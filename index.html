@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BAIO Learning System — Biology All In One</title>
+<style>
+:root{
+  --navy:#0B1B14; --navy2:#0F2419; --panel:#13281E; --panel2:#0E211A;
+  --gold:#D4AF37; --gold2:#B8912A; --teal:#2EE6C5; --teal2:#127566;
+  --ink:#EAF3EE; --ink-dim:#9FC4B6; --line:rgba(212,175,55,0.22);
+  --ok:#33C48A;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:
+    radial-gradient(circle at 15% 8%, rgba(46,230,197,0.05), transparent 40%),
+    radial-gradient(circle at 85% 92%, rgba(212,175,55,0.06), transparent 45%),
+    var(--navy);
+  color:var(--ink); font-family:'Inter',-apple-system,sans-serif; -webkit-font-smoothing:antialiased;
+}
+@font-face{ font-family:'Space Grotesk'; src:local('Space Grotesk'); }
+h1,h2,h3,.brand,.tag{ font-family:'Space Grotesk',sans-serif; }
+
+.hexbg{
+  position:fixed; inset:0; z-index:0; opacity:0.05; pointer-events:none;
+  background-image:
+    radial-gradient(circle, transparent 18px, var(--navy) 19px),
+    repeating-linear-gradient(60deg, var(--teal) 0, var(--teal) 1px, transparent 1px, transparent 38px),
+    repeating-linear-gradient(-60deg, var(--teal) 0, var(--teal) 1px, transparent 1px, transparent 38px);
+}
+
+.wrap{position:relative; z-index:1; max-width:900px; margin:0 auto; padding:0 18px 60px;}
+
+header{padding:34px 0 22px; text-align:center;}
+.eyebrow{font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--teal); font-weight:600;}
+.brand{font-size:26px; font-weight:700; margin-top:8px; letter-spacing:-0.5px;}
+.brand span{color:var(--gold);}
+.tag{font-size:13px; color:var(--ink-dim); margin-top:6px; font-weight:500;}
+
+.hero{
+  border:1px solid var(--line); border-radius:20px; padding:26px 24px; margin-top:26px;
+  background:linear-gradient(160deg, var(--panel), var(--panel2));
+  position:relative; overflow:hidden;
+}
+.hero:before{
+  content:''; position:absolute; top:-40%; right:-15%; width:260px; height:260px; border-radius:50%;
+  background:radial-gradient(circle, rgba(46,230,197,0.14), transparent 70%);
+}
+.hero h1{font-size:21px; margin:0 0 8px; line-height:1.35; position:relative;}
+.hero p{font-size:13.5px; color:var(--ink-dim); line-height:1.7; margin:0; max-width:520px; position:relative;}
+.hero .signature{
+  margin-top:18px; display:flex; gap:18px; flex-wrap:wrap; position:relative;
+}
+.sig-stat{min-width:90px;}
+.sig-stat .n{font-size:22px; font-weight:700; color:var(--gold);}
+.sig-stat .l{font-size:10.5px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:0.6px; margin-top:2px;}
+
+.section-label{
+  font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--ink-dim);
+  margin:34px 0 14px; display:flex; align-items:center; gap:10px;
+}
+.section-label:after{content:''; flex:1; height:1px; background:var(--line);}
+
+.catalog{display:grid; grid-template-columns:1fr; gap:14px;}
+@media(min-width:640px){ .catalog{grid-template-columns:1fr 1fr;} }
+
+.slide-card{
+  position:relative; border:1px solid var(--line); border-radius:16px; background:var(--panel);
+  padding:18px 18px 16px; text-decoration:none; color:inherit; display:block;
+  transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+  overflow:hidden;
+}
+.slide-card:hover{ transform:translateY(-3px); border-color:var(--gold); box-shadow:0 10px 28px rgba(0,0,0,0.35); }
+.slide-card .tab{
+  position:absolute; top:0; right:0; background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#1a1406; font-weight:700; font-size:11px; padding:5px 14px 5px 18px;
+  border-bottom-left-radius:14px; font-family:'Space Grotesk',sans-serif;
+}
+.slide-card .num{font-size:11px; color:var(--teal); letter-spacing:1.5px; text-transform:uppercase; font-weight:700;}
+.slide-card h3{font-size:15.5px; margin:6px 34px 8px 0; line-height:1.3;}
+.slide-card p{font-size:12px; color:var(--ink-dim); line-height:1.6; margin:0 0 12px;}
+.slide-card .meta-row{display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--ink-dim); border-top:1px solid var(--line); padding-top:10px;}
+.slide-card .go{color:var(--gold); font-weight:700;}
+.slide-card .prog-mini{display:flex; align-items:center; gap:6px;}
+.prog-dot{width:6px; height:6px; border-radius:50%; background:var(--ok);}
+
+.slide-card.soon{opacity:0.5; cursor:default;}
+.slide-card.soon:hover{ transform:none; border-color:var(--line); box-shadow:none; }
+.slide-card.soon .tab{background:var(--panel2); color:var(--ink-dim);}
+
+.progress-strip{
+  border:1px solid var(--line); border-radius:14px; padding:16px 18px; background:var(--panel2);
+  font-size:12.5px; color:var(--ink-dim); display:none;
+}
+.progress-strip.show{display:block;}
+.progress-strip .row{display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.05);}
+.progress-strip .row:last-child{border-bottom:none;}
+.progress-strip b{color:var(--ink);}
+
+footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px; padding-top:16px; border-top:1px solid var(--line);}
+.footer-tagline{white-space:nowrap; overflow-x:auto; font-size:11px;}
+.footer-copy{margin-top:4px;}
+.footer-social{margin-top:8px; display:flex; justify-content:center; gap:14px; flex-wrap:wrap;}
+.footer-social a{color:var(--teal); text-decoration:none; font-weight:600; font-size:11.5px;}
+.footer-social a:hover{text-decoration:underline;}
+@media(max-width:380px){ .footer-tagline{font-size:9.5px;} }
+</style>
+</head>
+<body>
+<div class="hexbg"></div>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">PU Biology &middot; NEET / KCET Aligned</div>
+    <div class="brand">Biology All In One <span>(BAIO)</span></div>
+    <div class="tag">Learning System &middot; by Narendra Sir</div>
+  </header>
+
+  <div class="hero">
+    <h1>One place for every chapter, built the same way each time.</h1>
+    <p>Study notes, flashcards, MCQs, NEET-style practice, paper generation, and your own notes &mdash; consistent across every chapter, so once you know your way around one, you know your way around all of them.</p>
+    <div class="signature">
+      <div class="sig-stat"><div class="n" id="statChapters">2</div><div class="l">Chapters Live</div></div>
+      <div class="sig-stat"><div class="n" id="statQuestions">400+</div><div class="l">Practice Questions</div></div>
+      <div class="sig-stat"><div class="n" id="statSessions">&ndash;</div><div class="l">Your Sessions Logged</div></div>
+    </div>
+  </div>
+
+  <div class="progress-strip" id="progressStrip"></div>
+
+  <div class="section-label">Chapter Catalog</div>
+  <div class="catalog" id="catalog"></div>
+
+  <footer>
+    <div class="footer-tagline">Empowering future doctors. Crafted for PU BIOLOGY &amp; NEET Aspirants.</div>
+    <div class="footer-copy">&copy; Narendra Sir - Lecturer in Biology</div>
+    <div class="footer-social">
+      <a href="https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0" target="_blank" rel="noopener">YouTube</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+const CHAPTERS = [
+  {
+    num: 'Chapter 2', title: 'Biological Classification', href: 'ch2/',
+    desc: 'Five Kingdom system, taxonomy, viruses, viroids & lichens.',
+    progressKey: 'ch2_bioclass_progress_v1'
+  },
+  {
+    num: 'Chapter 9', title: 'Biotechnology: Principles & Processes', href: 'ch9/',
+    desc: 'Recombinant DNA technology, PCR, vectors, bioreactors.',
+    progressKey: 'ch9_biotech_progress_v1'
+  },
+  {
+    num: 'Chapter 3', title: 'Coming Soon', href: null,
+    desc: 'Next chapter in the series &mdash; built on the same template.',
+    progressKey: null, soon: true
+  }
+];
+
+function readProgress(key){
+  if(!key) return null;
+  try{
+    const raw = localStorage.getItem(key);
+    if(!raw) return null;
+    const log = JSON.parse(raw);
+    if(!Array.isArray(log) || log.length === 0) return null;
+    return { sessions: log.length, avg: Math.round(log.reduce((s,l)=>s+(l.pct||0),0)/log.length) };
+  }catch(e){ return null; }
+}
+
+const catalogEl = document.getElementById('catalog');
+let totalSessions = 0;
+let stripRows = '';
+
+CHAPTERS.forEach(ch => {
+  const prog = readProgress(ch.progressKey);
+  if(prog){
+    totalSessions += prog.sessions;
+    stripRows += `<div class="row"><span>${ch.num}: ${ch.title}</span><b>${prog.sessions} sessions &middot; ${prog.avg}% avg</b></div>`;
+  }
+  const card = document.createElement(ch.soon ? 'div' : 'a');
+  if(!ch.soon) card.href = ch.href;
+  card.className = 'slide-card' + (ch.soon ? ' soon' : '');
+  card.innerHTML = `
+    <div class="tab">${ch.soon ? 'Soon' : 'Open'}</div>
+    <div class="num">${ch.num}</div>
+    <h3>${ch.title}</h3>
+    <p>${ch.desc}</p>
+    <div class="meta-row">
+      <span class="prog-mini">${prog ? `<span class="prog-dot"></span> ${prog.sessions} sessions logged` : 'Not started yet'}</span>
+      ${ch.soon ? '' : '<span class="go">Open Chapter &rarr;</span>'}
+    </div>`;
+  catalogEl.appendChild(card);
+});
+
+document.getElementById('statSessions').textContent = totalSessions > 0 ? totalSessions : '\u2013';
+if(stripRows){
+  document.getElementById('progressStrip').innerHTML = '<b style="color:var(--gold);">Your Progress at a Glance</b><div style="margin-top:8px;">' + stripRows + '</div>';
+  document.getElementById('progressStrip').classList.add('show');
+}
+</script>
+</body>
+</html>
