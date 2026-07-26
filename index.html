@@ -74,6 +74,54 @@ header{padding:34px 0 22px; text-align:center; position:relative;}
 }
 .section-label:after{content:''; flex:1; height:2px; background:var(--line);}
 
+.tab-nav{
+  display:flex; flex-wrap:wrap; gap:2px 6px; margin-top:22px; border-bottom:1px solid var(--line);
+  padding-bottom:2px;
+}
+.tab-btn{
+  flex:0 0 auto; background:none; border:none; cursor:pointer; padding:9px 6px 11px;
+  font-family:'Space Grotesk',sans-serif; font-size:11.5px; font-weight:700; letter-spacing:0.2px;
+  color:var(--ink-dim); white-space:nowrap; position:relative;
+}
+.tab-btn:after{
+  content:''; position:absolute; left:0; right:0; bottom:-1px; height:2px; background:transparent; border-radius:2px;
+}
+.tab-btn.active{color:var(--gold);}
+.tab-btn.active:after{background:linear-gradient(90deg,var(--gold),var(--gold2));}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+.dash-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px;}
+@media(min-width:640px){ .dash-grid{grid-template-columns:repeat(4,1fr);} }
+.dash-stat{
+  border:1px solid var(--line); border-radius:14px; padding:14px 14px; background:var(--panel);
+  text-align:center;
+}
+.dash-stat .n{font-size:20px; font-weight:700; color:var(--gold); font-family:'Space Grotesk',sans-serif;}
+.dash-stat .l{font-size:10px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:0.5px; margin-top:3px;}
+.dash-sublabel{
+  font-size:12.5px; font-weight:700; color:var(--ink); text-transform:uppercase; letter-spacing:0.5px;
+  margin:26px 0 10px;
+}
+.dash-sublabel:first-of-type{margin-top:6px;}
+.dash-empty{
+  border:1px dashed var(--line); border-radius:14px; padding:26px 18px; text-align:center;
+  color:var(--ink-dim); font-size:13px; margin-top:18px;
+}
+
+.announce-card{
+  border:1px solid var(--line); border-radius:14px; padding:16px 18px; background:var(--panel);
+  margin-bottom:14px; position:relative;
+}
+.announce-card .a-date{font-size:10.5px; color:var(--teal); text-transform:uppercase; letter-spacing:0.8px; font-weight:700;}
+.announce-card h3{font-size:14.5px; margin:6px 0 6px;}
+.announce-card p{font-size:12.5px; color:var(--ink-dim); line-height:1.65; margin:0;}
+.announce-card.pinned{border-color:var(--gold);}
+.announce-card .pin-tag{
+  position:absolute; top:0; right:0; background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#1a1406; font-weight:700; font-size:10px; padding:4px 12px 4px 16px; border-bottom-left-radius:12px;
+}
+
 .catalog{display:grid; grid-template-columns:1fr; gap:14px;}
 @media(min-width:640px){ .catalog{grid-template-columns:1fr 1fr;} }
 
@@ -183,21 +231,45 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     <div class="tag">Learning System &middot; by Narendra Sir</div>
   </header>
 
-  <div class="hero">
-    <h1>One place for every chapter, built the same way each time.</h1>
-    <p>Study notes, flashcards, MCQs, NEET-style practice, paper generation, and your own notes &mdash; consistent across every chapter, so once you know your way around one, you know your way around all of them.</p>
-    <div class="signature">
-      <div class="sig-stat"><div class="n" id="statChapters">2</div><div class="l">Chapters Live</div></div>
-      <div class="sig-stat"><div class="n" id="statQuestions">400+</div><div class="l">Practice Questions</div></div>
-      <div class="sig-stat"><div class="n" id="statSessions">&ndash;</div><div class="l">Your Sessions Logged</div></div>
-    </div>
+  <div class="tab-nav" id="tabNav">
+    <button class="tab-btn active" data-tab="chapters">Chapters</button>
+    <button class="tab-btn" data-tab="dashboard">Biology Performance Dashboard</button>
+    <button class="tab-btn" data-tab="examdashboard">Exam Dashboard</button>
+    <button class="tab-btn" data-tab="announcements">Announcements</button>
   </div>
 
-  <div class="progress-strip" id="progressStrip"></div>
+  <div class="tab-panel active" id="panel-chapters">
+    <div class="hero">
+      <h1>One place for every chapter, built the same way each time.</h1>
+      <p>Study notes, flashcards, MCQs, NEET-style practice, paper generation, and your own notes &mdash; consistent across every chapter, so once you know your way around one, you know your way around all of them.</p>
+      <div class="signature">
+        <div class="sig-stat"><div class="n" id="statChapters">2</div><div class="l">Chapters Live</div></div>
+        <div class="sig-stat"><div class="n" id="statQuestions">400+</div><div class="l">Practice Questions</div></div>
+        <div class="sig-stat"><div class="n" id="statSessions">&ndash;</div><div class="l">Your Sessions Logged</div></div>
+      </div>
+    </div>
 
-  <div id="badgesSections"></div>
+    <div class="progress-strip" id="progressStrip"></div>
 
-  <div id="catalogSections"></div>
+    <div id="badgesSections"></div>
+
+    <div id="catalogSections"></div>
+  </div>
+
+  <div class="tab-panel" id="panel-dashboard">
+    <div class="section-label">Biology Performance Dashboard</div>
+    <div id="bioDashboardBody"></div>
+  </div>
+
+  <div class="tab-panel" id="panel-examdashboard">
+    <div class="section-label">Exam Dashboard</div>
+    <div id="examDashboardBody"></div>
+  </div>
+
+  <div class="tab-panel" id="panel-announcements">
+    <div class="section-label">Announcements</div>
+    <div id="announcementsBody"></div>
+  </div>
 
   <footer>
     <div class="footer-tagline">Empowering future doctors. Crafted for PU BIOLOGY &amp; NEET Aspirants.</div>
@@ -408,6 +480,164 @@ if(stripRows){
   document.getElementById('progressStrip').innerHTML = '<b style="color:var(--gold);">Your Progress at a Glance</b><div style="margin-top:8px;">' + stripRows + '</div>';
   document.getElementById('progressStrip').classList.add('show');
 }
+
+(function(){
+  const tabNav = document.getElementById('tabNav');
+  if(!tabNav) return;
+  const btns = tabNav.querySelectorAll('.tab-btn');
+  btns.forEach(btn => {
+    btn.addEventListener('click', function(){
+      btns.forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const panel = document.getElementById('panel-' + btn.dataset.tab);
+      if(panel) panel.classList.add('active');
+    });
+  });
+})();
+
+(function(){
+  const body = document.getElementById('bioDashboardBody');
+  if(!body) return;
+  const realChapters = CHAPTERS.filter(ch => !ch.soon);
+  const groupsByPuc = { 'PUC-1': [], 'PUC-2': [] };
+  realChapters.forEach(ch => { if(groupsByPuc[ch.puc]) groupsByPuc[ch.puc].push(ch); });
+
+  function statsFor(chapters){
+    let sessions = 0, scoreSum = 0, scoreCount = 0, bestStreak = 0;
+    const rows = [];
+    chapters.forEach(ch => {
+      const log = getRawLog(ch.progressKey);
+      const streak = getStreakDaysFromLog(log);
+      if(streak > bestStreak) bestStreak = streak;
+      if(log.length > 0){
+        sessions += log.length;
+        log.forEach(l => { if(typeof l.pct === 'number'){ scoreSum += l.pct; scoreCount++; } });
+        rows.push(`<div class="row"><span>${ch.num}: ${ch.title}</span><b>${log.length} sessions</b></div>`);
+      } else {
+        rows.push(`<div class="row"><span>${ch.num}: ${ch.title}</span><b>Not started</b></div>`);
+      }
+    });
+    return {
+      chapterCount: chapters.length, sessions, rows, bestStreak,
+      avg: scoreCount > 0 ? Math.round(scoreSum / scoreCount) : null
+    };
+  }
+
+  function renderSection(label, chapters){
+    let html = `<div class="dash-sublabel">${label}</div>`;
+    if(chapters.length === 0){
+      html += '<div class="dash-empty">No live chapters yet for this section.</div>';
+      return html;
+    }
+    const stats = statsFor(chapters);
+    html += `
+      <div class="dash-grid">
+        <div class="dash-stat"><div class="n">${stats.chapterCount}</div><div class="l">Chapters</div></div>
+        <div class="dash-stat"><div class="n">${stats.sessions}</div><div class="l">Sessions Logged</div></div>
+        <div class="dash-stat"><div class="n">${stats.avg !== null ? stats.avg + '%' : '\u2013'}</div><div class="l">Average Score</div></div>
+        <div class="dash-stat"><div class="n">${stats.bestStreak}</div><div class="l">Best Day Streak</div></div>
+      </div>
+      <div class="progress-strip show" style="margin-top:14px;">
+        <b style="color:var(--gold);">Chapter Breakdown</b>
+        <div style="margin-top:8px;">${stats.rows.join('')}</div>
+      </div>`;
+    return html;
+  }
+
+  body.innerHTML =
+    renderSection('PU-1', groupsByPuc['PUC-1']) +
+    renderSection('PU-2', groupsByPuc['PUC-2']) +
+    renderSection('Combined', realChapters);
+})();
+
+(function(){
+  const body = document.getElementById('examDashboardBody');
+  if(!body) return;
+  const EXAM_TYPE = 'NEET Practice';
+  const pucGroupsExam = { 'PUC-1': [], 'PUC-2': [] };
+  CHAPTERS.filter(ch => !ch.soon).forEach(ch => {
+    if(pucGroupsExam[ch.puc]) pucGroupsExam[ch.puc].push(ch);
+  });
+
+  function examStatsFor(chapters){
+    let attempts = 0, scoreSum = 0, best = null, latest = null;
+    const rows = [];
+    chapters.forEach(ch => {
+      const log = getRawLog(ch.progressKey).filter(l => l.type === EXAM_TYPE);
+      if(log.length > 0){
+        attempts += log.length;
+        log.forEach(l => {
+          if(typeof l.pct === 'number'){
+            scoreSum += l.pct;
+            if(best === null || l.pct > best) best = l.pct;
+          }
+          const d = new Date(l.date);
+          if(!isNaN(d.getTime()) && (latest === null || d > latest)) latest = d;
+        });
+        rows.push(`<div class="row"><span>${ch.num}: ${ch.title}</span><b>${log.length} attempt${log.length === 1 ? '' : 's'}</b></div>`);
+      } else {
+        rows.push(`<div class="row"><span>${ch.num}: ${ch.title}</span><b>No exam attempts yet</b></div>`);
+      }
+    });
+    return {
+      attempts, rows,
+      avg: attempts > 0 ? Math.round(scoreSum / attempts) : null,
+      best,
+      latest
+    };
+  }
+
+  function renderPucExamSection(label, chapters){
+    let html = `<div class="dash-sublabel">${label}</div>`;
+    if(chapters.length === 0){
+      html += '<div class="dash-empty">No live chapters yet for this year.</div>';
+      return html;
+    }
+    const stats = examStatsFor(chapters);
+    html += `
+      <div class="dash-grid">
+        <div class="dash-stat"><div class="n">${stats.attempts}</div><div class="l">Exam Attempts</div></div>
+        <div class="dash-stat"><div class="n">${stats.avg !== null ? stats.avg + '%' : '\u2013'}</div><div class="l">Average Score</div></div>
+        <div class="dash-stat"><div class="n">${stats.best !== null ? stats.best + '%' : '\u2013'}</div><div class="l">Best Score</div></div>
+        <div class="dash-stat"><div class="n">${stats.latest ? stats.latest.toLocaleDateString() : '\u2013'}</div><div class="l">Latest Attempt</div></div>
+      </div>
+      <div class="progress-strip show" style="margin-top:14px;">
+        <b style="color:var(--gold);">Per-Chapter Attempts</b>
+        <div style="margin-top:8px;">${stats.rows.join('')}</div>
+      </div>`;
+    return html;
+  }
+
+  body.innerHTML =
+    renderPucExamSection('PUC-1 Exams', pucGroupsExam['PUC-1']) +
+    renderPucExamSection('PUC-2 Exams', pucGroupsExam['PUC-2']);
+})();
+
+(function(){
+  const body = document.getElementById('announcementsBody');
+  if(!body) return;
+  // Edit this list to add, remove, or update announcements. Newest first; set pinned:true to highlight.
+  const ANNOUNCEMENTS = [
+    {
+      date: 'Coming Soon',
+      title: 'More chapters on the way',
+      text: 'New PUC-1 and PUC-2 chapters are being added to BAIO over time, built on the same template you already know.',
+      pinned: true
+    }
+  ];
+  if(ANNOUNCEMENTS.length === 0){
+    body.innerHTML = '<div class="dash-empty">No announcements right now &mdash; check back soon.</div>';
+    return;
+  }
+  body.innerHTML = ANNOUNCEMENTS.map(a => `
+    <div class="announce-card${a.pinned ? ' pinned' : ''}">
+      ${a.pinned ? '<div class="pin-tag">Pinned</div>' : ''}
+      <div class="a-date">${a.date}</div>
+      <h3>${a.title}</h3>
+      <p>${a.text}</p>
+    </div>`).join('');
+})();
 
 (function(){
   var THEME_KEY = 'baio_theme';
