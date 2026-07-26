@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BAIO Learning System — Important Update</title>
+<style>
+  :root{
+    --navy-deep:#0a1628;
+    --navy:#0f2138;
+    --navy-light:#16304f;
+    --gold:#d4af37;
+    --gold-bright:#f0cd6a;
+    --teal:#2a9d8f;
+    --teal-dim:#1c6b61;
+    --cream:#f4efe2;
+    --cream-dim:#c9c2ac;
+    --line: rgba(212,175,55,0.18);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background: radial-gradient(ellipse at 20% -10%, var(--navy-light), var(--navy-deep) 55%);
+    color:var(--cream);
+    font-family: 'Iowan Old Style','Georgia',serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
+  .wrap{max-width:760px; margin:0 auto; padding: 56px 24px 80px;}
+
+  /* ---- Masthead ---- */
+  .masthead{
+    display:flex; align-items:center; justify-content:space-between;
+    padding-bottom:22px; border-bottom:1px solid var(--line);
+    margin-bottom:44px;
+  }
+  .brand{
+    display:flex; align-items:center; gap:12px;
+    font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+    letter-spacing:2.5px; font-size:13px; text-transform:uppercase;
+    color:var(--gold-bright); font-weight:700;
+  }
+  .brand .mark{
+    width:30px; height:30px; border-radius:7px;
+    background: linear-gradient(155deg, var(--teal), var(--navy-light) 70%);
+    border:1px solid var(--gold);
+    display:flex; align-items:center; justify-content:center;
+    font-family: Georgia, serif; font-size:15px; color:var(--gold-bright); font-weight:bold;
+    box-shadow: inset 0 0 12px rgba(212,175,55,0.15);
+  }
+  .masthead .tag{
+    font-family:'Trebuchet MS', sans-serif; font-size:11px; letter-spacing:1.5px;
+    color:var(--cream-dim); text-transform:uppercase;
+  }
+
+  /* ---- Hero / notice ticket ---- */
+  .notice{
+    position:relative;
+    border:1px solid var(--gold);
+    background: linear-gradient(180deg, rgba(212,175,55,0.05), rgba(42,157,143,0.04));
+    padding: 42px 36px 38px;
+    margin-bottom:46px;
+    opacity:0; transform:translateY(14px);
+    animation: rise .7s ease forwards;
+  }
+  .notice::before, .notice::after{
+    content:""; position:absolute; width:9px; height:9px; border-radius:50%;
+    background: var(--navy-deep); border:1px solid var(--gold);
+    top:50%; transform:translateY(-50%);
+  }
+  .notice::before{ left:-5px; }
+  .notice::after{ right:-5px; }
+  @keyframes rise{ to{opacity:1; transform:translateY(0);} }
+
+  .eyebrow{
+    font-family:'Trebuchet MS', sans-serif; font-size:12px; letter-spacing:3px;
+    text-transform:uppercase; color:var(--teal); font-weight:700; margin-bottom:14px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow .dot{width:7px; height:7px; border-radius:50%; background:var(--gold-bright); box-shadow:0 0 8px var(--gold-bright);}
+
+  h1{
+    font-size: clamp(28px, 5vw, 40px);
+    line-height:1.18;
+    font-weight:700;
+    color:var(--cream);
+    margin-bottom:14px;
+    letter-spacing:0.2px;
+  }
+  h1 .accent{ color: var(--gold-bright); font-style:italic; }
+
+  .lede{
+    font-size:16.5px; line-height:1.65; color:var(--cream-dim); max-width:58ch;
+  }
+
+  .meta-row{
+    display:flex; flex-wrap:wrap; gap:18px; margin-top:24px;
+    font-family:'Trebuchet MS', sans-serif; font-size:12.5px; color:var(--teal); letter-spacing:0.5px;
+  }
+  .meta-row span{ display:flex; align-items:center; gap:7px; }
+  .meta-row b{ color:var(--gold-bright); }
+
+  /* ---- Body sections ---- */
+  section{ margin-bottom:40px; }
+  .section-label{
+    font-family:'Trebuchet MS', sans-serif; font-size:11.5px; letter-spacing:2.5px;
+    text-transform:uppercase; color:var(--gold); font-weight:700;
+    margin-bottom:16px; padding-bottom:8px; border-bottom:1px solid var(--line);
+  }
+
+  .update-list{ list-style:none; }
+  .update-list li{
+    padding:16px 0 16px 30px; position:relative;
+    border-bottom:1px solid var(--line);
+    font-size:15.5px; line-height:1.6; color:var(--cream);
+  }
+  .update-list li:last-child{ border-bottom:none; }
+  .update-list li::before{
+    content:"▸"; position:absolute; left:0; top:16px; color:var(--teal); font-size:15px;
+  }
+  .update-list strong{ color:var(--gold-bright); font-weight:700; }
+
+  .callout{
+    background: rgba(42,157,143,0.08);
+    border-left:3px solid var(--teal);
+    padding:18px 22px; font-size:14.5px; line-height:1.6; color:var(--cream-dim);
+  }
+  .callout b{ color:var(--cream); }
+
+  /* ---- CTA ---- */
+  .cta-block{
+    text-align:center; padding: 38px 20px 10px;
+  }
+  .cta-btn{
+    display:inline-block; padding:16px 42px;
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+    color: var(--navy-deep); font-family:'Trebuchet MS', sans-serif;
+    font-weight:700; letter-spacing:1px; text-transform:uppercase; font-size:13.5px;
+    text-decoration:none; border-radius:2px;
+    box-shadow: 0 6px 22px rgba(212,175,55,0.22);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .cta-btn:hover{ transform: translateY(-2px); box-shadow: 0 10px 26px rgba(212,175,55,0.32); }
+  .cta-btn:focus-visible{ outline:3px solid var(--teal); outline-offset:3px; }
+  .cta-sub{ margin-top:14px; font-size:12.5px; color:var(--cream-dim); font-family:'Trebuchet MS', sans-serif; }
+
+  footer{
+    margin-top:56px; padding-top:22px; border-top:1px solid var(--line);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+    font-family:'Trebuchet MS', sans-serif; font-size:11.5px; color:var(--cream-dim); letter-spacing:0.5px;
+  }
+  footer .sig{ color:var(--teal); }
+
+  @media (max-width:520px){
+    .notice{ padding:32px 22px 30px; }
+    .masthead{ flex-direction:column; align-items:flex-start; gap:10px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <div class="brand">
+      <div class="mark">B</div>
+      BAIO Learning System
+    </div>
+    <div class="tag">Biology All In One</div>
+  </div>
+
+  <div class="notice">
+    <div class="eyebrow"><span class="dot"></span>Important Update</div>
+    <h1>Study in your own language. See your results in one place.</h1>
+    <p class="lede">
+      Narendra Sir here — two big additions have just gone live in your BAIO Learning System:
+      trilingual study mode, and a full performance dashboard for PU1 students. Read below for the details.
+    </p>
+    <div class="meta-row">
+      <span>📅 <b>Posted:</b> 26 July 2026</span>
+      <span>👥 <b>Applies to:</b> Spark · Prime · Champion · Elite</span>
+    </div>
+  </div>
+
+  <section>
+    <div class="section-label">What's New</div>
+    <ul class="update-list">
+      <li><strong>Trilingual study mode</strong> — Study Mode now supports <strong>English, Hindi, and Kannada</strong>, so you can learn every concept in whichever language feels clearest to you.</li>
+      <li><strong>PU1 Performance Dashboard</strong> — PU1 students can now view their results and progress in Biology <strong>and across all subjects</strong> in one place.</li>
+      <li><strong>Downloadable report</strong> — your dashboard result can be downloaded as a report to keep or share.</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="section-label">What You Need To Do</div>
+    <div class="callout">
+      <b>Just open the app as usual.</b> No reinstall needed — the update is already live.
+      Choose your language in Study Mode, and check the Performance Dashboard for your latest results.
+    </div>
+  </section>
+
+  <div class="cta-block">
+    <a class="cta-btn" href="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/" id="ctaLink">Open BAIO App</a>
+    <div class="cta-sub">Questions? Message Narendra Sir directly on WhatsApp.</div>
+  </div>
+
+  <footer>
+    <div>© 2026 BAIO Learning System</div>
+    <div class="sig">— Narendra Sir, Lecturer in Biology</div>
+  </footer>
+
+</div>
+</body>
+</html>
