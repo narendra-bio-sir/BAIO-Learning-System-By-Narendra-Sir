@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BAIO Learning System — Biology All In One</title>
+<style>
+:root{
+  --navy:#0B1B14; --navy2:#0F2419; --panel:#13281E; --panel2:#0E211A;
+  --gold:#D4AF37; --gold2:#B8912A; --teal:#2EE6C5; --teal2:#127566;
+  --ink:#EAF3EE; --ink-dim:#9FC4B6; --line:rgba(212,175,55,0.22);
+  --ok:#33C48A;
+}
+[data-theme="light"]{
+  --navy:#F7F5EE; --navy2:#EFEBDD; --panel:#FFFFFF; --panel2:#F3F0E6;
+  --gold:#B8912A; --gold2:#8A6A1A; --teal:#0F8F7A; --teal2:#0B6F5E;
+  --ink:#1E2A22; --ink-dim:#5C6E63; --line:rgba(184,145,42,0.25);
+  --ok:#1F9D6C;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:
+    radial-gradient(circle at 15% 8%, rgba(46,230,197,0.05), transparent 40%),
+    radial-gradient(circle at 85% 92%, rgba(212,175,55,0.06), transparent 45%),
+    var(--navy);
+  color:var(--ink); font-family:'Inter',-apple-system,sans-serif; -webkit-font-smoothing:antialiased;
+  transition:background-color .2s ease, color .2s ease;
+}
+@font-face{ font-family:'Space Grotesk'; src:local('Space Grotesk'); }
+h1,h2,h3,.brand,.tag{ font-family:'Space Grotesk',sans-serif; }
+
+.hexbg{
+  position:fixed; inset:0; z-index:0; opacity:0.05; pointer-events:none;
+  background-image:
+    radial-gradient(circle, transparent 18px, var(--navy) 19px),
+    repeating-linear-gradient(60deg, var(--teal) 0, var(--teal) 1px, transparent 1px, transparent 38px),
+    repeating-linear-gradient(-60deg, var(--teal) 0, var(--teal) 1px, transparent 1px, transparent 38px);
+}
+
+.wrap{position:relative; z-index:1; max-width:900px; margin:0 auto; padding:0 18px 60px;}
+
+header{padding:34px 0 22px; text-align:center; position:relative;}
+.eyebrow{font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--teal); font-weight:600;}
+.brand{font-size:26px; font-weight:700; margin-top:8px; letter-spacing:-0.5px;}
+.brand span{color:var(--gold);}
+.tag{font-size:13px; color:var(--ink-dim); margin-top:6px; font-weight:500;}
+.theme-toggle-btn{
+  position:absolute; top:30px; right:0; width:38px; height:38px; border-radius:50%;
+  border:1px solid var(--line); background:var(--panel2); font-size:16px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+}
+
+.hero{
+  border:1px solid var(--line); border-radius:20px; padding:26px 24px; margin-top:26px;
+  background:linear-gradient(160deg, var(--panel), var(--panel2));
+  position:relative; overflow:hidden;
+}
+.hero:before{
+  content:''; position:absolute; top:-40%; right:-15%; width:260px; height:260px; border-radius:50%;
+  background:radial-gradient(circle, rgba(46,230,197,0.14), transparent 70%);
+}
+.hero h1{font-size:21px; margin:0 0 8px; line-height:1.35; position:relative;}
+.hero p{font-size:13.5px; color:var(--ink-dim); line-height:1.7; margin:0; max-width:520px; position:relative;}
+.hero .signature{
+  margin-top:18px; display:flex; gap:18px; flex-wrap:wrap; position:relative;
+}
+.sig-stat{min-width:90px;}
+.sig-stat .n{font-size:22px; font-weight:700; color:var(--gold);}
+.sig-stat .l{font-size:10.5px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:0.6px; margin-top:2px;}
+
+.section-label{
+  font-size:17px; letter-spacing:1px; text-transform:uppercase; color:var(--gold); font-weight:800;
+  margin:34px 0 14px; display:flex; align-items:center; gap:10px;
+}
+.section-label:after{content:''; flex:1; height:2px; background:var(--line);}
+
+.catalog{display:grid; grid-template-columns:1fr; gap:14px;}
+@media(min-width:640px){ .catalog{grid-template-columns:1fr 1fr;} }
+
+.slide-card{
+  position:relative; border:1px solid var(--line); border-radius:16px; background:var(--panel);
+  padding:18px 18px 16px; text-decoration:none; color:inherit; display:block;
+  transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+  overflow:hidden;
+}
+.slide-card:hover{ transform:translateY(-3px); border-color:var(--gold); box-shadow:0 10px 28px rgba(0,0,0,0.35); }
+.slide-card .tab{
+  position:absolute; top:0; right:0; background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#1a1406; font-weight:700; font-size:11px; padding:5px 14px 5px 18px;
+  border-bottom-left-radius:14px; font-family:'Space Grotesk',sans-serif;
+}
+.card-icon{font-size:18px; line-height:1; margin-bottom:4px;}
+.slide-card .num{font-size:11px; color:var(--teal); letter-spacing:1.5px; text-transform:uppercase; font-weight:700;}
+.slide-card h3{font-size:15.5px; margin:6px 34px 8px 0; line-height:1.3;}
+.slide-card p{font-size:12px; color:var(--ink-dim); line-height:1.6; margin:0 0 12px;}
+.slide-card .meta-row{display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--ink-dim); border-top:1px solid var(--line); padding-top:10px;}
+.slide-card .go{color:var(--gold); font-weight:700;}
+.slide-card .prog-mini{display:flex; align-items:center; gap:6px;}
+.prog-dot{width:6px; height:6px; border-radius:50%; background:var(--ok);}
+
+.slide-card.soon{opacity:0.5; cursor:default;}
+.slide-card.soon:hover{ transform:none; border-color:var(--line); box-shadow:none; }
+.slide-card.soon .tab{background:var(--panel2); color:var(--ink-dim);}
+
+.quick-actions-row{display:flex; gap:12px; margin-top:18px;}
+.quick-action-btn{
+  flex:1; text-align:center; padding:13px 16px; border-radius:12px;
+  border:1px solid var(--gold); background:transparent; color:var(--gold);
+  font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13.5px;
+  text-decoration:none; cursor:pointer; transition:background .15s ease;
+}
+.quick-action-btn:hover{background:rgba(212,175,55,0.08);}
+
+.announce-modal-overlay{
+  position:fixed; inset:0; z-index:2000; background:rgba(0,0,0,0.6);
+  display:flex; align-items:center; justify-content:center; padding:20px;
+}
+.announce-modal{
+  background:var(--panel); border:1px solid var(--gold); border-radius:16px;
+  padding:26px 22px; max-width:400px; width:100%; text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,0.4);
+}
+.announce-modal-icon{font-size:36px; margin-bottom:8px;}
+.announce-modal-date{font-size:10.5px; color:var(--teal); font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;}
+.announce-modal-text{font-size:14px; color:var(--ink); line-height:1.6; margin-bottom:20px;}
+.announce-modal-btn{
+  background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#0B1B14; border:none;
+  padding:10px 28px; border-radius:10px; font-weight:700; font-size:13.5px; cursor:pointer;
+}
+@media(max-width:420px){ .quick-actions-row{flex-direction:column;} }
+
+.progress-strip{
+  border:1px solid var(--line); border-radius:14px; padding:16px 18px; background:var(--panel2);
+  font-size:12.5px; color:var(--ink-dim); display:none;
+}
+.progress-strip.show{display:block;}
+.progress-strip .row{display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.05);}
+
+.badges-chapter-card{
+  border:1px solid var(--line); border-radius:14px; padding:14px 16px; background:var(--panel);
+  margin-bottom:12px;
+}
+.badges-chapter-card .bc-head{display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; margin-bottom:10px;}
+.badges-chapter-card .bc-head .bc-icon{font-size:16px;}
+.badge-chip-row{display:flex; flex-wrap:wrap; gap:8px;}
+.badge-chip{
+  display:flex; align-items:center; gap:6px; padding:6px 10px; border-radius:20px;
+  font-size:11px; font-weight:600; border:1px solid var(--line); background:var(--panel2);
+  color:var(--ink-dim); opacity:0.55;
+}
+.badge-chip.earned{opacity:1; color:var(--ink); border-color:var(--gold); background:linear-gradient(135deg,rgba(212,175,55,0.15),var(--panel2));}
+.badge-chip .bicon{font-size:13px;}
+.no-progress-msg{font-size:12px; color:var(--ink-dim); font-style:italic;}
+.progress-strip .row:last-child{border-bottom:none;}
+.progress-strip b{color:var(--ink);}
+
+footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px; padding-top:16px; border-top:1px solid var(--line);}
+.footer-tagline{white-space:nowrap; overflow-x:auto; font-size:11px;}
+.footer-copy{margin-top:4px;}
+.footer-social{margin-top:8px; display:flex; justify-content:center; gap:14px; flex-wrap:wrap;}
+.footer-social a{color:var(--teal); text-decoration:none; font-weight:600; font-size:11.5px;}
+.footer-social a:hover{text-decoration:underline;}
+@media(max-width:380px){ .footer-tagline{font-size:9.5px;} }
+.faq-chat-btn{
+  position:fixed; bottom:16px; right:16px; width:38px; height:38px; border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--gold2)); border:none; font-size:16px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.35); cursor:pointer; z-index:500;
+}
+.faq-chat-panel{
+  position:fixed; bottom:62px; right:16px; width:min(300px, calc(100vw - 32px)); max-height:min(420px, calc(100vh - 120px));
+  background:var(--panel); border:1px solid var(--line); border-radius:14px; box-shadow:0 12px 40px rgba(0,0,0,0.4);
+  display:none; flex-direction:column; z-index:500; overflow:hidden;
+}
+.faq-chat-panel.open{display:flex;}
+.faq-chat-header{
+  background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#1a1406; font-weight:700; font-size:14px;
+  padding:12px 14px; display:flex; justify-content:space-between; align-items:center;
+}
+.faq-chat-header button{background:none; border:none; font-size:20px; color:#1a1406; cursor:pointer; line-height:1;}
+.faq-chat-body{flex:1; overflow-y:auto; padding:12px; font-size:13px; display:flex; flex-direction:column; gap:8px;}
+.faq-msg{max-width:85%; padding:8px 12px; border-radius:12px; line-height:1.5;}
+.faq-msg.bot{background:var(--panel2); color:var(--ink); align-self:flex-start; border:1px solid var(--line);}
+.faq-msg.user{background:var(--gold); color:#1a1406; align-self:flex-end; font-weight:600;}
+.faq-quick-replies{display:flex; flex-wrap:wrap; gap:6px; margin-top:2px;}
+.faq-quick-btn{
+  font-size:11.5px; padding:6px 10px; border-radius:14px; border:1px solid var(--line);
+  background:var(--panel2); color:var(--ink); cursor:pointer;
+}
+.faq-quick-btn:hover{border-color:var(--gold);}
+.faq-chat-input-row{display:flex; gap:6px; padding:10px; border-top:1px solid var(--line);}
+.faq-chat-input-row input{
+  flex:1; padding:8px 10px; border-radius:10px; border:1px solid var(--line); background:var(--panel2);
+  color:var(--ink); font-size:13px;
+}
+.faq-chat-input-row button{
+  padding:8px 14px; border-radius:10px; border:none; background:var(--gold); color:#1a1406;
+  font-weight:700; font-size:12.5px; cursor:pointer;
+}
+</style>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN_HERE"}'></script>
+</head>
+<body>
+<div class="hexbg"></div>
+<div class="wrap">
+
+  <header>
+    <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle light/dark theme">&#127769;</button>
+    <div class="eyebrow">PU Biology &middot; NEET / KCET Aligned</div>
+    <div class="brand">Biology All In One <span>(BAIO)</span></div>
+    <div class="tag">Learning System &middot; by Narendra Sir</div>
+  </header>
+
+  <div class="hero">
+    <h1>One place for every chapter, built the same way each time.</h1>
+    <p>Study notes, flashcards, MCQs, NEET-style practice, paper generation, and your own notes &mdash; consistent across every chapter, so once you know your way around one, you know your way around all of them.</p>
+    <div class="signature">
+      <div class="sig-stat"><div class="n" id="statChapters">2</div><div class="l">Chapters Live</div></div>
+      <div class="sig-stat"><div class="n" id="statQuestions">400+</div><div class="l">Practice Questions</div></div>
+      <div class="sig-stat"><div class="n" id="statSessions">&ndash;</div><div class="l">Your Sessions Logged</div></div>
+    </div>
+  </div>
+
+  <div class="quick-actions-row">
+    <a href="analytics.html" class="quick-action-btn">📊 Performance Analysis</a>
+    <a href="announcements.html" class="quick-action-btn">🔔 Announcements</a>
+  </div>
+
+  <div id="announcementModalOverlay" class="announce-modal-overlay" style="display:none;">
+    <div class="announce-modal">
+      <div class="announce-modal-icon">🔔</div>
+      <div class="announce-modal-date" id="announceModalDate"></div>
+      <div class="announce-modal-text" id="announceModalText"></div>
+      <button class="announce-modal-btn" id="announceModalCloseBtn">Got it</button>
+    </div>
+  </div>
+
+  <div class="progress-strip" id="progressStrip"></div>
+
+  <div id="badgesSections"></div>
+
+  <div id="catalogSections"></div>
+
+  <footer>
+    <div class="footer-tagline">Empowering future doctors. Crafted for PU BIOLOGY &amp; NEET Aspirants.</div>
+    <div class="footer-copy">&copy; Narendra Sir - Lecturer in Biology</div>
+    <div class="footer-social">
+      <a href="https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0" target="_blank" rel="noopener">YouTube</a>
+    </div>
+  </footer>
+
+</div>
+
+<button id="faqChatBtn" class="faq-chat-btn" aria-label="Open help chat">
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#1a1406" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+  </svg>
+</button>
+
+<div id="faqChatPanel" class="faq-chat-panel">
+  <div class="faq-chat-header">
+    <span>BAIO Help Desk</span>
+    <button id="faqChatCloseBtn" aria-label="Close chat">&times;</button>
+  </div>
+  <div class="faq-chat-body" id="faqChatBody"></div>
+  <div class="faq-chat-input-row">
+    <input type="text" id="faqChatInput" placeholder="Ask a question...">
+    <button id="faqChatSendBtn">Send</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  fetch('announcements.html')
+    .then(res => res.ok ? res.text() : Promise.reject())
+    .then(htmlText => {
+      const doc = new DOMParser().parseFromString(htmlText, 'text/html');
+      const title = doc.querySelector('h1');
+      const lede = doc.querySelector('.lede');
+      const metaRow = doc.querySelector('.meta-row');
+      if(!title) return;
+
+      const titleText = title.textContent.trim();
+      const ledeText = lede ? lede.textContent.trim() : '';
+      let dateText = '';
+      if(metaRow){
+        const spans = Array.from(metaRow.querySelectorAll('span'));
+        const postedSpan = spans.find(s => /posted/i.test(s.textContent));
+        if(postedSpan) dateText = postedSpan.textContent.replace(/^\s*\S+\s*/, '').trim();
+      }
+
+      const seenKey = 'baio_last_seen_announcement';
+      const fingerprint = titleText + '::' + dateText;
+      let lastSeen = null;
+      try{ lastSeen = localStorage.getItem(seenKey); }catch(e){}
+      if(lastSeen === fingerprint) return;
+
+      document.getElementById('announceModalDate').textContent = dateText;
+      document.getElementById('announceModalText').innerHTML =
+        '<b style="display:block; margin-bottom:6px; font-size:15px;">' + titleText + '</b>' + ledeText +
+        '<br><a href="announcements.html" style="color:var(--teal); font-weight:700; text-decoration:none;">Read Full Announcement &rarr;</a>';
+      document.getElementById('announcementModalOverlay').style.display = 'flex';
+
+      document.getElementById('announceModalCloseBtn').addEventListener('click', () => {
+        document.getElementById('announcementModalOverlay').style.display = 'none';
+        try{ localStorage.setItem(seenKey, fingerprint); }catch(e){}
+      });
+    })
+    .catch(() => { /* announcements.html not uploaded yet, or fetch blocked \u2014 skip popup silently */ });
+})();
+
+const CHAPTERS = [
+  {
+    num: 'Chapter 2', title: 'Biological Classification', href: 'ch2/', icon: '\uD83C\uDF33',
+    desc: 'Five Kingdom system, taxonomy, viruses, viroids & lichens.',
+    progressKey: 'ch2_bioclass_progress_v1', hwKey: 'ch2_hw_unlock', topicCount: 8, puc: 'PUC-1'
+  },
+  {
+    num: 'Chapter 9', title: 'Biotechnology: Principles & Processes', href: 'ch9/', icon: '\uD83E\uDDEC',
+    desc: 'Recombinant DNA technology, PCR, vectors, bioreactors.',
+    progressKey: 'ch9_biotech_progress_v1', hwKey: 'ch9_hw_unlock', topicCount: 8, puc: 'PUC-2'
+  },
+  {
+    num: 'Chapter', title: 'Coming Soon', href: null, icon: '\uD83D\uDD5C',
+    desc: 'Next PUC-1 chapter in the series &mdash; built on the same template.',
+    progressKey: null, soon: true, puc: 'PUC-1'
+  },
+  {
+    num: 'Chapter', title: 'Coming Soon', href: null, icon: '\uD83D\uDD5C',
+    desc: 'Next PUC-2 chapter in the series &mdash; built on the same template.',
+    progressKey: null, soon: true, puc: 'PUC-2'
+  }
+];
+
+function readProgress(key){
+  if(!key) return null;
+  try{
+    const raw = localStorage.getItem(key);
+    if(!raw) return null;
+    const log = JSON.parse(raw);
+    if(!Array.isArray(log) || log.length === 0) return null;
+    return { sessions: log.length, avg: Math.round(log.reduce((s,l)=>s+(l.pct||0),0)/log.length) };
+  }catch(e){ return null; }
+}
+
+function getRawLog(key){
+  if(!key) return [];
+  try{
+    const raw = localStorage.getItem(key);
+    const log = raw ? JSON.parse(raw) : [];
+    return Array.isArray(log) ? log : [];
+  }catch(e){ return []; }
+}
+function dayKeyFromLogDate(rawDate){
+  const d = new Date(rawDate);
+  if(isNaN(d.getTime())) return null;
+  return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+}
+function getStreakDaysFromLog(log){
+  const daySet = new Set();
+  log.forEach(l => { const k = dayKeyFromLogDate(l.date); if(k) daySet.add(k); });
+  if(daySet.size === 0) return 0;
+  let streak = 0;
+  const cursor = new Date();
+  while(true){
+    const key = cursor.getFullYear() + '-' + (cursor.getMonth()+1) + '-' + cursor.getDate();
+    if(daySet.has(key)){ streak++; cursor.setDate(cursor.getDate()-1); }
+    else break;
+  }
+  return streak;
+}
+function getTopicMasteryFromLog(log){
+  const mastery = {};
+  log.forEach(l => {
+    if(l.type === 'MCQ Quiz' && l.topicScope){
+      if(!mastery[l.topicScope] || l.pct > mastery[l.topicScope]) mastery[l.topicScope] = l.pct;
+    }
+  });
+  return mastery;
+}
+function computeChapterBadges(ch){
+  const log = getRawLog(ch.progressKey);
+  const streak = getStreakDaysFromLog(log);
+  const mastery = getTopicMasteryFromLog(log);
+  const masteryVals = Object.values(mastery);
+  const above90 = masteryVals.filter(p => p >= 90).length;
+  const masteredCount = masteryVals.filter(p => p > 85).length;
+  const topicCount = ch.topicCount || 8;
+  let hwUnlocked = false;
+  try{
+    const hw = ch.hwKey ? JSON.parse(localStorage.getItem(ch.hwKey) || 'null') : null;
+    hwUnlocked = !!(hw && hw.unlocked);
+  }catch(e){}
+  return {
+    hasActivity: log.length > 0,
+    streak: { earned: streak >= 7, label: streak + '/7 day streak' },
+    crusher: { earned: above90 >= 3, label: above90 + '/3 topics 90%+' },
+    mastermind: { earned: topicCount > 0 && masteredCount >= topicCount, label: masteredCount + '/' + topicCount + ' mastered' },
+    notes: { earned: hwUnlocked, label: hwUnlocked ? 'Unlocked' : 'Locked' }
+  };
+}
+
+const badgesSectionsEl = document.getElementById('badgesSections');
+const realChapters = CHAPTERS.filter(ch => !ch.soon);
+const anyBadgeActivity = realChapters.some(ch => getRawLog(ch.progressKey).length > 0);
+if(anyBadgeActivity){
+  const label = document.createElement('div');
+  label.className = 'section-label';
+  label.textContent = '\uD83C\uDFC6 Badges & Rewards';
+  badgesSectionsEl.appendChild(label);
+
+  realChapters.forEach(ch => {
+    const badges = computeChapterBadges(ch);
+    if(!badges.hasActivity) return;
+    const card = document.createElement('div');
+    card.className = 'badges-chapter-card';
+    card.innerHTML = `
+      <div class="bc-head"><span class="bc-icon">${ch.icon || '\uD83D\uDCD8'}</span> ${ch.num}: ${ch.title}</div>
+      <div class="badge-chip-row">
+        <span class="badge-chip${badges.streak.earned ? ' earned' : ''}"><span class="bicon">\uD83D\uDD25</span> Streak Scholar &middot; ${badges.streak.label}</span>
+        <span class="badge-chip${badges.crusher.earned ? ' earned' : ''}"><span class="bicon">\uD83C\uDFAF</span> Concept Crusher &middot; ${badges.crusher.label}</span>
+        <span class="badge-chip${badges.mastermind.earned ? ' earned' : ''}"><span class="bicon">\uD83D\uDC51</span> BAIO Mastermind &middot; ${badges.mastermind.label}</span>
+        <span class="badge-chip${badges.notes.earned ? ' earned' : ''}"><span class="bicon">\uD83D\uDCDC</span> Handwritten Notes &middot; ${badges.notes.label}</span>
+      </div>`;
+    badgesSectionsEl.appendChild(card);
+  });
+}
+
+const catalogSectionsEl = document.getElementById('catalogSections');
+let totalSessions = 0;
+let stripRows = '';
+const PUC_ORDER = ['PUC-1', 'PUC-2'];
+const groups = {};
+CHAPTERS.forEach(ch => {
+  const key = ch.puc || 'Other';
+  if(!groups[key]) groups[key] = [];
+  groups[key].push(ch);
+});
+
+function buildCard(ch){
+  const prog = readProgress(ch.progressKey);
+  if(prog){
+    totalSessions += prog.sessions;
+    stripRows += `<div class="row"><span>${ch.num}: ${ch.title}</span><b>${prog.sessions} sessions &middot; ${prog.avg}% avg</b></div>`;
+  }
+  const card = document.createElement(ch.soon ? 'div' : 'a');
+  if(!ch.soon) card.href = ch.href;
+  card.className = 'slide-card' + (ch.soon ? ' soon' : '');
+  card.innerHTML = `
+    <div class="tab">${ch.soon ? 'Soon' : 'Open'}</div>
+    <div class="card-icon">${ch.icon || '\uD83D\uDCD8'}</div>
+    <div class="num">${ch.num}</div>
+    <h3>${ch.title}</h3>
+    <p>${ch.desc}</p>
+    <div class="meta-row">
+      <span class="prog-mini">${prog ? `<span class="prog-dot"></span> ${prog.sessions} sessions logged` : 'Not started yet'}</span>
+      ${ch.soon ? '' : '<span class="go">Open Chapter &rarr;</span>'}
+    </div>`;
+  return card;
+}
+
+PUC_ORDER.filter(k => groups[k]).forEach(puc => {
+  const sectionLabel = document.createElement('div');
+  sectionLabel.className = 'section-label';
+  sectionLabel.textContent = puc + ' Chapters';
+  catalogSectionsEl.appendChild(sectionLabel);
+
+  const catalogGrid = document.createElement('div');
+  catalogGrid.className = 'catalog';
+  groups[puc].forEach(ch => catalogGrid.appendChild(buildCard(ch)));
+  catalogSectionsEl.appendChild(catalogGrid);
+});
+// Any chapters without a recognized PUC value still get shown, grouped last
+Object.keys(groups).filter(k => !PUC_ORDER.includes(k)).forEach(other => {
+  const sectionLabel = document.createElement('div');
+  sectionLabel.className = 'section-label';
+  sectionLabel.textContent = other;
+  catalogSectionsEl.appendChild(sectionLabel);
+  const catalogGrid = document.createElement('div');
+  catalogGrid.className = 'catalog';
+  groups[other].forEach(ch => catalogGrid.appendChild(buildCard(ch)));
+  catalogSectionsEl.appendChild(catalogGrid);
+});
+
+document.getElementById('statSessions').textContent = totalSessions > 0 ? totalSessions : '\u2013';
+if(stripRows){
+  document.getElementById('progressStrip').innerHTML = '<b style="color:var(--gold);">Your Progress at a Glance</b><div style="margin-top:8px;">' + stripRows + '</div>';
+  document.getElementById('progressStrip').classList.add('show');
+}
+
+(function(){
+  var THEME_KEY = 'baio_theme';
+  var btn = document.getElementById('themeToggleBtn');
+  function applyTheme(t){
+    if(t === 'light'){ document.documentElement.setAttribute('data-theme','light'); if(btn) btn.innerHTML = '&#9728;\uFE0F'; }
+    else { document.documentElement.removeAttribute('data-theme'); if(btn) btn.innerHTML = '&#127769;'; }
+  }
+  var saved = null;
+  try{ saved = localStorage.getItem(THEME_KEY); }catch(e){}
+  applyTheme(saved || 'light');
+  if(btn){
+    btn.addEventListener('click', function(){
+      var cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+      var next = cur === 'light' ? 'dark' : 'light';
+      applyTheme(next);
+      try{ localStorage.setItem(THEME_KEY, next); }catch(e){}
+    });
+  }
+})();
+
+(function(){
+  const FAQ = [
+    { keys: ['unlock', 'handwritten', 'notes', 'code'],
+      q: 'How do I unlock handwritten notes?',
+      a: 'Score 290+ marks in a single NEET Practice session, then use "Share Report Card" to send it to Narendra Sir on WhatsApp for your unlock code. You can also pay a small one-time fee inside the Downloads tab for instant help getting a code.' },
+    { keys: ['badge', 'streak', 'crusher', 'mastermind', 'reward'],
+      q: 'What are the badges?',
+      a: '\uD83D\uDD25 Streak Scholar: study 7 days in a row. \uD83C\uDFAF Concept Crusher: score 90%+ on 3 different topic quizzes. \uD83D\uDC51 BAIO Mastermind: score 85%+ on every topic. \uD83D\uDCDC Handwritten Notes: unlock the notes. Check the Milestones tab inside any chapter to track these!' },
+    { keys: ['progress', 'track', 'score', 'history'],
+      q: 'Where can I see my progress?',
+      a: 'Each chapter has its own "Progress" tab showing your full session history, and this homepage shows a combined summary across all chapters you\u2019ve used, right at the top.' },
+    { keys: ['theme', 'dark', 'light', 'colour', 'color'],
+      q: 'How do I change the theme?',
+      a: 'Tap the \uD83C\uDF19/\u2600\uFE0F button in the top-right corner of any page. Your choice is remembered and stays the same across the homepage and every chapter.' },
+    { keys: ['note', 'my notes', 'write', 'own notes'],
+      q: 'Can I write my own notes?',
+      a: 'Yes! Every chapter has a "My Notes" tab where you can write your own notes, then print, save as PDF, download as an image or Word file, or share them \u2014 with your name and roll number included automatically.' },
+    { keys: ['pay', 'payment', 'price', 'fee', 'rupee', '\u20b9'],
+      q: 'How does payment work?',
+      a: 'Paying is completely optional \u2014 it\u2019s just a faster alternative to the free score-based unlock for handwritten notes. After paying, send your confirmation + roll number to Narendra Sir on WhatsApp to get your code.' },
+    { keys: ['puc', 'chapter', 'add', 'more'],
+      q: 'What\u2019s PUC-1 vs PUC-2?',
+      a: 'PUC-1 and PUC-2 are the two years of Pre-University biology. Chapters are grouped by year on this homepage \u2014 more chapters get added over time under the matching section.' },
+    { keys: ['contact', 'whatsapp', 'reach', 'sir', 'teacher', 'help'],
+      q: 'How do I contact Narendra Sir?',
+      a: 'Use the WhatsApp, Instagram, or YouTube links in the footer at the bottom of this page \u2014 WhatsApp is fastest for unlock codes or questions.' },
+    { keys: ['data', 'save', 'device', 'lost', 'clear'],
+      q: 'Is my data safe?',
+      a: 'Your progress is saved directly on your own device (browser storage). It stays as long as you don\u2019t clear your browser data, but it won\u2019t appear if you switch devices or browsers.' }
+  ];
+  const btn = document.getElementById('faqChatBtn');
+  const panel = document.getElementById('faqChatPanel');
+  const closeBtn = document.getElementById('faqChatCloseBtn');
+  const body = document.getElementById('faqChatBody');
+  const input = document.getElementById('faqChatInput');
+  const sendBtn = document.getElementById('faqChatSendBtn');
+
+  function addMsg(text, who){
+    const m = document.createElement('div');
+    m.className = 'faq-msg ' + who;
+    m.textContent = text;
+    body.appendChild(m);
+    body.scrollTop = body.scrollHeight;
+  }
+  function addQuickReplies(){
+    const wrap = document.createElement('div');
+    wrap.className = 'faq-quick-replies';
+    FAQ.forEach(item => {
+      const b = document.createElement('button');
+      b.className = 'faq-quick-btn';
+      b.textContent = item.q;
+      b.addEventListener('click', () => handleQuestion(item.q));
+      wrap.appendChild(b);
+    });
+    body.appendChild(wrap);
+    body.scrollTop = body.scrollHeight;
+  }
+  function findAnswer(text){
+    const lower = text.toLowerCase();
+    let best = null, bestScore = 0;
+    FAQ.forEach(item => {
+      let score = 0;
+      item.keys.forEach(k => { if(lower.indexOf(k) !== -1) score++; });
+      if(score > bestScore){ bestScore = score; best = item; }
+    });
+    return bestScore > 0 ? best.a : null;
+  }
+  function handleQuestion(text){
+    addMsg(text, 'user');
+    const ans = findAnswer(text);
+    if(ans){
+      addMsg(ans, 'bot');
+    } else {
+      addMsg("I'm not sure about that one \u2014 message Narendra Sir directly on WhatsApp (link in the footer) and he'll help you out.", 'bot');
+    }
+  }
+  let opened = false;
+  btn.addEventListener('click', function(){
+    panel.classList.toggle('open');
+    if(!opened && panel.classList.contains('open')){
+      opened = true;
+      addMsg("Hi! I'm the BAIO Help Desk. Tap a question below or type your own.", 'bot');
+      addQuickReplies();
+    }
+  });
+  closeBtn.addEventListener('click', () => panel.classList.remove('open'));
+  sendBtn.addEventListener('click', function(){
+    const text = input.value.trim();
+    if(!text) return;
+    handleQuestion(text);
+    input.value = '';
+  });
+  input.addEventListener('keydown', function(e){
+    if(e.key === 'Enter') sendBtn.click();
+  });
+})();
+</script>
+</body>
+</html>
