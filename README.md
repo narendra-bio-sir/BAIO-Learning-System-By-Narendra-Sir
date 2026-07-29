@@ -6,7 +6,7 @@ Welcome to the official repository for **BAIO Learning System**, an advanced edu
 
 ## 🔬 Overview
 
-The BAIO Learning System simplifies complex biological concepts through structured digital resources, interactive tools, and curated educational content by **Narendra Sir**.
+The BAIO Learning System simplifies complex biological concepts through structured digital resources, interactive tools, and curated educational content by Founder & CEO **Narendra Naslai** Sir.
 
 ---
 
@@ -29,4 +29,4 @@ The contents of this repository, including but not limited to source code, text,
 
 ---
 
-© 2026 Narendra Sir / BAIO Learning System. All Rights Reserved.
+© 2026 Narendra Naslai Sir - Founder & CEO / BAIO Learning System. All Rights Reserved.
