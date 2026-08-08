@@ -1106,10 +1106,12 @@ function hwUnlockLookupKey(section, roll){
   return (String(section).trim() + '_' + String(roll).trim()).toUpperCase();
 }
 function hwSubmitUnlock(){
+  const nameInput = document.getElementById('hwNameInput');
   const rollInput = document.getElementById('hwRollInput');
   const codeInput = document.getElementById('hwCodeInput');
   const sectionInput = document.getElementById('hwSectionInput');
   const msgEl = document.getElementById('hwUnlockMsg');
+  const name = nameInput ? nameInput.value.trim() : '';
   const roll = rollInput.value.trim();
   const section = sectionInput.value.trim();
   const code = codeInput.value.trim().toUpperCase();
@@ -1124,10 +1126,19 @@ function hwSubmitUnlock(){
   if(entry && entry.code.toUpperCase() === code){
     setHwUnlock('code', {roll:roll, section:section});
     renderDownloads();
-  } else {
-    msgEl.textContent = 'That roll number / code combination was not recognized. Double-check with Narendra Sir.';
-    msgEl.className = 'hw-msg bad';
+    return;
   }
+  if(name && computeStudentCode(name, roll, section, 'CH9-HWNOTES') === code){
+    setHwUnlock('code', {roll:roll, section:section, name:name});
+    renderDownloads();
+    return;
+  }
+  if(!name){
+    msgEl.textContent = 'That roll number / code combination was not recognized. If Narendra Sir gave you a new-style code, please also enter your full name above.';
+  } else {
+    msgEl.textContent = 'That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir.';
+  }
+  msgEl.className = 'hw-msg bad';
 }
 window.hwSubmitUnlock = hwSubmitUnlock;
 
@@ -1173,8 +1184,9 @@ function fnv1aHash(str){
   for(let i=0;i<str.length;i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); }
   return h >>> 0;
 }
-function computeStudentCode(name, roll, section){
-  const key = CODE_SALT + '|' + normalizeField(name) + '|' + normalizeField(roll) + '|' + normalizeField(section);
+function computeStudentCode(name, roll, section, contentKey){
+  const ck = contentKey ? ('|' + normalizeField(contentKey)) : '';
+  const key = CODE_SALT + '|' + normalizeField(name) + '|' + normalizeField(roll) + '|' + normalizeField(section) + ck;
   const h1 = fnv1aHash(key);
   const h2 = fnv1aHash(key.split('').reverse().join('') + CODE_SALT);
   let n = (BigInt(h1) << 32n) | BigInt(h2);
@@ -1207,7 +1219,7 @@ function premiumSubmitUnlock(){
     renderContent();
     return;
   }
-  if(name && computeStudentCode(name, roll, section) === code){
+  if(name && (computeStudentCode(name, roll, section, 'CH9-PREMIUM') === code || computeStudentCode(name, roll, section) === code)){
     setPremiumUnlock('code', {roll:roll, section:section, name:name});
     renderContent();
     return;
@@ -2573,6 +2585,7 @@ function hwRow(){
       <div class="d">Locked &middot; score ${HW_SCORE_THRESHOLD} or above out of ${HW_SCORE_MAX} marks in a single NEET Practice session, then use the "Share Report Card" button to send your report card to Narendra Sir's social media handle. He will send you your personal roll-number unlock code (your best score so far: ${bestScore}). Or pay a small one-time fee below to get your code instead.</div></div></div>
     <div class="hw-unlock-form">
       <div class="hw-msg" id="hwUnlockMsg"></div>
+      <input type="text" id="hwNameInput" class="pg-text-input" placeholder="Full name (e.g. Vishwapal)" value="${profile&&profile.name?profile.name:''}">
       <input type="text" id="hwSectionInput" class="pg-text-input" placeholder="Section (e.g. Champion)" value="${profile&&profile.section?profile.section:''}">
       <input type="text" id="hwRollInput" class="pg-text-input" placeholder="Roll number (e.g. 25MPU0087)" value="${profile&&profile.roll?profile.roll:''}">
       <input type="text" id="hwCodeInput" class="pg-text-input" placeholder="Unlock code" autocomplete="off">

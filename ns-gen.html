@@ -196,6 +196,8 @@ body.light-theme .autocomplete-list{box-shadow:0 8px 24px rgba(0,0,0,0.12);}
         <button class="action-btn" onclick="pdfSelectedExisting()">📄 PDF</button>
         <button class="action-btn" onclick="printSelectedExisting()">🖨️ Print</button>
       </div>
+      <button class="btn secondary" style="margin-top:12px;" onclick="saveGeneratedStudent()">💾 Save This Student (so you can look them up later)</button>
+      <div class="hint" id="saveStudentMsg" style="margin-top:6px;"></div>
     </div>
     <div id="singleChapterCodesWrap" class="hidden" style="margin-top:16px;">
       <h3 style="font-size:13px;">⚡ Upcoming Chapter Codes</h3>
@@ -232,7 +234,7 @@ Kiran Kumar, 26MPU0042, Spark"></textarea>
     <div id="quickRefTable"></div>
 
     <h3 style="margin-top:20px;">Generate a New One</h3>
-    <div class="hint" style="margin-bottom:10px;">Give it a short, clear label — the same label always regenerates the exact same code, so you can always get it back later just by typing that label again. Remember: for this to actually unlock anything, you'd need to paste the resulting code into that chapter page's own <code>HW_MASTER_CODE</code> / <code>PREMIUM_MASTER_CODE</code> constant.</div>
+    <div class="hint" style="margin-bottom:10px;">Give it a short, clear label — the same label always regenerates the exact same codes, so you can always get them back later just by typing that label again.</div>
     <label>Master Code Label</label>
     <input type="text" id="mcLabel" placeholder="e.g. Chapter 5 - Champion - Demo Access">
     <button class="btn" onclick="generateOrRetrieveMaster()">Generate / Retrieve Code</button>
@@ -247,6 +249,47 @@ Kiran Kumar, 26MPU0042, Spark"></textarea>
         <button class="action-btn" onclick="printNode('masterResult')">🖨️ Print</button>
       </div>
     </div>
+
+    <div id="existingMasterCodesWrap" class="hidden" style="margin-top:16px;">
+      <h3 style="font-size:13px;">✅ Existing Chapter Master Codes (Ch2, Ch3, Ch9)</h3>
+      <div class="hint" style="margin-bottom:10px;">Same label, one distinct code per chapter and content type &mdash; a Ch2 one won't work as a Ch3 one. Remember: to actually put one of these live, you'd still need to paste it into that chapter's own <code>HW_MASTER_CODE</code> / <code>PREMIUM_MASTER_CODE</code> constant &mdash; ask me when you're ready and I'll do it for you.</div>
+      <div style="display:flex; gap:8px; margin-bottom:8px;">
+        <button class="action-btn" onclick="toggleAllExistingMaster(true)">Select All</button>
+        <button class="action-btn" onclick="toggleAllExistingMaster(false)">Select None</button>
+      </div>
+      <div id="existingMasterCodesTable"></div>
+      <div class="action-row" style="margin-top:10px;">
+        <button class="action-btn" onclick="shareSelectedExistingMaster()">🔗 Share Selected</button>
+        <button class="action-btn" onclick="copySelectedExistingMaster()">📋 Copy Selected</button>
+        <button class="action-btn" onclick="imageSelectedExistingMaster()">🖼️ Image</button>
+        <button class="action-btn" onclick="pdfSelectedExistingMaster()">📄 PDF</button>
+        <button class="action-btn" onclick="printSelectedExistingMaster()">🖨️ Print</button>
+      </div>
+    </div>
+
+    <div id="upcomingMasterCodesWrap" class="hidden" style="margin-top:16px;">
+      <h3 style="font-size:13px;">⚡ Upcoming Chapter Master Codes (Ch5, Ch10, Ch11)</h3>
+      <div class="hint" style="margin-bottom:10px;">These won't work anywhere yet &mdash; only once that chapter's page is built with the matching unlock system (ask me when you're ready).</div>
+      <div style="display:flex; gap:8px; margin-bottom:8px;">
+        <button class="action-btn" onclick="toggleAllUpcomingMaster(true)">Select All</button>
+        <button class="action-btn" onclick="toggleAllUpcomingMaster(false)">Select None</button>
+      </div>
+      <div id="upcomingMasterCodesTable"></div>
+      <div class="action-row" style="margin-top:10px;">
+        <button class="action-btn" onclick="shareSelectedUpcomingMaster()">🔗 Share Selected</button>
+        <button class="action-btn" onclick="copySelectedUpcomingMaster()">📋 Copy Selected</button>
+        <button class="action-btn" onclick="imageSelectedUpcomingMaster()">🖼️ Image</button>
+        <button class="action-btn" onclick="pdfSelectedUpcomingMaster()">📄 PDF</button>
+        <button class="action-btn" onclick="printSelectedUpcomingMaster()">🖨️ Print</button>
+      </div>
+    </div>
+
+    <button class="btn secondary" style="margin-top:16px;" onclick="saveGeneratedMasterCode()">💾 Save This Master Code (so you can look it up later)</button>
+    <div class="hint" id="saveMasterMsg" style="margin-top:6px;"></div>
+
+    <h3 style="margin-top:20px;">Saved Master Codes</h3>
+    <div class="hint" style="margin-bottom:6px;">Search by label &mdash; saved on this device, just like saved students.</div>
+    <input type="text" id="masterSearchInput" placeholder="Search by label..." oninput="renderMasterHistory(this.value)">
     <div id="masterHistoryWrap"></div>
   </div>
 
@@ -326,8 +369,9 @@ window.CONTENT_TYPES = CONTENT_TYPES;
 
 /* Master codes use a different salt so they never collide with a real student's code */
 const MASTER_CODE_SALT = 'BAIO-MASTER-CODE-2026';
-function computeMasterCode(label){
-  const key = MASTER_CODE_SALT + '|' + normalizeField(label);
+function computeMasterCode(label, contentKey){
+  const ck = contentKey ? ('|' + normalizeField(contentKey)) : '';
+  const key = MASTER_CODE_SALT + '|' + normalizeField(label) + ck;
   const h1 = fnv1aHash(key);
   const h2 = fnv1aHash(key.split('').reverse().join('') + MASTER_CODE_SALT);
   let n = (BigInt(h1) << 32n) | BigInt(h2);
@@ -397,7 +441,7 @@ function switchMode(mode){
   document.getElementById('singleCard').classList.toggle('hidden', mode!=='single');
   document.getElementById('bulkCard').classList.toggle('hidden', mode!=='bulk');
   document.getElementById('masterCard').classList.toggle('hidden', mode!=='master');
-  if(mode==='master'){ renderRealMasterTable(); renderQuickRefTable(); }
+  if(mode==='master'){ renderRealMasterTable(); renderQuickRefTable(); renderMasterHistory(''); }
 }
 
 /* ---------------- Autocomplete on the name field ---------------- */
@@ -486,20 +530,33 @@ function runLookup(){
     if(qRoll && !r.includes(qRoll)) return false;
     if(qSection && !sec.includes(qSection)) return false;
     return true;
-  });
+  }).map(s => Object.assign({}, s, {__saved: false}));
 
-  if(!matches.length){
-    out.innerHTML = '<div class="warn-box">No matching student found in the imported records. Double-check spelling, or try searching with fewer fields.</div>';
+  const savedMatches = getSavedStudents().filter(s=>{
+    const n = normalizeField(s.name);
+    const r = normalizeField(s.roll);
+    const sec = normalizeField(s.section);
+    if(qName && !n.includes(qName)) return false;
+    if(qRoll && !r.includes(qRoll)) return false;
+    if(qSection && !sec.includes(qSection)) return false;
+    return true;
+  }).map(s => Object.assign({}, s, {__saved: true}));
+
+  const allMatches = matches.concat(savedMatches);
+
+  if(!allMatches.length){
+    out.innerHTML = '<div class="warn-box">No matching student found in the imported records or saved students. Double-check spelling, or try searching with fewer fields.</div>';
     return;
   }
 
-  let html = '<div class="hint" style="margin-top:14px;">Found ' + matches.length + ' matching student' + (matches.length>1?'s':'') + '. Tick the codes you want to share/save, then use the buttons below each card.</div>';
-  matches.forEach(s=>{
+  let html = '<div class="hint" style="margin-top:14px;">Found ' + allMatches.length + ' matching student' + (allMatches.length>1?'s':'') + '. Tick the codes you want to share/save, then use the buttons below each card.</div>';
+  allMatches.forEach(s=>{
     lookupResultCounter++;
     const cardId = 'stu_' + lookupResultCounter;
     html += '<div class="result-box show" style="text-align:left;" id="' + cardId + '">';
     html += '<div class="result-meta" style="font-size:13px; color:var(--gold); font-weight:700; margin-bottom:8px;">' +
-      escapeHtml(s.name) + ' &middot; ' + escapeHtml(s.roll) + ' &middot; ' + escapeHtml(s.section) + '</div>';
+      escapeHtml(s.name) + ' &middot; ' + escapeHtml(s.roll) + ' &middot; ' + escapeHtml(s.section) +
+      (s.__saved ? ' <span style="color:var(--teal); font-weight:400; font-size:11px;">(saved on this device)</span>' : '') + '</div>';
     const labels = Object.keys(s.codes);
     if(!labels.length){
       html += '<div class="hint">No codes on file for this student.</div>';
@@ -515,6 +572,7 @@ function runLookup(){
         '<button class="action-btn" onclick="saveCardAsImage(\'' + cardId + '\')">🖼️ Image</button>' +
         '<button class="action-btn" onclick="saveCardAsPDF(\'' + cardId + '\')">📄 PDF</button>' +
         '<button class="action-btn" onclick="printCard(\'' + cardId + '\')">🖨️ Print</button>' +
+        (s.__saved ? '<button class="action-btn" onclick="removeSavedStudent(\'' + escapeHtml(s.roll).replace(/'/g,"\\'") + '\',\'' + escapeHtml(s.section).replace(/'/g,"\\'") + '\')">🗑️ Remove</button>' : '') +
       '</div>';
       html += '<div class="founder-msg" style="margin-top:14px;">' +
         '<div class="fm-quote">' + FOUNDER_QUOTE + '</div>' +
@@ -738,6 +796,45 @@ function printSelectedExisting(){
   w.focus();
   setTimeout(()=>{ w.print(); }, 300);
 }
+
+/* ---------------- Saved (self-served) students — stored in this browser only ----------------
+   These aren't added to the chapter pages' own source — they don't need to be, since the
+   chapter pages already verify these codes live from name+roll+section. This list exists purely
+   so you can search these students later the same way you search your real roster. */
+const SAVED_STUDENTS_KEY = 'baio_gen_saved_students';
+function getSavedStudents(){
+  try{ return JSON.parse(localStorage.getItem(SAVED_STUDENTS_KEY) || '[]'); }catch(e){ return []; }
+}
+function setSavedStudents(list){
+  try{ localStorage.setItem(SAVED_STUDENTS_KEY, JSON.stringify(list)); }catch(e){}
+}
+function saveGeneratedStudent(){
+  const msgEl = document.getElementById('saveStudentMsg');
+  const rows = window.__lastExistingRows || [];
+  if(!rows.length || !lastSingleMeta){ msgEl.textContent = 'Generate a code first.'; return; }
+  const parts = lastSingleMeta.split(' · ');
+  const name = parts[0] || '', roll = parts[1] || '', section = parts[2] || '';
+  const codes = {};
+  rows.forEach(r=>{ codes[r.label] = r.code; });
+
+  const saved = getSavedStudents();
+  const key = normalizeField(section) + '_' + normalizeField(roll);
+  const existingIdx = saved.findIndex(s => normalizeField(s.section) + '_' + normalizeField(s.roll) === key);
+  const entry = { name, roll, section, codes, savedAt: Date.now() };
+  if(existingIdx >= 0){ saved[existingIdx] = entry; }
+  else { saved.push(entry); }
+  setSavedStudents(saved);
+
+  msgEl.textContent = '✅ Saved — you can now find "' + name + '" anytime from the Lookup Existing tab.';
+}
+function removeSavedStudent(roll, section){
+  const saved = getSavedStudents();
+  const key = normalizeField(section) + '_' + normalizeField(roll);
+  const filtered = saved.filter(s => normalizeField(s.section) + '_' + normalizeField(s.roll) !== key);
+  setSavedStudents(filtered);
+  runLookup();
+}
+window.removeSavedStudent = removeSavedStudent;
 function copySingleChapterCodesAsCSV(){
   const rows = window.__lastSingleChapterRows || [];
   if(!rows.length) return;
@@ -759,7 +856,7 @@ function copySingle(){
 }
 
 /* ---------------- Master codes (not tied to a single student) ---------------- */
-let masterHistory = []; // {label, code} — kept in memory for this browser session only
+/* master code history is now persisted via getSavedMasterCodes()/setSavedMasterCodes() instead of an in-memory array */
 function generateOrRetrieveMaster(){
   const label = document.getElementById('mcLabel').value.trim();
   if(!label){ alert('Please enter a label for this master code.'); return; }
@@ -770,23 +867,189 @@ function generateOrRetrieveMaster(){
   document.getElementById('masterCode').textContent = code;
   document.getElementById('masterResult').classList.add('show');
 
-  if(!masterHistory.some(h => h.label.toUpperCase() === label.toUpperCase())){
-    masterHistory.unshift({label, code});
-    renderMasterHistory();
-  }
+  renderExistingMasterCodes(label);
+  renderUpcomingMasterCodes(label);
 }
 function copyMaster(){
   copySingle();
 }
-function renderMasterHistory(){
-  const wrap = document.getElementById('masterHistoryWrap');
-  if(!masterHistory.length){ wrap.innerHTML = ''; return; }
-  let html = '<div class="hint" style="margin-top:16px;">Generated this session — type any of these labels again any time to get the same code back:</div>';
-  html += '<div class="table-wrap"><table><tr><th>Label</th><th>Code</th></tr>';
-  masterHistory.forEach(h=>{
-    html += '<tr><td>' + escapeHtml(h.label) + '</td><td class="code-cell">' + escapeHtml(h.code) + '</td></tr>';
+
+/* ---------------- Existing chapters (Ch2, Ch3, Ch9) master codes ---------------- */
+function renderExistingMasterCodes(label){
+  window.__lastExistingMasterRows = EXISTING_CONTENT_TYPES.map((ct, i) => ({
+    id: 'exmrow_' + i,
+    label: ct.label,
+    code: computeMasterCode(label, ct.key)
+  }));
+  let html = '<div class="table-wrap"><table><tr><th></th><th>Content</th><th>Code</th></tr>';
+  window.__lastExistingMasterRows.forEach(r=>{
+    html += '<tr><td><input type="checkbox" id="' + r.id + '" checked></td><td>' + escapeHtml(r.label) + '</td><td class="code-cell">' + escapeHtml(r.code) + '</td></tr>';
   });
   html += '</table></div>';
+  document.getElementById('existingMasterCodesTable').innerHTML = html;
+  document.getElementById('existingMasterCodesWrap').classList.remove('hidden');
+}
+function toggleAllExistingMaster(checked){
+  (window.__lastExistingMasterRows || []).forEach(r=>{
+    const el = document.getElementById(r.id);
+    if(el) el.checked = checked;
+  });
+}
+function getSelectedExistingMaster(){
+  return (window.__lastExistingMasterRows || []).filter(r=>{
+    const el = document.getElementById(r.id);
+    return el && el.checked;
+  });
+}
+function shareSelectedExistingMaster(){ shareRows(getSelectedExistingMaster()); }
+function copySelectedExistingMaster(){ copyRowsText(getSelectedExistingMaster()); }
+function imageSelectedExistingMaster(){ imageRows(getSelectedExistingMaster(), 'existing-master-codes'); }
+function pdfSelectedExistingMaster(){ pdfRows(getSelectedExistingMaster(), 'existing-master-codes'); }
+function printSelectedExistingMaster(){ printRows(getSelectedExistingMaster()); }
+
+/* ---------------- Upcoming chapters (Ch5, Ch10, Ch11) master codes ---------------- */
+function renderUpcomingMasterCodes(label){
+  window.__lastUpcomingMasterRows = CONTENT_TYPES.map((ct, i) => ({
+    id: 'upmrow_' + i,
+    label: ct.label,
+    code: computeMasterCode(label, ct.key)
+  }));
+  let html = '<div class="table-wrap"><table><tr><th></th><th>Content</th><th>Code</th></tr>';
+  window.__lastUpcomingMasterRows.forEach(r=>{
+    html += '<tr><td><input type="checkbox" id="' + r.id + '" checked></td><td>' + escapeHtml(r.label) + '</td><td class="code-cell">' + escapeHtml(r.code) + '</td></tr>';
+  });
+  html += '</table></div>';
+  document.getElementById('upcomingMasterCodesTable').innerHTML = html;
+  document.getElementById('upcomingMasterCodesWrap').classList.remove('hidden');
+}
+function toggleAllUpcomingMaster(checked){
+  (window.__lastUpcomingMasterRows || []).forEach(r=>{
+    const el = document.getElementById(r.id);
+    if(el) el.checked = checked;
+  });
+}
+function getSelectedUpcomingMaster(){
+  return (window.__lastUpcomingMasterRows || []).filter(r=>{
+    const el = document.getElementById(r.id);
+    return el && el.checked;
+  });
+}
+function shareSelectedUpcomingMaster(){ shareRows(getSelectedUpcomingMaster()); }
+function copySelectedUpcomingMaster(){ copyRowsText(getSelectedUpcomingMaster()); }
+function imageSelectedUpcomingMaster(){ imageRows(getSelectedUpcomingMaster(), 'upcoming-master-codes'); }
+function pdfSelectedUpcomingMaster(){ pdfRows(getSelectedUpcomingMaster(), 'upcoming-master-codes'); }
+function printSelectedUpcomingMaster(){ printRows(getSelectedUpcomingMaster()); }
+
+/* ---------------- Shared row-based share/copy/image/pdf/print helpers ---------------- */
+function shareRows(rows){
+  if(!rows.length){ alert('Tick at least one code to share.'); return; }
+  const text = lastSingleMeta + '\n' + rows.map(r=>r.label + ': ' + r.code).join('\n') + '\n\n' + FOUNDER_QUOTE + '\n' + FOUNDER_SIGN;
+  if(navigator.share){
+    navigator.share({ title: 'Unlock Codes', text: text }).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(text).then(()=>{
+      alert('Sharing isn\'t available on this browser — copied to clipboard instead:\n\n' + text);
+    }).catch(()=>{ alert(text); });
+  }
+}
+function copyRowsText(rows){
+  if(!rows.length){ alert('Tick at least one code to copy.'); return; }
+  const text = lastSingleMeta + '\n' + rows.map(r=>r.label + ': ' + r.code).join('\n');
+  navigator.clipboard.writeText(text).then(()=>{
+    alert('Copied ' + rows.length + ' code' + (rows.length>1?'s':'') + '.');
+  }).catch(()=>{ alert('Could not copy automatically:\n\n' + text); });
+}
+function imageRows(rows, filename){
+  if(!rows.length){ alert('Tick at least one code first.'); return; }
+  const node = buildSnapshotNode(lastSingleMeta, rows.map(r=>({label:r.label, code:r.code})));
+  html2canvas(node, {backgroundColor: getComputedStyle(document.body).backgroundColor}).then(canvas=>{
+    document.body.removeChild(node);
+    const link = document.createElement('a');
+    link.download = filename + '.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }).catch(()=>{ document.body.removeChild(node); alert('Could not generate image.'); });
+}
+function pdfRows(rows, filename){
+  if(!rows.length){ alert('Tick at least one code first.'); return; }
+  const node = buildSnapshotNode(lastSingleMeta, rows.map(r=>({label:r.label, code:r.code})));
+  html2canvas(node, {backgroundColor: getComputedStyle(document.body).backgroundColor}).then(canvas=>{
+    document.body.removeChild(node);
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ unit: 'px', format: [canvas.width, canvas.height] });
+    pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, canvas.width, canvas.height);
+    pdf.save(filename + '.pdf');
+  }).catch(()=>{ document.body.removeChild(node); alert('Could not generate PDF.'); });
+}
+function printRows(rows){
+  if(!rows.length){ alert('Tick at least one code first.'); return; }
+  const w = window.open('', '_blank');
+  let rowsHtml = rows.map(r=>'<p><b>' + escapeHtml(r.label) + ':</b> <span style="font-size:20px;font-weight:700;">' + escapeHtml(r.code) + '</span></p>').join('');
+  w.document.write('<html><head><title>Unlock Codes</title></head><body style="font-family:sans-serif; padding:24px;">' +
+    '<h2>' + escapeHtml(lastSingleMeta) + '</h2>' + rowsHtml +
+    '<div style="margin-top:20px; padding-top:14px; border-top:1px solid #ccc; font-size:13px; line-height:1.6; font-style:italic;">' + escapeHtml(FOUNDER_QUOTE) + '</div>' +
+    '<div style="margin-top:6px; font-size:12px; font-weight:700;">' + escapeHtml(FOUNDER_SIGN) + '</div>' +
+    '</body></html>');
+  w.document.close();
+  w.focus();
+  setTimeout(()=>{ w.print(); }, 300);
+}
+
+/* ---------------- Saved master codes — persisted in this browser (survives reloads) ---------------- */
+const SAVED_MASTER_CODES_KEY = 'baio_gen_saved_master_codes';
+function getSavedMasterCodes(){
+  try{ return JSON.parse(localStorage.getItem(SAVED_MASTER_CODES_KEY) || '[]'); }catch(e){ return []; }
+}
+function setSavedMasterCodes(list){
+  try{ localStorage.setItem(SAVED_MASTER_CODES_KEY, JSON.stringify(list)); }catch(e){}
+}
+function saveGeneratedMasterCode(){
+  const msgEl = document.getElementById('saveMasterMsg');
+  const label = document.getElementById('mcLabel').value.trim();
+  if(!label || !lastSingleCode){ msgEl.textContent = 'Generate a code first.'; return; }
+
+  const codes = { 'Generic Code': lastSingleCode };
+  (window.__lastExistingMasterRows || []).forEach(r=>{ codes[r.label] = r.code; });
+  (window.__lastUpcomingMasterRows || []).forEach(r=>{ codes[r.label] = r.code; });
+
+  const saved = getSavedMasterCodes();
+  const idx = saved.findIndex(s => normalizeField(s.label) === normalizeField(label));
+  const entry = { label, codes, savedAt: Date.now() };
+  if(idx >= 0){ saved[idx] = entry; }
+  else { saved.unshift(entry); }
+  setSavedMasterCodes(saved);
+
+  msgEl.textContent = '✅ Saved — search "' + label + '" below anytime to get it back.';
+  renderMasterHistory(document.getElementById('masterSearchInput').value);
+}
+function removeSavedMasterCode(label){
+  const saved = getSavedMasterCodes();
+  const filtered = saved.filter(s => normalizeField(s.label) !== normalizeField(label));
+  setSavedMasterCodes(filtered);
+  renderMasterHistory(document.getElementById('masterSearchInput').value);
+}
+window.removeSavedMasterCode = removeSavedMasterCode;
+function renderMasterHistory(filterText){
+  const wrap = document.getElementById('masterHistoryWrap');
+  const q = normalizeField(filterText || '');
+  const saved = getSavedMasterCodes().filter(s => !q || normalizeField(s.label).includes(q));
+  if(!saved.length){
+    wrap.innerHTML = '<div class="hint" style="margin-top:10px;">' + (getSavedMasterCodes().length ? 'No saved master codes match that search.' : 'Nothing saved yet — generate one above, then tap "Save This Master Code."') + '</div>';
+    return;
+  }
+  let html = '';
+  saved.forEach((s, idx)=>{
+    const cardId = 'mhist_' + idx;
+    html += '<div class="result-box show" style="text-align:left; margin-top:12px;" id="' + cardId + '">';
+    html += '<div class="result-meta" style="font-size:13px; color:var(--gold); font-weight:700; margin-bottom:8px;">' + escapeHtml(s.label) + '</div>';
+    html += '<div class="table-wrap"><table><tr><th>Content</th><th>Code</th></tr>';
+    Object.keys(s.codes).forEach(k=>{
+      html += '<tr><td>' + escapeHtml(k) + '</td><td class="code-cell">' + escapeHtml(s.codes[k]) + '</td></tr>';
+    });
+    html += '</table></div>';
+    html += '<div class="action-row" style="margin-top:8px;"><button class="action-btn" onclick="removeSavedMasterCode(\'' + escapeHtml(s.label).replace(/'/g,"\\'") + '\')">🗑️ Remove</button></div>';
+    html += '</div>';
+  });
   wrap.innerHTML = html;
 }
 function shareNode(nodeId, label){
