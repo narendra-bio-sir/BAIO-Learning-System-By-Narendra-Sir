@@ -342,7 +342,7 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 }
 
 
-.lang-switcher{display:flex;gap:6px;}
+.lang-switcher{display:flex;gap:6px;margin-top:10px;}
 .lang-btn{padding:5px 12px;border-radius:14px;font-size:11px;font-weight:700;background:var(--panel2);color:var(--ink-dim);border:1px solid var(--line);cursor:pointer;}
 .lang-btn.active{background:linear-gradient(135deg,var(--btn-gold),var(--btn-gold2));color:#1a1406;border-color:var(--btn-gold);}
 
@@ -366,8 +366,8 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
   --fc-back-text:#0b6f5e;
 }
 
-.header-actions-row{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:10px;}
 .theme-toggle-btn{
+  position:absolute; top:14px; right:14px; z-index:6;
   width:36px; height:36px; border-radius:50%;
   background:linear-gradient(135deg, var(--gold), var(--teal));
   border:1px solid var(--line); color:#0d1a12; font-size:16px;
@@ -375,6 +375,7 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
   cursor:pointer; box-shadow:var(--shadow); flex-shrink:0;
 }
 .home-btn{
+  position:absolute; top:56px; left:auto; right:14px; z-index:6;
   width:36px; height:36px; border-radius:50%;
   background:var(--panel2); border:1px solid var(--line); color:var(--ink); font-size:16px;
   display:flex; align-items:center; justify-content:center;
@@ -433,11 +434,9 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
     <div class="chapter-title">Chapter 3: Plant Kingdom</div>
     <div class="topic-sub" id="topicSubline">Algae · Bryophytes · Pteridophytes · Gymnosperms · Angiosperms</div>
     <div class="credit">Crafted by Narendra Sir — Lecturer in Biology (M.Sc Biochemistry, B.Ed, KSET Life Science)</div>
-    <div class="header-actions-row">
-      <div id="langSwitcher" class="lang-switcher"></div>
-      <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle light/dark theme" aria-label="Toggle theme">&#127769;</button>
-      <a href="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/" class="home-btn" title="Back to Home" aria-label="Back to Home">🏠</a>
-    </div>
+    <div id="langSwitcher" class="lang-switcher"></div>
+    <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle light/dark theme" aria-label="Toggle theme">&#127769;</button>
+    <a href="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/" class="home-btn" title="Back to Home" aria-label="Back to Home">🏠</a>
   </div>
 
   <div class="student-greet-bar" id="studentGreetBar" style="display:none;"></div>
@@ -1483,7 +1482,7 @@ window.setLang = setLang;
 function renderLangSwitcher(){
   const el = document.getElementById('langSwitcher');
   if(!el) return;
-  const langs = [{id:'en',label:'English'},{id:'kn',label:'ಕನ್ನಡ'},{id:'hi',label:'हिंदी'}];
+  const langs = [{id:'en',label:'EN'},{id:'kn',label:'ಕನ್ನಡ'},{id:'hi',label:'हिंदी'}];
   el.innerHTML = langs.map(l=>`<div class="lang-btn${l.id===currentLang?' active':''}" onclick="setLang('${l.id}')">${l.label}</div>`).join('');
 }
 
@@ -2470,28 +2469,7 @@ function premiumQualifies(){ const u = getPremiumUnlock(); return !!(u && u.unlo
 function reLockPremium(){ try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){} renderContent(); renderTabbar(); }
 window.reLockPremium = reLockPremium;
 function premiumUnlockKey(section, roll){ return (section||'').trim().toUpperCase()+'_'+(roll||'').trim().toUpperCase(); }
-/* ---------------- Student-locked unlock code (must match code_generator.html exactly) ---------------- */
-const CODE_SALT = 'BAIO-STUDENT-LOCK-2026';
-const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-function normalizeField(s){ return (s || '').toString().trim().toUpperCase().replace(/\s+/g, ' '); }
-function fnv1aHash(str){
-  let h = 0x811c9dc5;
-  for(let i=0;i<str.length;i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); }
-  return h >>> 0;
-}
-function computeStudentCode(name, roll, section){
-  const key = CODE_SALT + '|' + normalizeField(name) + '|' + normalizeField(roll) + '|' + normalizeField(section);
-  const h1 = fnv1aHash(key);
-  const h2 = fnv1aHash(key.split('').reverse().join('') + CODE_SALT);
-  let n = (BigInt(h1) << 32n) | BigInt(h2);
-  const base = BigInt(CODE_CHARS.length);
-  let code = '';
-  for(let i=0;i<8;i++){ code += CODE_CHARS[Number(n % base)]; n = n / base; }
-  return code.slice(0,4) + '-' + code.slice(4,8);
-}
-
 function premiumSubmitUnlock(){
-  const name = document.getElementById('premNameInput') ? document.getElementById('premNameInput').value.trim() : '';
   const roll = document.getElementById('premRollInput').value.trim();
   const section = document.getElementById('premSectionInput').value.trim();
   const code = document.getElementById('premCodeInput').value.trim().toUpperCase();
@@ -2502,11 +2480,8 @@ function premiumSubmitUnlock(){
   if(!roll || !section){ msgEl.textContent = 'Please fill in section and roll number (or use the master code alone).'; msgEl.className='hw-msg bad'; return; }
   const key = premiumUnlockKey(section, roll);
   const entry = PREMIUM_UNLOCK_LOOKUP[key];
-  if(entry && entry.code.toUpperCase() === code){ setPremiumUnlock('code', {roll:roll, section:section}); renderContent(); renderTabbar(); return; }
-  if(name && computeStudentCode(name, roll, section) === code){ setPremiumUnlock('code', {roll:roll, section:section, name:name}); renderContent(); renderTabbar(); return; }
-  if(!name){ msgEl.textContent = 'That roll number / code combination was not recognized. If Narendra Sir gave you a new-style code, please also enter your full name above.'; }
-  else { msgEl.textContent = 'That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir.'; }
-  msgEl.className='hw-msg bad';
+  if(entry && entry.code.toUpperCase() === code){ setPremiumUnlock('code', {roll:roll, section:section}); renderContent(); renderTabbar(); }
+  else { msgEl.textContent = 'That roll number / code combination was not recognized. Double-check with Narendra Sir.'; msgEl.className='hw-msg bad'; }
 }
 window.premiumSubmitUnlock = premiumSubmitUnlock;
 function premiumPaymentWaLink(){
@@ -2528,7 +2503,6 @@ function renderPremiumLock(tabId){
     </div>
     <div class="hw-unlock-form">
       <div class="hw-msg" id="premUnlockMsg"></div>
-      <input type="text" id="premNameInput" placeholder="Full name (e.g. Vishwapal)">
       <input type="text" id="premSectionInput" placeholder="Section (e.g. Spark)">
       <input type="text" id="premRollInput" placeholder="Roll number (e.g. 26MPU0087)">
       <div style="position:relative;">
@@ -2635,7 +2609,7 @@ renderKcetReport = function(){
    drag-scroll, mouse wheel, keyboard arrow navigation
    ============================================================ */
 (function(){
-  var THEME_KEY = 'ch3_theme';
+  var THEME_KEY = 'baio_theme';
   var btn = document.getElementById('themeToggleBtn');
   function applyTheme(t){
     if(t === 'light'){ document.documentElement.setAttribute('data-theme','light'); if(btn) btn.innerHTML = '&#9728;\uFE0F'; }
@@ -2643,7 +2617,7 @@ renderKcetReport = function(){
   }
   var saved = null;
   try{ saved = localStorage.getItem(THEME_KEY); }catch(e){}
-  applyTheme(saved || 'dark');
+  applyTheme(saved || 'light');
   if(btn){
     btn.addEventListener('click', function(){
       var cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
