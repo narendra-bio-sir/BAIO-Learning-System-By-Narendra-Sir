@@ -1151,7 +1151,7 @@ window.addEventListener('afterprint', function(){
         <h2>Full Breakdown</h2>
         <div class="desc" id="subTableDesc">Combined view</div>
         <div class="table-wrap"><table id="subTable">
-          <thead><tr><th>Subject</th><th>Avg %</th><th>Toppers %</th><th>Fail %</th><th>Appeared</th></tr></thead>
+          <thead><tr><th>Subject</th><th>Avg %</th><th>Toppers %</th><th>Fail %</th><th>Appeared</th><th>Spread (SD)</th></tr></thead>
           <tbody></tbody>
         </table></div>
       </div>
@@ -2604,6 +2604,30 @@ function chartGrid(){ return cssVar('--chart-grid'); }
 function chartGridSoft(){ return cssVar('--chart-grid-soft'); }
 function chartText(){ return cssVar('--text'); }
 
+/* ---------- Statistics helpers (population SD — every cohort here, whether a test's
+   appeared students, a section roster, or a student's own test history, is treated as
+   the full population being measured, consistent with how "average" is already a
+   population mean throughout this file: vals.reduce(...)/vals.length, never Bessel-corrected). */
+function computeStats(arr){
+  const vals = (arr||[]).filter(v=>v!==null && v!==undefined && !isNaN(v));
+  const n = vals.length;
+  if(!n) return { n:0, mean:null, sd:null };
+  const mean = vals.reduce((a,b)=>a+b,0) / n;
+  const variance = vals.reduce((a,b)=>a + (b-mean)*(b-mean), 0) / n;
+  return { n, mean: Math.round(mean*10)/10, sd: Math.round(Math.sqrt(variance)*10)/10 };
+}
+/* Convenience for call sites that only need the SD, mirroring avgOf(arr) (line ~8074) */
+function sdOf(arr){ return computeStats(arr).sd; }
+/* Human-readable spread label for a raw SD value, scaled against the max score of
+   whatever scale it's measured on (e.g. maxScore=20 for slip-test marks, 100 for a %). */
+function sdLabel(sd, maxScore){
+  if(sd===null || sd===undefined || !maxScore) return '';
+  const pct = sd / maxScore * 100;
+  if(pct < 15) return 'Low spread';
+  if(pct < 30) return 'Moderate spread';
+  return 'High spread';
+}
+
 /* Chart instance registry so we can destroy+recreate on theme change without duplicating */
 let ovAvgChart, ovTopperChart, riskChart, mtAvgChartInst, mtFailChartInst, mtHighChartInst, mtSectionMeanChartInst, mtDistChartInst, bvoSlipChart, bvoMonthlyChart;
 let pu2SubAvgChartInst, pu2LeadChartInst; // used by buildPU2SubjectComparison, called from renderPU2All at load time
@@ -3070,11 +3094,13 @@ function buildOverview(){
   const bio1=D.subjects.test1.BIO.avg_pct, bio2=D.subjects.test2.BIO.avg_pct;
   const lead1=(bio1-Math.max(D.subjects.test1.PHY.avg_pct,D.subjects.test1.CHE.avg_pct,D.subjects.test1.MAT.avg_pct)).toFixed(1);
   const lead2=(bio2-Math.max(D.subjects.test2.PHY.avg_pct,D.subjects.test2.CHE.avg_pct,D.subjects.test2.MAT.avg_pct)).toFixed(1);
+  const bioSD2Pct = Math.round((computeSlipSubjectSD('t2','BIO').sd/20*100)*10)/10;
   document.getElementById('overviewKpis').innerHTML = `
     <div class="kpi hero"><div class="kpi-label">Biology Avg % (T1 &rarr; T2)</div><div class="kpi-value">${bio1}% &rarr; ${bio2}%</div><div class="kpi-note up">Highest of all core subjects, both tests</div></div>
     <div class="kpi gold"><div class="kpi-label">Biology Topper Density (&gt;15/20)</div><div class="kpi-value">${D.subjects.combined.BIO.topper_pct}%</div><div class="kpi-note">vs. &lt;4% combined in Physics &amp; Chemistry</div></div>
     <div class="kpi"><div class="kpi-label">Biology's Lead Widened</div><div class="kpi-value">+${lead1} &rarr; +${lead2} pts</div><div class="kpi-note">Gap over next-best core subject</div></div>
     <div class="kpi warn"><div class="kpi-label">Chemistry Fail Rate (T2)</div><div class="kpi-value">${D.fail.test2.CHE.fail_rate_pct}%</div><div class="kpi-note down">Steepest subject decline</div></div>
+    <div class="kpi"><div class="kpi-label">Biology Spread (SD, T2)</div><div class="kpi-value">${bioSD2Pct}%</div><div class="kpi-note">${sdLabel(bioSD2Pct,100)}</div></div>
   `;
 
   if(ovAvgChart) ovAvgChart.destroy();
@@ -3407,12 +3433,14 @@ function renderSubTable(test){
   const desc = document.getElementById('subTableDesc');
   desc.textContent = test==='both' ? 'Combined (unique-student average) — both tests' : (test==='test1'?'Slip Test 1':'Slip Test 2');
   tbody.innerHTML='';
+  const sdTestKey = test==='test1' ? 't1' : test==='test2' ? 't2' : 'combined';
   ALL_SUBJECTS.forEach(s=>{
     const row = D.subjects[test][s];
+    const sdPct = Math.round((computeSlipSubjectSD(sdTestKey, s).sd/20*100)*10)/10;
     const tr = document.createElement('tr');
     if(s==='BIO') tr.className='bio-row';
     if(s==='ELE') tr.className='ele-row';
-    tr.innerHTML = `<td>${NAMES[s]}${s==='ELE'?' <span class="chip gold" style="font-size:10px;">elective</span>':''}</td><td>${row.avg_pct}%</td><td>${row.topper_pct}%</td><td>${row.fail_pct}%</td><td>${row.appeared}</td>`;
+    tr.innerHTML = `<td>${NAMES[s]}${s==='ELE'?' <span class="chip gold" style="font-size:10px;">elective</span>':''}</td><td>${row.avg_pct}%</td><td>${row.topper_pct}%</td><td>${row.fail_pct}%</td><td>${row.appeared}</td><td>${isNaN(sdPct)?'—':sdPct+'%'}</td>`;
     tbody.appendChild(tr);
   });
 }
@@ -3475,7 +3503,7 @@ const PU1_MT_SUBJECT_META = {
 };
 function computePU1MonthlySubjectWide(monthKey){
   const order = ['BIO','KAN','ENG','MAT','PHY','CHE','HIN','ELE'];
-  const avgPctCoreSTEM = {}, highPerformers = {}, failures = {}, names = {}, colors = {}, appeared = {}, avgPct = {};
+  const avgPctCoreSTEM = {}, highPerformers = {}, failures = {}, names = {}, colors = {}, appeared = {}, avgPct = {}, sdPct = {};
   let totalStudents = 0;
   const seen = new Set();
   order.forEach(subj=>{
@@ -3489,13 +3517,15 @@ function computePU1MonthlySubjectWide(monthKey){
     highPerformers[subj] = vals.filter(v=>v>=35).length;
     failures[subj] = vals.filter(v=>v<14).length;
     appeared[subj] = vals.length;
-    avgPct[subj] = vals.length ? Math.round((vals.reduce((a,b)=>a+b,0)/vals.length/40*100)*10)/10 : 0;
+    const st = computeStats(vals);
+    avgPct[subj] = vals.length ? Math.round((st.mean/40*100)*10)/10 : 0;
+    sdPct[subj] = vals.length ? Math.round((st.sd/40*100)*10)/10 : 0;
     if(['BIO','PHY','CHE','MAT'].includes(subj)){
       avgPctCoreSTEM[subj] = avgPct[subj];
     }
   });
   totalStudents = seen.size;
-  return { order, names, colors, avgPctCoreSTEM, avgPct, highPerformers, failures, appeared, totalStudents };
+  return { order, names, colors, avgPctCoreSTEM, avgPct, sdPct, highPerformers, failures, appeared, totalStudents };
 }
 
 /* ---- Section-level (SPARK/PRIME) Biology stats for whichever PU-I month is selected — shared by
@@ -3509,8 +3539,10 @@ function computePU1SectionMonthlyStats(monthKey, section){
   }
   const absentList = roster.filter(isAbsent);
   const bioList = roster.filter(s=>{ const d=pu1MonthData(s,monthKey); return d && d.BIO!==null && d.BIO!==undefined; });
-  const mean = bioList.length ? Math.round((bioList.reduce((a,b)=>a+pu1MonthData(b,monthKey).BIO,0)/bioList.length)*10)/10 : 0;
-  return { mean, appeared: roster.length - absentList.length, absentees: absentList.length, sectionSize: roster.length };
+  const bioStats = computeStats(bioList.map(s=>pu1MonthData(s,monthKey).BIO));
+  const mean = bioStats.mean || 0;
+  const sd = bioStats.sd || 0;
+  return { mean, sd, appeared: roster.length - absentList.length, absentees: absentList.length, sectionSize: roster.length };
 }
 
 function buildMTOverview(){
@@ -3523,6 +3555,7 @@ function buildMTOverview(){
     <div class="kpi gold"><div class="kpi-label">Biology High-Performers (35+/40)</div><div class="kpi-value">${sw.highPerformers.BIO}</div><div class="kpi-note">Highest of all 8 subjects</div></div>
     <div class="kpi"><div class="kpi-label">Biology Failures</div><div class="kpi-value">${sw.failures.BIO}</div><div class="kpi-note">Below 35% (14/40)</div></div>
     <div class="kpi warn"><div class="kpi-label">Mathematics Failures</div><div class="kpi-value">${sw.failures.MAT}</div><div class="kpi-note down">~${sw.totalStudents} students appeared</div></div>
+    <div class="kpi"><div class="kpi-label">Biology Spread (SD)</div><div class="kpi-value">${sw.sdPct.BIO}%</div><div class="kpi-note">${sdLabel(sw.sdPct.BIO,100)}</div></div>
   `;
   document.querySelector('#view-mt-overview .desc').textContent = `${monthLabel}, overall percentage score by subject`;
 
@@ -3817,14 +3850,16 @@ function buildPU2(){
 
   function sectionStats(section){
     const secRows = rows.filter(r=>r.section===section);
-    const avgPct = {}, passRate = {};
+    const avgPct = {}, sdPct = {}, passRate = {};
     subjLabels.forEach(s=>{
       const vals = secRows.map(r=>pu2SubjPct(r, s, latestTest.outof[s])).filter(v=>v!==null);
-      avgPct[s] = vals.length ? Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)*10)/10 : 0;
+      const st = computeStats(vals);
+      avgPct[s] = vals.length ? st.mean : 0;
+      sdPct[s] = vals.length ? st.sd : 0;
       passRate[s] = vals.length ? Math.round((vals.filter(v=>v>=35).length/vals.length)*100) : 0;
     });
     const withBio = secRows.filter(r=>r.BIO!==null && r.BIO!==undefined).sort((a,b)=>b.BIO-a.BIO);
-    return {secRows, avgPct, passRate, top5: withBio.slice(0,5), topper: withBio[0]};
+    return {secRows, avgPct, sdPct, passRate, top5: withBio.slice(0,5), topper: withBio[0]};
   }
   const champ = sectionStats('CHAMPION');
   const elite = sectionStats('ELITE');
@@ -3837,7 +3872,8 @@ function buildPU2(){
     document.getElementById(elId).innerHTML = `
       <div class="kpi hero"><div class="kpi-label">${label} Roster</div><div class="kpi-value">${rosterLen}</div><div class="kpi-note">students</div></div>
       <div class="kpi ${stats.avgPct.BIO>=50?'up':'warn'}"><div class="kpi-label">Biology Avg %</div><div class="kpi-value">${stats.avgPct.BIO}%</div><div class="kpi-note">${latestTest.label}</div></div>
-      <div class="kpi"><div class="kpi-label">Section Topper</div><div class="kpi-value">${stats.topper?stats.topper.BIO+'/'+latestTest.outof.BIO:'\u2014'}</div><div class="kpi-note">${stats.topper?stats.topper.name:'\u2014'}</div></div>`;
+      <div class="kpi"><div class="kpi-label">Section Topper</div><div class="kpi-value">${stats.topper?stats.topper.BIO+'/'+latestTest.outof.BIO:'\u2014'}</div><div class="kpi-note">${stats.topper?stats.topper.name:'\u2014'}</div></div>
+      <div class="kpi"><div class="kpi-label">Biology Spread (SD)</div><div class="kpi-value">${stats.sdPct.BIO}%</div><div class="kpi-note">${sdLabel(stats.sdPct.BIO,100)}</div></div>`;
   }
   fillKpis('sa2ChampionKpis', 'CHAMPION', PU2_CHAMPION.length, champ);
   fillKpis('sa2EliteKpis', 'ELITE', PU2_ELITE.length, elite);
@@ -3927,12 +3963,13 @@ function buildPU2Electronics(){
   const roster = computePU2ElectronicsRoster();
   const withLatest = roster.map(s=>({s, latest: pu2ElectronicsLatestRec(s)})).filter(x=>x.latest);
 
-  const avgPct = {}, passRate = {};
+  const avgPct = {}, sdPct = {}, passRate = {};
   ELE_SUBJECTS.forEach(subj=>{
     const vals = withLatest.map(x=>x.latest.rec[subj]).filter(v=>v!==null&&v!==undefined);
-    if(!vals.length){ avgPct[subj]=0; passRate[subj]=0; return; }
-    const avg = vals.reduce((a,b)=>a+b,0)/vals.length;
-    avgPct[subj] = Math.round((avg/40*100)*10)/10;
+    if(!vals.length){ avgPct[subj]=0; sdPct[subj]=0; passRate[subj]=0; return; }
+    const st = computeStats(vals);
+    avgPct[subj] = Math.round((st.mean/40*100)*10)/10;
+    sdPct[subj] = Math.round((st.sd/40*100)*10)/10;
     passRate[subj] = Math.round((vals.filter(v=>v>=14).length/vals.length*100)*10)/10;
   });
 
@@ -3940,7 +3977,8 @@ function buildPU2Electronics(){
   document.getElementById('sa2ElectronicsKpis').innerHTML = `
     <div class="kpi hero"><div class="kpi-label">ELECTRONICS Roster</div><div class="kpi-value">${roster.length}</div><div class="kpi-note">students</div></div>
     <div class="kpi ${avgPct.ELE>=50?'up':'warn'}"><div class="kpi-label">Electronics Avg %</div><div class="kpi-value">${avgPct.ELE}%</div><div class="kpi-note">Latest month each student has on file</div></div>
-    <div class="kpi"><div class="kpi-label">Top Scorer</div><div class="kpi-value">${topper?topper.latest.rec.TOTAL+'/240':'\u2014'}</div><div class="kpi-note">${topper?topper.s.name:'\u2014'}</div></div>`;
+    <div class="kpi"><div class="kpi-label">Top Scorer</div><div class="kpi-value">${topper?topper.latest.rec.TOTAL+'/240':'\u2014'}</div><div class="kpi-note">${topper?topper.s.name:'\u2014'}</div></div>
+    <div class="kpi"><div class="kpi-label">Electronics Spread (SD)</div><div class="kpi-value">${sdPct.ELE}%</div><div class="kpi-note">${sdLabel(sdPct.ELE,100)}</div></div>`;
   document.getElementById('sa2ElectronicsRosterChip').textContent = withLatest.length+' with test data';
 
   const subjNice = {PHY:'Physics',CHE:'Chemistry',MAT:'Maths',ELE:'Electronics'};
@@ -4247,11 +4285,13 @@ function renderSectionFailTable(tableId, list){
 
 function buildSections(){
   // ---- SPARK ----
+  const sparkBioSD2 = Math.round((computeSlipSectionSubjectSD('SPARK','t2','BIO').sd/20*100)*10)/10;
   document.getElementById('sparkSecKpis').innerHTML = `
     <div class="kpi hero"><div class="kpi-label">SPARK Biology Avg (T1&rarr;T2)</div><div class="kpi-value">${SEC.subjects.SPARK.test1.BIO.avg_pct}% &rarr; ${SEC.subjects.SPARK.test2.BIO.avg_pct}%</div><div class="kpi-note up">Highest subject in section, both tests</div></div>
     <div class="kpi gold"><div class="kpi-label">SPARK Topper Density (Bio)</div><div class="kpi-value">${SEC.subjects.SPARK.test1.BIO.topper_pct}%</div><div class="kpi-note">&gt;15/20 in Test 1</div></div>
     <div class="kpi"><div class="kpi-label">Section Size</div><div class="kpi-value">${SEC.rosterSize.SPARK}</div><div class="kpi-note">Students matched to roster</div></div>
     <div class="kpi warn"><div class="kpi-label">Chemistry Fail Rate (T2)</div><div class="kpi-value">${SEC.subjects.SPARK.test2.CHE.fail_pct}%</div><div class="kpi-note down">Weakest subject, Test 2</div></div>
+    <div class="kpi"><div class="kpi-label">SPARK Biology Spread (SD, T2)</div><div class="kpi-value">${isNaN(sparkBioSD2)?'—':sparkBioSD2+'%'}</div><div class="kpi-note">${isNaN(sparkBioSD2)?'':sdLabel(sparkBioSD2,100)}</div></div>
   `;
   if(sparkSecAvgChart) sparkSecAvgChart.destroy();
   sparkSecAvgChart = new Chart(document.getElementById('sparkSecAvgChart'), {
@@ -4279,11 +4319,13 @@ function buildSections(){
   });
 
   // ---- PRIME ----
+  const primeBioSD2 = Math.round((computeSlipSectionSubjectSD('PRIME','t2','BIO').sd/20*100)*10)/10;
   document.getElementById('primeSecKpis').innerHTML = `
     <div class="kpi hero"><div class="kpi-label">PRIME Biology Avg (T1&rarr;T2)</div><div class="kpi-value">${SEC.subjects.PRIME.test1.BIO.avg_pct}% &rarr; ${SEC.subjects.PRIME.test2.BIO.avg_pct}%</div><div class="kpi-note up">Highest subject in section, both tests</div></div>
     <div class="kpi gold"><div class="kpi-label">PRIME Topper Density (Bio)</div><div class="kpi-value">${SEC.subjects.PRIME.test1.BIO.topper_pct}%</div><div class="kpi-note">&gt;15/20 in Test 1</div></div>
     <div class="kpi"><div class="kpi-label">Section Size</div><div class="kpi-value">${SEC.rosterSize.PRIME}</div><div class="kpi-note">Students matched to roster</div></div>
     <div class="kpi warn"><div class="kpi-label">Chemistry Fail Rate (T2)</div><div class="kpi-value">${SEC.subjects.PRIME.test2.CHE.fail_pct}%</div><div class="kpi-note down">Weakest subject, Test 2</div></div>
+    <div class="kpi"><div class="kpi-label">PRIME Biology Spread (SD, T2)</div><div class="kpi-value">${isNaN(primeBioSD2)?'—':primeBioSD2+'%'}</div><div class="kpi-note">${isNaN(primeBioSD2)?'':sdLabel(primeBioSD2,100)}</div></div>
   `;
   if(primeSecAvgChart) primeSecAvgChart.destroy();
   primeSecAvgChart = new Chart(document.getElementById('primeSecAvgChart'), {
@@ -4397,12 +4439,13 @@ function computeElectronicsSubjectStats(roster, testKey){
   const stats = {};
   ELE_SUBJECTS.forEach(subj=>{
     const vals = roster.map(s=> s[testKey] ? s[testKey][subj] : undefined).filter(v=>v!==null && v!==undefined);
-    if(!vals.length){ stats[subj] = {avg_pct:0, pass_rate_pct:0, topper_pct:0}; return; }
-    const avg = vals.reduce((a,b)=>a+b,0)/vals.length;
+    if(!vals.length){ stats[subj] = {avg_pct:0, sd_pct:0, pass_rate_pct:0, topper_pct:0}; return; }
+    const st = computeStats(vals);
     const passCount = vals.filter(v=>v>=7).length;
     const topperCount = vals.filter(v=>v>15).length;
     stats[subj] = {
-      avg_pct: Math.round((avg/20*100)*10)/10,
+      avg_pct: Math.round((st.mean/20*100)*10)/10,
+      sd_pct: Math.round((st.sd/20*100)*10)/10,
       pass_rate_pct: Math.round((passCount/vals.length*100)*10)/10,
       topper_pct: Math.round((topperCount/vals.length*100)*10)/10
     };
@@ -4474,6 +4517,7 @@ function buildElectronicsSection(){
     <div class="kpi gold"><div class="kpi-label">ELECTRONICS Topper Density</div><div class="kpi-value">${t1Stats.ELE.topper_pct}%</div><div class="kpi-note">&gt;15/20 in Test 1</div></div>
     <div class="kpi"><div class="kpi-label">Section Size</div><div class="kpi-value">${roster.length}</div><div class="kpi-note">Students in Electronics stream</div></div>
     <div class="kpi warn"><div class="kpi-label">Chemistry Fail Rate (T2)</div><div class="kpi-value">${cheFailT2}%</div><div class="kpi-note down">Below 7/20</div></div>
+    <div class="kpi"><div class="kpi-label">Electronics Spread (SD, T2)</div><div class="kpi-value">${t2Stats.ELE.sd_pct}%</div><div class="kpi-note">${sdLabel(t2Stats.ELE.sd_pct,100)}</div></div>
   `;
   document.getElementById('electronicsRosterChip').textContent = roster.length+' students';
 
@@ -4538,8 +4582,10 @@ function buildNeetObtOverview(){
   const test = neetCurrentTest();
   const rows = test.students;
   const n = rows.length;
-  const avg = key => rows.reduce((s,r)=>s+r[key],0)/n;
+  const statsOf = key => computeStats(rows.map(r=>r[key]));
+  const avg = key => statsOf(key).mean;
   const avgPhy = avg('phy'), avgChe = avg('che'), avgBio = avg('bio'), avgTotal = avg('total');
+  const sdBioPct = Math.round((statsOf('bio').sd/360*100)*10)/10;
   const pctPhyNum = avgPhy/180*100, pctCheNum = avgChe/180*100, pctBioNum = avgBio/360*100, pctTotalNum = avgTotal/720*100;
   const pctPhy = pctPhyNum.toFixed(1), pctChe = pctCheNum.toFixed(1),
         pctBio = pctBioNum.toFixed(1), pctTotal = pctTotalNum.toFixed(1);
@@ -4553,6 +4599,7 @@ function buildNeetObtOverview(){
     <div class="kpi gold"><div class="kpi-label">Biology Average</div><div class="kpi-value">${avgBio.toFixed(0)}/360</div><div class="kpi-note up">${pctBio}% \u2014 strongest of the 3 subjects</div></div>
     <div class="kpi"><div class="kpi-label">Top Scorer</div><div class="kpi-value">${top.total}/720</div><div class="kpi-note">${top.name} (${top.section||'\u2014'})</div></div>
     <div class="kpi warn"><div class="kpi-label">Physics Average</div><div class="kpi-value">${avgPhy.toFixed(0)}/180</div><div class="kpi-note down">${pctPhy}% \u2014 weakest of the 3 subjects</div></div>
+    <div class="kpi"><div class="kpi-label">Biology Spread (SD)</div><div class="kpi-value">${sdBioPct}%</div><div class="kpi-note">${sdLabel(sdBioPct,100)}</div></div>
   `;
 
   if(noAvgChartInst) noAvgChartInst.destroy();
@@ -4765,11 +4812,17 @@ function buildStreamComparison(){
   const avg = (rows,key,max) => {
     const vals = rows.map(r=>r[key]).filter(v=>v!==null && v!==undefined);
     if(!vals.length) return 0;
-    return (vals.reduce((a,b)=>a+b,0)/vals.length)/max*100;
+    return computeStats(vals).mean/max*100;
+  };
+  const sdPct = (rows,key,max) => {
+    const vals = rows.map(r=>r[key]).filter(v=>v!==null && v!==undefined);
+    if(!vals.length) return 0;
+    return Math.round((computeStats(vals).sd/max*100)*10)/10;
   };
   const kcetPhyPct = avg(kcetRows,'phy',45), kcetChePct = avg(kcetRows,'che',45);
   const neetPhyPct = avg(neetRows,'phy',180), neetChePct = avg(neetRows,'che',180);
   const neetBioPct = avg(neetRows,'bio',360);
+  const neetBioSDPct = sdPct(neetRows,'bio',360);
 
   document.getElementById('streamCompareDesc').textContent = `${kcet.label} (PCM, n=${kcetRows.length}) vs ${neet.label} (PCB, n=${neetRows.length}) \u2014 ${kcet.disp}`;
 
@@ -4777,6 +4830,7 @@ function buildStreamComparison(){
     <div class="kpi hero"><div class="kpi-label">PCM Students (KCET)</div><div class="kpi-value">${kcetRows.length}</div><div class="kpi-note">This OBT round</div></div>
     <div class="kpi"><div class="kpi-label">PCB Students (NEET)</div><div class="kpi-value">${neetRows.length}</div><div class="kpi-note">This OBT round</div></div>
     <div class="kpi gold"><div class="kpi-label">Biology Avg (PCB only)</div><div class="kpi-value">${neetBioPct.toFixed(1)}%</div><div class="kpi-note up">No PCM equivalent</div></div>
+    <div class="kpi"><div class="kpi-label">Biology Spread (SD)</div><div class="kpi-value">${neetBioSDPct}%</div><div class="kpi-note">${sdLabel(neetBioSDPct,100)}</div></div>
   `;
 
   if(streamCompareChartInst) streamCompareChartInst.destroy();
@@ -5027,7 +5081,12 @@ function pu2SubjPct(student, subj, outof){
 function pu2ClassAvgPct(test, subj){
   const vals = test.students.map(s=>pu2SubjPct(s, subj, test.outof[subj])).filter(v=>v!==null);
   if(!vals.length) return null;
-  return Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)*10)/10;
+  return computeStats(vals).mean;
+}
+function pu2ClassSDPct(test, subj){
+  const vals = test.students.map(s=>pu2SubjPct(s, subj, test.outof[subj])).filter(v=>v!==null);
+  if(!vals.length) return null;
+  return computeStats(vals).sd;
 }
 
 function renderPU2Overview(){
@@ -5335,17 +5394,24 @@ function buildPU2RiskShift(){
   // ---------- Section shift: CHAMPION vs ELITE, Biology first vs latest ----------
   function sectionBioAvg(test, section){
     const vals = test.students.filter(r=>r.section===section).map(r=>pu2SubjPct(r,'BIO',test.outof.BIO)).filter(v=>v!==null);
-    return vals.length ? Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)*10)/10 : null;
+    return vals.length ? computeStats(vals).mean : null;
+  }
+  function sectionBioSD(test, section){
+    const vals = test.students.filter(r=>r.section===section).map(r=>pu2SubjPct(r,'BIO',test.outof.BIO)).filter(v=>v!==null);
+    return vals.length ? computeStats(vals).sd : null;
   }
   const sectionRows = ['CHAMPION','ELITE'].map(sec=>{
     const f = sectionBioAvg(firstTest, sec), l = sectionBioAvg(latestTest, sec);
     const delta = (f!==null && l!==null) ? Math.round((l-f)*10)/10 : null;
-    return {sec, f, l, delta};
+    const sd = sectionBioSD(latestTest, sec);
+    return {sec, f, l, delta, sd};
   });
+  document.querySelector('#pu2ShiftSectionTable thead tr').innerHTML =
+    '<th>Section</th><th>First Test</th><th>Latest Test</th><th>Change</th><th>Latest Spread (SD)</th>';
   document.querySelector('#pu2ShiftSectionTable tbody').innerHTML = sectionRows.map(r=>{
     const cls = r.delta===null ? '' : (r.delta>=0?'rc-diff-up':'rc-diff-down');
     const sign = r.delta!==null && r.delta>=0 ? '+' : '';
-    return `<tr><td>${r.sec}</td><td>${r.f!==null?r.f+'%':'\u2014'}</td><td>${r.l!==null?r.l+'%':'\u2014'}</td><td class="${cls}">${r.delta!==null?sign+r.delta+'%':'\u2014'}</td></tr>`;
+    return `<tr><td>${r.sec}</td><td>${r.f!==null?r.f+'%':'\u2014'}</td><td>${r.l!==null?r.l+'%':'\u2014'}</td><td class="${cls}">${r.delta!==null?sign+r.delta+'%':'\u2014'}</td><td>${r.sd!==null?r.sd+'%':'\u2014'}</td></tr>`;
   }).join('');
 
   pu2RiskShiftBuilt = true;
@@ -5456,6 +5522,29 @@ function classAvgRaw(test, subj){
   const key = test==='t1' ? 'test1' : test==='t2' ? 'test2' : test;
   const row = D.subjects[key] && D.subjects[key][subj];
   return row ? Math.round((row.avg_pct/100*20)*100)/100 : null;
+}
+
+/* ---- Live-derived subject-level SD, companion to D.subjects/SEC.subjects.
+   D and SEC are historical pre-aggregated literals with no per-student raw array at
+   runtime, so these recompute SD from STUDENTS — the same roster they were summarized
+   from — rather than editing the hardcoded literals themselves. ---- */
+function computeSlipSubjectSD(testKey, subj){ // testKey: 't1' | 't2' | 'combined'
+  let vals;
+  if(testKey === 'combined'){
+    vals = STUDENTS.flatMap(s => [s.t1 && s.t1[subj], s.t2 && s.t2[subj]]).filter(v => v!==null && v!==undefined);
+  } else {
+    vals = STUDENTS.map(s => s[testKey] && s[testKey][subj]).filter(v => v!==null && v!==undefined);
+  }
+  return computeStats(vals); // {n, mean, sd} — mean is a sanity check against D.subjects[testKey][subj].average
+}
+function classSDRaw(test, subj){
+  const key = test==='t1' ? 'test1' : test==='t2' ? 'test2' : test;
+  return computeSlipSubjectSD(key, subj).sd;
+}
+function computeSlipSectionSubjectSD(section, testKey, subj){ // testKey: 't1' | 't2'
+  const roster = STUDENTS.filter(s => s.section === section);
+  const vals = roster.map(s => s[testKey] && s[testKey][subj]).filter(v => v!==null && v!==undefined);
+  return computeStats(vals); // {n, mean, sd} — mean is a sanity check against SEC.subjects[section][testKey][subj].avg_pct (÷20×100)
 }
 
 function findStudentBioTier(name){
@@ -5724,6 +5813,11 @@ function pu1MonthClassAvgRaw(monthKey, subj){
   const pct = sw.avgPct[subj];
   return pct!==undefined ? Math.round((pct/100*40)*100)/100 : null;
 }
+function pu1MonthClassSDRaw(monthKey, subj){
+  const sw = computePU1MonthlySubjectWide(monthKey);
+  const pct = sw.sdPct[subj];
+  return pct!==undefined ? Math.round((pct/100*40)*100)/100 : null;
+}
 function mtClassAvgRaw(subj){
   const sw = computePU1MonthlySubjectWide(pu1MonthCurrent);
   const pct = sw.avgPct[subj];
@@ -5739,10 +5833,13 @@ function mtSubjectRowsHtml(student){
     const val = student.mt[s];
     if(val===null || val===undefined) return;
     const avg = pu1MonthClassAvgRaw('july', s);
+    const sd = pu1MonthClassSDRaw('july', s);
     const diff = avg!==null ? Math.round((val-avg)*10)/10 : null;
     const cls = diff!==null ? (diff>=0?'rc-diff-up':'rc-diff-down') : '';
     const sign = diff!==null && diff>=0 ? '+' : '';
-    rows += '<tr'+(s==='BIO'?' class="bio-row"':'')+'><td>'+names[s]+'</td><td>'+val+'/40</td><td>'+(avg!==null?avg+'/40':'\u2014')+'</td><td class="'+cls+'">'+(diff!==null?sign+diff:'\u2014')+'</td></tr>';
+    const z = (sd && sd>0 && avg!==null) ? Math.round(((val-avg)/sd)*10)/10 : null;
+    const zCls = z===null ? '' : (Math.abs(z)<1 ? 'rc-diff-up' : 'rc-diff-down');
+    rows += '<tr'+(s==='BIO'?' class="bio-row"':'')+'><td>'+names[s]+'</td><td>'+val+'/40</td><td>'+(avg!==null?avg+'/40':'\u2014')+'</td><td class="'+cls+'">'+(diff!==null?sign+diff:'\u2014')+'</td><td class="'+zCls+'">'+(z!==null?z+'\u03c3':'\u2014')+'</td></tr>';
   });
   return rows;
 }
@@ -5755,7 +5852,10 @@ function subjectRowsHtml(test){
     const val = window.__currentStudent[test][s];
     if(val===null || val===undefined) return;
     const avg = classAvgRaw(test, s);
-    rows += '<tr'+(s==='BIO'?' class="bio-row"':'')+'><td>'+names[s]+'</td><td>'+val+'/20</td><td>'+(avg!==null?avg+'/20':'\u2014')+'</td>'+diffCell(val,avg)+'</tr>';
+    const sd = classSDRaw(test, s);
+    const z = (sd && sd>0 && avg!==null) ? Math.round(((val-avg)/sd)*10)/10 : null;
+    const zCls = z===null ? '' : (Math.abs(z)<1 ? 'rc-diff-up' : 'rc-diff-down');
+    rows += '<tr'+(s==='BIO'?' class="bio-row"':'')+'><td>'+names[s]+'</td><td>'+val+'/20</td><td>'+(avg!==null?avg+'/20':'\u2014')+'</td>'+diffCell(val,avg)+'<td class="'+zCls+'">'+(z!==null?z+'\u03c3':'\u2014')+'</td></tr>';
   });
   return rows;
 }
@@ -5766,7 +5866,14 @@ function pu2ClassAvgRaw(key, subj){
     .map(s => s[key] ? s[key][subj] : undefined)
     .filter(v => v!==null && v!==undefined);
   if(!vals.length) return null;
-  return Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)*10)/10;
+  return computeStats(vals).mean;
+}
+function pu2ClassSDRaw(key, subj){
+  const vals = PU2_STUDENTS
+    .map(s => s[key] ? s[key][subj] : undefined)
+    .filter(v => v!==null && v!==undefined);
+  if(!vals.length) return null;
+  return computeStats(vals).sd;
 }
 
 function pu2SubjectRowsHtml(student, key){
@@ -5779,10 +5886,13 @@ function pu2SubjectRowsHtml(student, key){
     const val = rec[s];
     if(val===null || val===undefined) return;
     const avg = pu2ClassAvgRaw(key, s);
+    const sd = pu2ClassSDRaw(key, s);
     const diff = avg!==null ? Math.round((val-avg)*10)/10 : null;
     const cls = diff!==null ? (diff>=0?'rc-diff-up':'rc-diff-down') : '';
     const sign = diff!==null && diff>=0 ? '+' : '';
-    rows += '<tr'+(s==='BIO'?' class="bio-row"':'')+'><td>'+names[s]+'</td><td>'+val+'/40</td><td>'+(avg!==null?avg+'/40':'\u2014')+'</td><td class="'+cls+'">'+(diff!==null?sign+diff:'\u2014')+'</td></tr>';
+    const z = (sd && sd>0 && avg!==null) ? Math.round(((val-avg)/sd)*10)/10 : null;
+    const zCls = z===null ? '' : (Math.abs(z)<1 ? 'rc-diff-up' : 'rc-diff-down');
+    rows += '<tr'+(s==='BIO'?' class="bio-row"':'')+'><td>'+names[s]+'</td><td>'+val+'/40</td><td>'+(avg!==null?avg+'/40':'\u2014')+'</td><td class="'+cls+'">'+(diff!==null?sign+diff:'\u2014')+'</td><td class="'+zCls+'">'+(z!==null?z+'\u03c3':'\u2014')+'</td></tr>';
   });
   return rows;
 }
@@ -5910,8 +6020,8 @@ function buildPU2ObtSectionsHtml(student){
     if(!rows) return;
     const totalOut = test.outof.PHY+test.outof.CHE+test.outof.MAT+test.outof.BIO+(test.outof.ELE?0:0);
     html += '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">'+test.label+' ('+test.disp+')</h3>'+
-      '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th></tr></thead>'+
-      '<tbody>'+rows+'<tr><td><b>Total</b></td><td colspan="3"><b>'+(rec.total!==null&&rec.total!==undefined?rec.total+'/'+totalOut:'\u2014')+'</b></td></tr></tbody></table></div>';
+      '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th><th>z-Score</th></tr></thead>'+
+      '<tbody>'+rows+'<tr><td><b>Total</b></td><td colspan="4"><b>'+(rec.total!==null&&rec.total!==undefined?rec.total+'/'+totalOut:'\u2014')+'</b></td></tr></tbody></table></div>';
   });
   return html;
 }
@@ -5953,8 +6063,8 @@ function showReportCardPU2(student){
     if(rows){
       const outOf = key==='june' ? 240 : 200;
       monthSections += '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">'+monthTitles[key]+(rec.RANK?' &mdash; Class Rank #'+rec.RANK:'')+'</h3>'+
-        '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th></tr></thead>'+
-        '<tbody>'+rows+'<tr><td><b>Total</b></td><td colspan="3"><b>'+(rec.TOTAL!==null&&rec.TOTAL!==undefined?rec.TOTAL+'/'+outOf:'\u2014')+'</b></td></tr></tbody></table></div>';
+        '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th><th>z-Score</th></tr></thead>'+
+        '<tbody>'+rows+'<tr><td><b>Total</b></td><td colspan="4"><b>'+(rec.TOTAL!==null&&rec.TOTAL!==undefined?rec.TOTAL+'/'+outOf:'\u2014')+'</b></td></tr></tbody></table></div>';
     } else {
       monthSections += '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">'+monthTitles[key]+'</h3>'+
         '<div class="desc" style="text-align:center; margin-top:4px; margin-bottom:12px;">Not available for this student.</div>';
@@ -6072,8 +6182,8 @@ function showReportCard(student, pu){
   const mtRows = mtSubjectRowsHtml(student);
   const mtSection = mtRows ?
     '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">July Monthly Test'+(student.mt.RANK?' &mdash; Class Rank #'+student.mt.RANK:'')+'</h3>'+
-    '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th></tr></thead>'+
-    '<tbody>'+mtRows+'<tr><td><b>Total</b></td><td colspan="3"><b>'+(student.mt.TOTAL!==null?student.mt.TOTAL+'/240':'\u2014')+'</b></td></tr></tbody></table></div>'
+    '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th><th>z-Score</th></tr></thead>'+
+    '<tbody>'+mtRows+'<tr><td><b>Total</b></td><td colspan="4"><b>'+(student.mt.TOTAL!==null?student.mt.TOTAL+'/240':'\u2014')+'</b></td></tr></tbody></table></div>'
     : '<div class="desc" style="text-align:center; margin-top:12px;">Monthly Test data not available for this student.</div>';
   const examSection = buildPU1ExamSectionsHtml(student);
   document.getElementById('reportCardContent').innerHTML =
@@ -6086,11 +6196,11 @@ function showReportCard(student, pu){
       tierHtml+
     '</div>'+
     '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">Slip Test 1 (13\u201315 Jun 2026)</h3>'+
-    '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th></tr></thead>'+
-    '<tbody>'+subjectRowsHtml('t1')+'<tr><td><b>Total</b></td><td colspan="3"><b>'+(student.t1.TOTAL!==null?student.t1.TOTAL+'/80':'\u2014')+'</b></td></tr></tbody></table></div>'+
+    '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th><th>z-Score</th></tr></thead>'+
+    '<tbody>'+subjectRowsHtml('t1')+'<tr><td><b>Total</b></td><td colspan="4"><b>'+(student.t1.TOTAL!==null?student.t1.TOTAL+'/80':'\u2014')+'</b></td></tr></tbody></table></div>'+
     '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">Slip Test 2 (17\u201320 Jul 2026)</h3>'+
-    '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th></tr></thead>'+
-    '<tbody>'+subjectRowsHtml('t2')+'<tr><td><b>Total</b></td><td colspan="3"><b>'+(student.t2.TOTAL!==null?student.t2.TOTAL+'/80':'\u2014')+'</b></td></tr></tbody></table></div>'+
+    '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th><th>z-Score</th></tr></thead>'+
+    '<tbody>'+subjectRowsHtml('t2')+'<tr><td><b>Total</b></td><td colspan="4"><b>'+(student.t2.TOTAL!==null?student.t2.TOTAL+'/80':'\u2014')+'</b></td></tr></tbody></table></div>'+
     mtSection+
     examSection+
     '<div class="teacher-comment">'+
@@ -6663,19 +6773,21 @@ function renderPU2MonthlyOverview(){
   const monthLabel = pu2CurrentMonthLabel();
   const roster = pu2MonthlyRoster().filter(s=>pu2MonthData(s,key));
   const bios = roster.map(s=>pu2MonthSubjPct(s,key,'BIO',40)).filter(v=>v!==null);
-  const bioAvg = bios.length ? Math.round((bios.reduce((a,b)=>a+b,0)/bios.length)*10)/10 : null;
+  const bioStats = computeStats(bios);
+  const bioAvg = bioStats.mean;
   const passCount = bios.filter(v=>v>=35).length;
   document.getElementById('pu2MonthOverviewKpis').innerHTML = `
     <div class="kpi hero"><div class="kpi-label">PU-II Roster</div><div class="kpi-value">${PU2_CHAMPION.length + PU2_ELITE.length}</div><div class="kpi-note">CHAMPION + ELITE</div></div>
     <div class="kpi"><div class="kpi-label">${monthLabel}</div><div class="kpi-value">${roster.length}</div><div class="kpi-note">Students appeared</div></div>
     <div class="kpi gold"><div class="kpi-label">Biology Class Avg</div><div class="kpi-value">${bioAvg!==null?bioAvg+'%':'\u2014'}</div><div class="kpi-note">out of 40</div></div>
-    <div class="kpi ${bios.length && (passCount/bios.length)>=0.5?'up':'warn'}"><div class="kpi-label">Biology Pass Rate</div><div class="kpi-value">${bios.length?Math.round((passCount/bios.length)*100):0}%</div><div class="kpi-note">&ge;35% scoring</div></div>`;
+    <div class="kpi ${bios.length && (passCount/bios.length)>=0.5?'up':'warn'}"><div class="kpi-label">Biology Pass Rate</div><div class="kpi-value">${bios.length?Math.round((passCount/bios.length)*100):0}%</div><div class="kpi-note">&ge;35% scoring</div></div>
+    <div class="kpi"><div class="kpi-label">Biology Spread (SD)</div><div class="kpi-value">${bioStats.sd!==null?bioStats.sd+'%':'\u2014'}</div><div class="kpi-note">${bioStats.sd!==null?sdLabel(bioStats.sd,100):''}</div></div>`;
 
   const subjLabels = ['PHY','CHE','MAT','BIO'];
   const subjNice = {PHY:'Physics',CHE:'Chemistry',MAT:'Maths',BIO:'Biology'};
   const avgs = subjLabels.map(s=>{
     const vals = roster.map(r=>pu2MonthSubjPct(r,key,s,40)).filter(v=>v!==null);
-    return vals.length ? Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)*10)/10 : 0;
+    return vals.length ? computeStats(vals).mean : 0;
   });
   document.getElementById('pu2MonthAvgDesc').textContent = `${monthLabel} \u2014 overall percentage score by subject, out of 40 each`;
   if(pu2MonthAvgChartInst) pu2MonthAvgChartInst.destroy();
@@ -6779,11 +6891,13 @@ function buildPU2Bvo(){
     const vals = PU2_TESTS.map(t=>pu2ClassAvgPct(t,s)).filter(v=>v!==null);
     testSeriesAvg[s] = vals.length ? Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)*10)/10 : null;
   });
-  // Monthly-test (June) average per subject
-  const monthlyAvg = {};
+  // Monthly-test (June) average + spread per subject
+  const monthlyAvg = {}, monthlySD = {};
   subjLabels.forEach(s=>{
     const vals = PU2_STUDENTS.map(st=>pu2MonthSubjPct(st,'june',s,40)).filter(v=>v!==null);
-    monthlyAvg[s] = vals.length ? Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)*10)/10 : null;
+    const st = computeStats(vals);
+    monthlyAvg[s] = vals.length ? st.mean : null;
+    monthlySD[s] = vals.length ? st.sd : null;
   });
 
   const bioTestSeries = testSeriesAvg.BIO, bioMonthly = monthlyAvg.BIO;
@@ -6804,8 +6918,9 @@ function buildPU2Bvo(){
     options:{ scales:{ y:{ max:100 } } }
   });
 
-  const rows = subjLabels.map(s=>[subjNice[s], testSeriesAvg[s]!==null?testSeriesAvg[s]+'%':'\u2014', monthlyAvg[s]!==null?monthlyAvg[s]+'%':'\u2014']);
-  document.querySelector('#pu2BvoTable tbody').innerHTML = rows.map(r=>`<tr${r[0]==='Biology'?' class="bio-row"':''}><td>${r[0]}</td><td><b>${r[1]}</b></td><td>${r[2]}</td></tr>`).join('');
+  const rows = subjLabels.map(s=>[subjNice[s], testSeriesAvg[s]!==null?testSeriesAvg[s]+'%':'\u2014', monthlyAvg[s]!==null?monthlyAvg[s]+'%':'\u2014', monthlySD[s]!==null?monthlySD[s]+'%':'\u2014']);
+  document.querySelector('#pu2BvoTable thead tr').innerHTML = '<th>Metric</th><th>Test Series (Combined)</th><th>Monthly Test</th><th>Monthly Spread (SD)</th>';
+  document.querySelector('#pu2BvoTable tbody').innerHTML = rows.map(r=>`<tr${r[0]==='Biology'?' class="bio-row"':''}><td>${r[0]}</td><td><b>${r[1]}</b></td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('');
 
   // Data-driven bullet points (computed, not fabricated)
   const others = ['PHY','CHE','MAT'];
@@ -7351,6 +7466,8 @@ function renderBioCandidateInsight(student, pu){
   const bestPct = bestEntry ? bestEntry.pct : null;
   const latestClassAvg = hist.length ? hist[hist.length-1].classAvg : null;
   const vsAvg = (latestPct!==null && latestClassAvg!==null) ? Math.round((latestPct-latestClassAvg)*10)/10 : null;
+  const histStats = computeStats(hist.map(h=>h.pct));
+  const compareStats = compare ? computeStats(compare.values) : null;
 
   let html = '<div class="rp-header">'+
     '<div class="rp-tag">Biology All In One (BAIO) Learning System</div>'+
@@ -7364,6 +7481,7 @@ function renderBioCandidateInsight(student, pu){
     '<div class="rp-kpi"><div class="rp-kpi-label">Best '+subjectLabel+' Score</div><div class="rp-kpi-value">'+(bestPct!==null?bestPct+'% <span style=\"font-size:13px;font-weight:500;color:var(--muted);\">('+bestEntry.score+'/'+bestEntry.outOf+')</span>':'\u2014')+'</div><div class="rp-kpi-sub">Across all tests recorded</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">vs Class Average (Latest Test)</div><div class="rp-kpi-value" style="color:'+(vsAvg!==null&&vsAvg>=0?'#15803d':'#b91c1c')+';">'+(vsAvg!==null?(vsAvg>=0?'+':'')+vsAvg+'%':'\u2014')+'</div><div class="rp-kpi-sub">Percentage points</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Tests Recorded</div><div class="rp-kpi-value">'+hist.length+'</div><div class="rp-kpi-sub">'+subjectLabel+' attempts on file</div></div>'+
+    '<div class="rp-kpi"><div class="rp-kpi-label">Consistency ('+subjectLabel+' SD Across Tests)</div><div class="rp-kpi-value">'+(histStats.sd!==null?histStats.sd+'%':'\u2014')+'</div><div class="rp-kpi-sub">'+(histStats.sd!==null?sdLabel(histStats.sd,100):'Not enough data')+'</div></div>'+
   '</div>';
 
   if(hist.length){
@@ -7379,7 +7497,9 @@ function renderBioCandidateInsight(student, pu){
   }
 
   if(compare){
-    html += '<div class="rp-section"><div class="rp-section-title">'+(isEle?'Subject Comparison':'Biology vs Other Subjects')+' <span style="font-weight:400;font-size:12px;color:var(--muted);">('+compare.testLabel+')</span></div><canvas id="bioCandSubjectCanvas" style="max-width:100%;" width="600" height="240"></canvas></div>';
+    html += '<div class="rp-section"><div class="rp-section-title">'+(isEle?'Subject Comparison':'Biology vs Other Subjects')+' <span style="font-weight:400;font-size:12px;color:var(--muted);">('+compare.testLabel+')</span></div><canvas id="bioCandSubjectCanvas" style="max-width:100%;" width="600" height="240"></canvas>'+
+      (compareStats.sd!==null ? '<div class="rp-callout" style="margin-top:10px;">Subject-to-subject spread this test: SD '+compareStats.sd+'% — '+sdLabel(compareStats.sd,100)+'</div>' : '') +
+    '</div>';
   }
 
   const comment = pu===2 ? generatePU2TeacherComment(student) : generateTeacherComment(student);
@@ -7494,8 +7614,9 @@ function getTestWiseBioData(sel){
       .map(s=>({name:s.name, section:s.section||'\u2014', score:s[sel.key].BIO, outOf, pct:Math.round(s[sel.key].BIO/outOf*1000)/10}));
   }
   rows = rows.filter(r=>currentBioFilters.sections.indexOf(r.section)===-1 ? !['SPARK','PRIME','CHAMPION','ELITE'].includes(r.section) : true);
-  if(rows.length) classAvgPct = Math.round((rows.reduce((a,b)=>a+b.pct,0)/rows.length)*10)/10;
-  return {label:sel.label, rows, classAvgPct, outOf};
+  let classSDPct = null;
+  if(rows.length){ const st = computeStats(rows.map(r=>r.pct)); classAvgPct = st.mean; classSDPct = st.sd; }
+  return {label:sel.label, rows, classAvgPct, classSDPct, outOf};
 }
 
 /* ---- THEORY (Board) section ---- */
@@ -7511,14 +7632,18 @@ function buildTheoryBioSection(){
   const topper10 = withLatest.slice().sort((a,b)=>b.pct-a.pct).slice(0,currentBioFilters.topN);
   const atRisk = withLatest.filter(s=>s.pct<35).sort((a,b)=>a.pct-b.pct).slice(0,currentBioFilters.topN);
 
-  const sectionPct = {};
+  const sectionPct = {}, sectionSD = {};
   const pu1SparkStats = computePU1SectionMonthlyStats(pu1MonthCurrent, 'SPARK');
   const pu1PrimeStats = computePU1SectionMonthlyStats(pu1MonthCurrent, 'PRIME');
   sectionPct.SPARK = Math.round((pu1SparkStats.mean/40)*1000)/10;
   sectionPct.PRIME = Math.round((pu1PrimeStats.mean/40)*1000)/10;
+  sectionSD.SPARK = Math.round((pu1SparkStats.sd/40)*1000)/10;
+  sectionSD.PRIME = Math.round((pu1PrimeStats.sd/40)*1000)/10;
   ['CHAMPION','ELITE'].forEach(sec=>{
     const vals = PU2_STUDENTS.filter(s=>{ const d=pu2MonthData(s,pu2MonthCurrent); return s.section===sec && d && d.BIO!==null && d.BIO!==undefined; }).map(s=>pu2MonthData(s,pu2MonthCurrent).BIO/40*100);
-    sectionPct[sec] = vals.length ? Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)*10)/10 : null;
+    const st = computeStats(vals);
+    sectionPct[sec] = vals.length ? st.mean : null;
+    sectionSD[sec] = vals.length ? st.sd : null;
   });
   const includedSections = ['SPARK','PRIME','CHAMPION','ELITE'].filter(sectionAllowed);
 
@@ -7532,15 +7657,19 @@ function buildTheoryBioSection(){
 
   const subjChartLabels = ['Biology','Physics','Chemistry','Mathematics'];
   const pu1SubjVals = [pu1sw.avgPctCoreSTEM.BIO, pu1sw.avgPctCoreSTEM.PHY, pu1sw.avgPctCoreSTEM.CHE, pu1sw.avgPctCoreSTEM.MAT];
-  const pu2Month = {};
+  const pu2Month = {}, pu2MonthSD = {};
   ['PHY','CHE','MAT','BIO'].forEach(subj=>{
     const vals = PU2_STUDENTS.map(s=>{ const d=pu2MonthData(s,pu2MonthCurrent); return d?d[subj]:null; }).filter(v=>v!==null&&v!==undefined);
-    pu2Month[subj] = vals.length ? Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)/40*1000)/10 : null;
+    const st = computeStats(vals);
+    pu2Month[subj] = vals.length ? Math.round((st.mean/40)*1000)/10 : null;
+    pu2MonthSD[subj] = vals.length ? Math.round((st.sd/40)*1000)/10 : null;
   });
   const pu2SubjVals = [pu2Month.BIO, pu2Month.PHY, pu2Month.CHE, pu2Month.MAT];
+  const pu2SubjSDVals = [pu2MonthSD.BIO, pu2MonthSD.PHY, pu2MonthSD.CHE, pu2MonthSD.MAT];
   const subjRows = subjChartLabels.map((label,i)=>[label,
     currentBioFilters.includePU1 && pu1SubjVals[i]!==null&&pu1SubjVals[i]!==undefined ? pu1SubjVals[i]+'%' : '\u2014',
-    currentBioFilters.includePU2 && pu2SubjVals[i]!==null&&pu2SubjVals[i]!==undefined ? pu2SubjVals[i]+'%' : '\u2014']);
+    currentBioFilters.includePU2 && pu2SubjVals[i]!==null&&pu2SubjVals[i]!==undefined ? pu2SubjVals[i]+'%' : '\u2014',
+    currentBioFilters.includePU2 && pu2SubjSDVals[i]!==null&&pu2SubjSDVals[i]!==undefined ? pu2SubjSDVals[i]+'%' : '\u2014']);
 
   const pu1Lead = Math.round((pu1SubjVals[0] - Math.max(pu1SubjVals[1]||0, pu1SubjVals[2]||0, pu1SubjVals[3]||0))*10)/10;
   const pu2Lead = Math.round((pu2SubjVals[0] - Math.max(pu2SubjVals[1]||0, pu2SubjVals[2]||0, pu2SubjVals[3]||0))*10)/10;
@@ -7564,16 +7693,16 @@ function buildTheoryBioSection(){
   if(atRisk.length){
     html += rpSection('Candidate-wise &mdash; Students Needing Support (Theory, Below 35%)', rpTable(['Name','Section','PU','Test','Biology %'], atRisk.map(s=>[s.name, s.section, 'PU-'+(s.pu===2?'II':'I'), s.label, s.pct+'%'])));
   }
-  const secRows = includedSections.map(sec=>[sec, (sec==='SPARK'||sec==='PRIME')?'PU-I':'PU-II', (sectionPct[sec]!==null&&sectionPct[sec]!==undefined?sectionPct[sec]:'\u2014')+'%']);
+  const secRows = includedSections.map(sec=>[sec, (sec==='SPARK'||sec==='PRIME')?'PU-I':'PU-II', (sectionPct[sec]!==null&&sectionPct[sec]!==undefined?sectionPct[sec]:'\u2014')+'%', (sectionSD[sec]!==null&&sectionSD[sec]!==undefined?sectionSD[sec]:'\u2014')+'%']);
   html += '<div class="rp-section"><div class="rp-section-title">Section-wise Biology Comparison (Theory)</div>'+
-    (secRows.length ? rpTable(['Section','PU Level','Biology Avg %'], secRows) : '<div class="rp-callout">No sections selected.</div>') +
+    (secRows.length ? rpTable(['Section','PU Level','Biology Avg %','Spread (SD)'], secRows) : '<div class="rp-callout">No sections selected.</div>') +
     (secRows.length ? '<canvas id="bioTheorySectionCanvas" style="max-width:100%;margin-top:10px;" width="600" height="240"></canvas>' : '') + '</div>';
   html += '<div class="rp-section"><div class="rp-section-title">Test-wise Biology Trend (Theory)</div>';
   if(currentBioFilters.includePU1) html += '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; margin-bottom:6px;">PU-I</div><canvas id="bioTheoryTrendPU1Canvas" style="max-width:100%;" width="600" height="200"></canvas>';
   if(currentBioFilters.includePU2) html += '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; margin:14px 0 6px;">PU-II</div><canvas id="bioTheoryTrendPU2Canvas" style="max-width:100%;" width="600" height="200"></canvas>';
   html += '</div>';
   html += '<div class="rp-section"><div class="rp-section-title">Biology vs Other Subjects (Theory)</div>'+
-    rpTable(['Subject','PU-I Avg %','PU-II Avg %'], subjRows, 0) + '<canvas id="bioTheorySubjectCanvas" style="max-width:100%;margin-top:10px;" width="600" height="240"></canvas></div>';
+    rpTable(['Subject','PU-I Avg %','PU-II Avg %','PU-II Spread (SD)'], subjRows, 0) + '<canvas id="bioTheorySubjectCanvas" style="max-width:100%;margin-top:10px;" width="600" height="240"></canvas></div>';
   html += '<div class="rp-section"><div class="rp-section-title">System-Generated Analysis &mdash; Theory <span style="font-weight:400;font-size:12px;color:var(--muted);">(Personal analysis, Narendra Sir)</span></div>'+
     '<div class="teacher-comment"><span class="tc-label">From Narendra Sir, Lecturer in Biology</span>'+comment+'</div></div>';
 
@@ -7604,15 +7733,19 @@ function buildNeetObtBioSection(){
   const atRisk = withLatest.filter(s=>s.pct<35).sort((a,b)=>a.pct-b.pct).slice(0,currentBioFilters.topN);
 
   const neetLatest = NEET_TESTS[NEET_TESTS.length-1];
-  const sectionPct = {};
+  const sectionPct = {}, sectionSD = {};
   ['SPARK','PRIME'].forEach(sec=>{
     const vals = neetLatest.students.filter(r=>r.section===sec).map(r=>r.bio/360*100);
-    sectionPct[sec] = vals.length ? Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)*10)/10 : null;
+    const st = computeStats(vals);
+    sectionPct[sec] = vals.length ? st.mean : null;
+    sectionSD[sec] = vals.length ? st.sd : null;
   });
   const pu2Latest = PU2_TESTS[PU2_TESTS.length-1];
   ['CHAMPION','ELITE'].forEach(sec=>{
     const vals = pu2Latest.students.filter(r=>r.section===sec).map(r=>pu2SubjPct(r,'BIO',pu2Latest.outof.BIO)).filter(v=>v!==null);
-    sectionPct[sec] = vals.length ? Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)*10)/10 : null;
+    const st = computeStats(vals);
+    sectionPct[sec] = vals.length ? st.mean : null;
+    sectionSD[sec] = vals.length ? st.sd : null;
   });
   const includedSections = ['SPARK','PRIME','CHAMPION','ELITE'].filter(sectionAllowed);
 
@@ -7650,9 +7783,9 @@ function buildNeetObtBioSection(){
   if(atRisk.length){
     html += rpSection('Candidate-wise &mdash; Students Needing Support (NEET OBT, Below 35%)', rpTable(['Name','Section','PU','Test','Biology %'], atRisk.map(s=>[s.name, s.section, 'PU-'+(s.pu===2?'II':'I'), s.label, s.pct+'%'])));
   }
-  const secRows = includedSections.map(sec=>[sec, (sec==='SPARK'||sec==='PRIME')?'PU-I':'PU-II', (sectionPct[sec]!==null&&sectionPct[sec]!==undefined?sectionPct[sec]:'\u2014')+'%']);
+  const secRows = includedSections.map(sec=>[sec, (sec==='SPARK'||sec==='PRIME')?'PU-I':'PU-II', (sectionPct[sec]!==null&&sectionPct[sec]!==undefined?sectionPct[sec]:'\u2014')+'%', (sectionSD[sec]!==null&&sectionSD[sec]!==undefined?sectionSD[sec]:'\u2014')+'%']);
   html += '<div class="rp-section"><div class="rp-section-title">Section-wise Biology Comparison (NEET OBT)</div>'+
-    (secRows.length ? rpTable(['Section','PU Level','Biology Avg %'], secRows) : '<div class="rp-callout">No sections selected.</div>') +
+    (secRows.length ? rpTable(['Section','PU Level','Biology Avg %','Spread (SD)'], secRows) : '<div class="rp-callout">No sections selected.</div>') +
     (secRows.length ? '<canvas id="bioNeetSectionCanvas" style="max-width:100%;margin-top:10px;" width="600" height="240"></canvas>' : '') + '</div>';
   html += '<div class="rp-section"><div class="rp-section-title">Test-wise Biology Trend (NEET OBT)</div>';
   if(currentBioFilters.includePU1) html += '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; margin-bottom:6px;">PU-I</div><canvas id="bioNeetTrendPU1Canvas" style="max-width:100%;" width="600" height="200"></canvas>';
@@ -7685,12 +7818,19 @@ function buildKcetObtBioSection(){
   const combined = [...pu1Rows, ...pu2Rows].filter(s=>currentBioFilters.sections.indexOf(s.section)===-1 ? !['SPARK','PRIME','CHAMPION','ELITE'].includes(s.section) : true).sort((a,b)=>b.pct-a.pct);
   const top10 = combined.slice(0,currentBioFilters.topN);
 
-  function secAvg(list, outof){ return list.length ? Math.round((list.reduce((a,b)=>a+b.total,0)/list.length)/outof*1000)/10 : null; }
+  function secAvg(list, outof){ return list.length ? Math.round((computeStats(list.map(b=>b.total)).mean)/outof*1000)/10 : null; }
+  function secSD(list, outof){ return list.length ? Math.round((computeStats(list.map(b=>b.total)).sd)/outof*1000)/10 : null; }
   const sectionPct = {
     SPARK: secAvg(pu1Kcet.students.filter(r=>r.section==='SPARK'),135),
     PRIME: secAvg(pu1Kcet.students.filter(r=>r.section==='PRIME'),135),
     CHAMPION: secAvg(pu2Kcet.students.filter(r=>r.section==='CHAMPION'), pu2Kcet.outof*3),
     ELITE: secAvg(pu2Kcet.students.filter(r=>r.section==='ELITE'), pu2Kcet.outof*3)
+  };
+  const sectionSD = {
+    SPARK: secSD(pu1Kcet.students.filter(r=>r.section==='SPARK'),135),
+    PRIME: secSD(pu1Kcet.students.filter(r=>r.section==='PRIME'),135),
+    CHAMPION: secSD(pu2Kcet.students.filter(r=>r.section==='CHAMPION'), pu2Kcet.outof*3),
+    ELITE: secSD(pu2Kcet.students.filter(r=>r.section==='ELITE'), pu2Kcet.outof*3)
   };
   const includedSections = ['SPARK','PRIME','CHAMPION','ELITE'].filter(sectionAllowed);
   const pu1TrendLabels = KCET_TESTS.map(t=>t.label);
@@ -7706,9 +7846,9 @@ function buildKcetObtBioSection(){
   html += '<div class="rp-callout warn"><b>Note:</b> KCET (PCM stream) is Physics, Chemistry &amp; Mathematics only &mdash; there is no Biology component. Figures below are for a complete academic picture, not a Biology measure.</div>';
   html += rpSection('Candidate-wise &mdash; Top PCM Performers', combined.length ? '<div class="table-wrap"><table><thead><tr><th>Rank</th><th>Name</th><th>Section</th><th>PU</th><th>PCM %</th></tr></thead><tbody>'+
     top10.map((s,i)=>'<tr'+(i===0?' class="rp-bio"':'')+'><td>'+rankCell(i)+'</td><td>'+s.name+'</td><td>'+s.section+'</td><td>PU-'+(s.pu===2?'II':'I')+'</td><td>'+s.pct+'%</td></tr>').join('')+'</tbody></table></div>' : '<div class="rp-callout">No students match the current PU / section filters.</div>');
-  const secRows = includedSections.map(sec=>[sec, (sec==='SPARK'||sec==='PRIME')?'PU-I':'PU-II', (sectionPct[sec]!==null&&sectionPct[sec]!==undefined?sectionPct[sec]:'\u2014')+'%']);
+  const secRows = includedSections.map(sec=>[sec, (sec==='SPARK'||sec==='PRIME')?'PU-I':'PU-II', (sectionPct[sec]!==null&&sectionPct[sec]!==undefined?sectionPct[sec]:'\u2014')+'%', (sectionSD[sec]!==null&&sectionSD[sec]!==undefined?sectionSD[sec]:'\u2014')+'%']);
   html += '<div class="rp-section"><div class="rp-section-title">Section-wise PCM Comparison</div>'+
-    (secRows.length ? rpTable(['Section','PU Level','PCM Avg %'], secRows) : '<div class="rp-callout">No sections selected.</div>') +
+    (secRows.length ? rpTable(['Section','PU Level','PCM Avg %','Spread (SD)'], secRows) : '<div class="rp-callout">No sections selected.</div>') +
     (secRows.length ? '<canvas id="bioKcetSectionCanvas" style="max-width:100%;margin-top:10px;" width="600" height="240"></canvas>' : '') + '</div>';
   html += '<div class="rp-section"><div class="rp-section-title">PCM Trend Over Time</div>';
   if(currentBioFilters.includePU1) html += '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; margin-bottom:6px;">PU-I</div><canvas id="bioKcetTrendPU1Canvas" style="max-width:100%;" width="600" height="200"></canvas>';
@@ -7733,7 +7873,8 @@ function buildRiskBioSection(){
     const hist = getBioHistory(s, s.pu);
     if(!hist.length) return null;
     const l = hist[hist.length-1];
-    return l.pct<35 ? {name:s.name, section:s.section||'\u2014', pu:s.pu, pct:l.pct, label:l.label} : null;
+    const consistSD = hist.length>1 ? computeStats(hist.map(h=>h.pct)).sd : null;
+    return l.pct<35 ? {name:s.name, section:s.section||'\u2014', pu:s.pu, pct:l.pct, label:l.label, consistSD} : null;
   }).filter(Boolean).sort((a,b)=>a.pct-b.pct).slice(0,currentBioFilters.topN);
 
   const declining = roster.map(s=>{
@@ -7741,14 +7882,15 @@ function buildRiskBioSection(){
     if(hist.length<2) return null;
     const first = hist[0].pct, last = hist[hist.length-1].pct;
     const delta = Math.round((last-first)*10)/10;
-    return delta<=-15 ? {name:s.name, section:s.section||'\u2014', pu:s.pu, first, last, delta} : null;
+    const consistSD = computeStats(hist.map(h=>h.pct)).sd;
+    return delta<=-15 ? {name:s.name, section:s.section||'\u2014', pu:s.pu, first, last, delta, consistSD} : null;
   }).filter(Boolean).sort((a,b)=>a.delta-b.delta).slice(0,currentBioFilters.topN);
 
   let html = '<div class="rp-section"><div class="rp-section-title" style="font-size:16px;">⚠️ Risk &amp; At-Risk &mdash; Biology</div></div>';
   html += rpSection('Below Passing Mark <span style="font-weight:400;font-size:12px;color:var(--muted);">(Latest Biology test on file, Below 35%)</span>',
-    rpTable(['Name','Section','PU','Test','Biology %'], belowPass.length ? belowPass.map(s=>[s.name, s.section, 'PU-'+(s.pu===2?'II':'I'), s.label, s.pct+'%']) : [['No students currently below 35% \u2014 great news!','','','','']]));
+    rpTable(['Name','Section','PU','Test','Biology %','Consistency (SD)'], belowPass.length ? belowPass.map(s=>[s.name, s.section, 'PU-'+(s.pu===2?'II':'I'), s.label, s.pct+'%', s.consistSD!==null?s.consistSD+'%':'\u2014']) : [['No students currently below 35% \u2014 great news!','','','','','']]));
   html += rpSection('Declining Students <span style="font-weight:400;font-size:12px;color:var(--muted);">(First recorded Biology % vs latest, drop of 15+ points)</span>',
-    rpTable(['Name','Section','PU','First %','Latest %','Change'], declining.length ? declining.map(s=>[s.name, s.section, 'PU-'+(s.pu===2?'II':'I'), s.first+'%', s.last+'%', s.delta+'%']) : [['No students have dropped 15+ points \u2014 great news!','','','','','']]));
+    rpTable(['Name','Section','PU','First %','Latest %','Change','Consistency (SD)'], declining.length ? declining.map(s=>[s.name, s.section, 'PU-'+(s.pu===2?'II':'I'), s.first+'%', s.last+'%', s.delta+'%', s.consistSD!==null?s.consistSD+'%':'\u2014']) : [['No students have dropped 15+ points \u2014 great news!','','','','','','']]));
 
   const comment = belowPass.length || declining.length
     ? 'Across the selected roster, '+belowPass.length+' student(s) are currently below the Biology passing mark, and '+declining.length+' student(s) have shown a significant decline. I am personally following up with each of them for a focused revision plan.'
@@ -7786,6 +7928,7 @@ function buildTestWiseBioSection(){
     sectionHtml += '<div class="rp-kpi-grid">'+
       '<div class="rp-kpi"><div class="rp-kpi-label">Students Appeared</div><div class="rp-kpi-value">'+data.rows.length+'</div><div class="rp-kpi-sub">'+data.label+'</div></div>'+
       '<div class="rp-kpi"><div class="rp-kpi-label">Class Average</div><div class="rp-kpi-value">'+(data.classAvgPct!==null?data.classAvgPct+'%':'\u2014')+'</div><div class="rp-kpi-sub">Biology, out of '+(data.outOf||'\u2014')+'</div></div>'+
+      '<div class="rp-kpi"><div class="rp-kpi-label">Class Spread (SD)</div><div class="rp-kpi-value">'+(data.classSDPct!==null?data.classSDPct+'%':'\u2014')+'</div><div class="rp-kpi-sub">'+(data.classSDPct!==null?sdLabel(data.classSDPct,100):'')+'</div></div>'+
     '</div>';
     sectionHtml += rpSection('Toppers <span style="font-weight:400;font-size:12px;color:var(--muted);">('+data.label+')</span>',
       topper10.length ? '<div class="table-wrap"><table><thead><tr><th>Rank</th><th>Name</th><th>Section</th><th>Score</th><th>%</th></tr></thead><tbody>'+
@@ -7993,6 +8136,8 @@ function renderEleCandidateInsight(student, pu){
   const bestPct = bestEntry ? bestEntry.pct : null;
   const latestClassAvg = hist.length ? hist[hist.length-1].classAvg : null;
   const vsAvg = (latestPct!==null && latestClassAvg!==null) ? Math.round((latestPct-latestClassAvg)*10)/10 : null;
+  const histStats = computeStats(hist.map(h=>h.pct));
+  const compareStats = compare ? computeStats(compare.values) : null;
 
   let html = '<div class="rp-header">'+
     '<div class="rp-tag">Biology All In One (BAIO) Learning System</div>'+
@@ -8006,6 +8151,7 @@ function renderEleCandidateInsight(student, pu){
     '<div class="rp-kpi"><div class="rp-kpi-label">Best Electronics Score</div><div class="rp-kpi-value">'+(bestPct!==null?bestPct+'% <span style=\"font-size:13px;font-weight:500;color:var(--muted);\">('+bestEntry.score+'/'+bestEntry.outOf+')</span>':'\u2014')+'</div><div class="rp-kpi-sub">Across all tests recorded</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">vs Class Average (Latest Test)</div><div class="rp-kpi-value" style="color:'+(vsAvg!==null&&vsAvg>=0?'#15803d':'#b91c1c')+';">'+(vsAvg!==null?(vsAvg>=0?'+':'')+vsAvg+'%':'\u2014')+'</div><div class="rp-kpi-sub">Percentage points</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Tests Recorded</div><div class="rp-kpi-value">'+hist.length+'</div><div class="rp-kpi-sub">Electronics attempts on file</div></div>'+
+    '<div class="rp-kpi"><div class="rp-kpi-label">Consistency (Electronics SD Across Tests)</div><div class="rp-kpi-value">'+(histStats.sd!==null?histStats.sd+'%':'\u2014')+'</div><div class="rp-kpi-sub">'+(histStats.sd!==null?sdLabel(histStats.sd,100):'Not enough data')+'</div></div>'+
   '</div>';
 
   if(hist.length){
@@ -8021,7 +8167,9 @@ function renderEleCandidateInsight(student, pu){
   }
 
   if(compare){
-    html += '<div class="rp-section"><div class="rp-section-title">Subject Comparison <span style="font-weight:400;font-size:12px;color:var(--muted);">('+compare.testLabel+')</span></div><canvas id="eleCandSubjectCanvas" style="max-width:100%;" width="600" height="240"></canvas></div>';
+    html += '<div class="rp-section"><div class="rp-section-title">Subject Comparison <span style="font-weight:400;font-size:12px;color:var(--muted);">('+compare.testLabel+')</span></div><canvas id="eleCandSubjectCanvas" style="max-width:100%;" width="600" height="240"></canvas>'+
+      (compareStats.sd!==null ? '<div class="rp-callout" style="margin-top:10px;">Subject-to-subject spread this test: SD '+compareStats.sd+'% — '+sdLabel(compareStats.sd,100)+'</div>' : '') +
+    '</div>';
   }
 
   const comment = pu===2 ? generatePU2TeacherComment(student) : generateTeacherComment(student);
@@ -8107,8 +8255,9 @@ function buildEleTheorySection(){
   const pu1Vals = pu1Roster.map(s=>pu1ElectronicsLatest(s)).filter(Boolean).map(l=>l.pct);
   const pu2Vals = pu2Roster.map(s=>pu2ElectronicsLatestELE(s)).filter(Boolean).map(l=>l.pct);
   const pu1Avg = avgOf(pu1Vals), pu2Avg = avgOf(pu2Vals);
+  const pu1SD = sdOf(pu1Vals), pu2SD = sdOf(pu2Vals);
   const includedSections = ['PU1_ELE','PU2_ELE'].filter(eleSectionAllowed);
-  const secRows = includedSections.map(sec=> sec==='PU1_ELE' ? ['PU-I Electronics (SPARK/PRIME)','PU-I', pu1Avg!==null?pu1Avg+'%':'\u2014'] : ['PU-II Electronics','PU-II', pu2Avg!==null?pu2Avg+'%':'\u2014']);
+  const secRows = includedSections.map(sec=> sec==='PU1_ELE' ? ['PU-I Electronics (SPARK/PRIME)','PU-I', pu1Avg!==null?pu1Avg+'%':'\u2014', pu1SD!==null?pu1SD+'%':'\u2014'] : ['PU-II Electronics','PU-II', pu2Avg!==null?pu2Avg+'%':'\u2014', pu2SD!==null?pu2SD+'%':'\u2014']);
 
   const pu1TrendLabels = ['Slip Test 1','Slip Test 2',pu1CurrentMonthLabel()];
   const pu1TrendVals = ['t1','t2','mt'].map(k=>computeElectronicsSubjectStats(pu1Roster,k).ELE.avg_pct);
@@ -8119,17 +8268,21 @@ function buildEleTheorySection(){
   });
 
   const pu1SubjStats = computeElectronicsSubjectStats(pu1Roster, 'mt');
-  const pu2SubjVals = {};
+  const pu2SubjVals = {}, pu2SubjSD = {};
   ELE_SUBJECTS.forEach(subj=>{
     const vals = pu2Roster.map(s=>{ const d=pu2MonthData(s,pu2MonthCurrent); return d && d[subj]!==null && d[subj]!==undefined ? d[subj] : null; }).filter(v=>v!==null);
-    pu2SubjVals[subj] = vals.length ? Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)/40*1000)/10 : null;
+    const st = computeStats(vals);
+    pu2SubjVals[subj] = vals.length ? Math.round((st.mean/40)*1000)/10 : null;
+    pu2SubjSD[subj] = vals.length ? Math.round((st.sd/40)*1000)/10 : null;
   });
   const subjChartLabels = ['Electronics','Physics','Chemistry','Mathematics'];
   const pu1SubjArr = [pu1SubjStats.ELE.avg_pct, pu1SubjStats.PHY.avg_pct, pu1SubjStats.CHE.avg_pct, pu1SubjStats.MAT.avg_pct];
   const pu2SubjArr = [pu2SubjVals.ELE, pu2SubjVals.PHY, pu2SubjVals.CHE, pu2SubjVals.MAT];
+  const pu2SubjSDArr = [pu2SubjSD.ELE, pu2SubjSD.PHY, pu2SubjSD.CHE, pu2SubjSD.MAT];
   const subjRows = subjChartLabels.map((label,i)=>[label,
     currentEleFilters.includePU1 && pu1SubjArr[i]!=null ? pu1SubjArr[i]+'%' : '\u2014',
-    currentEleFilters.includePU2 && pu2SubjArr[i]!=null ? pu2SubjArr[i]+'%' : '\u2014']);
+    currentEleFilters.includePU2 && pu2SubjArr[i]!=null ? pu2SubjArr[i]+'%' : '\u2014',
+    currentEleFilters.includePU2 && pu2SubjSDArr[i]!=null ? pu2SubjSDArr[i]+'%' : '\u2014']);
 
   const pu1Lead = pu1SubjArr[0]!=null ? Math.round((pu1SubjArr[0] - Math.max(pu1SubjArr[1]||0, pu1SubjArr[2]||0, pu1SubjArr[3]||0))*10)/10 : null;
   const pu1Trend = (pu1TrendVals[0]!=null && pu1TrendVals[pu1TrendVals.length-1]!=null) ? Math.round((pu1TrendVals[pu1TrendVals.length-1]-pu1TrendVals[0])*10)/10 : null;
@@ -8153,14 +8306,14 @@ function buildEleTheorySection(){
     html += rpSection('Candidate-wise &mdash; Students Needing Support (Theory, Below 35%)', rpTable(['Name','Section','PU','Test','Electronics %'], atRisk.map(s=>[s.name, s.section, 'PU-'+(s.pu===2?'II':'I'), s.label, s.pct+'%'])));
   }
   html += '<div class="rp-section"><div class="rp-section-title">Section-wise Electronics Comparison (Theory)</div>'+
-    (secRows.length ? rpTable(['Section','PU Level','Electronics Avg %'], secRows) : '<div class="rp-callout">No sections selected.</div>') +
+    (secRows.length ? rpTable(['Section','PU Level','Electronics Avg %','Spread (SD)'], secRows) : '<div class="rp-callout">No sections selected.</div>') +
     (secRows.length ? '<canvas id="eleTheorySectionCanvas" style="max-width:100%;margin-top:10px;" width="600" height="240"></canvas>' : '') + '</div>';
   html += '<div class="rp-section"><div class="rp-section-title">Test-wise Electronics Trend (Theory)</div>';
   if(currentEleFilters.includePU1) html += '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; margin-bottom:6px;">PU-I</div><canvas id="eleTheoryTrendPU1Canvas" style="max-width:100%;" width="600" height="200"></canvas>';
   if(currentEleFilters.includePU2) html += '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; margin:14px 0 6px;">PU-II</div><canvas id="eleTheoryTrendPU2Canvas" style="max-width:100%;" width="600" height="200"></canvas>';
   html += '</div>';
   html += '<div class="rp-section"><div class="rp-section-title">Electronics vs Other Subjects (Theory)</div>'+
-    rpTable(['Subject','PU-I Avg %','PU-II Avg %'], subjRows, 0) + '<canvas id="eleTheorySubjectCanvas" style="max-width:100%;margin-top:10px;" width="600" height="240"></canvas></div>';
+    rpTable(['Subject','PU-I Avg %','PU-II Avg %','PU-II Spread (SD)'], subjRows, 0) + '<canvas id="eleTheorySubjectCanvas" style="max-width:100%;margin-top:10px;" width="600" height="240"></canvas></div>';
   html += '<div class="rp-section"><div class="rp-section-title">System-Generated Analysis &mdash; Theory <span style="font-weight:400;font-size:12px;color:var(--muted);">(Personal analysis, Narendra Sir)</span></div>'+
     '<div class="teacher-comment"><span class="tc-label">From Narendra Sir</span>'+comment+'</div></div>';
 
@@ -8191,11 +8344,14 @@ function buildEleKcetSection(){
   const combined = [...pu1Rows, ...pu2Rows].sort((a,b)=>b.pct-a.pct);
   const top10 = combined.slice(0, currentEleFilters.topN);
 
-  function secAvg(list, outof){ return list.length ? Math.round((list.reduce((a,b)=>a+b.total,0)/list.length)/outof*1000)/10 : null; }
+  function secAvg(list, outof){ return list.length ? Math.round((computeStats(list.map(b=>b.total)).mean)/outof*1000)/10 : null; }
+  function secSD(list, outof){ return list.length ? Math.round((computeStats(list.map(b=>b.total)).sd)/outof*1000)/10 : null; }
   const pu1SecAvg = secAvg(pu1Kcet.students.filter(r=>pu1EleCodes.has(r.code)), 135);
   const pu2SecAvg = secAvg(pu2Kcet.students.filter(r=>pu2EleCodes.has(r.code)), pu2Kcet.outof*3);
+  const pu1SecSD = secSD(pu1Kcet.students.filter(r=>pu1EleCodes.has(r.code)), 135);
+  const pu2SecSD = secSD(pu2Kcet.students.filter(r=>pu2EleCodes.has(r.code)), pu2Kcet.outof*3);
   const includedSections = ['PU1_ELE','PU2_ELE'].filter(eleSectionAllowed);
-  const secRows = includedSections.map(sec=> sec==='PU1_ELE' ? ['PU-I Electronics (SPARK/PRIME)','PU-I', pu1SecAvg!==null?pu1SecAvg+'%':'\u2014'] : ['PU-II Electronics','PU-II', pu2SecAvg!==null?pu2SecAvg+'%':'\u2014']);
+  const secRows = includedSections.map(sec=> sec==='PU1_ELE' ? ['PU-I Electronics (SPARK/PRIME)','PU-I', pu1SecAvg!==null?pu1SecAvg+'%':'\u2014', pu1SecSD!==null?pu1SecSD+'%':'\u2014'] : ['PU-II Electronics','PU-II', pu2SecAvg!==null?pu2SecAvg+'%':'\u2014', pu2SecSD!==null?pu2SecSD+'%':'\u2014']);
 
   const pu1TrendLabels = KCET_TESTS.map(t=>t.label);
   const pu1TrendVals = KCET_TESTS.map(t=>{ const vals=t.students.filter(r=>pu1EleCodes.has(r.code)).map(r=>r.total/135*100); return vals.length?Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)*10)/10:null; });
@@ -8210,7 +8366,7 @@ function buildEleKcetSection(){
   html += rpSection('Candidate-wise &mdash; Top PCM Performers', combined.length ? '<div class="table-wrap"><table><thead><tr><th>Rank</th><th>Name</th><th>Section</th><th>PU</th><th>PCM %</th></tr></thead><tbody>'+
     top10.map((s,i)=>'<tr'+(i===0?' class="rp-bio"':'')+'><td>'+rankCell(i)+'</td><td>'+s.name+'</td><td>'+s.section+'</td><td>PU-'+(s.pu===2?'II':'I')+'</td><td>'+s.pct+'%</td></tr>').join('')+'</tbody></table></div>' : '<div class="rp-callout">No students match the current PU / section filters.</div>');
   html += '<div class="rp-section"><div class="rp-section-title">Section-wise PCM Comparison</div>'+
-    (secRows.length ? rpTable(['Section','PU Level','PCM Avg %'], secRows) : '<div class="rp-callout">No sections selected.</div>') +
+    (secRows.length ? rpTable(['Section','PU Level','PCM Avg %','Spread (SD)'], secRows) : '<div class="rp-callout">No sections selected.</div>') +
     (secRows.length ? '<canvas id="eleKcetSectionCanvas" style="max-width:100%;margin-top:10px;" width="600" height="240"></canvas>' : '') + '</div>';
   html += '<div class="rp-section"><div class="rp-section-title">PCM Trend Over Time</div>';
   if(currentEleFilters.includePU1) html += '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; margin-bottom:6px;">PU-I</div><canvas id="eleKcetTrendPU1Canvas" style="max-width:100%;" width="600" height="200"></canvas>';
@@ -8241,21 +8397,23 @@ function buildEleRiskSection(){
   const belowPass = withHist.map(s=>{
     if(!s.hist.length) return null;
     const l = s.hist[s.hist.length-1];
-    return l.pct<35 ? {name:s.name, section:s.section, pu:s.pu, pct:l.pct, label:l.label} : null;
+    const consistSD = s.hist.length>1 ? computeStats(s.hist.map(h=>h.pct)).sd : null;
+    return l.pct<35 ? {name:s.name, section:s.section, pu:s.pu, pct:l.pct, label:l.label, consistSD} : null;
   }).filter(Boolean).sort((a,b)=>a.pct-b.pct).slice(0,currentEleFilters.topN);
 
   const declining = withHist.map(s=>{
     if(s.hist.length<2) return null;
     const first = s.hist[0].pct, last = s.hist[s.hist.length-1].pct;
     const delta = Math.round((last-first)*10)/10;
-    return delta<=-15 ? {name:s.name, section:s.section, pu:s.pu, first, last, delta} : null;
+    const consistSD = computeStats(s.hist.map(h=>h.pct)).sd;
+    return delta<=-15 ? {name:s.name, section:s.section, pu:s.pu, first, last, delta, consistSD} : null;
   }).filter(Boolean).sort((a,b)=>a.delta-b.delta).slice(0,currentEleFilters.topN);
 
   let html = '<div class="rp-section"><div class="rp-section-title" style="font-size:16px;">⚠️ Risk &amp; At-Risk &mdash; Electronics</div></div>';
   html += rpSection('Below Passing Mark <span style="font-weight:400;font-size:12px;color:var(--muted);">(Latest Electronics test on file, Below 35%)</span>',
-    rpTable(['Name','Section','PU','Test','Electronics %'], belowPass.length ? belowPass.map(s=>[s.name, s.section, 'PU-'+(s.pu===2?'II':'I'), s.label, s.pct+'%']) : [['No students currently below 35% \u2014 great news!','','','','']]));
+    rpTable(['Name','Section','PU','Test','Electronics %','Consistency (SD)'], belowPass.length ? belowPass.map(s=>[s.name, s.section, 'PU-'+(s.pu===2?'II':'I'), s.label, s.pct+'%', s.consistSD!==null?s.consistSD+'%':'\u2014']) : [['No students currently below 35% \u2014 great news!','','','','','']]));
   html += rpSection('Declining Students <span style="font-weight:400;font-size:12px;color:var(--muted);">(First recorded Electronics % vs latest, drop of 15+ points)</span>',
-    rpTable(['Name','Section','PU','First %','Latest %','Change'], declining.length ? declining.map(s=>[s.name, s.section, 'PU-'+(s.pu===2?'II':'I'), s.first+'%', s.last+'%', s.delta+'%']) : [['No students have dropped 15+ points \u2014 great news!','','','','','']]));
+    rpTable(['Name','Section','PU','First %','Latest %','Change','Consistency (SD)'], declining.length ? declining.map(s=>[s.name, s.section, 'PU-'+(s.pu===2?'II':'I'), s.first+'%', s.last+'%', s.delta+'%', s.consistSD!==null?s.consistSD+'%':'\u2014']) : [['No students have dropped 15+ points \u2014 great news!','','','','','','']]));
 
   const comment = belowPass.length || declining.length
     ? 'Across the selected roster, '+belowPass.length+' student(s) are currently below the Electronics passing mark, and '+declining.length+' student(s) have shown a significant decline. I am personally following up with each of them for a focused revision plan.'
@@ -8298,8 +8456,9 @@ function getTestWiseEleData(sel){
     rows = computePU2ElectronicsRoster().filter(s=>s[sel.key] && s[sel.key].ELE!==null && s[sel.key].ELE!==undefined)
       .map(s=>({name:s.name, section:sectionLabel(s), score:s[sel.key].ELE, outOf, pct:Math.round(s[sel.key].ELE/outOf*1000)/10}));
   }
-  if(rows.length) classAvgPct = Math.round((rows.reduce((a,b)=>a+b.pct,0)/rows.length)*10)/10;
-  return {label:sel.label, rows, classAvgPct, outOf};
+  let classSDPct = null;
+  if(rows.length){ const st = computeStats(rows.map(r=>r.pct)); classAvgPct = st.mean; classSDPct = st.sd; }
+  return {label:sel.label, rows, classAvgPct, classSDPct, outOf};
 }
 function buildEleTestWiseSection(){
   const checkedEls = Array.from(document.querySelectorAll('.eleTestWiseCheck:checked'));
@@ -8327,6 +8486,7 @@ function buildEleTestWiseSection(){
     sectionHtml += '<div class="rp-kpi-grid">'+
       '<div class="rp-kpi"><div class="rp-kpi-label">Students Appeared</div><div class="rp-kpi-value">'+data.rows.length+'</div><div class="rp-kpi-sub">'+data.label+'</div></div>'+
       '<div class="rp-kpi"><div class="rp-kpi-label">Class Average</div><div class="rp-kpi-value">'+(data.classAvgPct!==null?data.classAvgPct+'%':'\u2014')+'</div><div class="rp-kpi-sub">Electronics, out of '+(data.outOf||'\u2014')+'</div></div>'+
+      '<div class="rp-kpi"><div class="rp-kpi-label">Class Spread (SD)</div><div class="rp-kpi-value">'+(data.classSDPct!==null?data.classSDPct+'%':'\u2014')+'</div><div class="rp-kpi-sub">'+(data.classSDPct!==null?sdLabel(data.classSDPct,100):'')+'</div></div>'+
     '</div>';
     sectionHtml += rpSection('Toppers <span style="font-weight:400;font-size:12px;color:var(--muted);">('+data.label+')</span>',
       topper10.length ? '<div class="table-wrap"><table><thead><tr><th>Rank</th><th>Name</th><th>Section</th><th>Score</th><th>%</th></tr></thead><tbody>'+
