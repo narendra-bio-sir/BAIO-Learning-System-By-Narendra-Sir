@@ -15,13 +15,13 @@
   --navy:#0B1B14; --navy2:#0F2419; --panel:#13281E; --panel2:#0E211A;
   --gold:#D4AF37; --gold2:#B8912A; --teal:#2EE6C5; --teal2:#127566;
   --ink:#EAF3EE; --ink-dim:#9FC4B6; --line:rgba(212,175,55,0.22);
-  --ok:#33C48A;
+  --ok:#33C48A; --gold-glow:rgba(212,175,55,0.55); --teal-glow:rgba(46,230,197,0.55);
 }
 [data-theme="light"]{
   --navy:#F7F5EE; --navy2:#EFEBDD; --panel:#FFFFFF; --panel2:#F3F0E6;
   --gold:#B8912A; --gold2:#8A6A1A; --teal:#0F8F7A; --teal2:#0B6F5E;
   --ink:#1E2A22; --ink-dim:#5C6E63; --line:rgba(184,145,42,0.25);
-  --ok:#1F9D6C;
+  --ok:#1F9D6C; --gold-glow:rgba(184,145,42,0.45); --teal-glow:rgba(15,143,122,0.45);
 }
 *{box-sizing:border-box;}
 body{
@@ -175,10 +175,19 @@ header{padding:34px 0 22px; text-align:center;}
   flex:0 0 auto; background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#1a1406;
   font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12px; padding:9px 14px;
   border-radius:10px; text-decoration:none; white-space:nowrap;
+  transition:transform .15s ease; animation:cwPulseGold 2.4s ease-in-out infinite;
 }
+.continue-widget .cw-btn:active{ transform:scale(0.94); }
+.continue-widget .cw-btn .arrow{ display:inline-block; transition:transform .2s ease; }
+.continue-widget .cw-btn:hover .arrow{ transform:translateX(3px); }
+@keyframes cwPulseGold{ 0%,100%{box-shadow:0 0 0 rgba(0,0,0,0);} 50%{box-shadow:0 0 14px var(--gold-glow);} }
+@keyframes cwPulseTeal{ 0%,100%{box-shadow:0 0 0 rgba(0,0,0,0);} 50%{box-shadow:0 0 14px var(--teal-glow);} }
 .continue-widget.try-next{ margin-top:10px; }
 .continue-widget.try-next .cw-label{ color:var(--gold); }
-.continue-widget.try-next .cw-btn{ background:linear-gradient(135deg,var(--teal),var(--teal2)); color:#062019; }
+.continue-widget.try-next .cw-btn{ background:linear-gradient(135deg,var(--teal),var(--teal2)); color:#062019; animation-name:cwPulseTeal; }
+@media (prefers-reduced-motion: reduce){
+  .continue-widget .cw-btn{ animation:none; }
+}
 
 .badges-chapter-card{
   border:1px solid var(--line); border-radius:14px; padding:14px 16px; background:var(--panel);
@@ -272,7 +281,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       <div class="cw-title" id="cwTitle"></div>
       <div class="cw-meta" id="cwMeta"></div>
     </div>
-    <a href="#" id="cwBtn" class="cw-btn">Resume →</a>
+    <a href="#" id="cwBtn" class="cw-btn">Resume <span class="arrow">&rarr;</span></a>
   </div>
 
   <div id="tryNextWidget" class="continue-widget try-next">
@@ -282,7 +291,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       <div class="cw-title" id="tnTitle"></div>
       <div class="cw-meta" id="tnMeta"></div>
     </div>
-    <a href="#" id="tnBtn" class="cw-btn">Start →</a>
+    <a href="#" id="tnBtn" class="cw-btn">Start <span class="arrow">&rarr;</span></a>
   </div>
 
   <div id="statWidgets" class="widget-row">
@@ -756,7 +765,7 @@ if(stripRows){
     document.getElementById('tnTitle').textContent = suggestion.num + ': ' + suggestion.title;
     document.getElementById('tnMeta').textContent = meta;
     document.getElementById('tnBtn').setAttribute('href', suggestion.href);
-    document.getElementById('tnBtn').textContent = unopened ? 'Start →' : 'Continue →';
+    document.getElementById('tnBtn').innerHTML = (unopened ? 'Start' : 'Continue') + ' <span class="arrow">&rarr;</span>';
     document.getElementById('tryNextWidget').classList.add('show');
 
     notifyChapterNudge(suggestion, unopened ? 'Give it a first look today.' : ("It's been " + stalestDays + " days — pick it back up?"));
