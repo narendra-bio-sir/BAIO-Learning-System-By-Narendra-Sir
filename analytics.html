@@ -7575,7 +7575,8 @@ function buildBioTestWiseOptions(){
   const opts = [
     {label:'Slip Test 1', pu:1, kind:'pu1_t1'},
     {label:'Slip Test 2', pu:1, kind:'pu1_t2'},
-    {label:'Monthly Test', pu:1, kind:'pu1_mt'},
+    {label:'June Monthly Test', pu:1, kind:'pu1_mt_june'},
+    {label:'July Monthly Test', pu:1, kind:'pu1_mt_july'},
   ];
   NEET_TESTS.forEach((t,i)=> opts.push({label:t.label, pu:1, kind:'pu1_neet', idx:i}));
   PU2_TESTS.forEach((t,i)=> opts.push({label:t.label+' (PU-II)', pu:2, kind:'pu2_test', idx:i}));
@@ -7585,7 +7586,16 @@ function buildBioTestWiseOptions(){
 function populateBioTestWiseSelect(){
   if(!BIO_TESTWISE_OPTIONS.length) buildBioTestWiseOptions();
   const wrap = document.getElementById('bioTestWiseChecks');
-  wrap.innerHTML = BIO_TESTWISE_OPTIONS.map((o,i)=>'<div class="checkbox-row"><input type="checkbox" class="bioTestWiseCheck" value="'+i+'" id="bioTWChk'+i+'"'+(i===0?' checked':'')+'><label for="bioTWChk'+i+'">'+o.label+'</label></div>').join('');
+  let html = '', lastGroup = null;
+  BIO_TESTWISE_OPTIONS.forEach((o,i)=>{
+    const group = o.pu===1 ? 'PU-I (Spark + Prime)' : 'PU-II (Champion + Elite)';
+    if(group !== lastGroup){
+      html += '<div style="font-family:\'Space Grotesk\',sans-serif; font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--gold-soft); margin:'+(lastGroup?'12px 0 4px':'0 0 4px')+';">'+group+'</div>';
+      lastGroup = group;
+    }
+    html += '<div class="checkbox-row"><input type="checkbox" class="bioTestWiseCheck" value="'+i+'" id="bioTWChk'+i+'"'+(i===0?' checked':'')+'><label for="bioTWChk'+i+'">'+o.label+'</label></div>';
+  });
+  wrap.innerHTML = html;
 }
 function getTestWiseBioData(sel){
   let rows = [], classAvgPct = null, outOf;
@@ -7594,7 +7604,11 @@ function getTestWiseBioData(sel){
     outOf = 20;
     rows = STUDENTS.filter(s=>s[key] && s[key].BIO!==null && s[key].BIO!==undefined)
       .map(s=>({name:s.name, section:s.section||'\u2014', score:s[key].BIO, outOf, pct:Math.round(s[key].BIO/outOf*1000)/10}));
-  } else if(sel.kind==='pu1_mt'){
+  } else if(sel.kind==='pu1_mt_june'){
+    outOf = 40;
+    rows = STUDENTS.filter(s=>s.june && s.june.BIO!==null && s.june.BIO!==undefined)
+      .map(s=>({name:s.name, section:s.section||'\u2014', score:s.june.BIO, outOf, pct:Math.round(s.june.BIO/outOf*1000)/10}));
+  } else if(sel.kind==='pu1_mt_july'){
     outOf = 40;
     rows = STUDENTS.filter(s=>s.mt && s.mt.BIO!==null && s.mt.BIO!==undefined)
       .map(s=>({name:s.name, section:s.section||'\u2014', score:s.mt.BIO, outOf, pct:Math.round(s.mt.BIO/outOf*1000)/10}));
@@ -8438,7 +8452,8 @@ function buildEleTestWiseOptions(){
   const opts = [
     {label:'Slip Test 1', pu:1, kind:'pu1_t1'},
     {label:'Slip Test 2', pu:1, kind:'pu1_t2'},
-    {label:'Monthly Test', pu:1, kind:'pu1_mt'},
+    {label:'June Monthly Test', pu:1, kind:'pu1_mt_june'},
+    {label:'July Monthly Test', pu:1, kind:'pu1_mt_july'},
   ];
   ['march','april','may','june','july'].forEach(mk=> opts.push({label:PU2_MONTH_LABELS[mk]+' (PU-II)', pu:2, kind:'pu2_month', key:mk}));
   ELE_TESTWISE_OPTIONS = opts;
@@ -8446,7 +8461,16 @@ function buildEleTestWiseOptions(){
 function populateEleTestWiseSelect(){
   if(!ELE_TESTWISE_OPTIONS.length) buildEleTestWiseOptions();
   const wrap = document.getElementById('eleTestWiseChecks');
-  wrap.innerHTML = ELE_TESTWISE_OPTIONS.map((o,i)=>'<div class="checkbox-row"><input type="checkbox" class="eleTestWiseCheck" value="'+i+'" id="eleTWChk'+i+'"'+(i===0?' checked':'')+'><label for="eleTWChk'+i+'">'+o.label+'</label></div>').join('');
+  let html = '', lastGroup = null;
+  ELE_TESTWISE_OPTIONS.forEach((o,i)=>{
+    const group = o.pu===1 ? 'PU-I Electronics' : 'PU-II Electronics';
+    if(group !== lastGroup){
+      html += '<div style="font-family:\'Space Grotesk\',sans-serif; font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--gold-soft); margin:'+(lastGroup?'12px 0 4px':'0 0 4px')+';">'+group+'</div>';
+      lastGroup = group;
+    }
+    html += '<div class="checkbox-row"><input type="checkbox" class="eleTestWiseCheck" value="'+i+'" id="eleTWChk'+i+'"'+(i===0?' checked':'')+'><label for="eleTWChk'+i+'">'+o.label+'</label></div>';
+  });
+  wrap.innerHTML = html;
 }
 function getTestWiseEleData(sel){
   let rows = [], classAvgPct = null, outOf;
@@ -8455,7 +8479,11 @@ function getTestWiseEleData(sel){
     outOf = 20;
     rows = computeElectronicsRoster().filter(s=>s[key] && s[key].ELE!==null && s[key].ELE!==undefined)
       .map(s=>({name:s.name, section:sectionLabel(s), score:s[key].ELE, outOf, pct:Math.round(s[key].ELE/outOf*1000)/10}));
-  } else if(sel.kind==='pu1_mt'){
+  } else if(sel.kind==='pu1_mt_june'){
+    outOf = 40;
+    rows = computeElectronicsRoster().filter(s=>s.june && s.june.ELE!==null && s.june.ELE!==undefined)
+      .map(s=>({name:s.name, section:sectionLabel(s), score:s.june.ELE, outOf, pct:Math.round(s.june.ELE/outOf*1000)/10}));
+  } else if(sel.kind==='pu1_mt_july'){
     outOf = 40;
     rows = computeElectronicsRoster().filter(s=>s.mt && s.mt.ELE!==null && s.mt.ELE!==undefined)
       .map(s=>({name:s.name, section:sectionLabel(s), score:s.mt.ELE, outOf, pct:Math.round(s.mt.ELE/outOf*1000)/10}));
