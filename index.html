@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BAIO">
 <title>BAIO Learning System — Biology All In One</title>
 <style>
 :root{
@@ -324,6 +330,14 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
 
 <script>
 (function(){
+  function setBadgeCount(n){
+    try{
+      if(!('setAppBadge' in navigator)) return;
+      if(n > 0) navigator.setAppBadge(n).catch(()=>{});
+      else navigator.clearAppBadge().catch(()=>{});
+    }catch(e){}
+  }
+
   fetch('announcements.html')
     .then(res => res.ok ? res.text() : Promise.reject())
     .then(htmlText => {
@@ -347,7 +361,8 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       const fingerprint = titleText + '::' + dateText;
       let lastSeen = null;
       try{ lastSeen = localStorage.getItem(seenKey); }catch(e){}
-      if(lastSeen === fingerprint) return;
+      if(lastSeen === fingerprint){ setBadgeCount(0); return; }
+      setBadgeCount(1);
 
       const iconEl = document.querySelector('#announcementModalOverlay .announce-modal-icon');
       if(img && iconEl){
@@ -362,6 +377,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       document.getElementById('announceModalCloseBtn').addEventListener('click', () => {
         document.getElementById('announcementModalOverlay').style.display = 'none';
         try{ localStorage.setItem(seenKey, fingerprint); }catch(e){}
+        setBadgeCount(0);
       });
     })
     .catch(() => { /* announcements.html not uploaded yet, or fetch blocked \u2014 skip popup silently */ });
