@@ -137,6 +137,32 @@ header{padding:34px 0 22px; text-align:center;}
 .progress-strip.show{display:block;}
 .progress-strip .row{display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.05);}
 
+.widget-row{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:16px;}
+.widget-tile{
+  border:1px solid var(--line); border-radius:14px; padding:12px 8px; background:var(--panel);
+  text-align:center;
+}
+.widget-tile .wt-icon{font-size:17px; line-height:1;}
+.widget-tile .wt-n{font-size:18px; font-weight:800; color:var(--gold); margin-top:4px; font-family:'Space Grotesk',sans-serif;}
+.widget-tile .wt-l{font-size:9.5px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:0.5px; margin-top:2px; line-height:1.3;}
+@media(max-width:360px){ .widget-tile{padding:10px 4px;} .widget-tile .wt-n{font-size:16px;} }
+
+.continue-widget{
+  display:none; align-items:center; gap:12px; border:1px solid var(--line); border-radius:14px;
+  padding:14px 16px; background:linear-gradient(120deg, var(--panel), var(--panel2)); margin-top:16px;
+}
+.continue-widget.show{display:flex;}
+.continue-widget .cw-icon{font-size:26px; flex:0 0 auto;}
+.continue-widget .cw-body{flex:1; min-width:0;}
+.continue-widget .cw-label{font-size:10px; text-transform:uppercase; letter-spacing:0.6px; color:var(--teal); font-weight:700;}
+.continue-widget .cw-title{font-size:13.5px; font-weight:700; color:var(--ink); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.continue-widget .cw-meta{font-size:11px; color:var(--ink-dim); margin-top:2px;}
+.continue-widget .cw-btn{
+  flex:0 0 auto; background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#1a1406;
+  font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12px; padding:9px 14px;
+  border-radius:10px; text-decoration:none; white-space:nowrap;
+}
+
 .badges-chapter-card{
   border:1px solid var(--line); border-radius:14px; padding:14px 16px; background:var(--panel);
   margin-bottom:12px;
@@ -223,6 +249,22 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       <div class="sig-stat"><div class="n" id="statQuestions">400+</div><div class="l">Practice Questions</div></div>
       <div class="sig-stat"><div class="n" id="statSessions">&ndash;</div><div class="l">Your Sessions Logged</div></div>
     </div>
+  </div>
+
+  <div id="continueWidget" class="continue-widget">
+    <div class="cw-icon" id="cwIcon">📘</div>
+    <div class="cw-body">
+      <div class="cw-label">Continue Studying</div>
+      <div class="cw-title" id="cwTitle"></div>
+      <div class="cw-meta" id="cwMeta"></div>
+    </div>
+    <a href="#" id="cwBtn" class="cw-btn">Resume →</a>
+  </div>
+
+  <div id="statWidgets" class="widget-row">
+    <div class="widget-tile"><div class="wt-icon">🔥</div><div class="wt-n" id="wtStreak">–</div><div class="wt-l">Day Streak</div></div>
+    <div class="widget-tile"><div class="wt-icon">📚</div><div class="wt-n" id="wtChapters">–</div><div class="wt-l">Chapters Started</div></div>
+    <div class="widget-tile"><div class="wt-icon">⭐</div><div class="wt-n" id="wtAvg">–</div><div class="wt-l">Avg Score</div></div>
   </div>
 
   <div class="quick-actions-row">
@@ -532,6 +574,51 @@ if(stripRows){
   document.getElementById('progressStrip').innerHTML = '<b style="color:var(--gold);">Your Progress at a Glance</b><div style="margin-top:8px;">' + stripRows + '</div>';
   document.getElementById('progressStrip').classList.add('show');
 }
+
+(function(){
+  const allEntries = [];
+  let mostRecent = null;
+  const chaptersWithActivity = new Set();
+  CHAPTERS.forEach(ch => {
+    getRawLog(ch.progressKey).forEach(l => {
+      if(!l || !l.date) return;
+      const d = new Date(l.date);
+      if(isNaN(d.getTime())) return;
+      allEntries.push({ date: d, pct: l.pct });
+      chaptersWithActivity.add(ch.progressKey);
+      if(!mostRecent || d > mostRecent.date) mostRecent = { date: d, ch: ch };
+    });
+  });
+
+  if(mostRecent){
+    const dayMs = 86400000;
+    const todayStart = new Date().setHours(0,0,0,0);
+    const seenStart = new Date(mostRecent.date).setHours(0,0,0,0);
+    const diffDays = Math.round((todayStart - seenStart) / dayMs);
+    const metaText = diffDays <= 0 ? 'Studied today' : diffDays === 1 ? 'Studied yesterday' : `Studied ${diffDays} days ago`;
+    document.getElementById('cwIcon').textContent = mostRecent.ch.icon || '\ud83d\udcd8';
+    document.getElementById('cwTitle').textContent = mostRecent.ch.num + ': ' + mostRecent.ch.title;
+    document.getElementById('cwMeta').textContent = metaText;
+    document.getElementById('cwBtn').setAttribute('href', mostRecent.ch.href);
+    document.getElementById('continueWidget').classList.add('show');
+  }
+
+  if(allEntries.length){
+    const daySet = new Set();
+    allEntries.forEach(e => daySet.add(e.date.getFullYear() + '-' + (e.date.getMonth()+1) + '-' + e.date.getDate()));
+    let streak = 0;
+    const cursor = new Date();
+    while(true){
+      const key = cursor.getFullYear() + '-' + (cursor.getMonth()+1) + '-' + cursor.getDate();
+      if(daySet.has(key)){ streak++; cursor.setDate(cursor.getDate()-1); }
+      else break;
+    }
+    const avgScore = Math.round(allEntries.reduce((s,e)=>s+(e.pct||0),0) / allEntries.length);
+    document.getElementById('wtStreak').textContent = streak;
+    document.getElementById('wtChapters').textContent = chaptersWithActivity.size;
+    document.getElementById('wtAvg').textContent = avgScore + '%';
+  }
+})();
 
 (function(){
   var THEME_KEY = 'baio_theme';
