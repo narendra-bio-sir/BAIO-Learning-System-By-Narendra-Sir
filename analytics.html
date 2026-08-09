@@ -1151,7 +1151,7 @@ window.addEventListener('afterprint', function(){
         <h2>Full Breakdown</h2>
         <div class="desc" id="subTableDesc">Combined view</div>
         <div class="table-wrap"><table id="subTable">
-          <thead><tr><th>Subject</th><th>Avg %</th><th>Toppers %</th><th>Fail %</th><th>Appeared</th><th>Spread (SD)</th></tr></thead>
+          <thead><tr><th>Subject</th><th>Avg %</th><th>Toppers %</th><th>Fail %</th><th>Appeared</th></tr></thead>
           <tbody></tbody>
         </table></div>
       </div>
@@ -2187,6 +2187,7 @@ window.addEventListener('afterprint', function(){
         <input type="text" id="bioStudentSearch" placeholder="Type a name or enrollment code..." style="width:100%; padding:12px 16px; border-radius:10px; border:1px solid var(--border); background:rgba(var(--overlay-rgb),0.03); color:var(--text-strong); font-family:'Inter'; font-size:14px;">
         <div class="student-results" id="bioStudentResults"></div>
       </div>
+      <div id="bioCandSdOptionsWrap" style="margin-top:12px;"></div>
     </div>
 
     <div id="bioCandidateWrap" style="display:none;">
@@ -2239,6 +2240,7 @@ window.addEventListener('afterprint', function(){
         <label style="display:block; font-size:11.5px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--gold-soft); margin-bottom:6px;">Select Test(s)</label>
         <div id="bioTestWiseChecks" class="custom-report-options active" style="display:block;"></div>
       </div>
+      <div id="bioSdOptionsWrap"></div>
       <div class="setup-label" style="font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--gold-soft);margin:14px 0 6px;">Your Personal Comments (included in the printed report)</div>
       <textarea id="bioPrincipalComments" placeholder="e.g. Biology continues to be our strongest subject across both PU-I and PU-II this term. I recommend..." style="width:100%; min-height:110px; padding:12px 14px; border-radius:10px; border:1px solid var(--border); background:rgba(var(--overlay-rgb),0.03); color:var(--text-strong); font-family:'Inter'; font-size:13.5px; line-height:1.6; resize:vertical;"></textarea>
       <div class="report-actions">
@@ -2276,6 +2278,7 @@ window.addEventListener('afterprint', function(){
         <input type="text" id="eleStudentSearch" placeholder="Type a name or enrollment code..." style="width:100%; padding:12px 16px; border-radius:10px; border:1px solid var(--border); background:rgba(var(--overlay-rgb),0.03); color:var(--text-strong); font-family:'Inter'; font-size:14px;">
         <div class="student-results" id="eleStudentResults"></div>
       </div>
+      <div id="eleCandSdOptionsWrap" style="margin-top:12px;"></div>
     </div>
 
     <div id="eleCandidateWrap" style="display:none;">
@@ -2325,6 +2328,7 @@ window.addEventListener('afterprint', function(){
         <label style="display:block; font-size:11.5px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--gold-soft); margin-bottom:6px;">Select Test(s)</label>
         <div id="eleTestWiseChecks" class="custom-report-options active" style="display:block;"></div>
       </div>
+      <div id="eleSdOptionsWrap"></div>
       <div class="setup-label" style="font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--gold-soft);margin:14px 0 6px;">Your Personal Comments (included in the printed report)</div>
       <textarea id="elePrincipalComments" placeholder="e.g. Our Electronics stream continues to show steady improvement this term. I recommend..." style="width:100%; min-height:110px; padding:12px 14px; border-radius:10px; border:1px solid var(--border); background:rgba(var(--overlay-rgb),0.03); color:var(--text-strong); font-family:'Inter'; font-size:13.5px; line-height:1.6; resize:vertical;"></textarea>
       <div class="report-actions">
@@ -2582,6 +2586,7 @@ window.addEventListener('afterprint', function(){
         <input type="text" id="studentSearch" placeholder="Type a name or enrollment code..." style="width:100%; padding:12px 16px; border-radius:10px; border:1px solid var(--border); background:rgba(var(--overlay-rgb),0.03); color:var(--text-strong); font-family:'Inter'; font-size:14px;">
         <div class="student-results" id="studentResults"></div>
       </div>
+      <div id="rcSdOptionsWrap" style="margin-top:12px;"></div>
     </div>
   </div>
 
@@ -2669,6 +2674,24 @@ function sdConsistencyPhrase(sd, maxScore, lang, firstName){
   if(pct<15) return ` Looking at consistency: ${who} has performed steadily across tests (SD ${pct}%) — a good sign.`;
   if(pct<30) return ` Looking at consistency: ${who} has shown some ups and downs across tests (SD ${pct}%) — worth keeping an eye on.`;
   return ` Looking at consistency: ${who} has shown considerable swings across tests (SD ${pct}%) — worth addressing directly.`;
+}
+
+/* ---- Standard Deviation analysis: off by default everywhere. Opt in per-category via the
+   "Standard Deviation Analysis" checklist on the Principal Report / Report Card / Candidate
+   Insight screens — those screens fully rebuild their content on each action, so reading this
+   object at render time is enough; no live re-render wiring needed. ---- */
+let sdOptions = { subject:false, student:false, classWide:false };
+function setSdOption(key, val){
+  sdOptions[key] = val;
+  document.querySelectorAll('.sd-opt-'+key).forEach(cb=>{ cb.checked = val; });
+}
+function sdOptionsChecklistHtml(prefix){
+  return '<div class="setup-label" style="font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--gold-soft);margin:14px 0 6px;">📊 Standard Deviation Analysis (optional)</div>'+
+    '<div class="custom-report-options active" style="display:block;">'+
+    '<div class="checkbox-row"><input type="checkbox" class="sd-opt-subject" id="'+prefix+'SdSubject" onchange="setSdOption(\'subject\', this.checked)"><label for="'+prefix+'SdSubject">Subject &amp; section-wise spread (SD)</label></div>'+
+    '<div class="checkbox-row"><input type="checkbox" class="sd-opt-student" id="'+prefix+'SdStudent" onchange="setSdOption(\'student\', this.checked)"><label for="'+prefix+'SdStudent">Student-wise consistency (SD across tests)</label></div>'+
+    '<div class="checkbox-row"><input type="checkbox" class="sd-opt-classWide" id="'+prefix+'SdClass" onchange="setSdOption(\'classWide\', this.checked)"><label for="'+prefix+'SdClass">Class-wide spread (SD, all subjects combined)</label></div>'+
+    '</div>';
 }
 
 /* Chart instance registry so we can destroy+recreate on theme change without duplicating */
@@ -3145,8 +3168,8 @@ function buildOverview(){
     <div class="kpi gold"><div class="kpi-label">Biology Topper Density (&gt;15/20)</div><div class="kpi-value">${D.subjects.combined.BIO.topper_pct}%</div><div class="kpi-note">vs. &lt;4% combined in Physics &amp; Chemistry</div></div>
     <div class="kpi"><div class="kpi-label">Biology's Lead Widened</div><div class="kpi-value">+${lead1} &rarr; +${lead2} pts</div><div class="kpi-note">Gap over next-best core subject</div></div>
     <div class="kpi warn"><div class="kpi-label">Chemistry Fail Rate (T2)</div><div class="kpi-value">${D.fail.test2.CHE.fail_rate_pct}%</div><div class="kpi-note down">Steepest subject decline</div></div>
-    <div class="kpi"><div class="kpi-label">Biology Spread (SD, T2)</div><div class="kpi-value">${bioSD2Pct}%</div><div class="kpi-note">${sdLabel(bioSD2Pct,100)}</div></div>
-    <div class="kpi"><div class="kpi-label">Class-wide Spread (Total Score, T2)</div><div class="kpi-value">${classSDPct!==null?classSDPct+'%':'—'}</div><div class="kpi-note">${classSDPct!==null?sdLabel(classSDPct,100):''} across ${classTotalStats.n} students, all subjects combined</div></div>
+    ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">Biology Spread (SD, T2)</div><div class="kpi-value">${bioSD2Pct}%</div><div class="kpi-note">${sdLabel(bioSD2Pct,100)}</div></div>`:''}
+    ${sdOptions.classWide?`<div class="kpi"><div class="kpi-label">Class-wide Spread (Total Score, T2)</div><div class="kpi-value">${classSDPct!==null?classSDPct+'%':'—'}</div><div class="kpi-note">${classSDPct!==null?sdLabel(classSDPct,100):''} across ${classTotalStats.n} students, all subjects combined</div></div>`:''}
   `;
 
   if(ovAvgChart) ovAvgChart.destroy();
@@ -3486,7 +3509,7 @@ function renderSubTable(test){
     const tr = document.createElement('tr');
     if(s==='BIO') tr.className='bio-row';
     if(s==='ELE') tr.className='ele-row';
-    tr.innerHTML = `<td>${NAMES[s]}${s==='ELE'?' <span class="chip gold" style="font-size:10px;">elective</span>':''}</td><td>${row.avg_pct}%</td><td>${row.topper_pct}%</td><td>${row.fail_pct}%</td><td>${row.appeared}</td><td>${isNaN(sdPct)?'—':sdPct+'%'}</td>`;
+    tr.innerHTML = `<td>${NAMES[s]}${s==='ELE'?' <span class="chip gold" style="font-size:10px;">elective</span>':''}</td><td>${row.avg_pct}%</td><td>${row.topper_pct}%</td><td>${row.fail_pct}%</td><td>${row.appeared}</td>`;
     tbody.appendChild(tr);
   });
 }
@@ -3601,7 +3624,7 @@ function buildMTOverview(){
     <div class="kpi gold"><div class="kpi-label">Biology High-Performers (35+/40)</div><div class="kpi-value">${sw.highPerformers.BIO}</div><div class="kpi-note">Highest of all 8 subjects</div></div>
     <div class="kpi"><div class="kpi-label">Biology Failures</div><div class="kpi-value">${sw.failures.BIO}</div><div class="kpi-note">Below 35% (14/40)</div></div>
     <div class="kpi warn"><div class="kpi-label">Mathematics Failures</div><div class="kpi-value">${sw.failures.MAT}</div><div class="kpi-note down">~${sw.totalStudents} students appeared</div></div>
-    <div class="kpi"><div class="kpi-label">Biology Spread (SD)</div><div class="kpi-value">${sw.sdPct.BIO}%</div><div class="kpi-note">${sdLabel(sw.sdPct.BIO,100)}</div></div>
+    ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">Biology Spread (SD)</div><div class="kpi-value">${sw.sdPct.BIO}%</div><div class="kpi-note">${sdLabel(sw.sdPct.BIO,100)}</div></div>`:''}
   `;
   document.querySelector('#view-mt-overview .desc').textContent = `${monthLabel}, overall percentage score by subject`;
 
@@ -3919,7 +3942,7 @@ function buildPU2(){
       <div class="kpi hero"><div class="kpi-label">${label} Roster</div><div class="kpi-value">${rosterLen}</div><div class="kpi-note">students</div></div>
       <div class="kpi ${stats.avgPct.BIO>=50?'up':'warn'}"><div class="kpi-label">Biology Avg %</div><div class="kpi-value">${stats.avgPct.BIO}%</div><div class="kpi-note">${latestTest.label}</div></div>
       <div class="kpi"><div class="kpi-label">Section Topper</div><div class="kpi-value">${stats.topper?stats.topper.BIO+'/'+latestTest.outof.BIO:'\u2014'}</div><div class="kpi-note">${stats.topper?stats.topper.name:'\u2014'}</div></div>
-      <div class="kpi"><div class="kpi-label">Biology Spread (SD)</div><div class="kpi-value">${stats.sdPct.BIO}%</div><div class="kpi-note">${sdLabel(stats.sdPct.BIO,100)}</div></div>`;
+      ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">Biology Spread (SD)</div><div class="kpi-value">${stats.sdPct.BIO}%</div><div class="kpi-note">${sdLabel(stats.sdPct.BIO,100)}</div></div>`:''}`;
   }
   fillKpis('sa2ChampionKpis', 'CHAMPION', PU2_CHAMPION.length, champ);
   fillKpis('sa2EliteKpis', 'ELITE', PU2_ELITE.length, elite);
@@ -4024,7 +4047,7 @@ function buildPU2Electronics(){
     <div class="kpi hero"><div class="kpi-label">ELECTRONICS Roster</div><div class="kpi-value">${roster.length}</div><div class="kpi-note">students</div></div>
     <div class="kpi ${avgPct.ELE>=50?'up':'warn'}"><div class="kpi-label">Electronics Avg %</div><div class="kpi-value">${avgPct.ELE}%</div><div class="kpi-note">Latest month each student has on file</div></div>
     <div class="kpi"><div class="kpi-label">Top Scorer</div><div class="kpi-value">${topper?topper.latest.rec.TOTAL+'/240':'\u2014'}</div><div class="kpi-note">${topper?topper.s.name:'\u2014'}</div></div>
-    <div class="kpi"><div class="kpi-label">Electronics Spread (SD)</div><div class="kpi-value">${sdPct.ELE}%</div><div class="kpi-note">${sdLabel(sdPct.ELE,100)}</div></div>`;
+    ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">Electronics Spread (SD)</div><div class="kpi-value">${sdPct.ELE}%</div><div class="kpi-note">${sdLabel(sdPct.ELE,100)}</div></div>`:''}`;
   document.getElementById('sa2ElectronicsRosterChip').textContent = withLatest.length+' with test data';
 
   const subjNice = {PHY:'Physics',CHE:'Chemistry',MAT:'Maths',ELE:'Electronics'};
@@ -4337,7 +4360,7 @@ function buildSections(){
     <div class="kpi gold"><div class="kpi-label">SPARK Topper Density (Bio)</div><div class="kpi-value">${SEC.subjects.SPARK.test1.BIO.topper_pct}%</div><div class="kpi-note">&gt;15/20 in Test 1</div></div>
     <div class="kpi"><div class="kpi-label">Section Size</div><div class="kpi-value">${SEC.rosterSize.SPARK}</div><div class="kpi-note">Students matched to roster</div></div>
     <div class="kpi warn"><div class="kpi-label">Chemistry Fail Rate (T2)</div><div class="kpi-value">${SEC.subjects.SPARK.test2.CHE.fail_pct}%</div><div class="kpi-note down">Weakest subject, Test 2</div></div>
-    <div class="kpi"><div class="kpi-label">SPARK Biology Spread (SD, T2)</div><div class="kpi-value">${isNaN(sparkBioSD2)?'—':sparkBioSD2+'%'}</div><div class="kpi-note">${isNaN(sparkBioSD2)?'':sdLabel(sparkBioSD2,100)}</div></div>
+    ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">SPARK Biology Spread (SD, T2)</div><div class="kpi-value">${isNaN(sparkBioSD2)?'—':sparkBioSD2+'%'}</div><div class="kpi-note">${isNaN(sparkBioSD2)?'':sdLabel(sparkBioSD2,100)}</div></div>`:''}
   `;
   if(sparkSecAvgChart) sparkSecAvgChart.destroy();
   sparkSecAvgChart = new Chart(document.getElementById('sparkSecAvgChart'), {
@@ -4371,7 +4394,7 @@ function buildSections(){
     <div class="kpi gold"><div class="kpi-label">PRIME Topper Density (Bio)</div><div class="kpi-value">${SEC.subjects.PRIME.test1.BIO.topper_pct}%</div><div class="kpi-note">&gt;15/20 in Test 1</div></div>
     <div class="kpi"><div class="kpi-label">Section Size</div><div class="kpi-value">${SEC.rosterSize.PRIME}</div><div class="kpi-note">Students matched to roster</div></div>
     <div class="kpi warn"><div class="kpi-label">Chemistry Fail Rate (T2)</div><div class="kpi-value">${SEC.subjects.PRIME.test2.CHE.fail_pct}%</div><div class="kpi-note down">Weakest subject, Test 2</div></div>
-    <div class="kpi"><div class="kpi-label">PRIME Biology Spread (SD, T2)</div><div class="kpi-value">${isNaN(primeBioSD2)?'—':primeBioSD2+'%'}</div><div class="kpi-note">${isNaN(primeBioSD2)?'':sdLabel(primeBioSD2,100)}</div></div>
+    ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">PRIME Biology Spread (SD, T2)</div><div class="kpi-value">${isNaN(primeBioSD2)?'—':primeBioSD2+'%'}</div><div class="kpi-note">${isNaN(primeBioSD2)?'':sdLabel(primeBioSD2,100)}</div></div>`:''}
   `;
   if(primeSecAvgChart) primeSecAvgChart.destroy();
   primeSecAvgChart = new Chart(document.getElementById('primeSecAvgChart'), {
@@ -4563,7 +4586,7 @@ function buildElectronicsSection(){
     <div class="kpi gold"><div class="kpi-label">ELECTRONICS Topper Density</div><div class="kpi-value">${t1Stats.ELE.topper_pct}%</div><div class="kpi-note">&gt;15/20 in Test 1</div></div>
     <div class="kpi"><div class="kpi-label">Section Size</div><div class="kpi-value">${roster.length}</div><div class="kpi-note">Students in Electronics stream</div></div>
     <div class="kpi warn"><div class="kpi-label">Chemistry Fail Rate (T2)</div><div class="kpi-value">${cheFailT2}%</div><div class="kpi-note down">Below 7/20</div></div>
-    <div class="kpi"><div class="kpi-label">Electronics Spread (SD, T2)</div><div class="kpi-value">${t2Stats.ELE.sd_pct}%</div><div class="kpi-note">${sdLabel(t2Stats.ELE.sd_pct,100)}</div></div>
+    ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">Electronics Spread (SD, T2)</div><div class="kpi-value">${t2Stats.ELE.sd_pct}%</div><div class="kpi-note">${sdLabel(t2Stats.ELE.sd_pct,100)}</div></div>`:''}
   `;
   document.getElementById('electronicsRosterChip').textContent = roster.length+' students';
 
@@ -4645,7 +4668,7 @@ function buildNeetObtOverview(){
     <div class="kpi gold"><div class="kpi-label">Biology Average</div><div class="kpi-value">${avgBio.toFixed(0)}/360</div><div class="kpi-note up">${pctBio}% \u2014 strongest of the 3 subjects</div></div>
     <div class="kpi"><div class="kpi-label">Top Scorer</div><div class="kpi-value">${top.total}/720</div><div class="kpi-note">${top.name} (${top.section||'\u2014'})</div></div>
     <div class="kpi warn"><div class="kpi-label">Physics Average</div><div class="kpi-value">${avgPhy.toFixed(0)}/180</div><div class="kpi-note down">${pctPhy}% \u2014 weakest of the 3 subjects</div></div>
-    <div class="kpi"><div class="kpi-label">Biology Spread (SD)</div><div class="kpi-value">${sdBioPct}%</div><div class="kpi-note">${sdLabel(sdBioPct,100)}</div></div>
+    ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">Biology Spread (SD)</div><div class="kpi-value">${sdBioPct}%</div><div class="kpi-note">${sdLabel(sdBioPct,100)}</div></div>`:''}
   `;
 
   if(noAvgChartInst) noAvgChartInst.destroy();
@@ -4876,7 +4899,7 @@ function buildStreamComparison(){
     <div class="kpi hero"><div class="kpi-label">PCM Students (KCET)</div><div class="kpi-value">${kcetRows.length}</div><div class="kpi-note">This OBT round</div></div>
     <div class="kpi"><div class="kpi-label">PCB Students (NEET)</div><div class="kpi-value">${neetRows.length}</div><div class="kpi-note">This OBT round</div></div>
     <div class="kpi gold"><div class="kpi-label">Biology Avg (PCB only)</div><div class="kpi-value">${neetBioPct.toFixed(1)}%</div><div class="kpi-note up">No PCM equivalent</div></div>
-    <div class="kpi"><div class="kpi-label">Biology Spread (SD)</div><div class="kpi-value">${neetBioSDPct}%</div><div class="kpi-note">${sdLabel(neetBioSDPct,100)}</div></div>
+    ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">Biology Spread (SD)</div><div class="kpi-value">${neetBioSDPct}%</div><div class="kpi-note">${sdLabel(neetBioSDPct,100)}</div></div>`:''}
   `;
 
   if(streamCompareChartInst) streamCompareChartInst.destroy();
@@ -5149,7 +5172,7 @@ function renderPU2Overview(){
     <div class="kpi"><div class="kpi-label">${test.label} &middot; ${test.disp}</div><div class="kpi-value">${appeared}</div><div class="kpi-note">Students appeared</div></div>
     <div class="kpi"><div class="kpi-label">Biology Class Avg</div><div class="kpi-value">${bioAvg!==null?bioAvg+'%':'—'}</div><div class="kpi-note">out of ${test.outof.BIO}</div></div>
     <div class="kpi ${passPct>=50?'up':'warn'}"><div class="kpi-label">Biology Pass Rate</div><div class="kpi-value">${passPct}%</div><div class="kpi-note">&ge;35% scoring</div></div>
-    <div class="kpi"><div class="kpi-label">Class-wide Spread (Total Score)</div><div class="kpi-value">${classSDPct!==null?classSDPct+'%':'—'}</div><div class="kpi-note">${classSDPct!==null?sdLabel(classSDPct,100):''} across all subjects combined</div></div>`;
+    ${sdOptions.classWide?`<div class="kpi"><div class="kpi-label">Class-wide Spread (Total Score)</div><div class="kpi-value">${classSDPct!==null?classSDPct+'%':'—'}</div><div class="kpi-note">${classSDPct!==null?sdLabel(classSDPct,100):''} across all subjects combined</div></div>`:''}`;
   document.getElementById('mt2AvgDesc').textContent = `${test.label} (${test.disp}) — overall percentage score by subject, out of ${test.outof.BIO} each`;
 
   const subjLabels = ['PHY','CHE','MAT','BIO'];
@@ -5457,11 +5480,11 @@ function buildPU2RiskShift(){
     return {sec, f, l, delta, sd};
   });
   document.querySelector('#pu2ShiftSectionTable thead tr').innerHTML =
-    '<th>Section</th><th>First Test</th><th>Latest Test</th><th>Change</th><th>Latest Spread (SD)</th>';
+    '<th>Section</th><th>First Test</th><th>Latest Test</th><th>Change</th>'+(sdOptions.subject?'<th>Latest Spread (SD)</th>':'');
   document.querySelector('#pu2ShiftSectionTable tbody').innerHTML = sectionRows.map(r=>{
     const cls = r.delta===null ? '' : (r.delta>=0?'rc-diff-up':'rc-diff-down');
     const sign = r.delta!==null && r.delta>=0 ? '+' : '';
-    return `<tr><td>${r.sec}</td><td>${r.f!==null?r.f+'%':'\u2014'}</td><td>${r.l!==null?r.l+'%':'\u2014'}</td><td class="${cls}">${r.delta!==null?sign+r.delta+'%':'\u2014'}</td><td>${r.sd!==null?r.sd+'%':'\u2014'}</td></tr>`;
+    return `<tr><td>${r.sec}</td><td>${r.f!==null?r.f+'%':'\u2014'}</td><td>${r.l!==null?r.l+'%':'\u2014'}</td><td class="${cls}">${r.delta!==null?sign+r.delta+'%':'\u2014'}</td>${sdOptions.subject?`<td>${r.sd!==null?r.sd+'%':'\u2014'}</td>`:''}</tr>`;
   }).join('');
 
   pu2RiskShiftBuilt = true;
@@ -5565,6 +5588,12 @@ document.querySelectorAll('#mt2MonthlyBioTabs .subtab-btn').forEach(btn=>{
 });
 
 renderPU2All();
+
+/* Populate the "Standard Deviation Analysis" opt-in checklist wherever a placeholder for it exists. */
+[['bioSdOptionsWrap','bioP'],['eleSdOptionsWrap','eleP'],['bioCandSdOptionsWrap','bioC'],['eleCandSdOptionsWrap','eleC'],['rcSdOptionsWrap','rc']].forEach(([id,prefix])=>{
+  const el = document.getElementById(id);
+  if(el) el.innerHTML = sdOptionsChecklistHtml(prefix);
+});
 
 
 
@@ -5704,10 +5733,12 @@ function generateElectronicsTeacherComment(student, pu){
     hi = `${firstName}, ${latestLabel} में आप भौतिकी, रसायन विज्ञान, गणित और इलेक्ट्रॉनिक्स में स्थिर प्रदर्शन कर रहे हैं${avgPct!==null?` (औसतन ${avgPct}%)`:''}। ${bestNameHi} अभी आपका सबसे मजबूत विषय है; ${weakNameHi} में थोड़ा और अभ्यास मदद करेगा।${rankLineHi}`;
   }
 
-  const consistSD = computeStats(getElectronicsHistory(student, pu).map(h=>h.pct)).sd;
-  en += sdConsistencyPhrase(consistSD, 100, 'en', firstName);
-  kn += sdConsistencyPhrase(consistSD, 100, 'kn', firstName);
-  hi += sdConsistencyPhrase(consistSD, 100, 'hi', firstName);
+  if(sdOptions.student){
+    const consistSD = computeStats(getElectronicsHistory(student, pu).map(h=>h.pct)).sd;
+    en += sdConsistencyPhrase(consistSD, 100, 'en', firstName);
+    kn += sdConsistencyPhrase(consistSD, 100, 'kn', firstName);
+    hi += sdConsistencyPhrase(consistSD, 100, 'hi', firstName);
+  }
 
   en += signEn; kn += signKn; hi += signHi;
   return {en, kn, hi};
@@ -5824,10 +5855,12 @@ function generateTeacherComment(student){
   const signEn = "\n\n\u2014 Narendra Sir, Biology Lecturer, Founder & CEO - BAIO Learning System";
   const signKn = "\n\n\u2014 ನರೇಂದ್ರ ಸರ್, ಜೀವಶಾಸ್ತ್ರ ಉಪನ್ಯಾಸಕರು, ಸ್ಥಾಪಕ ಮತ್ತು ಸಿಇಒ - BAIO Learning System";
   const signHi = "\n\n\u2014 नरेंद्र सर, जीव विज्ञान व्याख्याता, संस्थापक एवं सीईओ - BAIO Learning System";
-  const consistSD = computeStats(getBioHistory(student, 1).map(h=>h.pct)).sd;
-  en += sdConsistencyPhrase(consistSD, 100, 'en', firstName);
-  kn += sdConsistencyPhrase(consistSD, 100, 'kn', firstName);
-  hi += sdConsistencyPhrase(consistSD, 100, 'hi', firstName);
+  if(sdOptions.student){
+    const consistSD = computeStats(getBioHistory(student, 1).map(h=>h.pct)).sd;
+    en += sdConsistencyPhrase(consistSD, 100, 'en', firstName);
+    kn += sdConsistencyPhrase(consistSD, 100, 'kn', firstName);
+    hi += sdConsistencyPhrase(consistSD, 100, 'hi', firstName);
+  }
 
   en += signEn; kn += signKn; hi += signHi;
 
@@ -5898,7 +5931,7 @@ function mtSubjectRowsHtml(student){
     const sign = diff!==null && diff>=0 ? '+' : '';
     const z = (sd && sd>0 && avg!==null) ? Math.round(((val-avg)/sd)*10)/10 : null;
     const zCls = z===null ? '' : (Math.abs(z)<1 ? 'rc-diff-up' : 'rc-diff-down');
-    rows += '<tr'+(s==='BIO'?' class="bio-row"':'')+'><td>'+names[s]+'</td><td>'+val+'/40</td><td>'+(avg!==null?avg+'/40':'\u2014')+'</td><td class="'+cls+'">'+(diff!==null?sign+diff:'\u2014')+'</td><td class="'+zCls+'">'+(z!==null?z+'\u03c3':'\u2014')+'</td></tr>';
+    rows += '<tr'+(s==='BIO'?' class="bio-row"':'')+'><td>'+names[s]+'</td><td>'+val+'/40</td><td>'+(avg!==null?avg+'/40':'\u2014')+'</td><td class="'+cls+'">'+(diff!==null?sign+diff:'\u2014')+'</td>'+(sdOptions.student?'<td class="'+zCls+'">'+(z!==null?z+'\u03c3':'\u2014')+'</td>':'')+'</tr>';
   });
   return rows;
 }
@@ -5914,7 +5947,7 @@ function subjectRowsHtml(test){
     const sd = classSDRaw(test, s);
     const z = (sd && sd>0 && avg!==null) ? Math.round(((val-avg)/sd)*10)/10 : null;
     const zCls = z===null ? '' : (Math.abs(z)<1 ? 'rc-diff-up' : 'rc-diff-down');
-    rows += '<tr'+(s==='BIO'?' class="bio-row"':'')+'><td>'+names[s]+'</td><td>'+val+'/20</td><td>'+(avg!==null?avg+'/20':'\u2014')+'</td>'+diffCell(val,avg)+'<td class="'+zCls+'">'+(z!==null?z+'\u03c3':'\u2014')+'</td></tr>';
+    rows += '<tr'+(s==='BIO'?' class="bio-row"':'')+'><td>'+names[s]+'</td><td>'+val+'/20</td><td>'+(avg!==null?avg+'/20':'\u2014')+'</td>'+diffCell(val,avg)+(sdOptions.student?'<td class="'+zCls+'">'+(z!==null?z+'\u03c3':'\u2014')+'</td>':'')+'</tr>';
   });
   return rows;
 }
@@ -5951,7 +5984,7 @@ function pu2SubjectRowsHtml(student, key){
     const sign = diff!==null && diff>=0 ? '+' : '';
     const z = (sd && sd>0 && avg!==null) ? Math.round(((val-avg)/sd)*10)/10 : null;
     const zCls = z===null ? '' : (Math.abs(z)<1 ? 'rc-diff-up' : 'rc-diff-down');
-    rows += '<tr'+(s==='BIO'?' class="bio-row"':'')+'><td>'+names[s]+'</td><td>'+val+'/40</td><td>'+(avg!==null?avg+'/40':'\u2014')+'</td><td class="'+cls+'">'+(diff!==null?sign+diff:'\u2014')+'</td><td class="'+zCls+'">'+(z!==null?z+'\u03c3':'\u2014')+'</td></tr>';
+    rows += '<tr'+(s==='BIO'?' class="bio-row"':'')+'><td>'+names[s]+'</td><td>'+val+'/40</td><td>'+(avg!==null?avg+'/40':'\u2014')+'</td><td class="'+cls+'">'+(diff!==null?sign+diff:'\u2014')+'</td>'+(sdOptions.student?'<td class="'+zCls+'">'+(z!==null?z+'\u03c3':'\u2014')+'</td>':'')+'</tr>';
   });
   return rows;
 }
@@ -6052,10 +6085,12 @@ function generatePU2TeacherComment(student){
     kn = `${firstName}, ನೀವು ಜೀವಶಾಸ್ತ್ರದಲ್ಲಿ ತರಗತಿಯ ಸರಾಸರಿಯ ಸುತ್ತ ಸಾಧನೆ ಮಾಡುತ್ತಿದ್ದೀರಿ${bioNow!==null?` (${bioNow}/40)`:''}.${vsAvgKn} ಸ್ವಲ್ಪ ಹೆಚ್ಚು ಕೇಂದ್ರೀಕೃತ ಪುನರಾವರ್ತನೆಯೊಂದಿಗೆ ನೀವು ಒಂದು ಹಂತ ಮೇಲೇರಬಹುದು. ನೀವು ಇದನ್ನು ಮಾಡಬಲ್ಲಿರಿ ಎಂದು ನಾನು ನಂಬುತ್ತೇನೆ.${otherSubjectNote('kn')}${rankLineKn}${trend.kn}`;
     hi = `${firstName}, आप जीव विज्ञान में कक्षा के औसत के आसपास प्रदर्शन कर रहे हैं${bioNow!==null?` (${bioNow}/40)`:''}।${vsAvgHi} थोड़ा और केंद्रित रिवीजन करके आप एक स्तर ऊपर जा सकते हैं। मुझे विश्वास है कि आप यह कर सकते हैं।${otherSubjectNote('hi')}${rankLineHi}${trend.hi}`;
   }
-  const consistSD = computeStats(getBioHistory(student, 2).map(h=>h.pct)).sd;
-  en += sdConsistencyPhrase(consistSD, 100, 'en', firstName);
-  kn += sdConsistencyPhrase(consistSD, 100, 'kn', firstName);
-  hi += sdConsistencyPhrase(consistSD, 100, 'hi', firstName);
+  if(sdOptions.student){
+    const consistSD = computeStats(getBioHistory(student, 2).map(h=>h.pct)).sd;
+    en += sdConsistencyPhrase(consistSD, 100, 'en', firstName);
+    kn += sdConsistencyPhrase(consistSD, 100, 'kn', firstName);
+    hi += sdConsistencyPhrase(consistSD, 100, 'hi', firstName);
+  }
 
   en += signEn; kn += signKn; hi += signHi;
 
@@ -6084,8 +6119,8 @@ function buildPU2ObtSectionsHtml(student){
     if(!rows) return;
     const totalOut = test.outof.PHY+test.outof.CHE+test.outof.MAT+test.outof.BIO+(test.outof.ELE?0:0);
     html += '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">'+test.label+' ('+test.disp+')</h3>'+
-      '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th><th>z-Score</th></tr></thead>'+
-      '<tbody>'+rows+'<tr><td><b>Total</b></td><td colspan="4"><b>'+(rec.total!==null&&rec.total!==undefined?rec.total+'/'+totalOut:'\u2014')+'</b></td></tr></tbody></table></div>';
+      '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th>'+(sdOptions.student?'<th>z-Score</th>':'')+'</tr></thead>'+
+      '<tbody>'+rows+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(rec.total!==null&&rec.total!==undefined?rec.total+'/'+totalOut:'\u2014')+'</b></td></tr></tbody></table></div>';
   });
   return html;
 }
@@ -6127,8 +6162,8 @@ function showReportCardPU2(student){
     if(rows){
       const outOf = key==='june' ? 240 : 200;
       monthSections += '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">'+monthTitles[key]+(rec.RANK?' &mdash; Class Rank #'+rec.RANK:'')+'</h3>'+
-        '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th><th>z-Score</th></tr></thead>'+
-        '<tbody>'+rows+'<tr><td><b>Total</b></td><td colspan="4"><b>'+(rec.TOTAL!==null&&rec.TOTAL!==undefined?rec.TOTAL+'/'+outOf:'\u2014')+'</b></td></tr></tbody></table></div>';
+        '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th>'+(sdOptions.student?'<th>z-Score</th>':'')+'</tr></thead>'+
+        '<tbody>'+rows+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(rec.TOTAL!==null&&rec.TOTAL!==undefined?rec.TOTAL+'/'+outOf:'\u2014')+'</b></td></tr></tbody></table></div>';
     } else {
       monthSections += '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">'+monthTitles[key]+'</h3>'+
         '<div class="desc" style="text-align:center; margin-top:4px; margin-bottom:12px;">Not available for this student.</div>';
@@ -6246,8 +6281,8 @@ function showReportCard(student, pu){
   const mtRows = mtSubjectRowsHtml(student);
   const mtSection = mtRows ?
     '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">July Monthly Test'+(student.mt.RANK?' &mdash; Class Rank #'+student.mt.RANK:'')+'</h3>'+
-    '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th><th>z-Score</th></tr></thead>'+
-    '<tbody>'+mtRows+'<tr><td><b>Total</b></td><td colspan="4"><b>'+(student.mt.TOTAL!==null?student.mt.TOTAL+'/240':'\u2014')+'</b></td></tr></tbody></table></div>'
+    '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th>'+(sdOptions.student?'<th>z-Score</th>':'')+'</tr></thead>'+
+    '<tbody>'+mtRows+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(student.mt.TOTAL!==null?student.mt.TOTAL+'/240':'\u2014')+'</b></td></tr></tbody></table></div>'
     : '<div class="desc" style="text-align:center; margin-top:12px;">Monthly Test data not available for this student.</div>';
   const examSection = buildPU1ExamSectionsHtml(student);
   document.getElementById('reportCardContent').innerHTML =
@@ -6260,11 +6295,11 @@ function showReportCard(student, pu){
       tierHtml+
     '</div>'+
     '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">Slip Test 1 (13\u201315 Jun 2026)</h3>'+
-    '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th><th>z-Score</th></tr></thead>'+
-    '<tbody>'+subjectRowsHtml('t1')+'<tr><td><b>Total</b></td><td colspan="4"><b>'+(student.t1.TOTAL!==null?student.t1.TOTAL+'/80':'\u2014')+'</b></td></tr></tbody></table></div>'+
+    '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th>'+(sdOptions.student?'<th>z-Score</th>':'')+'</tr></thead>'+
+    '<tbody>'+subjectRowsHtml('t1')+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(student.t1.TOTAL!==null?student.t1.TOTAL+'/80':'\u2014')+'</b></td></tr></tbody></table></div>'+
     '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">Slip Test 2 (17\u201320 Jul 2026)</h3>'+
-    '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th><th>z-Score</th></tr></thead>'+
-    '<tbody>'+subjectRowsHtml('t2')+'<tr><td><b>Total</b></td><td colspan="4"><b>'+(student.t2.TOTAL!==null?student.t2.TOTAL+'/80':'\u2014')+'</b></td></tr></tbody></table></div>'+
+    '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th>'+(sdOptions.student?'<th>z-Score</th>':'')+'</tr></thead>'+
+    '<tbody>'+subjectRowsHtml('t2')+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(student.t2.TOTAL!==null?student.t2.TOTAL+'/80':'\u2014')+'</b></td></tr></tbody></table></div>'+
     mtSection+
     examSection+
     '<div class="teacher-comment">'+
@@ -6845,7 +6880,7 @@ function renderPU2MonthlyOverview(){
     <div class="kpi"><div class="kpi-label">${monthLabel}</div><div class="kpi-value">${roster.length}</div><div class="kpi-note">Students appeared</div></div>
     <div class="kpi gold"><div class="kpi-label">Biology Class Avg</div><div class="kpi-value">${bioAvg!==null?bioAvg+'%':'\u2014'}</div><div class="kpi-note">out of 40</div></div>
     <div class="kpi ${bios.length && (passCount/bios.length)>=0.5?'up':'warn'}"><div class="kpi-label">Biology Pass Rate</div><div class="kpi-value">${bios.length?Math.round((passCount/bios.length)*100):0}%</div><div class="kpi-note">&ge;35% scoring</div></div>
-    <div class="kpi"><div class="kpi-label">Biology Spread (SD)</div><div class="kpi-value">${bioStats.sd!==null?bioStats.sd+'%':'\u2014'}</div><div class="kpi-note">${bioStats.sd!==null?sdLabel(bioStats.sd,100):''}</div></div>`;
+    ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">Biology Spread (SD)</div><div class="kpi-value">${bioStats.sd!==null?bioStats.sd+'%':'\u2014'}</div><div class="kpi-note">${bioStats.sd!==null?sdLabel(bioStats.sd,100):''}</div></div>`:''}`;
 
   const subjLabels = ['PHY','CHE','MAT','BIO'];
   const subjNice = {PHY:'Physics',CHE:'Chemistry',MAT:'Maths',BIO:'Biology'};
@@ -6983,8 +7018,8 @@ function buildPU2Bvo(){
   });
 
   const rows = subjLabels.map(s=>[subjNice[s], testSeriesAvg[s]!==null?testSeriesAvg[s]+'%':'\u2014', monthlyAvg[s]!==null?monthlyAvg[s]+'%':'\u2014', monthlySD[s]!==null?monthlySD[s]+'%':'\u2014']);
-  document.querySelector('#pu2BvoTable thead tr').innerHTML = '<th>Metric</th><th>Test Series (Combined)</th><th>Monthly Test</th><th>Monthly Spread (SD)</th>';
-  document.querySelector('#pu2BvoTable tbody').innerHTML = rows.map(r=>`<tr${r[0]==='Biology'?' class="bio-row"':''}><td>${r[0]}</td><td><b>${r[1]}</b></td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('');
+  document.querySelector('#pu2BvoTable thead tr').innerHTML = '<th>Metric</th><th>Test Series (Combined)</th><th>Monthly Test</th>'+(sdOptions.subject?'<th>Monthly Spread (SD)</th>':'');
+  document.querySelector('#pu2BvoTable tbody').innerHTML = rows.map(r=>`<tr${r[0]==='Biology'?' class="bio-row"':''}><td>${r[0]}</td><td><b>${r[1]}</b></td><td>${r[2]}</td>${sdOptions.subject?`<td>${r[3]}</td>`:''}</tr>`).join('');
 
   // Data-driven bullet points (computed, not fabricated)
   const others = ['PHY','CHE','MAT'];
@@ -7544,7 +7579,7 @@ function renderBioCandidateInsight(student, pu){
     '<div class="rp-kpi"><div class="rp-kpi-label">Class Average (Latest Test)</div><div class="rp-kpi-value">'+(latestClassAvg!==null?latestClassAvg+'%':'\u2014')+'</div><div class="rp-kpi-sub">'+(hist.length?hist[hist.length-1].label:'\u2014')+'</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">vs Class Average (Latest Test)</div><div class="rp-kpi-value" style="color:'+(vsAvg!==null&&vsAvg>=0?'#15803d':'#b91c1c')+';">'+(vsAvg!==null?(vsAvg>=0?'+':'')+vsAvg+'%':'\u2014')+'</div><div class="rp-kpi-sub">Percentage points</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Tests Recorded</div><div class="rp-kpi-value">'+hist.length+'</div><div class="rp-kpi-sub">'+subjectLabel+' attempts on file</div></div>'+
-    '<div class="rp-kpi"><div class="rp-kpi-label">Consistency ('+subjectLabel+' SD Across Tests)</div><div class="rp-kpi-value">'+(histStats.sd!==null?histStats.sd+'%':'\u2014')+'</div><div class="rp-kpi-sub">'+(histStats.sd!==null?sdLabel(histStats.sd,100):'Not enough data')+'</div></div>'+
+    (sdOptions.student?'<div class="rp-kpi"><div class="rp-kpi-label">Consistency ('+subjectLabel+' SD Across Tests)</div><div class="rp-kpi-value">'+(histStats.sd!==null?histStats.sd+'%':'\u2014')+'</div><div class="rp-kpi-sub">'+(histStats.sd!==null?sdLabel(histStats.sd,100):'Not enough data')+'</div></div>':'')+
   '</div>';
 
   if(hist.length){
@@ -7561,7 +7596,7 @@ function renderBioCandidateInsight(student, pu){
 
   if(compare){
     html += '<div class="rp-section"><div class="rp-section-title">'+(isEle?'Subject Comparison':'Biology vs Other Subjects')+' <span style="font-weight:400;font-size:12px;color:var(--muted);">('+compare.testLabel+')</span></div><canvas id="bioCandSubjectCanvas" style="max-width:100%;" width="600" height="240"></canvas>'+
-      (compareStats.sd!==null ? '<div class="rp-callout" style="margin-top:10px;">Subject-to-subject spread this test: SD '+compareStats.sd+'% — '+sdLabel(compareStats.sd,100)+'</div>' : '') +
+      (sdOptions.subject && compareStats.sd!==null ? '<div class="rp-callout" style="margin-top:10px;">Subject-to-subject spread this test: SD '+compareStats.sd+'% — '+sdLabel(compareStats.sd,100)+'</div>' : '') +
     '</div>';
   }
 
@@ -7744,10 +7779,13 @@ function buildTheoryBioSection(){
   });
   const pu2SubjVals = [pu2Month.BIO, pu2Month.PHY, pu2Month.CHE, pu2Month.MAT];
   const pu2SubjSDVals = [pu2MonthSD.BIO, pu2MonthSD.PHY, pu2MonthSD.CHE, pu2MonthSD.MAT];
-  const subjRows = subjChartLabels.map((label,i)=>[label,
-    currentBioFilters.includePU1 && pu1SubjVals[i]!==null&&pu1SubjVals[i]!==undefined ? pu1SubjVals[i]+'%' : '\u2014',
-    currentBioFilters.includePU2 && pu2SubjVals[i]!==null&&pu2SubjVals[i]!==undefined ? pu2SubjVals[i]+'%' : '\u2014',
-    currentBioFilters.includePU2 && pu2SubjSDVals[i]!==null&&pu2SubjSDVals[i]!==undefined ? pu2SubjSDVals[i]+'%' : '\u2014']);
+  const subjRows = subjChartLabels.map((label,i)=>{
+    const row = [label,
+      currentBioFilters.includePU1 && pu1SubjVals[i]!==null&&pu1SubjVals[i]!==undefined ? pu1SubjVals[i]+'%' : '\u2014',
+      currentBioFilters.includePU2 && pu2SubjVals[i]!==null&&pu2SubjVals[i]!==undefined ? pu2SubjVals[i]+'%' : '\u2014'];
+    if(sdOptions.subject) row.push(currentBioFilters.includePU2 && pu2SubjSDVals[i]!==null&&pu2SubjSDVals[i]!==undefined ? pu2SubjSDVals[i]+'%' : '\u2014');
+    return row;
+  });
 
   const pu1Lead = Math.round((pu1SubjVals[0] - Math.max(pu1SubjVals[1]||0, pu1SubjVals[2]||0, pu1SubjVals[3]||0))*10)/10;
   const pu2Lead = Math.round((pu2SubjVals[0] - Math.max(pu2SubjVals[1]||0, pu2SubjVals[2]||0, pu2SubjVals[3]||0))*10)/10;
@@ -7759,9 +7797,11 @@ function buildTheoryBioSection(){
   if(currentBioFilters.includePU1) comment += 'PU-I is averaging '+pu1TrendVals[pu1TrendVals.length-1]+'% in Biology, '+Math.abs(pu1Lead)+' points '+(pu1Lead>=0?'ahead of':'behind')+' our next-best subject, and has '+(pu1Trend>=0?'improved by '+pu1Trend:'declined by '+Math.abs(pu1Trend))+' points since Slip Test 1. ';
   if(currentBioFilters.includePU2) comment += 'PU-II is averaging '+(pu2TrendVals[pu2TrendVals.length-1]!==null?pu2TrendVals[pu2TrendVals.length-1]+'%':'\u2014')+' in Biology, '+Math.abs(pu2Lead)+' points '+(pu2Lead>=0?'ahead of':'behind')+' its next-best subject'+(pu2Trend!==null?', with a '+(pu2Trend>=0?'gain of '+pu2Trend:'drop of '+Math.abs(pu2Trend))+' points since March':'')+'. ';
   comment += (atRisk.length ? atRisk.length+' student(s) are below 35% in Theory Biology and need focused support.' : 'No students are currently below the passing mark in Theory Biology.');
-  if(currentBioFilters.includePU1) comment += ' '+sdInterpretClass(pu1sw.sdPct.BIO, 100, {noun:'PU-I Biology scores'});
-  const mostVariableSec = includedSections.filter(s=>sectionSD[s]!==null&&sectionSD[s]!==undefined).sort((a,b)=>sectionSD[b]-sectionSD[a])[0];
-  if(mostVariableSec) comment += ' Among sections, '+mostVariableSec+' shows the widest spread in Biology performance (SD '+sectionSD[mostVariableSec]+'%), suggesting the most uneven preparation levels within that group and a good candidate for targeted revision sessions.';
+  if(sdOptions.subject){
+    if(currentBioFilters.includePU1) comment += ' '+sdInterpretClass(pu1sw.sdPct.BIO, 100, {noun:'PU-I Biology scores'});
+    const mostVariableSec = includedSections.filter(s=>sectionSD[s]!==null&&sectionSD[s]!==undefined).sort((a,b)=>sectionSD[b]-sectionSD[a])[0];
+    if(mostVariableSec) comment += ' Among sections, '+mostVariableSec+' shows the widest spread in Biology performance (SD '+sectionSD[mostVariableSec]+'%), suggesting the most uneven preparation levels within that group and a good candidate for targeted revision sessions.';
+  }
 
   let html = '<div class="rp-section"><div class="rp-section-title" style="font-size:16px;">📖 Theory (Board) &mdash; Biology Performance</div></div>';
   let kpiHtml = '<div class="rp-kpi-grid">';
@@ -7774,16 +7814,20 @@ function buildTheoryBioSection(){
   if(atRisk.length){
     html += rpSection('Candidate-wise &mdash; Students Needing Support (Theory, Below 35%)', rpTable(['Name','Section','PU','Test','Biology %'], atRisk.map(s=>[s.name, s.section, 'PU-'+(s.pu===2?'II':'I'), s.label, s.pct+'%'])));
   }
-  const secRows = includedSections.map(sec=>[sec, (sec==='SPARK'||sec==='PRIME')?'PU-I':'PU-II', (sectionPct[sec]!==null&&sectionPct[sec]!==undefined?sectionPct[sec]:'\u2014')+'%', (sectionSD[sec]!==null&&sectionSD[sec]!==undefined?sectionSD[sec]:'\u2014')+'%']);
+  const secRows = includedSections.map(sec=>{
+    const row = [sec, (sec==='SPARK'||sec==='PRIME')?'PU-I':'PU-II', (sectionPct[sec]!==null&&sectionPct[sec]!==undefined?sectionPct[sec]:'\u2014')+'%'];
+    if(sdOptions.subject) row.push((sectionSD[sec]!==null&&sectionSD[sec]!==undefined?sectionSD[sec]:'\u2014')+'%');
+    return row;
+  });
   html += '<div class="rp-section"><div class="rp-section-title">Section-wise Biology Comparison (Theory)</div>'+
-    (secRows.length ? rpTable(['Section','PU Level','Biology Avg %','Spread (SD)'], secRows) : '<div class="rp-callout">No sections selected.</div>') +
+    (secRows.length ? rpTable(['Section','PU Level','Biology Avg %'].concat(sdOptions.subject?['Spread (SD)']:[]), secRows) : '<div class="rp-callout">No sections selected.</div>') +
     (secRows.length ? '<canvas id="bioTheorySectionCanvas" style="max-width:100%;margin-top:10px;" width="600" height="240"></canvas>' : '') + '</div>';
   html += '<div class="rp-section"><div class="rp-section-title">Test-wise Biology Trend (Theory)</div>';
   if(currentBioFilters.includePU1) html += '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; margin-bottom:6px;">PU-I</div><canvas id="bioTheoryTrendPU1Canvas" style="max-width:100%;" width="600" height="200"></canvas>';
   if(currentBioFilters.includePU2) html += '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; margin:14px 0 6px;">PU-II</div><canvas id="bioTheoryTrendPU2Canvas" style="max-width:100%;" width="600" height="200"></canvas>';
   html += '</div>';
   html += '<div class="rp-section"><div class="rp-section-title">Biology vs Other Subjects (Theory)</div>'+
-    rpTable(['Subject','PU-I Avg %','PU-II Avg %','PU-II Spread (SD)'], subjRows, 0) + '<canvas id="bioTheorySubjectCanvas" style="max-width:100%;margin-top:10px;" width="600" height="240"></canvas></div>';
+    rpTable(['Subject','PU-I Avg %','PU-II Avg %'].concat(sdOptions.subject?['PU-II Spread (SD)']:[]), subjRows, 0) + '<canvas id="bioTheorySubjectCanvas" style="max-width:100%;margin-top:10px;" width="600" height="240"></canvas></div>';
   html += '<div class="rp-section"><div class="rp-section-title">System-Generated Analysis &mdash; Theory <span style="font-weight:400;font-size:12px;color:var(--muted);">(Personal analysis, Narendra Sir)</span></div>'+
     '<div class="teacher-comment"><span class="tc-label">From Narendra Sir, Lecturer in Biology</span>'+comment+'</div></div>';
 
@@ -7864,9 +7908,13 @@ function buildNeetObtBioSection(){
   if(atRisk.length){
     html += rpSection('Candidate-wise &mdash; Students Needing Support (NEET OBT, Below 35%)', rpTable(['Name','Section','PU','Test','Biology %'], atRisk.map(s=>[s.name, s.section, 'PU-'+(s.pu===2?'II':'I'), s.label, s.pct+'%'])));
   }
-  const secRows = includedSections.map(sec=>[sec, (sec==='SPARK'||sec==='PRIME')?'PU-I':'PU-II', (sectionPct[sec]!==null&&sectionPct[sec]!==undefined?sectionPct[sec]:'\u2014')+'%', (sectionSD[sec]!==null&&sectionSD[sec]!==undefined?sectionSD[sec]:'\u2014')+'%']);
+  const secRows = includedSections.map(sec=>{
+    const row = [sec, (sec==='SPARK'||sec==='PRIME')?'PU-I':'PU-II', (sectionPct[sec]!==null&&sectionPct[sec]!==undefined?sectionPct[sec]:'\u2014')+'%'];
+    if(sdOptions.subject) row.push((sectionSD[sec]!==null&&sectionSD[sec]!==undefined?sectionSD[sec]:'\u2014')+'%');
+    return row;
+  });
   html += '<div class="rp-section"><div class="rp-section-title">Section-wise Biology Comparison (NEET OBT) <span style="font-weight:400;font-size:12px;color:var(--muted);">(PU-I: '+neetLatest.label+(currentBioFilters.includePU2?', PU-II: '+pu2Latest.label:'')+')</span></div>'+
-    (secRows.length ? rpTable(['Section','PU Level','Biology Avg %','Spread (SD)'], secRows) : '<div class="rp-callout">No sections selected.</div>') +
+    (secRows.length ? rpTable(['Section','PU Level','Biology Avg %'].concat(sdOptions.subject?['Spread (SD)']:[]), secRows) : '<div class="rp-callout">No sections selected.</div>') +
     (secRows.length ? '<canvas id="bioNeetSectionCanvas" style="max-width:100%;margin-top:10px;" width="600" height="240"></canvas>' : '') + '</div>';
   html += '<div class="rp-section"><div class="rp-section-title">Test-wise Biology Trend (NEET OBT)</div>';
   if(currentBioFilters.includePU1) html += '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; margin-bottom:6px;">PU-I</div><canvas id="bioNeetTrendPU1Canvas" style="max-width:100%;" width="600" height="200"></canvas>';
@@ -7927,9 +7975,13 @@ function buildKcetObtBioSection(){
   html += '<div class="rp-callout warn"><b>Note:</b> KCET (PCM stream) is Physics, Chemistry &amp; Mathematics only &mdash; there is no Biology component. Figures below are for a complete academic picture, not a Biology measure.</div>';
   html += rpSection('Candidate-wise &mdash; Top PCM Performers', combined.length ? '<div class="table-wrap"><table><thead><tr><th>Rank</th><th>Name</th><th>Section</th><th>PU</th><th>PCM %</th></tr></thead><tbody>'+
     top10.map((s,i)=>'<tr'+(i===0?' class="rp-bio"':'')+'><td>'+rankCell(i)+'</td><td>'+s.name+'</td><td>'+s.section+'</td><td>PU-'+(s.pu===2?'II':'I')+'</td><td>'+s.pct+'%</td></tr>').join('')+'</tbody></table></div>' : '<div class="rp-callout">No students match the current PU / section filters.</div>');
-  const secRows = includedSections.map(sec=>[sec, (sec==='SPARK'||sec==='PRIME')?'PU-I':'PU-II', (sectionPct[sec]!==null&&sectionPct[sec]!==undefined?sectionPct[sec]:'\u2014')+'%', (sectionSD[sec]!==null&&sectionSD[sec]!==undefined?sectionSD[sec]:'\u2014')+'%']);
+  const secRows = includedSections.map(sec=>{
+    const row = [sec, (sec==='SPARK'||sec==='PRIME')?'PU-I':'PU-II', (sectionPct[sec]!==null&&sectionPct[sec]!==undefined?sectionPct[sec]:'\u2014')+'%'];
+    if(sdOptions.subject) row.push((sectionSD[sec]!==null&&sectionSD[sec]!==undefined?sectionSD[sec]:'\u2014')+'%');
+    return row;
+  });
   html += '<div class="rp-section"><div class="rp-section-title">Section-wise PCM Comparison <span style="font-weight:400;font-size:12px;color:var(--muted);">(PU-I: '+pu1Kcet.label+(currentBioFilters.includePU2?', PU-II: '+pu2Kcet.label:'')+')</span></div>'+
-    (secRows.length ? rpTable(['Section','PU Level','PCM Avg %','Spread (SD)'], secRows) : '<div class="rp-callout">No sections selected.</div>') +
+    (secRows.length ? rpTable(['Section','PU Level','PCM Avg %'].concat(sdOptions.subject?['Spread (SD)']:[]), secRows) : '<div class="rp-callout">No sections selected.</div>') +
     (secRows.length ? '<canvas id="bioKcetSectionCanvas" style="max-width:100%;margin-top:10px;" width="600" height="240"></canvas>' : '') + '</div>';
   html += '<div class="rp-section"><div class="rp-section-title">PCM Trend Over Time</div>';
   if(currentBioFilters.includePU1) html += '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; margin-bottom:6px;">PU-I</div><canvas id="bioKcetTrendPU1Canvas" style="max-width:100%;" width="600" height="200"></canvas>';
@@ -7968,10 +8020,22 @@ function buildRiskBioSection(){
   }).filter(Boolean).sort((a,b)=>a.delta-b.delta).slice(0,currentBioFilters.topN);
 
   let html = '<div class="rp-section"><div class="rp-section-title" style="font-size:16px;">⚠️ Risk &amp; At-Risk &mdash; Biology</div></div>';
+  const belowPassHeaders = ['Name','Section','PU','Test','Biology %'].concat(sdOptions.student?['Consistency (SD)']:[]);
+  const belowPassRows = belowPass.map(s=>{
+    const row = [s.name, s.section, 'PU-'+(s.pu===2?'II':'I'), s.label, s.pct+'%'];
+    if(sdOptions.student) row.push(s.consistSD!==null?s.consistSD+'%':'\u2014');
+    return row;
+  });
   html += rpSection('Below Passing Mark <span style="font-weight:400;font-size:12px;color:var(--muted);">(Latest Biology test on file, Below 35%)</span>',
-    rpTable(['Name','Section','PU','Test','Biology %','Consistency (SD)'], belowPass.length ? belowPass.map(s=>[s.name, s.section, 'PU-'+(s.pu===2?'II':'I'), s.label, s.pct+'%', s.consistSD!==null?s.consistSD+'%':'\u2014']) : [['No students currently below 35% \u2014 great news!','','','','','']]));
+    rpTable(belowPassHeaders, belowPassRows.length ? belowPassRows : [['No students currently below 35% \u2014 great news!','','','',''].concat(sdOptions.student?['']:[])]));
+  const decliningHeaders = ['Name','Section','PU','First %','Latest %','Change'].concat(sdOptions.student?['Consistency (SD)']:[]);
+  const decliningRows = declining.map(s=>{
+    const row = [s.name, s.section, 'PU-'+(s.pu===2?'II':'I'), s.first+'%', s.last+'%', s.delta+'%'];
+    if(sdOptions.student) row.push(s.consistSD!==null?s.consistSD+'%':'\u2014');
+    return row;
+  });
   html += rpSection('Declining Students <span style="font-weight:400;font-size:12px;color:var(--muted);">(First recorded Biology % vs latest, drop of 15+ points)</span>',
-    rpTable(['Name','Section','PU','First %','Latest %','Change','Consistency (SD)'], declining.length ? declining.map(s=>[s.name, s.section, 'PU-'+(s.pu===2?'II':'I'), s.first+'%', s.last+'%', s.delta+'%', s.consistSD!==null?s.consistSD+'%':'\u2014']) : [['No students have dropped 15+ points \u2014 great news!','','','','','','']]));
+    rpTable(decliningHeaders, decliningRows.length ? decliningRows : [['No students have dropped 15+ points \u2014 great news!','','','','',''].concat(sdOptions.student?['']:[])]));
 
   const comment = belowPass.length || declining.length
     ? 'Across the selected roster, '+belowPass.length+' student(s) are currently below the Biology passing mark, and '+declining.length+' student(s) have shown a significant decline. I am personally following up with each of them for a focused revision plan.'
@@ -8009,7 +8073,7 @@ function buildTestWiseBioSection(){
     sectionHtml += '<div class="rp-kpi-grid">'+
       '<div class="rp-kpi"><div class="rp-kpi-label">Students Appeared</div><div class="rp-kpi-value">'+data.rows.length+'</div><div class="rp-kpi-sub">'+data.label+'</div></div>'+
       '<div class="rp-kpi"><div class="rp-kpi-label">Class Average</div><div class="rp-kpi-value">'+(data.classAvgPct!==null?data.classAvgPct+'%':'\u2014')+'</div><div class="rp-kpi-sub">Biology, out of '+(data.outOf||'\u2014')+'</div></div>'+
-      '<div class="rp-kpi"><div class="rp-kpi-label">Class Spread (SD)</div><div class="rp-kpi-value">'+(data.classSDPct!==null?data.classSDPct+'%':'\u2014')+'</div><div class="rp-kpi-sub">'+(data.classSDPct!==null?sdLabel(data.classSDPct,100):'')+'</div></div>'+
+      (sdOptions.subject ? '<div class="rp-kpi"><div class="rp-kpi-label">Class Spread (SD)</div><div class="rp-kpi-value">'+(data.classSDPct!==null?data.classSDPct+'%':'\u2014')+'</div><div class="rp-kpi-sub">'+(data.classSDPct!==null?sdLabel(data.classSDPct,100):'')+'</div></div>' : '')+
     '</div>';
     sectionHtml += rpSection('Toppers <span style="font-weight:400;font-size:12px;color:var(--muted);">('+data.label+')</span>',
       topper10.length ? '<div class="table-wrap"><table><thead><tr><th>Rank</th><th>Name</th><th>Section</th><th>Score</th><th>%</th></tr></thead><tbody>'+
@@ -8233,7 +8297,7 @@ function renderEleCandidateInsight(student, pu){
     '<div class="rp-kpi"><div class="rp-kpi-label">Class Average (Latest Test)</div><div class="rp-kpi-value">'+(latestClassAvg!==null?latestClassAvg+'%':'\u2014')+'</div><div class="rp-kpi-sub">'+(hist.length?hist[hist.length-1].label:'\u2014')+'</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">vs Class Average (Latest Test)</div><div class="rp-kpi-value" style="color:'+(vsAvg!==null&&vsAvg>=0?'#15803d':'#b91c1c')+';">'+(vsAvg!==null?(vsAvg>=0?'+':'')+vsAvg+'%':'\u2014')+'</div><div class="rp-kpi-sub">Percentage points</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Tests Recorded</div><div class="rp-kpi-value">'+hist.length+'</div><div class="rp-kpi-sub">Electronics attempts on file</div></div>'+
-    '<div class="rp-kpi"><div class="rp-kpi-label">Consistency (Electronics SD Across Tests)</div><div class="rp-kpi-value">'+(histStats.sd!==null?histStats.sd+'%':'\u2014')+'</div><div class="rp-kpi-sub">'+(histStats.sd!==null?sdLabel(histStats.sd,100):'Not enough data')+'</div></div>'+
+    (sdOptions.student?'<div class="rp-kpi"><div class="rp-kpi-label">Consistency (Electronics SD Across Tests)</div><div class="rp-kpi-value">'+(histStats.sd!==null?histStats.sd+'%':'\u2014')+'</div><div class="rp-kpi-sub">'+(histStats.sd!==null?sdLabel(histStats.sd,100):'Not enough data')+'</div></div>':'')+
   '</div>';
 
   if(hist.length){
@@ -8250,7 +8314,7 @@ function renderEleCandidateInsight(student, pu){
 
   if(compare){
     html += '<div class="rp-section"><div class="rp-section-title">Subject Comparison <span style="font-weight:400;font-size:12px;color:var(--muted);">('+compare.testLabel+')</span></div><canvas id="eleCandSubjectCanvas" style="max-width:100%;" width="600" height="240"></canvas>'+
-      (compareStats.sd!==null ? '<div class="rp-callout" style="margin-top:10px;">Subject-to-subject spread this test: SD '+compareStats.sd+'% — '+sdLabel(compareStats.sd,100)+'</div>' : '') +
+      (sdOptions.subject && compareStats.sd!==null ? '<div class="rp-callout" style="margin-top:10px;">Subject-to-subject spread this test: SD '+compareStats.sd+'% — '+sdLabel(compareStats.sd,100)+'</div>' : '') +
     '</div>';
   }
 
@@ -8339,7 +8403,11 @@ function buildEleTheorySection(){
   const pu1Avg = avgOf(pu1Vals), pu2Avg = avgOf(pu2Vals);
   const pu1SD = sdOf(pu1Vals), pu2SD = sdOf(pu2Vals);
   const includedSections = ['PU1_ELE','PU2_ELE'].filter(eleSectionAllowed);
-  const secRows = includedSections.map(sec=> sec==='PU1_ELE' ? ['PU-I Electronics (SPARK/PRIME)','PU-I', pu1Avg!==null?pu1Avg+'%':'\u2014', pu1SD!==null?pu1SD+'%':'\u2014'] : ['PU-II Electronics','PU-II', pu2Avg!==null?pu2Avg+'%':'\u2014', pu2SD!==null?pu2SD+'%':'\u2014']);
+  const secRows = includedSections.map(sec=>{
+    const row = sec==='PU1_ELE' ? ['PU-I Electronics (SPARK/PRIME)','PU-I', pu1Avg!==null?pu1Avg+'%':'\u2014'] : ['PU-II Electronics','PU-II', pu2Avg!==null?pu2Avg+'%':'\u2014'];
+    if(sdOptions.subject) row.push(sec==='PU1_ELE' ? (pu1SD!==null?pu1SD+'%':'\u2014') : (pu2SD!==null?pu2SD+'%':'\u2014'));
+    return row;
+  });
 
   const pu1SubjVals = {}, pu1SubjSD = {};
   ELE_SUBJECTS.forEach(subj=>{
@@ -8368,10 +8436,13 @@ function buildEleTheorySection(){
   const pu1SubjArr = [pu1SubjVals.ELE, pu1SubjVals.PHY, pu1SubjVals.CHE, pu1SubjVals.MAT];
   const pu2SubjArr = [pu2SubjVals.ELE, pu2SubjVals.PHY, pu2SubjVals.CHE, pu2SubjVals.MAT];
   const pu2SubjSDArr = [pu2SubjSD.ELE, pu2SubjSD.PHY, pu2SubjSD.CHE, pu2SubjSD.MAT];
-  const subjRows = subjChartLabels.map((label,i)=>[label,
-    currentEleFilters.includePU1 && pu1SubjArr[i]!=null ? pu1SubjArr[i]+'%' : '\u2014',
-    currentEleFilters.includePU2 && pu2SubjArr[i]!=null ? pu2SubjArr[i]+'%' : '\u2014',
-    currentEleFilters.includePU2 && pu2SubjSDArr[i]!=null ? pu2SubjSDArr[i]+'%' : '\u2014']);
+  const subjRows = subjChartLabels.map((label,i)=>{
+    const row = [label,
+      currentEleFilters.includePU1 && pu1SubjArr[i]!=null ? pu1SubjArr[i]+'%' : '\u2014',
+      currentEleFilters.includePU2 && pu2SubjArr[i]!=null ? pu2SubjArr[i]+'%' : '\u2014'];
+    if(sdOptions.subject) row.push(currentEleFilters.includePU2 && pu2SubjSDArr[i]!=null ? pu2SubjSDArr[i]+'%' : '\u2014');
+    return row;
+  });
 
   const pu1Lead = pu1SubjArr[0]!=null ? Math.round((pu1SubjArr[0] - Math.max(pu1SubjArr[1]||0, pu1SubjArr[2]||0, pu1SubjArr[3]||0))*10)/10 : null;
   const pu1Trend = (pu1TrendVals[0]!=null && pu1TrendVals[pu1TrendVals.length-1]!=null) ? Math.round((pu1TrendVals[pu1TrendVals.length-1]-pu1TrendVals[0])*10)/10 : null;
@@ -8382,10 +8453,12 @@ function buildEleTheorySection(){
   if(currentEleFilters.includePU1) comment += 'PU-I Electronics students are averaging '+(pu1Avg!==null?pu1Avg+'%':'\u2014')+' in Electronics'+(pu1Lead!==null?', '+Math.abs(pu1Lead)+' points '+(pu1Lead>=0?'ahead of':'behind')+' their next-best subject':'')+(pu1Trend!==null?', and have '+(pu1Trend>=0?'improved by '+pu1Trend:'declined by '+Math.abs(pu1Trend))+' points since Slip Test 1':'')+'. ';
   if(currentEleFilters.includePU2) comment += 'PU-II Electronics students are averaging '+(pu2Avg!==null?pu2Avg+'%':'\u2014')+' in Electronics'+(pu2Trend!==null?', with a '+(pu2Trend>=0?'gain of '+pu2Trend:'drop of '+Math.abs(pu2Trend))+' points since March':'')+'. ';
   comment += (atRisk.length ? atRisk.length+' student(s) are below 35% in Theory Electronics and need focused support.' : 'No students are currently below the passing mark in Theory Electronics.');
-  if(currentEleFilters.includePU1) comment += ' '+sdInterpretClass(pu1SD, 100, {noun:'PU-I Electronics scores'});
-  if(currentEleFilters.includePU1 && currentEleFilters.includePU2 && pu1SD!==null && pu2SD!==null){
-    const wider = pu1SD>=pu2SD ? 'PU-I' : 'PU-II';
-    comment += ' Between the two groups, '+wider+' Electronics shows the wider spread, suggesting less consistent preparation there.';
+  if(sdOptions.subject){
+    if(currentEleFilters.includePU1) comment += ' '+sdInterpretClass(pu1SD, 100, {noun:'PU-I Electronics scores'});
+    if(currentEleFilters.includePU1 && currentEleFilters.includePU2 && pu1SD!==null && pu2SD!==null){
+      const wider = pu1SD>=pu2SD ? 'PU-I' : 'PU-II';
+      comment += ' Between the two groups, '+wider+' Electronics shows the wider spread, suggesting less consistent preparation there.';
+    }
   }
 
   let html = '<div class="rp-section"><div class="rp-section-title" style="font-size:16px;">📖 Theory (Board) &mdash; Electronics Performance</div></div>';
@@ -8400,14 +8473,14 @@ function buildEleTheorySection(){
     html += rpSection('Candidate-wise &mdash; Students Needing Support (Theory, Below 35%)', rpTable(['Name','Section','PU','Test','Electronics %'], atRisk.map(s=>[s.name, s.section, 'PU-'+(s.pu===2?'II':'I'), s.label, s.pct+'%'])));
   }
   html += '<div class="rp-section"><div class="rp-section-title">Section-wise Electronics Comparison (Theory)</div>'+
-    (secRows.length ? rpTable(['Section','PU Level','Electronics Avg %','Spread (SD)'], secRows) : '<div class="rp-callout">No sections selected.</div>') +
+    (secRows.length ? rpTable(['Section','PU Level','Electronics Avg %'].concat(sdOptions.subject?['Spread (SD)']:[]), secRows) : '<div class="rp-callout">No sections selected.</div>') +
     (secRows.length ? '<canvas id="eleTheorySectionCanvas" style="max-width:100%;margin-top:10px;" width="600" height="240"></canvas>' : '') + '</div>';
   html += '<div class="rp-section"><div class="rp-section-title">Test-wise Electronics Trend (Theory)</div>';
   if(currentEleFilters.includePU1) html += '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; margin-bottom:6px;">PU-I</div><canvas id="eleTheoryTrendPU1Canvas" style="max-width:100%;" width="600" height="200"></canvas>';
   if(currentEleFilters.includePU2) html += '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; margin:14px 0 6px;">PU-II</div><canvas id="eleTheoryTrendPU2Canvas" style="max-width:100%;" width="600" height="200"></canvas>';
   html += '</div>';
   html += '<div class="rp-section"><div class="rp-section-title">Electronics vs Other Subjects (Theory)</div>'+
-    rpTable(['Subject','PU-I Avg %','PU-II Avg %','PU-II Spread (SD)'], subjRows, 0) + '<canvas id="eleTheorySubjectCanvas" style="max-width:100%;margin-top:10px;" width="600" height="240"></canvas></div>';
+    rpTable(['Subject','PU-I Avg %','PU-II Avg %'].concat(sdOptions.subject?['PU-II Spread (SD)']:[]), subjRows, 0) + '<canvas id="eleTheorySubjectCanvas" style="max-width:100%;margin-top:10px;" width="600" height="240"></canvas></div>';
   html += '<div class="rp-section"><div class="rp-section-title">System-Generated Analysis &mdash; Theory <span style="font-weight:400;font-size:12px;color:var(--muted);">(Personal analysis, Narendra Sir)</span></div>'+
     '<div class="teacher-comment"><span class="tc-label">From Narendra Sir</span>'+comment+'</div></div>';
 
@@ -8445,7 +8518,11 @@ function buildEleKcetSection(){
   const pu1SecSD = secSD(pu1Kcet.students.filter(r=>pu1EleCodes.has(r.code)), 135);
   const pu2SecSD = secSD(pu2Kcet.students.filter(r=>pu2EleCodes.has(r.code)), pu2Kcet.outof*3);
   const includedSections = ['PU1_ELE','PU2_ELE'].filter(eleSectionAllowed);
-  const secRows = includedSections.map(sec=> sec==='PU1_ELE' ? ['PU-I Electronics (SPARK/PRIME)','PU-I', pu1SecAvg!==null?pu1SecAvg+'%':'\u2014', pu1SecSD!==null?pu1SecSD+'%':'\u2014'] : ['PU-II Electronics','PU-II', pu2SecAvg!==null?pu2SecAvg+'%':'\u2014', pu2SecSD!==null?pu2SecSD+'%':'\u2014']);
+  const secRows = includedSections.map(sec=>{
+    const row = sec==='PU1_ELE' ? ['PU-I Electronics (SPARK/PRIME)','PU-I', pu1SecAvg!==null?pu1SecAvg+'%':'\u2014'] : ['PU-II Electronics','PU-II', pu2SecAvg!==null?pu2SecAvg+'%':'\u2014'];
+    if(sdOptions.subject) row.push(sec==='PU1_ELE' ? (pu1SecSD!==null?pu1SecSD+'%':'\u2014') : (pu2SecSD!==null?pu2SecSD+'%':'\u2014'));
+    return row;
+  });
 
   const pu1TrendLabels = KCET_TESTS.map(t=>t.label);
   const pu1TrendVals = KCET_TESTS.map(t=>{ const vals=t.students.filter(r=>pu1EleCodes.has(r.code)).map(r=>r.total/135*100); return vals.length?Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)*10)/10:null; });
@@ -8460,7 +8537,7 @@ function buildEleKcetSection(){
   html += rpSection('Candidate-wise &mdash; Top PCM Performers', combined.length ? '<div class="table-wrap"><table><thead><tr><th>Rank</th><th>Name</th><th>Section</th><th>PU</th><th>PCM %</th></tr></thead><tbody>'+
     top10.map((s,i)=>'<tr'+(i===0?' class="rp-bio"':'')+'><td>'+rankCell(i)+'</td><td>'+s.name+'</td><td>'+s.section+'</td><td>PU-'+(s.pu===2?'II':'I')+'</td><td>'+s.pct+'%</td></tr>').join('')+'</tbody></table></div>' : '<div class="rp-callout">No students match the current PU / section filters.</div>');
   html += '<div class="rp-section"><div class="rp-section-title">Section-wise PCM Comparison <span style="font-weight:400;font-size:12px;color:var(--muted);">(PU-I: '+pu1Kcet.label+(currentEleFilters.includePU2?', PU-II: '+pu2Kcet.label:'')+')</span></div>'+
-    (secRows.length ? rpTable(['Section','PU Level','PCM Avg %','Spread (SD)'], secRows) : '<div class="rp-callout">No sections selected.</div>') +
+    (secRows.length ? rpTable(['Section','PU Level','PCM Avg %'].concat(sdOptions.subject?['Spread (SD)']:[]), secRows) : '<div class="rp-callout">No sections selected.</div>') +
     (secRows.length ? '<canvas id="eleKcetSectionCanvas" style="max-width:100%;margin-top:10px;" width="600" height="240"></canvas>' : '') + '</div>';
   html += '<div class="rp-section"><div class="rp-section-title">PCM Trend Over Time</div>';
   if(currentEleFilters.includePU1) html += '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; margin-bottom:6px;">PU-I</div><canvas id="eleKcetTrendPU1Canvas" style="max-width:100%;" width="600" height="200"></canvas>';
@@ -8504,10 +8581,22 @@ function buildEleRiskSection(){
   }).filter(Boolean).sort((a,b)=>a.delta-b.delta).slice(0,currentEleFilters.topN);
 
   let html = '<div class="rp-section"><div class="rp-section-title" style="font-size:16px;">⚠️ Risk &amp; At-Risk &mdash; Electronics</div></div>';
+  const belowPassHeaders = ['Name','Section','PU','Test','Electronics %'].concat(sdOptions.student?['Consistency (SD)']:[]);
+  const belowPassRows = belowPass.map(s=>{
+    const row = [s.name, s.section, 'PU-'+(s.pu===2?'II':'I'), s.label, s.pct+'%'];
+    if(sdOptions.student) row.push(s.consistSD!==null?s.consistSD+'%':'\u2014');
+    return row;
+  });
   html += rpSection('Below Passing Mark <span style="font-weight:400;font-size:12px;color:var(--muted);">(Latest Electronics test on file, Below 35%)</span>',
-    rpTable(['Name','Section','PU','Test','Electronics %','Consistency (SD)'], belowPass.length ? belowPass.map(s=>[s.name, s.section, 'PU-'+(s.pu===2?'II':'I'), s.label, s.pct+'%', s.consistSD!==null?s.consistSD+'%':'\u2014']) : [['No students currently below 35% \u2014 great news!','','','','','']]));
+    rpTable(belowPassHeaders, belowPassRows.length ? belowPassRows : [['No students currently below 35% \u2014 great news!','','','',''].concat(sdOptions.student?['']:[])]));
+  const decliningHeaders = ['Name','Section','PU','First %','Latest %','Change'].concat(sdOptions.student?['Consistency (SD)']:[]);
+  const decliningRows = declining.map(s=>{
+    const row = [s.name, s.section, 'PU-'+(s.pu===2?'II':'I'), s.first+'%', s.last+'%', s.delta+'%'];
+    if(sdOptions.student) row.push(s.consistSD!==null?s.consistSD+'%':'\u2014');
+    return row;
+  });
   html += rpSection('Declining Students <span style="font-weight:400;font-size:12px;color:var(--muted);">(First recorded Electronics % vs latest, drop of 15+ points)</span>',
-    rpTable(['Name','Section','PU','First %','Latest %','Change','Consistency (SD)'], declining.length ? declining.map(s=>[s.name, s.section, 'PU-'+(s.pu===2?'II':'I'), s.first+'%', s.last+'%', s.delta+'%', s.consistSD!==null?s.consistSD+'%':'\u2014']) : [['No students have dropped 15+ points \u2014 great news!','','','','','','']]));
+    rpTable(decliningHeaders, decliningRows.length ? decliningRows : [['No students have dropped 15+ points \u2014 great news!','','','','',''].concat(sdOptions.student?['']:[])]));
 
   const comment = belowPass.length || declining.length
     ? 'Across the selected roster, '+belowPass.length+' student(s) are currently below the Electronics passing mark, and '+declining.length+' student(s) have shown a significant decline. I am personally following up with each of them for a focused revision plan.'
@@ -8594,7 +8683,7 @@ function buildEleTestWiseSection(){
     sectionHtml += '<div class="rp-kpi-grid">'+
       '<div class="rp-kpi"><div class="rp-kpi-label">Students Appeared</div><div class="rp-kpi-value">'+data.rows.length+'</div><div class="rp-kpi-sub">'+data.label+'</div></div>'+
       '<div class="rp-kpi"><div class="rp-kpi-label">Class Average</div><div class="rp-kpi-value">'+(data.classAvgPct!==null?data.classAvgPct+'%':'\u2014')+'</div><div class="rp-kpi-sub">Electronics, out of '+(data.outOf||'\u2014')+'</div></div>'+
-      '<div class="rp-kpi"><div class="rp-kpi-label">Class Spread (SD)</div><div class="rp-kpi-value">'+(data.classSDPct!==null?data.classSDPct+'%':'\u2014')+'</div><div class="rp-kpi-sub">'+(data.classSDPct!==null?sdLabel(data.classSDPct,100):'')+'</div></div>'+
+      (sdOptions.subject ? '<div class="rp-kpi"><div class="rp-kpi-label">Class Spread (SD)</div><div class="rp-kpi-value">'+(data.classSDPct!==null?data.classSDPct+'%':'\u2014')+'</div><div class="rp-kpi-sub">'+(data.classSDPct!==null?sdLabel(data.classSDPct,100):'')+'</div></div>' : '')+
     '</div>';
     sectionHtml += rpSection('Toppers <span style="font-weight:400;font-size:12px;color:var(--muted);">('+data.label+')</span>',
       topper10.length ? '<div class="table-wrap"><table><thead><tr><th>Rank</th><th>Name</th><th>Section</th><th>Score</th><th>%</th></tr></thead><tbody>'+
