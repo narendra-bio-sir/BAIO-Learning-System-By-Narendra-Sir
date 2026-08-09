@@ -2540,6 +2540,11 @@ window.addEventListener('afterprint', function(){
     <div id="customReportBlock" class="custom-report-options">
       <div class="checkbox-row"><input type="checkbox" id="incSlip" checked><label for="incSlip">Slip Test Overview (subject averages, fail rates, toppers)</label></div>
       <div class="checkbox-row"><input type="checkbox" id="incMonthly" checked><label for="incMonthly">Monthly Test Overview (subject-wide + section-wise)</label></div>
+      <div style="margin-left:26px; margin-bottom:6px;">
+        <div class="checkbox-row"><input type="checkbox" id="rpMonthAll"><label for="rpMonthAll"><b>All Months (Combined)</b></label></div>
+        <div class="checkbox-row"><input type="checkbox" class="rp-month-check" value="july" id="rpMonth_july" checked><label for="rpMonth_july">July Monthly Test</label></div>
+        <div class="checkbox-row"><input type="checkbox" class="rp-month-check" value="june" id="rpMonth_june"><label for="rpMonth_june">June Monthly Test</label></div>
+      </div>
       <div class="checkbox-row"><input type="checkbox" id="incSections" checked><label for="incSections">Section Analysis (SPARK vs PRIME)</label></div>
       <div class="checkbox-row"><input type="checkbox" id="incBvo" checked><label for="incBvo">Biology vs Other Subjects</label></div>
       <div class="checkbox-row"><input type="checkbox" id="incNeetObt" checked><label for="incNeetObt">NEET OBT 01 Overview (subject averages, section-wise, distribution)</label></div>
@@ -6630,6 +6635,18 @@ function generateReport(){
     risk: document.getElementById('incRisk').checked
   };
 
+  const savedPu1MonthCurrent = pu1MonthCurrent;
+  const rpMonthAllBox = document.getElementById('rpMonthAll');
+  const rpMonthBoxes = document.querySelectorAll('.rp-month-check');
+  if(rpMonthAllBox && rpMonthBoxes.length){
+    if(rpMonthAllBox.checked){
+      pu1MonthCurrent = PU1_MONTH_ORDER.slice();
+    } else {
+      const checked = Array.from(rpMonthBoxes).filter(b=>b.checked).map(b=>b.value);
+      pu1MonthCurrent = checked.length ? checked : ['july'];
+    }
+  }
+
   const dateStr = new Date().toLocaleDateString('en-IN', {day:'numeric', month:'long', year:'numeric'});
   let html = '<div class="rp-header">'+
     '<div class="rp-tag">Global Education With Indian Values</div>'+
@@ -6723,6 +6740,8 @@ function generateReport(){
   html += '</div>'; // close rp-body
   html += '<div class="rp-footer">BAIO Learning System by Narendra Sir &middot; Lecturer in Biology &middot; S.R.N. Mehta PU Science College</div>';
 
+  pu1MonthCurrent = savedPu1MonthCurrent;
+
   document.getElementById('printArea').innerHTML = html;
   document.getElementById('reportPreviewWrap').style.display = 'block';
   document.getElementById('printArea').scrollIntoView({behavior:'smooth', block:'start'});
@@ -6780,6 +6799,24 @@ function buildPU1MonthlyCategory(){
 
   allBox.addEventListener('change', recomputeSelection);
   monthBoxes.forEach(b=> b.addEventListener('change', recomputeSelection));
+})();
+
+/* Report setup's own June/July checklist — independent of the dashboard's
+   Monthly Test Analytics tab, only read at report-generation time. */
+(function(){
+  const allBox = document.getElementById('rpMonthAll');
+  const monthBoxes = document.querySelectorAll('.rp-month-check');
+  if(!allBox || !monthBoxes.length) return;
+  allBox.addEventListener('change', ()=>{
+    monthBoxes.forEach(b=>{ b.checked = allBox.checked; b.disabled = allBox.checked; });
+  });
+  monthBoxes.forEach(b=> b.addEventListener('change', ()=>{
+    if(!Array.from(monthBoxes).some(x=>x.checked)){
+      // Never leave zero months selected — fall back to July.
+      const julyBox = document.getElementById('rpMonth_july');
+      if(julyBox) julyBox.checked = true;
+    }
+  }));
 })();
 
 /* ---------- Restore mode/tab from a previous session (page refresh) ---------- */
