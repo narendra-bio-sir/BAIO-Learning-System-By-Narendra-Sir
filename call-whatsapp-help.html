@@ -386,13 +386,18 @@ if('serviceWorker' in navigator){
     var bar = document.getElementById('baioOfflineBanner');
     if(bar) bar.remove();
   }
-  function checkConnectivity(){
+  function checkConnectivity(isRetry){
     if(!navigator.onLine){ showOfflineBanner(); return; }
     fetch('manifest.json', { cache:'no-store' }).then(function(res){
-      if(res && res.ok) hideOfflineBanner(); else showOfflineBanner();
-    }).catch(function(){ showOfflineBanner(); });
+      if(res && res.ok) hideOfflineBanner();
+      else if(isRetry) showOfflineBanner();
+      else setTimeout(function(){ checkConnectivity(true); }, 1000);
+    }).catch(function(){
+      if(isRetry) showOfflineBanner();
+      else setTimeout(function(){ checkConnectivity(true); }, 1000);
+    });
   }
-  window.addEventListener('online', checkConnectivity);
+  window.addEventListener('online', function(){ checkConnectivity(); });
   window.addEventListener('offline', showOfflineBanner);
   if(document.readyState === 'complete' || document.readyState === 'interactive'){ checkConnectivity(); }
   else { document.addEventListener('DOMContentLoaded', checkConnectivity); }
