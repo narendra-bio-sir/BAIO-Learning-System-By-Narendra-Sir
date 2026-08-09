@@ -296,6 +296,8 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .board-page-scroll{overflow:auto !important;max-height:75vh;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;}
 .board-page-scroll img{display:block;width:100%;height:auto;}
 .board-page-wrap img{display:block;width:100%;height:auto;cursor:inherit;}
+.board-page-wrap img,#pptImg,#mmImg{opacity:0;transition:opacity .25s ease;}
+.board-page-wrap img.loaded,#pptImg.loaded,#mmImg.loaded{opacity:1;}
 
 /* Fullscreen overlay controls -- these live INSIDE the element that goes
    fullscreen, so they stay visible/usable in fullscreen (buttons outside the
@@ -1880,7 +1882,7 @@ function renderMindmap(){
       <button class="opt-btn" onclick="mmFullscreen()">&#9974; Fullscreen</button>
     </div>
     <div class="mindmap-wrap" id="mmWrap">
-      <img id="mmImg" src="${MINDMAP_IMAGES[mmIdx]}">
+      <img id="mmImg" src="${MINDMAP_IMAGES[mmIdx]}" onload="this.classList.add('loaded')">
       <div class="fs-controls">
         <div class="fs-zoomrow">
           <button class="fs-btn" onclick="mmZoomOut()" style="position:static;">&minus;</button>
@@ -1949,7 +1951,7 @@ function renderClassPpt(){
     <div class="ppt-progress-track"><div class="ppt-progress-fill" id="pptProgressFill"></div></div>
     <div class="ppt-thumbs" id="pptThumbs"></div>
     <div class="ppt-slide-wrap" id="pptWrap">
-      <img id="pptImg" src="">
+      <img id="pptImg" src="" onload="this.classList.add('loaded')">
       <div class="ppt-tap-zone ppt-tap-left" onclick="pptPrev()" title="Previous slide"></div>
       <div class="ppt-tap-zone ppt-tap-right" onclick="pptNext()" title="Next slide"></div>
       <div class="fs-controls">
@@ -1983,6 +1985,7 @@ function pptRender(){
   if(!img) return;
   img.style.transform = '';
   pptFsState.scale = 1; pptFsState.tx = 0; pptFsState.ty = 0;
+  img.classList.remove('loaded');
   img.src = pptSlideSrc(pptIdx);
   const fill = document.getElementById('pptProgressFill');
   if(fill) fill.style.width = (((pptIdx+1)/CLASS_SLIDES.length)*100)+'%';
@@ -2028,7 +2031,7 @@ document.addEventListener('keydown', (e)=>{
 function renderBoardImportant(){
   const pages = BOARD_IMPORTANT_IMAGES.map((b64,i)=>`
     <div class="board-page-wrap board-page-scroll" id="boardWrap${i}">
-      <img id="boardImg${i}" src="${b64}" alt="Board Important page ${i+1}">
+      <img id="boardImg${i}" src="${b64}" alt="Board Important page ${i+1}" onload="this.classList.add('loaded')">
     </div>`).join('');
   document.getElementById('content').innerHTML = `<div class="setup-card">
     <h3 style="color:var(--gold);margin-bottom:4px;">Board Important &ndash; Karnataka 1st PUC Blueprint</h3>

@@ -299,6 +299,8 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .board-page-wrap:focus-visible{outline:2px solid var(--gold);outline-offset:-2px;}
 .board-page-scroll{overflow:auto !important;max-height:75vh;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;}
 .board-page-scroll img{display:block;width:100%;height:auto;cursor:inherit;}
+.board-page-wrap img,#pptImg,#mmImg{opacity:0;transition:opacity .25s ease;}
+.board-page-wrap img.loaded,#pptImg.loaded,#mmImg.loaded{opacity:1;}
 
 /* HANDWRITTEN NOTES LOCK SYSTEM */
 .hw-unlock-form{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:-4px 0 14px;display:flex;flex-direction:column;gap:8px;}
@@ -2472,6 +2474,7 @@ function pptRender(){
   const progress = document.getElementById('pptProgress');
   const thumbs = document.getElementById('pptThumbs');
   if(!img) return;
+  img.classList.remove('loaded');
   img.src = pptSlideSrc(pptIndex);
   counter.textContent = (pptIndex+1) + ' / ' + pptTotal;
   progress.style.width = (((pptIndex+1)/pptTotal)*100) + '%';
@@ -2504,7 +2507,7 @@ function renderClassPresentation(){
     <h3 style="color:var(--gold); margin-bottom:4px; font-size:15px;">Narendra Sir &ndash; Class Presentation</h3>
     <div style="color:var(--ink-dim); font-size:12px; margin-bottom:10px;">${pptTotal}-slide classroom deck &middot; tap left/right half of the slide to navigate &middot; use Fullscreen for a landscape, PPT-style view</div>
     <div class="ppt-wrap" id="pptWrap">
-      <img id="pptImg" src="" alt="Class presentation slide">
+      <img id="pptImg" src="" alt="Class presentation slide" onload="this.classList.add('loaded')">
       <div class="ppt-nav-zone left" id="pptPrevZone"></div>
       <div class="ppt-nav-zone right" id="pptNextZone"></div>
       <div class="ppt-counter" id="pptCounter">1 / ${pptTotal}</div>
@@ -2576,7 +2579,7 @@ function renderClassPresentation(){
 function renderBoardImportant(){
   const pages = BOARD_IMPORTANT_IMAGES.map((b64,i)=>`
     <div class="board-page-wrap board-page-scroll" id="boardWrap${i}">
-      <img id="boardImg${i}" src="${b64}" alt="Board Important page ${i+1}">
+      <img id="boardImg${i}" src="${b64}" alt="Board Important page ${i+1}" onload="this.classList.add('loaded')">
     </div>`).join('');
   document.getElementById('content').innerHTML = `<div class="setup-card">
     <h3 style="color:var(--gold);margin-bottom:4px;">Board Important &ndash; Karnataka 2nd PUC Blueprint</h3>
@@ -2790,7 +2793,7 @@ function renderMindMap(){
       <button class="fc-btn" onclick="mmZoom(0.25)">+ Zoom In</button>
     </div>
     <div class="mm-viewport" id="mmViewport">
-      <img id="mmImg" src="${m.img}" alt="${m.title}">
+      <img id="mmImg" src="${m.img}" alt="${m.title}" onload="this.classList.add('loaded')">
     </div>
     <div class="mm-caption">${m.title} &middot; use the buttons above or pinch to zoom; drag only works once zoomed in</div>
   </div>`;
