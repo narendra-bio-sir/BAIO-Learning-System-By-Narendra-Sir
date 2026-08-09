@@ -282,9 +282,11 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .dl-btn.view{border-color:var(--teal);color:var(--teal);}
 .dl-btn.dl{border-color:var(--gold);color:var(--gold);}
 
-.board-page-wrap{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:14px;background:#0a0a0a;}
+.board-page-wrap{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:14px;background:#0a0a0a;cursor:grab;}
+.board-page-wrap.dragging{cursor:grabbing;}
+.board-page-wrap:focus-visible{outline:2px solid var(--gold);outline-offset:-2px;}
 .board-page-scroll{overflow:auto !important;max-height:75vh;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;}
-.board-page-scroll img{display:block;width:100%;height:auto;}
+.board-page-scroll img{display:block;width:100%;height:auto;cursor:inherit;}
 
 /* HANDWRITTEN NOTES LOCK SYSTEM */
 .hw-unlock-form{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:-4px 0 14px;display:flex;flex-direction:column;gap:8px;}
@@ -2575,8 +2577,9 @@ function renderBoardImportant(){
     </div>`).join('');
   document.getElementById('content').innerHTML = `<div class="setup-card">
     <h3 style="color:var(--gold);margin-bottom:4px;">Board Important &ndash; Karnataka 2nd PUC Blueprint</h3>
-    <div style="color:var(--ink-dim);font-size:12px;margin-bottom:12px;">Official chapter-wise weightage, high-yield topics &amp; model answers &middot; scroll up/down/left/right and pinch to zoom on any page</div>
+    <div style="color:var(--ink-dim);font-size:12px;margin-bottom:12px;">Official chapter-wise weightage, high-yield topics &amp; model answers &middot; scroll or drag to pan, hold Ctrl and scroll (or press +/&minus;) to zoom, arrow keys to pan when focused, pinch to zoom on touch</div>
     <div class="opt-row" style="margin-bottom:10px;">
+      <button class="dl-btn view" id="boardViewBtn" onclick="viewPdf('board_important')">View</button>
       <button class="dl-btn dl" id="boardDlBtn" onclick="downloadPdf('board_important','boardDlBtn')">Download PDF</button>
     </div>
     ${pages}
@@ -2594,16 +2597,49 @@ function attachPinchZoomScroll(wrapEl, imgEl){
     const m = /([\d.]+)%/.exec(imgEl.style.width);
     return m ? parseFloat(m[1]) : 100;
   }
+  function setWidthPct(pct){ imgEl.style.width = Math.min(Math.max(pct, 100), 400) + '%'; }
   wrapEl.addEventListener('touchstart', (e)=>{
     if(e.touches.length===2){ startDist = dist(e.touches); startWidth = currentWidthPct(); }
   }, {passive:true});
   wrapEl.addEventListener('touchmove', (e)=>{
     if(e.touches.length===2){
       e.preventDefault();
-      const pct = Math.min(Math.max(startWidth*(dist(e.touches)/startDist), 100), 400);
-      imgEl.style.width = pct + '%';
+      setWidthPct(startWidth*(dist(e.touches)/startDist));
     }
   }, {passive:false});
+  wrapEl.addEventListener('wheel', (e)=>{
+    if(!(e.ctrlKey || e.metaKey)) return;
+    e.preventDefault();
+    setWidthPct(currentWidthPct() + (e.deltaY < 0 ? 15 : -15));
+  }, {passive:false});
+  let dragging = false, dragStartX = 0, dragStartY = 0, startScrollL = 0, startScrollT = 0;
+  wrapEl.addEventListener('pointerdown', (e)=>{
+    if(e.pointerType !== 'mouse' || e.button !== 0) return;
+    dragging = true;
+    dragStartX = e.clientX; dragStartY = e.clientY;
+    startScrollL = wrapEl.scrollLeft; startScrollT = wrapEl.scrollTop;
+    wrapEl.classList.add('dragging');
+    wrapEl.setPointerCapture(e.pointerId);
+  });
+  wrapEl.addEventListener('pointermove', (e)=>{
+    if(!dragging) return;
+    wrapEl.scrollLeft = startScrollL - (e.clientX - dragStartX);
+    wrapEl.scrollTop = startScrollT - (e.clientY - dragStartY);
+  });
+  function endDrag(){ if(dragging){ dragging = false; wrapEl.classList.remove('dragging'); } }
+  wrapEl.addEventListener('pointerup', endDrag);
+  wrapEl.addEventListener('pointercancel', endDrag);
+  wrapEl.setAttribute('tabindex', '0');
+  wrapEl.addEventListener('keydown', (e)=>{
+    const step = 60;
+    if(e.key === 'ArrowUp'){ wrapEl.scrollTop -= step; e.preventDefault(); }
+    else if(e.key === 'ArrowDown'){ wrapEl.scrollTop += step; e.preventDefault(); }
+    else if(e.key === 'ArrowLeft'){ wrapEl.scrollLeft -= step; e.preventDefault(); }
+    else if(e.key === 'ArrowRight'){ wrapEl.scrollLeft += step; e.preventDefault(); }
+    else if(e.key === '+' || e.key === '='){ setWidthPct(currentWidthPct()+20); e.preventDefault(); }
+    else if(e.key === '-' || e.key === '_'){ setWidthPct(currentWidthPct()-20); e.preventDefault(); }
+    else if(e.key === '0'){ setWidthPct(100); e.preventDefault(); }
+  });
 }
 function renderDownloads(){
   let html = `<div class="dl-section-title">Study Material</div>${pdfRow('notes')}${pdfRow('revision_notes')}${hwRow()}${premiumStatusRow()}`;
