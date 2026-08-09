@@ -2637,7 +2637,7 @@ renderKcetReport = function(){
    drag-scroll, mouse wheel, keyboard arrow navigation
    ============================================================ */
 (function(){
-  var THEME_KEY = 'ch3_theme';
+  var THEME_KEY = 'baio_theme';
   var btn = document.getElementById('themeToggleBtn');
   function applyTheme(t){
     if(t === 'light'){ document.documentElement.setAttribute('data-theme','light'); if(btn) btn.innerHTML = '&#9728;\uFE0F'; }
@@ -2645,7 +2645,7 @@ renderKcetReport = function(){
   }
   var saved = null;
   try{ saved = localStorage.getItem(THEME_KEY); }catch(e){}
-  applyTheme(saved || 'dark');
+  applyTheme(saved || 'light');
   if(btn){
     btn.addEventListener('click', function(){
       var cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
