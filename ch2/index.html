@@ -4178,12 +4178,13 @@ function renderProgress(){
   const avg = Math.round(data.reduce((s,d)=>s+d.pct,0)/data.length);
   const best = Math.max(...data.map(d=>d.pct));
   const last5 = data.slice(-5);
-  const trendUp = last5.length>1 && last5[last5.length-1].pct >= last5[0].pct;
+  const trend = last5.length>1 ? (last5[last5.length-1].pct > last5[0].pct ? 'up' : last5[last5.length-1].pct < last5[0].pct ? 'down' : 'flat') : null;
+  const trendLabel = trend==='up' ? '&#8593; Improving' : trend==='down' ? '&#8595; Declining' : trend==='flat' ? '&#8594; Steady' : '&ndash;';
   statsEl.innerHTML = `
     <div class="stat-box"><div class="num">${data.length}</div><div class="lbl">Sessions Logged</div></div>
     <div class="stat-box"><div class="num">${avg}%</div><div class="lbl">Average Score</div></div>
     <div class="stat-box ok"><div class="num">${best}%</div><div class="lbl">Best Score</div></div>
-    <div class="stat-box"><div class="num">${trendUp?'&#8593; Improving':'&ndash;'}</div><div class="lbl">Recent Trend</div></div>`;
+    <div class="stat-box"><div class="num">${trendLabel}</div><div class="lbl">Recent Trend</div></div>`;
   const recent = data.slice(-10);
   chartEl.innerHTML = recent.map(d=>`
     <div class="progress-bar-row">
@@ -4210,12 +4211,13 @@ function renderNeetOnlyProgress(){
   const avg = Math.round(data.reduce((s,d)=>s+d.pct,0)/data.length);
   const best = Math.max(...data.map(d=>d.pct));
   const last5 = data.slice(-5);
-  const trendUp = last5.length>1 && last5[last5.length-1].pct >= last5[0].pct;
+  const trend = last5.length>1 ? (last5[last5.length-1].pct > last5[0].pct ? 'up' : last5[last5.length-1].pct < last5[0].pct ? 'down' : 'flat') : null;
+  const trendLabel = trend==='up' ? '&#8593; Improving' : trend==='down' ? '&#8595; Declining' : trend==='flat' ? '&#8594; Steady' : '&ndash;';
   statsEl.innerHTML = `
     <div class="stat-box"><div class="num">${data.length}</div><div class="lbl">Sessions Logged</div></div>
     <div class="stat-box"><div class="num">${avg}%</div><div class="lbl">Average Score</div></div>
     <div class="stat-box ok"><div class="num">${best}%</div><div class="lbl">Best Score</div></div>
-    <div class="stat-box"><div class="num">${trendUp?'&#8593; Improving':'&ndash;'}</div><div class="lbl">Recent Trend</div></div>`;
+    <div class="stat-box"><div class="num">${trendLabel}</div><div class="lbl">Recent Trend</div></div>`;
   const recent = data.slice(-10);
   chartEl.innerHTML = recent.map(d=>`
     <div class="progress-bar-row">

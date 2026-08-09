@@ -1516,7 +1516,8 @@ function renderProgress(){
   const avg = Math.round(data.reduce((s,d)=>s+d.pct,0)/data.length);
   const best = Math.max(...data.map(d=>d.pct));
   const last5 = data.slice(-5);
-  const trendUp = last5.length>1 && last5[last5.length-1].pct >= last5[0].pct;
+  const trend = last5.length>1 ? (last5[last5.length-1].pct > last5[0].pct ? 'up' : last5[last5.length-1].pct < last5[0].pct ? 'down' : 'flat') : null;
+  const trendLabel = trend==='up' ? '↑ Up' : trend==='down' ? '↓ Down' : trend==='flat' ? '→ Flat' : '–';
   const recent = data.slice(-10);
   const logRev = data.slice().reverse();
   let html = `<div class="setup-card">
@@ -1526,7 +1527,7 @@ function renderProgress(){
       <div class="progress-stat-box"><div class="num">${data.length}</div><div class="lbl">Sessions</div></div>
       <div class="progress-stat-box"><div class="num">${avg}%</div><div class="lbl">Average Score</div></div>
       <div class="progress-stat-box"><div class="num">${best}%</div><div class="lbl">Best Score</div></div>
-      <div class="progress-stat-box"><div class="num">${trendUp?'\u2191 Up':'\u2013'}</div><div class="lbl">Recent Trend</div></div>
+      <div class="progress-stat-box"><div class="num">${trendLabel}</div><div class="lbl">Recent Trend</div></div>
     </div>
     <div class="setup-label">Score History</div>
     ${recent.map(d=>`<div class="progress-bar-row"><div class="progress-bar-label">${d.date}</div><div class="progress-bar-track"><div class="progress-bar-fill-inner" style="width:${d.pct}%;"></div></div><div class="progress-bar-pct">${d.pct}%</div></div>`).join('')}
