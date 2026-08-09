@@ -338,6 +338,26 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     }catch(e){}
   }
 
+  function showAnnouncementNotification(title, body){
+    try{
+      if(!('Notification' in window)) return;
+      const opts = { body: (body || '').slice(0, 140), icon: 'icon-192.png', badge: 'icon-192.png', tag: 'baio-announcement' };
+      function fire(){
+        if('serviceWorker' in navigator){
+          navigator.serviceWorker.getRegistration()
+            .then(reg => { if(reg && reg.showNotification) return reg.showNotification(title, opts); throw 0; })
+            .catch(() => { try{ new Notification(title, opts); }catch(e){} });
+        } else {
+          try{ new Notification(title, opts); }catch(e){}
+        }
+      }
+      if(Notification.permission === 'granted') fire();
+      else if(Notification.permission === 'default'){
+        Notification.requestPermission().then(perm => { if(perm === 'granted') fire(); }).catch(()=>{});
+      }
+    }catch(e){}
+  }
+
   fetch('announcements.html')
     .then(res => res.ok ? res.text() : Promise.reject())
     .then(htmlText => {
@@ -363,6 +383,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       try{ lastSeen = localStorage.getItem(seenKey); }catch(e){}
       if(lastSeen === fingerprint){ setBadgeCount(0); return; }
       setBadgeCount(1);
+      showAnnouncementNotification(titleText, ledeText);
 
       const iconEl = document.querySelector('#announcementModalOverlay .announce-modal-icon');
       if(img && iconEl){
