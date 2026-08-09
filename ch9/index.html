@@ -14,7 +14,11 @@
 (function(){
   try{
     var t = localStorage.getItem('baio_theme') || 'light';
-    if(t === 'light') document.documentElement.setAttribute('data-theme','light');
+    if(t === 'light'){
+      document.documentElement.setAttribute('data-theme','light');
+      var m = document.querySelector('meta[name="theme-color"]');
+      if(m) m.setAttribute('content', '#F4F6F1');
+    }
   }catch(e){}
 })();
 </script>
@@ -2846,6 +2850,8 @@ function applyTheme(t){
   document.documentElement.setAttribute('data-theme', t);
   const btn = document.getElementById('themeToggleBtn');
   if(btn) btn.textContent = t === 'light' ? '☀️' : '🌙';
+  const m = document.querySelector('meta[name="theme-color"]');
+  if(m) m.setAttribute('content', t === 'light' ? '#F4F6F1' : '#0B1B14');
   try{ localStorage.setItem('baio_theme', t); }catch(e){}
 }
 (function initTheme(){

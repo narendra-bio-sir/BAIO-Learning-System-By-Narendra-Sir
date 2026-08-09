@@ -14,7 +14,11 @@
 (function(){
   try{
     var t = localStorage.getItem('baio_theme') || 'light';
-    if(t === 'light') document.documentElement.setAttribute('data-theme','light');
+    if(t === 'light'){
+      document.documentElement.setAttribute('data-theme','light');
+      var m = document.querySelector('meta[name="theme-color"]');
+      if(m) m.setAttribute('content', '#F7F5EE');
+    }
   }catch(e){}
 })();
 </script>
@@ -784,8 +788,9 @@ if(stripRows){
   var THEME_KEY = 'baio_theme';
   var btn = document.getElementById('themeToggleBtn');
   function applyTheme(t){
-    if(t === 'light'){ document.documentElement.setAttribute('data-theme','light'); if(btn) btn.innerHTML = '&#9728;\uFE0F'; }
-    else { document.documentElement.removeAttribute('data-theme'); if(btn) btn.innerHTML = '&#127769;'; }
+    var m = document.querySelector('meta[name="theme-color"]');
+    if(t === 'light'){ document.documentElement.setAttribute('data-theme','light'); if(btn) btn.innerHTML = '&#9728;\uFE0F'; if(m) m.setAttribute('content', '#F7F5EE'); }
+    else { document.documentElement.removeAttribute('data-theme'); if(btn) btn.innerHTML = '&#127769;'; if(m) m.setAttribute('content', '#0B1B14'); }
   }
   var saved = null;
   try{ saved = localStorage.getItem(THEME_KEY); }catch(e){}
