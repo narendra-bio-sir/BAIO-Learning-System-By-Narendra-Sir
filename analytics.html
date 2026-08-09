@@ -7385,14 +7385,17 @@ function getStudentElectronicsCompare(student, pu){
       values: subjs.map(s=> rec[s]!==null && rec[s]!==undefined ? pu2SubjPct(rec,s,latestTest.outof[s]) : 0)
     };
   } else {
-    const useTest = (student.t2 && student.t2.ELE!==null && student.t2.ELE!==undefined) ? student.t2 : student.t1;
+    const has = rec => rec && rec.ELE!==null && rec.ELE!==undefined;
+    const useTest = has(student.mt) ? student.mt : has(student.june) ? student.june : has(student.t2) ? student.t2 : student.t1;
     if(!useTest) return null;
+    const outOf = (useTest===student.mt || useTest===student.june) ? 40 : 20;
+    const testLabel = useTest===student.mt ? 'July Monthly Test' : useTest===student.june ? 'June Monthly Test' : useTest===student.t2 ? 'Slip Test 2' : 'Slip Test 1';
     const subjs = ['PHY','CHE','MAT','ELE'];
     const nice = {PHY:'Physics',CHE:'Chemistry',MAT:'Maths',ELE:'Electronics'};
     return {
-      testLabel: (useTest===student.t2 ? 'Slip Test 2' : 'Slip Test 1'),
+      testLabel,
       labels: subjs.map(s=>nice[s]),
-      values: subjs.map(s=> useTest[s]!==null && useTest[s]!==undefined ? Math.round(useTest[s]/20*1000)/10 : 0)
+      values: subjs.map(s=> useTest[s]!==null && useTest[s]!==undefined ? Math.round(useTest[s]/outOf*1000)/10 : 0)
     };
   }
 }
@@ -7411,9 +7414,9 @@ function sectionLabel(student){
 /* ---- Student's own subject comparison: Biology vs Physics/Chemistry/Maths, most recent full test ---- */
 function getStudentSubjectCompare(student, pu){
   if(pu===2){
-    const latestTest = PU2_TESTS[PU2_TESTS.length-1];
+    const latestTest = [...PU2_TESTS].reverse().find(t=> t.students.some(s=>s.code===student.code && s.BIO!==null && s.BIO!==undefined));
+    if(!latestTest) return null;
     const rec = latestTest.students.find(s=>s.code===student.code);
-    if(!rec) return null;
     const subjs = ['PHY','CHE','MAT','BIO'];
     const nice = {PHY:'Physics',CHE:'Chemistry',MAT:'Maths',BIO:'Biology'};
     return {
@@ -7422,14 +7425,17 @@ function getStudentSubjectCompare(student, pu){
       values: subjs.map(s=> rec[s]!==null && rec[s]!==undefined ? pu2SubjPct(rec,s,latestTest.outof[s]) : 0)
     };
   } else {
-    const useTest = (student.t2 && student.t2.TOTAL) ? student.t2 : student.t1;
+    const has = rec => rec && rec.BIO!==null && rec.BIO!==undefined;
+    const useTest = has(student.mt) ? student.mt : has(student.june) ? student.june : has(student.t2) ? student.t2 : student.t1;
     if(!useTest) return null;
+    const outOf = (useTest===student.mt || useTest===student.june) ? 40 : 20;
+    const testLabel = useTest===student.mt ? 'July Monthly Test' : useTest===student.june ? 'June Monthly Test' : useTest===student.t2 ? 'Slip Test 2' : 'Slip Test 1';
     const subjs = ['PHY','CHE','MAT','BIO'];
     const nice = {PHY:'Physics',CHE:'Chemistry',MAT:'Maths',BIO:'Biology'};
     return {
-      testLabel: (useTest===student.t2 ? 'Slip Test 2' : 'Slip Test 1'),
+      testLabel,
       labels: subjs.map(s=>nice[s]),
-      values: subjs.map(s=> useTest[s]!==null && useTest[s]!==undefined ? Math.round(useTest[s]/20*1000)/10 : 0)
+      values: subjs.map(s=> useTest[s]!==null && useTest[s]!==undefined ? Math.round(useTest[s]/outOf*1000)/10 : 0)
     };
   }
 }
