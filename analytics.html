@@ -7403,14 +7403,6 @@ function getPU1ElectronicsHistory(student){
     const avg = pu1MonthClassAvgRaw('july','ELE');
     hist.push({label:'July Monthly Test', score:student.mt.ELE, outOf:40, pct:Math.round(student.mt.ELE/40*1000)/10, classAvg: avg!==null?Math.round(avg/40*1000)/10:null});
   }
-  const kcet = (typeof KCET_BY_CODE!=='undefined') ? KCET_BY_CODE[student.code] : null;
-  if(kcet){
-    ['obt1','obt2','obt3'].forEach((k,i)=>{
-      if(kcet[k] && kcet[k].MAT!==null && kcet[k].MAT!==undefined){
-        hist.push({label:'KCET OBT '+(i+1)+' (Maths)', score:kcet[k].MAT, outOf:45, pct:Math.round(kcet[k].MAT/45*1000)/10, classAvg:null});
-      }
-    });
-  }
   return hist;
 }
 
@@ -7549,6 +7541,7 @@ function renderBioCandidateInsight(student, pu){
   html += '<div class="rp-kpi-grid">'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Latest '+subjectLabel+' Score</div><div class="rp-kpi-value">'+(latestPct!==null?latestPct+'% <span style=\"font-size:13px;font-weight:500;color:var(--muted);\">('+latestEntry.score+'/'+latestEntry.outOf+')</span>':'\u2014')+'</div><div class="rp-kpi-sub">'+(hist.length?hist[hist.length-1].label:'\u2014')+'</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Best '+subjectLabel+' Score</div><div class="rp-kpi-value">'+(bestPct!==null?bestPct+'% <span style=\"font-size:13px;font-weight:500;color:var(--muted);\">('+bestEntry.score+'/'+bestEntry.outOf+')</span>':'\u2014')+'</div><div class="rp-kpi-sub">Across all tests recorded</div></div>'+
+    '<div class="rp-kpi"><div class="rp-kpi-label">Class Average (Latest Test)</div><div class="rp-kpi-value">'+(latestClassAvg!==null?latestClassAvg+'%':'\u2014')+'</div><div class="rp-kpi-sub">'+(hist.length?hist[hist.length-1].label:'\u2014')+'</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">vs Class Average (Latest Test)</div><div class="rp-kpi-value" style="color:'+(vsAvg!==null&&vsAvg>=0?'#15803d':'#b91c1c')+';">'+(vsAvg!==null?(vsAvg>=0?'+':'')+vsAvg+'%':'\u2014')+'</div><div class="rp-kpi-sub">Percentage points</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Tests Recorded</div><div class="rp-kpi-value">'+hist.length+'</div><div class="rp-kpi-sub">'+subjectLabel+' attempts on file</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Consistency ('+subjectLabel+' SD Across Tests)</div><div class="rp-kpi-value">'+(histStats.sd!==null?histStats.sd+'%':'\u2014')+'</div><div class="rp-kpi-sub">'+(histStats.sd!==null?sdLabel(histStats.sd,100):'Not enough data')+'</div></div>'+
@@ -8237,6 +8230,7 @@ function renderEleCandidateInsight(student, pu){
   html += '<div class="rp-kpi-grid">'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Latest Electronics Score</div><div class="rp-kpi-value">'+(latestPct!==null?latestPct+'% <span style=\"font-size:13px;font-weight:500;color:var(--muted);\">('+latestEntry.score+'/'+latestEntry.outOf+')</span>':'\u2014')+'</div><div class="rp-kpi-sub">'+(hist.length?hist[hist.length-1].label:'\u2014')+'</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Best Electronics Score</div><div class="rp-kpi-value">'+(bestPct!==null?bestPct+'% <span style=\"font-size:13px;font-weight:500;color:var(--muted);\">('+bestEntry.score+'/'+bestEntry.outOf+')</span>':'\u2014')+'</div><div class="rp-kpi-sub">Across all tests recorded</div></div>'+
+    '<div class="rp-kpi"><div class="rp-kpi-label">Class Average (Latest Test)</div><div class="rp-kpi-value">'+(latestClassAvg!==null?latestClassAvg+'%':'\u2014')+'</div><div class="rp-kpi-sub">'+(hist.length?hist[hist.length-1].label:'\u2014')+'</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">vs Class Average (Latest Test)</div><div class="rp-kpi-value" style="color:'+(vsAvg!==null&&vsAvg>=0?'#15803d':'#b91c1c')+';">'+(vsAvg!==null?(vsAvg>=0?'+':'')+vsAvg+'%':'\u2014')+'</div><div class="rp-kpi-sub">Percentage points</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Tests Recorded</div><div class="rp-kpi-value">'+hist.length+'</div><div class="rp-kpi-sub">Electronics attempts on file</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Consistency (Electronics SD Across Tests)</div><div class="rp-kpi-value">'+(histStats.sd!==null?histStats.sd+'%':'\u2014')+'</div><div class="rp-kpi-sub">'+(histStats.sd!==null?sdLabel(histStats.sd,100):'Not enough data')+'</div></div>'+
@@ -8975,6 +8969,7 @@ function renderShareableInsight(student, pu){
   html += '<div class="rp-kpi-grid">'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Latest '+subjectLabel+' Score</div><div class="rp-kpi-value">'+(latestPct!==null?latestPct+'% <span style=\"font-size:13px;font-weight:500;color:var(--muted);\">('+latestEntry.score+'/'+latestEntry.outOf+')</span>':'\u2014')+'</div><div class="rp-kpi-sub">'+(hist.length?hist[hist.length-1].label:'\u2014')+'</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Best '+subjectLabel+' Score</div><div class="rp-kpi-value">'+(bestPct!==null?bestPct+'% <span style=\"font-size:13px;font-weight:500;color:var(--muted);\">('+bestEntry.score+'/'+bestEntry.outOf+')</span>':'\u2014')+'</div><div class="rp-kpi-sub">Across all tests recorded</div></div>'+
+    '<div class="rp-kpi"><div class="rp-kpi-label">Class Average (Latest Test)</div><div class="rp-kpi-value">'+(latestClassAvg!==null?latestClassAvg+'%':'\u2014')+'</div><div class="rp-kpi-sub">'+(hist.length?hist[hist.length-1].label:'\u2014')+'</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">vs Class Average (Latest Test)</div><div class="rp-kpi-value" style="color:'+(vsAvg!==null&&vsAvg>=0?'#15803d':'#b91c1c')+';">'+(vsAvg!==null?(vsAvg>=0?'+':'')+vsAvg+'%':'\u2014')+'</div><div class="rp-kpi-sub">Percentage points</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Tests Recorded</div><div class="rp-kpi-value">'+hist.length+'</div><div class="rp-kpi-sub">'+subjectLabel+' attempts on file</div></div>'+
   '</div>';
