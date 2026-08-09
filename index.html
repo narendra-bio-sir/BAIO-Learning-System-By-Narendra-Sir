@@ -117,6 +117,15 @@ header{padding:34px 0 22px; text-align:center;}
   text-decoration:none; cursor:pointer; transition:background .15s ease;
 }
 .quick-action-btn:hover{background:rgba(212,175,55,0.08);}
+@keyframes bellRing{
+  0%, 45%, 100%{ transform:rotate(0); }
+  5%{ transform:rotate(15deg); } 10%{ transform:rotate(-13deg); }
+  15%{ transform:rotate(11deg); } 20%{ transform:rotate(-9deg); }
+  25%{ transform:rotate(7deg); } 30%{ transform:rotate(-5deg); }
+  35%{ transform:rotate(3deg); } 40%{ transform:rotate(-1deg); }
+}
+.bell-ring{ display:inline-block; transform-origin:50% 0; animation:bellRing 2.4s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce){ .bell-ring{ animation:none; } }
 
 .announce-modal-overlay{
   position:fixed; inset:0; z-index:2000; background:rgba(0,0,0,0.6);
@@ -275,7 +284,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
 
   <div class="quick-actions-row">
     <a href="analytics.html" class="quick-action-btn">📊 Performance Analysis</a>
-    <a href="announcements.html" class="quick-action-btn">🔔 Announcements</a>
+    <a href="announcements.html" class="quick-action-btn"><span id="bellIcon">🔔</span> Announcements</a>
     <a href="guide.html" class="quick-action-btn">📘 Student Guide</a>
     <a href="about.html" class="quick-action-btn">ℹ️ About</a>
     <a href="call-whatsapp-help.html" class="quick-action-btn">📞 Call &amp; WhatsApp Help</a>
@@ -384,6 +393,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       if(lastSeen === fingerprint){ setBadgeCount(0); return; }
       setBadgeCount(1);
       showAnnouncementNotification(titleText, ledeText);
+      document.getElementById('bellIcon')?.classList.add('bell-ring');
 
       const iconEl = document.querySelector('#announcementModalOverlay .announce-modal-icon');
       if(img && iconEl){
@@ -399,6 +409,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
         document.getElementById('announcementModalOverlay').style.display = 'none';
         try{ localStorage.setItem(seenKey, fingerprint); }catch(e){}
         setBadgeCount(0);
+        document.getElementById('bellIcon')?.classList.remove('bell-ring');
       });
     })
     .catch(() => { /* announcements.html not uploaded yet, or fetch blocked \u2014 skip popup silently */ });
