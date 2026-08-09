@@ -40,12 +40,12 @@
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
+  .utility-row{display:flex; justify-content:flex-end; gap:8px; margin-bottom:14px;}
   .fixed-nav-btn{
-    position:fixed; right:5vw; z-index:50;
     width:38px; height:38px; border-radius:50%;
     background:var(--navy-light); border:1.5px solid var(--line); color:var(--cream);
     font-size:16px; cursor:pointer; text-decoration:none;
-    display:flex; align-items:center; justify-content:center;
+    display:flex; align-items:center; justify-content:center; flex:0 0 auto;
   }
   body{
     background: radial-gradient(ellipse at 20% -10%, var(--navy-light), var(--navy-deep) 55%);
@@ -198,9 +198,12 @@
 </style>
 </head>
 <body>
-<a href="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/" id="annHomeBtn" class="fixed-nav-btn" style="top:60px;" title="Back to Home" aria-label="Back to Home">🏠</a>
-<button id="themeToggleBtn" class="fixed-nav-btn" style="top:16px;" aria-label="Toggle light/dark theme">🌙</button>
 <div class="wrap">
+
+  <div class="utility-row">
+    <button id="themeToggleBtn" class="fixed-nav-btn" aria-label="Toggle light/dark theme">🌙</button>
+    <a href="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/" id="annHomeBtn" class="fixed-nav-btn" title="Back to Home" aria-label="Back to Home">🏠</a>
+  </div>
 
   <div class="masthead">
     <div class="brand">
@@ -308,6 +311,13 @@
     });
   }
 })();
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  });
+}
 </script>
 </body>
 </html>

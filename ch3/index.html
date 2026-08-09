@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<link rel="manifest" href="manifest.json">
+<link rel="manifest" href="../manifest.json">
 <meta name="theme-color" content="#0B1B14">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="BAIO">
@@ -14,12 +14,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --navy:#14231C; --navy2:#1A2E23; --panel:#1F3A2C; --panel2:#17301F;
-  --gold:#E08D4B; --gold2:#C06E2E; --teal:#3FDCA8; --teal2:#1C8F6C;
-  --ink:#F1F5EE; --ink-dim:#A8C4B0; --line:rgba(224,141,75,0.28);
+  --navy:#0B1B14; --navy2:#0F2419; --panel:#13281E; --panel2:#0E211A;
+  --gold:#D4AF37; --gold2:#B8912A; --teal:#2EE6C5; --teal2:#127566;
+  --ink:#EAF3EE; --ink-dim:#9FC4B6; --line:rgba(212,175,55,0.25);
   --danger:#E7695B; --ok:#33C48A;
-  --fc-back-1:#1c3d2a; --fc-back-2:#12301f; --fc-back-text:#8ff5d4;
-  --btn-gold:#E08D4B; --btn-gold2:#C06E2E;
+  --fc-back-1:#127566; --fc-back-2:#0a4239; --fc-back-text:#EFFFFA;
+  --btn-gold:#D4AF37; --btn-gold2:#B8912A;
   --shadow: 0 10px 30px rgba(0,0,0,0.45);
 }
 *{box-sizing:border-box;}
@@ -348,22 +348,24 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 
 
 [data-theme="light"]{
-  --navy:#FAF6EE;
-  --navy2:#F1E9D8;
+  --navy:#F4F6F1;
+  --navy2:#EDF1E8;
   --panel:#ffffff;
-  --panel2:#F7F0E2;
-  --line:rgba(192,110,46,0.22);
-  --ink:#241C12;
-  --ink-dim:#6E5B48;
-  --gold:#A85A1E;
-  --gold2:#8A4815;
-  --teal:#0E7A5C;
-  --teal2:#0B6349;
-  --danger:#c23a3a;
-  --ok:#1f8a4c;
-  --fc-back-1:#e8f5ec;
-  --fc-back-2:#d8ecdf;
-  --fc-back-text:#0b6f5e;
+  --panel2:#F0F4EC;
+  --line:rgba(138,95,0,0.25);
+  --ink:#16241C;
+  --ink-dim:#4C5D52;
+  --gold:#A9760A;
+  --gold2:#8A5F00;
+  --teal:#0F8F7A;
+  --teal2:#0B6F5E;
+  --danger:#B23A2E;
+  --ok:#1E8F5C;
+  --fc-back-1:#dff3ee;
+  --fc-back-2:#c9ece3;
+  --fc-back-text:#0b3d34;
+  --btn-gold:#A9760A;
+  --btn-gold2:#8A5F00;
 }
 
 .header-actions-row{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:10px;}
@@ -2755,6 +2757,13 @@ document.body.classList.add('lang-'+currentLang);
 renderTabbar();
 renderLangSwitcher();
 renderContent();
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('../sw.js', {scope:'../'}).catch(function(){});
+  });
+}
 </script>
 </body>
 </html>
