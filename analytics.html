@@ -5588,8 +5588,7 @@ function computeSlipSubjectSD(testKey, subj){ // testKey: 't1' | 't2' | 'combine
   return computeStats(vals); // {n, mean, sd} — mean is a sanity check against D.subjects[testKey][subj].average
 }
 function classSDRaw(test, subj){
-  const key = test==='t1' ? 'test1' : test==='t2' ? 'test2' : test;
-  return computeSlipSubjectSD(key, subj).sd;
+  return computeSlipSubjectSD(test, subj).sd;
 }
 function computeSlipSectionSubjectSD(section, testKey, subj){ // testKey: 't1' | 't2'
   const roster = STUDENTS.filter(s => s.section === section);
