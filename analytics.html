@@ -564,7 +564,7 @@ window.addEventListener('afterprint', function(){
   tr.ele-row td{ background:rgba(167,139,250,0.08); }
   tr.ele-row td:first-child{ background:var(--navy); }
   .report-page table{ min-width:400px; }
-  .report-page th:first-child{ background:var(--card); }
+  .report-page th:first-child{ background:var(--navy2); }
   .report-page td:first-child{ background:var(--navy); }
   .report-page tr.rp-bio td:first-child{ background:var(--navy); border-left:3px solid var(--teal); }
   .chip{ display:inline-block; padding:2px 9px; border-radius:999px; font-size:11.5px; font-weight:700; }
@@ -6638,14 +6638,25 @@ function generateReport(){
   const savedPu1MonthCurrent = pu1MonthCurrent;
   const rpMonthAllBox = document.getElementById('rpMonthAll');
   const rpMonthBoxes = document.querySelectorAll('.rp-month-check');
+  let rpMonthKeys = ['july'];
+  let rpMonthsCombined = true; // true = blend selected months into one figure; false = show each month side by side
   if(rpMonthAllBox && rpMonthBoxes.length){
     if(rpMonthAllBox.checked){
-      pu1MonthCurrent = PU1_MONTH_ORDER.slice();
+      rpMonthKeys = PU1_MONTH_ORDER.slice();
+      rpMonthsCombined = true;
     } else {
       const checked = Array.from(rpMonthBoxes).filter(b=>b.checked).map(b=>b.value);
-      pu1MonthCurrent = checked.length ? checked : ['july'];
+      rpMonthKeys = checked.length ? checked : ['july'];
+      rpMonthsCombined = false;
     }
   }
+  pu1MonthCurrent = rpMonthKeys;
+  // When two+ individual months are picked without "All Months (Combined)", build
+  // per-month stats separately instead of blending them into one averaged figure.
+  const rpShowMonthsSeparately = !rpMonthsCombined && rpMonthKeys.length > 1;
+  const rpPerMonthSW = rpShowMonthsSeparately
+    ? rpMonthKeys.map(k => ({ key:k, label:(PU1_MONTH_LABELS[k]||k).replace(' Monthly Test',''), sw:computePU1MonthlySubjectWide(k) }))
+    : null;
 
   const dateStr = new Date().toLocaleDateString('en-IN', {day:'numeric', month:'long', year:'numeric'});
   let html = '<div class="rp-header">'+
@@ -6677,18 +6688,43 @@ function generateReport(){
       '<div class="rp-callout warn"><b>Key Insight:</b> Biology leads every subject in average score across both tests, while Chemistry and Mathematics show the steepest declines from Test 1 to Test 2.</div>');
   }
   if(inc.monthly){
-    const sw = computePU1MonthlySubjectWide(pu1MonthCurrent);
-    const sparkStats = computePU1SectionMonthlyStats(pu1MonthCurrent, 'SPARK');
-    const primeStats = computePU1SectionMonthlyStats(pu1MonthCurrent, 'PRIME');
-    const rows = sw.order.map(s=>[sw.names[s], sw.appeared[s], sw.failures[s], sw.highPerformers[s]]);
-    html += rpSection('Monthly Test Overview <span style="font-weight:400;font-size:12px;color:var(--muted);">(All Subjects, '+(pu1CurrentMonthLabel())+')</span>',
-      rpTable(['Subject','Appeared','Failures','High Performers (35+/40)'], rows, 0));
-    html += '<div class="rp-section" style="margin-top:-14px;">'+
-      '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13.5px; font-weight:700; color:var(--text-strong); margin-bottom:8px;">Section-wise Summary (Biology, '+(pu1CurrentMonthLabel())+')</div>'+
-      rpTable(['Section','Mean /40','Appeared','Absentees'], [
-        ['SPARK', sparkStats.mean, sparkStats.appeared, sparkStats.absentees],
-        ['PRIME', primeStats.mean, primeStats.appeared, primeStats.absentees]
-      ]) + '</div>';
+    if(rpShowMonthsSeparately){
+      const headers = ['Subject'].concat(rpPerMonthSW.flatMap(m => [m.label+' Appeared', m.label+' Failures', m.label+' High (35+)']));
+      const rows = rpPerMonthSW[0].sw.order.map((s,i) => {
+        const row = [rpPerMonthSW[0].sw.names[s]];
+        rpPerMonthSW.forEach(m => { row.push(m.sw.appeared[s]); row.push(m.sw.failures[s]); row.push(m.sw.highPerformers[s]); });
+        return row;
+      });
+      html += rpSection('Monthly Test Overview <span style="font-weight:400;font-size:12px;color:var(--muted);">(All Subjects, by month)</span>', rpTable(headers, rows, 0));
+      const sectionHeaders = ['Section'].concat(rpMonthKeys.flatMap(k => {
+        const label = (PU1_MONTH_LABELS[k]||k).replace(' Monthly Test','');
+        return [label+' Mean /40', label+' Appeared', label+' Absentees'];
+      }));
+      const sectionRows = ['SPARK','PRIME'].map(sec => {
+        const row = [sec];
+        rpMonthKeys.forEach(k => {
+          const stats = computePU1SectionMonthlyStats(k, sec);
+          row.push(stats.mean, stats.appeared, stats.absentees);
+        });
+        return row;
+      });
+      html += '<div class="rp-section" style="margin-top:-14px;">'+
+        '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13.5px; font-weight:700; color:var(--text-strong); margin-bottom:8px;">Section-wise Summary (Biology, by month)</div>'+
+        rpTable(sectionHeaders, sectionRows) + '</div>';
+    } else {
+      const sw = computePU1MonthlySubjectWide(pu1MonthCurrent);
+      const sparkStats = computePU1SectionMonthlyStats(pu1MonthCurrent, 'SPARK');
+      const primeStats = computePU1SectionMonthlyStats(pu1MonthCurrent, 'PRIME');
+      const rows = sw.order.map(s=>[sw.names[s], sw.appeared[s], sw.failures[s], sw.highPerformers[s]]);
+      html += rpSection('Monthly Test Overview <span style="font-weight:400;font-size:12px;color:var(--muted);">(All Subjects, '+(pu1CurrentMonthLabel())+')</span>',
+        rpTable(['Subject','Appeared','Failures','High Performers (35+/40)'], rows, 0));
+      html += '<div class="rp-section" style="margin-top:-14px;">'+
+        '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13.5px; font-weight:700; color:var(--text-strong); margin-bottom:8px;">Section-wise Summary (Biology, '+(pu1CurrentMonthLabel())+')</div>'+
+        rpTable(['Section','Mean /40','Appeared','Absentees'], [
+          ['SPARK', sparkStats.mean, sparkStats.appeared, sparkStats.absentees],
+          ['PRIME', primeStats.mean, primeStats.appeared, primeStats.absentees]
+        ]) + '</div>';
+    }
   }
   if(inc.sections){
     const rows = ['SPARK','PRIME'].map(sec=>{
@@ -6701,13 +6737,26 @@ function generateReport(){
   if(inc.bvo){
     const slipRows = SUBJECTS.map((s,i)=>[NAMES[s], D.subjects.combined[s].avg_pct+'%', D.subjects.combined[s].fail_pct+'%']);
     const mtCore = ['BIO','CHE','PHY','MAT'];
-    const pu1sw = computePU1MonthlySubjectWide(pu1MonthCurrent);
-    const mtRows = mtCore.map(s=>[pu1sw.names[s], pu1sw.avgPctCoreSTEM[s]+'%', pu1sw.failures[s]+' / '+pu1sw.appeared[s]+' ('+(pu1sw.appeared[s]?Math.round(pu1sw.failures[s]/pu1sw.appeared[s]*100):0)+'%)']);
-    html += rpSection('Biology vs Other Subjects', 
+    let mtHeaders, mtRows, mtLabel;
+    if(rpShowMonthsSeparately){
+      mtHeaders = ['Subject'].concat(rpPerMonthSW.flatMap(m => [m.label+' Avg %', m.label+' Failures']));
+      mtRows = mtCore.map(s => {
+        const row = [rpPerMonthSW[0].sw.names[s]];
+        rpPerMonthSW.forEach(m => { row.push(m.sw.avgPctCoreSTEM[s]+'%'); row.push(m.sw.failures[s]+' / '+m.sw.appeared[s]); });
+        return row;
+      });
+      mtLabel = 'By Month';
+    } else {
+      const pu1sw = computePU1MonthlySubjectWide(pu1MonthCurrent);
+      mtHeaders = ['Subject','Avg %','Failures (of appeared)'];
+      mtRows = mtCore.map(s=>[pu1sw.names[s], pu1sw.avgPctCoreSTEM[s]+'%', pu1sw.failures[s]+' / '+pu1sw.appeared[s]+' ('+(pu1sw.appeared[s]?Math.round(pu1sw.failures[s]/pu1sw.appeared[s]*100):0)+'%)']);
+      mtLabel = pu1CurrentMonthLabel();
+    }
+    html += rpSection('Biology vs Other Subjects',
       '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin-bottom:8px;">Slip Tests (Combined Average)</div>'+
       rpTable(['Subject','Combined Avg %','Fail %'], slipRows, 0) +
-      '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin:16px 0 8px;">'+(pu1CurrentMonthLabel())+'</div>'+
-      rpTable(['Subject','Avg %','Failures (of appeared)'], mtRows, 0) +
+      '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin:16px 0 8px;">'+mtLabel+'</div>'+
+      rpTable(mtHeaders, mtRows, 0) +
       '<div class="rp-callout"><b>Why Biology leads:</b> Highest average score, lowest failure rate, and highest topper density of any subject in both assessment types.</div>');
   }
   if(inc.neetobt){
