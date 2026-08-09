@@ -7732,7 +7732,7 @@ function buildNeetObtBioSection(){
   const topper10 = withLatest.slice().sort((a,b)=>b.pct-a.pct).slice(0,currentBioFilters.topN);
   const atRisk = withLatest.filter(s=>s.pct<35).sort((a,b)=>a.pct-b.pct).slice(0,currentBioFilters.topN);
 
-  const neetLatest = NEET_TESTS[NEET_TESTS.length-1];
+  const neetLatest = neetCurrentTest();
   const sectionPct = {}, sectionSD = {};
   ['SPARK','PRIME'].forEach(sec=>{
     const vals = neetLatest.students.filter(r=>r.section===sec).map(r=>r.bio/360*100);
@@ -7740,7 +7740,7 @@ function buildNeetObtBioSection(){
     sectionPct[sec] = vals.length ? st.mean : null;
     sectionSD[sec] = vals.length ? st.sd : null;
   });
-  const pu2Latest = PU2_TESTS[PU2_TESTS.length-1];
+  const pu2Latest = pu2NeetCurrentTest();
   ['CHAMPION','ELITE'].forEach(sec=>{
     const vals = pu2Latest.students.filter(r=>r.section===sec).map(r=>pu2SubjPct(r,'BIO',pu2Latest.outof.BIO)).filter(v=>v!==null);
     const st = computeStats(vals);
@@ -7784,14 +7784,14 @@ function buildNeetObtBioSection(){
     html += rpSection('Candidate-wise &mdash; Students Needing Support (NEET OBT, Below 35%)', rpTable(['Name','Section','PU','Test','Biology %'], atRisk.map(s=>[s.name, s.section, 'PU-'+(s.pu===2?'II':'I'), s.label, s.pct+'%'])));
   }
   const secRows = includedSections.map(sec=>[sec, (sec==='SPARK'||sec==='PRIME')?'PU-I':'PU-II', (sectionPct[sec]!==null&&sectionPct[sec]!==undefined?sectionPct[sec]:'\u2014')+'%', (sectionSD[sec]!==null&&sectionSD[sec]!==undefined?sectionSD[sec]:'\u2014')+'%']);
-  html += '<div class="rp-section"><div class="rp-section-title">Section-wise Biology Comparison (NEET OBT)</div>'+
+  html += '<div class="rp-section"><div class="rp-section-title">Section-wise Biology Comparison (NEET OBT) <span style="font-weight:400;font-size:12px;color:var(--muted);">(PU-I: '+neetLatest.label+(currentBioFilters.includePU2?', PU-II: '+pu2Latest.label:'')+')</span></div>'+
     (secRows.length ? rpTable(['Section','PU Level','Biology Avg %','Spread (SD)'], secRows) : '<div class="rp-callout">No sections selected.</div>') +
     (secRows.length ? '<canvas id="bioNeetSectionCanvas" style="max-width:100%;margin-top:10px;" width="600" height="240"></canvas>' : '') + '</div>';
   html += '<div class="rp-section"><div class="rp-section-title">Test-wise Biology Trend (NEET OBT)</div>';
   if(currentBioFilters.includePU1) html += '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; margin-bottom:6px;">PU-I</div><canvas id="bioNeetTrendPU1Canvas" style="max-width:100%;" width="600" height="200"></canvas>';
   if(currentBioFilters.includePU2) html += '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; margin:14px 0 6px;">PU-II</div><canvas id="bioNeetTrendPU2Canvas" style="max-width:100%;" width="600" height="200"></canvas>';
   html += '</div>';
-  html += '<div class="rp-section"><div class="rp-section-title">Biology vs Other Subjects (NEET OBT)</div>'+
+  html += '<div class="rp-section"><div class="rp-section-title">Biology vs Other Subjects (NEET OBT) <span style="font-weight:400;font-size:12px;color:var(--muted);">(PU-I: '+neetLatest.label+(currentBioFilters.includePU2?', PU-II: '+pu2Latest.label:'')+')</span></div>'+
     rpTable(['Subject','PU-I Avg %','PU-II Avg %'], subjRows, 0) + '<canvas id="bioNeetSubjectCanvas" style="max-width:100%;margin-top:10px;" width="600" height="240"></canvas></div>';
   html += '<div class="rp-section"><div class="rp-section-title">System-Generated Analysis &mdash; NEET OBT <span style="font-weight:400;font-size:12px;color:var(--muted);">(Personal analysis, Narendra Sir)</span></div>'+
     '<div class="teacher-comment"><span class="tc-label">From Narendra Sir, Lecturer in Biology</span>'+comment+'</div></div>';
@@ -7811,8 +7811,8 @@ function buildNeetObtBioSection(){
 
 /* ---- KCET OBT section (no Biology; PCM context only) ---- */
 function buildKcetObtBioSection(){
-  const pu1Kcet = KCET_TESTS[KCET_TESTS.length-1];
-  const pu2Kcet = PU2_KCET_TESTS[PU2_KCET_TESTS.length-1];
+  const pu1Kcet = kcetCurrentTest();
+  const pu2Kcet = PU2_KCET_TESTS[pu2KcetIdx];
   const pu1Rows = currentBioFilters.includePU1 ? pu1Kcet.students.map(r=>({name:r.name, section:r.section||'\u2014', total:r.total, pct:Math.round(r.total/135*1000)/10, pu:1})) : [];
   const pu2Rows = currentBioFilters.includePU2 ? pu2Kcet.students.map(r=>({name:r.name, section:r.section||'\u2014', total:r.total, pct:Math.round(r.total/(pu2Kcet.outof*3)*1000)/10, pu:2})) : [];
   const combined = [...pu1Rows, ...pu2Rows].filter(s=>currentBioFilters.sections.indexOf(s.section)===-1 ? !['SPARK','PRIME','CHAMPION','ELITE'].includes(s.section) : true).sort((a,b)=>b.pct-a.pct);
@@ -7847,7 +7847,7 @@ function buildKcetObtBioSection(){
   html += rpSection('Candidate-wise &mdash; Top PCM Performers', combined.length ? '<div class="table-wrap"><table><thead><tr><th>Rank</th><th>Name</th><th>Section</th><th>PU</th><th>PCM %</th></tr></thead><tbody>'+
     top10.map((s,i)=>'<tr'+(i===0?' class="rp-bio"':'')+'><td>'+rankCell(i)+'</td><td>'+s.name+'</td><td>'+s.section+'</td><td>PU-'+(s.pu===2?'II':'I')+'</td><td>'+s.pct+'%</td></tr>').join('')+'</tbody></table></div>' : '<div class="rp-callout">No students match the current PU / section filters.</div>');
   const secRows = includedSections.map(sec=>[sec, (sec==='SPARK'||sec==='PRIME')?'PU-I':'PU-II', (sectionPct[sec]!==null&&sectionPct[sec]!==undefined?sectionPct[sec]:'\u2014')+'%', (sectionSD[sec]!==null&&sectionSD[sec]!==undefined?sectionSD[sec]:'\u2014')+'%']);
-  html += '<div class="rp-section"><div class="rp-section-title">Section-wise PCM Comparison</div>'+
+  html += '<div class="rp-section"><div class="rp-section-title">Section-wise PCM Comparison <span style="font-weight:400;font-size:12px;color:var(--muted);">(PU-I: '+pu1Kcet.label+(currentBioFilters.includePU2?', PU-II: '+pu2Kcet.label:'')+')</span></div>'+
     (secRows.length ? rpTable(['Section','PU Level','PCM Avg %','Spread (SD)'], secRows) : '<div class="rp-callout">No sections selected.</div>') +
     (secRows.length ? '<canvas id="bioKcetSectionCanvas" style="max-width:100%;margin-top:10px;" width="600" height="240"></canvas>' : '') + '</div>';
   html += '<div class="rp-section"><div class="rp-section-title">PCM Trend Over Time</div>';
@@ -8337,8 +8337,8 @@ function buildEleKcetSection(){
   const pu2EleCodes = new Set(computePU2ElectronicsRoster().map(s=>s.code));
   const pu2SectionByCode = {}; PU2_STUDENTS.forEach(s=>{ pu2SectionByCode[s.code] = s.section || 'Electronics'; });
 
-  const pu1Kcet = KCET_TESTS[KCET_TESTS.length-1];
-  const pu2Kcet = PU2_KCET_TESTS[PU2_KCET_TESTS.length-1];
+  const pu1Kcet = kcetCurrentTest();
+  const pu2Kcet = PU2_KCET_TESTS[pu2KcetIdx];
   const pu1Rows = currentEleFilters.includePU1 ? pu1Kcet.students.filter(r=>pu1EleCodes.has(r.code)).map(r=>({name:r.name, section:pu1SectionByCode[r.code]||'\u2014', total:r.total, pct:Math.round(r.total/135*1000)/10, pu:1})) : [];
   const pu2Rows = currentEleFilters.includePU2 ? pu2Kcet.students.filter(r=>pu2EleCodes.has(r.code)).map(r=>({name:r.name, section:pu2SectionByCode[r.code]||'Electronics', total:r.total, pct:Math.round(r.total/(pu2Kcet.outof*3)*1000)/10, pu:2})) : [];
   const combined = [...pu1Rows, ...pu2Rows].sort((a,b)=>b.pct-a.pct);
@@ -8365,7 +8365,7 @@ function buildEleKcetSection(){
   html += '<div class="rp-callout warn"><b>Note:</b> KCET (PCM stream) is Physics, Chemistry &amp; Mathematics only &mdash; there is no Electronics component. Figures below are for a complete academic picture, not an Electronics measure.</div>';
   html += rpSection('Candidate-wise &mdash; Top PCM Performers', combined.length ? '<div class="table-wrap"><table><thead><tr><th>Rank</th><th>Name</th><th>Section</th><th>PU</th><th>PCM %</th></tr></thead><tbody>'+
     top10.map((s,i)=>'<tr'+(i===0?' class="rp-bio"':'')+'><td>'+rankCell(i)+'</td><td>'+s.name+'</td><td>'+s.section+'</td><td>PU-'+(s.pu===2?'II':'I')+'</td><td>'+s.pct+'%</td></tr>').join('')+'</tbody></table></div>' : '<div class="rp-callout">No students match the current PU / section filters.</div>');
-  html += '<div class="rp-section"><div class="rp-section-title">Section-wise PCM Comparison</div>'+
+  html += '<div class="rp-section"><div class="rp-section-title">Section-wise PCM Comparison <span style="font-weight:400;font-size:12px;color:var(--muted);">(PU-I: '+pu1Kcet.label+(currentEleFilters.includePU2?', PU-II: '+pu2Kcet.label:'')+')</span></div>'+
     (secRows.length ? rpTable(['Section','PU Level','PCM Avg %','Spread (SD)'], secRows) : '<div class="rp-callout">No sections selected.</div>') +
     (secRows.length ? '<canvas id="eleKcetSectionCanvas" style="max-width:100%;margin-top:10px;" width="600" height="240"></canvas>' : '') + '</div>';
   html += '<div class="rp-section"><div class="rp-section-title">PCM Trend Over Time</div>';
