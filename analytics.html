@@ -5916,16 +5916,18 @@ function mtClassAvgRaw(subj){
   return pct!==undefined ? Math.round((pct/100*40)*100)/100 : null;
 }
 
-function mtSubjectRowsHtml(student){
+function mtSubjectRowsHtml(student, monthKey){
+  monthKey = monthKey || 'july';
   const subs = ['BIO','KAN','HIN','ENG','PHY','CHE','MAT','ELE'];
   const names = {KAN:'Kannada',HIN:'Hindi',ENG:'English',PHY:'Physics',CHE:'Chemistry',MAT:'Mathematics',BIO:'Biology',ELE:'Electronics'};
   let rows = '';
-  if(!student.mt) return rows;
+  const rec = pu1MonthData(student, monthKey);
+  if(!rec) return rows;
   subs.forEach(s=>{
-    const val = student.mt[s];
+    const val = rec[s];
     if(val===null || val===undefined) return;
-    const avg = pu1MonthClassAvgRaw('july', s);
-    const sd = pu1MonthClassSDRaw('july', s);
+    const avg = pu1MonthClassAvgRaw(monthKey, s);
+    const sd = pu1MonthClassSDRaw(monthKey, s);
     const diff = avg!==null ? Math.round((val-avg)*10)/10 : null;
     const cls = diff!==null ? (diff>=0?'rc-diff-up':'rc-diff-down') : '';
     const sign = diff!==null && diff>=0 ? '+' : '';
@@ -6278,12 +6280,18 @@ function showReportCard(student, pu){
   const tierHtml = tier ? '<span class="chip '+tier.cls+'" style="margin-top:8px;">'+tier.label+'</span>' : '';
   const comment = generateTeacherComment(student);
   window.__currentComment = comment;
+  const juneRows = mtSubjectRowsHtml(student, 'june');
+  const juneSection = juneRows ?
+    '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">June Monthly Test'+(student.june && student.june.RANK?' &mdash; Class Rank #'+student.june.RANK:'')+'</h3>'+
+    '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th>'+(sdOptions.student?'<th>z-Score</th>':'')+'</tr></thead>'+
+    '<tbody>'+juneRows+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(student.june && student.june.TOTAL!==null?student.june.TOTAL+'/240':'\u2014')+'</b></td></tr></tbody></table></div>'
+    : '';
   const mtRows = mtSubjectRowsHtml(student);
   const mtSection = mtRows ?
     '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">July Monthly Test'+(student.mt.RANK?' &mdash; Class Rank #'+student.mt.RANK:'')+'</h3>'+
     '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th>'+(sdOptions.student?'<th>z-Score</th>':'')+'</tr></thead>'+
     '<tbody>'+mtRows+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(student.mt.TOTAL!==null?student.mt.TOTAL+'/240':'\u2014')+'</b></td></tr></tbody></table></div>'
-    : '<div class="desc" style="text-align:center; margin-top:12px;">Monthly Test data not available for this student.</div>';
+    : (juneSection ? '' : '<div class="desc" style="text-align:center; margin-top:12px;">Monthly Test data not available for this student.</div>');
   const examSection = buildPU1ExamSectionsHtml(student);
   document.getElementById('reportCardContent').innerHTML =
     '<div class="report-card-header">'+
@@ -6300,6 +6308,7 @@ function showReportCard(student, pu){
     '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">Slip Test 2 (17\u201320 Jul 2026)</h3>'+
     '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th>'+(sdOptions.student?'<th>z-Score</th>':'')+'</tr></thead>'+
     '<tbody>'+subjectRowsHtml('t2')+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(student.t2.TOTAL!==null?student.t2.TOTAL+'/80':'\u2014')+'</b></td></tr></tbody></table></div>'+
+    juneSection+
     mtSection+
     examSection+
     '<div class="teacher-comment">'+
