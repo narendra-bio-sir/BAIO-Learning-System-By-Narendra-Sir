@@ -1381,7 +1381,7 @@ function renderProgressPage(){
       <button class="fc-btn" id="progressResetBtn" style="margin-top:10px;">Reset All History</button>
     </div>`;
   }
-  document.getElementById('content').innerHTML = html;
+  document.getElementById('content').innerHTML = renderRecommendCard() + html;
   wireProgressResetBtn();
 }
 
@@ -1427,6 +1427,43 @@ function getTopicsAttempted(){
   log.forEach(function(l){ if(l.type === 'MCQ Quiz' && l.topicScope) attempted.add(l.topicScope); });
   return attempted;
 }
+function getTopicRecommendation(){
+  const mastery = getTopicMastery();
+  const attempted = getTopicsAttempted();
+  let untried = null;
+  let weakest = null, weakestPct = 101;
+  DATA.topics.forEach(function(t){
+    if(!attempted.has(t.id)){
+      if(!untried) untried = t;
+    } else {
+      const pct = mastery[t.id] || 0;
+      if(pct < 85 && pct < weakestPct){ weakest = t; weakestPct = pct; }
+    }
+  });
+  const target = untried || weakest;
+  if(!target) return null;
+  return { topic: target, untried: !!untried && target===untried, pct: weakestPct };
+}
+function renderRecommendCard(){
+  const rec = getTopicRecommendation();
+  if(!rec){
+    return `<div class="setup-card" style="text-align:center;color:var(--ink-dim);font-size:12.5px;">🎉 Solid footing across every topic in this chapter — keep it sharp with a full NEET Practice session.</div>`;
+  }
+  const reason = rec.untried ? "You haven't studied this topic yet" : ('Best score so far: ' + rec.pct + '% — a bit more practice will help');
+  return `<div class="setup-card">
+    <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.6px;color:var(--teal);font-weight:700;">🎯 Recommended for You</div>
+    <div style="font-size:14px;font-weight:700;color:var(--ink);margin-top:4px;">${rec.topic.name}</div>
+    <div style="font-size:11.5px;color:var(--ink-dim);margin-top:2px;margin-bottom:10px;">${reason}</div>
+    <button class="fc-btn" style="background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;border:none;font-weight:700;" onclick="goToRecommendedTopic('${rec.topic.id}')">${rec.untried ? 'Start This Topic' : 'Revisit This Topic'} &rarr;</button>
+  </div>`;
+}
+function goToRecommendedTopic(id){
+  currentTopic = id;
+  try{ localStorage.setItem(LAST_TOPIC_KEY, id); }catch(e){}
+  switchTab('study');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+window.goToRecommendedTopic = goToRecommendedTopic;
 function checkEarnedBadges(){
   const streak = getStreakDays();
   const mastery = getTopicMastery();
