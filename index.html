@@ -177,6 +177,9 @@ header{padding:34px 0 22px; text-align:center;}
   font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12px; padding:9px 14px;
   border-radius:10px; text-decoration:none; white-space:nowrap;
 }
+.continue-widget.try-next{ margin-top:10px; }
+.continue-widget.try-next .cw-label{ color:var(--gold); }
+.continue-widget.try-next .cw-btn{ background:linear-gradient(135deg,var(--teal),var(--teal2)); color:#062019; }
 
 .badges-chapter-card{
   border:1px solid var(--line); border-radius:14px; padding:14px 16px; background:var(--panel);
@@ -274,6 +277,16 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       <div class="cw-meta" id="cwMeta"></div>
     </div>
     <a href="#" id="cwBtn" class="cw-btn">Resume →</a>
+  </div>
+
+  <div id="tryNextWidget" class="continue-widget try-next">
+    <div class="cw-icon" id="tnIcon">📘</div>
+    <div class="cw-body">
+      <div class="cw-label" id="tnLabel">Try Next</div>
+      <div class="cw-title" id="tnTitle"></div>
+      <div class="cw-meta" id="tnMeta"></div>
+    </div>
+    <a href="#" id="tnBtn" class="cw-btn">Start →</a>
   </div>
 
   <div id="statWidgets" class="widget-row">
@@ -666,6 +679,92 @@ if(stripRows){
     document.getElementById('wtChapters').textContent = chaptersWithActivity.size;
     document.getElementById('wtAvg').textContent = avgScore + '%';
   }
+})();
+
+/* Suggest a chapter to try next: an unopened chapter first, else the
+   chapter that's gone the longest without activity. Only considers
+   chapters that actually resolve (skips "Soon" placeholders), and never
+   repeats whatever "Continue Studying" is already pointing at. */
+(function(){
+  function checkLive(href){
+    return fetch(href, { method:'HEAD', cache:'no-store' })
+      .then(function(res){ return !!res.ok; })
+      .catch(function(){ return false; });
+  }
+  function daysSince(dateObj){
+    const todayStart = new Date().setHours(0,0,0,0);
+    const thatStart = new Date(dateObj).setHours(0,0,0,0);
+    return Math.round((todayStart - thatStart) / 86400000);
+  }
+  function lastActivityDate(log){
+    let last = null;
+    log.forEach(function(l){
+      if(!l || !l.date) return;
+      const d = new Date(l.date);
+      if(isNaN(d.getTime())) return;
+      if(!last || d > last) last = d;
+    });
+    return last;
+  }
+  function notifyChapterNudge(chapter, body){
+    try{
+      if(!('Notification' in window) || Notification.permission !== 'granted') return;
+      const nudgeKey = 'baio_last_chapter_nudge';
+      const todayStr = new Date().toDateString();
+      if(localStorage.getItem(nudgeKey) === todayStr) return;
+      const opts = { body: body.slice(0, 140), icon: 'icon-192.png', badge: 'icon-192.png', tag: 'baio-chapter-nudge', data: { url: chapter.href } };
+      const title = chapter.num + ': ' + chapter.title;
+      function fire(){
+        if('serviceWorker' in navigator){
+          navigator.serviceWorker.getRegistration()
+            .then(function(reg){ if(reg && reg.showNotification) return reg.showNotification(title, opts); throw 0; })
+            .catch(function(){ try{ new Notification(title, opts); }catch(e){} });
+        } else {
+          try{ new Notification(title, opts); }catch(e){}
+        }
+      }
+      fire();
+      localStorage.setItem(nudgeKey, todayStr);
+    }catch(e){}
+  }
+
+  const STALE_DAYS = 3;
+  const mostRecentHref = document.getElementById('cwBtn').getAttribute('href');
+
+  Promise.all(CHAPTERS.map(function(ch){
+    return checkLive(ch.href).then(function(live){ return { ch: ch, live: live }; });
+  })).then(function(results){
+    const liveChapters = results.filter(function(r){ return r.live; }).map(function(r){ return r.ch; });
+    if(!liveChapters.length) return;
+
+    let unopened = null;
+    let stalest = null, stalestDays = -1;
+    liveChapters.forEach(function(ch){
+      if(ch.href === mostRecentHref) return;
+      const log = getRawLog(ch.progressKey);
+      if(log.length === 0){
+        if(!unopened) unopened = ch;
+        return;
+      }
+      const last = lastActivityDate(log);
+      if(!last) return;
+      const days = daysSince(last);
+      if(days >= STALE_DAYS && days > stalestDays){ stalest = ch; stalestDays = days; }
+    });
+
+    const suggestion = unopened || stalest;
+    if(!suggestion) return;
+
+    const meta = unopened ? "You haven't opened this one yet" : (stalestDays + ' days since you studied this');
+    document.getElementById('tnIcon').textContent = suggestion.icon || '📘';
+    document.getElementById('tnTitle').textContent = suggestion.num + ': ' + suggestion.title;
+    document.getElementById('tnMeta').textContent = meta;
+    document.getElementById('tnBtn').setAttribute('href', suggestion.href);
+    document.getElementById('tnBtn').textContent = unopened ? 'Start →' : 'Continue →';
+    document.getElementById('tryNextWidget').classList.add('show');
+
+    notifyChapterNudge(suggestion, unopened ? 'Give it a first look today.' : ("It's been " + stalestDays + " days — pick it back up?"));
+  });
 })();
 
 (function(){
