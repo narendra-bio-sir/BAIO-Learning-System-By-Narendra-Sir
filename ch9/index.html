@@ -3342,5 +3342,12 @@ renderContent();
 window.__baioReady = true;
 (function(){ var ov = document.getElementById('pageLoadOverlay'); if(ov) ov.remove(); })();
 </script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('../sw.js', {scope:'../'}).catch(function(){});
+  });
+}
+</script>
 </body>
 </html>

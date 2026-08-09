@@ -5257,5 +5257,12 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
   if(loadOv) loadOv.remove();
 })();
 </script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('../sw.js', {scope:'../'}).catch(function(){});
+  });
+}
+</script>
 </body>
 </html>
