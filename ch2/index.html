@@ -200,6 +200,15 @@ table.cmp th:first-child{color:var(--gold-2); font-weight:700;}
 .btn:disabled{opacity:.4; cursor:not-allowed;}
 .btn-row{display:flex; gap:10px; justify-content:center; flex-wrap:wrap;}
 
+.recommend-card{
+  background:linear-gradient(120deg, var(--panel), var(--panel-2)); border:1px solid var(--border);
+  border-radius:var(--radius); padding:14px 16px; margin:12px 0;
+}
+.recommend-card .rc-label{ font-size:10px; text-transform:uppercase; letter-spacing:0.6px; color:var(--teal); font-weight:700; }
+.recommend-card .rc-title{ font-size:14px; font-weight:700; color:var(--text); margin-top:4px; }
+.recommend-card .rc-reason{ font-size:11.5px; color:var(--text-dim); margin-top:2px; margin-bottom:10px; }
+.recommend-card.done{ text-align:center; color:var(--text-dim); font-size:12.5px; }
+
 /* Quiz setup */
 .setup-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
 .setup-grid .full{grid-column:1/-1;}
@@ -938,6 +947,7 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       <h3 style="color:var(--gold-2); margin-bottom:4px;">Overall Performance Tracker</h3>
       <div style="color:var(--text-dim); font-size:12px; margin-bottom:12px;">Combined history across MCQ Quiz and NEET Practice (saved on this device)</div>
       <div class="report-grid" id="progressStats"></div>
+      <div id="progressRecommend"></div>
       <div class="subhead" style="margin-top:14px;">Score History</div>
       <div id="progressChart"></div>
       <div class="subhead" style="margin-top:14px;">Session Log</div>
@@ -4164,11 +4174,55 @@ async function shareBadgesCH2(){
   });
 }
 
+function renderTopicRecommendation(){
+  const el = document.getElementById('progressRecommend');
+  if(!el) return;
+  const mastery = getTopicMasteryCh2();
+  const attempted = getTopicsAttemptedCh2();
+  let untried = null;
+  let weakest = null, weakestPct = 101;
+  STUDY_DATA.forEach(function(t){
+    if(!attempted[t.id]){
+      if(!untried) untried = t;
+    } else {
+      const pct = mastery[t.id] || 0;
+      if(pct < 85 && pct < weakestPct){ weakest = t; weakestPct = pct; }
+    }
+  });
+  const target = untried || weakest;
+  if(!target){
+    el.innerHTML = `<div class="recommend-card done">🎉 Solid footing across every topic in this chapter — keep it sharp with a full NEET Practice session.</div>`;
+    return;
+  }
+  const cleanTitle = target.title.replace(/^\d+\.\s*/,'');
+  const reason = untried ? "You haven't studied this topic yet" : ('Best score so far: ' + weakestPct + '% — a bit more practice will help');
+  el.innerHTML = `<div class="recommend-card">
+    <div class="rc-label">🎯 Recommended for You</div>
+    <div class="rc-title">${cleanTitle}</div>
+    <div class="rc-reason">${reason}</div>
+    <button class="btn" onclick="goToRecommendedTopicCh2('${target.id}')">${untried ? 'Start This Topic' : 'Revisit This Topic'} &rarr;</button>
+  </div>`;
+}
+function goToRecommendedTopicCh2(id){
+  currentTopic = id;
+  try{ localStorage.setItem('ch2_last_study_topic', id); }catch(e){}
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+  const btn = document.querySelector('.tab-btn[data-tab="study"]');
+  if(btn) btn.classList.add('active');
+  document.getElementById('panel-study').classList.add('active');
+  try{ localStorage.setItem('ch2_last_tab', 'study'); }catch(e){}
+  renderTopicNav(); renderStudy();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+window.goToRecommendedTopicCh2 = goToRecommendedTopicCh2;
+
 function renderProgress(){
   const data = loadProgress();
   const statsEl = document.getElementById('progressStats');
   const chartEl = document.getElementById('progressChart');
   const logEl = document.getElementById('progressLog');
+  renderTopicRecommendation();
   if(data.length===0){
     statsEl.innerHTML = `<div class="stat-box"><div class="num">0</div><div class="lbl">Sessions Logged</div></div>`;
     chartEl.innerHTML = `<div style="color:var(--text-dim); padding:10px;">Complete an MCQ Quiz or NEET Practice session to start tracking your progress here.</div>`;
