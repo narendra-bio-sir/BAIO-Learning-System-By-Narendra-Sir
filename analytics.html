@@ -7623,9 +7623,10 @@ function getTestWiseBioData(sel){
 function buildTheoryBioSection(){
   const roster = bioCombinedRoster().filter(passesBioFilter);
   const monthLabels = Object.values(PU2_MONTH_LABELS);
+  const pu1MonthLabels = Object.values(PU1_MONTH_LABELS);
   function latest(s){
     const hist = getBioHistory(s, s.pu);
-    const filtered = s.pu===1 ? hist.filter(h=>h.label.startsWith('Slip Test') || h.label==='Monthly Test') : hist.filter(h=>monthLabels.includes(h.label));
+    const filtered = s.pu===1 ? hist.filter(h=>h.label.startsWith('Slip Test') || pu1MonthLabels.includes(h.label)) : hist.filter(h=>monthLabels.includes(h.label));
     return filtered.length ? filtered[filtered.length-1] : null;
   }
   const withLatest = roster.map(s=>{ const l=latest(s); return l ? {name:s.name, section:s.section||'\u2014', pu:s.pu, pct:l.pct, label:l.label} : null; }).filter(Boolean);
@@ -8223,7 +8224,7 @@ function avgOf(arr){ return arr.length ? Math.round((arr.reduce((a,b)=>a+b,0)/ar
 
 /* ---- Per-student latest Electronics record helpers ---- */
 function pu1ElectronicsLatest(s){
-  const order = [{key:'mt',label:'Monthly Test',outOf:40},{key:'t2',label:'Slip Test 2',outOf:20},{key:'t1',label:'Slip Test 1',outOf:20}];
+  const order = [{key:'mt',label:'July Monthly Test',outOf:40},{key:'june',label:'June Monthly Test',outOf:40},{key:'t2',label:'Slip Test 2',outOf:20},{key:'t1',label:'Slip Test 1',outOf:20}];
   for(const o of order){
     if(s[o.key] && s[o.key].ELE!==null && s[o.key].ELE!==undefined){
       return {pct:Math.round(s[o.key].ELE/o.outOf*1000)/10, label:o.label, raw:s[o.key].ELE, outOf:o.outOf};
@@ -8259,15 +8260,22 @@ function buildEleTheorySection(){
   const includedSections = ['PU1_ELE','PU2_ELE'].filter(eleSectionAllowed);
   const secRows = includedSections.map(sec=> sec==='PU1_ELE' ? ['PU-I Electronics (SPARK/PRIME)','PU-I', pu1Avg!==null?pu1Avg+'%':'\u2014', pu1SD!==null?pu1SD+'%':'\u2014'] : ['PU-II Electronics','PU-II', pu2Avg!==null?pu2Avg+'%':'\u2014', pu2SD!==null?pu2SD+'%':'\u2014']);
 
+  const pu1SubjVals = {}, pu1SubjSD = {};
+  ELE_SUBJECTS.forEach(subj=>{
+    const vals = pu1Roster.map(s=>{ const d=pu1MonthData(s,pu1MonthCurrent); return d && d[subj]!==null && d[subj]!==undefined ? d[subj] : null; }).filter(v=>v!==null);
+    const st = computeStats(vals);
+    pu1SubjVals[subj] = vals.length ? Math.round((st.mean/40)*1000)/10 : null;
+    pu1SubjSD[subj] = vals.length ? Math.round((st.sd/40)*1000)/10 : null;
+  });
+
   const pu1TrendLabels = ['Slip Test 1','Slip Test 2',pu1CurrentMonthLabel()];
-  const pu1TrendVals = ['t1','t2','mt'].map(k=>computeElectronicsSubjectStats(pu1Roster,k).ELE.avg_pct);
+  const pu1TrendVals = ['t1','t2'].map(k=>computeElectronicsSubjectStats(pu1Roster,k).ELE.avg_pct).concat([pu1SubjVals.ELE]);
   const pu2TrendLabels = ['march','april','may','june','july'].map(mk=>PU2_MONTH_LABELS[mk]);
   const pu2TrendVals = ['march','april','may','june','july'].map(mk=>{
     const vals = pu2Roster.map(s=>s[mk]&&s[mk].ELE!==null&&s[mk].ELE!==undefined?s[mk].ELE:null).filter(v=>v!==null);
     return vals.length ? Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)/40*1000)/10 : null;
   });
 
-  const pu1SubjStats = computeElectronicsSubjectStats(pu1Roster, 'mt');
   const pu2SubjVals = {}, pu2SubjSD = {};
   ELE_SUBJECTS.forEach(subj=>{
     const vals = pu2Roster.map(s=>{ const d=pu2MonthData(s,pu2MonthCurrent); return d && d[subj]!==null && d[subj]!==undefined ? d[subj] : null; }).filter(v=>v!==null);
@@ -8276,7 +8284,7 @@ function buildEleTheorySection(){
     pu2SubjSD[subj] = vals.length ? Math.round((st.sd/40)*1000)/10 : null;
   });
   const subjChartLabels = ['Electronics','Physics','Chemistry','Mathematics'];
-  const pu1SubjArr = [pu1SubjStats.ELE.avg_pct, pu1SubjStats.PHY.avg_pct, pu1SubjStats.CHE.avg_pct, pu1SubjStats.MAT.avg_pct];
+  const pu1SubjArr = [pu1SubjVals.ELE, pu1SubjVals.PHY, pu1SubjVals.CHE, pu1SubjVals.MAT];
   const pu2SubjArr = [pu2SubjVals.ELE, pu2SubjVals.PHY, pu2SubjVals.CHE, pu2SubjVals.MAT];
   const pu2SubjSDArr = [pu2SubjSD.ELE, pu2SubjSD.PHY, pu2SubjSD.CHE, pu2SubjSD.MAT];
   const subjRows = subjChartLabels.map((label,i)=>[label,
