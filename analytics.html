@@ -7507,7 +7507,8 @@ function getStudentElectronicsCompare(student, pu){
    PU-II Electronics students who predate this system and have no known Champion/Elite tag). ---- */
 function sectionLabel(student){
   const s = (student.section||'').toUpperCase();
-  if(!s || s==='OTHER') return 'Electronics';
+  if(!s) return 'Not on file';
+  if(s==='OTHER') return 'Electronics';
   return student.section;
 }
 
