@@ -138,7 +138,7 @@ function toggleCard(){
   const btn = document.getElementById('themeToggle');
   let saved = null;
   try{ saved = localStorage.getItem('baio_theme'); }catch(e){}
-  const theme = saved || 'dark';
+  const theme = saved || 'light';
   root.setAttribute('data-theme', theme);
   btn.textContent = theme === 'dark' ? '☀️' : '🌙';
   btn.addEventListener('click', (e)=>{
