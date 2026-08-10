@@ -6350,6 +6350,45 @@ function buildPU2KcetSectionHtml(student){
   return html;
 }
 
+/* PU-II KCET readiness: PU2_KCET_BY_CODE rounds carry their own per-subject `outof`
+   (it varies test to test, unlike PU-I's fixed 135), so this can't reuse
+   computeStreamReadiness as-is - same classifyReadiness/readinessCardHtml below it. */
+function computePU2KcetReadiness(student){
+  const rec = PU2_KCET_BY_CODE[student.code];
+  if(!rec) return null;
+  const attempts = Object.keys(rec).sort().map(k=>rec[k])
+    .filter(r=>r && !r.ABSENT && r.TOTAL!==null && r.TOTAL!==undefined && r.outof);
+  if(!attempts.length) return null;
+  const latest = attempts[attempts.length-1];
+  const first = attempts[0];
+  const latestPct = Math.round((latest.TOTAL/(latest.outof*3))*1000)/10;
+  const firstPct = Math.round((first.TOTAL/(first.outof*3))*1000)/10;
+  const trend = attempts.length>1 ? Math.round((latestPct-firstPct)*10)/10 : null;
+  return { latestPct, trend, attemptsCount: attempts.length, band: classifyReadiness(latestPct) };
+}
+/* PU-II NEET readiness: there's no PU2_NEET_BY_CODE - the general PU2_TESTS array
+   (a mix of OBT rounds and Slip Tests, every subject together) is what the "NEET OBT"
+   screen already reads PHY/CHE/BIO out of, so derive readiness the same way, restricted
+   to entries labelled "OBT" and where the student has a Biology mark (their Slip Tests
+   and PCM-only rounds have BIO:null and are correctly excluded). */
+function computePU2NeetReadiness(student){
+  const attempts = [];
+  PU2_TESTS.forEach(test=>{
+    if(!/OBT/i.test(test.label)) return;
+    const rec = test.students.find(s=>s.code===student.code);
+    if(!rec || rec.BIO===null || rec.BIO===undefined) return;
+    const total = (rec.PHY||0)+(rec.CHE||0)+(rec.BIO||0);
+    const max = (rec.PHY_out||0)+(rec.CHE_out||0)+(rec.BIO_out||0);
+    if(max>0) attempts.push({total, max});
+  });
+  if(!attempts.length) return null;
+  const latest = attempts[attempts.length-1];
+  const first = attempts[0];
+  const latestPct = Math.round((latest.total/latest.max)*1000)/10;
+  const firstPct = Math.round((first.total/first.max)*1000)/10;
+  const trend = attempts.length>1 ? Math.round((latestPct-firstPct)*10)/10 : null;
+  return { latestPct, trend, attemptsCount: attempts.length, band: classifyReadiness(latestPct) };
+}
 function showReportCardPU2(student){
   window.__currentStudent = student;
   window.__remarkLang = 'en';
@@ -6379,14 +6418,16 @@ function showReportCardPU2(student){
     }
   });
 
+  const neetReadiness = readinessCardHtml('NEET (PCB)', computePU2NeetReadiness(student));
   const obtSections = buildPU2ObtSectionsHtml(student);
   const obtBlock = obtSections
-    ? '<h2 style="font-family:\'Space Grotesk\'; font-size:15px; color:var(--gold-soft); margin:0 0 4px;">Slip Test &amp; OBT Results</h2>' + obtSections
+    ? '<h2 style="font-family:\'Space Grotesk\'; font-size:15px; color:var(--gold-soft); margin:0 0 4px;">Slip Test &amp; OBT Results</h2>' + neetReadiness + obtSections
     : '';
 
+  const kcetReadiness = readinessCardHtml('KCET (PCM)', computePU2KcetReadiness(student));
   const kcetSections = buildPU2KcetSectionHtml(student);
   const kcetBlock = kcetSections
-    ? '<h2 style="font-family:\'Space Grotesk\'; font-size:15px; color:var(--gold-soft); margin:18px 0 4px;">KCET (PCM) Results</h2>' + kcetSections
+    ? '<h2 style="font-family:\'Space Grotesk\'; font-size:15px; color:var(--gold-soft); margin:18px 0 4px;">KCET (PCM) Results</h2>' + kcetReadiness + kcetSections
     : '';
 
   document.getElementById('reportCardContent').innerHTML =
