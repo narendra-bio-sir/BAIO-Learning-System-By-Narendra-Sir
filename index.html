@@ -402,10 +402,11 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     .then(res => res.ok ? res.text() : Promise.reject())
     .then(htmlText => {
       const doc = new DOMParser().parseFromString(htmlText, 'text/html');
-      const title = doc.querySelector('h1');
-      const lede = doc.querySelector('.lede');
-      const metaRow = doc.querySelector('.meta-row');
-      const img = doc.querySelector('.notice img');
+      const latestNotice = doc.querySelector('.notice');
+      const title = latestNotice ? latestNotice.querySelector('h1') : null;
+      const lede = latestNotice ? latestNotice.querySelector('.lede') : null;
+      const metaRow = latestNotice ? latestNotice.querySelector('.meta-row') : null;
+      const img = latestNotice ? latestNotice.querySelector('img') : null;
       if(!title) return;
 
       const titleText = title.textContent.trim();
