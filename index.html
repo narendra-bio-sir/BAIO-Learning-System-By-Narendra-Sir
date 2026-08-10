@@ -210,12 +210,22 @@ header{padding:34px 0 22px; text-align:center;}
 .continue-widget .cw-btn .arrow{ display:inline-block; transition:transform .2s ease; }
 .continue-widget .cw-btn:hover .arrow{ transform:translateX(3px); }
 @keyframes cwPulseGold{ 0%,100%{box-shadow:0 0 0 0 var(--gold-glow);} 50%{box-shadow:0 0 0 7px var(--gold-glow);} }
-@keyframes cwPulseTeal{ 0%,100%{box-shadow:0 0 0 0 var(--teal-glow);} 50%{box-shadow:0 0 0 7px var(--teal-glow);} }
-.continue-widget.try-next{ margin-top:10px; }
-.continue-widget.try-next .cw-label{ color:var(--gold); }
-.continue-widget.try-next .cw-btn{ background:linear-gradient(135deg,var(--teal),var(--teal2)); color:#062019; animation-name:cwPulseTeal; }
 @media (prefers-reduced-motion: reduce){
   .continue-widget .cw-btn{ animation:none; }
+}
+
+.try-next-banner{
+  display:flex; align-items:center; gap:10px;
+  background:rgba(212,175,55,0.10); border:1px solid var(--line); border-left:4px solid var(--gold);
+  color:var(--ink); padding:11px 14px; border-radius:12px; margin-bottom:16px;
+  font-size:13px; text-decoration:none; animation:tnPulse 2.4s ease-in-out infinite;
+}
+.try-next-banner b{ color:var(--gold); }
+.try-next-banner .tn-body{ flex:1 1 auto; min-width:0; }
+.try-next-banner .tn-arrow{ flex:0 0 auto; font-weight:800; color:var(--gold); }
+@keyframes tnPulse{ 0%,100%{box-shadow:0 0 0 0 var(--gold-glow);} 50%{box-shadow:0 0 0 5px transparent;} }
+@media (prefers-reduced-motion: reduce){
+  .try-next-banner{ animation:none; }
 }
 
 .badges-chapter-card{
@@ -297,6 +307,12 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     <button type="button" id="announceBannerDismiss" class="announce-banner-dismiss" aria-label="Dismiss">&times;</button>
   </div>
 
+  <a href="#" id="tryNextWidget" class="try-next-banner" style="display:none;">
+    <span id="tnIcon">📘</span>
+    <span class="tn-body"><b>Try Next:</b> <span id="tnTitle"></span> &mdash; <span id="tnMeta"></span></span>
+    <span class="tn-arrow">&rarr;</span>
+  </a>
+
   <div class="hero">
     <h1>One place for every chapter, built the same way each time.</h1>
     <p>Study notes, flashcards, MCQs, NEET-style practice, paper generation, and your own notes &mdash; consistent across every chapter, so once you know your way around one, you know your way around all of them.</p>
@@ -317,16 +333,6 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       <div class="cw-meta" id="cwMeta"></div>
     </div>
     <a href="#" id="cwBtn" class="cw-btn">Resume <span class="arrow">&rarr;</span></a>
-  </div>
-
-  <div id="tryNextWidget" class="continue-widget try-next">
-    <div class="cw-icon" id="tnIcon">📘</div>
-    <div class="cw-body">
-      <div class="cw-label" id="tnLabel">Try Next</div>
-      <div class="cw-title" id="tnTitle"></div>
-      <div class="cw-meta" id="tnMeta"></div>
-    </div>
-    <a href="#" id="tnBtn" class="cw-btn">Start <span class="arrow">&rarr;</span></a>
   </div>
 
   <div id="statWidgets" class="widget-row">
@@ -824,13 +830,13 @@ if(stripRows){
 
     const suggestion = unopened || stalest;
     if(suggestion){
-      const meta = unopened ? "You haven't opened this one yet" : (stalestDays + ' days since you studied this');
+      const meta = unopened ? "you haven't opened this one yet" : (stalestDays + ' days since you studied this');
       document.getElementById('tnIcon').textContent = suggestion.icon || '📘';
       document.getElementById('tnTitle').textContent = suggestion.num + ': ' + suggestion.title;
       document.getElementById('tnMeta').textContent = meta;
-      document.getElementById('tnBtn').setAttribute('href', suggestion.href);
-      document.getElementById('tnBtn').innerHTML = (unopened ? 'Start' : 'Continue') + ' <span class="arrow">&rarr;</span>';
-      document.getElementById('tryNextWidget').classList.add('show');
+      const tryNextEl = document.getElementById('tryNextWidget');
+      tryNextEl.setAttribute('href', suggestion.href);
+      tryNextEl.style.display = 'flex';
 
       notifyChapterNudge(suggestion, unopened ? 'Give it a first look today.' : ("It's been " + stalestDays + " days — pick it back up?"));
     }
