@@ -151,8 +151,25 @@ header{padding:34px 0 22px; text-align:center;}
 .announce-modal-date{font-size:10.5px; color:var(--teal); font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;}
 .announce-modal-text{font-size:14px; color:var(--ink); line-height:1.6; margin-bottom:20px;}
 .announce-modal-btn{
-  background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#0B1B14; border:none;
+  display:block; background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#0B1B14; border:none;
   padding:10px 28px; border-radius:10px; font-weight:700; font-size:13.5px; cursor:pointer;
+  text-decoration:none; margin-bottom:10px;
+}
+.announce-modal-later-btn{
+  background:none; border:none; color:var(--ink-dim); font-size:12.5px; font-weight:600;
+  cursor:pointer; text-decoration:underline;
+}
+.announce-banner{
+  display:flex; align-items:center; gap:10px;
+  background:rgba(46,230,197,0.10); border:1px solid var(--line); border-left:4px solid var(--teal);
+  color:var(--ink); padding:11px 14px; border-radius:12px; margin-bottom:16px;
+  font-weight:600; font-size:13px;
+}
+.announce-banner-link{ color:var(--ink); text-decoration:none; flex:1 1 auto; }
+.announce-banner-link strong{ color:var(--teal); }
+.announce-banner-dismiss{
+  background:none; border:none; color:var(--ink-dim); font-weight:800; font-size:16px;
+  cursor:pointer; line-height:1; padding:2px 4px; flex:0 0 auto;
 }
 @media(max-width:420px){ .quick-actions-row{flex-direction:column;} }
 
@@ -275,6 +292,11 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     <div class="tag" style="margin-top:2px; letter-spacing:1px; font-size:11px;">Learn. Analyse. Improve. Achieve.</div>
   </header>
 
+  <div id="announcementBanner" class="announce-banner" style="display:none;">
+    <a href="announcements.html" class="announce-banner-link">📢 <strong id="announceBannerText">New announcement waiting</strong> &mdash; tap to read</a>
+    <button type="button" id="announceBannerDismiss" class="announce-banner-dismiss" aria-label="Dismiss">&times;</button>
+  </div>
+
   <div class="hero">
     <h1>One place for every chapter, built the same way each time.</h1>
     <p>Study notes, flashcards, MCQs, NEET-style practice, paper generation, and your own notes &mdash; consistent across every chapter, so once you know your way around one, you know your way around all of them.</p>
@@ -326,7 +348,8 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       <div class="announce-modal-icon">🔔</div>
       <div class="announce-modal-date" id="announceModalDate"></div>
       <div class="announce-modal-text" id="announceModalText"></div>
-      <button class="announce-modal-btn" id="announceModalCloseBtn">Got it</button>
+      <a href="announcements.html" class="announce-modal-btn" id="announceModalReadBtn">📖 Read Full Announcement</a>
+      <button type="button" class="announce-modal-later-btn" id="announceModalCloseBtn">Remind me later</button>
     </div>
   </div>
 
@@ -460,6 +483,11 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       showAnnouncementNotification(titleText, ledeText);
       playBellChime();
       document.getElementById('bellIcon')?.classList.add('bell-ring');
+      const banner = document.getElementById('announcementBanner');
+      if(banner){
+        document.getElementById('announceBannerText').textContent = titleText;
+        banner.style.display = 'flex';
+      }
 
       const iconEl = document.querySelector('#announcementModalOverlay .announce-modal-icon');
       if(img && iconEl){
@@ -467,20 +495,24 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       }
       document.getElementById('announceModalDate').textContent = dateText;
       document.getElementById('announceModalText').innerHTML =
-        '<b style="display:block; margin-bottom:6px; font-size:15px;">' + titleText + '</b>' + ledeText +
-        '<br><a href="announcements.html" style="color:var(--teal); font-weight:700; text-decoration:none;">Read Full Announcement &rarr;</a>';
+        '<b style="display:block; margin-bottom:6px; font-size:15px;">' + titleText + '</b>' + ledeText;
       document.getElementById('announcementModalOverlay').style.display = 'flex';
 
       function markAnnouncementSeen(){
         try{ localStorage.setItem(seenKey, fingerprint); }catch(e){}
         setBadgeCount(0);
         document.getElementById('bellIcon')?.classList.remove('bell-ring');
+        if(banner) banner.style.display = 'none';
       }
 
-      // Closing the summary popup just dismisses it — the bell keeps ringing
-      // as a reminder until the student actually opens the full announcement.
+      // Closing the summary popup or dismissing the banner just hides them —
+      // the bell keeps ringing as a reminder until the student actually
+      // opens the full announcement.
       document.getElementById('announceModalCloseBtn').addEventListener('click', () => {
         document.getElementById('announcementModalOverlay').style.display = 'none';
+      });
+      document.getElementById('announceBannerDismiss')?.addEventListener('click', () => {
+        if(banner) banner.style.display = 'none';
       });
       document.querySelectorAll('a[href="announcements.html"]').forEach(a => {
         a.addEventListener('click', markAnnouncementSeen);
