@@ -190,6 +190,22 @@ header{padding:34px 0 22px; text-align:center;}
 .widget-tile .wt-l{font-size:9.5px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:0.5px; margin-top:2px; line-height:1.3;}
 @media(max-width:360px){ .widget-tile{padding:10px 4px;} .widget-tile .wt-n{font-size:16px;} }
 
+.motivation-bar{
+  border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin-top:16px;
+  background:linear-gradient(120deg, var(--panel), var(--panel2));
+  font-size:13px; color:var(--ink-dim); font-style:italic; text-align:center; line-height:1.6;
+}
+.motivation-bar b{ color:var(--gold); font-style:normal; }
+
+.syllabus-progress{
+  border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin-top:16px; background:var(--panel);
+}
+.sp-head{display:flex; justify-content:space-between; align-items:center; font-size:12.5px; font-weight:700; color:var(--ink); margin-bottom:8px;}
+.sp-head span:last-child{color:var(--gold); font-family:'Space Grotesk',sans-serif;}
+.sp-track{height:10px; border-radius:6px; background:var(--panel2); overflow:hidden;}
+.sp-fill{height:100%; background:linear-gradient(90deg,var(--teal),var(--gold)); border-radius:6px; transition:width .8s ease;}
+.sp-sub{font-size:11px; color:var(--ink-dim); margin-top:6px;}
+
 .continue-widget{
   display:none; align-items:center; gap:12px; border:1px solid var(--line); border-radius:14px;
   padding:14px 16px; background:linear-gradient(120deg, var(--panel), var(--panel2)); margin-top:16px;
@@ -309,6 +325,8 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     <script>(function(){try{var t=localStorage.getItem('baio_theme')||'light';if(t==='light')document.getElementById('themeToggleBtn').innerHTML='&#9728;️';}catch(e){}})();</script>
   </div>
 
+  <div id="motivationBar" class="motivation-bar"></div>
+
   <div id="continueWidget" class="continue-widget">
     <div class="cw-icon" id="cwIcon">📘</div>
     <div class="cw-body">
@@ -333,6 +351,12 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     <div class="widget-tile"><div class="wt-icon">🔥</div><div class="wt-n" id="wtStreak">–</div><div class="wt-l">Day Streak</div></div>
     <div class="widget-tile"><div class="wt-icon">📚</div><div class="wt-n" id="wtChapters">–</div><div class="wt-l">Chapters Started</div></div>
     <div class="widget-tile"><div class="wt-icon">⭐</div><div class="wt-n" id="wtAvg">–</div><div class="wt-l">Avg Score</div></div>
+  </div>
+
+  <div id="syllabusProgress" class="syllabus-progress" style="display:none;">
+    <div class="sp-head"><span>📈 Mastery Across Live Chapters</span><span id="spPct">0%</span></div>
+    <div class="sp-track"><div class="sp-fill" id="spFill" style="width:0%;"></div></div>
+    <div class="sp-sub" id="spSub"></div>
   </div>
 
   <div class="quick-actions-row">
@@ -650,6 +674,100 @@ if(anyBadgeActivity){
   });
 }
 
+/* A short line from Narendra Sir, rotated once per calendar day so it stays
+   stable through repeat visits but changes daily rather than every reload. */
+const MOTIVATION_QUOTES = [
+  "Every question you attempt today is one less surprise on exam day.",
+  "Consistency beats intensity — 20 focused minutes daily beats one long cram session.",
+  "Board exams reward what you can explain in your own words, not just what you recognise.",
+  "Your weakest topic today is your biggest score opportunity tomorrow.",
+  "Small daily streaks build the discipline toppers are made of.",
+  "Don't just read the answer — write it out. That's when it actually sticks.",
+  "NEET and KCET rank is built one topic at a time. Trust the process.",
+  "Students who revise all year, not just before exams, are the ones who top.",
+  "A topic you've tested yourself on beats a topic you've only re-read.",
+  "Mistakes in practice are cheap. Mistakes in the exam hall are expensive. Make them here first.",
+  "You don't need to feel motivated every day — you just need to show up and open the app.",
+  "Speed comes after accuracy. Get the concept right first, then get fast.",
+  "Every chapter you finish is one less thing to fear in March.",
+];
+(function(){
+  const el = document.getElementById('motivationBar');
+  if(!el) return;
+  const dayIdx = Math.floor(Date.now() / 86400000) % MOTIVATION_QUOTES.length;
+  el.innerHTML = '💬 <b>Narendra Sir:</b> “' + MOTIVATION_QUOTES[dayIdx] + '”';
+})();
+
+/* Syllabus mastery bar: % of topics across LIVE chapters only (not the full
+   28-chapter syllabus, which would look discouragingly small right now)
+   scored 90%+ at least once — same threshold as the "BAIO Mastermind" badge. */
+(function(){
+  const liveChapters = CHAPTERS.filter(ch => ch.live);
+  let totalMastered = 0, totalTopics = 0;
+  liveChapters.forEach(ch => {
+    const log = getRawLog(ch.progressKey);
+    const mastery = getTopicMasteryFromLog(log);
+    totalMastered += Object.values(mastery).filter(p => p > 85).length;
+    totalTopics += (ch.topicCount || 8);
+  });
+  if(totalTopics === 0) return;
+  const pct = Math.round((totalMastered / totalTopics) * 100);
+  document.getElementById('spFill').style.width = pct + '%';
+  document.getElementById('spPct').textContent = pct + '%';
+  document.getElementById('spSub').textContent = totalMastered + ' of ' + totalTopics + ' topics mastered (90%+ scores) across live chapters';
+  document.getElementById('syllabusProgress').style.display = 'block';
+})();
+
+/* Streak-milestone celebration: fires once per newly reached milestone,
+   tracked in localStorage so it never repeats for the same streak length. */
+const STREAK_MILESTONES = [3, 7, 14, 30, 50, 100, 150, 200, 365];
+function fireConfetti(){
+  try{
+    const colors = ['#D4AF37', '#2EE6C5', '#F4D37A', '#33C48A'];
+    const container = document.createElement('div');
+    container.style.cssText = 'position:fixed; inset:0; pointer-events:none; z-index:99999; overflow:hidden;';
+    document.body.appendChild(container);
+    for(let i = 0; i < 60; i++){
+      const piece = document.createElement('div');
+      const size = 6 + Math.random() * 6;
+      piece.style.cssText = 'position:absolute; top:-20px; left:' + (Math.random() * 100) + '%; width:' + size + 'px; height:' + (size * 0.4) + 'px; background:' + colors[Math.floor(Math.random() * colors.length)] + '; opacity:' + (0.7 + Math.random() * 0.3) + '; transform:rotate(' + (Math.random() * 360) + 'deg); border-radius:2px;';
+      const duration = 2200 + Math.random() * 1400;
+      const drift = (Math.random() - 0.5) * 160;
+      piece.animate([
+        { transform: 'translate(0,0) rotate(0deg)', opacity: 1 },
+        { transform: 'translate(' + drift + 'px, 100vh) rotate(' + (360 + Math.random() * 360) + 'deg)', opacity: 0 }
+      ], { duration: duration, easing: 'cubic-bezier(.25,.46,.45,.94)', fill: 'forwards' });
+      container.appendChild(piece);
+    }
+    setTimeout(function(){ container.remove(); }, 3800);
+  }catch(e){}
+}
+function showMilestoneToast(streakDays){
+  try{
+    const bar = document.createElement('div');
+    bar.style.cssText = 'position:fixed; top:16px; left:50%; transform:translateX(-50%); z-index:99999; background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#0B1B14; font-weight:800; padding:14px 22px; border-radius:14px; box-shadow:0 10px 30px rgba(0,0,0,.35); font-size:14px; text-align:center; max-width:88vw;';
+    bar.textContent = '🔥 ' + streakDays + '-Day Streak! Keep it going!';
+    document.body.appendChild(bar);
+    setTimeout(function(){
+      bar.style.transition = 'opacity .6s';
+      bar.style.opacity = '0';
+      setTimeout(function(){ bar.remove(); }, 700);
+    }, 3200);
+  }catch(e){}
+}
+function checkStreakMilestone(streakDays){
+  try{
+    const seenKey = 'baio_streak_milestone_seen';
+    const seen = parseInt(localStorage.getItem(seenKey) || '0', 10);
+    const hit = STREAK_MILESTONES.filter(function(m){ return m <= streakDays && m > seen; }).pop();
+    if(hit){
+      localStorage.setItem(seenKey, String(hit));
+      fireConfetti();
+      showMilestoneToast(hit);
+    }
+  }catch(e){}
+}
+
 const catalogSectionsEl = document.getElementById('catalogSections');
 let totalSessions = 0;
 let stripRows = '';
@@ -757,6 +875,7 @@ if(stripRows){
     document.getElementById('wtStreak').textContent = streak;
     document.getElementById('wtChapters').textContent = chaptersWithActivity.size;
     document.getElementById('wtAvg').textContent = avgScore + '%';
+    checkStreakMilestone(streak);
   }
 })();
 
