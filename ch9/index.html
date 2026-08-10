@@ -1641,6 +1641,58 @@ window.mcqSetTopicMode=mcqSetTopicMode; window.mcqSetDiff=mcqSetDiff; window.mcq
 
 function shuffleArr(a){ a=[...a]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 
+/* ---------------- PERSONAL BEST TRACKING ---------------- */
+/* One running high score per exam type per chapter (not scoped to topic
+   filters, which would fragment the "record" into too many small buckets
+   to feel meaningful) — same "beat your own record" idea across all
+   report screens, with a confetti burst when a new best is actually set. */
+const PERSONAL_BEST_KEY = 'ch9_personal_best_v1';
+function getPersonalBests(){
+  try{ return JSON.parse(localStorage.getItem(PERSONAL_BEST_KEY)) || {}; }catch(e){ return {}; }
+}
+function checkPersonalBest(examType, pct){
+  const bests = getPersonalBests();
+  const prevBest = bests[examType] ? bests[examType].pct : null;
+  const isNewBest = prevBest === null || pct > prevBest;
+  if(isNewBest){
+    bests[examType] = {pct: pct, date: new Date().toISOString()};
+    try{ localStorage.setItem(PERSONAL_BEST_KEY, JSON.stringify(bests)); }catch(e){}
+  }
+  return {isNewBest: isNewBest, prevBest: prevBest};
+}
+function personalBestBanner(examType, pct){
+  const r = checkPersonalBest(examType, pct);
+  if(r.prevBest === null){
+    return `<div class="marks-info">🏁 <b>First attempt logged!</b> ${pct}% is now your baseline to beat next time.</div>`;
+  }
+  if(r.isNewBest){
+    setTimeout(fireConfetti, 200);
+    return `<div class="marks-info">🎉 <b>New personal best!</b> You beat your previous best of ${r.prevBest}%.</div>`;
+  }
+  return `<div class="marks-info">📊 Your personal best in ${examType}: <b>${r.prevBest}%</b> · This attempt: ${pct}%</div>`;
+}
+function fireConfetti(){
+  try{
+    const colors = ['#D4AF37', '#2EE6C5', '#F4D37A', '#33C48A'];
+    const container = document.createElement('div');
+    container.style.cssText = 'position:fixed; inset:0; pointer-events:none; z-index:99999; overflow:hidden;';
+    document.body.appendChild(container);
+    for(let i = 0; i < 60; i++){
+      const piece = document.createElement('div');
+      const size = 6 + Math.random() * 6;
+      piece.style.cssText = 'position:absolute; top:-20px; left:' + (Math.random() * 100) + '%; width:' + size + 'px; height:' + (size * 0.4) + 'px; background:' + colors[Math.floor(Math.random() * colors.length)] + '; opacity:' + (0.7 + Math.random() * 0.3) + '; transform:rotate(' + (Math.random() * 360) + 'deg); border-radius:2px;';
+      const duration = 2200 + Math.random() * 1400;
+      const drift = (Math.random() - 0.5) * 160;
+      piece.animate([
+        {transform: 'translate(0,0) rotate(0deg)', opacity: 1},
+        {transform: 'translate(' + drift + 'px, 100vh) rotate(' + (360 + Math.random() * 360) + 'deg)', opacity: 0}
+      ], {duration: duration, easing: 'cubic-bezier(.25,.46,.45,.94)', fill: 'forwards'});
+      container.appendChild(piece);
+    }
+    setTimeout(function(){ container.remove(); }, 3800);
+  }catch(e){}
+}
+
 function mcqStart(){
   let pool = shuffleArr(mcqFilterPool());
   if(mcqSetup.count!=='All'){ pool = pool.slice(0, parseInt(mcqSetup.count)); }
@@ -1739,6 +1791,7 @@ function renderMcqReport(){
       <div class="stat-box"><div class="n">${s.bestStreak}</div><div class="l">Best Streak</div></div>
       <div class="stat-box"><div class="n">${timeSec}s</div><div class="l">Time Taken</div></div>
     </div></div>
+    ${personalBestBanner('MCQ Quiz', pct)}
     <button class="start-btn" onclick="renderMcqSetup()" style="margin-bottom:14px;">Start New Quiz</button>
     ${nextStepNudge('mcq')}
     <div class="setup-label">Question-by-question Review</div>`;
@@ -2014,6 +2067,7 @@ function renderNeetReport(){
       <div class="stat-box"><div class="n">${s.timeoutCount}</div><div class="l">Timed Out</div></div>
       <div class="stat-box"><div class="n">${timeSec}s</div><div class="l">Time Taken</div></div>
     </div></div>
+    ${personalBestBanner('NEET Practice', pct)}
     <div class="btn-row" style="display:flex; gap:8px; margin-bottom:14px;">
       <button class="start-btn" style="flex:1;" onclick="renderNeetSetup()">Start New Practice Set</button>
       <button class="fc-btn primary" style="flex:1;" onclick="openShareCard()">\uD83D\uDCE4 Share Report Card</button>
@@ -2256,6 +2310,7 @@ function renderKcetReport(){
       <div class="stat-box"><div class="n">${s.timeoutCount}</div><div class="l">Timed Out (0 each)</div></div>
       <div class="stat-box"><div class="n">${timeSec}s</div><div class="l">Time Taken</div></div>
     </div></div>
+    ${personalBestBanner('KCET Practice', pct)}
     <button class="start-btn" onclick="renderKcetSetup()" style="margin-bottom:14px;">Start New Practice Set</button>
     ${nextStepNudge('kcet')}
     <div class="setup-label">Question-by-question Review</div>`;
