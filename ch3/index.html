@@ -1536,7 +1536,7 @@ function renderWriteItSetup(){
     const label = id==='All' ? 'All Topics' : DATA.topics.find(t=>t.id===id).name;
     return `<div class="opt-btn ${waSetup.topic===id?'sel':''}" onclick="waSetTopic('${id}')">${label}</div>`;
   }).join('');
-  let html = `<div class="marks-info">✍️ <b>How it works:</b> Read the question, write your own answer, then reveal the model answer to see what you missed — keywords, structure, examples the examiner expects.</div>`;
+  let html = `<div class="marks-info">✍️ <b>How it works:</b> Grab a pen and paper — write your answer by hand, just like in the exam, then reveal the model answer to see what you missed: keywords, structure, examples the examiner expects. Typing is fine in a pinch, but handwriting it builds the speed and habit you'll need on exam day.</div>`;
   html += `<div class="setup-card">
     <div class="setup-label">Topic</div>
     <div class="opt-row">${topicChips}</div>
@@ -1581,6 +1581,7 @@ function renderWriteItQuestion(){
         <span class="opt-btn" style="cursor:default;">${topicName}</span>
       </div>
       <div class="aq-q" style="margin-bottom:12px;">${q.q}</div>
+      <div style="font-size:11.5px; color:var(--ink-dim); margin-bottom:6px;">📝 Write this out on paper first, like the real exam — use the box below only as a rough scratchpad.</div>
       <textarea placeholder="Write your answer here..." style="width:100%; min-height:110px; padding:10px; border-radius:10px; border:1px solid var(--line); background:var(--panel2); color:var(--ink); font-family:inherit; font-size:13.5px; resize:vertical;"></textarea>
       ${!s.revealed
         ? `<button class="start-btn" style="margin-top:10px;" onclick="waReveal()">Show Model Answer</button>`
