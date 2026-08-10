@@ -780,11 +780,16 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
         </div>
       </div>
       <div class="fc-hint">Tap the card to flip</div>
+      <div class="fc-rate-row" id="fcRateRow" style="display:none; gap:8px; margin:10px 0;">
+        <button class="btn secondary" id="fcRateAgain" style="flex:1; border-color:var(--red,#e0685f); color:var(--red,#e0685f);">😕 Still Learning</button>
+        <button class="btn" id="fcRateKnow" style="flex:1;">✅ Got It</button>
+      </div>
       <div class="fc-nav">
         <button class="btn secondary" id="fcPrev">&larr; Prev</button>
         <button class="btn secondary" id="fcShuffle">Shuffle</button>
         <button class="btn" id="fcNext">Next &rarr;</button>
       </div>
+      <button class="btn secondary" id="fcWeakFirst" style="width:100%; margin-top:8px;">🎯 Study Weak Cards First</button>
     </div>
   </div>
 
@@ -2637,18 +2642,51 @@ function renderConcept(){
 renderConceptTopicNav(); renderConcept();
 
 /* ---------- Flashcards ---------- */
+/* Spaced-repetition-lite: each card has an "ease" level (0-3) stored by index.
+   "Got It" raises it (so it sorts later next time "Weak Cards First" is used);
+   "Still Learning" resets it to 0 (so it resurfaces first). No automatic
+   grading exists for flashcards, so this self-rating is the only signal. */
+const FC_WEIGHTS_KEY = 'ch2_flashcard_weights_v1';
+function getFcWeights(){
+  try{ return JSON.parse(localStorage.getItem(FC_WEIGHTS_KEY)) || {}; }catch(e){ return {}; }
+}
+function setFcWeight(idx, gotIt){
+  const w = getFcWeights();
+  const cur = w[idx] || 0;
+  w[idx] = gotIt ? Math.min(cur+1, 3) : 0;
+  try{ localStorage.setItem(FC_WEIGHTS_KEY, JSON.stringify(w)); }catch(e){}
+}
 function renderFlashcard(){
   const idx = fcOrder[fcIndex];
   document.getElementById('fcFrontText').textContent = FLASHCARDS[idx][0];
   document.getElementById('fcBackText').textContent = FLASHCARDS[idx][1];
   document.getElementById('fcProgress').textContent = `Card ${fcIndex+1} / ${FLASHCARDS.length}`;
   document.getElementById('fcCard').classList.remove('flipped');
+  document.getElementById('fcRateRow').style.display = 'none';
 }
-document.getElementById('fcCard').addEventListener('click', function(){ this.classList.toggle('flipped'); });
+document.getElementById('fcCard').addEventListener('click', function(){
+  this.classList.toggle('flipped');
+  document.getElementById('fcRateRow').style.display = this.classList.contains('flipped') ? 'flex' : 'none';
+});
 document.getElementById('fcNext').addEventListener('click', ()=>{ fcIndex=(fcIndex+1)%FLASHCARDS.length; renderFlashcard(); });
 document.getElementById('fcPrev').addEventListener('click', ()=>{ fcIndex=(fcIndex-1+FLASHCARDS.length)%FLASHCARDS.length; renderFlashcard(); });
 document.getElementById('fcShuffle').addEventListener('click', ()=>{
   for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; }
+  fcIndex=0; renderFlashcard();
+});
+function fcRate(gotIt){
+  const idx = fcOrder[fcIndex];
+  setFcWeight(idx, gotIt);
+  fcIndex=(fcIndex+1)%FLASHCARDS.length;
+  renderFlashcard();
+}
+document.getElementById('fcRateAgain').addEventListener('click', ()=>fcRate(false));
+document.getElementById('fcRateKnow').addEventListener('click', ()=>fcRate(true));
+document.getElementById('fcWeakFirst').addEventListener('click', ()=>{
+  const w = getFcWeights();
+  fcOrder = FLASHCARDS.map((_,i)=>i);
+  for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; }
+  fcOrder.sort((a,b)=>(w[a]||0)-(w[b]||0));
   fcIndex=0; renderFlashcard();
 });
 renderFlashcard();
