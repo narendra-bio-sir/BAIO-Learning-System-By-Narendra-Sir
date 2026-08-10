@@ -735,6 +735,7 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
     <button class="tab-btn" data-tab="quiz">MCQ Quiz</button>
     <button class="tab-btn" data-tab="adv">NEET Practice</button>
     <button class="tab-btn" data-tab="kcet">KCET Practice</button>
+    <button class="tab-btn" data-tab="writeit">Answer Practice</button>
     <button class="tab-btn" data-tab="revision">Revision</button>
     <button class="tab-btn" data-tab="mindmap">Mind Map</button>
     <button class="tab-btn" data-tab="classppt">Class Presentation</button>
@@ -979,6 +980,12 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
     <div class="card" id="kcetRunner" style="display:none;"></div>
     <div class="card" id="kcetReport" style="display:none;"></div>
     <div class="premium-lock-overlay" id="premLock_kcet"></div>
+  </div>
+
+  <!-- ===================== ANSWER PRACTICE ===================== -->
+  <div class="panel" id="panel-writeit">
+    <div class="card" id="writeitContent"></div>
+    <div class="premium-lock-overlay" id="premLock_writeit"></div>
   </div>
 
   <!-- ===================== OVERALL PERFORMANCE TRACKER ===================== -->
@@ -2126,7 +2133,8 @@ const NEXT_STEP_MAP = {
   flash: {id:'quiz', label:'MCQ Quiz'},
   quiz: {id:'adv', label:'NEET Practice'},
   adv: {id:'kcet', label:'KCET Practice'},
-  kcet: {id:'revision', label:'Revision'}
+  kcet: {id:'writeit', label:'Answer Practice'},
+  writeit: {id:'revision', label:'Revision'}
 };
 function nextStepNudge(fromTab){
   const next = NEXT_STEP_MAP[fromTab];
@@ -2736,6 +2744,116 @@ function segSetup(containerId){
 }
 function segVal(containerId){ return document.querySelector('#'+containerId+' .seg-opt.active').dataset.val; }
 segSetup('quizCountSeg'); segSetup('advCountSeg'); segSetup('advTimerSeg');
+
+/* ---------- Answer Practice (Write It, Then Compare) ---------- */
+/* Chapter 2's Paper Generator only produces template questions with no
+   authored model answers (it just points students back to Study Mode), so
+   this reuses each topic's full Study Mode write-up as the "model answer" —
+   coarser-grained than Chapters 3/9's per-question banks, but genuine
+   existing content rather than new authoring. */
+function waAllPool(){
+  return STUDY_DATA.map((t,i)=>{
+    const name = t.title.replace(/^\d+\.\s*/, '');
+    return {topic: t.id, topicName: name, q: 'Give a detailed account of: ' + name, a: t.html, idx: i};
+  });
+}
+let waSetup = {topic:'All'};
+let waSession = null;
+const WA_WEIGHTS_KEY = 'ch2_writeit_weights_v1';
+function getWaWeights(){
+  try{ return JSON.parse(localStorage.getItem(WA_WEIGHTS_KEY)) || {}; }catch(e){ return {}; }
+}
+function setWaWeight(idx, gotIt){
+  const w = getWaWeights();
+  const cur = w[idx] || 0;
+  w[idx] = gotIt ? Math.min(cur+1, 3) : 0;
+  try{ localStorage.setItem(WA_WEIGHTS_KEY, JSON.stringify(w)); }catch(e){}
+}
+function waFilterPool(){
+  return waAllPool().filter(q => waSetup.topic==='All' || q.topic===waSetup.topic);
+}
+function renderWriteItSetup(){
+  const pool = waFilterPool();
+  const topicChips = ['All', ...STUDY_DATA.map(t=>t.id)].map(id=>{
+    const label = id==='All' ? 'All Topics' : STUDY_DATA.find(t=>t.id===id).title.replace(/^\d+\.\s*/, '');
+    return `<div class="topic-pill ${waSetup.topic===id?'active':''}" onclick="waSetTopic('${id}')">${label}</div>`;
+  }).join('');
+  let html = `<div class="card" style="background:linear-gradient(135deg,var(--teal-2),#0a4239); color:#EFFFFA; font-size:12.5px; line-height:1.6;">✍️ <b>How it works:</b> Grab a pen and paper — write your answer by hand, just like in the exam, then reveal the model answer to see what you missed. Typing is fine in a pinch, but handwriting it builds the speed and habit you'll need on exam day.</div>`;
+  html += `<div class="card">
+    <label class="field-label">Topic</label>
+    <div style="display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;">${topicChips}</div>
+    <div class="btn-row" style="margin-top:14px;">
+      <button class="btn" onclick="waStart()">Start Practice · ${pool.length} matching</button>
+    </div>
+    ${pool.length ? `<div class="btn-row" style="margin-top:8px;"><button class="btn secondary" onclick="waWeakFirst()">🎯 Practice Weak Answers First</button></div>` : ''}
+  </div>`;
+  html += nextStepNudge('writeit');
+  document.getElementById('writeitContent').innerHTML = html;
+}
+function waSetTopic(id){ waSetup.topic=id; renderWriteItSetup(); }
+window.waSetTopic=waSetTopic;
+
+function waStart(){
+  const pool = shuffleArr(waFilterPool());
+  if(pool.length===0){ alert('No questions match those filters. Try widening your selection.'); return; }
+  waSession = {questions: pool, idx:0, revealed:false};
+  renderWriteItQuestion();
+}
+function waWeakFirst(){
+  const w = getWaWeights();
+  const pool = shuffleArr(waFilterPool()).sort((a,b)=>(w[a.idx]||0)-(w[b.idx]||0));
+  if(pool.length===0){ alert('No questions match those filters. Try widening your selection.'); return; }
+  waSession = {questions: pool, idx:0, revealed:false};
+  renderWriteItQuestion();
+}
+window.waStart=waStart; window.waWeakFirst=waWeakFirst;
+
+function renderWriteItQuestion(){
+  const s = waSession;
+  if(s.idx >= s.questions.length){ renderWriteItDone(); return; }
+  const q = s.questions[s.idx];
+  let html = `<div class="fc-progress" style="text-align:center; margin-bottom:10px;">Question ${s.idx+1} / ${s.questions.length}</div>
+  <div class="card">
+    <div class="chip-row" style="margin-bottom:10px;"><span class="chip gold">${q.topicName}</span></div>
+    <div style="font-weight:700; font-size:14px; margin-bottom:10px;">${q.q}</div>
+    <div style="font-size:11.5px; color:var(--text-dim); margin-bottom:6px;">📝 Write this out on paper first, like the real exam — use the box below only as a rough scratchpad.</div>
+    <textarea placeholder="Write your answer here..." style="width:100%; min-height:110px; padding:10px; border-radius:10px; border:1px solid var(--border); background:var(--panel-2); color:var(--text); font-family:inherit; font-size:13.5px; resize:vertical; box-sizing:border-box;"></textarea>
+    ${!s.revealed
+      ? `<div class="btn-row" style="margin-top:10px;"><button class="btn" onclick="waReveal()">Show Model Answer</button></div>`
+      : `<div class="study-block" style="margin-top:12px; border-top:1px dashed var(--border); padding-top:10px;"><div class="subhead">Model Answer</div>${q.a}</div>
+         <div class="btn-row" style="margin:12px 0;">
+           <button class="btn secondary" style="flex:1; border-color:var(--red,#e0685f); color:var(--red,#e0685f);" onclick="waRate(false)">😕 Still Learning</button>
+           <button class="btn" style="flex:1;" onclick="waRate(true)">✅ Got It</button>
+         </div>`}
+  </div>
+  <div class="btn-row">
+    <button class="btn secondary" onclick="renderWriteItSetup()">← Change Filters</button>
+    ${s.revealed ? `<button class="btn" onclick="waNext()">Next →</button>` : ''}
+  </div>`;
+  document.getElementById('writeitContent').innerHTML = html;
+}
+function waReveal(){ waSession.revealed = true; renderWriteItQuestion(); }
+function waRate(gotIt){ setWaWeight(waSession.questions[waSession.idx].idx, gotIt); waNext(); }
+function waNext(){ waSession.idx++; waSession.revealed=false; renderWriteItQuestion(); }
+window.waReveal=waReveal; window.waRate=waRate; window.waNext=waNext;
+
+function renderWriteItDone(){
+  let html = `<div class="card" style="text-align:center;">
+    <div style="font-size:32px; margin-bottom:8px;">🎉</div>
+    <div style="font-weight:700; margin-bottom:6px;">Practice round complete!</div>
+    <div style="color:var(--text-dim); font-size:13px; margin-bottom:14px;">You went through ${waSession.questions.length} topic(s). Practice the ones marked "Still Learning" again to sharpen your answer-writing.</div>
+    <button class="btn" onclick="renderWriteItSetup()">Practice More</button>
+  </div>`;
+  html += nextStepNudge('writeit');
+  document.getElementById('writeitContent').innerHTML = html;
+}
+function renderWriteIt(){
+  if(waSession && waSession.idx < waSession.questions.length) renderWriteItQuestion();
+  else renderWriteItSetup();
+}
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  if(btn.dataset.tab==='writeit') btn.addEventListener('click', renderWriteIt);
+});
 
 /* ---------- MCQ Quiz setup ---------- */
 let quizTopicMode = 'full';
@@ -3504,8 +3622,8 @@ const PREMIUM_PRICE_RUPEES = 1999;
 const PREMIUM_PRICE_ORIGINAL = 3000;
 const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/j2zWhMQ7';
 const PREMIUM_UNLOCK_LOOKUP = {"SPARK_26MPU0010": {"name": "AAKANKSH", "code": "9UT4-88R7"}, "SPARK_26MPU0124": {"name": "ABDUL HAQ", "code": "K2NJ-ET4X"}, "SPARK_26MPU0008": {"name": "ABDUL RAQIB", "code": "TAUV-9K68"}, "SPARK_26MPU0082": {"name": "ADITYA", "code": "YX27-WNR2"}, "SPARK_26MPU0117": {"name": "ADITYA", "code": "Q4CW-822K"}, "SPARK_26MPU0077": {"name": "AKSHATA", "code": "9CJX-G6G7"}, "SPARK_26MPU0014": {"name": "AMBRESH", "code": "AK4K-E8SX"}, "SPARK_26MPU0023": {"name": "AMRUTA", "code": "3FX2-W9CE"}, "SPARK_26MPU0030": {"name": "ANUSHKA HALKUDE", "code": "RUQF-5GG6"}, "SPARK_26MPU0040": {"name": "Akhil N Hudgi", "code": "LVBC-WDUY"}, "SPARK_26MPU0005": {"name": "Akshay Desai", "code": "Z5KR-4MLM"}, "SPARK_26MPU0074": {"name": "Amar Singh Thakur", "code": "F2R9-KQ7S"}, "SPARK_26MPU0068": {"name": "Bhavani Sheelvant", "code": "7SA7-ULE6"}, "SPARK_26MPU0018": {"name": "D PRAGYA", "code": "YV5S-7VN2"}, "SPARK_26MPU0059": {"name": "DHANESHWARI", "code": "8GR2-YUUB"}, "SPARK_26MPU0102": {"name": "FATIMA HABEEB", "code": "3TAD-9UQY"}, "SPARK_26MPU0076": {"name": "GANGA", "code": "QNSJ-GCV6"}, "SPARK_26MPU0036": {"name": "Ganded Navaneeth", "code": "CZJF-UW4M"}, "SPARK_26MPU0095": {"name": "Hemanth Mundada", "code": "NJZT-LS8U"}, "SPARK_26MPU0089": {"name": "Jyoti", "code": "XH7E-KQ3Z"}, "SPARK_26MPU0090": {"name": "KAVIRAJ", "code": "F3AS-H7ZS"}, "SPARK_26MPU0029": {"name": "Kupendra", "code": "2ZGQ-8BWQ"}, "SPARK_26MPU0119": {"name": "MARUTHI C", "code": "E7V4-HJCC"}, "SPARK_26MPU0006": {"name": "MOHAMMED AMMAR FIRAS", "code": "V9HG-RJ27"}, "SPARK_26MPU0079": {"name": "MOHAMMED ARFAT", "code": "Z4K4-G94T"}, "SPARK_26MPU0135": {"name": "NAVATEJ CHINDAM", "code": "CZP6-6RZG"}, "SPARK_26MPU0104": {"name": "OM SHARAN", "code": "ZYD3-TNH7"}, "SPARK_26MPU0128": {"name": "OMKESH", "code": "FPBD-XRJP"}, "SPARK_26MPU0096": {"name": "PALLAVI", "code": "EPPQ-XKAT"}, "SPARK_26MPU0001": {"name": "PRASHANT MATHPATI", "code": "KJSM-HBJA"}, "SPARK_26MPU0065": {"name": "Prateek", "code": "YRWB-MSDJ"}, "SPARK_26MPU0084": {"name": "RASHI", "code": "4HE8-6ZG6"}, "SPARK_26MPU0002": {"name": "RENUKA HOSMATH", "code": "QCV7-BD83"}, "SPARK_26MPU0106": {"name": "Ritesh", "code": "5G96-EFWK"}, "SPARK_26MPU0075": {"name": "SAGAR", "code": "EJTW-2U75"}, "SPARK_26MPU0073": {"name": "SAMIKSHA DIVAKAR", "code": "GHP5-6Q4X"}, "SPARK_26MPU0041": {"name": "SANCHITA R PRACHANDE", "code": "734G-W5WS"}, "SPARK_26MPU0052": {"name": "SANJU", "code": "ZK8E-FFF5"}, "SPARK_26MPU0054": {"name": "SHAMBHAVI", "code": "GZJD-XH4Y"}, "SPARK_26MPU0015": {"name": "SHARADA", "code": "5DUV-YGPK"}, "SPARK_26MPU0114": {"name": "SNEHA", "code": "8QGY-ZHTQ"}, "SPARK_26MPU0100": {"name": "SOUMYA", "code": "5BTB-MTVX"}, "SPARK_26MPU0069": {"name": "SUGANDHA", "code": "YAMK-3EKB"}, "SPARK_26MPU0058": {"name": "Samarth mahantayya Hiremath", "code": "FP24-7XLZ"}, "SPARK_26MPU0044": {"name": "Shanamma", "code": "VWFD-KLDF"}, "SPARK_26MPU0093": {"name": "Shravya Biradar", "code": "T659-64TP"}, "SPARK_26MPU0039": {"name": "Shreya", "code": "HY5H-U9VC"}, "SPARK_26MPU0033": {"name": "Sneha", "code": "Q3DA-PVPJ"}, "SPARK_26MPU0026": {"name": "Soundarya", "code": "SUWH-A95M"}, "SPARK_26MPU0007": {"name": "Syed Muzammil", "code": "J2QY-E3C5"}, "SPARK_26MPU0012": {"name": "VAIDEHI", "code": "B7EW-534U"}, "SPARK_26MPU0016": {"name": "VIJAY KUMAR", "code": "H3BW-L7ZF"}, "SPARK_26MPU0056": {"name": "VISHNU", "code": "5GR5-3F3V"}, "SPARK_26MPU0011": {"name": "Vedant Chincholi", "code": "XQXL-EHNY"}, "SPARK_26MPU0020": {"name": "Vishwas", "code": "YKRG-KSNM"}, "SPARK_26MPU0003": {"name": "ZAINAB FATIMA", "code": "KEM9-76WW"}, "SPARK_26MPU0103": {"name": "kanchana", "code": "K6E8-6VTD"}, "ELITE_25MPU0067": {"name": "ABHISHEK", "code": "UEF2-7C6N"}, "ELITE_25MPU0048": {"name": "AKSHATA", "code": "MCR6-6LZZ"}, "ELITE_25MPU0013": {"name": "ANUSH IRANNA SURYAVANSHI", "code": "YV3J-FV2X"}, "ELITE_25MPU0080": {"name": "ARIFA NAZNEEN", "code": "JF5Z-BZVM"}, "ELITE_25MPU0077": {"name": "BHAGYASHREE", "code": "UGCX-J2KL"}, "ELITE_25MPU0071": {"name": "BHAKTI", "code": "ML6C-4ZR6"}, "ELITE_25MPU0082": {"name": "DEVRAJ", "code": "LT6K-5FQ6"}, "ELITE_25MPU0035": {"name": "DIVYA", "code": "YB4D-3ZR2"}, "ELITE_25MPU0095": {"name": "FAAZ HAMID HUSSAIN", "code": "FZQB-WGXK"}, "ELITE_25MPU0073": {"name": "INSHARA ANUM FATIMA", "code": "FBSP-K5HU"}, "ELITE_25MPU0076": {"name": "JAHA UZMA BADADAL", "code": "RVHD-R47E"}, "ELITE_25MPU0046": {"name": "MD TALHA", "code": "EYRG-XJCY"}, "ELITE_25MPU0063": {"name": "MOHAMMED AASIM ZUBAIR", "code": "CUNC-NCWV"}, "ELITE_25MPU0014": {"name": "MOHAMMED HISAMUDDIN SOHARWARDI", "code": "38SC-NUYD"}, "ELITE_25MPU0030": {"name": "MOHAMMED SHAHID FIRAS", "code": "XTHZ-5362"}, "ELITE_25MPU0053": {"name": "NAMAN", "code": "XM99-ZTF5"}, "ELITE_25MPU0020": {"name": "NIDHI MISHRA", "code": "F5MU-WGFW"}, "ELITE_25MPU0023": {"name": "NUMAN TAIF", "code": "CY5T-DE3Z"}, "ELITE_25MPU0044": {"name": "PRANITI", "code": "ZZ2C-K6ZZ"}, "ELITE_25MPU0088": {"name": "PREETAM", "code": "HBM9-2HSS"}, "ELITE_25MPU0050": {"name": "RAKSHITA", "code": "6M6F-WYEU"}, "ELITE_25MPU0070": {"name": "RENUKA", "code": "VLMZ-QHNJ"}, "ELITE_25MPU0036": {"name": "ROHIT PATANGE", "code": "EV38-44EJ"}, "ELITE_25MPU0057": {"name": "SRINIVAS", "code": "DU24-RLWW"}, "ELITE_25MPU0069": {"name": "SWATI", "code": "U98U-AG5J"}, "ELITE_25MPU0098": {"name": "SYED AMAAN ALI", "code": "ZUE2-6THJ"}, "ELITE_25MPU0049": {"name": "VEDA", "code": "V8BZ-XH4V"}, "ELITE_25MPU0101": {"name": "VIJAYLAXMI", "code": "B8SQ-D8L2"}, "CHAMPION_25MPU0087": {"name": "ABDUL QUDDUS", "code": "U6C4-JZ3M"}, "CHAMPION_25MPU0075": {"name": "ADITI SAJJAN", "code": "893D-PHYB"}, "CHAMPION_25MPU0081": {"name": "ALMEENA", "code": "T7R5-SS3P"}, "CHAMPION_25MPU0052": {"name": "ANJALI", "code": "W5VT-EWPT"}, "CHAMPION_25MPU0094": {"name": "ARYANSUJAY JALSANDHI", "code": "FBMR-S5GQ"}, "CHAMPION_25MPU0056": {"name": "BHUMIKA HARILAL", "code": "6GHJ-7AXT"}, "CHAMPION_25MPU0007": {"name": "DANVI", "code": "CX7A-8ANC"}, "CHAMPION_25MPU0003": {"name": "DARSHANA M SHAH", "code": "2ZHU-GEHW"}, "CHAMPION_25MPU0006": {"name": "HARSHA SANGASHETTY", "code": "N2PC-6ZTJ"}, "CHAMPION_25MPU0045": {"name": "LAXMI", "code": "UBR5-86RB"}, "CHAMPION_25MPU0064": {"name": "MAHESH A CHAKRAKAR", "code": "Z5YF-RPZU"}, "CHAMPION_25MPU0004": {"name": "MANJUNATH", "code": "SPHF-HYPX"}, "CHAMPION_25MPU0089": {"name": "MEGHA", "code": "KZYS-B8SJ"}, "CHAMPION_25MPU0028": {"name": "NIKITHA", "code": "HYF3-BRX7"}, "CHAMPION_25MPU0041": {"name": "PALLAVI", "code": "GEF2-2LH5"}, "CHAMPION_25MPU0002": {"name": "PRATEEK", "code": "2LUY-TWM8"}, "CHAMPION_25MPU0024": {"name": "RAHUL BEERAPPA PUJARI", "code": "8WWR-CSNQ"}, "CHAMPION_25MPU0011": {"name": "RINKU", "code": "4DA2-3CR4"}, "CHAMPION_25MPU0034": {"name": "SAMARTH MALAGOND", "code": "KX55-5NFD"}, "CHAMPION_25MPU0072": {"name": "SANGAMESH R MARALABHAVI", "code": "8MBY-KNYE"}, "CHAMPION_25MPU0008": {"name": "SANVI", "code": "B7E7-89ZD"}, "CHAMPION_25MPU0040": {"name": "SHAIKH GHULAM MUSTAFA QUADRI", "code": "Z2H3-DW5J"}, "CHAMPION_25MPU0021": {"name": "SHUBHAM AKADE", "code": "ZRBH-JV3R"}, "CHAMPION_25MPU0026": {"name": "SIMRAN", "code": "7LQC-H9DY"}, "CHAMPION_25MPU0022": {"name": "SIRIGIRI RUPANJANA", "code": "95XA-JJDQ"}, "CHAMPION_25MPU0047": {"name": "SONAKSHI PAWAR", "code": "CP4A-69KJ"}, "CHAMPION_25MPU0059": {"name": "SOUMYA", "code": "ETN3-MQQW"}, "CHAMPION_25MPU0029": {"name": "SRUSHTI", "code": "NVFX-53ZU"}, "CHAMPION_25MPU0078": {"name": "SUDHA RANI", "code": "ESVR-6FJW"}, "CHAMPION_25MPU0038": {"name": "SYED ABDUL HASEEB", "code": "6Z2F-WXFR"}, "CHAMPION_25MPU0051": {"name": "SYED SUFIYAN WAZEER", "code": "V9JQ-S76S"}, "CHAMPION_25MPU0027": {"name": "SYEDA RIDA IMANA SHEEZA", "code": "EN8S-7ED2"}, "CHAMPION_25MPU0012": {"name": "VARSHA", "code": "YPJ8-UYNJ"}, "CHAMPION_25MPU0062": {"name": "VIKAS S SWAMY", "code": "7LVJ-3XB3"}, "CHAMPION_25MPU0079": {"name": "VINAYSAGAR", "code": "L69B-SW77"}, "PRIME_26MPU0013": {"name": "Aashritha", "code": "87VN-R5DC"}, "PRIME_26MPU0122": {"name": "ABHAY", "code": "R4W6-5YRN"}, "PRIME_26MPU0055": {"name": "Abhishek", "code": "CZ7X-BGNM"}, "PRIME_26MPU0028": {"name": "Aditya", "code": "JLZK-FM9U"}, "PRIME_26MPU0063": {"name": "Akshara R Pawar", "code": "KEUQ-QX2J"}, "PRIME_26MPU0133": {"name": "AMAN", "code": "F8VX-ETTC"}, "PRIME_26MPU0112": {"name": "ANKITREDDY", "code": "7CYB-GEEG"}, "PRIME_26MPU0048": {"name": "ANUSHA PATIL", "code": "Z5RP-2XQK"}, "PRIME_26MPU0072": {"name": "ANUSHKA DEOKAR", "code": "DU5W-CHF5"}, "PRIME_26MPU0047": {"name": "Apoorva", "code": "ANV7-93L9"}, "PRIME_26MPU0024": {"name": "Arpita", "code": "UM5C-4P4Q"}, "PRIME_26MPU0126": {"name": "BHARAT KUMAR", "code": "7QDW-HWTJ"}, "PRIME_26MPU0092": {"name": "Bhavani", "code": "CYHX-CNSS"}, "PRIME_26MPU0083": {"name": "CHANDAN", "code": "KP78-UPP2"}, "PRIME_26MPU0125": {"name": "Deepika", "code": "PWPZ-UQM7"}, "PRIME_26MPU0034": {"name": "DIVYA LAXMI", "code": "K8UB-6MFW"}, "PRIME_26MPU0113": {"name": "HABIB UR RAHMAN", "code": "9D2K-9ZP8"}, "PRIME_26MPU0120": {"name": "J PAVAN", "code": "2HDU-L75S"}, "PRIME_26MPU0098": {"name": "KHAJA MOINUDDIN", "code": "V7EH-S6K7"}, "PRIME_26MPU0061": {"name": "KHATIJA TUL KUBRA", "code": "TYJY-FBQU"}, "PRIME_26MPU0022": {"name": "Kritikaa", "code": "SVEN-73A6"}, "PRIME_26MPU0050": {"name": "MANASA", "code": "S3DG-SACB"}, "PRIME_26MPU0064": {"name": "MANOJ", "code": "KV7T-9RU8"}, "PRIME_26MPU0108": {"name": "MAYURI", "code": "JPDN-F98N"}, "PRIME_26MPU0060": {"name": "MD Atif Ali", "code": "P7GL-HZK3"}, "PRIME_26MPU0066": {"name": "MD IBRAHIM", "code": "H8WY-TSVU"}, "PRIME_26MPU0105": {"name": "MOHAMMAD FARHAN AKMAL", "code": "574Q-MBNV"}, "PRIME_26MPU0070": {"name": "MOHAMMED ABDULLAH ZAYAN", "code": "HQNL-PSYZ"}, "PRIME_26MPU0035": {"name": "MOHAMMED ABUBAKAR SIDDIQ", "code": "EW6N-QCYH"}, "PRIME_26MPU0080": {"name": "MOHAMMED ASAD", "code": "KNNB-SK8X"}, "PRIME_26MPU0049": {"name": "Mohammed Atif Ahmed Ahmed", "code": "PC3Z-M9QN"}, "PRIME_26MPU0078": {"name": "MOHAMMED JUNAID", "code": "9ERU-Z2YL"}, "PRIME_26MPU0121": {"name": "NETRAVATI .", "code": "QKK8-43U9"}, "PRIME_26MPU0085": {"name": "NIRAJ MALKUD", "code": "3SUL-FZZZ"}, "PRIME_26MPU0129": {"name": "OMER ABDULLAH", "code": "3FAZ-L9BC"}, "PRIME_26MPU0123": {"name": "PRAJWAL", "code": "483C-62ZL"}, "PRIME_26MPU0131": {"name": "PRIYANKA", "code": "F6HJ-XW2F"}, "PRIME_26MPU0038": {"name": "RENUKA", "code": "9HB5-4G83"}, "PRIME_26MPU0032": {"name": "RITISHA", "code": "FED3-DUFL"}, "PRIME_26MPU0037": {"name": "SAHANA SHIRSAND", "code": "ECK6-TDLH"}, "PRIME_26MPU0021": {"name": "Saikamal lakka", "code": "DK6Q-DR97"}, "PRIME_26MPU0116": {"name": "SANCHET DIGAMBAR MANE", "code": "SF6E-P7HQ"}, "PRIME_26MPU0086": {"name": "SANJANA", "code": "LXJV-7F95"}, "PRIME_26MPU0067": {"name": "Savita Khajure", "code": "RFDP-9NKA"}, "PRIME_26MPU0111": {"name": "SHAIKH ABDUL RAHMAN", "code": "GGJS-FDNG"}, "PRIME_26MPU0087": {"name": "SHARANABASAPPA P K", "code": "U6N7-9YKY"}, "PRIME_26MPU0109": {"name": "SHAZFA LAIBA", "code": "UUH2-6H6J"}, "PRIME_26MPU0136": {"name": "Sheetal", "code": "E8HG-EK3J"}, "PRIME_26MPU0057": {"name": "Shivaleela", "code": "MTQ9-9Z4W"}, "PRIME_26MPU0027": {"name": "SHRADDHA", "code": "LRMS-WJWV"}, "PRIME_26MPU0099": {"name": "Shrusti", "code": "ZC7F-CN6N"}, "PRIME_26MPU0053": {"name": "SHWETA M GIRI", "code": "SQVS-HESF"}, "PRIME_26MPU0101": {"name": "Srushti", "code": "FY2A-ZYVP"}, "PRIME_26MPU0009": {"name": "SWATIKUMARI", "code": "Y5GE-RADX"}, "PRIME_26MPU0019": {"name": "Syed Nabi", "code": "RW34-L9UA"}, "PRIME_26MPU0017": {"name": "Vishwapal", "code": "UBMQ-VLZK"}, "GUEST_001": {"name": "Guest Student 001", "code": "NFAS-DB4L"}, "GUEST_002": {"name": "Guest Student 002", "code": "ZYT7-5AYG"}, "GUEST_003": {"name": "Guest Student 003", "code": "GZLQ-LKCE"}, "GUEST_004": {"name": "Guest Student 004", "code": "3UBZ-VJ92"}, "GUEST_005": {"name": "Guest Student 005", "code": "ST4Y-T6LL"}, "GUEST_006": {"name": "Guest Student 006", "code": "M6EZ-KJFN"}, "GUEST_007": {"name": "Guest Student 007", "code": "LGW7-HWUX"}, "GUEST_008": {"name": "Guest Student 008", "code": "76EF-PERY"}, "GUEST_009": {"name": "Guest Student 009", "code": "W69B-XL53"}, "GUEST_010": {"name": "Guest Student 010", "code": "QY87-QPB4"}, "GUEST_011": {"name": "Guest Student 011", "code": "MT73-M2W6"}, "GUEST_012": {"name": "Guest Student 012", "code": "22EX-5Q2A"}, "GUEST_013": {"name": "Guest Student 013", "code": "P7ZG-FUNK"}, "GUEST_014": {"name": "Guest Student 014", "code": "UE5L-56UD"}, "GUEST_015": {"name": "Guest Student 015", "code": "R342-PGFU"}, "GUEST_016": {"name": "Guest Student 016", "code": "N6D9-VSKS"}, "GUEST_017": {"name": "Guest Student 017", "code": "TSJG-9Z9G"}, "GUEST_018": {"name": "Guest Student 018", "code": "YNUX-G7DK"}, "GUEST_019": {"name": "Guest Student 019", "code": "V4BD-UKWM"}, "GUEST_020": {"name": "Guest Student 020", "code": "5Y36-QMGD"}, "GUEST_021": {"name": "Guest Student 021", "code": "8EPD-HKSA"}, "GUEST_022": {"name": "Guest Student 022", "code": "T7BJ-HG8R"}, "GUEST_023": {"name": "Guest Student 023", "code": "W86A-MML7"}, "GUEST_024": {"name": "Guest Student 024", "code": "96EY-Z6XB"}, "GUEST_025": {"name": "Guest Student 025", "code": "CDQ7-W3BZ"}, "GUEST_026": {"name": "Guest Student 026", "code": "FCDK-ZARC"}, "GUEST_027": {"name": "Guest Student 027", "code": "25P7-ZN2F"}, "GUEST_028": {"name": "Guest Student 028", "code": "DN6W-9KGJ"}, "GUEST_029": {"name": "Guest Student 029", "code": "G7GZ-DYVB"}, "GUEST_030": {"name": "Guest Student 030", "code": "6NS5-LC3V"}, "GUEST_031": {"name": "Guest Student 031", "code": "F5U7-A2Q2"}, "GUEST_032": {"name": "Guest Student 032", "code": "LHL7-YACF"}, "GUEST_033": {"name": "Guest Student 033", "code": "VW6Q-TRWZ"}, "GUEST_034": {"name": "Guest Student 034", "code": "AXSR-SLKM"}, "GUEST_035": {"name": "Guest Student 035", "code": "KXYJ-AP67"}, "GUEST_036": {"name": "Guest Student 036", "code": "8DWV-3KUY"}, "GUEST_037": {"name": "Guest Student 037", "code": "Z3FY-A8EB"}, "GUEST_038": {"name": "Guest Student 038", "code": "EQXX-PS2N"}, "GUEST_039": {"name": "Guest Student 039", "code": "PDEB-RTQX"}, "GUEST_040": {"name": "Guest Student 040", "code": "TJ2Z-TV67"}, "GUEST_041": {"name": "Guest Student 041", "code": "JY8L-ESMM"}, "GUEST_042": {"name": "Guest Student 042", "code": "5MYL-TEGB"}, "GUEST_043": {"name": "Guest Student 043", "code": "CQ6E-TZVY"}, "GUEST_044": {"name": "Guest Student 044", "code": "7DFN-EKQ2"}, "GUEST_045": {"name": "Guest Student 045", "code": "WVVX-Y74V"}, "GUEST_046": {"name": "Guest Student 046", "code": "H78B-TPZZ"}, "GUEST_047": {"name": "Guest Student 047", "code": "Q8QN-6TAF"}, "GUEST_048": {"name": "Guest Student 048", "code": "3HB8-A39U"}, "GUEST_049": {"name": "Guest Student 049", "code": "SGGH-24MN"}, "GUEST_050": {"name": "Guest Student 050", "code": "L8DR-4RVN"}, "GUEST_051": {"name": "Guest Student 051", "code": "HYNU-B4H9"}, "GUEST_052": {"name": "Guest Student 052", "code": "675V-NMM3"}, "GUEST_053": {"name": "Guest Student 053", "code": "KJN2-2P9M"}, "GUEST_054": {"name": "Guest Student 054", "code": "YR9L-6TCD"}, "GUEST_055": {"name": "Guest Student 055", "code": "VBQS-93YP"}, "GUEST_056": {"name": "Guest Student 056", "code": "JPUU-D62T"}, "GUEST_057": {"name": "Guest Student 057", "code": "XC2B-49PQ"}, "GUEST_058": {"name": "Guest Student 058", "code": "UTFJ-QLSP"}, "GUEST_059": {"name": "Guest Student 059", "code": "RQKA-2JFE"}, "GUEST_060": {"name": "Guest Student 060", "code": "ZTXH-V3XD"}, "GUEST_061": {"name": "Guest Student 061", "code": "4SRX-M4CB"}, "GUEST_062": {"name": "Guest Student 062", "code": "XDJ2-49RW"}, "GUEST_063": {"name": "Guest Student 063", "code": "S2LN-GZ39"}, "GUEST_064": {"name": "Guest Student 064", "code": "D9HG-5VH7"}, "GUEST_065": {"name": "Guest Student 065", "code": "GA4F-V7UC"}, "GUEST_066": {"name": "Guest Student 066", "code": "BSTB-3B8K"}, "GUEST_067": {"name": "Guest Student 067", "code": "6WAL-2GJZ"}, "GUEST_068": {"name": "Guest Student 068", "code": "9PEW-EBWW"}, "GUEST_069": {"name": "Guest Student 069", "code": "CW7H-VCBU"}, "GUEST_070": {"name": "Guest Student 070", "code": "2V7Q-LJKW"}, "GUEST_071": {"name": "Guest Student 071", "code": "BFKP-L264"}, "GUEST_072": {"name": "Guest Student 072", "code": "QMZA-UCTH"}, "GUEST_073": {"name": "Guest Student 073", "code": "RAEB-EKFG"}, "GUEST_074": {"name": "Guest Student 074", "code": "E75G-G73W"}, "GUEST_075": {"name": "Guest Student 075", "code": "P4CR-7TR7"}, "GUEST_076": {"name": "Guest Student 076", "code": "45ST-XSAQ"}, "GUEST_077": {"name": "Guest Student 077", "code": "58KM-6RXA"}, "GUEST_078": {"name": "Guest Student 078", "code": "AUFR-SELV"}, "GUEST_079": {"name": "Guest Student 079", "code": "KGE6-YE9F"}, "GUEST_080": {"name": "Guest Student 080", "code": "PMWR-6XP4"}, "GUEST_081": {"name": "Guest Student 081", "code": "EMQK-UC37"}, "GUEST_082": {"name": "Guest Student 082", "code": "R97D-JDW3"}, "GUEST_083": {"name": "Guest Student 083", "code": "QAZ3-8NCR"}, "GUEST_084": {"name": "Guest Student 084", "code": "BHGN-MM7H"}, "GUEST_085": {"name": "Guest Student 085", "code": "248C-XJMX"}, "GUEST_086": {"name": "Guest Student 086", "code": "D66T-4UE5"}, "GUEST_087": {"name": "Guest Student 087", "code": "CE8E-QMV2"}, "GUEST_088": {"name": "Guest Student 088", "code": "FUCN-6ZNH"}, "GUEST_089": {"name": "Guest Student 089", "code": "6EAP-773Q"}, "GUEST_090": {"name": "Guest Student 090", "code": "GFZF-T4C7"}, "GUEST_091": {"name": "Guest Student 091", "code": "DF8L-TYYR"}, "GUEST_092": {"name": "Guest Student 092", "code": "SHDX-AR3M"}, "GUEST_093": {"name": "Guest Student 093", "code": "XECS-TVRS"}, "GUEST_094": {"name": "Guest Student 094", "code": "4UEZ-5CSQ"}, "GUEST_095": {"name": "Guest Student 095", "code": "ZS5P-VRE3"}, "GUEST_096": {"name": "Guest Student 096", "code": "E8XU-J3LD"}, "GUEST_097": {"name": "Guest Student 097", "code": "KYE3-TP7X"}, "GUEST_098": {"name": "Guest Student 098", "code": "8VVY-8AA8"}, "GUEST_099": {"name": "Guest Student 099", "code": "5QKQ-BHZS"}, "GUEST_100": {"name": "Guest Student 100", "code": "WM3Y-SE3K"}};
-const PREMIUM_LOCKED_TABS = ['mindmap', 'classppt', 'quiz', 'adv', 'kcet', 'papergen', 'boardimp'];
-const PREMIUM_TAB_LABELS = {mindmap:'Mind Map', classppt:'Class Presentation', revision:'Revision', quiz:'MCQ Quiz', adv:'NEET Practice', kcet:'KCET Practice', papergen:'Paper Generator', boardimp:'Board Important'};
+const PREMIUM_LOCKED_TABS = ['mindmap', 'classppt', 'quiz', 'adv', 'kcet', 'writeit', 'papergen', 'boardimp'];
+const PREMIUM_TAB_LABELS = {mindmap:'Mind Map', classppt:'Class Presentation', revision:'Revision', quiz:'MCQ Quiz', adv:'NEET Practice', kcet:'KCET Practice', writeit:'Answer Practice', papergen:'Paper Generator', boardimp:'Board Important'};
 function getPremiumUnlock(){
   try{ return JSON.parse(localStorage.getItem(PREMIUM_KEY) || 'null'); }catch(e){ return null; }
 }
