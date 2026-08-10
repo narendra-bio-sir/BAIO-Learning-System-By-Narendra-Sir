@@ -790,6 +790,10 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
         <button class="btn" id="fcNext">Next &rarr;</button>
       </div>
       <button class="btn secondary" id="fcWeakFirst" style="width:100%; margin-top:8px;">🎯 Study Weak Cards First</button>
+      <div class="card" style="margin-top:14px; border:1px solid var(--gold-2); background:rgba(212,175,55,.08); display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+        <div style="font-size:12.5px; color:var(--text-dim);">📍 Next step in your study path</div>
+        <button class="btn" onclick="goToTab('quiz')">MCQ Quiz →</button>
+      </div>
     </div>
   </div>
 
@@ -2102,6 +2106,37 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
   });
 });
 
+/* ---------- Study Path Guidance ---------- */
+/* A gentle, dismissible-by-ignoring suggestion for the recommended next tab —
+   never blocks navigation, just nudges students who aren't sure what to do next. */
+function goToTab(id){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  const btn = document.querySelector('.tab-btn[data-tab="'+id+'"]');
+  if(btn) btn.classList.add('active');
+  const panel = document.getElementById('panel-'+id);
+  if(panel) panel.classList.add('active');
+  try{ localStorage.setItem('ch2_last_tab', id); }catch(e){}
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+window.goToTab = goToTab;
+const NEXT_STEP_MAP = {
+  study: {id:'concept', label:'Concepts'},
+  concept: {id:'flash', label:'Flashcards'},
+  flash: {id:'quiz', label:'MCQ Quiz'},
+  quiz: {id:'adv', label:'NEET Practice'},
+  adv: {id:'kcet', label:'KCET Practice'},
+  kcet: {id:'revision', label:'Revision'}
+};
+function nextStepNudge(fromTab){
+  const next = NEXT_STEP_MAP[fromTab];
+  if(!next) return '';
+  return `<div class="card" style="margin-top:14px; border:1px solid var(--gold-2); background:rgba(212,175,55,.08); display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+    <div style="font-size:12.5px; color:var(--text-dim);">📍 Next step in your study path</div>
+    <button class="btn" onclick="goToTab('${next.id}')">${next.label} →</button>
+  </div>`;
+}
+
 /* ---------- Study Mode ---------- */
 function renderTopicNav(){
   const nav = document.getElementById('topicNav');
@@ -2585,7 +2620,7 @@ function renderStudy(){
   const el = document.getElementById('studyContent');
   el.innerHTML = `<div class="study-block"><h3>${t.title}</h3>
     <div class="chip-row recap-strip">${t.chips.map(c=>`<span class="chip gold">${c}</span>`).join('')}</div>
-    ${t.html}</div>`;
+    ${t.html}</div>` + nextStepNudge('study');
 }
 renderTopicNav(); renderStudy();
 
@@ -2628,7 +2663,7 @@ function renderConcept(){
           <div class="think-q-answer" id="thinkAns-${i}" style="display:none;">${tq.a}</div>
         </div>`).join('')}
     </div>
-  `;
+  ` + nextStepNudge('concept');
   el.querySelectorAll('.reveal-btn').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const idx = btn.dataset.idx;
@@ -2823,6 +2858,7 @@ function showQuizReport(){
       <div class="stat-box warn"><div class="num">${s.maxStreak}</div><div class="lbl">Best Streak</div></div>
       <div class="stat-box"><div class="num">${mins}m ${secs}s</div><div class="lbl">Time Taken</div></div>
     </div>
+    ${nextStepNudge('quiz')}
     <div class="subhead">Full Review</div>
     <div id="quizReviewList"></div>
     <div class="btn-row" style="margin-top:12px;">
@@ -3105,6 +3141,7 @@ function showAdvReport(){
       <div class="stat-box warn"><div class="num">${s.skipped}</div><div class="lbl">Timed Out</div></div>
       <div class="stat-box"><div class="num">${mins}m ${secs}s</div><div class="lbl">Time Taken</div></div>
     </div>
+    ${nextStepNudge('adv')}
     <div class="subhead">Full Review</div>
     <div id="advReviewList"></div>
     <div class="btn-row" style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
@@ -3340,6 +3377,7 @@ function showKcetReport(){
       <div class="stat-box warn"><div class="num">${s.skipped}</div><div class="lbl">Timed Out</div></div>
       <div class="stat-box"><div class="num">${mins}m ${secs}s</div><div class="lbl">Time Taken</div></div>
     </div>
+    ${nextStepNudge('kcet')}
     <div class="subhead">Full Review</div>
     <div id="kcetReviewList"></div>
     <div class="btn-row" style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">

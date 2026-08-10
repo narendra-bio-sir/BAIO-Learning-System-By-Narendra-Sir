@@ -604,6 +604,26 @@ function topicPills(activeId, onClickName){
   return `<div class="pillrow-wrap"><button class="tab-scroll-btn pill-scroll-left">&#8249;</button><div class="pillrow">${DATA.topics.map(t=>`<div class="pill ${t.id===activeId?'active':''}" onclick="${onClickName}('${t.id}')">${t.name}</div>`).join('')}</div><button class="tab-scroll-btn pill-scroll-right">&#8250;</button></div>`;
 }
 
+/* ---------------- STUDY PATH GUIDANCE ---------------- */
+/* A gentle, dismissible-by-ignoring suggestion for the recommended next tab —
+   never blocks navigation, just nudges students who aren't sure what to do next. */
+const NEXT_STEP_MAP = {
+  study: {id:'concepts', label:'Concepts'},
+  concepts: {id:'flashcards', label:'Flashcards'},
+  flashcards: {id:'mcq', label:'MCQ Quiz'},
+  mcq: {id:'neet', label:'NEET Practice'},
+  neet: {id:'kcet', label:'KCET Practice'},
+  kcet: {id:'revision', label:'Revision'}
+};
+function nextStepNudge(fromTab){
+  const next = NEXT_STEP_MAP[fromTab];
+  if(!next) return '';
+  return `<div class="setup-card" style="margin-top:14px; border:1px solid var(--gold); background:rgba(212,175,55,.08); display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+    <div style="font-size:12.5px; color:var(--ink-dim);">📍 Next step in your study path</div>
+    <button class="opt-btn sel" onclick="switchTab('${next.id}')">${next.label} →</button>
+  </div>`;
+}
+
 /* ---------------- STUDY MODE ---------------- */
 function selectStudyTopic(id){ currentTopic = id; renderContent(); }
 window.selectStudyTopic = selectStudyTopic;
@@ -622,6 +642,7 @@ function renderStudy(){
     d.table.rows.forEach(r=>{ html += `<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`; });
     html += `</table>`;
   }
+  html += nextStepNudge('study');
   document.getElementById('content').innerHTML = html;
 }
 
@@ -655,6 +676,7 @@ function renderConcepts(){
       <div class="aq-a" id="aqa_${i}">${a.a}</div></div>`;
   });
   html += `</div>`;
+  html += nextStepNudge('concepts');
   document.getElementById('content').innerHTML = html;
 }
 
@@ -698,6 +720,7 @@ function renderFlashcards(){
     </div>
     <button class="start-btn" style="margin-top:10px;" onclick="fcWeakFirst()">\ud83c\udfaf Study Weak Cards First</button>
   </div>`;
+  html += nextStepNudge('flashcards');
   document.getElementById('content').innerHTML = html;
 }
 function fcFlip(){ fcFlipped = !fcFlipped; renderFlashcards(); }
@@ -958,6 +981,7 @@ function renderMcqReport(){
     </div></div>
     <button class="start-btn" onclick="renderMcqSetup()" style="margin-bottom:10px;">Start New Quiz</button>
     <button class="fc-btn" style="width:100%; margin-bottom:14px;" onclick="openShareCard({examLabel:'MCQ Quiz', marks:${s.marks}, maxMarks:${maxMarks}, pct:${pct}, correct:${s.correctCount}, wrong:${s.wrongCount}, timeSec:${timeSec}})">📤 Share Report Card</button>
+    ${nextStepNudge('mcq')}
     <div class="setup-label">Question-by-question Review</div>`;
   s.log.forEach((l,i)=>{
     const status = l.timeout ? '\u23F0 Timed out (0)' : (l.correct?'\u2713 (+4)':'\u2717 (\u22121)');
@@ -1233,6 +1257,7 @@ function renderNeetReport(){
     </div></div>
     <button class="start-btn" onclick="renderNeetSetup()" style="margin-bottom:10px;">Start New Practice Set</button>
     <button class="fc-btn" style="width:100%; margin-bottom:14px;" onclick="openShareCard({examLabel:'NEET Practice', marks:${s.marks}, maxMarks:${maxMarks}, pct:${pct}, correct:${s.correctCount}, wrong:${s.wrongCount}, timeSec:${timeSec}})">📤 Share Report Card</button>
+    ${nextStepNudge('neet')}
     <div class="setup-label">Question-by-question Review</div>`;
   s.log.forEach((l,i)=>{
     const status = l.timeout? '<span class="ans-bad">Timed out</span>' : (l.correct?'<span class="ans-ok">Correct \u2713</span>':'<span class="ans-bad">Incorrect \u2717</span>');
@@ -1470,6 +1495,7 @@ function renderKcetReport(){
     </div></div>
     <button class="start-btn" onclick="renderKcetSetup()" style="margin-bottom:10px;">Start New Practice Set</button>
     <button class="fc-btn" style="width:100%; margin-bottom:14px;" onclick="openShareCard({examLabel:'KCET Practice', marks:${s.marks}, maxMarks:${total}, pct:${pct}, correct:${s.correctCount}, wrong:${s.wrongCount}, timeSec:${timeSec}})">📤 Share Report Card</button>
+    ${nextStepNudge('kcet')}
     <div class="setup-label">Question-by-question Review</div>`;
   s.log.forEach((l,i)=>{
     const status = l.timeout? '<span class="ans-bad">Timed out</span>' : (l.correct?'<span class="ans-ok">Correct \u2713 (+1)</span>':'<span class="ans-bad">Incorrect \u2717 (0)</span>');
