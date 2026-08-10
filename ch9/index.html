@@ -1695,6 +1695,34 @@ function renderMcqReport(){
 }
 window.renderMcqSetup = renderMcqSetup;
 
+/* ---------------- TOPIC MASTERY TRACKING ---------------- */
+const TOPIC_STATS_KEY = 'ch9_topic_stats_v1';
+function getTopicStats(){
+  try{ return JSON.parse(localStorage.getItem(TOPIC_STATS_KEY)) || {}; }catch(e){ return {}; }
+}
+function recordTopicStat(topicId, correct){
+  if(!topicId) return;
+  const stats = getTopicStats();
+  if(!stats[topicId]) stats[topicId] = {c:0, w:0};
+  if(correct) stats[topicId].c++; else stats[topicId].w++;
+  try{ localStorage.setItem(TOPIC_STATS_KEY, JSON.stringify(stats)); }catch(e){}
+}
+/* Combines KCET + NEET attempts per topic (both draw from the same DATA.topics
+   syllabus subtopics), so weak-topic practice reflects performance across both modes. */
+function getWeakTopics(maxCount){
+  const stats = getTopicStats();
+  let rows = DATA.topics.map(t=>{
+    const s = stats[t.id] || {c:0,w:0};
+    const attempts = s.c + s.w;
+    return {id:t.id, attempts, accuracy: attempts ? s.c/attempts : null};
+  });
+  let pool = rows.filter(r=>r.attempts>=3);
+  if(pool.length===0) pool = rows.filter(r=>r.attempts>=1);
+  if(pool.length===0) return [];
+  pool.sort((a,b)=>a.accuracy-b.accuracy);
+  return pool.slice(0, maxCount||3).map(r=>r.id);
+}
+
 /* ---------------- NEET PRACTICE ---------------- */
 const NEET_TYPES = [
   {id:'mcq', label:'MCQ / Analytical'},
@@ -1736,6 +1764,15 @@ function renderNeetSetup(){
   const topicChips = DATA.topics.map(t => `<label class="pg-topic-chip"><input type="checkbox" class="neetTopicCb" value="${t.id}" ${neetSetup.topicIds.indexOf(t.id)!==-1?'checked':''}> ${t.name}</label>`).join('');
   let html = renderNeetOnlyTrackerCard();
   html += `<div class="marks-info">\uD83D\uDCCB <b>Marking scheme:</b> +4 marks for every correct answer, \u22121 mark for every wrong answer, 0 if the timer runs out before you answer. Choose your filters below, then start.</div>`;
+  html += `<div class="setup-card" style="border:1px solid var(--gold); background:rgba(212,175,55,.08);">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+      <div>
+        <div style="font-weight:700; font-size:13px; color:var(--gold);">\uD83C\uDFAF Practice Weak Topics</div>
+        <div style="font-size:11px; color:var(--ink-dim); margin-top:2px;">Auto-selects the topics you're scoring lowest on.</div>
+      </div>
+      <button class="opt-btn" style="white-space:nowrap;" onclick="neetPracticeWeak()">Find My Weak Topics</button>
+    </div>
+  </div>`;
   html += `<div class="setup-card">
     <div class="setup-label">Question Coverage</div>
     <div class="opt-row">
@@ -1771,7 +1808,13 @@ function neetSetDiff(v){ neetSetup.difficulty=v; renderNeetSetup(); }
 function neetSetCount(v){ neetSetup.count=v; renderNeetSetup(); }
 function neetSetTimer(v){ neetSetup.timer=v; renderNeetSetup(); }
 function neetSetTopicMode(v){ neetSetup.topicMode=v; renderNeetSetup(); }
-window.neetSetType=neetSetType; window.neetSetDiff=neetSetDiff; window.neetSetCount=neetSetCount; window.neetSetTimer=neetSetTimer; window.neetSetTopicMode=neetSetTopicMode;
+function neetPracticeWeak(){
+  const weak = getWeakTopics(3);
+  if(weak.length===0){ alert("Not enough practice data yet — answer a few NEET or KCET Practice questions first, then your weak topics will show up here."); return; }
+  neetSetup.topicMode='select'; neetSetup.topicIds=weak;
+  renderNeetSetup();
+}
+window.neetSetType=neetSetType; window.neetSetDiff=neetSetDiff; window.neetSetCount=neetSetCount; window.neetSetTimer=neetSetTimer; window.neetSetTopicMode=neetSetTopicMode; window.neetPracticeWeak=neetPracticeWeak;
 
 let neetSession = null; let neetTimerInt = null;
 function neetStart(){
@@ -1888,6 +1931,7 @@ function neetAnswer(i){
   const q = s.questions[s.idx];
   const correct = (i===q.answer);
   if(correct){ s.correctCount++; s.marks += 4; } else { s.wrongCount++; s.marks -= 1; }
+  recordTopicStat(q.topic, correct);
   s.log.push({q:neetQText(q), correct, chosen:q.options[i], right:q.options[q.answer], exp:q.exp});
   document.getElementById('neetopt_'+q.answer).classList.add('correct');
   if(!correct) document.getElementById('neetopt_'+i).classList.add('wrong');
@@ -1974,6 +2018,15 @@ function renderKcetSetup(){
     return `<div class="opt-btn ${isSel?'sel':''}" onclick="kcetToggleFormat('${v}')">${label}</div>`;
   }).join('');
   let html = `<div class="marks-info">\uD83D\uDCCB <b>Official KCET pattern:</b> Biology paper is 60 MCQs in 80 minutes, +1 mark per correct answer, <b>no negative marking</b>. This practice set follows the same rules for this chapter.</div>`;
+  html += `<div class="setup-card" style="border:1px solid var(--gold); background:rgba(212,175,55,.08);">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+      <div>
+        <div style="font-weight:700; font-size:13px; color:var(--gold);">\uD83C\uDFAF Practice Weak Topics</div>
+        <div style="font-size:11px; color:var(--ink-dim); margin-top:2px;">Auto-selects the topics you're scoring lowest on.</div>
+      </div>
+      <button class="opt-btn" style="white-space:nowrap;" onclick="kcetPracticeWeak()">Find My Weak Topics</button>
+    </div>
+  </div>`;
   html += `<div class="setup-card">
     <h3 style="color:var(--gold);margin-bottom:8px;font-size:15px;">\u23F1 Time Breakdown &amp; Strategy</h3>
     <div style="font-size:12.5px;color:var(--ink-dim);line-height:1.7;margin-bottom:6px;">
@@ -2033,7 +2086,13 @@ function kcetToggleFormat(v){
   }
   renderKcetSetup();
 }
-window.kcetSetTopicMode=kcetSetTopicMode; window.kcetToggleTopic=kcetToggleTopic; window.kcetSetDiff=kcetSetDiff; window.kcetSetCount=kcetSetCount; window.kcetSetTimer=kcetSetTimer; window.kcetToggleFormat=kcetToggleFormat;
+function kcetPracticeWeak(){
+  const weak = getWeakTopics(3);
+  if(weak.length===0){ alert("Not enough practice data yet — answer a few NEET or KCET Practice questions first, then your weak topics will show up here."); return; }
+  kcetSetup.topicMode='select'; kcetSetup.topics=weak;
+  renderKcetSetup();
+}
+window.kcetSetTopicMode=kcetSetTopicMode; window.kcetToggleTopic=kcetToggleTopic; window.kcetSetDiff=kcetSetDiff; window.kcetSetCount=kcetSetCount; window.kcetSetTimer=kcetSetTimer; window.kcetToggleFormat=kcetToggleFormat; window.kcetPracticeWeak=kcetPracticeWeak;
 
 let kcetSession = null; let kcetTimerInt = null;
 function kcetStart(){
@@ -2116,6 +2175,7 @@ function kcetAnswer(i){
   const correct = (i===q.answer);
   if(correct){ s.correctCount++; s.marks += 1; }
   else { s.wrongCount++; } // KCET: no negative marking, wrong answers score 0
+  recordTopicStat(q.topic, correct);
   s.log.push({q:q.q, correct, chosen:q.options[i], right:q.options[q.answer], exp:q.exp});
   document.getElementById('kcetopt_'+q.answer).classList.add('correct');
   if(!correct) document.getElementById('kcetopt_'+i).classList.add('wrong');
