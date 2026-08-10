@@ -437,11 +437,19 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
         '<br><a href="announcements.html" style="color:var(--teal); font-weight:700; text-decoration:none;">Read Full Announcement &rarr;</a>';
       document.getElementById('announcementModalOverlay').style.display = 'flex';
 
-      document.getElementById('announceModalCloseBtn').addEventListener('click', () => {
-        document.getElementById('announcementModalOverlay').style.display = 'none';
+      function markAnnouncementSeen(){
         try{ localStorage.setItem(seenKey, fingerprint); }catch(e){}
         setBadgeCount(0);
         document.getElementById('bellIcon')?.classList.remove('bell-ring');
+      }
+
+      // Closing the summary popup just dismisses it — the bell keeps ringing
+      // as a reminder until the student actually opens the full announcement.
+      document.getElementById('announceModalCloseBtn').addEventListener('click', () => {
+        document.getElementById('announcementModalOverlay').style.display = 'none';
+      });
+      document.querySelectorAll('a[href="announcements.html"]').forEach(a => {
+        a.addEventListener('click', markAnnouncementSeen);
       });
     })
     .catch(() => { /* announcements.html not uploaded yet, or fetch blocked \u2014 skip popup silently */ });
