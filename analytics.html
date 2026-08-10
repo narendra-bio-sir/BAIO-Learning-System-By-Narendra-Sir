@@ -6427,11 +6427,54 @@ function absentSectionHtml(label, streamSuffix, disp){
   return '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">'+label+streamSuffix+' ('+disp+')</h3>'+
     '<div style="margin-top:0; margin-bottom:14px;"><span class="chip down">Absent</span> <span class="desc" style="display:inline; margin:0;">\u2014 did not attempt this test.</span></div>';
 }
+/* ---------- Exam Readiness (illustrative, not a guarantee) ----------
+   Bands are rough placeholders based on % of max marks in the mock test —
+   they are NOT verified real NEET/KCET/JEE admission cutoffs (those vary
+   by year, category and quota). Adjust READINESS_BANDS below once real
+   cutoff data is available; everything downstream reads from this one
+   config so a threshold change here updates every readiness badge. */
+const READINESS_BANDS = [
+  {min:70, key:'strong',      label:'Strong',       icon:'🟢', color:'var(--teal-soft)',  bg:'rgba(43,179,163,.14)',  border:'var(--teal)'},
+  {min:50, key:'competitive', label:'Competitive',  icon:'🟡', color:'var(--gold-soft)',  bg:'rgba(212,175,55,.14)',  border:'var(--gold)'},
+  {min:30, key:'needs-work',  label:'Needs Work',   icon:'🟠', color:'#f0b429',           bg:'rgba(240,180,41,.14)',  border:'#f0b429'},
+  {min:-999, key:'high-risk', label:'High Risk',    icon:'🔴', color:'var(--red)',        bg:'rgba(224,104,95,.14)',  border:'var(--red)'}
+];
+function classifyReadiness(pct){
+  return READINESS_BANDS.find(b=>pct>=b.min) || READINESS_BANDS[READINESS_BANDS.length-1];
+}
+function computeStreamReadiness(byCodeEntry, roundKeys, maxTotal){
+  if(!byCodeEntry) return null;
+  const attempts = roundKeys.map(k=>byCodeEntry[k]).filter(r=>r && !r.ABSENT && r.TOTAL!==null && r.TOTAL!==undefined);
+  if(!attempts.length) return null;
+  const latest = attempts[attempts.length-1];
+  const first = attempts[0];
+  const latestPct = Math.round((latest.TOTAL/maxTotal)*1000)/10;
+  const firstPct = Math.round((first.TOTAL/maxTotal)*1000)/10;
+  const trend = attempts.length>1 ? Math.round((latestPct-firstPct)*10)/10 : null;
+  return { latestPct, trend, attemptsCount: attempts.length, band: classifyReadiness(latestPct) };
+}
+function readinessCardHtml(streamLabel, r){
+  if(!r) return '';
+  const trendHtml = r.trend===null ? '' :
+    (r.trend>=0
+      ? '<span style="color:var(--teal-soft);">↑ up '+r.trend+' pts since first attempt</span>'
+      : '<span style="color:var(--red);">↓ down '+Math.abs(r.trend)+' pts since first attempt</span>');
+  return '<div style="background:'+r.band.bg+'; border:1px solid '+r.band.border+'; border-radius:12px; padding:12px 14px; margin-bottom:10px;">'+
+    '<div style="font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin-bottom:4px;">'+streamLabel+' Exam Readiness</div>'+
+    '<div style="font-size:15px; font-weight:700; color:'+r.band.color+';">'+r.band.icon+' '+r.band.label+' — '+r.latestPct+'%</div>'+
+    (trendHtml ? '<div style="font-size:12px; margin-top:3px;">'+trendHtml+'</div>' : '')+
+    '<div style="font-size:10.5px; color:var(--muted); margin-top:6px;">Rough guide from mock test performance ('+r.attemptsCount+' attempt'+(r.attemptsCount>1?'s':'')+') — not a guarantee, and not based on verified real admission cutoffs.</div>'+
+    '</div>';
+}
 function buildPU1ExamSectionsHtml(student){
   const neet = NEET_BY_CODE[student.code];
   const kcet = KCET_BY_CODE[student.code];
   const jee = (typeof JEE_BY_CODE!=='undefined') ? JEE_BY_CODE[student.code] : null;
   let html = '';
+
+  if(kcet){ html += readinessCardHtml('KCET (PCM)', computeStreamReadiness(kcet, ['obt1','obt2','obt3'], 135)); }
+  if(neet){ html += readinessCardHtml('NEET (PCB)', computeStreamReadiness(neet, ['obt1','obt2','obt3'], 720)); }
+  if(jee){ html += readinessCardHtml('JEE', computeStreamReadiness(jee, ['obt1','obt2','obt3','ct1'], 300)); }
 
   if(kcet){
     const kcetMeta = [
