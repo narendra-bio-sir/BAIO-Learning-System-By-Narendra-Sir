@@ -6085,6 +6085,23 @@ function mtClassAvgRaw(subj){
   return pct!==undefined ? Math.round((pct/100*40)*100)/100 : null;
 }
 
+/* A subject is "in a student's pool" if they've ever scored in it across any of their
+   own tests. A later blank in that subject (for a test where they're otherwise present)
+   is then shown as Absent rather than silently skipped, since it's a subject they
+   normally take. Subjects they've genuinely never taken (wrong language/stream) stay
+   skipped. Used as a fallback wherever we don't have a literal "AB" mark from the
+   source sheet (ABSENT_SUBJECTS, currently only populated for July). */
+function studentSubjectPool(student, pu){
+  const subs = ['KAN','HIN','ENG','PHY','CHE','MAT','BIO','ELE'];
+  const keys = pu===2 ? ['march','april','may','june','july'] : ['t1','t2','june','mt'];
+  const pool = new Set();
+  keys.forEach(k=>{
+    const d = student[k];
+    if(!d) return;
+    subs.forEach(s=>{ if(d[s]!==null && d[s]!==undefined) pool.add(s); });
+  });
+  return pool;
+}
 function mtSubjectRowsHtml(student, monthKey){
   monthKey = monthKey || 'july';
   const subs = ['BIO','KAN','HIN','ENG','PHY','CHE','MAT','ELE'];
@@ -6092,10 +6109,12 @@ function mtSubjectRowsHtml(student, monthKey){
   let rows = '';
   const rec = pu1MonthData(student, monthKey);
   if(!rec) return rows;
+  const pool = studentSubjectPool(student, 1);
   subs.forEach(s=>{
     const val = rec[s];
     if(val===null || val===undefined){
-      if(rec.ABSENT_SUBJECTS && rec.ABSENT_SUBJECTS.indexOf(s)!==-1){
+      const groundTruth = rec.ABSENT_SUBJECTS && rec.ABSENT_SUBJECTS.indexOf(s)!==-1;
+      if(groundTruth || pool.has(s)){
         rows += '<tr'+(s==='BIO'?' class="bio-row"':'')+'><td>'+names[s]+'</td><td colspan="'+(sdOptions.student?4:3)+'"><span class="chip down">Absent</span></td></tr>';
       }
       return;
@@ -6115,10 +6134,17 @@ function mtSubjectRowsHtml(student, monthKey){
 function subjectRowsHtml(test){
   const subs = ['BIO','PHY','CHE','MAT','ELE'];
   const names = {PHY:'Physics',CHE:'Chemistry',MAT:'Mathematics',BIO:'Biology',ELE:'Electronics'};
+  const student = window.__currentStudent;
+  const pool = studentSubjectPool(student, 1);
   let rows = '';
   subs.forEach(s=>{
-    const val = window.__currentStudent[test][s];
-    if(val===null || val===undefined) return;
+    const val = student[test][s];
+    if(val===null || val===undefined){
+      if(pool.has(s)){
+        rows += '<tr'+(s==='BIO'?' class="bio-row"':'')+'><td>'+names[s]+'</td><td colspan="'+(sdOptions.student?4:3)+'"><span class="chip down">Absent</span></td></tr>';
+      }
+      return;
+    }
     const avg = classAvgRaw(test, s);
     const sd = classSDRaw(test, s);
     const z = (sd && sd>0 && avg!==null) ? Math.round(((val-avg)/sd)*10)/10 : null;
@@ -6149,11 +6175,13 @@ function pu2SubjectRowsHtml(student, key){
   if(!rec) return '';
   const subs = ['BIO','KAN','HIN','ENG','PHY','CHE','MAT','ELE'];
   const names = {KAN:'Kannada',HIN:'Hindi',ENG:'English',PHY:'Physics',CHE:'Chemistry',MAT:'Mathematics',BIO:'Biology',ELE:'Electronics'};
+  const pool = studentSubjectPool(student, 2);
   let rows = '';
   subs.forEach(s=>{
     const val = rec[s];
     if(val===null || val===undefined){
-      if(rec.ABSENT_SUBJECTS && rec.ABSENT_SUBJECTS.indexOf(s)!==-1){
+      const groundTruth = rec.ABSENT_SUBJECTS && rec.ABSENT_SUBJECTS.indexOf(s)!==-1;
+      if(groundTruth || pool.has(s)){
         rows += '<tr'+(s==='BIO'?' class="bio-row"':'')+'><td>'+names[s]+'</td><td colspan="'+(sdOptions.student?4:3)+'"><span class="chip down">Absent</span></td></tr>';
       }
       return;
