@@ -408,6 +408,7 @@ const TABS = [
   {id:'mcq', label:'MCQ Quiz'},
   {id:'neet', label:'NEET Practice'},
   {id:'kcet', label:'KCET Practice'},
+  {id:'writeit', label:'Answer Practice'},
   {id:'revision', label:'Revision'},
   {id:'boardimp', label:'Board Important'},
   {id:'downloads', label:'Downloads'},
@@ -463,7 +464,8 @@ const NEXT_STEP_MAP = {
   flashcards: {id:'mcq', label:'MCQ Quiz'},
   mcq: {id:'neet', label:'NEET Practice'},
   neet: {id:'kcet', label:'KCET Practice'},
-  kcet: {id:'revision', label:'Revision'}
+  kcet: {id:'writeit', label:'Answer Practice'},
+  writeit: {id:'revision', label:'Revision'}
 };
 function nextStepNudge(fromTab){
   const next = NEXT_STEP_MAP[fromTab];
@@ -1440,6 +1442,123 @@ function renderKcetReport(){
 }
 window.renderKcetSetup = renderKcetSetup;
 
+/* ---------------- ANSWER PRACTICE (Write It, Then Compare) ---------------- */
+/* No authored theory question bank exists in this chapter, so this reuses
+   each topic's existing Study Mode sections (DATA.study[topic].sections,
+   already authored {h, body} pairs used by Study Mode and Revision) as an
+   active-recall loop: student writes their own answer to the section
+   heading, then reveals the section body as the model answer. Self-rating
+   mirrors Flashcards' weak-first pattern, keyed into a stable flattened pool. */
+let WA_ALL_POOL = null;
+function waAllPool(){
+  if(WA_ALL_POOL) return WA_ALL_POOL;
+  const list = [];
+  DATA.topics.forEach(t=>{
+    const d = DATA.study[t.id];
+    if(!d || !d.sections) return;
+    d.sections.forEach(sec=>{ list.push({topic:t.id, q:'Explain: ' + sec.h, a:sec.body, idx:list.length}); });
+  });
+  WA_ALL_POOL = list;
+  return list;
+}
+let waSetup = {topic:'All'};
+let waSession = null;
+const WA_WEIGHTS_KEY = 'pu1ch5_writeit_weights_v1';
+function getWaWeights(){
+  try{ return JSON.parse(localStorage.getItem(WA_WEIGHTS_KEY)) || {}; }catch(e){ return {}; }
+}
+function setWaWeight(idx, gotIt){
+  const w = getWaWeights();
+  const cur = w[idx] || 0;
+  w[idx] = gotIt ? Math.min(cur+1, 3) : 0;
+  try{ localStorage.setItem(WA_WEIGHTS_KEY, JSON.stringify(w)); }catch(e){}
+}
+function waFilterPool(){
+  return waAllPool().filter(q => waSetup.topic==='All' || q.topic===waSetup.topic);
+}
+function renderWriteItSetup(){
+  const pool = waFilterPool();
+  const topicChips = ['All', ...DATA.topics.map(t=>t.id)].map(id=>{
+    const label = id==='All' ? 'All Topics' : DATA.topics.find(t=>t.id===id).name;
+    return `<div class="opt-btn ${waSetup.topic===id?'sel':''}" onclick="waSetTopic('${id}')">${label}</div>`;
+  }).join('');
+  let html = `<div class="marks-info">✍️ <b>How it works:</b> Grab a pen and paper — write your answer by hand, just like in the exam, then reveal the model answer to see what you missed: keywords, structure, examples the examiner expects. Typing is fine in a pinch, but handwriting it builds the speed and habit you'll need on exam day.</div>`;
+  html += `<div class="setup-card">
+    <div class="setup-label">Topic</div>
+    <div class="opt-row">${topicChips}</div>
+    <button class="start-btn" onclick="waStart()">Start Practice · ${pool.length} matching</button>
+    ${pool.length ? `<button class="fc-btn" style="width:100%; margin-top:8px;" onclick="waWeakFirst()">🎯 Practice Weak Answers First</button>` : ''}
+  </div>`;
+  html += nextStepNudge('writeit');
+  document.getElementById('content').innerHTML = html;
+}
+function waSetTopic(id){ waSetup.topic=id; renderWriteItSetup(); }
+window.waSetTopic=waSetTopic;
+
+function waStart(){
+  const pool = shuffleArr(waFilterPool());
+  if(pool.length===0){ alert('No questions match those filters. Try widening your selection.'); return; }
+  waSession = {questions: pool, idx:0, revealed:false};
+  renderWriteItQuestion();
+}
+function waWeakFirst(){
+  const w = getWaWeights();
+  const pool = shuffleArr(waFilterPool()).sort((a,b)=>(w[a.idx]||0)-(w[b.idx]||0));
+  if(pool.length===0){ alert('No questions match those filters. Try widening your selection.'); return; }
+  waSession = {questions: pool, idx:0, revealed:false};
+  renderWriteItQuestion();
+}
+window.waStart=waStart; window.waWeakFirst=waWeakFirst;
+
+function renderWriteItQuestion(){
+  const s = waSession;
+  if(s.idx >= s.questions.length){ renderWriteItDone(); return; }
+  const q = s.questions[s.idx];
+  const topicName = (DATA.topics.find(t=>t.id===q.topic)||{}).name || q.topic;
+  let html = `<div class="fc-wrap">
+    <div class="fc-counter">Question ${s.idx+1} / ${s.questions.length}</div>
+    <div class="setup-card">
+      <div class="opt-row" style="margin-bottom:10px;">
+        <span class="opt-btn sel" style="cursor:default;">${topicName}</span>
+      </div>
+      <div class="aq-q" style="margin-bottom:12px;">${q.q}</div>
+      <div style="font-size:11.5px; color:var(--ink-dim); margin-bottom:6px;">📝 Write this out on paper first, like the real exam — use the box below only as a rough scratchpad.</div>
+      <textarea placeholder="Write your answer here..." style="width:100%; min-height:110px; padding:10px; border-radius:10px; border:1px solid var(--line); background:var(--panel2); color:var(--ink); font-family:inherit; font-size:13.5px; resize:vertical;"></textarea>
+      ${!s.revealed
+        ? `<button class="start-btn" style="margin-top:10px;" onclick="waReveal()">Show Model Answer</button>`
+        : `<div class="aq-a show" style="margin-top:12px;"><b>Model Answer:</b><br>${q.a.replace(/\n/g,'<br>')}</div>
+           <div class="opt-row" style="margin:12px 0;">
+             <button class="opt-btn" style="flex:1; border-color:#e0685f; color:#e0685f;" onclick="waRate(false)">😕 Still Learning</button>
+             <button class="opt-btn sel" style="flex:1;" onclick="waRate(true)">✅ Got It</button>
+           </div>`}
+    </div>
+    <div class="fc-controls">
+      <button class="fc-btn" onclick="renderWriteItSetup()">← Change Filters</button>
+      ${s.revealed ? `<button class="fc-btn primary" onclick="waNext()">Next →</button>` : ''}
+    </div>
+  </div>`;
+  document.getElementById('content').innerHTML = html;
+}
+function waReveal(){ waSession.revealed = true; renderWriteItQuestion(); }
+function waRate(gotIt){ setWaWeight(waSession.questions[waSession.idx].idx, gotIt); waNext(); }
+function waNext(){ waSession.idx++; waSession.revealed=false; renderWriteItQuestion(); }
+window.waReveal=waReveal; window.waRate=waRate; window.waNext=waNext;
+
+function renderWriteItDone(){
+  let html = `<div class="setup-card" style="text-align:center;">
+    <div style="font-size:32px; margin-bottom:8px;">🎉</div>
+    <div style="font-weight:700; margin-bottom:6px;">Practice round complete!</div>
+    <div style="color:var(--ink-dim); font-size:13px; margin-bottom:14px;">You went through ${waSession.questions.length} question(s). Practice the ones marked "Still Learning" again to sharpen your answer-writing.</div>
+    <button class="start-btn" onclick="renderWriteItSetup()">Practice More</button>
+  </div>`;
+  html += nextStepNudge('writeit');
+  document.getElementById('content').innerHTML = html;
+}
+function renderWriteIt(){
+  if(waSession && waSession.idx < waSession.questions.length) renderWriteItQuestion();
+  else renderWriteItSetup();
+}
+
 function renderContent(){
   if(currentTab==='progress') renderProgress();
   else if(currentTab==='study') renderStudy();
@@ -1449,6 +1568,7 @@ function renderContent(){
   else if(currentTab==='mcq') renderMcqSetup();
   else if(currentTab==='neet') renderNeetSetup();
   else if(currentTab==='kcet') renderKcetSetup();
+  else if(currentTab==='writeit') renderWriteIt();
   else if(currentTab==='revision') renderRevision();
   else if(currentTab==='boardimp') renderBoardImportant();
   else if(currentTab==='downloads') renderDownloads();
