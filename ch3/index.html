@@ -46,16 +46,15 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif; margin:0;}
 
 .app{max-width:720px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;padding-bottom:70px;}
 
-/* HEADER */
+/* HEADER — pinned to top while scrolling, matching pu1-ch5's sticky header */
 .header{
-  background:linear-gradient(160deg,var(--panel),var(--panel2));
-  border:1px solid var(--line);
-  border-radius:16px;
+  background:linear-gradient(180deg,var(--navy2),var(--navy) 90%);
+  border-bottom:1px solid var(--line);
   padding:18px 56px 14px 18px;
-  box-shadow:var(--shadow);
-  position:relative;
+  position:sticky;
+  top:0;
+  z-index:20;
   overflow:hidden;
-  margin:12px 12px 14px;
 }
 .header::before{
   content:"";
@@ -3034,6 +3033,20 @@ renderKcetReport = function(){
       try{ localStorage.setItem(THEME_KEY, next); }catch(e){}
     });
   }
+})();
+
+/* ---------------- Keep the sticky tabbar pinned right below the sticky header.
+   A hardcoded top offset breaks whenever the header wraps to a different
+   height (narrow screens, language switch, font load), so measure it live
+   instead. ---------------- */
+(function syncTabbarOffset(){
+  var header = document.querySelector('.header');
+  var tabbarWrap = document.querySelector('.tabbar-wrap');
+  if(!header || !tabbarWrap) return;
+  function sync(){ tabbarWrap.style.top = header.getBoundingClientRect().height + 'px'; }
+  sync();
+  if(window.ResizeObserver){ new ResizeObserver(sync).observe(header); }
+  else{ window.addEventListener('resize', sync); }
 })();
 
 document.body.classList.add('lang-'+currentLang);
