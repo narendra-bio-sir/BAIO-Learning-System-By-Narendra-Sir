@@ -2755,12 +2755,17 @@ function sdConsistencyPhrase(sd, maxScore, lang, firstName){
 
 /* ---- Standard Deviation analysis: off by default everywhere. Opt in per-category via the
    "Standard Deviation Analysis" checklist on the Principal Report / Report Card / Candidate
-   Insight screens — those screens fully rebuild their content on each action, so reading this
-   object at render time is enough; no live re-render wiring needed. ---- */
+   Insight screens. Report Card and Candidate Insight already track which student/pu is
+   currently on screen (window.__currentStudent / currentBioCandidate / currentEleCandidate),
+   so toggling a checkbox re-renders whichever of those is currently open immediately instead
+   of waiting for the next search/action. ---- */
 let sdOptions = { subject:false, student:false, classWide:false };
 function setSdOption(key, val){
   sdOptions[key] = val;
   document.querySelectorAll('.sd-opt-'+key).forEach(cb=>{ cb.checked = val; });
+  if(window.__currentStudent) showReportCard(window.__currentStudent, window.__currentStudentPu);
+  if(currentBioCandidate) renderBioCandidateInsight(currentBioCandidate.student, currentBioCandidate.pu);
+  if(currentEleCandidate) renderEleCandidateInsight(currentEleCandidate.student, currentEleCandidate.pu);
 }
 function sdOptionsChecklistHtml(prefix){
   return '<div class="setup-label" style="font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--gold-soft);margin:14px 0 6px;">📊 Standard Deviation Analysis (optional)</div>'+
@@ -6486,6 +6491,7 @@ function buildPU2JeeSectionHtml(student){
 }
 function showReportCardPU2(student){
   window.__currentStudent = student;
+  window.__currentStudentPu = 2;
   window.__remarkLang = 'en';
   document.getElementById('reportCardWrap').style.display = 'block';
   const comment = generatePU2TeacherComment(student);
@@ -6683,6 +6689,7 @@ function buildPU1ExamSectionsHtml(student){
 function showReportCard(student, pu){
   if(pu===2 || (student && student.pu===2)){ showReportCardPU2(student); return; }
   window.__currentStudent = student;
+  window.__currentStudentPu = 1;
   window.__remarkLang = 'en';
   document.getElementById('reportCardWrap').style.display = 'block';
   const tier = findStudentBioTier(student.name);
