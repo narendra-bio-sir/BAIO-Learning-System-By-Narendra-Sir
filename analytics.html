@@ -8053,6 +8053,46 @@ function renderBioStudentResults(list){
   });
 }
 
+/* ---- Engineering vs Medical interest signal ----
+   No stream is stored per student anywhere in this app; it's always inferred
+   from test participation. This mirrors that same pattern: count distinct
+   NEET rounds attempted (medical-leaning effort) against distinct KCET+JEE
+   rounds attempted (engineering-leaning effort) for one student, and classify
+   which way their actual exam-taking behaviour points -- not a guess from
+   their PCM/PCB subject enrollment, but from what they've actually shown up
+   for. */
+function computeExamInterest(student, pu){
+  const neetByCode = pu===2 ? (typeof PU2_NEET_BY_CODE!=='undefined'?PU2_NEET_BY_CODE:null) : (typeof NEET_BY_CODE!=='undefined'?NEET_BY_CODE:null);
+  const kcetByCode = pu===2 ? (typeof PU2_KCET_BY_CODE!=='undefined'?PU2_KCET_BY_CODE:null) : (typeof KCET_BY_CODE!=='undefined'?KCET_BY_CODE:null);
+  const jeeByCode = pu===2 ? (typeof PU2_JEE_BY_CODE!=='undefined'?PU2_JEE_BY_CODE:null) : (typeof JEE_BY_CODE!=='undefined'?JEE_BY_CODE:null);
+
+  function countAttempts(byCode){
+    if(!byCode) return 0;
+    const rec = byCode[student.code];
+    if(!rec) return 0;
+    return Object.keys(rec).map(k=>rec[k]).filter(r=>r && !r.ABSENT && r.TOTAL!==null && r.TOTAL!==undefined).length;
+  }
+
+  const medicalAttempts = countAttempts(neetByCode);
+  const engineeringAttempts = countAttempts(kcetByCode) + countAttempts(jeeByCode);
+
+  let leaning, icon;
+  if(medicalAttempts===0 && engineeringAttempts===0){ leaning = 'No competitive exam attempts on file yet'; icon = '❓'; }
+  else if(medicalAttempts>0 && engineeringAttempts===0){ leaning = 'Medical (NEET) only'; icon = '🩺'; }
+  else if(engineeringAttempts>0 && medicalAttempts===0){ leaning = 'Engineering (KCET/JEE) only'; icon = '⚙️'; }
+  else if(medicalAttempts>engineeringAttempts){ leaning = 'Leaning Medical'; icon = '🩺'; }
+  else if(engineeringAttempts>medicalAttempts){ leaning = 'Leaning Engineering'; icon = '⚙️'; }
+  else { leaning = 'Exploring Both Equally'; icon = '⚖️'; }
+
+  return { medicalAttempts, engineeringAttempts, leaning, icon };
+}
+function examInterestHtml(student, pu){
+  const r = computeExamInterest(student, pu);
+  if(r.medicalAttempts===0 && r.engineeringAttempts===0) return '';
+  return '<div class="rp-section"><div class="rp-section-title">Exam Focus: Engineering vs Medical</div>'+
+    '<div class="rp-callout">'+r.icon+' <b>'+r.leaning+'</b> — '+r.medicalAttempts+' NEET attempt'+(r.medicalAttempts===1?'':'s')+' vs '+r.engineeringAttempts+' KCET/JEE attempt'+(r.engineeringAttempts===1?'':'s')+' recorded. Based on which competitive exams this student actually shows up for, not just their PCM/PCB subject enrollment.</div></div>';
+}
+
 function renderBioCandidateInsight(student, pu){
   currentBioCandidate = {student, pu};
   const isEle = isElectronicsOnly(student, pu);
@@ -8086,6 +8126,8 @@ function renderBioCandidateInsight(student, pu){
     '<div class="rp-kpi"><div class="rp-kpi-label">Tests Recorded</div><div class="rp-kpi-value">'+hist.length+'</div><div class="rp-kpi-sub">'+subjectLabel+' attempts on file</div></div>'+
     (sdOptions.student?'<div class="rp-kpi"><div class="rp-kpi-label">Consistency ('+subjectLabel+' SD Across Tests)</div><div class="rp-kpi-value">'+(histStats.sd!==null?histStats.sd+'%':'\u2014')+'</div><div class="rp-kpi-sub">'+(histStats.sd!==null?sdLabel(histStats.sd,100):'Not enough data')+'</div></div>':'')+
   '</div>';
+
+  html += examInterestHtml(student, pu);
 
   if(hist.length){
     const rows = hist.map(h=>{
@@ -8804,6 +8846,8 @@ function renderEleCandidateInsight(student, pu){
     '<div class="rp-kpi"><div class="rp-kpi-label">Tests Recorded</div><div class="rp-kpi-value">'+hist.length+'</div><div class="rp-kpi-sub">Electronics attempts on file</div></div>'+
     (sdOptions.student?'<div class="rp-kpi"><div class="rp-kpi-label">Consistency (Electronics SD Across Tests)</div><div class="rp-kpi-value">'+(histStats.sd!==null?histStats.sd+'%':'\u2014')+'</div><div class="rp-kpi-sub">'+(histStats.sd!==null?sdLabel(histStats.sd,100):'Not enough data')+'</div></div>':'')+
   '</div>';
+
+  html += examInterestHtml(student, pu);
 
   if(hist.length){
     const rows = hist.map(h=>{
