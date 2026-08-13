@@ -2755,12 +2755,17 @@ function sdConsistencyPhrase(sd, maxScore, lang, firstName){
 
 /* ---- Standard Deviation analysis: off by default everywhere. Opt in per-category via the
    "Standard Deviation Analysis" checklist on the Principal Report / Report Card / Candidate
-   Insight screens — those screens fully rebuild their content on each action, so reading this
-   object at render time is enough; no live re-render wiring needed. ---- */
+   Insight screens. Report Card and Candidate Insight already track which student/pu is
+   currently on screen (window.__currentStudent / currentBioCandidate / currentEleCandidate),
+   so toggling a checkbox re-renders whichever of those is currently open immediately instead
+   of waiting for the next search/action. ---- */
 let sdOptions = { subject:false, student:false, classWide:false };
 function setSdOption(key, val){
   sdOptions[key] = val;
   document.querySelectorAll('.sd-opt-'+key).forEach(cb=>{ cb.checked = val; });
+  if(window.__currentStudent) showReportCard(window.__currentStudent, window.__currentStudentPu);
+  if(currentBioCandidate) renderBioCandidateInsight(currentBioCandidate.student, currentBioCandidate.pu);
+  if(currentEleCandidate) renderEleCandidateInsight(currentEleCandidate.student, currentEleCandidate.pu);
 }
 function sdOptionsChecklistHtml(prefix){
   return '<div class="setup-label" style="font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--gold-soft);margin:14px 0 6px;">📊 Standard Deviation Analysis (optional)</div>'+
@@ -6486,6 +6491,7 @@ function buildPU2JeeSectionHtml(student){
 }
 function showReportCardPU2(student){
   window.__currentStudent = student;
+  window.__currentStudentPu = 2;
   window.__remarkLang = 'en';
   document.getElementById('reportCardWrap').style.display = 'block';
   const comment = generatePU2TeacherComment(student);
@@ -6541,6 +6547,7 @@ function showReportCardPU2(student){
       '<div class="name">'+student.name+'</div>'+
       '<div class="meta">Enrollment: '+student.code+' &middot; Section: '+sectionLabel(student)+' &middot; 2nd PUC Science</div>'+
     '</div>'+
+    classPercentileHtml(student, 2)+
     obtBlock+
     '<h2 style="font-family:\'Space Grotesk\'; font-size:15px; color:var(--gold-soft); margin:18px 0 4px;">Monthly Tests</h2>'+
     monthSections+
@@ -6586,6 +6593,54 @@ const READINESS_BANDS = [
 ];
 function classifyReadiness(pct){
   return READINESS_BANDS.find(b=>pct>=b.min) || READINESS_BANDS[READINESS_BANDS.length-1];
+}
+
+/* ---- Estimated class percentile: a rough theory/board-exam standing guide, derived
+   purely from this student's already-computed RANK on their last few theory tests
+   (Slip Test / Monthly Test for PU-I, Monthly Test for PU-II) relative to the same
+   roster those ranks were assigned within. Not a real board percentile -- there's no
+   actual board data here -- just "how this student's class rank translates to a
+   percentile," clearly labelled as such wherever it's shown. ---- */
+const PERCENTILE_BANDS = [
+  {min:90, label:'Top 10%',    icon:'🟢', color:'var(--teal-soft)', bg:'rgba(43,179,163,.14)', border:'var(--teal)'},
+  {min:75, label:'Top 25%',    icon:'🟡', color:'var(--gold-soft)', bg:'rgba(212,175,55,.14)', border:'var(--gold)'},
+  {min:50, label:'Top Half',   icon:'🟠', color:'#f0b429',          bg:'rgba(240,180,41,.14)', border:'#f0b429'},
+  {min:-999, label:'Bottom Half', icon:'🔴', color:'var(--red)',    bg:'rgba(224,104,95,.14)', border:'var(--red)'}
+];
+function computeClassPercentileTrend(student, pu){
+  const roster = pu===2 ? (typeof PU2_STUDENTS!=='undefined' ? PU2_STUDENTS : null) : STUDENTS;
+  if(!roster) return null;
+  const testDefs = pu===2
+    ? [['march','March Monthly'],['april','April Monthly'],['may','May Monthly'],['june','June Monthly'],['july','July Monthly']]
+    : [['t1','Slip Test 1'],['t2','Slip Test 2'],['june','June Monthly'],['mt','July Monthly']];
+  const points = [];
+  testDefs.forEach(([key,label])=>{
+    const rec = student[key];
+    if(!rec || rec.RANK===undefined || rec.RANK===null || rec.TOTAL===null || rec.TOTAL===undefined) return;
+    const n = roster.filter(s=>s[key] && s[key].RANK!==undefined && s[key].RANK!==null).length;
+    if(n<2) return;
+    const pct = Math.round(((n-rec.RANK)/(n-1))*1000)/10;
+    points.push({key, label, pct, rank:rec.RANK, n});
+  });
+  if(!points.length) return null;
+  const avgPct = Math.round((points.reduce((s,p)=>s+p.pct,0)/points.length)*10)/10;
+  const trend = points.length>1 ? Math.round((points[points.length-1].pct-points[0].pct)*10)/10 : null;
+  return { avgPct, points, trend };
+}
+function classPercentileHtml(student, pu){
+  const r = computeClassPercentileTrend(student, pu);
+  if(!r) return '';
+  const band = PERCENTILE_BANDS.find(b=>r.avgPct>=b.min) || PERCENTILE_BANDS[PERCENTILE_BANDS.length-1];
+  const trendHtml = r.trend===null ? '' :
+    (r.trend>=0
+      ? '<span style="color:var(--teal-soft);">↑ up '+r.trend+' pts since '+r.points[0].label+'</span>'
+      : '<span style="color:var(--red);">↓ down '+Math.abs(r.trend)+' pts since '+r.points[0].label+'</span>');
+  return '<div style="background:'+band.bg+'; border:1px solid '+band.border+'; border-radius:12px; padding:12px 14px; margin-bottom:10px;">'+
+    '<div style="font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin-bottom:4px;">📈 Estimated Class Percentile (Theory)</div>'+
+    '<div style="font-size:15px; font-weight:700; color:'+band.color+';">'+band.icon+' '+band.label+' — ~'+r.avgPct+'th percentile</div>'+
+    (trendHtml ? '<div style="font-size:12px; margin-top:3px;">'+trendHtml+'</div>' : '')+
+    '<div style="font-size:10.5px; color:var(--muted); margin-top:6px;">Based on this student’s class rank across their last '+r.points.length+' theory test'+(r.points.length>1?'s':'')+' ('+r.points.map(p=>p.label).join(', ')+') — a rough guide only, not an official board exam percentile.</div>'+
+    '</div>';
 }
 function computeStreamReadiness(byCodeEntry, roundKeys, maxTotal){
   if(!byCodeEntry) return null;
@@ -6683,6 +6738,7 @@ function buildPU1ExamSectionsHtml(student){
 function showReportCard(student, pu){
   if(pu===2 || (student && student.pu===2)){ showReportCardPU2(student); return; }
   window.__currentStudent = student;
+  window.__currentStudentPu = 1;
   window.__remarkLang = 'en';
   document.getElementById('reportCardWrap').style.display = 'block';
   const tier = findStudentBioTier(student.name);
@@ -6711,6 +6767,7 @@ function showReportCard(student, pu){
       '<div class="meta">Enrollment: '+student.code+' &middot; Section: '+sectionLabel(student)+' &middot; 1st PUC Science</div>'+
       tierHtml+
     '</div>'+
+    classPercentileHtml(student, 1)+
     '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">Slip Test 1 (13\u201315 Jun 2026)</h3>'+
     '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th>'+(sdOptions.student?'<th>z-Score</th>':'')+'</tr></thead>'+
     '<tbody>'+subjectRowsHtml('t1')+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(student.t1.TOTAL!==null?student.t1.TOTAL+'/80':'\u2014')+'</b></td></tr></tbody></table></div>'+
@@ -8176,6 +8233,7 @@ function renderBioCandidateInsight(student, pu){
   '</div>';
 
   html += examInterestHtml(student, pu);
+  html += classPercentileHtml(student, pu);
 
   if(hist.length){
     const rows = hist.map(h=>{
@@ -8896,6 +8954,7 @@ function renderEleCandidateInsight(student, pu){
   '</div>';
 
   html += examInterestHtml(student, pu);
+  html += classPercentileHtml(student, pu);
 
   if(hist.length){
     const rows = hist.map(h=>{

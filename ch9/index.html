@@ -3157,6 +3157,20 @@ function applyTheme(t){
   });
 })();
 
+/* ---------------- Keep the sticky tabbar pinned right below the sticky header.
+   A hardcoded top offset breaks whenever the header wraps to a different
+   height (narrow screens, language switch, font load), so measure it live
+   instead. ---------------- */
+(function syncTabbarOffset(){
+  const header = document.querySelector('.header');
+  const tabbarWrap = document.querySelector('.tabbar-wrap');
+  if(!header || !tabbarWrap) return;
+  function sync(){ tabbarWrap.style.top = header.getBoundingClientRect().height + 'px'; }
+  sync();
+  if(window.ResizeObserver){ new ResizeObserver(sync).observe(header); }
+  else{ window.addEventListener('resize', sync); }
+})();
+
 /* ---------------- STUDENT PROFILE MODAL ---------------- */
 const STUDENT_KEY = 'ch9_student_profile';
 function renderGreet(){
