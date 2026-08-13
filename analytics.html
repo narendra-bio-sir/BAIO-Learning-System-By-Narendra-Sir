@@ -1518,6 +1518,15 @@ window.addEventListener('afterprint', function(){
       </table></div>
     </div>
     <div class="panel">
+      <h2>🎯 Class-Wide Exam Interest: Engineering vs Medical</h2>
+      <div class="desc">Based on how many NEET rounds vs KCET/JEE rounds each student has actually attempted &mdash; not a guess from their PCM/PCB subject enrollment, but from what they've actually shown up for.</div>
+      <div class="kpi-row" id="examInterestKpisPU1"></div>
+      <div class="table-wrap"><table id="examInterestTablePU1">
+        <thead><tr><th>Interest Category</th><th>Students</th><th>% of Roster</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+    </div>
+    <div class="panel">
       <h2>Note</h2>
       <div class="desc">23 students appearing across the SPARK and PRIME rosters take Electronics instead of Biology as their 4th subject &mdash; they're shown together here as a stream-wide view, and individually broken out by their real SPARK/PRIME section in the tables below.</div>
     </div>
@@ -1974,6 +1983,15 @@ window.addEventListener('afterprint', function(){
       <div class="podium" id="sa2CombinedPodium"></div>
       <div id="sa2CombinedRest"></div>
       <div class="topper-share-bar" id="sa2CombinedShareBar"></div>
+    </div>
+    <div class="panel">
+      <h2>🎯 Class-Wide Exam Interest: Engineering vs Medical</h2>
+      <div class="desc">Based on how many NEET rounds vs KCET/JEE rounds each student has actually attempted &mdash; not a guess from their PCM/PCB subject enrollment, but from what they've actually shown up for.</div>
+      <div class="kpi-row" id="examInterestKpisPU2"></div>
+      <div class="table-wrap"><table id="examInterestTablePU2">
+        <thead><tr><th>Interest Category</th><th>Students</th><th>% of Roster</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
     </div>
   </section>
   <section class="view" id="view-pu2sec-electronics-tab">
@@ -4069,6 +4087,7 @@ function buildPU2(){
     ]},
     options:{ scales:{ y:{ max:100 } } }
   });
+  renderClassExamInterest('examInterestKpisPU2', 'examInterestTablePU2', 2);
 
   pu2Built = true;
   buildPU2Electronics();
@@ -4492,6 +4511,7 @@ function buildSections(){
     <div class="kpi gold"><div class="kpi-label">SPARK Roster</div><div class="kpi-value">${SEC.rosterSize.SPARK}</div><div class="kpi-note">students</div></div>
     <div class="kpi gold"><div class="kpi-label">PRIME Roster</div><div class="kpi-value">${SEC.rosterSize.PRIME}</div><div class="kpi-note">students</div></div>
   `;
+  renderClassExamInterest('examInterestKpisPU1', 'examInterestTablePU1', 1);
   if(secCompareAvgChart) secCompareAvgChart.destroy();
   secCompareAvgChart = new Chart(document.getElementById('secCompareAvgChart'), {
     type:'bar',
@@ -8091,6 +8111,34 @@ function examInterestHtml(student, pu){
   if(r.medicalAttempts===0 && r.engineeringAttempts===0) return '';
   return '<div class="rp-section"><div class="rp-section-title">Exam Focus: Engineering vs Medical</div>'+
     '<div class="rp-callout">'+r.icon+' <b>'+r.leaning+'</b> — '+r.medicalAttempts+' NEET attempt'+(r.medicalAttempts===1?'':'s')+' vs '+r.engineeringAttempts+' KCET/JEE attempt'+(r.engineeringAttempts===1?'':'s')+' recorded. Based on which competitive exams this student actually shows up for, not just their PCM/PCB subject enrollment.</div></div>';
+}
+
+/* ---- Class-wide Engineering vs Medical summary tile ---- */
+const EXAM_INTEREST_CATEGORIES = ['Medical (NEET) only','Leaning Medical','Exploring Both Equally','Leaning Engineering','Engineering (KCET/JEE) only','No competitive exam attempts on file yet'];
+const EXAM_INTEREST_ICONS = {'Medical (NEET) only':'🩺','Leaning Medical':'🩺','Exploring Both Equally':'⚖️','Leaning Engineering':'⚙️','Engineering (KCET/JEE) only':'⚙️','No competitive exam attempts on file yet':'❓'};
+function computeClassExamInterest(pu){
+  const roster = pu===2 ? PU2_CHAMPION.concat(PU2_ELITE) : STUDENTS;
+  const counts = {}; EXAM_INTEREST_CATEGORIES.forEach(c=> counts[c]=0);
+  roster.forEach(s=>{ counts[computeExamInterest(s, pu).leaning]++; });
+  const noAttempts = counts['No competitive exam attempts on file yet'];
+  const attempted = roster.length - noAttempts;
+  const medicalLeaning = counts['Medical (NEET) only'] + counts['Leaning Medical'];
+  const engineeringLeaning = counts['Engineering (KCET/JEE) only'] + counts['Leaning Engineering'];
+  const both = counts['Exploring Both Equally'];
+  return { rosterSize: roster.length, attempted, noAttempts, medicalLeaning, engineeringLeaning, both, counts };
+}
+function renderClassExamInterest(kpiElId, tableElId, pu){
+  const s = computeClassExamInterest(pu);
+  const pct = n => s.rosterSize ? Math.round(n/s.rosterSize*1000)/10 : 0;
+  document.getElementById(kpiElId).innerHTML = `
+    <div class="kpi hero"><div class="kpi-label">🩺 Leaning Medical (NEET)</div><div class="kpi-value">${s.medicalLeaning}</div><div class="kpi-note">${pct(s.medicalLeaning)}% of roster</div></div>
+    <div class="kpi gold"><div class="kpi-label">⚙️ Leaning Engineering (KCET/JEE)</div><div class="kpi-value">${s.engineeringLeaning}</div><div class="kpi-note">${pct(s.engineeringLeaning)}% of roster</div></div>
+    <div class="kpi"><div class="kpi-label">⚖️ Exploring Both Equally</div><div class="kpi-value">${s.both}</div><div class="kpi-note">${pct(s.both)}% of roster</div></div>
+    <div class="kpi warn"><div class="kpi-label">❓ No Exam Attempts Yet</div><div class="kpi-value">${s.noAttempts}</div><div class="kpi-note">${pct(s.noAttempts)}% of roster</div></div>
+  `;
+  document.querySelector('#'+tableElId+' tbody').innerHTML = EXAM_INTEREST_CATEGORIES.map(c=>
+    `<tr><td>${EXAM_INTEREST_ICONS[c]} ${c}</td><td>${s.counts[c]}</td><td>${pct(s.counts[c])}%</td></tr>`
+  ).join('');
 }
 
 function renderBioCandidateInsight(student, pu){
