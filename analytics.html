@@ -941,6 +941,7 @@ window.addEventListener('afterprint', function(){
     <button class="mode-btn" data-mode="kcetobt">📐 KCET OBT Analytics</button>
     <button class="mode-btn" data-mode="jeeobt">🎯 JEE OBT Analytics</button>
     <button class="mode-btn" data-mode="pucompare">⚖️ PU-I vs PU-II (Biology)</button>
+    <button class="mode-btn" data-mode="achievers">🏆 Potential Achievers</button>
     <button class="mode-btn" data-mode="bioreport">🧬 Biology Report</button>
     <button class="mode-btn" data-mode="electronicsreport">⚡ Electronics Report</button>
     <button class="mode-btn" data-mode="keys">🗝️ Answer Keys</button>
@@ -2190,6 +2191,45 @@ window.addEventListener('afterprint', function(){
 </main>
 </div><!-- /app-pucompare -->
 
+<div class="app-container" id="app-achievers" style="display:none;">
+<main>
+  <div class="panel">
+    <h2>🏆 Potential Achievers</h2>
+    <div class="desc">Students on track for a strong result in each category, based on their most recent test performance — not a guarantee, just a rough guide from the data on file.</div>
+    <div class="subtabs" id="achieverCategoryTabs">
+      <button class="subtab-btn active" data-cat="theory">📖 Theory</button>
+      <button class="subtab-btn" data-cat="neet">🩺 NEET</button>
+      <button class="subtab-btn" data-cat="kcet">📐 KCET</button>
+      <button class="subtab-btn" data-cat="jee">🎯 JEE</button>
+    </div>
+    <div class="custom-report-options active" style="display:block; margin-top:10px;">
+      <div class="checkbox-row"><input type="checkbox" id="achIncludePU1" checked><label for="achIncludePU1">Include PU-I (Spark + Prime)</label></div>
+      <div style="margin-left:26px; margin-bottom:6px;">
+        <div class="checkbox-row"><input type="checkbox" class="ach-section-check" value="SPARK" id="achSecSPARK" checked><label for="achSecSPARK">SPARK</label></div>
+        <div class="checkbox-row"><input type="checkbox" class="ach-section-check" value="PRIME" id="achSecPRIME" checked><label for="achSecPRIME">PRIME</label></div>
+      </div>
+      <div class="checkbox-row"><input type="checkbox" id="achIncludePU2" checked><label for="achIncludePU2">Include PU-II (Champion + Elite)</label></div>
+      <div style="margin-left:26px; margin-bottom:6px;">
+        <div class="checkbox-row"><input type="checkbox" class="ach-section-check" value="CHAMPION" id="achSecCHAMPION" checked><label for="achSecCHAMPION">CHAMPION</label></div>
+        <div class="checkbox-row"><input type="checkbox" class="ach-section-check" value="ELITE" id="achSecELITE" checked><label for="achSecELITE">ELITE</label></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-row" id="achieverKpis"></div>
+
+  <div class="panel">
+    <h2 id="achieverListTitle">Potential Theory Achievers</h2>
+    <div class="desc" id="achieverListDesc"></div>
+    <div class="table-wrap"><table id="achieverTable">
+      <thead><tr><th>Rank</th><th>Name</th><th>Enroll Code</th><th>Section</th><th>PU</th><th>Score</th><th>Trend</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <div class="report-actions" id="achieverShareBar" style="margin-top:12px;"></div>
+  </div>
+</main>
+</div><!-- /app-achievers -->
+
 <div class="app-container" id="app-bioreport" style="display:none;">
 <main>
   <div class="subtabs">
@@ -3058,7 +3098,7 @@ document.querySelectorAll('.app-container').forEach(container=>{
 const ANALYTICS_MASTER_CODE = 'BAIO-NS-2026-R4T9';
 // Note: the teacher bypass now uses ANALYTICS_MASTER_CODE directly (defined above) \u2014
 // no separate password to remember.
-const ANALYTICS_LOCKED_MODES = ['slip', 'monthly', 'bvo', 'sections', 'neetobt', 'kcetobt', 'jeeobt', 'pucompare', 'bioreport', 'electronicsreport', 'reports'];
+const ANALYTICS_LOCKED_MODES = ['slip', 'monthly', 'bvo', 'sections', 'neetobt', 'kcetobt', 'jeeobt', 'pucompare', 'achievers', 'bioreport', 'electronicsreport', 'reports'];
 function isAnalyticsUnlocked(){
   try{ return localStorage.getItem('baio_analytics_unlock') === 'true'; }catch(e){ return false; }
 }
@@ -3178,13 +3218,14 @@ function buildFnFor(mode){
   if(mode==='keys') return buildKeyAnswers;
   if(mode==='jeeobt') return buildJeeObtOverview;
   if(mode==='pucompare') return buildPuCompare;
+  if(mode==='achievers') return buildAchievers;
   if(mode==='bioreport') return initBioReportTab;
   if(mode==='electronicsreport') return initElectronicsReportTab;
   return null;
 }
 const ALL_CONTAINER_IDS = ['app-slip','app-monthly','app-bvo','app-sections','app-neetobt','app-kcetobt','app-jeeobt',
   'app-pu2slip','app-pu2monthly','app-pu2bvo','app-pu2sections','app-pu2neetobt','app-pu2kcetobt',
-  'app-pucompare','app-bioreport','app-electronicsreport','app-keys','app-reports','app-student'];
+  'app-pucompare','app-achievers','app-bioreport','app-electronicsreport','app-keys','app-reports','app-student'];
 document.querySelectorAll('.mode-btn[data-mode]').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     if(ANALYTICS_LOCKED_MODES.indexOf(btn.dataset.mode) !== -1 && !isAnalyticsUnlocked()){
@@ -6642,6 +6683,121 @@ function classPercentileHtml(student, pu){
     '<div style="font-size:10.5px; color:var(--muted); margin-top:6px;">Based on this student’s class rank across their last '+r.points.length+' theory test'+(r.points.length>1?'s':'')+' ('+r.points.map(p=>p.label).join(', ')+') — a rough guide only, not an official board exam percentile.</div>'+
     '</div>';
 }
+
+/* ---- Potential Achievers: scan the roster for students already showing a strong
+   signal in Theory (class percentile), NEET, KCET, or JEE (exam readiness band),
+   reusing the exact same computations already shown on individual report
+   cards/candidate insight, just filtered down to whoever clears the "Strong"/
+   "Top 25%" bar. ---- */
+const ACHIEVER_CATEGORY_META = {
+  theory: { label: 'Theory', icon: '📖', desc: 'Estimated class percentile across recent theory tests (Slip Test / Monthly Test).', unit: 'percentile' },
+  neet:   { label: 'NEET',   icon: '🩺', desc: 'NEET (PCB) exam readiness across NEET OBT / CT rounds.', unit: '%' },
+  kcet:   { label: 'KCET',   icon: '📐', desc: 'KCET (PCM) exam readiness across KCET OBT / CT rounds.', unit: '%' },
+  jee:    { label: 'JEE',    icon: '🎯', desc: 'JEE exam readiness across JEE OBT / CT rounds.', unit: '%' }
+};
+function computeAchieversList(category, opts){
+  const list = [];
+  function pushIfQualifies(student, pu, r){
+    if(!r) return;
+    if(category==='theory'){
+      if(r.avgPct < 75) return;
+      list.push({ code: student.code, name: student.name, section: sectionLabel(student), pu, score: r.avgPct, trend: r.trend });
+    } else {
+      if(!r.band || r.band.key !== 'strong') return;
+      list.push({ code: student.code, name: student.name, section: sectionLabel(student), pu, score: r.latestPct, trend: r.trend });
+    }
+  }
+  const KNOWN_ACH_SECTIONS = ['SPARK','PRIME','CHAMPION','ELITE'];
+  const sections = opts.sections || KNOWN_ACH_SECTIONS;
+  function sectionAllowed(student){
+    return KNOWN_ACH_SECTIONS.indexOf(student.section) === -1 || sections.indexOf(student.section) !== -1;
+  }
+  if(opts.includePU1){
+    STUDENTS.forEach(student=>{
+      if(!sectionAllowed(student)) return;
+      let r = null;
+      if(category==='theory') r = computeClassPercentileTrend(student, 1);
+      else if(category==='neet') r = computeStreamReadiness(NEET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 720);
+      else if(category==='kcet') r = computeStreamReadiness(KCET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 135);
+      else if(category==='jee') r = (typeof JEE_BY_CODE!=='undefined') ? computeStreamReadiness(JEE_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 300) : null;
+      pushIfQualifies(student, 1, r);
+    });
+  }
+  if(opts.includePU2 && typeof PU2_STUDENTS!=='undefined'){
+    PU2_STUDENTS.forEach(student=>{
+      if(!sectionAllowed(student)) return;
+      let r = null;
+      if(category==='theory') r = computeClassPercentileTrend(student, 2);
+      else if(category==='neet') r = computePU2NeetReadiness(student);
+      else if(category==='kcet') r = computePU2KcetReadiness(student);
+      else if(category==='jee') r = computePU2JeeReadiness(student);
+      pushIfQualifies(student, 2, r);
+    });
+  }
+  list.sort((a,b)=> b.score - a.score);
+  return list;
+}
+function achieverScoreLabel(category, score){
+  return category==='theory' ? '~'+score+'th pct' : score+'%';
+}
+function renderAchieverTable(list, category){
+  const tbody = document.querySelector('#achieverTable tbody');
+  if(!list.length){
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--muted);">No students currently clear this bar with the data on file.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map((s,i)=>{
+    const trendHtml = s.trend===null||s.trend===undefined ? '—' :
+      (s.trend>=0 ? '<span style="color:#15803d;">↑ +'+s.trend+'</span>' : '<span style="color:#b91c1c;">↓ '+s.trend+'</span>');
+    return '<tr><td>#'+(i+1)+'</td><td>'+s.name+'</td><td>'+s.code+'</td><td>'+s.section+'</td><td>PU-'+(s.pu===2?'II':'I')+'</td><td><b>'+achieverScoreLabel(category, s.score)+'</b></td><td>'+trendHtml+'</td></tr>';
+  }).join('');
+}
+function buildAchievers(){
+  const activeBtn = document.querySelector('#achieverCategoryTabs .subtab-btn.active');
+  const category = activeBtn ? activeBtn.dataset.cat : 'theory';
+  const opts = {
+    includePU1: document.getElementById('achIncludePU1').checked,
+    includePU2: document.getElementById('achIncludePU2').checked,
+    sections: Array.from(document.querySelectorAll('.ach-section-check:checked')).map(cb=>cb.value)
+  };
+  const meta = ACHIEVER_CATEGORY_META[category];
+  const list = computeAchieversList(category, opts);
+  const pu1Count = list.filter(s=>s.pu===1).length;
+  const pu2Count = list.filter(s=>s.pu===2).length;
+
+  document.getElementById('achieverKpis').innerHTML =
+    '<div class="kpi hero"><div class="kpi-label">'+meta.icon+' Potential '+meta.label+' Achievers</div><div class="kpi-value">'+list.length+'</div><div class="kpi-note">students clearing the bar</div></div>'+
+    '<div class="kpi"><div class="kpi-label">PU-I</div><div class="kpi-value">'+pu1Count+'</div><div class="kpi-note">Spark + Prime</div></div>'+
+    '<div class="kpi"><div class="kpi-label">PU-II</div><div class="kpi-value">'+pu2Count+'</div><div class="kpi-note">Champion + Elite</div></div>';
+
+  document.getElementById('achieverListTitle').textContent = 'Potential '+meta.label+' Achievers';
+  document.getElementById('achieverListDesc').textContent = meta.desc+' Threshold: '+(category==='theory' ? 'Top 25% class percentile (75th+).' : '“Strong” readiness band (70%+ on latest attempt).');
+  renderAchieverTable(list, category);
+
+  attachTopperShareBar('achieverShareBar', () => ({
+    title: 'Potential '+meta.label+' Achievers',
+    subtitle: 'BAIO Learning System · '+list.length+' student'+(list.length===1?'':'s'),
+    rows: list.map(s=>({ name: s.name, section: s.section+' · PU-'+(s.pu===2?'II':'I'), score: achieverScoreLabel(category, s.score) })),
+    outOf: null,
+    filenameBase: 'potential-'+category+'-achievers'
+  }));
+}
+(function wireAchieversUI(){
+  const tabsWrap = document.getElementById('achieverCategoryTabs');
+  if(!tabsWrap) return;
+  tabsWrap.querySelectorAll('.subtab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      tabsWrap.querySelectorAll('.subtab-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      buildAchievers();
+    });
+  });
+  const pu1Cb = document.getElementById('achIncludePU1');
+  const pu2Cb = document.getElementById('achIncludePU2');
+  if(pu1Cb) pu1Cb.addEventListener('change', buildAchievers);
+  if(pu2Cb) pu2Cb.addEventListener('change', buildAchievers);
+  document.querySelectorAll('.ach-section-check').forEach(cb=> cb.addEventListener('change', buildAchievers));
+})();
 function computeStreamReadiness(byCodeEntry, roundKeys, maxTotal){
   if(!byCodeEntry) return null;
   const attempts = roundKeys.map(k=>byCodeEntry[k]).filter(r=>r && !r.ABSENT && r.TOTAL!==null && r.TOTAL!==undefined);
