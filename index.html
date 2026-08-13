@@ -137,6 +137,13 @@ header{padding:34px 0 22px; text-align:center;}
 }
 .bell-ring{ display:inline-block; transform-origin:50% 0; animation:bellRing 2.4s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce){ .bell-ring{ animation:none; } }
+.bell-wrap{ position:relative; display:inline-block; }
+.bell-count{
+  position:absolute; top:-7px; right:-9px; min-width:15px; height:15px; padding:0 3px;
+  border-radius:999px; background:#e0685f; color:#fff; font-size:9.5px; font-weight:800;
+  display:none; align-items:center; justify-content:center; line-height:1;
+  font-family:'Space Grotesk',sans-serif; box-shadow:0 0 0 2px var(--navy);
+}
 
 .announce-modal-overlay{
   position:fixed; inset:0; z-index:2000; background:rgba(0,0,0,0.6);
@@ -361,7 +368,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
 
   <div class="quick-actions-row">
     <a href="analytics.html" class="quick-action-btn">📊 Performance Analysis</a>
-    <a href="announcements.html" class="quick-action-btn"><span id="bellIcon">🔔</span> Announcements</a>
+    <a href="announcements.html" class="quick-action-btn"><span class="bell-wrap"><span id="bellIcon">🔔</span><span id="bellCount" class="bell-count"></span></span> Announcements</a>
     <a href="guide.html" class="quick-action-btn">📘 Student Guide</a>
     <a href="about.html" class="quick-action-btn">ℹ️ About</a>
     <a href="call-whatsapp-help.html" class="quick-action-btn">📞 Call &amp; WhatsApp Help</a>
@@ -482,50 +489,74 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     .then(res => res.ok ? res.text() : Promise.reject())
     .then(htmlText => {
       const doc = new DOMParser().parseFromString(htmlText, 'text/html');
-      const latestNotice = doc.querySelector('.notice');
-      const title = latestNotice ? latestNotice.querySelector('h1') : null;
-      const lede = latestNotice ? latestNotice.querySelector('.lede') : null;
-      const metaRow = latestNotice ? latestNotice.querySelector('.meta-row') : null;
-      const img = latestNotice ? latestNotice.querySelector('img') : null;
-      if(!title) return;
+      // Parse every archived .notice block (newest first, matching how new
+      // announcements are always prepended) so unread state can be a real
+      // count of how many are newer than what this student last saw, not
+      // just a single latest/seen flag.
+      const parsed = Array.from(doc.querySelectorAll('.notice')).map(notice => {
+        const title = notice.querySelector('h1');
+        if(!title) return null;
+        const lede = notice.querySelector('.lede');
+        const metaRow = notice.querySelector('.meta-row');
+        const img = notice.querySelector('img');
+        const titleText = title.textContent.trim();
+        const ledeText = lede ? lede.textContent.trim() : '';
+        let dateText = '';
+        if(metaRow){
+          const spans = Array.from(metaRow.querySelectorAll('span'));
+          const postedSpan = spans.find(s => /posted/i.test(s.textContent));
+          if(postedSpan) dateText = postedSpan.textContent.replace(/^\s*\S+\s*/, '').trim();
+        }
+        return {titleText: titleText, ledeText: ledeText, dateText: dateText, img: img, fingerprint: titleText + '::' + dateText};
+      }).filter(Boolean);
+      if(parsed.length === 0) return;
 
-      const titleText = title.textContent.trim();
-      const ledeText = lede ? lede.textContent.trim() : '';
-      let dateText = '';
-      if(metaRow){
-        const spans = Array.from(metaRow.querySelectorAll('span'));
-        const postedSpan = spans.find(s => /posted/i.test(s.textContent));
-        if(postedSpan) dateText = postedSpan.textContent.replace(/^\s*\S+\s*/, '').trim();
-      }
-
+      const latest = parsed[0];
       const seenKey = 'baio_last_seen_announcement';
-      const fingerprint = titleText + '::' + dateText;
       let lastSeen = null;
       try{ lastSeen = localStorage.getItem(seenKey); }catch(e){}
-      if(lastSeen === fingerprint){ setBadgeCount(0); return; }
-      setBadgeCount(1);
-      showAnnouncementNotification(titleText, ledeText);
+
+      let unreadCount;
+      if(lastSeen === null){
+        // First-ever visit: flag just the newest one, not the whole archive.
+        unreadCount = 1;
+      } else {
+        const seenIdx = parsed.findIndex(p => p.fingerprint === lastSeen);
+        // If the last-seen fingerprint isn't found (e.g. an old entry was
+        // pruned from the page), treat the student as caught up rather than
+        // surfacing a confusing/inflated count.
+        unreadCount = seenIdx === -1 ? 0 : seenIdx;
+      }
+      if(unreadCount === 0){ setBadgeCount(0); return; }
+
+      setBadgeCount(unreadCount);
+      showAnnouncementNotification(latest.titleText, latest.ledeText);
       playBellChime();
-      document.getElementById('bellIcon')?.classList.add('bell-ring');
+      const bellIcon = document.getElementById('bellIcon');
+      bellIcon?.classList.add('bell-ring');
+      const bellCount = document.getElementById('bellCount');
+      if(bellCount){ bellCount.textContent = unreadCount; bellCount.style.display = 'flex'; }
       const banner = document.getElementById('announcementBanner');
       if(banner){
-        document.getElementById('announceBannerText').textContent = titleText;
+        document.getElementById('announceBannerText').textContent =
+          unreadCount > 1 ? unreadCount + ' new announcements waiting' : latest.titleText;
         banner.style.display = 'flex';
       }
 
       const iconEl = document.querySelector('#announcementModalOverlay .announce-modal-icon');
-      if(img && iconEl){
-        iconEl.outerHTML = '<img src="' + img.src + '" alt="Announcement" style="width:100%; border-radius:10px; margin-bottom:10px; display:block;">';
+      if(latest.img && iconEl){
+        iconEl.outerHTML = '<img src="' + latest.img.src + '" alt="Announcement" style="width:100%; border-radius:10px; margin-bottom:10px; display:block;">';
       }
-      document.getElementById('announceModalDate').textContent = dateText;
+      document.getElementById('announceModalDate').textContent = latest.dateText;
       document.getElementById('announceModalText').innerHTML =
-        '<b style="display:block; margin-bottom:6px; font-size:15px;">' + titleText + '</b>' + ledeText;
+        '<b style="display:block; margin-bottom:6px; font-size:15px;">' + latest.titleText + '</b>' + latest.ledeText;
       document.getElementById('announcementModalOverlay').style.display = 'flex';
 
       function markAnnouncementSeen(){
-        try{ localStorage.setItem(seenKey, fingerprint); }catch(e){}
+        try{ localStorage.setItem(seenKey, latest.fingerprint); }catch(e){}
         setBadgeCount(0);
-        document.getElementById('bellIcon')?.classList.remove('bell-ring');
+        bellIcon?.classList.remove('bell-ring');
+        if(bellCount) bellCount.style.display = 'none';
         if(banner) banner.style.display = 'none';
       }
 
