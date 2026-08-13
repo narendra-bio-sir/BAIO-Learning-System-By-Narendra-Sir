@@ -2204,7 +2204,15 @@ window.addEventListener('afterprint', function(){
     </div>
     <div class="custom-report-options active" style="display:block; margin-top:10px;">
       <div class="checkbox-row"><input type="checkbox" id="achIncludePU1" checked><label for="achIncludePU1">Include PU-I (Spark + Prime)</label></div>
+      <div style="margin-left:26px; margin-bottom:6px;">
+        <div class="checkbox-row"><input type="checkbox" class="ach-section-check" value="SPARK" id="achSecSPARK" checked><label for="achSecSPARK">SPARK</label></div>
+        <div class="checkbox-row"><input type="checkbox" class="ach-section-check" value="PRIME" id="achSecPRIME" checked><label for="achSecPRIME">PRIME</label></div>
+      </div>
       <div class="checkbox-row"><input type="checkbox" id="achIncludePU2" checked><label for="achIncludePU2">Include PU-II (Champion + Elite)</label></div>
+      <div style="margin-left:26px; margin-bottom:6px;">
+        <div class="checkbox-row"><input type="checkbox" class="ach-section-check" value="CHAMPION" id="achSecCHAMPION" checked><label for="achSecCHAMPION">CHAMPION</label></div>
+        <div class="checkbox-row"><input type="checkbox" class="ach-section-check" value="ELITE" id="achSecELITE" checked><label for="achSecELITE">ELITE</label></div>
+      </div>
     </div>
   </div>
 
@@ -6699,8 +6707,14 @@ function computeAchieversList(category, opts){
       list.push({ code: student.code, name: student.name, section: sectionLabel(student), pu, score: r.latestPct, trend: r.trend });
     }
   }
+  const KNOWN_ACH_SECTIONS = ['SPARK','PRIME','CHAMPION','ELITE'];
+  const sections = opts.sections || KNOWN_ACH_SECTIONS;
+  function sectionAllowed(student){
+    return KNOWN_ACH_SECTIONS.indexOf(student.section) === -1 || sections.indexOf(student.section) !== -1;
+  }
   if(opts.includePU1){
     STUDENTS.forEach(student=>{
+      if(!sectionAllowed(student)) return;
       let r = null;
       if(category==='theory') r = computeClassPercentileTrend(student, 1);
       else if(category==='neet') r = computeStreamReadiness(NEET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 720);
@@ -6711,6 +6725,7 @@ function computeAchieversList(category, opts){
   }
   if(opts.includePU2 && typeof PU2_STUDENTS!=='undefined'){
     PU2_STUDENTS.forEach(student=>{
+      if(!sectionAllowed(student)) return;
       let r = null;
       if(category==='theory') r = computeClassPercentileTrend(student, 2);
       else if(category==='neet') r = computePU2NeetReadiness(student);
@@ -6742,7 +6757,8 @@ function buildAchievers(){
   const category = activeBtn ? activeBtn.dataset.cat : 'theory';
   const opts = {
     includePU1: document.getElementById('achIncludePU1').checked,
-    includePU2: document.getElementById('achIncludePU2').checked
+    includePU2: document.getElementById('achIncludePU2').checked,
+    sections: Array.from(document.querySelectorAll('.ach-section-check:checked')).map(cb=>cb.value)
   };
   const meta = ACHIEVER_CATEGORY_META[category];
   const list = computeAchieversList(category, opts);
@@ -6780,6 +6796,7 @@ function buildAchievers(){
   const pu2Cb = document.getElementById('achIncludePU2');
   if(pu1Cb) pu1Cb.addEventListener('change', buildAchievers);
   if(pu2Cb) pu2Cb.addEventListener('change', buildAchievers);
+  document.querySelectorAll('.ach-section-check').forEach(cb=> cb.addEventListener('change', buildAchievers));
 })();
 function computeStreamReadiness(byCodeEntry, roundKeys, maxTotal){
   if(!byCodeEntry) return null;
