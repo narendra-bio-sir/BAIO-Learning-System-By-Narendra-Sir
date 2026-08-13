@@ -105,6 +105,7 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif; margin:0;}
 .tabbar-wrap{
   display:flex; align-items:stretch; gap:4px;
   margin-bottom:14px; position:sticky; top:8px; z-index:20;
+  background:var(--bg-0);
 }
 .tab-scroll-btn{
   flex:0 0 auto; width:26px; border:1px solid var(--border); border-radius:8px;
@@ -532,6 +533,7 @@ footer{text-align:center; color:var(--text-dim); font-size:11px; margin-top:22px
   display:flex; align-items:center; justify-content:space-between; gap:10px;
   background:var(--panel-2); border:1px solid var(--border); border-radius:10px;
   padding:8px 12px; margin-bottom:10px; font-size:12.5px; color:var(--text);
+  position:sticky; top:0; z-index:19;
 }
 .student-greet-bar .btn{padding:5px 10px; font-size:11px;}
 /* ---- Slidable / keyboard-navigable tabs ---- */
@@ -4699,14 +4701,26 @@ renderMnemonics();
    A hardcoded top offset breaks whenever the header wraps to a different
    height (narrow screens, language switch, font load), so measure it live
    instead. ---------------- */
-(function syncTabbarOffset(){
+(function syncStickyOffsets(){
   var header = document.querySelector('.header');
+  var bar = document.getElementById('studentGreetBar');
   var tabbarWrap = document.querySelector('.tabbar-wrap');
   if(!header || !tabbarWrap) return;
-  function sync(){ tabbarWrap.style.top = header.getBoundingClientRect().height + 'px'; }
+  function sync(){
+    var headerH = header.getBoundingClientRect().height;
+    var barH = 0;
+    if(bar){
+      bar.style.top = headerH + 'px';
+      if(getComputedStyle(bar).display !== 'none') barH = bar.getBoundingClientRect().height;
+    }
+    tabbarWrap.style.top = (headerH + barH) + 'px';
+  }
   sync();
-  if(window.ResizeObserver){ new ResizeObserver(sync).observe(header); }
-  else{ window.addEventListener('resize', sync); }
+  if(window.ResizeObserver){
+    var ro = new ResizeObserver(sync);
+    ro.observe(header);
+    if(bar) ro.observe(bar);
+  } else { window.addEventListener('resize', sync); }
 })();
 
 const LANG_STRINGS = {
