@@ -425,7 +425,7 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .student-modal label{display:block;font-size:11.5px;color:var(--gold);text-transform:uppercase;letter-spacing:0.5px;margin:10px 0 4px;}
 .student-modal input[type="text"]{width:100%;padding:9px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font-size:14px;}
 .sm-save-btn{margin-top:16px;width:100%;padding:10px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;font-weight:700;font-size:14px;cursor:pointer;}
-.student-greet-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 18px;font-size:12.5px;color:var(--ink-dim);background:var(--panel2);border-bottom:1px solid var(--line);}
+.student-greet-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 18px;font-size:12.5px;color:var(--ink-dim);background:var(--panel2);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:19;}
 .student-greet-bar b{color:var(--gold);}
 .sm-edit-btn{background:none;border:1px solid var(--line);color:var(--ink-dim);padding:3px 9px;border-radius:12px;font-size:11px;cursor:pointer;}
 
@@ -3039,14 +3039,26 @@ renderKcetReport = function(){
    A hardcoded top offset breaks whenever the header wraps to a different
    height (narrow screens, language switch, font load), so measure it live
    instead. ---------------- */
-(function syncTabbarOffset(){
+(function syncStickyOffsets(){
   var header = document.querySelector('.header');
+  var bar = document.getElementById('studentGreetBar');
   var tabbarWrap = document.querySelector('.tabbar-wrap');
   if(!header || !tabbarWrap) return;
-  function sync(){ tabbarWrap.style.top = header.getBoundingClientRect().height + 'px'; }
+  function sync(){
+    var headerH = header.getBoundingClientRect().height;
+    var barH = 0;
+    if(bar){
+      bar.style.top = headerH + 'px';
+      if(getComputedStyle(bar).display !== 'none') barH = bar.getBoundingClientRect().height;
+    }
+    tabbarWrap.style.top = (headerH + barH) + 'px';
+  }
   sync();
-  if(window.ResizeObserver){ new ResizeObserver(sync).observe(header); }
-  else{ window.addEventListener('resize', sync); }
+  if(window.ResizeObserver){
+    var ro = new ResizeObserver(sync);
+    ro.observe(header);
+    if(bar) ro.observe(bar);
+  } else { window.addEventListener('resize', sync); }
 })();
 
 document.body.classList.add('lang-'+currentLang);
