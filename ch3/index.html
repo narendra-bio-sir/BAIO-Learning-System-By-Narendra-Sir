@@ -2328,27 +2328,76 @@ document.addEventListener('keydown', (e)=>{
 });
 
 /* ---- Study Tips ---- */
-function renderStudyTips(){
-  const theory = [
+const STUDYTIPS_CH3_EN = {
+  title: "Study Tips &ndash; Plant Kingdom",
+  intro: "How to study this chapter well, and what to focus on for NEET.",
+  theoryHead: "📘 Theory &mdash; How to Study This Chapter",
+  neetHead: "🎯 NEET Strategy for This Chapter",
+  theory: [
     "Build one master table across Algae &rarr; Bryophytes &rarr; Pteridophytes &rarr; Gymnosperms &rarr; Angiosperms comparing plant body, vascular tissue, dominant phase (gametophyte vs sporophyte) and reproductive units &mdash; this single table covers most of the chapter.",
     "Alternation of generations is the backbone of this chapter. For every group, be able to say which phase is dominant and why.",
     "Learn one classic life cycle in real detail (Funaria for bryophytes, or a fern for pteridophytes) since diagram-labelling questions repeat from these.",
     "Memorize the algae classes (Chlorophyceae, Phaeophyceae, Rhodophyceae) with their pigments and stored food &mdash; a favourite distinguishing set in exams.",
     "For Gymnosperms vs Angiosperms, anchor everything to one difference first: whether the ovule/seed is exposed or enclosed."
-  ];
-  const neet = [
+  ],
+  neet: [
     "“Which phase is dominant” and “identify the odd one out” questions are extremely common across the plant groups &mdash; drill these with flashcards.",
     "Pigment / stored-food matching for the three algae classes is a repeat favourite. Make yourself a 30-second recall table for it.",
     "Don't skip Pteridophytes or Gymnosperms as “low-yield” &mdash; direct one-line factual questions from both show up regularly.",
     "Revise this chapter alongside Chapter 2 (Biological Classification) &mdash; classification logic is often tested across both together."
-  ];
+  ]
+};
+const STUDYTIPS_CH3_TRANSLATIONS = {
+  kn: {
+    title: "ಅಧ್ಯಯನ ಸಲಹೆಗಳು – ಸಸ್ಯ ಸಾಮ್ರಾಜ್ಯ",
+    intro: "ಈ ಅಧ್ಯಾಯವನ್ನು ಚೆನ್ನಾಗಿ ಓದುವುದು ಹೇಗೆ, ಮತ್ತು NEET ಗಾಗಿ ಏನು ಗಮನಿಸಬೇಕು.",
+    theoryHead: "📘 ಥಿಯರಿ — ಈ ಅಧ್ಯಾಯವನ್ನು ಹೇಗೆ ಓದುವುದು",
+    neetHead: "🎯 ಈ ಅಧ್ಯಾಯಕ್ಕೆ NEET ತಂತ್ರ",
+    theory: [
+      "ಪಾಚಿ → ಬ್ರಯೋಫೈಟ್ → ಟೆರಿಡೋಫೈಟ್ → ಜಿಮ್ನೋಸ್ಪರ್ಮ್ → ಆಂಜಿಯೋಸ್ಪರ್ಮ್ ಎಲ್ಲದರ ನಡುವೆ ಸಸ್ಯ ದೇಹ, ವಾಹಕ ಅಂಗಾಂಶ, ಪ್ರಬಲ ಹಂತ (ಗ್ಯಾಮಿಟೋಫೈಟ್ ವರ್ಸಸ್ ಸ್ಪೋರೋಫೈಟ್) ಮತ್ತು ಸಂತಾನೋತ್ಪತ್ತಿ ಘಟಕಗಳನ್ನು ಹೋಲಿಸುವ ಒಂದೇ ಮಾಸ್ಟರ್ ಟೇಬಲ್ ಮಾಡಿ — ಇದೊಂದೇ ಟೇಬಲ್ ಅಧ್ಯಾಯದ ಬಹುಪಾಲನ್ನು ಆವರಿಸುತ್ತದೆ.",
+      "ಅಲ್ಟರ್ನೇಷನ್ ಆಫ್ ಜನರೇಷನ್ಸ್ ಈ ಅಧ್ಯಾಯದ ಬೆನ್ನೆಲುಬು. ಪ್ರತಿ ಗುಂಪಿಗೂ ಯಾವ ಹಂತ ಪ್ರಬಲ ಮತ್ತು ಏಕೆ ಎಂದು ಹೇಳಲು ಸಾಧ್ಯವಾಗಬೇಕು.",
+      "ಒಂದು ಕ್ಲಾಸಿಕ್ ಜೀವನ ಚಕ್ರವನ್ನು (ಬ್ರಯೋಫೈಟ್‌ಗಳಿಗೆ ಫ್ಯುನೇರಿಯಾ, ಅಥವಾ ಟೆರಿಡೋಫೈಟ್‌ಗಳಿಗೆ ಒಂದು ಫರ್ನ್) ಆಳವಾಗಿ ಕಲಿಯಿರಿ ಏಕೆಂದರೆ ಡಯಾಗ್ರಾಂ-ಲೇಬಲಿಂಗ್ ಪ್ರಶ್ನೆಗಳು ಇವುಗಳಿಂದ ಪುನರಾವರ್ತನೆಯಾಗುತ್ತವೆ.",
+      "ಪಾಚಿ ವರ್ಗಗಳನ್ನು (ಕ್ಲೋರೋಫೈಸೀ, ಫಿಯೋಫೈಸೀ, ರೋಡೋಫೈಸೀ) ಅವುಗಳ ವರ್ಣದ್ರವ್ಯ ಮತ್ತು ಸಂಗ್ರಹಿತ ಆಹಾರದೊಂದಿಗೆ ಕಂಠಪಾಠ ಮಾಡಿ — ಪರೀಕ್ಷೆಗಳಲ್ಲಿ ಇಷ್ಟದ ವ್ಯತ್ಯಾಸ ಗುರುತಿಸುವ ಸೆಟ್.",
+      "ಜಿಮ್ನೋಸ್ಪರ್ಮ್ ವರ್ಸಸ್ ಆಂಜಿಯೋಸ್ಪರ್ಮ್‌ಗೆ, ಎಲ್ಲವನ್ನೂ ಮೊದಲು ಒಂದೇ ವ್ಯತ್ಯಾಸಕ್ಕೆ ಆಧಾರಿಸಿ: ಅಂಡ/ಬೀಜ ತೆರೆದಿದೆಯೇ ಅಥವಾ ಮುಚ್ಚಲ್ಪಟ್ಟಿದೆಯೇ."
+    ],
+    neet: [
+      "“ಯಾವ ಹಂತ ಪ್ರಬಲ” ಮತ್ತು “ಅಸಾಮ್ಯ ಗುರುತಿಸಿ” ಪ್ರಶ್ನೆಗಳು ಸಸ್ಯ ಗುಂಪುಗಳಾದ್ಯಂತ ಅತ್ಯಂತ ಸಾಮಾನ್ಯ — ಫ್ಲಾಶ್‌ಕಾರ್ಡ್‌ಗಳಿಂದ ಇವುಗಳನ್ನು ಅಭ್ಯಾಸ ಮಾಡಿ.",
+      "ಮೂರು ಪಾಚಿ ವರ್ಗಗಳಿಗೆ ವರ್ಣದ್ರವ್ಯ / ಸಂಗ್ರಹಿತ ಆಹಾರ ಹೊಂದಾಣಿಕೆ ಪುನರಾವರ್ತಿತ ಇಷ್ಟದ ಪ್ರಶ್ನೆ. ಅದಕ್ಕಾಗಿ 30-ಸೆಕೆಂಡ್ ರಿಕಾಲ್ ಟೇಬಲ್ ಮಾಡಿಕೊಳ್ಳಿ.",
+      "ಟೆರಿಡೋಫೈಟ್ ಅಥವಾ ಜಿಮ್ನೋಸ್ಪರ್ಮ್‌ಗಳನ್ನು “ಕಡಿಮೆ-ಪ್ರಾಮುಖ್ಯ” ಎಂದು ಬಿಟ್ಟುಬಿಡಬೇಡಿ — ಎರಡರಿಂದಲೂ ನೇರ ಒಂದು-ಸಾಲಿನ ಸತ್ಯ ಆಧಾರಿತ ಪ್ರಶ್ನೆಗಳು ನಿಯಮಿತವಾಗಿ ಬರುತ್ತವೆ.",
+      "ಈ ಅಧ್ಯಾಯವನ್ನು ಅಧ್ಯಾಯ 2 (ಜೈವಿಕ ವರ್ಗೀಕರಣ) ಜೊತೆಗೆ ಪುನರಾವರ್ತಿಸಿ — ವರ್ಗೀಕರಣ ತರ್ಕವನ್ನು ಎರಡರಲ್ಲೂ ಒಟ್ಟಿಗೆ ಪರೀಕ್ಷಿಸುವುದು ಸಾಮಾನ್ಯ."
+    ]
+  },
+  hi: {
+    title: "अध्ययन सुझाव – प्लांट किंगडम",
+    intro: "इस अध्याय को अच्छी तरह कैसे पढ़ें, और NEET के लिए किस पर ध्यान दें।",
+    theoryHead: "📘 सिद्धांत — इस अध्याय को कैसे पढ़ें",
+    neetHead: "🎯 इस अध्याय के लिए NEET रणनीति",
+    theory: [
+      "शैवाल → ब्रायोफाइट → टेरिडोफाइट → जिम्नोस्पर्म → एंजियोस्पर्म — सभी की तुलना करते हुए एक मास्टर टेबल बनाएं: पादप शरीर, संवहन ऊतक, प्रमुख अवस्था (गैमीटोफाइट बनाम स्पोरोफाइट) और जनन इकाइयाँ — यह एक टेबल अध्याय के अधिकांश भाग को कवर करती है।",
+      "पीढ़ी एकांतरण (Alternation of Generations) इस अध्याय की रीढ़ है। हर समूह के लिए बता पाना चाहिए कि कौन-सी अवस्था प्रमुख है और क्यों।",
+      "किसी एक क्लासिक जीवन-चक्र को गहराई से सीखें (ब्रायोफाइट के लिए फ्यूनेरिया, या टेरिडोफाइट के लिए एक फर्न) क्योंकि डायग्राम-लेबलिंग प्रश्न इन्हीं से बार-बार आते हैं।",
+      "शैवाल वर्गों (क्लोरोफाइसी, फियोफाइसी, रोडोफाइसी) को उनके वर्णक और संचित भोजन के साथ याद करें — परीक्षाओं में यह एक पसंदीदा भेद बताने वाला सेट है।",
+      "जिम्नोस्पर्म बनाम एंजियोस्पर्म के लिए, सब कुछ पहले एक अंतर पर टिकाएं: क्या बीजांड/बीज खुला है या ढका हुआ।"
+    ],
+    neet: [
+      "“कौन-सी अवस्था प्रमुख है” और “विषम को पहचानें” जैसे प्रश्न पादप समूहों में बहुत आम हैं — फ्लैशकार्ड से इनका अभ्यास करें।",
+      "तीन शैवाल वर्गों के लिए वर्णक/संचित भोजन का मिलान एक बार-बार आने वाला पसंदीदा प्रश्न है। इसके लिए खुद एक 30-सेकंड रिकॉल टेबल बनाएं।",
+      "टेरिडोफाइट या जिम्नोस्पर्म को “कम महत्वपूर्ण” समझकर न छोड़ें — दोनों से सीधे एक-पंक्ति के तथ्यात्मक प्रश्न नियमित रूप से आते हैं।",
+      "इस अध्याय को अध्याय 2 (जैविक वर्गीकरण) के साथ दोहराएं — वर्गीकरण तर्क अक्सर दोनों में एक साथ परखा जाता है।"
+    ]
+  }
+};
+function renderStudyTips(){
+  const en = STUDYTIPS_CH3_EN;
+  const tr = (currentLang !== 'en') && STUDYTIPS_CH3_TRANSLATIONS[currentLang];
+  const d = tr || en;
   document.getElementById('content').innerHTML = `<div class="setup-card">
-    <h3 style="color:var(--gold);margin-bottom:4px;">Study Tips &ndash; Plant Kingdom</h3>
-    <div style="color:var(--ink-dim);font-size:12px;margin-bottom:16px;">How to study this chapter well, and what to focus on for NEET.</div>
-    <div class="tip-head">📘 Theory &mdash; How to Study This Chapter</div>
-    <ul class="tip-list">${theory.map(t=>`<li>${t}</li>`).join('')}</ul>
-    <div class="tip-head neet">🎯 NEET Strategy for This Chapter</div>
-    <ul class="tip-list neet">${neet.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <h3 style="color:var(--gold);margin-bottom:4px;">${d.title}</h3>
+    <div style="color:var(--ink-dim);font-size:12px;margin-bottom:16px;">${d.intro}</div>
+    <div class="tip-head">${d.theoryHead}</div>
+    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <div class="tip-head neet">${d.neetHead}</div>
+    <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   </div>`;
 }
 
