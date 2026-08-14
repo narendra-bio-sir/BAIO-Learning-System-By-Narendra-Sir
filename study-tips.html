@@ -244,10 +244,15 @@ const sections = document.querySelectorAll('.step, .hero');
 const pills = document.querySelectorAll('.nav-pill');
 function onScroll(){
   let current = 'start';
-  sections.forEach(sec=>{
-    const rect = sec.getBoundingClientRect();
-    if(rect.top <= 90) current = sec.id;
-  });
+  const nearBottom = (window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 4;
+  if(nearBottom){
+    current = sections[sections.length - 1].id;
+  } else {
+    sections.forEach(sec=>{
+      const rect = sec.getBoundingClientRect();
+      if(rect.top <= 90) current = sec.id;
+    });
+  }
   pills.forEach(p=>{
     p.classList.toggle('active', p.getAttribute('href') === '#' + current);
   });
