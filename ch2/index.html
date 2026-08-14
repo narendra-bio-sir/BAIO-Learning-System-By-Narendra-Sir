@@ -679,6 +679,49 @@ footer{text-align:center; color:var(--text-dim); font-size:11px; margin-top:22px
 .board-page-wrap:fullscreen img,.board-page-wrap:-webkit-full-screen img{
   width:100%;max-width:none;height:auto;touch-action:pan-x pan-y;
 }
+
+/* ============ DESKTOP LAYOUT (>=1024px) ============ */
+@media(min-width:1024px){
+  .app{
+    max-width:1180px;
+    display:grid;
+    grid-template-columns:230px 1fr;
+    grid-template-areas:
+      "header header"
+      "greet  greet"
+      "tabs   content"
+      "footer footer";
+    column-gap:32px;
+  }
+  .header{grid-area:header; padding:26px 32px 20px;}
+  .student-greet-bar{grid-area:greet;}
+  .tabbar-wrap{
+    grid-area:tabs;
+    display:block;
+    position:sticky;
+    top:24px;
+    align-self:start;
+    max-height:calc(100vh - 48px);
+    overflow-y:auto;
+    margin-bottom:0;
+  }
+  .tab-scroll-btn{display:none;}
+  .tabs{
+    display:flex;
+    flex-direction:column;
+    overflow-x:visible;
+    gap:4px;
+  }
+  .tab-btn{
+    width:100%;
+    min-width:0;
+    text-align:left;
+    border-radius:10px;
+    padding:10px 14px;
+  }
+  .panel{grid-area:content; min-width:0;}
+  footer{grid-area:footer;}
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>

@@ -444,6 +444,50 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 }
 .share-card-box .btn-row button{flex:1 1 auto;}
 
+/* ============ DESKTOP LAYOUT (>=1024px) ============ */
+@media(min-width:1024px){
+  .app{
+    max-width:1180px;
+    display:grid;
+    grid-template-columns:230px 1fr;
+    grid-template-areas:
+      "header header"
+      "greet  greet"
+      "tabs   content"
+      "footer footer";
+    column-gap:32px;
+  }
+  .header{grid-area:header; padding:26px 32px 20px;}
+  .student-greet-bar{grid-area:greet;}
+  .tabbar-wrap{
+    grid-area:tabs;
+    display:block;
+    position:sticky;
+    top:24px;
+    align-self:start;
+    max-height:calc(100vh - 48px);
+    overflow-y:auto;
+  }
+  .tab-scroll-btn{display:none;}
+  .tabbar{
+    display:flex;
+    flex-direction:column;
+    overflow-x:visible;
+    position:static;
+    padding:0;
+    border-bottom:none;
+    gap:4px;
+  }
+  .tab{
+    width:100%;
+    text-align:left;
+    border-radius:10px;
+    padding:10px 14px;
+  }
+  .content{grid-area:content; min-width:0;}
+  footer{grid-area:footer;}
+}
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
