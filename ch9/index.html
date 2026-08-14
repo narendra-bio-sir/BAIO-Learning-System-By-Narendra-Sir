@@ -2071,21 +2071,22 @@ function neetQText(q){
   return '';
 }
 function neetClearTimer(){ if(neetTimerInt){ clearInterval(neetTimerInt); neetTimerInt=null; } }
-function neetRestart(){
-  if(confirm('Restart this NEET practice session? Your current progress in this session will be lost.')){
-    if(document.fullscreenElement) document.exitFullscreen();
-    neetStart();
-  }
+function neetStopTest(){
+  if(!confirm('Stop this test now and see your report card based on the questions you\'ve answered so far?')) return;
+  neetClearTimer();
+  if(document.fullscreenElement) document.exitFullscreen();
+  const s = neetSession;
+  s.questions = s.questions.slice(0, s.idx);
+  renderNeetReport();
 }
-function neetStop(){
-  if(confirm('Stop this practice session and go back to setup? Progress for this session will not be saved.')){
-    neetClearTimer();
-    if(document.fullscreenElement) document.exitFullscreen();
-    neetSession = null;
-    renderNeetSetup();
-  }
+function neetGoBack(){
+  if(!confirm('Go back to setup? Your current progress in this test will be lost.')) return;
+  neetClearTimer();
+  if(document.fullscreenElement) document.exitFullscreen();
+  neetSession = null;
+  renderNeetSetup();
 }
-window.neetRestart = neetRestart; window.neetStop = neetStop;
+window.neetStopTest = neetStopTest; window.neetGoBack = neetGoBack;
 function renderNeetQuestion(){
   neetClearTimer();
   const s = neetSession;
@@ -2095,8 +2096,8 @@ function renderNeetQuestion(){
   const pct = Math.round((s.idx/s.questions.length)*100);
   const typeLabel = NEET_TYPES.find(t=>t.id===q.type).label;
   let html = `<div class="btn-row runner-exit-bar" style="margin-bottom:8px; display:flex; gap:8px;">
-    <button class="fc-btn" onclick="neetRestart()">\u27F2 Restart</button>
-    <button class="fc-btn" onclick="neetStop()">\u23F9 Stop &amp; Back to Setup</button>
+    <button class="fc-btn" onclick="neetGoBack()">\u2190 Go Back</button>
+    <button class="fc-btn" onclick="neetStopTest()">\u23F9 Stop &amp; See Report</button>
   </div>
   <div class="qz-progress"><div class="qz-progress-fill" style="width:${pct}%"></div></div>
   <div class="qz-meta"><span>Q ${s.idx+1}/${s.questions.length} \u00b7 ${typeLabel}</span><span id="neetTimer">\u23F1 ${s.timeLeft}s</span><button class="qz-fs-btn" title="Fullscreen" onclick="toggleContentFullscreen()">\u26F6</button></div>
