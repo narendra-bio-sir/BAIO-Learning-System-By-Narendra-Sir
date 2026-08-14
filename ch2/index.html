@@ -246,12 +246,40 @@ select, .seg{
 .seg-opt.active{background:rgba(46,230,197,0.15); border-color:var(--teal); color:var(--teal-2);}
 
 /* Quiz runner */
-.quiz-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:12px; color:var(--text-dim);}
+.quiz-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:12px; color:var(--text-dim); gap:8px;}
 .timer-badge{
   background:var(--panel-2); border:1px solid var(--border); padding:6px 12px; border-radius:99px;
   font-family:'Space Grotesk',sans-serif; font-weight:700; color:var(--gold-2); font-size:14px; min-width:56px; text-align:center;
 }
 .timer-badge.low{color:var(--danger); border-color:var(--danger); animation:pulse 1s infinite;}
+.fs-btn{
+  background:var(--panel-2); border:1px solid var(--border); color:var(--text-dim);
+  border-radius:8px; padding:6px 9px; font-size:14px; line-height:1; cursor:pointer; flex-shrink:0;
+}
+.fs-btn:hover{color:var(--teal-2); border-color:var(--teal);}
+/* Fullscreen mode for MCQ Quiz / NEET Practice / KCET Practice runners */
+.fs-target:fullscreen{
+  display:flex !important; flex-direction:column; justify-content:center;
+  max-width:760px; margin:0 auto; padding:28px clamp(16px,5vw,48px);
+  border-radius:0; background:var(--bg-1); overflow-y:auto;
+}
+.fs-target:fullscreen .q-text{font-size:clamp(17px,2.6vw,25px);}
+.fs-target:fullscreen .opt{font-size:clamp(14px,2vw,17px); padding:14px 16px;}
+.fs-target:fullscreen .fs-btn{background:var(--panel);}
+/* Exit controls: top bar in normal mode, bottom bar in fullscreen mode */
+.fs-target:fullscreen .runner-exit-bar{display:none;}
+.runner-exit-bar-fs{display:none;}
+.fs-target:fullscreen .runner-exit-bar-fs{
+  display:flex; gap:8px; flex-wrap:wrap; margin-top:20px; padding-top:14px; border-top:1px solid var(--border);
+}
+/* Study Mode fullscreen: top-aligned reading view, topic nav stays reachable while scrolling */
+#studyFsWrap.fs-target:fullscreen{
+  justify-content:flex-start; max-width:900px; padding-top:16px;
+}
+#studyFsWrap.fs-target:fullscreen .topic-nav-wrap{
+  position:sticky; top:0; z-index:5; background:var(--bg-1); padding-bottom:8px; margin-bottom:6px;
+}
+#studyFsWrap.fs-target:fullscreen .card{border:none; box-shadow:none; background:transparent; padding:0;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
 .streak-badge{color:var(--warn); font-weight:700;}
 .progress-bar{height:5px; background:var(--panel-2); border-radius:99px; overflow:hidden; margin-bottom:14px;}
@@ -804,12 +832,15 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
 
   <!-- ===================== STUDY MODE ===================== -->
   <div class="panel active" id="panel-study">
-    <div class="topic-nav-wrap">
-      <button class="tab-scroll-btn" id="topicNavScrollLeft">&#8249;</button>
-      <div class="topic-nav" id="topicNav" tabindex="0"></div>
-      <button class="tab-scroll-btn" id="topicNavScrollRight">&#8250;</button>
+    <div class="fs-target" id="studyFsWrap">
+      <div class="topic-nav-wrap">
+        <button class="tab-scroll-btn" id="topicNavScrollLeft">&#8249;</button>
+        <div class="topic-nav" id="topicNav" tabindex="0"></div>
+        <button class="tab-scroll-btn" id="topicNavScrollRight">&#8250;</button>
+        <button class="fs-btn" title="Fullscreen" onclick="toggleRunnerFullscreen('studyFsWrap')">&#x26F6;</button>
+      </div>
+      <div class="card" id="studyContent"></div>
     </div>
-    <div class="card" id="studyContent"></div>
   </div>
 
   <!-- ===================== STUDY TIPS ===================== -->
@@ -893,7 +924,7 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
         <button class="btn" id="quizStartBtn">Start Quiz</button>
       </div>
     </div>
-    <div class="card" id="quizRunner" style="display:none;"></div>
+    <div class="card fs-target" id="quizRunner" style="display:none;"></div>
     <div class="card" id="quizReport" style="display:none;"></div>
     <div class="premium-lock-overlay" id="premLock_quiz"></div>
   </div>
@@ -967,7 +998,7 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
         <div style="font-size:10.5px; color:var(--text-dim); text-align:center; margin-top:6px;">🔄 Prioritizes questions you haven't seen yet, so every session feels fresh</div>
       </div>
     </div>
-    <div class="card" id="advRunner" style="display:none;"></div>
+    <div class="card fs-target" id="advRunner" style="display:none;"></div>
     <div class="card" id="advReport" style="display:none;"></div>
     <div class="premium-lock-overlay" id="premLock_adv"></div>
   </div>
@@ -1034,7 +1065,7 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
         <div style="font-size:10.5px; color:var(--text-dim); text-align:center; margin-top:6px;">🔄 Prioritizes questions you haven't seen yet, so every session feels fresh</div>
       </div>
     </div>
-    <div class="card" id="kcetRunner" style="display:none;"></div>
+    <div class="card fs-target" id="kcetRunner" style="display:none;"></div>
     <div class="card" id="kcetReport" style="display:none;"></div>
     <div class="premium-lock-overlay" id="premLock_kcet"></div>
   </div>
@@ -3094,10 +3125,15 @@ function renderQuizQuestion(){
   s.timeLeft = QUIZ_TIMER_SEC;
   const runner = document.getElementById('quizRunner');
   runner.innerHTML = `
+    <div class="btn-row runner-exit-bar" style="margin-bottom:8px;">
+      <button class="btn secondary" onclick="quizGoBack()">← Go Back</button>
+      <button class="btn secondary" onclick="quizStopTest()">⏹ Stop &amp; See Report</button>
+    </div>
     <div class="quiz-top">
       <div>Question ${s.idx+1} / ${s.pool.length}</div>
       <div class="streak-badge">🔥 Streak: ${s.streak}</div>
       <div class="timer-badge" id="quizTimerBadge">⏱ ${s.timeLeft}s</div>
+      <button class="fs-btn" title="Fullscreen" onclick="toggleRunnerFullscreen('quizRunner')">⛶</button>
     </div>
     <div class="progress-bar"><div class="progress-fill" style="width:${(s.idx/s.pool.length)*100}%"></div></div>
     <div class="q-meta"><span class="chip">${q.d}</span></div>
@@ -3105,6 +3141,10 @@ function renderQuizQuestion(){
     <div id="quizOpts"></div>
     <div id="quizExplain"></div>
     <div class="btn-row" style="margin-top:12px;"><button class="btn" id="quizNextBtn" style="display:none;">Next</button></div>
+    <div class="btn-row runner-exit-bar-fs">
+      <button class="btn secondary" onclick="quizGoBack()">← Go Back</button>
+      <button class="btn secondary" onclick="quizStopTest()">⏹ Stop &amp; See Report</button>
+    </div>
   `;
   const opts = document.getElementById('quizOpts');
   q.o.forEach((opt,i)=>{
@@ -3119,6 +3159,22 @@ function renderQuizQuestion(){
     if(el) el.textContent = '⏱ ' + s.timeLeft + 's';
     if(s.timeLeft<=0){ quizTimeout(); }
   }, 1000);
+}
+function quizGoBack(){
+  if(!confirm('Go back to setup? Your current progress in this quiz will be lost.')) return;
+  quizClearTimer();
+  if(document.fullscreenElement) document.exitFullscreen();
+  quizState = null;
+  document.getElementById('quizRunner').style.display='none';
+  document.getElementById('quizSetup').style.display='block';
+}
+function quizStopTest(){
+  if(!confirm('Stop this quiz now and see your report card based on the questions you\'ve answered so far?')) return;
+  quizClearTimer();
+  if(document.fullscreenElement) document.exitFullscreen();
+  const s = quizState;
+  s.pool = s.pool.slice(0, s.idx);
+  showQuizReport();
 }
 function quizTimeout(){
   quizClearTimer();
@@ -3151,7 +3207,7 @@ function showQuizReport(){
   const s = quizState;
   document.getElementById('quizRunner').style.display='none';
   const rep = document.getElementById('quizReport'); rep.style.display='block';
-  const pct = Math.round((s.correct/s.pool.length)*100);
+  const pct = s.pool.length ? Math.round((s.correct/s.pool.length)*100) : 0;
   const timeSec = Math.round((Date.now()-s.startTime)/1000);
   const mins = Math.floor(timeSec/60), secs = timeSec%60;
   rep.innerHTML = `
@@ -3316,9 +3372,14 @@ function updateAdvTimerUI(){
   badge.classList.toggle('low', advState.timeLeft<=5);
 }
 function advQuestionHeader(q, extraChip){
-  return `<div class="quiz-top">
+  return `<div class="btn-row runner-exit-bar" style="margin-bottom:8px;">
+      <button class="btn secondary" onclick="advGoBack()">← Go Back</button>
+      <button class="btn secondary" onclick="advStopTest()">⏹ Stop &amp; See Report</button>
+    </div>
+    <div class="quiz-top">
       <div>Question ${advState.idx+1} / ${advState.pool.length}</div>
       <div class="timer-badge" id="advTimerBadge">${advState.timerSec}s</div>
+      <button class="fs-btn" title="Fullscreen" onclick="toggleRunnerFullscreen('advRunner')">⛶</button>
     </div>
     <div class="progress-bar"><div class="progress-fill" style="width:${(advState.idx/advState.pool.length)*100}%"></div></div>
     <div class="q-meta"><span class="chip">${q.d}</span><span class="chip gold">${ADV_TYPE_LABELS[q.type]}</span>${extraChip||''}</div>`;
@@ -3357,7 +3418,11 @@ function renderAdvQuestion(){
       <div class="seq-list">${display.map((d,i)=>`<div><span class="lbl">${String.fromCharCode(65+i)}.</span>${d.text}</div>`).join('')}</div>
       <div id="advOpts"></div>`;
   }
-  runner.innerHTML = advQuestionHeader(q) + body + `<div id="advExplain"></div><div class="btn-row" style="margin-top:12px;"><button class="btn" id="advNextBtn" style="display:none;">Next</button></div>`;
+  runner.innerHTML = advQuestionHeader(q) + body + `<div id="advExplain"></div><div class="btn-row" style="margin-top:12px;"><button class="btn" id="advNextBtn" style="display:none;">Next</button></div>
+    <div class="btn-row runner-exit-bar-fs">
+      <button class="btn secondary" onclick="advGoBack()">← Go Back</button>
+      <button class="btn secondary" onclick="advStopTest()">⏹ Stop &amp; See Report</button>
+    </div>`;
 
   const optsDiv = document.getElementById('advOpts');
   if(q.type==='ar'){
@@ -3404,6 +3469,21 @@ function selectAdvAnswer(i, correctIdx){
   const nb = document.getElementById('advNextBtn'); nb.style.display='inline-block';
   nb.onclick = advGoNext;
 }
+function advGoBack(){
+  if(!confirm('Go back to setup? Your current progress in this NEET Practice session will be lost.')) return;
+  const s = advState; if(s) clearInterval(s.timerHandle);
+  if(document.fullscreenElement) document.exitFullscreen();
+  advState = null;
+  document.getElementById('advRunner').style.display='none';
+  document.getElementById('advSetup').style.display='block';
+}
+function advStopTest(){
+  if(!confirm('Stop this test now and see your report card based on the questions you\'ve answered so far?')) return;
+  const s = advState; clearInterval(s.timerHandle);
+  if(document.fullscreenElement) document.exitFullscreen();
+  s.pool = s.pool.slice(0, s.idx);
+  showAdvReport();
+}
 function advTimeout(){
   const s = advState; if(s.locked) return; s.locked=true;
   const q = s.pool[s.idx];
@@ -3435,7 +3515,7 @@ function showAdvReport(){
   document.getElementById('advRunner').style.display='none';
   const rep = document.getElementById('advReport'); rep.style.display='block';
   const maxMarks = s.pool.length*4;
-  const pct = Math.round((s.marks/maxMarks)*100);
+  const pct = maxMarks ? Math.round((s.marks/maxMarks)*100) : 0;
   const timeSec = Math.round((Date.now()-s.startTime)/1000);
   const mins = Math.floor(timeSec/60), secs = timeSec%60;
   rep.innerHTML = `
@@ -3595,6 +3675,7 @@ function updateKcetTimerUI(){
 function kcetStopTest(){
   if(!confirm('Stop this test now and see your report card based on the questions you\'ve answered so far?')) return;
   kcetClearTimer();
+  if(document.fullscreenElement) document.exitFullscreen();
   const s = kcetState;
   s.pool = s.pool.slice(0, s.idx);
   showKcetReport();
@@ -3602,6 +3683,7 @@ function kcetStopTest(){
 function kcetGoBack(){
   if(!confirm('Go back to setup? Your current progress in this test will be lost.')) return;
   kcetClearTimer();
+  if(document.fullscreenElement) document.exitFullscreen();
   kcetState = null;
   document.getElementById('kcetRunner').style.display='none';
   document.getElementById('kcetSetup').style.display='block';
@@ -3614,13 +3696,14 @@ function renderKcetQuestion(){
       <div class="match-col"><div class="lbl">Column A</div>${q.colA.map(x=>`<div>${x}</div>`).join('')}</div>
       <div class="match-col"><div class="lbl">Column B</div>${q.colB.map(x=>`<div>${x}</div>`).join('')}</div>
     </div>` : '';
-  runner.innerHTML = `<div class="btn-row" style="margin-bottom:8px;">
+  runner.innerHTML = `<div class="btn-row runner-exit-bar" style="margin-bottom:8px;">
       <button class="btn secondary" id="kcetGoBackBtn">\u2190 Go Back</button>
       <button class="btn secondary" id="kcetStopBtn">\u23F9 Stop &amp; See Report</button>
     </div>
     <div class="quiz-top">
       <div>Question ${s.idx+1} / ${s.pool.length}</div>
       <div class="timer-badge" id="kcetTimerBadge">${s.timerSec}s</div>
+      <button class="fs-btn" title="Fullscreen" onclick="toggleRunnerFullscreen('kcetRunner')">⛶</button>
     </div>
     <div class="progress-bar"><div class="progress-fill" style="width:${(s.idx/s.pool.length)*100}%"></div></div>
     <div class="q-meta"><span class="chip">${q.difficulty}</span><span class="chip gold">${fmtLabel}</span></div>
@@ -3628,7 +3711,11 @@ function renderKcetQuestion(){
     ${matchHtml}
     <div id="kcetOpts"></div>
     <div id="kcetExplain"></div>
-    <div class="btn-row" style="margin-top:12px;"><button class="btn" id="kcetNextBtn" style="display:none;">Next</button></div>`;
+    <div class="btn-row" style="margin-top:12px;"><button class="btn" id="kcetNextBtn" style="display:none;">Next</button></div>
+    <div class="btn-row runner-exit-bar-fs">
+      <button class="btn secondary" onclick="kcetGoBack()">\u2190 Go Back</button>
+      <button class="btn secondary" onclick="kcetStopTest()">\u23F9 Stop &amp; See Report</button>
+    </div>`;
   document.getElementById('kcetGoBackBtn').addEventListener('click', kcetGoBack);
   document.getElementById('kcetStopBtn').addEventListener('click', kcetStopTest);
   const optsDiv = document.getElementById('kcetOpts');
@@ -4222,6 +4309,19 @@ document.addEventListener('fullscreenchange', ()=>{
     try{ screen.orientation.unlock(); }catch(e){}
   }
 });
+
+/* Fullscreen toggle for MCQ Quiz / NEET Practice / KCET Practice runners */
+async function toggleRunnerFullscreen(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  try{
+    if(!document.fullscreenElement){
+      await el.requestFullscreen();
+    } else {
+      await document.exitFullscreen();
+    }
+  }catch(err){ /* fullscreen not available, ignore silently */ }
+}
 
 // Keyboard navigation (desktop, works in and out of fullscreen)
 document.addEventListener('keydown', (e)=>{
