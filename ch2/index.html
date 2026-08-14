@@ -246,12 +246,26 @@ select, .seg{
 .seg-opt.active{background:rgba(46,230,197,0.15); border-color:var(--teal); color:var(--teal-2);}
 
 /* Quiz runner */
-.quiz-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:12px; color:var(--text-dim);}
+.quiz-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:12px; color:var(--text-dim); gap:8px;}
 .timer-badge{
   background:var(--panel-2); border:1px solid var(--border); padding:6px 12px; border-radius:99px;
   font-family:'Space Grotesk',sans-serif; font-weight:700; color:var(--gold-2); font-size:14px; min-width:56px; text-align:center;
 }
 .timer-badge.low{color:var(--danger); border-color:var(--danger); animation:pulse 1s infinite;}
+.fs-btn{
+  background:var(--panel-2); border:1px solid var(--border); color:var(--text-dim);
+  border-radius:8px; padding:6px 9px; font-size:14px; line-height:1; cursor:pointer; flex-shrink:0;
+}
+.fs-btn:hover{color:var(--teal-2); border-color:var(--teal);}
+/* Fullscreen mode for MCQ Quiz / NEET Practice / KCET Practice runners */
+.fs-target:fullscreen{
+  display:flex !important; flex-direction:column; justify-content:center;
+  max-width:760px; margin:0 auto; padding:28px clamp(16px,5vw,48px);
+  border-radius:0; background:var(--bg-1); overflow-y:auto;
+}
+.fs-target:fullscreen .q-text{font-size:clamp(17px,2.6vw,25px);}
+.fs-target:fullscreen .opt{font-size:clamp(14px,2vw,17px); padding:14px 16px;}
+.fs-target:fullscreen .fs-btn{background:var(--panel);}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
 .streak-badge{color:var(--warn); font-weight:700;}
 .progress-bar{height:5px; background:var(--panel-2); border-radius:99px; overflow:hidden; margin-bottom:14px;}
@@ -893,7 +907,7 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
         <button class="btn" id="quizStartBtn">Start Quiz</button>
       </div>
     </div>
-    <div class="card" id="quizRunner" style="display:none;"></div>
+    <div class="card fs-target" id="quizRunner" style="display:none;"></div>
     <div class="card" id="quizReport" style="display:none;"></div>
     <div class="premium-lock-overlay" id="premLock_quiz"></div>
   </div>
@@ -967,7 +981,7 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
         <div style="font-size:10.5px; color:var(--text-dim); text-align:center; margin-top:6px;">🔄 Prioritizes questions you haven't seen yet, so every session feels fresh</div>
       </div>
     </div>
-    <div class="card" id="advRunner" style="display:none;"></div>
+    <div class="card fs-target" id="advRunner" style="display:none;"></div>
     <div class="card" id="advReport" style="display:none;"></div>
     <div class="premium-lock-overlay" id="premLock_adv"></div>
   </div>
@@ -1034,7 +1048,7 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
         <div style="font-size:10.5px; color:var(--text-dim); text-align:center; margin-top:6px;">🔄 Prioritizes questions you haven't seen yet, so every session feels fresh</div>
       </div>
     </div>
-    <div class="card" id="kcetRunner" style="display:none;"></div>
+    <div class="card fs-target" id="kcetRunner" style="display:none;"></div>
     <div class="card" id="kcetReport" style="display:none;"></div>
     <div class="premium-lock-overlay" id="premLock_kcet"></div>
   </div>
@@ -3098,6 +3112,7 @@ function renderQuizQuestion(){
       <div>Question ${s.idx+1} / ${s.pool.length}</div>
       <div class="streak-badge">🔥 Streak: ${s.streak}</div>
       <div class="timer-badge" id="quizTimerBadge">⏱ ${s.timeLeft}s</div>
+      <button class="fs-btn" title="Fullscreen" onclick="toggleRunnerFullscreen('quizRunner')">⛶</button>
     </div>
     <div class="progress-bar"><div class="progress-fill" style="width:${(s.idx/s.pool.length)*100}%"></div></div>
     <div class="q-meta"><span class="chip">${q.d}</span></div>
@@ -3319,6 +3334,7 @@ function advQuestionHeader(q, extraChip){
   return `<div class="quiz-top">
       <div>Question ${advState.idx+1} / ${advState.pool.length}</div>
       <div class="timer-badge" id="advTimerBadge">${advState.timerSec}s</div>
+      <button class="fs-btn" title="Fullscreen" onclick="toggleRunnerFullscreen('advRunner')">⛶</button>
     </div>
     <div class="progress-bar"><div class="progress-fill" style="width:${(advState.idx/advState.pool.length)*100}%"></div></div>
     <div class="q-meta"><span class="chip">${q.d}</span><span class="chip gold">${ADV_TYPE_LABELS[q.type]}</span>${extraChip||''}</div>`;
@@ -3621,6 +3637,7 @@ function renderKcetQuestion(){
     <div class="quiz-top">
       <div>Question ${s.idx+1} / ${s.pool.length}</div>
       <div class="timer-badge" id="kcetTimerBadge">${s.timerSec}s</div>
+      <button class="fs-btn" title="Fullscreen" onclick="toggleRunnerFullscreen('kcetRunner')">⛶</button>
     </div>
     <div class="progress-bar"><div class="progress-fill" style="width:${(s.idx/s.pool.length)*100}%"></div></div>
     <div class="q-meta"><span class="chip">${q.difficulty}</span><span class="chip gold">${fmtLabel}</span></div>
@@ -4222,6 +4239,19 @@ document.addEventListener('fullscreenchange', ()=>{
     try{ screen.orientation.unlock(); }catch(e){}
   }
 });
+
+/* Fullscreen toggle for MCQ Quiz / NEET Practice / KCET Practice runners */
+async function toggleRunnerFullscreen(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  try{
+    if(!document.fullscreenElement){
+      await el.requestFullscreen();
+    } else {
+      await document.exitFullscreen();
+    }
+  }catch(err){ /* fullscreen not available, ignore silently */ }
+}
 
 // Keyboard navigation (desktop, works in and out of fullscreen)
 document.addEventListener('keydown', (e)=>{
