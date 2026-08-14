@@ -146,7 +146,7 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .marks-info b{color:var(--gold);}
 .setup-label{font-size:11.5px;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:0.6px;margin:12px 0 6px;}
 .opt-row{display:flex;flex-wrap:wrap;gap:7px;}
-.opt-btn{padding:8px 13px;border-radius:14px;font-size:12.5px;font-weight:600;background:var(--panel2);color:var(--ink-dim);border:1px solid var(--line);cursor:pointer;}
+.opt-btn{padding:8px 13px;border-radius:14px;font-size:12.5px;font-weight:600;background:var(--panel2);color:var(--ink-dim);border:1px solid var(--line);cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center;}
 .opt-btn.sel{background:var(--teal2);color:#EFFFFA;border-color:var(--teal);}
 .start-btn{width:100%;margin-top:16px;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--btn-gold),var(--btn-gold2));color:#1a1406;font-weight:800;font-size:14.5px;cursor:pointer;}
 
@@ -164,24 +164,27 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .qz-exp{font-size:12.5px;color:var(--ink-dim);background:var(--panel2);border-radius:10px;padding:10px 12px;margin-top:8px;line-height:1.5;}
 .qz-next{width:100%;margin-top:12px;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--teal),var(--teal2));color:#EFFFFA;font-weight:700;font-size:13.5px;cursor:pointer;}
 .streak{font-size:11px;color:var(--gold);font-weight:700;}
+.qz-timer-badge{
+  background:var(--panel2); border:1px solid var(--line); padding:5px 11px; border-radius:99px;
+  font-family:'Space Grotesk',sans-serif; font-weight:700; color:var(--gold2); font-size:12.5px; display:inline-block;
+}
+.qz-timer-badge.low{color:var(--danger); border-color:var(--danger); font-size:13.5px; box-shadow:0 0 0 2px rgba(231,105,91,0.18); animation:qzPulse 1s infinite;}
+@keyframes qzPulse{0%,100%{opacity:1;}50%{opacity:.5;}}
 .qz-fs-btn{background:var(--panel2);border:1px solid var(--line);color:var(--ink-dim);border-radius:8px;padding:5px 9px;font-size:13px;line-height:1;cursor:pointer;flex-shrink:0;}
 .qz-fs-btn:hover{color:var(--teal);border-color:var(--teal);}
 /* Fullscreen mode for MCQ Quiz / NEET Practice / KCET Practice / Study Mode */
 .content:fullscreen{
-  display:flex; flex-direction:column; justify-content:center;
+  display:flex; flex-direction:column; justify-content:flex-start;
   max-width:720px; margin:0 auto; padding:28px clamp(16px,5vw,48px);
   background:var(--navy); overflow-y:auto;
 }
-.content.fs-top-align:fullscreen{justify-content:flex-start; max-width:900px;}
+.content.fs-top-align:fullscreen{max-width:900px;}
 .content.fs-top-align:fullscreen .study-fs-header{position:sticky; top:0; z-index:5; background:var(--navy); padding-bottom:8px;}
 .content:fullscreen .qz-qtext{font-size:clamp(16px,2.6vw,22px);}
 .content:fullscreen .qz-opt{font-size:clamp(13px,2vw,16px); padding:13px 15px;}
 .content:fullscreen .qz-fs-btn{background:var(--panel);}
-.content:fullscreen .runner-exit-bar{display:none;}
-.runner-exit-bar-fs{display:none;}
-.content:fullscreen .runner-exit-bar-fs{
-  display:flex; gap:8px; flex-wrap:wrap; margin-top:18px; padding-top:14px; border-top:1px solid var(--line);
-}
+/* Go Back / Stop & See Report stay at the top in both normal and fullscreen mode (no separate fullscreen bar needed) */
+.content:fullscreen .fs-sticky-head{position:sticky; top:0; z-index:5; background:var(--navy); padding-bottom:8px; margin-bottom:2px;}
 
 /* NEET specific layouts */
 .ar-block{font-size:13px;line-height:1.55;margin-bottom:10px;}
@@ -833,6 +836,23 @@ function fcWeakFirst(){
 }
 window.fcFlip=fcFlip; window.fcNext=fcNext; window.fcPrev=fcPrev; window.fcShuffle=fcShuffle; window.fcRate=fcRate; window.fcWeakFirst=fcWeakFirst;
 
+/* Shared countdown "tick/tock" beep + low-time threshold for MCQ Quiz / NEET Practice / KCET Practice timers */
+const TIMER_LOW_SEC = 20;
+let _tickAudioCtx = null;
+function playTickSound(lowPitch){
+  try{
+    if(!_tickAudioCtx) _tickAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if(_tickAudioCtx.state === 'suspended') _tickAudioCtx.resume();
+    const ctx = _tickAudioCtx;
+    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+    osc.type = 'square'; osc.frequency.value = lowPitch ? 700 : 1000;
+    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime + 0.08);
+  }catch(e){ /* audio not available, ignore */ }
+}
+
 /* ---------------- MCQ QUIZ ---------------- */
 let mcqSetup = {topicMode:'full', topics:[], difficulty:'All', count:'All'};
 const MCQ_TIMER_SEC = 60;
@@ -961,27 +981,29 @@ function renderMcqQuestion(){
   const q = s.questions[s.idx];
   s.timeLeft = MCQ_TIMER_SEC;
   const pct = Math.round((s.idx/s.questions.length)*100);
-  let html = `<div class="opt-row runner-exit-bar" style="margin-bottom:8px;">
+  let html = `<div class="fs-sticky-head">
+  <div class="opt-row runner-exit-bar" style="margin-bottom:8px;">
     <button class="opt-btn" onclick="mcqGoBack()">\u2190 Go Back</button>
     <button class="opt-btn" onclick="mcqStopTest()">\u23F9 Stop &amp; See Report</button>
   </div>
   <div class="qz-progress"><div class="qz-progress-fill" style="width:${pct}%"></div></div>
-  <div class="qz-meta"><span>Question ${s.idx+1} / ${s.questions.length}</span><span class="streak">\uD83D\uDD25 Streak: ${s.streak}</span><span id="mcqTimer">\u23F1 ${s.timeLeft}s</span><button class="qz-fs-btn" title="Fullscreen" onclick="toggleContentFullscreen()">\u26F6</button></div>
+  <div class="qz-meta"><span>Question ${s.idx+1} / ${s.questions.length}</span><span class="streak">\uD83D\uDD25 Streak: ${s.streak}</span><span class="qz-timer-badge" id="mcqTimer">\u23F1 ${s.timeLeft}s</span><button class="qz-fs-btn" title="Fullscreen" onclick="toggleContentFullscreen()">\u26F6</button></div>
+  </div>
   <div class="qz-card"><div class="qz-qtext">${q.q}</div>`;
   q.options.forEach((opt,i)=>{
     const letters = ['A','B','C','D','E','F'];
     html += `<button class="qz-opt" id="mcqopt_${i}" onclick="mcqAnswer(${i})"><b>${letters[i]}.</b> ${opt}</button>`;
   });
-  html += `<div id="mcqexp"></div></div>
-  <div class="opt-row runner-exit-bar-fs">
-    <button class="opt-btn" onclick="mcqGoBack()">\u2190 Go Back</button>
-    <button class="opt-btn" onclick="mcqStopTest()">\u23F9 Stop &amp; See Report</button>
-  </div>`;
+  html += `<div id="mcqexp"></div></div>`;
   document.getElementById('content').innerHTML = html;
   mcqTimerInt = setInterval(()=>{
     s.timeLeft--;
     const el = document.getElementById('mcqTimer');
-    if(el) el.textContent = '\u23F1 ' + s.timeLeft + 's';
+    if(el){
+      el.textContent = '\u23F1 ' + s.timeLeft + 's';
+      el.classList.toggle('low', s.timeLeft>0 && s.timeLeft<=TIMER_LOW_SEC);
+    }
+    if(s.timeLeft>0 && s.timeLeft<=TIMER_LOW_SEC) playTickSound(s.timeLeft%2===0);
     if(s.timeLeft<=0){ mcqTimeout(); }
   }, 1000);
 }
@@ -1365,22 +1387,24 @@ function renderNeetQuestion(){
   s.timeLeft = parseInt(neetSetup.timer);
   const pct = Math.round((s.idx/s.questions.length)*100);
   const typeLabel = NEET_TYPES.find(t=>t.id===q.type).label;
-  let html = `<div class="opt-row runner-exit-bar" style="margin-bottom:8px;">
+  let html = `<div class="fs-sticky-head">
+  <div class="opt-row runner-exit-bar" style="margin-bottom:8px;">
     <button class="opt-btn" onclick="neetGoBack()">\u2190 Go Back</button>
     <button class="opt-btn" onclick="neetStopTest()">\u23F9 Stop &amp; See Report</button>
   </div>
   <div class="qz-progress"><div class="qz-progress-fill" style="width:${pct}%"></div></div>
-  <div class="qz-meta"><span>Q ${s.idx+1}/${s.questions.length} \u00b7 ${typeLabel}</span><span id="neetTimer">\u23F1 ${s.timeLeft}s</span><button class="qz-fs-btn" title="Fullscreen" onclick="toggleContentFullscreen()">\u26F6</button></div>
-  <div class="qz-card"><div class="qz-qtext">${neetQText(q)}</div>${neetQuestionBody(q)}<div id="neetexp"></div></div>
-  <div class="opt-row runner-exit-bar-fs">
-    <button class="opt-btn" onclick="neetGoBack()">\u2190 Go Back</button>
-    <button class="opt-btn" onclick="neetStopTest()">\u23F9 Stop &amp; See Report</button>
-  </div>`;
+  <div class="qz-meta"><span>Q ${s.idx+1}/${s.questions.length} \u00b7 ${typeLabel}</span><span class="qz-timer-badge" id="neetTimer">\u23F1 ${s.timeLeft}s</span><button class="qz-fs-btn" title="Fullscreen" onclick="toggleContentFullscreen()">\u26F6</button></div>
+  </div>
+  <div class="qz-card"><div class="qz-qtext">${neetQText(q)}</div>${neetQuestionBody(q)}<div id="neetexp"></div></div>`;
   document.getElementById('content').innerHTML = html;
   neetTimerInt = setInterval(()=>{
     s.timeLeft--;
     const el = document.getElementById('neetTimer');
-    if(el) el.textContent = '\u23F1 ' + s.timeLeft + 's';
+    if(el){
+      el.textContent = '\u23F1 ' + s.timeLeft + 's';
+      el.classList.toggle('low', s.timeLeft>0 && s.timeLeft<=TIMER_LOW_SEC);
+    }
+    if(s.timeLeft>0 && s.timeLeft<=TIMER_LOW_SEC) playTickSound(s.timeLeft%2===0);
     if(s.timeLeft<=0){ neetTimeout(); }
   }, 1000);
 }
@@ -1604,28 +1628,30 @@ function renderKcetQuestion(){
   const fmtLabel = (KCET_FORMATS.find(f=>f.id===q.format) || {label:'Direct NCERT Recall'}).label;
   const qTextHtml = esc(q.q).replace(/\n/g, '<br>');
   const matchHtml = (q.format==='matching' && q.colA && q.colB) ? `<table class="match-table"><tr><td><b>Column I</b></td><td><b>Column II</b></td></tr>${q.colA.map((a,i)=>`<tr><td>${a}</td><td>${q.colB[i]}</td></tr>`).join('')}</table>` : '';
-  let html = `<div class="opt-row runner-exit-bar" style="margin-bottom:8px;">
+  let html = `<div class="fs-sticky-head">
+  <div class="opt-row runner-exit-bar" style="margin-bottom:8px;">
     <button class="opt-btn" onclick="kcetGoBack()">\u2190 Go Back</button>
     <button class="opt-btn" onclick="kcetStopTest()">\u23F9 Stop &amp; See Report</button>
   </div>
   <div class="qz-progress"><div class="qz-progress-fill" style="width:${pct}%"></div></div>
-  <div class="qz-meta"><span>Question ${s.idx+1} / ${s.questions.length}</span><span class="streak">\uD83D\uDD25 Streak: ${s.streak||0}</span><span id="kcetTimer">\u23F1 ${kcetFmtMMSS(s.timeLeft)}</span><button class="qz-fs-btn" title="Fullscreen" onclick="toggleContentFullscreen()">\u26F6</button></div>
+  <div class="qz-meta"><span>Question ${s.idx+1} / ${s.questions.length}</span><span class="streak">\uD83D\uDD25 Streak: ${s.streak||0}</span><span class="qz-timer-badge" id="kcetTimer">\u23F1 ${kcetFmtMMSS(s.timeLeft)}</span><button class="qz-fs-btn" title="Fullscreen" onclick="toggleContentFullscreen()">\u26F6</button></div>
+  </div>
   <div style="font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:4px;">${fmtLabel}</div>
   <div class="qz-card"><div class="qz-qtext">${qTextHtml}</div>${matchHtml}`;
   q.options.forEach((opt,i)=>{
     const letters = ['A','B','C','D','E','F'];
     html += `<button class="qz-opt" id="kcetopt_${i}" onclick="kcetAnswer(${i})"><b>${letters[i]}.</b> ${opt}</button>`;
   });
-  html += `<div id="kcetexp"></div></div>
-  <div class="opt-row runner-exit-bar-fs">
-    <button class="opt-btn" onclick="kcetGoBack()">\u2190 Go Back</button>
-    <button class="opt-btn" onclick="kcetStopTest()">\u23F9 Stop &amp; See Report</button>
-  </div>`;
+  html += `<div id="kcetexp"></div></div>`;
   document.getElementById('content').innerHTML = html;
   kcetTimerInt = setInterval(()=>{
     s.timeLeft--;
     const el = document.getElementById('kcetTimer');
-    if(el) el.textContent = '\u23F1 ' + kcetFmtMMSS(Math.max(s.timeLeft,0));
+    if(el){
+      el.textContent = '\u23F1 ' + kcetFmtMMSS(Math.max(s.timeLeft,0));
+      el.classList.toggle('low', s.timeLeft>0 && s.timeLeft<=TIMER_LOW_SEC);
+    }
+    if(s.timeLeft>0 && s.timeLeft<=TIMER_LOW_SEC) playTickSound(s.timeLeft%2===0);
     if(s.timeLeft<=0){ kcetTimeout(); }
   }, 1000);
 }
