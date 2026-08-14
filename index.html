@@ -486,7 +486,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     }catch(e){}
   }
 
-  fetch('announcements.html')
+  fetch('announcements.html', { cache: 'no-store' })
     .then(res => res.ok ? res.text() : Promise.reject())
     .then(htmlText => {
       const doc = new DOMParser().parseFromString(htmlText, 'text/html');
