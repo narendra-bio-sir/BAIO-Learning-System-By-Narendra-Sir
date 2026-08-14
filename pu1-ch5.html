@@ -1952,6 +1952,7 @@ function renderProgress(){
   document.addEventListener('wheel', function(e){
     var row = e.target.closest('.tabbar');
     if(!row) return;
+    if(row.scrollWidth <= row.clientWidth) return;
     if(Math.abs(e.deltaY) > Math.abs(e.deltaX)){
       e.preventDefault();
       row.scrollLeft += e.deltaY;

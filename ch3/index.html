@@ -3212,6 +3212,7 @@ document.body.classList.add('lang-'+currentLang);
     if(moved){ e.stopPropagation(); e.preventDefault(); moved = false; }
   }, true);
   tabs.addEventListener('wheel', function(e){
+    if(tabs.scrollWidth <= tabs.clientWidth) return;
     if(Math.abs(e.deltaY) > Math.abs(e.deltaX)){
       e.preventDefault();
       tabs.scrollLeft += e.deltaY;
