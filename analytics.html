@@ -6271,15 +6271,32 @@ function pu2SubjectRowsHtml(student, key){
 function generatePU2TeacherComment(student){
   if(isElectronicsOnly(student, 2)) return generateElectronicsTeacherComment(student, 2);
   const firstName = student.name.split(' ')[0];
-  const marchBio = student.march ? student.march.BIO : null;
-  const juneBio = student.june ? student.june.BIO : null;
+  /* ---- Latest month with real Biology data for this student, walked from PU2_MONTH_ORDER
+     (currently ['july','june','may','april','march']) rather than hardcoded to June, so the
+     remark always reflects the most recent Monthly Test on file. ---- */
+  const MONTH_NAMES_EN = {march:'March', april:'April', may:'May', june:'June', july:'July'};
+  const MONTH_NAMES_KN = {march:'ಮಾರ್ಚ್', april:'ಏಪ್ರಿಲ್', may:'ಮೇ', june:'ಜೂನ್', july:'ಜುಲೈ'};
+  const MONTH_NAMES_HI = {march:'मार्च', april:'अप्रैल', may:'मई', june:'जून', july:'जुलाई'};
+  const hasBio = mk => student[mk] && student[mk].BIO!==null && student[mk].BIO!==undefined;
+  const curKey = PU2_MONTH_ORDER.find(hasBio) || null;
+  const prevKey = curKey ? (PU2_MONTH_ORDER.slice(PU2_MONTH_ORDER.indexOf(curKey)+1).find(hasBio) || null) : null;
+  const curLabel = curKey ? PU2_MONTH_LABELS[curKey] : '';
+  const curMonthEn = curKey ? MONTH_NAMES_EN[curKey] : '';
+  const curMonthKn = curKey ? MONTH_NAMES_KN[curKey] : '';
+  const curMonthHi = curKey ? MONTH_NAMES_HI[curKey] : '';
+  const prevMonthEn = prevKey ? MONTH_NAMES_EN[prevKey] : '';
+  const prevMonthKn = prevKey ? MONTH_NAMES_KN[prevKey] : '';
+  const prevMonthHi = prevKey ? MONTH_NAMES_HI[prevKey] : '';
+  const marchBio = prevKey ? student[prevKey].BIO : null;
+  const juneBio = curKey ? student[curKey].BIO : null;
   const bioNow = juneBio!==null && juneBio!==undefined ? juneBio : marchBio;
   const bioDelta = (marchBio!==null && marchBio!==undefined && juneBio!==null && juneBio!==undefined) ? Math.round((juneBio-marchBio)*10)/10 : null;
-  const juneAvg = pu2ClassAvgRaw('june','BIO');
+  const juneAvg = curKey ? pu2ClassAvgRaw(curKey,'BIO') : null;
   const bioVsAvg = (bioNow!==null && bioNow!==undefined && juneAvg!==null) ? Math.round((bioNow-juneAvg)*10)/10 : null;
-  const rankLine = (student.june && student.june.RANK) ? ` Your current class rank in the June Monthly Test is #${Math.round(student.june.RANK)}.` : '';
-  const rankLineKn = (student.june && student.june.RANK) ? ` ಜೂನ್ ಮಾಸಿಕ ಪರೀಕ್ಷೆಯಲ್ಲಿ ನಿಮ್ಮ ಪ್ರಸ್ತುತ ವರ್ಗ ಶ್ರೇಣಿ #${Math.round(student.june.RANK)}.` : '';
-  const rankLineHi = (student.june && student.june.RANK) ? ` जून मासिक परीक्षा में आपकी वर्तमान क्लास रैंक #${Math.round(student.june.RANK)} है।` : '';
+  const curRank = curKey ? student[curKey].RANK : null;
+  const rankLine = curRank ? ` Your current class rank in the ${curLabel} is #${Math.round(curRank)}.` : '';
+  const rankLineKn = curRank ? ` ${curMonthKn} ಮಾಸಿಕ ಪರೀಕ್ಷೆಯಲ್ಲಿ ನಿಮ್ಮ ಪ್ರಸ್ತುತ ವರ್ಗ ಶ್ರೇಣಿ #${Math.round(curRank)}.` : '';
+  const rankLineHi = curRank ? ` ${curMonthHi} मासिक परीक्षा में आपकी वर्तमान क्लास रैंक #${Math.round(curRank)} है।` : '';
   const vsAvgEn = bioVsAvg!==null ? (bioVsAvg>=0? ` That's ${bioVsAvg} marks above the class average.` : ` That's ${Math.abs(bioVsAvg)} marks below the class average.`) : '';
   const vsAvgKn = bioVsAvg!==null ? (bioVsAvg>=0? ` ಇದು ತರಗತಿಯ ಸರಾಸರಿಗಿಂತ ${bioVsAvg} ಅಂಕ ಹೆಚ್ಚು.` : ` ಇದು ತರಗತಿಯ ಸರಾಸರಿಗಿಂತ ${Math.abs(bioVsAvg)} ಅಂಕ ಕಡಿಮೆ.`) : '';
   const vsAvgHi = bioVsAvg!==null ? (bioVsAvg>=0? ` यह क्लास औसत से ${bioVsAvg} अंक अधिक है।` : ` यह क्लास औसत से ${Math.abs(bioVsAvg)} अंक कम है।`) : '';
@@ -6291,7 +6308,8 @@ function generatePU2TeacherComment(student){
   const SUBJ_NAMES_KN = {PHY:'ಭೌತಶಾಸ್ತ್ರ', CHE:'ರಸಾಯನಶಾಸ್ತ್ರ', MAT:'ಗಣಿತ', ELE:'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್'};
   const SUBJ_NAMES_HI = {PHY:'भौतिकी', CHE:'रसायन विज्ञान', MAT:'गणित', ELE:'इलेक्ट्रॉनिक्स'};
   function subjectInsight(){
-    const useTest = (student.june && student.june.TOTAL!==null && student.june.TOTAL>0) ? student.june : student.march;
+    const dataKey = PU2_MONTH_ORDER.find(mk => student[mk] && student[mk].TOTAL!==null && student[mk].TOTAL>0) || null;
+    const useTest = dataKey ? student[dataKey] : null;
     if(!useTest) return null;
     let weakest=null, weakestVal=Infinity;
     ['PHY','CHE','MAT','ELE'].forEach(s=>{
@@ -6343,22 +6361,22 @@ function generatePU2TeacherComment(student){
     kn = `${firstName}, ನೀವು ಪ್ರಸ್ತುತ PU-II ನಲ್ಲಿ ಪ್ರಬಲ ಜೀವಶಾಸ್ತ್ರ ವಿದ್ಯಾರ್ಥಿಗಳಲ್ಲಿ ಒಬ್ಬರು - ${bioNow}/40, ಮತ್ತು ಈ ಮಟ್ಟವನ್ನು ಸ್ಥಿರವಾಗಿ ಕಾಪಾಡಿಕೊಂಡಿದ್ದೀರಿ. ಇದಕ್ಕಾಗಿ ನನಗೆ ನಿಜವಾಗಿಯೂ ಹೆಮ್ಮೆ ಇದೆ. ಈ ಬಲವನ್ನು ಉನ್ನತ NEET ಅಂಕಗಳಾಗಿ ಪರಿವರ್ತಿಸಲು NEET ಮಟ್ಟದ ಕಷ್ಟಕರ ಪ್ರಶ್ನೆಗಳ ಅಭ್ಯಾಸವನ್ನು ಮುಂದುವರಿಸಿ.${otherSubjectNote('kn')}${vsAvgKn}${rankLineKn}${trend.kn}`;
     hi = `${firstName}, आप अभी PU-II के सबसे मजबूत जीव विज्ञान छात्रों में से एक हैं - ${bioNow}/40, और यह स्तर लगातार बनाए हुए हैं। मुझे इस पर सच में गर्व है। इस मजबूती को उच्च NEET स्कोर में बदलने के लिए NEET-स्तर के कठिन प्रश्नों का अभ्यास जारी रखें।${otherSubjectNote('hi')}${vsAvgHi}${rankLineHi}${trend.hi}`;
   } else if(bioDelta!==null && bioDelta>=5){
-    en = `Good improvement in Biology, ${firstName}! Your score rose from ${marchBio}/40 in March to ${juneBio}/40 in June.${vsAvgEn} Whatever changes you've made to your Biology preparation are clearly working - keep building on this momentum, and let's aim even higher next test.${otherSubjectNote('en')}${rankLine}${trend.en}`;
-    kn = `ಜೀವಶಾಸ್ತ್ರದಲ್ಲಿ ಉತ್ತಮ ಸುಧಾರಣೆ, ${firstName}! ನಿಮ್ಮ ಅಂಕಗಳು ಮಾರ್ಚ್‌ನಲ್ಲಿ ${marchBio}/40 ರಿಂದ ಜೂನ್‌ನಲ್ಲಿ ${juneBio}/40 ಕ್ಕೆ ಏರಿವೆ.${vsAvgKn} ನಿಮ್ಮ ಜೀವಶಾಸ್ತ್ರ ಸಿದ್ಧತೆಯಲ್ಲಿ ನೀವು ಮಾಡಿದ ಬದಲಾವಣೆಗಳು ಸ್ಪಷ್ಟವಾಗಿ ಕೆಲಸ ಮಾಡುತ್ತಿವೆ - ಈ ಪ್ರಗತಿಯನ್ನು ಮುಂದುವರಿಸಿ.${otherSubjectNote('kn')}${rankLineKn}${trend.kn}`;
-    hi = `जीव विज्ञान में अच्छा सुधार, ${firstName}! आपका स्कोर मार्च में ${marchBio}/40 से बढ़कर जून में ${juneBio}/40 हो गया है।${vsAvgHi} आपकी जीव विज्ञान की तैयारी में जो भी बदलाव हुए हैं, वे स्पष्ट रूप से काम कर रहे हैं - इस प्रगति को जारी रखें।${otherSubjectNote('hi')}${rankLineHi}${trend.hi}`;
+    en = `Good improvement in Biology, ${firstName}! Your score rose from ${marchBio}/40 in ${prevMonthEn} to ${juneBio}/40 in ${curMonthEn}.${vsAvgEn} Whatever changes you've made to your Biology preparation are clearly working - keep building on this momentum, and let's aim even higher next test.${otherSubjectNote('en')}${rankLine}${trend.en}`;
+    kn = `ಜೀವಶಾಸ್ತ್ರದಲ್ಲಿ ಉತ್ತಮ ಸುಧಾರಣೆ, ${firstName}! ನಿಮ್ಮ ಅಂಕಗಳು ${prevMonthKn}‌ನಲ್ಲಿ ${marchBio}/40 ರಿಂದ ${curMonthKn}‌ನಲ್ಲಿ ${juneBio}/40 ಕ್ಕೆ ಏರಿವೆ.${vsAvgKn} ನಿಮ್ಮ ಜೀವಶಾಸ್ತ್ರ ಸಿದ್ಧತೆಯಲ್ಲಿ ನೀವು ಮಾಡಿದ ಬದಲಾವಣೆಗಳು ಸ್ಪಷ್ಟವಾಗಿ ಕೆಲಸ ಮಾಡುತ್ತಿವೆ - ಈ ಪ್ರಗತಿಯನ್ನು ಮುಂದುವರಿಸಿ.${otherSubjectNote('kn')}${rankLineKn}${trend.kn}`;
+    hi = `जीव विज्ञान में अच्छा सुधार, ${firstName}! आपका स्कोर ${prevMonthHi} में ${marchBio}/40 से बढ़कर ${curMonthHi} में ${juneBio}/40 हो गया है।${vsAvgHi} आपकी जीव विज्ञान की तैयारी में जो भी बदलाव हुए हैं, वे स्पष्ट रूप से काम कर रहे हैं - इस प्रगति को जारी रखें।${otherSubjectNote('hi')}${rankLineHi}${trend.hi}`;
   } else if(bioDelta!==null && bioDelta<=-8){
     const absd = Math.abs(bioDelta);
-    en = `${firstName}, your Biology score has dropped by ${absd} marks from March (${marchBio}/40) to June (${juneBio}/40). This isn't something to be discouraged about, but it does need attention - please come and see me so we can sit down together and rebuild a focused revision plan for this subject before the next test.${otherSubjectNote('en')}${rankLine}${trend.en}`;
-    kn = `${firstName}, ಮಾರ್ಚ್ (${marchBio}/40) ರಿಂದ ಜೂನ್ (${juneBio}/40) ವರೆಗೆ ನಿಮ್ಮ ಜೀವಶಾಸ್ತ್ರ ಅಂಕಗಳು ${absd} ಅಂಕಗಳಷ್ಟು ಕುಸಿದಿವೆ. ಇದು ನಿರುತ್ಸಾಹಗೊಳ್ಳುವ ವಿಷಯವಲ್ಲ, ಆದರೆ ಗಮನ ಬೇಕಾಗಿದೆ - ದಯವಿಟ್ಟು ನನ್ನನ್ನು ಭೇಟಿಯಾಗಿ ಇದರಿಂದ ನಾವು ಒಟ್ಟಿಗೆ ಕುಳಿತು ಒಂದು ಕೇಂದ್ರೀಕೃತ ಪುನರಾವರ್ತನೆ ಯೋಜನೆಯನ್ನು ರೂಪಿಸಬಹುದು.${otherSubjectNote('kn')}${rankLineKn}${trend.kn}`;
-    hi = `${firstName}, मार्च (${marchBio}/40) से जून (${juneBio}/40) तक आपका जीव विज्ञान स्कोर ${absd} अंक गिर गया है। यह निराश होने वाली बात नहीं है, लेकिन इस पर ध्यान देने की जरूरत है - कृपया मुझसे मिलें ताकि हम मिलकर अगली परीक्षा से पहले एक केंद्रित रिवीजन योजना बना सकें।${otherSubjectNote('hi')}${rankLineHi}${trend.hi}`;
+    en = `${firstName}, your Biology score has dropped by ${absd} marks from ${prevMonthEn} (${marchBio}/40) to ${curMonthEn} (${juneBio}/40). This isn't something to be discouraged about, but it does need attention - please come and see me so we can sit down together and rebuild a focused revision plan for this subject before the next test.${otherSubjectNote('en')}${rankLine}${trend.en}`;
+    kn = `${firstName}, ${prevMonthKn} (${marchBio}/40) ರಿಂದ ${curMonthKn} (${juneBio}/40) ವರೆಗೆ ನಿಮ್ಮ ಜೀವಶಾಸ್ತ್ರ ಅಂಕಗಳು ${absd} ಅಂಕಗಳಷ್ಟು ಕುಸಿದಿವೆ. ಇದು ನಿರುತ್ಸಾಹಗೊಳ್ಳುವ ವಿಷಯವಲ್ಲ, ಆದರೆ ಗಮನ ಬೇಕಾಗಿದೆ - ದಯವಿಟ್ಟು ನನ್ನನ್ನು ಭೇಟಿಯಾಗಿ ಇದರಿಂದ ನಾವು ಒಟ್ಟಿಗೆ ಕುಳಿತು ಒಂದು ಕೇಂದ್ರೀಕೃತ ಪುನರಾವರ್ತನೆ ಯೋಜನೆಯನ್ನು ರೂಪಿಸಬಹುದು.${otherSubjectNote('kn')}${rankLineKn}${trend.kn}`;
+    hi = `${firstName}, ${prevMonthHi} (${marchBio}/40) से ${curMonthHi} (${juneBio}/40) तक आपका जीव विज्ञान स्कोर ${absd} अंक गिर गया है। यह निराश होने वाली बात नहीं है, लेकिन इस पर ध्यान देने की जरूरत है - कृपया मुझसे मिलें ताकि हम मिलकर अगली परीक्षा से पहले एक केंद्रित रिवीजन योजना बना सकें।${otherSubjectNote('hi')}${rankLineHi}${trend.hi}`;
   } else if(bioNow!==null && bioNow!==undefined && bioNow<14){
     en = `${firstName}, your Biology score (${bioNow}/40) is currently below the passing mark. Please don't be discouraged - there is plenty of time to turn this around. Come talk to me so we can build a focused, topic-by-topic revision plan together. I'm available for extra help whenever you need it.${otherSubjectNote('en')}${rankLine}${trend.en}`;
     kn = `${firstName}, ನಿಮ್ಮ ಜೀವಶಾಸ್ತ್ರ ಅಂಕಗಳು (${bioNow}/40) ಪ್ರಸ್ತುತ ಉತ್ತೀರ್ಣ ಅಂಕಗಳಿಗಿಂತ ಕಡಿಮೆ ಇವೆ. ದಯವಿಟ್ಟು ನಿರುತ್ಸಾಹಗೊಳ್ಳಬೇಡಿ - ಇದನ್ನು ಸರಿಪಡಿಸಲು ಸಾಕಷ್ಟು ಸಮಯವಿದೆ. ಒಟ್ಟಿಗೆ ಒಂದು ಕೇಂದ್ರೀಕೃತ, ವಿಷಯ-ಆಧಾರಿತ ಪುನರಾವರ್ತನೆ ಯೋಜನೆಯನ್ನು ರೂಪಿಸಲು ನನ್ನೊಂದಿಗೆ ಮಾತನಾಡಿ.${otherSubjectNote('kn')}${rankLineKn}${trend.kn}`;
     hi = `${firstName}, आपका जीव विज्ञान स्कोर (${bioNow}/40) फिलहाल पासिंग मार्क्स से कम है। कृपया निराश न हों - इसे सुधारने के लिए काफी समय है। साथ मिलकर एक केंद्रित, विषय-दर-विषय रिवीजन योजना बनाने के लिए मुझसे बात करें।${otherSubjectNote('hi')}${rankLineHi}${trend.hi}`;
   } else if(bioNow!==null && bioNow!==undefined && bioNow>=30){
-    en = `Solid, steady performance in Biology, ${firstName} - ${bioNow}/40 in the June Monthly Test.${vsAvgEn} Keep this consistency going, and start looking for opportunities to push into the distinction range.${otherSubjectNote('en')}${rankLine}${trend.en}`;
-    kn = `ಜೀವಶಾಸ್ತ್ರದಲ್ಲಿ ಉತ್ತಮ, ಸ್ಥಿರ ಸಾಧನೆ, ${firstName} - ಜೂನ್ ಮಾಸಿಕ ಪರೀಕ್ಷೆಯಲ್ಲಿ ${bioNow}/40.${vsAvgKn} ಈ ಸ್ಥಿರತೆಯನ್ನು ಮುಂದುವರಿಸಿ, ಮತ್ತು ಡಿಸ್ಟಿಂಕ್ಷನ್ ಶ್ರೇಣಿಗೆ ಏರುವ ಅವಕಾಶಗಳನ್ನು ಹುಡುಕಿ.${otherSubjectNote('kn')}${rankLineKn}${trend.kn}`;
-    hi = `जीव विज्ञान में ठोस, स्थिर प्रदर्शन, ${firstName} - जून मासिक परीक्षा में ${bioNow}/40।${vsAvgHi} इस निरंतरता को बनाए रखें, और डिस्टिंक्शन रेंज में जाने के अवसर तलाशना शुरू करें।${otherSubjectNote('hi')}${rankLineHi}${trend.hi}`;
+    en = `Solid, steady performance in Biology, ${firstName} - ${bioNow}/40 in the ${curLabel}.${vsAvgEn} Keep this consistency going, and start looking for opportunities to push into the distinction range.${otherSubjectNote('en')}${rankLine}${trend.en}`;
+    kn = `ಜೀವಶಾಸ್ತ್ರದಲ್ಲಿ ಉತ್ತಮ, ಸ್ಥಿರ ಸಾಧನೆ, ${firstName} - ${curMonthKn} ಮಾಸಿಕ ಪರೀಕ್ಷೆಯಲ್ಲಿ ${bioNow}/40.${vsAvgKn} ಈ ಸ್ಥಿರತೆಯನ್ನು ಮುಂದುವರಿಸಿ, ಮತ್ತು ಡಿಸ್ಟಿಂಕ್ಷನ್ ಶ್ರೇಣಿಗೆ ಏರುವ ಅವಕಾಶಗಳನ್ನು ಹುಡುಕಿ.${otherSubjectNote('kn')}${rankLineKn}${trend.kn}`;
+    hi = `जीव विज्ञान में ठोस, स्थिर प्रदर्शन, ${firstName} - ${curMonthHi} मासिक परीक्षा में ${bioNow}/40।${vsAvgHi} इस निरंतरता को बनाए रखें, और डिस्टिंक्शन रेंज में जाने के अवसर तलाशना शुरू करें।${otherSubjectNote('hi')}${rankLineHi}${trend.hi}`;
   } else {
     en = `${firstName}, you're performing around the class average in Biology${bioNow!==null?` (${bioNow}/40)`:''}.${vsAvgEn} With a bit more focused revision - particularly on the topics we cover in class - you can move up a level. I believe you can do it.${otherSubjectNote('en')}${rankLine}${trend.en}`;
     kn = `${firstName}, ನೀವು ಜೀವಶಾಸ್ತ್ರದಲ್ಲಿ ತರಗತಿಯ ಸರಾಸರಿಯ ಸುತ್ತ ಸಾಧನೆ ಮಾಡುತ್ತಿದ್ದೀರಿ${bioNow!==null?` (${bioNow}/40)`:''}.${vsAvgKn} ಸ್ವಲ್ಪ ಹೆಚ್ಚು ಕೇಂದ್ರೀಕೃತ ಪುನರಾವರ್ತನೆಯೊಂದಿಗೆ ನೀವು ಒಂದು ಹಂತ ಮೇಲೇರಬಹುದು. ನೀವು ಇದನ್ನು ಮಾಡಬಲ್ಲಿರಿ ಎಂದು ನಾನು ನಂಬುತ್ತೇನೆ.${otherSubjectNote('kn')}${rankLineKn}${trend.kn}`;
