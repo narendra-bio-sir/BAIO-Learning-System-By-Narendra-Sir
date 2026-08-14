@@ -773,25 +773,7 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
 
   <!-- ===================== STUDY TIPS ===================== -->
   <div class="panel" id="panel-studytips">
-    <div class="card">
-      <h3 style="color:var(--gold-2); margin-bottom:4px;">Study Tips &ndash; Biological Classification</h3>
-      <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">How to study this chapter well, and what to focus on for NEET.</div>
-      <div class="tip-head">📘 Theory &mdash; How to Study This Chapter</div>
-      <ul class="tip-list">
-        <li>Build a comparison table across the five kingdoms (Monera, Protista, Fungi, Plantae, Animalia) &mdash; cell type, mode of nutrition, cell wall composition. This one table covers most of the chapter.</li>
-        <li>Learn Whittaker's classification hierarchy and be clear on <i>why</i> viruses, viroids and lichens are kept outside the five kingdoms.</li>
-        <li>For each fungal class (Phycomycetes, Ascomycetes, Basidiomycetes, Deuteromycetes), memorize one classic example and its distinguishing reproductive structure rather than the full life cycle.</li>
-        <li>Draw and label a virus (TMV) and a bacteriophage from memory &mdash; diagram-based questions recur here.</li>
-        <li>Revise cell wall composition differences (peptidoglycan vs cellulose vs chitin) since exams love cross-kingdom "which one has X" questions.</li>
-      </ul>
-      <div class="tip-head neet">🎯 NEET Strategy for This Chapter</div>
-      <ul class="tip-list neet">
-        <li>This is a pure memory chapter &mdash; most NEET questions are single-line factual recall, so speed and elimination matter more than deep reasoning.</li>
-        <li>Expect at least one assertion-reason or match-the-following question mixing organisms from different kingdoms.</li>
-        <li>Common traps: Euglena's mode of nutrition, whether viruses count as living, and the stage at which slime moulds behave differently.</li>
-        <li>Because it's memory-heavy, revise this chapter in short, frequent passes (spaced repetition) rather than one long session.</li>
-      </ul>
-    </div>
+    <div class="card" id="studyTipsContent"></div>
   </div>
 
   <!-- ===================== CONCEPT CLARITY ===================== -->
@@ -2717,6 +2699,83 @@ function renderConcept(){
   });
 }
 renderConceptTopicNav(); renderConcept();
+
+/* ---------- Study Tips (trilingual) ---------- */
+const STUDYTIPS_CH2_EN = {
+  title: "Study Tips – Biological Classification",
+  intro: "How to study this chapter well, and what to focus on for NEET.",
+  theoryHead: "📘 Theory — How to Study This Chapter",
+  neetHead: "🎯 NEET Strategy for This Chapter",
+  theory: [
+    "Build a comparison table across the five kingdoms (Monera, Protista, Fungi, Plantae, Animalia) — cell type, mode of nutrition, cell wall composition. This one table covers most of the chapter.",
+    "Learn Whittaker's classification hierarchy and be clear on why viruses, viroids and lichens are kept outside the five kingdoms.",
+    "For each fungal class (Phycomycetes, Ascomycetes, Basidiomycetes, Deuteromycetes), memorize one classic example and its distinguishing reproductive structure rather than the full life cycle.",
+    "Draw and label a virus (TMV) and a bacteriophage from memory — diagram-based questions recur here.",
+    "Revise cell wall composition differences (peptidoglycan vs cellulose vs chitin) since exams love cross-kingdom “which one has X” questions."
+  ],
+  neet: [
+    "This is a pure memory chapter — most NEET questions are single-line factual recall, so speed and elimination matter more than deep reasoning.",
+    "Expect at least one assertion-reason or match-the-following question mixing organisms from different kingdoms.",
+    "Common traps: Euglena's mode of nutrition, whether viruses count as living, and the stage at which slime moulds behave differently.",
+    "Because it's memory-heavy, revise this chapter in short, frequent passes (spaced repetition) rather than one long session."
+  ]
+};
+const STUDYTIPS_CH2_TRANSLATIONS = {
+  kn: {
+    title: "ಅಧ್ಯಯನ ಸಲಹೆಗಳು – ಜೈವಿಕ ವರ್ಗೀಕರಣ",
+    intro: "ಈ ಅಧ್ಯಾಯವನ್ನು ಚೆನ್ನಾಗಿ ಓದುವುದು ಹೇಗೆ, ಮತ್ತು NEET ಗಾಗಿ ಏನು ಗಮನಿಸಬೇಕು.",
+    theoryHead: "📘 ಥಿಯರಿ — ಈ ಅಧ್ಯಾಯವನ್ನು ಹೇಗೆ ಓದುವುದು",
+    neetHead: "🎯 ಈ ಅಧ್ಯಾಯಕ್ಕೆ NEET ತಂತ್ರ",
+    theory: [
+      "ಐದು ಸಾಮ್ರಾಜ್ಯಗಳಾದ್ಯಂತ (ಮೊನೆರಾ, ಪ್ರೊಟಿಸ್ಟಾ, ಶಿಲೀಂಧ್ರ, ಪ್ಲಾಂಟೇ, ಅನಿಮೇಲಿಯಾ) ಒಂದು ಹೋಲಿಕೆ ಟೇಬಲ್ ಮಾಡಿ — ಜೀವಕೋಶ ಪ್ರಕಾರ, ಪೋಷಣೆಯ ವಿಧಾನ, ಜೀವಕೋಶ ಗೋಡೆಯ ಸಂಯೋಜನೆ. ಈ ಒಂದೇ ಟೇಬಲ್ ಅಧ್ಯಾಯದ ಬಹುಪಾಲನ್ನು ಆವರಿಸುತ್ತದೆ.",
+      "ವಿಟ್ಟೇಕರ್‌ನ ವರ್ಗೀಕರಣ ಶ್ರೇಣಿಯನ್ನು ಕಲಿಯಿರಿ ಮತ್ತು ವೈರಸ್, ವೈರಾಯ್ಡ್ ಮತ್ತು ಲೈಕೆನ್‌ಗಳನ್ನು ಐದು ಸಾಮ್ರಾಜ್ಯಗಳಿಂದ ಏಕೆ ಹೊರಗಿಡಲಾಗಿದೆ ಎಂಬುದನ್ನು ಸ್ಪಷ್ಟವಾಗಿ ಅರ್ಥಮಾಡಿಕೊಳ್ಳಿ.",
+      "ಪ್ರತಿ ಶಿಲೀಂಧ್ರ ವರ್ಗಕ್ಕೂ (ಫೈಕೊಮೈಸಿಟೀಸ್, ಆಸ್ಕೊಮೈಸಿಟೀಸ್, ಬೆಸಿಡಿಯೊಮೈಸಿಟೀಸ್, ಡ್ಯೂಟೆರೊಮೈಸಿಟೀಸ್) ಪೂರ್ಣ ಜೀವನ ಚಕ್ರಕ್ಕಿಂತ ಒಂದು ಕ್ಲಾಸಿಕ್ ಉದಾಹರಣೆ ಮತ್ತು ಅದರ ವಿಶಿಷ್ಟ ಸಂತಾನೋತ್ಪತ್ತಿ ರಚನೆಯನ್ನು ಕಂಠಪಾಠ ಮಾಡಿ.",
+      "ವೈರಸ್ (TMV) ಮತ್ತು ಬ್ಯಾಕ್ಟೀರಿಯೊಫೇಜ್ ಅನ್ನು ನೆನಪಿನಿಂದ ಬರೆದು ಲೇಬಲ್ ಮಾಡಿ — ಇಲ್ಲಿ ಡಯಾಗ್ರಾಂ ಆಧಾರಿತ ಪ್ರಶ್ನೆಗಳು ಪುನರಾವರ್ತನೆಯಾಗುತ್ತವೆ.",
+      "ಜೀವಕೋಶ ಗೋಡೆಯ ಸಂಯೋಜನೆ ವ್ಯತ್ಯಾಸಗಳನ್ನು (ಪೆಪ್ಟಿಡೊಗ್ಲೈಕನ್ ವರ್ಸಸ್ ಸೆಲ್ಯುಲೋಸ್ ವರ್ಸಸ್ ಚಿಟಿನ್) ಪುನರಾವರ್ತಿಸಿ ಏಕೆಂದರೆ ಪರೀಕ್ಷೆಗಳು ಸಾಮ್ರಾಜ್ಯಗಳಾದ್ಯಂತ “ಯಾವುದರಲ್ಲಿ X ಇದೆ” ಪ್ರಶ್ನೆಗಳನ್ನು ಇಷ್ಟಪಡುತ್ತವೆ."
+    ],
+    neet: [
+      "ಇದು ಸಂಪೂರ್ಣ ಕಂಠಪಾಠ ಅಧ್ಯಾಯ — ಹೆಚ್ಚಿನ NEET ಪ್ರಶ್ನೆಗಳು ಒಂದು-ಸಾಲಿನ ಸತ್ಯ ಆಧಾರಿತ ನೆನಪು, ಆದ್ದರಿಂದ ಆಳವಾದ ತರ್ಕಕ್ಕಿಂತ ವೇಗ ಮತ್ತು ನಿರ್ಮೂಲನೆ ಮುಖ್ಯ.",
+      "ವಿಭಿನ್ನ ಸಾಮ್ರಾಜ್ಯಗಳ ಜೀವಿಗಳನ್ನು ಬೆರೆಸುವ ಕನಿಷ್ಠ ಒಂದು ಅಸರ್ಷನ್-ರೀಸನ್ ಅಥವಾ ಮ್ಯಾಚ್-ದಿ-ಫಾಲೋಯಿಂಗ್ ಪ್ರಶ್ನೆಯನ್ನು ನಿರೀಕ್ಷಿಸಿ.",
+      "ಸಾಮಾನ್ಯ ಬಲೆಗಳು: ಯುಗ್ಲೀನಾದ ಪೋಷಣೆಯ ವಿಧಾನ, ವೈರಸ್‌ಗಳು ಜೀವಿಗಳೇ ಎಂಬುದು, ಮತ್ತು ಸ್ಲೈಮ್ ಮೋಲ್ಡ್‌ಗಳು ವಿಭಿನ್ನವಾಗಿ ವರ್ತಿಸುವ ಹಂತ.",
+      "ಇದು ಕಂಠಪಾಠ-ಭಾರಿತವಾಗಿರುವುದರಿಂದ, ಒಂದು ದೀರ್ಘ ಸೆಷನ್‌ಗಿಂತ ಚಿಕ್ಕ, ಆಗಾಗ್ಗೆ ಪುನರಾವರ್ತನೆಗಳಲ್ಲಿ (ಸ್ಪೇಸ್ಡ್ ರೆಪಿಟಿಷನ್) ಈ ಅಧ್ಯಾಯವನ್ನು ಪುನರಾವರ್ತಿಸಿ."
+    ]
+  },
+  hi: {
+    title: "अध्ययन सुझाव – जैविक वर्गीकरण",
+    intro: "इस अध्याय को अच्छी तरह कैसे पढ़ें, और NEET के लिए किस पर ध्यान दें।",
+    theoryHead: "📘 सिद्धांत — इस अध्याय को कैसे पढ़ें",
+    neetHead: "🎯 इस अध्याय के लिए NEET रणनीति",
+    theory: [
+      "पांच जगतों (मोनेरा, प्रोटिस्टा, कवक, पादप, जंतु) में एक तुलना तालिका बनाएं — कोशिका प्रकार, पोषण विधि, कोशिका भित्ति संरचना। यह एक तालिका अध्याय के अधिकांश भाग को कवर करती है।",
+      "व्हिटेकर के वर्गीकरण पदानुक्रम को सीखें और स्पष्ट रहें कि वायरस, वाइरॉइड और लाइकेन को पांच जगतों से बाहर क्यों रखा गया है।",
+      "प्रत्येक कवक वर्ग (फाइकोमाइसिटीज़, एस्कोमाइसिटीज़, बेसिडियोमाइसिटीज़, ड्यूटेरोमाइसिटीज़) के लिए, पूरे जीवन-चक्र के बजाय एक क्लासिक उदाहरण और उसकी विशिष्ट जनन संरचना याद करें।",
+      "एक वायरस (TMV) और एक बैक्टीरियोफेज को याददाश्त से बनाकर लेबल करें — यहाँ डायग्राम आधारित प्रश्न बार-बार आते हैं।",
+      "कोशिका भित्ति संरचना के अंतर (पेप्टिडोग्लाइकन बनाम सेल्युलोज़ बनाम काइटिन) दोहराएं क्योंकि परीक्षाओं को जगतों के बीच “किसमें X है” जैसे प्रश्न बहुत पसंद हैं।"
+    ],
+    neet: [
+      "यह पूरी तरह याददाश्त वाला अध्याय है — अधिकांश NEET प्रश्न एक-पंक्ति के तथ्यात्मक स्मरण होते हैं, इसलिए गहरे तर्क से ज़्यादा गति और विकल्प हटाना मायने रखता है।",
+      "अलग-अलग जगतों के जीवों को मिलाने वाला कम से कम एक एसर्शन-रीज़न या मिलान वाला प्रश्न अपेक्षित रखें।",
+      "आम जाल: यूग्लीना की पोषण विधि, क्या वायरस को सजीव माना जाए, और वह अवस्था जहाँ स्लाइम मोल्ड अलग व्यवहार करते हैं।",
+      "चूँकि यह याददाश्त-भारी है, एक लंबे सत्र के बजाय छोटे, बार-बार के दोहरावों (स्पेस्ड रिपिटिशन) में इसे दोहराएं।"
+    ]
+  }
+};
+function renderStudyTipsCh2(){
+  const el = document.getElementById('studyTipsContent');
+  if(!el) return;
+  const en = STUDYTIPS_CH2_EN;
+  const tr = (currentLang !== 'en') && STUDYTIPS_CH2_TRANSLATIONS[currentLang];
+  const d = (tr && tr.title && tr.theory.length && tr.neet.length) ? tr : en;
+  el.innerHTML = `
+    <h3 style="color:var(--gold-2); margin-bottom:4px;">${d.title}</h3>
+    <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">${d.intro}</div>
+    <div class="tip-head">${d.theoryHead}</div>
+    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <div class="tip-head neet">${d.neetHead}</div>
+    <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
+  `;
+}
+renderStudyTipsCh2();
 
 /* ---------- Flashcards ---------- */
 /* Spaced-repetition-lite: each card has an "ease" level (0-3) stored by index.
@@ -4804,6 +4863,7 @@ function setLang(lang){
     const tabId = activePanel.id.replace('panel-', '');
     if(tabId === 'study' && typeof renderStudy === 'function') renderStudy();
     else if(tabId === 'concept' && typeof renderConcept === 'function') renderConcept();
+    else if(tabId === 'studytips' && typeof renderStudyTipsCh2 === 'function') renderStudyTipsCh2();
   }
 }
 window.setLang = setLang;

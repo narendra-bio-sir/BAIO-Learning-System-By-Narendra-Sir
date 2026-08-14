@@ -2883,27 +2883,76 @@ function renderClassPresentation(){
   }
 }
 
-function renderStudyTips(){
-  const theory = [
+const STUDYTIPS_CH9_EN = {
+  title: "Study Tips &ndash; Biotechnology: Principles and Processes",
+  intro: "How to study this chapter well, and what to focus on for NEET.",
+  theoryHead: "📘 Theory &mdash; How to Study This Chapter",
+  neetHead: "🎯 NEET Strategy for This Chapter",
+  theory: [
     "Split the chapter mentally into two halves &mdash; the genetic engineering tools (restriction enzymes, vectors, cloning) and the process of making rDNA (isolation &rarr; cutting &rarr; ligation &rarr; transfer &rarr; selection). Most questions sit right at the boundary between the two.",
     "Know restriction enzyme nomenclature (e.g. EcoRI) and be able to recognize a palindromic recognition sequence on sight &mdash; this comes up as a standalone question almost every year.",
     "Be precise about what each enzyme does &mdash; restriction endonuclease, DNA ligase, reverse transcriptase &mdash; don't let their roles blur together.",
     "Learn selectable markers and insertional inactivation (blue-white selection using beta-galactosidase) as one full worked example, not just as isolated terms.",
     "For bioreactors, know the difference between a simple batch bioreactor and a stirred-tank bioreactor, and why aeration/agitation matters for large-scale culture."
-  ];
-  const neet = [
+  ],
+  neet: [
     "This chapter is calculation-light but terminology-heavy &mdash; precise definitions matter more than derivations here.",
     "Expect diagram-based questions on plasmid vectors (like pBR322) with labelled restriction sites and marker genes.",
     "Drill these frequently-confused pairs separately: exonuclease vs endonuclease, cloning vector vs expression vector, upstream vs downstream processing.",
     "Cross-link this chapter with Biotechnology and its Applications while revising &mdash; NEET often pairs a “principle” question with an “application” question from that chapter."
-  ];
+  ]
+};
+const STUDYTIPS_CH9_TRANSLATIONS = {
+  kn: {
+    title: "ಅಧ್ಯಯನ ಸಲಹೆಗಳು – ಜೈವತಂತ್ರಜ್ಞಾನ: ತತ್ವಗಳು ಮತ್ತು ಪ್ರಕ್ರಿಯೆಗಳು",
+    intro: "ಈ ಅಧ್ಯಾಯವನ್ನು ಚೆನ್ನಾಗಿ ಓದುವುದು ಹೇಗೆ, ಮತ್ತು NEET ಗಾಗಿ ಏನು ಗಮನಿಸಬೇಕು.",
+    theoryHead: "📘 ಥಿಯರಿ — ಈ ಅಧ್ಯಾಯವನ್ನು ಹೇಗೆ ಓದುವುದು",
+    neetHead: "🎯 ಈ ಅಧ್ಯಾಯಕ್ಕೆ NEET ತಂತ್ರ",
+    theory: [
+      "ಅಧ್ಯಾಯವನ್ನು ಮಾನಸಿಕವಾಗಿ ಎರಡು ಭಾಗಗಳಾಗಿ ವಿಂಗಡಿಸಿ — ಜೆನೆಟಿಕ್ ಎಂಜಿನಿಯರಿಂಗ್ ಟೂಲ್ಸ್ (ರಿಸ್ಟ್ರಿಕ್ಷನ್ ಎಂಜೈಮ್‌ಗಳು, ವೆಕ್ಟರ್‌ಗಳು, ಕ್ಲೋನಿಂಗ್) ಮತ್ತು rDNA ಮಾಡುವ ಪ್ರಕ್ರಿಯೆ (ಐಸೊಲೇಷನ್ → ಕಟಿಂಗ್ → ಲೈಗೇಷನ್ → ವರ್ಗಾವಣೆ → ಆಯ್ಕೆ). ಹೆಚ್ಚಿನ ಪ್ರಶ್ನೆಗಳು ಈ ಎರಡರ ಗಡಿಯಲ್ಲಿಯೇ ಇರುತ್ತವೆ.",
+      "ರಿಸ್ಟ್ರಿಕ್ಷನ್ ಎಂಜೈಮ್ ನಾಮಕರಣವನ್ನು (ಉದಾ. EcoRI) ತಿಳಿಯಿರಿ ಮತ್ತು ಪ್ಯಾಲಿಂಡ್ರೋಮಿಕ್ ರೆಕಗ್ನಿಷನ್ ಸೀಕ್ವೆನ್ಸ್ ಅನ್ನು ನೋಡಿದ ತಕ್ಷಣ ಗುರುತಿಸಲು ಸಾಧ್ಯವಾಗಿಸಿ — ಇದು ಬಹುತೇಕ ಪ್ರತಿ ವರ್ಷ ಸ್ವತಂತ್ರ ಪ್ರಶ್ನೆಯಾಗಿ ಬರುತ್ತದೆ.",
+      "ಪ್ರತಿ ಎಂಜೈಮ್ ಏನು ಮಾಡುತ್ತದೆ ಎಂಬುದರ ಬಗ್ಗೆ ನಿಖರವಾಗಿರಿ — ರಿಸ್ಟ್ರಿಕ್ಷನ್ ಎಂಡೊನ್ಯೂಕ್ಲಿಯೇಸ್, DNA ಲೈಗೇಸ್, ರಿವರ್ಸ್ ಟ್ರಾನ್ಸ್‌ಕ್ರಿಪ್ಟೇಸ್ — ಅವುಗಳ ಪಾತ್ರಗಳನ್ನು ಬೆರೆಸಿಕೊಳ್ಳಬೇಡಿ.",
+      "ಸೆಲೆಕ್ಟಬಲ್ ಮಾರ್ಕರ್‌ಗಳು ಮತ್ತು ಇನ್ಸರ್ಷನಲ್ ಇನ್ಆಕ್ಟಿವೇಷನ್ ಅನ್ನು (ಬೀಟಾ-ಗ್ಯಾಲಕ್ಟೊಸಿಡೇಸ್ ಬಳಸಿ ಬ್ಲೂ-ವೈಟ್ ಸೆಲೆಕ್ಷನ್) ಒಂದು ಪೂರ್ಣ ಉದಾಹರಣೆಯಾಗಿ ಕಲಿಯಿರಿ, ಕೇವಲ ಪ್ರತ್ಯೇಕ ಪದಗಳಾಗಿ ಅಲ್ಲ.",
+      "ಬಯೋರಿಯಾಕ್ಟರ್‌ಗಳಿಗೆ, ಸರಳ ಬ್ಯಾಚ್ ಬಯೋರಿಯಾಕ್ಟರ್ ಮತ್ತು ಸ್ಟಿರ್ಡ್-ಟ್ಯಾಂಕ್ ಬಯೋರಿಯಾಕ್ಟರ್ ನಡುವಿನ ವ್ಯತ್ಯಾಸ ಮತ್ತು ದೊಡ್ಡ ಪ್ರಮಾಣದ ಕಲ್ಚರ್‌ಗೆ ಏರೇಷನ್/ಆಂದೋಲನ ಏಕೆ ಮುಖ್ಯ ಎಂಬುದನ್ನು ತಿಳಿಯಿರಿ."
+    ],
+    neet: [
+      "ಈ ಅಧ್ಯಾಯ ಲೆಕ್ಕಾಚಾರ ಕಡಿಮೆ ಆದರೆ ಪರಿಭಾಷೆ ಹೆಚ್ಚು — ಇಲ್ಲಿ ನಿಖರ ವ್ಯಾಖ್ಯಾನಗಳು ಉತ್ಪನ್ನಗಳಿಗಿಂತ ಹೆಚ್ಚು ಮುಖ್ಯ.",
+      "ಪ್ಲಾಸ್ಮಿಡ್ ವೆಕ್ಟರ್‌ಗಳ (pBR322 ನಂತಹ) ಡಯಾಗ್ರಾಂ ಆಧಾರಿತ ಪ್ರಶ್ನೆಗಳನ್ನು ನಿರೀಕ್ಷಿಸಿ, ಲೇಬಲ್ ಮಾಡಿದ ರಿಸ್ಟ್ರಿಕ್ಷನ್ ಸೈಟ್‌ಗಳು ಮತ್ತು ಮಾರ್ಕರ್ ಜೀನ್‌ಗಳೊಂದಿಗೆ.",
+      "ಈ ಗೊಂದಲಕಾರಿ ಜೋಡಿಗಳನ್ನು ಪ್ರತ್ಯೇಕವಾಗಿ ಅಭ್ಯಾಸ ಮಾಡಿ: ಎಕ್ಸೊನ್ಯೂಕ್ಲಿಯೇಸ್ ವರ್ಸಸ್ ಎಂಡೊನ್ಯೂಕ್ಲಿಯೇಸ್, ಕ್ಲೋನಿಂಗ್ ವೆಕ್ಟರ್ ವರ್ಸಸ್ ಎಕ್ಸ್‌ಪ್ರೆಷನ್ ವೆಕ್ಟರ್, ಅಪ್‌ಸ್ಟ್ರೀಮ್ ವರ್ಸಸ್ ಡೌನ್‌ಸ್ಟ್ರೀಮ್ ಪ್ರೊಸೆಸಿಂಗ್.",
+      "ಪುನರಾವರ್ತಿಸುವಾಗ ಈ ಅಧ್ಯಾಯವನ್ನು ಜೈವತಂತ್ರಜ್ಞಾನ ಮತ್ತು ಅದರ ಅನ್ವಯಗಳ ಜೊತೆಗೆ ಜೋಡಿಸಿ — NEET ಸಾಮಾನ್ಯವಾಗಿ “ತತ್ವ” ಪ್ರಶ್ನೆಯನ್ನು ಆ ಅಧ್ಯಾಯದ “ಅನ್ವಯ” ಪ್ರಶ್ನೆಯೊಂದಿಗೆ ಜೋಡಿಸುತ್ತದೆ."
+    ]
+  },
+  hi: {
+    title: "अध्ययन सुझाव – जैव प्रौद्योगिकी: सिद्धांत और प्रक्रियाएं",
+    intro: "इस अध्याय को अच्छी तरह कैसे पढ़ें, और NEET के लिए किस पर ध्यान दें।",
+    theoryHead: "📘 सिद्धांत — इस अध्याय को कैसे पढ़ें",
+    neetHead: "🎯 इस अध्याय के लिए NEET रणनीति",
+    theory: [
+      "अध्याय को मानसिक रूप से दो हिस्सों में बांटें — जेनेटिक इंजीनियरिंग टूल्स (रिस्ट्रिक्शन एंजाइम, वेक्टर, क्लोनिंग) और rDNA बनाने की प्रक्रिया (पृथक्करण → काटना → लाइगेशन → स्थानांतरण → चयन)। अधिकांश प्रश्न इन दोनों की सीमा पर ही होते हैं।",
+      "रिस्ट्रिक्शन एंजाइम नामकरण (जैसे EcoRI) जानें और पैलिंड्रोमिक पहचान अनुक्रम को देखते ही पहचान पाएं — यह लगभग हर साल एक स्वतंत्र प्रश्न के रूप में आता है।",
+      "हर एंजाइम क्या करता है इसके बारे में सटीक रहें — रिस्ट्रिक्शन एंडोन्यूक्लिएज़, DNA लाइगेज़, रिवर्स ट्रांसक्रिप्टेज़ — इनकी भूमिकाओं को आपस में मिलने न दें।",
+      "चयन योग्य मार्कर और इन्सर्शनल इनएक्टिवेशन (बीटा-गैलेक्टोसिडेज़ का उपयोग करके ब्लू-व्हाइट चयन) को एक पूर्ण उदाहरण के रूप में सीखें, न कि केवल अलग-अलग शब्दों के रूप में।",
+      "बायोरिएक्टर के लिए, सामान्य बैच बायोरिएक्टर और स्टिर्ड-टैंक बायोरिएक्टर के बीच अंतर जानें, और बड़े पैमाने की कल्चर के लिए वातन/आंदोलन क्यों महत्वपूर्ण है।"
+    ],
+    neet: [
+      "यह अध्याय गणना में हल्का लेकिन शब्दावली में भारी है — यहाँ सटीक परिभाषाएं व्युत्पत्तियों से ज़्यादा मायने रखती हैं।",
+      "प्लास्मिड वेक्टर (जैसे pBR322) पर डायग्राम आधारित प्रश्नों की अपेक्षा करें, जिनमें रिस्ट्रिक्शन साइट और मार्कर जीन लेबल किए गए हों।",
+      "इन बार-बार भ्रमित करने वाले जोड़ों का अलग-अलग अभ्यास करें: एक्सोन्यूक्लिएज़ बनाम एंडोन्यूक्लिएज़, क्लोनिंग वेक्टर बनाम एक्सप्रेशन वेक्टर, अपस्ट्रीम बनाम डाउनस्ट्रीम प्रोसेसिंग।",
+      "दोहराते समय इस अध्याय को जैव प्रौद्योगिकी और उसके अनुप्रयोग अध्याय से जोड़ें — NEET अक्सर एक “सिद्धांत” प्रश्न को उस अध्याय के “अनुप्रयोग” प्रश्न के साथ जोड़ता है।"
+    ]
+  }
+};
+function renderStudyTips(){
+  const en = STUDYTIPS_CH9_EN;
+  const tr = (currentLang !== 'en') && STUDYTIPS_CH9_TRANSLATIONS[currentLang];
+  const d = tr || en;
   document.getElementById('content').innerHTML = `<div class="setup-card">
-    <h3 style="color:var(--gold);margin-bottom:4px;">Study Tips &ndash; Biotechnology: Principles and Processes</h3>
-    <div style="color:var(--ink-dim);font-size:12px;margin-bottom:16px;">How to study this chapter well, and what to focus on for NEET.</div>
-    <div class="tip-head">📘 Theory &mdash; How to Study This Chapter</div>
-    <ul class="tip-list">${theory.map(t=>`<li>${t}</li>`).join('')}</ul>
-    <div class="tip-head neet">🎯 NEET Strategy for This Chapter</div>
-    <ul class="tip-list neet">${neet.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <h3 style="color:var(--gold);margin-bottom:4px;">${d.title}</h3>
+    <div style="color:var(--ink-dim);font-size:12px;margin-bottom:16px;">${d.intro}</div>
+    <div class="tip-head">${d.theoryHead}</div>
+    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <div class="tip-head neet">${d.neetHead}</div>
+    <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   </div>`;
 }
 

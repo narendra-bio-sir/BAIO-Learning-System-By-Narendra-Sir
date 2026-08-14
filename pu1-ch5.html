@@ -1230,27 +1230,76 @@ function pdfRow(key){
     <div class="dl-btns"><button class="dl-btn view" onclick="viewPdf('${key}')">View</button>
     <button class="dl-btn dl" id="${btnId}" onclick="downloadPdf('${key}','${btnId}')">Download</button></div></div>`;
 }
-function renderStudyTips(){
-  const theory = [
+const STUDYTIPS_CH5_EN = {
+  title: "Study Tips &ndash; Morphology of Flowering Plants",
+  intro: "How to study this chapter well, and what to focus on for NEET.",
+  theoryHead: "📘 Theory &mdash; How to Study This Chapter",
+  neetHead: "🎯 NEET Strategy for This Chapter",
+  theory: [
     "This is the most diagram-dependent chapter in PU-I Biology &mdash; practice labelling root, stem, leaf, inflorescence, flower and fruit diagrams by hand, not just reading them.",
     "Build one table of modifications (root modifications, stem modifications, leaf modifications) with one example each &mdash; “which is a modified X” questions are asked constantly.",
     "Learn the floral formula and floral diagram notation for your syllabus families (e.g. Solanaceae) cold &mdash; this is a guaranteed few marks every year.",
     "Be precise with definitions that sound similar: raceme vs spike, hypogynous vs epigynous, superior vs inferior ovary, the different aestivation types.",
     "Practice converting a described flower into its floral formula and back again &mdash; this is a skill built by repetition, not something you can just memorize once."
-  ];
-  const neet = [
+  ],
+  neet: [
     "Diagram-based “identify the labelled part” questions are extremely common from this chapter &mdash; the Board Important pages and diagram practice here are your highest-value prep.",
     "Match-the-following questions (root type&harr;example, modification&harr;example, placentation&harr;example) show up almost every year.",
     "Don't neglect fruit and seed structure at the end of the chapter &mdash; it's shorter, but still tested directly.",
     "This chapter pairs naturally with Anatomy of Flowering Plants (internal structure) &mdash; get the external morphology solid first, it makes the internal anatomy much easier to visualize."
-  ];
+  ]
+};
+const STUDYTIPS_CH5_TRANSLATIONS = {
+  kn: {
+    title: "ಅಧ್ಯಯನ ಸಲಹೆಗಳು – ಹೂ ಬಿಡುವ ಸಸ್ಯಗಳ ರೂಪವಿಜ್ಞಾನ",
+    intro: "ಈ ಅಧ್ಯಾಯವನ್ನು ಚೆನ್ನಾಗಿ ಓದುವುದು ಹೇಗೆ, ಮತ್ತು NEET ಗಾಗಿ ಏನು ಗಮನಿಸಬೇಕು.",
+    theoryHead: "📘 ಥಿಯರಿ — ಈ ಅಧ್ಯಾಯವನ್ನು ಹೇಗೆ ಓದುವುದು",
+    neetHead: "🎯 ಈ ಅಧ್ಯಾಯಕ್ಕೆ NEET ತಂತ್ರ",
+    theory: [
+      "ಇದು PU-I ಜೀವಶಾಸ್ತ್ರದ ಅತ್ಯಂತ ಡಯಾಗ್ರಾಂ-ಅವಲಂಬಿತ ಅಧ್ಯಾಯ — ಬೇರು, ಕಾಂಡ, ಎಲೆ, ಪುಷ್ಪಮಂಜರಿ, ಹೂವು ಮತ್ತು ಹಣ್ಣಿನ ಡಯಾಗ್ರಾಂಗಳನ್ನು ಕೇವಲ ಓದುವುದಲ್ಲ, ಕೈಯಿಂದ ಬರೆದು ಲೇಬಲ್ ಮಾಡುವ ಅಭ್ಯಾಸ ಮಾಡಿ.",
+      "ಮಾರ್ಪಾಡುಗಳ (ಬೇರಿನ ಮಾರ್ಪಾಡುಗಳು, ಕಾಂಡದ ಮಾರ್ಪಾಡುಗಳು, ಎಲೆಯ ಮಾರ್ಪಾಡುಗಳು) ಒಂದು ಟೇಬಲ್ ಮಾಡಿ, ಪ್ರತಿಯೊಂದಕ್ಕೂ ಒಂದು ಉದಾಹರಣೆಯೊಂದಿಗೆ — “ಇದು ಯಾವ ಮಾರ್ಪಡಿಸಿದ X” ಪ್ರಶ್ನೆಗಳು ನಿರಂತರವಾಗಿ ಕೇಳಲಾಗುತ್ತವೆ.",
+      "ನಿಮ್ಮ ಪಠ್ಯಕ್ರಮದ ಕುಟುಂಬಗಳಿಗೆ (ಉದಾ. ಸೊಲನೇಸೀ) ಫ್ಲೋರಲ್ ಫಾರ್ಮುಲಾ ಮತ್ತು ಫ್ಲೋರಲ್ ಡಯಾಗ್ರಾಂ ನೊಟೇಷನ್ ಅನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಕಲಿಯಿರಿ — ಇದು ಪ್ರತಿ ವರ್ಷ ಖಚಿತ ಕೆಲವು ಅಂಕಗಳು.",
+      "ಒಂದೇ ರೀತಿ ಕೇಳಿಸುವ ವ್ಯಾಖ್ಯಾನಗಳಲ್ಲಿ ನಿಖರವಾಗಿರಿ: ರೇಸಿಮ್ ವರ್ಸಸ್ ಸ್ಪೈಕ್, ಹೈಪೊಜೈನಸ್ ವರ್ಸಸ್ ಎಪಿಜೈನಸ್, ಸುಪೀರಿಯರ್ ವರ್ಸಸ್ ಇನ್ಫೀರಿಯರ್ ಓವರಿ, ವಿಭಿನ್ನ ಎಸ್ಟಿವೇಷನ್ ಪ್ರಕಾರಗಳು.",
+      "ವಿವರಿಸಿದ ಹೂವನ್ನು ಅದರ ಫ್ಲೋರಲ್ ಫಾರ್ಮುಲಾಗೆ ಪರಿವರ್ತಿಸುವ ಮತ್ತು ಹಿಂತಿರುಗಿಸುವ ಅಭ್ಯಾಸ ಮಾಡಿ — ಇದು ಪುನರಾವರ್ತನೆಯಿಂದ ನಿರ್ಮಿಸುವ ಕೌಶಲ್ಯ, ಒಮ್ಮೆ ಕಂಠಪಾಠ ಮಾಡುವಂಥದ್ದಲ್ಲ."
+    ],
+    neet: [
+      "ಈ ಅಧ್ಯಾಯದಿಂದ ಡಯಾಗ್ರಾಂ ಆಧಾರಿತ “ಲೇಬಲ್ ಮಾಡಿದ ಭಾಗವನ್ನು ಗುರುತಿಸಿ” ಪ್ರಶ್ನೆಗಳು ಅತ್ಯಂತ ಸಾಮಾನ್ಯ — ಇಲ್ಲಿನ ಬೋರ್ಡ್ ಇಂಪಾರ್ಟೆಂಟ್ ಪುಟಗಳು ಮತ್ತು ಡಯಾಗ್ರಾಂ ಅಭ್ಯಾಸ ನಿಮ್ಮ ಅತ್ಯಂತ ಮೌಲ್ಯಯುತ ತಯಾರಿ.",
+      "ಮ್ಯಾಚ್-ದಿ-ಫಾಲೋಯಿಂಗ್ ಪ್ರಶ್ನೆಗಳು (ಬೇರಿನ ಪ್ರಕಾರ↔ಉದಾಹರಣೆ, ಮಾರ್ಪಾಡು↔ಉದಾಹರಣೆ, ಪ್ಲಸೆಂಟೇಷನ್↔ಉದಾಹರಣೆ) ಬಹುತೇಕ ಪ್ರತಿ ವರ್ಷ ಬರುತ್ತವೆ.",
+      "ಅಧ್ಯಾಯದ ಕೊನೆಯಲ್ಲಿರುವ ಹಣ್ಣು ಮತ್ತು ಬೀಜದ ರಚನೆಯನ್ನು ನಿರ್ಲಕ್ಷಿಸಬೇಡಿ — ಇದು ಚಿಕ್ಕದಾಗಿದ್ದರೂ ನೇರವಾಗಿ ಪರೀಕ್ಷಿಸಲ್ಪಡುತ್ತದೆ.",
+      "ಈ ಅಧ್ಯಾಯವು ಹೂ ಬಿಡುವ ಸಸ್ಯಗಳ ಅಂಗರಚನಾಶಾಸ್ತ್ರ (ಆಂತರಿಕ ರಚನೆ) ಜೊತೆ ಸ್ವಾಭಾವಿಕವಾಗಿ ಜೋಡಿಸುತ್ತದೆ — ಮೊದಲು ಬಾಹ್ಯ ರೂಪವಿಜ್ಞಾನವನ್ನು ಗಟ್ಟಿಗೊಳಿಸಿ, ಅದು ಆಂತರಿಕ ಅಂಗರಚನಾಶಾಸ್ತ್ರವನ್ನು ದೃಶ್ಯೀಕರಿಸಲು ಸುಲಭಗೊಳಿಸುತ್ತದೆ."
+    ]
+  },
+  hi: {
+    title: "अध्ययन सुझाव – पुष्पी पादपों की आकारिकी",
+    intro: "इस अध्याय को अच्छी तरह कैसे पढ़ें, और NEET के लिए किस पर ध्यान दें।",
+    theoryHead: "📘 सिद्धांत — इस अध्याय को कैसे पढ़ें",
+    neetHead: "🎯 इस अध्याय के लिए NEET रणनीति",
+    theory: [
+      "यह PU-I जीव विज्ञान का सबसे अधिक डायग्राम-निर्भर अध्याय है — जड़, तना, पत्ती, पुष्पक्रम, फूल और फल के डायग्राम को केवल पढ़ने के बजाय हाथ से बनाकर लेबल करने का अभ्यास करें।",
+      "रूपांतरणों (जड़ के रूपांतरण, तने के रूपांतरण, पत्ती के रूपांतरण) की एक तालिका बनाएं, हर एक के साथ एक उदाहरण — “यह किसका रूपांतरित X है” जैसे प्रश्न लगातार पूछे जाते हैं।",
+      "अपने पाठ्यक्रम के परिवारों (जैसे सोलेनेसी) के लिए पुष्प सूत्र और पुष्प आरेख संकेतन को पूरी तरह याद करें — यह हर साल कुछ पक्के अंक दिलाता है।",
+      "एक जैसे लगने वाली परिभाषाओं में सटीक रहें: रेसीम बनाम स्पाइक, हाइपोजाइनस बनाम एपिजाइनस, सुपीरियर बनाम इनफीरियर अंडाशय, विभिन्न एस्टिवेशन प्रकार।",
+      "किसी वर्णित फूल को उसके पुष्प सूत्र में बदलने और वापस पलटने का अभ्यास करें — यह दोहराव से बनने वाला कौशल है, एक बार याद करने वाली चीज़ नहीं।"
+    ],
+    neet: [
+      "इस अध्याय से डायग्राम आधारित “लेबल किए गए भाग को पहचानें” प्रश्न बेहद आम हैं — यहाँ के बोर्ड इम्पॉर्टेंट पन्ने और डायग्राम अभ्यास आपकी सबसे मूल्यवान तैयारी हैं।",
+      "मिलान वाले प्रश्न (जड़ के प्रकार↔उदाहरण, रूपांतरण↔उदाहरण, बीजांडन्यास↔उदाहरण) लगभग हर साल आते हैं।",
+      "अध्याय के अंत में फल और बीज की संरचना को नज़रअंदाज़ न करें — यह छोटा है, पर फिर भी सीधे परखा जाता है।",
+      "यह अध्याय पुष्पी पादपों की शारीरिकी (आंतरिक संरचना) से स्वाभाविक रूप से जुड़ता है — पहले बाहरी आकारिकी को मज़बूत करें, इससे आंतरिक शारीरिकी को समझना आसान हो जाता है।"
+    ]
+  }
+};
+function renderStudyTips(){
+  const en = STUDYTIPS_CH5_EN;
+  const tr = (currentLang !== 'en') && STUDYTIPS_CH5_TRANSLATIONS[currentLang];
+  const d = tr || en;
   document.getElementById('content').innerHTML = `<div class="setup-card">
-    <h3 style="color:var(--gold);margin-bottom:4px;">Study Tips &ndash; Morphology of Flowering Plants</h3>
-    <div style="color:var(--ink-dim);font-size:12px;margin-bottom:16px;">How to study this chapter well, and what to focus on for NEET.</div>
-    <div class="tip-head">📘 Theory &mdash; How to Study This Chapter</div>
-    <ul class="tip-list">${theory.map(t=>`<li>${t}</li>`).join('')}</ul>
-    <div class="tip-head neet">🎯 NEET Strategy for This Chapter</div>
-    <ul class="tip-list neet">${neet.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <h3 style="color:var(--gold);margin-bottom:4px;">${d.title}</h3>
+    <div style="color:var(--ink-dim);font-size:12px;margin-bottom:16px;">${d.intro}</div>
+    <div class="tip-head">${d.theoryHead}</div>
+    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <div class="tip-head neet">${d.neetHead}</div>
+    <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   </div>`;
 }
 function renderBoardImportant(){
