@@ -252,7 +252,7 @@ select, .seg{
   background:var(--panel-2); border:1px solid var(--border); padding:6px 12px; border-radius:99px;
   font-family:'Space Grotesk',sans-serif; font-weight:700; color:var(--gold-2); font-size:14px; min-width:56px; text-align:center;
 }
-.timer-badge.low{color:var(--danger); border-color:var(--danger); animation:pulse 1s infinite;}
+.timer-badge.low{color:var(--danger); border-color:var(--danger); font-size:15px; box-shadow:0 0 0 2px rgba(224,85,85,0.18); animation:pulse 1s infinite;}
 .fs-btn{
   background:var(--panel-2); border:1px solid var(--border); color:var(--text-dim);
   border-radius:8px; padding:6px 9px; font-size:14px; line-height:1; cursor:pointer; flex-shrink:0;
@@ -268,6 +268,7 @@ select, .seg{
 .fs-target:fullscreen .opt{font-size:clamp(14px,2vw,17px); padding:14px 16px;}
 .fs-target:fullscreen .fs-btn{background:var(--panel);}
 /* Go Back / Stop & See Report stay at the top in both normal and fullscreen mode (no separate fullscreen bar needed) */
+.fs-target:fullscreen .fs-sticky-head{position:sticky; top:0; z-index:5; background:var(--bg-1); padding-bottom:8px; margin-bottom:2px;}
 /* Study Mode fullscreen: top-aligned reading view, topic nav stays reachable while scrolling */
 #studyFsWrap.fs-target:fullscreen{
   justify-content:flex-start; max-width:900px; padding-top:16px;
@@ -3097,6 +3098,23 @@ document.querySelectorAll('.quizTopicCb').forEach(cb=>{
   });
 });
 
+/* Shared countdown "tick/tock" beep + low-time threshold for MCQ Quiz / NEET Practice / KCET Practice timers */
+const TIMER_LOW_SEC = 20;
+let _tickAudioCtx = null;
+function playTickSound(lowPitch){
+  try{
+    if(!_tickAudioCtx) _tickAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if(_tickAudioCtx.state === 'suspended') _tickAudioCtx.resume();
+    const ctx = _tickAudioCtx;
+    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+    osc.type = 'square'; osc.frequency.value = lowPitch ? 700 : 1000;
+    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime + 0.08);
+  }catch(e){ /* audio not available, ignore */ }
+}
+
 let quizState = null; let quizTimerInt = null;
 const QUIZ_TIMER_SEC = 60;
 document.getElementById('quizStartBtn').addEventListener('click', ()=>{
@@ -3121,6 +3139,7 @@ function renderQuizQuestion(){
   s.timeLeft = QUIZ_TIMER_SEC;
   const runner = document.getElementById('quizRunner');
   runner.innerHTML = `
+    <div class="fs-sticky-head">
     <div class="btn-row runner-exit-bar" style="margin-bottom:8px;">
       <button class="btn secondary" onclick="quizGoBack()">← Go Back</button>
       <button class="btn secondary" onclick="quizStopTest()">⏹ Stop &amp; See Report</button>
@@ -3130,6 +3149,7 @@ function renderQuizQuestion(){
       <div class="streak-badge">🔥 Streak: ${s.streak}</div>
       <div class="timer-badge" id="quizTimerBadge">⏱ ${s.timeLeft}s</div>
       <button class="fs-btn" title="Fullscreen" onclick="toggleRunnerFullscreen('quizRunner')">⛶</button>
+    </div>
     </div>
     <div class="progress-bar"><div class="progress-fill" style="width:${(s.idx/s.pool.length)*100}%"></div></div>
     <div class="q-meta"><span class="chip">${q.d}</span></div>
@@ -3148,7 +3168,11 @@ function renderQuizQuestion(){
   quizTimerInt = setInterval(()=>{
     s.timeLeft--;
     const el = document.getElementById('quizTimerBadge');
-    if(el) el.textContent = '⏱ ' + s.timeLeft + 's';
+    if(el){
+      el.textContent = '⏱ ' + s.timeLeft + 's';
+      el.classList.toggle('low', s.timeLeft>0 && s.timeLeft<=TIMER_LOW_SEC);
+    }
+    if(s.timeLeft>0 && s.timeLeft<=TIMER_LOW_SEC) playTickSound(s.timeLeft%2===0);
     if(s.timeLeft<=0){ quizTimeout(); }
   }, 1000);
 }
@@ -3353,18 +3377,21 @@ function startAdvTimer(){
   updateAdvTimerUI();
   s.timerHandle = setInterval(()=>{
     s.timeLeft--;
-    updateAdvTimerUI();
+    updateAdvTimerUI(true);
     if(s.timeLeft<=0){ clearInterval(s.timerHandle); advTimeout(); }
   },1000);
 }
-function updateAdvTimerUI(){
+function updateAdvTimerUI(playSound){
   const badge = document.getElementById('advTimerBadge');
   if(!badge) return;
   badge.textContent = advState.timeLeft+'s';
-  badge.classList.toggle('low', advState.timeLeft<=5);
+  const isLow = advState.timeLeft>0 && advState.timeLeft<=TIMER_LOW_SEC;
+  badge.classList.toggle('low', isLow);
+  if(playSound && isLow) playTickSound(advState.timeLeft%2===0);
 }
 function advQuestionHeader(q, extraChip){
-  return `<div class="btn-row runner-exit-bar" style="margin-bottom:8px;">
+  return `<div class="fs-sticky-head">
+    <div class="btn-row runner-exit-bar" style="margin-bottom:8px;">
       <button class="btn secondary" onclick="advGoBack()">← Go Back</button>
       <button class="btn secondary" onclick="advStopTest()">⏹ Stop &amp; See Report</button>
     </div>
@@ -3372,6 +3399,7 @@ function advQuestionHeader(q, extraChip){
       <div>Question ${advState.idx+1} / ${advState.pool.length}</div>
       <div class="timer-badge" id="advTimerBadge">${advState.timerSec}s</div>
       <button class="fs-btn" title="Fullscreen" onclick="toggleRunnerFullscreen('advRunner')">⛶</button>
+    </div>
     </div>
     <div class="progress-bar"><div class="progress-fill" style="width:${(advState.idx/advState.pool.length)*100}%"></div></div>
     <div class="q-meta"><span class="chip">${q.d}</span><span class="chip gold">${ADV_TYPE_LABELS[q.type]}</span>${extraChip||''}</div>`;
@@ -3650,15 +3678,17 @@ function startKcetTimer(){
   updateKcetTimerUI();
   s.timerHandle = setInterval(()=>{
     s.timeLeft--;
-    updateKcetTimerUI();
+    updateKcetTimerUI(true);
     if(s.timeLeft<=0){ clearInterval(s.timerHandle); kcetTimeout(); }
   },1000);
 }
-function updateKcetTimerUI(){
+function updateKcetTimerUI(playSound){
   const badge = document.getElementById('kcetTimerBadge');
   if(!badge) return;
   badge.textContent = kcetState.timeLeft+'s';
-  badge.classList.toggle('low', kcetState.timeLeft<=5);
+  const isLow = kcetState.timeLeft>0 && kcetState.timeLeft<=TIMER_LOW_SEC;
+  badge.classList.toggle('low', isLow);
+  if(playSound && isLow) playTickSound(kcetState.timeLeft%2===0);
 }
 function kcetStopTest(){
   if(!confirm('Stop this test now and see your report card based on the questions you\'ve answered so far?')) return;
@@ -3684,7 +3714,8 @@ function renderKcetQuestion(){
       <div class="match-col"><div class="lbl">Column A</div>${q.colA.map(x=>`<div>${x}</div>`).join('')}</div>
       <div class="match-col"><div class="lbl">Column B</div>${q.colB.map(x=>`<div>${x}</div>`).join('')}</div>
     </div>` : '';
-  runner.innerHTML = `<div class="btn-row runner-exit-bar" style="margin-bottom:8px;">
+  runner.innerHTML = `<div class="fs-sticky-head">
+    <div class="btn-row runner-exit-bar" style="margin-bottom:8px;">
       <button class="btn secondary" id="kcetGoBackBtn">\u2190 Go Back</button>
       <button class="btn secondary" id="kcetStopBtn">\u23F9 Stop &amp; See Report</button>
     </div>
@@ -3692,6 +3723,7 @@ function renderKcetQuestion(){
       <div>Question ${s.idx+1} / ${s.pool.length}</div>
       <div class="timer-badge" id="kcetTimerBadge">${s.timerSec}s</div>
       <button class="fs-btn" title="Fullscreen" onclick="toggleRunnerFullscreen('kcetRunner')">⛶</button>
+    </div>
     </div>
     <div class="progress-bar"><div class="progress-fill" style="width:${(s.idx/s.pool.length)*100}%"></div></div>
     <div class="q-meta"><span class="chip">${q.difficulty}</span><span class="chip gold">${fmtLabel}</span></div>
