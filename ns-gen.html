@@ -6,7 +6,7 @@
 <title>Unlock Code Generator | BAIO Learning System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
@@ -66,14 +66,14 @@ body.light-theme .btn{color:#fff;}
 
 .result-box{margin-top:16px; background:var(--panel2); border:1px solid var(--teal2); border-radius:12px; padding:16px; text-align:center; display:none;}
 .result-box.show{display:block;}
-.result-code{font-family:'Space Grotesk',sans-serif; font-size:26px; font-weight:700; color:var(--teal); letter-spacing:2px; margin:6px 0;}
+.result-code{font-family:'JetBrains Mono',monospace; font-size:24px; font-weight:700; color:var(--teal); letter-spacing:2px; margin:6px 0;}
 .result-meta{font-size:12px; color:var(--ink-dim);}
 .copy-btn{margin-top:10px; padding:7px 16px; border-radius:10px; border:1px solid var(--teal2); background:transparent; color:var(--teal); font-size:12px; cursor:pointer;}
 
 table{width:100%; border-collapse:collapse; margin-top:14px; font-size:12.5px;}
 th{background:var(--panel2); color:var(--gold); text-align:left; padding:8px 10px; font-size:11px; text-transform:uppercase;}
 td{padding:8px 10px; border-top:1px solid var(--line);}
-td.code-cell{font-family:'Space Grotesk',sans-serif; font-weight:700; color:var(--teal); letter-spacing:1px;}
+td.code-cell{font-family:'JetBrains Mono',monospace; font-weight:700; color:var(--teal); letter-spacing:1px;}
 .table-wrap{overflow-x:auto; margin-top:14px;}
 th.chk-col, td.chk-col{width:30px; text-align:center; padding:8px 6px;}
 input[type="checkbox"]{width:16px; height:16px; accent-color:var(--teal2); cursor:pointer;}
@@ -625,7 +625,7 @@ function buildSnapshotNode(meta, selected){
   let inner = '<div style="font-family:Space Grotesk,sans-serif; font-weight:700; color:var(--gold); margin-bottom:10px; font-size:14px;">' + escapeHtml(meta) + '</div>';
   selected.forEach(s=>{
     inner += '<div style="margin-bottom:8px;"><div style="font-size:11px; color:var(--ink-dim); text-transform:uppercase;">' + escapeHtml(s.label) + '</div>' +
-      '<div style="font-family:Space Grotesk,sans-serif; font-weight:700; font-size:18px; color:var(--teal); letter-spacing:1px;">' + escapeHtml(s.code) + '</div></div>';
+      '<div style="font-family:\'JetBrains Mono\',monospace; font-weight:700; font-size:17px; color:var(--teal); letter-spacing:1px;">' + escapeHtml(s.code) + '</div></div>';
   });
   inner += '<div style="margin-top:12px; padding-top:12px; border-top:1px solid var(--line);">' +
     '<div style="font-size:11px; line-height:1.6; color:var(--ink); font-style:italic;">' + escapeHtml(FOUNDER_QUOTE) + '</div>' +
@@ -664,8 +664,8 @@ function printCard(cardId){
   const {meta, selected} = getSelectedFromCard(cardId);
   if(!selected.length){ alert('Tick at least one code to print.'); return; }
   const w = window.open('', '_blank');
-  let rows = selected.map(s=>'<tr><td style="padding:8px;border-bottom:1px solid #ccc;">' + escapeHtml(s.label) + '</td><td style="padding:8px;border-bottom:1px solid #ccc;font-weight:700;">' + escapeHtml(s.code) + '</td></tr>').join('');
-  w.document.write('<html><head><title>Unlock Codes</title></head><body style="font-family:sans-serif; padding:24px;">' +
+  let rows = selected.map(s=>'<tr><td style="padding:8px;border-bottom:1px solid #ccc;">' + escapeHtml(s.label) + '</td><td style="padding:8px;border-bottom:1px solid #ccc;font-family:\'JetBrains Mono\',monospace;font-weight:700;">' + escapeHtml(s.code) + '</td></tr>').join('');
+  w.document.write('<html><head><title>Unlock Codes</title><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet"></head><body style="font-family:sans-serif; padding:24px;">' +
     '<h2>' + escapeHtml(meta) + '</h2><table style="border-collapse:collapse; width:100%;">' + rows + '</table>' +
     '<div style="margin-top:20px; padding-top:14px; border-top:1px solid #ccc; font-size:13px; line-height:1.6; font-style:italic;">' + escapeHtml(FOUNDER_QUOTE) + '</div>' +
     '<div style="margin-top:6px; font-size:12px; font-weight:700;">' + escapeHtml(FOUNDER_SIGN) + '</div>' +
@@ -786,8 +786,8 @@ function printSelectedExisting(){
   const rows = getSelectedExisting();
   if(!rows.length){ alert('Tick at least one code first.'); return; }
   const w = window.open('', '_blank');
-  let rowsHtml = rows.map(r=>'<p><b>' + escapeHtml(r.label) + ':</b> <span style="font-size:20px;font-weight:700;">' + escapeHtml(r.code) + '</span></p>').join('');
-  w.document.write('<html><head><title>Chapter Unlock Codes</title></head><body style="font-family:sans-serif; padding:24px;">' +
+  let rowsHtml = rows.map(r=>'<p><b>' + escapeHtml(r.label) + ':</b> <span style="font-family:\'JetBrains Mono\',monospace;font-size:20px;font-weight:700;">' + escapeHtml(r.code) + '</span></p>').join('');
+  w.document.write('<html><head><title>Chapter Unlock Codes</title><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet"></head><body style="font-family:sans-serif; padding:24px;">' +
     '<h2>' + escapeHtml(lastSingleMeta) + '</h2>' + rowsHtml +
     '<div style="margin-top:20px; padding-top:14px; border-top:1px solid #ccc; font-size:13px; line-height:1.6; font-style:italic;">' + escapeHtml(FOUNDER_QUOTE) + '</div>' +
     '<div style="margin-top:6px; font-size:12px; font-weight:700;">' + escapeHtml(FOUNDER_SIGN) + '</div>' +
@@ -984,8 +984,8 @@ function pdfRows(rows, filename){
 function printRows(rows){
   if(!rows.length){ alert('Tick at least one code first.'); return; }
   const w = window.open('', '_blank');
-  let rowsHtml = rows.map(r=>'<p><b>' + escapeHtml(r.label) + ':</b> <span style="font-size:20px;font-weight:700;">' + escapeHtml(r.code) + '</span></p>').join('');
-  w.document.write('<html><head><title>Unlock Codes</title></head><body style="font-family:sans-serif; padding:24px;">' +
+  let rowsHtml = rows.map(r=>'<p><b>' + escapeHtml(r.label) + ':</b> <span style="font-family:\'JetBrains Mono\',monospace;font-size:20px;font-weight:700;">' + escapeHtml(r.code) + '</span></p>').join('');
+  w.document.write('<html><head><title>Unlock Codes</title><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet"></head><body style="font-family:sans-serif; padding:24px;">' +
     '<h2>' + escapeHtml(lastSingleMeta) + '</h2>' + rowsHtml +
     '<div style="margin-top:20px; padding-top:14px; border-top:1px solid #ccc; font-size:13px; line-height:1.6; font-style:italic;">' + escapeHtml(FOUNDER_QUOTE) + '</div>' +
     '<div style="margin-top:6px; font-size:12px; font-weight:700;">' + escapeHtml(FOUNDER_SIGN) + '</div>' +
@@ -1088,8 +1088,8 @@ function saveNodeAsPDF(){
 function printNode(){
   if(!lastSingleCode){ alert('Generate a code first.'); return; }
   const w = window.open('', '_blank');
-  w.document.write('<html><head><title>Unlock Code</title></head><body style="font-family:sans-serif; padding:24px;">' +
-    '<h2>' + escapeHtml(lastSingleMeta) + '</h2><p style="font-size:22px; font-weight:700;">' + escapeHtml(lastSingleCode) + '</p>' +
+  w.document.write('<html><head><title>Unlock Code</title><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet"></head><body style="font-family:sans-serif; padding:24px;">' +
+    '<h2>' + escapeHtml(lastSingleMeta) + '</h2><p style="font-family:\'JetBrains Mono\',monospace; font-size:22px; font-weight:700;">' + escapeHtml(lastSingleCode) + '</p>' +
     '<div style="margin-top:20px; padding-top:14px; border-top:1px solid #ccc; font-size:13px; line-height:1.6; font-style:italic;">' + escapeHtml(FOUNDER_QUOTE) + '</div>' +
     '<div style="margin-top:6px; font-size:12px; font-weight:700;">' + escapeHtml(FOUNDER_SIGN) + '</div>' +
     '</body></html>');
