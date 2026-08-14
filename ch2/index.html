@@ -242,6 +242,7 @@ select, .seg{
 .seg-opt{
   flex:1; text-align:center; background:var(--panel-2); border:1px solid var(--border); color:var(--text-dim);
   padding:8px 6px; border-radius:8px; font-size:12px; cursor:pointer; font-weight:600;
+  display:flex; align-items:center; justify-content:center;
 }
 .seg-opt.active{background:rgba(46,230,197,0.15); border-color:var(--teal); color:var(--teal-2);}
 
@@ -259,19 +260,14 @@ select, .seg{
 .fs-btn:hover{color:var(--teal-2); border-color:var(--teal);}
 /* Fullscreen mode for MCQ Quiz / NEET Practice / KCET Practice runners */
 .fs-target:fullscreen{
-  display:flex !important; flex-direction:column; justify-content:center;
+  display:flex !important; flex-direction:column; justify-content:flex-start;
   max-width:760px; margin:0 auto; padding:28px clamp(16px,5vw,48px);
   border-radius:0; background:var(--bg-1); overflow-y:auto;
 }
 .fs-target:fullscreen .q-text{font-size:clamp(17px,2.6vw,25px);}
 .fs-target:fullscreen .opt{font-size:clamp(14px,2vw,17px); padding:14px 16px;}
 .fs-target:fullscreen .fs-btn{background:var(--panel);}
-/* Exit controls: top bar in normal mode, bottom bar in fullscreen mode */
-.fs-target:fullscreen .runner-exit-bar{display:none;}
-.runner-exit-bar-fs{display:none;}
-.fs-target:fullscreen .runner-exit-bar-fs{
-  display:flex; gap:8px; flex-wrap:wrap; margin-top:20px; padding-top:14px; border-top:1px solid var(--border);
-}
+/* Go Back / Stop & See Report stay at the top in both normal and fullscreen mode (no separate fullscreen bar needed) */
 /* Study Mode fullscreen: top-aligned reading view, topic nav stays reachable while scrolling */
 #studyFsWrap.fs-target:fullscreen{
   justify-content:flex-start; max-width:900px; padding-top:16px;
@@ -3141,10 +3137,6 @@ function renderQuizQuestion(){
     <div id="quizOpts"></div>
     <div id="quizExplain"></div>
     <div class="btn-row" style="margin-top:12px;"><button class="btn" id="quizNextBtn" style="display:none;">Next</button></div>
-    <div class="btn-row runner-exit-bar-fs">
-      <button class="btn secondary" onclick="quizGoBack()">← Go Back</button>
-      <button class="btn secondary" onclick="quizStopTest()">⏹ Stop &amp; See Report</button>
-    </div>
   `;
   const opts = document.getElementById('quizOpts');
   q.o.forEach((opt,i)=>{
@@ -3418,11 +3410,7 @@ function renderAdvQuestion(){
       <div class="seq-list">${display.map((d,i)=>`<div><span class="lbl">${String.fromCharCode(65+i)}.</span>${d.text}</div>`).join('')}</div>
       <div id="advOpts"></div>`;
   }
-  runner.innerHTML = advQuestionHeader(q) + body + `<div id="advExplain"></div><div class="btn-row" style="margin-top:12px;"><button class="btn" id="advNextBtn" style="display:none;">Next</button></div>
-    <div class="btn-row runner-exit-bar-fs">
-      <button class="btn secondary" onclick="advGoBack()">← Go Back</button>
-      <button class="btn secondary" onclick="advStopTest()">⏹ Stop &amp; See Report</button>
-    </div>`;
+  runner.innerHTML = advQuestionHeader(q) + body + `<div id="advExplain"></div><div class="btn-row" style="margin-top:12px;"><button class="btn" id="advNextBtn" style="display:none;">Next</button></div>`;
 
   const optsDiv = document.getElementById('advOpts');
   if(q.type==='ar'){
@@ -3711,11 +3699,7 @@ function renderKcetQuestion(){
     ${matchHtml}
     <div id="kcetOpts"></div>
     <div id="kcetExplain"></div>
-    <div class="btn-row" style="margin-top:12px;"><button class="btn" id="kcetNextBtn" style="display:none;">Next</button></div>
-    <div class="btn-row runner-exit-bar-fs">
-      <button class="btn secondary" onclick="kcetGoBack()">\u2190 Go Back</button>
-      <button class="btn secondary" onclick="kcetStopTest()">\u23F9 Stop &amp; See Report</button>
-    </div>`;
+    <div class="btn-row" style="margin-top:12px;"><button class="btn" id="kcetNextBtn" style="display:none;">Next</button></div>`;
   document.getElementById('kcetGoBackBtn').addEventListener('click', kcetGoBack);
   document.getElementById('kcetStopBtn').addEventListener('click', kcetStopTest);
   const optsDiv = document.getElementById('kcetOpts');
