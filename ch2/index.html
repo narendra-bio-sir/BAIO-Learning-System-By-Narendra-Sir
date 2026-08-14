@@ -248,6 +248,7 @@ select, .seg{
 
 /* Quiz runner */
 .quiz-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:12px; color:var(--text-dim); gap:8px;}
+.quiz-top-right{display:flex; align-items:center; gap:8px;}
 .timer-badge{
   background:var(--panel-2); border:1px solid var(--border); padding:6px 12px; border-radius:99px;
   font-family:'Space Grotesk',sans-serif; font-weight:700; color:var(--gold-2); font-size:14px; min-width:56px; text-align:center;
@@ -2203,6 +2204,10 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
 /* A gentle, dismissible-by-ignoring suggestion for the recommended next tab —
    never blocks navigation, just nudges students who aren't sure what to do next. */
 function goToTab(id){
+  /* Stop any running quiz countdown (and its tick sound) when navigating away without using Go Back / Stop & See Report */
+  if(typeof quizClearTimer === 'function') quizClearTimer();
+  if(typeof advState !== 'undefined' && advState && advState.timerHandle){ clearInterval(advState.timerHandle); advState.timerHandle=null; }
+  if(typeof kcetClearTimer === 'function') kcetClearTimer();
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   const btn = document.querySelector('.tab-btn[data-tab="'+id+'"]');
@@ -3147,8 +3152,10 @@ function renderQuizQuestion(){
     <div class="quiz-top">
       <div>Question ${s.idx+1} / ${s.pool.length}</div>
       <div class="streak-badge">🔥 Streak: ${s.streak}</div>
-      <div class="timer-badge" id="quizTimerBadge">⏱ ${s.timeLeft}s</div>
-      <button class="fs-btn" title="Fullscreen" onclick="toggleRunnerFullscreen('quizRunner')">⛶</button>
+      <div class="quiz-top-right">
+        <div class="timer-badge" id="quizTimerBadge">⏱ ${s.timeLeft}s</div>
+        <button class="fs-btn" title="Fullscreen" onclick="toggleRunnerFullscreen('quizRunner')">⛶</button>
+      </div>
     </div>
     </div>
     <div class="progress-bar"><div class="progress-fill" style="width:${(s.idx/s.pool.length)*100}%"></div></div>
@@ -3397,8 +3404,10 @@ function advQuestionHeader(q, extraChip){
     </div>
     <div class="quiz-top">
       <div>Question ${advState.idx+1} / ${advState.pool.length}</div>
-      <div class="timer-badge" id="advTimerBadge">${advState.timerSec}s</div>
-      <button class="fs-btn" title="Fullscreen" onclick="toggleRunnerFullscreen('advRunner')">⛶</button>
+      <div class="quiz-top-right">
+        <div class="timer-badge" id="advTimerBadge">${advState.timerSec}s</div>
+        <button class="fs-btn" title="Fullscreen" onclick="toggleRunnerFullscreen('advRunner')">⛶</button>
+      </div>
     </div>
     </div>
     <div class="progress-bar"><div class="progress-fill" style="width:${(advState.idx/advState.pool.length)*100}%"></div></div>
@@ -3721,8 +3730,10 @@ function renderKcetQuestion(){
     </div>
     <div class="quiz-top">
       <div>Question ${s.idx+1} / ${s.pool.length}</div>
-      <div class="timer-badge" id="kcetTimerBadge">${s.timerSec}s</div>
-      <button class="fs-btn" title="Fullscreen" onclick="toggleRunnerFullscreen('kcetRunner')">⛶</button>
+      <div class="quiz-top-right">
+        <div class="timer-badge" id="kcetTimerBadge">${s.timerSec}s</div>
+        <button class="fs-btn" title="Fullscreen" onclick="toggleRunnerFullscreen('kcetRunner')">⛶</button>
+      </div>
     </div>
     </div>
     <div class="progress-bar"><div class="progress-fill" style="width:${(s.idx/s.pool.length)*100}%"></div></div>

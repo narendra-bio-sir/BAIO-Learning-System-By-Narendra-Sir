@@ -164,6 +164,7 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .qz-exp{font-size:12.5px;color:var(--ink-dim);background:var(--panel2);border-radius:10px;padding:10px 12px;margin-top:8px;line-height:1.5;}
 .qz-next{width:100%;margin-top:12px;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--teal),var(--teal2));color:#EFFFFA;font-weight:700;font-size:13.5px;cursor:pointer;}
 .streak{font-size:11px;color:var(--gold);font-weight:700;}
+.qz-meta-right{display:flex; align-items:center; gap:8px;}
 .qz-timer-badge{
   background:var(--panel2); border:1px solid var(--line); padding:5px 11px; border-radius:99px;
   font-family:'Space Grotesk',sans-serif; font-weight:700; color:var(--gold2); font-size:12.5px; display:inline-block;
@@ -664,6 +665,10 @@ function renderTabbar(){
   }).join('');
 }
 function switchTab(id){
+  /* Stop any running quiz countdown (and its tick sound) when navigating away without using Go Back / Stop & See Report */
+  if(typeof mcqClearTimer === 'function') mcqClearTimer();
+  if(typeof neetClearTimer === 'function') neetClearTimer();
+  if(typeof kcetClearTimer === 'function') kcetClearTimer();
   currentTab = id;
   renderTabbar();
   renderContent();
@@ -987,7 +992,7 @@ function renderMcqQuestion(){
     <button class="opt-btn" onclick="mcqStopTest()">\u23F9 Stop &amp; See Report</button>
   </div>
   <div class="qz-progress"><div class="qz-progress-fill" style="width:${pct}%"></div></div>
-  <div class="qz-meta"><span>Question ${s.idx+1} / ${s.questions.length}</span><span class="streak">\uD83D\uDD25 Streak: ${s.streak}</span><span class="qz-timer-badge" id="mcqTimer">\u23F1 ${s.timeLeft}s</span><button class="qz-fs-btn" title="Fullscreen" onclick="toggleContentFullscreen()">\u26F6</button></div>
+  <div class="qz-meta"><span>Question ${s.idx+1} / ${s.questions.length}</span><span class="streak">\uD83D\uDD25 Streak: ${s.streak}</span><span class="qz-meta-right"><span class="qz-timer-badge" id="mcqTimer">\u23F1 ${s.timeLeft}s</span><button class="qz-fs-btn" title="Fullscreen" onclick="toggleContentFullscreen()">\u26F6</button></span></div>
   </div>
   <div class="qz-card"><div class="qz-qtext">${q.q}</div>`;
   q.options.forEach((opt,i)=>{
@@ -1393,7 +1398,7 @@ function renderNeetQuestion(){
     <button class="opt-btn" onclick="neetStopTest()">\u23F9 Stop &amp; See Report</button>
   </div>
   <div class="qz-progress"><div class="qz-progress-fill" style="width:${pct}%"></div></div>
-  <div class="qz-meta"><span>Q ${s.idx+1}/${s.questions.length} \u00b7 ${typeLabel}</span><span class="qz-timer-badge" id="neetTimer">\u23F1 ${s.timeLeft}s</span><button class="qz-fs-btn" title="Fullscreen" onclick="toggleContentFullscreen()">\u26F6</button></div>
+  <div class="qz-meta"><span>Q ${s.idx+1}/${s.questions.length} \u00b7 ${typeLabel}</span><span class="qz-meta-right"><span class="qz-timer-badge" id="neetTimer">\u23F1 ${s.timeLeft}s</span><button class="qz-fs-btn" title="Fullscreen" onclick="toggleContentFullscreen()">\u26F6</button></span></div>
   </div>
   <div class="qz-card"><div class="qz-qtext">${neetQText(q)}</div>${neetQuestionBody(q)}<div id="neetexp"></div></div>`;
   document.getElementById('content').innerHTML = html;
@@ -1634,7 +1639,7 @@ function renderKcetQuestion(){
     <button class="opt-btn" onclick="kcetStopTest()">\u23F9 Stop &amp; See Report</button>
   </div>
   <div class="qz-progress"><div class="qz-progress-fill" style="width:${pct}%"></div></div>
-  <div class="qz-meta"><span>Question ${s.idx+1} / ${s.questions.length}</span><span class="streak">\uD83D\uDD25 Streak: ${s.streak||0}</span><span class="qz-timer-badge" id="kcetTimer">\u23F1 ${kcetFmtMMSS(s.timeLeft)}</span><button class="qz-fs-btn" title="Fullscreen" onclick="toggleContentFullscreen()">\u26F6</button></div>
+  <div class="qz-meta"><span>Question ${s.idx+1} / ${s.questions.length}</span><span class="streak">\uD83D\uDD25 Streak: ${s.streak||0}</span><span class="qz-meta-right"><span class="qz-timer-badge" id="kcetTimer">\u23F1 ${kcetFmtMMSS(s.timeLeft)}</span><button class="qz-fs-btn" title="Fullscreen" onclick="toggleContentFullscreen()">\u26F6</button></span></div>
   </div>
   <div style="font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:4px;">${fmtLabel}</div>
   <div class="qz-card"><div class="qz-qtext">${qTextHtml}</div>${matchHtml}`;
