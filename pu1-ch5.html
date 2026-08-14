@@ -273,19 +273,16 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
 @media(min-width:1024px){
   .app{
     max-width:1180px;
+  }
+  .header{padding:26px 32px 20px;}
+  .desktop-row{
     display:grid;
     grid-template-columns:230px 1fr;
-    grid-template-areas:
-      "header header"
-      "greet  greet"
-      "tabs   content"
-      "footer footer";
     column-gap:32px;
+    align-items:start;
+    min-height:calc(100vh + 200px);
   }
-  .header{grid-area:header; padding:26px 32px 20px;}
-  .student-greet-bar{grid-area:greet;}
   .tabbar-wrap{
-    grid-area:tabs;
     display:block;
     position:sticky;
     top:24px;
@@ -309,8 +306,7 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
     border-radius:10px;
     padding:10px 14px;
   }
-  .content{grid-area:content; min-width:0;}
-  footer{grid-area:footer;}
+  .content{min-width:0;}
 }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -332,12 +328,14 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
   </div>
 
   <div class="student-greet-bar" id="studentGreetBar" style="display:none;"></div>
+  <div class="desktop-row">
   <div class="tabbar-wrap">
     <button class="tab-scroll-btn tab-scroll-left">&#8249;</button>
     <div class="tabbar" id="tabbar"></div>
     <button class="tab-scroll-btn tab-scroll-right">&#8250;</button>
   </div>
   <div class="content" id="content"></div>
+  </div>
 
   <footer>
     <div class="footer-tagline">Empowering future doctors. Crafted for PU BIOLOGY &amp; NEET Aspirants.</div>
