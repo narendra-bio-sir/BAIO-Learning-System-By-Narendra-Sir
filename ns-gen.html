@@ -394,7 +394,7 @@ function renderQuickRefTable(){
   if(!wrap) return;
   let html = '<div class="table-wrap"><table><tr><th>Label</th><th>Code</th></tr>';
   STANDARD_MASTER_LABELS.forEach(label=>{
-    html += '<tr><td>' + escapeHtml(label) + '</td><td class="code-cell">' + computeMasterCode(label) + '</td></tr>';
+    html += '<tr><td>' + escapeHtml(label) + '</td><td class="code-cell">' + codeHtml(computeMasterCode(label)) + '</td></tr>';
   });
   html += '</table></div>';
   wrap.innerHTML = html;
@@ -418,8 +418,8 @@ function renderRealMasterTable(){
   let html = '<div class="table-wrap"><table><tr><th>Chapter</th><th>Premium Master Code</th><th>Handwritten Notes Master Code</th></tr>';
   REAL_MASTER_CODES.forEach(row=>{
     html += '<tr><td>' + escapeHtml(row.chapter) + '</td>' +
-      '<td class="code-cell">' + escapeHtml(row.premium) + '</td>' +
-      '<td class="code-cell">' + escapeHtml(row.handwritten) + '</td></tr>';
+      '<td class="code-cell">' + codeHtml(row.premium) + '</td>' +
+      '<td class="code-cell">' + codeHtml(row.handwritten) + '</td></tr>';
   });
   html += '</table></div>';
   html += '<div class="code-type" style="margin-top:12px;">' +
@@ -564,7 +564,7 @@ function runLookup(){
       html += '<div class="table-wrap"><table><tr><th class="chk-col"><input type="checkbox" checked onchange="toggleAllInCard(\'' + cardId + '\', this.checked)"></th><th>Code Type</th><th>Code</th></tr>';
       labels.forEach((label, idx)=>{
         html += '<tr><td class="chk-col"><input type="checkbox" class="code-check" data-label="' + escapeHtml(label) + '" data-code="' + escapeHtml(s.codes[label]) + '" checked></td>' +
-          '<td>' + escapeHtml(label) + '</td><td class="code-cell">' + escapeHtml(s.codes[label]) + '</td></tr>';
+          '<td>' + escapeHtml(label) + '</td><td class="code-cell">' + codeHtml(s.codes[label]) + '</td></tr>';
       });
       html += '</table></div>';
       html += '<div class="action-row">' +
@@ -625,7 +625,7 @@ function buildSnapshotNode(meta, selected){
   let inner = '<div style="font-family:Space Grotesk,sans-serif; font-weight:700; color:var(--gold); margin-bottom:10px; font-size:14px;">' + escapeHtml(meta) + '</div>';
   selected.forEach(s=>{
     inner += '<div style="margin-bottom:8px;"><div style="font-size:11px; color:var(--ink-dim); text-transform:uppercase;">' + escapeHtml(s.label) + '</div>' +
-      '<div style="font-family:\'JetBrains Mono\',monospace; font-weight:700; font-size:17px; color:var(--teal); letter-spacing:1px;">' + escapeHtml(s.code) + '</div></div>';
+      '<div style="font-family:\'JetBrains Mono\',monospace; font-weight:700; font-size:17px; letter-spacing:1px;">' + codeHtml(s.code) + '</div></div>';
   });
   inner += '<div style="margin-top:12px; padding-top:12px; border-top:1px solid var(--line);">' +
     '<div style="font-size:11px; line-height:1.6; color:var(--ink); font-style:italic;">' + escapeHtml(FOUNDER_QUOTE) + '</div>' +
@@ -664,7 +664,7 @@ function printCard(cardId){
   const {meta, selected} = getSelectedFromCard(cardId);
   if(!selected.length){ alert('Tick at least one code to print.'); return; }
   const w = window.open('', '_blank');
-  let rows = selected.map(s=>'<tr><td style="padding:8px;border-bottom:1px solid #ccc;">' + escapeHtml(s.label) + '</td><td style="padding:8px;border-bottom:1px solid #ccc;font-family:\'JetBrains Mono\',monospace;font-weight:700;">' + escapeHtml(s.code) + '</td></tr>').join('');
+  let rows = selected.map(s=>'<tr><td style="padding:8px;border-bottom:1px solid #ccc;">' + escapeHtml(s.label) + '</td><td style="padding:8px;border-bottom:1px solid #ccc;font-family:\'JetBrains Mono\',monospace;font-weight:700;">' + codeHtml(s.code, '#127566', '#8A5F00') + '</td></tr>').join('');
   w.document.write('<html><head><title>Unlock Codes</title><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet"></head><body style="font-family:sans-serif; padding:24px;">' +
     '<h2>' + escapeHtml(meta) + '</h2><table style="border-collapse:collapse; width:100%;">' + rows + '</table>' +
     '<div style="margin-top:20px; padding-top:14px; border-top:1px solid #ccc; font-size:13px; line-height:1.6; font-style:italic;">' + escapeHtml(FOUNDER_QUOTE) + '</div>' +
@@ -687,7 +687,7 @@ function generateSingle(){
   lastSingleCode = code;
   lastSingleMeta = name + ' · ' + roll + ' · ' + section;
   document.getElementById('singleMeta').textContent = lastSingleMeta;
-  document.getElementById('singleCode').textContent = code;
+  document.getElementById('singleCode').innerHTML = codeHtml(code);
   document.getElementById('singleResult').classList.add('show');
 
   window.__lastSingleChapterRows = CONTENT_TYPES.map(ct => ({
@@ -696,7 +696,7 @@ function generateSingle(){
   }));
   let html = '<div class="table-wrap"><table><tr><th>Content</th><th>Code</th></tr>';
   window.__lastSingleChapterRows.forEach(r=>{
-    html += '<tr><td>' + escapeHtml(r.label) + '</td><td class="code-cell">' + escapeHtml(r.code) + '</td></tr>';
+    html += '<tr><td>' + escapeHtml(r.label) + '</td><td class="code-cell">' + codeHtml(r.code) + '</td></tr>';
   });
   html += '</table></div>';
   document.getElementById('singleChapterCodesTable').innerHTML = html;
@@ -720,7 +720,7 @@ function renderExistingChapterCodes(name, roll, section){
   }));
   let html = '<div class="table-wrap"><table><tr><th></th><th>Content</th><th>Code</th></tr>';
   window.__lastExistingRows.forEach(r=>{
-    html += '<tr><td><input type="checkbox" id="' + r.id + '" checked></td><td>' + escapeHtml(r.label) + '</td><td class="code-cell">' + escapeHtml(r.code) + '</td></tr>';
+    html += '<tr><td><input type="checkbox" id="' + r.id + '" checked></td><td>' + escapeHtml(r.label) + '</td><td class="code-cell">' + codeHtml(r.code) + '</td></tr>';
   });
   html += '</table></div>';
   document.getElementById('existingChapterCodesTable').innerHTML = html;
@@ -786,7 +786,7 @@ function printSelectedExisting(){
   const rows = getSelectedExisting();
   if(!rows.length){ alert('Tick at least one code first.'); return; }
   const w = window.open('', '_blank');
-  let rowsHtml = rows.map(r=>'<p><b>' + escapeHtml(r.label) + ':</b> <span style="font-family:\'JetBrains Mono\',monospace;font-size:20px;font-weight:700;">' + escapeHtml(r.code) + '</span></p>').join('');
+  let rowsHtml = rows.map(r=>'<p><b>' + escapeHtml(r.label) + ':</b> <span style="font-family:\'JetBrains Mono\',monospace;font-size:20px;font-weight:700;">' + codeHtml(r.code, '#127566', '#8A5F00') + '</span></p>').join('');
   w.document.write('<html><head><title>Chapter Unlock Codes</title><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet"></head><body style="font-family:sans-serif; padding:24px;">' +
     '<h2>' + escapeHtml(lastSingleMeta) + '</h2>' + rowsHtml +
     '<div style="margin-top:20px; padding-top:14px; border-top:1px solid #ccc; font-size:13px; line-height:1.6; font-style:italic;">' + escapeHtml(FOUNDER_QUOTE) + '</div>' +
@@ -864,7 +864,7 @@ function generateOrRetrieveMaster(){
   lastSingleCode = code;
   lastSingleMeta = 'Master Code · ' + label;
   document.getElementById('masterMeta').textContent = lastSingleMeta;
-  document.getElementById('masterCode').textContent = code;
+  document.getElementById('masterCode').innerHTML = codeHtml(code);
   document.getElementById('masterResult').classList.add('show');
 
   renderExistingMasterCodes(label);
@@ -883,7 +883,7 @@ function renderExistingMasterCodes(label){
   }));
   let html = '<div class="table-wrap"><table><tr><th></th><th>Content</th><th>Code</th></tr>';
   window.__lastExistingMasterRows.forEach(r=>{
-    html += '<tr><td><input type="checkbox" id="' + r.id + '" checked></td><td>' + escapeHtml(r.label) + '</td><td class="code-cell">' + escapeHtml(r.code) + '</td></tr>';
+    html += '<tr><td><input type="checkbox" id="' + r.id + '" checked></td><td>' + escapeHtml(r.label) + '</td><td class="code-cell">' + codeHtml(r.code) + '</td></tr>';
   });
   html += '</table></div>';
   document.getElementById('existingMasterCodesTable').innerHTML = html;
@@ -916,7 +916,7 @@ function renderUpcomingMasterCodes(label){
   }));
   let html = '<div class="table-wrap"><table><tr><th></th><th>Content</th><th>Code</th></tr>';
   window.__lastUpcomingMasterRows.forEach(r=>{
-    html += '<tr><td><input type="checkbox" id="' + r.id + '" checked></td><td>' + escapeHtml(r.label) + '</td><td class="code-cell">' + escapeHtml(r.code) + '</td></tr>';
+    html += '<tr><td><input type="checkbox" id="' + r.id + '" checked></td><td>' + escapeHtml(r.label) + '</td><td class="code-cell">' + codeHtml(r.code) + '</td></tr>';
   });
   html += '</table></div>';
   document.getElementById('upcomingMasterCodesTable').innerHTML = html;
@@ -984,7 +984,7 @@ function pdfRows(rows, filename){
 function printRows(rows){
   if(!rows.length){ alert('Tick at least one code first.'); return; }
   const w = window.open('', '_blank');
-  let rowsHtml = rows.map(r=>'<p><b>' + escapeHtml(r.label) + ':</b> <span style="font-family:\'JetBrains Mono\',monospace;font-size:20px;font-weight:700;">' + escapeHtml(r.code) + '</span></p>').join('');
+  let rowsHtml = rows.map(r=>'<p><b>' + escapeHtml(r.label) + ':</b> <span style="font-family:\'JetBrains Mono\',monospace;font-size:20px;font-weight:700;">' + codeHtml(r.code, '#127566', '#8A5F00') + '</span></p>').join('');
   w.document.write('<html><head><title>Unlock Codes</title><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet"></head><body style="font-family:sans-serif; padding:24px;">' +
     '<h2>' + escapeHtml(lastSingleMeta) + '</h2>' + rowsHtml +
     '<div style="margin-top:20px; padding-top:14px; border-top:1px solid #ccc; font-size:13px; line-height:1.6; font-style:italic;">' + escapeHtml(FOUNDER_QUOTE) + '</div>' +
@@ -1044,7 +1044,7 @@ function renderMasterHistory(filterText){
     html += '<div class="result-meta" style="font-size:13px; color:var(--gold); font-weight:700; margin-bottom:8px;">' + escapeHtml(s.label) + '</div>';
     html += '<div class="table-wrap"><table><tr><th>Content</th><th>Code</th></tr>';
     Object.keys(s.codes).forEach(k=>{
-      html += '<tr><td>' + escapeHtml(k) + '</td><td class="code-cell">' + escapeHtml(s.codes[k]) + '</td></tr>';
+      html += '<tr><td>' + escapeHtml(k) + '</td><td class="code-cell">' + codeHtml(s.codes[k]) + '</td></tr>';
     });
     html += '</table></div>';
     html += '<div class="action-row" style="margin-top:8px;"><button class="action-btn" onclick="removeSavedMasterCode(\'' + escapeHtml(s.label).replace(/'/g,"\\'") + '\')">🗑️ Remove</button></div>';
@@ -1089,7 +1089,7 @@ function printNode(){
   if(!lastSingleCode){ alert('Generate a code first.'); return; }
   const w = window.open('', '_blank');
   w.document.write('<html><head><title>Unlock Code</title><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet"></head><body style="font-family:sans-serif; padding:24px;">' +
-    '<h2>' + escapeHtml(lastSingleMeta) + '</h2><p style="font-family:\'JetBrains Mono\',monospace; font-size:22px; font-weight:700;">' + escapeHtml(lastSingleCode) + '</p>' +
+    '<h2>' + escapeHtml(lastSingleMeta) + '</h2><p style="font-family:\'JetBrains Mono\',monospace; font-size:22px; font-weight:700;">' + codeHtml(lastSingleCode, '#127566', '#8A5F00') + '</p>' +
     '<div style="margin-top:20px; padding-top:14px; border-top:1px solid #ccc; font-size:13px; line-height:1.6; font-style:italic;">' + escapeHtml(FOUNDER_QUOTE) + '</div>' +
     '<div style="margin-top:6px; font-size:12px; font-weight:700;">' + escapeHtml(FOUNDER_SIGN) + '</div>' +
     '</body></html>');
@@ -1100,6 +1100,23 @@ function printNode(){
 
 function escapeHtml(s){
   return (s===undefined||s===null?'':s.toString()).replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+/* Colors digits vs letters differently inside a code/password so 0 vs O, 1 vs I/l etc.
+   are told apart by color, not by squinting at glyph shape. digitColor/letterColor
+   default to the app's themed CSS variables; pass literal hex when rendering into a
+   popup window that doesn't have the app's :root variables (e.g. print views). */
+function codeHtml(code, digitColor, letterColor){
+  const dCol = digitColor || 'var(--teal)';
+  const lCol = letterColor || 'var(--gold)';
+  const s = escapeHtml(code);
+  let out = '';
+  for(let i=0;i<s.length;i++){
+    const ch = s[i];
+    if(/[0-9]/.test(ch)) out += '<span style="color:'+dCol+';">'+ch+'</span>';
+    else if(/[A-Za-z]/.test(ch)) out += '<span style="color:'+lCol+';">'+ch+'</span>';
+    else out += ch;
+  }
+  return out;
 }
 
 /* ---------------- Bulk generator ---------------- */
@@ -1137,8 +1154,8 @@ function generateBulk(){
     selectedTypes.forEach(ct=>{ html += '<th>' + escapeHtml(ct.label) + '</th>'; });
     html += '</tr>';
     rows.forEach(r=>{
-      html += '<tr><td>' + r.name.replace(/</g,'&lt;') + '</td><td>' + r.roll.replace(/</g,'&lt;') + '</td><td>' + r.section.replace(/</g,'&lt;') + '</td><td class="code-cell">' + r.code + '</td>';
-      r.chapterCodes.forEach(cc=>{ html += '<td class="code-cell">' + cc.code + '</td>'; });
+      html += '<tr><td>' + r.name.replace(/</g,'&lt;') + '</td><td>' + r.roll.replace(/</g,'&lt;') + '</td><td>' + r.section.replace(/</g,'&lt;') + '</td><td class="code-cell">' + codeHtml(r.code) + '</td>';
+      r.chapterCodes.forEach(cc=>{ html += '<td class="code-cell">' + codeHtml(cc.code) + '</td>'; });
       html += '</tr>';
     });
     html += '</table></div>';
