@@ -684,22 +684,20 @@ footer{text-align:center; color:var(--text-dim); font-size:11px; margin-top:22px
 @media(min-width:1024px){
   .app{
     max-width:1180px;
+  }
+  .header{padding:26px 32px 20px;}
+  .desktop-row{
     display:grid;
     grid-template-columns:230px 1fr;
-    grid-template-areas:
-      "header header"
-      "greet  greet"
-      "tabs   content"
-      "footer footer";
     column-gap:32px;
+    align-items:start;
+    min-height:calc(100vh + 200px);
   }
-  .header{grid-area:header; padding:26px 32px 20px;}
-  .student-greet-bar{grid-area:greet;}
   .tabbar-wrap{
-    grid-area:tabs;
     display:block;
     position:sticky;
     top:24px;
+    z-index:15;
     align-self:start;
     max-height:calc(100vh - 48px);
     overflow-y:auto;
@@ -719,8 +717,7 @@ footer{text-align:center; color:var(--text-dim); font-size:11px; margin-top:22px
     border-radius:10px;
     padding:10px 14px;
   }
-  .panel{grid-area:content; min-width:0;}
-  footer{grid-area:footer;}
+  .panel{grid-column:2; min-width:0;}
 }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -777,6 +774,7 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
     <button class="btn secondary" id="studentEditBtn">Edit</button>
   </div>
 
+  <div class="desktop-row">
   <div class="tabbar-wrap">
     <button class="tab-scroll-btn" id="tabScrollLeft">&#8249;</button>
     <div class="tabs" id="tabsBar">
@@ -1479,6 +1477,7 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       <input type="text" id="glossarySearch" placeholder="Search terms..." style="width:100%; padding:9px 12px; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(212,175,55,0.3); color:var(--text); font-family:'Inter',sans-serif; margin-bottom:12px; box-sizing:border-box;">
       <div id="glossaryList"></div>
     </div>
+  </div>
   </div>
 
   <footer>
