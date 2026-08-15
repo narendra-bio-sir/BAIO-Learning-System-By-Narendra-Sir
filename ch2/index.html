@@ -247,7 +247,7 @@ select, .seg{
 .seg-opt.active{background:rgba(46,230,197,0.15); border-color:var(--teal); color:var(--teal-2);}
 
 /* Quiz runner */
-.quiz-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:12px; color:var(--text-dim); gap:8px;}
+.quiz-top{display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; row-gap:6px; margin-bottom:10px; font-size:12px; color:var(--text-dim); gap:8px;}
 .quiz-top-right{display:flex; align-items:center; gap:8px;}
 .timer-badge{
   background:var(--panel-2); border:1px solid var(--border); padding:6px 12px; border-radius:99px;
@@ -256,7 +256,7 @@ select, .seg{
 .timer-badge.low{color:var(--danger); border-color:var(--danger); font-size:15px; box-shadow:0 0 0 2px rgba(224,85,85,0.18); animation:pulse 1s infinite;}
 .fs-btn{
   background:var(--panel-2); border:1px solid var(--border); color:var(--text-dim);
-  border-radius:8px; padding:6px 9px; font-size:14px; line-height:1; cursor:pointer; flex-shrink:0;
+  border-radius:8px; padding:6px 10px; font-size:11.5px; font-weight:600; white-space:nowrap; line-height:1; cursor:pointer; flex-shrink:0;
 }
 .fs-btn:hover{color:var(--teal-2); border-color:var(--teal);}
 /* Fullscreen mode for MCQ Quiz / NEET Practice / KCET Practice runners */
@@ -835,7 +835,7 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
         <button class="tab-scroll-btn" id="topicNavScrollLeft">&#8249;</button>
         <div class="topic-nav" id="topicNav" tabindex="0"></div>
         <button class="tab-scroll-btn" id="topicNavScrollRight">&#8250;</button>
-        <button class="fs-btn" title="Fullscreen" onclick="toggleRunnerFullscreen('studyFsWrap')">&#x26F6;</button>
+        <button class="fs-btn" title="Full Screen Mode" onclick="toggleRunnerFullscreen('studyFsWrap')">&#x26F6; Full Screen Mode</button>
       </div>
       <div class="card" id="studyContent"></div>
     </div>
@@ -3154,7 +3154,7 @@ function renderQuizQuestion(){
       <div class="streak-badge">🔥 Streak: ${s.streak}</div>
       <div class="quiz-top-right">
         <div class="timer-badge" id="quizTimerBadge">⏱ ${s.timeLeft}s</div>
-        <button class="fs-btn" title="Fullscreen" onclick="toggleRunnerFullscreen('quizRunner')">⛶</button>
+        <button class="fs-btn" title="Full Screen Mode" onclick="toggleRunnerFullscreen('quizRunner')">⛶ Full Screen Mode</button>
       </div>
     </div>
     </div>
@@ -3406,7 +3406,7 @@ function advQuestionHeader(q, extraChip){
       <div>Question ${advState.idx+1} / ${advState.pool.length}</div>
       <div class="quiz-top-right">
         <div class="timer-badge" id="advTimerBadge">${advState.timerSec}s</div>
-        <button class="fs-btn" title="Fullscreen" onclick="toggleRunnerFullscreen('advRunner')">⛶</button>
+        <button class="fs-btn" title="Full Screen Mode" onclick="toggleRunnerFullscreen('advRunner')">⛶ Full Screen Mode</button>
       </div>
     </div>
     </div>
@@ -3732,7 +3732,7 @@ function renderKcetQuestion(){
       <div>Question ${s.idx+1} / ${s.pool.length}</div>
       <div class="quiz-top-right">
         <div class="timer-badge" id="kcetTimerBadge">${s.timerSec}s</div>
-        <button class="fs-btn" title="Fullscreen" onclick="toggleRunnerFullscreen('kcetRunner')">⛶</button>
+        <button class="fs-btn" title="Full Screen Mode" onclick="toggleRunnerFullscreen('kcetRunner')">⛶ Full Screen Mode</button>
       </div>
     </div>
     </div>

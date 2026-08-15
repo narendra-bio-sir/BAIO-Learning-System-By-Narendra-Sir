@@ -153,7 +153,7 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 /* QUIZ */
 .qz-progress{height:6px;background:var(--panel2);border-radius:4px;overflow:hidden;margin-bottom:10px;}
 .qz-progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));}
-.qz-meta{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-dim);margin-bottom:10px;}
+.qz-meta{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;row-gap:6px;font-size:11.5px;color:var(--ink-dim);margin-bottom:10px;}
 .qz-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;}
 .qz-qtext{font-size:14.5px;font-weight:600;color:var(--ink);margin-bottom:12px;line-height:1.5;}
 .qz-opt{display:block;width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line);color:var(--ink);padding:11px 13px;border-radius:10px;font-size:13px;margin-bottom:8px;cursor:pointer;}
@@ -171,7 +171,7 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 }
 .qz-timer-badge.low{color:var(--danger); border-color:var(--danger); font-size:13.5px; box-shadow:0 0 0 2px rgba(231,105,91,0.18); animation:qzPulse 1s infinite;}
 @keyframes qzPulse{0%,100%{opacity:1;}50%{opacity:.5;}}
-.qz-fs-btn{background:var(--panel2);border:1px solid var(--line);color:var(--ink-dim);border-radius:8px;padding:5px 9px;font-size:13px;line-height:1;cursor:pointer;flex-shrink:0;}
+.qz-fs-btn{background:var(--panel2);border:1px solid var(--line);color:var(--ink-dim);border-radius:8px;padding:5px 10px;font-size:11px;font-weight:600;white-space:nowrap;line-height:1;cursor:pointer;flex-shrink:0;}
 .qz-fs-btn:hover{color:var(--teal);border-color:var(--teal);}
 /* Fullscreen mode for MCQ Quiz / NEET Practice / KCET Practice / Study Mode */
 .content:fullscreen{
@@ -729,7 +729,7 @@ function renderStudy(){
   const en = DATA.study[currentTopic];
   const trans = (currentLang!=='en') && STUDY_TRANSLATIONS_CH3[currentTopic] && STUDY_TRANSLATIONS_CH3[currentTopic][currentLang];
   const d = trans || en;
-  let html = `<div class="study-fs-header"><div style="display:flex; justify-content:flex-end; margin-bottom:6px;"><button class="qz-fs-btn" title="Fullscreen" onclick="toggleContentFullscreen(true)">⛶</button></div>${topicPills(currentTopic, 'selectStudyTopic')}</div>`;
+  let html = `<div class="study-fs-header"><div style="display:flex; justify-content:flex-end; margin-bottom:6px;"><button class="qz-fs-btn" title="Full Screen Mode" onclick="toggleContentFullscreen(true)">⛶ Full Screen Mode</button></div>${topicPills(currentTopic, 'selectStudyTopic')}</div>`;
   html += `<div class="chiprow">${d.recap.map(c=>`<span class="chip">${c}</span>`).join('')}</div>`;
   d.sections.forEach(sec=>{
     html += `<div class="section"><h4>${sec.h}</h4><p>${sec.body}</p></div>`;
@@ -992,7 +992,7 @@ function renderMcqQuestion(){
     <button class="opt-btn" onclick="mcqStopTest()">\u23F9 Stop &amp; See Report</button>
   </div>
   <div class="qz-progress"><div class="qz-progress-fill" style="width:${pct}%"></div></div>
-  <div class="qz-meta"><span>Question ${s.idx+1} / ${s.questions.length}</span><span class="streak">\uD83D\uDD25 Streak: ${s.streak}</span><span class="qz-meta-right"><span class="qz-timer-badge" id="mcqTimer">\u23F1 ${s.timeLeft}s</span><button class="qz-fs-btn" title="Fullscreen" onclick="toggleContentFullscreen()">\u26F6</button></span></div>
+  <div class="qz-meta"><span>Question ${s.idx+1} / ${s.questions.length}</span><span class="streak">\uD83D\uDD25 Streak: ${s.streak}</span><span class="qz-meta-right"><span class="qz-timer-badge" id="mcqTimer">\u23F1 ${s.timeLeft}s</span><button class="qz-fs-btn" title="Full Screen Mode" onclick="toggleContentFullscreen()">\u26F6 Full Screen Mode</button></span></div>
   </div>
   <div class="qz-card"><div class="qz-qtext">${q.q}</div>`;
   q.options.forEach((opt,i)=>{
@@ -1398,7 +1398,7 @@ function renderNeetQuestion(){
     <button class="opt-btn" onclick="neetStopTest()">\u23F9 Stop &amp; See Report</button>
   </div>
   <div class="qz-progress"><div class="qz-progress-fill" style="width:${pct}%"></div></div>
-  <div class="qz-meta"><span>Q ${s.idx+1}/${s.questions.length} \u00b7 ${typeLabel}</span><span class="qz-meta-right"><span class="qz-timer-badge" id="neetTimer">\u23F1 ${s.timeLeft}s</span><button class="qz-fs-btn" title="Fullscreen" onclick="toggleContentFullscreen()">\u26F6</button></span></div>
+  <div class="qz-meta"><span>Q ${s.idx+1}/${s.questions.length} \u00b7 ${typeLabel}</span><span class="qz-meta-right"><span class="qz-timer-badge" id="neetTimer">\u23F1 ${s.timeLeft}s</span><button class="qz-fs-btn" title="Full Screen Mode" onclick="toggleContentFullscreen()">\u26F6 Full Screen Mode</button></span></div>
   </div>
   <div class="qz-card"><div class="qz-qtext">${neetQText(q)}</div>${neetQuestionBody(q)}<div id="neetexp"></div></div>`;
   document.getElementById('content').innerHTML = html;
@@ -1639,7 +1639,7 @@ function renderKcetQuestion(){
     <button class="opt-btn" onclick="kcetStopTest()">\u23F9 Stop &amp; See Report</button>
   </div>
   <div class="qz-progress"><div class="qz-progress-fill" style="width:${pct}%"></div></div>
-  <div class="qz-meta"><span>Question ${s.idx+1} / ${s.questions.length}</span><span class="streak">\uD83D\uDD25 Streak: ${s.streak||0}</span><span class="qz-meta-right"><span class="qz-timer-badge" id="kcetTimer">\u23F1 ${kcetFmtMMSS(s.timeLeft)}</span><button class="qz-fs-btn" title="Fullscreen" onclick="toggleContentFullscreen()">\u26F6</button></span></div>
+  <div class="qz-meta"><span>Question ${s.idx+1} / ${s.questions.length}</span><span class="streak">\uD83D\uDD25 Streak: ${s.streak||0}</span><span class="qz-meta-right"><span class="qz-timer-badge" id="kcetTimer">\u23F1 ${kcetFmtMMSS(s.timeLeft)}</span><button class="qz-fs-btn" title="Full Screen Mode" onclick="toggleContentFullscreen()">\u26F6 Full Screen Mode</button></span></div>
   </div>
   <div style="font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:4px;">${fmtLabel}</div>
   <div class="qz-card"><div class="qz-qtext">${qTextHtml}</div>${matchHtml}`;
