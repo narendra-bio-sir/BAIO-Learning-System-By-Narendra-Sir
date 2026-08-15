@@ -458,23 +458,39 @@ setTimeout(function(){ if(!window.__baioReady){ var ov=document.getElementById('
 
   <div class="student-greet-bar" id="studentGreetBar" style="display:none;"></div>
   <div class="whatsnew-banner" id="whatsNewBanner" style="display:none;">
-    <span>&#127807; <b>New look!</b> Cleaner typography and calmer colors across the app &mdash; same content, easier on the eyes.</span>
+    <span id="whatsNewText"></span>
     <button onclick="dismissWhatsNew()" aria-label="Dismiss">&times;</button>
   </div>
   <script>
-    var WHATSNEW_KEY = 'ch9_whatsnew_redesign_v1';
-    function dismissWhatsNew(){
-      try{ localStorage.setItem(WHATSNEW_KEY, '1'); }catch(e){}
+    var WHATSNEW_ITEMS = [
+      {key:'ch9_whatsnew_redesign_v1', html:'&#127807; <b>New look!</b> Cleaner typography and calmer colors across the app &mdash; same content, easier on the eyes.'},
+      {key:'ch9_whatsnew_fullscreen_v1', html:'&#128421;&#65039; <b>Full Screen Mode</b> is here! Tap the button on MCQ Quiz, NEET Practice, KCET Practice, or Study Mode to focus distraction-free.'}
+    ];
+    function showNextWhatsNew(){
       var el = document.getElementById('whatsNewBanner');
+      var textEl = document.getElementById('whatsNewText');
+      if(!el || !textEl) return;
+      for(var i=0;i<WHATSNEW_ITEMS.length;i++){
+        var item = WHATSNEW_ITEMS[i];
+        var dismissed = false;
+        try{ dismissed = !!localStorage.getItem(item.key); }catch(e){}
+        if(!dismissed){
+          textEl.innerHTML = item.html;
+          el.setAttribute('data-current-key', item.key);
+          el.style.display = 'flex';
+          return;
+        }
+      }
+      el.style.display = 'none';
+    }
+    function dismissWhatsNew(){
+      var el = document.getElementById('whatsNewBanner');
+      var key = el ? el.getAttribute('data-current-key') : null;
+      if(key){ try{ localStorage.setItem(key, '1'); }catch(e){} }
       if(el) el.style.display = 'none';
     }
     (function(){
-      try{
-        if(!localStorage.getItem(WHATSNEW_KEY)){
-          var el = document.getElementById('whatsNewBanner');
-          if(el) el.style.display = 'flex';
-        }
-      }catch(e){}
+      showNextWhatsNew();
     })();
   </script>
   <div class="desktop-row">
