@@ -94,6 +94,11 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .header h1{font-size:22px; color:var(--gold-2); line-height:1.25;}
 .baio-brand{font-size:11.5px; font-weight:700; color:var(--teal); letter-spacing:0.5px; margin-top:2px;}
 .header .sub{color:var(--text-dim); font-size:12.5px; margin-top:4px;}
+.header-details-toggle{
+  background:none; border:none; padding:0; margin-top:6px;
+  color:var(--teal-2); font-size:11.5px; font-weight:600; cursor:pointer;
+  display:flex; align-items:center; gap:4px;
+}
 .credentials{
   margin-top:12px; padding-top:12px; border-top:1px dashed var(--border);
   font-size:12px; color:var(--text-dim); line-height:1.6;
@@ -803,10 +808,29 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
     <div class="eyebrow" id="eyebrowText">PU-I Biology &middot; NEET / KCET Aligned</div>
     <div class="baio-brand" id="brandLineText">Biology All In One (BAIO) Learning System</div>
     <h1>Chapter 2: Biological Classification</h1>
-    <div class="sub">Monera &middot; Protista &middot; Fungi &middot; Plantae &middot; Animalia &middot; Viruses &middot; Viroids &middot; Prions &middot; Lichens</div>
-    <div class="credentials">
-      By <b>Narendra Sir</b> &mdash; <span class="role">Lecturer in Biology</span> (M.Sc Biochemistry, B.Ed, KSET Life Science)
+    <button type="button" id="headerDetailsToggle" class="header-details-toggle" aria-expanded="false" aria-controls="headerDetails" onclick="toggleHeaderDetails()">&#9662; Topics &amp; credentials</button>
+    <div class="header-details" id="headerDetails" style="display:none;">
+      <div class="sub">Monera &middot; Protista &middot; Fungi &middot; Plantae &middot; Animalia &middot; Viruses &middot; Viroids &middot; Prions &middot; Lichens</div>
+      <div class="credentials">
+        By <b>Narendra Sir</b> &mdash; <span class="role">Lecturer in Biology</span> (M.Sc Biochemistry, B.Ed, KSET Life Science)
+      </div>
     </div>
+    <script>
+    function toggleHeaderDetails(){
+      var el = document.getElementById('headerDetails');
+      var btn = document.getElementById('headerDetailsToggle');
+      var willOpen = el.style.display === 'none';
+      el.style.display = willOpen ? '' : 'none';
+      btn.setAttribute('aria-expanded', String(willOpen));
+      btn.innerHTML = (willOpen ? '&#9652;' : '&#9662;') + ' Topics &amp; credentials';
+      try{ localStorage.setItem('ch2_header_details_open', willOpen ? '1' : '0'); }catch(e){}
+    }
+    (function(){
+      try{
+        if(localStorage.getItem('ch2_header_details_open') === '1') toggleHeaderDetails();
+      }catch(e){}
+    })();
+    </script>
     <div class="header-actions-row">
       <div id="langSwitcher" class="lang-switcher"></div>
       <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle light/dark theme" aria-label="Toggle theme">&#127769;</button>
