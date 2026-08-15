@@ -881,7 +881,7 @@ function renderMcqSetup(){
     <div class="opt-row">${['All','Easy','Medium','Hard'].map(v=>`<div class="opt-btn ${mcqSetup.difficulty===v?'sel':''}" onclick="mcqSetDiff('${v}')">${v}</div>`).join('')}</div>
     <div class="setup-label">Number of Questions</div>
     <div class="opt-row">${['10','25','50','90','All'].map(v=>`<div class="opt-btn ${mcqSetup.count===v?'sel':''}" onclick="mcqSetCount('${v}')">${v==='All'?'All matching':v}</div>`).join('')}</div>
-    <button class="start-btn" onclick="mcqStart()">Start Quiz \u00b7 ${pool.length} matching</button>
+    <button class="start-btn" onclick="mcqStart()">Start Quiz \u00b7 ${mcqSetup.count==='All' ? pool.length+' matching' : Math.min(parseInt(mcqSetup.count), pool.length)+' questions'}</button>
   </div>`;
   document.getElementById('content').innerHTML = html;
 }
@@ -1284,7 +1284,7 @@ function renderNeetSetup(){
     <div class="opt-row">${['10','25','50','90','All'].map(v=>`<div class="opt-btn ${neetSetup.count===v?'sel':''}" onclick="neetSetCount('${v}')">${v==='All'?'All matching':v}</div>`).join('')}</div>
     <div class="setup-label">Per-question Timer</div>
     <div class="opt-row">${['20','30','60'].map(v=>`<div class="opt-btn ${neetSetup.timer===v?'sel':''}" onclick="neetSetTimer('${v}')">${v}s</div>`).join('')}</div>
-    <button class="start-btn" onclick="neetStart()">Start NEET Practice \u00b7 ${pool.length} matching</button>
+    <button class="start-btn" onclick="neetStart()">Start NEET Practice \u00b7 ${neetSetup.count==='All' ? pool.length+' matching' : Math.min(parseInt(neetSetup.count), pool.length)+' questions'}</button>
     <div style="font-size:10.5px;color:var(--ink-dim);text-align:center;margin-top:10px;">\uD83D\uDD04 Prioritizes questions you haven't seen yet, so every session feels fresh</div>
   </div>`;
   document.getElementById('content').innerHTML = html;
@@ -1562,7 +1562,7 @@ function renderKcetSetup(){
     <div class="opt-row">${['10','25','50','60','All'].map(v=>`<div class="opt-btn ${kcetSetup.count===v?'sel':''}" onclick="kcetSetCount('${v}')">${v==='60'?'60 (full paper)':(v==='All'?'All matching':v)}</div>`).join('')}</div>
     <div class="setup-label">Per-question Timer</div>
     <div class="opt-row">${['20','30','40','60','80'].map(v=>`<div class="opt-btn ${kcetSetup.timer===v?'sel':''}" onclick="kcetSetTimer('${v}')">${kcetFmtMMSS(parseInt(v))}</div>`).join('')}</div>
-    <button class="start-btn" onclick="kcetStart()">Start KCET Practice \u00b7 ${pool.length} matching</button>
+    <button class="start-btn" onclick="kcetStart()">Start KCET Practice \u00b7 ${kcetSetup.count==='All' ? pool.length+' matching' : Math.min(parseInt(kcetSetup.count), pool.length)+' questions'}</button>
     <div style="font-size:10.5px;color:var(--ink-dim);text-align:center;margin-top:10px;">\uD83D\uDD04 Prioritizes questions you haven't seen yet, so every session feels fresh</div>
   </div>`;
   document.getElementById('content').innerHTML = html;
