@@ -582,7 +582,7 @@ footer{text-align:center; color:var(--text-dim); font-size:11px; margin-top:22px
 .student-greet-bar .btn{padding:5px 10px; font-size:11px;}
 .whatsnew-banner{
   display:flex; align-items:center; justify-content:space-between; gap:12px;
-  background:linear-gradient(135deg,var(--teal-2),#0a4239); color:#EFFFFA;
+  background:linear-gradient(135deg,#0F6653,#0a4239); color:#EFFFFA;
   border-radius:10px; padding:10px 14px; margin-bottom:10px; font-size:12px; line-height:1.5;
 }
 .whatsnew-banner b{color:var(--gold-2);}
@@ -1488,7 +1488,17 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       <div class="dl-row" data-pdf="00_Complete_Study_Notes.pdf">
         <div class="dl-info">
           <div class="dl-title">Complete Study Notes</div>
-          <div class="dl-sub">11 sections &middot; comprehensive &amp; analytical study material &middot; 6 pages</div>
+          <div class="dl-sub">12 sections &middot; comprehensive &amp; analytical study material &middot; 11 pages</div>
+        </div>
+        <div class="dl-actions">
+          <button class="btn secondary dl-view-btn">View</button>
+          <button class="btn dl-btn">Download</button>
+        </div>
+      </div>
+      <div class="dl-row" data-pdf="10_Typed_Notes.pdf">
+        <div class="dl-info">
+          <div class="dl-title">Narendra Sir's Typed Notes</div>
+          <div class="dl-sub">Full chapter, original typed format &middot; 27 pages</div>
         </div>
         <div class="dl-actions">
           <button class="btn secondary dl-view-btn">View</button>
@@ -2654,6 +2664,7 @@ const PDF_FILES = {
   "Board_Important_Karnataka_2nd_PUC_Blueprint.pdf": {"label": "Board Important - Karnataka 2nd PUC Blueprint.pdf", "b64": "pu2-ch4-assets/pdf-Board_Important_Karnataka_2nd_PUC_Blueprint.pdf"},
   "00b_Revision_Notes.pdf": {"label": "Revision Notes - Quick Summary.pdf", "b64": "pu2-ch4-assets/pdf-00b_Revision_Notes.pdf"},
   "00_Complete_Study_Notes.pdf": {"label": "Complete Study Notes (Full Chapter).pdf", "b64": "pu2-ch4-assets/pdf-00_Complete_Study_Notes.pdf"},
+  "10_Typed_Notes.pdf": {"label": "Narendra Sir's Typed Notes.pdf", "b64": "pu2-ch4-assets/pdf-10_Typed_Notes.pdf"},
   "01_Genetics_Basics_and_Mendels_Experiments.pdf": {"label": "Worksheet 1 - Genetics Basics and Mendel's Experiments.pdf", "b64": "pu2-ch4-assets/pdf-01_Genetics_Basics_and_Mendels_Experiments.pdf"},
   "02_Monohybrid_Cross_and_Mendels_Laws.pdf": {"label": "Worksheet 2 - Monohybrid Cross and Mendel's Laws.pdf", "b64": "pu2-ch4-assets/pdf-02_Monohybrid_Cross_and_Mendels_Laws.pdf"},
   "03_Dihybrid_Cross_and_Independent_Assortment.pdf": {"label": "Worksheet 3 - Dihybrid Cross and Independent Assortment.pdf", "b64": "pu2-ch4-assets/pdf-03_Dihybrid_Cross_and_Independent_Assortment.pdf"},
@@ -2942,7 +2953,7 @@ function checkPersonalBest(examType, pct){
 }
 function personalBestBanner(examType, pct){
   const r = checkPersonalBest(examType, pct);
-  const boxStyle = 'background:linear-gradient(135deg,var(--teal-2),#0a4239); color:#EFFFFA; font-size:12.5px; line-height:1.6; margin-bottom:12px;';
+  const boxStyle = 'background:linear-gradient(135deg,#0F6653,#0a4239); color:#EFFFFA; font-size:12.5px; line-height:1.6; margin-bottom:12px;';
   if(r.prevBest === null){
     return '<div class="card" style="' + boxStyle + '">🏁 <b>First attempt logged!</b> ' + pct + '% is now your baseline to beat next time.</div>';
   }
@@ -3015,7 +3026,7 @@ function renderWriteItSetup(){
     const label = id==='All' ? 'All Topics' : STUDY_DATA.find(t=>t.id===id).title.replace(/^\d+\.\s*/, '');
     return `<div class="topic-pill ${waSetup.topic===id?'active':''}" onclick="waSetTopic('${id}')">${label}</div>`;
   }).join('');
-  let html = `<div class="card" style="background:linear-gradient(135deg,var(--teal-2),#0a4239); color:#EFFFFA; font-size:12.5px; line-height:1.6;">✍️ <b>How it works:</b> Grab a pen and paper — write your answer by hand, just like in the exam, then reveal the model answer to see what you missed. Typing is fine in a pinch, but handwriting it builds the speed and habit you'll need on exam day.</div>`;
+  let html = `<div class="card" style="background:linear-gradient(135deg,#0F6653,#0a4239); color:#EFFFFA; font-size:12.5px; line-height:1.6;">✍️ <b>How it works:</b> Grab a pen and paper — write your answer by hand, just like in the exam, then reveal the model answer to see what you missed. Typing is fine in a pinch, but handwriting it builds the speed and habit you'll need on exam day.</div>`;
   html += `<div class="card">
     <label class="field-label">Topic</label>
     <div style="display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;">${topicChips}</div>
@@ -4002,9 +4013,9 @@ const PREMIUM_SCORE_THRESHOLD = 330;
 const PREMIUM_MASTER_CODE = 'NS-PREMIUM-2026';
 const PREMIUM_PRICE_RUPEES = 1999;
 const PREMIUM_PRICE_ORIGINAL = 3000;
-const RAZORPAY_PREMIUM_LINK = 'YOUR_PREMIUM_LINK_HERE'; // TODO: Narendra Sir - create a Razorpay Payment Page for Chapter 4 Premium and paste its rzp.io link here
+const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/ncmBEYAw';
 const PREMIUM_UNLOCK_LOOKUP = {};
-const PREMIUM_LOCKED_TABS = ['mindmap', 'classppt', 'quiz', 'adv', 'kcet', 'writeit', 'papergen', 'boardimp'];
+const PREMIUM_LOCKED_TABS = ['mindmap', 'classppt', 'quiz', 'adv', 'kcet', 'papergen', 'boardimp'];
 const PREMIUM_TAB_LABELS = {mindmap:'Mind Map', classppt:'Class Presentation', revision:'Revision', quiz:'MCQ Quiz', adv:'NEET Practice', kcet:'KCET Practice', writeit:'Answer Practice', papergen:'Paper Generator', boardimp:'Board Important'};
 function getPremiumUnlock(){
   try{ return JSON.parse(localStorage.getItem(PREMIUM_KEY) || 'null'); }catch(e){ return null; }
@@ -4212,38 +4223,7 @@ function hwPaymentWaLinkCh2(){
   return 'https://wa.me/919008968389?text=' + encodeURIComponent(msg);
 }
 function hwRowHtml(){
-  const p = PDF_FILES[HW_KEY];
-  const unlock = getHwUnlock();
-  const title = p ? p.label.replace(/\.pdf$/i,'').replace(/_/g,' ') : 'Hand-Written Notes';
-  if(unlock && unlock.unlocked){
-    const methodLabel = unlock.method === 'master' ? 'unlocked with a teacher-provided access code' : 'unlocked with your roll-number code';
-    const qualifies = hwQualifies();
-    const viewBtn = qualifies
-      ? '<button class="btn secondary" onclick="hwViewNotes()">View</button>'
-      : '<button class="btn secondary" onclick="hwDownloadBlocked()" style="opacity:0.5;">View \uD83D\uDD12</button>';
-    const dlBtn = qualifies
-      ? '<button class="btn" id="hwDlBtn" onclick="hwDownloadNotes()">Download</button>'
-      : '<button class="btn" id="hwDlBtn" onclick="hwDownloadBlocked()" style="opacity:0.5;">Download \uD83D\uDD12</button>';
-    return '<div class="dl-row"><div class="dl-info"><div class="dl-title">\uD83D\uDD13 Hand-Written Notes</div>'
-      + '<div class="dl-sub">Narendra Sir\'s handwritten chapter notes &middot; 9 pages &middot; ' + methodLabel + '</div></div>'
-      + '<div class="dl-actions">' + viewBtn + dlBtn + '</div></div>'
-      + '<div style="text-align:right; margin:-6px 0 10px;"><a href="#" onclick="reLockHw(); return false;" style="font-size:11px; color:var(--text-dim); text-decoration:underline; cursor:pointer;">Re-lock notes on this device</a></div>';
-  }
-  const bestScore = bestNeetScoreCh2();
-  return '<div class="dl-row"><div class="dl-info"><div class="dl-title">\uD83D\uDD12 Hand-Written Notes</div>'
-    + '<div class="dl-sub">Locked &middot; score ' + HW_SCORE_THRESHOLD + '+ marks in a single NEET Practice session, then use "Share Report Card" to send it to Narendra Sir\'s social media handle for your unique roll-number code to unlock (your best so far: ' + bestScore + '). Or pay a small one-time fee below to get your code instead.</div></div></div>'
-    + '<div class="hw-unlock-form">'
-    + '<div class="hw-msg" id="hwUnlockMsg"></div>'
-    + '<input type="text" id="hwNameInput" placeholder="Full name (e.g. Vishwapal)">'
-    + '<input type="text" id="hwSectionInput" placeholder="Section (e.g. Spark)">'
-    + '<input type="text" id="hwRollInput" placeholder="Roll number (e.g. 25MPU0087)">'
-    + '<input type="text" id="hwCodeInput" placeholder="Unlock code" autocomplete="off">'
-    + '<div class="hw-code-toggle"><label><input type="checkbox" id="hwCodeShowToggle" checked> Show code</label></div>'
-    + '<button class="btn" style="margin-top:8px;" onclick="hwSubmitUnlock()">Unlock with Code</button>'
-    + '<div style="text-align:center; font-size:11px; color:var(--text-dim); margin:10px 0 4px;">&mdash; or pay \u20B9' + HW_UNLOCK_PRICE_RUPEES + ' for instant help getting a code &mdash;</div>'
-    + '<div id="rzpButtonContainer" style="display:flex; justify-content:center; margin-top:4px;"></div>'
-    + '<div style="font-size:10.5px; color:var(--text-dim); text-align:center; margin-top:6px;">After paying, send your payment confirmation along with your section &amp; roll number to <a href="' + hwPaymentWaLinkCh2() + '" target="_blank" rel="noopener" style="color:var(--teal); font-weight:700; text-decoration:none;">Narendra Sir on WhatsApp</a> \u2014 he\'ll send your unlock code right away.</div>'
-    + '</div>';
+  return '<div style="background:rgba(227,175,67,0.08); border:1px solid rgba(227,175,67,0.25); border-radius:10px; padding:10px 12px; margin-bottom:12px; font-size:12px; color:var(--text-dim);">\uD83D\uDCDD <b>Coming soon</b> \u2013 Narendra Sir\'s handwritten notes for this chapter haven\'t been added yet.</div>';
 }
 
 function renderDownloadsList(){
