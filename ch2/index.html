@@ -568,6 +568,14 @@ footer{text-align:center; color:var(--text-dim); font-size:11px; margin-top:22px
   position:sticky; top:0; z-index:19;
 }
 .student-greet-bar .btn{padding:5px 10px; font-size:11px;}
+.whatsnew-banner{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  background:linear-gradient(135deg,var(--teal-2),#0a4239); color:#EFFFFA;
+  border-radius:10px; padding:10px 14px; margin-bottom:10px; font-size:12px; line-height:1.5;
+}
+.whatsnew-banner b{color:var(--gold-2);}
+.whatsnew-banner button{flex:none; background:none; border:none; color:#EFFFFA; font-size:19px; line-height:1; cursor:pointer; padding:0 2px; opacity:0.8;}
+.whatsnew-banner button:hover{opacity:1;}
 /* ---- Slidable / keyboard-navigable tabs ---- */
 .tabs{cursor:grab;}
 .tabs.dragging{cursor:grabbing; user-select:none;}
@@ -799,6 +807,27 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
     <span id="studentGreetText"></span>
     <button class="btn secondary" id="studentEditBtn">Edit</button>
   </div>
+
+  <div class="whatsnew-banner" id="whatsNewBanner" style="display:none;">
+    <span>&#127807; <b>New look!</b> Cleaner typography and calmer colors across the app &mdash; same content, easier on the eyes.</span>
+    <button onclick="dismissWhatsNew()" aria-label="Dismiss">&times;</button>
+  </div>
+  <script>
+    var WHATSNEW_KEY = 'ch2_whatsnew_redesign_v1';
+    function dismissWhatsNew(){
+      try{ localStorage.setItem(WHATSNEW_KEY, '1'); }catch(e){}
+      var el = document.getElementById('whatsNewBanner');
+      if(el) el.style.display = 'none';
+    }
+    (function(){
+      try{
+        if(!localStorage.getItem(WHATSNEW_KEY)){
+          var el = document.getElementById('whatsNewBanner');
+          if(el) el.style.display = 'flex';
+        }
+      }catch(e){}
+    })();
+  </script>
 
   <div class="desktop-row">
   <div class="tabbar-wrap">
