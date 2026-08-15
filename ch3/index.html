@@ -23,24 +23,24 @@
 })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --navy:#0B1B14; --navy2:#0F2419; --panel:#13281E; --panel2:#0E211A;
-  --gold:#D4AF37; --gold2:#B8912A; --teal:#2EE6C5; --teal2:#127566;
-  --ink:#EAF3EE; --ink-dim:#9FC4B6; --line:rgba(212,175,55,0.25);
-  --danger:#E7695B; --ok:#33C48A;
-  --fc-back-1:#127566; --fc-back-2:#0a4239; --fc-back-text:#EFFFFA;
-  --btn-gold:#D4AF37; --btn-gold2:#B8912A;
+  --navy:#0C1610; --navy2:#0E1912; --panel:#16241C; --panel2:#1C2B21;
+  --gold:#E3AF43; --gold2:#C99530; --teal:#42C6A0; --teal2:#1E7A63;
+  --ink:#ECF3E9; --ink-dim:#A6BCAC; --line:rgba(166,188,172,0.18);
+  --danger:#E8815F; --ok:#3FBE8E;
+  --fc-back-1:#1E7A63; --fc-back-2:#123328; --fc-back-text:#EFFFFA;
+  --btn-gold:#E3AF43; --btn-gold2:#C99530;
   --shadow: 0 10px 30px rgba(0,0,0,0.45);
 }
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
 body{
   background: radial-gradient(1200px 600px at 50% -10%, #16332510, transparent), linear-gradient(180deg, var(--navy) 0%, var(--navy2) 100%);
-  color:var(--ink); font-family:'Inter',sans-serif; min-height:100vh; -webkit-tap-highlight-color:transparent;
+  color:var(--ink); font-family:'Work Sans',-apple-system,sans-serif; min-height:100vh; -webkit-tap-highlight-color:transparent;
 }
-h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif; margin:0;}
+h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 ::-webkit-scrollbar{height:6px;width:6px;}
 ::-webkit-scrollbar-thumb{background:var(--gold2);border-radius:4px;}
 
@@ -78,7 +78,7 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 12px 16
 .tabbar{display:flex;overflow-x:auto;gap:6px;padding:10px 12px;border-bottom:1px solid var(--line);position:sticky;top:8px;z-index:19;background:var(--navy);scrollbar-width:none;}
 .tabbar::-webkit-scrollbar{display:none;}
 .tab{flex:0 0 auto;padding:8px 14px;border-radius:20px;font-size:12.5px;font-weight:600;color:var(--ink-dim);background:var(--panel2);border:1px solid var(--line);cursor:pointer;white-space:nowrap;}
-.tab.active{background:linear-gradient(135deg,var(--btn-gold),var(--btn-gold2));color:#FFFFFF;border-color:var(--btn-gold);text-shadow:0 1px 2px rgba(0,0,0,0.35);}
+.tab.active{background:var(--btn-gold);color:#1A1406;border-color:var(--btn-gold);}
 
 /* TOPIC PILLS */
 .pillrow{display:flex;overflow-x:auto;gap:8px;padding:12px 14px 4px;scrollbar-width:none;}
@@ -90,7 +90,7 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 12px 16
 
 /* CHIPS */
 .chiprow{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 14px;}
-.chip{background:linear-gradient(135deg,var(--btn-gold),var(--btn-gold2));color:#FFFFFF;font-size:11px;font-weight:700;padding:5px 10px;border-radius:12px;text-shadow:0 1px 2px rgba(0,0,0,0.35);}
+.chip{background:var(--btn-gold);color:#1A1406;font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px;}
 
 /* STUDY SECTIONS */
 .section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 15px;margin-bottom:10px;}
@@ -167,7 +167,7 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .qz-meta-right{display:flex; align-items:center; gap:8px;}
 .qz-timer-badge{
   background:var(--panel2); border:1px solid var(--line); padding:5px 11px; border-radius:99px;
-  font-family:'Space Grotesk',sans-serif; font-weight:700; color:var(--gold2); font-size:12.5px; display:inline-block;
+  font-family:ui-monospace,"SF Mono",Consolas,monospace; font-variant-numeric:tabular-nums; font-weight:600; color:var(--gold2); font-size:12.5px; display:inline-block;
 }
 .qz-timer-badge.low{color:var(--danger); border-color:var(--danger); font-size:13.5px; box-shadow:0 0 0 2px rgba(231,105,91,0.18); animation:qzPulse 1s infinite;}
 @keyframes qzPulse{0%,100%{opacity:1;}50%{opacity:.5;}}
@@ -196,7 +196,7 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 
 /* REPORT CARD */
 .report{background:var(--panel);border:1px solid var(--gold);border-radius:16px;padding:20px;text-align:center;margin-bottom:14px;}
-.report .score{font-size:40px;font-weight:800;color:var(--gold);font-family:'Space Grotesk',sans-serif;}
+.report .score{font-size:40px;font-weight:600;color:var(--gold);font-family:'Fraunces',Georgia,serif;font-variant-numeric:tabular-nums;}
 .report .sub{font-size:12.5px;color:var(--ink-dim);margin-top:2px;}
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;}
 .stat-box{background:var(--panel2);border-radius:10px;padding:10px;text-align:center;}
@@ -244,7 +244,7 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 
 /* ===== NEW FEATURE STYLES (Progress/Badges/Tree/Compare/Glossary/Mindmap/Papergen/Premium) ===== */
 .tree-division{border:1px solid var(--line);border-radius:12px;margin-bottom:10px;overflow:hidden;background:var(--panel);}
-.tree-division-head{padding:12px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--gold);}
+.tree-division-head{padding:12px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:'Fraunces',Georgia,serif;font-weight:700;color:var(--gold);}
 .tree-division-head .arrow{transition:transform .25s;color:var(--teal);}
 .tree-division.open .arrow{transform:rotate(90deg);}
 .tree-division-body{max-height:0;overflow:hidden;transition:max-height .3s ease;padding:0 14px;}
@@ -257,7 +257,7 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 
 .cmp-select-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
 .cmp-select-row select{flex:1;}
-.cmp-vs{color:var(--gold);font-weight:700;font-family:'Space Grotesk',sans-serif;flex:0 0 auto;}
+.cmp-vs{color:var(--gold);font-weight:700;font-family:'Fraunces',Georgia,serif;flex:0 0 auto;}
 #cmpResult table.factbl{table-layout:fixed;}
 #cmpResult table.factbl th, #cmpResult table.factbl td{word-break:break-word;overflow-wrap:break-word;vertical-align:top;white-space:normal !important;}
 #cmpResult table.factbl th:first-child, #cmpResult table.factbl td:first-child{width:29%;word-break:normal;overflow-wrap:break-word;}
@@ -273,12 +273,12 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .cmp-select-row select{flex:1;padding:9px 10px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);color:var(--ink);font-size:13px;}
 
 .glossary-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 12px;border-bottom:1px solid var(--line);background:var(--panel);border-radius:10px;margin-bottom:6px;}
-.glossary-term{color:var(--gold);font-weight:700;font-family:'Space Grotesk',sans-serif;font-size:13.5px;}
+.glossary-term{color:var(--gold);font-weight:700;font-family:'Fraunces',Georgia,serif;font-size:13.5px;}
 .glossary-def{color:var(--ink-dim);font-size:12px;margin-top:3px;}
-.glossary-speak-btn{background:rgba(46,230,197,0.15);border:1px solid var(--teal);color:var(--teal);border-radius:50%;width:36px;height:36px;min-width:36px;cursor:pointer;font-size:16px;flex-shrink:0;}
+.glossary-speak-btn{background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);border-radius:50%;width:36px;height:36px;min-width:36px;cursor:pointer;font-size:16px;flex-shrink:0;}
 
 .badge-card{display:flex;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin-bottom:9px;opacity:.55;filter:grayscale(.6);}
-.badge-card.earned{opacity:1;filter:none;border-color:var(--gold);background:linear-gradient(135deg,rgba(212,175,55,.12),var(--panel));}
+.badge-card.earned{opacity:1;filter:none;border-color:var(--gold);background:linear-gradient(135deg,rgba(227,175,67,.12),var(--panel));}
 .badge-icon{font-size:26px;flex:0 0 auto;line-height:1;}
 .badge-body{flex:1;min-width:0;}
 .badge-name{font-size:13px;font-weight:700;color:var(--ink);}
@@ -289,7 +289,7 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 
 .progress-stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0;}
 .progress-stat-box{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center;}
-.progress-stat-box .num{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--gold);}
+.progress-stat-box .num{font-family:'Fraunces',Georgia,serif;font-size:22px;font-weight:700;color:var(--gold);font-variant-numeric:tabular-nums;}
 .progress-stat-box .lbl{font-size:11px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.5px;}
 .progress-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
 .progress-bar-label{width:80px;font-size:11px;color:var(--ink-dim);flex-shrink:0;}
@@ -370,7 +370,7 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .hw-code-toggle label{display:flex;align-items:center;gap:6px;cursor:pointer;}
 
 .paper-header{border-bottom:2px solid var(--gold);padding-bottom:10px;margin-bottom:14px;}
-.paper-header .brand{font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--gold);font-size:16px;}
+.paper-header .brand{font-family:'Fraunces',Georgia,serif;font-weight:700;color:var(--gold);font-size:16px;}
 .paper-header .by{font-size:12px;color:var(--ink-dim);margin-top:2px;}
 .paper-header .meta{font-size:12.5px;color:var(--ink-dim);margin-top:8px;}
 .paper-q{margin-bottom:14px;font-size:13.5px;line-height:1.5;color:var(--ink);}
@@ -387,28 +387,28 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 
 .lang-switcher{display:flex;gap:6px;}
 .lang-btn{padding:5px 12px;border-radius:14px;font-size:11px;font-weight:700;background:var(--panel2);color:var(--ink-dim);border:1px solid var(--line);cursor:pointer;}
-.lang-btn.active{background:linear-gradient(135deg,var(--btn-gold),var(--btn-gold2));color:#FFFFFF;border-color:var(--btn-gold);text-shadow:0 1px 2px rgba(0,0,0,0.35);}
+.lang-btn.active{background:var(--btn-gold);color:#1A1406;border-color:var(--btn-gold);font-weight:700;}
 
 
 [data-theme="light"]{
-  --navy:#F4F6F1;
-  --navy2:#EDF1E8;
-  --panel:#ffffff;
-  --panel2:#F0F4EC;
-  --line:rgba(138,95,0,0.25);
+  --navy:#F4F7F0;
+  --navy2:#ECF1E5;
+  --panel:#FFFFFF;
+  --panel2:#EBF0E5;
+  --line:rgba(85,104,90,0.16);
   --ink:#16241C;
-  --ink-dim:#4C5D52;
-  --gold:#A9760A;
-  --gold2:#8A5F00;
-  --teal:#0F8F7A;
-  --teal2:#0B6F5E;
-  --danger:#B23A2E;
+  --ink-dim:#55685A;
+  --gold:#A17A22;
+  --gold2:#8A6318;
+  --teal:#157A62;
+  --teal2:#0F6653;
+  --danger:#A8442C;
   --ok:#1E8F5C;
-  --fc-back-1:#dff3ee;
-  --fc-back-2:#c9ece3;
-  --fc-back-text:#0b3d34;
-  --btn-gold:#A9760A;
-  --btn-gold2:#8A5F00;
+  --fc-back-1:#DFF0E7;
+  --fc-back-2:#CDE7DB;
+  --fc-back-text:#0F6653;
+  --btn-gold:#A17A22;
+  --btn-gold2:#8A6318;
 }
 
 .header-actions-row{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:10px;}
@@ -716,7 +716,7 @@ const NEXT_STEP_MAP = {
 function nextStepNudge(fromTab){
   const next = NEXT_STEP_MAP[fromTab];
   if(!next) return '';
-  return `<div class="setup-card" style="margin-top:14px; border:1px solid var(--gold); background:rgba(212,175,55,.08); display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+  return `<div class="setup-card" style="margin-top:14px; border:1px solid var(--gold); background:rgba(227,175,67,.08); display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
     <div style="font-size:12.5px; color:var(--ink-dim);">📍 Next step in your study path</div>
     <button class="opt-btn sel" onclick="switchTab('${next.id}')">${next.label} →</button>
   </div>`;
@@ -929,7 +929,7 @@ function personalBestBanner(examType, pct){
 }
 function fireConfetti(){
   try{
-    const colors = ['#D4AF37', '#2EE6C5', '#F4D37A', '#33C48A'];
+    const colors = ['#E3AF43', '#42C6A0', '#F6D998', '#3FBE8E'];
     const container = document.createElement('div');
     container.style.cssText = 'position:fixed; inset:0; pointer-events:none; z-index:99999; overflow:hidden;';
     document.body.appendChild(container);
@@ -1052,15 +1052,15 @@ function buildReportCardHtml(r){
   const section = (profile && profile.section) ? profile.section : '-';
   const dateStr = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
   const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-  const bg = isLight ? 'linear-gradient(160deg,#ffffff,#f4f6f1)' : 'linear-gradient(160deg,#132a1e,#0b1b14)';
-  const textMain = isLight ? '#16241C' : '#EAF3EE';
-  const textDim = isLight ? '#4C5D52' : '#9FC4B6';
-  const gold = isLight ? '#8A5F00' : '#D4AF37';
-  const teal = isLight ? '#0F8F7A' : '#2EE6C5';
+  const bg = isLight ? 'linear-gradient(160deg,#FFFFFF,#F4F7F0)' : 'linear-gradient(160deg,#16241C,#0A140E)';
+  const textMain = isLight ? '#16241C' : '#ECF3E9';
+  const textDim = isLight ? '#55685A' : '#A6BCAC';
+  const gold = isLight ? '#8A6318' : '#E3AF43';
+  const teal = isLight ? '#157A62' : '#42C6A0';
   const panelBg = isLight ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.06)';
-  const ok = isLight ? '#1E8F5C' : '#33C48A';
-  const danger = isLight ? '#B23A2E' : '#E7695B';
-  return `<div id="shareCardInner" style="width:100%; max-width:480px; box-sizing:border-box; background:${bg}; color:${textMain}; font-family:'Space Grotesk',sans-serif; padding:22px; border-radius:20px; border:2px solid #D4AF37;">
+  const ok = isLight ? '#1E8F5C' : '#3FBE8E';
+  const danger = isLight ? '#A8442C' : '#E8815F';
+  return `<div id="shareCardInner" style="width:100%; max-width:480px; box-sizing:border-box; background:${bg}; color:${textMain}; font-family:'Fraunces',Georgia,serif; padding:22px; border-radius:20px; border:2px solid #E3AF43;">
     <div style="text-align:center; margin-bottom:14px;">
       <div style="font-size:12px; letter-spacing:2px; color:${teal}; text-transform:uppercase;">BAIO Learning System</div>
       <div style="font-size:18px; font-weight:700; color:${gold}; margin-top:4px;">${r.examLabel} Report Card</div>
@@ -1080,7 +1080,7 @@ function buildReportCardHtml(r){
       <div style="text-align:center;"><div style="font-weight:700; color:${danger};">${r.wrong}</div><div style="color:${textDim};">Incorrect</div></div>
       <div style="text-align:center;"><div style="font-weight:700; color:${gold};">${r.timeSec}s</div><div style="color:${textDim};">Time Taken</div></div>
     </div>
-    <div style="border-top:1px solid rgba(212,175,55,0.35); padding-top:12px; text-align:center; font-size:10.5px; color:${textDim}; line-height:2;">
+    <div style="border-top:1px solid rgba(227,175,67,0.35); padding-top:12px; text-align:center; font-size:10.5px; color:${textDim}; line-height:2;">
       Narendra Sir &ndash; Lecturer in Biology<br>
       <div style="margin-top:4px;">📱 <a href="https://wa.me/919008968389" target="_blank" rel="noopener" style="color:${teal};">9008968389</a> &nbsp;&middot;&nbsp; ✉️ <a href="mailto:bioguru102@gmail.com" style="color:${teal};">bioguru102@gmail.com</a></div>
       <div style="margin-top:4px;">WhatsApp Channel: <a href="https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X" target="_blank" rel="noopener" style="color:${teal};">BioGuru Narendra Sir</a></div>
@@ -1257,7 +1257,7 @@ function renderNeetSetup(){
   const pool = neetFilterPool();
   const topicChips = DATA.topics.map(t=>`<div class="opt-btn${neetSetup.topics.includes(t.id)?' sel':''}" onclick="neetToggleTopic('${t.id}')">${t.name}</div>`).join('');
   let html = `<div class="marks-info">\uD83D\uDCCB <b>Marking scheme:</b> +4 marks for every correct answer, \u22121 mark for every wrong answer, 0 if the timer runs out before you answer. Choose your filters below, then start.</div>`;
-  html += `<div class="setup-card" style="border:1px solid var(--gold); background:rgba(212,175,55,.08);">
+  html += `<div class="setup-card" style="border:1px solid var(--gold); background:rgba(227,175,67,.08);">
     <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
       <div>
         <div style="font-weight:700; font-size:13px; color:var(--gold);">\uD83C\uDFAF Practice Weak Topics</div>
@@ -1516,7 +1516,7 @@ function renderKcetSetup(){
     return `<div class="opt-btn ${isSel?'sel':''}" onclick="kcetToggleFormat('${v}')">${label}</div>`;
   }).join('');
   let html = `<div class="marks-info">\uD83D\uDCCB <b>Official KCET pattern:</b> Biology paper is 60 MCQs in 80 minutes, +1 mark per correct answer, <b>no negative marking</b>. This practice set follows the same rules for this chapter.</div>`;
-  html += `<div class="setup-card" style="border:1px solid var(--gold); background:rgba(212,175,55,.08);">
+  html += `<div class="setup-card" style="border:1px solid var(--gold); background:rgba(227,175,67,.08);">
     <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
       <div>
         <div style="font-weight:700; font-size:13px; color:var(--gold);">\uD83C\uDFAF Practice Weak Topics</div>
@@ -2638,11 +2638,11 @@ function renderMyNotes(){
   document.getElementById('content').innerHTML = `<div class="setup-card">
     <h3 style="color:var(--gold);margin-bottom:4px;">My Own Study Notes</h3>
     <div style="color:var(--ink-dim);font-size:12px;margin-bottom:12px;">Write your own notes for this chapter in your own words &mdash; a great way to revise. Saved automatically on this device as you type. Use "Print / Download as PDF" any time to get a clean, printable copy with your roll number on it.</div>
-    <textarea id="myNotesArea" placeholder="Start typing your notes here... e.g. definitions, diagrams described in words, mnemonics, exam points to remember..." style="width:100%;min-height:320px;box-sizing:border-box;background:var(--panel2);border:1px solid var(--line);border-radius:10px;color:var(--ink);font-family:'Space Grotesk',sans-serif;font-size:14px;line-height:1.6;padding:14px;resize:vertical;">${escHtml(saved)}</textarea>
+    <textarea id="myNotesArea" placeholder="Start typing your notes here... e.g. definitions, diagrams described in words, mnemonics, exam points to remember..." style="width:100%;min-height:320px;box-sizing:border-box;background:var(--panel2);border:1px solid var(--line);border-radius:10px;color:var(--ink);font-family:'Work Sans',sans-serif;font-size:14px;line-height:1.6;padding:14px;resize:vertical;">${escHtml(saved)}</textarea>
     <div id="myNotesSavedMsg" style="font-size:11px;color:var(--ink-dim);margin-top:6px;"></div>
     <div class="opt-row" style="margin-top:12px;flex-wrap:wrap;">
       <button class="opt-btn" onclick="myNotesClear()">Clear Notes</button>
-      <select id="myNotesExportSelect" onchange="myNotesExport(this.value); this.value='';" style="flex:1;min-width:160px;padding:9px 10px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);color:var(--ink);font-family:'Inter',sans-serif;font-size:12.5px;">
+      <select id="myNotesExportSelect" onchange="myNotesExport(this.value); this.value='';" style="flex:1;min-width:160px;padding:9px 10px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);color:var(--ink);font-family:'Work Sans',sans-serif;font-size:12.5px;">
         <option value="">Print / Download...</option>
         <option value="pdf">Print / Save as PDF</option>
         <option value="image">Download as Image (PNG)</option>
@@ -2841,9 +2841,9 @@ function renderPapergenSetup(){
       <div class="opt-btn${pgState.paperType==='neet'?' sel':''}" onclick="pgSetPaperType('neet')">NEET Paper</div>
     </div>
     <div class="setup-label">Test Name / Title</div>
-    <input type="text" id="pgTestName" value="${escHtml(pgState.testName)}" placeholder="e.g. Slip Test, Monthly Test, Assignment 1" oninput="pgState.testName=this.value" style="width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--ink);padding:9px 10px;border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;box-sizing:border-box;margin-bottom:12px;">
+    <input type="text" id="pgTestName" value="${escHtml(pgState.testName)}" placeholder="e.g. Slip Test, Monthly Test, Assignment 1" oninput="pgState.testName=this.value" style="width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--ink);padding:9px 10px;border-radius:8px;font-size:13px;font-family:'Work Sans',sans-serif;box-sizing:border-box;margin-bottom:12px;">
     <div class="setup-label">Time Allotted</div>
-    <input type="text" id="pgTimeAllotted" value="${escHtml(pgState.timeAllotted)}" placeholder="e.g. 40 minutes / 1 Hour" oninput="pgState.timeAllotted=this.value" style="width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--ink);padding:9px 10px;border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;box-sizing:border-box;margin-bottom:14px;">
+    <input type="text" id="pgTimeAllotted" value="${escHtml(pgState.timeAllotted)}" placeholder="e.g. 40 minutes / 1 Hour" oninput="pgState.timeAllotted=this.value" style="width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--ink);padding:9px 10px;border-radius:8px;font-size:13px;font-family:'Work Sans',sans-serif;box-sizing:border-box;margin-bottom:14px;">
     <div class="setup-label">Question Topics</div>
     <div class="opt-row">
       <div class="opt-btn${pgState.topicMode==='full'?' sel':''}" onclick="pgSetTopicMode('full')">Full Chapter</div>
@@ -2875,7 +2875,7 @@ function renderPapergenSetup(){
     </div>`}
     <button class="start-btn" onclick="pgGenerate()">Generate Paper</button>
   </div>
-  <style>.pg-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;} .pg-grid select,#pgDifficulty,#pgNeetDifficulty{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--ink);padding:8px 10px;border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;}</style>`;
+  <style>.pg-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;} .pg-grid select,#pgDifficulty,#pgNeetDifficulty{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--ink);padding:8px 10px;border-radius:8px;font-size:13px;font-family:'Work Sans',sans-serif;}</style>`;
 }
 function pgSetPaperType(v){ pgState.paperType=v; renderPapergenSetup(); }
 function pgToggleTopic(id){
