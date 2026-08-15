@@ -23,27 +23,28 @@
 })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --navy:#0B1B14; --navy2:#0F2419; --panel:#13281E; --panel2:#0E211A;
-  --gold:#D4AF37; --gold2:#B8912A; --teal:#2EE6C5; --teal2:#127566;
-  --ink:#EAF3EE; --ink-dim:#9FC4B6; --line:rgba(212,175,55,0.25);
-  --danger:#E7695B; --ok:#33C48A;
+  --navy:#0C1610; --navy2:#0E1912; --panel:#16241C; --panel2:#1C2B21;
+  --gold:#E3AF43; --gold2:#C99530; --teal:#42C6A0; --teal2:#1E7A63;
+  --ink:#ECF3E9; --ink-dim:#A6BCAC; --line:rgba(166,188,172,0.18);
+  --danger:#E8815F; --ok:#3FBE8E;
 }
 [data-theme="light"]{
-  --navy:#F4F6F1; --navy2:#EDF1E8; --panel:#FFFFFF; --panel2:#F0F4EC;
-  --gold:#A9760A; --gold2:#8A5F00; --teal:#0F8F7A; --teal2:#0B6F5E;
-  --ink:#16241C; --ink-dim:#4C5D52; --line:rgba(138,95,0,0.25);
-  --danger:#B23A2E; --ok:#1E8F5C;
+  --navy:#F4F7F0; --navy2:#ECF1E5; --panel:#FFFFFF; --panel2:#EBF0E5;
+  --gold:#A17A22; --gold2:#8A6318; --teal:#157A62; --teal2:#0F6653;
+  --ink:#16241C; --ink-dim:#55685A; --line:rgba(85,104,90,0.16);
+  --danger:#A8442C; --ok:#1E8F5C;
 }
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
 body{
   background: radial-gradient(1200px 600px at 50% -10%, #16332510, transparent), linear-gradient(180deg, var(--navy) 0%, var(--navy2) 100%);
-  color:var(--ink); font-family:'Inter',sans-serif; min-height:100vh; -webkit-tap-highlight-color:transparent;
+  color:var(--ink); font-family:'Work Sans',-apple-system,sans-serif; min-height:100vh; -webkit-tap-highlight-color:transparent;
 }
-h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif; margin:0;}
+h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 ::-webkit-scrollbar{height:6px;width:6px;}
 ::-webkit-scrollbar-thumb{background:var(--gold2);border-radius:4px;}
 
@@ -56,7 +57,7 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif; margin:0;}
 .home-btn{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:16px;padding:5px 10px;font-size:14px;cursor:pointer;text-decoration:none;display:inline-block;}
 .lang-switcher{display:flex;gap:6px;}
 .lang-btn{padding:5px 12px;border-radius:14px;font-size:11px;font-weight:700;background:var(--panel2);color:var(--ink-dim);border:1px solid var(--line);cursor:pointer;}
-.lang-btn.active{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#FFFFFF;border-color:var(--gold);text-shadow:0 1px 2px rgba(0,0,0,0.35);}
+.lang-btn.active{background:var(--gold);color:#1a1406;border-color:var(--gold);font-weight:700;}
 .eyebrow{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);font-weight:600;}
 .chapter-title{font-size:20px;font-weight:700;color:var(--ink);margin-top:4px;}
 .topic-sub{font-size:12.5px;color:var(--gold);margin-top:2px;font-weight:500;}
@@ -74,7 +75,7 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif; margin:0;}
 .tabbar{display:flex;overflow-x:auto;gap:6px;padding:10px 4px;border-bottom:none;position:static;z-index:auto;background:transparent;scrollbar-width:none;}
 .tabbar::-webkit-scrollbar{display:none;}
 .tab{flex:0 0 auto;padding:8px 14px;border-radius:20px;font-size:12.5px;font-weight:600;color:var(--ink-dim);background:var(--panel2);border:1px solid var(--line);cursor:pointer;white-space:nowrap;}
-.tab.active{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#FFFFFF;border-color:var(--gold);text-shadow:0 1px 2px rgba(0,0,0,0.35);}
+.tab.active{background:var(--gold);color:#1a1406;border-color:var(--gold);}
 
 /* TOPIC PILLS */
 .pillrow-wrap{display:flex;align-items:stretch;gap:4px;margin:0 -16px 4px;}
@@ -88,7 +89,7 @@ h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif; margin:0;}
 
 /* CHIPS */
 .chiprow{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 14px;}
-.chip{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#FFFFFF;font-size:11px;font-weight:700;padding:5px 10px;border-radius:12px;text-shadow:0 1px 2px rgba(0,0,0,0.35);}
+.chip{background:var(--gold);color:#1a1406;font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px;}
 
 /* STUDY SECTIONS */
 .section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 15px;margin-bottom:10px;overflow-wrap:break-word;word-break:break-word;}
@@ -159,7 +160,8 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 /* QUIZ */
 .qz-progress{height:6px;background:var(--panel2);border-radius:4px;overflow:hidden;margin-bottom:10px;}
 .qz-progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));}
-.qz-meta{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-dim);margin-bottom:10px;}
+.qz-meta{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--ink-dim);margin-bottom:10px;}
+.qz-timer-badge{background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-family:ui-monospace,"SF Mono",Consolas,monospace;font-variant-numeric:tabular-nums;font-weight:600;color:var(--gold);font-size:12px;}
 .qz-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;}
 .qz-qtext{font-size:14.5px;font-weight:600;color:var(--ink);margin-bottom:12px;line-height:1.5;}
 .qz-opt{display:block;width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line);color:var(--ink);padding:11px 13px;border-radius:10px;font-size:13px;margin-bottom:8px;cursor:pointer;}
@@ -178,11 +180,11 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 
 /* REPORT CARD */
 .report{background:var(--panel);border:1px solid var(--gold);border-radius:16px;padding:20px;text-align:center;margin-bottom:14px;}
-.report .score{font-size:40px;font-weight:800;color:var(--gold);font-family:'Space Grotesk',sans-serif;}
+.report .score{font-size:40px;font-weight:600;color:var(--gold);font-family:'Fraunces',Georgia,serif; font-variant-numeric:tabular-nums;}
 .report .sub{font-size:12.5px;color:var(--ink-dim);margin-top:2px;}
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;}
 .stat-box{background:var(--panel2);border-radius:10px;padding:10px;text-align:center;}
-.stat-box .n{font-size:17px;font-weight:700;color:var(--ink);}
+.stat-box .n{font-size:17px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;}
 .stat-box .l{font-size:10.5px;color:var(--ink-dim);margin-top:2px;}
 .review-item{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-bottom:8px;font-size:12.5px;}
 .review-item .qq{font-weight:600;color:var(--ink);margin-bottom:6px;}
@@ -808,7 +810,7 @@ function buildReportCardHtml(r){
   const panelBg = isLight ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.06)';
   const ok = isLight ? '#1E8F5C' : '#33C48A';
   const danger = isLight ? '#B23A2E' : '#E7695B';
-  return `<div id="shareCardInner" style="width:100%; max-width:480px; box-sizing:border-box; background:${bg}; color:${textMain}; font-family:'Space Grotesk',sans-serif; padding:22px; border-radius:20px; border:2px solid #D4AF37;">
+  return `<div id="shareCardInner" style="width:100%; max-width:480px; box-sizing:border-box; background:${bg}; color:${textMain}; font-family:'Fraunces',Georgia,serif; padding:22px; border-radius:20px; border:2px solid #D4AF37;">
     <div style="text-align:center; margin-bottom:14px;">
       <div style="font-size:12px; letter-spacing:2px; color:${teal}; text-transform:uppercase;">BAIO Learning System</div>
       <div style="font-size:18px; font-weight:700; color:${gold}; margin-top:4px;">${r.examLabel} Report Card</div>
@@ -1106,7 +1108,7 @@ function renderNeetQuestion(){
     <button class="opt-btn" onclick="neetStopTest()">\u23F9 Stop &amp; See Report</button>
   </div>
   <div class="qz-progress"><div class="qz-progress-fill" style="width:${pct}%"></div></div>
-  <div class="qz-meta"><span>Q ${s.idx+1}/${s.questions.length} \u00b7 ${typeLabel}</span><span id="neetTimer">\u23F1 ${kcetFmtMMSS(s.timeLeft)}</span></div>
+  <div class="qz-meta"><span>Q ${s.idx+1}/${s.questions.length} \u00b7 ${typeLabel}</span><span class="qz-timer-badge" id="neetTimer">\u23F1 ${kcetFmtMMSS(s.timeLeft)}</span></div>
   <div class="qz-card"><div class="qz-qtext">${neetQText(q)}</div>${neetQuestionBody(q)}<div id="neetexp"></div></div>`;
   document.getElementById('content').innerHTML = html;
   neetTimerInt = setInterval(()=>{
@@ -1558,7 +1560,7 @@ function renderKcetQuestion(){
     <button class="opt-btn" onclick="kcetStopTest()">\u23F9 Stop &amp; See Report</button>
   </div>
   <div class="qz-progress"><div class="qz-progress-fill" style="width:${pct}%"></div></div>
-  <div class="qz-meta"><span>Question ${s.idx+1} / ${s.questions.length}</span><span id="kcetTimer">\u23F1 ${kcetFmtMMSS(s.timeLeft)}</span></div>
+  <div class="qz-meta"><span>Question ${s.idx+1} / ${s.questions.length}</span><span class="qz-timer-badge" id="kcetTimer">\u23F1 ${kcetFmtMMSS(s.timeLeft)}</span></div>
   <div style="font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:4px;">${fmtLabel}</div>
   <div class="qz-card"><div class="qz-qtext">${qTextHtml}</div>${matchHtml}`;
   q.options.forEach((opt,i)=>{
