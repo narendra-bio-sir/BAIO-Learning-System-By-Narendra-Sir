@@ -67,6 +67,7 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .chapter-title{font-size:20px;font-weight:700;color:var(--gold2);margin-top:4px;line-height:1.25;}
 .topic-sub{font-size:12.5px;color:var(--ink-dim);margin-top:2px;font-weight:500;}
 .credit{font-size:10.5px;color:var(--ink-dim);margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);line-height:1.6;}
+.header-details-toggle{background:none;border:none;padding:0;margin-top:6px;color:var(--teal2);font-size:11.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;}
 footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 12px 16px;padding-top:14px;border-top:1px solid var(--line);}
 .footer-tagline{white-space:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;font-size:11px;}
 .footer-copy{margin-top:4px;font-size:11px;}
@@ -532,8 +533,27 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
     <div class="eyebrow">PU-I Biology · NEET / KCET Aligned</div>
     <div class="baio-brand">Biology All In One (BAIO) Learning System</div>
     <div class="chapter-title">Chapter 3: Plant Kingdom</div>
-    <div class="topic-sub" id="topicSubline">Algae · Bryophytes · Pteridophytes · Gymnosperms · Angiosperms</div>
-    <div class="credit">Crafted by Narendra Sir — Lecturer in Biology (M.Sc Biochemistry, B.Ed, KSET Life Science)</div>
+    <button type="button" id="headerDetailsToggle" class="header-details-toggle" aria-expanded="false" aria-controls="headerDetails" onclick="toggleHeaderDetails()">&#9662; Topics &amp; credentials</button>
+    <div id="headerDetails" style="display:none;">
+      <div class="topic-sub" id="topicSubline">Algae · Bryophytes · Pteridophytes · Gymnosperms · Angiosperms</div>
+      <div class="credit">Crafted by Narendra Sir — Lecturer in Biology (M.Sc Biochemistry, B.Ed, KSET Life Science)</div>
+    </div>
+    <script>
+    function toggleHeaderDetails(){
+      var el = document.getElementById('headerDetails');
+      var btn = document.getElementById('headerDetailsToggle');
+      var willOpen = el.style.display === 'none';
+      el.style.display = willOpen ? '' : 'none';
+      btn.setAttribute('aria-expanded', String(willOpen));
+      btn.innerHTML = (willOpen ? '&#9652;' : '&#9662;') + ' Topics &amp; credentials';
+      try{ localStorage.setItem('ch3_header_details_open', willOpen ? '1' : '0'); }catch(e){}
+    }
+    (function(){
+      try{
+        if(localStorage.getItem('ch3_header_details_open') === '1') toggleHeaderDetails();
+      }catch(e){}
+    })();
+    </script>
     <div class="header-actions-row">
       <div id="langSwitcher" class="lang-switcher"></div>
       <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle light/dark theme" aria-label="Toggle theme">&#127769;</button>
