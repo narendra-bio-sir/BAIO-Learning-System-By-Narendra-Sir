@@ -582,7 +582,7 @@ footer{text-align:center; color:var(--text-dim); font-size:11px; margin-top:22px
 .student-greet-bar .btn{padding:5px 10px; font-size:11px;}
 .whatsnew-banner{
   display:flex; align-items:center; justify-content:space-between; gap:12px;
-  background:linear-gradient(135deg,var(--teal-2),#0a4239); color:#EFFFFA;
+  background:linear-gradient(135deg,#0F6653,#0a4239); color:#EFFFFA;
   border-radius:10px; padding:10px 14px; margin-bottom:10px; font-size:12px; line-height:1.5;
 }
 .whatsnew-banner b{color:var(--gold-2);}
@@ -2953,7 +2953,7 @@ function checkPersonalBest(examType, pct){
 }
 function personalBestBanner(examType, pct){
   const r = checkPersonalBest(examType, pct);
-  const boxStyle = 'background:linear-gradient(135deg,var(--teal-2),#0a4239); color:#EFFFFA; font-size:12.5px; line-height:1.6; margin-bottom:12px;';
+  const boxStyle = 'background:linear-gradient(135deg,#0F6653,#0a4239); color:#EFFFFA; font-size:12.5px; line-height:1.6; margin-bottom:12px;';
   if(r.prevBest === null){
     return '<div class="card" style="' + boxStyle + '">🏁 <b>First attempt logged!</b> ' + pct + '% is now your baseline to beat next time.</div>';
   }
@@ -3026,7 +3026,7 @@ function renderWriteItSetup(){
     const label = id==='All' ? 'All Topics' : STUDY_DATA.find(t=>t.id===id).title.replace(/^\d+\.\s*/, '');
     return `<div class="topic-pill ${waSetup.topic===id?'active':''}" onclick="waSetTopic('${id}')">${label}</div>`;
   }).join('');
-  let html = `<div class="card" style="background:linear-gradient(135deg,var(--teal-2),#0a4239); color:#EFFFFA; font-size:12.5px; line-height:1.6;">✍️ <b>How it works:</b> Grab a pen and paper — write your answer by hand, just like in the exam, then reveal the model answer to see what you missed. Typing is fine in a pinch, but handwriting it builds the speed and habit you'll need on exam day.</div>`;
+  let html = `<div class="card" style="background:linear-gradient(135deg,#0F6653,#0a4239); color:#EFFFFA; font-size:12.5px; line-height:1.6;">✍️ <b>How it works:</b> Grab a pen and paper — write your answer by hand, just like in the exam, then reveal the model answer to see what you missed. Typing is fine in a pinch, but handwriting it builds the speed and habit you'll need on exam day.</div>`;
   html += `<div class="card">
     <label class="field-label">Topic</label>
     <div style="display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;">${topicChips}</div>
