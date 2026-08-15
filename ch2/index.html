@@ -167,6 +167,18 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
   padding:8px 12px; border-radius:99px; font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap;
 }
 .topic-pill.active{background:var(--gold); color:#1A1406; border-color:var(--gold); font-weight:700;}
+/* Study Mode dropdown (topic switcher + Full Screen Mode combined) */
+.study-dd{position:relative; margin-bottom:10px;}
+.study-dd-btn{width:100%; display:flex; align-items:center; justify-content:space-between; gap:8px; background:var(--panel-2); border:1px solid var(--border); border-radius:10px; padding:11px 14px; font-family:'Work Sans',sans-serif; font-size:13.5px; font-weight:600; color:var(--text); cursor:pointer;}
+.study-dd-btn .study-dd-chevron{color:var(--text-dim); font-size:11px; transition:transform .15s ease; flex:none;}
+.study-dd-btn.open .study-dd-chevron{transform:rotate(180deg);}
+.study-dd-menu{position:absolute; top:calc(100% + 6px); left:0; right:0; z-index:15; background:var(--panel); border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow); padding:6px; max-height:60vh; overflow-y:auto;}
+.study-dd-item{padding:10px 12px; border-radius:8px; font-size:13px; color:var(--text); cursor:pointer;}
+.study-dd-item:hover{background:var(--panel-2);}
+.study-dd-item.active{color:var(--teal); font-weight:700; background:var(--panel-2);}
+.study-dd-divider{height:1px; background:var(--border); margin:6px 4px;}
+.study-dd-item.action{color:var(--gold); font-weight:600; display:flex; align-items:center; gap:7px;}
+#studyFsWrap.fs-target:fullscreen .study-dd{position:sticky; top:0; z-index:5; background:var(--bg-1); padding-bottom:8px; margin-bottom:6px;}
 .study-block h3{color:var(--gold-2); font-size:16px; margin-bottom:8px; display:flex; align-items:center; gap:8px;}
 .study-block h3::before{content:""; width:6px; height:6px; border-radius:50%; background:var(--teal); box-shadow:0 0 8px var(--teal);}
 .study-block ul{margin:0 0 12px 0; padding-left:18px;}
@@ -876,11 +888,12 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
   <!-- ===================== STUDY MODE ===================== -->
   <div class="panel active" id="panel-study">
     <div class="fs-target" id="studyFsWrap">
-      <div class="topic-nav-wrap">
-        <button class="tab-scroll-btn" id="topicNavScrollLeft">&#8249;</button>
-        <div class="topic-nav" id="topicNav" tabindex="0"></div>
-        <button class="tab-scroll-btn" id="topicNavScrollRight">&#8250;</button>
-        <button class="fs-btn" title="Full Screen Mode" onclick="toggleRunnerFullscreen('studyFsWrap')">&#x26F6; Full Screen Mode</button>
+      <div class="study-dd">
+        <button class="study-dd-btn" id="studyDropdownBtn" onclick="toggleStudyDropdown(event)">
+          <span id="studyDropdownLabel">&#128218; Choose a topic</span>
+          <span class="study-dd-chevron">&#9662;</span>
+        </button>
+        <div class="study-dd-menu" id="studyDropdownMenu" style="display:none;"></div>
       </div>
       <div class="card" id="studyContent"></div>
     </div>
@@ -2283,12 +2296,49 @@ function nextStepNudge(fromTab){
 
 /* ---------- Study Mode ---------- */
 function renderTopicNav(){
-  const nav = document.getElementById('topicNav');
-  nav.innerHTML = STUDY_DATA.map(t=>`<div class="topic-pill ${t.id===currentTopic?'active':''}" data-id="${t.id}">${t.title.replace(/^\d+\.\s*/,'')}</div>`).join('');
-  nav.querySelectorAll('.topic-pill').forEach(p=>{
-    p.addEventListener('click', ()=>{ currentTopic = p.dataset.id; try{ localStorage.setItem('ch2_last_study_topic', currentTopic); }catch(e){} renderTopicNav(); renderStudy(); window.scrollTo({top:0,behavior:'smooth'}); });
+  const label = document.getElementById('studyDropdownLabel');
+  const menu = document.getElementById('studyDropdownMenu');
+  if(!label || !menu) return;
+  const current = STUDY_DATA.find(t=>t.id===currentTopic);
+  label.textContent = '\u{1F4DA} ' + (current ? current.title.replace(/^\d+\.\s*/,'') : 'Choose a topic');
+  menu.innerHTML = STUDY_DATA.map(t=>`<div class="study-dd-item ${t.id===currentTopic?'active':''}" data-id="${t.id}">${t.title.replace(/^\d+\.\s*/,'')}</div>`).join('')
+    + '<div class="study-dd-divider"></div>'
+    + '<div class="study-dd-item action" id="studyFsAction">⛶ Full Screen Mode</div>';
+  menu.querySelectorAll('.study-dd-item[data-id]').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      currentTopic = p.dataset.id;
+      try{ localStorage.setItem('ch2_last_study_topic', currentTopic); }catch(e){}
+      renderTopicNav(); renderStudy(); closeStudyDropdown();
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
   });
+  const fsAction = document.getElementById('studyFsAction');
+  if(fsAction) fsAction.addEventListener('click', ()=>{ toggleRunnerFullscreen('studyFsWrap'); closeStudyDropdown(); });
 }
+function toggleStudyDropdown(e){
+  if(e) e.stopPropagation();
+  const menu = document.getElementById('studyDropdownMenu');
+  const btn = document.getElementById('studyDropdownBtn');
+  if(!menu) return;
+  const isOpen = menu.style.display === 'block';
+  menu.style.display = isOpen ? 'none' : 'block';
+  if(btn) btn.classList.toggle('open', !isOpen);
+}
+function closeStudyDropdown(){
+  const menu = document.getElementById('studyDropdownMenu');
+  const btn = document.getElementById('studyDropdownBtn');
+  if(menu) menu.style.display = 'none';
+  if(btn) btn.classList.remove('open');
+}
+document.addEventListener('click', function(e){
+  const menu = document.getElementById('studyDropdownMenu');
+  if(menu && menu.style.display === 'block' && !e.target.closest('.study-dd')){
+    closeStudyDropdown();
+  }
+});
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape') closeStudyDropdown();
+});
 const STUDY_TRANSLATIONS_CH2 = {
   t1: {
     kn: {
@@ -5246,7 +5296,6 @@ function enableTopicNavScrolling(navId, leftBtnId, rightBtnId){
     if(nextPill){ nextPill.click(); nextPill.scrollIntoView({inline:'center', block:'nearest'}); }
   });
 }
-enableTopicNavScrolling('topicNav', 'topicNavScrollLeft', 'topicNavScrollRight');
 enableTopicNavScrolling('conceptTopicNav', 'conceptTopicNavScrollLeft', 'conceptTopicNavScrollRight');
 
 (function(){
