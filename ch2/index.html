@@ -183,7 +183,7 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .study-dd-item.active{color:var(--teal); font-weight:700; background:var(--panel-2);}
 .study-dd-divider{height:1px; background:var(--border); margin:6px 4px;}
 .study-dd-item.action{color:var(--gold); font-weight:600; display:flex; align-items:center; gap:7px;}
-#studyFsWrap.fs-target:fullscreen .study-dd{position:sticky; top:0; z-index:5; background:var(--bg-1); padding-bottom:8px; margin-bottom:6px;}
+#studyFsWrap.fs-target:fullscreen .study-dd{background:var(--bg-1); padding-bottom:8px; margin-bottom:6px;}
 .study-block h3{color:var(--gold-2); font-size:16px; margin-bottom:8px; display:flex; align-items:center; gap:8px;}
 .study-block h3::before{content:""; width:6px; height:6px; border-radius:50%; background:var(--teal); box-shadow:0 0 8px var(--teal);}
 .study-block ul{margin:0 0 12px 0; padding-left:18px;}
@@ -4956,6 +4956,12 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
   if(btn.dataset.tab==='dl') btn.addEventListener('click', function(){
     if(typeof hwInjectPaymentButton === 'function') hwInjectPaymentButton();
   });
+  /* Re-render language-sensitive tabs on entry, in case the language was
+     switched while a different tab was active (their content is only
+     rendered on load / on setLang(), not on every tab switch). */
+  if(btn.dataset.tab==='study') btn.addEventListener('click', renderStudy);
+  if(btn.dataset.tab==='concept') btn.addEventListener('click', renderConcept);
+  if(btn.dataset.tab==='studytips') btn.addEventListener('click', renderStudyTipsCh2);
 });
 renderProgress();
 renderNeetOnlyProgress();
