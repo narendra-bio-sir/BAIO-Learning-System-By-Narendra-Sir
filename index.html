@@ -1719,7 +1719,9 @@ const MOTIVATION_QUOTES = [
 (function(){
   const el = document.getElementById('motivationBar');
   if(!el) return;
-  const dayIdx = Math.floor(Date.now() / 86400000) % MOTIVATION_QUOTES.length;
+  const now = new Date();
+  const localDayNum = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
+  const dayIdx = localDayNum % MOTIVATION_QUOTES.length;
   el.innerHTML = '💬 <b>Narendra Sir:</b> “' + MOTIVATION_QUOTES[dayIdx] + '”';
 })();
 
