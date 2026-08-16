@@ -103,6 +103,9 @@ table.factbl th{background:var(--panel2);color:var(--gold);text-align:left;paddi
 table.factbl td{padding:7px 8px;border:1px solid var(--line);color:var(--ink);word-break:break-word;overflow-wrap:break-word;white-space:normal !important;vertical-align:top;}
 table.factbl th:first-child, table.factbl td:first-child{width:27%;word-break:normal;}
 table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
+#cmpResult{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+#cmpResult table.factbl th:nth-child(2), #cmpResult table.factbl th:nth-child(3),
+#cmpResult table.factbl td:nth-child(2), #cmpResult table.factbl td:nth-child(3){width:36.5%;}
 @media(max-width:600px){
   table.factbl th, table.factbl td{font-size:10.5px !important;padding:5px 4px !important;line-height:1.35;}
   table.factbl th:first-child, table.factbl td:first-child{font-weight:700;color:var(--teal);}
@@ -2583,8 +2586,8 @@ const PREMIUM_UNLOCK_LOOKUP = {};
 const PREMIUM_PRICE_RUPEES = 1999;
 const PREMIUM_PRICE_ORIGINAL = 3000;
 const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/3wLzPds';
-const PREMIUM_LOCKED_TABS = ['mcq','neet','kcet','writeit','papergen','boardimp'];
-const PREMIUM_TAB_LABELS = {mcq:'MCQ Quiz', neet:'NEET Practice', kcet:'KCET Practice', writeit:'Answer Practice', papergen:'Paper Generator', boardimp:'Board Important'};
+const PREMIUM_LOCKED_TABS = ['mcq','neet','kcet','papergen','boardimp'];
+const PREMIUM_TAB_LABELS = {mcq:'MCQ Quiz', neet:'NEET Practice', kcet:'KCET Practice', papergen:'Paper Generator', boardimp:'Board Important'};
 
 function getPremiumUnlock(){ try{ return JSON.parse(localStorage.getItem(PREMIUM_KEY) || 'null'); }catch(e){ return null; } }
 function setPremiumUnlock(method, extra){
@@ -2644,7 +2647,7 @@ function renderPremiumLock(tabId){
     <div style="text-align:center;margin-bottom:14px;">
       <div style="font-size:38px;">🔒</div>
       <h3 style="color:var(--gold);margin:6px 0 2px;font-size:17px;">${label} is Premium Content</h3>
-      <div style="color:var(--ink-dim);font-size:12px;">Part of the Premium bundle: MCQ Quiz, NEET Practice, KCET Practice, Answer Practice, Paper Generator &amp; Board Important</div>
+      <div style="color:var(--ink-dim);font-size:12px;">Part of the Premium bundle: MCQ Quiz, NEET Practice, KCET Practice, Paper Generator &amp; Board Important</div>
     </div>
     <div style="text-align:center;margin-bottom:16px;">
       <span style="text-decoration:line-through;color:var(--ink-dim);font-size:14px;">₹${PREMIUM_PRICE_ORIGINAL}</span>
@@ -2954,7 +2957,7 @@ function renderCompareResult(){
   const a = COMPARE_DATA[parseInt(document.getElementById('cmpSelectA').value)];
   const b = COMPARE_DATA[parseInt(document.getElementById('cmpSelectB').value)];
   const rows = CMP_FIELDS.map(f=>`<tr><td style="color:var(--teal);font-weight:600;">${f.label}</td><td>${a[f.key]}</td><td>${b[f.key]}</td></tr>`).join('');
-  document.getElementById('cmpResult').innerHTML = `<table class="factbl"><tr><th>Characters</th><th>${a.name}</th><th>${b.name}</th></tr>${rows}</table>`;
+  document.getElementById('cmpResult').innerHTML = `<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;"><table class="factbl"><tr><th>Characters</th><th>${a.name}</th><th>${b.name}</th></tr>${rows}</table></div>`;
 }
 function renderCompare(){
   document.getElementById('content').innerHTML = `<div class="setup-card">
