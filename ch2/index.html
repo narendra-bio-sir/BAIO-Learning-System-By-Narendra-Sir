@@ -3085,19 +3085,80 @@ function segSetup(containerId){
 function segVal(containerId){ return document.querySelector('#'+containerId+' .seg-opt.active').dataset.val; }
 segSetup('quizCountSeg'); segSetup('advCountSeg'); segSetup('advTimerSeg');
 
+const DESC_QUESTIONS = [
+{"topic": "t1", "marks": 1, "difficulty": "Easy", "q": "Who classified plants into trees, shrubs and herbs based on simple morphology?", "a": "Aristotle (350 BC)."},
+{"topic": "t1", "marks": 1, "difficulty": "Easy", "q": "Name the two kingdoms proposed by Linnaeus in 1753.", "a": "Plantae and Animalia."},
+{"topic": "t1", "marks": 2, "difficulty": "Medium", "q": "How did Aristotle classify animals?", "a": "(i) Based on presence of red blood — Enaima (red blood) vs Anaima (no red blood). (ii) Based on habitat — Aquatic vs Terrestrial."},
+{"topic": "t1", "marks": 2, "difficulty": "Easy", "q": "Give two limitations of Linnaeus's Two Kingdom system of classification.", "a": "(i) It did not distinguish eukaryotes from prokaryotes. (ii) It did not distinguish unicellular from multicellular organisms."},
+{"topic": "t1", "marks": 3, "difficulty": "Medium", "q": "Explain why fungi could not be properly placed in the Two Kingdom system.", "a": "(i) Fungi are heterotrophic, unlike autotrophic plants. (ii) The fungal cell wall is made of chitin, not cellulose like plants. (iii) Grouping fungi with plants ignored these fundamental differences in nutrition and cell wall composition."},
+{"topic": "t1", "marks": 3, "difficulty": "Hard", "q": "Give two examples showing how the Two Kingdom system wrongly grouped organisms of very different cell organisation.", "a": "(i) Prokaryotic bacteria and blue-green algae were grouped together with eukaryotic organisms. (ii) Unicellular Chlamydomonas was grouped with multicellular Spirogyra under 'algae'. (iii) Both show the system ignored cell structure and body organisation as criteria."},
+{"topic": "t1", "marks": 5, "difficulty": "Hard", "q": "Describe Aristotle's system of classification and explain why Linnaeus's Two Kingdom system was eventually rejected.", "a": "1. Aristotle (350 BC) classified plants by simple morphology into trees, shrubs and herbs.\n2. He classified animals based on presence of red blood — Enaima (red blood) vs Anaima (no red blood).\n3. He also grouped animals by habitat — Aquatic vs Terrestrial.\n4. Linnaeus (1753) proposed the Two Kingdom system — Plantae and Animalia.\n5. It failed to distinguish eukaryotes from prokaryotes, and unicellular from multicellular organisms.\n6. It failed to distinguish photosynthetic (green algae) from non-photosynthetic (fungi) organisms.\n7. It ignored cell structure and mode of nutrition, wrongly grouping fungi (chitin wall) with plants (cellulose wall)."},
+
+{"topic": "t2", "marks": 1, "difficulty": "Easy", "q": "Who proposed the Five Kingdom classification, and in which year?", "a": "R.H. Whittaker, in 1969."},
+{"topic": "t2", "marks": 1, "difficulty": "Easy", "q": "Name the five kingdoms proposed by Whittaker.", "a": "Monera, Protista, Fungi, Plantae and Animalia."},
+{"topic": "t2", "marks": 2, "difficulty": "Easy", "q": "State two criteria used by Whittaker for five kingdom classification.", "a": "(i) Cell structure. (ii) Mode of nutrition."},
+{"topic": "t2", "marks": 2, "difficulty": "Medium", "q": "Differentiate Monera and Protista with respect to cell type and nuclear membrane.", "a": "(i) Monera is prokaryotic, with no nuclear membrane. (ii) Protista is eukaryotic, with a well-defined nuclear membrane."},
+{"topic": "t2", "marks": 3, "difficulty": "Medium", "q": "List the criteria used by Whittaker, in sequence, for five kingdom classification.", "a": "(i) Cell structure. (ii) Thallus organisation and mode of nutrition. (iii) Reproduction and phylogenetic relationships."},
+{"topic": "t2", "marks": 3, "difficulty": "Medium", "q": "State two merits of the Five Kingdom system over earlier systems of classification.", "a": "(i) All prokaryotes are grouped under a single kingdom, Monera. (ii) Unicellular eukaryotes like Chlamydomonas and Amoeba are united under Protista, regardless of earlier 'plant' or 'animal' labels. (iii) It uses multiple criteria — cell structure, nutrition, reproduction — instead of gross morphology alone."},
+{"topic": "t2", "marks": 5, "difficulty": "Hard", "q": "Compare the five kingdoms Monera, Protista, Fungi, Plantae and Animalia with respect to cell type, cell wall and mode of nutrition.", "a": "1. Monera — prokaryotic; cell wall non-cellulosic (peptidoglycan); nutrition autotrophic and heterotrophic.\n2. Protista — eukaryotic; cell wall present in some; nutrition autotrophic and heterotrophic.\n3. Fungi — eukaryotic; cell wall of chitin; nutrition heterotrophic (saprophytic/parasitic).\n4. Plantae — eukaryotic; cell wall of cellulose; nutrition autotrophic (photosynthetic).\n5. Animalia — eukaryotic; cell wall absent; nutrition heterotrophic.\n6. Body organisation ranges from cellular (Monera, Protista) to tissue/organ (Plantae) to tissue/organ/organ system (Animalia)."},
+
+{"topic": "t3", "marks": 1, "difficulty": "Easy", "q": "Name the protein that makes up bacterial flagella.", "a": "Flagellin."},
+{"topic": "t3", "marks": 1, "difficulty": "Easy", "q": "Name the smallest known living organisms, which completely lack a cell wall.", "a": "Mycoplasma."},
+{"topic": "t3", "marks": 2, "difficulty": "Medium", "q": "Name the four shape-based groups of bacteria with their shapes.", "a": "(i) Coccus — spherical; Bacillus — rod-shaped. (ii) Vibrio — comma-shaped; Spirillum — spiral."},
+{"topic": "t3", "marks": 2, "difficulty": "Medium", "q": "Give one example each of the bacterial pathogen causing cholera and the one causing typhoid.", "a": "(i) Cholera — Vibrio cholerae. (ii) Typhoid — Salmonella typhi."},
+{"topic": "t3", "marks": 3, "difficulty": "Medium", "q": "Describe the three groups of Archaebacteria based on habitat, with an example habitat for each.", "a": "(i) Halophiles — live in salty areas. (ii) Thermoacidophiles — live in hot springs. (iii) Methanogens — live in marshy areas and ruminant guts, producing methane (biogas) from dung."},
+{"topic": "t3", "marks": 3, "difficulty": "Hard", "q": "Explain the two types of autotrophic nutrition seen in bacteria.", "a": "(i) Photosynthetic — use chlorophyll to synthesise food from CO2 and H2O, e.g. cyanobacteria. (ii) Chemosynthetic — oxidise inorganic substrates like nitrites, nitrates and ammonia to obtain energy. (iii) Both types help in recycling nutrients within the ecosystem."},
+{"topic": "t3", "marks": 5, "difficulty": "Hard", "q": "Describe the general characteristics and reproduction of Kingdom Monera.", "a": "1. Bacteria are the sole members; the most abundant micro-organisms, found in almost every habitat including extreme ones.\n2. Cell wall (if present) is made of peptidoglycan; flagella (if present) made of the protein flagellin; no membrane-bound organelles.\n3. Classified by shape into Coccus, Bacillus, Vibrio and Spirillum.\n4. Nutrition may be autotrophic (chemosynthetic or photosynthetic) or heterotrophic (parasitic or saprophytic).\n5. Archaebacteria live in extreme habitats (halophiles, thermoacidophiles, methanogens) due to a unique cell wall structure.\n6. Eubacteria include photosynthetic cyanobacteria (fix N2 in heterocysts) and many heterotrophic decomposers and pathogens.\n7. Reproduce asexually by fission, by spores under unfavourable conditions, and show sexual-like DNA transfer by conjugation."},
+
+{"topic": "t4", "marks": 1, "difficulty": "Easy", "q": "Name the protein that makes up flagella and cilia in Protista.", "a": "Tubulin."},
+{"topic": "t4", "marks": 1, "difficulty": "Easy", "q": "Name the dinoflagellate responsible for causing red tides.", "a": "Gonyaulax."},
+{"topic": "t4", "marks": 2, "difficulty": "Medium", "q": "What is diatomaceous earth, and what is it used for?", "a": "(i) It is the fossil deposit formed from the indestructible, silica-embedded cell walls of diatoms. (ii) It is used in polishing, filtration, and sound/fire-proofing."},
+{"topic": "t4", "marks": 2, "difficulty": "Medium", "q": "Why are Euglenoids described as mixotrophic?", "a": "(i) They are autotrophic in the presence of sunlight. (ii) They become heterotrophic (predatory) in the dark, acting as a connecting link between plants and animals."},
+{"topic": "t4", "marks": 3, "difficulty": "Medium", "q": "Describe the two phases seen in the life cycle of slime moulds.", "a": "(i) Under favourable conditions, they aggregate to form a plasmodium. (ii) Under unfavourable conditions, they form fruiting bodies bearing spores. (iii) Spores have true, resistant walls and are dispersed by air currents."},
+{"topic": "t4", "marks": 3, "difficulty": "Hard", "q": "Classify Protozoans into four types, giving one example and its associated disease for each.", "a": "(i) Amoeboid — Entamoeba (amoebic dysentery). (ii) Flagellated — Trypanosoma (sleeping sickness). (iii) Ciliated — Paramoecium (free-living); Sporozoans — Plasmodium (malaria)."},
+{"topic": "t4", "marks": 5, "difficulty": "Hard", "q": "Describe the five classes of Kingdom Protista, giving one distinguishing feature and example for each.", "a": "1. Chrysophytes — diatoms and golden algae; cell wall of two silica-embedded shells; chief producers of oceans.\n2. Dinoflagellates — marine, photosynthetic, cell wall of stiff cellulose plates, 2 flagella; cause red tides, e.g. Gonyaulax.\n3. Euglenoids — freshwater, have a protein-rich pellicle instead of a cell wall; mixotrophic, e.g. Euglena.\n4. Slime moulds — saprophytic; form a plasmodium in favourable conditions and spore-bearing fruiting bodies in unfavourable conditions.\n5. Protozoans — all heterotrophic; grouped as Amoeboid (Amoeba), Flagellated (Trypanosoma), Ciliated (Paramoecium) and Sporozoans (Plasmodium)."},
+
+{"topic": "t5", "marks": 1, "difficulty": "Easy", "q": "What is a network of fungal hyphae called?", "a": "Mycelium."},
+{"topic": "t5", "marks": 1, "difficulty": "Easy", "q": "Name the fungal species from which the antibiotic Penicillin is obtained.", "a": "Penicillium notatum and Penicillium chrysogenum."},
+{"topic": "t5", "marks": 2, "difficulty": "Medium", "q": "Differentiate coenocytic and septate hyphae.", "a": "(i) Coenocytic hyphae are continuous and multinucleate with no cross walls. (ii) Septate hyphae have cross walls (septae) dividing them into cells."},
+{"topic": "t5", "marks": 2, "difficulty": "Easy", "q": "What is mycorrhiza? State one benefit of this association.", "a": "(i) It is a symbiotic association between fungi and the roots of higher plants. (ii) It helps the plant absorb water and minerals more efficiently."},
+{"topic": "t5", "marks": 3, "difficulty": "Medium", "q": "Describe the three steps involved in sexual reproduction of fungi.", "a": "(i) Plasmogamy — fusion of the protoplasm of two cells. (ii) Karyogamy — fusion of the two nuclei. (iii) Meiosis in the zygote produces haploid spores."},
+{"topic": "t5", "marks": 3, "difficulty": "Hard", "q": "Differentiate Ascomycetes and Basidiomycetes with respect to spore formation and give one example of each.", "a": "(i) Ascomycetes form ascospores within sac-like asci in ascocarps, e.g. Aspergillus. (ii) Basidiomycetes form basidiospores exogenously on a basidium in basidiocarps, e.g. Agaricus. (iii) Basidiomycetes lack asexual spores, unlike Ascomycetes which also form conidia."},
+{"topic": "t5", "marks": 5, "difficulty": "Hard", "q": "Describe the four classes of Kingdom Fungi with their mycelium type, key feature and one example each.", "a": "1. Phycomycetes (algal fungi) — aseptate, coenocytic mycelium; aquatic/damp habitats; form zoospores or aplanospores and zygospores, e.g. Mucor, Rhizopus.\n2. Ascomycetes (sac fungi) — branched, septate mycelium; form conidia on conidiophores and ascospores in asci within ascocarps, e.g. Aspergillus, Neurospora.\n3. Basidiomycetes (club fungi) — branched, septate mycelium; no asexual spores; plasmogamy by fusion of vegetative cells forms a dikaryon that develops a basidium bearing 4 exogenous basidiospores, e.g. Agaricus, Puccinia.\n4. Deuteromycetes (imperfect fungi) — septate, branched mycelium; sexual phase absent or unknown; reproduce only by conidia, e.g. Alternaria, Trichoderma.\n5. Once a sexual phase is discovered in a Deuteromycete, it is reclassified under Ascomycetes or Basidiomycetes."},
+
+{"topic": "t6", "marks": 1, "difficulty": "Easy", "q": "Name one insectivorous plant found in Kingdom Plantae.", "a": "Dionaea (Venus flytrap)."},
+{"topic": "t6", "marks": 1, "difficulty": "Easy", "q": "In what form do animals store their reserve food?", "a": "As glycogen or fat."},
+{"topic": "t6", "marks": 2, "difficulty": "Easy", "q": "Give one example each of an insectivorous plant and a parasitic plant.", "a": "(i) Insectivorous — Dionaea (Venus flytrap). (ii) Parasitic — Cuscuta."},
+{"topic": "t6", "marks": 2, "difficulty": "Medium", "q": "What is meant by alternation of generation as seen in Kingdom Plantae?", "a": "(i) It is the alternation between a diploid sporophytic phase. (ii) And a haploid gametophytic phase, occurring during the life cycle of a plant."},
+{"topic": "t6", "marks": 3, "difficulty": "Medium", "q": "List the five major divisions of Kingdom Plantae.", "a": "(i) Algae. (ii) Bryophyta and Pteridophyta. (iii) Gymnosperms and Angiosperms."},
+{"topic": "t6", "marks": 3, "difficulty": "Medium", "q": "State three characteristic features of Kingdom Animalia.", "a": "(i) Heterotrophic, eukaryotic and multicellular, with cells lacking a cell wall. (ii) They store reserve food as glycogen or fat. (iii) Most are capable of locomotion and show a definite growth pattern to adult shape and size."},
+{"topic": "t6", "marks": 5, "difficulty": "Hard", "q": "Compare Kingdom Plantae and Kingdom Animalia with respect to cell wall, nutrition, reproduction and exceptions seen in each.", "a": "1. Plantae cells have a cellulosic cell wall and prominent chloroplasts; Animalia cells completely lack a cell wall.\n2. Plantae is mainly autotrophic (photosynthetic); Animalia is entirely heterotrophic.\n3. A few plants show partial heterotrophy — insectivorous plants like Dionaea, Drosera, Nepenthes, and the parasitic plant Cuscuta.\n4. Plantae shows alternation of generation between diploid sporophytic and haploid gametophytic phases; grouped into five divisions — Algae, Bryophyta, Pteridophyta, Gymnosperms, Angiosperms.\n5. Animalia reproduces sexually by copulation of male and female followed by embryological development.\n6. Higher animal forms show elaborate sensory and neuromotor mechanisms and are mostly capable of locomotion."},
+
+{"topic": "t7", "marks": 1, "difficulty": "Easy", "q": "Who coined the term 'virus'?", "a": "Pasteur."},
+{"topic": "t7", "marks": 1, "difficulty": "Easy", "q": "Who discovered viroids, and in which year?", "a": "T.O. Diener, in 1971."},
+{"topic": "t7", "marks": 2, "difficulty": "Medium", "q": "What is a capsid, and what are its subunits called?", "a": "(i) The capsid is the protein coat surrounding the viral genetic material. (ii) Its subunits are called capsomeres, arranged helically or polyhedrally."},
+{"topic": "t7", "marks": 2, "difficulty": "Medium", "q": "Differentiate the genetic material found in bacteriophages and plant viruses.", "a": "(i) Bacteriophages contain double-stranded DNA. (ii) Plant viruses (e.g. TMV) contain single-stranded RNA."},
+{"topic": "t7", "marks": 3, "difficulty": "Hard", "q": "Describe the contributions of Ivanowsky, Beijerinck and Stanley to the discovery of viruses.", "a": "(i) Ivanowsky (1892) discovered agents smaller than bacteria, passing through bacteria-proof filters, causing tobacco mosaic disease. (ii) Beijerinck (1898) showed infected-plant extract causes disease in healthy plants and named it Contagium vivum fluidum. (iii) Stanley (1935) crystallised viruses and showed the crystals are largely protein."},
+{"topic": "t7", "marks": 3, "difficulty": "Hard", "q": "Differentiate viroids and prions with respect to their composition.", "a": "(i) Viroids are free, low molecular weight RNA lacking a protein coat. (ii) Prions are infectious, abnormally-folded proteins containing no nucleic acid at all. (iii) Both are simpler infectious agents than viruses but differ fundamentally in composition."},
+{"topic": "t7", "marks": 5, "difficulty": "Hard", "q": "Describe the general characteristics, structure and diseases caused by viruses.", "a": "1. Viruses are acellular, obligate parasites, not placed in Whittaker's five kingdoms.\n2. They are considered 'not truly living' as they show life activities only inside a host, otherwise existing as inert crystalline particles.\n3. Genetic material is either DNA or RNA, never both — plant viruses mostly ssRNA (e.g. TMV), bacteriophages dsDNA, animal viruses ssRNA/dsRNA/dsDNA.\n4. The protein coat, called the capsid, is made of subunits called capsomeres, arranged helically or polyhedrally.\n5. A fully assembled virus particle outside the host is called a virion.\n6. They cause human diseases like mumps, smallpox, herpes, influenza and AIDS.\n7. They cause plant diseases like mosaic, leaf rolling/curling, yellowing, vein clearing, dwarfing and stunting."},
+
+{"topic": "t8", "marks": 1, "difficulty": "Easy", "q": "Define a lichen.", "a": "A lichen is a symbiotic association between a fungus and an alga."},
+{"topic": "t8", "marks": 1, "difficulty": "Easy", "q": "Why are lichens considered good indicators of air pollution?", "a": "Because they do not grow in polluted areas, so their absence signals pollution."},
+{"topic": "t8", "marks": 2, "difficulty": "Easy", "q": "What are phycobiont and mycobiont?", "a": "(i) Phycobiont is the algal partner (autotrophic) — a green alga or cyanobacterium. (ii) Mycobiont is the fungal partner (heterotrophic), belonging to Ascomycetes or Basidiomycetes."},
+{"topic": "t8", "marks": 2, "difficulty": "Medium", "q": "What does each partner contribute in a lichen association?", "a": "(i) The alga prepares food for the fungus through photosynthesis. (ii) The fungus absorbs water and minerals and provides shelter to the alga."},
+{"topic": "t8", "marks": 3, "difficulty": "Medium", "q": "To which fungal classes does the mycobiont of a lichen usually belong, and why is the association called symbiotic?", "a": "(i) The mycobiont usually belongs to Ascomycetes or Basidiomycetes. (ii) The alga (autotrophic) provides food to the fungus. (iii) The fungus (heterotrophic) provides water, minerals and shelter to the alga — this mutual benefit makes it symbiotic."},
+{"topic": "t8", "marks": 3, "difficulty": "Hard", "q": "Explain why lichens fail to survive in polluted environments.", "a": "(i) The phycobiont (algal partner) is highly sensitive to airborne pollutants. (ii) Since the fungus depends entirely on the alga for food, damage to the alga collapses the whole lichen. (iii) Hence lichens serve as excellent pollution indicators."},
+{"topic": "t8", "marks": 5, "difficulty": "Hard", "q": "Describe the lichen association between fungi and algae, covering its components, the exchange of benefits, and its ecological significance.", "a": "1. A lichen is a symbiotic association between a fungus and an alga.\n2. The algal partner is called the phycobiont — it is autotrophic and may be a green alga or a cyanobacterium.\n3. The fungal partner is called the mycobiont — it is heterotrophic, usually an Ascomycete or Basidiomycete.\n4. The alga photosynthesises and prepares food for the fungus.\n5. The fungus absorbs water and minerals from the substratum and provides physical shelter to the alga.\n6. This mutual dependence allows lichens to survive in harsh habitats like bare rocks.\n7. Lichens are excellent pollution indicators, as they fail to grow in polluted areas."}
+];
+
 /* ---------- Answer Practice (Write It, Then Compare) ---------- */
-/* Chapter 2's Paper Generator only produces template questions with no
-   authored model answers (it just points students back to Study Mode), so
-   this reuses each topic's full Study Mode write-up as the "model answer" —
-   coarser-grained than Chapters 3/9's per-question banks, but genuine
-   existing content rather than new authoring. */
 function waAllPool(){
-  return STUDY_DATA.map((t,i)=>{
-    const name = t.title.replace(/^\d+\.\s*/, '');
-    return {topic: t.id, topicName: name, q: 'Give a detailed account of: ' + name, a: t.html, idx: i};
+  return DESC_QUESTIONS.map((q,i)=>{
+    const topicName = STUDY_DATA.find(t=>t.id===q.topic).title.replace(/^\d+\.\s*/, '');
+    return {...q, topicName, idx: i};
   });
 }
-let waSetup = {topic:'All'};
+let waSetup = {topic:'All', marks:'All'};
 let waSession = null;
 const WA_WEIGHTS_KEY = 'ch2_writeit_weights_v1';
 function getWaWeights(){
@@ -3110,7 +3171,8 @@ function setWaWeight(idx, gotIt){
   try{ localStorage.setItem(WA_WEIGHTS_KEY, JSON.stringify(w)); }catch(e){}
 }
 function waFilterPool(){
-  return waAllPool().filter(q => waSetup.topic==='All' || q.topic===waSetup.topic);
+  return waAllPool().filter(q => (waSetup.topic==='All' || q.topic===waSetup.topic)
+    && (waSetup.marks==='All' || q.marks===parseInt(waSetup.marks,10)));
 }
 function renderWriteItSetup(){
   const pool = waFilterPool();
@@ -3119,9 +3181,15 @@ function renderWriteItSetup(){
     return `<div class="topic-pill ${waSetup.topic===id?'active':''}" onclick="waSetTopic('${id}')">${label}</div>`;
   }).join('');
   let html = `<div class="card" style="background:linear-gradient(135deg,#0F6653,#0a4239); color:#EFFFFA; font-size:12.5px; line-height:1.6;">✍️ <b>How it works:</b> Grab a pen and paper — write your answer by hand, just like in the exam, then reveal the model answer to see what you missed. Typing is fine in a pinch, but handwriting it builds the speed and habit you'll need on exam day.</div>`;
+  const marksChips = ['All','1','2','3','5'].map(v=>{
+    const label = v==='All' ? 'All' : v+' Marks';
+    return `<div class="topic-pill ${waSetup.marks===v?'active':''}" onclick="waSetMarks('${v}')">${label}</div>`;
+  }).join('');
   html += `<div class="card">
     <label class="field-label">Topic</label>
     <div style="display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;">${topicChips}</div>
+    <label class="field-label" style="margin-top:12px;">Marks</label>
+    <div style="display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;">${marksChips}</div>
     <div class="btn-row" style="margin-top:14px;">
       <button class="btn" onclick="waStart()">Start Practice · ${pool.length} matching</button>
     </div>
@@ -3131,7 +3199,8 @@ function renderWriteItSetup(){
   document.getElementById('writeitContent').innerHTML = html;
 }
 function waSetTopic(id){ waSetup.topic=id; renderWriteItSetup(); }
-window.waSetTopic=waSetTopic;
+function waSetMarks(v){ waSetup.marks=v; renderWriteItSetup(); }
+window.waSetTopic=waSetTopic; window.waSetMarks=waSetMarks;
 
 function waStart(){
   const pool = shuffleArr(waFilterPool());
@@ -3154,13 +3223,13 @@ function renderWriteItQuestion(){
   const q = s.questions[s.idx];
   let html = `<div class="fc-progress" style="text-align:center; margin-bottom:10px;">Question ${s.idx+1} / ${s.questions.length}</div>
   <div class="card">
-    <div class="chip-row" style="margin-bottom:10px;"><span class="chip gold">${q.topicName}</span></div>
+    <div class="chip-row" style="margin-bottom:10px;"><span class="chip gold">${q.marks} Marks</span><span class="chip">${q.difficulty}</span><span class="chip">${q.topicName}</span></div>
     <div style="font-weight:700; font-size:14px; margin-bottom:10px;">${q.q}</div>
     <div style="font-size:11.5px; color:var(--text-dim); margin-bottom:6px;">📝 Write this out on paper first, like the real exam — use the box below only as a rough scratchpad.</div>
     <textarea placeholder="Write your answer here..." style="width:100%; min-height:110px; padding:10px; border-radius:10px; border:1px solid var(--border); background:var(--panel-2); color:var(--text); font-family:inherit; font-size:13.5px; resize:vertical; box-sizing:border-box;"></textarea>
     ${!s.revealed
       ? `<div class="btn-row" style="margin-top:10px;"><button class="btn" onclick="waReveal()">Show Model Answer</button></div>`
-      : `<div class="study-block" style="margin-top:12px; border-top:1px dashed var(--border); padding-top:10px;"><div class="subhead">Model Answer</div>${q.a}</div>
+      : `<div class="study-block" style="margin-top:12px; border-top:1px dashed var(--border); padding-top:10px;"><div class="subhead">Model Answer</div>${q.a.replace(/\n/g,'<br>')}</div>
          <div class="btn-row" style="margin:12px 0;">
            <button class="btn secondary" style="flex:1; border-color:var(--red,#e0685f); color:var(--red,#e0685f);" onclick="waRate(false)">😕 Still Learning</button>
            <button class="btn" style="flex:1;" onclick="waRate(true)">✅ Got It</button>
@@ -3181,7 +3250,7 @@ function renderWriteItDone(){
   let html = `<div class="card" style="text-align:center;">
     <div style="font-size:32px; margin-bottom:8px;">🎉</div>
     <div style="font-weight:700; margin-bottom:6px;">Practice round complete!</div>
-    <div style="color:var(--text-dim); font-size:13px; margin-bottom:14px;">You went through ${waSession.questions.length} topic(s). Practice the ones marked "Still Learning" again to sharpen your answer-writing.</div>
+    <div style="color:var(--text-dim); font-size:13px; margin-bottom:14px;">You went through ${waSession.questions.length} question(s). Practice the ones marked "Still Learning" again to sharpen your answer-writing.</div>
     <button class="btn" onclick="renderWriteItSetup()">Practice More</button>
   </div>`;
   html += nextStepNudge('writeit');
