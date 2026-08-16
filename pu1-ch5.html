@@ -178,6 +178,15 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
   .paper-options{grid-template-columns:1fr 1fr !important;}
 }
 
+/* Premium unlock */
+.hw-unlock-form{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px;margin:10px 0;display:flex;flex-direction:column;gap:8px;}
+.hw-unlock-form input{padding:9px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:13px;}
+.hw-msg{font-size:11.5px;min-height:14px;}
+.hw-msg.bad{color:var(--danger);}
+.hw-code-blurred{filter:blur(6px);-webkit-filter:blur(6px);transition:filter .15s;}
+.hw-code-toggle{font-size:11px;color:var(--ink-dim);margin-top:-4px;}
+.hw-code-toggle label{display:flex;align-items:center;gap:6px;cursor:pointer;}
+
 /* CONCEPTS TAB */
 .hook{background:linear-gradient(135deg,var(--teal2),#0d5347);border-radius:12px;padding:14px 16px;margin-bottom:12px;font-size:14px;font-weight:600;color:#EFFFFA;}
 .hook span{display:block;font-size:10.5px;color:#9be8d8;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;}
@@ -613,7 +622,11 @@ function esc(s){ return (s===undefined||s===null)?'':String(s); }
 
 function renderTabbar(){
   const bar = document.getElementById('tabbar');
-  bar.innerHTML = TABS.map(t => `<div class="tab ${t.id===currentTab?'active':''}" onclick="switchTab('${t.id}')">${t.label}</div>`).join('');
+  const unlocked = premiumQualifies();
+  bar.innerHTML = TABS.map(t => {
+    const locked = PREMIUM_LOCKED_TABS.indexOf(t.id) !== -1 && !unlocked;
+    return `<div class="tab ${t.id===currentTab?'active':''}" onclick="switchTab('${t.id}')">${locked?'🔒 ':''}${t.label}</div>`;
+  }).join('');
 }
 function switchTab(id){
   currentTab = id;
@@ -2552,7 +2565,126 @@ function pgRenderOutput(){
 function pgToggleKey(){ pgGenerated.showKey = !pgGenerated.showKey; pgRenderOutput(); }
 window.pgToggleKey = pgToggleKey;
 
+/* ---------------- PREMIUM CONTENT UNLOCK ---------------- */
+/* Chapter-specific monetization values (payment link, per-student code
+   overrides) are intentionally left blank/placeholder here — they must
+   NOT be copied from another chapter, since that would route payments
+   to the wrong chapter's Razorpay page and misattribute unlock codes.
+   Narendra Sir needs to: (1) create a Chapter 5 Razorpay payment link
+   and paste it into RAZORPAY_PREMIUM_LINK below, (2) optionally add
+   specific student overrides to PREMIUM_UNLOCK_LOOKUP the same way the
+   other chapters do once students start paying. Until then, the master
+   code and the computeStudentCode() formula (same as every other
+   chapter, via the existing code_generator.html tool with contentKey
+   'CH5-PREMIUM') still work for unlocking. */
+const PREMIUM_KEY = 'pu1ch5_premium_unlock';
+const PREMIUM_MASTER_CODE = 'NS-MASTER-2026';
+const PREMIUM_UNLOCK_LOOKUP = {};
+const PREMIUM_PRICE_RUPEES = 1999;
+const PREMIUM_PRICE_ORIGINAL = 3000;
+const RAZORPAY_PREMIUM_LINK = 'YOUR_CHAPTER5_PREMIUM_LINK_HERE';
+const PREMIUM_LOCKED_TABS = ['mcq','neet','kcet','writeit','papergen','boardimp'];
+const PREMIUM_TAB_LABELS = {mcq:'MCQ Quiz', neet:'NEET Practice', kcet:'KCET Practice', writeit:'Answer Practice', papergen:'Paper Generator', boardimp:'Board Important'};
+
+function getPremiumUnlock(){ try{ return JSON.parse(localStorage.getItem(PREMIUM_KEY) || 'null'); }catch(e){ return null; } }
+function setPremiumUnlock(method, extra){
+  try{ localStorage.setItem(PREMIUM_KEY, JSON.stringify(Object.assign({unlocked:true, method:method, ts:Date.now()}, extra||{}))); }catch(e){}
+}
+function premiumQualifies(){ const u = getPremiumUnlock(); return !!(u && u.unlocked); }
+function reLockPremium(){ try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){} renderContent(); renderTabbar(); }
+window.reLockPremium = reLockPremium;
+function premiumUnlockKey(section, roll){ return (section||'').trim().toUpperCase()+'_'+(roll||'').trim().toUpperCase(); }
+/* ---------------- Student-locked unlock code (must match code_generator.html exactly) ---------------- */
+const CODE_SALT = 'BAIO-STUDENT-LOCK-2026';
+const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+function normalizeField(s){ return (s || '').toString().trim().toUpperCase().replace(/\s+/g, ' '); }
+function fnv1aHash(str){
+  let h = 0x811c9dc5;
+  for(let i=0;i<str.length;i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); }
+  return h >>> 0;
+}
+function computeStudentCode(name, roll, section, contentKey){
+  const ck = contentKey ? ('|' + normalizeField(contentKey)) : '';
+  const key = CODE_SALT + '|' + normalizeField(name) + '|' + normalizeField(roll) + '|' + normalizeField(section) + ck;
+  const h1 = fnv1aHash(key);
+  const h2 = fnv1aHash(key.split('').reverse().join('') + CODE_SALT);
+  let n = (BigInt(h1) << 32n) | BigInt(h2);
+  const base = BigInt(CODE_CHARS.length);
+  let code = '';
+  for(let i=0;i<8;i++){ code += CODE_CHARS[Number(n % base)]; n = n / base; }
+  return code.slice(0,4) + '-' + code.slice(4,8);
+}
+
+function premiumSubmitUnlock(){
+  const name = document.getElementById('premNameInput') ? document.getElementById('premNameInput').value.trim() : '';
+  const roll = document.getElementById('premRollInput').value.trim();
+  const section = document.getElementById('premSectionInput').value.trim();
+  const code = document.getElementById('premCodeInput').value.trim().toUpperCase();
+  const msgEl = document.getElementById('premUnlockMsg');
+  if(!code){ msgEl.textContent = 'Please enter an unlock code.'; msgEl.className='hw-msg bad'; return; }
+  if(code === PREMIUM_MASTER_CODE.toUpperCase()){ setPremiumUnlock('master', {roll:roll||'master-access'}); renderContent(); renderTabbar(); return; }
+  if(!roll || !section){ msgEl.textContent = 'Please fill in section and roll number (or use the master code alone).'; msgEl.className='hw-msg bad'; return; }
+  const key = premiumUnlockKey(section, roll);
+  const entry = PREMIUM_UNLOCK_LOOKUP[key];
+  if(entry && entry.code.toUpperCase() === code){ setPremiumUnlock('code', {roll:roll, section:section}); renderContent(); renderTabbar(); return; }
+  if(name && (computeStudentCode(name, roll, section, 'CH5-PREMIUM') === code || computeStudentCode(name, roll, section) === code)){ setPremiumUnlock('code', {roll:roll, section:section, name:name}); renderContent(); renderTabbar(); return; }
+  if(!name){ msgEl.textContent = 'That roll number / code combination was not recognized. If Narendra Sir gave you a new-style code, please also enter your full name above.'; }
+  else { msgEl.textContent = 'That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir.'; }
+  msgEl.className='hw-msg bad';
+}
+window.premiumSubmitUnlock = premiumSubmitUnlock;
+function premiumPaymentWaLink(){
+  const msg = 'Hi Narendra Sir, here\'s my payment confirmation for Premium Content unlock (Chapter 5: Morphology of Flowering Plants).\n\nAmount Paid: ₹'+PREMIUM_PRICE_RUPEES+'\n\n(Attaching my payment screenshot below)';
+  return 'https://wa.me/919008968389?text=' + encodeURIComponent(msg);
+}
+function renderPremiumLock(tabId){
+  const label = PREMIUM_TAB_LABELS[tabId] || 'This feature';
+  const paymentNotSetUp = RAZORPAY_PREMIUM_LINK.indexOf('YOUR_CHAPTER5_PREMIUM_LINK_HERE') !== -1;
+  document.getElementById('content').innerHTML = `<div class="setup-card">
+    <div style="text-align:center;margin-bottom:14px;">
+      <div style="font-size:38px;">🔒</div>
+      <h3 style="color:var(--gold);margin:6px 0 2px;font-size:17px;">${label} is Premium Content</h3>
+      <div style="color:var(--ink-dim);font-size:12px;">Part of the Premium bundle: MCQ Quiz, NEET Practice, KCET Practice, Answer Practice, Paper Generator &amp; Board Important</div>
+    </div>
+    <div style="text-align:center;margin-bottom:16px;">
+      <span style="text-decoration:line-through;color:var(--ink-dim);font-size:14px;">₹${PREMIUM_PRICE_ORIGINAL}</span>
+      <span style="color:var(--gold);font-size:22px;font-weight:800;margin-left:8px;">₹${PREMIUM_PRICE_RUPEES}</span>
+      <div style="color:var(--ink-dim);font-size:11px;margin-top:2px;">one-time unlock &middot; covers all premium features in this chapter</div>
+    </div>
+    <div class="hw-unlock-form">
+      <div class="hw-msg" id="premUnlockMsg"></div>
+      <input type="text" id="premNameInput" placeholder="Full name (e.g. Vishwapal)">
+      <input type="text" id="premSectionInput" placeholder="Section (e.g. Spark)">
+      <input type="text" id="premRollInput" placeholder="Roll number (e.g. 26MPU0087)">
+      <div style="position:relative;">
+        <input type="text" id="premCodeInput" placeholder="Unlock code" autocomplete="off" style="width:100%;filter:none;">
+        <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-dim);margin:6px 0 0;cursor:pointer;">
+          <input type="checkbox" id="premCodeShowToggle" checked onchange="premToggleCodeVisibility()" style="width:auto;margin:0;">
+          Show code
+        </label>
+      </div>
+      <button class="start-btn" onclick="premiumSubmitUnlock()">Unlock with Code</button>
+      <div style="text-align:center;font-size:11px;color:var(--ink-dim);margin:10px 0 4px;">&mdash; or pay ₹${PREMIUM_PRICE_RUPEES} for instant help getting a code &mdash;</div>
+      ${paymentNotSetUp
+        ? `<div style="font-size:11px;color:var(--ink-dim);text-align:center;">Payment isn't set up yet &mdash; Narendra Sir needs to add his Chapter 5 Razorpay payment link here.</div>`
+        : `<a href="${RAZORPAY_PREMIUM_LINK}" target="_blank" rel="noopener" class="opt-btn" style="display:block;text-align:center;text-decoration:none;">💳 Pay ₹${PREMIUM_PRICE_RUPEES} to Unlock Premium</a>`}
+      <div style="font-size:10.5px;color:var(--ink-dim);text-align:center;margin-top:6px;">After paying, send your payment confirmation with your section &amp; roll number to <a href="${premiumPaymentWaLink()}" target="_blank" rel="noopener" style="color:var(--teal);font-weight:700;text-decoration:none;">Narendra Sir on WhatsApp</a> &mdash; he'll send your unlock code right away.</div>
+    </div>
+  </div>`;
+}
+function premToggleCodeVisibility(){
+  const input = document.getElementById('premCodeInput');
+  const toggle = document.getElementById('premCodeShowToggle');
+  if(!input || !toggle) return;
+  input.style.filter = toggle.checked ? 'none' : 'blur(4px)';
+}
+window.premToggleCodeVisibility = premToggleCodeVisibility;
+
 function renderContent(){
+  if(PREMIUM_LOCKED_TABS.indexOf(currentTab) !== -1 && !premiumQualifies()){
+    renderPremiumLock(currentTab);
+    return;
+  }
   if(currentTab==='badges') renderBadgesCard();
   else if(currentTab==='progress') renderProgress();
   else if(currentTab==='study') renderStudy();
