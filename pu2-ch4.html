@@ -2764,7 +2764,7 @@ function renderTopicNav(){
     p.addEventListener('click', ()=>{
       currentTopic = p.dataset.id;
       try{ localStorage.setItem('pu2ch4_last_study_topic', currentTopic); }catch(e){}
-      renderTopicNav(); renderStudy(); closeStudyDropdown();
+      try{ renderTopicNav(); }catch(e){ console.error('renderTopicNav failed:', e); } try{ renderStudy(); }catch(e){ console.error('renderStudy failed:', e); } closeStudyDropdown();
       window.scrollTo({top:0,behavior:'smooth'});
     });
   });
@@ -3716,14 +3716,14 @@ function renderStudy(){
     <div class="chip-row recap-strip">${t.chips.map(c=>`<span class="chip gold">${c}</span>`).join('')}</div>
     ${t.html}</div>` + nextStepNudge('study');
 }
-renderTopicNav(); renderStudy();
+try{ renderTopicNav(); }catch(e){ console.error('renderTopicNav failed:', e); } try{ renderStudy(); }catch(e){ console.error('renderStudy failed:', e); }
 
 let currentConceptTopic = STUDY_DATA[0].id;
 function renderConceptTopicNav(){
   const nav = document.getElementById('conceptTopicNav');
   nav.innerHTML = STUDY_DATA.map(t=>`<div class="topic-pill ${t.id===currentConceptTopic?'active':''}" data-id="${t.id}">${t.title.replace(/^\d+\.\s*/,'')}</div>`).join('');
   nav.querySelectorAll('.topic-pill').forEach(p=>{
-    p.addEventListener('click', ()=>{ currentConceptTopic = p.dataset.id; try{ localStorage.setItem('pu2ch4_last_concept_topic', currentConceptTopic); }catch(e){} renderConceptTopicNav(); renderConcept(); window.scrollTo({top:0,behavior:'smooth'}); });
+    p.addEventListener('click', ()=>{ currentConceptTopic = p.dataset.id; try{ localStorage.setItem('pu2ch4_last_concept_topic', currentConceptTopic); }catch(e){} try{ renderConceptTopicNav(); }catch(e){ console.error('renderConceptTopicNav failed:', e); } try{ renderConcept(); }catch(e){ console.error('renderConcept failed:', e); } window.scrollTo({top:0,behavior:'smooth'}); });
   });
 }
 function renderConcept(){
@@ -3767,7 +3767,7 @@ function renderConcept(){
     });
   });
 }
-renderConceptTopicNav(); renderConcept();
+try{ renderConceptTopicNav(); }catch(e){ console.error('renderConceptTopicNav failed:', e); } try{ renderConcept(); }catch(e){ console.error('renderConcept failed:', e); }
 
 /* ---------- Study Tips (trilingual) ---------- */
 const STUDYTIPS_CH4_EN = {
@@ -3844,7 +3844,7 @@ function renderStudyTipsCh2(){
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   `;
 }
-renderStudyTipsCh2();
+try{ renderStudyTipsCh2(); }catch(e){ console.error('renderStudyTipsCh2 failed:', e); }
 
 /* ---------- Flashcards ---------- */
 /* Spaced-repetition-lite: each card has an "ease" level (0-3) stored by index.
@@ -3873,17 +3873,17 @@ document.getElementById('fcCard').addEventListener('click', function(){
   this.classList.toggle('flipped');
   document.getElementById('fcRateRow').style.display = this.classList.contains('flipped') ? 'flex' : 'none';
 });
-document.getElementById('fcNext').addEventListener('click', ()=>{ fcIndex=(fcIndex+1)%FLASHCARDS.length; renderFlashcard(); });
-document.getElementById('fcPrev').addEventListener('click', ()=>{ fcIndex=(fcIndex-1+FLASHCARDS.length)%FLASHCARDS.length; renderFlashcard(); });
+document.getElementById('fcNext').addEventListener('click', ()=>{ fcIndex=(fcIndex+1)%FLASHCARDS.length; try{ renderFlashcard(); }catch(e){ console.error('renderFlashcard failed:', e); } });
+document.getElementById('fcPrev').addEventListener('click', ()=>{ fcIndex=(fcIndex-1+FLASHCARDS.length)%FLASHCARDS.length; try{ renderFlashcard(); }catch(e){ console.error('renderFlashcard failed:', e); } });
 document.getElementById('fcShuffle').addEventListener('click', ()=>{
   for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; }
-  fcIndex=0; renderFlashcard();
+  fcIndex=0; try{ renderFlashcard(); }catch(e){ console.error('renderFlashcard failed:', e); }
 });
 function fcRate(gotIt){
   const idx = fcOrder[fcIndex];
   setFcWeight(idx, gotIt);
   fcIndex=(fcIndex+1)%FLASHCARDS.length;
-  renderFlashcard();
+  try{ renderFlashcard(); }catch(e){ console.error('renderFlashcard failed:', e); }
 }
 document.getElementById('fcRateAgain').addEventListener('click', ()=>fcRate(false));
 document.getElementById('fcRateKnow').addEventListener('click', ()=>fcRate(true));
@@ -3892,9 +3892,9 @@ document.getElementById('fcWeakFirst').addEventListener('click', ()=>{
   fcOrder = FLASHCARDS.map((_,i)=>i);
   for(let i=fcOrder.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [fcOrder[i],fcOrder[j]]=[fcOrder[j],fcOrder[i]]; }
   fcOrder.sort((a,b)=>(w[a]||0)-(w[b]||0));
-  fcIndex=0; renderFlashcard();
+  fcIndex=0; try{ renderFlashcard(); }catch(e){ console.error('renderFlashcard failed:', e); }
 });
-renderFlashcard();
+try{ renderFlashcard(); }catch(e){ console.error('renderFlashcard failed:', e); }
 
 /* ---------- Shared quiz-engine helpers ---------- */
 function shuffleArr(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
@@ -4994,7 +4994,7 @@ function setHwUnlock(method, extra){
 }
 function reLockHw(){
   try{ localStorage.removeItem(HW_UNLOCK_KEY); }catch(e){}
-  if(document.getElementById('panel-dl').classList.contains('active')) renderDownloadsList();
+  if(document.getElementById('panel-dl').classList.contains('active')) try{ renderDownloadsList(); }catch(e){ console.error('renderDownloadsList failed:', e); }
 }
 window.reLockHw = reLockHw;
 function bestNeetScoreCh2(){
@@ -5023,19 +5023,19 @@ function hwSubmitUnlock(){
   if(!code){ msgEl.textContent = 'Please enter an unlock code.'; msgEl.className='hw-msg bad'; return; }
   if(code === HW_MASTER_CODE.toUpperCase()){
     setHwUnlock('master', {roll:roll || 'master-access'});
-    renderDownloadsList();
+    try{ renderDownloadsList(); }catch(e){ console.error('renderDownloadsList failed:', e); }
     return;
   }  if(!roll || !section){ msgEl.textContent = 'Please fill in section and roll number (or use the master code alone).'; msgEl.className='hw-msg bad'; return; }
   const key = hwUnlockLookupKey(section, roll);
   const entry = UNLOCK_LOOKUP[key];
   if(entry && entry.code.toUpperCase() === code){
     setHwUnlock('code', {roll:roll, section:section});
-    renderDownloadsList();
+    try{ renderDownloadsList(); }catch(e){ console.error('renderDownloadsList failed:', e); }
     return;
   }
   if(name && computeStudentCode(name, roll, section, 'CH4-HWNOTES') === code){
     setHwUnlock('code', {roll:roll, section:section, name:name});
-    renderDownloadsList();
+    try{ renderDownloadsList(); }catch(e){ console.error('renderDownloadsList failed:', e); }
     return;
   }
   if(!name){
@@ -5300,7 +5300,7 @@ function renderDownloadsList(){
   const premStatusContainer = document.getElementById('premiumStatusRowContainer');
   if(premStatusContainer && typeof premiumStatusRowCh2 === 'function') premStatusContainer.innerHTML = premiumStatusRowCh2();
 }
-renderDownloadsList();
+try{ renderDownloadsList(); }catch(e){ console.error('renderDownloadsList failed:', e); }
 
 function downloadPdf(fileKey, btn){
   const entry = PDF_FILES[fileKey];
@@ -5470,8 +5470,8 @@ document.addEventListener('keydown', (e)=>{
   }, {passive:true});
 })();
 
-pptBuildThumbs();
-pptRender();
+try{ pptBuildThumbs(); }catch(e){ console.error('pptBuildThumbs failed:', e); }
+try{ pptRender(); }catch(e){ console.error('pptRender failed:', e); }
 
 /* ---------- Footer social links ---------- */
 function openExternal(url){
@@ -5537,7 +5537,7 @@ function renderTreeExplorer(){
     g.addEventListener('click', (e)=>{ e.stopPropagation(); g.classList.toggle('open'); });
   });
 }
-renderTreeExplorer();
+try{ renderTreeExplorer(); }catch(e){ console.error('renderTreeExplorer failed:', e); }
 
 /* =========================================================
    2. COMPARE & CONTRAST MATRIX GENERATOR
@@ -5583,8 +5583,8 @@ function renderCompareResult(){
     </table>`;
   document.getElementById('cmpResult').querySelectorAll('td, th').forEach(c=>{ c.style.padding='8px'; c.style.borderBottom='1px solid rgba(227,175,67,0.15)'; c.style.fontSize='13px'; });
 }
-populateCompareSelects();
-renderCompareResult();
+try{ populateCompareSelects(); }catch(e){ console.error('populateCompareSelects failed:', e); }
+try{ renderCompareResult(); }catch(e){ console.error('renderCompareResult failed:', e); }
 document.getElementById('cmpSelectA').addEventListener('change', renderCompareResult);
 document.getElementById('cmpSelectB').addEventListener('change', renderCompareResult);
 
@@ -5851,7 +5851,7 @@ function goToRecommendedTopicCh2(id){
   if(btn) btn.classList.add('active');
   document.getElementById('panel-study').classList.add('active');
   try{ localStorage.setItem('pu2ch4_last_tab', 'study'); }catch(e){}
-  renderTopicNav(); renderStudy();
+  try{ renderTopicNav(); }catch(e){ console.error('renderTopicNav failed:', e); } try{ renderStudy(); }catch(e){ console.error('renderStudy failed:', e); }
   window.scrollTo({top:0, behavior:'smooth'});
 }
 window.goToRecommendedTopicCh2 = goToRecommendedTopicCh2;
@@ -5944,9 +5944,9 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
   if(btn.dataset.tab==='concept') btn.addEventListener('click', renderConcept);
   if(btn.dataset.tab==='studytips') btn.addEventListener('click', renderStudyTipsCh2);
 });
-renderProgress();
-renderNeetOnlyProgress();
-renderBadgesCard();
+try{ renderProgress(); }catch(e){ console.error('renderProgress failed:', e); }
+try{ renderNeetOnlyProgress(); }catch(e){ console.error('renderNeetOnlyProgress failed:', e); }
+try{ renderBadgesCard(); }catch(e){ console.error('renderBadgesCard failed:', e); }
 
 /* Hook into existing MCQ Quiz report to log progress */
 const _origShowQuizReport = showQuizReport;
@@ -6017,7 +6017,7 @@ function renderMnemonics(){
       const arr2 = loadMnemonics();
       arr2.splice(parseInt(b.dataset.i),1);
       saveMnemonics(arr2);
-      renderMnemonics();
+      try{ renderMnemonics(); }catch(e){ console.error('renderMnemonics failed:', e); }
     });
   });
 }
@@ -6029,12 +6029,12 @@ document.getElementById('mnemoSaveBtn').addEventListener('click', ()=>{
   arr.push(val);
   saveMnemonics(arr);
   inp.value='';
-  renderMnemonics();
+  try{ renderMnemonics(); }catch(e){ console.error('renderMnemonics failed:', e); }
 });
 document.getElementById('mnemoInput').addEventListener('keydown', (e)=>{
   if(e.key==='Enter') document.getElementById('mnemoSaveBtn').click();
 });
-renderMnemonics();
+try{ renderMnemonics(); }catch(e){ console.error('renderMnemonics failed:', e); }
 
 /* ============================================================
    ADDITIONAL FEATURES: Theme toggle, Student profile,
@@ -6138,7 +6138,7 @@ function setLang(lang){
     const tabId = activePanel.id.replace('panel-', '');
     if(tabId === 'study' && typeof renderStudy === 'function') renderStudy();
     else if(tabId === 'concept' && typeof renderConcept === 'function') renderConcept();
-    else if(tabId === 'studytips' && typeof renderStudyTipsCh2 === 'function') renderStudyTipsCh2();
+    else if(tabId === 'studytips' && typeof renderStudyTipsCh2 === 'function') try{ renderStudyTipsCh2(); }catch(e){ console.error('renderStudyTipsCh2 failed:', e); }
   }
 }
 window.setLang = setLang;
@@ -6933,14 +6933,14 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
     var savedStudyTopic = localStorage.getItem('pu2ch4_last_study_topic');
     if(savedStudyTopic && STUDY_DATA.some(function(t){ return t.id === savedStudyTopic; })){
       currentTopic = savedStudyTopic;
-      renderTopicNav(); renderStudy();
+      try{ renderTopicNav(); }catch(e){ console.error('renderTopicNav failed:', e); } try{ renderStudy(); }catch(e){ console.error('renderStudy failed:', e); }
     }
   }catch(e){}
   try{
     var savedConceptTopic = localStorage.getItem('pu2ch4_last_concept_topic');
     if(savedConceptTopic && STUDY_DATA.some(function(t){ return t.id === savedConceptTopic; })){
       currentConceptTopic = savedConceptTopic;
-      renderConceptTopicNav(); renderConcept();
+      try{ renderConceptTopicNav(); }catch(e){ console.error('renderConceptTopicNav failed:', e); } try{ renderConcept(); }catch(e){ console.error('renderConcept failed:', e); }
     }
   }catch(e){}
   try{ applyPremiumGates(); }catch(e){}
