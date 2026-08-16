@@ -3960,19 +3960,80 @@ function segSetup(containerId){
 function segVal(containerId){ return document.querySelector('#'+containerId+' .seg-opt.active').dataset.val; }
 segSetup('quizCountSeg'); segSetup('advCountSeg'); segSetup('advTimerSeg');
 
+const DESC_QUESTIONS = [
+{"topic": "t1", "marks": 1, "difficulty": "Easy", "q": "Define a gene.", "a": "A gene is the functional unit of inheritance that carries the information required to express a particular trait (Mendel's 'factor')."},
+{"topic": "t1", "marks": 1, "difficulty": "Easy", "q": "What is meant by locus in genetics?", "a": "Locus is the specific region or point on a chromosome where a gene or its alleles are located."},
+{"topic": "t1", "marks": 2, "difficulty": "Easy", "q": "Differentiate between genotype and phenotype.", "a": "(i) Genotype is the genetic constitution of an organism, expressed using symbols (e.g. TT, Tt). (ii) Phenotype is the external, observable appearance of an organism, expressed in words (e.g. tall, dwarf)."},
+{"topic": "t1", "marks": 2, "difficulty": "Medium", "q": "Differentiate between homozygous and heterozygous individuals with an example.", "a": "(i) Homozygous individuals have similar alleles on homologous chromosomes for a character, e.g. TT or tt. (ii) Heterozygous individuals have dissimilar alleles, e.g. Tt."},
+{"topic": "t1", "marks": 3, "difficulty": "Medium", "q": "Differentiate between a test cross and a back cross.", "a": "(i) A back cross is any cross between an F1 individual and either of its parents. (ii) A test cross is specifically a back cross between an F1/F2 hybrid and a homozygous recessive parent. (iii) A test cross is used to determine the unknown genotype of the hybrid."},
+{"topic": "t1", "marks": 3, "difficulty": "Easy", "q": "Give three reasons why Mendel selected the garden pea for his hybridisation experiments.", "a": "(i) Easy to cultivate; needs little space and time. (ii) Has several easily distinguishable contrasting characters. (iii) Has a short life span, is naturally self-pollinating, and can also be cross-pollinated artificially."},
+{"topic": "t1", "marks": 5, "difficulty": "Hard", "q": "Explain the key terms used in genetics, giving an example for each.", "a": "1. Gene - functional unit of inheritance (Mendel's factor).\n2. Allele - alternative forms of a gene at the same locus, e.g. T and t.\n3. Locus - the fixed position of a gene on a chromosome.\n4. Homozygous - similar alleles, e.g. TT.\n5. Heterozygous - dissimilar alleles, e.g. Tt.\n6. Monohybrid - cross differing in one character.\n7. Dihybrid - cross differing in two characters."},
+
+{"topic": "t2", "marks": 1, "difficulty": "Easy", "q": "State the F2 phenotypic ratio obtained by Mendel in a monohybrid cross.", "a": "3 : 1 (dominant : recessive), e.g. Tall : Dwarf = 3 : 1."},
+{"topic": "t2", "marks": 1, "difficulty": "Easy", "q": "Who developed the Punnett square method?", "a": "The British geneticist Reginald C. Punnett."},
+{"topic": "t2", "marks": 2, "difficulty": "Medium", "q": "State Mendel's Law of Dominance.", "a": "(i) In a pair of contrasting factors, one member dominates over the other in a dissimilar pair. (ii) This explains why F1 shows only one parental character while both reappear in F2."},
+{"topic": "t2", "marks": 2, "difficulty": "Medium", "q": "State Mendel's Law of Segregation.", "a": "(i) The two alleles of a pair separate during gamete formation, so a gamete receives only one of them. (ii) A heterozygote (Tt) produces two kinds of gametes (T and t) in equal proportion."},
+{"topic": "t2", "marks": 3, "difficulty": "Medium", "q": "Explain the significance of a test cross with reference to a tall pea plant of unknown genotype.", "a": "(i) Tt (unknown) x tt gives 1 tall : 1 dwarf, showing the plant is heterozygous. (ii) TT (unknown) x tt gives all tall progeny, showing the plant is homozygous dominant. (iii) It thus reveals whether the dominant phenotype hides a TT or Tt genotype."},
+{"topic": "t2", "marks": 3, "difficulty": "Medium", "q": "Give the genotypic and phenotypic ratio obtained in the F2 generation of a monohybrid cross, and explain why they differ.", "a": "(i) Genotypic ratio: TT : Tt : tt = 1 : 2 : 1. (ii) Phenotypic ratio: Tall : Dwarf = 3 : 1. (iii) They differ because both TT and Tt show the same dominant (tall) phenotype."},
+{"topic": "t2", "marks": 5, "difficulty": "Hard", "q": "Describe a monohybrid cross between homozygous tall (TT) and homozygous dwarf (tt) pea plants up to the F2 generation.", "a": "1. P generation: TT (tall) x tt (dwarf).\n2. Gametes: T and t.\n3. F1: all Tt, tall (Law of Dominance).\n4. F1 selfed: Tt x Tt.\n5. F2 genotypes: TT : Tt : tt = 1 : 2 : 1.\n6. F2 phenotypes: Tall : Dwarf = 3 : 1.\n7. Alleles segregate cleanly into gametes (Law of Segregation), so the recessive trait reappears in F2."},
+
+{"topic": "t3", "marks": 1, "difficulty": "Easy", "q": "Define a dihybrid cross.", "a": "A cross between two homozygous individuals differing in two pairs of contrasting characters, e.g. seed shape and seed colour."},
+{"topic": "t3", "marks": 1, "difficulty": "Medium", "q": "How many types of gametes are produced by an RrYy plant?", "a": "Four types - RY, Ry, rY and ry - each in equal (25%) proportion."},
+{"topic": "t3", "marks": 2, "difficulty": "Medium", "q": "State Mendel's Law of Independent Assortment.", "a": "(i) When two pairs of traits are combined in a hybrid, segregation of one pair is independent of the other. (ii) Genes for one character (e.g. shape) do not intermix with genes for another (e.g. colour) but assort independently."},
+{"topic": "t3", "marks": 2, "difficulty": "Easy", "q": "Name the three scientists who independently rediscovered Mendel's work, and the year.", "a": "(i) Hugo de Vries, Correns, and Von Tschermak. (ii) They rediscovered his work in the year 1900."},
+{"topic": "t3", "marks": 3, "difficulty": "Medium", "q": "Give any three reasons why Mendel's work remained unrecognised until 1900.", "a": "(i) Lack of communication and publicity of his results. (ii) His idea of factors as discrete units (not blending) was not accepted. (iii) His mathematical approach to explaining biology was not accepted at the time."},
+{"topic": "t3", "marks": 3, "difficulty": "Hard", "q": "Show how the 9:3:3:1 dihybrid F2 ratio can be derived from two separate 3:1 ratios.", "a": "(i) Round : Wrinkled = 3 : 1 and Yellow : Green = 3 : 1, independently. (ii) Multiplying (3 Round:1 Wrinkled) x (3 Yellow:1 Green) gives 9:3:3:1. (iii) This shows the two characters assort independently of each other."},
+{"topic": "t3", "marks": 5, "difficulty": "Hard", "q": "Describe the dihybrid cross carried out by Mendel between round-yellow and wrinkled-green pea seeds.", "a": "1. P generation: RRYY (round, yellow) x rryy (wrinkled, green).\n2. F1: all RrYy, round and yellow.\n3. F1 selfed (RrYy x RrYy) produces 4 gamete types each: RY, Ry, rY, ry.\n4. Punnett square gives 16 combinations.\n5. F2 phenotypic ratio: 9 Round Yellow : 3 Round Green : 3 Wrinkled Yellow : 1 Wrinkled Green.\n6. Genotypic ratio: 1:2:1:2:4:2:1:2:1.\n7. 14 of the 16 F2 types are new recombinant combinations not seen in the parents."},
+
+{"topic": "t4", "marks": 1, "difficulty": "Easy", "q": "Define incomplete dominance.", "a": "A condition where the F1 phenotype does not resemble either parent but shows a blended, intermediate expression, e.g. pink flowers in Mirabilis jalapa."},
+{"topic": "t4", "marks": 1, "difficulty": "Easy", "q": "Define pleiotropy.", "a": "A condition in which a single gene produces more than one phenotypic trait, e.g. the sickle-cell gene."},
+{"topic": "t4", "marks": 2, "difficulty": "Medium", "q": "Differentiate incomplete dominance and co-dominance, giving one example of each.", "a": "(i) In incomplete dominance the F1 shows a blended, intermediate phenotype, e.g. pink flowers (Rr) in Mirabilis. (ii) In co-dominance both alleles express independently and fully, e.g. AB blood group (IAIB)."},
+{"topic": "t4", "marks": 2, "difficulty": "Medium", "q": "What is multiple allelism? Name the gene and its alleles responsible for ABO blood grouping.", "a": "(i) Multiple allelism is the existence of more than two alternative forms (alleles) of a single gene in a population. (ii) The ABO blood group gene 'I' has three alleles - IA, IB and i."},
+{"topic": "t4", "marks": 3, "difficulty": "Medium", "q": "Explain co-dominance with reference to the inheritance of sickle-cell anaemia.", "a": "(i) The alleles HbA and HbS are co-dominant. (ii) HbAHbA individuals are normal and HbSHbS individuals have sickle-cell disease. (iii) Heterozygous HbAHbS individuals show both types of haemoglobin and suffer only mild anaemia, showing both alleles express."},
+{"topic": "t4", "marks": 3, "difficulty": "Hard", "q": "Explain polygenic inheritance using the example of human skin colour.", "a": "(i) Skin colour is controlled by three genes (A, B, C), each with additive/cumulative effect. (ii) AABBCC individuals have the darkest skin and aabbcc the lightest. (iii) AaBbCc individuals show intermediate skin colour; environment also influences the phenotype."},
+{"topic": "t4", "marks": 5, "difficulty": "Hard", "q": "Describe the various deviations from Mendelian inheritance, giving one example each.", "a": "1. Incomplete dominance - F1 blended phenotype, e.g. pink Mirabilis jalapa flowers.\n2. Co-dominance - both alleles express, e.g. AB blood group.\n3. Multiple allelism - more than two alleles of a gene, e.g. ABO blood group (IA, IB, i).\n4. Pleiotropy - one gene, multiple traits, e.g. phenylketonuria (PKU).\n5. Polygenic inheritance - a trait controlled by 3+ genes, e.g. human skin colour."},
+
+{"topic": "t5", "marks": 1, "difficulty": "Easy", "q": "Define linkage.", "a": "Linkage is the physical association of two or more genes on the same chromosome, causing them to be inherited together."},
+{"topic": "t5", "marks": 1, "difficulty": "Easy", "q": "Who proposed the chromosomal theory of inheritance?", "a": "Walter Sutton and Theodore Boveri."},
+{"topic": "t5", "marks": 2, "difficulty": "Medium", "q": "Define recombination and differentiate it from linkage.", "a": "(i) Recombination is the generation of new, non-parental combinations of genes in the offspring. (ii) Linkage is the physical association of genes on a chromosome that keeps parental combinations together; recombination occurs due to crossing over between linked genes."},
+{"topic": "t5", "marks": 2, "difficulty": "Easy", "q": "Give any two reasons why Morgan chose Drosophila melanogaster for his experiments.", "a": "(i) It has a very short life cycle of about two weeks and produces many progeny from a single mating. (ii) It grows easily on synthetic medium, and the sexes are clearly distinguishable."},
+{"topic": "t5", "marks": 3, "difficulty": "Medium", "q": "Explain the physical basis of the Law of Independent Assortment, according to the chromosomal theory.", "a": "(i) During Anaphase I of meiosis, the two pairs of homologous chromosomes separate randomly. (ii) This random, independent separation of different chromosome pairs is the physical basis of independent assortment. (iii) It was proposed by Sutton and Boveri, linking chromosome and gene behaviour."},
+{"topic": "t5", "marks": 3, "difficulty": "Hard", "q": "Explain the concept of the map unit (centiMorgan) with reference to genetic mapping.", "a": "(i) 1% crossing over between two linked genes equals 1 map unit or 1 centiMorgan (cM). (ii) Alfred Sturtevant used recombination frequency to map gene positions on chromosomes. (iii) The frequency of crossing over increases as the physical distance between genes increases."},
+{"topic": "t5", "marks": 5, "difficulty": "Hard", "q": "Describe Morgan's dihybrid cross experiment on Drosophila and explain how it led to the concept of linkage.", "a": "1. Morgan crossed yellow-bodied, white-eyed females with brown-bodied, red-eyed males.\n2. F1 was inter-crossed to obtain F2.\n3. F2 ratio differed significantly from the expected 9:3:3:1.\n4. Reason: the genes for body colour and eye colour were located on the same (X) chromosome.\n5. Parental combinations were far more frequent than new (recombinant) combinations - this is linkage.\n6. Cross A (y, w genes): 98.7% parental, 1.3% recombinant - tightly linked.\n7. Cross B (w, m genes): 62.8% parental, 37.2% recombinant - loosely linked."},
+
+{"topic": "t6", "marks": 1, "difficulty": "Easy", "q": "Define allosomes.", "a": "Allosomes (sex chromosomes) are the chromosomes directly involved in the determination of the sex of an individual."},
+{"topic": "t6", "marks": 1, "difficulty": "Easy", "q": "What is the sex chromosome constitution of human males and females?", "a": "Human females are XX and human males are XY."},
+{"topic": "t6", "marks": 2, "difficulty": "Medium", "q": "Differentiate XO and XY types of sex determination.", "a": "(i) In the XO type (e.g. grasshopper), males have only one X and no Y (XO), females have XX. (ii) In the XY type (e.g. humans), males have one X and one Y chromosome, females have XX."},
+{"topic": "t6", "marks": 2, "difficulty": "Medium", "q": "What is female heterogamety? Give an example.", "a": "(i) Female heterogamety is a system where the female produces two types of gametes (bearing Z or W) while the male produces only one type. (ii) Seen in the ZW type of sex determination in birds."},
+{"topic": "t6", "marks": 3, "difficulty": "Hard", "q": "Explain the haplodiploid mechanism of sex determination in the honey bee.", "a": "(i) A fertilised egg develops into a diploid female (32 chromosomes) - queen or worker. (ii) An unfertilised egg develops by parthenogenesis into a haploid male (16 chromosomes) - drone. (iii) Since males arise without fertilisation, they produce sperm by mitosis and have no father."},
+{"topic": "t6", "marks": 3, "difficulty": "Medium", "q": "Describe Henking's discovery that led to identification of the X chromosome.", "a": "(i) Henking observed a specific nuclear structure during spermatogenesis in insects, naming it the 'X body'. (ii) He found only 50% of the sperm received this structure after spermatogenesis. (iii) The X body was later identified as a chromosome and named the X chromosome."},
+{"topic": "t6", "marks": 5, "difficulty": "Hard", "q": "Describe the different mechanisms of sex determination found in animals, with one example each.", "a": "1. XO type - males lack a Y chromosome (XO), females are XX, e.g. grasshopper, earthworm.\n2. XY type - males are XY, females are XX, e.g. humans, Drosophila.\n3. ZW type (female heterogamety) - females are ZW, males are ZZ, e.g. birds.\n4. Haplodiploid type - fertilised eggs give diploid females, unfertilised eggs give haploid males, e.g. honey bee.\n5. XO and XY systems are both examples of male heterogamety."},
+
+{"topic": "t7", "marks": 1, "difficulty": "Easy", "q": "Define mutation.", "a": "Mutation is an alteration in the DNA sequence that results in a change in the genotype and phenotype of an organism."},
+{"topic": "t7", "marks": 1, "difficulty": "Easy", "q": "Define point mutation.", "a": "A point mutation is a change in a single base pair of DNA, as seen in sickle-cell anaemia."},
+{"topic": "t7", "marks": 2, "difficulty": "Medium", "q": "Differentiate point mutation and frameshift mutation.", "a": "(i) Point mutation is caused by a change in a single base pair, e.g. sickle-cell anaemia. (ii) Frameshift mutation is caused by insertion or deletion of a base pair in the DNA sequence."},
+{"topic": "t7", "marks": 2, "difficulty": "Medium", "q": "Name one physical and one chemical mutagen, with their action.", "a": "(i) Physical mutagen - UV/ionizing radiation, which damages DNA. (ii) Chemical mutagen - nitrous acid, a deaminating agent that changes cytosine to uracil."},
+{"topic": "t7", "marks": 3, "difficulty": "Medium", "q": "Explain the meaning of the following pedigree symbols: square, circle, and a filled shape.", "a": "(i) A square represents a male and a circle represents a female. (ii) A diamond represents an individual of unspecified sex. (iii) A filled (shaded) shape represents an affected individual."},
+{"topic": "t7", "marks": 3, "difficulty": "Medium", "q": "What is meant by the term 'propositus' in pedigree analysis? How is consanguineous mating represented?", "a": "(i) The propositus/proposita is the individual who is the starting point of the genetic study of a family, marked with an arrow. (ii) Mating between relatives (consanguineous mating) is shown by a double horizontal line joining the two individuals."},
+{"topic": "t7", "marks": 5, "difficulty": "Hard", "q": "List and explain any six standard symbols used in pedigree analysis.", "a": "1. Square - male; Circle - female; Diamond - sex unspecified.\n2. Filled (shaded) shape - affected individual.\n3. Horizontal line joining a square and circle - mating.\n4. Double horizontal line - consanguineous mating.\n5. Diagonal line through a symbol - deceased individual.\n6. Arrow - propositus/proposita (starting point of study).\n7. Half-filled shape or dot inside a symbol - unaffected carrier."},
+
+{"topic": "t8", "marks": 1, "difficulty": "Easy", "q": "Define a Mendelian disorder.", "a": "A genetic disorder caused by mutation in a single gene, whose mode of inheritance follows Mendelian principles."},
+{"topic": "t8", "marks": 1, "difficulty": "Easy", "q": "Which chromosome is affected in Down's syndrome, and how?", "a": "Chromosome 21; Down's syndrome is caused by an additional (trisomy) copy of chromosome 21."},
+{"topic": "t8", "marks": 2, "difficulty": "Easy", "q": "Give one example each of an autosomal dominant and an autosomal recessive disorder.", "a": "(i) Autosomal dominant - Huntington's disease. (ii) Autosomal recessive - sickle-cell anaemia."},
+{"topic": "t8", "marks": 2, "difficulty": "Medium", "q": "State the cause and any one symptom of Turner's syndrome.", "a": "(i) Cause: absence of one X chromosome, giving 45 chromosomes (XO), an allosomal monosomy. (ii) Symptom: affected females are sterile with a webbed neck and rudimentary ovaries."},
+{"topic": "t8", "marks": 3, "difficulty": "Medium", "q": "Explain the criss-cross pattern of inheritance seen in haemophilia.", "a": "(i) Haemophilia is an X-linked recessive disorder affecting clotting factor VIII. (ii) It is transmitted from an unaffected carrier female to her son. (iii) The grandson inherits the trait from his grandfather through his carrier mother - this is criss-cross inheritance."},
+{"topic": "t8", "marks": 3, "difficulty": "Hard", "q": "Differentiate Klinefelter's syndrome and Turner's syndrome with respect to cause and chromosome number.", "a": "(i) Klinefelter's syndrome is caused by an extra X chromosome (47, XXY) - allosomal trisomy. (ii) Turner's syndrome is caused by absence of one X chromosome (45, XO) - allosomal monosomy. (iii) Klinefelter males show gynaecomastia; Turner females show a webbed neck and sterility."},
+{"topic": "t8", "marks": 5, "difficulty": "Hard", "q": "Classify Mendelian disorders and describe the characteristic features of autosomal dominant, autosomal recessive, and X-linked recessive inheritance.", "a": "1. Mendelian disorders are of three types: autosomal dominant, autosomal recessive, and sex-linked traits.\n2. Autosomal dominant (e.g. Huntington's disease): trait appears in every generation (vertical pedigree), affects both sexes equally.\n3. Autosomal recessive (e.g. sickle-cell anaemia): appears in siblings born to unaffected carrier parents, often linked to consanguinity.\n4. X-linked recessive (e.g. haemophilia, colour blindness): males are affected more often since they are hemizygous.\n5. About half the sons of a carrier female are affected.\n6. Affected individuals are related through the maternal side of the family.\n7. Any evidence of male-to-male transmission rules out X-linked inheritance."},
+];
+
 /* ---------- Answer Practice (Write It, Then Compare) ---------- */
-/* Chapter 4's Paper Generator only produces template questions with no
-   authored model answers (it just points students back to Study Mode), so
-   this reuses each topic's full Study Mode write-up as the "model answer" —
-   coarser-grained than Chapters 3/9's per-question banks, but genuine
-   existing content rather than new authoring. */
 function waAllPool(){
-  return STUDY_DATA.map((t,i)=>{
-    const name = t.title.replace(/^\d+\.\s*/, '');
-    return {topic: t.id, topicName: name, q: 'Give a detailed account of: ' + name, a: t.html, idx: i};
+  return DESC_QUESTIONS.map((q,i)=>{
+    const topicName = STUDY_DATA.find(t=>t.id===q.topic).title.replace(/^\d+\.\s*/, '');
+    return {...q, topicName, idx: i};
   });
 }
-let waSetup = {topic:'All'};
+let waSetup = {topic:'All', marks:'All'};
 let waSession = null;
 const WA_WEIGHTS_KEY = 'pu2ch4_writeit_weights_v1';
 function getWaWeights(){
@@ -3985,7 +4046,8 @@ function setWaWeight(idx, gotIt){
   try{ localStorage.setItem(WA_WEIGHTS_KEY, JSON.stringify(w)); }catch(e){}
 }
 function waFilterPool(){
-  return waAllPool().filter(q => waSetup.topic==='All' || q.topic===waSetup.topic);
+  return waAllPool().filter(q => (waSetup.topic==='All' || q.topic===waSetup.topic)
+    && (waSetup.marks==='All' || q.marks===parseInt(waSetup.marks,10)));
 }
 function renderWriteItSetup(){
   const pool = waFilterPool();
@@ -3994,9 +4056,15 @@ function renderWriteItSetup(){
     return `<div class="topic-pill ${waSetup.topic===id?'active':''}" onclick="waSetTopic('${id}')">${label}</div>`;
   }).join('');
   let html = `<div class="card" style="background:linear-gradient(135deg,#0F6653,#0a4239); color:#EFFFFA; font-size:12.5px; line-height:1.6;">✍️ <b>How it works:</b> Grab a pen and paper — write your answer by hand, just like in the exam, then reveal the model answer to see what you missed. Typing is fine in a pinch, but handwriting it builds the speed and habit you'll need on exam day.</div>`;
+  const marksChips = ['All','1','2','3','5'].map(v=>{
+    const label = v==='All' ? 'All' : v+' Marks';
+    return `<div class="topic-pill ${waSetup.marks===v?'active':''}" onclick="waSetMarks('${v}')">${label}</div>`;
+  }).join('');
   html += `<div class="card">
     <label class="field-label">Topic</label>
     <div style="display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;">${topicChips}</div>
+    <label class="field-label" style="margin-top:12px;">Marks</label>
+    <div style="display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;">${marksChips}</div>
     <div class="btn-row" style="margin-top:14px;">
       <button class="btn" onclick="waStart()">Start Practice · ${pool.length} matching</button>
     </div>
@@ -4006,7 +4074,8 @@ function renderWriteItSetup(){
   document.getElementById('writeitContent').innerHTML = html;
 }
 function waSetTopic(id){ waSetup.topic=id; renderWriteItSetup(); }
-window.waSetTopic=waSetTopic;
+function waSetMarks(v){ waSetup.marks=v; renderWriteItSetup(); }
+window.waSetTopic=waSetTopic; window.waSetMarks=waSetMarks;
 
 function waStart(){
   const pool = shuffleArr(waFilterPool());
@@ -4029,13 +4098,13 @@ function renderWriteItQuestion(){
   const q = s.questions[s.idx];
   let html = `<div class="fc-progress" style="text-align:center; margin-bottom:10px;">Question ${s.idx+1} / ${s.questions.length}</div>
   <div class="card">
-    <div class="chip-row" style="margin-bottom:10px;"><span class="chip gold">${q.topicName}</span></div>
+    <div class="chip-row" style="margin-bottom:10px;"><span class="chip gold">${q.marks} Marks</span><span class="chip">${q.difficulty}</span><span class="chip">${q.topicName}</span></div>
     <div style="font-weight:700; font-size:14px; margin-bottom:10px;">${q.q}</div>
     <div style="font-size:11.5px; color:var(--text-dim); margin-bottom:6px;">📝 Write this out on paper first, like the real exam — use the box below only as a rough scratchpad.</div>
     <textarea placeholder="Write your answer here..." style="width:100%; min-height:110px; padding:10px; border-radius:10px; border:1px solid var(--border); background:var(--panel-2); color:var(--text); font-family:inherit; font-size:13.5px; resize:vertical; box-sizing:border-box;"></textarea>
     ${!s.revealed
       ? `<div class="btn-row" style="margin-top:10px;"><button class="btn" onclick="waReveal()">Show Model Answer</button></div>`
-      : `<div class="study-block" style="margin-top:12px; border-top:1px dashed var(--border); padding-top:10px;"><div class="subhead">Model Answer</div>${q.a}</div>
+      : `<div class="study-block" style="margin-top:12px; border-top:1px dashed var(--border); padding-top:10px;"><div class="subhead">Model Answer</div>${q.a.replace(/\n/g,'<br>')}</div>
          <div class="btn-row" style="margin:12px 0;">
            <button class="btn secondary" style="flex:1; border-color:var(--red,#e0685f); color:var(--red,#e0685f);" onclick="waRate(false)">😕 Still Learning</button>
            <button class="btn" style="flex:1;" onclick="waRate(true)">✅ Got It</button>
@@ -4056,7 +4125,7 @@ function renderWriteItDone(){
   let html = `<div class="card" style="text-align:center;">
     <div style="font-size:32px; margin-bottom:8px;">🎉</div>
     <div style="font-weight:700; margin-bottom:6px;">Practice round complete!</div>
-    <div style="color:var(--text-dim); font-size:13px; margin-bottom:14px;">You went through ${waSession.questions.length} topic(s). Practice the ones marked "Still Learning" again to sharpen your answer-writing.</div>
+    <div style="color:var(--text-dim); font-size:13px; margin-bottom:14px;">You went through ${waSession.questions.length} question(s). Practice the ones marked "Still Learning" again to sharpen your answer-writing.</div>
     <button class="btn" onclick="renderWriteItSetup()">Practice More</button>
   </div>`;
   html += nextStepNudge('writeit');
