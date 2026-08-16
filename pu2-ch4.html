@@ -5618,13 +5618,19 @@ const GLOSSARY_DATA = [
   { term:"Aneuploidy", def:"Loss or gain of individual chromosomes due to failure of chromatid segregation." },
   { term:"Trisomy", def:"The presence of an extra copy of one chromosome in a homologous pair (2n+1), e.g. Down's syndrome." }
 ];
+const GLOSSARY_TRANSLATIONS_CH4 = {};
+const GLOSSARY_SPEECH_LANG = {en:'en-US', kn:'kn-IN', hi:'hi-IN'};
 function speakTerm(text){
   if(!('speechSynthesis' in window)){ alert('Sorry, your browser does not support text-to-speech.'); return; }
   const clean = text.replace(/\(.*?\)/g,'').trim();
   const utter = new SpeechSynthesisUtterance(clean);
-  utter.rate = 0.85; utter.lang = 'en-US';
+  utter.rate = 0.85; utter.lang = GLOSSARY_SPEECH_LANG[currentLang] || 'en-US';
   window.speechSynthesis.cancel();
   window.speechSynthesis.speak(utter);
+}
+function glossaryDef(g){
+  const tr = (currentLang!=='en') && GLOSSARY_TRANSLATIONS_CH4[g.term] && GLOSSARY_TRANSLATIONS_CH4[g.term][currentLang];
+  return tr || g.def;
 }
 function renderGlossary(filter){
   const q = (filter||'').toLowerCase();
@@ -5633,7 +5639,7 @@ function renderGlossary(filter){
   if(list.length===0){ el.innerHTML = '<div style="color:var(--text-dim); padding:10px;">No matching terms.</div>'; return; }
   el.innerHTML = list.map((g,i)=>`
     <div class="glossary-item">
-      <div><div class="glossary-term">${g.term}</div><div class="glossary-def">${g.def}</div></div>
+      <div><div class="glossary-term">${g.term}</div><div class="glossary-def">${glossaryDef(g)}</div></div>
       <button class="glossary-speak-btn" data-term="${encodeURIComponent(g.term)}" title="Speak">&#128266;</button>
     </div>`).join('');
   el.querySelectorAll('.glossary-speak-btn').forEach(b=>{
@@ -6139,6 +6145,7 @@ function setLang(lang){
     if(tabId === 'study' && typeof renderStudy === 'function') renderStudy();
     else if(tabId === 'concept' && typeof renderConcept === 'function') renderConcept();
     else if(tabId === 'studytips' && typeof renderStudyTipsCh2 === 'function') try{ renderStudyTipsCh2(); }catch(e){ console.error('renderStudyTipsCh2 failed:', e); }
+    else if(tabId === 'glossary' && typeof renderGlossary === 'function') renderGlossary(document.getElementById('glossarySearch') ? document.getElementById('glossarySearch').value : '');
   }
 }
 window.setLang = setLang;
