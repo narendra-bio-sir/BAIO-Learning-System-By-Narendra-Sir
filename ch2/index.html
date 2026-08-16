@@ -204,6 +204,20 @@ table.cmp th:first-child,table.cmp td:first-child{
 table.cmp th:first-child{color:var(--gold-2); font-weight:700;}
 .recap-strip{margin-top:6px;}
 .subhead{color:var(--teal-2); font-size:12.5px; font-weight:700; margin:10px 0 4px; text-transform:uppercase; letter-spacing:1px;}
+.kw-panel{margin-top:12px;border:1px solid rgba(227,175,67,0.35);border-radius:12px;background:linear-gradient(160deg,rgba(227,175,67,0.10),rgba(227,175,67,0.03));padding:12px 13px;}
+.kw-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:2px;}
+.kw-title{font-size:12px;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:6px;}
+.kw-score{font-size:11px;font-weight:700;color:var(--text-dim);font-variant-numeric:tabular-nums;}
+.kw-sub{font-size:11px;color:var(--text-dim);margin:2px 0 10px;line-height:1.5;}
+.kw-list{display:flex;flex-direction:column;gap:7px;}
+.kw-item{display:flex;align-items:flex-start;gap:9px;padding:8px 9px;border-radius:9px;background:var(--panel-2);border:1px solid var(--border);cursor:pointer;user-select:none;}
+.kw-item:hover{border-color:var(--gold);}
+.kw-check{flex:0 0 auto;width:18px;height:18px;border-radius:5px;border:1.5px solid var(--text-dim);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--bg-0);margin-top:1px;}
+.kw-item.checked .kw-check{background:var(--ok);border-color:var(--ok);color:#08210F;}
+.kw-text{flex:1 1 auto;min-width:0;font-size:12.5px;font-weight:600;color:var(--text);line-height:1.45;}
+.kw-item.checked .kw-text{color:var(--ok);}
+.kw-foot{margin-top:10px;font-size:11px;color:var(--text-dim);line-height:1.5;padding-top:8px;border-top:1px dashed var(--border);}
+.kw-foot b{color:var(--gold);}
 
 /* Flashcards */
 .fc-wrap{display:flex; flex-direction:column; align-items:center; gap:14px;}
@@ -3150,6 +3164,7 @@ const DESC_QUESTIONS = [
 {"topic": "t8", "marks": 3, "difficulty": "Hard", "q": "Explain why lichens fail to survive in polluted environments.", "a": "(i) The phycobiont (algal partner) is highly sensitive to airborne pollutants. (ii) Since the fungus depends entirely on the alga for food, damage to the alga collapses the whole lichen. (iii) Hence lichens serve as excellent pollution indicators."},
 {"topic": "t8", "marks": 5, "difficulty": "Hard", "q": "Describe the lichen association between fungi and algae, covering its components, the exchange of benefits, and its ecological significance.", "a": "1. A lichen is a symbiotic association between a fungus and an alga.\n2. The algal partner is called the phycobiont — it is autotrophic and may be a green alga or a cyanobacterium.\n3. The fungal partner is called the mycobiont — it is heterotrophic, usually an Ascomycete or Basidiomycete.\n4. The alga photosynthesises and prepares food for the fungus.\n5. The fungus absorbs water and minerals from the substratum and provides physical shelter to the alga.\n6. This mutual dependence allows lichens to survive in harsh habitats like bare rocks.\n7. Lichens are excellent pollution indicators, as they fail to grow in polluted areas."}
 ];
+const DESC_KEYWORDS_CH2 = {};
 
 /* ---------- Answer Practice (Write It, Then Compare) ---------- */
 function waAllPool(){
@@ -3230,6 +3245,7 @@ function renderWriteItQuestion(){
     ${!s.revealed
       ? `<div class="btn-row" style="margin-top:10px;"><button class="btn" onclick="waReveal()">Show Model Answer</button></div>`
       : `<div class="study-block" style="margin-top:12px; border-top:1px dashed var(--border); padding-top:10px;"><div class="subhead">Model Answer</div>${q.a.replace(/\n/g,'<br>')}</div>
+         ${kwPanelHtml(q)}
          <div class="btn-row" style="margin:12px 0;">
            <button class="btn secondary" style="flex:1; border-color:var(--red,#e0685f); color:var(--red,#e0685f);" onclick="waRate(false)">😕 Still Learning</button>
            <button class="btn" style="flex:1;" onclick="waRate(true)">✅ Got It</button>
@@ -3241,6 +3257,29 @@ function renderWriteItQuestion(){
   </div>`;
   document.getElementById('writeitContent').innerHTML = html;
 }
+function kwPanelHtml(q){
+  if(typeof DESC_KEYWORDS_CH2 === 'undefined') return '';
+  const items = DESC_KEYWORDS_CH2[q.q];
+  if(!items || !items.length) return '';
+  const lang = (currentLang==='kn'||currentLang==='hi') ? currentLang : 'en';
+  const rows = items.map((it,i)=>`<div class="kw-item" data-i="${i}" onclick="kwToggle(this)"><div class="kw-check">✓</div><div class="kw-text">${it[lang]||it.en}</div></div>`).join('');
+  return `<div class="kw-panel">
+    <div class="kw-head"><div class="kw-title">🔑 Keywords examiners look for</div><div class="kw-score">0 / ${items.length} marked</div></div>
+    <div class="kw-sub">Tap each one your written answer actually included — not just whether you had the right general idea.</div>
+    <div class="kw-list">${rows}</div>
+    <div class="kw-foot">Missed one? That's usually worth <b>1 mark</b> in the board scheme — go back and rewrite the line with it included.</div>
+  </div>`;
+}
+function kwToggle(el){
+  el.classList.toggle('checked');
+  const panel = el.closest('.kw-panel');
+  const total = panel.querySelectorAll('.kw-item').length;
+  const n = panel.querySelectorAll('.kw-item.checked').length;
+  panel.querySelector('.kw-score').textContent = n + ' / ' + total + ' marked';
+  const foot = panel.querySelector('.kw-foot');
+  foot.innerHTML = (n===total) ? '🎉 All keywords included — this answer should score full marks.' : 'Missed one? That\'s usually worth <b>1 mark</b> in the board scheme — go back and rewrite the line with it included.';
+}
+window.kwToggle = kwToggle;
 function waReveal(){ waSession.revealed = true; renderWriteItQuestion(); }
 function waRate(gotIt){ setWaWeight(waSession.questions[waSession.idx].idx, gotIt); waNext(); }
 function waNext(){ waSession.idx++; waSession.revealed=false; renderWriteItQuestion(); }

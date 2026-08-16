@@ -231,6 +231,20 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .reveal-btn{font-size:11.5px;font-weight:700;background:none;border:1px solid var(--teal);color:var(--teal);padding:6px 12px;border-radius:14px;cursor:pointer;}
 .aq-a{font-size:12.5px;color:var(--ink-dim);margin-top:8px;line-height:1.55;display:none;border-top:1px dashed var(--line);padding-top:8px;}
 .aq-a.show{display:block;}
+.kw-panel{margin-top:12px;border:1px solid rgba(212,175,55,0.35);border-radius:12px;background:linear-gradient(160deg,rgba(212,175,55,0.10),rgba(212,175,55,0.03));padding:12px 13px;}
+.kw-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:2px;}
+.kw-title{font-size:12px;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:6px;}
+.kw-score{font-size:11px;font-weight:700;color:var(--ink-dim);font-variant-numeric:tabular-nums;}
+.kw-sub{font-size:11px;color:var(--ink-dim);margin:2px 0 10px;line-height:1.5;}
+.kw-list{display:flex;flex-direction:column;gap:7px;}
+.kw-item{display:flex;align-items:flex-start;gap:9px;padding:8px 9px;border-radius:9px;background:var(--panel2);border:1px solid var(--line);cursor:pointer;user-select:none;}
+.kw-item:hover{border-color:var(--gold);}
+.kw-check{flex:0 0 auto;width:18px;height:18px;border-radius:5px;border:1.5px solid var(--ink-dim);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--navy);margin-top:1px;}
+.kw-item.checked .kw-check{background:var(--ok);border-color:var(--ok);color:#08210F;}
+.kw-text{flex:1 1 auto;min-width:0;font-size:12.5px;font-weight:600;color:var(--ink);line-height:1.45;}
+.kw-item.checked .kw-text{color:var(--ok);}
+.kw-foot{margin-top:10px;font-size:11px;color:var(--ink-dim);line-height:1.5;padding-top:8px;border-top:1px dashed var(--line);}
+.kw-foot b{color:var(--gold);}
 
 /* FLASHCARDS */
 .fc-wrap{display:flex;flex-direction:column;align-items:center;padding:10px 0;}
@@ -2753,6 +2767,7 @@ const DESC_QUESTIONS = [
 {topic: "bioreactor", marks: 3, difficulty: "Medium", q: "Why must the growth conditions inside a bioreactor be optimised, and which factors need to be controlled?", a: "(i) Optimum conditions ensure maximum product formation with minimum time and cost. (ii) Factors that must be controlled include temperature, pH, substrate concentration, salts and vitamins. (iii) Systems for agitation, oxygen supply, and foam control are also needed to maintain these conditions consistently."},
 {topic: "bioreactor", marks: 5, difficulty: "Hard", q: "Describe the sequence of steps, from selecting transformed cells to obtaining a market-ready product, in the large-scale production of a recombinant protein.", a: "1. Cells that have taken up the recombinant DNA are first selected using the vector's selectable marker gene.\n2. Selected cells are grown in a bioreactor, a large vessel (100–1000 litres) that provides optimum conditions of temperature, pH, substrate, salts and vitamins.\n3. The bioreactor is equipped with an agitator system, oxygen delivery system, foam control system, and temperature/pH control systems, monitored via sampling ports.\n4. A continuous culture system may be used, draining used medium and adding fresh medium so cells remain in log/exponential phase for a longer period, giving higher biomass and yield.\n5. The desired product (enzyme, antibiotic, alcohol) accumulates but is obtained in a crude form.\n6. Downstream processing is carried out — separation and purification of the product from the culture.\n7. The product is then formulated with suitable preservatives, and must pass clinical trials and quality control checks before it can be marketed."},
 ];
+const DESC_KEYWORDS_CH9 = {};
 
 /* ---------------- ANSWER PRACTICE (Write It, Then Compare) ---------------- */
 let WA_ALL_POOL = null;
@@ -2833,6 +2848,7 @@ function renderWriteItQuestion(){
       ${!s.revealed
         ? `<button class="start-btn" style="margin-top:10px;" onclick="waReveal()">Show Model Answer</button>`
         : `<div class="aq-a show" style="margin-top:12px;"><b>Model Answer:</b><br>${q.a.replace(/\n/g,'<br>')}</div>
+           ${kwPanelHtml(q)}
            <div class="opt-row" style="margin:12px 0;">
              <button class="opt-btn" style="flex:1; border-color:#e0685f; color:#e0685f;" onclick="waRate(false)">😕 Still Learning</button>
              <button class="opt-btn sel" style="flex:1;" onclick="waRate(true)">✅ Got It</button>
@@ -2845,6 +2861,29 @@ function renderWriteItQuestion(){
   </div>`;
   document.getElementById('content').innerHTML = html;
 }
+function kwPanelHtml(q){
+  if(typeof DESC_KEYWORDS_CH9 === 'undefined') return '';
+  const items = DESC_KEYWORDS_CH9[q.q];
+  if(!items || !items.length) return '';
+  const lang = (currentLang==='kn'||currentLang==='hi') ? currentLang : 'en';
+  const rows = items.map((it,i)=>`<div class="kw-item" data-i="${i}" onclick="kwToggle(this)"><div class="kw-check">✓</div><div class="kw-text">${it[lang]||it.en}</div></div>`).join('');
+  return `<div class="kw-panel">
+    <div class="kw-head"><div class="kw-title">🔑 Keywords examiners look for</div><div class="kw-score">0 / ${items.length} marked</div></div>
+    <div class="kw-sub">Tap each one your written answer actually included — not just whether you had the right general idea.</div>
+    <div class="kw-list">${rows}</div>
+    <div class="kw-foot">Missed one? That's usually worth <b>1 mark</b> in the board scheme — go back and rewrite the line with it included.</div>
+  </div>`;
+}
+function kwToggle(el){
+  el.classList.toggle('checked');
+  const panel = el.closest('.kw-panel');
+  const total = panel.querySelectorAll('.kw-item').length;
+  const n = panel.querySelectorAll('.kw-item.checked').length;
+  panel.querySelector('.kw-score').textContent = n + ' / ' + total + ' marked';
+  const foot = panel.querySelector('.kw-foot');
+  foot.innerHTML = (n===total) ? '🎉 All keywords included — this answer should score full marks.' : 'Missed one? That\'s usually worth <b>1 mark</b> in the board scheme — go back and rewrite the line with it included.';
+}
+window.kwToggle = kwToggle;
 function waReveal(){ waSession.revealed = true; renderWriteItQuestion(); }
 function waRate(gotIt){ setWaWeight(waSession.questions[waSession.idx].idx, gotIt); waNext(); }
 function waNext(){ waSession.idx++; waSession.revealed=false; renderWriteItQuestion(); }
