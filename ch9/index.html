@@ -2688,26 +2688,80 @@ async function exportShareCard(mode){
 }
 window.openShareCard = openShareCard; window.closeShareCard = closeShareCard; window.exportShareCard = exportShareCard;
 
+const DESC_QUESTIONS = [
+{topic: "intro", marks: 1, difficulty: "Easy", q: "Define biotechnology as per the European Federation of Biotechnology (EFB).", a: "The integration of natural science and organisms, cells, parts thereof, and molecular analogues for products and services."},
+{topic: "intro", marks: 1, difficulty: "Easy", q: "What is cloning in the context of genetic engineering?", a: "The formation of multiple identical copies of a piece of DNA (or an organism/cell)."},
+{topic: "intro", marks: 2, difficulty: "Easy", q: "Name the two pillars on which modern biotechnology rests.", a: "(i) Genetic engineering — introducing foreign DNA/RNA into a host's genome to alter its phenotype. (ii) Aseptic techniques — maintaining contamination-free, sterile conditions in bioprocesses."},
+{topic: "intro", marks: 2, difficulty: "Medium", q: "Differentiate asexual and sexual reproduction with respect to genetic information.", a: "(i) Asexual reproduction preserves genetic information faithfully across generations. (ii) Sexual reproduction introduces variation, since genetic material is contributed by two parents."},
+{topic: "intro", marks: 3, difficulty: "Medium", q: "Why does traditional hybridisation fail to give a genetic engineer precise control over which genes are transferred?", a: "(i) Hybridisation crosses whole organisms, so entire sets of genes are transferred together. (ii) Along with the desirable gene, several undesirable genes also get introduced into the progeny. (iii) Genetic engineering avoids this by transferring only the specific gene of interest."},
+{topic: "intro", marks: 3, difficulty: "Medium", q: "List the three key steps involved in creating a genetically modified organism.", a: "(i) Identification and isolation/creation of the DNA of interest (recombinant DNA). (ii) Gene cloning — multiplying copies of this DNA. (iii) Gene transfer of the DNA/RNA into a host organism."},
+{topic: "intro", marks: 5, difficulty: "Hard", q: "Explain why an introduced piece of foreign DNA needs to be linked to an 'origin of replication' to be cloned in a host cell.", a: "1. A foreign DNA fragment placed inside a host cell does not replicate on its own.\n2. It must integrate with a host DNA sequence known as the 'origin of replication' (ori) to be maintained.\n3. Any piece of DNA linked to the ori can be made to replicate within the host cell.\n4. Once integrated, the foreign DNA is copied along with the host DNA during cell division.\n5. This repeated copying produces multiple identical copies of the foreign DNA, called cloning.\n6. This is the basic principle used in gene cloning experiments to obtain many copies of a gene of interest."},
+
+{topic: "restriction", marks: 1, difficulty: "Easy", q: "Define a palindromic sequence in DNA.", a: "A base sequence that reads the same in the 5'→3' direction on both strands of the DNA."},
+{topic: "restriction", marks: 1, difficulty: "Easy", q: "What stain is used to visualise DNA bands after gel electrophoresis?", a: "Ethidium bromide, which fluoresces as bright orange bands under UV light."},
+{topic: "restriction", marks: 2, difficulty: "Easy", q: "Differentiate endonucleases and exonucleases.", a: "(i) Endonucleases cut DNA at specific internal positions within the strand. (ii) Exonucleases remove nucleotides progressively from the ends of the DNA strand."},
+{topic: "restriction", marks: 2, difficulty: "Medium", q: "List the five essential tools required for recombinant DNA technology.", a: "(i) Restriction enzymes, polymerase enzymes and ligases. (ii) Vectors and a suitable host organism."},
+{topic: "restriction", marks: 3, difficulty: "Medium", q: "Explain how sticky ends are generated during restriction digestion and why they are useful.", a: "(i) The restriction enzyme cuts a little away from the centre of the palindromic site, between the same two bases on opposite strands. (ii) This generates short single-stranded overhangs called sticky ends. (iii) Sticky ends of two DNA molecules cut by the same enzyme can hydrogen-bond and be joined together using DNA ligase."},
+{topic: "restriction", marks: 3, difficulty: "Medium", q: "Explain the naming convention for a restriction enzyme, taking EcoRI as an example.", a: "(i) The first letter comes from the genus of the source organism (E = Escherichia). (ii) The second and third letters come from the species (co = coli). (iii) The fourth letter denotes the strain (R) and the Roman numeral shows the order of isolation (I = first discovered)."},
+{topic: "restriction", marks: 5, difficulty: "Hard", q: "Describe the process of separating and recovering a DNA fragment of interest using gel electrophoresis.", a: "1. DNA fragments produced by restriction digestion carry a net negative charge due to the phosphate groups.\n2. The digested DNA is loaded into wells of an agarose gel and an electric field is applied.\n3. Negatively charged fragments migrate towards the anode (positive electrode).\n4. The gel matrix acts as a molecular sieve, so smaller fragments move faster and travel farther than larger ones.\n5. Separated fragments are stained with ethidium bromide.\n6. Under UV light, the DNA appears as bright orange bands, allowing fragments of different sizes to be distinguished.\n7. The desired band is cut out of the gel and the DNA is extracted/eluted for further use, such as ligation into a vector."},
+
+{topic: "vectors", marks: 1, difficulty: "Easy", q: "Name two common types of cloning vectors.", a: "Plasmids and bacteriophages."},
+{topic: "vectors", marks: 1, difficulty: "Easy", q: "What is meant by the 'copy number' of a vector?", a: "The number of copies of the vector (plasmid/phage) that are naturally maintained per host cell."},
+{topic: "vectors", marks: 2, difficulty: "Easy", q: "Differentiate the copy number range of plasmids and bacteriophages as vectors.", a: "(i) Bacteriophages maintain a high copy number of their genome per cell. (ii) Plasmids vary widely, from as low as 1–2 copies to as high as 15–100 copies per cell."},
+{topic: "vectors", marks: 2, difficulty: "Medium", q: "What is the role of the origin of replication (ori) in a cloning vector?", a: "(i) The ori is the sequence from which replication of the vector begins. (ii) Any DNA fragment linked to the ori can be made to replicate, and a suitable ori lets the engineer control the copy number of the recombinant DNA."},
+{topic: "vectors", marks: 3, difficulty: "Medium", q: "What are cloning sites in a vector, and why can having multiple recognition sites for one enzyme complicate cloning?", a: "(i) Cloning sites are the recognition sequences of restriction enzymes present in the vector, where foreign DNA is inserted. (ii) When more than one site for the same enzyme is present, the enzyme cuts the vector at several places. (iii) This produces multiple fragments and complicates cloning, so ligation is carried out only at a chosen site within an antibiotic resistance gene."},
+{topic: "vectors", marks: 3, difficulty: "Medium", q: "Name three enzymes whose recognition sequences serve as cloning sites in pBR322, and state their general function in the vector.", a: "(i) EcoRI, HindIII, PvuI and BamHI recognition sites occur in pBR322. (ii) These are the precise locations where the respective restriction enzyme cuts the plasmid DNA. (iii) Foreign DNA is inserted at these sites to construct recombinant DNA."},
+{topic: "vectors", marks: 5, difficulty: "Hard", q: "Describe the essential features that a molecule must possess to act as a cloning vector.", a: "1. Origin of replication (ori) — the sequence from which vector replication begins; controls copy number.\n2. Selectable marker — usually an antibiotic resistance gene (e.g. ampR, tetR) that distinguishes transformed from non-transformed hosts.\n3. Cloning sites — one or a few recognition sequences for restriction enzymes where foreign DNA can be inserted.\n4. Ability to replicate independently within the host cell, separate from the host chromosome.\n5. Small size, for ease of manipulation and to be taken up efficiently by the host cell.\n6. Compatibility with the chosen host organism so that it can be introduced and maintained inside it."},
+
+{topic: "markers", marks: 1, difficulty: "Easy", q: "What is insertional inactivation?", a: "The loss of function of a gene that occurs when a foreign DNA fragment is inserted within its coding sequence."},
+{topic: "markers", marks: 1, difficulty: "Easy", q: "Name the enzyme used as an alternative selectable marker to antibiotic resistance genes.", a: "β-galactosidase."},
+{topic: "markers", marks: 2, difficulty: "Medium", q: "In pBR322, what happens when foreign DNA is inserted into the BamHI site present within the tetR gene?", a: "(i) Insertion of the foreign DNA disrupts the tetR gene, so tetracycline resistance is lost. (ii) The resulting recombinant is unable to grow in the presence of tetracycline, unlike non-recombinants."},
+{topic: "markers", marks: 2, difficulty: "Medium", q: "How do recombinant and non-recombinant colonies appear on a chromogenic β-galactosidase substrate plate?", a: "(i) Non-recombinants, with an intact β-galactosidase gene, form blue colonies. (ii) Recombinants, where the gene is inactivated by insertion, form colourless colonies."},
+{topic: "markers", marks: 3, difficulty: "Medium", q: "Explain, with reasoning, how recombinant and non-recombinant bacteria are distinguished using ampicillin and tetracycline plates.", a: "(i) Both recombinants and non-recombinants carry the intact ampR gene, so both grow on ampicillin medium. (ii) In recombinants, insertion of foreign DNA into tetR causes loss of tetracycline resistance, so they die on tetracycline medium. (iii) Non-recombinants have an intact tetR gene and grow on both antibiotics, allowing the two types to be distinguished."},
+{topic: "markers", marks: 3, difficulty: "Medium", q: "Why is the blue-white (β-galactosidase) screening method often preferred over the dual antibiotic-plate method?", a: "(i) The antibiotic method needs replica plating onto two separate media and comparing growth patterns. (ii) The blue-white method needs only a single plate with the chromogenic substrate. (iii) Recombinant (colourless) and non-recombinant (blue) colonies are directly and visually distinguished in one step, saving time and labour."},
+{topic: "markers", marks: 5, difficulty: "Hard", q: "Describe the principle and procedure of selecting recombinants using insertional inactivation of an antibiotic resistance gene.", a: "1. A vector such as pBR322 carries two antibiotic resistance genes, e.g. ampR and tetR.\n2. One of these genes (say tetR) contains a unique restriction site, e.g. for BamHI.\n3. The vector and foreign DNA are cut with BamHI and ligated; foreign DNA gets inserted within the tetR gene.\n4. This insertion disrupts the tetR gene sequence, so its function (tetracycline resistance) is lost — insertional inactivation.\n5. Transformed bacteria are first plated on ampicillin medium; only cells carrying the vector (recombinant or not) survive.\n6. These survivors are then replica-plated onto tetracycline medium.\n7. Recombinants (tetR inactivated) fail to grow on tetracycline, while non-recombinants (tetR intact) grow on both, allowing recombinants to be identified."},
+
+{topic: "hosts", marks: 1, difficulty: "Easy", q: "What is a 'disarmed' vector?", a: "A vector such as the Ti plasmid or a retrovirus that has had its disease/tumour/cancer-causing genes removed while retaining its ability to deliver DNA into cells."},
+{topic: "hosts", marks: 1, difficulty: "Easy", q: "Define a competent host in the context of transformation.", a: "A bacterial cell that has been made capable of taking up foreign/vector DNA, usually by physical or chemical treatment."},
+{topic: "hosts", marks: 2, difficulty: "Easy", q: "Name the natural vectors used to introduce recombinant DNA into plant cells and animal cells respectively.", a: "(i) Plant cells — the (disarmed) Ti plasmid of Agrobacterium tumefaciens. (ii) Animal cells — a disarmed retrovirus."},
+{topic: "hosts", marks: 2, difficulty: "Medium", q: "Describe the biolistics (gene gun) method of gene transfer.", a: "(i) Cells are bombarded with high-velocity micro-particles of gold or tungsten coated with DNA. (ii) This method is commonly used to introduce recombinant DNA into plant cells."},
+{topic: "hosts", marks: 3, difficulty: "Medium", q: "Explain the CaCl2/heat-shock method of making bacterial cells competent to take up recombinant DNA.", a: "(i) Bacterial cells are treated with a divalent cation such as Ca2+, which increases the efficiency of DNA entry through the cell wall/membrane pores. (ii) The cells are incubated with the recombinant DNA on ice. (iii) They are then given a brief heat shock at 42°C and placed back on ice, allowing the DNA to enter the cell."},
+{topic: "hosts", marks: 3, difficulty: "Medium", q: "Why is the Ti plasmid of Agrobacterium tumefaciens useful as a cloning vector after it is disarmed?", a: "(i) Agrobacterium tumefaciens naturally infects plants and transfers part of its Ti plasmid DNA into the plant cell's genome. (ii) Removing the tumour-inducing (pathogenicity) genes disarms it, so it no longer causes disease. (iii) The disarmed plasmid retains its natural ability to transfer DNA into plant cells, making it an efficient vector for plant genetic engineering."},
+{topic: "hosts", marks: 5, difficulty: "Hard", q: "Describe the various methods used to introduce recombinant DNA into host cells.", a: "1. CaCl2/heat-shock method — bacterial cells are treated with Ca2+ ions, incubated with DNA on ice, given a brief 42°C heat shock, and returned to ice; used mainly for bacteria.\n2. Microinjection — recombinant DNA is directly injected into the nucleus of an animal cell using a fine needle.\n3. Biolistics (gene gun) — cells (especially plant cells) are bombarded with high-velocity micro-particles of gold or tungsten coated with DNA.\n4. Disarmed vectors — the Ti plasmid of Agrobacterium tumefaciens (for plants) or a disarmed retrovirus (for animals) is used to naturally deliver DNA into the host cell.\n5. In each method, cells that take up the DNA are later selected using the vector's selectable marker gene."},
+
+{topic: "isolation", marks: 1, difficulty: "Easy", q: "Name the enzyme used to break open the cell wall of a bacterial cell during DNA isolation.", a: "Lysozyme."},
+{topic: "isolation", marks: 1, difficulty: "Easy", q: "What is used to precipitate purified DNA at the final step of DNA isolation?", a: "Chilled ethanol, which causes DNA to precipitate out as fine threads."},
+{topic: "isolation", marks: 2, difficulty: "Easy", q: "Which enzymes are used to break open the cell walls of plant cells and fungal cells respectively?", a: "(i) Plant cells — cellulase. (ii) Fungal cells — chitinase."},
+{topic: "isolation", marks: 2, difficulty: "Medium", q: "Name the enzymes used to remove contaminating RNA and proteins during DNA isolation.", a: "(i) Ribonucleases (RNase) digest and remove contaminating RNA. (ii) Proteases digest and remove contaminating proteins."},
+{topic: "isolation", marks: 3, difficulty: "Medium", q: "Explain how recombinant DNA is constructed once the gene of interest and the vector have been isolated.", a: "(i) The purified DNA containing the gene of interest is cut with a restriction enzyme, and fragments are separated by gel electrophoresis. (ii) The vector DNA is cut with the same restriction enzyme so both have compatible sticky ends. (iii) The gene of interest is hybridised (joined) with the vector using the enzyme DNA ligase to form recombinant DNA."},
+{topic: "isolation", marks: 3, difficulty: "Medium", q: "Outline, in sequence, the main steps involved in obtaining pure DNA from a bacterial cell.", a: "(i) Cell wall is broken open using lysozyme to release the cell contents. (ii) Contaminating RNA and proteins are removed using ribonucleases and proteases. (iii) Chilled ethanol is added to precipitate the purified DNA, which appears as fine threads."},
+{topic: "isolation", marks: 5, difficulty: "Hard", q: "Describe the complete process, from isolating DNA to obtaining recombinant DNA, in constructing a rDNA molecule.", a: "1. The cell wall is broken open using a suitable enzyme — lysozyme for bacteria, cellulase for plant cells, chitinase for fungi.\n2. Other cellular macromolecules such as RNA and proteins are removed using ribonucleases and proteases respectively.\n3. Purified DNA is precipitated using chilled ethanol and appears as fine threads in the suspension.\n4. This purified DNA is cut into fragments with a suitable restriction enzyme.\n5. The resulting fragments are separated and the desired fragment (gene of interest) is isolated by gel electrophoresis.\n6. The vector DNA is cut with the same restriction enzyme to create matching sticky ends.\n7. The gene of interest is joined (hybridised) with the vector DNA using the enzyme DNA ligase, forming a recombinant DNA molecule."},
+
+{topic: "pcr", marks: 1, difficulty: "Easy", q: "What does PCR stand for?", a: "Polymerase Chain Reaction."},
+{topic: "pcr", marks: 1, difficulty: "Easy", q: "From which organism is Taq polymerase isolated?", a: "The thermophilic bacterium Thermus aquaticus."},
+{topic: "pcr", marks: 2, difficulty: "Easy", q: "What are primers in a PCR reaction?", a: "(i) Primers are chemically synthesised oligonucleotides. (ii) They are complementary to specific regions on the DNA template and flank the sequence to be amplified."},
+{topic: "pcr", marks: 2, difficulty: "Medium", q: "Why must the DNA polymerase used in PCR be thermostable?", a: "(i) The PCR reaction involves a denaturation step at very high temperature to separate the DNA strands. (ii) A thermostable enzyme like Taq polymerase survives this repeated heating without being degraded, unlike ordinary DNA polymerases."},
+{topic: "pcr", marks: 3, difficulty: "Medium", q: "Name the three steps of a PCR cycle and briefly state what occurs in each.", a: "(i) Denaturation — the double-helical DNA is heated to high temperature, separating it into single strands. (ii) Annealing — temperature is lowered to 50–65°C, allowing primers to bind their complementary sequences. (iii) Extension — Taq polymerase extends the primers in the 5' to 3' direction to synthesise new DNA strands."},
+{topic: "pcr", marks: 3, difficulty: "Medium", q: "What components are essential in a PCR reaction mixture?", a: "(i) Two sets of primers complementary to the flanking regions of the DNA of interest. (ii) The enzyme DNA polymerase (typically Taq polymerase). (iii) A supply of deoxynucleotides (dNTPs) as building blocks for new DNA strands."},
+{topic: "pcr", marks: 5, difficulty: "Hard", q: "Describe the steps of the PCR technique and explain how it results in a large number of DNA copies.", a: "1. The reaction mixture contains the template DNA, two primers, Taq polymerase, and deoxynucleotides.\n2. Denaturation: the double-stranded DNA is heated to a high temperature, separating it into two single strands.\n3. Annealing: the temperature is lowered to 50–65°C, allowing the two primers to bind to their complementary sequences on the separated strands.\n4. Extension: Taq polymerase, being thermostable, extends the primers in the 5' to 3' direction using the dNTPs, synthesising new complementary strands.\n5. This three-step cycle (denaturation-annealing-extension) is repeated many times.\n6. In each cycle, both the original and the newly synthesised strands act as templates, so the DNA doubles every cycle.\n7. After multiple cycles, up to about a billion copies of the target DNA fragment are generated in vitro."},
+
+{topic: "bioreactor", marks: 1, difficulty: "Easy", q: "What is downstream processing?", a: "The series of processes (separation, purification and finishing) applied to a crude bioreactor product before it is marketed."},
+{topic: "bioreactor", marks: 1, difficulty: "Easy", q: "What is the typical volume range of a bioreactor?", a: "Typically 100 to 1000 litres."},
+{topic: "bioreactor", marks: 2, difficulty: "Easy", q: "Name three key components of a bioreactor.", a: "(i) An agitator system and an oxygen delivery system. (ii) A foam control system, along with temperature and pH control systems, and sampling ports."},
+{topic: "bioreactor", marks: 2, difficulty: "Medium", q: "How is recombinant DNA typically introduced into a bacterial host as compared to a plant or animal host?", a: "(i) In bacteria, recombinant DNA is introduced mainly by transformation. (ii) In plant and animal cells, disarmed vectors, biolistics, or micro-injection are used instead."},
+{topic: "bioreactor", marks: 3, difficulty: "Medium", q: "Explain why continuous culture in a bioreactor gives a higher product yield than a simple batch culture.", a: "(i) In continuous culture, used medium is continuously drained from one side while fresh medium is added from the other. (ii) This maintains optimal nutrient and growth conditions throughout the run. (iii) Cells are kept in their log/exponential growth phase for longer, producing greater biomass and higher product yield."},
+{topic: "bioreactor", marks: 3, difficulty: "Medium", q: "Why must the growth conditions inside a bioreactor be optimised, and which factors need to be controlled?", a: "(i) Optimum conditions ensure maximum product formation with minimum time and cost. (ii) Factors that must be controlled include temperature, pH, substrate concentration, salts and vitamins. (iii) Systems for agitation, oxygen supply, and foam control are also needed to maintain these conditions consistently."},
+{topic: "bioreactor", marks: 5, difficulty: "Hard", q: "Describe the sequence of steps, from selecting transformed cells to obtaining a market-ready product, in the large-scale production of a recombinant protein.", a: "1. Cells that have taken up the recombinant DNA are first selected using the vector's selectable marker gene.\n2. Selected cells are grown in a bioreactor, a large vessel (100–1000 litres) that provides optimum conditions of temperature, pH, substrate, salts and vitamins.\n3. The bioreactor is equipped with an agitator system, oxygen delivery system, foam control system, and temperature/pH control systems, monitored via sampling ports.\n4. A continuous culture system may be used, draining used medium and adding fresh medium so cells remain in log/exponential phase for a longer period, giving higher biomass and yield.\n5. The desired product (enzyme, antibiotic, alcohol) accumulates but is obtained in a crude form.\n6. Downstream processing is carried out — separation and purification of the product from the culture.\n7. The product is then formulated with suitable preservatives, and must pass clinical trials and quality control checks before it can be marketed."},
+];
+
 /* ---------------- ANSWER PRACTICE (Write It, Then Compare) ---------------- */
-/* Reuses each topic's existing analytical Q&A (DATA.concepts[topic].analytical,
-   already authored for the Concepts tab's "Reveal Reasoning" cards) as an
-   active-recall loop: student writes their own answer first, then reveals
-   the model answer. Unlike Chapter 3, this data has no marks/difficulty
-   tags, so filtering here is by topic only. Self-rating mirrors Flashcards'
-   weak-first pattern, keyed by index into a flattened, stable question list. */
 let WA_ALL_POOL = null;
 function waAllPool(){
   if(WA_ALL_POOL) return WA_ALL_POOL;
-  const list = [];
-  DATA.topics.forEach(t=>{
-    const c = DATA.concepts[t.id];
-    if(!c || !c.analytical) return;
-    c.analytical.forEach(qa=>{ list.push({topic:t.id, q:qa.q, a:qa.a, idx:list.length}); });
-  });
-  WA_ALL_POOL = list;
-  return list;
+  WA_ALL_POOL = DESC_QUESTIONS.map((q,i)=>({...q, idx:i}));
+  return WA_ALL_POOL;
 }
-let waSetup = {topic:'All'};
+let waSetup = {topic:'All', marks:'All'};
 let waSession = null;
 const WA_WEIGHTS_KEY = 'ch9_writeit_weights_v1';
 function getWaWeights(){
@@ -2720,7 +2774,8 @@ function setWaWeight(idx, gotIt){
   try{ localStorage.setItem(WA_WEIGHTS_KEY, JSON.stringify(w)); }catch(e){}
 }
 function waFilterPool(){
-  return waAllPool().filter(q => waSetup.topic==='All' || q.topic===waSetup.topic);
+  return waAllPool().filter(q => (waSetup.topic==='All' || q.topic===waSetup.topic)
+    && (waSetup.marks==='All' || q.marks===parseInt(waSetup.marks,10)));
 }
 function renderWriteItSetup(){
   const pool = waFilterPool();
@@ -2732,6 +2787,8 @@ function renderWriteItSetup(){
   html += `<div class="setup-card">
     <div class="setup-label">Topic</div>
     <div class="opt-row">${topicChips}</div>
+    <div class="setup-label">Marks</div>
+    <div class="opt-row">${['All','1','2','3','5'].map(v=>`<div class="opt-btn ${waSetup.marks===v?'sel':''}" onclick="waSetMarks('${v}')">${v==='All'?'All':v+' Marks'}</div>`).join('')}</div>
     <button class="start-btn" onclick="waStart()">Start Practice · ${pool.length} matching</button>
     ${pool.length ? `<button class="fc-btn" style="width:100%; margin-top:8px;" onclick="waWeakFirst()">🎯 Practice Weak Answers First</button>` : ''}
   </div>`;
@@ -2739,7 +2796,8 @@ function renderWriteItSetup(){
   document.getElementById('content').innerHTML = html;
 }
 function waSetTopic(id){ waSetup.topic=id; renderWriteItSetup(); }
-window.waSetTopic=waSetTopic;
+function waSetMarks(v){ waSetup.marks=v; renderWriteItSetup(); }
+window.waSetTopic=waSetTopic; window.waSetMarks=waSetMarks;
 
 function waStart(){
   const pool = shuffleArr(waFilterPool());
@@ -2765,7 +2823,9 @@ function renderWriteItQuestion(){
     <div class="fc-counter">Question ${s.idx+1} / ${s.questions.length}</div>
     <div class="setup-card">
       <div class="opt-row" style="margin-bottom:10px;">
-        <span class="opt-btn sel" style="cursor:default;">${topicName}</span>
+        <span class="opt-btn sel" style="cursor:default;">${q.marks} Marks</span>
+        <span class="opt-btn" style="cursor:default;">${q.difficulty}</span>
+        <span class="opt-btn" style="cursor:default;">${topicName}</span>
       </div>
       <div class="aq-q" style="margin-bottom:12px;">${q.q}</div>
       <div style="font-size:11.5px; color:var(--ink-dim); margin-bottom:6px;">📝 Write this out on paper first, like the real exam — use the box below only as a rough scratchpad.</div>
