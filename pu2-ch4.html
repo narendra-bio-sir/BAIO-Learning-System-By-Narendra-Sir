@@ -6498,6 +6498,7 @@ function setLang(lang){
     else if(tabId === 'concept' && typeof renderConcept === 'function') renderConcept();
     else if(tabId === 'studytips' && typeof renderStudyTipsCh2 === 'function') try{ renderStudyTipsCh2(); }catch(e){ console.error('renderStudyTipsCh2 failed:', e); }
     else if(tabId === 'glossary' && typeof renderGlossary === 'function') renderGlossary(document.getElementById('glossarySearch') ? document.getElementById('glossarySearch').value : '');
+    else if(tabId === 'writeit' && typeof renderWriteItQuestion === 'function' && typeof waSession !== 'undefined' && waSession && waSession.idx < waSession.questions.length) renderWriteItQuestion();
   }
 }
 window.setLang = setLang;
