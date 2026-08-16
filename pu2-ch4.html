@@ -2678,6 +2678,13 @@ const ADV_SEQ = [
 {"steps":["Chromatids fail to segregate properly during cell division (non-disjunction)","This produces a gamete with an extra copy of chromosome 21","Fertilisation with a normal gamete produces a zygote with three copies of chromosome 21 (trisomy)","The individual develops the physical and developmental features of Down's syndrome"],"correctOrder":[0,1,2,3],"d":"Medium","top":"t8","e":"Down's syndrome arises when chromatids fail to segregate (non-disjunction) during gamete formation, a gamete carries an extra chromosome 21, fertilisation gives a zygote with trisomy 21, and the individual shows Down's syndrome features."},
 {"steps":["An affected (haemophilic) grandfather passes his defective X chromosome to his daughter","The daughter inherits one normal and one defective X chromosome, making her an unaffected carrier","The carrier daughter passes the defective X chromosome to one of her sons","That son, having only one X chromosome, expresses haemophilia (hemizygous for the defective allele)"],"correctOrder":[0,1,2,3],"d":"Hard","top":"t8","e":"Haemophilia's criss-cross inheritance: an affected grandfather passes his defective X to his daughter, who becomes an unaffected carrier, and she in turn may pass the defective X to a son, who expresses the disease since males are hemizygous for X-linked genes."}
 ];
+ADV_MCQ.forEach(x=>ADV.push({type:"mcq",d:x.d,top:x.top,q:x.q,o:x.o,a:x.a,e:x.e}));
+ADV_AR.forEach(x=>ADV.push({type:"ar",d:x.d,top:x.top,as:x.as,re:x.re,a:x.a,e:x.e}));
+ADV_FIB.forEach(x=>ADV.push({type:"fib",d:x.d,top:x.top,s:x.s,o:x.o,a:x.a,e:x.e}));
+ADV_MATCH.forEach(x=>ADV.push({type:"match",d:x.d,top:x.top,colA:x.colA,colB:x.colB,o:x.o,a:x.a,e:x.e}));
+ADV_CI.forEach(x=>ADV.push({type:"ci",d:x.d,top:x.top,prompt:x.prompt,st:x.st,a:x.a,e:x.e}));
+ADV_S12.forEach(x=>ADV.push({type:"s12",d:x.d,top:x.top,s1:x.s1,s2:x.s2,a:x.a,e:x.e}));
+ADV_COMBO.forEach(x=>ADV.push({type:"combo",d:x.d,top:x.top,stmts:x.stmts,o:x.o,a:x.a,e:x.e}));
 ADV_SEQ.forEach(x=>ADV.push({type:"seq",d:x.d,top:x.top,steps:x.steps,correctOrder:x.correctOrder,e:x.e}));
 ADV.forEach((q,i)=>{ q._uid = i; });
 
