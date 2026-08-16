@@ -1770,25 +1770,287 @@ function renderKcetReport(){
 window.renderKcetSetup = renderKcetSetup;
 
 /* ---------------- ANSWER PRACTICE (Write It, Then Compare) ---------------- */
-/* No authored theory question bank exists in this chapter, so this reuses
-   each topic's existing Study Mode sections (DATA.study[topic].sections,
-   already authored {h, body} pairs used by Study Mode and Revision) as an
-   active-recall loop: student writes their own answer to the section
-   heading, then reveals the section body as the model answer. Self-rating
-   mirrors Flashcards' weak-first pattern, keyed into a stable flattened pool. */
-let WA_ALL_POOL = null;
-function waAllPool(){
-  if(WA_ALL_POOL) return WA_ALL_POOL;
-  const list = [];
-  DATA.topics.forEach(t=>{
-    const d = DATA.study[t.id];
-    if(!d || !d.sections) return;
-    d.sections.forEach(sec=>{ list.push({topic:t.id, q:'Explain: ' + sec.h, a:sec.body, idx:list.length}); });
-  });
-  WA_ALL_POOL = list;
-  return list;
-}
-let waSetup = {topic:'All'};
+const DESC_QUESTIONS = [
+{"topic": "root", "marks": 1, "difficulty": "Easy", "q": "Define the tap root system.", "a": "The tap root system develops by direct elongation of the embryonic radicle into a primary root, which branches into secondary and tertiary roots, e.g. Mustard."},
+{"topic": "root", "marks": 1, "difficulty": "Easy", "q": "Why do mangrove plants develop pneumatophores?", "a": "Mangrove plants develop pneumatophores, roots that grow vertically upward out of the waterlogged soil, to aid in respiration."},
+{"topic": "root", "marks": 2, "difficulty": "Medium", "q": "Differentiate between the tap root system and the fibrous root system.", "a": "(i) In the tap root system the primary root persists and branches into secondary and tertiary roots, e.g. Mustard. (ii) In the fibrous root system the primary root is short-lived and is replaced by a dense cluster of roots arising from the base of the stem, e.g. Wheat."},
+{"topic": "root", "marks": 2, "difficulty": "Easy", "q": "Mention any two functions of the root system.", "a": "(i) Absorption of water and minerals from the soil. (ii) Anchorage of the plant in the soil, along with storage of food and synthesis of growth hormones."},
+{"topic": "root", "marks": 3, "difficulty": "Medium", "q": "Describe the different regions of a root tip.", "a": "(i) The root cap covers and protects the growing tip of the root. (ii) The region of meristematic activity, made of small, continuously dividing cells, lies just behind the root cap. (iii) This is followed by the region of elongation and then the region of maturation, where root hairs develop for absorption."},
+{"topic": "root", "marks": 3, "difficulty": "Medium", "q": "Explain any three modifications of roots for special functions, with an example each.", "a": "(i) Storage roots such as carrot, radish and turnip swell up with reserve food. (ii) Prop roots in banyan arise from branches and provide mechanical support. (iii) Pneumatophores in mangroves grow upward out of waterlogged soil to aid respiration."},
+{"topic": "root", "marks": 3, "difficulty": "Medium", "q": "Explain the significance of root nodules in leguminous plants.", "a": "(i) Roots of leguminous plants form swellings called root nodules. (ii) These nodules house nitrogen-fixing bacteria, Rhizobium. (iii) This symbiotic relationship enriches the nitrogen content of the soil."},
+{"topic": "root", "marks": 5, "difficulty": "Hard", "q": "Describe the modifications of roots and the functions of the root system, with examples.", "a": "1. Roots absorb water and minerals from the soil.\n2. Roots provide anchorage, fixing the plant firmly in the soil.\n3. Storage roots such as carrot, radish and turnip swell up to store reserve food.\n4. Prop roots in banyan arise from spreading branches and provide them mechanical support.\n5. Pneumatophores in mangrove plants grow vertically upward out of waterlogged soil to aid in respiration.\n6. Root nodules in leguminous plants house nitrogen-fixing Rhizobium bacteria, enriching soil nitrogen.\n7. Roots also synthesise growth hormones needed by the plant."},
+
+{"topic": "stem", "marks": 1, "difficulty": "Easy", "q": "What is a node?", "a": "A node is the point on a stem that bears a leaf, distinguishing the stem from the root."},
+{"topic": "stem", "marks": 1, "difficulty": "Easy", "q": "Name the underground stem modification seen in ginger and turmeric.", "a": "Rhizome - a horizontal underground stem that stores food and helps in propagation."},
+{"topic": "stem", "marks": 2, "difficulty": "Easy", "q": "Differentiate between a node and an internode.", "a": "(i) A node is the point on the stem bearing a leaf. (ii) An internode is the segment of the stem lying between two successive nodes."},
+{"topic": "stem", "marks": 2, "difficulty": "Medium", "q": "Differentiate between terminal buds and axillary buds.", "a": "(i) A terminal (apical) bud is present at the tip of the stem or branch. (ii) An axillary bud develops in the axil of a leaf."},
+{"topic": "stem", "marks": 3, "difficulty": "Medium", "q": "Describe the underground modifications of the stem, with examples.", "a": "(i) Underground stems are modified mainly for storage of food and perennation. (ii) A rhizome is a horizontal underground stem, e.g. ginger, turmeric. (iii) A corm is a short, vertical, swollen underground stem, e.g. Colocasia."},
+{"topic": "stem", "marks": 3, "difficulty": "Medium", "q": "Explain the aerial modifications of the stem, with examples.", "a": "(i) Stem tendrils are slender coiling structures used for climbing, e.g. grapevine. (ii) Thorns are hard, pointed structures for protection, e.g. Citrus, Bougainvillea. (iii) Phylloclades are flattened green stems that carry out photosynthesis in place of leaves, e.g. Opuntia."},
+{"topic": "stem", "marks": 3, "difficulty": "Medium", "q": "Explain the sub-aerial modifications of the stem, with examples.", "a": "(i) Runners creep along the ground helping in vegetative propagation, e.g. grass. (ii) Stolons and offsets arise similarly and root at the nodes, e.g. mint, Pistia. (iii) Suckers arise from the base of the stem and grow obliquely to form new plants, e.g. banana, chrysanthemum."},
+{"topic": "stem", "marks": 5, "difficulty": "Hard", "q": "Describe the various modifications of the stem, with one example each.", "a": "1. Rhizome - a horizontal underground stem that stores food, e.g. ginger, turmeric.\n2. Corm - a short, vertical, swollen underground stem, e.g. Colocasia.\n3. Stem tendril - a slender coiling aerial modification used for climbing, e.g. grapevine.\n4. Thorn - a hard, pointed aerial modification for protection, e.g. Citrus, Bougainvillea.\n5. Phylloclade - a flattened green aerial stem that performs photosynthesis, e.g. Opuntia.\n6. Runner/stolon - a sub-aerial stem creeping along the ground for vegetative propagation, e.g. grass, mint.\n7. Sucker - a sub-aerial stem arising from the base for propagation, e.g. banana, chrysanthemum."},
+
+{"topic": "leaf", "marks": 1, "difficulty": "Easy", "q": "Define venation.", "a": "Venation is the pattern of distribution of veins and veinlets in the lamina of a leaf."},
+{"topic": "leaf", "marks": 1, "difficulty": "Easy", "q": "Define heterophylly.", "a": "Heterophylly is the occurrence of leaves of different shapes on the same plant at different developmental stages or under different environmental conditions, e.g. cotton, larkspur."},
+{"topic": "leaf", "marks": 2, "difficulty": "Medium", "q": "Differentiate between reticulate and parallel venation, with an example each.", "a": "(i) In reticulate venation the veins form a net-like pattern, typical of dicots, e.g. China rose. (ii) In parallel venation the veins run parallel to each other, typical of monocots, e.g. grasses."},
+{"topic": "leaf", "marks": 2, "difficulty": "Easy", "q": "Differentiate between a simple leaf and a compound leaf.", "a": "(i) In a simple leaf the incisions of the lamina do not reach the midrib. (ii) In a compound leaf the incisions reach the midrib, dividing the lamina into leaflets, e.g. Neem."},
+{"topic": "leaf", "marks": 2, "difficulty": "Medium", "q": "Differentiate between alternate and opposite phyllotaxy, with an example each.", "a": "(i) In alternate phyllotaxy a single leaf arises at each node alternately, e.g. China rose. (ii) In opposite phyllotaxy a pair of leaves arises at each node opposite to each other, e.g. Calotropis."},
+{"topic": "leaf", "marks": 3, "difficulty": "Medium", "q": "Describe the three types of phyllotaxy, with an example each.", "a": "(i) Alternate phyllotaxy - a single leaf arises at each node, e.g. China rose. (ii) Opposite phyllotaxy - a pair of leaves arises at each node, e.g. Calotropis. (iii) Whorled phyllotaxy - more than two leaves arise at a node, forming a whorl, e.g. Alstonia."},
+{"topic": "leaf", "marks": 3, "difficulty": "Medium", "q": "Explain any three modifications of leaves, with an example each.", "a": "(i) Leaf tendrils help the plant climb, e.g. Pea. (ii) Leaf spines protect the plant and reduce water loss, e.g. Cactus. (iii) Leaf pitchers capture insects, e.g. Nepenthes."},
+{"topic": "leaf", "marks": 5, "difficulty": "Hard", "q": "Describe the structure of a typical leaf and its modifications, with examples.", "a": "1. The leaf base attaches the leaf to the stem; it may bear stipules, form a sheath around the stem in monocots, or a pulvinus in legumes.\n2. The petiole holds the blade to the light and allows it to flutter in the wind.\n3. The lamina, or leaf blade, bears the midrib and is the main site of photosynthesis.\n4. Venation may be reticulate (net-like, dicots) or parallel (monocots).\n5. Leaves modify into tendrils for climbing, e.g. Pea.\n6. Leaves modify into spines for protection and to reduce water loss, e.g. Cactus.\n7. Leaves modify into pitchers for insect capture, e.g. Nepenthes."},
+
+{"topic": "inflorescence", "marks": 1, "difficulty": "Medium", "q": "What is meant by acropetal succession?", "a": "Acropetal succession is the arrangement of flowers on a racemose inflorescence in which the older flowers are borne towards the base and the younger ones towards the tip."},
+{"topic": "inflorescence", "marks": 1, "difficulty": "Easy", "q": "Give an example of a plant showing spadix inflorescence.", "a": "Banana shows a spadix inflorescence, a spike with a fleshy axis enclosed by a bract."},
+{"topic": "inflorescence", "marks": 1, "difficulty": "Easy", "q": "What is a capitulum? Give an example.", "a": "A capitulum (head) is a type of racemose inflorescence with densely packed florets on a flattened axis, e.g. sunflower."},
+{"topic": "inflorescence", "marks": 2, "difficulty": "Medium", "q": "Differentiate between racemose and cymose inflorescence.", "a": "(i) In racemose inflorescence the main axis continues to grow and flowers are borne laterally in acropetal succession. (ii) In cymose inflorescence the main axis terminates in a flower, limiting further growth, and flowers are borne in basipetal order."},
+{"topic": "inflorescence", "marks": 2, "difficulty": "Medium", "q": "Differentiate between biparous and multiparous cyme, with an example each.", "a": "(i) A biparous cyme has two lateral branches arising at each step, e.g. Jasmine. (ii) A multiparous cyme has more than two lateral branches arising at each step, e.g. Calotropis."},
+{"topic": "inflorescence", "marks": 3, "difficulty": "Medium", "q": "Explain any three special types of racemose inflorescence, with an example each.", "a": "(i) Spike bears sessile flowers on an elongated axis, e.g. Achyranthes. (ii) Catkin is a pendulous spike, e.g. mulberry. (iii) Umbel has flowers arising from a common point at the tip of the axis, e.g. coriander."},
+{"topic": "inflorescence", "marks": 3, "difficulty": "Hard", "q": "Explain the three types of cymose inflorescence based on the number of lateral branches produced.", "a": "(i) Uniparous cyme produces a single lateral branch at each step. (ii) Biparous cyme produces two lateral branches at each step, e.g. Jasmine. (iii) Multiparous cyme produces more than two lateral branches at each step, e.g. Calotropis."},
+{"topic": "inflorescence", "marks": 5, "difficulty": "Hard", "q": "Describe the racemose and cymose types of inflorescence, along with their special forms.", "a": "1. In a racemose inflorescence the main axis continues to grow and flowers are borne laterally in acropetal succession, with older flowers at the base and younger ones at the tip.\n2. Spike bears sessile flowers on an elongated axis, e.g. Achyranthes.\n3. Spadix is a spike with a fleshy axis enclosed by a bract, e.g. banana.\n4. Umbel has flowers arising from a common point, e.g. coriander.\n5. Head or capitulum bears densely packed florets, e.g. sunflower.\n6. In a cymose inflorescence the main axis terminates in a flower, so flowers are borne in basipetal order, with younger flowers at the base.\n7. Cymose variants include the uniparous, biparous (Jasmine) and multiparous (Calotropis) cymes, based on the number of lateral branches produced."},
+
+{"topic": "flower", "marks": 1, "difficulty": "Easy", "q": "Define perianth.", "a": "Perianth is the term used when the calyx and corolla of a flower are not distinguishable from each other."},
+{"topic": "flower", "marks": 1, "difficulty": "Easy", "q": "Define placentation.", "a": "Placentation is the arrangement of ovules within the ovary of a flower."},
+{"topic": "flower", "marks": 2, "difficulty": "Medium", "q": "Differentiate between hypogynous and epigynous flowers, with an example each.", "a": "(i) In a hypogynous flower the ovary is superior, situated above the other floral whorls, e.g. Mustard. (ii) In an epigynous flower the ovary is inferior, situated below the other floral whorls, e.g. Guava."},
+{"topic": "flower", "marks": 2, "difficulty": "Medium", "q": "Differentiate between apocarpous and syncarpous gynoecium, with an example each.", "a": "(i) An apocarpous gynoecium has carpels that are free from one another, e.g. Lotus. (ii) A syncarpous gynoecium has carpels that are fused together, e.g. Mustard."},
+{"topic": "flower", "marks": 3, "difficulty": "Medium", "q": "Describe the structure of a typical stamen.", "a": "(i) A stamen consists of a slender stalk called the filament. (ii) The filament bears a terminal anther, typically bilobed, with each lobe having two chambers (theca) that produce pollen grains. (iii) The point of attachment between the filament and the anther is called the connective."},
+{"topic": "flower", "marks": 3, "difficulty": "Medium", "q": "Explain any three types of aestivation found in flowers, with an example each.", "a": "(i) In valvate aestivation the sepals or petals just touch each other at the margin without overlapping, e.g. Calotropis. (ii) In twisted aestivation one margin of each member overlaps the next, e.g. China rose. (iii) In imbricate aestivation the margins overlap one another irregularly, e.g. Gulmohur."},
+{"topic": "flower", "marks": 5, "difficulty": "Hard", "q": "Describe the four floral whorls of a typical flower and the three positions of the ovary on the thalamus.", "a": "1. Calyx is the outermost whorl of sepals, usually green, and protects the flower in the bud stage.\n2. Corolla is the whorl of petals, often brightly coloured to attract pollinators; calyx and corolla together are accessory whorls.\n3. Androecium is the male reproductive whorl made up of stamens.\n4. Gynoecium is the female reproductive whorl made up of carpels.\n5. In hypogynous flowers the ovary is superior, e.g. Mustard.\n6. In perigynous flowers the ovary is half-inferior, e.g. Plum.\n7. In epigynous flowers the ovary is inferior, e.g. Guava."},
+{"topic": "flower", "marks": 5, "difficulty": "Hard", "q": "Describe the various types of placentation found in flowers, with an example each.", "a": "1. Marginal placentation - ovules are borne on the fused margin of a single carpel, e.g. Pea.\n2. Axile placentation - ovules are borne on a central axis in a multilocular ovary, e.g. Tomato.\n3. Parietal placentation - ovules are borne on the inner wall of the ovary, e.g. Mustard.\n4. Free central placentation - ovules are borne on a central axis without septa, e.g. Dianthus.\n5. Basal placentation - a single ovule is borne at the base of the ovary, e.g. Sunflower."},
+
+{"topic": "fruit-seed", "marks": 1, "difficulty": "Easy", "q": "What is a parthenocarpic fruit?", "a": "A parthenocarpic fruit is one that develops from the ovary without fertilization."},
+{"topic": "fruit-seed", "marks": 1, "difficulty": "Easy", "q": "Name the three layers of the pericarp of a fruit.", "a": "The pericarp differentiates into the epicarp, mesocarp and endocarp."},
+{"topic": "fruit-seed", "marks": 2, "difficulty": "Medium", "q": "Differentiate between true fruit and false fruit, with an example each.", "a": "(i) A true fruit develops solely from the ovary, e.g. mango. (ii) A false fruit develops from the ovary along with other floral parts such as the thalamus, e.g. apple."},
+{"topic": "fruit-seed", "marks": 2, "difficulty": "Medium", "q": "Differentiate between simple and aggregate fruits, with an example each.", "a": "(i) A simple fruit develops from a single ovary of one flower, e.g. mango, guava. (ii) An aggregate fruit develops from the multiple free carpels of a single flower, e.g. custard apple."},
+{"topic": "fruit-seed", "marks": 3, "difficulty": "Medium", "q": "Describe the three layers of the pericarp with reference to the mango fruit.", "a": "(i) The epicarp forms the outer skin of the fruit. (ii) In mango the mesocarp is fleshy and edible. (iii) The endocarp forms the hard, stony layer surrounding the seed."},
+{"topic": "fruit-seed", "marks": 3, "difficulty": "Medium", "q": "Describe the structure of a dicot seed.", "a": "(i) It has a seed coat differentiated into an outer testa and inner tegmen. (ii) The embryo has two cotyledons. (iii) Dicot seeds are often non-endospermous, e.g. bean, gram, pea."},
+{"topic": "fruit-seed", "marks": 3, "difficulty": "Medium", "q": "Describe the structure of a monocot seed.", "a": "(i) It has a dominant endosperm with an outer aleurone layer. (ii) The embryo has a single shield-shaped cotyledon called the scutellum. (iii) The embryonic axis is enclosed by a coleoptile (protecting the plumule) and a coleorhiza (protecting the radicle)."},
+{"topic": "fruit-seed", "marks": 5, "difficulty": "Hard", "q": "Classify fruits and describe the difference between true and false fruits, with examples.", "a": "1. A fruit is a post-fertilization modification of the ovary; a fruit that develops without fertilization is called parthenocarpic.\n2. The fruit wall, or pericarp, differentiates into the epicarp, mesocarp and endocarp.\n3. A true fruit develops solely from the ovary, e.g. mango.\n4. A false fruit develops from the ovary along with other floral parts such as the thalamus, e.g. apple.\n5. Simple fruits develop from a single ovary, e.g. mango, guava.\n6. Aggregate fruits develop from the multiple free carpels of one flower, e.g. custard apple.\n7. Composite fruits develop from an entire inflorescence, e.g. pineapple, fig."},
+
+{"topic": "solanaceae", "marks": 1, "difficulty": "Easy", "q": "Name the type of aestivation seen in the corolla of a typical Solanaceae flower.", "a": "Valvate aestivation."},
+{"topic": "solanaceae", "marks": 1, "difficulty": "Easy", "q": "State the composition of the androecium in a typical Solanaceae flower.", "a": "The androecium consists of five epipetalous stamens, i.e. stamens attached to the corolla."},
+{"topic": "solanaceae", "marks": 1, "difficulty": "Easy", "q": "Name any one medicinally important plant of the family Solanaceae.", "a": "Belladonna (or Ashwagandha) is a medicinally important plant of the family Solanaceae."},
+{"topic": "solanaceae", "marks": 2, "difficulty": "Medium", "q": "Mention the characteristic vegetative features of the family Solanaceae.", "a": "(i) Members are mostly herbs and shrubs with a herbaceous stem, sometimes tuberous, e.g. potato. (ii) Leaves are alternate, simple, exstipulate, with reticulate venation."},
+{"topic": "solanaceae", "marks": 2, "difficulty": "Medium", "q": "Describe the gynoecium of a typical Solanaceae flower.", "a": "(i) The gynoecium is bicarpellary and syncarpous, with a superior ovary. (ii) It shows axile placentation."},
+{"topic": "solanaceae", "marks": 2, "difficulty": "Easy", "q": "Give the economic importance of Solanaceae under the food and medicine categories, with examples.", "a": "(i) As food, Solanaceae gives us tomato, brinjal and potato. (ii) As medicine, it gives us belladonna and ashwagandha."},
+{"topic": "solanaceae", "marks": 3, "difficulty": "Hard", "q": "Differentiate family Solanaceae from family Fabaceae with respect to aestivation and gynoecium.", "a": "(i) Solanaceae shows valvate aestivation, while Fabaceae shows vexillary (papilionaceous) aestivation. (ii) Solanaceae has a syncarpous, bicarpellary gynoecium, while Fabaceae has an apocarpous (free carpel) gynoecium. (iii) Floral dissection of the aestivation and gynoecium is thus key to distinguishing the two families."},
+{"topic": "solanaceae", "marks": 5, "difficulty": "Hard", "q": "Describe the salient features of family Solanaceae under vegetative, floral and economic characters.", "a": "1. Habit - mostly herbs and shrubs; stem is herbaceous, sometimes tuberous, e.g. potato.\n2. Leaves - alternate, simple, exstipulate, with reticulate venation.\n3. Inflorescence - solitary or cymose; flowers are bisexual and actinomorphic.\n4. Calyx has 5 united sepals, valvate and persistent; corolla has 5 united petals, valvate.\n5. Androecium has 5 epipetalous stamens; gynoecium is bicarpellary, syncarpous, superior, with axile placentation.\n6. Fruit is a berry or capsule with endospermous seeds.\n7. Economic importance includes food (tomato, brinjal, potato), spice (chilli), medicine (belladonna, ashwagandha), fumigatory use (tobacco) and ornamental use (petunia)."}
+];
+const DESC_KEYWORDS_CH5 = {
+"Differentiate between the tap root system and the fibrous root system.": [
+  {"en": "\"primary root persists\" and branches – tap root system, e.g. Mustard", "kn": "\"ಪ್ರಾಥಮಿಕ ಬೇರು ಉಳಿದು\" ಕವಲೊಡೆಯುತ್ತದೆ – tap root system, ಉದಾ. Mustard", "hi": "\"प्राथमिक जड़ बनी रहकर\" शाखाएँ बनाती है – tap root system, उदा. Mustard"},
+  {"en": "primary root \"short-lived\", replaced by cluster from stem base – fibrous root system, e.g. Wheat", "kn": "ಪ್ರಾಥಮಿಕ ಬೇರು \"ಅಲ್ಪಾವಧಿಯದ್ದು\", ಕಾಂಡದ ತಳದ ಗುಂಪಿನಿಂದ ಬದಲಾಗುತ್ತದೆ – fibrous root system, ಉದಾ. Wheat", "hi": "प्राथमिक जड़ \"अल्पजीवी\", तने के आधार से बने गुच्छे द्वारा प्रतिस्थापित – fibrous root system, उदा. Wheat"}
+],
+"Mention any two functions of the root system.": [
+  {"en": "\"absorption of water and minerals\" from the soil", "kn": "ಮಣ್ಣಿನಿಂದ \"ನೀರು ಮತ್ತು ಖನಿಜಗಳ ಹೀರುವಿಕೆ\"", "hi": "मिट्टी से \"जल और खनिजों का अवशोषण\""},
+  {"en": "\"anchorage\" of the plant, plus storage and hormone synthesis", "kn": "ಸಸ್ಯಕ್ಕೆ \"ಆಧಾರ\" (anchorage), ಜೊತೆಗೆ ಶೇಖರಣೆ ಮತ್ತು ಹಾರ್ಮೋನ್ ಸಂಶ್ಲೇಷಣೆ", "hi": "पौधे को \"स्थिरीकरण\" (anchorage), साथ ही भंडारण और हार्मोन संश्लेषण"}
+],
+"Describe the different regions of a root tip.": [
+  {"en": "\"root cap\" covers and protects the growing tip", "kn": "\"root cap\" ಬೆಳೆಯುವ ತುದಿಯನ್ನು ಆವರಿಸಿ ರಕ್ಷಿಸುತ್ತದೆ", "hi": "\"root cap\" बढ़ते सिरे को ढककर सुरक्षा देता है"},
+  {"en": "\"region of meristematic activity\" – small, dividing cells", "kn": "\"region of meristematic activity\" – ಚಿಕ್ಕ, ವಿಭಜಿಸುವ ಜೀವಕೋಶಗಳು", "hi": "\"region of meristematic activity\" – छोटी, विभाजित होती कोशिकाएँ"},
+  {"en": "\"region of elongation\" then \"region of maturation\" – root hairs develop", "kn": "\"region of elongation\" ನಂತರ \"region of maturation\" – ಬೇರಿನ ಕೂದಲುಗಳು ಬೆಳೆಯುತ್ತವೆ", "hi": "\"region of elongation\" फिर \"region of maturation\" – जड़ रोम विकसित होते हैं"}
+],
+"Explain any three modifications of roots for special functions, with an example each.": [
+  {"en": "\"storage roots\" swell with reserve food, e.g. carrot, radish, turnip", "kn": "\"storage roots\" ಮೀಸಲು ಆಹಾರದಿಂದ ಊದಿಕೊಳ್ಳುತ್ತವೆ, ಉದಾ. carrot, radish, turnip", "hi": "\"storage roots\" संचित भोजन से फूल जाती हैं, उदा. carrot, radish, turnip"},
+  {"en": "\"prop roots\" from branches give mechanical support, e.g. banyan", "kn": "ಕವಲುಗಳಿಂದ ಬರುವ \"prop roots\" ಯಾಂತ್ರಿಕ ಆಧಾರ ನೀಡುತ್ತವೆ, ಉದಾ. banyan", "hi": "शाखाओं से निकलने वाली \"prop roots\" यांत्रिक सहारा देती हैं, उदा. banyan"},
+  {"en": "\"pneumatophores\" aid respiration in waterlogged soil, e.g. mangroves", "kn": "ಜಲಾವೃತ ಮಣ್ಣಿನಲ್ಲಿ ಉಸಿರಾಟಕ್ಕೆ ಸಹಾಯ ಮಾಡುವ \"pneumatophores\", ಉದಾ. mangroves", "hi": "जलमग्न मिट्टी में श्वसन में सहायक \"pneumatophores\", उदा. mangroves"}
+],
+"Explain the significance of root nodules in leguminous plants.": [
+  {"en": "leguminous roots form \"root nodules\" (swellings)", "kn": "ದ್ವಿದಳ ಸಸ್ಯಗಳ ಬೇರುಗಳಲ್ಲಿ \"root nodules\" (ಊತಗಳು) ಉಂಟಾಗುತ್ತವೆ", "hi": "फलीदार पौधों की जड़ों में \"root nodules\" (सूजन) बनती है"},
+  {"en": "nodules house nitrogen-fixing \"Rhizobium\" bacteria", "kn": "ಈ ಗಂಟುಗಳಲ್ಲಿ ನೈಟ್ರೋಜನ್ ಸ್ಥಿರೀಕರಿಸುವ \"Rhizobium\" ಬ್ಯಾಕ್ಟೀರಿಯಾ ಇರುತ್ತವೆ", "hi": "इन ग्रंथियों में नाइट्रोजन-स्थिरीकरण करने वाला \"Rhizobium\" जीवाणु रहता है"},
+  {"en": "the \"symbiotic relationship\" enriches soil nitrogen", "kn": "ಈ \"symbiotic relationship\" ಮಣ್ಣಿನ ಸಾರಜನಕವನ್ನು ಸಮೃದ್ಧಗೊಳಿಸುತ್ತದೆ", "hi": "यह \"symbiotic relationship\" मिट्टी के नाइट्रोजन को समृद्ध करता है"}
+],
+"Describe the modifications of roots and the functions of the root system, with examples.": [
+  {"en": "roots \"absorb water and minerals\" from the soil", "kn": "ಬೇರುಗಳು ಮಣ್ಣಿನಿಂದ \"ನೀರು ಮತ್ತು ಖನಿಜಗಳನ್ನು ಹೀರುತ್ತವೆ\"", "hi": "जड़ें मिट्टी से \"जल और खनिजों को अवशोषित\" करती हैं"},
+  {"en": "roots give \"anchorage\" to the plant", "kn": "ಬೇರುಗಳು ಸಸ್ಯಕ್ಕೆ \"ಆಧಾರ\" ನೀಡುತ್ತವೆ", "hi": "जड़ें पौधे को \"स्थिरीकरण\" (anchorage) प्रदान करती हैं"},
+  {"en": "\"storage roots\" store reserve food, e.g. carrot, radish, turnip", "kn": "\"storage roots\" ಮೀಸಲು ಆಹಾರ ಶೇಖರಿಸುತ್ತವೆ, ಉದಾ. carrot, radish, turnip", "hi": "\"storage roots\" संचित भोजन जमा करती हैं, उदा. carrot, radish, turnip"},
+  {"en": "\"prop roots\" in banyan give mechanical support", "kn": "banyan ನ \"prop roots\" ಯಾಂತ್ರಿಕ ಆಧಾರ ನೀಡುತ್ತವೆ", "hi": "banyan की \"prop roots\" यांत्रिक सहारा देती हैं"},
+  {"en": "\"pneumatophores\" in mangroves aid respiration", "kn": "mangroves ನ \"pneumatophores\" ಉಸಿರಾಟಕ್ಕೆ ಸಹಾಯ ಮಾಡುತ್ತವೆ", "hi": "mangroves की \"pneumatophores\" श्वसन में सहायक"},
+  {"en": "\"root nodules\" house Rhizobium, enriching soil nitrogen", "kn": "\"root nodules\" Rhizobium ಹೊಂದಿದ್ದು ಮಣ್ಣಿನ ಸಾರಜನಕ ಹೆಚ್ಚಿಸುತ್ತವೆ", "hi": "\"root nodules\" में Rhizobium होकर मिट्टी का नाइट्रोजन बढ़ाते हैं"},
+  {"en": "roots \"synthesise growth hormones\"", "kn": "ಬೇರುಗಳು \"ಬೆಳವಣಿಗೆ ಹಾರ್ಮೋನ್‌ಗಳನ್ನು ಸಂಶ್ಲೇಷಿಸುತ್ತವೆ\"", "hi": "जड़ें \"वृद्धि हार्मोन\" संश्लेषित करती हैं"}
+],
+"Differentiate between a node and an internode.": [
+  {"en": "\"node\" – point on stem bearing a leaf", "kn": "\"node\" – ಎಲೆ ಇರುವ ಕಾಂಡದ ಬಿಂದು", "hi": "\"node\" – तने का वह बिंदु जहाँ पत्ती लगती है"},
+  {"en": "\"internode\" – segment between two successive nodes", "kn": "\"internode\" – ಎರಡು ಸತತ nodes ನಡುವಿನ ಭಾಗ", "hi": "\"internode\" – दो लगातार nodes के बीच का भाग"}
+],
+"Differentiate between terminal buds and axillary buds.": [
+  {"en": "\"terminal (apical) bud\" – present at the tip of the stem/branch", "kn": "\"terminal (apical) bud\" – ಕಾಂಡ/ಕವಲಿನ ತುದಿಯಲ್ಲಿ ಇರುತ್ತದೆ", "hi": "\"terminal (apical) bud\" – तने/शाखा के सिरे पर होती है"},
+  {"en": "\"axillary bud\" – develops in the axil of a leaf", "kn": "\"axillary bud\" – ಎಲೆಯ ಕಂಕುಳಲ್ಲಿ (axil) ಬೆಳೆಯುತ್ತದೆ", "hi": "\"axillary bud\" – पत्ती की कक्ष (axil) में विकसित होती है"}
+],
+"Describe the underground modifications of the stem, with examples.": [
+  {"en": "underground stems modify for \"storage and perennation\"", "kn": "ಭೂಮಿಯೊಳಗಿನ ಕಾಂಡಗಳು \"ಶೇಖರಣೆ ಮತ್ತು ಪೆರೆನ್ನೇಷನ್\"ಗಾಗಿ ರೂಪುಗೊಳ್ಳುತ್ತವೆ", "hi": "भूमिगत तने \"भंडारण और perennation\" के लिए रूपांतरित होते हैं"},
+  {"en": "\"rhizome\" – horizontal underground stem, e.g. ginger, turmeric", "kn": "\"rhizome\" – ಅಡ್ಡಲಾಗಿ ಬೆಳೆಯುವ ಭೂಗತ ಕಾಂಡ, ಉದಾ. ginger, turmeric", "hi": "\"rhizome\" – क्षैतिज भूमिगत तना, उदा. ginger, turmeric"},
+  {"en": "\"corm\" – short, vertical, swollen underground stem, e.g. Colocasia", "kn": "\"corm\" – ಚಿಕ್ಕ, ಲಂಬ, ಊದಿದ ಭೂಗತ ಕಾಂಡ, ಉದಾ. Colocasia", "hi": "\"corm\" – छोटा, खड़ा, फूला हुआ भूमिगत तना, उदा. Colocasia"}
+],
+"Explain the aerial modifications of the stem, with examples.": [
+  {"en": "\"stem tendrils\" for climbing, e.g. grapevine", "kn": "ಹತ್ತಲು ಸಹಾಯ ಮಾಡುವ \"stem tendrils\", ಉದಾ. grapevine", "hi": "चढ़ने के लिए \"stem tendrils\", उदा. grapevine"},
+  {"en": "\"thorns\" for protection, e.g. Citrus, Bougainvillea", "kn": "ರಕ್ಷಣೆಗಾಗಿ \"thorns\", ಉದಾ. Citrus, Bougainvillea", "hi": "सुरक्षा के लिए \"thorns\", उदा. Citrus, Bougainvillea"},
+  {"en": "\"phylloclades\" perform photosynthesis instead of leaves, e.g. Opuntia", "kn": "ಎಲೆಗಳ ಬದಲು ದ್ಯುತಿಸಂಶ್ಲೇಷಣೆ ಮಾಡುವ \"phylloclades\", ಉದಾ. Opuntia", "hi": "पत्तियों की जगह प्रकाश-संश्लेषण करने वाले \"phylloclades\", उदा. Opuntia"}
+],
+"Explain the sub-aerial modifications of the stem, with examples.": [
+  {"en": "\"runners\" creep along ground for vegetative propagation, e.g. grass", "kn": "ವಾನಸ್ಪತಿಕ ಪ್ರವರ್ಧನೆಗಾಗಿ ನೆಲದ ಮೇಲೆ ಹರಿಯುವ \"runners\", ಉದಾ. grass", "hi": "कायिक प्रवर्धन हेतु ज़मीन पर रेंगने वाले \"runners\", उदा. grass"},
+  {"en": "\"stolons\" and \"offsets\" root at the nodes, e.g. mint, Pistia", "kn": "ಗಂಟುಗಳಲ್ಲಿ ಬೇರೂರುವ \"stolons\" ಮತ್ತು \"offsets\", ಉದಾ. mint, Pistia", "hi": "गाँठों पर जड़ पकड़ने वाले \"stolons\" और \"offsets\", उदा. mint, Pistia"},
+  {"en": "\"suckers\" arise from the base to form new plants, e.g. banana, chrysanthemum", "kn": "ತಳದಿಂದ ಹೊಸ ಸಸ್ಯ ರೂಪಿಸುವ \"suckers\", ಉದಾ. banana, chrysanthemum", "hi": "आधार से नया पौधा बनाने वाले \"suckers\", उदा. banana, chrysanthemum"}
+],
+"Describe the various modifications of the stem, with one example each.": [
+  {"en": "\"rhizome\" – horizontal underground stem, e.g. ginger, turmeric", "kn": "\"rhizome\" – ಅಡ್ಡಲಾಗಿ ಬೆಳೆಯುವ ಭೂಗತ ಕಾಂಡ, ಉದಾ. ginger, turmeric", "hi": "\"rhizome\" – क्षैतिज भूमिगत तना, उदा. ginger, turmeric"},
+  {"en": "\"corm\" – short, vertical, swollen underground stem, e.g. Colocasia", "kn": "\"corm\" – ಚಿಕ್ಕ, ಲಂಬ, ಊದಿದ ಭೂಗತ ಕಾಂಡ, ಉದಾ. Colocasia", "hi": "\"corm\" – छोटा, खड़ा, फूला हुआ भूमिगत तना, उदा. Colocasia"},
+  {"en": "\"stem tendril\" for climbing, e.g. grapevine", "kn": "ಹತ್ತಲು ಸಹಾಯ ಮಾಡುವ \"stem tendril\", ಉದಾ. grapevine", "hi": "चढ़ने के लिए \"stem tendril\", उदा. grapevine"},
+  {"en": "\"thorn\" for protection, e.g. Citrus, Bougainvillea", "kn": "ರಕ್ಷಣೆಗಾಗಿ \"thorn\", ಉದಾ. Citrus, Bougainvillea", "hi": "सुरक्षा के लिए \"thorn\", उदा. Citrus, Bougainvillea"},
+  {"en": "\"phylloclade\" performs photosynthesis, e.g. Opuntia", "kn": "ದ್ಯುತಿಸಂಶ್ಲೇಷಣೆ ಮಾಡುವ \"phylloclade\", ಉದಾ. Opuntia", "hi": "प्रकाश-संश्लेषण करने वाला \"phylloclade\", उदा. Opuntia"},
+  {"en": "\"runner/stolon\" – sub-aerial propagation, e.g. grass, mint", "kn": "ಉಪ-ವಾಯುಗತ ಪ್ರವರ್ಧನೆ ಮಾಡುವ \"runner/stolon\", ಉದಾ. grass, mint", "hi": "उप-वायवीय प्रवर्धन करने वाला \"runner/stolon\", उदा. grass, mint"},
+  {"en": "\"sucker\" arises from the base, e.g. banana, chrysanthemum", "kn": "ತಳದಿಂದ ಬೆಳೆಯುವ \"sucker\", ಉದಾ. banana, chrysanthemum", "hi": "आधार से निकलने वाला \"sucker\", उदा. banana, chrysanthemum"}
+],
+"Differentiate between reticulate and parallel venation, with an example each.": [
+  {"en": "\"reticulate venation\" – net-like, dicots, e.g. China rose", "kn": "\"reticulate venation\" – ಬಲೆಯಂತೆ, dicots, ಉದಾ. China rose", "hi": "\"reticulate venation\" – जालीदार, dicots, उदा. China rose"},
+  {"en": "\"parallel venation\" – veins run parallel, monocots, e.g. grasses", "kn": "\"parallel venation\" – ಸಿರೆಗಳು ಸಮಾನಾಂತರವಾಗಿ ಹೋಗುತ್ತವೆ, monocots, ಉದಾ. grasses", "hi": "\"parallel venation\" – शिराएँ समानांतर चलती हैं, monocots, उदा. grasses"}
+],
+"Differentiate between a simple leaf and a compound leaf.": [
+  {"en": "\"simple leaf\" – incisions don't reach the midrib", "kn": "\"simple leaf\" – ಕೊಯ್ತಗಳು midrib ತಲುಪುವುದಿಲ್ಲ", "hi": "\"simple leaf\" – कटाव midrib तक नहीं पहुँचते"},
+  {"en": "\"compound leaf\" – incisions reach midrib, forming leaflets, e.g. Neem", "kn": "\"compound leaf\" – ಕೊಯ್ತಗಳು midrib ತಲುಪಿ leaflets ರೂಪಿಸುತ್ತವೆ, ಉದಾ. Neem", "hi": "\"compound leaf\" – कटाव midrib तक पहुँचकर leaflets बनाते हैं, उदा. Neem"}
+],
+"Differentiate between alternate and opposite phyllotaxy, with an example each.": [
+  {"en": "\"alternate phyllotaxy\" – single leaf per node, e.g. China rose", "kn": "\"alternate phyllotaxy\" – ಪ್ರತಿ node ನಲ್ಲಿ ಒಂದೇ ಎಲೆ, ಉದಾ. China rose", "hi": "\"alternate phyllotaxy\" – प्रत्येक node पर एक पत्ती, उदा. China rose"},
+  {"en": "\"opposite phyllotaxy\" – pair of leaves per node, e.g. Calotropis", "kn": "\"opposite phyllotaxy\" – ಪ್ರತಿ node ನಲ್ಲಿ ಜೋಡಿ ಎಲೆಗಳು, ಉದಾ. Calotropis", "hi": "\"opposite phyllotaxy\" – प्रत्येक node पर पत्तियों की जोड़ी, उदा. Calotropis"}
+],
+"Describe the three types of phyllotaxy, with an example each.": [
+  {"en": "\"alternate\" – single leaf per node, e.g. China rose", "kn": "\"alternate\" – ಪ್ರತಿ node ನಲ್ಲಿ ಒಂದೇ ಎಲೆ, ಉದಾ. China rose", "hi": "\"alternate\" – प्रत्येक node पर एक पत्ती, उदा. China rose"},
+  {"en": "\"opposite\" – pair of leaves per node, e.g. Calotropis", "kn": "\"opposite\" – ಪ್ರತಿ node ನಲ್ಲಿ ಜೋಡಿ ಎಲೆಗಳು, ಉದಾ. Calotropis", "hi": "\"opposite\" – प्रत्येक node पर पत्तियों की जोड़ी, उदा. Calotropis"},
+  {"en": "\"whorled\" – more than two leaves at a node, e.g. Alstonia", "kn": "\"whorled\" – ಒಂದು node ನಲ್ಲಿ ಎರಡಕ್ಕಿಂತ ಹೆಚ್ಚು ಎಲೆಗಳು, ಉದಾ. Alstonia", "hi": "\"whorled\" – एक node पर दो से अधिक पत्तियाँ, उदा. Alstonia"}
+],
+"Explain any three modifications of leaves, with an example each.": [
+  {"en": "leaf \"tendrils\" help the plant climb, e.g. Pea", "kn": "ಸಸ್ಯ ಹತ್ತಲು ಸಹಾಯ ಮಾಡುವ ಎಲೆಯ \"tendrils\", ಉದಾ. Pea", "hi": "पौधे को चढ़ने में मदद करने वाले पत्ती के \"tendrils\", उदा. Pea"},
+  {"en": "leaf \"spines\" protect and reduce water loss, e.g. Cactus", "kn": "ರಕ್ಷಣೆ ಮತ್ತು ನೀರಿನ ನಷ್ಟ ಕಡಿಮೆ ಮಾಡುವ ಎಲೆಯ \"spines\", ಉದಾ. Cactus", "hi": "सुरक्षा और जल-हानि घटाने वाले पत्ती के \"spines\", उदा. Cactus"},
+  {"en": "leaf \"pitchers\" capture insects, e.g. Nepenthes", "kn": "ಕೀಟಗಳನ್ನು ಹಿಡಿಯುವ ಎಲೆಯ \"pitchers\", ಉದಾ. Nepenthes", "hi": "कीड़ों को पकड़ने वाले पत्ती के \"pitchers\", उदा. Nepenthes"}
+],
+"Describe the structure of a typical leaf and its modifications, with examples.": [
+  {"en": "\"leaf base\" attaches leaf to stem – stipules/sheath/pulvinus", "kn": "\"leaf base\" ಎಲೆಯನ್ನು ಕಾಂಡಕ್ಕೆ ಜೋಡಿಸುತ್ತದೆ – stipules/sheath/pulvinus", "hi": "\"leaf base\" पत्ती को तने से जोड़ता है – stipules/sheath/pulvinus"},
+  {"en": "\"petiole\" holds blade to light, allows fluttering", "kn": "\"petiole\" ಬ್ಲೇಡನ್ನು ಬೆಳಕಿಗೆ ಹಿಡಿದು ಅಲುಗಾಡಲು ಬಿಡುತ್ತದೆ", "hi": "\"petiole\" फलक को प्रकाश की ओर रखता है और हिलने देता है"},
+  {"en": "\"lamina\" with midrib – main site of photosynthesis", "kn": "midrib ಹೊಂದಿದ \"lamina\" – ದ್ಯುತಿಸಂಶ್ಲೇಷಣೆಯ ಮುಖ್ಯ ಸ್ಥಳ", "hi": "midrib सहित \"lamina\" – प्रकाश-संश्लेषण का मुख्य स्थान"},
+  {"en": "venation – \"reticulate\" (dicots) or \"parallel\" (monocots)", "kn": "venation – \"reticulate\" (dicots) ಅಥವಾ \"parallel\" (monocots)", "hi": "venation – \"reticulate\" (dicots) या \"parallel\" (monocots)"},
+  {"en": "modify into \"tendrils\" for climbing, e.g. Pea", "kn": "ಹತ್ತಲು \"tendrils\" ಆಗಿ ಮಾರ್ಪಡುತ್ತವೆ, ಉದಾ. Pea", "hi": "चढ़ने हेतु \"tendrils\" में बदल जाती हैं, उदा. Pea"},
+  {"en": "modify into \"spines\" for protection, e.g. Cactus", "kn": "ರಕ್ಷಣೆಗಾಗಿ \"spines\" ಆಗಿ ಮಾರ್ಪಡುತ್ತವೆ, ಉದಾ. Cactus", "hi": "सुरक्षा हेतु \"spines\" में बदल जाती हैं, उदा. Cactus"},
+  {"en": "modify into \"pitchers\" for insect capture, e.g. Nepenthes", "kn": "ಕೀಟ ಹಿಡಿಯಲು \"pitchers\" ಆಗಿ ಮಾರ್ಪಡುತ್ತವೆ, ಉದಾ. Nepenthes", "hi": "कीट पकड़ने हेतु \"pitchers\" में बदल जाती हैं, उदा. Nepenthes"}
+],
+"Differentiate between racemose and cymose inflorescence.": [
+  {"en": "\"racemose\" – main axis keeps growing, flowers in acropetal succession", "kn": "\"racemose\" – ಮುಖ್ಯ ಅಕ್ಷ ಬೆಳೆಯುತ್ತಲೇ ಇರುತ್ತದೆ, ಹೂಗಳು acropetal ಕ್ರಮದಲ್ಲಿ", "hi": "\"racemose\" – मुख्य अक्ष बढ़ता रहता है, फूल acropetal क्रम में"},
+  {"en": "\"cymose\" – main axis ends in a flower, flowers in basipetal order", "kn": "\"cymose\" – ಮುಖ್ಯ ಅಕ್ಷ ಹೂವಿನಲ್ಲಿ ಕೊನೆಗೊಳ್ಳುತ್ತದೆ, ಹೂಗಳು basipetal ಕ್ರಮದಲ್ಲಿ", "hi": "\"cymose\" – मुख्य अक्ष फूल पर समाप्त होता है, फूल basipetal क्रम में"}
+],
+"Differentiate between biparous and multiparous cyme, with an example each.": [
+  {"en": "\"biparous cyme\" – two lateral branches at each step, e.g. Jasmine", "kn": "\"biparous cyme\" – ಪ್ರತಿ ಹಂತದಲ್ಲಿ ಎರಡು ಪಾರ್ಶ್ವ ಕವಲುಗಳು, ಉದಾ. Jasmine", "hi": "\"biparous cyme\" – प्रत्येक चरण में दो पार्श्व शाखाएँ, उदा. Jasmine"},
+  {"en": "\"multiparous cyme\" – more than two lateral branches, e.g. Calotropis", "kn": "\"multiparous cyme\" – ಎರಡಕ್ಕಿಂತ ಹೆಚ್ಚು ಪಾರ್ಶ್ವ ಕವಲುಗಳು, ಉದಾ. Calotropis", "hi": "\"multiparous cyme\" – दो से अधिक पार्श्व शाखाएँ, उदा. Calotropis"}
+],
+"Explain any three special types of racemose inflorescence, with an example each.": [
+  {"en": "\"spike\" – sessile flowers on an elongated axis, e.g. Achyranthes", "kn": "\"spike\" – ಉದ್ದವಾದ ಅಕ್ಷದ ಮೇಲೆ ತೊಟ್ಟಿಲ್ಲದ ಹೂಗಳು, ಉದಾ. Achyranthes", "hi": "\"spike\" – लंबी अक्ष पर बिना डंठल के फूल, उदा. Achyranthes"},
+  {"en": "\"catkin\" – pendulous spike, e.g. mulberry", "kn": "\"catkin\" – ಜೋತಾಡುವ spike, ಉದಾ. mulberry", "hi": "\"catkin\" – लटकती हुई spike, उदा. mulberry"},
+  {"en": "\"umbel\" – flowers from a common point, e.g. coriander", "kn": "\"umbel\" – ಒಂದೇ ಬಿಂದುವಿನಿಂದ ಹೂಗಳು, ಉದಾ. coriander", "hi": "\"umbel\" – एक ही बिंदु से निकलने वाले फूल, उदा. coriander"}
+],
+"Explain the three types of cymose inflorescence based on the number of lateral branches produced.": [
+  {"en": "\"uniparous cyme\" – single lateral branch at each step", "kn": "\"uniparous cyme\" – ಪ್ರತಿ ಹಂತದಲ್ಲಿ ಒಂದೇ ಪಾರ್ಶ್ವ ಕವಲು", "hi": "\"uniparous cyme\" – प्रत्येक चरण में एक पार्श्व शाखा"},
+  {"en": "\"biparous cyme\" – two lateral branches, e.g. Jasmine", "kn": "\"biparous cyme\" – ಎರಡು ಪಾರ್ಶ್ವ ಕವಲುಗಳು, ಉದಾ. Jasmine", "hi": "\"biparous cyme\" – दो पार्श्व शाखाएँ, उदा. Jasmine"},
+  {"en": "\"multiparous cyme\" – more than two lateral branches, e.g. Calotropis", "kn": "\"multiparous cyme\" – ಎರಡಕ್ಕಿಂತ ಹೆಚ್ಚು ಪಾರ್ಶ್ವ ಕವಲುಗಳು, ಉದಾ. Calotropis", "hi": "\"multiparous cyme\" – दो से अधिक पार्श्व शाखाएँ, उदा. Calotropis"}
+],
+"Describe the racemose and cymose types of inflorescence, along with their special forms.": [
+  {"en": "\"racemose\" – flowers in acropetal succession, older at base, younger at tip", "kn": "\"racemose\" – ಹೂಗಳು acropetal ಕ್ರಮದಲ್ಲಿ, ಹಳೆಯವು ತಳದಲ್ಲಿ, ಎಳೆಯವು ತುದಿಯಲ್ಲಿ", "hi": "\"racemose\" – फूल acropetal क्रम में, पुराने आधार पर, नए सिरे पर"},
+  {"en": "\"spike\" – sessile flowers, e.g. Achyranthes", "kn": "\"spike\" – ತೊಟ್ಟಿಲ್ಲದ ಹೂಗಳು, ಉದಾ. Achyranthes", "hi": "\"spike\" – बिना डंठल के फूल, उदा. Achyranthes"},
+  {"en": "\"spadix\" – fleshy axis enclosed by a bract, e.g. banana", "kn": "\"spadix\" – ಬ್ರ್ಯಾಕ್ಟ್‌ನಿಂದ ಆವೃತ ಮಾಂಸಲ ಅಕ್ಷ, ಉದಾ. banana", "hi": "\"spadix\" – ब्रैक्ट से घिरा माँसल अक्ष, उदा. banana"},
+  {"en": "\"umbel\" – flowers from a common point, e.g. coriander", "kn": "\"umbel\" – ಒಂದೇ ಬಿಂದುವಿನಿಂದ ಹೂಗಳು, ಉದಾ. coriander", "hi": "\"umbel\" – एक बिंदु से फूल, उदा. coriander"},
+  {"en": "\"head/capitulum\" – densely packed florets, e.g. sunflower", "kn": "\"head/capitulum\" – ಒತ್ತಾಗಿ ಜೋಡಿಸಿದ florets, ಉದಾ. sunflower", "hi": "\"head/capitulum\" – सघन रूप से सजे florets, उदा. sunflower"},
+  {"en": "\"cymose\" – main axis ends in a flower, basipetal order, younger at base", "kn": "\"cymose\" – ಮುಖ್ಯ ಅಕ್ಷ ಹೂವಿನಲ್ಲಿ ಕೊನೆಗೊಳ್ಳುತ್ತದೆ, basipetal ಕ್ರಮ, ಎಳೆಯವು ತಳದಲ್ಲಿ", "hi": "\"cymose\" – मुख्य अक्ष फूल पर समाप्त, basipetal क्रम, नए आधार पर"},
+  {"en": "cymose variants: \"uniparous, biparous (Jasmine), multiparous (Calotropis)\"", "kn": "cymose ಪ್ರಭೇದಗಳು: \"uniparous, biparous (Jasmine), multiparous (Calotropis)\"", "hi": "cymose प्रकार: \"uniparous, biparous (Jasmine), multiparous (Calotropis)\""}
+],
+"Differentiate between hypogynous and epigynous flowers, with an example each.": [
+  {"en": "\"hypogynous\" – ovary superior, above other whorls, e.g. Mustard", "kn": "\"hypogynous\" – ovary ಇತರ ಸುರುಳಿಗಳ ಮೇಲೆ (superior), ಉದಾ. Mustard", "hi": "\"hypogynous\" – ovary अन्य चक्रों से ऊपर (superior), उदा. Mustard"},
+  {"en": "\"epigynous\" – ovary inferior, below other whorls, e.g. Guava", "kn": "\"epigynous\" – ovary ಇತರ ಸುರುಳಿಗಳ ಕೆಳಗೆ (inferior), ಉದಾ. Guava", "hi": "\"epigynous\" – ovary अन्य चक्रों से नीचे (inferior), उदा. Guava"}
+],
+"Differentiate between apocarpous and syncarpous gynoecium, with an example each.": [
+  {"en": "\"apocarpous\" – carpels free from one another, e.g. Lotus", "kn": "\"apocarpous\" – carpels ಪರಸ್ಪರ ಬೇರ್ಪಟ್ಟಿವೆ, ಉದಾ. Lotus", "hi": "\"apocarpous\" – carpels एक-दूसरे से मुक्त, उदा. Lotus"},
+  {"en": "\"syncarpous\" – carpels fused together, e.g. Mustard", "kn": "\"syncarpous\" – carpels ಒಟ್ಟಿಗೆ ಬೆಸೆದಿವೆ, ಉದಾ. Mustard", "hi": "\"syncarpous\" – carpels आपस में जुड़े हुए, उदा. Mustard"}
+],
+"Describe the structure of a typical stamen.": [
+  {"en": "\"filament\" – slender stalk of the stamen", "kn": "\"filament\" – ಸ್ಟೇಮನ್‌ನ ತೆಳುವಾದ ಕಾಂಡ", "hi": "\"filament\" – पुंकेसर का पतला डंठल"},
+  {"en": "\"anther\" bilobed, each lobe with two \"theca\" producing pollen", "kn": "\"anther\" ಎರಡು ಹಾಲೆಗಳಿಂದ ಕೂಡಿದ್ದು, ಪ್ರತಿ ಹಾಲೆಯಲ್ಲಿ ಎರಡು \"theca\" ಪರಾಗ ಉತ್ಪಾದಿಸುತ್ತವೆ", "hi": "\"anther\" द्विपालित, प्रत्येक पालि में दो \"theca\" पराग बनाते हैं"},
+  {"en": "\"connective\" – joins filament and anther", "kn": "\"connective\" – filament ಮತ್ತು anther ನಡುವಿನ ಜೋಡಣಾ ಭಾಗ", "hi": "\"connective\" – filament और anther को जोड़ने वाला भाग"}
+],
+"Explain any three types of aestivation found in flowers, with an example each.": [
+  {"en": "\"valvate\" – margins just touch, no overlap, e.g. Calotropis", "kn": "\"valvate\" – ಅಂಚುಗಳು ಕೇವಲ ಸ್ಪರ್ಶಿಸುತ್ತವೆ, ಅತಿಕ್ರಮಣವಿಲ್ಲ, ಉದಾ. Calotropis", "hi": "\"valvate\" – किनारे केवल स्पर्श करते हैं, अतिव्यापन नहीं, उदा. Calotropis"},
+  {"en": "\"twisted\" – one margin overlaps the next, e.g. China rose", "kn": "\"twisted\" – ಒಂದು ಅಂಚು ಮುಂದಿನದನ್ನು ಅತಿಕ್ರಮಿಸುತ್ತದೆ, ಉದಾ. China rose", "hi": "\"twisted\" – एक किनारा अगले पर अतिव्यापन करता है, उदा. China rose"},
+  {"en": "\"imbricate\" – margins overlap irregularly, e.g. Gulmohur", "kn": "\"imbricate\" – ಅಂಚುಗಳು ಅನಿಯಮಿತವಾಗಿ ಅತಿಕ್ರಮಿಸುತ್ತವೆ, ಉದಾ. Gulmohur", "hi": "\"imbricate\" – किनारे अनियमित रूप से अतिव्यापन करते हैं, उदा. Gulmohur"}
+],
+"Describe the four floral whorls of a typical flower and the three positions of the ovary on the thalamus.": [
+  {"en": "\"calyx\" – outermost whorl of sepals, protects the bud", "kn": "\"calyx\" – sepals ನ ಹೊರ ಸುರುಳಿ, ಮೊಗ್ಗನ್ನು ರಕ್ಷಿಸುತ್ತದೆ", "hi": "\"calyx\" – sepals का सबसे बाहरी चक्र, कली की रक्षा करता है"},
+  {"en": "\"corolla\" – whorl of petals, attracts pollinators, accessory whorl", "kn": "\"corolla\" – petals ಸುರುಳಿ, ಪರಾಗಸ್ಪರ್ಶಕರನ್ನು ಆಕರ್ಷಿಸುತ್ತದೆ, accessory ಸುರುಳಿ", "hi": "\"corolla\" – petals का चक्र, परागणकों को आकर्षित करता है, accessory चक्र"},
+  {"en": "\"androecium\" – male whorl of stamens", "kn": "\"androecium\" – stamens ನ ಪುರುಷ ಸುರುಳಿ", "hi": "\"androecium\" – stamens का नर चक्र"},
+  {"en": "\"gynoecium\" – female whorl of carpels", "kn": "\"gynoecium\" – carpels ನ ಸ್ತ್ರೀ ಸುರುಳಿ", "hi": "\"gynoecium\" – carpels का मादा चक्र"},
+  {"en": "\"hypogynous\" – superior ovary, e.g. Mustard", "kn": "\"hypogynous\" – superior ovary, ಉದಾ. Mustard", "hi": "\"hypogynous\" – superior ovary, उदा. Mustard"},
+  {"en": "\"perigynous\" – half-inferior ovary, e.g. Plum", "kn": "\"perigynous\" – half-inferior ovary, ಉದಾ. Plum", "hi": "\"perigynous\" – half-inferior ovary, उदा. Plum"},
+  {"en": "\"epigynous\" – inferior ovary, e.g. Guava", "kn": "\"epigynous\" – inferior ovary, ಉದಾ. Guava", "hi": "\"epigynous\" – inferior ovary, उदा. Guava"}
+],
+"Describe the various types of placentation found in flowers, with an example each.": [
+  {"en": "\"marginal\" placentation – ovules on fused margin of a carpel, e.g. Pea", "kn": "\"marginal\" placentation – ಒಂದು carpel ನ ಬೆಸೆದ ಅಂಚಿನಲ್ಲಿ ovules, ಉದಾ. Pea", "hi": "\"marginal\" placentation – carpel के जुड़े किनारे पर ovules, उदा. Pea"},
+  {"en": "\"axile\" placentation – ovules on central axis, multilocular ovary, e.g. Tomato", "kn": "\"axile\" placentation – ಕೇಂದ್ರ ಅಕ್ಷದ ಮೇಲೆ ovules, multilocular ovary, ಉದಾ. Tomato", "hi": "\"axile\" placentation – केंद्रीय अक्ष पर ovules, multilocular ovary, उदा. Tomato"},
+  {"en": "\"parietal\" placentation – ovules on inner wall of ovary, e.g. Mustard", "kn": "\"parietal\" placentation – ovary ಯ ಒಳಗೋಡೆಯ ಮೇಲೆ ovules, ಉದಾ. Mustard", "hi": "\"parietal\" placentation – ovary की भीतरी दीवार पर ovules, उदा. Mustard"},
+  {"en": "\"free central\" placentation – ovules on central axis without septa, e.g. Dianthus", "kn": "\"free central\" placentation – septa ಇಲ್ಲದ ಕೇಂದ್ರ ಅಕ್ಷದ ಮೇಲೆ ovules, ಉದಾ. Dianthus", "hi": "\"free central\" placentation – बिना septa के केंद्रीय अक्ष पर ovules, उदा. Dianthus"},
+  {"en": "\"basal\" placentation – single ovule at the base, e.g. Sunflower", "kn": "\"basal\" placentation – ತಳದಲ್ಲಿ ಒಂದೇ ovule, ಉದಾ. Sunflower", "hi": "\"basal\" placentation – आधार पर एक ovule, उदा. Sunflower"}
+],
+"Differentiate between true fruit and false fruit, with an example each.": [
+  {"en": "\"true fruit\" – develops solely from the ovary, e.g. mango", "kn": "\"true fruit\" – ovary ಯಿಂದ ಮಾತ್ರ ಬೆಳೆಯುತ್ತದೆ, ಉದಾ. mango", "hi": "\"true fruit\" – केवल ovary से बनता है, उदा. mango"},
+  {"en": "\"false fruit\" – develops from ovary plus other floral parts (thalamus), e.g. apple", "kn": "\"false fruit\" – ovary ಮತ್ತು ಇತರ ಪುಷ್ಪ ಭಾಗಗಳ (thalamus) ಯಿಂದ ಬೆಳೆಯುತ್ತದೆ, ಉದಾ. apple", "hi": "\"false fruit\" – ovary के साथ अन्य पुष्प भागों (thalamus) से बनता है, उदा. apple"}
+],
+"Differentiate between simple and aggregate fruits, with an example each.": [
+  {"en": "\"simple fruit\" – from a single ovary of one flower, e.g. mango, guava", "kn": "\"simple fruit\" – ಒಂದು ಹೂವಿನ ಒಂದೇ ovary ಯಿಂದ, ಉದಾ. mango, guava", "hi": "\"simple fruit\" – एक फूल के एक ही ovary से, उदा. mango, guava"},
+  {"en": "\"aggregate fruit\" – from multiple free carpels of one flower, e.g. custard apple", "kn": "\"aggregate fruit\" – ಒಂದು ಹೂವಿನ ಅನೇಕ ಬೇರ್ಪಟ್ಟ carpels ಯಿಂದ, ಉದಾ. custard apple", "hi": "\"aggregate fruit\" – एक फूल के कई मुक्त carpels से, उदा. custard apple"}
+],
+"Describe the three layers of the pericarp with reference to the mango fruit.": [
+  {"en": "\"epicarp\" – outer skin of the fruit", "kn": "\"epicarp\" – ಹಣ್ಣಿನ ಹೊರ ಚರ್ಮ", "hi": "\"epicarp\" – फल की बाहरी त्वचा"},
+  {"en": "\"mesocarp\" – fleshy and edible in mango", "kn": "mango ನಲ್ಲಿ ಮಾಂಸಲ ಮತ್ತು ತಿನ್ನಬಹುದಾದ \"mesocarp\"", "hi": "mango में गूदेदार व खाने योग्य \"mesocarp\""},
+  {"en": "\"endocarp\" – hard, stony layer around the seed", "kn": "ಬೀಜದ ಸುತ್ತ ಗಟ್ಟಿ, ಕಲ್ಲಿನಂತಹ \"endocarp\"", "hi": "बीज के चारों ओर कठोर, पथरीली \"endocarp\""}
+],
+"Describe the structure of a dicot seed.": [
+  {"en": "seed coat differentiated into \"testa\" (outer) and \"tegmen\" (inner)", "kn": "ಬೀಜದ ಹೊದಿಕೆ \"testa\" (ಹೊರ) ಮತ್ತು \"tegmen\" (ಒಳ) ಆಗಿ ಭಿನ್ನವಾಗಿದೆ", "hi": "बीज आवरण \"testa\" (बाहरी) और \"tegmen\" (भीतरी) में विभेदित"},
+  {"en": "embryo has \"two cotyledons\"", "kn": "ಭ್ರೂಣ \"ಎರಡು cotyledons\" ಹೊಂದಿದೆ", "hi": "भ्रूण में \"दो cotyledons\" होते हैं"},
+  {"en": "often \"non-endospermous\", e.g. bean, gram, pea", "kn": "ಸಾಮಾನ್ಯವಾಗಿ \"non-endospermous\", ಉದಾ. bean, gram, pea", "hi": "प्रायः \"non-endospermous\", उदा. bean, gram, pea"}
+],
+"Describe the structure of a monocot seed.": [
+  {"en": "dominant \"endosperm\" with an outer \"aleurone layer\"", "kn": "ಪ್ರಬಲ \"endosperm\" ಜೊತೆಗೆ ಹೊರ \"aleurone layer\"", "hi": "प्रमुख \"endosperm\" के साथ बाहरी \"aleurone layer\""},
+  {"en": "single shield-shaped cotyledon called \"scutellum\"", "kn": "ಗುರಾಣಿ-ಆಕಾರದ ಒಂದೇ cotyledon, \"scutellum\" ಎಂದು ಕರೆಯಲ್ಪಡುತ್ತದೆ", "hi": "ढाल-आकार का एक cotyledon, जिसे \"scutellum\" कहते हैं"},
+  {"en": "axis enclosed by \"coleoptile\" (plumule) and \"coleorhiza\" (radicle)", "kn": "ಅಕ್ಷ \"coleoptile\" (plumule) ಮತ್ತು \"coleorhiza\" (radicle) ಇಂದ ಆವೃತವಾಗಿದೆ", "hi": "अक्ष \"coleoptile\" (plumule) व \"coleorhiza\" (radicle) से ढका होता है"}
+],
+"Classify fruits and describe the difference between true and false fruits, with examples.": [
+  {"en": "fruit = \"post-fertilization\" modification of ovary; \"parthenocarpic\" if without fertilization", "kn": "ಹಣ್ಣು = ovary ಯ \"post-fertilization\" ಮಾರ್ಪಾಡು; ಫಲೀಕರಣವಿಲ್ಲದೆ \"parthenocarpic\"", "hi": "फल = ovary का \"post-fertilization\" रूपांतरण; बिना निषेचन के \"parthenocarpic\""},
+  {"en": "fruit wall/\"pericarp\" has epicarp, mesocarp, endocarp", "kn": "ಹಣ್ಣಿನ ಗೋಡೆ/\"pericarp\" epicarp, mesocarp, endocarp ಹೊಂದಿದೆ", "hi": "फल की दीवार/\"pericarp\" में epicarp, mesocarp, endocarp"},
+  {"en": "\"true fruit\" – from ovary alone, e.g. mango", "kn": "\"true fruit\" – ovary ಯಿಂದ ಮಾತ್ರ, ಉದಾ. mango", "hi": "\"true fruit\" – केवल ovary से, उदा. mango"},
+  {"en": "\"false fruit\" – ovary plus thalamus, e.g. apple", "kn": "\"false fruit\" – ovary ಜೊತೆಗೆ thalamus, ಉದಾ. apple", "hi": "\"false fruit\" – ovary के साथ thalamus, उदा. apple"},
+  {"en": "\"simple fruit\" – single ovary, e.g. mango, guava", "kn": "\"simple fruit\" – ಒಂದೇ ovary, ಉದಾ. mango, guava", "hi": "\"simple fruit\" – एक ovary, उदा. mango, guava"},
+  {"en": "\"aggregate fruit\" – multiple free carpels, e.g. custard apple", "kn": "\"aggregate fruit\" – ಅನೇಕ ಬೇರ್ಪಟ್ಟ carpels, ಉದಾ. custard apple", "hi": "\"aggregate fruit\" – कई मुक्त carpels, उदा. custard apple"},
+  {"en": "\"composite fruit\" – entire inflorescence, e.g. pineapple, fig", "kn": "\"composite fruit\" – ಸಂಪೂರ್ಣ inflorescence, ಉದಾ. pineapple, fig", "hi": "\"composite fruit\" – पूरे inflorescence से, उदा. pineapple, fig"}
+],
+"Mention the characteristic vegetative features of the family Solanaceae.": [
+  {"en": "herbs/shrubs, stem herbaceous, sometimes tuberous, e.g. potato", "kn": "herbs/shrubs, ಕಾಂಡ herbaceous, ಕೆಲವೊಮ್ಮೆ tuberous, ಉದಾ. potato", "hi": "herbs/shrubs, तना herbaceous, कभी-कभी tuberous, उदा. potato"},
+  {"en": "leaves \"alternate, simple, exstipulate\", reticulate venation", "kn": "ಎಲೆಗಳು \"alternate, simple, exstipulate\", reticulate venation", "hi": "पत्तियाँ \"alternate, simple, exstipulate\", reticulate venation"}
+],
+"Describe the gynoecium of a typical Solanaceae flower.": [
+  {"en": "\"bicarpellary, syncarpous\", superior ovary", "kn": "\"bicarpellary, syncarpous\", superior ovary", "hi": "\"bicarpellary, syncarpous\", superior ovary"},
+  {"en": "\"axile placentation\"", "kn": "\"axile placentation\"", "hi": "\"axile placentation\""}
+],
+"Give the economic importance of Solanaceae under the food and medicine categories, with examples.": [
+  {"en": "food – \"tomato, brinjal, potato\"", "kn": "ಆಹಾರ – \"tomato, brinjal, potato\"", "hi": "भोजन – \"tomato, brinjal, potato\""},
+  {"en": "medicine – \"belladonna, ashwagandha\"", "kn": "ಔಷಧ – \"belladonna, ashwagandha\"", "hi": "औषधि – \"belladonna, ashwagandha\""}
+],
+"Differentiate family Solanaceae from family Fabaceae with respect to aestivation and gynoecium.": [
+  {"en": "Solanaceae \"valvate\" aestivation vs Fabaceae \"vexillary\" aestivation", "kn": "Solanaceae \"valvate\" aestivation, Fabaceae \"vexillary\" aestivation", "hi": "Solanaceae में \"valvate\" aestivation, Fabaceae में \"vexillary\" aestivation"},
+  {"en": "Solanaceae \"syncarpous bicarpellary\" gynoecium vs Fabaceae \"apocarpous\" (free) carpels", "kn": "Solanaceae \"syncarpous bicarpellary\" gynoecium, Fabaceae \"apocarpous\" (ಮುಕ್ತ) carpels", "hi": "Solanaceae में \"syncarpous bicarpellary\" gynoecium, Fabaceae में \"apocarpous\" (मुक्त) carpels"},
+  {"en": "floral dissection of aestivation & gynoecium is \"key to identification\"", "kn": "aestivation ಮತ್ತು gynoecium ಪರೀಕ್ಷೆ \"ಗುರುತಿಸುವಿಕೆಗೆ ಮುಖ್ಯ ಕೀಲಿ\"", "hi": "aestivation व gynoecium की जाँच \"पहचान की मुख्य कुंजी\""}
+],
+"Describe the salient features of family Solanaceae under vegetative, floral and economic characters.": [
+  {"en": "habit – herbs/shrubs, stem sometimes tuberous, e.g. potato", "kn": "habit – herbs/shrubs, ಕಾಂಡ ಕೆಲವೊಮ್ಮೆ tuberous, ಉದಾ. potato", "hi": "habit – herbs/shrubs, तना कभी-कभी tuberous, उदा. potato"},
+  {"en": "leaves \"alternate, simple, exstipulate\", reticulate venation", "kn": "ಎಲೆಗಳು \"alternate, simple, exstipulate\", reticulate venation", "hi": "पत्तियाँ \"alternate, simple, exstipulate\", reticulate venation"},
+  {"en": "inflorescence solitary/cymose; flowers bisexual, actinomorphic", "kn": "inflorescence solitary/cymose; ಹೂಗಳು bisexual, actinomorphic", "hi": "inflorescence solitary/cymose; फूल bisexual, actinomorphic"},
+  {"en": "calyx 5 united sepals valvate persistent; corolla 5 united petals valvate", "kn": "calyx 5 ಒಟ್ಟುಗೂಡಿದ sepals valvate persistent; corolla 5 ಒಟ್ಟುಗೂಡಿದ petals valvate", "hi": "calyx 5 संयुक्त sepals valvate persistent; corolla 5 संयुक्त petals valvate"},
+  {"en": "androecium 5 epipetalous stamens; gynoecium bicarpellary syncarpous superior axile", "kn": "androecium 5 epipetalous stamens; gynoecium bicarpellary syncarpous superior axile", "hi": "androecium 5 epipetalous stamens; gynoecium bicarpellary syncarpous superior axile"},
+  {"en": "fruit – berry or capsule, endospermous seeds", "kn": "ಹಣ್ಣು – berry ಅಥವಾ capsule, endospermous ಬೀಜಗಳು", "hi": "फल – berry या capsule, endospermous बीज"},
+  {"en": "economic importance – food, spice, medicine, fumigatory, ornamental uses", "kn": "ಆರ್ಥಿಕ ಪ್ರಾಮುಖ್ಯತೆ – ಆಹಾರ, ಮಸಾಲೆ, ಔಷಧ, fumigatory, ಅಲಂಕಾರಿಕ ಬಳಕೆಗಳು", "hi": "आर्थिक महत्व – भोजन, मसाला, औषधि, fumigatory, सजावटी उपयोग"}
+]
+};
+let waSetup = {topic:'All', marks:'All'};
 let waSession = null;
 const WA_WEIGHTS_KEY = 'pu1ch5_writeit_weights_v1';
 function getWaWeights(){
@@ -1801,7 +2063,9 @@ function setWaWeight(idx, gotIt){
   try{ localStorage.setItem(WA_WEIGHTS_KEY, JSON.stringify(w)); }catch(e){}
 }
 function waFilterPool(){
-  return waAllPool().filter(q => waSetup.topic==='All' || q.topic===waSetup.topic);
+  return DESC_QUESTIONS.map((q,i)=>({...q, idx:i})).filter(q =>
+    (waSetup.topic==='All' || q.topic===waSetup.topic)
+    && (waSetup.marks==='All' || q.marks===parseInt(waSetup.marks,10)));
 }
 function renderWriteItSetup(){
   const pool = waFilterPool();
@@ -1813,6 +2077,8 @@ function renderWriteItSetup(){
   html += `<div class="setup-card">
     <div class="setup-label">Topic</div>
     <div class="opt-row">${topicChips}</div>
+    <div class="setup-label">Marks</div>
+    <div class="opt-row">${['All','1','2','3','5'].map(v=>`<div class="opt-btn ${waSetup.marks===v?'sel':''}" onclick="waSetMarks('${v}')">${v==='All'?'All':v+' Marks'}</div>`).join('')}</div>
     <button class="start-btn" onclick="waStart()">Start Practice · ${pool.length} matching</button>
     ${pool.length ? `<button class="fc-btn" style="width:100%; margin-top:8px;" onclick="waWeakFirst()">🎯 Practice Weak Answers First</button>` : ''}
   </div>`;
@@ -1820,7 +2086,8 @@ function renderWriteItSetup(){
   document.getElementById('content').innerHTML = html;
 }
 function waSetTopic(id){ waSetup.topic=id; renderWriteItSetup(); }
-window.waSetTopic=waSetTopic;
+function waSetMarks(v){ waSetup.marks=v; renderWriteItSetup(); }
+window.waSetTopic=waSetTopic; window.waSetMarks=waSetMarks;
 
 function waStart(){
   const pool = shuffleArr(waFilterPool());
@@ -1837,6 +2104,30 @@ function waWeakFirst(){
 }
 window.waStart=waStart; window.waWeakFirst=waWeakFirst;
 
+function kwPanelHtml(q){
+  if(typeof DESC_KEYWORDS_CH5 === 'undefined') return '';
+  const items = DESC_KEYWORDS_CH5[q.q];
+  if(!items || !items.length) return '';
+  const lang = (currentLang==='kn'||currentLang==='hi') ? currentLang : 'en';
+  const rows = items.map((it,i)=>`<div class="kw-item" data-i="${i}" onclick="kwToggle(this)"><div class="kw-check">✓</div><div class="kw-text">${it[lang]||it.en}</div></div>`).join('');
+  return `<div class="kw-panel">
+    <div class="kw-head"><div class="kw-title">🔑 Keywords examiners look for</div><div class="kw-score">0 / ${items.length} marked</div></div>
+    <div class="kw-sub">Tap each one your written answer actually included — not just whether you had the right general idea.</div>
+    <div class="kw-list">${rows}</div>
+    <div class="kw-foot">Missed one? That's usually worth <b>1 mark</b> in the board scheme — go back and rewrite the line with it included.</div>
+  </div>`;
+}
+function kwToggle(el){
+  el.classList.toggle('checked');
+  const panel = el.closest('.kw-panel');
+  const total = panel.querySelectorAll('.kw-item').length;
+  const n = panel.querySelectorAll('.kw-item.checked').length;
+  panel.querySelector('.kw-score').textContent = n + ' / ' + total + ' marked';
+  const foot = panel.querySelector('.kw-foot');
+  foot.innerHTML = (n===total) ? '🎉 All keywords included — this answer should score full marks.' : 'Missed one? That\'s usually worth <b>1 mark</b> in the board scheme — go back and rewrite the line with it included.';
+}
+window.kwToggle = kwToggle;
+
 function renderWriteItQuestion(){
   const s = waSession;
   if(s.idx >= s.questions.length){ renderWriteItDone(); return; }
@@ -1846,7 +2137,9 @@ function renderWriteItQuestion(){
     <div class="fc-counter">Question ${s.idx+1} / ${s.questions.length}</div>
     <div class="setup-card">
       <div class="opt-row" style="margin-bottom:10px;">
-        <span class="opt-btn sel" style="cursor:default;">${topicName}</span>
+        <span class="opt-btn sel" style="cursor:default;">${q.marks} Marks</span>
+        <span class="opt-btn" style="cursor:default;">${q.difficulty}</span>
+        <span class="opt-btn" style="cursor:default;">${topicName}</span>
       </div>
       <div class="aq-q" style="margin-bottom:12px;">${q.q}</div>
       <div style="font-size:11.5px; color:var(--ink-dim); margin-bottom:6px;">📝 Write this out on paper first, like the real exam — use the box below only as a rough scratchpad.</div>
@@ -1854,6 +2147,7 @@ function renderWriteItQuestion(){
       ${!s.revealed
         ? `<button class="start-btn" style="margin-top:10px;" onclick="waReveal()">Show Model Answer</button>`
         : `<div class="aq-a show" style="margin-top:12px;"><b>Model Answer:</b><br>${q.a.replace(/\n/g,'<br>')}</div>
+           ${kwPanelHtml(q)}
            <div class="opt-row" style="margin:12px 0;">
              <button class="opt-btn" style="flex:1; border-color:#e0685f; color:#e0685f;" onclick="waRate(false)">😕 Still Learning</button>
              <button class="opt-btn sel" style="flex:1;" onclick="waRate(true)">✅ Got It</button>
@@ -2169,6 +2463,183 @@ function renderCompare(){
   renderCompareResult();
   document.getElementById('cmpSelectA').addEventListener('change', renderCompareResult);
   document.getElementById('cmpSelectB').addEventListener('change', renderCompareResult);
+}
+
+/* ---- Glossary / Pronunciation ---- */
+const GLOSSARY_DATA = [
+  { term:"Tap Root System", def:"The root system formed by direct elongation of the embryonic radicle into a primary root that branches into secondary and tertiary roots, typical of dicots (e.g. Mustard)." },
+  { term:"Fibrous Root System", def:"A root system in monocots where the short-lived primary root is replaced by a dense cluster of roots arising from the base of the stem (e.g. Wheat)." },
+  { term:"Adventitious Root", def:"A root that arises from any plant part other than the radicle, e.g. from stem nodes in grass or Banyan." },
+  { term:"Root Cap", def:"The thimble-like protective covering over the tip of the root, forming the first region of the root tip." },
+  { term:"Node", def:"The point on a stem where a leaf or branch arises." },
+  { term:"Internode", def:"The segment of a stem lying between two successive nodes." },
+  { term:"Rhizome", def:"An underground stem that grows horizontally, storing food and aiding vegetative propagation, e.g. ginger and turmeric." },
+  { term:"Phylloclade", def:"A flattened, green, photosynthetic stem that replaces leaves in function, e.g. in Opuntia." },
+  { term:"Phyllotaxy", def:"The pattern of arrangement of leaves on a stem or branch &ndash; alternate, opposite, or whorled." },
+  { term:"Venation", def:"The pattern of distribution of veins and veinlets in a leaf lamina &ndash; reticulate (net-like, dicots) or parallel (monocots)." },
+  { term:"Compound Leaf", def:"A leaf whose lamina is incised up to the midrib, dividing it into separate leaflets, either pinnately (Neem) or palmately (Silk Cotton)." },
+  { term:"Stipule", def:"A small, leaf-like outgrowth found at the base of the petiole in some leaves." },
+  { term:"Racemose Inflorescence", def:"An inflorescence in which the main axis continues to grow and bears flowers laterally in acropetal succession, older flowers toward the base." },
+  { term:"Cymose Inflorescence", def:"An inflorescence in which the main axis terminates in a flower, so growth is limited and flowers are borne in basipetal order." },
+  { term:"Spadix", def:"A special type of spike with a fleshy axis, enclosed by a large bract called a spathe, e.g. in banana." },
+  { term:"Calyx", def:"The outermost floral whorl, composed of sepals, usually green, that protects the flower in the bud stage." },
+  { term:"Corolla", def:"The floral whorl of petals, usually brightly coloured, lying just within the calyx and attracting pollinators." },
+  { term:"Androecium", def:"The male reproductive whorl of a flower, made up of stamens, each with a filament and an anther." },
+  { term:"Gynoecium", def:"The female reproductive whorl of a flower, made up of one or more carpels, each with an ovary, style and stigma." },
+  { term:"Aestivation", def:"The pattern in which sepals or petals are arranged relative to one another in a flower bud, e.g. valvate, twisted, imbricate, or vexillary." },
+  { term:"Placentation", def:"The arrangement of ovules within the ovary on the placenta, e.g. marginal, axile, parietal, free central, or basal." },
+  { term:"Pericarp", def:"The wall of a fruit, developed from the ovary wall, differentiated into epicarp, mesocarp, and endocarp." },
+  { term:"Drupe", def:"A fleshy fruit from a monocarpellary superior ovary bearing a single seed enclosed in a hard endocarp, e.g. mango and coconut." },
+  { term:"Endosperm", def:"The nutritive tissue formed after double fertilisation that stores food for the developing embryo, dominant in monocot seeds." },
+  { term:"Scutellum", def:"The single, shield-shaped cotyledon of a monocot embryo (e.g. grass), lying against the endosperm." },
+  { term:"Solanaceae", def:"A large dicot family (the potato family) with alternate exstipulate leaves, actinomorphic bisexual flowers, and a bicarpellary syncarpous ovary with axile placentation." },
+  { term:"Epipetalous", def:"A condition where the stamens are attached to the petals of the corolla, as seen in the androecium of Solanaceae." },
+  { term:"Berry", def:"A fleshy fruit, usually with many seeds embedded in the pulp and no true stony layer, e.g. tomato and brinjal in Solanaceae." }
+];
+const GLOSSARY_TRANSLATIONS_CH5 = {
+  "Tap Root System": {
+    kn: "ಭ್ರೂಣದ ಮೂಲಾಂಕುರವು ನೇರವಾಗಿ ಉದ್ದವಾಗಿ ಪ್ರಾಥಮಿಕ ಬೇರಾಗಿ ಬೆಳೆದು, ದ್ವಿತೀಯ ಮತ್ತು ತೃತೀಯ ಬೇರುಗಳಾಗಿ ಕವಲೊಡೆಯುವ ಬೇರಿನ ವ್ಯವಸ್ಥೆ, ಡೈಕಾಟ್‌ಗಳಲ್ಲಿ (ಉದಾ. Mustard) ಸಾಮಾನ್ಯ.",
+    hi: "भ्रूण के मूलांकुर के सीधे लंबा होकर प्राथमिक जड़ बनने और द्वितीयक-तृतीयक जड़ों में शाखित होने से बनी जड़ प्रणाली, जो द्विबीजपत्री पौधों (उदा. Mustard) में सामान्य है."
+  },
+  "Fibrous Root System": {
+    kn: "ಏಕದಳಸಸ್ಯಗಳಲ್ಲಿ ಅಲ್ಪಾಯುಷಿ ಪ್ರಾಥಮಿಕ ಬೇರಿನ ಬದಲಿಗೆ ಕಾಂಡದ ತಳಭಾಗದಿಂದ ಹುಟ್ಟುವ ದಟ್ಟವಾದ ಬೇರುಗಳ ಗುಂಪೇ ನಾರುಬೇರು ವ್ಯವಸ್ಥೆ (ಉದಾ. Wheat).",
+    hi: "एकबीजपत्री पौधों में अल्पजीवी प्राथमिक जड़ के स्थान पर तने के आधार से निकलने वाले सघन जड़ों के गुच्छे से बनी प्रणाली को रेशेदार जड़ प्रणाली कहते हैं (उदा. Wheat)."
+  },
+  "Adventitious Root": {
+    kn: "ಮೂಲಾಂಕುರವನ್ನು ಬಿಟ್ಟು ಸಸ್ಯದ ಬೇರೆ ಯಾವುದೇ ಭಾಗದಿಂದ ಹುಟ್ಟುವ ಬೇರು, ಉದಾ. Grass ಅಥವಾ Banyan ನಲ್ಲಿ ಕಾಂಡದ ಗಂಟುಗಳಿಂದ.",
+    hi: "मूलांकुर के अलावा पौधे के किसी अन्य भाग से उत्पन्न होने वाली जड़, जैसे Grass या Banyan में तने की गाँठों से निकलने वाली जड़ें."
+  },
+  "Root Cap": {
+    kn: "ಬೇರಿನ ತುದಿಯ ಮೇಲಿರುವ ಟೊಪ್ಪಿಯಂತಹ ರಕ್ಷಣಾತ್ಮಕ ಆವರಣ, ಇದು ಬೇರಿನ ತುದಿಯ ಮೊದಲ ಭಾಗ.",
+    hi: "जड़ की नोक पर स्थित टोपी जैसा सुरक्षात्मक आवरण, जो जड़ के शीर्ष का पहला भाग होता है."
+  },
+  "Node": {
+    kn: "ಕಾಂಡದ ಮೇಲೆ ಎಲೆ ಅಥವಾ ಕವಲು ಹುಟ್ಟುವ ಸ್ಥಳವೇ ಗಂಟು (node).",
+    hi: "तने पर वह स्थान जहाँ से पत्ती या शाखा निकलती है, गाँठ (node) कहलाता है."
+  },
+  "Internode": {
+    kn: "ಎರಡು ಸತತ ಗಂಟುಗಳ ನಡುವಿನ ಕಾಂಡದ ಭಾಗವೇ ಇಂಟರ್ನೋಡ್ (ಪರ್ವಮಧ್ಯ).",
+    hi: "दो लगातार गाँठों के बीच का तना भाग इंटरनोड (पर्वमध्य) कहलाता है."
+  },
+  "Rhizome": {
+    kn: "ಅಡ್ಡಡ್ಡ ಬೆಳೆಯುವ ಭೂಗತ ಕಾಂಡ, ಆಹಾರ ಸಂಗ್ರಹಿಸಿ ಸಸ್ಯಕ ಪ್ರವರ್ಧನೆಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಉದಾ. Ginger ಮತ್ತು Turmeric.",
+    hi: "क्षैतिज दिशा में बढ़ने वाला भूमिगत तना, जो भोजन संग्रहित करता है और कायिक प्रवर्धन में सहायक होता है, उदा. Ginger और Turmeric."
+  },
+  "Phylloclade": {
+    kn: "ಎಲೆಗಳ ಕಾರ್ಯವನ್ನು ನಿರ್ವಹಿಸುವ ಚಪ್ಪಟೆ, ಹಸಿರು, ದ್ಯುತಿಸಂಶ್ಲೇಷಕ ಕಾಂಡ, ಉದಾ. Opuntia.",
+    hi: "पत्तियों का कार्य करने वाला चपटा, हरा, प्रकाश-संश्लेषी तना, उदा. Opuntia."
+  },
+  "Phyllotaxy": {
+    kn: "ಕಾಂಡ ಅಥವಾ ಕವಲಿನ ಮೇಲೆ ಎಲೆಗಳು ಜೋಡಣೆಗೊಳ್ಳುವ ವಿಧಾನ &ndash; ಪರ್ಯಾಯ (alternate), ಎದುರುಬದುರು (opposite), ಅಥವಾ ಚಕ್ರಾಕಾರ (whorled).",
+    hi: "तने या शाखा पर पत्तियों के व्यवस्थित होने का ढंग &ndash; एकांतर (alternate), सम्मुख (opposite), या चक्रिक (whorled)."
+  },
+  "Venation": {
+    kn: "ಎಲೆಯ ಫಲಕದಲ್ಲಿ ಸಿರೆಗಳು ಮತ್ತು ಉಪಸಿರೆಗಳ ಹಂಚಿಕೆಯ ವಿನ್ಯಾಸ &ndash; ಜಾಲರೂಪ (reticulate, ಡೈಕಾಟ್) ಅಥವಾ ಸಮಾನಾಂತರ (parallel, ಮೊನೊಕಾಟ್).",
+    hi: "पत्ती के फलक में शिराओं व उपशिराओं के फैलाव का ढंग &ndash; जालिकावत (reticulate, द्विबीजपत्री) या समानांतर (parallel, एकबीजपत्री)."
+  },
+  "Compound Leaf": {
+    kn: "ಎಲೆಯ ಫಲಕವು ಮಧ್ಯನಾಳದವರೆಗೂ ಸೀಳಿ ಪ್ರತ್ಯೇಕ ಚಿಗುರೆಲೆಗಳಾಗಿ (leaflets) ವಿಭಜನೆಗೊಳ್ಳುವ ಎಲೆ, ಪಿನ್ನೇಟ್ ರೀತಿಯಲ್ಲಿ (Neem) ಅಥವಾ ಪಾಲ್ಮೇಟ್ ರೀತಿಯಲ್ಲಿ (Silk Cotton).",
+    hi: "जिसकी पत्ती का फलक मध्यशिरा तक कटकर अलग-अलग पत्रकों (leaflets) में बँट जाता है, वह संयुक्त पत्ती कहलाती है &ndash; पिच्छाकार (Neem) या हस्ताकार (Silk Cotton)."
+  },
+  "Stipule": {
+    kn: "ಕೆಲವು ಎಲೆಗಳಲ್ಲಿ ತೊಟ್ಟಿನ ತಳಭಾಗದಲ್ಲಿ ಕಂಡುಬರುವ ಸಣ್ಣ, ಎಲೆಯಂತಹ ಉಪ ಬೆಳವಣಿಗೆ.",
+    hi: "कुछ पत्तियों में वृंत (petiole) के आधार पर पाई जाने वाली छोटी, पत्ती-जैसी संरचना."
+  },
+  "Racemose Inflorescence": {
+    kn: "ಮುಖ್ಯ ಅಕ್ಷವು ಬೆಳೆಯುತ್ತಲೇ ಇದ್ದು, ಪಾರ್ಶ್ವದಲ್ಲಿ ಹೂವುಗಳನ್ನು ಅಕ್ರೊಪೆಟಲ್ ಕ್ರಮದಲ್ಲಿ (ಹಳೆಯ ಹೂವುಗಳು ತಳಭಾಗದಲ್ಲಿ) ಬಿಡುವ ಪುಷ್ಪಮಂಜರಿಯೇ ರೇಸಿಮೋಸ್ ಪುಷ್ಪಮಂಜರಿ.",
+    hi: "जिसमें मुख्य अक्ष निरंतर बढ़ता रहता है और पार्श्व में फूल आरोही (acropetal) क्रम में लगते हैं, यानी पुराने फूल आधार की ओर, उसे रेसीमोस पुष्पक्रम कहते हैं."
+  },
+  "Cymose Inflorescence": {
+    kn: "ಮುಖ್ಯ ಅಕ್ಷವು ಹೂವಿನಲ್ಲಿ ಕೊನೆಗೊಳ್ಳುವುದರಿಂದ ಬೆಳವಣಿಗೆ ಸೀಮಿತವಾಗಿದ್ದು, ಹೂವುಗಳು ಬೇಸಿಪೆಟಲ್ ಕ್ರಮದಲ್ಲಿ (ಎಳೆಯ ಹೂವುಗಳು ತಳಭಾಗದಲ್ಲಿ) ಬಿಡುವ ಪುಷ್ಪಮಂಜರಿ.",
+    hi: "जिसमें मुख्य अक्ष एक फूल पर समाप्त हो जाता है, इसलिए वृद्धि सीमित रहती है और फूल अवरोही (basipetal) क्रम में लगते हैं, उसे साइमोस पुष्पक्रम कहते हैं."
+  },
+  "Spadix": {
+    kn: "ಮಾಂಸಲ ಅಕ್ಷವನ್ನು ಹೊಂದಿ, ಸ್ಪೇತ್ ಎಂಬ ದೊಡ್ಡ ಬ್ರ್ಯಾಕ್ಟ್‌ನಿಂದ ಆವೃತವಾಗಿರುವ ವಿಶೇಷ ಬಗೆಯ ಸ್ಪೈಕ್, ಉದಾ. Banana.",
+    hi: "मांसल अक्ष वाला और स्पेथ नामक बड़े ब्रैक्ट से घिरा विशेष प्रकार का स्पाइक, उदा. Banana."
+  },
+  "Calyx": {
+    kn: "ಹೂವಿನ ಅತ್ಯಂತ ಹೊರಗಿನ ಸುತ್ತು, ಸಾಮಾನ್ಯವಾಗಿ ಹಸಿರು ಬಣ್ಣದ ಸೀಪಲ್‌ಗಳಿಂದಾಗಿದ್ದು, ಮೊಗ್ಗಿನ ಹಂತದಲ್ಲಿ ಹೂವನ್ನು ರಕ್ಷಿಸುತ್ತದೆ.",
+    hi: "फूल का सबसे बाहरी चक्र, जो सामान्यतः हरे रंग के बाह्यदलों (sepals) से बना होता है और कली अवस्था में फूल की रक्षा करता है."
+  },
+  "Corolla": {
+    kn: "ಸಾಮಾನ್ಯವಾಗಿ ಗಾಢ ಬಣ್ಣದ ಪೆಟಲ್‌ಗಳಿಂದಾದ, ಕ್ಯಾಲಿಕ್ಸ್‌ನ ಒಳಗಿನ ಸುತ್ತಾಗಿದ್ದು ಪರಾಗಸ್ಪರ್ಶಕಗಳನ್ನು ಆಕರ್ಷಿಸುವ ಹೂವಿನ ಸುತ್ತೇ ಕೊರೊಲ್ಲಾ.",
+    hi: "प्रायः चमकीले रंग की पंखुड़ियों (petals) से बना, कैलिक्स के ठीक भीतर स्थित और परागणकों को आकर्षित करने वाला पुष्प चक्र कोरोला कहलाता है."
+  },
+  "Androecium": {
+    kn: "ಹೂವಿನ ಗಂಡು ಸಂತಾನೋತ್ಪತ್ತಿ ಸುತ್ತು, ಸ್ಟೇಮನ್‌ಗಳಿಂದಾಗಿದ್ದು, ಪ್ರತಿ ಸ್ಟೇಮನ್‌ಗೆ ಫಿಲಮೆಂಟ್ ಮತ್ತು ಆಂಥರ್ ಇರುತ್ತದೆ.",
+    hi: "फूल का नर जनन चक्र, जो पुंकेसरों (stamens) से बना होता है, प्रत्येक पुंकेसर में तंतु (filament) और परागकोश (anther) होता है."
+  },
+  "Gynoecium": {
+    kn: "ಹೂವಿನ ಹೆಣ್ಣು ಸಂತಾನೋತ್ಪತ್ತಿ ಸುತ್ತು, ಒಂದು ಅಥವಾ ಹೆಚ್ಚು ಕಾರ್ಪೆಲ್‌ಗಳಿಂದಾಗಿದ್ದು, ಪ್ರತಿ ಕಾರ್ಪೆಲ್‌ಗೆ ಒವರಿ, ಸ್ಟೈಲ್ ಮತ್ತು ಸ್ಟಿಗ್ಮಾ ಇರುತ್ತದೆ.",
+    hi: "फूल का मादा जनन चक्र, जो एक या अधिक अंडपों (carpels) से बना होता है, प्रत्येक अंडप में अंडाशय (ovary), वर्तिका (style) और वर्तिकाग्र (stigma) होता है."
+  },
+  "Aestivation": {
+    kn: "ಹೂವಿನ ಮೊಗ್ಗಿನಲ್ಲಿ ಸೀಪಲ್‌ಗಳು ಅಥವಾ ಪೆಟಲ್‌ಗಳು ಪರಸ್ಪರ ಜೋಡಣೆಗೊಳ್ಳುವ ವಿಧಾನವೇ ಎಸ್ಟಿವೇಷನ್, ಉದಾ. ವಾಲ್ವೇಟ್, ಟ್ವಿಸ್ಟೆಡ್, ಇಂಬ್ರಿಕೇಟ್, ಅಥವಾ ವೆಕ್ಸಿಲರಿ.",
+    hi: "फूल की कली में बाह्यदल या दल एक-दूसरे के सापेक्ष जिस क्रम में व्यवस्थित होते हैं, उसे एस्टिवेशन कहते हैं, उदा. वाल्वेट, ट्विस्टेड, इम्ब्रिकेट, या वेक्सिलरी."
+  },
+  "Placentation": {
+    kn: "ಓವರಿಯ ಒಳಗೆ ಪ್ಲಸೆಂಟಾದ ಮೇಲೆ ಓವ್ಯುಲ್‌ಗಳ ಜೋಡಣೆಯೇ ಪ್ಲಸೆಂಟೇಷನ್, ಉದಾ. ಮಾರ್ಜಿನಲ್, ಆಕ್ಸೈಲ್, ಪ್ಯಾರೈಟಲ್, ಫ್ರೀ ಸೆಂಟ್ರಲ್, ಅಥವಾ ಬೇಸಲ್.",
+    hi: "अंडाशय के भीतर बीजाणुधानी (placenta) पर बीजांडों (ovules) की व्यवस्था को बीजांडन्यास (placentation) कहते हैं, उदा. मार्जिनल, एक्सिल, पैराइटल, फ्री सेंट्रल, या बेसल."
+  },
+  "Pericarp": {
+    kn: "ಓವರಿಯ ಗೋಡೆಯಿಂದ ಬೆಳೆದ ಹಣ್ಣಿನ ಗೋಡೆ, ಇದು ಎಪಿಕಾರ್ಪ್, ಮೀಸೋಕಾರ್ಪ್ ಮತ್ತು ಎಂಡೋಕಾರ್ಪ್ ಎಂದು ಪ್ರತ್ಯೇಕಗೊಳ್ಳುತ್ತದೆ.",
+    hi: "अंडाशय की दीवार से विकसित होने वाली फल की भित्ति, जो एपिकार्प, मीसोकार्प और एंडोकार्प में विभेदित होती है."
+  },
+  "Drupe": {
+    kn: "ಏಕಕಾರ್ಪೆಲ್ ಸುಪೀರಿಯರ್ ಓವರಿಯಿಂದ ಬೆಳೆದ, ಗಟ್ಟಿಯಾದ ಎಂಡೋಕಾರ್ಪ್‌ನೊಳಗೆ ಒಂದೇ ಬೀಜವಿರುವ ಮಾಂಸಲ ಹಣ್ಣು, ಉದಾ. Mango ಮತ್ತು Coconut.",
+    hi: "एककार्पिक ऊर्ध्ववर्ती अंडाशय से बना, कठोर एंडोकार्प में एक ही बीज लिए मांसल फल, उदा. Mango और Coconut."
+  },
+  "Endosperm": {
+    kn: "ದ್ವಿ ಫಲಿತೀಕರಣದ ನಂತರ ಉಂಟಾಗುವ ಪೋಷಕಾಂಶ ಅಂಗಾಂಶ, ಬೆಳವಣಿಗೆಯಾಗುತ್ತಿರುವ ಭ್ರೂಣಕ್ಕೆ ಆಹಾರ ಸಂಗ್ರಹಿಸುತ್ತದೆ, ಮೊನೊಕಾಟ್ ಬೀಜಗಳಲ್ಲಿ ಪ್ರಧಾನವಾಗಿ ಕಂಡುಬರುತ್ತದೆ.",
+    hi: "द्वि-निषेचन के बाद बनने वाला पोषक ऊतक, जो विकसित हो रहे भ्रूण के लिए भोजन संग्रहित करता है, एकबीजपत्री बीजों में प्रमुख रूप से पाया जाता है."
+  },
+  "Scutellum": {
+    kn: "ಮೊನೊಕಾಟ್ ಭ್ರೂಣದ (ಉದಾ. Grass) ಒಂದೇ, ಗುರಾಣಿ ಆಕಾರದ ಕಾಟಿಲಿಡನ್, ಇದು ಎಂಡೋಸ್ಪರ್ಮ್‌ಗೆ ಅಂಟಿಕೊಂಡಿರುತ್ತದೆ.",
+    hi: "एकबीजपत्री भ्रूण (उदा. Grass) का एकल, ढाल-आकार का बीजपत्र, जो एंडोस्पर्म से सटा रहता है."
+  },
+  "Solanaceae": {
+    kn: "ಪರ್ಯಾಯ ಎಕ್ಸ್‌ಸ್ಟಿಪ್ಯುಲೇಟ್ ಎಲೆಗಳು, ಆಕ್ಟಿನೋಮಾರ್ಫಿಕ್ ಉಭಯಲಿಂಗಿ ಹೂವುಗಳು ಮತ್ತು ಆಕ್ಸೈಲ್ ಪ್ಲಸೆಂಟೇಷನ್‌ನೊಂದಿಗೆ ದ್ವಿಕಾರ್ಪೆಲ್ ಸಿಂಕಾರ್ಪಸ್ ಓವರಿ ಇರುವ ದೊಡ್ಡ ಡೈಕಾಟ್ ಕುಟುಂಬ (ಆಲೂಗಡ್ಡೆ ಕುಟುಂಬ) &ndash; Solanaceae.",
+    hi: "एकांतर एक्सस्टिपुलेट पत्तियों, त्रिज्यसममित (actinomorphic) उभयलिंगी फूलों और एक्सिल प्लेसेंटेशन वाले द्विअंडपी युक्तांडपी (bicarpellary syncarpous) अंडाशय वाला बड़ा द्विबीजपत्री कुल (आलू कुल) &ndash; Solanaceae."
+  },
+  "Epipetalous": {
+    kn: "ಸ್ಟೇಮನ್‌ಗಳು ಕೊರೊಲ್ಲಾದ ಪೆಟಲ್‌ಗಳಿಗೆ ಅಂಟಿಕೊಂಡಿರುವ ಸ್ಥಿತಿ, Solanaceae ಕುಟುಂಬದ ಆಂಡ್ರೀಸಿಯಂನಲ್ಲಿ ಕಾಣಸಿಗುತ್ತದೆ.",
+    hi: "पुंकेसरों (stamens) का कोरोला की पंखुड़ियों से जुड़े रहने की स्थिति, जैसा Solanaceae कुल के पुमंग (androecium) में देखा जाता है."
+  },
+  "Berry": {
+    kn: "ಮಾಂಸಲ ತಿರುಳಿನಲ್ಲಿ ಅನೇಕ ಬೀಜಗಳಿದ್ದು, ನಿಜವಾದ ಗಟ್ಟಿ ಪದರವಿಲ್ಲದ ಹಣ್ಣು, ಉದಾ. Solanaceae ಕುಟುಂಬದ Tomato ಮತ್ತು Brinjal.",
+    hi: "गूदे में कई बीज धँसे होने वाला और सच्ची कठोर परत रहित मांसल फल, उदा. Solanaceae कुल के Tomato और Brinjal."
+  }
+};
+const GLOSSARY_SPEECH_LANG = {en:'en-US', kn:'kn-IN', hi:'hi-IN'};
+function speakTerm(text){
+  if(!('speechSynthesis' in window)){ alert('Sorry, your browser does not support text-to-speech.'); return; }
+  const clean = text.replace(/\(.*?\)/g,'').trim();
+  const utter = new SpeechSynthesisUtterance(clean);
+  utter.rate = 0.85; utter.lang = GLOSSARY_SPEECH_LANG[currentLang] || 'en-US';
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utter);
+}
+window.speakTerm = speakTerm;
+function glossaryDef(g){
+  const tr = (currentLang!=='en') && GLOSSARY_TRANSLATIONS_CH5[g.term] && GLOSSARY_TRANSLATIONS_CH5[g.term][currentLang];
+  return tr || g.def;
+}
+function renderGlossaryList(filter){
+  const q = (filter||'').toLowerCase();
+  const list = GLOSSARY_DATA.filter(g=>g.term.toLowerCase().includes(q));
+  const el = document.getElementById('glossaryList');
+  if(!el) return;
+  if(list.length===0){ el.innerHTML = '<div style="color:var(--ink-dim);padding:10px;">No matching terms.</div>'; return; }
+  el.innerHTML = list.map(g=>`<div class="glossary-item"><div><div class="glossary-term">${g.term}</div><div class="glossary-def">${glossaryDef(g)}</div></div><button class="glossary-speak-btn" onclick="speakTerm('${g.term.replace(/'/g,"\\'")}')" title="Speak">🔊</button></div>`).join('');
+}
+function renderGlossary(){
+  document.getElementById('content').innerHTML = `<div class="setup-card">
+    <h3 style="color:var(--gold);margin-bottom:10px;">Pronunciation &amp; Glossary</h3>
+    <input type="text" id="glossarySearch" placeholder="Search terms..." style="width:100%;padding:9px 10px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);color:var(--ink);font-size:13px;margin-bottom:12px;box-sizing:border-box;">
+    <div id="glossaryList"></div>
+  </div>`;
+  renderGlossaryList('');
+  document.getElementById('glossarySearch').addEventListener('input', (e)=>renderGlossaryList(e.target.value));
 }
 
 /* ---------------- OVERALL PERFORMANCE TRACKER ---------------- */
