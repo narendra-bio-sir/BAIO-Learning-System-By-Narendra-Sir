@@ -163,6 +163,21 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .kw-foot{margin-top:10px;font-size:11px;color:var(--ink-dim);line-height:1.5;padding-top:8px;border-top:1px dashed var(--line);}
 .kw-foot b{color:var(--gold);}
 
+/* Paper Generator */
+.pg-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.pg-grid select,#pgDifficulty,#pgNeetDifficulty{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--ink);padding:8px 10px;border-radius:8px;font-size:13px;font-family:'Work Sans',sans-serif;}
+.paper-header{border-bottom:2px solid var(--gold);padding-bottom:10px;margin-bottom:14px;}
+.paper-header .brand{font-family:'Fraunces',Georgia,serif;font-weight:700;color:var(--gold);font-size:16px;}
+.paper-header .by{font-size:12px;color:var(--ink-dim);margin-top:2px;}
+.paper-header .meta{font-size:12.5px;color:var(--ink-dim);margin-top:8px;}
+.paper-q{margin-bottom:14px;font-size:13.5px;line-height:1.5;color:var(--ink);}
+.paper-q-text{margin-bottom:6px;font-weight:700;}
+.paper-options{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;margin-top:6px;font-size:12.5px;}
+.paper-key{font-size:12.5px;color:var(--ink-dim);line-height:1.85;}
+@media print{
+  .paper-options{grid-template-columns:1fr 1fr !important;}
+}
+
 /* CONCEPTS TAB */
 .hook{background:linear-gradient(135deg,var(--teal2),#0d5347);border-radius:12px;padding:14px 16px;margin-bottom:12px;font-size:14px;font-weight:600;color:#EFFFFA;}
 .hook span{display:block;font-size:10.5px;color:#9be8d8;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;}
@@ -2361,6 +2376,181 @@ function myNotesShare(){
   });
 }
 window.myNotesShare = myNotesShare;
+
+/* ---- Paper Generator ---- */
+let pgState = {
+  paperType:'theory', testName:'', timeAllotted:'',
+  topicMode:'full', topics:[],
+  mcqCount:10, fibCount:5, m2Count:4, m3Count:3, m5Count:2, difficulty:'All',
+  neetCount:'90', neetDifficulty:'All', neetTypeMode:'all', neetTypes:[]
+};
+function pgAllMcq(){ return DATA.mcq; }
+function pgAllFib(){ return DATA.neet.filter(q=>q.type==='fib'); }
+function pgAllDesc(marks){ return DESC_QUESTIONS.filter(q=>q.marks===marks); }
+function pgTopicOk(q){ return pgState.topicMode==='full' || pgState.topics.length===0 || pgState.topics.includes(q.topic); }
+function pgFilterPool(pool){
+  return pool.filter(q => pgTopicOk(q) && (pgState.difficulty==='All' || q.difficulty===pgState.difficulty));
+}
+function pgNeetFilterPool(){
+  return DATA.neet.filter(q => pgTopicOk(q)
+    && (pgState.neetDifficulty==='All' || q.difficulty===pgState.neetDifficulty)
+    && (pgState.neetTypeMode==='all' || pgState.neetTypes.length===0 || pgState.neetTypes.includes(q.type)));
+}
+function pgCountOptions(max, step){
+  let out = [];
+  for(let i=0;i<=max;i+=step) out.push(i);
+  return out;
+}
+function renderPapergenSetup(){
+  const topicChips = DATA.topics.map(t=>`<div class="opt-btn${pgState.topics.includes(t.id)?' sel':''}" onclick="pgToggleTopic('${t.id}')">${t.name}</div>`).join('');
+  const neetTypeChips = NEET_TYPES.map(t=>`<div class="opt-btn${pgState.neetTypes.includes(t.id)?' sel':''}" onclick="pgToggleNeetType('${t.id}')">${t.label}</div>`).join('');
+  const selOpts = (id, count, cur, onchange) => `<select id="${id}" onchange="${onchange}(this.value)">${pgCountOptions(count,1).map(n=>`<option value="${n}"${n===cur?' selected':''}>${n}</option>`).join('')}</select>`;
+  document.getElementById('content').innerHTML = `<div class="setup-card">
+    <h3 style="color:var(--gold);margin-bottom:4px;">Custom Theory &amp; NEET Paper Generator</h3>
+    <div style="color:var(--ink-dim);font-size:12px;margin-bottom:12px;">Build a printable question paper from this chapter's question bank</div>
+    <div class="opt-row" style="margin-bottom:14px;">
+      <div class="opt-btn${pgState.paperType==='theory'?' sel':''}" onclick="pgSetPaperType('theory')">Theory Paper</div>
+      <div class="opt-btn${pgState.paperType==='neet'?' sel':''}" onclick="pgSetPaperType('neet')">NEET Paper</div>
+    </div>
+    <div class="setup-label">Test Name / Title</div>
+    <input type="text" id="pgTestName" value="${escHtml(pgState.testName)}" placeholder="e.g. Slip Test, Monthly Test, Assignment 1" oninput="pgState.testName=this.value" style="width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--ink);padding:9px 10px;border-radius:8px;font-size:13px;font-family:'Work Sans',sans-serif;box-sizing:border-box;margin-bottom:12px;">
+    <div class="setup-label">Time Allotted</div>
+    <input type="text" id="pgTimeAllotted" value="${escHtml(pgState.timeAllotted)}" placeholder="e.g. 40 minutes / 1 Hour" oninput="pgState.timeAllotted=this.value" style="width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--ink);padding:9px 10px;border-radius:8px;font-size:13px;font-family:'Work Sans',sans-serif;box-sizing:border-box;margin-bottom:14px;">
+    <div class="setup-label">Question Topics</div>
+    <div class="opt-row">
+      <div class="opt-btn${pgState.topicMode==='full'?' sel':''}" onclick="pgSetTopicMode('full')">Full Chapter</div>
+      <div class="opt-btn${pgState.topicMode==='select'?' sel':''}" onclick="pgSetTopicMode('select')">Select Topic(s)</div>
+    </div>
+    ${pgState.topicMode==='select' ? '<div class="opt-row" style="margin-top:8px;">'+topicChips+'</div>' : ''}
+    ${pgState.paperType==='theory' ? `
+    <div class="pg-grid" style="margin-top:14px;">
+      <div><div class="setup-label" style="margin-bottom:4px;">I. MCQ &mdash; count</div>${selOpts('pgMcqCount',20,pgState.mcqCount,'pgSetMcq')}</div>
+      <div><div class="setup-label" style="margin-bottom:4px;">II. Fill in the blanks &mdash; count</div>${selOpts('pgFibCount',20,pgState.fibCount,'pgSetFib')}</div>
+      <div><div class="setup-label" style="margin-bottom:4px;">III. 2 Marks &mdash; count</div>${selOpts('pgM2Count',20,pgState.m2Count,'pgSetM2')}</div>
+      <div><div class="setup-label" style="margin-bottom:4px;">IV. 3 Marks &mdash; count</div>${selOpts('pgM3Count',20,pgState.m3Count,'pgSetM3')}</div>
+      <div><div class="setup-label" style="margin-bottom:4px;">V. 5 Marks &mdash; count</div>${selOpts('pgM5Count',20,pgState.m5Count,'pgSetM5')}</div>
+      <div><div class="setup-label" style="margin-bottom:4px;">Difficulty</div>
+        <select id="pgDifficulty" onchange="pgSetDiff(this.value)">${['All','Easy','Medium','Hard'].map(d=>`<option${d===pgState.difficulty?' selected':''}>${d}</option>`).join('')}</select>
+      </div>
+    </div>` : `
+    <div style="margin-top:14px;">
+      <div class="setup-label">Number of Questions</div>
+      <div class="opt-row">${['10','25','50','90'].map(n=>`<div class="opt-btn${pgState.neetCount===n?' sel':''}" onclick="pgSetNeetCount('${n}')">${n}</div>`).join('')}</div>
+      <div class="setup-label" style="margin-top:12px;">Difficulty</div>
+      <select id="pgNeetDifficulty" onchange="pgSetNeetDiff(this.value)">${['All','Easy','Medium','Hard'].map(d=>`<option${d===pgState.neetDifficulty?' selected':''}>${d}</option>`).join('')}</select>
+      <div class="setup-label" style="margin-top:12px;">Question Types</div>
+      <div class="opt-row">
+        <div class="opt-btn${pgState.neetTypeMode==='all'?' sel':''}" onclick="pgSetNeetTypeMode('all')">All Types</div>
+        <div class="opt-btn${pgState.neetTypeMode==='select'?' sel':''}" onclick="pgSetNeetTypeMode('select')">Select Type(s)</div>
+      </div>
+      ${pgState.neetTypeMode==='select' ? '<div class="opt-row" style="margin-top:8px;">'+neetTypeChips+'</div>' : ''}
+    </div>`}
+    <button class="start-btn" onclick="pgGenerate()">Generate Paper</button>
+  </div>`;
+}
+function pgSetPaperType(v){ pgState.paperType=v; renderPapergenSetup(); }
+function pgToggleTopic(id){
+  const i = pgState.topics.indexOf(id);
+  if(i===-1) pgState.topics.push(id); else pgState.topics.splice(i,1);
+  renderPapergenSetup();
+}
+function pgSetTopicMode(v){ pgState.topicMode=v; renderPapergenSetup(); }
+function pgSetDiff(v){ pgState.difficulty=v; }
+function pgSetMcq(v){ pgState.mcqCount=parseInt(v); }
+function pgSetFib(v){ pgState.fibCount=parseInt(v); }
+function pgSetM2(v){ pgState.m2Count=parseInt(v); }
+function pgSetM3(v){ pgState.m3Count=parseInt(v); }
+function pgSetM5(v){ pgState.m5Count=parseInt(v); }
+function pgSetNeetCount(v){ pgState.neetCount=v; renderPapergenSetup(); }
+function pgSetNeetDiff(v){ pgState.neetDifficulty=v; }
+function pgSetNeetTypeMode(v){ pgState.neetTypeMode=v; renderPapergenSetup(); }
+function pgToggleNeetType(id){
+  const i = pgState.neetTypes.indexOf(id);
+  if(i===-1) pgState.neetTypes.push(id); else pgState.neetTypes.splice(i,1);
+  renderPapergenSetup();
+}
+window.pgSetPaperType=pgSetPaperType; window.pgToggleTopic=pgToggleTopic; window.pgSetTopicMode=pgSetTopicMode; window.pgSetDiff=pgSetDiff;
+window.pgSetMcq=pgSetMcq; window.pgSetFib=pgSetFib; window.pgSetM2=pgSetM2; window.pgSetM3=pgSetM3; window.pgSetM5=pgSetM5;
+window.pgSetNeetCount=pgSetNeetCount; window.pgSetNeetDiff=pgSetNeetDiff; window.pgSetNeetTypeMode=pgSetNeetTypeMode; window.pgToggleNeetType=pgToggleNeetType;
+
+let pgGenerated = null;
+function pgGenerate(){
+  if(pgState.paperType==='theory'){
+    const mcqPool = shuffleArr(pgFilterPool(pgAllMcq())).slice(0, pgState.mcqCount);
+    const fibPool = shuffleArr(pgFilterPool(pgAllFib())).slice(0, pgState.fibCount);
+    const m2Pool = shuffleArr(pgFilterPool(pgAllDesc(2))).slice(0, pgState.m2Count);
+    const m3Pool = shuffleArr(pgFilterPool(pgAllDesc(3))).slice(0, pgState.m3Count);
+    const m5Pool = shuffleArr(pgFilterPool(pgAllDesc(5))).slice(0, pgState.m5Count);
+    pgGenerated = {type:'theory', mcq:mcqPool, fib:fibPool, m2:m2Pool, m3:m3Pool, m5:m5Pool, showKey:false};
+  } else {
+    const n = parseInt(pgState.neetCount);
+    const neetPool = shuffleArr(pgNeetFilterPool()).slice(0, n);
+    pgGenerated = {type:'neet', neet:neetPool, showKey:false};
+  }
+  pgRenderOutput();
+}
+window.pgGenerate = pgGenerate;
+function pgRenderOutput(){
+  const g = pgGenerated;
+  let qNum = 1;
+  const title = pgState.testName ? escHtml(pgState.testName) : (g.type==='theory' ? 'Theory Paper' : 'NEET-style Paper');
+  const timeLine = pgState.timeAllotted ? `<div class="submeta">Time Allotted: ${escHtml(pgState.timeAllotted)}</div>` : '';
+  let body = `<div class="paper-header"><div class="brand">BAIO Learning System &middot; Morphology of Flowering Plants</div><div class="by">By Narendra Sir &mdash; Lecturer in Biology</div>
+    <div class="meta">${title}</div>${timeLine}</div>`;
+  if(g.type==='theory'){
+    let sectionNum = 0;
+    const sections = [
+      {label:'Section I: Multiple Choice Questions', list:g.mcq, kind:'mcq'},
+      {label:'Section II: Fill in the Blanks', list:g.fib, kind:'fib'},
+      {label:'Section III: 2 Mark Questions', list:g.m2, kind:'desc'},
+      {label:'Section IV: 3 Mark Questions', list:g.m3, kind:'desc'},
+      {label:'Section V: 5 Mark Questions', list:g.m5, kind:'desc'},
+    ];
+    sections.forEach(sec=>{
+      if(!sec.list.length) return;
+      sectionNum++;
+      body += `<div class="tbl-title">${sec.label} (${sec.list.length})</div>`;
+      sec.list.forEach(q=>{
+        if(sec.kind==='mcq'){
+          body += `<div class="paper-q"><div class="paper-q-text">${qNum}. ${q.q}</div><div class="paper-options">${q.options.map((o,i)=>`<div>${String.fromCharCode(65+i)}. ${o}</div>`).join('')}</div></div>`;
+        } else if(sec.kind==='fib'){
+          body += `<div class="paper-q"><div class="paper-q-text">${qNum}. ${q.q}</div></div>`;
+        } else {
+          body += `<div class="paper-q"><div class="paper-q-text">${qNum}. ${q.q} <i>(${q.marks} Marks)</i></div></div>`;
+        }
+        qNum++;
+      });
+    });
+  } else {
+    body += `<div class="tbl-title">NEET-style Questions (${g.neet.length})</div>`;
+    g.neet.forEach(q=>{
+      body += `<div class="paper-q"><div class="paper-q-text">${qNum}. ${q.q}</div>${q.options?`<div class="paper-options">${q.options.map((o,i)=>`<div>${String.fromCharCode(65+i)}. ${o}</div>`).join('')}</div>`:''}</div>`;
+      qNum++;
+    });
+  }
+  let keyHtml = '';
+  if(g.showKey){
+    let kNum=1;
+    keyHtml = '<div class="tbl-title">Answer Key</div><div class="paper-key">';
+    if(g.type==='theory'){
+      g.mcq.forEach(q=>{ keyHtml += `${kNum}. ${String.fromCharCode(65+q.answer)} &mdash; ${q.exp}<br>`; kNum++; });
+      g.fib.forEach(q=>{ keyHtml += `${kNum}. ${q.options[q.answer]} &mdash; ${q.exp}<br>`; kNum++; });
+      [g.m2,g.m3,g.m5].forEach(list=>{ list.forEach(q=>{ keyHtml += `${kNum}. ${q.a}<br>`; kNum++; }); });
+    } else {
+      g.neet.forEach(q=>{ keyHtml += `${kNum}. ${q.options?String.fromCharCode(65+q.answer)+' &mdash; ':''}${q.exp}<br>`; kNum++; });
+    }
+    keyHtml += '</div>';
+  }
+  document.getElementById('content').innerHTML = `<div class="setup-card" id="paperPrintArea">${body}${keyHtml}</div>
+    <div class="opt-row" style="margin-top:12px;">
+      <button class="opt-btn" onclick="pgGenerate()">🔁 New Set</button>
+      <button class="opt-btn" onclick="pgToggleKey()">${g.showKey?'Hide':'View'} Answers</button>
+      <button class="opt-btn" onclick="renderPapergenSetup()">← Back to Setup</button>
+      <button class="opt-btn" onclick="window.print()">Print / Save as PDF</button>
+    </div>`;
+}
+function pgToggleKey(){ pgGenerated.showKey = !pgGenerated.showKey; pgRenderOutput(); }
+window.pgToggleKey = pgToggleKey;
 
 function renderContent(){
   if(currentTab==='badges') renderBadgesCard();
