@@ -3799,6 +3799,10 @@ document.getElementById('kcetStartBtn').addEventListener('click', ()=>{
 });
 
 function kcetClearTimer(){ if(kcetState && kcetState.timerHandle){ clearInterval(kcetState.timerHandle); kcetState.timerHandle=null; } }
+function kcetFmtMMSS(totalSeconds){
+  const m = Math.floor(totalSeconds/60), s = totalSeconds%60;
+  return String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+}
 function startKcetTimer(){
   const s = kcetState;
   s.timeLeft = s.timerSec;
@@ -3813,7 +3817,7 @@ function startKcetTimer(){
 function updateKcetTimerUI(playSound){
   const badge = document.getElementById('kcetTimerBadge');
   if(!badge) return;
-  badge.textContent = kcetState.timeLeft+'s';
+  badge.textContent = kcetFmtMMSS(kcetState.timeLeft);
   const isLow = kcetState.timeLeft>0 && kcetState.timeLeft<=TIMER_LOW_SEC;
   badge.classList.toggle('low', isLow);
   if(playSound && isLow) playTickSound(kcetState.timeLeft%2===0);
@@ -3850,7 +3854,7 @@ function renderKcetQuestion(){
     <div class="quiz-top">
       <div>Question ${s.idx+1} / ${s.pool.length}</div>
       <div class="quiz-top-right">
-        <div class="timer-badge" id="kcetTimerBadge">${s.timerSec}s</div>
+        <div class="timer-badge" id="kcetTimerBadge">${kcetFmtMMSS(s.timerSec)}</div>
         <button class="fs-btn" title="Full Screen Mode" onclick="toggleRunnerFullscreen('kcetRunner')">⛶ Full Screen Mode</button>
       </div>
     </div>
