@@ -166,7 +166,23 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .qz-progress{height:6px;background:var(--panel2);border-radius:4px;overflow:hidden;margin-bottom:10px;}
 .qz-progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));}
 .qz-meta{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--ink-dim);margin-bottom:10px;}
+.qz-meta-right{display:flex;align-items:center;gap:8px;}
 .qz-timer-badge{background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-family:ui-monospace,"SF Mono",Consolas,monospace;font-variant-numeric:tabular-nums;font-weight:600;color:var(--gold);font-size:12px;}
+.qz-fs-btn{background:var(--panel2);border:1px solid var(--line);color:var(--ink-dim);border-radius:8px;padding:5px 10px;font-size:11px;font-weight:600;white-space:nowrap;line-height:1;cursor:pointer;flex-shrink:0;}
+.qz-fs-btn:hover{color:var(--teal);border-color:var(--teal);}
+.study-fs-btn{font-size:11px;font-weight:600;background:var(--panel2);border:1px solid var(--line);color:var(--ink-dim);border-radius:8px;padding:5px 10px;cursor:pointer;margin:8px 0 0;}
+.study-fs-btn:hover{color:var(--teal);border-color:var(--teal);}
+/* Fullscreen mode for MCQ Quiz / NEET Practice / KCET Practice / Study Mode */
+.content:fullscreen{
+  display:flex; flex-direction:column; justify-content:flex-start;
+  max-width:720px; margin:0 auto; padding:28px clamp(16px,5vw,48px);
+  background:var(--navy); overflow-y:auto;
+}
+.content.fs-top-align:fullscreen{max-width:900px;}
+.content:fullscreen .qz-qtext{font-size:clamp(16px,2.6vw,22px);}
+.content:fullscreen .qz-opt{font-size:clamp(13px,2vw,16px); padding:13px 15px;}
+.content:fullscreen .qz-fs-btn{background:var(--panel);}
+.content:fullscreen .fs-sticky-head{position:sticky; top:0; z-index:5; background:var(--navy); padding-bottom:8px; margin-bottom:2px;}
 .qz-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;}
 .qz-qtext{font-size:14.5px;font-weight:600;color:var(--ink);margin-bottom:12px;line-height:1.5;}
 .qz-opt{display:block;width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line);color:var(--ink);padding:11px 13px;border-radius:10px;font-size:13px;margin-bottom:8px;cursor:pointer;}
@@ -534,6 +550,28 @@ function switchTab(id){
 }
 window.switchTab = switchTab;
 
+/* Fullscreen toggle shared by MCQ Quiz / NEET Practice / KCET Practice / Study Mode.
+   topAlign keeps long study-mode articles top-aligned instead of vertically centered. */
+async function toggleContentFullscreen(topAlign){
+  const el = document.getElementById('content');
+  if(!el) return;
+  try{
+    if(!document.fullscreenElement){
+      el.classList.toggle('fs-top-align', !!topAlign);
+      await el.requestFullscreen();
+    } else {
+      await document.exitFullscreen();
+    }
+  }catch(err){ /* fullscreen not available, ignore silently */ }
+}
+window.toggleContentFullscreen = toggleContentFullscreen;
+document.addEventListener('fullscreenchange', ()=>{
+  if(!document.fullscreenElement){
+    const el = document.getElementById('content');
+    if(el) el.classList.remove('fs-top-align');
+  }
+});
+
 function topicPills(activeId, onClickName){
   return `<div class="pillrow-wrap"><button class="tab-scroll-btn pill-scroll-left">&#8249;</button><div class="pillrow">${DATA.topics.map(t=>`<div class="pill ${t.id===activeId?'active':''}" onclick="${onClickName}('${t.id}')">${t.name}</div>`).join('')}</div><button class="tab-scroll-btn pill-scroll-right">&#8250;</button></div>`;
 }
@@ -585,6 +623,7 @@ function renderStudy(){
   const trans = (currentLang!=='en') && STUDY_TRANSLATIONS_CH5[currentTopic] && STUDY_TRANSLATIONS_CH5[currentTopic][currentLang];
   const d = trans || en;
   let html = topicPills(currentTopic, 'selectStudyTopic');
+  html += `<button class="study-fs-btn" onclick="toggleContentFullscreen(true)">&#10688; Full Screen Mode</button>`;
   html += `<div class="chiprow">${d.recap.map(c=>`<span class="chip">${c}</span>`).join('')}</div>`;
   d.sections.forEach(sec=>{
     html += `<div class="section"><h4>${sec.h}</h4><p>${sec.body}</p></div>`;
@@ -794,7 +833,7 @@ function renderMcqQuestion(){
   const q = s.questions[s.idx];
   const pct = Math.round((s.idx/s.questions.length)*100);
   let html = `<div class="qz-progress"><div class="qz-progress-fill" style="width:${pct}%"></div></div>
-  <div class="qz-meta"><span>Question ${s.idx+1} / ${s.questions.length}</span><span class="streak">\uD83D\uDD25 Streak: ${s.streak}</span></div>
+  <div class="qz-meta"><span>Question ${s.idx+1} / ${s.questions.length}</span><span class="qz-meta-right"><span class="streak">\uD83D\uDD25 Streak: ${s.streak}</span><button class="qz-fs-btn" title="Full Screen Mode" onclick="toggleContentFullscreen()">\u26F6 Full Screen Mode</button></span></div>
   <div class="qz-card"><div class="qz-qtext">${q.q}</div>`;
   q.options.forEach((opt,i)=>{
     const letters = ['A','B','C','D','E','F'];
@@ -1136,7 +1175,7 @@ function renderNeetQuestion(){
     <button class="opt-btn" onclick="neetStopTest()">\u23F9 Stop &amp; See Report</button>
   </div>
   <div class="qz-progress"><div class="qz-progress-fill" style="width:${pct}%"></div></div>
-  <div class="qz-meta"><span>Q ${s.idx+1}/${s.questions.length} \u00b7 ${typeLabel}</span><span class="qz-timer-badge" id="neetTimer">\u23F1 ${kcetFmtMMSS(s.timeLeft)}</span></div>
+  <div class="qz-meta"><span>Q ${s.idx+1}/${s.questions.length} \u00b7 ${typeLabel}</span><span class="qz-meta-right"><span class="qz-timer-badge" id="neetTimer">\u23F1 ${kcetFmtMMSS(s.timeLeft)}</span><button class="qz-fs-btn" title="Full Screen Mode" onclick="toggleContentFullscreen()">\u26f6 Full Screen Mode</button></span></div>
   <div class="qz-card"><div class="qz-qtext">${neetQText(q)}</div>${neetQuestionBody(q)}<div id="neetexp"></div></div>`;
   document.getElementById('content').innerHTML = html;
   neetTimerInt = setInterval(()=>{
@@ -1588,7 +1627,7 @@ function renderKcetQuestion(){
     <button class="opt-btn" onclick="kcetStopTest()">\u23F9 Stop &amp; See Report</button>
   </div>
   <div class="qz-progress"><div class="qz-progress-fill" style="width:${pct}%"></div></div>
-  <div class="qz-meta"><span>Question ${s.idx+1} / ${s.questions.length}</span><span class="qz-timer-badge" id="kcetTimer">\u23F1 ${kcetFmtMMSS(s.timeLeft)}</span></div>
+  <div class="qz-meta"><span>Question ${s.idx+1} / ${s.questions.length}</span><span class="qz-meta-right"><span class="qz-timer-badge" id="kcetTimer">\u23F1 ${kcetFmtMMSS(s.timeLeft)}</span><button class="qz-fs-btn" title="Full Screen Mode" onclick="toggleContentFullscreen()">\u26F6 Full Screen Mode</button></span></div>
   <div style="font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:4px;">${fmtLabel}</div>
   <div class="qz-card"><div class="qz-qtext">${qTextHtml}</div>${matchHtml}`;
   q.options.forEach((opt,i)=>{
