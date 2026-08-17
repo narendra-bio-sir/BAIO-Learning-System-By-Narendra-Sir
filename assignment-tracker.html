@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assignment &amp; Worksheet Tracker | BAIO Learning System</title>
+<script>
+(function(){
+  try{
+    var t = localStorage.getItem('baio_theme') || 'light';
+    if(t === 'light') document.documentElement.setAttribute('data-theme','light');
+  }catch(e){}
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B1B14; --navy2:#0F2419; --panel:#13281E; --panel2:#0E211A;
+  --gold:#D4AF37; --gold2:#B8912A; --teal:#2EE6C5; --teal2:#127566;
+  --ink:#EAF3EE; --ink-dim:#9FC4B6; --line:rgba(212,175,55,0.25);
+  --danger:#E7695B; --ok:#33C48A; --card-shadow:none;
+}
+[data-theme="light"]{
+  --navy:#F7F5EE; --navy2:#EFEBDD; --panel:#FFFFFF; --panel2:#F3F0E6;
+  --gold:#B8912A; --gold2:#8A6A1A; --teal:#0F8F7A; --teal2:#0B6F5E;
+  --ink:#1E2A22; --ink-dim:#5C6E63; --line:rgba(184,145,42,0.25);
+  --danger:#C33A2C; --ok:#1F9D6C; --card-shadow:0 2px 10px rgba(0,0,0,0.06);
+}
+*{box-sizing:border-box;}
+body{margin:0; background:var(--navy); color:var(--ink); font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased; transition:background 0.25s, color 0.25s;}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif; margin:0;}
+::-webkit-scrollbar{height:6px;width:6px;}
+::-webkit-scrollbar-thumb{background:var(--gold2);border-radius:4px;}
+
+.wrap{max-width:920px; margin:0 auto; padding:20px 16px 60px;}
+header{text-align:center; margin-bottom:14px;}
+.utility-row{display:flex; justify-content:flex-end; gap:8px; margin-bottom:10px;}
+.icon-btn{
+  width:38px; height:38px; border-radius:10px;
+  border:1px solid var(--line); background:var(--panel); color:var(--ink); font-size:16px;
+  cursor:pointer; display:flex; align-items:center; justify-content:center; flex:0 0 auto; text-decoration:none;
+}
+.eyebrow{font-size:11px; letter-spacing:2.5px; text-transform:uppercase; color:var(--teal); font-weight:700;}
+.title{font-size:21px; font-weight:700; margin-top:6px;}
+.sub{font-size:12px; color:var(--ink-dim); margin-top:6px; line-height:1.6;}
+
+/* DASHBOARD */
+.dash-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:16px;}
+@media(max-width:600px){ .dash-grid{grid-template-columns:repeat(2,1fr);} }
+.dash-tile{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:12px; text-align:center; box-shadow:var(--card-shadow);}
+.dash-tile .num{font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; color:var(--gold);}
+.dash-tile .lbl{font-size:10.5px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:0.4px; margin-top:2px;}
+
+.card{background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:14px; box-shadow:var(--card-shadow);}
+.card h3{font-size:14px; color:var(--gold); margin-bottom:10px;}
+
+/* item completion bars */
+.item-bar-row{display:flex; align-items:center; gap:8px; padding:6px 0; font-size:12px;}
+.item-bar-row .ilbl{flex:0 0 auto; width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--ink);}
+.item-bar-track{flex:1; height:8px; border-radius:5px; background:var(--panel2); overflow:hidden; border:1px solid var(--line);}
+.item-bar-fill{height:100%; background:linear-gradient(90deg,var(--teal2),var(--teal)); border-radius:5px;}
+.item-bar-pct{flex:0 0 auto; width:38px; text-align:right; color:var(--ink-dim); font-variant-numeric:tabular-nums;}
+
+/* controls */
+.controls-row{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; align-items:center;}
+.seg{display:flex; background:var(--panel); border:1px solid var(--line); border-radius:10px; overflow:hidden;}
+.seg button{flex:1; padding:9px 12px; border:none; background:transparent; color:var(--ink-dim); font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12.5px; cursor:pointer; white-space:nowrap;}
+.seg button.active{background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#1a1406;}
+[data-theme="light"] .seg button.active{color:#fff;}
+input[type="text"]{
+  flex:1; min-width:160px; padding:10px 12px; border-radius:10px; border:1px solid var(--line);
+  background:var(--panel2); color:var(--ink); font-size:13.5px; font-family:'Inter',sans-serif;
+}
+.small-btn{
+  padding:9px 12px; border-radius:10px; border:1px solid var(--line); background:var(--panel);
+  color:var(--ink); font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12px; cursor:pointer; white-space:nowrap;
+}
+.small-btn.primary{background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#1a1406; border:none;}
+[data-theme="light"] .small-btn.primary{color:#fff;}
+.small-btn.danger{border-color:var(--danger); color:var(--danger);}
+.actions-row{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;}
+
+/* student cards */
+.stu-card{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:14px; margin-bottom:10px; box-shadow:var(--card-shadow);}
+.stu-head{display:flex; align-items:center; gap:10px; cursor:pointer;}
+.stu-ring{
+  flex:0 0 auto; width:44px; height:44px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700;
+  font-family:'Space Grotesk',sans-serif; color:var(--ink);
+  background: conic-gradient(var(--teal) calc(var(--pct)*1%), var(--panel2) 0);
+}
+.stu-ring::before{content:''; position:absolute;}
+.stu-ring-inner{width:34px; height:34px; border-radius:50%; background:var(--panel); display:flex; align-items:center; justify-content:center;}
+.stu-info{flex:1; min-width:0;}
+.stu-name{font-weight:700; font-size:14px; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.stu-meta{font-size:11px; color:var(--ink-dim); margin-top:2px;}
+.stu-sec-chip{display:inline-block; padding:1px 7px; border-radius:6px; font-size:10px; font-weight:700; margin-left:6px; background:var(--panel2); color:var(--teal); border:1px solid var(--line);}
+.stu-caret{flex:0 0 auto; color:var(--ink-dim); font-size:14px; transition:transform 0.2s;}
+.stu-card.open .stu-caret{transform:rotate(180deg);}
+.stu-checklist{display:none; margin-top:12px; padding-top:12px; border-top:1px solid var(--line);}
+.stu-card.open .stu-checklist{display:block;}
+.chk-chapter{font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:var(--teal); margin:10px 0 4px;}
+.chk-chapter:first-child{margin-top:0;}
+.chk-item{
+  display:flex; align-items:center; justify-content:space-between; gap:8px; padding:7px 10px; margin-bottom:5px;
+  border-radius:9px; background:var(--panel2); border:1px solid var(--line); cursor:pointer; font-size:12.5px;
+}
+.chk-item .chk-lbl{flex:1;}
+.chk-item .chk-type{font-size:9.5px; color:var(--ink-dim); text-transform:uppercase; margin-right:6px;}
+.chk-pill{flex:0 0 auto; padding:3px 10px; border-radius:20px; font-size:10.5px; font-weight:700;}
+.chk-pill.sub{background:rgba(51,196,138,0.18); color:var(--ok);}
+.chk-pill.pen{background:rgba(231,105,91,0.16); color:var(--danger);}
+
+.rp-callout{background:var(--panel2); border:1px solid var(--line); border-radius:10px; padding:14px; text-align:center; color:var(--ink-dim); font-size:13px;}
+
+.hint{font-size:11px; color:var(--ink-dim); margin-top:6px; line-height:1.5;}
+
+@media print{
+  .utility-row, .controls-row, .actions-row, .icon-btn, header .sub, .stu-caret{ display:none !important; }
+  .stu-checklist{ display:block !important; }
+  body{ background:#fff; color:#111; }
+  .stu-card, .card, .dash-tile{ box-shadow:none !important; border-color:#ccc !important; break-inside:avoid; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="utility-row">
+    <button class="icon-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle dark/light theme">🌙</button>
+  </div>
+  <header>
+    <div class="eyebrow">BAIO Learning System</div>
+    <div class="title">📋 Assignment &amp; Worksheet Tracker</div>
+    <div class="sub">Track Home Assignment and Worksheet submissions for Spark &amp; Prime — tap any item to mark Submitted or Pending. Changes save automatically on this device.</div>
+  </header>
+
+  <div class="dash-grid" id="dashGrid"></div>
+
+  <div class="card">
+    <h3>📊 Submission Rate by Item</h3>
+    <div id="itemBars"></div>
+  </div>
+
+  <div class="controls-row">
+    <div class="seg" id="sectionSeg">
+      <button data-sec="ALL" class="active">All</button>
+      <button data-sec="SPARK">Spark</button>
+      <button data-sec="PRIME">Prime</button>
+    </div>
+  </div>
+  <div class="controls-row">
+    <input type="text" id="searchBox" placeholder="Search by name or enrollment code...">
+    <button class="small-btn" id="sortBtn">↕ Most Behind First</button>
+  </div>
+  <div class="actions-row">
+    <button class="small-btn" id="addItemBtn">➕ Add Assignment / Worksheet</button>
+    <button class="small-btn" id="exportCsvBtn">📤 Export CSV</button>
+    <button class="small-btn" id="printBtn">🖨️ Print / Save as PDF</button>
+    <button class="small-btn danger" id="resetBtn">↺ Reset to Original Data</button>
+  </div>
+
+  <div id="studentList"></div>
+  <div class="hint" style="text-align:center; margin-top:10px;">Source roster: BIO_Students_Performance_Tracker.xlsx (Spark &amp; Prime, PU-I) &middot; All edits are stored only in this browser via localStorage.</div>
+</div>
+
+<script src="assignment-tracker-data.js"></script>
+<script>
+/* ---------------- Theme (synced with rest of site via baio_theme) ---------------- */
+const THEME_KEY = 'baio_theme';
+function applyTheme(t){
+  const btn = document.getElementById('themeToggle');
+  if(t === 'light'){ document.documentElement.setAttribute('data-theme','light'); if(btn) btn.textContent = '☀️'; }
+  else { document.documentElement.removeAttribute('data-theme'); if(btn) btn.textContent = '🌙'; }
+}
+function toggleTheme(){
+  const cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+  const next = cur === 'light' ? 'dark' : 'light';
+  applyTheme(next);
+  try{ localStorage.setItem(THEME_KEY, next); }catch(e){}
+}
+(function(){
+  let saved = null;
+  try{ saved = localStorage.getItem(THEME_KEY); }catch(e){}
+  applyTheme(saved || 'light');
+})();
+
+/* ---------------- State: seeded from SEED_ITEMS/SEED_STUDENTS, persisted in localStorage ---------------- */
+const STATE_KEY = 'baio_assignment_tracker_v1';
+let ITEMS = [];
+let STUDENTS = [];
+
+function loadState(){
+  let saved = null;
+  try{ saved = JSON.parse(localStorage.getItem(STATE_KEY) || 'null'); }catch(e){}
+  if(saved && saved.items && saved.students){
+    ITEMS = saved.items;
+    STUDENTS = saved.students;
+  } else {
+    ITEMS = JSON.parse(JSON.stringify(SEED_ITEMS));
+    STUDENTS = JSON.parse(JSON.stringify(SEED_STUDENTS));
+    saveState();
+  }
+}
+function saveState(){
+  try{ localStorage.setItem(STATE_KEY, JSON.stringify({items:ITEMS, students:STUDENTS})); }catch(e){}
+}
+
+/* ---------------- Derived helpers ---------------- */
+function completion(student){
+  let done = 0;
+  ITEMS.forEach(it=>{ if(student.status[it.id] === 'Submitted') done++; });
+  return {done, total: ITEMS.length, pct: ITEMS.length ? Math.round((done/ITEMS.length)*100) : 0};
+}
+function itemSubmissionRate(itemId, roster){
+  const list = roster.length ? roster : STUDENTS;
+  const n = list.length;
+  const done = list.filter(s=>s.status[itemId]==='Submitted').length;
+  return {done, n, pct: n ? Math.round((done/n)*100) : 0};
+}
+
+/* ---------------- UI state ---------------- */
+let currentSection = 'ALL';
+let currentSearch = '';
+let sortMostBehind = true;
+let openStudentCode = null;
+
+function filteredStudents(){
+  let list = STUDENTS.slice();
+  if(currentSection !== 'ALL') list = list.filter(s=>s.section===currentSection);
+  if(currentSearch){
+    const q = currentSearch.toLowerCase();
+    list = list.filter(s=> s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q));
+  }
+  list.sort((a,b)=>{
+    const ca = completion(a).pct, cb = completion(b).pct;
+    if(sortMostBehind) return ca - cb || a.name.localeCompare(b.name);
+    return a.name.localeCompare(b.name);
+  });
+  return list;
+}
+
+/* ---------------- Render ---------------- */
+function renderDashboard(){
+  const roster = currentSection==='ALL' ? STUDENTS : STUDENTS.filter(s=>s.section===currentSection);
+  const totalItems = ITEMS.length;
+  let fullyDone = 0, totalPctSum = 0;
+  roster.forEach(s=>{
+    const c = completion(s);
+    totalPctSum += c.pct;
+    if(c.done === c.total) fullyDone++;
+  });
+  const avgPct = roster.length ? Math.round(totalPctSum/roster.length) : 0;
+
+  document.getElementById('dashGrid').innerHTML = `
+    <div class="dash-tile"><div class="num">${roster.length}</div><div class="lbl">Students Shown</div></div>
+    <div class="dash-tile"><div class="num">${totalItems}</div><div class="lbl">Tracked Items</div></div>
+    <div class="dash-tile"><div class="num">${avgPct}%</div><div class="lbl">Avg. Completion</div></div>
+    <div class="dash-tile"><div class="num">${fullyDone}</div><div class="lbl">Fully Complete</div></div>
+  `;
+
+  const bars = ITEMS.map(it=>{
+    const r = itemSubmissionRate(it.id, roster);
+    return `<div class="item-bar-row">
+      <div class="ilbl" title="${escHtml(it.chapter)} — ${escHtml(it.label)}">${escHtml(it.chapter)} — ${escHtml(it.label)}</div>
+      <div class="item-bar-track"><div class="item-bar-fill" style="width:${r.pct}%;"></div></div>
+      <div class="item-bar-pct">${r.done}/${r.n}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('itemBars').innerHTML = bars || '<div class="rp-callout">No tracked items yet.</div>';
+}
+
+function escHtml(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderStudentList(){
+  const list = filteredStudents();
+  if(!list.length){
+    document.getElementById('studentList').innerHTML = '<div class="rp-callout">No students match this filter.</div>';
+    return;
+  }
+  document.getElementById('studentList').innerHTML = list.map(s=>{
+    const c = completion(s);
+    const isOpen = openStudentCode === s.code;
+    let chaptersHtml = '';
+    let lastChapter = null;
+    ITEMS.forEach(it=>{
+      if(it.chapter !== lastChapter){
+        chaptersHtml += `<div class="chk-chapter">${escHtml(it.chapter)}</div>`;
+        lastChapter = it.chapter;
+      }
+      const status = s.status[it.id] === 'Submitted' ? 'Submitted' : 'Pending';
+      const pillClass = status === 'Submitted' ? 'sub' : 'pen';
+      chaptersHtml += `<div class="chk-item" data-code="${escHtml(s.code)}" data-item="${escHtml(it.id)}">
+        <div class="chk-lbl"><span class="chk-type">${it.type==='assignment'?'📝 Assignment':'📄 Worksheet'}</span>${escHtml(it.label)}</div>
+        <div class="chk-pill ${pillClass}">${status}</div>
+      </div>`;
+    });
+    return `<div class="stu-card ${isOpen?'open':''}" data-code="${escHtml(s.code)}">
+      <div class="stu-head" data-toggle="${escHtml(s.code)}">
+        <div class="stu-ring" style="--pct:${c.pct};"><div class="stu-ring-inner">${c.pct}%</div></div>
+        <div class="stu-info">
+          <div class="stu-name">${escHtml(s.name)}<span class="stu-sec-chip">${s.section}</span></div>
+          <div class="stu-meta">${escHtml(s.code)} &middot; ${c.done}/${c.total} submitted</div>
+        </div>
+        <div class="stu-caret">▾</div>
+      </div>
+      <div class="stu-checklist">${chaptersHtml}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderAll(){
+  renderDashboard();
+  renderStudentList();
+}
+
+/* ---------------- Interactions ---------------- */
+document.getElementById('sectionSeg').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button[data-sec]');
+  if(!btn) return;
+  currentSection = btn.dataset.sec;
+  document.querySelectorAll('#sectionSeg button').forEach(b=>b.classList.toggle('active', b===btn));
+  renderAll();
+});
+document.getElementById('searchBox').addEventListener('input', function(){
+  currentSearch = this.value.trim();
+  renderStudentList();
+});
+document.getElementById('sortBtn').addEventListener('click', function(){
+  sortMostBehind = !sortMostBehind;
+  this.textContent = sortMostBehind ? '↕ Most Behind First' : '↕ Alphabetical';
+  renderStudentList();
+});
+
+document.getElementById('studentList').addEventListener('click', (e)=>{
+  const chk = e.target.closest('.chk-item');
+  if(chk){
+    const code = chk.dataset.code, itemId = chk.dataset.item;
+    const s = STUDENTS.find(x=>x.code===code);
+    if(s){
+      s.status[itemId] = s.status[itemId] === 'Submitted' ? 'Pending' : 'Submitted';
+      saveState();
+      renderAll();
+      openStudentCode = code;
+      const card = document.querySelector('.stu-card[data-code="'+CSS.escape(code)+'"]');
+      if(card) card.classList.add('open');
+    }
+    return;
+  }
+  const head = e.target.closest('.stu-head');
+  if(head){
+    const code = head.dataset.toggle;
+    openStudentCode = (openStudentCode === code) ? null : code;
+    renderStudentList();
+  }
+});
+
+document.getElementById('addItemBtn').addEventListener('click', ()=>{
+  const chapter = prompt('Chapter name (e.g. "Plant Kingdom"):');
+  if(!chapter) return;
+  const label = prompt('Item name (e.g. "Classes of Fungi" or leave blank for a plain assignment):', '');
+  if(label === null) return;
+  const type = confirm('Click OK for a Worksheet, or Cancel for a Home Assignment.') ? 'worksheet' : 'assignment';
+  const id = 'custom_' + Date.now();
+  ITEMS.push({id, type, chapter: chapter.trim(), label: (label.trim() || 'Home Assignment')});
+  STUDENTS.forEach(s=>{ s.status[id] = 'Pending'; });
+  saveState();
+  renderAll();
+});
+
+document.getElementById('exportCsvBtn').addEventListener('click', ()=>{
+  const headers = ['Section','Enrollment Code','Student Name'].concat(ITEMS.map(it=>it.chapter+' — '+it.label));
+  const rows = STUDENTS.slice().sort((a,b)=> a.section.localeCompare(b.section) || a.name.localeCompare(b.name)).map(s=>{
+    return [s.section, s.code, s.name].concat(ITEMS.map(it=> s.status[it.id] === 'Submitted' ? 'Submitted' : 'Pending'));
+  });
+  function csvCell(v){
+    const str = String(v);
+    return /[",\n]/.test(str) ? '"' + str.replace(/"/g,'""') + '"' : str;
+  }
+  const csv = [headers].concat(rows).map(r=>r.map(csvCell).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'assignment_worksheet_tracker.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById('printBtn').addEventListener('click', ()=>{
+  document.querySelectorAll('.stu-card').forEach(c=>c.classList.add('open'));
+  window.print();
+});
+
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  if(!confirm('This will discard every change made in this browser and reload the original spreadsheet data. Continue?')) return;
+  try{ localStorage.removeItem(STATE_KEY); }catch(e){}
+  loadState();
+  renderAll();
+});
+
+/* ---------------- Init ---------------- */
+loadState();
+renderAll();
+</script>
+</body>
+</html>
