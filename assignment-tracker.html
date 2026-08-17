@@ -63,6 +63,14 @@ header{text-align:center; margin-bottom:14px;}
 .item-bar-fill{height:100%; background:linear-gradient(90deg,var(--teal2),var(--teal)); border-radius:5px;}
 .item-bar-pct{flex:0 0 auto; width:38px; text-align:right; color:var(--ink-dim); font-variant-numeric:tabular-nums;}
 
+/* top performers */
+.tp-row{display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--line); font-size:12.5px;}
+.tp-row:last-child{border-bottom:none;}
+.tp-rank{flex:0 0 auto; width:20px; text-align:center; font-family:'Space Grotesk',sans-serif; font-weight:700; color:var(--ink-dim); font-size:12px;}
+.tp-info{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--ink); font-weight:600;}
+.tp-badge{margin-right:4px;}
+.tp-pct{flex:0 0 auto; color:var(--teal); font-weight:700; font-variant-numeric:tabular-nums; font-size:11.5px;}
+
 /* controls */
 .controls-row{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; align-items:center;}
 .seg{display:flex; background:var(--panel); border:1px solid var(--line); border-radius:10px; overflow:hidden;}
@@ -141,6 +149,12 @@ input[type="text"]{
   <div class="card">
     <h3>📊 Submission Rate by Item</h3>
     <div id="itemBars"></div>
+  </div>
+
+  <div class="card">
+    <h3>🏆 Top Performers</h3>
+    <div class="hint" style="margin:-4px 0 8px;">Students at 50%+ of everything assigned so far, ranked highest first — updates live as you mark submissions. Follows the section filter below.</div>
+    <div id="topPerformers"></div>
   </div>
 
   <div class="controls-row">
@@ -274,6 +288,31 @@ function renderDashboard(){
   document.getElementById('itemBars').innerHTML = bars || '<div class="rp-callout">No tracked items yet.</div>';
 }
 
+function renderTopPerformers(){
+  const roster = currentSection==='ALL' ? STUDENTS : STUDENTS.filter(s=>s.section===currentSection);
+  const ranked = roster.map(s=>{
+    const c = completion(s);
+    return {name:s.name, section:s.section, code:s.code, done:c.done, total:c.total, pct:c.pct};
+  }).sort((a,b)=> b.pct - a.pct || a.name.localeCompare(b.name));
+
+  let list = ranked.filter(r=>r.pct >= 50);
+  if(!list.length) list = ranked.slice(0,5).filter(r=>r.pct > 0);
+
+  if(!list.length){
+    document.getElementById('topPerformers').innerHTML = '<div class="rp-callout">No students have reached 50% yet.</div>';
+    return;
+  }
+
+  document.getElementById('topPerformers').innerHTML = list.map((r,i)=>{
+    const badge = r.pct === 100 ? '🏆' : (r.pct >= 75 ? '⭐' : '👍');
+    return `<div class="tp-row">
+      <div class="tp-rank">${i+1}</div>
+      <div class="tp-info"><span class="tp-badge">${badge}</span>${escHtml(r.name)}<span class="stu-sec-chip">${r.section}</span></div>
+      <div class="tp-pct">${r.done}/${r.total} &middot; ${r.pct}%</div>
+    </div>`;
+  }).join('');
+}
+
 function escHtml(s){
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
@@ -317,6 +356,7 @@ function renderStudentList(){
 
 function renderAll(){
   renderDashboard();
+  renderTopPerformers();
   renderStudentList();
 }
 
