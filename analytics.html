@@ -2235,6 +2235,7 @@ window.addEventListener('afterprint', function(){
   <div class="subtabs">
     <button class="subtab-btn active" id="bioModeCandidate">👨‍👩‍👧 Candidate Insight</button>
     <button class="subtab-btn" id="bioModePrincipal">🏛️ Principal Report</button>
+    <button class="subtab-btn" id="bioModeFailures">⚠️ Failures &amp; Remedial Plan</button>
   </div>
 
   <!-- CANDIDATE INSIGHT -->
@@ -2316,6 +2317,21 @@ window.addEventListener('afterprint', function(){
         <button class="report-btn" id="bioPrincipalPrintBtn">🖨️ Print / Save as PDF</button>
         <button class="report-btn secondary" id="bioPrincipalCloseBtn">✕ Close Preview</button>
       </div>
+    </div>
+  </div>
+
+  <!-- FAILURES & REMEDIAL PLAN -->
+  <div id="bioFailuresBlock" style="display:none;">
+    <div class="panel">
+      <h2>⚠️ Biology Failures &amp; Remedial Plan</h2>
+      <div class="desc">A live, auto-generated list of every student currently below the Biology passing mark on their most recent Board-pattern test (Slip Test or Monthly Test &mdash; NEET OBT is tracked separately), split by section, with a concrete remedial plan for each group. Refreshes from the latest data every time you open this tab.</div>
+      <div class="report-actions" style="margin-top:14px;">
+        <button class="report-btn secondary" id="bioFailuresRefreshBtn">🔄 Refresh</button>
+      </div>
+    </div>
+    <div class="report-page print-area" id="bioFailuresPrintArea"></div>
+    <div class="report-actions">
+      <button class="report-btn" id="bioFailuresPrintBtn">💾 Save / Print as PDF</button>
     </div>
   </div>
 </main>
@@ -8826,6 +8842,104 @@ function buildKcetObtBioSection(){
   }};
 }
 
+/* ---- Failures & Remedial Plan (standalone, always-current, Board-pattern only) ----
+   Unlike buildRiskBioSection() below (which mixes NEET OBT into "latest"), this view is
+   deliberately restricted to Theory/Board-pattern tests only (Slip Tests + Monthly Tests) —
+   NEET OBT has its own dedicated analytics tab and a different pass bar, so mixing it in
+   here would misrepresent who is actually at risk of failing Biology in the Karnataka
+   PU Board exam. ---- */
+function getTheoryLatestBio(student, pu){
+  const hist = getBioHistory(student, pu);
+  const monthLabels = pu===2 ? Object.values(PU2_MONTH_LABELS) : Object.values(PU1_MONTH_LABELS);
+  const theoryHist = hist.filter(h => h.label.startsWith('Slip Test') || monthLabels.includes(h.label));
+  if(!theoryHist.length) return null;
+  return { theoryHist, latest: theoryHist[theoryHist.length-1], everPassed: theoryHist.some(h=>h.pct>=35) };
+}
+
+function buildFailuresRemedialReport(){
+  const dateStr = new Date().toLocaleDateString('en-IN', {day:'numeric', month:'long', year:'numeric'});
+  const roster = bioCombinedRoster();
+
+  const failing = [];
+  const sectionTotals = {};
+
+  roster.forEach(s=>{
+    const sec = s.section || '—';
+    const info = getTheoryLatestBio(s, s.pu);
+    if(!info) return;
+    if(!sectionTotals[sec]) sectionTotals[sec] = {sum:0, n:0, failN:0};
+    sectionTotals[sec].sum += info.latest.pct;
+    sectionTotals[sec].n += 1;
+    if(info.latest.pct < 35){
+      sectionTotals[sec].failN += 1;
+      failing.push({
+        name: s.name, section: sec, pu: s.pu,
+        latestLabel: info.latest.label, latestPct: info.latest.pct,
+        pattern: info.everPassed ? 'Regressed' : 'Persistent',
+        trend: info.theoryHist.map(h=>h.pct+'%').join(' → ')
+      });
+    }
+  });
+
+  failing.sort((a,b)=> a.latestPct - b.latestPct);
+  const persistent = failing.filter(f=>f.pattern==='Persistent');
+  const regressed = failing.filter(f=>f.pattern==='Regressed');
+
+  const sectionRows = Object.keys(sectionTotals).sort().map(sec=>{
+    const t = sectionTotals[sec];
+    const avg = t.n ? Math.round((t.sum/t.n)*10)/10 : 0;
+    const failPct = t.n ? Math.round((t.failN/t.n)*1000)/10 : 0;
+    return {sec, avg, failN:t.failN, n:t.n, failPct};
+  });
+  const weakest = sectionRows.length ? sectionRows.slice().sort((a,b)=>b.failPct-a.failPct)[0] : null;
+
+  let html = '<div class="rp-header">'+
+    '<div class="rp-tag">Global Education With Indian Values</div>'+
+    '<h1>S.R.N. MEHTA PU SCIENCE COLLEGE</h1>'+
+    '<p>Biology Department &middot; Failures &amp; Remedial Plan &middot; '+dateStr+'</p>'+
+    '<div class="rp-badges"><span class="rp-badge">⚠️ '+failing.length+' Currently Failing</span>'+
+      '<span class="rp-badge" style="opacity:.85;">'+persistent.length+' Persistent · '+regressed.length+' Regressed</span></div>'+
+  '</div><div class="rp-body">';
+
+  html += '<div class="rp-kpi-grid">'+
+    '<div class="rp-kpi"><div class="rp-kpi-label">Currently Failing Biology</div><div class="rp-kpi-value">'+failing.length+'</div><div class="rp-kpi-sub">Below 35%, latest Board-pattern test</div></div>'+
+    '<div class="rp-kpi"><div class="rp-kpi-label">Persistent (never passed)</div><div class="rp-kpi-value">'+persistent.length+'</div><div class="rp-kpi-sub">Needs foundational catch-up</div></div>'+
+    '<div class="rp-kpi"><div class="rp-kpi-label">Regressed (passed before)</div><div class="rp-kpi-value">'+regressed.length+'</div><div class="rp-kpi-sub">Needs revision &amp; consistency</div></div>'+
+    (weakest ? '<div class="rp-kpi"><div class="rp-kpi-label">Weakest Section</div><div class="rp-kpi-value">'+weakest.sec+'</div><div class="rp-kpi-sub">'+weakest.failN+'/'+weakest.n+' failing ('+weakest.failPct+'%)</div></div>' : '')+
+  '</div>';
+
+  html += rpSection('Section-wise Biology Snapshot <span style="font-weight:400;font-size:12px;color:var(--muted);">(Latest Board-pattern test per student)</span>',
+    rpTable(['Section','Avg %','Appeared','Failing','Fail Rate'], sectionRows.map(r=>[r.sec, r.avg+'%', r.n, r.failN, r.failPct+'%'])));
+
+  html += rpSection('Students Currently Failing Biology <span style="font-weight:400;font-size:12px;color:var(--muted);">(sorted lowest first)</span>',
+    failing.length ?
+      rpTable(['Name','Section','PU','Latest Test','Biology %','Pattern','Score Trend'], failing.map(f=>[f.name, f.section, 'PU-'+(f.pu===2?'II':'I'), f.latestLabel, f.latestPct+'%', f.pattern, f.trend]))
+      : '<div class="rp-callout">No students are currently below the passing mark in Biology — excellent work!</div>');
+
+  let remedial = '';
+  if(persistent.length){
+    remedial += '<p><b>'+persistent.length+' student(s) have never crossed the Biology pass mark</b> in any recorded Slip Test or Monthly Test on file ('+persistent.map(p=>p.name).join(', ')+'). '+
+      'These students need foundational catch-up, not more of the current pace: start from early-chapter basics before layering on new syllabus, assign the Answer Practice tool filtered to 1&ndash;2 mark questions only so they can build confidence with achievable wins, and use the Paper Generator to create short, low-stakes practice papers scoped to whatever chapter is currently being taught. A visible first-pass badge matters more for this group right now than more content.</p>';
+  }
+  if(regressed.length){
+    remedial += '<p><b>'+regressed.length+' student(s) have passed Biology before but are currently below the mark</b> ('+regressed.map(p=>p.name).join(', ')+'). '+
+      'Their gap is consistency, not fundamentals — revision and exam technique will move them fastest: quick spaced-recall drills with Flashcards and each chapter\'s keyword checklists, plus one extra revision pass before the next Monthly Test.</p>';
+  }
+  if(weakest && weakest.failPct > 0){
+    remedial += '<p><b>'+weakest.sec+' has the highest Biology fail rate of any section</b> ('+weakest.failPct+'%, '+weakest.failN+' of '+weakest.n+'). '+
+      'If this gap is wider than '+weakest.sec+'\'s gap in other subjects, it points at a section-specific fix — consider an extra short revision slot for '+weakest.sec+' before each Monthly Test, or pairing its weaker students with strong Biology performers from other sections.</p>';
+  }
+  if(!failing.length){
+    remedial = '<p>No students are currently failing Biology across any section — a genuinely strong position. Keep checking back here after every new Slip Test or Monthly Test.</p>';
+  }
+  html += '<div class="rp-section"><div class="rp-section-title">Remedial Plan <span style="font-weight:400;font-size:12px;color:var(--muted);">(Auto-generated from current data, Narendra Sir)</span></div>'+
+    '<div class="teacher-comment"><span class="tc-label">From Narendra Sir, Lecturer in Biology</span>'+remedial+'</div></div>';
+
+  html += '</div><div class="rp-footer">BAIO Learning System by Narendra Sir &middot; Lecturer in Biology &middot; S.R.N. Mehta PU Science College</div>';
+
+  document.getElementById('bioFailuresPrintArea').innerHTML = html;
+}
+
 /* ---- Risk & At-Risk section (combined PU-I + PU-II, Biology) ---- */
 function buildRiskBioSection(){
   const roster = bioCombinedRoster().filter(passesBioFilter);
@@ -8978,18 +9092,20 @@ function initBioReportTab(){
   if(bioReportInitialized) return;
   bioReportInitialized = true;
 
-  document.getElementById('bioModeCandidate').addEventListener('click', ()=>{
-    document.getElementById('bioModeCandidate').classList.add('active');
-    document.getElementById('bioModePrincipal').classList.remove('active');
-    document.getElementById('bioCandidateBlock').style.display = 'block';
-    document.getElementById('bioPrincipalBlock').style.display = 'none';
-  });
-  document.getElementById('bioModePrincipal').addEventListener('click', ()=>{
-    document.getElementById('bioModePrincipal').classList.add('active');
-    document.getElementById('bioModeCandidate').classList.remove('active');
-    document.getElementById('bioPrincipalBlock').style.display = 'block';
-    document.getElementById('bioCandidateBlock').style.display = 'none';
-  });
+  function showBioMode(mode){
+    document.getElementById('bioModeCandidate').classList.toggle('active', mode==='candidate');
+    document.getElementById('bioModePrincipal').classList.toggle('active', mode==='principal');
+    document.getElementById('bioModeFailures').classList.toggle('active', mode==='failures');
+    document.getElementById('bioCandidateBlock').style.display = mode==='candidate' ? 'block' : 'none';
+    document.getElementById('bioPrincipalBlock').style.display = mode==='principal' ? 'block' : 'none';
+    document.getElementById('bioFailuresBlock').style.display = mode==='failures' ? 'block' : 'none';
+    if(mode==='failures') buildFailuresRemedialReport();
+  }
+  document.getElementById('bioModeCandidate').addEventListener('click', ()=> showBioMode('candidate'));
+  document.getElementById('bioModePrincipal').addEventListener('click', ()=> showBioMode('principal'));
+  document.getElementById('bioModeFailures').addEventListener('click', ()=> showBioMode('failures'));
+  document.getElementById('bioFailuresRefreshBtn').addEventListener('click', buildFailuresRemedialReport);
+  document.getElementById('bioFailuresPrintBtn').addEventListener('click', ()=> window.print());
 
   document.getElementById('bioStudentSearch').addEventListener('input', function(){
     renderBioStudentResults(searchStudents(this.value));
