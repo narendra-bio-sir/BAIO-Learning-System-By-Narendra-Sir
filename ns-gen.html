@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unlock Code Generator | BAIO Learning System</title>
+<script>
+(function(){
+  try{
+    var t = localStorage.getItem('baio_theme') || 'light';
+    if(t === 'light') document.documentElement.setAttribute('data-theme','light');
+  }catch(e){}
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -16,11 +24,11 @@
   --ink:#EAF3EE; --ink-dim:#9FC4B6; --line:rgba(212,175,55,0.25);
   --danger:#E7695B; --ok:#33C48A; --card-shadow:none;
 }
-body.light-theme{
-  --navy:#F4F1E8; --navy2:#FFFFFF; --panel:#FFFFFF; --panel2:#F0EEE2;
-  --gold:#A9781F; --gold2:#8C6417; --teal:#0E8A76; --teal2:#0B6E5E;
-  --ink:#20291F; --ink-dim:#5B6B5A; --line:rgba(169,120,31,0.28);
-  --danger:#C33A2C; --ok:#1E8A57; --card-shadow:0 2px 10px rgba(0,0,0,0.06);
+[data-theme="light"]{
+  --navy:#F7F5EE; --navy2:#EFEBDD; --panel:#FFFFFF; --panel2:#F3F0E6;
+  --gold:#B8912A; --gold2:#8A6A1A; --teal:#0F8F7A; --teal2:#0B6F5E;
+  --ink:#1E2A22; --ink-dim:#5C6E63; --line:rgba(184,145,42,0.25);
+  --danger:#C33A2C; --ok:#1F9D6C; --card-shadow:0 2px 10px rgba(0,0,0,0.06);
 }
 *{box-sizing:border-box;}
 body{margin:0; background:var(--navy); color:var(--ink); font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased; transition:background 0.25s, color 0.25s;}
@@ -41,7 +49,7 @@ header{text-align:center; margin-bottom:14px;}
 .mode-btn{flex:1 1 calc(50% - 4px); padding:11px 4px; border-radius:12px; border:1px solid var(--line); background:var(--panel);
   color:var(--ink-dim); font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13px; cursor:pointer;}
 .mode-btn.active{background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#1a1406; border-color:var(--gold);}
-body.light-theme .mode-btn.active{color:#fff;}
+[data-theme="light"] .mode-btn.active{color:#fff;}
 
 .card{background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:18px; margin-bottom:16px; box-shadow:var(--card-shadow);}
 .card h3{font-size:14px; color:var(--gold); margin-bottom:10px;}
@@ -61,7 +69,7 @@ textarea{min-height:140px; font-family:'Space Mono', monospace; font-size:12.5px
   background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#1a1406; font-weight:700; font-size:14px;
   font-family:'Space Grotesk',sans-serif; cursor:pointer;
 }
-body.light-theme .btn{color:#fff;}
+[data-theme="light"] .btn{color:#fff;}
 .btn.secondary{background:var(--panel2); color:var(--ink); border:1px solid var(--line);}
 
 .result-box{margin-top:16px; background:var(--panel2); border:1px solid var(--teal2); border-radius:12px; padding:16px; text-align:center; display:none;}
@@ -89,7 +97,7 @@ input[type="checkbox"]{width:16px; height:16px; accent-color:var(--teal2); curso
   background:var(--panel); border:1px solid var(--line); border-radius:10px; overflow:hidden;
   max-height:220px; overflow-y:auto; box-shadow:0 8px 24px rgba(0,0,0,0.35); display:none;
 }
-body.light-theme .autocomplete-list{box-shadow:0 8px 24px rgba(0,0,0,0.12);}
+[data-theme="light"] .autocomplete-list{box-shadow:0 8px 24px rgba(0,0,0,0.12);}
 .autocomplete-list.show{display:block;}
 .ac-item{padding:9px 12px; cursor:pointer; font-size:13px; border-bottom:1px solid var(--line);}
 .ac-item:last-child{border-bottom:none;}
@@ -309,10 +317,23 @@ const FOUNDER_QUOTE = '"I\'m truly happy to share these unlock codes with you an
 const FOUNDER_SIGN = '— Narendra Sir, Biology Lecturer & Founder-CEO, BAIO Learning System';
 
 /* ---------------- Theme toggle ---------------- */
-function toggleTheme(){
-  const isLight = document.body.classList.toggle('light-theme');
-  document.getElementById('themeToggle').textContent = isLight ? '☀️' : '🌙';
+const THEME_KEY = 'baio_theme';
+function applyTheme(t){
+  const btn = document.getElementById('themeToggle');
+  if(t === 'light'){ document.documentElement.setAttribute('data-theme','light'); if(btn) btn.textContent = '☀️'; }
+  else { document.documentElement.removeAttribute('data-theme'); if(btn) btn.textContent = '🌙'; }
 }
+function toggleTheme(){
+  const cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+  const next = cur === 'light' ? 'dark' : 'light';
+  applyTheme(next);
+  try{ localStorage.setItem(THEME_KEY, next); }catch(e){}
+}
+(function(){
+  let saved = null;
+  try{ saved = localStorage.getItem(THEME_KEY); }catch(e){}
+  applyTheme(saved || 'light');
+})();
 
 /* ---------------- Deterministic student-locked code algorithm ----------------
    IMPORTANT: this exact CODE_SALT and function must be copied into every
