@@ -113,9 +113,20 @@ button, select, input{font-family:var(--sans);}
 /* ---------- Layout ---------- */
 .app{
   max-width:1400px; margin:0 auto; padding:22px; display:grid;
-  grid-template-columns:1.35fr 1fr; gap:20px;
+  grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:20px;
 }
-@media (max-width:1050px){ .app{grid-template-columns:1fr;} }
+@media (max-width:1050px){ .app{grid-template-columns:minmax(0,1fr);} }
+@media (max-width:640px){
+  .app{padding:14px 12px; gap:14px;}
+  .panel{padding:14px;}
+  .top-inner{padding:12px 14px;}
+  .top-actions{width:100%;}
+  .top-actions .btn{flex:1 1 auto; min-width:0;}
+  .settings-grid{grid-template-columns:minmax(0,1fr);}
+  .summary-strip{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .toolbar{gap:8px;}
+  select.filter{max-width:none; flex:1 1 140px;}
+}
 
 .panel{
   background:linear-gradient(180deg, var(--bg-1), var(--bg-2));
@@ -216,7 +227,7 @@ select.filter{
 .field.full{grid-column:1/-1;}
 .field label{font-size:11px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.4px;}
 .field input, .field select, .field textarea{
-  background:var(--bg-0); border:1px solid var(--line); color:var(--ink);
+  width:100%; background:var(--bg-0); border:1px solid var(--line); color:var(--ink);
   padding:8px 10px; border-radius:7px; font-size:13px;
 }
 .field textarea{resize:vertical; min-height:44px; font-family:var(--sans);}
