@@ -522,6 +522,28 @@ footer{text-align:center; color:var(--text-dim); font-size:11px; margin-top:22px
 .cmp-picker-row{display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap;}
 .cmp-picker-row select{flex:1; min-width:130px; padding:10px 12px; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(227,175,67,0.3); color:var(--text); font-family:'Work Sans',sans-serif;}
 .cmp-vs{color:var(--gold-2); font-weight:700; font-family:'Fraunces',Georgia,serif;}
+
+/* Genetics Cross Simulator */
+.cross-block{scroll-margin-top:10px;}
+table.cmp td.punnett-cell{text-align:center; font-weight:700; color:var(--gold-2); background:rgba(227,175,67,0.06);}
+.gcs-ratio-row{display:flex; flex-wrap:wrap; gap:8px; margin:12px 0;}
+.gcs-ratio-card{flex:1; min-width:150px; background:var(--panel-2); border:1px solid var(--border); border-radius:10px; padding:10px 12px;}
+.gcs-ratio-card .gcs-label{font-size:10px; text-transform:uppercase; letter-spacing:.6px; color:var(--teal-2); font-weight:700; margin-bottom:4px;}
+.gcs-ratio-card .gcs-value{font-size:14px; font-weight:700; color:var(--text); line-height:1.5;}
+.gcs-note{font-size:11.5px; color:var(--text-dim); margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); line-height:1.6;}
+.gcs-note b{color:var(--gold-2);}
+.disorder-card{background:var(--panel-2); border:1px solid var(--border); border-radius:12px; padding:12px 14px; margin-bottom:10px;}
+.disorder-card h4{margin:0 0 6px; color:var(--gold-2); font-size:14px; display:flex; align-items:center; gap:8px;}
+.disorder-card .dc-row{font-size:12.5px; color:var(--text-dim); margin-bottom:4px; line-height:1.55;}
+.disorder-card .dc-row b{color:var(--teal-2); font-weight:700;}
+.pq-opt{
+  display:block; width:100%; text-align:left; background:var(--panel-2); border:1px solid var(--border); color:var(--text);
+  padding:10px 12px; border-radius:9px; font-size:13px; cursor:pointer; margin-bottom:8px; font-family:'Work Sans',sans-serif;
+}
+.pq-opt:hover{border-color:var(--teal);}
+.pq-opt.correct{background:rgba(63,190,142,0.18); border-color:var(--ok); color:#DFF7EC;}
+.pq-opt.wrong{background:rgba(232,129,95,0.18); border-color:var(--danger); color:#FBDCD0;}
+.pq-opt:disabled{cursor:default;}
 .glossary-item{display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 12px; border-bottom:1px solid rgba(227,175,67,0.15);}
 .glossary-term{color:var(--gold-2); font-weight:600; font-family:'Fraunces',Georgia,serif;}
 .glossary-def{color:var(--text-dim); font-size:12px; margin-top:2px;}
@@ -910,6 +932,7 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
     <button class="tab-btn" data-tab="adv">NEET Practice</button>
     <button class="tab-btn" data-tab="kcet">KCET Practice</button>
     <button class="tab-btn" data-tab="writeit">Answer Practice</button>
+    <button class="tab-btn" data-tab="cross">Cross Simulator</button>
     <button class="tab-btn" data-tab="revision">Revision</button>
     <button class="tab-btn" data-tab="mindmap">Mind Map</button>
     <button class="tab-btn" data-tab="classppt">Class Presentation</button>
@@ -1559,6 +1582,120 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       <h3 style="color:var(--gold-2); margin-bottom:4px;">Interactive Inheritance &amp; Disorders Tree Explorer</h3>
       <div style="color:var(--text-dim); font-size:12px; margin-bottom:12px;">Tap a category to expand its sub-groups &middot; tap a sub-group to see traits &amp; NEET-frequent examples</div>
       <div id="treeWrap"></div>
+    </div>
+  </div>
+
+  <!-- ===================== GENETICS CROSS SIMULATOR & PRACTICE ===================== -->
+  <div class="panel" id="panel-cross">
+    <div class="card">
+      <h3 style="color:var(--gold-2); margin-bottom:4px;">🧬 Genetics Cross Simulator</h3>
+      <div style="color:var(--text-dim); font-size:12px; margin-bottom:12px;">Build a cross and get the Punnett square, genotypic and phenotypic ratios instantly &middot; then test yourself in Practice mode.</div>
+      <div class="seg-group" id="crossModeGroup">
+        <div class="seg-opt active" data-mode="mono">Monohybrid</div>
+        <div class="seg-opt" data-mode="di">Dihybrid</div>
+        <div class="seg-opt" data-mode="incomplete">Incomplete Dominance</div>
+        <div class="seg-opt" data-mode="abo">ABO Blood Group</div>
+        <div class="seg-opt" data-mode="honeybee">Honey Bee Sex</div>
+        <div class="seg-opt" data-mode="disorders">Chromosomal Disorders</div>
+        <div class="seg-opt" data-mode="practice">🎯 Practice Quiz</div>
+      </div>
+    </div>
+
+    <!-- Monohybrid -->
+    <div class="card cross-block" data-block="mono">
+      <div class="subhead">1. Choose a trait (Mendel's 7 pea traits)</div>
+      <select id="monoTraitSelect"></select>
+      <div class="subhead" style="margin-top:12px;">2. Parent genotypes</div>
+      <div class="cmp-picker-row">
+        <select id="monoP1"></select>
+        <span class="cmp-vs">&times;</span>
+        <select id="monoP2"></select>
+      </div>
+      <div class="btn-row" style="margin:12px 0 4px; justify-content:flex-start;">
+        <button class="btn" id="monoCrossBtn">Generate Punnett Square</button>
+        <button class="btn secondary" id="monoTestCrossBtn">Set up as Test Cross</button>
+      </div>
+      <div id="monoResult"></div>
+    </div>
+
+    <!-- Dihybrid -->
+    <div class="card cross-block" data-block="di" style="display:none;">
+      <div class="subhead">1. Choose two traits</div>
+      <div class="cmp-picker-row">
+        <select id="diTraitSelect1"></select>
+        <select id="diTraitSelect2"></select>
+      </div>
+      <div class="subhead" style="margin-top:12px;">2. Parent 1 genotype</div>
+      <div class="cmp-picker-row">
+        <select id="diP1t1"></select>
+        <select id="diP1t2"></select>
+      </div>
+      <div class="subhead" style="margin-top:6px;">3. Parent 2 genotype</div>
+      <div class="cmp-picker-row">
+        <select id="diP2t1"></select>
+        <select id="diP2t2"></select>
+      </div>
+      <div class="btn-row" style="margin:12px 0 4px; justify-content:flex-start;">
+        <button class="btn" id="diCrossBtn">Generate Punnett Square</button>
+        <button class="btn secondary" id="diClassicBtn">Load Classic F1&times;F1 (AaBb &times; AaBb)</button>
+      </div>
+      <div id="diResult"></div>
+    </div>
+
+    <!-- Incomplete Dominance -->
+    <div class="card cross-block" data-block="incomplete" style="display:none;">
+      <div class="subhead">Snapdragon / 4 O'clock plant flower colour (no dominance &mdash; heterozygote blends)</div>
+      <div style="color:var(--text-dim); font-size:12px; margin:4px 0 10px;">RR = Red, rr = White, Rr = <b style="color:var(--gold-2);">Pink</b> (the heterozygote shows an intermediate phenotype instead of the dominant one)</div>
+      <div class="cmp-picker-row">
+        <select id="incP1"></select>
+        <span class="cmp-vs">&times;</span>
+        <select id="incP2"></select>
+      </div>
+      <div class="btn-row" style="margin:12px 0 4px; justify-content:flex-start;">
+        <button class="btn" id="incCrossBtn">Generate Punnett Square</button>
+      </div>
+      <div id="incResult"></div>
+    </div>
+
+    <!-- ABO Blood Group -->
+    <div class="card cross-block" data-block="abo" style="display:none;">
+      <div class="subhead">ABO blood group &mdash; multiple alleles (I&#7480;, I&#7461;, i) with codominance of I&#7480;/I&#7461; and both dominant over i</div>
+      <div class="cmp-picker-row">
+        <select id="aboP1"></select>
+        <span class="cmp-vs">&times;</span>
+        <select id="aboP2"></select>
+      </div>
+      <div class="btn-row" style="margin:12px 0 4px; justify-content:flex-start;">
+        <button class="btn" id="aboCrossBtn">Generate Cross</button>
+      </div>
+      <div id="aboResult"></div>
+    </div>
+
+    <!-- Honey Bee Sex Determination -->
+    <div class="card cross-block" data-block="honeybee" style="display:none;">
+      <div class="subhead">Haplodiploidy in honey bees (Apis)</div>
+      <div style="color:var(--text-dim); font-size:12px; margin:4px 0 12px; line-height:1.6;">The queen (diploid, 2n=32) mates once and stores sperm. She then decides, egg by egg, whether to fertilise it &mdash; tap either egg type below to see what it becomes.</div>
+      <div class="btn-row" style="justify-content:flex-start;">
+        <button class="btn" id="beeFertBtn">Fertilised egg</button>
+        <button class="btn secondary" id="beeUnfertBtn">Unfertilised egg</button>
+      </div>
+      <div id="beeResult" style="margin-top:12px;"></div>
+    </div>
+
+    <!-- Chromosomal Disorders reference -->
+    <div class="card cross-block" data-block="disorders" style="display:none;">
+      <div class="subhead">Quick reference &mdash; board-important chromosomal disorders</div>
+      <div id="disorderList"></div>
+    </div>
+
+    <!-- Practice Quiz -->
+    <div class="card cross-block" data-block="practice" style="display:none;">
+      <div class="subhead">Predict the ratio / outcome &mdash; instant feedback</div>
+      <div class="quiz-top" style="margin-bottom:10px;">
+        <span>Score: <b id="pqScore" style="color:var(--gold-2);">0 / 0</b></span>
+        <button class="btn secondary" id="pqNextBtn" style="padding:6px 12px; font-size:12px;">Next question &rarr;</button>
+      </div>
+      <div id="pqQuestion"></div>
     </div>
   </div>
 
@@ -7384,6 +7521,451 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
   if(loadOv) loadOv.remove();
 })();
 </script>
+<script>
+(function(){
+  "use strict";
+
+  var MENDEL_TRAITS = [
+    {letter:'T', dom:'Tall stem', rec:'Dwarf stem'},
+    {letter:'F', dom:'Axial flower position', rec:'Terminal flower position'},
+    {letter:'C', dom:'Violet flower colour', rec:'White flower colour'},
+    {letter:'P', dom:'Inflated pod shape', rec:'Constricted pod shape'},
+    {letter:'G', dom:'Green pod colour', rec:'Yellow pod colour'},
+    {letter:'R', dom:'Round seed shape', rec:'Wrinkled seed shape'},
+    {letter:'Y', dom:'Yellow seed colour', rec:'Green seed colour'}
+  ];
+
+  function genoOptions(letter){
+    var up = letter.toUpperCase(), lo = letter.toLowerCase();
+    return [
+      {v: up+up, label: up+up+' (homozygous dominant)'},
+      {v: up+lo, label: up+lo+' (heterozygous)'},
+      {v: lo+lo, label: lo+lo+' (homozygous recessive)'}
+    ];
+  }
+  function fillSelect(sel, options){
+    sel.innerHTML = options.map(function(o){ return '<option value="'+o.v+'">'+o.label+'</option>'; }).join('');
+  }
+  function gcd(a,b){ return b===0?a:gcd(b,a%b); }
+  function tally(arr){
+    var counts = {};
+    arr.forEach(function(x){ counts[x] = (counts[x]||0)+1; });
+    return counts;
+  }
+  function ratioString(counts){
+    var vals = Object.keys(counts).map(function(k){ return counts[k]; });
+    var g = vals.reduce(function(a,b){ return gcd(a,b); });
+    return Object.keys(counts).map(function(k){ return (counts[k]/g); }).join(' : ');
+  }
+  function buildPunnettTable(g1arr, g2arr, combineFn){
+    var html = '<div class="cmp-scroll"><table class="cmp"><thead><tr><th></th>';
+    g2arr.forEach(function(g){ html += '<th>'+g+'</th>'; });
+    html += '</tr></thead><tbody>';
+    var cells = [];
+    g1arr.forEach(function(a){
+      html += '<tr><th>'+a+'</th>';
+      g2arr.forEach(function(b){
+        var combined = combineFn(a,b);
+        cells.push(combined);
+        html += '<td class="punnett-cell">'+combined+'</td>';
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+    return {html:html, cells:cells};
+  }
+  function crossPair(p1, p2, upperLetter){
+    var g1 = p1.split(''), g2 = p2.split('');
+    var out = [];
+    g1.forEach(function(a){
+      g2.forEach(function(b){
+        var pair = [a,b];
+        pair.sort(function(x,y){ return (x===upperLetter?0:1)-(y===upperLetter?0:1); });
+        out.push(pair.join(''));
+      });
+    });
+    return out;
+  }
+  function randInt(n){ return Math.floor(Math.random()*n); }
+  function shuffle(arr){
+    var a = arr.slice();
+    for(var i=a.length-1;i>0;i--){ var j=randInt(i+1); var t=a[i]; a[i]=a[j]; a[j]=t; }
+    return a;
+  }
+
+  // ---------------- sub-mode switching ----------------
+  var crossModeGroup = document.getElementById('crossModeGroup');
+  if(crossModeGroup){
+    crossModeGroup.querySelectorAll('.seg-opt').forEach(function(opt){
+      opt.addEventListener('click', function(){
+        crossModeGroup.querySelectorAll('.seg-opt').forEach(function(o){ o.classList.remove('active'); });
+        opt.classList.add('active');
+        var mode = opt.dataset.mode;
+        document.querySelectorAll('.cross-block').forEach(function(b){
+          b.style.display = (b.dataset.block === mode) ? '' : 'none';
+        });
+        if(mode === 'practice' && !pqCurrentQ) nextPracticeQuestion();
+      });
+    });
+  }
+
+  // ================= MONOHYBRID =================
+  var monoTraitSelect = document.getElementById('monoTraitSelect');
+  var monoP1 = document.getElementById('monoP1');
+  var monoP2 = document.getElementById('monoP2');
+
+  function refreshMonoGenoOptions(){
+    var t = MENDEL_TRAITS[+monoTraitSelect.value];
+    fillSelect(monoP1, genoOptions(t.letter));
+    fillSelect(monoP2, genoOptions(t.letter));
+    monoP1.value = t.letter.toUpperCase()+t.letter.toLowerCase();
+    monoP2.value = t.letter.toUpperCase()+t.letter.toLowerCase();
+  }
+  function renderMonoResult(){
+    var t = MENDEL_TRAITS[+monoTraitSelect.value];
+    var upper = t.letter.toUpperCase(), lower = t.letter.toLowerCase();
+    var p1 = monoP1.value, p2 = monoP2.value;
+    var g1 = p1.split(''), g2 = p2.split('');
+
+    var tbl = buildPunnettTable(g1, g2, function(a,b){
+      var pair=[a,b]; pair.sort(function(x,y){ return (x===upper?0:1)-(y===upper?0:1); });
+      return pair.join('');
+    });
+    var genoCounts = tally(tbl.cells);
+    var phenoCells = tbl.cells.map(function(c){ return c.indexOf(upper)!==-1 ? t.dom : t.rec; });
+    var phenoCounts = tally(phenoCells);
+    var isTestCross = ((p2 === lower+lower) && (p1 !== lower+lower)) || ((p1 === lower+lower) && (p2 !== lower+lower));
+
+    var html = tbl.html;
+    html += '<div class="gcs-ratio-row">';
+    html += '<div class="gcs-ratio-card"><div class="gcs-label">Genotypic ratio</div><div class="gcs-value">'+Object.keys(genoCounts).join(' : ')+' &nbsp;=&nbsp; '+ratioString(genoCounts)+'</div></div>';
+    html += '<div class="gcs-ratio-card"><div class="gcs-label">Phenotypic ratio</div><div class="gcs-value">'+Object.keys(phenoCounts).join(' : ')+' &nbsp;=&nbsp; '+ratioString(phenoCounts)+'</div></div>';
+    html += '</div>';
+    if(isTestCross){
+      html += '<div class="gcs-note"><b>This is a test cross</b> &mdash; one parent is homozygous recessive ('+lower+lower+'), used to reveal whether the dominant-phenotype parent is homozygous or heterozygous, from the offspring ratio.</div>';
+    }
+    document.getElementById('monoResult').innerHTML = html;
+  }
+  if(monoTraitSelect){
+    monoTraitSelect.innerHTML = MENDEL_TRAITS.map(function(t,i){
+      return '<option value="'+i+'">'+t.dom+' / '+t.rec+' ('+t.letter.toUpperCase()+'/'+t.letter.toLowerCase()+')</option>';
+    }).join('');
+    monoTraitSelect.addEventListener('change', function(){ refreshMonoGenoOptions(); renderMonoResult(); });
+    refreshMonoGenoOptions();
+    var monoCrossBtn = document.getElementById('monoCrossBtn');
+    if(monoCrossBtn) monoCrossBtn.addEventListener('click', renderMonoResult);
+    var monoTestCrossBtn = document.getElementById('monoTestCrossBtn');
+    if(monoTestCrossBtn) monoTestCrossBtn.addEventListener('click', function(){
+      var t = MENDEL_TRAITS[+monoTraitSelect.value];
+      monoP2.value = t.letter.toLowerCase()+t.letter.toLowerCase();
+      renderMonoResult();
+    });
+    renderMonoResult();
+  }
+
+  // ================= DIHYBRID =================
+  var diTraitSelect1 = document.getElementById('diTraitSelect1');
+  var diTraitSelect2 = document.getElementById('diTraitSelect2');
+  var diP1t1 = document.getElementById('diP1t1'), diP1t2 = document.getElementById('diP1t2');
+  var diP2t1 = document.getElementById('diP2t1'), diP2t2 = document.getElementById('diP2t2');
+
+  function refreshDiGenoOptions(){
+    var t1 = MENDEL_TRAITS[+diTraitSelect1.value];
+    var t2 = MENDEL_TRAITS[+diTraitSelect2.value];
+    fillSelect(diP1t1, genoOptions(t1.letter));
+    fillSelect(diP1t2, genoOptions(t2.letter));
+    fillSelect(diP2t1, genoOptions(t1.letter));
+    fillSelect(diP2t2, genoOptions(t2.letter));
+    diP1t1.value = t1.letter.toUpperCase()+t1.letter.toLowerCase();
+    diP1t2.value = t2.letter.toUpperCase()+t2.letter.toLowerCase();
+    diP2t1.value = t1.letter.toUpperCase()+t1.letter.toLowerCase();
+    diP2t2.value = t2.letter.toUpperCase()+t2.letter.toLowerCase();
+  }
+  function ensureDifferentTraits(changed, other){
+    if(changed.value === other.value){
+      other.value = String((+changed.value + 1) % MENDEL_TRAITS.length);
+    }
+  }
+  function gametesForPair(genoT1, genoT2){
+    var alleles1 = genoT1.split(''), alleles2 = genoT2.split('');
+    var combos = [];
+    alleles1.forEach(function(a){ alleles2.forEach(function(b){ combos.push(a+b); }); });
+    var seen = {}, unique = [];
+    combos.forEach(function(c){ if(!seen[c]){ seen[c]=true; unique.push(c); } });
+    return unique;
+  }
+  function combineDiGametes(g1, g2, upper1, upper2){
+    var pair1 = [g1[0],g2[0]]; pair1.sort(function(x,y){ return (x===upper1?0:1)-(y===upper1?0:1); });
+    var pair2 = [g1[1],g2[1]]; pair2.sort(function(x,y){ return (x===upper2?0:1)-(y===upper2?0:1); });
+    return pair1.join('') + pair2.join('');
+  }
+  function renderDiResult(){
+    var t1 = MENDEL_TRAITS[+diTraitSelect1.value];
+    var t2 = MENDEL_TRAITS[+diTraitSelect2.value];
+    var u1 = t1.letter.toUpperCase(), u2 = t2.letter.toUpperCase();
+    var p1Gametes = gametesForPair(diP1t1.value, diP1t2.value);
+    var p2Gametes = gametesForPair(diP2t1.value, diP2t2.value);
+
+    var tbl = buildPunnettTable(p1Gametes, p2Gametes, function(g1,g2){ return combineDiGametes(g1, g2, u1, u2); });
+    var phenoCells = tbl.cells.map(function(c){
+      var trait1Geno = c.slice(0,2), trait2Geno = c.slice(2,4);
+      var pheno1 = trait1Geno.indexOf(u1)!==-1 ? t1.dom : t1.rec;
+      var pheno2 = trait2Geno.indexOf(u2)!==-1 ? t2.dom : t2.rec;
+      return pheno1 + ' + ' + pheno2;
+    });
+    var phenoCounts = tally(phenoCells);
+    var genoCounts = tally(tbl.cells);
+
+    var html = tbl.html;
+    html += '<div class="gcs-ratio-row">';
+    html += '<div class="gcs-ratio-card"><div class="gcs-label">Distinct genotypes</div><div class="gcs-value">'+Object.keys(genoCounts).length+'</div></div>';
+    html += '<div class="gcs-ratio-card"><div class="gcs-label">Phenotypic ratio</div><div class="gcs-value">'+ratioString(phenoCounts)+'</div></div>';
+    html += '</div>';
+    html += '<div class="gcs-note">';
+    Object.keys(phenoCounts).forEach(function(k){
+      html += '<div>'+phenoCounts[k]+' &times; <b>'+k+'</b></div>';
+    });
+    html += '</div>';
+    document.getElementById('diResult').innerHTML = html;
+  }
+  if(diTraitSelect1){
+    var traitOptsHtml = MENDEL_TRAITS.map(function(t,i){
+      return '<option value="'+i+'">'+t.dom+' / '+t.rec+' ('+t.letter.toUpperCase()+'/'+t.letter.toLowerCase()+')</option>';
+    }).join('');
+    diTraitSelect1.innerHTML = traitOptsHtml;
+    diTraitSelect2.innerHTML = traitOptsHtml;
+    diTraitSelect1.value = 5;
+    diTraitSelect2.value = 6;
+    refreshDiGenoOptions();
+    diTraitSelect1.addEventListener('change', function(){ ensureDifferentTraits(diTraitSelect1, diTraitSelect2); refreshDiGenoOptions(); renderDiResult(); });
+    diTraitSelect2.addEventListener('change', function(){ ensureDifferentTraits(diTraitSelect2, diTraitSelect1); refreshDiGenoOptions(); renderDiResult(); });
+    var diCrossBtn = document.getElementById('diCrossBtn');
+    if(diCrossBtn) diCrossBtn.addEventListener('click', renderDiResult);
+    var diClassicBtn = document.getElementById('diClassicBtn');
+    if(diClassicBtn) diClassicBtn.addEventListener('click', function(){
+      diTraitSelect1.value = 5; diTraitSelect2.value = 6;
+      refreshDiGenoOptions(); renderDiResult();
+    });
+    renderDiResult();
+  }
+
+  // ================= INCOMPLETE DOMINANCE =================
+  var incP1 = document.getElementById('incP1'), incP2 = document.getElementById('incP2');
+  var INC_OPTIONS = [
+    {v:'RR', label:'RR (Red)'},
+    {v:'Rr', label:'Rr (Pink)'},
+    {v:'rr', label:'rr (White)'}
+  ];
+  function renderIncResult(){
+    var p1 = incP1.value, p2 = incP2.value;
+    var g1 = p1.split(''), g2 = p2.split('');
+    var tbl = buildPunnettTable(g1, g2, function(a,b){
+      var pair=[a,b]; pair.sort(function(x,y){ return (x==='R'?0:1)-(y==='R'?0:1); });
+      return pair.join('');
+    });
+    var genoCounts = tally(tbl.cells);
+    var PHENO_MAP = {RR:'Red', Rr:'Pink', rr:'White'};
+    var phenoCells = tbl.cells.map(function(c){ return PHENO_MAP[c]; });
+    var phenoCounts = tally(phenoCells);
+    var html = tbl.html;
+    html += '<div class="gcs-ratio-row">';
+    html += '<div class="gcs-ratio-card"><div class="gcs-label">Genotypic ratio</div><div class="gcs-value">'+Object.keys(genoCounts).join(' : ')+' = '+ratioString(genoCounts)+'</div></div>';
+    html += '<div class="gcs-ratio-card"><div class="gcs-label">Phenotypic ratio</div><div class="gcs-value">'+Object.keys(phenoCounts).join(' : ')+' = '+ratioString(phenoCounts)+'</div></div>';
+    html += '</div>';
+    html += '<div class="gcs-note">In incomplete dominance the <b>genotypic and phenotypic ratios are identical</b> &mdash; there is no dominant allele to mask the heterozygote, so each genotype produces its own distinct, intermediate phenotype.</div>';
+    document.getElementById('incResult').innerHTML = html;
+  }
+  if(incP1){
+    fillSelect(incP1, INC_OPTIONS);
+    fillSelect(incP2, INC_OPTIONS);
+    incP1.value='RR'; incP2.value='rr';
+    var incCrossBtn = document.getElementById('incCrossBtn');
+    if(incCrossBtn) incCrossBtn.addEventListener('click', renderIncResult);
+    renderIncResult();
+  }
+
+  // ================= ABO BLOOD GROUP =================
+  var aboP1 = document.getElementById('aboP1'), aboP2 = document.getElementById('aboP2');
+  var ABO_GENO = {
+    'IAIA':['IA','IA'], 'IAi':['IA','i'], 'IBIB':['IB','IB'], 'IBi':['IB','i'], 'IAIB':['IA','IB'], 'ii':['i','i']
+  };
+  var ABO_OPTIONS = [
+    {v:'IAIA', label:'IAIA (Blood group A, homozygous)'},
+    {v:'IAi', label:'IAi (Blood group A, heterozygous)'},
+    {v:'IBIB', label:'IBIB (Blood group B, homozygous)'},
+    {v:'IBi', label:'IBi (Blood group B, heterozygous)'},
+    {v:'IAIB', label:'IAIB (Blood group AB)'},
+    {v:'ii', label:'ii (Blood group O)'}
+  ];
+  function aboPhenotype(tokens){
+    var hasA = tokens.indexOf('IA')!==-1, hasB = tokens.indexOf('IB')!==-1;
+    if(hasA && hasB) return 'AB';
+    if(hasA) return 'A';
+    if(hasB) return 'B';
+    return 'O';
+  }
+  function renderAboResult(){
+    var g1 = ABO_GENO[aboP1.value], g2 = ABO_GENO[aboP2.value];
+    var tbl = buildPunnettTable(g1, g2, function(a,b){ return a+' '+b; });
+    var pairs = [];
+    g1.forEach(function(a){ g2.forEach(function(b){ pairs.push([a,b]); }); });
+    var phenoCounts = tally(pairs.map(aboPhenotype));
+
+    var html = tbl.html;
+    html += '<div class="gcs-ratio-row">';
+    html += '<div class="gcs-ratio-card" style="flex:1 1 100%;"><div class="gcs-label">Possible offspring blood groups</div><div class="gcs-value">'+Object.keys(phenoCounts).map(function(k){ return k+' ('+phenoCounts[k]+'/4)'; }).join(' &nbsp;&middot;&nbsp; ')+'</div></div>';
+    html += '</div>';
+    var allGroups = ['A','B','AB','O'];
+    var impossible = allGroups.filter(function(g){ return !phenoCounts[g]; });
+    if(impossible.length){
+      html += '<div class="gcs-note">Blood group'+(impossible.length>1?'s':'')+' <b>'+impossible.join(', ')+'</b> '+(impossible.length>1?'are':'is')+' NOT possible from this cross.</div>';
+    }
+    document.getElementById('aboResult').innerHTML = html;
+  }
+  if(aboP1){
+    fillSelect(aboP1, ABO_OPTIONS);
+    fillSelect(aboP2, ABO_OPTIONS);
+    aboP1.value='IAi'; aboP2.value='IBi';
+    var aboCrossBtn = document.getElementById('aboCrossBtn');
+    if(aboCrossBtn) aboCrossBtn.addEventListener('click', renderAboResult);
+    renderAboResult();
+  }
+
+  // ================= HONEY BEE =================
+  var beeFertBtn = document.getElementById('beeFertBtn');
+  var beeUnfertBtn = document.getElementById('beeUnfertBtn');
+  var beeResult = document.getElementById('beeResult');
+  if(beeFertBtn){
+    beeFertBtn.addEventListener('click', function(){
+      beeResult.innerHTML = '<div class="disorder-card"><h4>Fertilised egg &rarr; Diploid (2n = 32)</h4>'
+        + '<div class="dc-row">Develops into a <b>female</b> &mdash; a worker, or (if fed royal jelly throughout larval life) a new <b>queen</b>.</div>'
+        + '<div class="dc-row">Females have <b>two parents</b> and develop by normal fertilisation.</div></div>';
+    });
+    beeUnfertBtn.addEventListener('click', function(){
+      beeResult.innerHTML = '<div class="disorder-card"><h4>Unfertilised egg &rarr; Haploid (n = 16)</h4>'
+        + '<div class="dc-row">Develops into a <b>male</b> (drone) by <b>parthenogenesis</b> &mdash; without fertilisation.</div>'
+        + '<div class="dc-row">Drones have <b>only a mother</b> and produce sperm by mitosis, not meiosis, since they are already haploid.</div></div>';
+    });
+  }
+
+  // ================= CHROMOSOMAL DISORDERS =================
+  var DISORDERS = [
+    {name:'Down Syndrome', karyotype:'47, XX/XY, +21 (Trisomy 21)', cause:'Nondisjunction of chromosome 21 during meiosis in a parent, producing a gamete with an extra copy.', features:'Small round head, furrowed tongue, partial separation of fingers, mental retardation, short stature.'},
+    {name:'Klinefelter Syndrome', karyotype:'47, XXY', cause:'Nondisjunction of the X chromosome, producing an egg or sperm with an extra X.', features:'Overall masculine development but feminine body features (gynecomastia); sterile; tall stature.'},
+    {name:'Turner Syndrome', karyotype:'45, X (monosomy X)', cause:'Loss or nondisjunction of one X chromosome.', features:'Female with underdeveloped ovaries; sterile; short stature; webbed neck.'}
+  ];
+  var disorderList = document.getElementById('disorderList');
+  if(disorderList){
+    disorderList.innerHTML = DISORDERS.map(function(d){
+      return '<div class="disorder-card"><h4>'+d.name+'</h4>'
+        + '<div class="dc-row"><b>Karyotype:</b> '+d.karyotype+'</div>'
+        + '<div class="dc-row"><b>Cause:</b> '+d.cause+'</div>'
+        + '<div class="dc-row"><b>Features:</b> '+d.features+'</div></div>';
+    }).join('');
+  }
+
+  // ================= PRACTICE QUIZ =================
+  var pqCurrentQ = null;
+  var pqScoreCorrect = 0, pqScoreTotal = 0;
+  var pqQuestionEl = document.getElementById('pqQuestion');
+  var pqScoreEl = document.getElementById('pqScore');
+  var pqNextBtn = document.getElementById('pqNextBtn');
+
+  function makeMonoQuestion(){
+    var t = MENDEL_TRAITS[randInt(MENDEL_TRAITS.length)];
+    var upper=t.letter.toUpperCase(), lower=t.letter.toLowerCase();
+    var opts = [upper+upper, upper+lower, lower+lower];
+    var p1 = opts[randInt(3)], p2 = opts[randInt(3)];
+    var cells = crossPair(p1, p2, upper);
+    var phenoCells = cells.map(function(c){ return c.indexOf(upper)!==-1 ? t.dom : t.rec; });
+    var counts = tally(phenoCells);
+    var keys = Object.keys(counts);
+    var correctLabel = keys.length===1 ? ('All offspring: '+keys[0]) : (keys.join(' : ')+' = '+ratioString(counts));
+    var distractorPool = ['3 : 1', '1 : 1', '1 : 2 : 1', 'All offspring show one phenotype'];
+    var distractors = shuffle(distractorPool).filter(function(d){ return d!==correctLabel; }).slice(0,3);
+    var optionsList = shuffle([correctLabel].concat(distractors));
+    return {
+      prompt: 'Cross: <b>'+p1+'</b> &times; <b>'+p2+'</b> for '+t.dom+' / '+t.rec+' ('+upper+'/'+lower+'). What is the phenotypic ratio of the offspring?',
+      options: optionsList,
+      correct: correctLabel
+    };
+  }
+  function makeDiQuestion(){
+    var i1 = randInt(MENDEL_TRAITS.length);
+    var i2 = (i1 + 1 + randInt(MENDEL_TRAITS.length-1)) % MENDEL_TRAITS.length;
+    var t1 = MENDEL_TRAITS[i1], t2 = MENDEL_TRAITS[i2];
+    return {
+      prompt: 'A dihybrid cross AaBb &times; AaBb (independent assortment, e.g. '+t1.dom+'/'+t1.rec+' and '+t2.dom+'/'+t2.rec+') gives which F2 phenotypic ratio?',
+      options: shuffle(['9 : 3 : 3 : 1', '1 : 1 : 1 : 1', '3 : 3 : 1 : 1', '9 : 3 : 4']),
+      correct: '9 : 3 : 3 : 1'
+    };
+  }
+  function makeIncQuestion(){
+    return {
+      prompt: "In the 4 O'clock plant, a cross Rr (Pink) &times; Rr (Pink) is made. What is the phenotypic ratio of the offspring?",
+      options: shuffle(['1 Red : 2 Pink : 1 White', '3 Red : 1 White', '1 Red : 1 White', 'All Pink']),
+      correct: '1 Red : 2 Pink : 1 White'
+    };
+  }
+  function makeAboQuestion(){
+    var genos = Object.keys(ABO_GENO);
+    var p1 = genos[randInt(genos.length)], p2 = genos[randInt(genos.length)];
+    var g1 = ABO_GENO[p1], g2 = ABO_GENO[p2];
+    var pairs = [];
+    g1.forEach(function(a){ g2.forEach(function(b){ pairs.push([a,b]); }); });
+    var phenoCounts = tally(pairs.map(aboPhenotype));
+    var allGroups = ['A','B','AB','O'];
+    var impossible = allGroups.filter(function(g){ return !phenoCounts[g]; });
+    if(impossible.length === 0) return makeAboQuestion();
+    var correct = impossible[randInt(impossible.length)];
+    return {
+      prompt: 'Cross: <b>'+p1+'</b> &times; <b>'+p2+'</b>. Which blood group is <b>NOT</b> possible among the offspring?',
+      options: shuffle(allGroups.slice()),
+      correct: correct
+    };
+  }
+  function makeDisorderQuestion(){
+    var d = DISORDERS[randInt(DISORDERS.length)];
+    var others = DISORDERS.filter(function(x){ return x!==d; }).map(function(x){ return x.name; });
+    return {
+      prompt: 'Karyotype <b>'+d.karyotype+'</b> corresponds to which disorder?',
+      options: shuffle([d.name].concat(others)),
+      correct: d.name
+    };
+  }
+  var PQ_GENERATORS = [makeMonoQuestion, makeDiQuestion, makeIncQuestion, makeAboQuestion, makeDisorderQuestion];
+
+  function renderPracticeQuestion(){
+    if(!pqQuestionEl || !pqCurrentQ) return;
+    var html = '<div style="font-size:13.5px; line-height:1.6; margin-bottom:12px;">'+pqCurrentQ.prompt+'</div>';
+    pqCurrentQ.options.forEach(function(opt, i){
+      html += '<button type="button" class="pq-opt" data-i="'+i+'">'+opt+'</button>';
+    });
+    pqQuestionEl.innerHTML = html;
+    pqQuestionEl.querySelectorAll('.pq-opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var chosen = pqCurrentQ.options[+btn.dataset.i];
+        pqScoreTotal++;
+        var isCorrect = chosen === pqCurrentQ.correct;
+        if(isCorrect) pqScoreCorrect++;
+        if(pqScoreEl) pqScoreEl.textContent = pqScoreCorrect+' / '+pqScoreTotal;
+        pqQuestionEl.querySelectorAll('.pq-opt').forEach(function(b){
+          b.disabled = true;
+          if(b.textContent === pqCurrentQ.correct) b.classList.add('correct');
+          else if(b === btn && !isCorrect) b.classList.add('wrong');
+        });
+      });
+    });
+  }
+  function nextPracticeQuestion(){
+    pqCurrentQ = PQ_GENERATORS[randInt(PQ_GENERATORS.length)]();
+    renderPracticeQuestion();
+  }
+  if(pqNextBtn) pqNextBtn.addEventListener('click', nextPracticeQuestion);
+
+})();
+</script>
+
 <script>
 if('serviceWorker' in navigator){
   window.addEventListener('load', function(){
