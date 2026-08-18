@@ -525,10 +525,23 @@ footer{text-align:center; color:var(--text-dim); font-size:11px; margin-top:22px
 
 /* Genetics Cross Simulator */
 .cross-block{scroll-margin-top:10px;}
-table.cmp.punnett-tbl{width:auto; min-width:0; max-width:100%; table-layout:fixed;}
-table.cmp.punnett-tbl th, table.cmp.punnett-tbl td{padding:8px 6px; text-align:center; white-space:nowrap;}
-table.cmp.punnett-tbl th:first-child, table.cmp.punnett-tbl td:first-child{position:static; box-shadow:none; width:2em;}
+table.cmp.punnett-tbl{width:auto; min-width:0; max-width:100%; table-layout:fixed; border-spacing:0;}
+table.cmp.punnett-tbl th, table.cmp.punnett-tbl td{padding:13px 16px; text-align:center; white-space:nowrap; font-size:13.5px; line-height:1.4;}
+table.cmp.punnett-tbl th:first-child, table.cmp.punnett-tbl td:first-child{position:static; box-shadow:none; width:2.6em; padding-left:10px; padding-right:10px;}
 table.cmp td.punnett-cell{text-align:center; font-weight:700; color:var(--gold-2); background:rgba(227,175,67,0.06);}
+/* Phenotype colour-coding + genotype zygosity cue for Punnett cells */
+.pheno-legend{display:flex; flex-wrap:wrap; gap:6px; margin:2px 0 12px;}
+.pheno-chip{font-size:10.5px; font-weight:700; padding:4px 10px; border-radius:99px; letter-spacing:.2px;}
+table.cmp.punnett-tbl td.punnett-cell.pheno-0, .pheno-chip.pheno-0{background:rgba(66,198,160,0.22); color:var(--teal-2);}
+table.cmp.punnett-tbl td.punnett-cell.pheno-1, .pheno-chip.pheno-1{background:rgba(227,175,67,0.24); color:var(--gold-2);}
+table.cmp.punnett-tbl td.punnett-cell.pheno-2, .pheno-chip.pheno-2{background:rgba(217,165,72,0.26); color:var(--text);}
+table.cmp.punnett-tbl td.punnett-cell.pheno-3, .pheno-chip.pheno-3{background:rgba(232,129,95,0.22); color:var(--danger);}
+table.cmp.punnett-tbl td.punnett-cell.geno-homo{font-weight:800;}
+table.cmp.punnett-tbl td.punnett-cell.geno-het{font-weight:600; font-style:italic;}
+/* Incomplete dominance: colour the cells like the actual flower phenotype */
+table.cmp.punnett-tbl td.punnett-cell[data-pheno-label="Red"], .pheno-chip[data-pheno-label="Red"]{background:rgba(214,58,58,0.22); color:#D65F5F;}
+table.cmp.punnett-tbl td.punnett-cell[data-pheno-label="Pink"], .pheno-chip[data-pheno-label="Pink"]{background:rgba(236,110,170,0.24); color:#E08FB5;}
+table.cmp.punnett-tbl td.punnett-cell[data-pheno-label="White"], .pheno-chip[data-pheno-label="White"]{background:rgba(170,170,170,0.18); color:var(--text-dim);}
 .gcs-ratio-row{display:flex; flex-wrap:wrap; gap:8px; margin:12px 0;}
 .gcs-ratio-card{flex:1; min-width:150px; background:var(--panel-2); border:1px solid var(--border); border-radius:10px; padding:10px 12px;}
 .gcs-ratio-card .gcs-label{font-size:10px; text-transform:uppercase; letter-spacing:.6px; color:var(--teal-2); font-weight:700; margin-bottom:4px;}
@@ -7560,7 +7573,23 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
     var g = vals.reduce(function(a,b){ return gcd(a,b); });
     return Object.keys(counts).map(function(k){ return (counts[k]/g); }).join(' : ');
   }
-  function buildPunnettTable(g1arr, g2arr, combineFn){
+  // Cell genotype is "homozygous" when every 2-letter trait chunk has the
+  // same letter twice (AA, RRYY, ...) and "heterozygous" the moment any
+  // chunk mixes the two alleles (Aa, RrYY, ...) — used as a light font-style
+  // cue so genotype zygosity reads at a glance alongside the phenotype colour.
+  function isHomozygousGenotype(combined){
+    for(var i=0;i<combined.length;i+=2){
+      if(combined[i] !== combined[i+1]) return false;
+    }
+    return true;
+  }
+  function buildPunnettTable(g1arr, g2arr, combineFn, phenoFn, zygosityFn){
+    var phenoOrder = [];
+    function phenoIndex(label){
+      var idx = phenoOrder.indexOf(label);
+      if(idx === -1){ idx = phenoOrder.length; phenoOrder.push(label); }
+      return idx;
+    }
     var html = '<div class="cmp-scroll"><table class="cmp punnett-tbl"><thead><tr><th></th>';
     g2arr.forEach(function(g){ html += '<th>'+g+'</th>'; });
     html += '</tr></thead><tbody>';
@@ -7570,12 +7599,29 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
       g2arr.forEach(function(b){
         var combined = combineFn(a,b);
         cells.push(combined);
-        html += '<td class="punnett-cell">'+combined+'</td>';
+        var cls = 'punnett-cell';
+        var dataAttr = '';
+        if(phenoFn){
+          var label = phenoFn(a,b,combined);
+          var homo = zygosityFn ? zygosityFn(a,b,combined) : isHomozygousGenotype(combined);
+          cls += ' pheno-'+(phenoIndex(label)%4)+(homo?' geno-homo':' geno-het');
+          dataAttr = ' data-pheno-label="'+label+'"';
+        }
+        html += '<td class="'+cls+'"'+dataAttr+'>'+combined+'</td>';
       });
       html += '</tr>';
     });
     html += '</tbody></table></div>';
-    return {html:html, cells:cells};
+    return {html:html, cells:cells, phenoOrder:phenoOrder};
+  }
+  function buildPhenoLegend(phenoOrder){
+    if(!phenoOrder || phenoOrder.length < 2) return '';
+    var html = '<div class="pheno-legend">';
+    phenoOrder.forEach(function(label, i){
+      html += '<span class="pheno-chip pheno-'+(i%4)+'" data-pheno-label="'+label+'">'+label+'</span>';
+    });
+    html += '</div>';
+    return html;
   }
   function crossPair(p1, p2, upperLetter){
     var g1 = p1.split(''), g2 = p2.split('');
@@ -7633,13 +7679,13 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
     var tbl = buildPunnettTable(g1, g2, function(a,b){
       var pair=[a,b]; pair.sort(function(x,y){ return (x===upper?0:1)-(y===upper?0:1); });
       return pair.join('');
-    });
+    }, function(a,b,combined){ return combined.indexOf(upper)!==-1 ? t.dom : t.rec; });
     var genoCounts = tally(tbl.cells);
     var phenoCells = tbl.cells.map(function(c){ return c.indexOf(upper)!==-1 ? t.dom : t.rec; });
     var phenoCounts = tally(phenoCells);
     var isTestCross = ((p2 === lower+lower) && (p1 !== lower+lower)) || ((p1 === lower+lower) && (p2 !== lower+lower));
 
-    var html = tbl.html;
+    var html = buildPhenoLegend(tbl.phenoOrder) + tbl.html;
     html += '<div class="gcs-ratio-row">';
     html += '<div class="gcs-ratio-card"><div class="gcs-label">Genotypic ratio</div><div class="gcs-value">'+Object.keys(genoCounts).join(' : ')+' &nbsp;=&nbsp; '+ratioString(genoCounts)+'</div></div>';
     html += '<div class="gcs-ratio-card"><div class="gcs-label">Phenotypic ratio</div><div class="gcs-value">'+Object.keys(phenoCounts).join(' : ')+' &nbsp;=&nbsp; '+ratioString(phenoCounts)+'</div></div>';
@@ -7709,17 +7755,18 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
     var p1Gametes = gametesForPair(diP1t1.value, diP1t2.value);
     var p2Gametes = gametesForPair(diP2t1.value, diP2t2.value);
 
-    var tbl = buildPunnettTable(p1Gametes, p2Gametes, function(g1,g2){ return combineDiGametes(g1, g2, u1, u2); });
-    var phenoCells = tbl.cells.map(function(c){
-      var trait1Geno = c.slice(0,2), trait2Geno = c.slice(2,4);
+    function diPhenoLabel(combined){
+      var trait1Geno = combined.slice(0,2), trait2Geno = combined.slice(2,4);
       var pheno1 = trait1Geno.indexOf(u1)!==-1 ? t1.dom : t1.rec;
       var pheno2 = trait2Geno.indexOf(u2)!==-1 ? t2.dom : t2.rec;
       return pheno1 + ' + ' + pheno2;
-    });
+    }
+    var tbl = buildPunnettTable(p1Gametes, p2Gametes, function(g1,g2){ return combineDiGametes(g1, g2, u1, u2); }, function(g1,g2,combined){ return diPhenoLabel(combined); });
+    var phenoCells = tbl.cells.map(diPhenoLabel);
     var phenoCounts = tally(phenoCells);
     var genoCounts = tally(tbl.cells);
 
-    var html = tbl.html;
+    var html = buildPhenoLegend(tbl.phenoOrder) + tbl.html;
     html += '<div class="gcs-ratio-row">';
     html += '<div class="gcs-ratio-card"><div class="gcs-label">Distinct genotypes</div><div class="gcs-value">'+Object.keys(genoCounts).length+'</div></div>';
     html += '<div class="gcs-ratio-card"><div class="gcs-label">Phenotypic ratio</div><div class="gcs-value">'+ratioString(phenoCounts)+'</div></div>';
@@ -7762,15 +7809,15 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
   function renderIncResult(){
     var p1 = incP1.value, p2 = incP2.value;
     var g1 = p1.split(''), g2 = p2.split('');
+    var PHENO_MAP = {RR:'Red', Rr:'Pink', rr:'White'};
     var tbl = buildPunnettTable(g1, g2, function(a,b){
       var pair=[a,b]; pair.sort(function(x,y){ return (x==='R'?0:1)-(y==='R'?0:1); });
       return pair.join('');
-    });
+    }, function(a,b,combined){ return PHENO_MAP[combined]; });
     var genoCounts = tally(tbl.cells);
-    var PHENO_MAP = {RR:'Red', Rr:'Pink', rr:'White'};
     var phenoCells = tbl.cells.map(function(c){ return PHENO_MAP[c]; });
     var phenoCounts = tally(phenoCells);
-    var html = tbl.html;
+    var html = buildPhenoLegend(tbl.phenoOrder) + tbl.html;
     html += '<div class="gcs-ratio-row">';
     html += '<div class="gcs-ratio-card"><div class="gcs-label">Genotypic ratio</div><div class="gcs-value">'+Object.keys(genoCounts).join(' : ')+' = '+ratioString(genoCounts)+'</div></div>';
     html += '<div class="gcs-ratio-card"><div class="gcs-label">Phenotypic ratio</div><div class="gcs-value">'+Object.keys(phenoCounts).join(' : ')+' = '+ratioString(phenoCounts)+'</div></div>';
@@ -7807,16 +7854,25 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
     if(hasB) return 'B';
     return 'O';
   }
+  var ABO_ALLELE_ORDER = {'IA':0, 'IB':1, 'i':2};
+  function aboGenoLabel(tokens){
+    var sorted = tokens.slice().sort(function(a,b){ return ABO_ALLELE_ORDER[a]-ABO_ALLELE_ORDER[b]; });
+    return sorted.join('');
+  }
   function renderAboResult(){
     var g1 = ABO_GENO[aboP1.value], g2 = ABO_GENO[aboP2.value];
-    var tbl = buildPunnettTable(g1, g2, function(a,b){ return a+' '+b; });
+    var tbl = buildPunnettTable(g1, g2, function(a,b){ return aboGenoLabel([a,b]); },
+      function(a,b){ return aboPhenotype([a,b]); },
+      function(a,b){ return a===b; });
+    var genoCounts = tally(tbl.cells);
     var pairs = [];
     g1.forEach(function(a){ g2.forEach(function(b){ pairs.push([a,b]); }); });
     var phenoCounts = tally(pairs.map(aboPhenotype));
 
-    var html = tbl.html;
+    var html = buildPhenoLegend(tbl.phenoOrder) + tbl.html;
     html += '<div class="gcs-ratio-row">';
-    html += '<div class="gcs-ratio-card" style="flex:1 1 100%;"><div class="gcs-label">Possible offspring blood groups</div><div class="gcs-value">'+Object.keys(phenoCounts).map(function(k){ return k+' ('+phenoCounts[k]+'/4)'; }).join(' &nbsp;&middot;&nbsp; ')+'</div></div>';
+    html += '<div class="gcs-ratio-card"><div class="gcs-label">Genotypic ratio</div><div class="gcs-value">'+Object.keys(genoCounts).join(' : ')+' &nbsp;=&nbsp; '+ratioString(genoCounts)+'</div></div>';
+    html += '<div class="gcs-ratio-card"><div class="gcs-label">Phenotypic ratio (blood group)</div><div class="gcs-value">'+Object.keys(phenoCounts).join(' : ')+' &nbsp;=&nbsp; '+ratioString(phenoCounts)+'</div></div>';
     html += '</div>';
     var allGroups = ['A','B','AB','O'];
     var impossible = allGroups.filter(function(g){ return !phenoCounts[g]; });
