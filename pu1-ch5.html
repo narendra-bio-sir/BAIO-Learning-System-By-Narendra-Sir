@@ -55,6 +55,39 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .header-actions-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px;}
 .theme-toggle-btn{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:16px;padding:5px 10px;font-size:14px;cursor:pointer;}
 .home-btn{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:16px;padding:5px 10px;font-size:14px;cursor:pointer;text-decoration:none;display:inline-block;}
+.notif-btn{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:16px;padding:5px 10px;font-size:14px;cursor:pointer;position:relative;}
+.notif-badge{
+  position:absolute; top:-6px; right:-6px; min-width:16px; height:16px; padding:0 3px;
+  border-radius:999px; background:#e0685f; color:#fff; font-size:10px; font-weight:800;
+  display:none; align-items:center; justify-content:center; line-height:1;
+  box-shadow:0 0 0 2px var(--panel);
+}
+.notif-modal-overlay{
+  position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:110;
+  display:flex; align-items:center; justify-content:center; padding:20px;
+}
+.notif-modal{
+  background:linear-gradient(160deg, var(--panel), var(--panel2));
+  border:1px solid var(--line); border-radius:14px;
+  padding:22px; max-width:380px; width:100%; box-shadow:var(--shadow);
+  max-height:80vh; overflow-y:auto;
+}
+.notif-modal h3{color:var(--gold); margin-bottom:12px; font-size:17px;}
+.notif-modal-item{
+  background:var(--panel2); border:1px solid var(--line); border-radius:10px;
+  padding:10px 12px; margin-bottom:10px; font-size:12.5px; line-height:1.55; color:var(--ink);
+}
+.notif-modal-item b{color:var(--gold);}
+.notif-modal-empty{color:var(--ink-dim); font-size:12.5px; text-align:center; padding:10px 0;}
+@keyframes bellRing{
+  0%, 45%, 100%{ transform:rotate(0); }
+  5%{ transform:rotate(15deg); } 10%{ transform:rotate(-13deg); }
+  15%{ transform:rotate(11deg); } 20%{ transform:rotate(-9deg); }
+  25%{ transform:rotate(7deg); } 30%{ transform:rotate(-5deg); }
+  35%{ transform:rotate(3deg); } 40%{ transform:rotate(-1deg); }
+}
+.notif-btn .bell-ring{ display:inline-block; transform-origin:50% 0; animation:bellRing 2.4s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce){ .notif-btn .bell-ring{ animation:none; } }
 .lang-switcher{display:flex;gap:6px;}
 .lang-btn{padding:5px 12px;border-radius:14px;font-size:11px;font-weight:700;background:var(--panel2);color:var(--ink-dim);border:1px solid var(--line);cursor:pointer;}
 .lang-btn.active{background:var(--gold);color:#1a1406;border-color:var(--gold);font-weight:700;}
@@ -443,13 +476,22 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
       <div id="langSwitcher" class="lang-switcher"></div>
       <button class="theme-toggle-btn" id="themeToggleBtn">🌙</button>
       <script>(function(){try{var t=localStorage.getItem('baio_theme')||'light';if(t==='light')document.getElementById('themeToggleBtn').textContent='☀️';}catch(e){}})();</script>
+      <button type="button" class="notif-btn" id="chapterNotifBtn" title="Chapter updates &amp; notifications" aria-label="Chapter updates and notifications"><span id="chapterNotifIcon">&#128276;</span><span class="notif-badge" id="chapterNotifBadge"></span></button>
       <a href="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/" class="home-btn" title="Back to Home" aria-label="Back to Home">🏠</a>
+    </div>
+
+    <div class="notif-modal-overlay" id="chapterNotifOverlay" style="display:none;">
+      <div class="notif-modal">
+        <h3>&#128276; Chapter 5 Updates</h3>
+        <div id="chapterNotifList"></div>
+        <button class="sm-save-btn" id="chapterNotifCloseBtn">Close</button>
+      </div>
     </div>
   </div>
 
   <div class="student-greet-bar" id="studentGreetBar" style="display:none;"></div>
   <div class="whatsnew-banner" id="whatsNewBanner" style="display:none;">
-    <span>&#127807; <b>New look!</b> Cleaner typography and calmer colors across the app &mdash; same content, easier on the eyes.</span>
+    <span id="whatsNewText"></span>
     <button onclick="dismissWhatsNew()" aria-label="Dismiss">&times;</button>
   </div>
   <div class="desktop-row">
@@ -3346,19 +3388,117 @@ renderTabbar();
 renderLangSwitcher();
 renderContent();
 
-var WHATSNEW_KEY = 'ch5_whatsnew_redesign_v1';
-function dismissWhatsNew(){
-  try{ localStorage.setItem(WHATSNEW_KEY, '1'); }catch(e){}
+var WHATSNEW_ITEMS = [
+  {key:'ch5_whatsnew_redesign_v1', html:'&#127807; <b>New look!</b> Cleaner typography and calmer colors across the app &mdash; same content, easier on the eyes.'}
+];
+function showNextWhatsNew(){
   var el = document.getElementById('whatsNewBanner');
-  if(el) el.style.display = 'none';
+  var textEl = document.getElementById('whatsNewText');
+  if(!el || !textEl) return;
+  for(var i=0;i<WHATSNEW_ITEMS.length;i++){
+    var item = WHATSNEW_ITEMS[i];
+    var dismissed = false;
+    try{ dismissed = !!localStorage.getItem(item.key); }catch(e){}
+    if(!dismissed){
+      textEl.innerHTML = item.html;
+      el.setAttribute('data-current-key', item.key);
+      el.style.display = 'flex';
+      return;
+    }
+  }
+  el.style.display = 'none';
 }
-(function(){
+function dismissWhatsNew(){
+  var el = document.getElementById('whatsNewBanner');
+  var key = el ? el.getAttribute('data-current-key') : null;
+  if(key){ try{ localStorage.setItem(key, '1'); }catch(e){} }
+  if(el) el.style.display = 'none';
+  updateChapterNotifBadge();
+}
+
+// ---- Chapter notification bell (beside the Home button) ----
+function playBellChime(){
   try{
-    if(!localStorage.getItem(WHATSNEW_KEY)){
-      var el = document.getElementById('whatsNewBanner');
-      if(el) el.style.display = 'flex';
+    var Ctx = window.AudioContext || window.webkitAudioContext;
+    if(!Ctx) return;
+    var ctx = new Ctx();
+    function ding(){
+      var now = ctx.currentTime;
+      [880, 1318.5].forEach(function(freq, i){
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(i === 0 ? 0.22 : 0.1, now + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.9);
+      });
+      setTimeout(function(){ ctx.close(); }, 1200);
+    }
+    if(ctx.state === 'suspended'){
+      var unlock = function(){ ctx.resume().then(ding); };
+      document.addEventListener('pointerdown', unlock, { once: true });
+      document.addEventListener('keydown', unlock, { once: true });
+    } else {
+      ding();
     }
   }catch(e){}
+}
+function updateChapterNotifBadge(){
+  var badge = document.getElementById('chapterNotifBadge');
+  var icon = document.getElementById('chapterNotifIcon');
+  if(!badge) return 0;
+  var count = 0;
+  WHATSNEW_ITEMS.forEach(function(item){
+    var dismissed = false;
+    try{ dismissed = !!localStorage.getItem(item.key); }catch(e){}
+    if(!dismissed) count++;
+  });
+  if(count > 0){
+    badge.textContent = String(count);
+    badge.style.display = 'flex';
+    if(icon) icon.classList.add('bell-ring');
+  } else {
+    badge.style.display = 'none';
+    if(icon) icon.classList.remove('bell-ring');
+  }
+  return count;
+}
+function renderChapterNotifList(){
+  var listEl = document.getElementById('chapterNotifList');
+  if(!listEl) return;
+  var items = WHATSNEW_ITEMS.slice().reverse();
+  listEl.innerHTML = items.length
+    ? items.map(function(item){ return '<div class="notif-modal-item">'+item.html+'</div>'; }).join('')
+    : '<div class="notif-modal-empty">No updates yet.</div>';
+}
+function openChapterNotif(){
+  renderChapterNotifList();
+  WHATSNEW_ITEMS.forEach(function(item){
+    try{ localStorage.setItem(item.key, '1'); }catch(e){}
+  });
+  updateChapterNotifBadge();
+  var banner = document.getElementById('whatsNewBanner');
+  if(banner) banner.style.display = 'none';
+  var overlay = document.getElementById('chapterNotifOverlay');
+  if(overlay) overlay.style.display = 'flex';
+}
+function closeChapterNotif(){
+  var overlay = document.getElementById('chapterNotifOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+(function(){
+  showNextWhatsNew();
+  if(updateChapterNotifBadge() > 0) playBellChime();
+  var notifBtn = document.getElementById('chapterNotifBtn');
+  if(notifBtn) notifBtn.addEventListener('click', openChapterNotif);
+  var closeBtn = document.getElementById('chapterNotifCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeChapterNotif);
+  var overlay = document.getElementById('chapterNotifOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target === overlay) closeChapterNotif(); });
 })();
 </script>
 <script>
