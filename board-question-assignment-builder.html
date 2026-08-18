@@ -199,7 +199,7 @@ select.filter{
 }
 
 .q-row{
-  display:flex; gap:9px; align-items:flex-start; padding:6px 4px; border-radius:6px; font-size:12.7px;
+  display:flex; flex-wrap:wrap; gap:9px; align-items:flex-start; padding:6px 4px; border-radius:6px; font-size:12.7px;
   line-height:1.45;
 }
 .q-row:hover{background:rgba(255,255,255,.03);}
@@ -220,6 +220,28 @@ select.filter{
 .q-row.diagram label:after{
   content:" [diagram]"; color:var(--ink-faint); font-size:10px; font-style:italic;
 }
+
+/* ---------- Answer key (hidden unless "Show Answer Key" is switched on) ---------- */
+.ak-toggle{
+  display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600; color:var(--ink-dim);
+  cursor:pointer; user-select:none; padding:9px 10px; border:1px solid var(--line); border-radius:8px; background:var(--bg-0);
+}
+.ak-toggle input{accent-color:var(--gold); cursor:pointer;}
+.ak-box{display:none; margin:6px 0 2px 24px; padding:6px 8px; border-radius:6px; background:rgba(212,175,55,.08); border:1px dashed var(--line);}
+.chapter-list.ak-mode .ak-box{display:flex; flex-wrap:wrap; align-items:center; gap:6px; flex-basis:100%;}
+.ak-box .ak-caption{font-size:10.5px; text-transform:uppercase; letter-spacing:.4px; color:var(--gold-soft); font-weight:700;}
+.ak-opt{
+  min-width:24px; padding:2px 8px; border-radius:6px; border:1px solid var(--line); background:var(--bg-2);
+  color:var(--ink-dim); font-size:11.5px; font-weight:700; cursor:pointer;
+}
+.ak-opt:hover{border-color:var(--teal);}
+.ak-opt.correct{background:linear-gradient(180deg,var(--gold-soft),var(--gold)); color:#1c1204; border-color:var(--gold);}
+.ak-status{font-size:11.5px; color:var(--ink-faint); font-style:italic;}
+.ak-text{
+  flex:1; min-width:160px; background:var(--bg-0); border:1px solid var(--line); color:var(--ink);
+  padding:5px 8px; border-radius:6px; font-size:12px;
+}
+.field .ak-toggle{text-transform:none; letter-spacing:normal; color:var(--ink); width:auto;}
 
 /* ---------- Right column ---------- */
 .settings-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
@@ -320,6 +342,9 @@ footer.foot b{color:var(--gold-soft);}
 .p-q .match-tbl td{border:0.7pt solid #888; padding:2px 8px; vertical-align:top;}
 .p-signoff{margin-top:26px; text-align:right; font-size:10.5pt;}
 .p-pagebreak{page-break-before:always;}
+.p-ak-title{font-size:14pt; font-weight:700; text-transform:uppercase; text-align:center; margin:6px 0 14px; letter-spacing:1px;}
+.p-akgrid{display:grid; grid-template-columns:1fr 1fr; gap:2px 20px; margin:4px 0 12px 4px; font-size:11pt;}
+.p-akrow{overflow-wrap:break-word; word-break:break-word; padding:1px 0;}
 
 @media print{
   @page{ size:A4; margin:0; }
@@ -374,7 +399,9 @@ footer.foot b{color:var(--gold-soft);}
         </select>
         <button class="btn small" id="expandAllBtn">Expand all</button>
         <button class="btn small" id="collapseAllBtn">Collapse all</button>
+        <label class="ak-toggle"><input type="checkbox" id="akModeToggle"> 🔑 Show Answer Key</label>
       </div>
+      <p class="sub" style="margin:-6px 0 12px;">Answer key is hidden by default — switch it on to mark or check correct answers, per question, for every question type.</p>
 
       <div class="chapter-list" id="chapterList"></div>
     </div>
@@ -429,6 +456,9 @@ footer.foot b{color:var(--gold-soft);}
           <label>Instructions (optional)</label>
           <textarea id="f_instructions" placeholder="e.g. Answer all questions. Draw diagrams wherever necessary."></textarea>
         </div>
+        <div class="field full">
+          <label class="ak-toggle" style="width:auto;"><input type="checkbox" id="f_includeAnswerKey"> Append answer key pages after the question paper</label>
+        </div>
       </div>
     </div>
 
@@ -442,6 +472,7 @@ footer.foot b{color:var(--gold-soft);}
       </div>
       <div class="breakdown" id="breakdownBox"></div>
       <button class="btn gold" id="printBtn2" style="width:100%; justify-content:center;">🖨️ Preview &amp; Print / Save PDF</button>
+      <button class="btn" id="printAnswerKeyBtn" style="width:100%; justify-content:center; margin-top:8px;">🔑 Print / Save Answer Key Only</button>
     </div>
 
     <div class="panel">
@@ -488,6 +519,16 @@ function toggleTheme(){
 
   var DATA = JSON.parse(document.getElementById('qbData').textContent);
 
+  // ---------------- Answer key store ----------------
+  // The question bank itself has no correct-answer data attached to it, so this
+  // is a "mark as you go" key: Narendra Sir marks the correct option (or types
+  // a model answer for non-MCQ questions) once, here, and it's remembered for
+  // both the on-screen Answer Key view and the printed answer key pages.
+  var ANSWER_KEY_LS = 'baio_qb_answerkey_v1';
+  var ANSWER_KEY = {};
+  try{ ANSWER_KEY = JSON.parse(localStorage.getItem(ANSWER_KEY_LS) || '{}'); }catch(e){ ANSWER_KEY = {}; }
+  function saveAnswerKey(){ try{ localStorage.setItem(ANSWER_KEY_LS, JSON.stringify(ANSWER_KEY)); }catch(e){} }
+
   // Display number restarts at 1 for each PUC level (I PUC 1-19, II PUC 1-13)
   // while ch.num stays the single unique id used internally for IDs/lookups.
   var DISPLAY_NUM = {};
@@ -515,6 +556,23 @@ function toggleTheme(){
   var selected = new Map();
 
   function qid(chapNum, roman, n){ return 'c'+chapNum+'-'+roman+'-'+n; }
+
+  function buildAkBoxHtml(id, q){
+    var saved = ANSWER_KEY[id];
+    if(q.options && q.options.length){
+      var letters = ['A','B','C','D','E'];
+      var html = '<div class="ak-box" data-akid="'+id+'"><span class="ak-caption">Answer</span>';
+      q.options.forEach(function(opt, oi){
+        var L = letters[oi];
+        html += '<button type="button" class="ak-opt'+(saved===L?' correct':'')+'" data-letter="'+L+'">'+L+'</button>';
+      });
+      html += '<span class="ak-status">'+(saved ? 'Correct: '+esc(saved)+') '+esc(q.options[letters.indexOf(saved)]||'') : 'Not marked — click the correct option')+'</span>';
+      html += '</div>';
+      return html;
+    }
+    return '<div class="ak-box" data-akid="'+id+'"><span class="ak-caption">Answer</span>'+
+      '<input type="text" class="ak-text" placeholder="Type the model answer or key points…" value="'+esc(saved||'')+'"></div>';
+  }
 
   // ---------------- render chapter list ----------------
   var listEl = document.getElementById('chapterList');
@@ -565,6 +623,7 @@ function toggleTheme(){
           html += smartFormat(q.text);
         }
         html += '</label>';
+        html += buildAkBoxHtml(id, q);
         html += '</div>';
       });
       html += '</div>';
@@ -582,10 +641,11 @@ function toggleTheme(){
   // onto separate lines so they read cleanly and don't overflow their box.
   function smartFormat(raw){
     var t = esc(raw);
-    // Statement I: / Statement II: / Statement 1: / Statement A: etc.
-    t = t.replace(/\s*(Statement[\s-]+(?:[IVXivx]+|[0-9]+|[A-D])\s*[:\-])/g, '<br>$1');
-    t = t.replace(/\s*(Assertion\s*[:\-])/gi, '<br>$1');
-    t = t.replace(/\s*(Reason\s*[:\-\(])/gi, '<br>$1');
+    // Statement I: / Statement II: / Statement 1: / Statement A: etc. — bolded so
+    // they stand out as labels, each on its own line.
+    t = t.replace(/\s*(Statement[\s-]+(?:[IVXivx]+|[0-9]+|[A-D])\s*[:\-])/g, '<br><b>$1</b>');
+    t = t.replace(/\s*(Assertion\s*[:\-])/gi, '<br><b>$1</b>');
+    t = t.replace(/\s*(Reason\s*[:\-\(])/gi, '<br><b>$1</b>');
 
     // "Colu?o?mn" only matched u-before-o, so the common "Coloumn" misspelling
     // (o-before-u) never matched — Col[ou]{0,2}mn matches Column/Colomn/Coloumn alike.
@@ -648,12 +708,30 @@ function toggleTheme(){
       var n = parseInt(nInput.value || '5', 10);
       randomSelectSection(e.target.dataset.chap, e.target.dataset.roman, n);
     }
+    if(e.target.classList.contains('ak-opt')){
+      var box = e.target.closest('.ak-box');
+      var akId = box.dataset.akid;
+      var letter = e.target.dataset.letter;
+      ANSWER_KEY[akId] = letter;
+      saveAnswerKey();
+      box.querySelectorAll('.ak-opt').forEach(function(b){ b.classList.toggle('correct', b.dataset.letter===letter); });
+      var cb = box.closest('.q-row').querySelector('input[type=checkbox]');
+      var found = findQuestion(cb.dataset.chap, cb.dataset.roman, cb.dataset.n);
+      var letters = ['A','B','C','D','E'];
+      var optText = found && found.q.options ? found.q.options[letters.indexOf(letter)] : '';
+      box.querySelector('.ak-status').textContent = 'Correct: ' + letter + (optText ? ') ' + optText : '');
+    }
   });
 
   listEl.addEventListener('change', function(e){
     if(e.target.type === 'checkbox'){
       var chap = e.target.dataset.chap, roman = e.target.dataset.roman, n = e.target.dataset.n;
       handleCheck(chap, roman, n, e.target.checked);
+    }
+    if(e.target.classList.contains('ak-text')){
+      var box = e.target.closest('.ak-box');
+      ANSWER_KEY[box.dataset.akid] = e.target.value.trim();
+      saveAnswerKey();
     }
   });
 
@@ -725,6 +803,9 @@ function toggleTheme(){
   });
   document.getElementById('collapseAllBtn').addEventListener('click', function(){
     listEl.querySelectorAll('.chapter').forEach(function(c){ c.classList.remove('open'); });
+  });
+  document.getElementById('akModeToggle').addEventListener('change', function(){
+    listEl.classList.toggle('ak-mode', this.checked);
   });
 
   // ---------------- search / filter ----------------
@@ -919,6 +1000,76 @@ function toggleTheme(){
     });
 
     html += '<div class="p-signoff">'+esc(headerLine2)+' &middot; '+esc(headerLine1)+'</div>';
+    if(document.getElementById('f_includeAnswerKey').checked){
+      html += '<div class="p-pagebreak">';
+      html += '<div class="p-ak-title">Answer Key — '+esc(title)+'</div>';
+      html += buildAnswerKeyBody();
+      html += '</div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  // Compact "Q. answer" rows grouped the same way as the question paper
+  // (PUC, then section in the same order), reading marked answers from
+  // ANSWER_KEY. A question that hasn't been marked yet prints as "—".
+  function buildAnswerKeyBody(){
+    var pucLevels = [];
+    var byPuc = {};
+    selected.forEach(function(v){
+      var p = v.puc || 'I';
+      if(!byPuc[p]){ byPuc[p] = []; pucLevels.push(p); }
+      byPuc[p].push(v);
+    });
+    pucLevels.sort();
+
+    var letters = ['A','B','C','D','E'];
+    var html = '';
+    pucLevels.forEach(function(pucLevel){
+      if(pucLevels.length > 1){ html += '<div class="p-puc-title">'+esc(pucLevel)+' PUC</div>'; }
+      var byKind = {};
+      KIND_ORDER.forEach(function(k){ byKind[k] = []; });
+      byPuc[pucLevel].forEach(function(v){ byKind[v.kind].push(v); });
+      KIND_ORDER.forEach(function(k){
+        byKind[k].sort(function(a,b){
+          if(a.chapterNum !== b.chapterNum) return a.chapterNum - b.chapterNum;
+          return a.n - b.n;
+        });
+      });
+      var secIdx = 0;
+      KIND_ORDER.forEach(function(k){
+        var qs = byKind[k];
+        if(qs.length===0) return;
+        var meta = KIND_META[k];
+        secIdx++;
+        html += '<div class="p-section-title">Section '+ROMANS[secIdx-1]+' — '+esc(meta.label)+'</div>';
+        html += '<div class="p-akgrid">';
+        qs.forEach(function(v, idx){
+          var akId = qid(v.chapterNum, v.roman, v.n);
+          var saved = ANSWER_KEY[akId];
+          var answerText;
+          if(v.options){
+            answerText = saved ? saved+') '+(v.options[letters.indexOf(saved)] || '') : '—';
+          } else {
+            answerText = saved || '—';
+          }
+          html += '<div class="p-akrow"><b>'+(idx+1)+'.</b> '+esc(answerText)+'</div>';
+        });
+        html += '</div>';
+      });
+    });
+    return html;
+  }
+
+  function buildAnswerKeyOnlyPaper(){
+    var title = document.getElementById('f_title').value || titleDefaults[paperType];
+    var headerLine1 = document.getElementById('f_headerline1').value || 'BAIO Learning System';
+    var html = '<div class="paper simple">';
+    html += '<div class="p-letterhead">';
+    html += '  <div class="p-college">'+esc(headerLine1)+'</div>';
+    html += '  <div class="p-ak-title">Answer Key — '+esc(title)+'</div>';
+    html += '</div>';
+    html += buildAnswerKeyBody();
     html += '</div>';
     return html;
   }
@@ -940,6 +1091,16 @@ function toggleTheme(){
   }
   document.getElementById('printBtn').addEventListener('click', doPrint);
   document.getElementById('printBtn2').addEventListener('click', doPrint);
+
+  function doPrintAnswerKeyOnly(){
+    if(selected.size === 0){
+      alert('Select at least one question before printing.');
+      return;
+    }
+    document.getElementById('printArea').innerHTML = buildAnswerKeyOnlyPaper();
+    window.print();
+  }
+  document.getElementById('printAnswerKeyBtn').addEventListener('click', doPrintAnswerKeyOnly);
 
   // ---------------- localStorage: saved papers ----------------
   var LS_KEY = 'srnmehta_qb_saved_papers_v1';
