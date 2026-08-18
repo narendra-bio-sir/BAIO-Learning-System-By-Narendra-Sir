@@ -488,15 +488,28 @@ function toggleTheme(){
 
   var DATA = JSON.parse(document.getElementById('qbData').textContent);
 
+  // Display number restarts at 1 for each PUC level (I PUC 1-19, II PUC 1-13)
+  // while ch.num stays the single unique id used internally for IDs/lookups.
+  var DISPLAY_NUM = {};
+  (function(){
+    var counters = {};
+    DATA.forEach(function(ch){
+      var p = ch.puc || 'I';
+      counters[p] = (counters[p] || 0) + 1;
+      DISPLAY_NUM[ch.num] = counters[p];
+    });
+  })();
+
   var KIND_META = {
-    mcq:   {label:'Section I — Multiple Choice Questions', marks:1, part:'PART A — Objective Type', order:1, diagram:false},
-    fill:  {label:'Section II — Fill in the Blanks', marks:1, part:'PART A — Objective Type', order:2, diagram:false},
-    short2:{label:'Section III — Answer in 3–5 sentences', marks:2, part:'PART B — Short Answer', order:3, diagram:false},
-    short3:{label:'Section IV — Answer in 40–80 words', marks:3, part:'PART C — Short Answer', order:4, diagram:false},
-    long5: {label:'Section V — Answer in 200–250 words', marks:5, part:'PART D — Long Answer', order:5, diagram:false},
-    long5d:{label:'Section VI — Diagram / Data-based', marks:5, part:'PART D — Long Answer', order:6, diagram:true}
+    mcq:   {label:'Multiple Choice Questions', marks:1, part:'PART A — Objective Type', order:1, diagram:false},
+    fill:  {label:'Fill in the Blanks', marks:1, part:'PART A — Objective Type', order:2, diagram:false},
+    short2:{label:'Answer in 3–5 sentences', marks:2, part:'PART B — Short Answer', order:3, diagram:false},
+    short3:{label:'Answer in 40–80 words', marks:3, part:'PART C — Short Answer', order:4, diagram:false},
+    long5: {label:'Answer in 200–250 words', marks:5, part:'PART D — Long Answer', order:5, diagram:false},
+    long5d:{label:'Diagram / Data-based', marks:5, part:'PART D — Long Answer', order:6, diagram:true}
   };
   var KIND_ORDER = ['mcq','fill','short2','short3','long5','long5d'];
+  var ROMANS = ['I','II','III','IV','V','VI','VII','VIII','IX','X'];
 
   // selected: Map id -> {chapterNum, chapterTitle, kind, n, text, marks, options, stem}
   var selected = new Map();
@@ -512,15 +525,17 @@ function toggleTheme(){
     var html = '';
     html += '<div class="chapter" data-chap="'+ch.num+'" data-puc="'+(ch.puc||'')+'">';
     html += '  <div class="chapter-head">';
-    html += '    <div class="ctitle"><span class="badge gold" style="margin-right:2px;">'+esc(ch.puc||'')+' PUC</span><span class="chapter-num">'+ch.num+'.</span><span class="chapter-name">'+esc(ch.title)+'</span></div>';
+    html += '    <div class="ctitle"><span class="badge gold" style="margin-right:2px;">'+esc(ch.puc||'')+' PUC</span><span class="chapter-num">'+DISPLAY_NUM[ch.num]+'.</span><span class="chapter-name">'+esc(ch.title)+'</span></div>';
     html += '    <div class="chapter-meta"><span class="badge" data-chapcount="'+ch.num+'">0 / '+qCount+' selected</span><span class="chevron">▶</span></div>';
     html += '  </div>';
     html += '  <div class="chapter-body">';
+    var secIdx = 0;
     ch.sections.slice().sort(function(a,b){return KIND_META[a.kind].order-KIND_META[b.kind].order;}).forEach(function(s){
       var meta = KIND_META[s.kind];
+      secIdx++;
       html += '<div class="section-block" data-kind="'+s.kind+'">';
       html += '  <div class="section-block-head">';
-      html += '    <span class="section-label">'+meta.label+' <span style="color:var(--ink-faint); font-weight:400;">('+meta.marks+' mark'+(meta.marks>1?'s':'')+' each · '+s.questions.length+' qs)</span></span>';
+      html += '    <span class="section-label">Section '+ROMANS[secIdx-1]+' — '+meta.label+' <span style="color:var(--ink-faint); font-weight:400;">('+meta.marks+' mark'+(meta.marks>1?'s':'')+' each · '+s.questions.length+' qs)</span></span>';
       html += '    <span class="section-tools">';
       html += '      <button class="btn small sel-all" data-chap="'+ch.num+'" data-roman="'+s.roman+'">Select all</button>';
       html += '      <button class="btn small sel-none" data-chap="'+ch.num+'" data-roman="'+s.roman+'">Clear</button>';
@@ -779,7 +794,7 @@ function toggleTheme(){
       var d = byKind[k];
       if(d.count===0) return;
       var row = document.createElement('div');
-      row.innerHTML = '<span>'+KIND_META[k].label.replace(/^Section [A-Z]+ — /,'')+'</span><span class="v">'+d.count+' q · '+d.marks+' m</span>';
+      row.innerHTML = '<span>'+KIND_META[k].label+'</span><span class="v">'+d.count+' q · '+d.marks+' m</span>';
       bd.appendChild(row);
     });
     if(totalQ===0){ bd.innerHTML = '<div class="empty-note" style="border:none;">No questions selected yet. Tick some from the left panel.</div>'; }
@@ -857,15 +872,17 @@ function toggleTheme(){
       });
 
       var lastPart = null;
+      var secIdx = 0;
       KIND_ORDER.forEach(function(k){
         var qs = byKind[k];
         if(qs.length===0) return;
         var meta = KIND_META[k];
+        secIdx++;
         if(!isSimple && meta.part !== lastPart){
           html += '<div class="p-part-title">'+esc(meta.part)+'</div>';
           lastPart = meta.part;
         }
-        html += '<div class="p-section-title'+(isSimple?' simple':'')+'">'+esc(meta.label)+' <span style="font-weight:400;">('+meta.marks+' mark'+(meta.marks>1?'s':'')+' each)</span></div>';
+        html += '<div class="p-section-title'+(isSimple?' simple':'')+'">Section '+ROMANS[secIdx-1]+' — '+esc(meta.label)+' <span style="font-weight:400;">('+meta.marks+' mark'+(meta.marks>1?'s':'')+' each)</span></div>';
 
         if(k==='fill'){
           var banks = [];
