@@ -1686,8 +1686,8 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
 
     <!-- Codominance -->
     <div class="card cross-block" data-block="codominance" style="display:none;">
-      <div class="subhead">MN Blood Group in Humans (both alleles fully expressed &mdash; not a blend)</div>
-      <div style="color:var(--text-dim); font-size:12px; margin:4px 0 10px;">L<sup>M</sup>L<sup>M</sup> = Blood group M, L<sup>N</sup>L<sup>N</sup> = Blood group N, L<sup>M</sup>L<sup>N</sup> = Blood group <b style="color:var(--gold-2);">MN</b> &mdash; the heterozygote shows <i>both</i> M and N antigens on the RBC surface at once, unlike incomplete dominance where the heterozygote blends into a new, intermediate phenotype.</div>
+      <div class="subhead">ABO Blood Group Alleles (IA, IB) &mdash; Codominance</div>
+      <div style="color:var(--text-dim); font-size:12px; margin:4px 0 10px;">IAIA = Blood group A, IBIB = Blood group B, IAIB = Blood group <b style="color:var(--gold-2);">AB</b> &mdash; the heterozygote expresses <i>both</i> A and B antigens on the RBC surface at once, unlike incomplete dominance where the heterozygote blends into a new, intermediate phenotype. (The full ABO system also includes a third, recessive allele i &mdash; see the ABO Blood Group tab.)</div>
       <div class="cmp-picker-row">
         <select id="codP1"></select>
         <span class="cmp-vs">&times;</span>
@@ -7908,13 +7908,13 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
   // ================= CODOMINANCE =================
   var codP1 = document.getElementById('codP1'), codP2 = document.getElementById('codP2');
   var COD_OPTIONS = [
-    {v:'MM', label:'LMLM (Blood group M)'},
-    {v:'MN', label:'LMLN (Blood group MN)'},
-    {v:'NN', label:'LNLN (Blood group N)'}
+    {v:'AA', label:'IAIA (Blood group A)'},
+    {v:'AB', label:'IAIB (Blood group AB)'},
+    {v:'BB', label:'IBIB (Blood group B)'}
   ];
-  var COD_PHENO_MAP = {MM:'M', MN:'MN', NN:'N'};
+  var COD_PHENO_MAP = {AA:'A', AB:'AB', BB:'B'};
   function codCombine(a,b){
-    var pair=[a,b]; pair.sort(function(x,y){ return (x==='M'?0:1)-(y==='M'?0:1); });
+    var pair=[a,b]; pair.sort(function(x,y){ return (x==='A'?0:1)-(y==='A'?0:1); });
     return pair.join('');
   }
   function renderCodResult(){
@@ -7929,13 +7929,13 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
     html += '<div class="gcs-ratio-card"><div class="gcs-label">Genotypic ratio</div><div class="gcs-value">'+Object.keys(genoCounts).join(' : ')+' = '+ratioString(genoCounts)+'</div></div>';
     html += '<div class="gcs-ratio-card"><div class="gcs-label">Phenotypic ratio</div><div class="gcs-value">'+Object.keys(phenoCounts).join(' : ')+' = '+ratioString(phenoCounts)+'</div></div>';
     html += '</div>';
-    html += '<div class="gcs-note">The genotypic and phenotypic ratios are identical here, just like incomplete dominance &mdash; but the heterozygote L<sup>M</sup>L<sup>N</sup> shows <b>both parental phenotypes fully and separately</b> (both M and N antigens detected), not a blended intermediate. The same codominance principle is why I<sup>A</sup>I<sup>B</sup> individuals show blood group AB in the ABO system.</div>';
+    html += '<div class="gcs-note">The genotypic and phenotypic ratios are identical here, just like incomplete dominance &mdash; but the heterozygote IAIB shows <b>both parental phenotypes fully and separately</b> (both A and B antigens detected), not a blended intermediate. This is the same codominance relationship at work in the full ABO Blood Group system, which also adds the recessive allele i.</div>';
     document.getElementById('codResult').innerHTML = html;
   }
   if(codP1){
     fillSelect(codP1, COD_OPTIONS);
     fillSelect(codP2, COD_OPTIONS);
-    codP1.value='MM'; codP2.value='NN';
+    codP1.value='AA'; codP2.value='BB';
     var codCrossBtn = document.getElementById('codCrossBtn');
     if(codCrossBtn) codCrossBtn.addEventListener('click', renderCodResult);
     renderCodResult();
@@ -8323,7 +8323,7 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
     };
   }
   function makeCodQuestion(){
-    var genos = ['MM','MN','NN'];
+    var genos = ['AA','AB','BB'];
     var p1 = genos[randInt(3)], p2 = genos[randInt(3)];
     var g1 = p1.split(''), g2 = p2.split('');
     var phenoCells = [];
@@ -8331,10 +8331,10 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
     var counts = tally(phenoCells);
     var keys = Object.keys(counts);
     var correctLabel = keys.length===1 ? ('All offspring: '+keys[0]) : (keys.join(' : ')+' = '+ratioString(counts));
-    var distractorPool = ['1 : 2 : 1', 'All offspring MN', '3 : 1', '1 : 1'];
+    var distractorPool = ['1 : 2 : 1', 'All offspring AB', '3 : 1', '1 : 1'];
     var distractors = shuffle(distractorPool).filter(function(d){ return d!==correctLabel; }).slice(0,3);
     return {
-      prompt: 'MN blood group cross: <b>'+p1+'</b> &times; <b>'+p2+'</b> (codominant L<sup>M</sup>/L<sup>N</sup> alleles). What is the phenotypic ratio of the offspring?',
+      prompt: 'Codominance cross: <b>'+p1+'</b> &times; <b>'+p2+'</b> (codominant IA/IB alleles). What is the phenotypic ratio of the offspring?',
       options: shuffle([correctLabel].concat(distractors)),
       correct: correctLabel
     };
