@@ -7807,16 +7807,23 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
     if(hasB) return 'B';
     return 'O';
   }
+  var ABO_ALLELE_ORDER = {'IA':0, 'IB':1, 'i':2};
+  function aboGenoLabel(tokens){
+    var sorted = tokens.slice().sort(function(a,b){ return ABO_ALLELE_ORDER[a]-ABO_ALLELE_ORDER[b]; });
+    return sorted.join('');
+  }
   function renderAboResult(){
     var g1 = ABO_GENO[aboP1.value], g2 = ABO_GENO[aboP2.value];
-    var tbl = buildPunnettTable(g1, g2, function(a,b){ return a+' '+b; });
+    var tbl = buildPunnettTable(g1, g2, function(a,b){ return aboGenoLabel([a,b]); });
+    var genoCounts = tally(tbl.cells);
     var pairs = [];
     g1.forEach(function(a){ g2.forEach(function(b){ pairs.push([a,b]); }); });
     var phenoCounts = tally(pairs.map(aboPhenotype));
 
     var html = tbl.html;
     html += '<div class="gcs-ratio-row">';
-    html += '<div class="gcs-ratio-card" style="flex:1 1 100%;"><div class="gcs-label">Possible offspring blood groups</div><div class="gcs-value">'+Object.keys(phenoCounts).map(function(k){ return k+' ('+phenoCounts[k]+'/4)'; }).join(' &nbsp;&middot;&nbsp; ')+'</div></div>';
+    html += '<div class="gcs-ratio-card"><div class="gcs-label">Genotypic ratio</div><div class="gcs-value">'+Object.keys(genoCounts).join(' : ')+' &nbsp;=&nbsp; '+ratioString(genoCounts)+'</div></div>';
+    html += '<div class="gcs-ratio-card"><div class="gcs-label">Phenotypic ratio (blood group)</div><div class="gcs-value">'+Object.keys(phenoCounts).join(' : ')+' &nbsp;=&nbsp; '+ratioString(phenoCounts)+'</div></div>';
     html += '</div>';
     var allGroups = ['A','B','AB','O'];
     var impossible = allGroups.filter(function(g){ return !phenoCounts[g]; });
