@@ -1615,12 +1615,15 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
         <div class="seg-opt active" data-mode="mono">Monohybrid</div>
         <div class="seg-opt" data-mode="di">Dihybrid</div>
         <div class="seg-opt" data-mode="incomplete">Incomplete Dominance</div>
+        <div class="seg-opt" data-mode="codominance">Codominance</div>
         <div class="seg-opt" data-mode="abo">ABO Blood Group</div>
         <div class="seg-opt" data-mode="sexlinked">Sex-Linked Cross</div>
         <div class="seg-opt" data-mode="honeybee">Honey Bee Sex</div>
         <div class="seg-opt" data-mode="pedigree">Pedigree Analysis</div>
         <div class="seg-opt" data-mode="disorders">Chromosomal Disorders</div>
         <div class="seg-opt" data-mode="mendelian">Mendelian Disorders</div>
+        <div class="seg-opt" data-mode="pleiotropy">Pleiotropy</div>
+        <div class="seg-opt" data-mode="inheritance">Inheritance Patterns</div>
         <div class="seg-opt" data-mode="practice">🎯 Practice Quiz</div>
       </div>
     </div>
@@ -1679,6 +1682,21 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
         <button class="btn" id="incCrossBtn">Generate Punnett Square</button>
       </div>
       <div id="incResult"></div>
+    </div>
+
+    <!-- Codominance -->
+    <div class="card cross-block" data-block="codominance" style="display:none;">
+      <div class="subhead">MN Blood Group in Humans (both alleles fully expressed &mdash; not a blend)</div>
+      <div style="color:var(--text-dim); font-size:12px; margin:4px 0 10px;">L<sup>M</sup>L<sup>M</sup> = Blood group M, L<sup>N</sup>L<sup>N</sup> = Blood group N, L<sup>M</sup>L<sup>N</sup> = Blood group <b style="color:var(--gold-2);">MN</b> &mdash; the heterozygote shows <i>both</i> M and N antigens on the RBC surface at once, unlike incomplete dominance where the heterozygote blends into a new, intermediate phenotype.</div>
+      <div class="cmp-picker-row">
+        <select id="codP1"></select>
+        <span class="cmp-vs">&times;</span>
+        <select id="codP2"></select>
+      </div>
+      <div class="btn-row" style="margin:12px 0 4px; justify-content:flex-start;">
+        <button class="btn" id="codCrossBtn">Generate Punnett Square</button>
+      </div>
+      <div id="codResult"></div>
     </div>
 
     <!-- ABO Blood Group -->
@@ -1742,6 +1760,19 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
     <div class="card cross-block" data-block="mendelian" style="display:none;">
       <div class="subhead">Quick reference &mdash; board-important Mendelian (single-gene) disorders</div>
       <div id="mendelianList"></div>
+    </div>
+
+    <!-- Pleiotropy reference -->
+    <div class="card cross-block" data-block="pleiotropy" style="display:none;">
+      <div class="subhead">Pleiotropy &mdash; one gene, multiple effects</div>
+      <div style="color:var(--text-dim); font-size:12px; margin:4px 0 12px;">A pleiotropic gene influences <b>multiple, apparently unrelated phenotypic traits</b> at the same time &mdash; usually because its single gene product (often an enzyme) acts at several points in the body's biochemistry or development.</div>
+      <div id="pleiotropyList"></div>
+    </div>
+
+    <!-- Inheritance Patterns reference -->
+    <div class="card cross-block" data-block="inheritance" style="display:none;">
+      <div class="subhead">Quick reference &mdash; Autosomal &amp; sex-linked inheritance patterns, with examples</div>
+      <div id="inheritanceList"></div>
     </div>
 
     <!-- Practice Quiz -->
@@ -7874,6 +7905,42 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
     renderIncResult();
   }
 
+  // ================= CODOMINANCE =================
+  var codP1 = document.getElementById('codP1'), codP2 = document.getElementById('codP2');
+  var COD_OPTIONS = [
+    {v:'MM', label:'LMLM (Blood group M)'},
+    {v:'MN', label:'LMLN (Blood group MN)'},
+    {v:'NN', label:'LNLN (Blood group N)'}
+  ];
+  var COD_PHENO_MAP = {MM:'M', MN:'MN', NN:'N'};
+  function codCombine(a,b){
+    var pair=[a,b]; pair.sort(function(x,y){ return (x==='M'?0:1)-(y==='M'?0:1); });
+    return pair.join('');
+  }
+  function renderCodResult(){
+    var p1 = codP1.value, p2 = codP2.value;
+    var g1 = p1.split(''), g2 = p2.split('');
+    var tbl = buildPunnettTable(g1, g2, codCombine, function(a,b,combined){ return COD_PHENO_MAP[combined]; });
+    var genoCounts = tally(tbl.cells);
+    var phenoCells = tbl.cells.map(function(c){ return COD_PHENO_MAP[c]; });
+    var phenoCounts = tally(phenoCells);
+    var html = buildPhenoLegend(tbl.phenoOrder) + tbl.html;
+    html += '<div class="gcs-ratio-row">';
+    html += '<div class="gcs-ratio-card"><div class="gcs-label">Genotypic ratio</div><div class="gcs-value">'+Object.keys(genoCounts).join(' : ')+' = '+ratioString(genoCounts)+'</div></div>';
+    html += '<div class="gcs-ratio-card"><div class="gcs-label">Phenotypic ratio</div><div class="gcs-value">'+Object.keys(phenoCounts).join(' : ')+' = '+ratioString(phenoCounts)+'</div></div>';
+    html += '</div>';
+    html += '<div class="gcs-note">The genotypic and phenotypic ratios are identical here, just like incomplete dominance &mdash; but the heterozygote L<sup>M</sup>L<sup>N</sup> shows <b>both parental phenotypes fully and separately</b> (both M and N antigens detected), not a blended intermediate. The same codominance principle is why I<sup>A</sup>I<sup>B</sup> individuals show blood group AB in the ABO system.</div>';
+    document.getElementById('codResult').innerHTML = html;
+  }
+  if(codP1){
+    fillSelect(codP1, COD_OPTIONS);
+    fillSelect(codP2, COD_OPTIONS);
+    codP1.value='MM'; codP2.value='NN';
+    var codCrossBtn = document.getElementById('codCrossBtn');
+    if(codCrossBtn) codCrossBtn.addEventListener('click', renderCodResult);
+    renderCodResult();
+  }
+
   // ================= ABO BLOOD GROUP =================
   var aboP1 = document.getElementById('aboP1'), aboP2 = document.getElementById('aboP2');
   var ABO_GENO = {
@@ -8070,6 +8137,38 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
     }).join('');
   }
 
+  // ================= PLEIOTROPY =================
+  var PLEIOTROPY_EXAMPLES = [
+    {name:'Phenylketonuria (PKU)', gene:'A single mutant gene coding for the enzyme phenylalanine hydroxylase.', effects:'Mental retardation, reduced hair and skin pigmentation (fair complexion), and accumulation of phenyl-ketones in urine &mdash; several unrelated-looking symptoms all traced back to one defective enzyme.'},
+    {name:'Starch Synthesis in Garden Pea', gene:'The gene that determines round vs wrinkled seed shape (Mendel’s R/r trait).', effects:'Also affects the seed’s starch grain structure, sugar and water content, and its ability to imbibe water and germinate &mdash; a single gene, several downstream effects on the same seed.'},
+    {name:'Sickle-cell Anaemia', gene:'A single base-pair substitution in the beta-globin gene (HbS).', effects:'Abnormal, sickle-shaped RBCs cause anaemia, joint and bone pain, organ damage, and increased susceptibility to infection &mdash; many distinct symptoms from one gene change.'}
+  ];
+  var pleiotropyList = document.getElementById('pleiotropyList');
+  if(pleiotropyList){
+    pleiotropyList.innerHTML = PLEIOTROPY_EXAMPLES.map(function(d){
+      return '<div class="disorder-card"><h4>'+d.name+'</h4>'
+        + '<div class="dc-row"><b>Gene involved:</b> '+d.gene+'</div>'
+        + '<div class="dc-row"><b>Multiple effects:</b> '+d.effects+'</div></div>';
+    }).join('');
+  }
+
+  // ================= INHERITANCE PATTERNS REFERENCE =================
+  var INHERITANCE_PATTERNS_REF = [
+    {name:'Autosomal Dominant', rule:'A single copy of the mutant allele (heterozygous, Aa) is enough to show the trait. It appears in every generation; an affected &times; unaffected cross gives roughly 50% affected children of both sexes; two unaffected parents almost never have an affected child.', examples:'Huntington’s disease, Achondroplasia (a form of dwarfism), Polydactyly (extra fingers/toes), Widow’s peak hairline.'},
+    {name:'Autosomal Recessive', rule:'Both copies must carry the mutant allele (aa) to show the trait. Two unaffected carrier parents (Aa &times; Aa) can have an affected child; the trait often skips generations; affects males and females equally.', examples:'Sickle-cell Anaemia, Phenylketonuria (PKU), Thalassemia, Albinism, Cystic Fibrosis.'},
+    {name:'X-linked Recessive', rule:'The recessive allele sits on the X chromosome. Since males are hemizygous (only one X), a single copy is enough to show the trait in a son &mdash; so it affects far more males than females; an affected father can never pass it to his sons.', examples:'Haemophilia, Colour Blindness (red-green), Duchenne Muscular Dystrophy.'},
+    {name:'X-linked Dominant', rule:'A single copy on the X chromosome is enough to show the trait in either sex. An affected father passes it to <b>all</b> his daughters but <b>none</b> of his sons, since sons inherit his Y chromosome, not his X.', examples:'Vitamin D-resistant Rickets (Hypophosphatemia), Rett syndrome.'},
+    {name:'Y-linked (Holandric)', rule:'The gene lies only on the Y chromosome, so it passes directly and exclusively from father to every son, and never to daughters.', examples:'Hypertrichosis pinnae (excessive hair growth on the ear pinna).'}
+  ];
+  var inheritanceList = document.getElementById('inheritanceList');
+  if(inheritanceList){
+    inheritanceList.innerHTML = INHERITANCE_PATTERNS_REF.map(function(d){
+      return '<div class="disorder-card"><h4>'+d.name+'</h4>'
+        + '<div class="dc-row"><b>Pattern:</b> '+d.rule+'</div>'
+        + '<div class="dc-row"><b>Examples:</b> '+d.examples+'</div></div>';
+    }).join('');
+  }
+
   // ================= PEDIGREE ANALYSIS =================
   function pedigreeSymbol(p){
     var s = 14;
@@ -8223,6 +8322,23 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
       correct: '1 Red : 2 Pink : 1 White'
     };
   }
+  function makeCodQuestion(){
+    var genos = ['MM','MN','NN'];
+    var p1 = genos[randInt(3)], p2 = genos[randInt(3)];
+    var g1 = p1.split(''), g2 = p2.split('');
+    var phenoCells = [];
+    g1.forEach(function(a){ g2.forEach(function(b){ phenoCells.push(COD_PHENO_MAP[codCombine(a,b)]); }); });
+    var counts = tally(phenoCells);
+    var keys = Object.keys(counts);
+    var correctLabel = keys.length===1 ? ('All offspring: '+keys[0]) : (keys.join(' : ')+' = '+ratioString(counts));
+    var distractorPool = ['1 : 2 : 1', 'All offspring MN', '3 : 1', '1 : 1'];
+    var distractors = shuffle(distractorPool).filter(function(d){ return d!==correctLabel; }).slice(0,3);
+    return {
+      prompt: 'MN blood group cross: <b>'+p1+'</b> &times; <b>'+p2+'</b> (codominant L<sup>M</sup>/L<sup>N</sup> alleles). What is the phenotypic ratio of the offspring?',
+      options: shuffle([correctLabel].concat(distractors)),
+      correct: correctLabel
+    };
+  }
   function makeAboQuestion(){
     var genos = Object.keys(ABO_GENO);
     var p1 = genos[randInt(genos.length)], p2 = genos[randInt(genos.length)];
@@ -8289,7 +8405,17 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
       correct: preset.correct
     };
   }
-  var PQ_GENERATORS = [makeMonoQuestion, makeDiQuestion, makeIncQuestion, makeAboQuestion, makeDisorderQuestion, makeSexLinkedQuestion, makeMendelianQuestion, makePedigreeQuestion];
+  function makeInheritanceQuestion(){
+    var item = INHERITANCE_PATTERNS_REF[randInt(INHERITANCE_PATTERNS_REF.length)];
+    var firstExample = item.examples.split(',')[0].replace(/\.$/,'').trim();
+    var others = shuffle(INHERITANCE_PATTERNS_REF.filter(function(x){ return x!==item; }).map(function(x){ return x.name; })).slice(0,3);
+    return {
+      prompt: 'Which inheritance pattern does this example belong to: <b>'+firstExample+'</b>?',
+      options: shuffle([item.name].concat(others)),
+      correct: item.name
+    };
+  }
+  var PQ_GENERATORS = [makeMonoQuestion, makeDiQuestion, makeIncQuestion, makeCodQuestion, makeAboQuestion, makeDisorderQuestion, makeSexLinkedQuestion, makeMendelianQuestion, makePedigreeQuestion, makeInheritanceQuestion];
 
   function renderPracticeQuestion(){
     if(!pqQuestionEl || !pqCurrentQ) return;
