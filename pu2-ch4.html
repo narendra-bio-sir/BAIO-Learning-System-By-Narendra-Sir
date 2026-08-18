@@ -525,6 +525,9 @@ footer{text-align:center; color:var(--text-dim); font-size:11px; margin-top:22px
 
 /* Genetics Cross Simulator */
 .cross-block{scroll-margin-top:10px;}
+table.cmp.punnett-tbl{width:auto; min-width:0; max-width:100%; table-layout:fixed;}
+table.cmp.punnett-tbl th, table.cmp.punnett-tbl td{padding:8px 6px; text-align:center; white-space:nowrap;}
+table.cmp.punnett-tbl th:first-child, table.cmp.punnett-tbl td:first-child{position:static; box-shadow:none; width:2em;}
 table.cmp td.punnett-cell{text-align:center; font-weight:700; color:var(--gold-2); background:rgba(227,175,67,0.06);}
 .gcs-ratio-row{display:flex; flex-wrap:wrap; gap:8px; margin:12px 0;}
 .gcs-ratio-card{flex:1; min-width:150px; background:var(--panel-2); border:1px solid var(--border); border-radius:10px; padding:10px 12px;}
@@ -1659,7 +1662,7 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
 
     <!-- ABO Blood Group -->
     <div class="card cross-block" data-block="abo" style="display:none;">
-      <div class="subhead">ABO blood group &mdash; multiple alleles (I&#7480;, I&#7461;, i) with codominance of I&#7480;/I&#7461; and both dominant over i</div>
+      <div class="subhead">ABO blood group &mdash; multiple alleles (IA, IB, i) with codominance of IA/IB and both dominant over i</div>
       <div class="cmp-picker-row">
         <select id="aboP1"></select>
         <span class="cmp-vs">&times;</span>
@@ -7558,7 +7561,7 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
     return Object.keys(counts).map(function(k){ return (counts[k]/g); }).join(' : ');
   }
   function buildPunnettTable(g1arr, g2arr, combineFn){
-    var html = '<div class="cmp-scroll"><table class="cmp"><thead><tr><th></th>';
+    var html = '<div class="cmp-scroll"><table class="cmp punnett-tbl"><thead><tr><th></th>';
     g2arr.forEach(function(g){ html += '<th>'+g+'</th>'; });
     html += '</tr></thead><tbody>';
     var cells = [];
