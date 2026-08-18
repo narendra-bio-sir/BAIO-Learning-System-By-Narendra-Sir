@@ -215,17 +215,34 @@ const STATE_KEY = 'baio_assignment_tracker_v1';
 let ITEMS = [];
 let STUDENTS = [];
 
+// Reconciles a browser's previously-saved roster against the roster
+// currently embedded in this page: drops students no longer in
+// SEED_STUDENTS (e.g. moved out / removed), adds any new ones, and keeps
+// each remaining student's locally-tracked Submitted/Pending status so a
+// teacher's live edits aren't lost just because the source roster changed.
+function reconcileStudents(savedStudents, seedStudents){
+  const savedByCode = {};
+  savedStudents.forEach(s=>{ savedByCode[s.code] = s; });
+  return seedStudents.map(seed=>{
+    const existing = savedByCode[seed.code];
+    if(!existing) return JSON.parse(JSON.stringify(seed));
+    return {
+      code: seed.code, name: seed.name, section: seed.section,
+      status: Object.assign({}, seed.status, existing.status)
+    };
+  });
+}
 function loadState(){
   let saved = null;
   try{ saved = JSON.parse(localStorage.getItem(STATE_KEY) || 'null'); }catch(e){}
   if(saved && saved.items && saved.students){
     ITEMS = saved.items;
-    STUDENTS = saved.students;
+    STUDENTS = reconcileStudents(saved.students, SEED_STUDENTS);
   } else {
     ITEMS = JSON.parse(JSON.stringify(SEED_ITEMS));
     STUDENTS = JSON.parse(JSON.stringify(SEED_STUDENTS));
-    saveState();
   }
+  saveState();
 }
 function saveState(){
   try{ localStorage.setItem(STATE_KEY, JSON.stringify({items:ITEMS, students:STUDENTS})); }catch(e){}
