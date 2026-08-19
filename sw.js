@@ -23,6 +23,24 @@ self.addEventListener('activate', event => {
   );
 });
 
+// Handles a push message sent via Firebase Cloud Messaging (webpush
+// protocol) — the payload arrives as raw JSON, no Firebase SDK needed here.
+self.addEventListener('push', event => {
+  let payload = {};
+  try { payload = event.data ? event.data.json() : {}; } catch (e) {}
+  const notif = payload.notification || {};
+  const data = payload.data || {};
+  const title = notif.title || data.title || 'BAIO Learning System';
+  const options = {
+    body: notif.body || data.body || '',
+    icon: 'icon-192.png',
+    badge: 'icon-192.png',
+    tag: data.tag || 'baio-nudge',
+    data: { url: data.url || 'index.html' }
+  };
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
 self.addEventListener('notificationclick', event => {
   event.notification.close();
   const targetUrl = new URL((event.notification.data && event.notification.data.url) || 'index.html', self.registration.scope).href;

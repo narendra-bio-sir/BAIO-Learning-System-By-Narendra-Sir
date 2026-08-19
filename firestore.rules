@@ -1,0 +1,57 @@
+rules_version = '2';
+
+// There is no login in this app — students just type a name/roll number,
+// same as the rest of the site. These rules deliberately do NOT try to
+// cryptographically verify "is this really that student's device", since
+// there's no auth system to key off. What they DO enforce:
+//  - a device can only read/write ONE exact student record at a time (it
+//    must already know the student's id — no browsing/listing every
+//    student's data), and
+//  - "notifiedTopics" (used to avoid re-notifying the same weak topic too
+//    often) can only be written by the backend (Cloud Functions, via the
+//    Admin SDK, which always bypasses these rules), never by a client.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /students/{studentId} {
+      allow get: if true;
+      allow list: if false;
+      allow create, update: if isValidStudent(request.resource.data);
+      allow delete: if false;
+
+      match /topicStats/{statId} {
+        allow get: if true;
+        allow list: if false;
+        allow create, update: if isValidTopicStat(request.resource.data);
+        allow delete: if false;
+      }
+
+      match /pushTokens/{tokenId} {
+        allow get: if true;
+        allow list: if false;
+        allow create, update: if request.resource.data.keys().hasAll(['token', 'createdAt'])
+                                  && request.resource.data.token is string;
+        allow delete: if true;
+      }
+
+      match /notifiedTopics/{topicKey} {
+        allow read: if false;
+        allow write: if false;
+      }
+    }
+  }
+
+  function isValidStudent(data) {
+    return data.keys().hasAll(['name', 'section', 'roll', 'updatedAt'])
+      && data.name is string && data.name.size() < 100
+      && data.section is string && data.section.size() < 50
+      && data.roll is string && data.roll.size() < 30;
+  }
+
+  function isValidTopicStat(data) {
+    return data.keys().hasAll(['chapterId', 'topicId', 'accuracy', 'attempts', 'updatedAt'])
+      && data.chapterId is string
+      && data.topicId is string
+      && data.accuracy is number && data.accuracy >= 0 && data.accuracy <= 100
+      && data.attempts is number && data.attempts >= 0;
+  }
+}
