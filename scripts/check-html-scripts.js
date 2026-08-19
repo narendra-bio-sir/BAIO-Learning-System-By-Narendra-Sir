@@ -19,6 +19,7 @@ const HTML_FILES = [
   'call-whatsapp-help.html',
   'ns-gen.html',
   'pu1-ch5.html',
+  'pu1-ch4.html',
   'ch2/index.html',
   'ch3/index.html',
   'ch9/index.html',
