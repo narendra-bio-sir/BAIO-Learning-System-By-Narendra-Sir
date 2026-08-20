@@ -570,7 +570,7 @@ function shareCardRenderCanvas(student){
   const H = headerH + ringBlockH + listHeadH + listLineCount*lineH + footerH + PAD;
   c2d.height = Math.max(H, 460);
 
-  const navy = '#0B1B14', panel = '#13281E', gold = '#D4AF37', gold2 = '#F4D37A', teal = '#2EE6C5', ink = '#EAF3EE', inkDim = '#9FC4B6', danger = '#E7695B', ok = '#33C48A';
+  const navy = '#0B1B14', gold = '#D4AF37', gold2 = '#F4D37A', teal = '#2EE6C5', ink = '#EAF3EE', inkDim = '#9FC4B6', danger = '#E7695B', ok = '#33C48A';
 
   ctx.fillStyle = navy; ctx.fillRect(0, 0, c2d.width, c2d.height);
   ctx.strokeStyle = gold; ctx.lineWidth = 3;
@@ -598,7 +598,7 @@ function shareCardRenderCanvas(student){
   ctx.fillText(student.code, PAD, y + 34);
 
   const ringCx = c2d.width - PAD - 55, ringCy = y + 30, ringR = 50;
-  ctx.beginPath(); ctx.arc(ringCx, ringCy, ringR, 0, Math.PI*2); ctx.strokeStyle = panel; ctx.lineWidth = 10; ctx.stroke();
+  ctx.beginPath(); ctx.arc(ringCx, ringCy, ringR, 0, Math.PI*2); ctx.strokeStyle = 'rgba(159,196,182,0.22)'; ctx.lineWidth = 10; ctx.stroke();
   ctx.beginPath(); ctx.arc(ringCx, ringCy, ringR, -Math.PI/2, -Math.PI/2 + (c.pct/100)*Math.PI*2);
   ctx.strokeStyle = c.pct === 100 ? ok : teal; ctx.lineWidth = 10; ctx.stroke();
   ctx.textAlign = 'center'; ctx.fillStyle = ink; ctx.font = 'bold 22px Arial, sans-serif';
