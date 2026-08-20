@@ -2,16 +2,14 @@
  * Performance-based push notifications — client module.
  *
  * NOT YET WIRED INTO ANY LIVE PAGE. This file is safe to load anywhere: if
- * window.BAIO_FIREBASE_CONFIG isn't set, or Firebase's SDK isn't loaded, or
- * the browser doesn't support push, everything here quietly no-ops.
+ * Firebase's SDK isn't loaded, or the browser doesn't support push,
+ * everything here quietly no-ops.
  *
- * A page that wants this needs, before including this file:
- *   1. The Firebase compat SDKs:
- *        <script src="https://www.gstatic.com/firebasejs/10.x.x/firebase-app-compat.js"></script>
- *        <script src="https://www.gstatic.com/firebasejs/10.x.x/firebase-firestore-compat.js"></script>
- *        <script src="https://www.gstatic.com/firebasejs/10.x.x/firebase-messaging-compat.js"></script>
- *   2. window.BAIO_FIREBASE_CONFIG = { apiKey, authDomain, projectId, ... }
- *   3. window.BAIO_VAPID_KEY = '<the Web Push certificate key pair public key>'
+ * A page that wants this needs, before including this file, the Firebase
+ * compat SDKs:
+ *   <script src="https://www.gstatic.com/firebasejs/10.x.x/firebase-app-compat.js"></script>
+ *   <script src="https://www.gstatic.com/firebasejs/10.x.x/firebase-firestore-compat.js"></script>
+ *   <script src="https://www.gstatic.com/firebasejs/10.x.x/firebase-messaging-compat.js"></script>
  *
  * Then, once a student's profile is known on that page:
  *   BaioPush.init({ name, roll, section }, { chapterId: 'pu2ch4', chapterName: 'Principles of Inheritance and Variation' });
@@ -22,6 +20,18 @@
 (function (global) {
   "use strict";
 
+  // Public web app config — not a secret. This identifies which Firebase
+  // project to talk to; access is enforced separately by firestore.rules.
+  var FIREBASE_CONFIG = {
+    apiKey: "AIzaSyBfbVcutUkubiq8w6eHkd4FE8xX9-IyEbU",
+    authDomain: "baio-learning-system.firebaseapp.com",
+    projectId: "baio-learning-system",
+    storageBucket: "baio-learning-system.firebasestorage.app",
+    messagingSenderId: "564399701604",
+    appId: "1:564399701604:web:5d3aefd97e626201ce6971"
+  };
+  var VAPID_KEY = "BO8AyYXvtRLj7iRD5u8Aiet_qKvOOPhR9idmvBLwHj4mKYKDhyz_1mD1eFCqbIsEKyqM412fT_v1G7ZPCXRZlCI";
+
   function studentId(profile) {
     var section = String((profile && profile.section) || 'na').toLowerCase().replace(/[^a-z0-9]+/g, '');
     var roll = String((profile && profile.roll) || (profile && profile.code) || 'na').toLowerCase().replace(/[^a-z0-9]+/g, '');
@@ -29,7 +39,7 @@
   }
 
   function ready() {
-    return !!(global.firebase && global.BAIO_FIREBASE_CONFIG && global.BAIO_VAPID_KEY && 'serviceWorker' in navigator && 'Notification' in global);
+    return !!(global.firebase && 'serviceWorker' in navigator && 'Notification' in global);
   }
 
   var app = null;
@@ -37,7 +47,7 @@
     if (!app) {
       app = global.firebase.apps && global.firebase.apps.length
         ? global.firebase.app()
-        : global.firebase.initializeApp(global.BAIO_FIREBASE_CONFIG);
+        : global.firebase.initializeApp(FIREBASE_CONFIG);
     }
     return app;
   }
@@ -64,7 +74,7 @@
 
       var reg = await navigator.serviceWorker.ready;
       var messaging = getApp().messaging();
-      var token = await messaging.getToken({ vapidKey: global.BAIO_VAPID_KEY, serviceWorkerRegistration: reg });
+      var token = await messaging.getToken({ vapidKey: VAPID_KEY, serviceWorkerRegistration: reg });
       if (!token) return;
 
       await db().collection('students').doc(id).collection('pushTokens').doc(token).set({
