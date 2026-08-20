@@ -561,16 +561,35 @@ function shareCardRenderCanvas(student){
     return out;
   }
 
-  const listLines = pendingItems.length
-    ? pendingItems.map(it => wrapLines('• ' + it.chapter + ' — ' + it.label, '13px Arial, sans-serif', W - PAD*2 - 10))
-    : [['🎉 All caught up — every tracked item submitted!']];
-  const listLineCount = listLines.reduce((n, lines)=>n+lines.length, 0);
-
-  const headerH = 78, ringBlockH = 140, listHeadH = 34, lineH = 20, footerH = 60;
-  const H = headerH + ringBlockH + listHeadH + listLineCount*lineH + footerH + PAD;
-  c2d.height = Math.max(H, 460);
+  function roundedRect(x, y, w, h, r){
+    ctx.beginPath();
+    ctx.moveTo(x+r, y);
+    ctx.lineTo(x+w-r, y);
+    ctx.arcTo(x+w, y, x+w, y+r, r);
+    ctx.lineTo(x+w, y+h-r);
+    ctx.arcTo(x+w, y+h, x+w-r, y+h, r);
+    ctx.lineTo(x+r, y+h);
+    ctx.arcTo(x, y+h, x, y+h-r, r);
+    ctx.lineTo(x, y+r);
+    ctx.arcTo(x, y, x+r, y, r);
+    ctx.closePath();
+  }
 
   const navy = '#0B1B14', gold = '#D4AF37', gold2 = '#F4D37A', teal = '#2EE6C5', ink = '#EAF3EE', inkDim = '#9FC4B6', danger = '#E7695B', ok = '#33C48A';
+
+  const rowPadX = 12, rowGap = 8, rowLineH = 16;
+  const itemsW = W - PAD*2 - rowPadX*2;
+  const rows = pendingItems.length
+    ? pendingItems.map(it=>{
+        const labelLines = wrapLines(it.label, 'bold 13px Arial, sans-serif', itemsW);
+        return { chapter: it.chapter, labelLines, h: 10 + 14 + 3 + labelLines.length*rowLineH + 10 };
+      })
+    : [{ h: 44 }];
+  const rowsH = rows.reduce((n, row)=>n + row.h + rowGap, 0);
+
+  const headerH = 78, heroH = 232, listHeadH = 34, footerH = 60;
+  const H = headerH + heroH + listHeadH + rowsH + footerH + PAD;
+  c2d.height = Math.max(H, 460);
 
   ctx.fillStyle = navy; ctx.fillRect(0, 0, c2d.width, c2d.height);
   ctx.strokeStyle = gold; ctx.lineWidth = 3;
@@ -584,46 +603,70 @@ function shareCardRenderCanvas(student){
   ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1;
   ctx.beginPath(); ctx.moveTo(PAD, PAD+52); ctx.lineTo(c2d.width-PAD, PAD+52); ctx.stroke();
 
-  let y = headerH + 14;
-  ctx.textAlign = 'left';
-  ctx.fillStyle = ink; ctx.font = 'bold 24px Arial, sans-serif';
-  ctx.fillText(student.name, PAD, y);
-  const nameWidth = ctx.measureText(student.name).width;
-  ctx.fillStyle = teal; ctx.font = 'bold 11px Arial, sans-serif';
-  const chipX = PAD + nameWidth + 12, chipY = y + 4, chipW = ctx.measureText(student.section).width + 18, chipH = 20;
-  ctx.strokeStyle = teal; ctx.lineWidth = 1;
-  ctx.strokeRect(chipX, chipY, chipW, chipH);
-  ctx.textAlign = 'center'; ctx.fillText(student.section, chipX + chipW/2, chipY + 5);
-  ctx.textAlign = 'left'; ctx.fillStyle = inkDim; ctx.font = '13px Arial, sans-serif';
-  ctx.fillText(student.code, PAD, y + 34);
-
-  const ringCx = c2d.width - PAD - 55, ringCy = y + 30, ringR = 50;
-  ctx.beginPath(); ctx.arc(ringCx, ringCy, ringR, 0, Math.PI*2); ctx.strokeStyle = 'rgba(159,196,182,0.22)'; ctx.lineWidth = 10; ctx.stroke();
+  // hero: centered ring + identity badge
+  let y = headerH + 20;
+  const ringCx = c2d.width/2, ringR = 64, ringCy = y + ringR;
+  ctx.beginPath(); ctx.arc(ringCx, ringCy, ringR, 0, Math.PI*2); ctx.strokeStyle = 'rgba(159,196,182,0.22)'; ctx.lineWidth = 11; ctx.stroke();
   ctx.beginPath(); ctx.arc(ringCx, ringCy, ringR, -Math.PI/2, -Math.PI/2 + (c.pct/100)*Math.PI*2);
-  ctx.strokeStyle = c.pct === 100 ? ok : teal; ctx.lineWidth = 10; ctx.stroke();
-  ctx.textAlign = 'center'; ctx.fillStyle = ink; ctx.font = 'bold 22px Arial, sans-serif';
-  ctx.fillText(c.pct + '%', ringCx, ringCy - 12);
-  ctx.fillStyle = inkDim; ctx.font = '12px Arial, sans-serif';
-  ctx.fillText(c.done + ' / ' + c.total, ringCx, ringCy + 14);
-  ctx.fillText('submitted', ringCx, ringCy + 28);
+  ctx.strokeStyle = c.pct === 100 ? ok : teal; ctx.lineWidth = 11; ctx.stroke();
+  ctx.textAlign = 'center'; ctx.fillStyle = ink; ctx.font = 'bold 26px Arial, sans-serif';
+  ctx.fillText(c.pct + '%', ringCx, ringCy - 16);
+  ctx.fillStyle = inkDim; ctx.font = '12.5px Arial, sans-serif';
+  ctx.fillText(c.done + ' / ' + c.total + ' submitted', ringCx, ringCy + 12);
 
-  y = headerH + ringBlockH;
+  y += ringR*2 + 16;
+  ctx.font = 'bold 22px Arial, sans-serif';
+  const nameW = ctx.measureText(student.name).width;
+  ctx.font = 'bold 10.5px Arial, sans-serif';
+  const chipW = ctx.measureText(student.section).width + 20, chipH = 19;
+  const startX = ringCx - (nameW + 9 + chipW)/2;
+  ctx.textAlign = 'left'; ctx.fillStyle = ink; ctx.font = 'bold 22px Arial, sans-serif';
+  ctx.fillText(student.name, startX, y);
+  const chipX = startX + nameW + 9, chipY = y + 3;
+  ctx.fillStyle = 'rgba(46,230,197,0.12)';
+  roundedRect(chipX, chipY, chipW, chipH, chipH/2); ctx.fill();
+  ctx.strokeStyle = teal; ctx.lineWidth = 1;
+  roundedRect(chipX, chipY, chipW, chipH, chipH/2); ctx.stroke();
+  ctx.fillStyle = teal; ctx.font = 'bold 10.5px Arial, sans-serif';
+  ctx.textAlign = 'center'; ctx.fillText(student.section, chipX + chipW/2, chipY + 4.5);
+
+  y += 26;
+  ctx.textAlign = 'center'; ctx.fillStyle = inkDim; ctx.font = '12.5px Arial, sans-serif';
+  ctx.fillText(student.code, ringCx, y);
+
+  y = headerH + heroH;
   ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1;
   ctx.beginPath(); ctx.moveTo(PAD, y); ctx.lineTo(c2d.width-PAD, y); ctx.stroke();
   y += 20;
   ctx.textAlign = 'left'; ctx.fillStyle = gold2; ctx.font = 'bold 12px Arial, sans-serif';
-  ctx.fillText(pendingItems.length ? 'PENDING ITEMS' : 'STATUS', PAD, y);
-  y += 26;
-  ctx.font = '13px Arial, sans-serif';
-  listLines.forEach(lines=>{
-    lines.forEach((line, i)=>{
-      ctx.fillStyle = pendingItems.length ? danger : ok;
-      ctx.fillText(i===0 ? line : '  ' + line, PAD, y);
-      y += lineH;
-    });
-  });
+  ctx.fillText(pendingItems.length ? 'PENDING WORKSHEETS' : 'STATUS', PAD, y);
+  y += 22;
 
-  y += 10;
+  const rowX = PAD, rowW = W - PAD*2;
+  if(pendingItems.length){
+    rows.forEach(row=>{
+      ctx.fillStyle = 'rgba(231,105,91,0.08)';
+      roundedRect(rowX, y, rowW, row.h, 5); ctx.fill();
+      ctx.fillStyle = danger; ctx.fillRect(rowX, y, 3, row.h);
+      let ty = y + 10;
+      ctx.textAlign = 'left'; ctx.fillStyle = inkDim; ctx.font = '11px Arial, sans-serif';
+      ctx.fillText(row.chapter, rowX + rowPadX, ty);
+      ty += 17;
+      ctx.fillStyle = ink; ctx.font = 'bold 13px Arial, sans-serif';
+      row.labelLines.forEach(line=>{ ctx.fillText(line, rowX + rowPadX, ty); ty += rowLineH; });
+      y += row.h + rowGap;
+    });
+  } else {
+    const row = rows[0];
+    ctx.fillStyle = 'rgba(51,196,138,0.1)';
+    roundedRect(rowX, y, rowW, row.h, 5); ctx.fill();
+    ctx.fillStyle = ok; ctx.fillRect(rowX, y, 3, row.h);
+    ctx.textAlign = 'center'; ctx.fillStyle = ok; ctx.font = 'bold 13px Arial, sans-serif';
+    ctx.fillText('🎉 All caught up — every tracked item submitted!', rowX + rowW/2, y + row.h/2 - 7);
+    y += row.h + rowGap;
+  }
+
+  y += 6;
   ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1;
   ctx.beginPath(); ctx.moveTo(PAD, y); ctx.lineTo(c2d.width-PAD, y); ctx.stroke();
   ctx.textAlign = 'center'; ctx.fillStyle = inkDim; ctx.font = '11px Arial, sans-serif';
