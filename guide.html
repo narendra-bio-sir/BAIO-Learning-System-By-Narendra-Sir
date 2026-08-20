@@ -43,6 +43,9 @@ a{color:var(--teal);}
 .nav-pill.active{background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#1a1406; border-color:var(--gold);}
 [data-theme="light"] .nav-pill.active{color:#fff;}
 .icon-btn{flex:0 0 auto; width:34px; height:34px; border-radius:10px; border:1px solid var(--line); background:var(--panel); color:var(--ink); font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; text-decoration:none;}
+.lang-switcher{flex:0 0 auto; display:flex; gap:4px;}
+.lang-btn{padding:5px 8px; border-radius:12px; font-size:10.5px; font-weight:700; background:var(--panel2); color:var(--ink-dim); border:1px solid var(--line); cursor:pointer; white-space:nowrap;}
+.lang-btn.active{background:var(--gold); color:#1a1406; border-color:var(--gold);}
 
 /* ---- Hero ---- */
 .hero{padding:38px 0 26px; text-align:center;}
@@ -132,72 +135,73 @@ footer{text-align:center; margin-top:40px; font-size:11px; color:var(--ink-dim);
 <nav class="topnav"><div class="topnav-inner">
   <a href="index.html" class="icon-btn" title="Back to BAIO home">🏠</a>
   <div class="topnav-scroll" id="topnavInner">
-    <a href="#start" class="nav-pill">Welcome</a>
-    <a href="#sections" class="nav-pill">Your Section</a>
-    <a href="#codes" class="nav-pill">Your Codes</a>
-    <a href="#website" class="nav-pill">On the Website</a>
-    <a href="#app" class="nav-pill">On the App</a>
-    <a href="#faq" class="nav-pill">FAQ</a>
-    <a href="#help" class="nav-pill">Get Help</a>
+    <a href="#start" class="nav-pill" data-i18n="nav_welcome">Welcome</a>
+    <a href="#sections" class="nav-pill" data-i18n="nav_section">Your Section</a>
+    <a href="#codes" class="nav-pill" data-i18n="nav_codes">Your Codes</a>
+    <a href="#website" class="nav-pill" data-i18n="nav_website">On the Website</a>
+    <a href="#app" class="nav-pill" data-i18n="nav_app">On the App</a>
+    <a href="#faq" class="nav-pill" data-i18n="nav_faq">FAQ</a>
+    <a href="#help" class="nav-pill" data-i18n="nav_help">Get Help</a>
   </div>
+  <div id="langSwitcher" class="lang-switcher"></div>
   <button class="icon-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle dark/light theme">🌙</button>
 </div></nav>
 
 <div class="wrap">
 
   <section class="hero" id="start">
-    <div class="eyebrow">BAIO Learning System &middot; Student Guide</div>
-    <h1>Everything you need to <span class="accent">get started</span> at BAIO</h1>
-    <p>This is your complete walkthrough — what BAIO is, what your unlock codes are for, and exactly how to use them to open your chapters, notes, and report card, on both the website and the app.</p>
+    <div class="eyebrow" data-i18n="hero_eyebrow">BAIO Learning System &middot; Student Guide</div>
+    <h1 data-i18n="hero_h1">Everything you need to <span class="accent">get started</span> at BAIO</h1>
+    <p data-i18n="hero_intro">This is your complete walkthrough — what BAIO is, what your unlock codes are for, and exactly how to use them to open your chapters, notes, and report card, on both the website and the app.</p>
 
     <div class="hero-map">
       <div class="map-row">
-        <div class="map-node you">You</div>
+        <div class="map-node you" data-i18n="map_you">You</div>
         <span class="map-arrow">→</span>
-        <div class="map-node">Your Section</div>
+        <div class="map-node" data-i18n="map_section">Your Section</div>
         <span class="map-arrow">→</span>
-        <div class="map-node">Your Chapters</div>
+        <div class="map-node" data-i18n="map_chapters">Your Chapters</div>
       </div>
       <div class="map-branches">
-        <div class="map-branch">🔓 Premium Unlock Code</div>
-        <div class="map-branch">📝 Handwritten Notes Code</div>
-        <div class="map-branch">📊 Report Card Password</div>
+        <div class="map-branch" data-i18n="map_premium">🔓 Premium Unlock Code</div>
+        <div class="map-branch" data-i18n="map_hwnotes">📝 Handwritten Notes Code</div>
+        <div class="map-branch" data-i18n="map_reportcard">📊 Report Card Password</div>
       </div>
-      <p class="dim" style="font-size:11px; margin-top:12px; margin-bottom:0;">This is the whole system in one picture — every code you're given fits into this map. Sections below explain each piece.</p>
+      <p class="dim" style="font-size:11px; margin-top:12px; margin-bottom:0;" data-i18n="map_caption">This is the whole system in one picture — every code you're given fits into this map. Sections below explain each piece.</p>
     </div>
   </section>
 
   <!-- STEP 1 -->
   <section class="step" id="sections">
-    <div class="step-head"><span class="step-num">STEP 1</span><h2>What BAIO Is, and Your Section</h2></div>
+    <div class="step-head"><span class="step-num" data-i18n="step1_num">STEP 1</span><h2 data-i18n="step1_title">What BAIO Is, and Your Section</h2></div>
     <div class="card">
-      <h3>The BAIO family</h3>
-      <p>BAIO Learning System exists for one goal: helping you reach your dream of becoming a doctor. Every chapter, every note, and every code you receive is built around that one outcome — steady, structured NEET preparation, chapter by chapter.</p>
+      <h3 data-i18n="step1_family_title">The BAIO family</h3>
+      <p data-i18n="step1_family_body">BAIO Learning System exists for one goal: helping you reach your dream of becoming a doctor. Every chapter, every note, and every code you receive is built around that one outcome — steady, structured NEET preparation, chapter by chapter.</p>
     </div>
     <div class="card">
-      <h3>Your section (batch)</h3>
-      <p class="dim">You've been placed into one of four sections. Your section decides which unlock codes belong to you — always check that a code matches your own section before using it.</p>
+      <h3 data-i18n="step1_section_title">Your section (batch)</h3>
+      <p class="dim" data-i18n="step1_section_body">You've been placed into one of four sections. Your section decides which unlock codes belong to you — always check that a code matches your own section before using it.</p>
       <div class="chip-grid">
         <div class="chip"><div class="chip-name">Spark</div></div>
         <div class="chip"><div class="chip-name">Prime</div></div>
         <div class="chip"><div class="chip-name">Champion</div></div>
         <div class="chip"><div class="chip-name">Elite</div></div>
       </div>
-      <p class="dim" style="margin-top:10px; font-size:11.5px;">Not sure which section you're in? Ask your teacher, or check the welcome message you received when you joined BAIO.</p>
+      <p class="dim" style="margin-top:10px; font-size:11.5px;" data-i18n="step1_section_note">Not sure which section you're in? Ask your teacher, or check the welcome message you received when you joined BAIO.</p>
     </div>
   </section>
 
   <!-- STEP 2 -->
   <section class="step" id="codes">
-    <div class="step-head"><span class="step-num">STEP 2</span><h2>Understanding Your Codes</h2></div>
+    <div class="step-head"><span class="step-num" data-i18n="step2_num">STEP 2</span><h2 data-i18n="step2_title">Understanding Your Codes</h2></div>
     <div class="card">
-      <p class="dim">Every code is locked to <b style="color:var(--ink);">your own name, roll number, and section</b> — a code that works for a classmate will not work for you, and yours won't work for anyone else. There are three kinds of codes you may receive:</p>
+      <p class="dim" data-i18n="step2_intro">Every code is locked to <b style="color:var(--ink);">your own name, roll number, and section</b> — a code that works for a classmate will not work for you, and yours won't work for anyone else. There are three kinds of codes you may receive:</p>
 
       <div class="code-type">
         <div class="ico">🔓</div>
         <div>
-          <div class="t-name">Premium Unlock Code</div>
-          <div class="t-desc">Opens the full premium content for a chapter — videos, solved questions, and detailed explanations.</div>
+          <div class="t-name" data-i18n="step2_premium_title">Premium Unlock Code</div>
+          <div class="t-desc" data-i18n="step2_premium_desc">Opens the full premium content for a chapter — videos, solved questions, and detailed explanations.</div>
           <div class="sample-code">XXXX-XXXX</div>
         </div>
       </div>
@@ -205,8 +209,8 @@ footer{text-align:center; margin-top:40px; font-size:11px; color:var(--ink-dim);
       <div class="code-type">
         <div class="ico">📝</div>
         <div>
-          <div class="t-name">Handwritten Notes Code</div>
-          <div class="t-desc">Unlocks the teacher's own handwritten notes for that chapter — great for quick revision before an exam.</div>
+          <div class="t-name" data-i18n="step2_hw_title">Handwritten Notes Code</div>
+          <div class="t-desc" data-i18n="step2_hw_desc">Unlocks the teacher's own handwritten notes for that chapter — great for quick revision before an exam.</div>
           <div class="sample-code">XXXX-XXXX</div>
         </div>
       </div>
@@ -214,118 +218,118 @@ footer{text-align:center; margin-top:40px; font-size:11px; color:var(--ink-dim);
       <div class="code-type">
         <div class="ico">📊</div>
         <div>
-          <div class="t-name">Report Card Password</div>
-          <div class="t-desc">A short password that opens your personal report card — your test scores and progress tracking.</div>
+          <div class="t-name" data-i18n="step2_report_title">Report Card Password</div>
+          <div class="t-desc" data-i18n="step2_report_desc">A short password that opens your personal report card — your test scores and progress tracking.</div>
           <div class="sample-code">a1b2c3</div>
         </div>
       </div>
 
-      <p class="dim" style="margin-top:12px; font-size:11.5px;">Codes are given out by your teacher — usually shared directly with you or your parent. Keep them private; sharing your code with a classmate won't help them, since it's locked to your details.</p>
+      <p class="dim" style="margin-top:12px; font-size:11.5px;" data-i18n="step2_footer">Codes are given out by your teacher — usually shared directly with you or your parent. Keep them private; sharing your code with a classmate won't help them, since it's locked to your details.</p>
     </div>
   </section>
 
   <!-- STEP 3 -->
   <section class="step" id="website">
-    <div class="step-head"><span class="step-num">STEP 3</span><h2>Redeeming a Code on the Website</h2></div>
+    <div class="step-head"><span class="step-num" data-i18n="step3_num">STEP 3</span><h2 data-i18n="step3_title">Redeeming a Code on the Website</h2></div>
     <div class="card">
       <div class="substep">
         <div class="dot">1</div>
-        <div class="txt">Go to <b><span class="placeholder">[your BAIO website URL]</span></b> in any browser, and sign in with your student account. If you don't have one yet, use the "New Student" option and enter your name, roll number, and section exactly as given to you.</div>
+        <div class="txt" data-i18n="step3_sub1">Go to <b><span class="placeholder">[your BAIO website URL]</span></b> in any browser, and sign in with your student account. If you don't have one yet, use the "New Student" option and enter your name, roll number, and section exactly as given to you.</div>
       </div>
       <div class="substep">
         <div class="dot">2</div>
-        <div class="txt">Open the chapter you want to study, and look for the <b>lock icon</b> next to Premium Content or Handwritten Notes.</div>
+        <div class="txt" data-i18n="step3_sub2">Open the chapter you want to study, and look for the <b>lock icon</b> next to Premium Content or Handwritten Notes.</div>
       </div>
       <div class="substep">
         <div class="dot">3</div>
-        <div class="txt">Tap the lock icon — a box will appear asking for your <b>unlock code</b>. Type it in exactly as given, including the dash (e.g. <span class="sample-code" style="font-size:12px; padding:2px 8px;">4Q6T-AL5X</span>).</div>
+        <div class="txt" data-i18n="step3_sub3">Tap the lock icon — a box will appear asking for your <b>unlock code</b>. Type it in exactly as given, including the dash (e.g. <span class="sample-code" style="font-size:12px; padding:2px 8px;">4Q6T-AL5X</span>).</div>
       </div>
       <div class="substep">
         <div class="dot">4</div>
-        <div class="txt">Press <b>Unlock</b>. If your name, roll number, and section all match what the code was made for, the content opens immediately.</div>
-        <div class="mock">✅ Unlocked — welcome back, [Your Name]!</div>
+        <div class="txt" data-i18n="step3_sub4">Press <b>Unlock</b>. If your name, roll number, and section all match what the code was made for, the content opens immediately.</div>
+        <div class="mock" data-i18n="step3_sub4_mock">✅ Unlocked — welcome back, [Your Name]!</div>
       </div>
       <div class="substep">
         <div class="dot">5</div>
-        <div class="txt">For your <b>Report Card</b>, go to the Report Card tab from your dashboard and enter your password there — no dash needed, just the short code.</div>
+        <div class="txt" data-i18n="step3_sub5">For your <b>Report Card</b>, go to the Report Card tab from your dashboard and enter your password there — no dash needed, just the short code.</div>
       </div>
     </div>
   </section>
 
   <!-- STEP 4 -->
   <section class="step" id="app">
-    <div class="step-head"><span class="step-num">STEP 4</span><h2>Redeeming a Code on the App</h2></div>
+    <div class="step-head"><span class="step-num" data-i18n="step4_num">STEP 4</span><h2 data-i18n="step4_title">Redeeming a Code on the App</h2></div>
     <div class="card">
       <div class="substep">
         <div class="dot">1</div>
-        <div class="txt">Download the <b>BAIO Learning App</b> from <span class="placeholder">[Play Store / App Store link]</span> and install it.</div>
+        <div class="txt" data-i18n="step4_sub1">Download the <b>BAIO Learning App</b> from <span class="placeholder">[Play Store / App Store link]</span> and install it.</div>
       </div>
       <div class="substep">
         <div class="dot">2</div>
-        <div class="txt">Open the app and log in with the same student account you use on the website — your codes and progress stay in sync across both.</div>
+        <div class="txt" data-i18n="step4_sub2">Open the app and log in with the same student account you use on the website — your codes and progress stay in sync across both.</div>
       </div>
       <div class="substep">
         <div class="dot">3</div>
-        <div class="txt">From the home screen, tap your section, then the chapter you want. You'll see the same lock icons as on the website.</div>
+        <div class="txt" data-i18n="step4_sub3">From the home screen, tap your section, then the chapter you want. You'll see the same lock icons as on the website.</div>
       </div>
       <div class="substep">
         <div class="dot">4</div>
-        <div class="txt">Tap the lock, enter your code, and tap <b>Unlock</b>. The app remembers unlocked chapters, so you won't need to re-enter the code next time you open it — unless you sign out or switch devices.</div>
+        <div class="txt" data-i18n="step4_sub4">Tap the lock, enter your code, and tap <b>Unlock</b>. The app remembers unlocked chapters, so you won't need to re-enter the code next time you open it — unless you sign out or switch devices.</div>
       </div>
       <div class="substep">
         <div class="dot">5</div>
-        <div class="txt">Turn on notifications in <span class="placeholder">Settings → Notifications</span> so you're alerted the moment a new chapter or code is released.</div>
+        <div class="txt" data-i18n="step4_sub5">Turn on notifications in <span class="placeholder">Settings → Notifications</span> so you're alerted the moment a new chapter or code is released.</div>
       </div>
     </div>
   </section>
 
   <!-- STEP 5 -->
   <section class="step" id="faq">
-    <div class="step-head"><span class="step-num">STEP 5</span><h2>Frequently Asked Questions</h2></div>
+    <div class="step-head"><span class="step-num" data-i18n="step5_num">STEP 5</span><h2 data-i18n="step5_title">Frequently Asked Questions</h2></div>
 
     <details>
-      <summary>My code says "invalid" — what do I do?</summary>
-      <p>Double-check three things: (1) you're logged in as yourself, not a classmate's account, (2) you've typed the code exactly, including the dash, and (3) you're using the right code type — a Handwritten Notes code won't open Premium Content, and vice versa. If it still doesn't work, contact your teacher — see Get Help below.</p>
+      <summary data-i18n="faq1_q">My code says "invalid" — what do I do?</summary>
+      <p data-i18n="faq1_a">Double-check three things: (1) you're logged in as yourself, not a classmate's account, (2) you've typed the code exactly, including the dash, and (3) you're using the right code type — a Handwritten Notes code won't open Premium Content, and vice versa. If it still doesn't work, contact your teacher — see Get Help below.</p>
     </details>
     <details>
-      <summary>Can I use a friend's code if I lose mine?</summary>
-      <p>No — every code is locked to one student's name, roll number, and section, so a friend's code will never unlock content for you. Ask your teacher to resend your own code instead.</p>
+      <summary data-i18n="faq2_q">Can I use a friend's code if I lose mine?</summary>
+      <p data-i18n="faq2_a">No — every code is locked to one student's name, roll number, and section, so a friend's code will never unlock content for you. Ask your teacher to resend your own code instead.</p>
     </details>
     <details>
-      <summary>Do codes expire?</summary>
-      <p>Once a chapter is unlocked on your account, it stays unlocked — you don't need to re-enter the code again unless you sign into a new device or your account is reset.</p>
+      <summary data-i18n="faq3_q">Do codes expire?</summary>
+      <p data-i18n="faq3_a">Once a chapter is unlocked on your account, it stays unlocked — you don't need to re-enter the code again unless you sign into a new device or your account is reset.</p>
     </details>
     <details>
-      <summary>I changed my name or roll number — will my old codes still work?</summary>
-      <p>No, because codes are tied to your exact details at the time they were made. Let your teacher know about the change and they'll issue you fresh codes.</p>
+      <summary data-i18n="faq4_q">I changed my name or roll number — will my old codes still work?</summary>
+      <p data-i18n="faq4_a">No, because codes are tied to your exact details at the time they were made. Let your teacher know about the change and they'll issue you fresh codes.</p>
     </details>
     <details>
-      <summary>What's the difference between Premium Content and Handwritten Notes?</summary>
-      <p>Premium Content is the full digital chapter — videos, explanations, and solved practice questions. Handwritten Notes are your teacher's own written revision notes for that chapter, best used for quick recap before a test.</p>
+      <summary data-i18n="faq5_q">What's the difference between Premium Content and Handwritten Notes?</summary>
+      <p data-i18n="faq5_a">Premium Content is the full digital chapter — videos, explanations, and solved practice questions. Handwritten Notes are your teacher's own written revision notes for that chapter, best used for quick recap before a test.</p>
     </details>
   </section>
 
   <!-- STEP 6 -->
   <section class="step" id="help">
-    <div class="step-head"><span class="step-num">STEP 6</span><h2>Still Need Help?</h2></div>
+    <div class="step-head"><span class="step-num" data-i18n="step6_num">STEP 6</span><h2 data-i18n="step6_title">Still Need Help?</h2></div>
     <div class="card">
-      <p class="dim">Your teacher is always your fastest route to a fix — codes, sections, and accounts are all managed on their end. You can also reach the same help through an automated <a href="call-whatsapp-help.html">phone call menu or WhatsApp keyword bot</a>, any time of day.</p>
+      <p class="dim" data-i18n="step6_body">Your teacher is always your fastest route to a fix — codes, sections, and accounts are all managed on their end. You can also reach the same help through an automated <a href="call-whatsapp-help.html">phone call menu or WhatsApp keyword bot</a>, any time of day.</p>
       <div class="support-grid">
-        <div class="support-item"><div class="ico">💬</div><div class="lbl">WhatsApp Number</div><a class="val" style="display:block; text-decoration:none;" href="https://wa.me/919008968389" target="_blank">9008968389</a></div>
-        <div class="support-item"><div class="ico">✉️</div><div class="lbl">Email</div><a class="val" style="display:block; text-decoration:none; word-break:break-all;" href="mailto:bioguru102@gmail.com">bioguru102@gmail.com</a></div>
-        <div class="support-item"><div class="ico">🏫</div><div class="lbl">Visit In Person</div><div class="val placeholder">Address coming soon</div></div>
-        <div class="support-item"><div class="ico">🕘</div><div class="lbl">Support Hours</div><div class="val">7 PM – 11 PM</div></div>
+        <div class="support-item"><div class="ico">💬</div><div class="lbl" data-i18n="support_whatsapp_label">WhatsApp Number</div><a class="val" style="display:block; text-decoration:none;" href="https://wa.me/919008968389" target="_blank">9008968389</a></div>
+        <div class="support-item"><div class="ico">✉️</div><div class="lbl" data-i18n="support_email_label">Email</div><a class="val" style="display:block; text-decoration:none; word-break:break-all;" href="mailto:bioguru102@gmail.com">bioguru102@gmail.com</a></div>
+        <div class="support-item"><div class="ico">🏫</div><div class="lbl" data-i18n="support_visit_label">Visit In Person</div><div class="val placeholder" data-i18n="support_visit_value">Address coming soon</div></div>
+        <div class="support-item"><div class="ico">🕘</div><div class="lbl" data-i18n="support_hours_label">Support Hours</div><div class="val">7 PM – 11 PM</div></div>
       </div>
     </div>
 
     <div class="founder-msg">
-      <div class="fm-quote">"Welcome to the BAIO family. Every chapter you unlock, every note you revise, is one more step closer to your dream of becoming a doctor. Stay consistent, stay curious — we're with you all the way."</div>
+      <div class="fm-quote" data-i18n="founder_quote">"Welcome to the BAIO family. Every chapter you unlock, every note you revise, is one more step closer to your dream of becoming a doctor. Stay consistent, stay curious — we're with you all the way."</div>
       <div class="fm-sign">— Narendra Sir</div>
-      <div class="fm-role">Biology Lecturer &middot; Founder &amp; CEO, BAIO Learning System</div>
+      <div class="fm-role" data-i18n="founder_role">Biology Lecturer &middot; Founder &amp; CEO, BAIO Learning System</div>
     </div>
   </section>
 
-  <footer>BAIO Learning System &middot; Student Guide</footer>
+  <footer data-i18n="footer_text">BAIO Learning System &middot; Student Guide</footer>
 </div>
 
 <script>
@@ -405,6 +409,38 @@ if('serviceWorker' in navigator){
   window.addEventListener('offline', showOfflineBanner);
   if(document.readyState === 'complete' || document.readyState === 'interactive'){ checkConnectivity(); }
   else { document.addEventListener('DOMContentLoaded', checkConnectivity); }
+})();
+</script>
+<script>
+/* Trilingual mode (English / Kannada / Hindi) */
+const GUIDE_TRANSLATIONS = {"nav_welcome":{"kn":"ಸ್ವಾಗತ","hi":"स्वागत"},"nav_section":{"kn":"ನಿಮ್ಮ ವಿಭಾಗ","hi":"आपका सेक्शन"},"nav_codes":{"kn":"ನಿಮ್ಮ ಕೋಡ್‌ಗಳು","hi":"आपके कोड"},"nav_website":{"kn":"ವೆಬ್‌ಸೈಟ್‌ನಲ್ಲಿ","hi":"वेबसाइट पर"},"nav_app":{"kn":"ಆ್ಯಪ್‌ನಲ್ಲಿ","hi":"ऐप पर"},"nav_faq":{"kn":"ಪ್ರಶ್ನೋತ್ತರ","hi":"सामान्य प्रश्न"},"nav_help":{"kn":"ಸಹಾಯ ಪಡೆಯಿರಿ","hi":"सहायता प्राप्त करें"},"hero_eyebrow":{"kn":"BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಂ &middot; ವಿದ್ಯಾರ್ಥಿ ಮಾರ್ಗದರ್ಶಿ","hi":"BAIO लर्निंग सिस्टम &middot; छात्र मार्गदर्शिका"},"hero_h1":{"kn":"BAIO ನಲ್ಲಿ <span class=\"accent\">ಪ್ರಾರಂಭಿಸಲು</span> ನಿಮಗೆ ಬೇಕಾದ ಎಲ್ಲವೂ","hi":"BAIO पर <span class=\"accent\">शुरुआत करने</span> के लिए आपको जो कुछ भी चाहिए"},"hero_intro":{"kn":"ಇದು ನಿಮ್ಮ ಸಂಪೂರ್ಣ ಮಾರ್ಗದರ್ಶಿ — BAIO ಎಂದರೇನು, ನಿಮ್ಮ ಅನ್‌ಲಾಕ್ ಕೋಡ್‌ಗಳು ಯಾವುದಕ್ಕಾಗಿ, ಮತ್ತು ವೆಬ್‌ಸೈಟ್ ಹಾಗೂ ಆ್ಯಪ್ ಎರಡರಲ್ಲೂ ನಿಮ್ಮ ಅಧ್ಯಾಯಗಳು, ನೋಟ್ಸ್ ಮತ್ತು ರಿಪೋರ್ಟ್ ಕಾರ್ಡ್ ತೆರೆಯಲು ಅವುಗಳನ್ನು ನಿಖರವಾಗಿ ಹೇಗೆ ಬಳಸುವುದು.","hi":"यह आपकी संपूर्ण मार्गदर्शिका है — BAIO क्या है, आपके अनलॉक कोड किस लिए हैं, और वेबसाइट तथा ऐप दोनों पर अपने अध्याय, नोट्स और रिपोर्ट कार्ड खोलने के लिए उनका सटीक उपयोग कैसे करें।"},"map_you":{"kn":"ನೀವು","hi":"आप"},"map_section":{"kn":"ನಿಮ್ಮ ವಿಭಾಗ","hi":"आपका सेक्शन"},"map_chapters":{"kn":"ನಿಮ್ಮ ಅಧ್ಯಾಯಗಳು","hi":"आपके अध्याय"},"map_premium":{"kn":"🔓 ಪ್ರೀಮಿಯಂ ಅನ್‌ಲಾಕ್ ಕೋಡ್","hi":"🔓 प्रीमियम अनलॉक कोड"},"map_hwnotes":{"kn":"📝 ಕೈಬರಹದ ನೋಟ್ಸ್ ಕೋಡ್","hi":"📝 हस्तलिखित नोट्स कोड"},"map_reportcard":{"kn":"📊 ರಿಪೋರ್ಟ್ ಕಾರ್ಡ್ ಪಾಸ್‌ವರ್ಡ್","hi":"📊 रिपोर्ट कार्ड पासवर्ड"},"map_caption":{"kn":"ಇದು ಇಡೀ ವ್ಯವಸ್ಥೆಯ ಒಂದೇ ಚಿತ್ರ — ನಿಮಗೆ ನೀಡಲಾದ ಪ್ರತಿಯೊಂದು ಕೋಡ್ ಈ ನಕ್ಷೆಯಲ್ಲಿ ಹೊಂದಿಕೊಳ್ಳುತ್ತದೆ. ಕೆಳಗಿನ ವಿಭಾಗಗಳು ಪ್ರತಿ ಭಾಗವನ್ನು ವಿವರಿಸುತ್ತವೆ.","hi":"यह पूरी व्यवस्था एक ही चित्र में है — आपको दिया गया हर कोड इसी मानचित्र में फिट बैठता है। नीचे दिए गए भाग हर हिस्से को समझाते हैं।"},"step1_num":{"kn":"ಹಂತ 1","hi":"चरण 1"},"step1_title":{"kn":"BAIO ಎಂದರೇನು, ಮತ್ತು ನಿಮ್ಮ ವಿಭಾಗ","hi":"BAIO क्या है, और आपका सेक्शन"},"step1_family_title":{"kn":"BAIO ಕುಟುಂಬ","hi":"BAIO परिवार"},"step1_family_body":{"kn":"BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಂ ಒಂದೇ ಗುರಿಗಾಗಿ ಇದೆ: ವೈದ್ಯರಾಗುವ ನಿಮ್ಮ ಕನಸನ್ನು ತಲುಪಲು ನಿಮಗೆ ಸಹಾಯ ಮಾಡುವುದು. ನೀವು ಪಡೆಯುವ ಪ್ರತಿ ಅಧ್ಯಾಯ, ಪ್ರತಿ ನೋಟ್ಸ್ ಮತ್ತು ಪ್ರತಿ ಕೋಡ್ ಆ ಒಂದೇ ಫಲಿತಾಂಶದ ಸುತ್ತ ರೂಪುಗೊಂಡಿದೆ — ಸ್ಥಿರ, ಕ್ರಮಬದ್ಧವಾದ NEET ಸಿದ್ಧತೆ, ಅಧ್ಯಾಯದಿಂದ ಅಧ್ಯಾಯಕ್ಕೆ.","hi":"BAIO लर्निंग सिस्टम एक ही लक्ष्य के लिए मौजूद है: डॉक्टर बनने के आपके सपने तक पहुँचने में आपकी मदद करना। आपको मिलने वाला हर अध्याय, हर नोट और हर कोड उसी एक परिणाम के इर्द-गिर्द बनाया गया है — स्थिर, व्यवस्थित NEET तैयारी, अध्याय दर अध्याय।"},"step1_section_title":{"kn":"ನಿಮ್ಮ ವಿಭಾಗ (ಬ್ಯಾಚ್)","hi":"आपका सेक्शन (बैच)"},"step1_section_body":{"kn":"ನಿಮ್ಮನ್ನು ನಾಲ್ಕು ವಿಭಾಗಗಳಲ್ಲಿ ಒಂದರಲ್ಲಿ ಸೇರಿಸಲಾಗಿದೆ. ಯಾವ ಅನ್‌ಲಾಕ್ ಕೋಡ್‌ಗಳು ನಿಮಗೆ ಸೇರಿವೆ ಎಂಬುದನ್ನು ನಿಮ್ಮ ವಿಭಾಗ ನಿರ್ಧರಿಸುತ್ತದೆ — ಬಳಸುವ ಮೊದಲು ಕೋಡ್ ನಿಮ್ಮ ಸ್ವಂತ ವಿಭಾಗಕ್ಕೆ ಹೊಂದಿಕೆಯಾಗುತ್ತದೆಯೇ ಎಂದು ಯಾವಾಗಲೂ ಪರಿಶೀಲಿಸಿ.","hi":"आपको चार सेक्शनों में से एक में रखा गया है। आपका सेक्शन तय करता है कि कौन-से अनलॉक कोड आपके हैं — उपयोग करने से पहले हमेशा जाँच लें कि कोड आपके ही सेक्शन से मेल खाता है।"},"step1_section_note":{"kn":"ನೀವು ಯಾವ ವಿಭಾಗದಲ್ಲಿದ್ದೀರಿ ಎಂದು ಖಚಿತವಿಲ್ಲವೇ? ನಿಮ್ಮ ಶಿಕ್ಷಕರನ್ನು ಕೇಳಿ, ಅಥವಾ ನೀವು BAIO ಸೇರಿದಾಗ ಸ್ವೀಕರಿಸಿದ ಸ್ವಾಗತ ಸಂದೇಶವನ್ನು ಪರಿಶೀಲಿಸಿ.","hi":"पक्का नहीं कि आप किस सेक्शन में हैं? अपने शिक्षक से पूछें, या BAIO से जुड़ने पर मिले स्वागत संदेश को देखें।"},"step2_num":{"kn":"ಹಂತ 2","hi":"चरण 2"},"step2_title":{"kn":"ನಿಮ್ಮ ಕೋಡ್‌ಗಳನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳುವುದು","hi":"अपने कोड को समझना"},"step2_intro":{"kn":"ಪ್ರತಿ ಕೋಡ್ <b style=\"color:var(--ink);\">ನಿಮ್ಮ ಸ್ವಂತ ಹೆಸರು, ರೋಲ್ ನಂಬರ್ ಮತ್ತು ವಿಭಾಗಕ್ಕೆ</b> ಲಾಕ್ ಆಗಿರುತ್ತದೆ — ಸಹಪಾಠಿಗೆ ಕೆಲಸ ಮಾಡುವ ಕೋಡ್ ನಿಮಗೆ ಕೆಲಸ ಮಾಡುವುದಿಲ್ಲ, ಮತ್ತು ನಿಮ್ಮದು ಬೇರೆ ಯಾರಿಗೂ ಕೆಲಸ ಮಾಡುವುದಿಲ್ಲ. ನೀವು ಪಡೆಯಬಹುದಾದ ಮೂರು ವಿಧದ ಕೋಡ್‌ಗಳಿವೆ:","hi":"हर कोड <b style=\"color:var(--ink);\">आपके ही नाम, रोल नंबर और सेक्शन</b> से लॉक होता है — किसी सहपाठी के लिए काम करने वाला कोड आपके लिए काम नहीं करेगा, और आपका कोड किसी और के लिए काम नहीं करेगा। आपको तीन तरह के कोड मिल सकते हैं:"},"step2_premium_title":{"kn":"ಪ್ರೀಮಿಯಂ ಅನ್‌ಲಾಕ್ ಕೋಡ್","hi":"प्रीमियम अनलॉक कोड"},"step2_premium_desc":{"kn":"ಒಂದು ಅಧ್ಯಾಯದ ಸಂಪೂರ್ಣ ಪ್ರೀಮಿಯಂ ವಿಷಯವನ್ನು ತೆರೆಯುತ್ತದೆ — ವೀಡಿಯೊಗಳು, ಪರಿಹರಿಸಿದ ಪ್ರಶ್ನೆಗಳು ಮತ್ತು ವಿವರವಾದ ವಿವರಣೆಗಳು.","hi":"किसी अध्याय की पूरी प्रीमियम सामग्री खोलता है — वीडियो, हल किए गए प्रश्न, और विस्तृत स्पष्टीकरण।"},"step2_hw_title":{"kn":"ಕೈಬರಹದ ನೋಟ್ಸ್ ಕೋಡ್","hi":"हस्तलिखित नोट्स कोड"},"step2_hw_desc":{"kn":"ಆ ಅಧ್ಯಾಯಕ್ಕೆ ಶಿಕ್ಷಕರ ಸ್ವಂತ ಕೈಬರಹದ ನೋಟ್ಸ್ ಅನ್ನು ಅನ್‌ಲಾಕ್ ಮಾಡುತ್ತದೆ — ಪರೀಕ್ಷೆಗೆ ಮೊದಲು ತ್ವರಿತ ಮರುಅಭ್ಯಾಸಕ್ಕೆ ಉತ್ತಮ.","hi":"उस अध्याय के लिए शिक्षक के अपने हस्तलिखित नोट्स को अनलॉक करता है — परीक्षा से पहले त्वरित रिवीजन के लिए बेहतरीन।"},"step2_report_title":{"kn":"ರಿಪೋರ್ಟ್ ಕಾರ್ಡ್ ಪಾಸ್‌ವರ್ಡ್","hi":"रिपोर्ट कार्ड पासवर्ड"},"step2_report_desc":{"kn":"ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ರಿಪೋರ್ಟ್ ಕಾರ್ಡ್ ಅನ್ನು ತೆರೆಯುವ ಒಂದು ಚಿಕ್ಕ ಪಾಸ್‌ವರ್ಡ್ — ನಿಮ್ಮ ಪರೀಕ್ಷಾ ಅಂಕಗಳು ಮತ್ತು ಪ್ರಗತಿ ಟ್ರ್ಯಾಕಿಂಗ್.","hi":"एक छोटा पासवर्ड जो आपका व्यक्तिगत रिपोर्ट कार्ड खोलता है — आपके परीक्षा अंक और प्रगति ट्रैकिंग।"},"step2_footer":{"kn":"ಕೋಡ್‌ಗಳನ್ನು ನಿಮ್ಮ ಶಿಕ್ಷಕರು ನೀಡುತ್ತಾರೆ — ಸಾಮಾನ್ಯವಾಗಿ ನೇರವಾಗಿ ನಿಮಗೆ ಅಥವಾ ನಿಮ್ಮ ಪೋಷಕರಿಗೆ ಹಂಚಿಕೊಳ್ಳಲಾಗುತ್ತದೆ. ಅವುಗಳನ್ನು ಖಾಸಗಿಯಾಗಿ ಇರಿಸಿ; ಸಹಪಾಠಿಯೊಂದಿಗೆ ನಿಮ್ಮ ಕೋಡ್ ಹಂಚಿಕೊಳ್ಳುವುದು ಅವರಿಗೆ ಸಹಾಯ ಮಾಡುವುದಿಲ್ಲ, ಏಕೆಂದರೆ ಅದು ನಿಮ್ಮ ವಿವರಗಳಿಗೆ ಲಾಕ್ ಆಗಿದೆ.","hi":"कोड आपके शिक्षक द्वारा दिए जाते हैं — आमतौर पर सीधे आपको या आपके अभिभावक को दिए जाते हैं। इन्हें निजी रखें; अपना कोड किसी सहपाठी के साथ साझा करना उसकी मदद नहीं करेगा, क्योंकि यह आपके विवरण से लॉक है।"},"step3_num":{"kn":"ಹಂತ 3","hi":"चरण 3"},"step3_title":{"kn":"ವೆಬ್‌ಸೈಟ್‌ನಲ್ಲಿ ಕೋಡ್ ಬಳಸುವುದು","hi":"वेबसाइट पर कोड का उपयोग करना"},"step3_sub1":{"kn":"ಯಾವುದೇ ಬ್ರೌಸರ್‌ನಲ್ಲಿ <b><span class=\"placeholder\">[ನಿಮ್ಮ BAIO ವೆಬ್‌ಸೈಟ್ URL]</span></b> ಗೆ ಹೋಗಿ, ಮತ್ತು ನಿಮ್ಮ ವಿದ್ಯಾರ್ಥಿ ಖಾತೆಯೊಂದಿಗೆ ಸೈನ್ ಇನ್ ಮಾಡಿ. ನಿಮಗೆ ಇನ್ನೂ ಖಾತೆ ಇಲ್ಲದಿದ್ದರೆ, \"New Student\" ಆಯ್ಕೆಯನ್ನು ಬಳಸಿ ಮತ್ತು ನಿಮಗೆ ನೀಡಿದಂತೆಯೇ ನಿಮ್ಮ ಹೆಸರು, ರೋಲ್ ನಂಬರ್ ಮತ್ತು ವಿಭಾಗವನ್ನು ನಮೂದಿಸಿ.","hi":"किसी भी ब्राउज़र में <b><span class=\"placeholder\">[आपकी BAIO वेबसाइट URL]</span></b> पर जाएँ, और अपने छात्र खाते से साइन इन करें। यदि आपके पास अभी तक खाता नहीं है, तो \"New Student\" विकल्प का उपयोग करें और आपको दिए गए अनुसार ही अपना नाम, रोल नंबर और सेक्शन दर्ज करें।"},"step3_sub2":{"kn":"ನೀವು ಓದಲು ಬಯಸುವ ಅಧ್ಯಾಯವನ್ನು ತೆರೆಯಿರಿ, ಮತ್ತು ಪ್ರೀಮಿಯಂ ವಿಷಯ ಅಥವಾ ಕೈಬರಹದ ನೋಟ್ಸ್ ಪಕ್ಕದಲ್ಲಿ <b>ಲಾಕ್ ಐಕಾನ್</b> ಅನ್ನು ಹುಡುಕಿ.","hi":"जिस अध्याय को पढ़ना चाहते हैं उसे खोलें, और Premium Content या Handwritten Notes के बगल में <b>लॉक आइकन</b> देखें।"},"step3_sub3":{"kn":"ಲಾಕ್ ಐಕಾನ್ ಅನ್ನು ಟ್ಯಾಪ್ ಮಾಡಿ — ನಿಮ್ಮ <b>ಅನ್‌ಲಾಕ್ ಕೋಡ್</b> ಕೇಳುವ ಒಂದು ಬಾಕ್ಸ್ ಕಾಣಿಸುತ್ತದೆ. ಅದನ್ನು ನೀಡಿದಂತೆಯೇ, ಡ್ಯಾಶ್ ಸೇರಿದಂತೆ ನಿಖರವಾಗಿ ಟೈಪ್ ಮಾಡಿ (ಉದಾ. <span class=\"sample-code\" style=\"font-size:12px; padding:2px 8px;\">4Q6T-AL5X</span>).","hi":"लॉक आइकन पर टैप करें — आपका <b>अनलॉक कोड</b> माँगने वाला एक बॉक्स दिखाई देगा। इसे बिल्कुल वैसे ही टाइप करें जैसे दिया गया है, डैश सहित (उदाहरण के लिए <span class=\"sample-code\" style=\"font-size:12px; padding:2px 8px;\">4Q6T-AL5X</span>)."},"step3_sub4":{"kn":"ಒತ್ತಿ <b>Unlock</b>. ನಿಮ್ಮ ಹೆಸರು, ರೋಲ್ ನಂಬರ್ ಮತ್ತು ವಿಭಾಗ ಎಲ್ಲವೂ ಕೋಡ್ ಮಾಡಲ್ಪಟ್ಟ ವಿವರಗಳಿಗೆ ಹೊಂದಿಕೆಯಾದರೆ, ವಿಷಯ ತಕ್ಷಣ ತೆರೆಯುತ್ತದೆ.","hi":"<b>Unlock</b> दबाएँ। यदि आपका नाम, रोल नंबर और सेक्शन उस विवरण से मेल खाते हैं जिसके लिए कोड बनाया गया था, तो सामग्री तुरंत खुल जाती है।"},"step3_sub4_mock":{"kn":"✅ ಅನ್‌ಲಾಕ್ ಆಗಿದೆ — ಮತ್ತೆ ಸ್ವಾಗತ, [ನಿಮ್ಮ ಹೆಸರು]!","hi":"✅ अनलॉक हो गया — वापसी पर स्वागत है, [आपका नाम]!"},"step3_sub5":{"kn":"ನಿಮ್ಮ <b>Report Card</b> ಗಾಗಿ, ನಿಮ್ಮ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ನಿಂದ Report Card ಟ್ಯಾಬ್‌ಗೆ ಹೋಗಿ ಮತ್ತು ಅಲ್ಲಿ ನಿಮ್ಮ ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ — ಡ್ಯಾಶ್ ಅಗತ್ಯವಿಲ್ಲ, ಕೇವಲ ಚಿಕ್ಕ ಕೋಡ್.","hi":"अपने <b>Report Card</b> के लिए, अपने डैशबोर्ड से Report Card टैब पर जाएँ और वहाँ अपना पासवर्ड दर्ज करें — डैश की आवश्यकता नहीं, बस छोटा कोड।"},"step4_num":{"kn":"ಹಂತ 4","hi":"चरण 4"},"step4_title":{"kn":"ಆ್ಯಪ್‌ನಲ್ಲಿ ಕೋಡ್ ಬಳಸುವುದು","hi":"ऐप पर कोड का उपयोग करना"},"step4_sub1":{"kn":"ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ <b>BAIO Learning App</b> ಅನ್ನು <span class=\"placeholder\">[Play Store / App Store ಲಿಂಕ್]</span> ನಿಂದ ಮತ್ತು ಅದನ್ನು ಸ್ಥಾಪಿಸಿ.","hi":"<span class=\"placeholder\">[Play Store / App Store लिंक]</span> से <b>BAIO Learning App</b> डाउनलोड करें और इंस्टॉल करें।"},"step4_sub2":{"kn":"ಆ್ಯಪ್ ತೆರೆಯಿರಿ ಮತ್ತು ವೆಬ್‌ಸೈಟ್‌ನಲ್ಲಿ ನೀವು ಬಳಸುವ ಅದೇ ವಿದ್ಯಾರ್ಥಿ ಖಾತೆಯೊಂದಿಗೆ ಲಾಗ್ ಇನ್ ಮಾಡಿ — ನಿಮ್ಮ ಕೋಡ್‌ಗಳು ಮತ್ತು ಪ್ರಗತಿ ಎರಡರಲ್ಲೂ ಸಿಂಕ್‌ನಲ್ಲಿ ಇರುತ್ತವೆ.","hi":"ऐप खोलें और वेबसाइट पर उपयोग किए जाने वाले उसी छात्र खाते से लॉग इन करें — आपके कोड और प्रगति दोनों में समन्वित (sync) रहते हैं।"},"step4_sub3":{"kn":"ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ನಿಂದ, ನಿಮ್ಮ ವಿಭಾಗವನ್ನು ಟ್ಯಾಪ್ ಮಾಡಿ, ನಂತರ ನಿಮಗೆ ಬೇಕಾದ ಅಧ್ಯಾಯವನ್ನು ಟ್ಯಾಪ್ ಮಾಡಿ. ವೆಬ್‌ಸೈಟ್‌ನಲ್ಲಿರುವಂತೆಯೇ ಅದೇ ಲಾಕ್ ಐಕಾನ್‌ಗಳನ್ನು ನೀವು ನೋಡುತ್ತೀರಿ.","hi":"होम स्क्रीन से, अपने सेक्शन पर टैप करें, फिर वांछित अध्याय पर। आपको वेबसाइट जैसे ही लॉक आइकन दिखाई देंगे।"},"step4_sub4":{"kn":"ಲಾಕ್ ಟ್ಯಾಪ್ ಮಾಡಿ, ನಿಮ್ಮ ಕೋಡ್ ನಮೂದಿಸಿ, ಮತ್ತು <b>Unlock</b> ಟ್ಯಾಪ್ ಮಾಡಿ. ಆ್ಯಪ್ ಅನ್‌ಲಾಕ್ ಆದ ಅಧ್ಯಾಯಗಳನ್ನು ನೆನಪಿಟ್ಟುಕೊಳ್ಳುತ್ತದೆ, ಆದ್ದರಿಂದ ಮುಂದಿನ ಬಾರಿ ತೆರೆದಾಗ ಕೋಡ್ ಅನ್ನು ಮತ್ತೆ ನಮೂದಿಸುವ ಅಗತ್ಯವಿಲ್ಲ — ನೀವು ಸೈನ್ ಔಟ್ ಮಾಡುವ ಅಥವಾ ಸಾಧನ ಬದಲಾಯಿಸುವ ಹೊರತು.","hi":"लॉक पर टैप करें, अपना कोड दर्ज करें, और <b>Unlock</b> पर टैप करें। ऐप अनलॉक किए गए अध्यायों को याद रखता है, इसलिए अगली बार खोलने पर कोड फिर से दर्ज करने की ज़रूरत नहीं — जब तक आप साइन आउट न करें या डिवाइस न बदलें।"},"step4_sub5":{"kn":"ಹೊಸ ಅಧ್ಯಾಯ ಅಥವಾ ಕೋಡ್ ಬಿಡುಗಡೆಯಾದ ಕ್ಷಣವೇ ನಿಮಗೆ ತಿಳಿಸಲು <span class=\"placeholder\">Settings → Notifications</span> ನಲ್ಲಿ ಅಧಿಸೂಚನೆಗಳನ್ನು ಆನ್ ಮಾಡಿ.","hi":"नया अध्याय या कोड जारी होते ही आपको सूचित करने के लिए <span class=\"placeholder\">Settings → Notifications</span> में नोटिफिकेशन चालू करें।"},"step5_num":{"kn":"ಹಂತ 5","hi":"चरण 5"},"step5_title":{"kn":"ಪದೇ ಪದೇ ಕೇಳಲಾಗುವ ಪ್ರಶ್ನೆಗಳು","hi":"अक्सर पूछे जाने वाले प्रश्न"},"faq1_q":{"kn":"ನನ್ನ ಕೋಡ್ \"invalid\" ಎಂದು ತೋರಿಸುತ್ತಿದೆ — ನಾನು ಏನು ಮಾಡಬೇಕು?","hi":"मेरा कोड \"invalid\" दिखा रहा है — मुझे क्या करना चाहिए?"},"faq1_a":{"kn":"ಈ ಮೂರು ವಿಷಯಗಳನ್ನು ಪರಿಶೀಲಿಸಿ: (1) ನೀವು ಸಹಪಾಠಿಯ ಖಾತೆಯಿಂದಲ್ಲ, ನಿಮ್ಮದೇ ಖಾತೆಯಿಂದ ಲಾಗ್ ಇನ್ ಆಗಿದ್ದೀರಿ, (2) ಡ್ಯಾಶ್ ಸೇರಿದಂತೆ ಕೋಡ್ ಅನ್ನು ನಿಖರವಾಗಿ ಟೈಪ್ ಮಾಡಿದ್ದೀರಿ, ಮತ್ತು (3) ಸರಿಯಾದ ಕೋಡ್ ಪ್ರಕಾರವನ್ನು ಬಳಸುತ್ತಿದ್ದೀರಿ — ಕೈಬರಹದ ನೋಟ್ಸ್ ಕೋಡ್ ಪ್ರೀಮಿಯಂ ವಿಷಯವನ್ನು ತೆರೆಯುವುದಿಲ್ಲ, ಮತ್ತು ಪ್ರತಿಯಾಗಿಯೂ ಸಹ. ಇನ್ನೂ ಕೆಲಸ ಮಾಡದಿದ್ದರೆ, ನಿಮ್ಮ ಶಿಕ್ಷಕರನ್ನು ಸಂಪರ್ಕಿಸಿ — ಕೆಳಗಿನ Get Help ನೋಡಿ.","hi":"तीन बातें जाँच लें: (1) आप किसी सहपाठी के नहीं, बल्कि अपने ही खाते से लॉग इन हैं, (2) आपने डैश सहित कोड बिल्कुल सही टाइप किया है, और (3) आप सही कोड प्रकार का उपयोग कर रहे हैं — Handwritten Notes कोड Premium Content नहीं खोलेगा, और इसका उल्टा भी सच है। यदि फिर भी काम न करे, तो अपने शिक्षक से संपर्क करें — नीचे Get Help देखें।"},"faq2_q":{"kn":"ನನ್ನದು ಕಳೆದುಹೋದರೆ ನಾನು ಸ್ನೇಹಿತನ ಕೋಡ್ ಬಳಸಬಹುದೇ?","hi":"अगर मेरा कोड खो जाए तो क्या मैं किसी दोस्त का कोड इस्तेमाल कर सकता हूँ?"},"faq2_a":{"kn":"ಇಲ್ಲ — ಪ್ರತಿ ಕೋಡ್ ಒಬ್ಬ ವಿದ್ಯಾರ್ಥಿಯ ಹೆಸರು, ರೋಲ್ ನಂಬರ್ ಮತ್ತು ವಿಭಾಗಕ್ಕೆ ಲಾಕ್ ಆಗಿರುತ್ತದೆ, ಆದ್ದರಿಂದ ಸ್ನೇಹಿತನ ಕೋಡ್ ನಿಮಗೆ ಎಂದಿಗೂ ವಿಷಯವನ್ನು ಅನ್‌ಲಾಕ್ ಮಾಡುವುದಿಲ್ಲ. ಬದಲಿಗೆ ನಿಮ್ಮ ಸ್ವಂತ ಕೋಡ್ ಅನ್ನು ಮತ್ತೆ ಕಳುಹಿಸಲು ನಿಮ್ಮ ಶಿಕ್ಷಕರನ್ನು ಕೇಳಿ.","hi":"नहीं — हर कोड एक छात्र के नाम, रोल नंबर और सेक्शन से लॉक होता है, इसलिए किसी दोस्त का कोड आपके लिए कभी भी सामग्री अनलॉक नहीं करेगा। इसके बजाय अपने शिक्षक से अपना कोड दोबारा भेजने के लिए कहें।"},"faq3_q":{"kn":"ಕೋಡ್‌ಗಳು ಅವಧಿ ಮೀರುತ್ತವೆಯೇ?","hi":"क्या कोड की समय-सीमा समाप्त होती है?"},"faq3_a":{"kn":"ಒಮ್ಮೆ ನಿಮ್ಮ ಖಾತೆಯಲ್ಲಿ ಅಧ್ಯಾಯ ಅನ್‌ಲಾಕ್ ಆದ ನಂತರ, ಅದು ಅನ್‌ಲಾಕ್ ಆಗಿಯೇ ಉಳಿಯುತ್ತದೆ — ನೀವು ಹೊಸ ಸಾಧನಕ್ಕೆ ಸೈನ್ ಇನ್ ಆಗುವ ಅಥವಾ ನಿಮ್ಮ ಖಾತೆ ರೀಸೆಟ್ ಆಗುವ ಹೊರತು ಕೋಡ್ ಅನ್ನು ಮತ್ತೆ ನಮೂದಿಸುವ ಅಗತ್ಯವಿಲ್ಲ.","hi":"एक बार आपके खाते में अध्याय अनलॉक हो जाए, तो वह अनलॉक ही रहता है — जब तक आप किसी नए डिवाइस में साइन इन न करें या आपका खाता रीसेट न हो, तब तक कोड दोबारा दर्ज करने की ज़रूरत नहीं।"},"faq4_q":{"kn":"ನಾನು ನನ್ನ ಹೆಸರು ಅಥವಾ ರೋಲ್ ನಂಬರ್ ಬದಲಾಯಿಸಿದೆ — ನನ್ನ ಹಳೆಯ ಕೋಡ್‌ಗಳು ಇನ್ನೂ ಕೆಲಸ ಮಾಡುತ್ತವೆಯೇ?","hi":"मैंने अपना नाम या रोल नंबर बदल लिया है — क्या मेरे पुराने कोड अभी भी काम करेंगे?"},"faq4_a":{"kn":"ಇಲ್ಲ, ಏಕೆಂದರೆ ಕೋಡ್‌ಗಳನ್ನು ತಯಾರಿಸಿದ ಸಮಯದಲ್ಲಿ ನಿಮ್ಮ ನಿಖರ ವಿವರಗಳಿಗೆ ಕಟ್ಟಲಾಗಿದೆ. ಬದಲಾವಣೆಯ ಬಗ್ಗೆ ನಿಮ್ಮ ಶಿಕ್ಷಕರಿಗೆ ತಿಳಿಸಿ ಮತ್ತು ಅವರು ನಿಮಗೆ ಹೊಸ ಕೋಡ್‌ಗಳನ್ನು ನೀಡುತ್ತಾರೆ.","hi":"नहीं, क्योंकि कोड बनाए जाने के समय आपके सटीक विवरण से जुड़े होते हैं। बदलाव के बारे में अपने शिक्षक को बताएँ और वे आपको नए कोड जारी करेंगे।"},"faq5_q":{"kn":"ಪ್ರೀಮಿಯಂ ವಿಷಯ ಮತ್ತು ಕೈಬರಹದ ನೋಟ್ಸ್ ನಡುವಿನ ವ್ಯತ್ಯಾಸವೇನು?","hi":"Premium Content और Handwritten Notes में क्या अंतर है?"},"faq5_a":{"kn":"ಪ್ರೀಮಿಯಂ ವಿಷಯವು ಸಂಪೂರ್ಣ ಡಿಜಿಟಲ್ ಅಧ್ಯಾಯ — ವೀಡಿಯೊಗಳು, ವಿವರಣೆಗಳು ಮತ್ತು ಪರಿಹರಿಸಿದ ಅಭ್ಯಾಸ ಪ್ರಶ್ನೆಗಳು. ಕೈಬರಹದ ನೋಟ್ಸ್ ಎಂದರೆ ಆ ಅಧ್ಯಾಯಕ್ಕೆ ನಿಮ್ಮ ಶಿಕ್ಷಕರ ಸ್ವಂತ ಬರೆದ ಮರುಅಭ್ಯಾಸ ಟಿಪ್ಪಣಿಗಳು, ಪರೀಕ್ಷೆಗೆ ಮೊದಲು ತ್ವರಿತ ಪುನರಾವಲೋಕನಕ್ಕೆ ಉತ್ತಮ.","hi":"Premium Content पूरा डिजिटल अध्याय है — वीडियो, स्पष्टीकरण, और हल किए गए अभ्यास प्रश्न। Handwritten Notes उस अध्याय के लिए आपके शिक्षक के अपने हाथ से लिखे रिवीजन नोट्स हैं, जो परीक्षा से पहले त्वरित पुनरावलोकन के लिए सर्वोत्तम हैं।"},"step6_num":{"kn":"ಹಂತ 6","hi":"चरण 6"},"step6_title":{"kn":"ಇನ್ನೂ ಸಹಾಯ ಬೇಕೇ?","hi":"अभी भी सहायता चाहिए?"},"step6_body":{"kn":"ಪರಿಹಾರಕ್ಕೆ ನಿಮ್ಮ ಶಿಕ್ಷಕರೇ ಯಾವಾಗಲೂ ಅತ್ಯಂತ ವೇಗದ ಮಾರ್ಗ — ಕೋಡ್‌ಗಳು, ವಿಭಾಗಗಳು ಮತ್ತು ಖಾತೆಗಳನ್ನು ಅವರ ಕಡೆಯಿಂದಲೇ ನಿರ್ವಹಿಸಲಾಗುತ್ತದೆ. ದಿನದ ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ಸ್ವಯಂಚಾಲಿತ <a href=\"call-whatsapp-help.html\">ಫೋನ್ ಕರೆ ಮೆನು ಅಥವಾ WhatsApp ಕೀವರ್ಡ್ ಬಾಟ್</a> ಮೂಲಕವೂ ನೀವು ಅದೇ ಸಹಾಯವನ್ನು ಪಡೆಯಬಹುದು.","hi":"समस्या ठीक करने का सबसे तेज़ रास्ता हमेशा आपके शिक्षक ही हैं — कोड, सेक्शन और खाते सभी उन्हीं के द्वारा प्रबंधित होते हैं। आप दिन के किसी भी समय स्वचालित <a href=\"call-whatsapp-help.html\">फोन कॉल मेनू या WhatsApp कीवर्ड बॉट</a> के माध्यम से भी वही सहायता प्राप्त कर सकते हैं।"},"support_whatsapp_label":{"kn":"WhatsApp ಸಂಖ್ಯೆ","hi":"WhatsApp नंबर"},"support_email_label":{"kn":"ಇಮೇಲ್","hi":"ईमेल"},"support_visit_label":{"kn":"ಖುದ್ದಾಗಿ ಭೇಟಿ ನೀಡಿ","hi":"व्यक्तिगत रूप से मिलें"},"support_visit_value":{"kn":"ವಿಳಾಸ ಶೀಘ್ರದಲ್ಲೇ","hi":"पता जल्द ही उपलब्ध होगा"},"support_hours_label":{"kn":"ಸಹಾಯ ಸಮಯ","hi":"सहायता समय"},"founder_quote":{"kn":"\"BAIO ಕುಟುಂಬಕ್ಕೆ ಸ್ವಾಗತ. ನೀವು ಅನ್‌ಲಾಕ್ ಮಾಡುವ ಪ್ರತಿ ಅಧ್ಯಾಯ, ನೀವು ಮರುಅಭ್ಯಾಸ ಮಾಡುವ ಪ್ರತಿ ನೋಟ್ಸ್, ವೈದ್ಯರಾಗುವ ನಿಮ್ಮ ಕನಸಿಗೆ ಇನ್ನೊಂದು ಹೆಜ್ಜೆ ಹತ್ತಿರವಾಗಿಸುತ್ತದೆ. ಸ್ಥಿರವಾಗಿರಿ, ಕುತೂಹಲದಿಂದಿರಿ — ನಾವು ನಿಮ್ಮೊಂದಿಗೆ ಪೂರ್ತಿ ದಾರಿಯುದ್ದಕ್ಕೂ ಇದ್ದೇವೆ.\"","hi":"\"BAIO परिवार में आपका स्वागत है। आप जो भी अध्याय अनलॉक करते हैं, जो भी नोट दोहराते हैं, वह डॉक्टर बनने के आपके सपने के एक कदम और करीब ले जाता है। निरंतर बने रहें, जिज्ञासु बने रहें — हम पूरे रास्ते आपके साथ हैं।\""},"founder_role":{"kn":"ಜೀವಶಾಸ್ತ್ರ ಉಪನ್ಯಾಸಕರು &middot; ಸಂಸ್ಥಾಪಕರು &amp; CEO, BAIO Learning System","hi":"जीव विज्ञान व्याख्याता &middot; संस्थापक &amp; CEO, BAIO Learning System"},"footer_text":{"kn":"BAIO Learning System &middot; ವಿದ್ಯಾರ್ಥಿ ಮಾರ್ಗದರ್ಶಿ","hi":"BAIO Learning System &middot; छात्र मार्गदर्शिका"}};
+const GUIDE_ORIGINAL_EN = {};
+document.querySelectorAll('[data-i18n]').forEach(function(el){
+  GUIDE_ORIGINAL_EN[el.getAttribute('data-i18n')] = el.innerHTML;
+});
+let currentLang = 'en';
+function setLang(lang){
+  currentLang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    const key = el.getAttribute('data-i18n');
+    if(lang === 'en'){ el.innerHTML = GUIDE_ORIGINAL_EN[key]; }
+    else if(GUIDE_TRANSLATIONS[key] && GUIDE_TRANSLATIONS[key][lang]){ el.innerHTML = GUIDE_TRANSLATIONS[key][lang]; }
+  });
+  try{ localStorage.setItem('baio_guide_lang', lang); }catch(e){}
+  renderLangSwitcher();
+}
+window.setLang = setLang;
+function renderLangSwitcher(){
+  const el = document.getElementById('langSwitcher');
+  if(!el) return;
+  const langs = [{id:'en',label:'English'},{id:'kn',label:'ಕನ್ನಡ'},{id:'hi',label:'हिंदी'}];
+  el.innerHTML = langs.map(function(l){ return '<div class="lang-btn' + (l.id===currentLang?' active':'') + '" onclick="setLang(\'' + l.id + '\')">' + l.label + '</div>'; }).join('');
+}
+(function(){
+  let saved = null;
+  try{ saved = localStorage.getItem('baio_guide_lang'); }catch(e){}
+  if(saved && saved !== 'en'){ setLang(saved); }
+  else { renderLangSwitcher(); }
 })();
 </script>
 </body>
