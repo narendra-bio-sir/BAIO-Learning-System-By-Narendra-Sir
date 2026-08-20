@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BAIO Push Notification Test</title>
+<style>
+  body{font-family:system-ui,sans-serif; max-width:520px; margin:0 auto; padding:20px; background:#0C1610; color:#ECF3E9;}
+  h1{font-size:18px; color:#E3AF43;}
+  p.sub{color:#A6BCAC; font-size:13px; line-height:1.5;}
+  button{display:block; width:100%; padding:14px; margin:10px 0; border-radius:10px; border:none; background:#E3AF43; color:#1a1406; font-weight:700; font-size:15px; cursor:pointer;}
+  button:disabled{opacity:0.5;}
+  #log{background:#16241C; border:1px solid rgba(166,188,172,0.18); border-radius:10px; padding:12px; margin-top:16px; font-family:monospace; font-size:12px; white-space:pre-wrap; word-break:break-all; max-height:60vh; overflow-y:auto;}
+  .ok{color:#42C6A0;} .err{color:#e0685f;} .info{color:#A6BCAC;}
+</style>
+</head>
+<body>
+  <h1>BAIO Push Notification — Test Page</h1>
+  <p class="sub">Not linked from anywhere in the app. Use this only to verify Firebase + push notifications are wired up correctly before it goes live in the real chapters. Safe to leave here — no student ever sees it.</p>
+
+  <button id="runBtn">Run Test: Register + Sync Fake Scores</button>
+  <button id="checkBtn">Check: Am I Registered?</button>
+
+  <div id="log"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js"></script>
+  <script src="push-notifications.js"></script>
+  <script>
+    var logEl = document.getElementById('log');
+    function log(msg, cls) {
+      var line = document.createElement('div');
+      if (cls) line.className = cls;
+      line.textContent = msg;
+      logEl.appendChild(line);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    log('Page loaded. Registering service worker...', 'info');
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').then(function () {
+        log('Service worker registered OK.', 'ok');
+      }).catch(function (e) {
+        log('Service worker registration FAILED: ' + e.message, 'err');
+      });
+    } else {
+      log('This browser does not support service workers at all.', 'err');
+    }
+
+    var testProfile = { name: 'Test Student', roll: 'TEST001', section: 'TestSection' };
+    var chapterMeta = { chapterId: 'testchapter', chapterName: 'Test Chapter', pageUrl: 'push-test.html' };
+
+    document.getElementById('runBtn').addEventListener('click', function () {
+      log('--- Starting test ---', 'info');
+      if (!window.firebase) { log('firebase SDK did not load — check network / ad blockers.', 'err'); return; }
+      log('Firebase SDK loaded OK.', 'ok');
+
+      if (!('Notification' in window)) { log('This browser does not support Notifications.', 'err'); return; }
+      log('Current notification permission: ' + Notification.permission, 'info');
+
+      log('Calling BaioPush.init() — this should prompt for notification permission...', 'info');
+      BaioPush.init(testProfile, chapterMeta).then(function () {
+        log('BaioPush.init() finished. Student id used: ' + BaioPush.studentId(testProfile), 'ok');
+        log('Check Firebase Console → Firestore → Data → students → ' + BaioPush.studentId(testProfile) + ' to confirm the doc + a pushTokens subcollection entry now exist.', 'info');
+
+        var fakeStats = { t1: { c: 1, w: 4 }, t2: { c: 8, w: 1 } }; // t1 = 20% (weak), t2 = 89%
+        var fakeTitles = { t1: 'Fake Weak Topic', t2: 'Fake Strong Topic' };
+        log('Syncing fake topic stats (t1=20% weak, t2=89% strong)...', 'info');
+        return BaioPush.syncTopicStats(fakeStats, fakeTitles, chapterMeta);
+      }).then(function () {
+        log('syncTopicStats() finished. Check students/' + BaioPush.studentId(testProfile) + '/topicStats in Firestore for testchapter_t1 and testchapter_t2 docs.', 'ok');
+        log('--- Test complete ---', 'info');
+      }).catch(function (e) {
+        log('Error during test: ' + (e && e.message ? e.message : e), 'err');
+      });
+    });
+
+    document.getElementById('checkBtn').addEventListener('click', function () {
+      log('Notification.permission = ' + (('Notification' in window) ? Notification.permission : 'unsupported'), 'info');
+      navigator.serviceWorker.getRegistrations().then(function (regs) {
+        log('Active service worker registrations: ' + regs.length, 'info');
+        regs.forEach(function (r) { log('  scope: ' + r.scope, 'info'); });
+      });
+    });
+  </script>
+</body>
+</html>
