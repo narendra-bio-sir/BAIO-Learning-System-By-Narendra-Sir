@@ -221,16 +221,34 @@ let STUDENTS = [];
 // SEED_STUDENTS (e.g. moved out / removed), adds any new ones, and keeps
 // each remaining student's locally-tracked Submitted/Pending status so a
 // teacher's live edits aren't lost just because the source roster changed.
-function reconcileStudents(savedStudents, seedStudents){
+//
+// Per-item precedence is decided against prevSeedStudents (the SEED_STUDENTS
+// snapshot saved alongside the roster the last time this browser loaded the
+// page): if a status hasn't moved since that baseline, it was never touched
+// locally, so the freshly-synced seed value wins; if it differs from the
+// baseline, the teacher changed it in this browser, so that edit wins. With
+// no baseline at all (an older save from before this snapshot existed), the
+// fresh seed wins outright so a pending Drive sync isn't stuck forever.
+function reconcileStudents(savedStudents, seedStudents, prevSeedStudents){
   const savedByCode = {};
   savedStudents.forEach(s=>{ savedByCode[s.code] = s; });
+  const havePrevSeed = Array.isArray(prevSeedStudents);
+  const prevSeedByCode = {};
+  if(havePrevSeed) prevSeedStudents.forEach(s=>{ prevSeedByCode[s.code] = s; });
   return seedStudents.map(seed=>{
     const existing = savedByCode[seed.code];
     if(!existing) return JSON.parse(JSON.stringify(seed));
-    return {
-      code: seed.code, name: seed.name, section: seed.section,
-      status: Object.assign({}, seed.status, existing.status)
-    };
+    const prevSeed = havePrevSeed ? prevSeedByCode[seed.code] : null;
+    const status = {};
+    Object.keys(seed.status).forEach(key=>{
+      const existingVal = existing.status ? existing.status[key] : undefined;
+      if(existingVal === undefined || !prevSeed || prevSeed.status[key] === existingVal){
+        status[key] = seed.status[key];
+      } else {
+        status[key] = existingVal;
+      }
+    });
+    return { code: seed.code, name: seed.name, section: seed.section, status };
   });
 }
 function loadState(){
@@ -238,7 +256,7 @@ function loadState(){
   try{ saved = JSON.parse(localStorage.getItem(STATE_KEY) || 'null'); }catch(e){}
   if(saved && saved.items && saved.students){
     ITEMS = saved.items;
-    STUDENTS = reconcileStudents(saved.students, SEED_STUDENTS);
+    STUDENTS = reconcileStudents(saved.students, SEED_STUDENTS, saved.seedSnapshot);
   } else {
     ITEMS = JSON.parse(JSON.stringify(SEED_ITEMS));
     STUDENTS = JSON.parse(JSON.stringify(SEED_STUDENTS));
@@ -246,7 +264,7 @@ function loadState(){
   saveState();
 }
 function saveState(){
-  try{ localStorage.setItem(STATE_KEY, JSON.stringify({items:ITEMS, students:STUDENTS})); }catch(e){}
+  try{ localStorage.setItem(STATE_KEY, JSON.stringify({items:ITEMS, students:STUDENTS, seedSnapshot:SEED_STUDENTS})); }catch(e){}
 }
 
 /* ---------------- Derived helpers ---------------- */
