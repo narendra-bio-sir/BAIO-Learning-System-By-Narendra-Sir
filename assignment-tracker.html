@@ -107,6 +107,12 @@ input[type="text"]{
 .stu-sec-chip{display:inline-block; padding:1px 7px; border-radius:6px; font-size:10px; font-weight:700; margin-left:6px; background:var(--panel2); color:var(--teal); border:1px solid var(--line);}
 .stu-caret{flex:0 0 auto; color:var(--ink-dim); font-size:14px; transition:transform 0.2s;}
 .stu-card.open .stu-caret{transform:rotate(180deg);}
+.stu-share-btn{
+  flex:0 0 auto; width:30px; height:30px; border-radius:8px;
+  border:1px solid var(--line); background:var(--panel2); color:var(--ink-dim); font-size:13px;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+}
+.stu-share-btn:hover{color:var(--teal); border-color:var(--teal);}
 .stu-checklist{display:none; margin-top:12px; padding-top:12px; border-top:1px solid var(--line);}
 .stu-card.open .stu-checklist{display:block;}
 .chk-chapter{font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:var(--teal); margin:10px 0 4px;}
@@ -126,7 +132,7 @@ input[type="text"]{
 .hint{font-size:11px; color:var(--ink-dim); margin-top:6px; line-height:1.5;}
 
 @media print{
-  .utility-row, .controls-row, .actions-row, .icon-btn, header .sub, .stu-caret{ display:none !important; }
+  .utility-row, .controls-row, .actions-row, .icon-btn, header .sub, .stu-caret, .stu-share-btn{ display:none !important; }
   .stu-checklist{ display:block !important; }
   #needsFollowup, #topPerformers{ max-height:none !important; overflow:visible !important; }
   body{ background:#fff; color:#111; }
@@ -414,6 +420,7 @@ function renderStudentList(){
           <div class="stu-name">${escHtml(s.name)}<span class="stu-sec-chip">${s.section}</span></div>
           <div class="stu-meta">${escHtml(s.code)} &middot; ${c.done}/${c.total} submitted</div>
         </div>
+        <button class="stu-share-btn" data-share="${escHtml(s.code)}" title="Share ${escHtml(s.name)}'s progress">📤</button>
         <div class="stu-caret">▾</div>
       </div>
       <div class="stu-checklist">${chaptersHtml}</div>
@@ -447,6 +454,11 @@ document.getElementById('sortBtn').addEventListener('click', function(){
 });
 
 document.getElementById('studentList').addEventListener('click', (e)=>{
+  const shareBtn = e.target.closest('.stu-share-btn');
+  if(shareBtn){
+    shareStudentCard(shareBtn.dataset.share);
+    return;
+  }
   const chk = e.target.closest('.chk-item');
   if(chk){
     const code = chk.dataset.code, itemId = chk.dataset.item;
@@ -514,6 +526,131 @@ document.getElementById('resetBtn').addEventListener('click', ()=>{
   loadState();
   renderAll();
 });
+
+/* ---------------- Share Card ---------------- */
+function shareCardDownloadBlob(blob, filename){
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+function shareCardRenderCanvas(student){
+  const c = completion(student);
+  const pendingItems = ITEMS.filter(it => student.status[it.id] !== 'Submitted');
+
+  const W = 700, PAD = 40;
+  const c2d = document.createElement('canvas');
+  c2d.width = W;
+  const ctx = c2d.getContext('2d');
+
+  function wrapLines(str, font, maxWidth){
+    ctx.font = font;
+    const words = str.split(' ');
+    const out = [];
+    let line = '';
+    words.forEach(word=>{
+      const test = line ? line+' '+word : word;
+      if(ctx.measureText(test).width > maxWidth && line){ out.push(line); line = word; }
+      else line = test;
+    });
+    if(line) out.push(line);
+    return out;
+  }
+
+  const listLines = pendingItems.length
+    ? pendingItems.map(it => wrapLines('• ' + it.chapter + ' — ' + it.label, '13px Arial, sans-serif', W - PAD*2 - 10))
+    : [['🎉 All caught up — every tracked item submitted!']];
+  const listLineCount = listLines.reduce((n, lines)=>n+lines.length, 0);
+
+  const headerH = 78, ringBlockH = 140, listHeadH = 34, lineH = 20, footerH = 60;
+  const H = headerH + ringBlockH + listHeadH + listLineCount*lineH + footerH + PAD;
+  c2d.height = Math.max(H, 460);
+
+  const navy = '#0B1B14', panel = '#13281E', gold = '#D4AF37', gold2 = '#F4D37A', teal = '#2EE6C5', ink = '#EAF3EE', inkDim = '#9FC4B6', danger = '#E7695B', ok = '#33C48A';
+
+  ctx.fillStyle = navy; ctx.fillRect(0, 0, c2d.width, c2d.height);
+  ctx.strokeStyle = gold; ctx.lineWidth = 3;
+  ctx.strokeRect(6, 6, c2d.width-12, c2d.height-12);
+
+  ctx.textBaseline = 'top'; ctx.textAlign = 'center';
+  ctx.fillStyle = gold2; ctx.font = 'bold 20px Arial, sans-serif';
+  ctx.fillText('BAIO Learning System', c2d.width/2, PAD);
+  ctx.fillStyle = inkDim; ctx.font = '12.5px Arial, sans-serif';
+  ctx.fillText('Assignment & Worksheet Tracker · By Narendra Sir', c2d.width/2, PAD+26);
+  ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(PAD, PAD+52); ctx.lineTo(c2d.width-PAD, PAD+52); ctx.stroke();
+
+  let y = headerH + 14;
+  ctx.textAlign = 'left';
+  ctx.fillStyle = ink; ctx.font = 'bold 24px Arial, sans-serif';
+  ctx.fillText(student.name, PAD, y);
+  const nameWidth = ctx.measureText(student.name).width;
+  ctx.fillStyle = teal; ctx.font = 'bold 11px Arial, sans-serif';
+  const chipX = PAD + nameWidth + 12, chipY = y + 4, chipW = ctx.measureText(student.section).width + 18, chipH = 20;
+  ctx.strokeStyle = teal; ctx.lineWidth = 1;
+  ctx.strokeRect(chipX, chipY, chipW, chipH);
+  ctx.textAlign = 'center'; ctx.fillText(student.section, chipX + chipW/2, chipY + 5);
+  ctx.textAlign = 'left'; ctx.fillStyle = inkDim; ctx.font = '13px Arial, sans-serif';
+  ctx.fillText(student.code, PAD, y + 34);
+
+  const ringCx = c2d.width - PAD - 55, ringCy = y + 30, ringR = 50;
+  ctx.beginPath(); ctx.arc(ringCx, ringCy, ringR, 0, Math.PI*2); ctx.strokeStyle = panel; ctx.lineWidth = 10; ctx.stroke();
+  ctx.beginPath(); ctx.arc(ringCx, ringCy, ringR, -Math.PI/2, -Math.PI/2 + (c.pct/100)*Math.PI*2);
+  ctx.strokeStyle = c.pct === 100 ? ok : teal; ctx.lineWidth = 10; ctx.stroke();
+  ctx.textAlign = 'center'; ctx.fillStyle = ink; ctx.font = 'bold 22px Arial, sans-serif';
+  ctx.fillText(c.pct + '%', ringCx, ringCy - 12);
+  ctx.fillStyle = inkDim; ctx.font = '12px Arial, sans-serif';
+  ctx.fillText(c.done + ' / ' + c.total, ringCx, ringCy + 14);
+  ctx.fillText('submitted', ringCx, ringCy + 28);
+
+  y = headerH + ringBlockH;
+  ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(PAD, y); ctx.lineTo(c2d.width-PAD, y); ctx.stroke();
+  y += 20;
+  ctx.textAlign = 'left'; ctx.fillStyle = gold2; ctx.font = 'bold 12px Arial, sans-serif';
+  ctx.fillText(pendingItems.length ? 'PENDING ITEMS' : 'STATUS', PAD, y);
+  y += 26;
+  ctx.font = '13px Arial, sans-serif';
+  listLines.forEach(lines=>{
+    lines.forEach((line, i)=>{
+      ctx.fillStyle = pendingItems.length ? danger : ok;
+      ctx.fillText(i===0 ? line : '  ' + line, PAD, y);
+      y += lineH;
+    });
+  });
+
+  y += 10;
+  ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(PAD, y); ctx.lineTo(c2d.width-PAD, y); ctx.stroke();
+  ctx.textAlign = 'center'; ctx.fillStyle = inkDim; ctx.font = '11px Arial, sans-serif';
+  ctx.fillText('BAIO Learning System · Biology All In One · Narendra Sir, Lecturer in Biology', c2d.width/2, y + 20);
+
+  return c2d;
+}
+async function shareStudentCard(code){
+  const student = STUDENTS.find(s=>s.code===code);
+  if(!student) return;
+  const canvas = shareCardRenderCanvas(student);
+  canvas.toBlob(async function(blob){
+    const filename = 'Tracker_' + student.code + '_' + student.name.replace(/[^a-zA-Z0-9]+/g,'_') + '.png';
+    const c = completion(student);
+    const caption = student.name + ' (' + student.code + ', ' + student.section + '): '
+      + c.done + '/' + c.total + ' items submitted (' + c.pct + '%) — BAIO Learning System Assignment Tracker';
+    const file = new File([blob], filename, {type:'image/png'});
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      try{ await navigator.share({files:[file], title:'Assignment Tracker — ' + student.name, text:caption}); }
+      catch(e){}
+    } else {
+      shareCardDownloadBlob(blob, filename);
+      alert("Direct sharing isn't supported on this browser/device — the image has been downloaded instead. You can now share it manually via WhatsApp, Instagram, etc.");
+    }
+  });
+}
+window.shareStudentCard = shareStudentCard;
 
 /* ---------------- Init ---------------- */
 loadState();
