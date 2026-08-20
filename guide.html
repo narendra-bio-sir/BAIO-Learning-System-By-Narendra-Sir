@@ -43,8 +43,9 @@ a{color:var(--teal);}
 .nav-pill.active{background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#1a1406; border-color:var(--gold);}
 [data-theme="light"] .nav-pill.active{color:#fff;}
 .icon-btn{flex:0 0 auto; width:34px; height:34px; border-radius:10px; border:1px solid var(--line); background:var(--panel); color:var(--ink); font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; text-decoration:none;}
-.lang-switcher{flex:0 0 auto; display:flex; gap:4px;}
-.lang-btn{padding:5px 8px; border-radius:12px; font-size:10.5px; font-weight:700; background:var(--panel2); color:var(--ink-dim); border:1px solid var(--line); cursor:pointer; white-space:nowrap;}
+.topnav-lang-row{display:flex; justify-content:center; padding:0 18px 8px; border-top:1px solid var(--line);}
+.lang-switcher{display:flex; gap:4px; padding-top:8px;}
+.lang-btn{padding:5px 10px; border-radius:12px; font-size:10.5px; font-weight:700; background:var(--panel2); color:var(--ink-dim); border:1px solid var(--line); cursor:pointer; white-space:nowrap;}
 .lang-btn.active{background:var(--gold); color:#1a1406; border-color:var(--gold);}
 
 /* ---- Hero ---- */
@@ -132,20 +133,24 @@ footer{text-align:center; margin-top:40px; font-size:11px; color:var(--ink-dim);
 </head>
 <body>
 
-<nav class="topnav"><div class="topnav-inner">
-  <a href="index.html" class="icon-btn" title="Back to BAIO home">🏠</a>
-  <div class="topnav-scroll" id="topnavInner">
-    <a href="#start" class="nav-pill" data-i18n="nav_welcome">Welcome</a>
-    <a href="#sections" class="nav-pill" data-i18n="nav_section">Your Section</a>
-    <a href="#codes" class="nav-pill" data-i18n="nav_codes">Your Codes</a>
-    <a href="#website" class="nav-pill" data-i18n="nav_website">On the Website</a>
-    <a href="#app" class="nav-pill" data-i18n="nav_app">On the App</a>
-    <a href="#faq" class="nav-pill" data-i18n="nav_faq">FAQ</a>
-    <a href="#help" class="nav-pill" data-i18n="nav_help">Get Help</a>
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a href="index.html" class="icon-btn" title="Back to BAIO home">🏠</a>
+    <div class="topnav-scroll" id="topnavInner">
+      <a href="#start" class="nav-pill" data-i18n="nav_welcome">Welcome</a>
+      <a href="#sections" class="nav-pill" data-i18n="nav_section">Your Section</a>
+      <a href="#codes" class="nav-pill" data-i18n="nav_codes">Your Codes</a>
+      <a href="#website" class="nav-pill" data-i18n="nav_website">On the Website</a>
+      <a href="#app" class="nav-pill" data-i18n="nav_app">On the App</a>
+      <a href="#faq" class="nav-pill" data-i18n="nav_faq">FAQ</a>
+      <a href="#help" class="nav-pill" data-i18n="nav_help">Get Help</a>
+    </div>
+    <button class="icon-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle dark/light theme">🌙</button>
   </div>
-  <div id="langSwitcher" class="lang-switcher"></div>
-  <button class="icon-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle dark/light theme">🌙</button>
-</div></nav>
+  <div class="topnav-lang-row">
+    <div id="langSwitcher" class="lang-switcher"></div>
+  </div>
+</nav>
 
 <div class="wrap">
 
