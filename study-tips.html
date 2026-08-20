@@ -43,6 +43,10 @@ a{color:var(--teal);}
 .nav-pill.active{background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#1a1406; border-color:var(--gold);}
 [data-theme="light"] .nav-pill.active{color:#fff;}
 .icon-btn{flex:0 0 auto; width:34px; height:34px; border-radius:10px; border:1px solid var(--line); background:var(--panel); color:var(--ink); font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; text-decoration:none;}
+.topnav-lang-row{display:flex; align-items:center; justify-content:center; gap:8px; padding:8px 18px; border-top:1px solid var(--line);}
+.lang-switcher{display:flex; gap:4px;}
+.lang-btn{padding:5px 10px; border-radius:12px; font-size:10.5px; font-weight:700; background:var(--panel2); color:var(--ink-dim); border:1px solid var(--line); cursor:pointer; white-space:nowrap;}
+.lang-btn.active{background:var(--gold); color:#1a1406; border-color:var(--gold);}
 
 /* ---- Hero ---- */
 .hero{padding:38px 0 26px; text-align:center;}
@@ -142,82 +146,87 @@ footer{text-align:center; margin-top:40px; font-size:11px; color:var(--ink-dim);
 </head>
 <body>
 
-<nav class="topnav"><div class="topnav-inner">
-  <a href="index.html" class="icon-btn" title="Back to BAIO home">🏠</a>
-  <div class="topnav-scroll" id="topnavInner">
-    <a href="#theory" class="nav-pill">Study Theory</a>
-    <a href="#neet" class="nav-pill">NEET Strategy</a>
-    <a href="#rhythm" class="nav-pill">Weekly Rhythm</a>
-    <a href="#chapters" class="nav-pill">Chapter Tips</a>
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="topnav-scroll" id="topnavInner">
+      <a href="#theory" class="nav-pill" data-i18n="nav_theory">Study Theory</a>
+      <a href="#neet" class="nav-pill" data-i18n="nav_neet">NEET Strategy</a>
+      <a href="#rhythm" class="nav-pill" data-i18n="nav_rhythm">Weekly Rhythm</a>
+      <a href="#chapters" class="nav-pill" data-i18n="nav_chapters">Chapter Tips</a>
+    </div>
   </div>
-  <button class="icon-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle dark/light theme">🌙</button>
-</div></nav>
+  <div class="topnav-lang-row">
+    <div id="langSwitcher" class="lang-switcher"></div>
+    <a href="index.html" class="icon-btn" title="Back to BAIO home">🏠</a>
+    <button class="icon-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle dark/light theme">🌙</button>
+  </div>
+</nav>
 
 <div class="wrap">
 
   <section class="hero" id="start">
-    <div class="eyebrow">BAIO Learning System &middot; Study Tips</div>
-    <h1>Study <span class="accent">smarter</span>, not just harder</h1>
-    <p>General habits and NEET exam strategy that apply across every chapter. For tips specific to one chapter's content, open that chapter's own <b>Study Tips</b> tab.</p>
+    <div class="eyebrow" data-i18n="hero_eyebrow">BAIO Learning System &middot; Study Tips</div>
+    <h1 data-i18n="hero_h1">Study <span class="accent">smarter</span>, not just harder</h1>
+    <p data-i18n="hero_intro">General habits and NEET exam strategy that apply across every chapter. For tips specific to one chapter's content, open that chapter's own <b>Study Tips</b> tab.</p>
   </section>
 
   <!-- STEP 1 -->
   <section class="step" id="theory">
-    <div class="step-head"><span class="step-num">01</span><h2>How to Study Biology Theory</h2></div>
+    <div class="step-head"><span class="step-num">01</span><h2 data-i18n="step1_title">How to Study Biology Theory</h2></div>
     <div class="card">
       <ul class="tip-list">
-        <li><b>Active recall beats re-reading.</b> After reading a topic, close the book and write or say out loud what you remember &mdash; then check what you missed. This is what actually builds memory, not passive reading.</li>
-        <li><b>Space your revision out.</b> Revisit a topic at increasing gaps (next day, then 3 days later, then a week later) instead of cramming it once and moving on.</li>
-        <li><b>Redraw diagrams from memory.</b> For diagram-heavy chapters (Plant Kingdom, Morphology, Anatomy), being able to recognize a diagram isn't enough &mdash; practice labelling it blank, from memory.</li>
-        <li><b>Write your own short notes</b> in your own words after finishing a topic. The act of rephrasing is what forces real understanding, not just copying.</li>
-        <li><b>Use the app's own sequence:</b> Study Mode/Concepts for your first pass, Flashcards to test recall the same day, then MCQ Quiz a few days later to check what actually stuck.</li>
+        <li data-i18n="step1_tip1"><b>Active recall beats re-reading.</b> After reading a topic, close the book and write or say out loud what you remember &mdash; then check what you missed. This is what actually builds memory, not passive reading.</li>
+        <li data-i18n="step1_tip2"><b>Space your revision out.</b> Revisit a topic at increasing gaps (next day, then 3 days later, then a week later) instead of cramming it once and moving on.</li>
+        <li data-i18n="step1_tip3"><b>Redraw diagrams from memory.</b> For diagram-heavy chapters (Plant Kingdom, Morphology, Anatomy), being able to recognize a diagram isn't enough &mdash; practice labelling it blank, from memory.</li>
+        <li data-i18n="step1_tip4"><b>Write your own short notes</b> in your own words after finishing a topic. The act of rephrasing is what forces real understanding, not just copying.</li>
+        <li data-i18n="step1_tip5"><b>Use the app's own sequence:</b> Study Mode/Concepts for your first pass, Flashcards to test recall the same day, then MCQ Quiz a few days later to check what actually stuck.</li>
       </ul>
     </div>
   </section>
 
   <!-- STEP 2 -->
   <section class="step" id="neet">
-    <div class="step-head"><span class="step-num">02</span><h2>NEET Exam Strategy</h2></div>
+    <div class="step-head"><span class="step-num">02</span><h2 data-i18n="step2_title">NEET Exam Strategy</h2></div>
     <div class="card">
       <ul class="tip-list neet">
-        <li><b>Biology carries the most weight in NEET</b> (90 of 200 questions) &mdash; it's the highest-yield subject per minute you put in, so consistency here compounds more than in any other subject.</li>
-        <li><b>Respect the negative marking.</b> A wrong answer costs a full mark. Only attempt a question you can't fully solve if you've genuinely eliminated at least two options first.</li>
-        <li><b>Attempt in two passes.</b> First pass: answer everything you're sure of. Second pass: come back for questions you can reason through. Don't burn time on a hard question during the first pass.</li>
-        <li><b>When two options both sound right, go back to the exact NCERT line</b> &mdash; NEET Biology questions are frequently lifted almost word-for-word from NCERT, so the textbook's precise wording is the tiebreaker.</li>
-        <li><b>Diagram-based and assertion-reason questions repeat every year.</b> Dedicated practice on these two formats pays off more than generic revision.</li>
+        <li data-i18n="step2_tip1"><b>Biology carries the most weight in NEET</b> (90 of 200 questions) &mdash; it's the highest-yield subject per minute you put in, so consistency here compounds more than in any other subject.</li>
+        <li data-i18n="step2_tip2"><b>Respect the negative marking.</b> A wrong answer costs a full mark. Only attempt a question you can't fully solve if you've genuinely eliminated at least two options first.</li>
+        <li data-i18n="step2_tip3"><b>Attempt in two passes.</b> First pass: answer everything you're sure of. Second pass: come back for questions you can reason through. Don't burn time on a hard question during the first pass.</li>
+        <li data-i18n="step2_tip4"><b>When two options both sound right, go back to the exact NCERT line</b> &mdash; NEET Biology questions are frequently lifted almost word-for-word from NCERT, so the textbook's precise wording is the tiebreaker.</li>
+        <li data-i18n="step2_tip5"><b>Diagram-based and assertion-reason questions repeat every year.</b> Dedicated practice on these two formats pays off more than generic revision.</li>
       </ul>
     </div>
   </section>
 
   <!-- STEP 3 -->
   <section class="step" id="rhythm">
-    <div class="step-head"><span class="step-num">03</span><h2>A Simple Weekly Rhythm</h2></div>
+    <div class="step-head"><span class="step-num">03</span><h2 data-i18n="step3_title">A Simple Weekly Rhythm</h2></div>
     <div class="card">
-      <p class="dim" style="margin-bottom:14px;">You don't need a complicated schedule &mdash; just repeat this loop for each new topic:</p>
+      <p class="dim" style="margin-bottom:14px;" data-i18n="step3_intro">You don't need a complicated schedule &mdash; just repeat this loop for each new topic:</p>
       <div class="rhythm">
-        <div class="rhythm-row"><div class="rhythm-dot">1</div><div class="rhythm-txt"><b>Same day the topic is taught</b> &mdash; go through Study Mode / Concepts once, slowly.</div></div>
-        <div class="rhythm-row"><div class="rhythm-dot">2</div><div class="rhythm-txt"><b>That evening</b> &mdash; run through Flashcards for that topic to test recall while it's fresh.</div></div>
-        <div class="rhythm-row"><div class="rhythm-dot">3</div><div class="rhythm-txt"><b>2&ndash;3 days later</b> &mdash; attempt an MCQ Quiz on it. Wrong answers tell you exactly what to re-read.</div></div>
-        <div class="rhythm-row"><div class="rhythm-dot">4</div><div class="rhythm-txt"><b>Before each Monthly Test</b> &mdash; use the Revision tab's Rapid Fire mode across every topic covered so far.</div></div>
+        <div class="rhythm-row"><div class="rhythm-dot">1</div><div class="rhythm-txt" data-i18n="step3_r1"><b>Same day the topic is taught</b> &mdash; go through Study Mode / Concepts once, slowly.</div></div>
+        <div class="rhythm-row"><div class="rhythm-dot">2</div><div class="rhythm-txt" data-i18n="step3_r2"><b>That evening</b> &mdash; run through Flashcards for that topic to test recall while it's fresh.</div></div>
+        <div class="rhythm-row"><div class="rhythm-dot">3</div><div class="rhythm-txt" data-i18n="step3_r3"><b>2&ndash;3 days later</b> &mdash; attempt an MCQ Quiz on it. Wrong answers tell you exactly what to re-read.</div></div>
+        <div class="rhythm-row"><div class="rhythm-dot">4</div><div class="rhythm-txt" data-i18n="step3_r4"><b>Before each Monthly Test</b> &mdash; use the Revision tab's Rapid Fire mode across every topic covered so far.</div></div>
       </div>
     </div>
   </section>
 
   <!-- STEP 4 -->
   <section class="step" id="chapters">
-    <div class="step-head"><span class="step-num">04</span><h2>Chapter-Specific Tips</h2></div>
-    <div class="callout">
+    <div class="step-head"><span class="step-num">04</span><h2 data-i18n="step4_title">Chapter-Specific Tips</h2></div>
+    <div class="callout" data-i18n="step4_callout">
       <b>Every chapter also has its own Study Tips tab</b> &mdash; look for it right after "Study Mode" inside each chapter. Those tabs cover exactly what to focus on for that chapter's theory and NEET-style questions, built around that chapter's actual content.
     </div>
   </section>
 
   <div class="founder-msg">
-    <div class="fm-quote">"There's no shortcut to becoming a doctor, but there is a smarter path. Study with a plan, revise before you forget, and trust the process &mdash; we're building this together."</div>
+    <div class="fm-quote" data-i18n="founder_quote">"There's no shortcut to becoming a doctor, but there is a smarter path. Study with a plan, revise before you forget, and trust the process &mdash; we're building this together."</div>
     <div class="fm-sign">&mdash; Narendra Sir</div>
-    <div class="fm-role">Biology Lecturer &middot; Founder &amp; CEO, BAIO Learning System</div>
+    <div class="fm-role" data-i18n="founder_role">Biology Lecturer &middot; Founder &amp; CEO, BAIO Learning System</div>
   </div>
 
-  <footer>BAIO Learning System &middot; Study Tips &amp; NEET Strategy</footer>
+  <footer data-i18n="footer_text">BAIO Learning System &middot; Study Tips &amp; NEET Strategy</footer>
 </div>
 
 <script>
@@ -302,6 +311,38 @@ if('serviceWorker' in navigator){
   window.addEventListener('offline', showOfflineBanner);
   if(document.readyState === 'complete' || document.readyState === 'interactive'){ checkConnectivity(); }
   else { document.addEventListener('DOMContentLoaded', checkConnectivity); }
+})();
+</script>
+<script>
+/* Trilingual mode (English / Kannada / Hindi) */
+const STUDYTIPS_PAGE_TRANSLATIONS = {"nav_theory":{"kn":"ಅಧ್ಯಯನ ಸಿದ್ಧಾಂತ","hi":"अध्ययन सिद्धांत"},"nav_neet":{"kn":"NEET ತಂತ್ರ","hi":"NEET रणनीति"},"nav_rhythm":{"kn":"ವಾರದ ಲಯ","hi":"साप्ताहिक दिनचर्या"},"nav_chapters":{"kn":"ಅಧ್ಯಾಯ ಸಲಹೆಗಳು","hi":"अध्याय सुझाव"},"hero_eyebrow":{"kn":"BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಂ &middot; ಅಧ್ಯಯನ ಸಲಹೆಗಳು","hi":"BAIO लर्निंग सिस्टम &middot; अध्ययन सुझाव"},"hero_h1":{"kn":"ಕೇವಲ ಹೆಚ್ಚು ಅಲ್ಲ, <span class=\"accent\">ಬುದ್ಧಿವಂತಿಕೆಯಿಂದ</span> ಓದಿ","hi":"सिर्फ ज़्यादा नहीं, <span class=\"accent\">समझदारी से</span> पढ़ें"},"hero_intro":{"kn":"ಪ್ರತಿ ಅಧ್ಯಾಯಕ್ಕೂ ಅನ್ವಯಿಸುವ ಸಾಮಾನ್ಯ ಅಭ್ಯಾಸಗಳು ಮತ್ತು NEET ಪರೀಕ್ಷಾ ತಂತ್ರ. ಒಂದು ಅಧ್ಯಾಯದ ವಿಷಯಕ್ಕೆ ನಿರ್ದಿಷ್ಟವಾದ ಸಲಹೆಗಳಿಗಾಗಿ, ಆ ಅಧ್ಯಾಯದ ಸ್ವಂತ <b>Study Tips</b> ಟ್ಯಾಬ್ ತೆರೆಯಿರಿ.","hi":"हर अध्याय पर लागू होने वाली सामान्य आदतें और NEET परीक्षा रणनीति। किसी एक अध्याय की सामग्री से जुड़े सुझावों के लिए, उस अध्याय का अपना <b>Study Tips</b> टैब खोलें।"},"step1_title":{"kn":"ಜೀವಶಾಸ್ತ್ರ ಥಿಯರಿಯನ್ನು ಹೇಗೆ ಓದುವುದು","hi":"जीव विज्ञान का सिद्धांत कैसे पढ़ें"},"step1_tip1":{"kn":"<b>ಸಕ್ರಿಯ ನೆನಪು ಮರುಓದುವಿಕೆಗಿಂತ ಉತ್ತಮ.</b> ಒಂದು ವಿಷಯ ಓದಿದ ನಂತರ, ಪುಸ್ತಕ ಮುಚ್ಚಿ ಮತ್ತು ನಿಮಗೆ ನೆನಪಿರುವುದನ್ನು ಬರೆಯಿರಿ ಅಥವಾ ಜೋರಾಗಿ ಹೇಳಿ — ನಂತರ ನೀವು ತಪ್ಪಿಸಿಕೊಂಡದ್ದನ್ನು ಪರಿಶೀಲಿಸಿ. ಇದೇ ನಿಜವಾಗಿ ನೆನಪನ್ನು ನಿರ್ಮಿಸುತ್ತದೆ, ನಿಷ್ಕ್ರಿಯ ಓದುವಿಕೆ ಅಲ್ಲ.","hi":"<b>सक्रिय स्मरण दोबारा पढ़ने से बेहतर है।</b> कोई विषय पढ़ने के बाद, किताब बंद करें और जो याद है उसे लिखें या ज़ोर से बोलें — फिर देखें क्या छूट गया। यही वास्तव में स्मृति बनाता है, निष्क्रिय पढ़ना नहीं।"},"step1_tip2":{"kn":"<b>ನಿಮ್ಮ ಮರುಅಭ್ಯಾಸವನ್ನು ಅಂತರದಲ್ಲಿ ಇರಿಸಿ.</b> ಒಂದೇ ಬಾರಿ ಕಂಠಪಾಠ ಮಾಡಿ ಮುಂದುವರಿಯುವ ಬದಲು, ಹೆಚ್ಚುತ್ತಿರುವ ಅಂತರಗಳಲ್ಲಿ (ಮರುದಿನ, ನಂತರ 3 ದಿನಗಳ ನಂತರ, ನಂತರ ಒಂದು ವಾರದ ನಂತರ) ವಿಷಯವನ್ನು ಮತ್ತೆ ಪರಿಶೀಲಿಸಿ.","hi":"<b>अपने रिवीजन को समय के अंतराल में बाँटें।</b> एक बार में रटकर आगे बढ़ने के बजाय, बढ़ते अंतराल पर (अगले दिन, फिर 3 दिन बाद, फिर एक हफ्ते बाद) विषय को दोबारा देखें।"},"step1_tip3":{"kn":"<b>ನೆನಪಿನಿಂದ ಚಿತ್ರಗಳನ್ನು ಮತ್ತೆ ಬಿಡಿಸಿ.</b> ಚಿತ್ರ-ಪ್ರಧಾನ ಅಧ್ಯಾಯಗಳಿಗೆ (ಪ್ಲಾಂಟ್ ಕಿಂಗ್‌ಡಮ್, ಮಾರ್ಫಾಲಜಿ, ಅನಾಟಮಿ), ಚಿತ್ರವನ್ನು ಗುರುತಿಸಲು ಸಾಧ್ಯವಾಗುವುದು ಸಾಕಾಗುವುದಿಲ್ಲ — ಖಾಲಿ ಚಿತ್ರಕ್ಕೆ ನೆನಪಿನಿಂದ ಲೇಬಲ್ ಮಾಡುವ ಅಭ್ಯಾಸ ಮಾಡಿ.","hi":"<b>चित्रों को याद्दाश्त से दोबारा बनाएँ।</b> चित्र-प्रधान अध्यायों (Plant Kingdom, Morphology, Anatomy) के लिए, चित्र को पहचान पाना ही काफी नहीं है — खाली चित्र पर याद्दाश्त से लेबल लगाने का अभ्यास करें।"},"step1_tip4":{"kn":"ಒಂದು ವಿಷಯ ಮುಗಿಸಿದ ನಂತರ ನಿಮ್ಮದೇ ಪದಗಳಲ್ಲಿ <b>ನಿಮ್ಮ ಸ್ವಂತ ಚಿಕ್ಕ ಟಿಪ್ಪಣಿಗಳನ್ನು ಬರೆಯಿರಿ</b>. ಮರುರೂಪಿಸುವ ಕ್ರಿಯೆಯೇ ನಿಜವಾದ ತಿಳುವಳಿಕೆಯನ್ನು ಒತ್ತಾಯಿಸುತ್ತದೆ, ಕೇವಲ ನಕಲು ಮಾಡುವುದಲ್ಲ.","hi":"किसी विषय को पूरा करने के बाद अपने ही शब्दों में <b>अपने छोटे नोट्स लिखें</b>। दोबारा शब्दों में ढालने की यह प्रक्रिया ही असली समझ बनाती है, केवल नकल करना नहीं।"},"step1_tip5":{"kn":"<b>ಆ್ಯಪ್‌ನ ಸ್ವಂತ ಅನುಕ್ರಮವನ್ನು ಬಳಸಿ:</b> ಮೊದಲ ಪಾಸ್‌ಗೆ Study Mode/Concepts, ಅದೇ ದಿನ ನೆನಪನ್ನು ಪರೀಕ್ಷಿಸಲು Flashcards, ನಂತರ ನಿಜವಾಗಿ ಏನು ಉಳಿದಿದೆ ಎಂದು ಪರಿಶೀಲಿಸಲು ಕೆಲವು ದಿನಗಳ ನಂತರ MCQ Quiz.","hi":"<b>ऐप के अपने क्रम का उपयोग करें:</b> पहले पास के लिए Study Mode/Concepts, उसी दिन स्मरण जाँचने के लिए Flashcards, फिर कुछ दिन बाद वास्तव में क्या याद रहा यह जाँचने के लिए MCQ Quiz।"},"step2_title":{"kn":"NEET ಪರೀಕ್ಷಾ ತಂತ್ರ","hi":"NEET परीक्षा रणनीति"},"step2_tip1":{"kn":"<b>NEET ನಲ್ಲಿ ಜೀವಶಾಸ್ತ್ರವು ಅತಿ ಹೆಚ್ಚು ತೂಕ ಹೊಂದಿದೆ</b> (200 ರಲ್ಲಿ 90 ಪ್ರಶ್ನೆಗಳು) — ನೀವು ಹಾಕುವ ಪ್ರತಿ ನಿಮಿಷಕ್ಕೆ ಇದು ಅತಿ ಹೆಚ್ಚು ಪ್ರತಿಫಲ ನೀಡುವ ವಿಷಯ, ಆದ್ದರಿಂದ ಇಲ್ಲಿನ ಸ್ಥಿರತೆ ಬೇರೆ ಯಾವುದೇ ವಿಷಯಕ್ಕಿಂತ ಹೆಚ್ಚು ಫಲ ನೀಡುತ್ತದೆ.","hi":"<b>NEET में जीव विज्ञान का सबसे अधिक भार है</b> (200 में से 90 प्रश्न) — यह प्रति मिनट सबसे अधिक फल देने वाला विषय है, इसलिए यहाँ की निरंतरता किसी भी अन्य विषय से ज़्यादा असर दिखाती है।"},"step2_tip2":{"kn":"<b>ನಕಾರಾತ್ಮಕ ಅಂಕಗಳನ್ನು ಗೌರವಿಸಿ.</b> ತಪ್ಪು ಉತ್ತರವು ಪೂರ್ಣ ಅಂಕವನ್ನು ಕಳೆದುಕೊಳ್ಳುತ್ತದೆ. ಸಂಪೂರ್ಣವಾಗಿ ಪರಿಹರಿಸಲಾಗದ ಪ್ರಶ್ನೆಯನ್ನು, ನೀವು ನಿಜವಾಗಿಯೂ ಕನಿಷ್ಠ ಎರಡು ಆಯ್ಕೆಗಳನ್ನು ತೆಗೆದುಹಾಕಿದ ನಂತರವೇ ಪ್ರಯತ್ನಿಸಿ.","hi":"<b>नकारात्मक अंकन का सम्मान करें।</b> गलत उत्तर पूरा अंक काट लेता है। जिस प्रश्न को आप पूरी तरह हल नहीं कर सकते, उसे तभी करें जब आपने वास्तव में कम से कम दो विकल्प हटा दिए हों।"},"step2_tip3":{"kn":"<b>ಎರಡು ಸುತ್ತುಗಳಲ್ಲಿ ಪ್ರಯತ್ನಿಸಿ.</b> ಮೊದಲ ಸುತ್ತು: ನಿಮಗೆ ಖಚಿತವಾಗಿರುವ ಎಲ್ಲದಕ್ಕೂ ಉತ್ತರಿಸಿ. ಎರಡನೇ ಸುತ್ತು: ತರ್ಕಿಸಬಹುದಾದ ಪ್ರಶ್ನೆಗಳಿಗೆ ಹಿಂತಿರುಗಿ. ಮೊದಲ ಸುತ್ತಿನಲ್ಲಿ ಕಷ್ಟದ ಪ್ರಶ್ನೆಗೆ ಸಮಯ ವ್ಯರ್ಥ ಮಾಡಬೇಡಿ.","hi":"<b>दो चरणों में प्रयास करें।</b> पहला चरण: जो निश्चित हैं उन सभी का उत्तर दें। दूसरा चरण: जिन प्रश्नों को तर्क से हल कर सकते हैं उन पर वापस आएँ। पहले चरण में किसी कठिन प्रश्न पर समय बर्बाद न करें।"},"step2_tip4":{"kn":"<b>ಎರಡು ಆಯ್ಕೆಗಳೂ ಸರಿ ಎಂದು ಅನಿಸಿದಾಗ, ನಿಖರವಾದ NCERT ಸಾಲಿಗೆ ಹಿಂತಿರುಗಿ</b> — NEET ಜೀವಶಾಸ್ತ್ರ ಪ್ರಶ್ನೆಗಳು ಆಗಾಗ್ಗೆ NCERT ಯಿಂದ ಬಹುತೇಕ ಪದಕ್ಕೆ ಪದವಾಗಿ ತೆಗೆದುಕೊಳ್ಳಲಾಗುತ್ತದೆ, ಆದ್ದರಿಂದ ಪಠ್ಯಪುಸ್ತಕದ ನಿಖರ ಪದಗಳೇ ನಿರ್ಣಾಯಕ.","hi":"<b>जब दोनों विकल्प सही लगें, तो सटीक NCERT पंक्ति पर वापस जाएँ</b> — NEET जीव विज्ञान के प्रश्न अक्सर NCERT से लगभग शब्दशः लिए जाते हैं, इसलिए पाठ्यपुस्तक के सटीक शब्द ही निर्णायक होते हैं।"},"step2_tip5":{"kn":"<b>ಚಿತ್ರ ಆಧಾರಿತ ಮತ್ತು ಅಭಿಪ್ರಾಯ-ಕಾರಣ ಪ್ರಶ್ನೆಗಳು ಪ್ರತಿ ವರ್ಷ ಪುನರಾವರ್ತನೆಯಾಗುತ್ತವೆ.</b> ಈ ಎರಡು ಸ್ವರೂಪಗಳ ಮೇಲೆ ಮೀಸಲಾದ ಅಭ್ಯಾಸವು ಸಾಮಾನ್ಯ ಮರುಅಭ್ಯಾಸಕ್ಕಿಂತ ಹೆಚ್ಚು ಫಲ ನೀಡುತ್ತದೆ.","hi":"<b>चित्र-आधारित और अभिकथन-कारण (assertion-reason) प्रश्न हर साल दोहराए जाते हैं।</b> इन दो प्रारूपों पर समर्पित अभ्यास सामान्य रिवीजन से ज़्यादा फायदा देता है।"},"step3_title":{"kn":"ಸರಳ ಸಾಪ್ತಾಹಿಕ ಲಯ","hi":"एक सरल साप्ताहिक दिनचर्या"},"step3_intro":{"kn":"ನಿಮಗೆ ಸಂಕೀರ್ಣ ವೇಳಾಪಟ್ಟಿ ಅಗತ್ಯವಿಲ್ಲ — ಪ್ರತಿ ಹೊಸ ವಿಷಯಕ್ಕೂ ಈ ಲೂಪ್ ಅನ್ನು ಪುನರಾವರ್ತಿಸಿ:","hi":"आपको जटिल समय-सारणी की ज़रूरत नहीं — हर नए विषय के लिए बस इस चक्र को दोहराएँ:"},"step3_r1":{"kn":"<b>ವಿಷಯ ಕಲಿಸಿದ ಅದೇ ದಿನ</b> — Study Mode / Concepts ಅನ್ನು ಒಮ್ಮೆ, ನಿಧಾನವಾಗಿ ಪೂರ್ಣಗೊಳಿಸಿ.","hi":"<b>जिस दिन विषय पढ़ाया जाए उसी दिन</b> — Study Mode / Concepts को एक बार, धीरे-धीरे पूरा करें।"},"step3_r2":{"kn":"<b>ಅದೇ ಸಂಜೆ</b> — ನೆನಪು ತಾಜಾ ಇರುವಾಗಲೇ ಪರೀಕ್ಷಿಸಲು ಆ ವಿಷಯದ Flashcards ಮೂಲಕ ಹೋಗಿ.","hi":"<b>उसी शाम</b> — जब याद ताज़ा हो, तभी उस विषय के Flashcards से गुज़रें।"},"step3_r3":{"kn":"<b>2–3 ದಿನಗಳ ನಂತರ</b> — ಅದರ ಮೇಲೆ MCQ Quiz ಪ್ರಯತ್ನಿಸಿ. ತಪ್ಪು ಉತ್ತರಗಳು ನೀವು ಏನನ್ನು ಮತ್ತೆ ಓದಬೇಕು ಎಂದು ನಿಖರವಾಗಿ ತಿಳಿಸುತ್ತವೆ.","hi":"<b>2–3 दिन बाद</b> — उस पर MCQ Quiz का प्रयास करें। गलत उत्तर बिल्कुल बता देते हैं कि क्या दोबारा पढ़ना है।"},"step3_r4":{"kn":"<b>ಪ್ರತಿ Monthly Test ಮೊದಲು</b> — ಇಲ್ಲಿಯವರೆಗೆ ಒಳಗೊಂಡ ಎಲ್ಲಾ ವಿಷಯಗಳಾದ್ಯಂತ Revision ಟ್ಯಾಬ್‌ನ Rapid Fire ಮೋಡ್ ಬಳಸಿ.","hi":"<b>हर Monthly Test से पहले</b> — अब तक कवर किए गए सभी विषयों पर Revision टैब के Rapid Fire मोड का उपयोग करें।"},"step4_title":{"kn":"ಅಧ್ಯಾಯ-ನಿರ್ದಿಷ್ಟ ಸಲಹೆಗಳು","hi":"अध्याय-विशिष्ट सुझाव"},"step4_callout":{"kn":"<b>ಪ್ರತಿ ಅಧ್ಯಾಯಕ್ಕೂ ಅದರದೇ ಸ್ವಂತ Study Tips ಟ್ಯಾಬ್ ಇದೆ</b> — ಪ್ರತಿ ಅಧ್ಯಾಯದೊಳಗೆ \"Study Mode\" ಆದ ಕೂಡಲೇ ಅದನ್ನು ಹುಡುಕಿ. ಆ ಟ್ಯಾಬ್‌ಗಳು ಆ ಅಧ್ಯಾಯದ ಥಿಯರಿ ಮತ್ತು NEET-ಶೈಲಿಯ ಪ್ರಶ್ನೆಗಳಿಗೆ ಏನನ್ನು ಗಮನಿಸಬೇಕು ಎಂಬುದನ್ನು ನಿಖರವಾಗಿ ಒಳಗೊಂಡಿದ್ದು, ಆ ಅಧ್ಯಾಯದ ನಿಜವಾದ ವಿಷಯದ ಸುತ್ತ ನಿರ್ಮಿಸಲಾಗಿದೆ.","hi":"<b>हर अध्याय का अपना Study Tips टैब भी होता है</b> — हर अध्याय के अंदर \"Study Mode\" के ठीक बाद इसे देखें। वे टैब उस अध्याय की सिद्धांत और NEET-शैली के प्रश्नों के लिए बिल्कुल सही बताते हैं कि किस पर ध्यान देना है, जो उस अध्याय की वास्तविक सामग्री के आधार पर बनाए गए हैं।"},"founder_quote":{"kn":"\"ವೈದ್ಯರಾಗಲು ಯಾವುದೇ ಶಾರ್ಟ್‌ಕಟ್ ಇಲ್ಲ, ಆದರೆ ಬುದ್ಧಿವಂತ ದಾರಿ ಇದೆ. ಯೋಜನೆಯೊಂದಿಗೆ ಓದಿ, ಮರೆಯುವ ಮೊದಲು ಮರುಅಭ್ಯಾಸ ಮಾಡಿ, ಮತ್ತು ಪ್ರಕ್ರಿಯೆಯನ್ನು ನಂಬಿ — ನಾವು ಇದನ್ನು ಒಟ್ಟಿಗೆ ನಿರ್ಮಿಸುತ್ತಿದ್ದೇವೆ.\"","hi":"\"डॉक्टर बनने का कोई शॉर्टकट नहीं है, लेकिन एक समझदार रास्ता ज़रूर है। योजना के साथ पढ़ें, भूलने से पहले दोहराएँ, और प्रक्रिया पर भरोसा रखें — हम इसे मिलकर बना रहे हैं।\""},"founder_role":{"kn":"ಜೀವಶಾಸ್ತ್ರ ಉಪನ್ಯಾಸಕರು &middot; ಸಂಸ್ಥಾಪಕರು &amp; CEO, BAIO Learning System","hi":"जीव विज्ञान व्याख्याता &middot; संस्थापक &amp; CEO, BAIO Learning System"},"footer_text":{"kn":"BAIO Learning System &middot; ಅಧ್ಯಯನ ಸಲಹೆಗಳು &amp; NEET ತಂತ್ರ","hi":"BAIO Learning System &middot; अध्ययन सुझाव &amp; NEET रणनीति"}};
+const STUDYTIPS_PAGE_ORIGINAL_EN = {};
+document.querySelectorAll('[data-i18n]').forEach(function(el){
+  STUDYTIPS_PAGE_ORIGINAL_EN[el.getAttribute('data-i18n')] = el.innerHTML;
+});
+let currentLang = 'en';
+function setLang(lang){
+  currentLang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    const key = el.getAttribute('data-i18n');
+    if(lang === 'en'){ el.innerHTML = STUDYTIPS_PAGE_ORIGINAL_EN[key]; }
+    else if(STUDYTIPS_PAGE_TRANSLATIONS[key] && STUDYTIPS_PAGE_TRANSLATIONS[key][lang]){ el.innerHTML = STUDYTIPS_PAGE_TRANSLATIONS[key][lang]; }
+  });
+  try{ localStorage.setItem('baio_studytips_lang', lang); }catch(e){}
+  renderLangSwitcher();
+}
+window.setLang = setLang;
+function renderLangSwitcher(){
+  const el = document.getElementById('langSwitcher');
+  if(!el) return;
+  const langs = [{id:'en',label:'English'},{id:'kn',label:'ಕನ್ನಡ'},{id:'hi',label:'हिंदी'}];
+  el.innerHTML = langs.map(function(l){ return '<div class="lang-btn' + (l.id===currentLang?' active':'') + '" onclick="setLang(\'' + l.id + '\')">' + l.label + '</div>'; }).join('');
+}
+(function(){
+  let saved = null;
+  try{ saved = localStorage.getItem('baio_studytips_lang'); }catch(e){}
+  if(saved && saved !== 'en'){ setLang(saved); }
+  else { renderLangSwitcher(); }
 })();
 </script>
 </body>
