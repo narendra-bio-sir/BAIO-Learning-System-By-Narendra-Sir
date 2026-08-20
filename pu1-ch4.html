@@ -1583,6 +1583,8 @@ const HW_UNLOCK_LOOKUP = {};
 function getHwUnlock(){ try{ return JSON.parse(localStorage.getItem(HW_UNLOCK_KEY) || 'null'); }catch(e){ return null; } }
 function setHwUnlock(method, extra){ try{ localStorage.setItem(HW_UNLOCK_KEY, JSON.stringify(Object.assign({unlocked:true, method:method, ts:Date.now()}, extra||{}))); }catch(e){} }
 function hwQualifies(){ const u=getHwUnlock(); return !!(u && u.unlocked); }
+function reLockHw(){ try{ localStorage.removeItem(HW_UNLOCK_KEY); }catch(e){} renderDownloads(); }
+window.reLockHw = reLockHw;
 function hwUnlockLookupKey(section,roll){ return (String(section).trim()+'_'+String(roll).trim()).toUpperCase(); }
 function hwSubmitUnlock(){
   const name=(document.getElementById('hwNameInput')||{}).value || '';
@@ -1603,13 +1605,13 @@ function hwToggleCodeVisibility(){ const input=document.getElementById('hwCodeIn
 window.hwToggleCodeVisibility=hwToggleCodeVisibility;
 function hwRow(){
   const key='handwritten_notes', p=DATA.pdfs[key];
-  if(hwQualifies()) return `<div class="dl-row"><div class="dl-info"><div class="t">🔓 ${p.title}</div><div class="d">${p.desc}</div></div><div class="dl-btns"><button class="dl-btn view" onclick="viewPdf('${key}')">View</button><button class="dl-btn dl" id="dlbtn_${key}" onclick="downloadPdf('${key}','dlbtn_${key}')">Download</button></div></div>`;
+  if(hwQualifies()) return `<div class="dl-row"><div class="dl-info"><div class="t">🔓 ${p.title}</div><div class="d">${p.desc}</div></div><div class="dl-btns"><button class="dl-btn view" onclick="viewPdf('${key}')">View</button><button class="dl-btn dl" id="dlbtn_${key}" onclick="downloadPdf('${key}','dlbtn_${key}')">Download</button></div></div><div style="text-align:right;margin:-6px 0 10px;"><a href="#" onclick="reLockHw(); return false;" style="font-size:11px;color:var(--ink-dim);text-decoration:underline;cursor:pointer;">Re-lock notes on this device</a></div>`;
   return `<div class="dl-row"><div class="dl-info"><div class="t">🔒 ${p.title}</div><div class="d">Locked teacher-issued material. Ask your teacher for a free unlock code.</div></div></div><div class="hw-unlock-form"><div class="hw-msg" id="hwUnlockMsg"></div><input type="text" id="hwNameInput" placeholder="Full name"><input type="text" id="hwSectionInput" placeholder="Section"><input type="text" id="hwRollInput" placeholder="Roll number"><div style="position:relative;"><input type="text" id="hwCodeInput" placeholder="Free unlock code" autocomplete="off" style="width:100%;"><label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-dim);margin:6px 0 0;cursor:pointer;"><input type="checkbox" id="hwCodeShowToggle" checked onchange="hwToggleCodeVisibility()" style="width:auto;margin:0;">Show code</label></div><button class="start-btn" onclick="hwSubmitUnlock()">Unlock with Code</button><div style="text-align:center;font-size:11px;color:var(--ink-dim);margin:10px 0 4px;">Ask your teacher for a free unlock code</div></div>`;
 }
 function renderDownloads(){
   let html=`<div class="dl-topic-block"><div class="dl-section-title">Study Material</div>${pdfRow('comprehensive')}${pdfRow('revision_notes')}</div>`;
   DATA.topics.forEach(t=>{ html+=`<div class="dl-topic-block"><div class="dl-section-title">Worksheet — ${t.name}</div>${pdfRow('ws_'+t.id)}</div>`; });
-  html+=`<div class="dl-topic-block"><div class="dl-section-title">Full Chapter Revision</div>${pdfRow('ws_revision')}</div></div><div class="dl-topic-block"><div class="dl-section-title">Teacher-issued organised notes</div>${hwRow()}</div>`;
+  html+=`<div class="dl-topic-block"><div class="dl-section-title">Full Chapter Revision</div>${pdfRow('ws_revision')}</div></div><div class="dl-topic-block"><div class="dl-section-title">Teacher-issued organised notes</div>${hwRow()}</div><div class="dl-topic-block"><div class="dl-section-title">Premium Content</div>${premiumStatusRow()}</div>`;
   document.getElementById('content').innerHTML=html;
 }
 
@@ -2332,6 +2334,12 @@ function setPremiumUnlock(method, extra){
 function premiumQualifies(){ const u = getPremiumUnlock(); return !!(u && u.unlocked); }
 function reLockPremium(){ try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){} renderContent(); renderTabbar(); }
 window.reLockPremium = reLockPremium;
+function premiumStatusRow(){
+  if(premiumQualifies()){
+    return `<div class="dl-row"><div class="dl-info"><div class="t">🔓 Premium Content</div><div class="d">Unlocked on this device — ${Object.values(PREMIUM_TAB_LABELS).join(', ')}</div></div></div><div style="text-align:right;margin:-6px 0 10px;"><a href="#" onclick="reLockPremium(); return false;" style="font-size:11px;color:var(--ink-dim);text-decoration:underline;cursor:pointer;">Re-lock Premium on this device</a></div>`;
+  }
+  return `<div class="dl-row"><div class="dl-info"><div class="t">🔒 Premium Content</div><div class="d">Not yet unlocked — visit any premium tab (${Object.values(PREMIUM_TAB_LABELS).join(', ')}) to unlock</div></div></div>`;
+}
 function premiumUnlockKey(section, roll){ return (section||'').trim().toUpperCase()+'_'+(roll||'').trim().toUpperCase(); }
 /* ---------------- Student-locked unlock code (must match code_generator.html exactly) ---------------- */
 const CODE_SALT = 'BAIO-STUDENT-LOCK-2026';
