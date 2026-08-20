@@ -678,7 +678,6 @@ const TABS = [
   {id:'study', label:'Study Mode'},
   {id:'studytips', label:'Study Tips'},
   {id:'pacing', label:'Pacing'},
-  {id:'notes', label:'Class Notes'},
   {id:'concepts', label:'Concepts'},
   {id:'flashcards', label:'Flashcards'},
   {id:'mcq', label:'MCQ Quiz'},
@@ -1727,16 +1726,6 @@ function renderDownloads(){
 
 
 /* ---------------- ROUTER ---------------- */
-function renderNotes(){
-  let html = '';
-  DATA.topics.forEach(t=>{
-    const key = 'ws_notes_' + t.id;
-    if(DATA.pdfs[key]){
-      html += `<div class="dl-topic-block"><div class="dl-section-title">${t.name}</div>${pdfRow(key)}</div>`;
-    }
-  });
-  document.getElementById('content').innerHTML = html;
-}
 /* ---------------- KCET PRACTICE ---------------- */
 let kcetSetup = {topicMode:'full', topics:[], difficulty:'All', formats:[], count:'60', timer:'80'};
 const KCET_FORMATS = [
@@ -2547,7 +2536,6 @@ function renderContent(){
   else if(currentTab==='study') renderStudy();
   else if(currentTab==='studytips') renderStudyTips();
   else if(currentTab==='pacing') renderPacing();
-  else if(currentTab==='notes') renderNotes();
   else if(currentTab==='concepts') renderConcepts();
   else if(currentTab==='flashcards') renderFlashcards();
   else if(currentTab==='mcq') renderMcqSetup();
