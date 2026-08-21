@@ -222,6 +222,21 @@ const STATE_KEY = 'baio_assignment_tracker_v1';
 let ITEMS = [];
 let STUDENTS = [];
 
+// Reconciles a browser's previously-saved item list against SEED_ITEMS:
+// any chapter/worksheet newly added to the page (e.g. a new chapter synced
+// from the spreadsheet) gets merged in, while custom items a teacher added
+// locally via "Add Assignment / Worksheet" (ids not present in SEED_ITEMS)
+// are kept. Items still present in SEED_ITEMS always take the seed's
+// current chapter/label/type, so renames in the source data show up too.
+function reconcileItems(savedItems, seedItems){
+  const seedIds = new Set(seedItems.map(it=>it.id));
+  const merged = seedItems.map(it=>JSON.parse(JSON.stringify(it)));
+  savedItems.forEach(it=>{
+    if(!seedIds.has(it.id)) merged.push(JSON.parse(JSON.stringify(it)));
+  });
+  return merged;
+}
+
 // Reconciles a browser's previously-saved roster against the roster
 // currently embedded in this page: drops students no longer in
 // SEED_STUDENTS (e.g. moved out / removed), adds any new ones, and keeps
@@ -235,21 +250,31 @@ let STUDENTS = [];
 // baseline, the teacher changed it in this browser, so that edit wins. With
 // no baseline at all (an older save from before this snapshot existed), the
 // fresh seed wins outright so a pending Drive sync isn't stuck forever.
-function reconcileStudents(savedStudents, seedStudents, prevSeedStudents){
+// mergedItems (see reconcileItems) drives which status keys survive: seed
+// items always get a status (Pending default if missing everywhere), and
+// custom items keep whatever the teacher locally set.
+function reconcileStudents(savedStudents, seedStudents, prevSeedStudents, mergedItems){
   const savedByCode = {};
   savedStudents.forEach(s=>{ savedByCode[s.code] = s; });
+  const seedItemIds = new Set(SEED_ITEMS.map(it=>it.id));
   const havePrevSeed = Array.isArray(prevSeedStudents);
   const prevSeedByCode = {};
   if(havePrevSeed) prevSeedStudents.forEach(s=>{ prevSeedByCode[s.code] = s; });
   return seedStudents.map(seed=>{
     const existing = savedByCode[seed.code];
-    if(!existing) return JSON.parse(JSON.stringify(seed));
     const prevSeed = havePrevSeed ? prevSeedByCode[seed.code] : null;
     const status = {};
-    Object.keys(seed.status).forEach(key=>{
-      const existingVal = existing.status ? existing.status[key] : undefined;
-      if(existingVal === undefined || !prevSeed || prevSeed.status[key] === existingVal){
-        status[key] = seed.status[key];
+    mergedItems.forEach(it=>{
+      const key = it.id;
+      if(!seedItemIds.has(key)){
+        // Custom item: not part of the seeded data, so keep the teacher's local value.
+        status[key] = (existing && existing.status && existing.status[key]) || 'Pending';
+        return;
+      }
+      const seedVal = seed.status[key];
+      const existingVal = existing && existing.status ? existing.status[key] : undefined;
+      if(!existing || existingVal === undefined || !prevSeed || prevSeed.status[key] === existingVal){
+        status[key] = seedVal;
       } else {
         status[key] = existingVal;
       }
@@ -261,8 +286,8 @@ function loadState(){
   let saved = null;
   try{ saved = JSON.parse(localStorage.getItem(STATE_KEY) || 'null'); }catch(e){}
   if(saved && saved.items && saved.students){
-    ITEMS = saved.items;
-    STUDENTS = reconcileStudents(saved.students, SEED_STUDENTS, saved.seedSnapshot);
+    ITEMS = reconcileItems(saved.items, SEED_ITEMS);
+    STUDENTS = reconcileStudents(saved.students, SEED_STUDENTS, saved.seedSnapshot, ITEMS);
   } else {
     ITEMS = JSON.parse(JSON.stringify(SEED_ITEMS));
     STUDENTS = JSON.parse(JSON.stringify(SEED_STUDENTS));
