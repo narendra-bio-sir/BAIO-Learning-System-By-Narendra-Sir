@@ -887,6 +887,7 @@ window.addEventListener('afterprint', function(){
 
 <header>
   <a href="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/" id="analyticsHomeBtn" class="theme-toggle-btn-fixed" style="top:60px; right:5vw; left:auto; text-decoration:none;" title="Back to Home" aria-label="Back to Home">🏠</a>
+  <button id="analyticsHardRefreshBtn" class="theme-toggle-btn-fixed" style="top:104px; right:5vw;" onclick="hardRefreshAnalytics()" title="Force-refresh this page (clears any cached copy)" aria-label="Refresh page">🔄</button>
   <button id="analyticsRelockBtn" class="theme-toggle-btn-fixed" style="display:none; right:calc(5vw + 48px);" title="Re-lock Performance Analysis">🔓</button>
   <button id="themeToggle" class="theme-toggle-btn-fixed">🌙</button>
   <div class="sub" style="font-weight:700;">Biology All In One (BAIO) Learning System</div>
@@ -5374,6 +5375,23 @@ function rebuildVisibleCharts(){
   if(bvoBuilt) buildBvo();
   if(sectionsBuilt) buildSections();
   resizeAllCharts();
+}
+async function hardRefreshAnalytics(){
+  const btn = document.getElementById('analyticsHardRefreshBtn');
+  if(btn) btn.textContent = '⏳';
+  try{
+    if('serviceWorker' in navigator){
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for(const r of regs) await r.unregister();
+    }
+    if('caches' in window){
+      const keys = await caches.keys();
+      for(const k of keys) await caches.delete(k);
+    }
+  }catch(e){}
+  const params = new URLSearchParams(location.search);
+  params.set('_r', Date.now());
+  location.href = location.pathname + '?' + params.toString();
 }
 document.getElementById('themeToggle').addEventListener('click', ()=>{
   const isDark = document.documentElement.getAttribute('data-theme')==='dark';
