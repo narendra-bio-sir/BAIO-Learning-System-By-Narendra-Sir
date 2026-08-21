@@ -3326,6 +3326,7 @@ document.querySelectorAll('.mode-btn[data-mode]').forEach(btn=>{
       const el = document.getElementById(id);
       if(el) el.style.display = (id===activeId) ? '' : 'none';
     });
+    if(btn.dataset.mode === 'achievers') syncAchieversToPULevel();
     const fn = buildFnFor(btn.dataset.mode);
     if(fn) fn();
     if(btn.dataset.mode==='student'){
@@ -3350,6 +3351,19 @@ document.querySelectorAll('.mode-btn[data-mode]').forEach(btn=>{
 });
 
 /* ---------- PU-I / PU-II level switch ---------- */
+function syncAchieversToPULevel(){
+  const pu1Box = document.getElementById('achIncludePU1');
+  const pu2Box = document.getElementById('achIncludePU2');
+  if(!pu1Box || !pu2Box) return;
+  pu1Box.checked = currentPULevel === 'pu1';
+  pu2Box.checked = currentPULevel === 'pu2';
+  const sparkBox = document.getElementById('achSecSPARK'), primeBox = document.getElementById('achSecPRIME');
+  const champBox = document.getElementById('achSecCHAMPION'), eliteBox = document.getElementById('achSecELITE');
+  if(sparkBox) sparkBox.checked = pu1Box.checked;
+  if(primeBox) primeBox.checked = pu1Box.checked;
+  if(champBox) champBox.checked = pu2Box.checked;
+  if(eliteBox) eliteBox.checked = pu2Box.checked;
+}
 document.querySelectorAll('#puLevelSwitch [data-pulevel]').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     if(btn.dataset.pulevel === currentPULevel) return;
@@ -3359,6 +3373,9 @@ document.querySelectorAll('#puLevelSwitch [data-pulevel]').forEach(btn=>{
     const activeMode = document.querySelector('.mode-btn[data-mode].active');
     if(activeMode && PU_CATEGORY_MODES.indexOf(activeMode.dataset.mode) !== -1){
       activeMode.click();
+    } else if(activeMode && activeMode.dataset.mode === 'achievers'){
+      syncAchieversToPULevel();
+      buildAchievers();
     }
   });
 });
