@@ -2745,6 +2745,7 @@ window.addEventListener('afterprint', function(){
         <div class="checkbox-row"><input type="checkbox" class="rp-jee-check" value="3" id="rpJee_3" checked><label for="rpJee_3">JEE CT 1</label></div>
       </div>
       <div class="checkbox-row"><input type="checkbox" id="incRisk"><label for="incRisk">At-Risk Students (failing 2+ subjects)</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="incConclusion" checked><label for="incConclusion">Conclusion &amp; Recommendations (Theory, NEET, KCET, JEE)</label></div>
     </div>
     <div id="rpBlockPU2" style="display:none;">
       <div class="checkbox-row"><input type="checkbox" id="incMonthlyPU2" checked><label for="incMonthlyPU2">Monthly Test Overview (subject-wide + section-wise)</label></div>
@@ -2757,6 +2758,7 @@ window.addEventListener('afterprint', function(){
       <div class="checkbox-row"><input type="checkbox" id="incJeeObtPU2" checked><label for="incJeeObtPU2">JEE Overview (subject averages, section-wise, distribution)</label></div>
       <div style="margin-left:26px; margin-bottom:6px;" id="rpPu2JeeChecks"></div>
       <div class="checkbox-row"><input type="checkbox" id="incRiskPU2"><label for="incRiskPU2">At-Risk Students (failing 2+ subjects)</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="incConclusionPU2" checked><label for="incConclusionPU2">Conclusion &amp; Recommendations (Theory, NEET, KCET, JEE)</label></div>
     </div>
     </div>
 
@@ -7519,7 +7521,7 @@ function generateReport(){
 }
 function generatePU1Report(){
   const useSystem = document.getElementById('reportModeSystem').classList.contains('active');
-  const inc = useSystem ? {slip:true,monthly:true,sections:true,bvo:true,neetobt:true,kcetobt:true,jeeobt:true,risk:false} : {
+  const inc = useSystem ? {slip:true,monthly:true,sections:true,bvo:true,neetobt:true,kcetobt:true,jeeobt:true,risk:false,conclusion:true} : {
     slip: document.getElementById('incSlip').checked,
     monthly: document.getElementById('incMonthly').checked,
     sections: document.getElementById('incSections').checked,
@@ -7527,7 +7529,8 @@ function generatePU1Report(){
     neetobt: document.getElementById('incNeetObt').checked,
     kcetobt: document.getElementById('incKcetObt').checked,
     jeeobt: document.getElementById('incJeeObt').checked,
-    risk: document.getElementById('incRisk').checked
+    risk: document.getElementById('incRisk').checked,
+    conclusion: document.getElementById('incConclusion').checked
   };
   const rpKcetRounds = useSystem ? KCET_TESTS.map((t,i)=>i) : Array.from(document.querySelectorAll('.rp-kcet-check')).filter(b=>b.checked).map(b=>parseInt(b.value,10));
   const rpJeeRounds = useSystem ? JEE_TESTS.map((t,i)=>i) : Array.from(document.querySelectorAll('.rp-jee-check')).filter(b=>b.checked).map(b=>parseInt(b.value,10));
@@ -7735,11 +7738,13 @@ function generatePU1Report(){
     html += rpSection('At-Risk Students <span style="font-weight:400;font-size:12px;color:var(--muted);">(Failing 2+ Subjects, Slip Test 2)</span>', rpTable(['Name','Enrollment','Subjects Failed','Total /80'], rows));
   }
 
-  const rpTheoryPct = (o.pct1 + o.pct2) / 2;
-  const rpNeetPct = rpOverallPct(NEET_TESTS, 'total', ()=>720);
-  const rpKcetPct = rpOverallPct(KCET_TESTS, 'total', ()=>135);
-  const rpJeePct = rpOverallPct(JEE_TESTS, 'total', ()=>300);
-  html += buildConclusionSection(rpTheoryPct, rpNeetPct, rpKcetPct, rpJeePct);
+  if(inc.conclusion){
+    const rpTheoryPct = (o.pct1 + o.pct2) / 2;
+    const rpNeetPct = rpOverallPct(NEET_TESTS, 'total', ()=>720);
+    const rpKcetPct = rpOverallPct(KCET_TESTS, 'total', ()=>135);
+    const rpJeePct = rpOverallPct(JEE_TESTS, 'total', ()=>300);
+    html += buildConclusionSection(rpTheoryPct, rpNeetPct, rpKcetPct, rpJeePct);
+  }
 
   html += '</div>'; // close rp-body
   html += '<div class="rp-footer">BAIO Learning System by Narendra Sir &middot; Lecturer in Biology &middot; S.R.N. Mehta PU Science College</div>';
@@ -7753,14 +7758,15 @@ function generatePU1Report(){
 
 function generatePU2Report(){
   const useSystem = document.getElementById('reportModeSystem').classList.contains('active');
-  const inc = useSystem ? {monthly:true,sections:true,bvo:true,neetobt:true,kcetobt:true,jeeobt:true,risk:false} : {
+  const inc = useSystem ? {monthly:true,sections:true,bvo:true,neetobt:true,kcetobt:true,jeeobt:true,risk:false,conclusion:true} : {
     monthly: document.getElementById('incMonthlyPU2').checked,
     sections: document.getElementById('incSectionsPU2').checked,
     bvo: document.getElementById('incBvoPU2').checked,
     neetobt: document.getElementById('incNeetObtPU2').checked,
     kcetobt: document.getElementById('incKcetObtPU2').checked,
     jeeobt: document.getElementById('incJeeObtPU2').checked,
-    risk: document.getElementById('incRiskPU2').checked
+    risk: document.getElementById('incRiskPU2').checked,
+    conclusion: document.getElementById('incConclusionPU2').checked
   };
   const rpPu2MonthRounds = useSystem ? PU2_TESTS.map((t,i)=>i) : Array.from(document.querySelectorAll('.rp-pu2month-check')).filter(b=>b.checked).map(b=>parseInt(b.value,10));
   const rpPu2KcetRounds = useSystem ? PU2_KCET_TESTS.map((t,i)=>i) : Array.from(document.querySelectorAll('.rp-pu2kcet-check')).filter(b=>b.checked).map(b=>parseInt(b.value,10));
@@ -7933,17 +7939,19 @@ function generatePU2Report(){
     html += rpSection('At-Risk Students <span style="font-weight:400;font-size:12px;color:var(--muted);">(Failing 2+ Subjects, '+latestTest.label+')</span>', rpTable(['Name','Enrollment','Subjects Failed','Total'], rows));
   }
 
-  const rpTheoryPctPU2 = rpOverallPct(PU2_TESTS, 'total', t=>t.outof.PHY+t.outof.CHE+t.outof.MAT+t.outof.BIO);
-  const rpNeetVals = PU2_TESTS.map(t=>{
-    const rows = t.students.map(r=>pu2NeetTotal(r,t)).filter(v=>v!==null);
-    if(!rows.length) return null;
-    const max = t.outof.PHY+t.outof.CHE+t.outof.BIO;
-    return (rows.reduce((a,b)=>a+b,0)/rows.length)/max*100;
-  }).filter(v=>v!==null);
-  const rpNeetPctPU2 = rpNeetVals.length ? rpNeetVals.reduce((a,b)=>a+b,0)/rpNeetVals.length : null;
-  const rpKcetPctPU2 = rpOverallPct(PU2_KCET_TESTS, 'total', t=>t.outof*3);
-  const rpJeePctPU2 = rpOverallPct(PU2_JEE_TESTS, 'total', ()=>300);
-  html += buildConclusionSection(rpTheoryPctPU2, rpNeetPctPU2, rpKcetPctPU2, rpJeePctPU2);
+  if(inc.conclusion){
+    const rpTheoryPctPU2 = rpOverallPct(PU2_TESTS, 'total', t=>t.outof.PHY+t.outof.CHE+t.outof.MAT+t.outof.BIO);
+    const rpNeetVals = PU2_TESTS.map(t=>{
+      const rows = t.students.map(r=>pu2NeetTotal(r,t)).filter(v=>v!==null);
+      if(!rows.length) return null;
+      const max = t.outof.PHY+t.outof.CHE+t.outof.BIO;
+      return (rows.reduce((a,b)=>a+b,0)/rows.length)/max*100;
+    }).filter(v=>v!==null);
+    const rpNeetPctPU2 = rpNeetVals.length ? rpNeetVals.reduce((a,b)=>a+b,0)/rpNeetVals.length : null;
+    const rpKcetPctPU2 = rpOverallPct(PU2_KCET_TESTS, 'total', t=>t.outof*3);
+    const rpJeePctPU2 = rpOverallPct(PU2_JEE_TESTS, 'total', ()=>300);
+    html += buildConclusionSection(rpTheoryPctPU2, rpNeetPctPU2, rpKcetPctPU2, rpJeePctPU2);
+  }
 
   html += '</div>'; // close rp-body
   html += '<div class="rp-footer">BAIO Learning System by Narendra Sir &middot; Lecturer in Biology &middot; S.R.N. Mehta PU Science College</div>';
