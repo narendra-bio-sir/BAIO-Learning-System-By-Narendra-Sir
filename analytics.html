@@ -7461,9 +7461,56 @@ function renderReportPUBlocks(){
   const sysDesc = document.getElementById('systemReportDesc');
   if(sysDesc){
     sysDesc.textContent = currentPULevel === 'pu1'
-      ? 'Includes: Slip Test overview, Monthly Test overview, Section comparison (SPARK vs PRIME), NEET/KCET/JEE overviews, and Biology vs Other Subjects — everything currently in this dashboard, compiled onto one printable page.'
-      : 'Includes: Monthly Test overview, Section comparison (CHAMPION vs ELITE), NEET/KCET/JEE overviews, and Biology vs Other Subjects — everything currently in this dashboard for PU-II, compiled onto one printable page.';
+      ? 'Includes: Slip Test overview, Monthly Test overview, Section comparison (SPARK vs PRIME), NEET/KCET/JEE overviews, Biology vs Other Subjects, and a system-generated Conclusion & Recommendations — everything currently in this dashboard, compiled onto one printable page.'
+      : 'Includes: Monthly Test overview, Section comparison (CHAMPION vs ELITE), NEET/KCET/JEE overviews, Biology vs Other Subjects, and a system-generated Conclusion & Recommendations — everything currently in this dashboard for PU-II, compiled onto one printable page.';
   }
+}
+/* ---------- Conclusion & Recommendations (always included, both System and Custom reports) ---------- */
+function rpOverallPct(tests, totalKey, maxFn){
+  const vals = tests.map(t=>{
+    const rows = t.students.filter(r=>r[totalKey]!==null && r[totalKey]!==undefined);
+    if(!rows.length) return null;
+    const avg = rows.reduce((s,r)=>s+r[totalKey],0)/rows.length;
+    const max = maxFn(t);
+    return max ? avg/max*100 : null;
+  }).filter(v=>v!==null);
+  return vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : null;
+}
+function rpBand(pct){
+  if(pct >= 70) return {label:'Strong — Exam Ready', cls:'rp-green'};
+  if(pct >= 50) return {label:'Developing — On Track', cls:''};
+  if(pct >= 35) return {label:'Needs Attention', cls:'rp-red'};
+  return {label:'Critical — Needs Intervention', cls:'rp-red'};
+}
+function rpSuggestion(label, pct){
+  if(pct >= 70) return label+' performance is strong — maintain the current pace with periodic revision and full-length timed practice.';
+  if(pct >= 50) return label+' is on track but inconsistent — focus on the weaker chapters flagged in recent rounds and increase timed-practice frequency.';
+  if(pct >= 35) return label+' needs focused attention — recommend targeted remedial sessions and doubt-clearing before the next round.';
+  return label+' is at a critical stage — recommend immediate one-on-one intervention, foundational concept revision, and closer monitoring.';
+}
+function buildConclusionSection(theoryPct, neetPct, kcetPct, jeePct){
+  const cats = [
+    {label:'Theory (Board)', pct:theoryPct},
+    {label:'NEET', pct:neetPct},
+    {label:'KCET', pct:kcetPct},
+    {label:'JEE', pct:jeePct}
+  ].filter(c=>c.pct!==null && !isNaN(c.pct));
+  if(!cats.length) return '';
+  const rows = cats.map(c=>{
+    const band = rpBand(c.pct);
+    return [c.label, c.pct.toFixed(1)+'%', '<span class="'+band.cls+'">'+band.label+'</span>'];
+  });
+  const sorted = cats.slice().sort((a,b)=>a.pct-b.pct);
+  const weakest = sorted[0], strongest = sorted[sorted.length-1];
+  const suggestions = cats.map(c=>'<li><b>'+c.label+':</b> '+rpSuggestion(c.label, c.pct)+'</li>').join('');
+  const compareLine = cats.length > 1
+    ? '<b>Overall standing:</b> '+strongest.label+' is currently the strongest track at '+strongest.pct.toFixed(1)+'%, while '+weakest.label+' needs the most attention at '+weakest.pct.toFixed(1)+'%.'
+    : '<b>Overall standing:</b> '+cats[0].label+' stands at '+cats[0].pct.toFixed(1)+'%.';
+  return rpSection('📌 Conclusion &amp; Recommendations <span style="font-weight:400;font-size:12px;color:var(--muted);">System-generated summary across all tracks</span>',
+    rpTable(['Track','Overall Average','Verdict'], rows) +
+    '<div class="rp-callout" style="margin-top:14px;">'+compareLine+'</div>'+
+    '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin:16px 0 8px;">Recommendations</div>'+
+    '<ul style="margin:0; padding-left:18px; font-size:13px; line-height:1.7; color:var(--text-dim);">'+suggestions+'</ul>');
 }
 
 function generateReport(){
@@ -7688,6 +7735,12 @@ function generatePU1Report(){
     html += rpSection('At-Risk Students <span style="font-weight:400;font-size:12px;color:var(--muted);">(Failing 2+ Subjects, Slip Test 2)</span>', rpTable(['Name','Enrollment','Subjects Failed','Total /80'], rows));
   }
 
+  const rpTheoryPct = (o.pct1 + o.pct2) / 2;
+  const rpNeetPct = rpOverallPct(NEET_TESTS, 'total', ()=>720);
+  const rpKcetPct = rpOverallPct(KCET_TESTS, 'total', ()=>135);
+  const rpJeePct = rpOverallPct(JEE_TESTS, 'total', ()=>300);
+  html += buildConclusionSection(rpTheoryPct, rpNeetPct, rpKcetPct, rpJeePct);
+
   html += '</div>'; // close rp-body
   html += '<div class="rp-footer">BAIO Learning System by Narendra Sir &middot; Lecturer in Biology &middot; S.R.N. Mehta PU Science College</div>';
 
@@ -7879,6 +7932,18 @@ function generatePU2Report(){
       .map(s=>[s.name, s.code, s.failCount, s.total.toFixed(0)+'/'+latestMax]);
     html += rpSection('At-Risk Students <span style="font-weight:400;font-size:12px;color:var(--muted);">(Failing 2+ Subjects, '+latestTest.label+')</span>', rpTable(['Name','Enrollment','Subjects Failed','Total'], rows));
   }
+
+  const rpTheoryPctPU2 = rpOverallPct(PU2_TESTS, 'total', t=>t.outof.PHY+t.outof.CHE+t.outof.MAT+t.outof.BIO);
+  const rpNeetVals = PU2_TESTS.map(t=>{
+    const rows = t.students.map(r=>pu2NeetTotal(r,t)).filter(v=>v!==null);
+    if(!rows.length) return null;
+    const max = t.outof.PHY+t.outof.CHE+t.outof.BIO;
+    return (rows.reduce((a,b)=>a+b,0)/rows.length)/max*100;
+  }).filter(v=>v!==null);
+  const rpNeetPctPU2 = rpNeetVals.length ? rpNeetVals.reduce((a,b)=>a+b,0)/rpNeetVals.length : null;
+  const rpKcetPctPU2 = rpOverallPct(PU2_KCET_TESTS, 'total', t=>t.outof*3);
+  const rpJeePctPU2 = rpOverallPct(PU2_JEE_TESTS, 'total', ()=>300);
+  html += buildConclusionSection(rpTheoryPctPU2, rpNeetPctPU2, rpKcetPctPU2, rpJeePctPU2);
 
   html += '</div>'; // close rp-body
   html += '<div class="rp-footer">BAIO Learning System by Narendra Sir &middot; Lecturer in Biology &middot; S.R.N. Mehta PU Science College</div>';
