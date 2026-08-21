@@ -7133,6 +7133,15 @@ async function renderReportCardAssignments(student, forceFresh){
     items = fallback.items;
     students = fallback.students;
   }
+  // If the teacher has this same browser's assignment-tracker.html open (or
+  // has ticked items there earlier), those live edits are saved instantly to
+  // localStorage but haven't been committed/deployed yet — layer them on top
+  // of the fetched/bundled snapshot so this device always shows the latest
+  // status without waiting for a redeploy.
+  try{
+    const saved = JSON.parse(localStorage.getItem('baio_assignment_tracker_v1') || 'null');
+    if(saved && saved.students) students = reconcileAtStudents(saved.students, students);
+  }catch(e){}
 
   const rec = students.find(s => s.code === student.code);
   let html = '<div class="report-card-header">'+
@@ -7274,6 +7283,19 @@ function initStudentSearch(){
   });
   document.getElementById('rcAssignRefreshBtn').addEventListener('click', ()=>{
     if(window.__currentStudent) renderReportCardAssignments(window.__currentStudent, true);
+  });
+  // If the teacher ticks an item in assignment-tracker.html open in another
+  // tab of this same browser, or switches back to this tab after doing so,
+  // pick up the change immediately without the student needing to click Refresh.
+  window.addEventListener('storage', (e)=>{
+    if(e.key === 'baio_assignment_tracker_v1' && window.__currentStudent && document.getElementById('rcPaneAssign').style.display !== 'none'){
+      renderReportCardAssignments(window.__currentStudent);
+    }
+  });
+  document.addEventListener('visibilitychange', ()=>{
+    if(!document.hidden && window.__currentStudent && document.getElementById('reportCardWrap').style.display !== 'none' && document.getElementById('rcPaneAssign').style.display !== 'none'){
+      renderReportCardAssignments(window.__currentStudent);
+    }
   });
   studentSearchInitialized = true;
 }
