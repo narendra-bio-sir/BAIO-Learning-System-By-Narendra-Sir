@@ -137,6 +137,7 @@ input[type="checkbox"]{width:16px; height:16px; accent-color:var(--teal2); curso
   </header>
 
   <div class="utility-row">
+    <button class="icon-btn" id="hardRefreshBtn" onclick="hardRefresh()" title="Force-refresh this page (clears any cached copy)">🔄</button>
     <a href="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/" class="icon-btn" title="Back to BAIO home">🏠</a>
     <button class="icon-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle dark/light theme">🌙</button>
   </div>
@@ -329,6 +330,25 @@ function toggleTheme(){
   applyTheme(next);
   try{ localStorage.setItem(THEME_KEY, next); }catch(e){}
 }
+/* Force-refresh: unregister any controlling service worker, clear its caches, then
+   reload with a cache-busting query string so even the plain browser HTTP cache is
+   bypassed. Solves the "I pushed an update but the page still looks old" problem. */
+async function hardRefresh(){
+  const btn = document.getElementById('hardRefreshBtn');
+  if(btn) btn.textContent = '⏳';
+  try{
+    if('serviceWorker' in navigator){
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for(const r of regs) await r.unregister();
+    }
+    if('caches' in window){
+      const keys = await caches.keys();
+      for(const k of keys) await caches.delete(k);
+    }
+  }catch(e){}
+  location.href = location.pathname + '?_r=' + Date.now();
+}
+window.hardRefresh = hardRefresh;
 (function(){
   let saved = null;
   try{ saved = localStorage.getItem(THEME_KEY); }catch(e){}
