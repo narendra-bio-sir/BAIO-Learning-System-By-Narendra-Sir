@@ -429,7 +429,7 @@ const REAL_MASTER_CODES = [
   { chapter: 'PU1 Chapter 3', premium: 'NS-PREMIUM-2026', handwritten: 'NS-MASTER-2026' },
   { chapter: 'PU1 Chapter 4', premium: 'NS-PREMIUM-2026', handwritten: 'NS-MASTER-2026' },
   { chapter: 'PU2 Chapter 4', premium: 'NS-PREMIUM-2026', handwritten: 'NS-MASTER-2026' },
-  { chapter: 'PU1 Chapter 5', premium: 'NS-PREMIUM-2026', handwritten: 'NS-MASTER-2026 (Coming Soon)' },
+  { chapter: 'PU1 Chapter 5', premium: 'NS-PREMIUM-2026', handwritten: 'NS-MASTER-2026', handwrittenNote: 'Coming Soon — code already works, notes not uploaded yet' },
   { chapter: 'PU2 Chapter 9', premium: 'NS-PREMIUM-2026', handwritten: 'NS-MASTER-2026' }
 ];
 /* Analytics dashboard master key — pulled from analytics.html (ANALYTICS_MASTER_CODE) */
@@ -439,9 +439,10 @@ function renderRealMasterTable(){
   if(!wrap) return;
   let html = '<div class="table-wrap"><table><tr><th>Chapter</th><th>Premium Master Code</th><th>Handwritten Notes Master Code</th></tr>';
   REAL_MASTER_CODES.forEach(row=>{
+    const hwNote = row.handwrittenNote ? '<div style="font-size:9.5px;color:var(--gold);margin-top:2px;">' + escapeHtml(row.handwrittenNote) + '</div>' : '';
     html += '<tr><td>' + escapeHtml(row.chapter) + '</td>' +
       '<td class="code-cell">' + codeHtml(row.premium) + '</td>' +
-      '<td class="code-cell">' + codeHtml(row.handwritten) + '</td></tr>';
+      '<td class="code-cell">' + codeHtml(row.handwritten) + hwNote + '</td></tr>';
   });
   html += '</table></div>';
   html += '<div class="code-type" style="margin-top:12px;">' +
@@ -740,7 +741,7 @@ const EXISTING_CONTENT_TYPES = [
   { key: 'CH4-PU1-PREMIUM',  label: 'PU1 Chapter 4 \u2014 Premium Unlock Code' },
   { key: 'CH4-PU1-HWNOTES',  label: 'PU1 Chapter 4 \u2014 Handwritten Notes' },
   { key: 'CH5-PREMIUM',  label: 'PU1 Chapter 5 \u2014 Premium Unlock Code' },
-  { key: 'CH5-HWNOTES',  label: 'PU1 Chapter 5 \u2014 Handwritten Notes (Coming Soon)' },
+  { key: 'CH5-HWNOTES',  label: 'PU1 Chapter 5 \u2014 Handwritten Notes' },
   { key: 'CH9-PREMIUM',  label: 'PU2 Chapter 9 \u2014 Premium Unlock Code' },
   { key: 'CH9-HWNOTES',  label: 'PU2 Chapter 9 \u2014 Handwritten Notes' },
 ];
