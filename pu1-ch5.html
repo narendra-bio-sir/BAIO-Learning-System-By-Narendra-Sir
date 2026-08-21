@@ -3376,6 +3376,29 @@ renderTabbar();
 renderLangSwitcher();
 renderContent();
 
+/* Android/iOS often keep this page frozen in the background instead of reloading it,
+   so re-opening the app can silently resume on whatever tab (e.g. a locked premium
+   tab) was showing when it was left. Treat a return after a real absence as a fresh
+   open and land back on Study Mode. */
+(function(){
+  var RESET_AFTER_MS = 20 * 60 * 1000;
+  var hiddenAt = null;
+  function backToStudy(){
+    if(currentTab !== 'study'){ currentTab = 'study'; renderTabbar(); renderContent(); }
+  }
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState === 'hidden'){
+      hiddenAt = Date.now();
+    } else if(document.visibilityState === 'visible'){
+      if(hiddenAt && (Date.now() - hiddenAt) > RESET_AFTER_MS) backToStudy();
+      hiddenAt = null;
+    }
+  });
+  window.addEventListener('pageshow', function(e){
+    if(e.persisted) backToStudy();
+  });
+})();
+
 var WHATSNEW_ITEMS = [
   {key:'ch5_whatsnew_redesign_v1', html:'&#127807; <b>New look!</b> Cleaner typography and calmer colors across the app &mdash; same content, easier on the eyes.'}
 ];
