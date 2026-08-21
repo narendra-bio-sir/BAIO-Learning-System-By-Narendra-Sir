@@ -2729,6 +2729,20 @@ window.addEventListener('afterprint', function(){
       <div class="checkbox-row"><input type="checkbox" id="incSections" checked><label for="incSections">Section Analysis (SPARK vs PRIME)</label></div>
       <div class="checkbox-row"><input type="checkbox" id="incBvo" checked><label for="incBvo">Biology vs Other Subjects</label></div>
       <div class="checkbox-row"><input type="checkbox" id="incNeetObt" checked><label for="incNeetObt">NEET OBT 01 Overview (subject averages, section-wise, distribution)</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="incKcetObt" checked><label for="incKcetObt">KCET Overview (subject averages, section-wise, distribution)</label></div>
+      <div style="margin-left:26px; margin-bottom:6px;">
+        <div class="checkbox-row"><input type="checkbox" class="rp-kcet-check" value="0" id="rpKcet_0" checked><label for="rpKcet_0">KCET OBT 1</label></div>
+        <div class="checkbox-row"><input type="checkbox" class="rp-kcet-check" value="1" id="rpKcet_1" checked><label for="rpKcet_1">KCET OBT 2</label></div>
+        <div class="checkbox-row"><input type="checkbox" class="rp-kcet-check" value="2" id="rpKcet_2" checked><label for="rpKcet_2">KCET OBT 3</label></div>
+        <div class="checkbox-row"><input type="checkbox" class="rp-kcet-check" value="3" id="rpKcet_3" checked><label for="rpKcet_3">KCET CT 1</label></div>
+      </div>
+      <div class="checkbox-row"><input type="checkbox" id="incJeeObt" checked><label for="incJeeObt">JEE Overview (subject averages, section-wise, distribution)</label></div>
+      <div style="margin-left:26px; margin-bottom:6px;">
+        <div class="checkbox-row"><input type="checkbox" class="rp-jee-check" value="0" id="rpJee_0" checked><label for="rpJee_0">JEE OBT 1</label></div>
+        <div class="checkbox-row"><input type="checkbox" class="rp-jee-check" value="1" id="rpJee_1" checked><label for="rpJee_1">JEE OBT 2</label></div>
+        <div class="checkbox-row"><input type="checkbox" class="rp-jee-check" value="2" id="rpJee_2" checked><label for="rpJee_2">JEE OBT 3</label></div>
+        <div class="checkbox-row"><input type="checkbox" class="rp-jee-check" value="3" id="rpJee_3" checked><label for="rpJee_3">JEE CT 1</label></div>
+      </div>
       <div class="checkbox-row"><input type="checkbox" id="incRisk"><label for="incRisk">At-Risk Students (failing 2+ subjects)</label></div>
     </div>
 
@@ -7391,14 +7405,18 @@ function rpTable(headers, rows, bioRowIndex){
 
 function generateReport(){
   const useSystem = document.getElementById('reportModeSystem').classList.contains('active');
-  const inc = useSystem ? {slip:true,monthly:true,sections:true,bvo:true,neetobt:true,risk:false} : {
+  const inc = useSystem ? {slip:true,monthly:true,sections:true,bvo:true,neetobt:true,kcetobt:true,jeeobt:true,risk:false} : {
     slip: document.getElementById('incSlip').checked,
     monthly: document.getElementById('incMonthly').checked,
     sections: document.getElementById('incSections').checked,
     bvo: document.getElementById('incBvo').checked,
     neetobt: document.getElementById('incNeetObt').checked,
+    kcetobt: document.getElementById('incKcetObt').checked,
+    jeeobt: document.getElementById('incJeeObt').checked,
     risk: document.getElementById('incRisk').checked
   };
+  const rpKcetRounds = useSystem ? KCET_TESTS.map((t,i)=>i) : Array.from(document.querySelectorAll('.rp-kcet-check')).filter(b=>b.checked).map(b=>parseInt(b.value,10));
+  const rpJeeRounds = useSystem ? JEE_TESTS.map((t,i)=>i) : Array.from(document.querySelectorAll('.rp-jee-check')).filter(b=>b.checked).map(b=>parseInt(b.value,10));
 
   const savedPu1MonthCurrent = pu1MonthCurrent;
   const rpMonthAllBox = document.getElementById('rpMonthAll');
@@ -7545,6 +7563,58 @@ function generateReport(){
       '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin:16px 0 8px;">Section-wise Summary</div>'+
       rpTable(['Section','Students','Avg Total /720','Avg Biology /360'], sectionRows) +
       '<div class="rp-callout"><b>Overall class average:</b> '+avgTotal.toFixed(1)+'/720 ('+(avgTotal/720*100).toFixed(1)+'%). Biology remains the strongest subject at '+(avgBio/360*100).toFixed(1)+'%, well ahead of Physics at '+(avgPhy/180*100).toFixed(1)+'%.</div>');
+  }
+  if(inc.kcetobt){
+    rpKcetRounds.forEach(idx=>{
+      const test = KCET_TESTS[idx];
+      if(!test) return;
+      const rows = test.students;
+      const n = rows.length;
+      const avg = key => rows.reduce((s,r)=>s+r[key],0)/n;
+      const avgPhy = avg('phy'), avgChe = avg('che'), avgMat = avg('mat'), avgTotal = avg('total');
+      const subjectRows = [
+        ['Physics', avgPhy.toFixed(1)+'/45', (avgPhy/45*100).toFixed(1)+'%'],
+        ['Chemistry', avgChe.toFixed(1)+'/45', (avgChe/45*100).toFixed(1)+'%'],
+        ['Maths', avgMat.toFixed(1)+'/45', (avgMat/45*100).toFixed(1)+'%']
+      ];
+      const sectionRows = ['SPARK','PRIME'].map(sec=>{
+        const r = rows.filter(x=>x.section===sec);
+        const secAvgTotal = r.length ? r.reduce((s,x)=>s+x.total,0)/r.length : 0;
+        return [sec, r.length, secAvgTotal.toFixed(1)+'/135'];
+      });
+      html += rpSection(test.label+' Overview <span style="font-weight:400;font-size:12px;color:var(--muted);">('+test.disp+', '+n+' students, PCM pattern)</span>',
+        '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin-bottom:8px;">Subject-wise Average</div>'+
+        rpTable(['Subject','Average','Percentage'], subjectRows) +
+        '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin:16px 0 8px;">Section-wise Summary</div>'+
+        rpTable(['Section','Students','Avg Total /135'], sectionRows) +
+        '<div class="rp-callout"><b>Overall class average:</b> '+avgTotal.toFixed(1)+'/135 ('+(avgTotal/135*100).toFixed(1)+'%).</div>');
+    });
+  }
+  if(inc.jeeobt){
+    rpJeeRounds.forEach(idx=>{
+      const test = JEE_TESTS[idx];
+      if(!test) return;
+      const rows = test.students;
+      const n = rows.length;
+      const avg = key => rows.reduce((s,r)=>s+r[key],0)/n;
+      const avgMat = avg('mat'), avgPhy = avg('phy'), avgChe = avg('che'), avgTotal = avg('total');
+      const subjectRows = [
+        ['Maths', avgMat.toFixed(1)+'/100', (avgMat/100*100).toFixed(1)+'%'],
+        ['Physics', avgPhy.toFixed(1)+'/100', (avgPhy/100*100).toFixed(1)+'%'],
+        ['Chemistry', avgChe.toFixed(1)+'/100', (avgChe/100*100).toFixed(1)+'%']
+      ];
+      const sectionRows = ['SPARK','PRIME'].map(sec=>{
+        const r = rows.filter(x=>x.section===sec);
+        const secAvgTotal = r.length ? r.reduce((s,x)=>s+x.total,0)/r.length : 0;
+        return [sec, r.length, secAvgTotal.toFixed(1)+'/300'];
+      });
+      html += rpSection(test.label+' Overview <span style="font-weight:400;font-size:12px;color:var(--muted);">('+test.disp+', '+n+' students, JEE Main pattern)</span>',
+        '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin-bottom:8px;">Subject-wise Average</div>'+
+        rpTable(['Subject','Average','Percentage'], subjectRows) +
+        '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin:16px 0 8px;">Section-wise Summary</div>'+
+        rpTable(['Section','Students','Avg Total /300'], sectionRows) +
+        '<div class="rp-callout"><b>Overall class average:</b> '+avgTotal.toFixed(1)+'/300 ('+(avgTotal/300*100).toFixed(1)+'%). JEE-style negative marking applies — totals can go negative.</div>');
+    });
   }
   if(inc.risk){
     const rows = D.multi_fail_t2.slice(0,20).map(s=>[s.Name, s.EnrollCode, s.fail_count, s.TOTAL]);
