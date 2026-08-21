@@ -2715,10 +2715,11 @@ window.addEventListener('afterprint', function(){
     </div>
 
     <div id="systemReportBlock">
-      <div class="desc">Includes: Slip Test overview, Monthly Test overview, Section comparison (SPARK vs PRIME), and Biology vs Other Subjects &mdash; everything currently in this dashboard, compiled onto one printable page.</div>
+      <div class="desc" id="systemReportDesc">Includes: Slip Test overview, Monthly Test overview, Section comparison (SPARK vs PRIME), and Biology vs Other Subjects &mdash; everything currently in this dashboard, compiled onto one printable page.</div>
     </div>
 
     <div id="customReportBlock" class="custom-report-options">
+    <div id="rpBlockPU1">
       <div class="checkbox-row"><input type="checkbox" id="incSlip" checked><label for="incSlip">Slip Test Overview (subject averages, fail rates, toppers)</label></div>
       <div class="checkbox-row"><input type="checkbox" id="incMonthly" checked><label for="incMonthly">Monthly Test Overview (subject-wide + section-wise)</label></div>
       <div style="margin-left:26px; margin-bottom:6px;">
@@ -2744,6 +2745,19 @@ window.addEventListener('afterprint', function(){
         <div class="checkbox-row"><input type="checkbox" class="rp-jee-check" value="3" id="rpJee_3" checked><label for="rpJee_3">JEE CT 1</label></div>
       </div>
       <div class="checkbox-row"><input type="checkbox" id="incRisk"><label for="incRisk">At-Risk Students (failing 2+ subjects)</label></div>
+    </div>
+    <div id="rpBlockPU2" style="display:none;">
+      <div class="checkbox-row"><input type="checkbox" id="incMonthlyPU2" checked><label for="incMonthlyPU2">Monthly Test Overview (subject-wide + section-wise)</label></div>
+      <div style="margin-left:26px; margin-bottom:6px;" id="rpPu2MonthChecks"></div>
+      <div class="checkbox-row"><input type="checkbox" id="incSectionsPU2" checked><label for="incSectionsPU2">Section Analysis (CHAMPION vs ELITE)</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="incBvoPU2" checked><label for="incBvoPU2">Biology vs Other Subjects</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="incNeetObtPU2" checked><label for="incNeetObtPU2">NEET Overview (subject averages, section-wise, distribution)</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="incKcetObtPU2" checked><label for="incKcetObtPU2">KCET Overview (subject averages, section-wise, distribution)</label></div>
+      <div style="margin-left:26px; margin-bottom:6px;" id="rpPu2KcetChecks"></div>
+      <div class="checkbox-row"><input type="checkbox" id="incJeeObtPU2" checked><label for="incJeeObtPU2">JEE Overview (subject averages, section-wise, distribution)</label></div>
+      <div style="margin-left:26px; margin-bottom:6px;" id="rpPu2JeeChecks"></div>
+      <div class="checkbox-row"><input type="checkbox" id="incRiskPU2"><label for="incRiskPU2">At-Risk Students (failing 2+ subjects)</label></div>
+    </div>
     </div>
 
     <div class="report-actions">
@@ -3327,6 +3341,7 @@ document.querySelectorAll('.mode-btn[data-mode]').forEach(btn=>{
       if(el) el.style.display = (id===activeId) ? '' : 'none';
     });
     if(btn.dataset.mode === 'achievers') syncAchieversToPULevel();
+    if(btn.dataset.mode === 'reports') renderReportPUBlocks();
     const fn = buildFnFor(btn.dataset.mode);
     if(fn) fn();
     if(btn.dataset.mode==='student'){
@@ -3376,6 +3391,10 @@ document.querySelectorAll('#puLevelSwitch [data-pulevel]').forEach(btn=>{
     } else if(activeMode && activeMode.dataset.mode === 'achievers'){
       syncAchieversToPULevel();
       buildAchievers();
+    } else if(activeMode && activeMode.dataset.mode === 'reports'){
+      renderReportPUBlocks();
+      const previewWrap = document.getElementById('reportPreviewWrap');
+      if(previewWrap && previewWrap.style.display !== 'none') generateReport();
     }
   });
 });
@@ -7419,8 +7438,39 @@ function rpTable(headers, rows, bioRowIndex){
   return '<div class="table-wrap"><table><thead><tr>'+headers.map(h=>'<th>'+h+'</th>').join('')+'</tr></thead>'+
     '<tbody>'+rows.map((r,i)=>'<tr'+(i===bioRowIndex?' class="rp-bio"':'')+'>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';
 }
+(function(){
+  const monthWrap = document.getElementById('rpPu2MonthChecks');
+  if(monthWrap){
+    monthWrap.innerHTML = PU2_TESTS.map((t,i)=>'<div class="checkbox-row"><input type="checkbox" class="rp-pu2month-check" value="'+i+'" id="rpPu2Month_'+i+'" checked><label for="rpPu2Month_'+i+'">'+t.label+' ('+t.disp+')</label></div>').join('');
+  }
+  const kcetWrap = document.getElementById('rpPu2KcetChecks');
+  if(kcetWrap){
+    kcetWrap.innerHTML = PU2_KCET_TESTS.map((t,i)=>'<div class="checkbox-row"><input type="checkbox" class="rp-pu2kcet-check" value="'+i+'" id="rpPu2Kcet_'+i+'" checked><label for="rpPu2Kcet_'+i+'">'+t.label+' ('+t.disp+')</label></div>').join('');
+  }
+  const jeeWrap = document.getElementById('rpPu2JeeChecks');
+  if(jeeWrap){
+    jeeWrap.innerHTML = PU2_JEE_TESTS.map((t,i)=>'<div class="checkbox-row"><input type="checkbox" class="rp-pu2jee-check" value="'+i+'" id="rpPu2Jee_'+i+'" checked><label for="rpPu2Jee_'+i+'">'+t.label+' ('+t.disp+')</label></div>').join('');
+  }
+})();
+function renderReportPUBlocks(){
+  const b1 = document.getElementById('rpBlockPU1');
+  const b2 = document.getElementById('rpBlockPU2');
+  if(!b1 || !b2) return;
+  b1.style.display = currentPULevel === 'pu1' ? '' : 'none';
+  b2.style.display = currentPULevel === 'pu2' ? '' : 'none';
+  const sysDesc = document.getElementById('systemReportDesc');
+  if(sysDesc){
+    sysDesc.textContent = currentPULevel === 'pu1'
+      ? 'Includes: Slip Test overview, Monthly Test overview, Section comparison (SPARK vs PRIME), NEET/KCET/JEE overviews, and Biology vs Other Subjects — everything currently in this dashboard, compiled onto one printable page.'
+      : 'Includes: Monthly Test overview, Section comparison (CHAMPION vs ELITE), NEET/KCET/JEE overviews, and Biology vs Other Subjects — everything currently in this dashboard for PU-II, compiled onto one printable page.';
+  }
+}
 
 function generateReport(){
+  if(currentPULevel === 'pu2'){ generatePU2Report(); return; }
+  generatePU1Report();
+}
+function generatePU1Report(){
   const useSystem = document.getElementById('reportModeSystem').classList.contains('active');
   const inc = useSystem ? {slip:true,monthly:true,sections:true,bvo:true,neetobt:true,kcetobt:true,jeeobt:true,risk:false} : {
     slip: document.getElementById('incSlip').checked,
@@ -7642,6 +7692,196 @@ function generateReport(){
   html += '<div class="rp-footer">BAIO Learning System by Narendra Sir &middot; Lecturer in Biology &middot; S.R.N. Mehta PU Science College</div>';
 
   pu1MonthCurrent = savedPu1MonthCurrent;
+
+  document.getElementById('printArea').innerHTML = html;
+  document.getElementById('reportPreviewWrap').style.display = 'block';
+  document.getElementById('printArea').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function generatePU2Report(){
+  const useSystem = document.getElementById('reportModeSystem').classList.contains('active');
+  const inc = useSystem ? {monthly:true,sections:true,bvo:true,neetobt:true,kcetobt:true,jeeobt:true,risk:false} : {
+    monthly: document.getElementById('incMonthlyPU2').checked,
+    sections: document.getElementById('incSectionsPU2').checked,
+    bvo: document.getElementById('incBvoPU2').checked,
+    neetobt: document.getElementById('incNeetObtPU2').checked,
+    kcetobt: document.getElementById('incKcetObtPU2').checked,
+    jeeobt: document.getElementById('incJeeObtPU2').checked,
+    risk: document.getElementById('incRiskPU2').checked
+  };
+  const rpPu2MonthRounds = useSystem ? PU2_TESTS.map((t,i)=>i) : Array.from(document.querySelectorAll('.rp-pu2month-check')).filter(b=>b.checked).map(b=>parseInt(b.value,10));
+  const rpPu2KcetRounds = useSystem ? PU2_KCET_TESTS.map((t,i)=>i) : Array.from(document.querySelectorAll('.rp-pu2kcet-check')).filter(b=>b.checked).map(b=>parseInt(b.value,10));
+  const rpPu2JeeRounds = useSystem ? PU2_JEE_TESTS.map((t,i)=>i) : Array.from(document.querySelectorAll('.rp-pu2jee-check')).filter(b=>b.checked).map(b=>parseInt(b.value,10));
+
+  const roster = PU2_CHAMPION.length + PU2_ELITE.length;
+  const latestTest = PU2_TESTS[PU2_TESTS.length-1];
+  const latestRows = latestTest.students;
+  const latestAvgTotal = latestRows.reduce((s,r)=>s+(r.total||0),0)/latestRows.length;
+  const latestMax = latestTest.outof.PHY + latestTest.outof.CHE + latestTest.outof.MAT + latestTest.outof.BIO;
+  const bioOverallVals = PU2_TESTS.map(t=>{
+    const rows = t.students.filter(r=>r.BIO!==null && r.BIO!==undefined);
+    return rows.length ? (rows.reduce((s,r)=>s+r.BIO,0)/rows.length)/t.outof.BIO*100 : null;
+  }).filter(v=>v!==null);
+  const bioOverallAvg = bioOverallVals.reduce((a,b)=>a+b,0)/bioOverallVals.length;
+  const topScorer = latestRows.slice().sort((a,b)=>(b.total||0)-(a.total||0))[0];
+
+  const dateStr = new Date().toLocaleDateString('en-IN', {day:'numeric', month:'long', year:'numeric'});
+  let html = '<div class="rp-header">'+
+    '<div class="rp-tag">Global Education With Indian Values</div>'+
+    '<h1>S.R.N. MEHTA PU SCIENCE COLLEGE</h1>'+
+    '<p>2nd PUC Science &middot; Performance Analytics Report &middot; '+dateStr+'</p>'+
+    '<div class="rp-badges">'+
+      '<span class="rp-badge">\u{1F4CD} Latest Monthly Test: '+latestTest.label+' ('+latestTest.disp+')</span>'+
+      '<span class="rp-badge">\u{1F393} Cohort: '+roster+' Students</span>'+
+    '</div>'+
+  '</div>';
+
+  html += '<div class="rp-body">';
+
+  html += '<div class="rp-kpi-grid">'+
+    '<div class="rp-kpi"><div class="rp-kpi-label">Latest Monthly Test Class Average</div><div class="rp-kpi-value">'+latestAvgTotal.toFixed(1)+'/'+latestMax+'</div><div class="rp-kpi-sub">'+(latestAvgTotal/latestMax*100).toFixed(1)+'% mean score, '+latestTest.label+'</div></div>'+
+    '<div class="rp-kpi"><div class="rp-kpi-label">Biology Overall Average</div><div class="rp-kpi-value" class="rp-green">'+bioOverallAvg.toFixed(1)+'%</div><div class="rp-kpi-sub">Across '+bioOverallVals.length+' monthly rounds</div></div>'+
+    '<div class="rp-kpi"><div class="rp-kpi-label">Top Scorer</div><div class="rp-kpi-value">'+(topScorer?(topScorer.total||0).toFixed(0):'—')+'/'+latestMax+'</div><div class="rp-kpi-sub">'+(topScorer?topScorer.name+' ('+(topScorer.section||'—')+')':'—')+'</div></div>'+
+    '<div class="rp-kpi"><div class="rp-kpi-label">Roster</div><div class="rp-kpi-value">'+roster+'</div><div class="rp-kpi-sub">CHAMPION + ELITE</div></div>'+
+  '</div>';
+
+  if(inc.monthly){
+    rpPu2MonthRounds.forEach(idx=>{
+      const test = PU2_TESTS[idx];
+      if(!test) return;
+      const subjectKeys = ['PHY','CHE','MAT','BIO'];
+      const subjectRows = subjectKeys.map(k=>{
+        const rows = test.students.filter(r=>r[k]!==null && r[k]!==undefined);
+        const avg = rows.length ? rows.reduce((s,r)=>s+r[k],0)/rows.length : 0;
+        return [k, avg.toFixed(1)+'/'+test.outof[k], rows.length ? (avg/test.outof[k]*100).toFixed(1)+'%' : '—'];
+      });
+      const sectionRows = ['CHAMPION','ELITE'].map(sec=>{
+        const r = test.students.filter(x=>x.section===sec && x.BIO!==null && x.BIO!==undefined);
+        const avgBio = r.length ? r.reduce((s,x)=>s+x.BIO,0)/r.length : 0;
+        return [sec, r.length, r.length ? (avgBio.toFixed(1)+'/'+test.outof.BIO) : '—'];
+      });
+      html += rpSection(test.label+' Overview <span style="font-weight:400;font-size:12px;color:var(--muted);">('+test.disp+', '+test.students.length+' students)</span>',
+        '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin-bottom:8px;">Subject-wise Average</div>'+
+        rpTable(['Subject','Average','Percentage'], subjectRows, 3) +
+        '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin:16px 0 8px;">Section-wise Summary (Biology)</div>'+
+        rpTable(['Section','Students','Avg Biology'], sectionRows));
+    });
+  }
+  if(inc.sections){
+    const rows = ['CHAMPION','ELITE'].map(sec=>{
+      const roster = sec==='CHAMPION' ? PU2_CHAMPION : PU2_ELITE;
+      const bioVals = bioOverallVals.length ? PU2_TESTS.map(t=>{
+        const r = t.students.filter(x=>x.section===sec && x.BIO!==null && x.BIO!==undefined);
+        return r.length ? (r.reduce((s,x)=>s+x.BIO,0)/r.length)/t.outof.BIO*100 : null;
+      }).filter(v=>v!==null) : [];
+      const secBioAvg = bioVals.length ? bioVals.reduce((a,b)=>a+b,0)/bioVals.length : 0;
+      return [sec, roster.length, secBioAvg.toFixed(1)+'%'];
+    });
+    html += rpSection('Section Analysis <span style="font-weight:400;font-size:12px;color:var(--muted);">(CHAMPION vs ELITE, Biology subject only)</span>', rpTable(['Section','Students','Biology Overall Avg %'], rows) +
+      '<div class="rp-callout"><b>Note:</b> Biology average is blended across every monthly round on file, not just the latest.</div>');
+  }
+  if(inc.bvo){
+    const subjectKeys = ['BIO','PHY','CHE','MAT'];
+    const rows = subjectKeys.map(k=>{
+      const vals = PU2_TESTS.map(t=>{
+        const r = t.students.filter(x=>x[k]!==null && x[k]!==undefined);
+        return r.length ? (r.reduce((s,x)=>s+x[k],0)/r.length)/t.outof[k]*100 : null;
+      }).filter(v=>v!==null);
+      const avgPct = vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : 0;
+      return [k, avgPct.toFixed(1)+'%'];
+    });
+    html += rpSection('Biology vs Other Subjects <span style="font-weight:400;font-size:12px;color:var(--muted);">(overall average, all monthly rounds)</span>', rpTable(['Subject','Overall Average %'], rows, 0));
+  }
+  if(inc.neetobt){
+    const test = latestTest;
+    const rows = test.students.map(r=>({...r, neetTotal: pu2NeetTotal(r,test)})).filter(r=>r.neetTotal!==null);
+    const n = rows.length;
+    if(n){
+      const maxTotal = test.outof.PHY + test.outof.CHE + test.outof.BIO;
+      const avgPhy = rows.reduce((s,r)=>s+r.PHY,0)/n, avgChe = rows.reduce((s,r)=>s+r.CHE,0)/n, avgBio = rows.reduce((s,r)=>s+r.BIO,0)/n;
+      const avgTotal = rows.reduce((s,r)=>s+r.neetTotal,0)/n;
+      const subjectRows = [
+        ['Physics', avgPhy.toFixed(1)+'/'+test.outof.PHY, (avgPhy/test.outof.PHY*100).toFixed(1)+'%'],
+        ['Chemistry', avgChe.toFixed(1)+'/'+test.outof.CHE, (avgChe/test.outof.CHE*100).toFixed(1)+'%'],
+        ['Biology', avgBio.toFixed(1)+'/'+test.outof.BIO, (avgBio/test.outof.BIO*100).toFixed(1)+'%']
+      ];
+      const sectionRows = ['CHAMPION','ELITE'].map(sec=>{
+        const r = rows.filter(x=>x.section===sec);
+        const secAvg = r.length ? r.reduce((s,x)=>s+x.neetTotal,0)/r.length : 0;
+        return [sec, r.length, secAvg.toFixed(1)+'/'+maxTotal];
+      });
+      html += rpSection('NEET Overview <span style="font-weight:400;font-size:12px;color:var(--muted);">('+test.label+', '+test.disp+', '+n+' students, PCB subset)</span>',
+        '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin-bottom:8px;">Subject-wise Average</div>'+
+        rpTable(['Subject','Average','Percentage'], subjectRows, 2) +
+        '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin:16px 0 8px;">Section-wise Summary</div>'+
+        rpTable(['Section','Students','Avg Total'], sectionRows) +
+        '<div class="rp-callout"><b>Overall class average:</b> '+avgTotal.toFixed(1)+'/'+maxTotal+' ('+(avgTotal/maxTotal*100).toFixed(1)+'%).</div>');
+    }
+  }
+  if(inc.kcetobt){
+    rpPu2KcetRounds.forEach(idx=>{
+      const test = PU2_KCET_TESTS[idx];
+      if(!test) return;
+      const rows = test.students;
+      const n = rows.length;
+      const avg = key => rows.reduce((s,r)=>s+r[key],0)/n;
+      const avgPhy = avg('phy'), avgChe = avg('che'), avgMat = avg('mat'), avgTotal = avg('total');
+      const subjectRows = [
+        ['Physics', avgPhy.toFixed(1)+'/'+test.outof, (avgPhy/test.outof*100).toFixed(1)+'%'],
+        ['Chemistry', avgChe.toFixed(1)+'/'+test.outof, (avgChe/test.outof*100).toFixed(1)+'%'],
+        ['Maths', avgMat.toFixed(1)+'/'+test.outof, (avgMat/test.outof*100).toFixed(1)+'%']
+      ];
+      const sectionRows = ['CHAMPION','ELITE'].map(sec=>{
+        const r = rows.filter(x=>x.section===sec);
+        const secAvgTotal = r.length ? r.reduce((s,x)=>s+x.total,0)/r.length : 0;
+        return [sec, r.length, secAvgTotal.toFixed(1)+'/'+(test.outof*3)];
+      });
+      html += rpSection(test.label+' Overview <span style="font-weight:400;font-size:12px;color:var(--muted);">('+test.disp+', '+n+' students, PCM pattern)</span>',
+        '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin-bottom:8px;">Subject-wise Average</div>'+
+        rpTable(['Subject','Average','Percentage'], subjectRows) +
+        '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin:16px 0 8px;">Section-wise Summary</div>'+
+        rpTable(['Section','Students','Avg Total /'+(test.outof*3)], sectionRows) +
+        '<div class="rp-callout"><b>Overall class average:</b> '+avgTotal.toFixed(1)+'/'+(test.outof*3)+' ('+(avgTotal/(test.outof*3)*100).toFixed(1)+'%).</div>');
+    });
+  }
+  if(inc.jeeobt){
+    rpPu2JeeRounds.forEach(idx=>{
+      const test = PU2_JEE_TESTS[idx];
+      if(!test) return;
+      const rows = test.students;
+      const n = rows.length;
+      const avg = key => rows.reduce((s,r)=>s+r[key],0)/n;
+      const avgMat = avg('mat'), avgPhy = avg('phy'), avgChe = avg('che'), avgTotal = avg('total');
+      const subjectRows = [
+        ['Maths', avgMat.toFixed(1)+'/100', (avgMat/100*100).toFixed(1)+'%'],
+        ['Physics', avgPhy.toFixed(1)+'/100', (avgPhy/100*100).toFixed(1)+'%'],
+        ['Chemistry', avgChe.toFixed(1)+'/100', (avgChe/100*100).toFixed(1)+'%']
+      ];
+      const sectionRows = ['CHAMPION','ELITE'].map(sec=>{
+        const r = rows.filter(x=>x.section===sec);
+        const secAvgTotal = r.length ? r.reduce((s,x)=>s+x.total,0)/r.length : 0;
+        return [sec, r.length, secAvgTotal.toFixed(1)+'/300'];
+      });
+      html += rpSection(test.label+' Overview <span style="font-weight:400;font-size:12px;color:var(--muted);">('+test.disp+', '+n+' students, JEE Main pattern)</span>',
+        '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin-bottom:8px;">Subject-wise Average</div>'+
+        rpTable(['Subject','Average','Percentage'], subjectRows) +
+        '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin:16px 0 8px;">Section-wise Summary</div>'+
+        rpTable(['Section','Students','Avg Total /300'], sectionRows) +
+        '<div class="rp-callout"><b>Overall class average:</b> '+avgTotal.toFixed(1)+'/300 ('+(avgTotal/300*100).toFixed(1)+'%). JEE-style negative marking applies — totals can go negative.</div>');
+    });
+  }
+  if(inc.risk){
+    const subjectKeys = ['PHY','CHE','MAT','BIO'];
+    const rows = latestRows.map(s=>{
+      const failCount = subjectKeys.filter(k=>s[k]!==null && s[k]!==undefined && s[k] < latestTest.outof[k]*0.35).length;
+      return { name:s.name, code:s.code, failCount, total:s.total };
+    }).filter(s=>s.failCount>=2).sort((a,b)=>b.failCount-a.failCount).slice(0,20)
+      .map(s=>[s.name, s.code, s.failCount, s.total.toFixed(0)+'/'+latestMax]);
+    html += rpSection('At-Risk Students <span style="font-weight:400;font-size:12px;color:var(--muted);">(Failing 2+ Subjects, '+latestTest.label+')</span>', rpTable(['Name','Enrollment','Subjects Failed','Total'], rows));
+  }
+
+  html += '</div>'; // close rp-body
+  html += '<div class="rp-footer">BAIO Learning System by Narendra Sir &middot; Lecturer in Biology &middot; S.R.N. Mehta PU Science College</div>';
 
   document.getElementById('printArea').innerHTML = html;
   document.getElementById('reportPreviewWrap').style.display = 'block';
