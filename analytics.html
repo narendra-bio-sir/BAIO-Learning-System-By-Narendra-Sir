@@ -7514,6 +7514,187 @@ function rpPodium(entrantsIn){
   }).join('');
   return '<div style="display:flex; align-items:flex-end; justify-content:center; gap:14px; margin:16px 0 4px;">'+cols+'</div>';
 }
+/* ================================================================
+   CONCLUSION SHARE / SAVE-IMAGE / PRINT ENGINE
+   Lets the Conclusion & Recommendations section be shared on its own,
+   separate from the full report. Same offline-first, no-external-library
+   approach as the Toppers share engine above. lastConclusionData is
+   filled in fresh by buildConclusionSection() on every report render;
+   attachConclusionShareBar() wires the bar AFTER that HTML has been
+   inserted into the DOM (buildConclusionSection can't bind listeners
+   to elements that don't exist yet).
+   ================================================================ */
+let lastConclusionData = null;
+function wrapCanvasLines(ctx, text, maxWidth){
+  const words = text.split(' ');
+  const lines = [];
+  let line = '';
+  words.forEach(w=>{
+    const test = line ? line+' '+w : w;
+    if(ctx.measureText(test).width > maxWidth && line){
+      lines.push(line);
+      line = w;
+    } else {
+      line = test;
+    }
+  });
+  if(line) lines.push(line);
+  return lines;
+}
+function renderConclusionCanvas(data){
+  const dark = document.documentElement.getAttribute('data-theme')==='dark';
+  const bg = dark ? '#0B1B14' : '#F7F5EE';
+  const text = dark ? '#EAF3EE' : '#1E2A22';
+  const muted = dark ? '#9FC4B6' : '#5C6E63';
+  const gold = '#D4AF37';
+  const strongText = dark ? '#ffffff' : '#0B1B14';
+  const green = '#1F9D6C';
+  const red = '#e0685f';
+  const W = 800;
+  const pad = 56;
+  const contentW = W - pad*2;
+
+  const mctx = document.createElement('canvas').getContext('2d');
+  mctx.font = '13.5px Arial';
+  const compareLines = wrapCanvasLines(mctx, data.compareLine, contentW);
+  mctx.font = '13px Arial';
+  const recLines = data.suggestions.map(s => wrapCanvasLines(mctx, '• '+s, contentW-16));
+
+  const headerH = 156;
+  const tableRowH = 34;
+  const tableH = 30 + data.cats.length*tableRowH;
+  const compareH = 10 + compareLines.length*18;
+  const podiumH = data.podium.length ? 70 : 0;
+  const recTitleH = 34;
+  const recBodyH = recLines.reduce((s,ls)=> s + ls.length*17 + 8, 0);
+  const footerH = 56;
+  const H = headerH + tableH + compareH + podiumH + recTitleH + recBodyH + footerH;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = bg; ctx.fillRect(0,0,W,H);
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = strongText; ctx.font = 'bold 21px Georgia, serif';
+  ctx.fillText('S.R.N. MEHTA PU SCIENCE COLLEGE', W/2, 42);
+  ctx.fillStyle = gold; ctx.font = 'bold 13px Arial';
+  ctx.fillText('BAIO LEARNING SYSTEM', W/2, 63);
+  ctx.fillStyle = text; ctx.font = 'bold 22px Arial';
+  ctx.fillText('\u{1F4CC} Conclusion & Recommendations', W/2, 98);
+  ctx.fillStyle = muted; ctx.font = '13px Arial';
+  ctx.fillText(data.subtitle, W/2, 120);
+  ctx.strokeStyle = gold; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(50,136); ctx.lineTo(W-50,136); ctx.stroke();
+
+  let y = headerH;
+  const avgX = W-pad-200;
+  ctx.textAlign = 'left'; ctx.fillStyle = muted; ctx.font = 'bold 12px Arial';
+  ctx.fillText('TRACK', pad, y);
+  ctx.textAlign = 'right';
+  ctx.fillText('AVERAGE', avgX, y);
+  ctx.fillText('VERDICT', W-pad, y);
+  y += 18;
+  ctx.strokeStyle = 'rgba(150,150,150,0.25)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(W-pad, y); ctx.stroke();
+  y += 24;
+  data.cats.forEach(c=>{
+    ctx.textAlign = 'left'; ctx.fillStyle = text; ctx.font = 'bold 15px Arial';
+    ctx.fillText(c.label, pad, y);
+    ctx.textAlign = 'right'; ctx.fillStyle = text; ctx.font = '15px Arial';
+    ctx.fillText(c.pct.toFixed(1)+'%', avgX, y);
+    ctx.fillStyle = c.verdictClass==='rp-green' ? green : c.verdictClass==='rp-red' ? red : muted;
+    ctx.font = 'bold 13px Arial';
+    ctx.fillText(c.verdictLabel, W-pad, y);
+    y += tableRowH;
+  });
+
+  y += 4;
+  ctx.textAlign = 'left'; ctx.fillStyle = text; ctx.font = '13.5px Arial';
+  compareLines.forEach(line=>{ ctx.fillText(line, pad, y); y += 18; });
+  y += 8;
+
+  if(data.podium.length){
+    ctx.textAlign = 'center'; ctx.fillStyle = strongText; ctx.font = 'bold 14px Arial';
+    ctx.fillText('\u{1F3C6} Track Comparison', W/2, y);
+    y += 26;
+    const medals = ['\u{1F947}','\u{1F948}','\u{1F949}'];
+    const colWidth = contentW / data.podium.length;
+    data.podium.forEach((p,i)=>{
+      const cx = pad + colWidth*i + colWidth/2;
+      ctx.textAlign = 'center';
+      ctx.font = i<3 ? '20px Arial' : 'bold 12px Arial';
+      ctx.fillStyle = gold;
+      ctx.fillText(i<3 ? medals[i] : '4th', cx, y);
+      ctx.font = 'bold 13px Arial'; ctx.fillStyle = text;
+      ctx.fillText(p.label, cx, y+20);
+      ctx.font = '12px Arial'; ctx.fillStyle = muted;
+      ctx.fillText(p.pct.toFixed(1)+'%', cx, y+36);
+    });
+    y += 44;
+  }
+
+  y += 14;
+  ctx.textAlign = 'left'; ctx.fillStyle = strongText; ctx.font = 'bold 15px Arial';
+  ctx.fillText('Recommendations', pad, y);
+  y += 22;
+  recLines.forEach(lines=>{
+    ctx.fillStyle = text; ctx.font = '13px Arial';
+    lines.forEach(line=>{ ctx.fillText(line, pad, y); y += 17; });
+    y += 8;
+  });
+
+  ctx.textAlign = 'center'; ctx.fillStyle = muted; ctx.font = 'italic 11.5px Arial';
+  ctx.fillText('Narendra Sir · Biology Lecturer, Founder & CEO - BAIO Learning System', W/2, H-22);
+  return canvas;
+}
+function shareConclusion(){
+  const data = lastConclusionData;
+  if(!data || !data.cats.length){ alert('Nothing to share yet — generate the report first.'); return; }
+  const canvas = renderConclusionCanvas(data);
+  canvas.toBlob(function(blob){
+    if(!blob){ alert('Could not generate the image on this device. Please try "Save Image" instead.'); return; }
+    const file = new File([blob], 'conclusion-recommendations.png', {type:'image/png'});
+    const shareText = 'Conclusion & Recommendations — '+data.subtitle;
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      navigator.share({files:[file], title:'Conclusion & Recommendations', text:shareText}).catch(()=>{});
+    } else if(navigator.share){
+      navigator.share({title:'Conclusion & Recommendations', text:shareText}).catch(()=>{});
+    } else {
+      const link = document.createElement('a');
+      link.download = file.name; link.href = URL.createObjectURL(blob); link.click();
+      alert('Sharing isn’t supported directly in this browser, so the image has been downloaded instead — you can share it from your gallery/downloads.');
+    }
+  }, 'image/png');
+}
+function saveConclusionImage(){
+  const data = lastConclusionData;
+  if(!data || !data.cats.length){ alert('Nothing to save yet — generate the report first.'); return; }
+  const canvas = renderConclusionCanvas(data);
+  const link = document.createElement('a');
+  link.download = 'conclusion-recommendations.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+function printConclusionSection(){
+  const el = document.getElementById('conclusionSection');
+  if(!el) return;
+  el.classList.add('print-area');
+  const cleanup = ()=>{ el.classList.remove('print-area'); window.removeEventListener('afterprint', cleanup); };
+  window.addEventListener('afterprint', cleanup);
+  window.print();
+}
+function attachConclusionShareBar(){
+  const bar = document.getElementById('conclusionShareBar');
+  if(!bar) return;
+  bar.innerHTML =
+    '<button class="mini-action-btn" type="button" data-act="share">📤 Share</button>'+
+    '<button class="mini-action-btn" type="button" data-act="image">🖼️ Save Image</button>'+
+    '<button class="mini-action-btn" type="button" data-act="print">🖨️ Print / Save as PDF</button>';
+  bar.querySelector('[data-act="share"]').addEventListener('click', shareConclusion);
+  bar.querySelector('[data-act="image"]').addEventListener('click', saveConclusionImage);
+  bar.querySelector('[data-act="print"]').addEventListener('click', printConclusionSection);
+}
 function buildConclusionSection(theoryPct, neetPct, kcetPct, jeePct, sections){
   const cats = [
     {label:'Theory (Board)', pct:theoryPct},
@@ -7563,13 +7744,27 @@ function buildConclusionSection(theoryPct, neetPct, kcetPct, jeePct, sections){
     }
   }
 
-  return rpSection('📌 Conclusion &amp; Recommendations <span style="font-weight:400;font-size:12px;color:var(--muted);">Comparing performance across all tracks</span>',
+  const suggestionTexts = cats.map(c=>rpSuggestion(c.label, c.pct));
+  lastConclusionData = {
+    subtitle: 'Comparing performance across all tracks',
+    cats: cats.map(c=>{
+      const band = rpBand(c.pct);
+      return {label:c.label, pct:c.pct, verdictLabel:band.label, verdictClass:band.cls};
+    }),
+    compareLine: compareLine.replace(/<\/?b>/g,''),
+    podium: cats.slice().sort((a,b)=>b.pct-a.pct),
+    suggestions: suggestionTexts
+  };
+
+  return '<div id="conclusionSection">'+rpSection('📌 Conclusion &amp; Recommendations <span style="font-weight:400;font-size:12px;color:var(--muted);">Comparing performance across all tracks</span>',
     rpTable(['Track','Overall Average','Verdict'], rows) +
     '<div class="rp-callout" style="margin-top:14px;">'+compareLine+'</div>'+
     (podiumHtml ? '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin:18px 0 4px; text-align:center;">🏆 Track Comparison</div>'+podiumHtml : '')+
     sectionHtml+
     '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin:16px 0 8px;">Recommendations</div>'+
-    '<ul style="margin:0; padding-left:18px; font-size:13px; line-height:1.7; color:var(--text-dim);">'+suggestions+'</ul>');
+    '<ul style="margin:0; padding-left:18px; font-size:13px; line-height:1.7; color:var(--text-dim);">'+suggestions+'</ul>'+
+    '<div class="report-actions" id="conclusionShareBar" style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border);"></div>')+
+    '</div>';
 }
 
 function generateReport(){
@@ -7822,6 +8017,7 @@ function generatePU1Report(){
   pu1MonthCurrent = savedPu1MonthCurrent;
 
   document.getElementById('printArea').innerHTML = html;
+  attachConclusionShareBar();
   document.getElementById('reportPreviewWrap').style.display = 'block';
   document.getElementById('printArea').scrollIntoView({behavior:'smooth', block:'start'});
 }
@@ -8043,6 +8239,7 @@ function generatePU2Report(){
   html += '<div class="rp-footer">BAIO Learning System by Narendra Sir &middot; Lecturer in Biology &middot; S.R.N. Mehta PU Science College</div>';
 
   document.getElementById('printArea').innerHTML = html;
+  attachConclusionShareBar();
   document.getElementById('reportPreviewWrap').style.display = 'block';
   document.getElementById('printArea').scrollIntoView({behavior:'smooth', block:'start'});
 }
