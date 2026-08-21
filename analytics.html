@@ -7468,9 +7468,11 @@ function renderReportPUBlocks(){
   }
 }
 /* ---------- Conclusion & Recommendations (always included, both System and Custom reports) ---------- */
-function rpOverallPct(tests, totalKey, maxFn){
+function rpOverallPct(tests, totalKey, maxFn, sectionFilter, sectionKey){
+  sectionKey = sectionKey || 'section';
   const vals = tests.map(t=>{
-    const rows = t.students.filter(r=>r[totalKey]!==null && r[totalKey]!==undefined);
+    let rows = t.students.filter(r=>r[totalKey]!==null && r[totalKey]!==undefined);
+    if(sectionFilter) rows = rows.filter(r=>r[sectionKey]===sectionFilter);
     if(!rows.length) return null;
     const avg = rows.reduce((s,r)=>s+r[totalKey],0)/rows.length;
     const max = maxFn(t);
@@ -7511,7 +7513,7 @@ function rpPodium(entrantsIn){
   }).join('');
   return '<div style="display:flex; align-items:flex-end; justify-content:center; gap:14px; margin:16px 0 4px;">'+cols+'</div>';
 }
-function buildConclusionSection(theoryPct, neetPct, kcetPct, jeePct){
+function buildConclusionSection(theoryPct, neetPct, kcetPct, jeePct, sections){
   const cats = [
     {label:'Theory (Board)', pct:theoryPct},
     {label:'NEET', pct:neetPct},
@@ -7531,10 +7533,41 @@ function buildConclusionSection(theoryPct, neetPct, kcetPct, jeePct){
     : '<b>Overall standing:</b> '+cats[0].label+' stands at '+cats[0].pct.toFixed(1)+'%.';
   const competitiveCats = cats.filter(c=>c.label==='NEET' || c.label==='KCET' || c.label==='JEE');
   const podiumHtml = rpPodium(competitiveCats);
+
+  let sectionHtml = '';
+  if(sections && sections.length){
+    const trackKeys = [
+      {key:'theoryPct', label:'Theory (Board)'},
+      {key:'neetPct', label:'NEET'},
+      {key:'kcetPct', label:'KCET'},
+      {key:'jeePct', label:'JEE'}
+    ].filter(tk => cats.some(c=>c.label===tk.label));
+    const secRows = sections.map(sec=>{
+      const cells = trackKeys.map(tk => sec[tk.key]!==null && sec[tk.key]!==undefined && !isNaN(sec[tk.key]) ? sec[tk.key].toFixed(1)+'%' : '—');
+      return [sec.label].concat(cells);
+    });
+    sectionHtml = '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin:20px 0 8px;">Section-wise Comparison</div>'+
+      rpTable(['Section'].concat(trackKeys.map(tk=>tk.label)), secRows);
+    // Call out whichever section leads on the most tracks
+    if(sections.length > 1){
+      const leadCounts = sections.map(sec=>({label:sec.label, wins:0}));
+      trackKeys.forEach(tk=>{
+        let bestIdx = -1, bestVal = -Infinity;
+        sections.forEach((sec,i)=>{ const v = sec[tk.key]; if(v!==null && v!==undefined && !isNaN(v) && v>bestVal){ bestVal=v; bestIdx=i; } });
+        if(bestIdx!==-1) leadCounts[bestIdx].wins++;
+      });
+      const topSection = leadCounts.slice().sort((a,b)=>b.wins-a.wins)[0];
+      if(topSection && topSection.wins>0){
+        sectionHtml += '<div class="rp-callout" style="margin-top:12px;"><b>Section lead:</b> '+topSection.label+' currently leads in '+topSection.wins+' of '+trackKeys.length+' tracked track(s).</div>';
+      }
+    }
+  }
+
   return rpSection('📌 Conclusion &amp; Recommendations <span style="font-weight:400;font-size:12px;color:var(--muted);">Comparing performance across all tracks</span>',
     rpTable(['Track','Overall Average','Verdict'], rows) +
     '<div class="rp-callout" style="margin-top:14px;">'+compareLine+'</div>'+
     (podiumHtml ? '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin:18px 0 4px; text-align:center;">🏆 NEET vs KCET vs JEE</div>'+podiumHtml : '')+
+    sectionHtml+
     '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin:16px 0 8px;">Recommendations</div>'+
     '<ul style="margin:0; padding-left:18px; font-size:13px; line-height:1.7; color:var(--text-dim);">'+suggestions+'</ul>');
 }
@@ -7767,7 +7800,20 @@ function generatePU1Report(){
     const rpNeetPct = rpOverallPct(NEET_TESTS, 'total', ()=>720);
     const rpKcetPct = rpOverallPct(KCET_TESTS, 'total', ()=>135);
     const rpJeePct = rpOverallPct(JEE_TESTS, 'total', ()=>300);
-    html += buildConclusionSection(rpTheoryPct, rpNeetPct, rpKcetPct, rpJeePct);
+    const rpTheorySectionPct = sec => {
+      const subs = ['PHY','CHE','MAT','BIO'];
+      const vals = [];
+      subs.forEach(s=>{ vals.push(SEC.subjects[sec].test1[s].avg_pct); vals.push(SEC.subjects[sec].test2[s].avg_pct); });
+      return vals.reduce((a,b)=>a+b,0)/vals.length;
+    };
+    const rpSections = ['SPARK','PRIME'].map(sec => ({
+      label: sec,
+      theoryPct: rpTheorySectionPct(sec),
+      neetPct: rpOverallPct(NEET_TESTS, 'total', ()=>720, sec),
+      kcetPct: rpOverallPct(KCET_TESTS, 'total', ()=>135, sec),
+      jeePct: rpOverallPct(JEE_TESTS, 'total', ()=>300, sec)
+    }));
+    html += buildConclusionSection(rpTheoryPct, rpNeetPct, rpKcetPct, rpJeePct, rpSections);
   }
 
   html += '</div>'; // close rp-body
@@ -7974,7 +8020,23 @@ function generatePU2Report(){
     const rpNeetPctPU2 = rpNeetVals.length ? rpNeetVals.reduce((a,b)=>a+b,0)/rpNeetVals.length : null;
     const rpKcetPctPU2 = rpOverallPct(PU2_KCET_TESTS, 'total', t=>t.outof*3);
     const rpJeePctPU2 = rpOverallPct(PU2_JEE_TESTS, 'total', ()=>300);
-    html += buildConclusionSection(rpTheoryPctPU2, rpNeetPctPU2, rpKcetPctPU2, rpJeePctPU2);
+    const rpNeetSectionPctPU2 = section => {
+      const vals = PU2_TESTS.map(t=>{
+        const rows = t.students.filter(r=>r.section===section).map(r=>pu2NeetTotal(r,t)).filter(v=>v!==null);
+        if(!rows.length) return null;
+        const max = t.outof.PHY+t.outof.CHE+t.outof.BIO;
+        return (rows.reduce((a,b)=>a+b,0)/rows.length)/max*100;
+      }).filter(v=>v!==null);
+      return vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : null;
+    };
+    const rpSectionsPU2 = ['CHAMPION','ELITE'].map(sec => ({
+      label: sec,
+      theoryPct: rpOverallPct(PU2_TESTS, 'total', t=>t.outof.PHY+t.outof.CHE+t.outof.MAT+t.outof.BIO, sec),
+      neetPct: rpNeetSectionPctPU2(sec),
+      kcetPct: rpOverallPct(PU2_KCET_TESTS, 'total', t=>t.outof*3, sec),
+      jeePct: rpOverallPct(PU2_JEE_TESTS, 'total', ()=>300, sec)
+    }));
+    html += buildConclusionSection(rpTheoryPctPU2, rpNeetPctPU2, rpKcetPctPU2, rpJeePctPU2, rpSectionsPU2);
   }
 
   html += '</div>'; // close rp-body
