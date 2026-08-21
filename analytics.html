@@ -919,9 +919,21 @@ window.addEventListener('afterprint', function(){
 </div>
 
 <div id="shareInsightWrap" style="display:none; max-width:900px; margin:20px auto; padding:0 20px 40px;">
-  <div class="report-page print-area" id="shareInsightPrintArea"></div>
-  <div class="report-actions">
-    <button class="report-btn" id="shareInsightPrintBtn">🖨️ Print / Save as PDF</button>
+  <div class="report-actions" style="margin-bottom:14px;">
+    <button class="report-btn" id="siTabInsightBtn">📊 Biology Insight</button>
+    <button class="report-btn secondary" id="siTabAssignBtn">📋 Assignments &amp; Worksheets</button>
+  </div>
+  <div id="siPaneInsight">
+    <div class="report-page print-area" id="shareInsightPrintArea"></div>
+    <div class="report-actions">
+      <button class="report-btn" id="shareInsightPrintBtn">🖨️ Print / Save as PDF</button>
+    </div>
+  </div>
+  <div id="siPaneAssign" style="display:none;">
+    <div class="report-page print-area" id="shareAssignPrintArea"></div>
+    <div class="report-actions">
+      <button class="report-btn secondary" id="shareAssignRefreshBtn">🔄 Refresh Status</button>
+    </div>
   </div>
 </div>
 
@@ -11067,6 +11079,79 @@ function renderShareableInsight(student, pu){
   });
 
   document.getElementById('shareInsightPrintBtn').addEventListener('click', ()=> window.print());
+
+  /* ---- Assignments & Worksheets tab: reads live from assignment-tracker.html's own
+     SEED_STUDENTS/SEED_ITEMS (fetched fresh, not duplicated here) so it never drifts
+     out of sync with the teacher's tracker. ---- */
+  let assignDataLoaded = false;
+  function escAssign(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  async function loadAssignmentStatus(forceFresh){
+    const area = document.getElementById('shareAssignPrintArea');
+    const refreshBtn = document.getElementById('shareAssignRefreshBtn');
+    if(refreshBtn) refreshBtn.textContent = '⏳ Loading...';
+    area.innerHTML = '<div class="rp-callout">Loading assignment &amp; worksheet status…</div>';
+    try{
+      const url = 'assignment-tracker.html' + (forceFresh ? ('?_r=' + Date.now()) : '');
+      const res = await fetch(url, forceFresh ? {cache:'no-store'} : {});
+      const text = await res.text();
+      const itemsMatch = text.match(/const SEED_ITEMS = (\[.*?\]);/s);
+      const studentsMatch = text.match(/const SEED_STUDENTS = (\[.*?\]);/s);
+      if(!itemsMatch || !studentsMatch) throw new Error('Could not read tracker data');
+      const items = JSON.parse(itemsMatch[1]);
+      const seedStudents = JSON.parse(studentsMatch[1]);
+      const record = seedStudents.find(s => s.code === student.code);
+
+      let html = '<div class="rp-header">'+
+        '<div class="rp-tag">Biology All In One (BAIO) Learning System</div>'+
+        '<h1>Assignments &amp; Worksheets</h1>'+
+        '<p>'+escAssign(student.name)+' &middot; '+escAssign(student.code)+' &middot; '+escAssign(sectionLabel(student))+' Section</p>'+
+      '</div><div class="rp-body">';
+
+      if(!record){
+        html += '<div class="rp-callout warn">No assignment/worksheet records found for this student yet.</div>';
+      } else {
+        const done = items.filter(it => record.status[it.id] === 'Submitted').length;
+        const pct = items.length ? Math.round(done/items.length*100) : 0;
+        html += '<div class="rp-kpi-grid">'+
+          '<div class="rp-kpi"><div class="rp-kpi-label">Submitted</div><div class="rp-kpi-value">'+done+' / '+items.length+'</div><div class="rp-kpi-sub">'+pct+'% complete</div></div>'+
+        '</div>';
+
+        const chapters = [];
+        items.forEach(it=>{
+          let c = chapters.find(c=>c.chapter===it.chapter);
+          if(!c){ c = {chapter: it.chapter, rows: []}; chapters.push(c); }
+          const status = record.status[it.id] === 'Submitted' ? 'Submitted' : (record.status[it.id] || 'Pending');
+          const cls = status === 'Submitted' ? 'rp-green' : 'rp-red';
+          c.rows.push([escAssign(it.label), '<span class="'+cls+'">'+escAssign(status)+'</span>']);
+        });
+        chapters.forEach(c=>{
+          html += rpSection(escAssign(c.chapter), rpTable(['Item','Status'], c.rows));
+        });
+      }
+
+      html += '</div><div class="rp-footer">BAIO Learning System by Narendra Sir &middot; S.R.N. Mehta PU Science College</div>';
+      area.innerHTML = html;
+      assignDataLoaded = true;
+    }catch(e){
+      area.innerHTML = '<div class="rp-callout warn">Could not load assignment status right now. Please try Refresh Status again in a moment.</div>';
+    }
+    if(refreshBtn) refreshBtn.textContent = '🔄 Refresh Status';
+  }
+
+  document.getElementById('siTabInsightBtn').addEventListener('click', ()=>{
+    document.getElementById('siPaneInsight').style.display = 'block';
+    document.getElementById('siPaneAssign').style.display = 'none';
+    document.getElementById('siTabInsightBtn').classList.remove('secondary');
+    document.getElementById('siTabAssignBtn').classList.add('secondary');
+  });
+  document.getElementById('siTabAssignBtn').addEventListener('click', ()=>{
+    document.getElementById('siPaneInsight').style.display = 'none';
+    document.getElementById('siPaneAssign').style.display = 'block';
+    document.getElementById('siTabAssignBtn').classList.remove('secondary');
+    document.getElementById('siTabInsightBtn').classList.add('secondary');
+    if(!assignDataLoaded) loadAssignmentStatus(false);
+  });
+  document.getElementById('shareAssignRefreshBtn').addEventListener('click', ()=> loadAssignmentStatus(true));
 })();
 
 </script>
