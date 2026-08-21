@@ -1740,12 +1740,43 @@ function renderBoardImportant(){
   }, 50);
 }
 
+/* ---- Chapter 5 Handwritten Notes: teacher-code unlock only (content coming soon) ---- */
+const HW_UNLOCK_KEY = 'pu1ch5_hw_unlock';
+const HW_MASTER_CODE = 'NS-MASTER-2026';
+const HW_UNLOCK_LOOKUP = {};
+function getHwUnlock(){ try{ return JSON.parse(localStorage.getItem(HW_UNLOCK_KEY) || 'null'); }catch(e){ return null; } }
+function setHwUnlock(method, extra){ try{ localStorage.setItem(HW_UNLOCK_KEY, JSON.stringify(Object.assign({unlocked:true, method:method, ts:Date.now()}, extra||{}))); }catch(e){} }
+function hwQualifies(){ const u=getHwUnlock(); return !!(u && u.unlocked); }
+function reLockHw(){ try{ localStorage.removeItem(HW_UNLOCK_KEY); }catch(e){} renderDownloads(); }
+window.reLockHw = reLockHw;
+function hwUnlockLookupKey(section,roll){ return (String(section).trim()+'_'+String(roll).trim()).toUpperCase(); }
+function hwSubmitUnlock(){
+  const name=(document.getElementById('hwNameInput')||{}).value || '';
+  const roll=(document.getElementById('hwRollInput')||{}).value || '';
+  const section=(document.getElementById('hwSectionInput')||{}).value || '';
+  const code=((document.getElementById('hwCodeInput')||{}).value || '').trim().toUpperCase();
+  const msgEl=document.getElementById('hwUnlockMsg');
+  if(!code){ msgEl.textContent='Please enter an unlock code.'; msgEl.className='hw-msg bad'; return; }
+  if(code===HW_MASTER_CODE){ setHwUnlock('master',{roll:roll||'master-access'}); renderDownloads(); return; }
+  if(!roll || !section){ msgEl.textContent='Please fill in section and roll number (or use the master code alone).'; msgEl.className='hw-msg bad'; return; }
+  const entry=HW_UNLOCK_LOOKUP[hwUnlockLookupKey(section,roll)];
+  if(entry && entry.code.toUpperCase()===code){ setHwUnlock('code',{roll,section}); renderDownloads(); return; }
+  if(name.trim() && computeStudentCode(name,roll,section,'CH5-HWNOTES')===code){ setHwUnlock('code',{roll,section,name:name.trim()}); renderDownloads(); return; }
+  msgEl.textContent='That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir.'; msgEl.className='hw-msg bad';
+}
+window.hwSubmitUnlock=hwSubmitUnlock;
+function hwToggleCodeVisibility(){ const input=document.getElementById('hwCodeInput'), toggle=document.getElementById('hwCodeShowToggle'); if(input&&toggle) input.style.filter=toggle.checked?'none':'blur(4px)'; }
+window.hwToggleCodeVisibility=hwToggleCodeVisibility;
+function hwRow(){
+  if(hwQualifies()) return `<div class="dl-row"><div class="dl-info"><div class="t">🔓 Handwritten Notes <span style="font-weight:400;font-size:10.5px;color:var(--gold);">— Coming Soon</span></div><div class="d">You're unlocked! These notes are still being prepared — they'll appear here automatically once uploaded, no need to unlock again.</div></div></div><div style="text-align:right;margin:-6px 0 10px;"><a href="#" onclick="reLockHw(); return false;" style="font-size:11px;color:var(--ink-dim);text-decoration:underline;cursor:pointer;">Re-lock notes on this device</a></div>`;
+  return `<div class="dl-row"><div class="dl-info"><div class="t">🔒 Handwritten Notes <span style="font-weight:400;font-size:10.5px;color:var(--gold);">— Coming Soon</span></div><div class="d">Not uploaded yet. Unlock early with a teacher-issued code so it's ready the moment the notes are added.</div></div></div><div class="hw-unlock-form"><div class="hw-msg" id="hwUnlockMsg"></div><input type="text" id="hwNameInput" placeholder="Full name"><input type="text" id="hwSectionInput" placeholder="Section"><input type="text" id="hwRollInput" placeholder="Roll number"><div style="position:relative;"><input type="text" id="hwCodeInput" placeholder="Free unlock code" autocomplete="off" style="width:100%;"><label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-dim);margin:6px 0 0;cursor:pointer;"><input type="checkbox" id="hwCodeShowToggle" checked onchange="hwToggleCodeVisibility()" style="width:auto;margin:0;">Show code</label></div><button class="start-btn" onclick="hwSubmitUnlock()">Unlock with Code</button><div style="text-align:center;font-size:11px;color:var(--ink-dim);margin:10px 0 4px;">Ask your teacher for a free unlock code</div></div>`;
+}
 function renderDownloads(){
   let html = `<div class="dl-topic-block"><div class="dl-section-title">Study Material</div>${pdfRow('comprehensive')}${pdfRow('revision_notes')}</div>`;
   DATA.topics.forEach(t=>{
     html += `<div class="dl-topic-block"><div class="dl-section-title">Worksheet — ${t.name}</div>${pdfRow('ws_'+t.id)}</div>`;
   });
-  html += `<div class="dl-topic-block"><div class="dl-section-title">Full Chapter Revision</div>${pdfRow('ws_revision')}</div><div class="dl-topic-block"><div class="dl-section-title">Premium Content</div>${premiumStatusRow()}</div>`;
+  html += `<div class="dl-topic-block"><div class="dl-section-title">Full Chapter Revision</div>${pdfRow('ws_revision')}</div><div class="dl-topic-block"><div class="dl-section-title">Teacher-issued organised notes</div>${hwRow()}</div><div class="dl-topic-block"><div class="dl-section-title">Premium Content</div>${premiumStatusRow()}</div>`;
   document.getElementById('content').innerHTML = html;
 }
 
