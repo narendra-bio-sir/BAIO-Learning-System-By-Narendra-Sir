@@ -600,8 +600,22 @@ function shareCardRenderCanvas(student){
     ctx.closePath();
   }
 
-  const navy = '#0B1B14', gold = '#D4AF37', gold2 = '#F4D37A', teal = '#2EE6C5', ink = '#EAF3EE', inkDim = '#9FC4B6', danger = '#E7695B', ok = '#33C48A';
+  // Mirror whichever theme (light/dark) is currently active on the page —
+  // same :root vs [data-theme="light"] palettes used across the whole site —
+  // so a shared card looks like the tracker the teacher is actually looking at.
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  const navy = isLight ? '#F7F5EE' : '#0B1B14';
+  const gold = isLight ? '#B8912A' : '#D4AF37';
+  const teal = isLight ? '#0F8F7A' : '#2EE6C5';
+  const ink = isLight ? '#1E2A22' : '#EAF3EE';
+  const inkDim = isLight ? '#5C6E63' : '#9FC4B6';
+  const danger = isLight ? '#C33A2C' : '#E7695B';
+  const ok = isLight ? '#1F9D6C' : '#33C48A';
   const heading = "'Space Grotesk', Arial, sans-serif", body = "'Inter', Arial, sans-serif";
+  function hexToRgba(hex, alpha){
+    const n = parseInt(hex.slice(1), 16);
+    return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${alpha})`;
+  }
 
   const rowPadX = 12, rowGap = 8, rowLineH = 16;
   const itemsW = W - PAD*2 - rowPadX*2;
@@ -626,24 +640,24 @@ function shareCardRenderCanvas(student){
     g.addColorStop(0, color); g.addColorStop(1, 'rgba(0,0,0,0)');
     ctx.fillStyle = g; ctx.fillRect(0, 0, c2d.width, c2d.height);
   }
-  glow(0.15, 0.08, 'rgba(46,230,197,0.10)', 0.42);
-  glow(0.88, 0.94, 'rgba(212,175,55,0.12)', 0.42);
+  glow(0.15, 0.08, hexToRgba(teal, 0.10), 0.42);
+  glow(0.88, 0.94, hexToRgba(gold, 0.12), 0.42);
 
   ctx.strokeStyle = gold; ctx.lineWidth = 3;
   roundedRect(6, 6, c2d.width-12, c2d.height-12, 20); ctx.stroke();
 
   ctx.textBaseline = 'top'; ctx.textAlign = 'center';
-  ctx.fillStyle = gold2; ctx.font = `bold 20px ${heading}`;
+  ctx.fillStyle = gold; ctx.font = `bold 20px ${heading}`;
   ctx.fillText('BAIO Learning System', c2d.width/2, PAD);
   ctx.fillStyle = teal; ctx.font = `700 10.5px ${body}`;
   ctx.fillText('ASSIGNMENT & WORKSHEET TRACKER', c2d.width/2, PAD+26);
-  ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1;
+  ctx.strokeStyle = hexToRgba(gold, 0.35); ctx.lineWidth = 1;
   ctx.beginPath(); ctx.moveTo(PAD, PAD+52); ctx.lineTo(c2d.width-PAD, PAD+52); ctx.stroke();
 
   // hero: centered ring + identity badge
   let y = headerH + 20;
   const ringCx = c2d.width/2, ringR = 64, ringCy = y + ringR;
-  ctx.beginPath(); ctx.arc(ringCx, ringCy, ringR, 0, Math.PI*2); ctx.strokeStyle = 'rgba(159,196,182,0.22)'; ctx.lineWidth = 11; ctx.stroke();
+  ctx.beginPath(); ctx.arc(ringCx, ringCy, ringR, 0, Math.PI*2); ctx.strokeStyle = hexToRgba(inkDim, 0.22); ctx.lineWidth = 11; ctx.stroke();
   ctx.beginPath(); ctx.arc(ringCx, ringCy, ringR, -Math.PI/2, -Math.PI/2 + (c.pct/100)*Math.PI*2);
   ctx.strokeStyle = c.pct === 100 ? ok : teal; ctx.lineWidth = 11; ctx.stroke();
   ctx.textAlign = 'center'; ctx.fillStyle = ink; ctx.font = `bold 26px ${heading}`;
@@ -660,7 +674,7 @@ function shareCardRenderCanvas(student){
   ctx.textAlign = 'left'; ctx.fillStyle = ink; ctx.font = `bold 22px ${heading}`;
   ctx.fillText(student.name, startX, y);
   const chipX = startX + nameW + 9, chipY = y + 3;
-  ctx.fillStyle = 'rgba(46,230,197,0.12)';
+  ctx.fillStyle = hexToRgba(teal, 0.12);
   roundedRect(chipX, chipY, chipW, chipH, chipH/2); ctx.fill();
   ctx.strokeStyle = teal; ctx.lineWidth = 1;
   roundedRect(chipX, chipY, chipW, chipH, chipH/2); ctx.stroke();
@@ -672,17 +686,17 @@ function shareCardRenderCanvas(student){
   ctx.fillText(student.code, ringCx, y);
 
   y = headerH + heroH;
-  ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1;
+  ctx.strokeStyle = hexToRgba(gold, 0.35); ctx.lineWidth = 1;
   ctx.beginPath(); ctx.moveTo(PAD, y); ctx.lineTo(c2d.width-PAD, y); ctx.stroke();
   y += 20;
-  ctx.textAlign = 'left'; ctx.fillStyle = gold2; ctx.font = `bold 12px ${heading}`;
+  ctx.textAlign = 'left'; ctx.fillStyle = gold; ctx.font = `bold 12px ${heading}`;
   ctx.fillText(pendingItems.length ? 'PENDING WORKSHEETS' : 'STATUS', PAD, y);
   y += 22;
 
   const rowX = PAD, rowW = W - PAD*2;
   if(pendingItems.length){
     rows.forEach(row=>{
-      ctx.fillStyle = 'rgba(231,105,91,0.08)';
+      ctx.fillStyle = hexToRgba(danger, 0.08);
       roundedRect(rowX, y, rowW, row.h, 8); ctx.fill();
       ctx.fillStyle = danger; ctx.fillRect(rowX, y, 3, row.h);
       let ty = y + 10;
@@ -695,7 +709,7 @@ function shareCardRenderCanvas(student){
     });
   } else {
     const row = rows[0];
-    ctx.fillStyle = 'rgba(51,196,138,0.1)';
+    ctx.fillStyle = hexToRgba(ok, 0.1);
     roundedRect(rowX, y, rowW, row.h, 8); ctx.fill();
     ctx.fillStyle = ok; ctx.fillRect(rowX, y, 3, row.h);
     ctx.textAlign = 'center'; ctx.fillStyle = ok; ctx.font = `bold 13px ${heading}`;
@@ -704,7 +718,7 @@ function shareCardRenderCanvas(student){
   }
 
   y += 6;
-  ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1;
+  ctx.strokeStyle = hexToRgba(gold, 0.35); ctx.lineWidth = 1;
   ctx.beginPath(); ctx.moveTo(PAD, y); ctx.lineTo(c2d.width-PAD, y); ctx.stroke();
   ctx.textAlign = 'center'; ctx.fillStyle = inkDim; ctx.font = `11px ${body}`;
   ctx.fillText('BAIO Learning System · Biology All In One · Narendra Sir, Lecturer in Biology', c2d.width/2, y + 20);
