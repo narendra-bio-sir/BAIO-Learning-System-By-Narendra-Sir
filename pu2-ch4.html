@@ -3077,8 +3077,11 @@ let fcIndex = 0;
 let fcOrder = FLASHCARDS.map((_,i)=>i);
 
 /* ---------- Tabs ---------- */
+let previousTab = 'study';
 document.querySelectorAll('.tab-btn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
+    const activeBefore = document.querySelector('.tab-btn.active');
+    if(activeBefore && activeBefore.dataset.tab !== btn.dataset.tab) previousTab = activeBefore.dataset.tab;
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
     btn.classList.add('active');
@@ -3095,6 +3098,8 @@ function goToTab(id){
   if(typeof quizClearTimer === 'function') quizClearTimer();
   if(typeof advState !== 'undefined' && advState && advState.timerHandle){ clearInterval(advState.timerHandle); advState.timerHandle=null; }
   if(typeof kcetClearTimer === 'function') kcetClearTimer();
+  const activeBefore = document.querySelector('.tab-btn.active');
+  if(activeBefore && activeBefore.dataset.tab !== id) previousTab = activeBefore.dataset.tab;
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   const btn = document.querySelector('.tab-btn[data-tab="'+id+'"]');
@@ -5774,6 +5779,12 @@ function premiumInjectPaymentButton(tabId){
   }
   container.innerHTML = '<a href="' + RAZORPAY_PREMIUM_LINK + '" target="_blank" rel="noopener" class="btn" style="display:inline-block; text-decoration:none; background:linear-gradient(135deg,#0F8F7A,#0B6F5E); border:none; color:#fff;">\uD83D\uDCB3 Pay \u20B9' + PREMIUM_PRICE_RUPEES + ' to Unlock Premium</a>';
 }
+function backFromPremiumLockCh2(){
+  const unlocked = premiumQualifies();
+  const target = (PREMIUM_LOCKED_TABS.indexOf(previousTab) === -1 || unlocked) ? previousTab : 'study';
+  goToTab(target);
+}
+window.backFromPremiumLockCh2 = backFromPremiumLockCh2;
 function renderPremiumLockScreenCh2(tabId){
   const overlay = document.getElementById('premLock_' + tabId);
   if(!overlay) return;
@@ -5781,6 +5792,7 @@ function renderPremiumLockScreenCh2(tabId){
   let profile = null;
   try{ profile = JSON.parse(localStorage.getItem('baio_student') || 'null'); }catch(e){}
   overlay.innerHTML = '<div class="setup-card">'
+    + '<button class="btn secondary" style="margin-bottom:14px;" onclick="backFromPremiumLockCh2()">&#8592; Back</button>'
     + '<div style="text-align:center; margin-bottom:14px;">'
     + '<div style="font-size:38px;">\uD83D\uDD12</div>'
     + '<h3 style="color:var(--gold-2); margin:6px 0 2px; font-size:17px;">' + label + ' is Premium Content</h3>'
@@ -7637,6 +7649,7 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
   var targetTab = null;
   try{ targetTab = localStorage.getItem(LAST_TAB_KEY); }catch(e){}
   if(!targetTab) targetTab = 'badges';
+  if(PREMIUM_LOCKED_TABS.indexOf(targetTab) !== -1 && !premiumQualifies()) targetTab = 'study';
   var targetBtn = document.querySelector('.tab-btn[data-tab="'+targetTab+'"]');
   var targetPanel = document.getElementById('panel-'+targetTab);
   if(targetBtn && targetPanel){
