@@ -914,6 +914,7 @@ window.addEventListener('afterprint', function(){
     <div id="svError" style="display:none; color:#e0685f; font-size:12.5px; margin:10px 0 0; text-align:left;"></div>
     <div class="report-actions" style="justify-content:center;">
       <button class="report-btn" id="svSubmitBtn">View My Biology Insight</button>
+      <button class="report-btn secondary" id="svRefreshBtn">🔄 Refresh</button>
     </div>
   </div>
 </div>
@@ -922,6 +923,7 @@ window.addEventListener('afterprint', function(){
   <div class="report-page print-area" id="shareInsightPrintArea"></div>
   <div class="report-actions">
     <button class="report-btn" id="shareInsightPrintBtn">🖨️ Print / Save as PDF</button>
+    <button class="report-btn secondary" id="shareInsightRefreshBtn">🔄 Refresh</button>
   </div>
 </div>
 
@@ -11067,6 +11069,30 @@ function renderShareableInsight(student, pu){
   });
 
   document.getElementById('shareInsightPrintBtn').addEventListener('click', ()=> window.print());
+
+  /* Force-refresh: unregister any controlling service worker, clear its caches, then
+     reload with a cache-busting query string, so a stale cached copy of this student's
+     report always gets replaced with the live version in one tap. */
+  async function hardRefreshInsight(btn){
+    if(btn) btn.textContent = '⏳';
+    try{
+      if('serviceWorker' in navigator){
+        const regs = await navigator.serviceWorker.getRegistrations();
+        for(const r of regs) await r.unregister();
+      }
+      if('caches' in window){
+        const keys = await caches.keys();
+        for(const k of keys) await caches.delete(k);
+      }
+    }catch(e){}
+    const url = new URL(window.location.href);
+    url.searchParams.set('_r', Date.now());
+    window.location.href = url.toString();
+  }
+  const svRefreshBtn = document.getElementById('svRefreshBtn');
+  if(svRefreshBtn) svRefreshBtn.addEventListener('click', ()=> hardRefreshInsight(svRefreshBtn));
+  const shareInsightRefreshBtn = document.getElementById('shareInsightRefreshBtn');
+  if(shareInsightRefreshBtn) shareInsightRefreshBtn.addEventListener('click', ()=> hardRefreshInsight(shareInsightRefreshBtn));
 })();
 
 </script>
