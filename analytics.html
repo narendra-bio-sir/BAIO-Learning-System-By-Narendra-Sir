@@ -7463,8 +7463,8 @@ function renderReportPUBlocks(){
   const sysDesc = document.getElementById('systemReportDesc');
   if(sysDesc){
     sysDesc.textContent = currentPULevel === 'pu1'
-      ? 'Includes: Slip Test overview, Monthly Test overview, Section comparison (SPARK vs PRIME), NEET/KCET/JEE overviews, Biology vs Other Subjects, and a system-generated Conclusion & Recommendations — everything currently in this dashboard, compiled onto one printable page.'
-      : 'Includes: Monthly Test overview, Section comparison (CHAMPION vs ELITE), NEET/KCET/JEE overviews, Biology vs Other Subjects, and a system-generated Conclusion & Recommendations — everything currently in this dashboard for PU-II, compiled onto one printable page.';
+      ? 'Includes: Slip Test overview, Monthly Test overview, Section comparison (SPARK vs PRIME), NEET/KCET/JEE overviews, Biology vs Other Subjects, and a Conclusion & Recommendations — everything currently in this dashboard, compiled onto one printable page.'
+      : 'Includes: Monthly Test overview, Section comparison (CHAMPION vs ELITE), NEET/KCET/JEE overviews, Biology vs Other Subjects, and a Conclusion & Recommendations — everything currently in this dashboard for PU-II, compiled onto one printable page.';
   }
 }
 /* ---------- Conclusion & Recommendations (always included, both System and Custom reports) ---------- */
@@ -7490,6 +7490,27 @@ function rpSuggestion(label, pct){
   if(pct >= 35) return label+' needs focused attention — recommend targeted remedial sessions and doubt-clearing before the next round.';
   return label+' is at a critical stage — recommend immediate one-on-one intervention, foundational concept revision, and closer monitoring.';
 }
+function rpPodium(entrantsIn){
+  const entrants = entrantsIn.filter(c=>c.pct!==null && !isNaN(c.pct));
+  if(entrants.length < 2) return '';
+  const ranked = entrants.slice().sort((a,b)=>b.pct-a.pct);
+  const MEDALS = ['🥇','🥈','🥉'];
+  const HEIGHTS = [92,66,46];
+  const COLORS = ['#D4AF37','#B0B7C3','#C97F4A'];
+  // Classic podium visual order: 2nd, 1st, 3rd (skip a slot if there are only 2 entrants)
+  const order = ranked.length >= 3 ? [1,0,2] : [1,0];
+  const cols = order.map(i=>{
+    const c = ranked[i];
+    if(!c) return '';
+    return '<div style="text-align:center; flex:1;">'+
+      '<div style="font-size:'+(i===0?'30':'24')+'px;">'+MEDALS[i]+'</div>'+
+      '<div style="font-weight:700; font-family:\'Space Grotesk\',sans-serif; color:var(--text-strong);">'+c.label+'</div>'+
+      '<div style="font-size:12px; color:var(--muted);">'+c.pct.toFixed(1)+'%</div>'+
+      '<div style="background:'+COLORS[i]+'; height:'+HEIGHTS[i]+'px; border-radius:6px 6px 0 0; margin-top:6px;"></div>'+
+    '</div>';
+  }).join('');
+  return '<div style="display:flex; align-items:flex-end; justify-content:center; gap:14px; margin:16px 0 4px;">'+cols+'</div>';
+}
 function buildConclusionSection(theoryPct, neetPct, kcetPct, jeePct){
   const cats = [
     {label:'Theory (Board)', pct:theoryPct},
@@ -7508,9 +7529,12 @@ function buildConclusionSection(theoryPct, neetPct, kcetPct, jeePct){
   const compareLine = cats.length > 1
     ? '<b>Overall standing:</b> '+strongest.label+' is currently the strongest track at '+strongest.pct.toFixed(1)+'%, while '+weakest.label+' needs the most attention at '+weakest.pct.toFixed(1)+'%.'
     : '<b>Overall standing:</b> '+cats[0].label+' stands at '+cats[0].pct.toFixed(1)+'%.';
-  return rpSection('📌 Conclusion &amp; Recommendations <span style="font-weight:400;font-size:12px;color:var(--muted);">System-generated summary across all tracks</span>',
+  const competitiveCats = cats.filter(c=>c.label==='NEET' || c.label==='KCET' || c.label==='JEE');
+  const podiumHtml = rpPodium(competitiveCats);
+  return rpSection('📌 Conclusion &amp; Recommendations <span style="font-weight:400;font-size:12px;color:var(--muted);">Comparing performance across all tracks</span>',
     rpTable(['Track','Overall Average','Verdict'], rows) +
     '<div class="rp-callout" style="margin-top:14px;">'+compareLine+'</div>'+
+    (podiumHtml ? '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin:18px 0 4px; text-align:center;">🏆 NEET vs KCET vs JEE</div>'+podiumHtml : '')+
     '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin:16px 0 8px;">Recommendations</div>'+
     '<ul style="margin:0; padding-left:18px; font-size:13px; line-height:1.7; color:var(--text-dim);">'+suggestions+'</ul>');
 }
