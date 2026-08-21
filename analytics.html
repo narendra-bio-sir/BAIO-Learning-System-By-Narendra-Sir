@@ -2807,10 +2807,22 @@ window.addEventListener('afterprint', function(){
   </div>
 
   <div id="reportCardWrap" style="display:none;">
-    <div class="report-card print-area" id="reportCardContent"></div>
-    <div class="report-actions">
-      <button class="report-btn" id="downloadCardBtn">📥 Download as Image</button>
-      <button class="report-btn secondary" id="printCardBtn">🖨️ Print / Save as PDF</button>
+    <div class="report-actions" style="margin-bottom:14px;">
+      <button class="report-btn" id="rcTabScoresBtn">📊 Test Scores</button>
+      <button class="report-btn secondary" id="rcTabAssignBtn">📋 Assignments &amp; Worksheets</button>
+    </div>
+    <div id="rcPaneScores">
+      <div class="report-card print-area" id="reportCardContent"></div>
+      <div class="report-actions">
+        <button class="report-btn" id="downloadCardBtn">📥 Download as Image</button>
+        <button class="report-btn secondary" id="printCardBtn">🖨️ Print / Save as PDF</button>
+      </div>
+    </div>
+    <div id="rcPaneAssign" style="display:none;">
+      <div class="report-card" id="reportCardAssignContent"></div>
+      <div class="report-actions">
+        <button class="report-btn secondary" id="rcAssignRefreshBtn">🔄 Refresh Status</button>
+      </div>
     </div>
   </div>
   <canvas id="reportCanvas" width="800" height="1750"></canvas>
@@ -6761,6 +6773,7 @@ function showReportCardPU2(student){
       document.getElementById('tcText').textContent = window.__currentComment[window.__remarkLang];
     });
   });
+  renderReportCardAssignments(student);
 }
 
 function absentSectionHtml(label, streamSuffix, disp){
@@ -7073,20 +7086,71 @@ function getAssignmentTrackerData(){
   return { items: AT_ITEMS, students: AT_SEED_STUDENTS };
 }
 
-function buildAssignmentWorksheetSectionHtml(student){
-  const data = getAssignmentTrackerData();
-  const rec = data.students.find(s => s.code === student.code);
-  if(!rec) return '';
-  const items = data.items;
-  const done = items.filter(it => rec.status[it.id] === 'Submitted').length;
-  const pct = items.length ? Math.round((done/items.length)*100) : 0;
-  const rows = items.map(it=>{
-    const submitted = rec.status[it.id] === 'Submitted';
-    return '<tr><td>'+it.chapter+' — '+it.label+'</td><td>'+(submitted?'✅ Submitted':'⏳ Pending')+'</td></tr>';
-  }).join('');
-  return '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">Assignment &amp; Worksheet Status</h3>'+
-    '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Item</th><th>Status</th></tr></thead>'+
-    '<tbody>'+rows+'<tr><td><b>Total</b></td><td><b>'+done+'/'+items.length+' ('+pct+'%)</b></td></tr></tbody></table></div>';
+/* ---- Report Card "Assignments & Worksheets" tab: tries a live fetch of
+   assignment-tracker.html's own SEED_ITEMS/SEED_STUDENTS first (so it reflects
+   whatever the teacher's tracker currently shows, including the hourly Google
+   Drive sync), and only falls back to this page's own bundled AT_ITEMS/
+   AT_SEED_STUDENTS snapshot if that fetch fails (e.g. offline). ---- */
+function escRc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+async function renderReportCardAssignments(student, forceFresh){
+  const area = document.getElementById('reportCardAssignContent');
+  const refreshBtn = document.getElementById('rcAssignRefreshBtn');
+  if(!area) return;
+  if(refreshBtn) refreshBtn.textContent = '⏳ Loading...';
+  const calloutStyle = 'background:rgba(59,130,246,0.10); border-left:3px solid #3b82f6; border-radius:0 8px 8px 0; padding:12px 14px; font-size:13px; color:var(--text);';
+  area.innerHTML = '<div style="'+calloutStyle+'">Loading assignment &amp; worksheet status…</div>';
+
+  let items, students;
+  try{
+    const url = 'assignment-tracker.html' + (forceFresh ? ('?_r=' + Date.now()) : '');
+    const res = await fetch(url, forceFresh ? {cache:'no-store'} : {});
+    const text = await res.text();
+    const itemsMatch = text.match(/const SEED_ITEMS = (\[.*?\]);/s);
+    const studentsMatch = text.match(/const SEED_STUDENTS = (\[.*?\]);/s);
+    if(!itemsMatch || !studentsMatch) throw new Error('Could not read tracker data');
+    items = JSON.parse(itemsMatch[1]);
+    students = JSON.parse(studentsMatch[1]);
+  }catch(e){
+    const fallback = getAssignmentTrackerData();
+    items = fallback.items;
+    students = fallback.students;
+  }
+
+  const rec = students.find(s => s.code === student.code);
+  let html = '<div class="report-card-header">'+
+    '<div class="school">SRN MEHTA PU COLLEGE KALABURAGI</div>'+
+    '<div class="system">BAIO LEARNING SYSTEM</div>'+
+    '<div class="name">'+escRc(student.name)+'</div>'+
+    '<div class="meta">Enrollment: '+escRc(student.code)+' &middot; Section: '+escRc(sectionLabel(student))+'</div>'+
+  '</div>';
+
+  if(!rec){
+    const warnStyle = 'background:rgba(217,119,6,0.10); border-left:3px solid #d97706; border-radius:0 8px 8px 0; padding:12px 14px; font-size:13px; color:var(--text); margin-top:14px;';
+    html += '<div style="'+warnStyle+'">No assignment/worksheet records found for this student yet.</div>';
+  } else {
+    const done = items.filter(it => rec.status[it.id] === 'Submitted').length;
+    const pct = items.length ? Math.round((done/items.length)*100) : 0;
+    const kpiTileStyle = 'background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px 16px;';
+    html += '<div style="'+kpiTileStyle+' margin-top:14px;">'+
+      '<div style="font-size:10.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; font-weight:700; margin-bottom:5px;">Submitted</div>'+
+      '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:20px; font-weight:700; color:var(--text-strong);">'+done+' / '+items.length+'</div>'+
+      '<div style="font-size:12px; color:var(--muted); margin-top:2px;">'+pct+'% complete</div>'+
+    '</div>';
+    const chapters = [];
+    items.forEach(it=>{
+      let c = chapters.find(c=>c.chapter===it.chapter);
+      if(!c){ c = {chapter: it.chapter, rows: []}; chapters.push(c); }
+      const submitted = rec.status[it.id] === 'Submitted';
+      c.rows.push('<tr><td>'+escRc(it.label)+'</td><td>'+(submitted?'✅ Submitted':'⏳ Pending')+'</td></tr>');
+    });
+    chapters.forEach(c=>{
+      html += '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin:16px 0 8px;">'+escRc(c.chapter)+'</h3>'+
+        '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Item</th><th>Status</th></tr></thead><tbody>'+c.rows.join('')+'</tbody></table></div>';
+    });
+  }
+
+  area.innerHTML = html;
+  if(refreshBtn) refreshBtn.textContent = '🔄 Refresh Status';
 }
 
 function showReportCard(student, pu){
@@ -7112,7 +7176,6 @@ function showReportCard(student, pu){
     '<tbody>'+mtRows+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(student.mt.TOTAL!==null?student.mt.TOTAL+'/240':'\u2014')+'</b></td></tr></tbody></table></div>'
     : (juneSection ? '' : '<div class="desc" style="text-align:center; margin-top:12px;">Monthly Test data not available for this student.</div>');
   const examSection = buildPU1ExamSectionsHtml(student);
-  const assignWorksheetSection = buildAssignmentWorksheetSectionHtml(student);
   document.getElementById('reportCardContent').innerHTML =
     '<div class="report-card-header">'+
       '<div class="school">SRN MEHTA PU COLLEGE KALABURAGI</div>'+
@@ -7132,7 +7195,6 @@ function showReportCard(student, pu){
     juneSection+
     mtSection+
     examSection+
-    assignWorksheetSection+
     '<div class="teacher-comment">'+
       '<span class="tc-label">\u{1F4AC} Teacher\'s Remark</span>'+
       '<div class="tc-lang-switch">'+
@@ -7153,6 +7215,7 @@ function showReportCard(student, pu){
       document.getElementById('tcText').textContent = window.__currentComment[window.__remarkLang];
     });
   });
+  renderReportCardAssignments(student);
 }
 
 let studentSearchInitialized = false;
@@ -7167,6 +7230,21 @@ function initStudentSearch(){
   });
   document.getElementById('printCardBtn').addEventListener('click', ()=> window.print());
   document.getElementById('downloadCardBtn').addEventListener('click', downloadReportCardImage);
+  document.getElementById('rcTabScoresBtn').addEventListener('click', ()=>{
+    document.getElementById('rcPaneScores').style.display = 'block';
+    document.getElementById('rcPaneAssign').style.display = 'none';
+    document.getElementById('rcTabScoresBtn').classList.remove('secondary');
+    document.getElementById('rcTabAssignBtn').classList.add('secondary');
+  });
+  document.getElementById('rcTabAssignBtn').addEventListener('click', ()=>{
+    document.getElementById('rcPaneScores').style.display = 'none';
+    document.getElementById('rcPaneAssign').style.display = 'block';
+    document.getElementById('rcTabAssignBtn').classList.remove('secondary');
+    document.getElementById('rcTabScoresBtn').classList.add('secondary');
+  });
+  document.getElementById('rcAssignRefreshBtn').addEventListener('click', ()=>{
+    if(window.__currentStudent) renderReportCardAssignments(window.__currentStudent, true);
+  });
   studentSearchInitialized = true;
 }
 let teacherSearchInitialized = false;
