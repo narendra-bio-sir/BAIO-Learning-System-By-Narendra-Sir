@@ -868,6 +868,21 @@ window.addEventListener('afterprint', function(){
     .report-card .teacher-comment{ border-left:3px solid #000000 !important; background:#f5f5f5 !important; }
     .report-card .tc-label{ color:#000000 !important; }
   }
+
+  /* Worksheet cover slip: a small standalone printable slip (name/roll/section,
+     lecturer, date, signature lines) meant to be stapled to a downloaded
+     worksheet PDF — always plain black-on-white since it's only ever printed. */
+  #worksheetCoverSlipArea{ display:none; }
+  .ws-cover{ font-family:'Inter',sans-serif; color:#000000; background:#ffffff; padding:48px 40px; }
+  .ws-cover .ws-school{ text-align:center; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:19px; }
+  .ws-cover .ws-system{ text-align:center; color:#B8912A; font-weight:700; font-size:12px; letter-spacing:.08em; margin:3px 0 28px; }
+  .ws-cover .ws-title{ text-align:center; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:16px; }
+  .ws-cover .ws-sub{ text-align:center; color:#555555; font-size:12px; margin:4px 0 36px; }
+  .ws-cover .ws-field-row{ display:flex; gap:24px; margin-bottom:22px; }
+  .ws-cover .ws-field{ flex:1; border-bottom:1px solid #000000; padding-bottom:5px; font-size:14px; min-height:18px; }
+  .ws-cover .ws-field-label{ font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:#666666; margin-bottom:3px; }
+  .ws-cover .ws-sign-row{ display:flex; justify-content:space-between; gap:24px; margin-top:70px; }
+  .ws-cover .ws-sign-box{ flex:1; border-top:1px solid #000000; padding-top:6px; font-size:11.5px; text-align:center; color:#333333; }
 </style>
 </head>
 <body>
@@ -2826,6 +2841,7 @@ window.addEventListener('afterprint', function(){
       </div>
     </div>
   </div>
+  <div id="worksheetCoverSlipArea"></div>
   <canvas id="reportCanvas" width="800" height="1750"></canvas>
 </main>
 </div><!-- /app-student -->
@@ -7110,6 +7126,78 @@ function getAssignmentTrackerData(){
    Drive sync), and only falls back to this page's own bundled AT_ITEMS/
    AT_SEED_STUDENTS snapshot if that fetch fails (e.g. offline). ---- */
 function escRc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ---- Maps each tracked assignment/worksheet id to its actual PDF file(s) on
+   the site, so a student can download the real worksheet straight from their
+   Report Card. Verified directly against each chapter page's own PDF listing
+   (title + file path) rather than guessed from filenames. A couple of items
+   (The Living World, and Floral Whorls & Placentation) have no PDF uploaded
+   yet, so they're simply left out here and the UI shows "Coming soon". ---- */
+const WORKSHEET_PDF_MAP = {
+  ws_bc_protista: [{ title:'Worksheet 4 – Kingdom Protista', url:'ch2/assets/pdf-04_Kingdom_Protista.pdf' }],
+  ws_bc_fungi: [{ title:'Worksheet 5 – Kingdom Fungi', url:'ch2/assets/pdf-05_Kingdom_Fungi.pdf' }],
+  ws_bc_plantae_animalia: [{ title:'Worksheet 6 – Plantae and Animalia', url:'ch2/assets/pdf-06_Plantae_and_Animalia.pdf' }],
+  ws_bc_acellular: [{ title:'Worksheet 7 – Viruses, Viroids, Prions', url:'ch2/assets/pdf-07_Viruses_Viroids_Prions.pdf' }],
+  ws_bc_lichens: [{ title:'Worksheet 8 – Lichens', url:'ch2/assets/pdf-08_Lichens.pdf' }],
+  ws_pk_intro: [{ title:'Worksheet – Classification Systems', url:'ch3/assets/pdf-ws_classification.pdf' }],
+  ws_pk_algae_div: [{ title:'Worksheet – Algae: General Characters', url:'ch3/assets/pdf-ws_algae.pdf' }],
+  ws_pk_algae_classes: [{ title:'Worksheet – Classes of Algae', url:'ch3/assets/pdf-ws_algae-classes.pdf' }],
+  ws_pk_bryophyta: [{ title:'Worksheet – Bryophyta: General Characters', url:'ch3/assets/pdf-ws_bryophyta.pdf' }],
+  ws_pk_pteridophyta: [{ title:'Worksheet – Pteridophyta', url:'ch3/assets/pdf-ws_pteridophyta.pdf' }],
+  ws_pk_gymno_angio: [
+    { title:'Worksheet – Gymnosperms', url:'ch3/assets/pdf-ws_gymnosperms.pdf' },
+    { title:'Worksheet – Angiosperms', url:'ch3/assets/pdf-ws_angiosperms.pdf' }
+  ],
+  ws_mo_root: [{ title:'Worksheet — The Root System', url:'pu1-ch5-assets/pdf-ws_root.pdf' }],
+  ws_mo_stem_leaf: [
+    { title:'Worksheet — The Stem', url:'pu1-ch5-assets/pdf-ws_stem.pdf' },
+    { title:'Worksheet — The Leaf', url:'pu1-ch5-assets/pdf-ws_leaf.pdf' }
+  ],
+  ws_mo_inflorescence: [
+    { title:'Worksheet — The Inflorescence', url:'pu1-ch5-assets/pdf-ws_inflorescence.pdf' },
+    { title:'Worksheet — The Flower', url:'pu1-ch5-assets/pdf-ws_flower.pdf' }
+  ],
+  ws_mo_fruit_seed: [{ title:'Worksheet — Fruits and Seeds', url:'pu1-ch5-assets/pdf-ws_fruit-seed.pdf' }],
+  ws_mo_floral_formula: [{ title:'Worksheet — Family Solanaceae', url:'pu1-ch5-assets/pdf-ws_solanaceae.pdf' }]
+};
+
+/* Downloads a small, separately-generated "cover slip" PDF (via the browser's
+   own Print/Save-as-PDF) with the student's name/roll/section, the lecturer's
+   name, and a blank signature line — meant to be stapled to the printed
+   worksheet, not merged into it, so the original worksheet file is never
+   touched or re-encoded. */
+function downloadWorksheetCoverSlip(student, worksheetTitle, chapterLabel){
+  const area = document.getElementById('worksheetCoverSlipArea');
+  if(!area) return;
+  area.innerHTML = '<div class="ws-cover">'+
+    '<div class="ws-school">SRN MEHTA PU COLLEGE KALABURAGI</div>'+
+    '<div class="ws-system">BAIO LEARNING SYSTEM</div>'+
+    '<div class="ws-title">'+escRc(worksheetTitle)+'</div>'+
+    '<div class="ws-sub">'+escRc(chapterLabel)+'</div>'+
+    '<div class="ws-field-row">'+
+      '<div class="ws-field"><div class="ws-field-label">Student Name</div>'+escRc(student.name)+'</div>'+
+      '<div class="ws-field"><div class="ws-field-label">Roll Number</div>'+escRc(student.code)+'</div>'+
+    '</div>'+
+    '<div class="ws-field-row">'+
+      '<div class="ws-field"><div class="ws-field-label">Section</div>'+escRc(sectionLabel(student))+'</div>'+
+      '<div class="ws-field"><div class="ws-field-label">Lecturer</div>Narendra Sir</div>'+
+    '</div>'+
+    '<div class="ws-field-row">'+
+      '<div class="ws-field"><div class="ws-field-label">Date of Submission</div>&nbsp;</div>'+
+    '</div>'+
+    '<div class="ws-sign-row">'+
+      '<div class="ws-sign-box">Student Signature</div>'+
+      '<div class="ws-sign-box">Lecturer Signature</div>'+
+    '</div>'+
+  '</div>';
+  area.style.display = 'block';
+  area.classList.add('print-area');
+  const cleanup = ()=>{ area.classList.remove('print-area'); area.style.display='none'; area.innerHTML=''; window.removeEventListener('afterprint', cleanup); };
+  window.addEventListener('afterprint', cleanup);
+  window.print();
+}
+window.downloadWorksheetCoverSlip = downloadWorksheetCoverSlip;
+
 async function renderReportCardAssignments(student, forceFresh){
   const area = document.getElementById('reportCardAssignContent');
   const refreshBtn = document.getElementById('rcAssignRefreshBtn');
@@ -7175,10 +7263,32 @@ async function renderReportCardAssignments(student, forceFresh){
       const pillStyle = submitted
         ? 'background:rgba(15,143,122,0.16); color:var(--teal-soft);'
         : 'background:rgba(224,104,95,0.16); color:var(--red);';
+      const pdfs = WORKSHEET_PDF_MAP[it.id];
+      let actionsHtml;
+      if(pdfs && pdfs.length){
+        actionsHtml = '<div style="display:flex; flex-direction:column; gap:5px; margin-top:8px;">' +
+          pdfs.map(function(p){
+            const chapterLabelEsc = escRc(it.chapter + ' — ' + it.label).replace(/'/g,'&#39;');
+            const titleEsc = escRc(p.title).replace(/'/g,'&#39;');
+            return '<div style="display:flex; align-items:center; gap:6px;">'+
+              '<a href="'+escRc(p.url)+'" download style="flex:1; min-width:0; display:flex; align-items:center; gap:5px; padding:6px 10px; border-radius:8px; background:rgba(212,175,55,0.12); border:1px solid var(--border); color:var(--gold-soft); font-size:11.5px; font-weight:600; text-decoration:none; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">📥 '+escRc(p.title)+'</a>'+
+              '<button onclick="downloadWorksheetCoverSlip(window.__currentStudent, \''+titleEsc+'\', \''+chapterLabelEsc+'\')" title="Download a cover slip with your name, roll no. &amp; section pre-filled, plus a signature line" style="flex:0 0 auto; padding:6px 9px; border-radius:8px; background:var(--card); border:1px solid var(--border); color:var(--muted); font-size:12px; cursor:pointer;">🖊️</button>'+
+            '</div>';
+          }).join('') +
+        '</div>';
+      } else {
+        actionsHtml = '<div style="margin-top:8px; font-size:11px; color:var(--muted); font-style:italic;">Worksheet PDF coming soon</div>';
+      }
+      const nudgeHtml = submitted ? '' :
+        '<div style="margin-top:8px; font-size:11.5px; color:var(--red); display:flex; align-items:center; gap:5px;">⚠️ Please complete and submit this worksheet</div>';
       c.rows.push(
-        '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:8px 12px; margin-bottom:6px; border-radius:10px; background:var(--card); border:1px solid var(--border); font-size:12.5px;">'+
-          '<div style="flex:1; min-width:0; color:var(--text);"><span style="font-size:9.5px; color:var(--muted); text-transform:uppercase; margin-right:6px; letter-spacing:.03em;">'+typeLabel+'</span>'+escRc(it.label)+'</div>'+
-          '<div style="flex:0 0 auto; padding:3px 10px; border-radius:20px; font-size:10.5px; font-weight:700; '+pillStyle+'">'+(submitted?'Submitted':'Pending')+'</div>'+
+        '<div style="padding:8px 12px; margin-bottom:6px; border-radius:10px; background:var(--card); border:1px solid var(--border); font-size:12.5px;">'+
+          '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">'+
+            '<div style="flex:1; min-width:0; color:var(--text);"><span style="font-size:9.5px; color:var(--muted); text-transform:uppercase; margin-right:6px; letter-spacing:.03em;">'+typeLabel+'</span>'+escRc(it.label)+'</div>'+
+            '<div style="flex:0 0 auto; padding:3px 10px; border-radius:20px; font-size:10.5px; font-weight:700; '+pillStyle+'">'+(submitted?'Submitted':'Pending')+'</div>'+
+          '</div>'+
+          nudgeHtml +
+          actionsHtml +
         '</div>'
       );
     });
