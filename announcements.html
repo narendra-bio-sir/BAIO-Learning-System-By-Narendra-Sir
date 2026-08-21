@@ -40,7 +40,13 @@
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
-  .utility-row{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:14px; flex-wrap:wrap;}
+  .utility-row{
+    display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;
+    position:sticky; top:0; z-index:50;
+    margin:0 -24px 14px; padding:14px 24px;
+    background:var(--navy-deep);
+    border-bottom:1px solid var(--line);
+  }
   .lang-switcher{display:flex; gap:4px; flex-wrap:wrap;}
   .lang-btn{padding:6px 11px; border-radius:12px; font-size:10.5px; font-weight:700; font-family:'Trebuchet MS', sans-serif; background:var(--navy-light); color:var(--cream-dim); border:1px solid var(--line); cursor:pointer; white-space:nowrap;}
   .lang-btn.active{background:var(--gold-bright); color:var(--navy-deep); border-color:var(--gold-bright);}
