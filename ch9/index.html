@@ -836,6 +836,7 @@ const TABS = [
   {id:'classppt', label:'Class Presentation'},
   {id:'papergen', label:'Paper Generator'},
   {id:'boardimp', label:'Board Important'},
+  {id:'diagrams', label:'Important Diagrams'},
   {id:'mynotes', label:'My Notes'},
   {id:'downloads', label:'Downloads'},
 ];
@@ -3758,6 +3759,14 @@ function renderPacing(){
 }
 window.renderPacing = renderPacing;
 
+function renderDiagrams(){
+  const html = `<div class="dl-topic-block"><div class="dl-section-title">Important Diagrams</div>
+    <div style="color:var(--ink-dim);font-size:13px;line-height:1.6;">\u{1F4D6} A board-exam priority guide to this chapter's key diagrams &mdash; ranked by importance, with exact labels to practice and direct links to the matching page of the official NCERT textbook &mdash; is coming soon.</div>
+  </div>`;
+  document.getElementById('content').innerHTML = html;
+}
+window.renderDiagrams = renderDiagrams;
+
 function renderBoardImportant(){
   const pages = BOARD_IMPORTANT_IMAGES.map((b64,i)=>`
     <div class="board-page-wrap board-page-scroll" id="boardWrap${i}">
@@ -3946,6 +3955,7 @@ function renderContent(){
   else if(currentTab==='tree') renderTreeExplorer();
   else if(currentTab==='classppt') renderClassPresentation();
   else if(currentTab==='boardimp') renderBoardImportant();
+  else if(currentTab==='diagrams') renderDiagrams();
   else if(currentTab==='kcet') renderKcetSetup();
   else if(currentTab==='writeit') renderWriteIt();
   else if(currentTab==='downloads') renderDownloads();

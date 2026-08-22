@@ -708,6 +708,7 @@ const TABS = [
   {id:'glossary', label:'Pronunciation'},
   {id:'papergen', label:'Paper Generator'},
   {id:'boardimp', label:'Board Important'},
+  {id:'diagrams', label:'Important Diagrams'},
   {id:'mynotes', label:'My Notes'},
   {id:'downloads', label:'Downloads'},
 ];
@@ -1617,6 +1618,14 @@ function renderPacing(){
   document.getElementById('content').innerHTML = html;
 }
 window.renderPacing = renderPacing;
+
+function renderDiagrams(){
+  const html = `<div class="dl-topic-block"><div class="dl-section-title">Important Diagrams</div>
+    <div style="color:var(--ink-dim);font-size:13px;line-height:1.6;">\u{1F4D6} A board-exam priority guide to this chapter's key diagrams &mdash; ranked by importance, with exact labels to practice and direct links to the matching page of the official NCERT textbook &mdash; is coming soon.</div>
+  </div>`;
+  document.getElementById('content').innerHTML = html;
+}
+window.renderDiagrams = renderDiagrams;
 
 function renderBoardImportant(){
   const pages = ["pu1-ch4-assets/board-01.jpg", "pu1-ch4-assets/board-02.jpg", "pu1-ch4-assets/board-03.jpg"];
@@ -2564,6 +2573,7 @@ function renderContent(){
   else if(currentTab==='glossary') renderGlossary();
   else if(currentTab==='papergen') renderPapergenSetup();
   else if(currentTab==='boardimp') renderBoardImportant();
+  else if(currentTab==='diagrams') renderDiagrams();
   else if(currentTab==='mynotes') renderMyNotes();
   else if(currentTab==='downloads') renderDownloads();
 }
