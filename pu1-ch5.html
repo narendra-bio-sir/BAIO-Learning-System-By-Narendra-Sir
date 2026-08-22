@@ -347,6 +347,20 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .dl-btn.view{border-color:var(--teal);color:var(--teal);}
 .dl-btn.dl{border-color:var(--gold);color:var(--gold);}
 
+.diagram-grid-label{font-size:10.5px;color:var(--ink-dim);margin:6px 0 6px;text-transform:uppercase;letter-spacing:0.5px;}
+.diagram-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px;}
+.diagram-thumb{cursor:pointer;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel);text-align:left;}
+.diagram-thumb img{width:100%;height:64px;object-fit:cover;display:block;background:#fff;}
+.diagram-thumb-label{font-size:9.5px;color:var(--ink-dim);padding:4px 5px;line-height:1.25;}
+.diagram-lightbox-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:80;display:none;flex-direction:column;align-items:center;justify-content:center;padding:16px;}
+.diagram-lightbox-box{max-width:600px;width:100%;display:flex;flex-direction:column;align-items:center;}
+.diagram-lightbox-box img{max-width:100%;max-height:64vh;border-radius:8px;background:#fff;object-fit:contain;}
+.diagram-lightbox-title{color:var(--ink);font-size:13px;font-weight:600;margin-top:12px;text-align:center;}
+.diagram-lightbox-actions{display:flex;gap:8px;margin-top:12px;}
+.diagram-lightbox-actions button{padding:8px 16px;border-radius:10px;font-size:12px;font-weight:700;border:1px solid var(--line);background:var(--panel2);color:var(--ink);cursor:pointer;}
+.diagram-lightbox-actions button.dl{border-color:var(--gold);color:var(--gold);}
+.diagram-lightbox-actions button.close{border-color:var(--teal);color:var(--teal);}
+
 /* REVISION TAB */
 .rev-strip{background:linear-gradient(135deg,var(--teal2),#0a4239);border-radius:14px;padding:14px 16px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
 .rev-strip .txt{font-size:13px;color:#EFFFFA;font-weight:600;}
@@ -525,6 +539,17 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
       <h3>&#128276; Chapter 5 Updates</h3>
       <div id="chapterNotifList"></div>
       <button class="sm-save-btn" id="chapterNotifCloseBtn">Close</button>
+    </div>
+  </div>
+
+  <div class="diagram-lightbox-overlay" id="diagramLightbox" onclick="if(event.target===this) closeDiagram();">
+    <div class="diagram-lightbox-box">
+      <img id="diagramLightboxImg" src="" alt="">
+      <div class="diagram-lightbox-title" id="diagramLightboxTitle"></div>
+      <div class="diagram-lightbox-actions">
+        <button class="dl" onclick="downloadDiagramImg()">&#11015; Save Image</button>
+        <button class="close" onclick="closeDiagram()">Close</button>
+      </div>
     </div>
   </div>
 
@@ -1519,6 +1544,58 @@ function pdfRow(key){
     <div class="dl-btns"><button class="dl-btn view" onclick="viewPdf('${key}')">View</button>
     <button class="dl-btn dl" id="${btnId}" onclick="downloadPdf('${key}','${btnId}')">Download</button></div></div>`;
 }
+
+/* ---- NCERT diagrams for labelling practice, grouped by worksheet topic ---- */
+const DIAGRAMS = [
+  {key:'ws_root', file:'fig5_1_parts_of_plant.jpg', title:'Fig 5.1 — Parts of a Flowering Plant'},
+  {key:'ws_root', file:'fig5_2_types_of_roots.jpg', title:'Fig 5.2 — Types of Roots: Tap, Fibrous, Adventitious'},
+  {key:'ws_root', file:'fig5_3_root_tip.jpg', title:'Fig 5.3 — Regions of the Root-tip'},
+  {key:'ws_stem_leaf', file:'fig5_4_leaf_structure_venation.jpg', title:'Fig 5.4 — Structure of a Leaf & Venation'},
+  {key:'ws_stem_leaf', file:'fig5_5_compound_leaves.jpg', title:'Fig 5.5 — Compound Leaves: Pinnate & Palmate'},
+  {key:'ws_stem_leaf', file:'fig5_6_phyllotaxy.jpg', title:'Fig 5.6 — Types of Phyllotaxy'},
+  {key:'ws_inflorescence_flower', file:'fig5_7_racemose_inflorescence.jpg', title:'Fig 5.7 — Racemose Inflorescence'},
+  {key:'ws_inflorescence_flower', file:'fig5_8_cymose_inflorescence.jpg', title:'Fig 5.8 — Cymose Inflorescence'},
+  {key:'ws_inflorescence_flower', file:'fig5_9_floral_parts_position.jpg', title:'Fig 5.9 — Position of Floral Parts on Thalamus'},
+  {key:'ws_inflorescence_flower', file:'fig5_10_parts_of_flower.jpg', title:'Fig 5.10 — Parts of a Flower'},
+  {key:'ws_floral_whorls', file:'fig5_11_aestivation.jpg', title:'Fig 5.11 — Types of Aestivation in Corolla'},
+  {key:'ws_floral_whorls', file:'fig5_12_placentation.jpg', title:'Fig 5.12 — Types of Placentation'},
+  {key:'ws_fruit-seed', file:'fig5_13_fruit_parts.jpg', title:'Fig 5.13 — Parts of a Fruit: Mango & Coconut'},
+  {key:'ws_fruit-seed', file:'fig5_14_dicot_seed.jpg', title:'Fig 5.14 — Structure of a Dicotyledonous Seed'},
+  {key:'ws_fruit-seed', file:'fig5_15_monocot_seed.jpg', title:'Fig 5.15 — Structure of a Monocotyledonous Seed'},
+  {key:'ws_solanaceae', file:'fig5_16_floral_diagram_formula.jpg', title:'Fig 5.16 — Floral Diagram with Floral Formula'},
+  {key:'ws_solanaceae', file:'fig5_17_solanum_solanaceae.jpg', title:'Fig 5.17 — Solanum nigrum, Family Solanaceae'}
+];
+function diagramGrid(key){
+  const items = DIAGRAMS.map((d,i)=>({d,i})).filter(o=>o.d.key===key);
+  if(!items.length) return '';
+  return `<div class="diagram-grid-label">\u{1F5BC}️ NCERT Diagrams for Practice</div>
+  <div class="diagram-grid">${items.map(o=>`<div class="diagram-thumb" onclick="openDiagram(${o.i})"><img src="pu1-ch5-assets/diagrams/${o.d.file}" loading="lazy" alt="${o.d.title}"><div class="diagram-thumb-label">${o.d.title}</div></div>`).join('')}</div>`;
+}
+function openDiagram(idx){
+  const d = DIAGRAMS[idx];
+  if(!d) return;
+  document.getElementById('diagramLightboxImg').src = 'pu1-ch5-assets/diagrams/'+d.file;
+  document.getElementById('diagramLightboxImg').alt = d.title;
+  document.getElementById('diagramLightboxTitle').textContent = d.title;
+  const box = document.getElementById('diagramLightbox');
+  box.dataset.file = d.file;
+  box.dataset.title = d.title;
+  box.style.display = 'flex';
+}
+function closeDiagram(){
+  const box = document.getElementById('diagramLightbox');
+  if(box) box.style.display = 'none';
+}
+function downloadDiagramImg(){
+  const box = document.getElementById('diagramLightbox');
+  const file = box.dataset.file, title = box.dataset.title;
+  if(!file) return;
+  const a = document.createElement('a');
+  a.href = 'pu1-ch5-assets/diagrams/'+file;
+  a.download = title.replace(/[^a-z0-9]+/gi,'_') + '.jpg';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+window.openDiagram=openDiagram; window.closeDiagram=closeDiagram; window.downloadDiagramImg=downloadDiagramImg;
 const STUDYTIPS_CH5_EN = {
   title: "Study Tips &ndash; Morphology of Flowering Plants",
   intro: "How to study this chapter well, and what to focus on for NEET.",
@@ -1789,7 +1866,7 @@ function renderDownloads(){
   html += `<div class="dl-topic-block"><div class="dl-section-title">Study Material</div>${pdfRow('comprehensive')}${pdfRow('revision_notes')}</div>`;
   const worksheetKeys = ['ws_root','ws_stem_leaf','ws_inflorescence_flower','ws_floral_whorls','ws_fruit-seed','ws_solanaceae'];
   worksheetKeys.forEach(key=>{
-    html += `<div class="dl-topic-block"><div class="dl-section-title">${DATA.pdfs[key].title}</div>${pdfRow(key)}</div>`;
+    html += `<div class="dl-topic-block"><div class="dl-section-title">${DATA.pdfs[key].title}</div>${pdfRow(key)}${diagramGrid(key)}</div>`;
   });
   html += `<div class="dl-topic-block"><div class="dl-section-title">Full Chapter Revision</div>${pdfRow('ws_revision')}</div><div class="dl-topic-block"><div class="dl-section-title">Teacher-issued organised notes</div>${hwRow()}</div>`;
   document.getElementById('content').innerHTML = html;
