@@ -336,6 +336,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     </div>
     <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle light/dark theme">&#127769;</button>
     <script>(function(){try{var t=localStorage.getItem('baio_theme')||'light';if(t==='light')document.getElementById('themeToggleBtn').innerHTML='&#9728;️';}catch(e){}})();</script>
+    <button id="indexHardRefreshBtn" class="theme-toggle-btn" style="right:66px;" onclick="indexHardRefresh()" title="Force-refresh this page (clears any cached copy)" aria-label="Force-refresh this page">&#128260;</button>
   </div>
 
   <div id="motivationBar" class="motivation-bar"></div>
@@ -2124,6 +2125,25 @@ if('serviceWorker' in navigator){
     navigator.serviceWorker.register('sw.js').catch(function(){});
   });
 }
+/* Force-refresh: unregister any controlling service worker, clear its caches, then
+   reload with a cache-busting query string so even the plain browser HTTP cache is
+   bypassed. Does NOT touch localStorage, so progress/preferences are preserved. */
+async function indexHardRefresh(){
+  const btn = document.getElementById('indexHardRefreshBtn');
+  if(btn) btn.textContent = '⏳';
+  try{
+    if('serviceWorker' in navigator){
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for(const r of regs) await r.unregister();
+    }
+    if('caches' in window){
+      const keys = await caches.keys();
+      for(const k of keys) await caches.delete(k);
+    }
+  }catch(e){}
+  location.href = location.pathname + '?_r=' + Date.now();
+}
+window.indexHardRefresh = indexHardRefresh;
 </script>
 <script>
 (function(){
