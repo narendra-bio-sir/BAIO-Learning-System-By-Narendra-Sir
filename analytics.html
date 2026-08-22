@@ -7098,23 +7098,42 @@ const AT_SEED_STUDENTS = [{"code":"26MPU0010","name":"AAKANKSH","section":"SPARK
 // new ones, and keeps each remaining student's locally-tracked status —
 // otherwise a device that already has localStorage data from before a
 // roster change would keep showing removed students forever.
-function reconcileAtStudents(savedStudents, seedStudents){
+// Per-item precedence is decided against prevSeedStudents (the seedSnapshot
+// assignment-tracker.html saved alongside this same localStorage entry the
+// last time it loaded): if a status hasn't moved since that baseline, it was
+// never touched locally, so the freshly-synced seed value wins; if it
+// differs from the baseline, someone changed it locally, so that edit wins.
+// With no baseline at all, the fresh seed wins outright — otherwise a device
+// with an old saved snapshot would keep showing stale per-item status
+// forever, no matter how many times the underlying roster is corrected.
+function reconcileAtStudents(savedStudents, seedStudents, prevSeedStudents){
   const savedByCode = {};
   savedStudents.forEach(s=>{ savedByCode[s.code] = s; });
+  const havePrevSeed = Array.isArray(prevSeedStudents);
+  const prevSeedByCode = {};
+  if(havePrevSeed) prevSeedStudents.forEach(s=>{ prevSeedByCode[s.code] = s; });
   return seedStudents.map(seed=>{
     const existing = savedByCode[seed.code];
     if(!existing) return JSON.parse(JSON.stringify(seed));
-    return {
-      code: seed.code, name: seed.name, section: seed.section,
-      status: Object.assign({}, seed.status, existing.status)
-    };
+    const prevSeed = havePrevSeed ? prevSeedByCode[seed.code] : null;
+    const status = {};
+    Object.keys(seed.status).forEach(key=>{
+      const seedVal = seed.status[key];
+      const existingVal = existing.status ? existing.status[key] : undefined;
+      if(existingVal === undefined || !prevSeed || prevSeed.status[key] === existingVal){
+        status[key] = seedVal;
+      } else {
+        status[key] = existingVal;
+      }
+    });
+    return { code: seed.code, name: seed.name, section: seed.section, status };
   });
 }
 function getAssignmentTrackerData(){
   try{
     const saved = JSON.parse(localStorage.getItem('baio_assignment_tracker_v1') || 'null');
     if(saved && saved.items && saved.students){
-      return { items: saved.items, students: reconcileAtStudents(saved.students, AT_SEED_STUDENTS) };
+      return { items: saved.items, students: reconcileAtStudents(saved.students, AT_SEED_STUDENTS, saved.seedSnapshot) };
     }
   }catch(e){}
   return { items: AT_ITEMS, students: AT_SEED_STUDENTS };
@@ -7223,7 +7242,7 @@ async function renderReportCardAssignments(student, forceFresh){
   // status without waiting for a redeploy.
   try{
     const saved = JSON.parse(localStorage.getItem('baio_assignment_tracker_v1') || 'null');
-    if(saved && saved.students) students = reconcileAtStudents(saved.students, students);
+    if(saved && saved.students) students = reconcileAtStudents(saved.students, students, saved.seedSnapshot);
   }catch(e){}
 
   const rec = students.find(s => s.code === student.code);
