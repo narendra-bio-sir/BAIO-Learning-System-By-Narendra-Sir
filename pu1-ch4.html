@@ -358,6 +358,17 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .dl-btn.view{border-color:var(--teal);color:var(--teal);}
 .dl-btn.dl{border-color:var(--gold);color:var(--gold);}
 
+.diagram-ref-label{font-size:10.5px;color:var(--ink-dim);margin:8px 0 6px;text-transform:uppercase;letter-spacing:0.5px;}
+.diagram-ref-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:7px;}
+.diagram-ref-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
+.diagram-ref-name{font-size:12.5px;font-weight:700;color:var(--ink);}
+.diagram-ref-priority{font-size:10px;font-weight:700;white-space:nowrap;padding:2px 7px;border-radius:8px;background:var(--panel2);}
+.diagram-ref-priority.high{color:#C24444;border:1px solid rgba(194,68,68,0.4);}
+.diagram-ref-priority.med{color:var(--gold);border:1px solid var(--gold);}
+.diagram-ref-priority.mod{color:var(--teal);border:1px solid var(--teal);}
+.diagram-ref-labels{font-size:11px;color:var(--ink-dim);margin-top:5px;line-height:1.4;}
+.diagram-ref-link{display:inline-block;margin-top:7px;font-size:11px;font-weight:700;color:var(--teal);text-decoration:none;border-bottom:1px solid var(--teal);}
+
 /* REVISION TAB */
 .rev-strip{background:linear-gradient(135deg,var(--teal2),#0a4239);border-radius:14px;padding:14px 16px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
 .rev-strip .txt{font-size:13px;color:#EFFFFA;font-weight:600;}
@@ -1619,10 +1630,44 @@ function renderPacing(){
 }
 window.renderPacing = renderPacing;
 
+/* ---- Board-important diagram reference guide, grouped by chapter topic ---- */
+/* Links out to the official NCERT PDF (ncert.nic.in) instead of hosting any NCERT artwork. */
+const NCERT_CH4_PDF = 'https://ncert.nic.in/textbook/pdf/kebo104.pdf';
+const BOARD_DIAGRAMS = [
+  {key:'body_symmetry_germ', fig:'Fig 4.1 — Body Symmetry', page:38, pr:'med', prLabel:'★★☆ High', labels:'(a) Radial symmetry (multiple central planes), (b) Bilateral symmetry (single plane dividing into left and right halves)'},
+  {key:'body_symmetry_germ', fig:'Fig 4.2 — Germinal Layers', page:38, pr:'high', prLabel:'★★★ Very High', labels:'(a) Diploblastic (Ectoderm, Mesoglea, Endoderm), (b) Triploblastic (Ectoderm, Mesoderm, Endoderm)'},
+  {key:'body_symmetry_germ', fig:'Fig 4.3 — Sectional View of Body Cavity (Coelom)', page:39, pr:'high', prLabel:'★★★ Very High', labels:'(a) Coelomate — true coelom lined by mesoderm, (b) Pseudocoelomate — scattered mesoderm pouches, (c) Acoelomate — solid body without cavity'},
+  {key:'phylum_coelenterata', fig:'Fig 4.6 — Body Forms of Coelenterata', page:41, pr:'med', prLabel:'★★☆ High', labels:'(a) Medusa — umbrella-shaped, Aurelia, (b) Polyp — cylindrical sessile, Adamsia/Hydra'},
+  {key:'phylum_coelenterata', fig:'Fig 4.7 — Cnidoblast (Cnidocyte)', page:41, pr:'med', prLabel:'★★☆ High', labels:'Stinging capsule/Nematocyst, operculum, thread tube, anchoring structure'},
+  {key:'phylum_aschelminthes', fig:'Fig 4.10 — Sexual Dimorphism in Aschelminthes (Ascaris)', page:43, pr:'med', prLabel:'★★☆ High', labels:'Male — curved posterior tail with cloacal aperture; Female — longer, straight body'},
+  {key:'phylum_hemichordata', fig:'Fig 4.15 — Balanoglossus (Phylum Hemichordata)', page:45, pr:'high', prLabel:'★★★ Very High', labels:'Proboscis, Collar, Trunk — keep the three divisions cleanly delineated and labelled'},
+  {key:'phylum_chordata', fig:'Fig 4.16 — Chordata Characteristics (Fundamental Plan)', page:46, pr:'high', prLabel:'★★★ Very High', labels:'Nerve cord, Notochord, Gill slits (Pharyngeal gill slits), Post-anal part (tail) — mandatory 3/5-mark drawing; get the dorsal-ventral positions of nerve cord and notochord right'},
+  {key:'phylum_chordata', fig:'Flowchart (Sec 4.2.11) — Classification of Subphylum Vertebrata', page:47, pr:'high', prLabel:'★★★ Very High', labels:'Agnatha (Cyclostomata) vs Gnathostomata — Pisces (Chondrichthyes, Osteichthyes), Tetrapoda (Amphibia, Reptilia, Aves, Mammalia)'},
+  {key:'class_cyclostomata', fig:'Fig 4.18 — Petromyzon (Class Cyclostomata)', page:47, pr:'mod', prLabel:'★☆☆ Moderate', labels:'Jawless circular sucking mouth, 6–15 pairs of gill slits, lack of paired fins and scales'},
+  {key:'summary', fig:'Table 4.1 & 4.2 — Comparative Tables (Chordates vs Non-chordates & Salient Features)', page:46, pr:'high', prLabel:'★★★ Very High', labels:'Levels of organisation, symmetry, coelom, segmentation, circulatory & respiratory systems across all animal phyla (also on page 51)'}
+];
+function diagramRefItems(key){
+  const items = BOARD_DIAGRAMS.filter(d=>d.key===key);
+  return items.map(d=>`<div class="diagram-ref-item">
+    <div class="diagram-ref-head"><span class="diagram-ref-name">${d.fig}</span><span class="diagram-ref-priority ${d.pr}">${d.prLabel}</span></div>
+    <div class="diagram-ref-labels">${d.labels}</div>
+    <a class="diagram-ref-link" href="${NCERT_CH4_PDF}#page=${d.page}" target="_blank" rel="noopener">View page ${d.page} in NCERT PDF &rarr;</a>
+  </div>`).join('');
+}
+const DIAGRAM_SECTIONS = [
+  {key:'body_symmetry_germ', title:'Body Symmetry, Germ Layers and Coelom'},
+  {key:'phylum_coelenterata', title:'Phylum Coelenterata (Cnidaria)'},
+  {key:'phylum_aschelminthes', title:'Phylum Aschelminthes'},
+  {key:'phylum_hemichordata', title:'Phylum Hemichordata'},
+  {key:'phylum_chordata', title:'Phylum Chordata — General Features and Subphyla'},
+  {key:'class_cyclostomata', title:'Class Cyclostomata'},
+  {key:'summary', title:'Summary — Salient Features of Phyla'}
+];
 function renderDiagrams(){
-  const html = `<div class="dl-topic-block"><div class="dl-section-title">Important Diagrams</div>
-    <div style="color:var(--ink-dim);font-size:13px;line-height:1.6;">\u{1F4D6} A board-exam priority guide to this chapter's key diagrams &mdash; ranked by importance, with exact labels to practice and direct links to the matching page of the official NCERT textbook &mdash; is coming soon.</div>
-  </div>`;
+  let html = `<div class="dl-topic-block"><div style="color:var(--ink-dim);font-size:12px;line-height:1.5;">\u{1F4D6} Every high-yield figure in this chapter, ranked by board-exam priority, with the exact labels to practice and a direct link to the matching page of the official NCERT PDF &mdash; so you always know which diagrams matter most and where to see them.</div></div>`;
+  DIAGRAM_SECTIONS.forEach(sec=>{
+    html += `<div class="dl-topic-block"><div class="dl-section-title">${sec.title}</div>${diagramRefItems(sec.key)}</div>`;
+  });
   document.getElementById('content').innerHTML = html;
 }
 window.renderDiagrams = renderDiagrams;
