@@ -347,6 +347,17 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .dl-btn.view{border-color:var(--teal);color:var(--teal);}
 .dl-btn.dl{border-color:var(--gold);color:var(--gold);}
 
+.diagram-ref-label{font-size:10.5px;color:var(--ink-dim);margin:8px 0 6px;text-transform:uppercase;letter-spacing:0.5px;}
+.diagram-ref-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:7px;}
+.diagram-ref-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
+.diagram-ref-name{font-size:12.5px;font-weight:700;color:var(--ink);}
+.diagram-ref-priority{font-size:10px;font-weight:700;white-space:nowrap;padding:2px 7px;border-radius:8px;background:var(--panel2);}
+.diagram-ref-priority.high{color:#C24444;border:1px solid rgba(194,68,68,0.4);}
+.diagram-ref-priority.med{color:var(--gold);border:1px solid var(--gold);}
+.diagram-ref-priority.mod{color:var(--teal);border:1px solid var(--teal);}
+.diagram-ref-labels{font-size:11px;color:var(--ink-dim);margin-top:5px;line-height:1.4;}
+.diagram-ref-link{display:inline-block;margin-top:7px;font-size:11px;font-weight:700;color:var(--teal);text-decoration:none;border-bottom:1px solid var(--teal);}
+
 /* REVISION TAB */
 .rev-strip{background:linear-gradient(135deg,var(--teal2),#0a4239);border-radius:14px;padding:14px 16px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
 .rev-strip .txt{font-size:13px;color:#EFFFFA;font-weight:600;}
@@ -696,6 +707,7 @@ const TABS = [
   {id:'glossary', label:'Pronunciation'},
   {id:'papergen', label:'Paper Generator'},
   {id:'boardimp', label:'Board Important'},
+  {id:'diagrams', label:'Important Diagrams'},
   {id:'mynotes', label:'My Notes'},
   {id:'downloads', label:'Downloads'},
 ];
@@ -1519,6 +1531,52 @@ function pdfRow(key){
     <div class="dl-btns"><button class="dl-btn view" onclick="viewPdf('${key}')">View</button>
     <button class="dl-btn dl" id="${btnId}" onclick="downloadPdf('${key}','${btnId}')">Download</button></div></div>`;
 }
+
+/* ---- Board-important diagram reference guide, grouped by worksheet topic ---- */
+/* Links out to the official NCERT PDF (ncert.nic.in) instead of hosting any NCERT artwork. */
+const NCERT_CH5_PDF = 'https://ncert.nic.in/textbook/pdf/kebo105.pdf';
+const BOARD_DIAGRAMS = [
+  {key:'ws_root', fig:'Fig 5.1 &amp; 5.2 — Parts of a Flowering Plant &amp; Root Types', page:58, pr:'mod', prLabel:'★☆☆ Moderate', labels:'Shoot system, Root system, Tap root, Fibrous root, Adventitious roots'},
+  {key:'ws_root', fig:'Fig 5.3 — The Regions of the Root-tip', page:59, pr:'high', prLabel:'★★★ Very High', labels:'Root cap, Region of meristematic activity, Region of elongation, Region of maturation, Root hair'},
+  {key:'ws_stem_leaf', fig:'Fig 5.4 — Structure of a Leaf &amp; Venation', page:60, pr:'med', prLabel:'★★☆ High', labels:'Leaf base, Petiole, Lamina, Stipule, Axillary bud, Reticulate venation, Parallel venation'},
+  {key:'ws_stem_leaf', fig:'Fig 5.5 — Compound Leaves', page:60, pr:'mod', prLabel:'★☆☆ Moderate', labels:'Pinnately compound (Rachis, Neem), Palmately compound (Silk Cotton)'},
+  {key:'ws_stem_leaf', fig:'Fig 5.6 — Types of Phyllotaxy', page:61, pr:'mod', prLabel:'★☆☆ Moderate', labels:'Alternate (China rose), Opposite (Guava/Calotropis), Whorled (Alstonia)'},
+  {key:'ws_inflorescence_flower', fig:'Fig 5.7 — Racemose Inflorescence', page:61, pr:'mod', prLabel:'★☆☆ Moderate', labels:'Main axis continues to grow, flowers borne laterally in acropetal succession'},
+  {key:'ws_inflorescence_flower', fig:'Fig 5.8 — Cymose Inflorescence', page:62, pr:'mod', prLabel:'★☆☆ Moderate', labels:'Main axis terminates in a flower, flowers borne in basipetal order'},
+  {key:'ws_inflorescence_flower', fig:'Fig 5.9 — Position of Floral Parts on Thalamus', page:62, pr:'med', prLabel:'★★☆ High', labels:'Hypogynous (superior ovary), Perigynous (half-inferior ovary), Epigynous (inferior ovary)'},
+  {key:'ws_inflorescence_flower', fig:'Fig 5.10 — Parts of a Flower', page:63, pr:'med', prLabel:'★★☆ High', labels:'Pedicel, Calyx, Corolla, Androecium, Gynoecium'},
+  {key:'ws_floral_whorls', fig:'Fig 5.11 — Types of Aestivation in Corolla', page:64, pr:'high', prLabel:'★★★ Very High', labels:'(a) Valvate, (b) Twisted, (c) Imbricate, (d) Vexillary (Standard, Wings, Keel)'},
+  {key:'ws_floral_whorls', fig:'Fig 5.12 — Types of Placentation', page:65, pr:'high', prLabel:'★★★ Very High', labels:'(a) Marginal, (b) Axile, (c) Parietal, (d) Free central, (e) Basal — with examples'},
+  {key:'ws_fruit-seed', fig:'Fig 5.13 — Parts of a Fruit (Mango &amp; Coconut)', page:66, pr:'med', prLabel:'★★☆ High', labels:'Epicarp, Mesocarp (fleshy in mango, fibrous in coconut), Endocarp (stony), Seed'},
+  {key:'ws_fruit-seed', fig:'Fig 5.14 — Structure of Dicotyledonous Seed (Gram)', page:66, pr:'high', prLabel:'★★★ Very High', labels:'Seed coat, Testa, Tegmen, Hilum, Micropyle, Embryonal axis, Cotyledons, Plumule, Radicle'},
+  {key:'ws_fruit-seed', fig:'Fig 5.15 — Structure of Monocotyledonous Seed (Maize)', page:67, pr:'high', prLabel:'★★★ Very High', labels:'Seed coat &amp; fruit-wall, Aleurone layer, Endosperm, Scutellum, Coleoptile, Plumule, Radicle, Coleorhiza'},
+  {key:'ws_solanaceae', fig:'Fig 5.16 — Floral Diagram &amp; Floral Formula', page:67, pr:'high', prLabel:'★★★ Very High', labels:'Mother axis dot, Calyx, Corolla, Androecium (epipetalous/diadelphous), Gynoecium (locules, placentation)'},
+  {key:'ws_solanaceae', fig:'Fig 5.17 — Solanum nigrum, Family Solanaceae', page:68, pr:'high', prLabel:'★★★ Very High', labels:'Flowering twig, Flower, L.S. of flower, Stamens, Carpel, Floral diagram, Solanaceae formula'}
+];
+function diagramRefItems(key){
+  const items = BOARD_DIAGRAMS.filter(d=>d.key===key);
+  return items.map(d=>`<div class="diagram-ref-item">
+    <div class="diagram-ref-head"><span class="diagram-ref-name">${d.fig}</span><span class="diagram-ref-priority ${d.pr}">${d.prLabel}</span></div>
+    <div class="diagram-ref-labels">${d.labels}</div>
+    <a class="diagram-ref-link" href="${NCERT_CH5_PDF}#page=${d.page}" target="_blank" rel="noopener">View page ${d.page} in NCERT PDF &rarr;</a>
+  </div>`).join('');
+}
+const DIAGRAM_SECTIONS = [
+  {key:'ws_root', title:'The Root System'},
+  {key:'ws_stem_leaf', title:'The Stem &amp; The Leaf'},
+  {key:'ws_inflorescence_flower', title:'Inflorescence &amp; Flower Architecture'},
+  {key:'ws_floral_whorls', title:'Floral Whorls &amp; Placentation'},
+  {key:'ws_fruit-seed', title:'Fruit and Seed Structure'},
+  {key:'ws_solanaceae', title:'Floral Formula &amp; Family Solanaceae'}
+];
+function renderDiagrams(){
+  let html = `<div class="dl-topic-block"><div style="color:var(--ink-dim);font-size:12px;line-height:1.5;">\u{1F4D6} Every figure in this chapter, ranked by board-exam priority, with the exact labels to practice and a direct link to the matching page of the official NCERT PDF &mdash; so you always know which diagrams matter most and where to see them.</div></div>`;
+  DIAGRAM_SECTIONS.forEach(sec=>{
+    html += `<div class="dl-topic-block"><div class="dl-section-title">${sec.title}</div>${diagramRefItems(sec.key)}</div>`;
+  });
+  document.getElementById('content').innerHTML = html;
+}
+window.renderDiagrams = renderDiagrams;
 const STUDYTIPS_CH5_EN = {
   title: "Study Tips &ndash; Morphology of Flowering Plants",
   intro: "How to study this chapter well, and what to focus on for NEET.",
@@ -1593,16 +1651,16 @@ function renderStudyTips(){
 }
 /* ---- Pacing: hour-by-hour study plan generated from this chapter's own topic list.
    Each topic becomes one or two 1-hour blocks (40 min reading / 20 min practice) based on
-   how much study content it actually has; blocks are grouped 3/day, 5 days/week, with a
+   how much study content it actually has; blocks are grouped 1/day, 5 days/week, with a
    weekend revision card after each week and a full-chapter revision after the last week. */
-const PACING_HOURS_PER_DAY = 3;
+const PACING_HOURS_PER_DAY = 1;
 const PACING_DAYS_PER_WEEK = 5;
 const PACING_CHAR_THRESHOLD = 800;
 const PACING_PROGRESS_KEY = 'pu1ch5_pacing_progress';
 const PACING_TRANSLATIONS = {
-  en:{week:'WEEK',weekdays:['Monday','Tuesday','Wednesday','Thursday','Friday'],hrs:'hrs',weekend:'Weekend',weeklyRevisionLabel:'Revision',finalRevisionLabel:'Full-chapter revision',doneLabel:'hours done',splitLabel:'40 / 20',satAm:'SAT AM',satPm:'SAT PM',satEve:'SAT EVE',sun:'SUN',weekRevAm:'Rapid Fire across all {n} topics covered this week.',weekRevPm:'MCQ Quiz on the week — note which topics you got wrong.',weekRevEve:'One 1-Hour Study Block on your weakest topic from the quiz.',weekRevSun:'Full mixed revision, then rest — no late-night studying.',finalRevAm:'Rapid Fire across all {n} topics in this chapter, start to finish.',finalRevPm:'Revisit the Summary topic’s comparison table.',finalRevSun:'Full-length NEET/KCET Practice set on the whole chapter.',note:'Every 1-hour block follows the same 40/20 split (40 min reading, 20 min practice) as the Study Tips tab. {hrs} hours total for this chapter, spread across {days} study days.'},
-  kn:{week:'ವಾರ',weekdays:['ಸೋಮವಾರ','ಮಂಗಳವಾರ','ಬುಧವಾರ','ಗುರುವಾರ','ಶುಕ್ರವಾರ'],hrs:'ಗಂಟೆ',weekend:'ವಾರಾಂತ್ಯ',weeklyRevisionLabel:'ಮರುಅಭ್ಯಾಸ',finalRevisionLabel:'ಪೂರ್ಣ ಅಧ್ಯಾಯ ಮರುಅಭ್ಯಾಸ',doneLabel:'ಗಂಟೆಗಳು ಪೂರ್ಣಗೊಂಡಿವೆ',splitLabel:'40 / 20',satAm:'ಶನಿ ಬೆಳಿಗ್ಗೆ',satPm:'ಶನಿ ಮಧ್ಯಾಹ್ನ',satEve:'ಶನಿ ಸಂಜೆ',sun:'ಭಾನು',weekRevAm:'ಈ ವಾರ ಒಳಗೊಂಡ ಎಲ್ಲಾ {n} ವಿಷಯಗಳಾದ್ಯಂತ Rapid Fire.',weekRevPm:'ಈ ವಾರದ MCQ Quiz — ಯಾವ ವಿಷಯಗಳಲ್ಲಿ ತಪ್ಪಾಯಿತು ಎಂದು ಬರೆದಿಡಿ.',weekRevEve:'ಕ್ವಿಜ್‌ನಲ್ಲಿ ದುರ್ಬಲವಾದ ವಿಷಯದ ಮೇಲೆ ಒಂದು 1-ಗಂಟೆಯ ಅಧ್ಯಯನ ಬ್ಲಾಕ್.',weekRevSun:'ಪೂರ್ಣ ಮಿಶ್ರ ಮರುಅಭ್ಯಾಸ, ನಂತರ ವಿಶ್ರಾಂತಿ — ರಾತ್ರಿ ತಡವಾಗಿ ಓದಬೇಡಿ.',finalRevAm:'ಈ ಅಧ್ಯಾಯದ ಎಲ್ಲಾ {n} ವಿಷಯಗಳಾದ್ಯಂತ Rapid Fire, ಆರಂಭದಿಂದ ಕೊನೆಯವರೆಗೆ.',finalRevPm:'Summary ವಿಷಯದ ಹೋಲಿಕೆ ಕೋಷ್ಟಕವನ್ನು ಮತ್ತೆ ನೋಡಿ.',finalRevSun:'ಪೂರ್ಣ ಅಧ್ಯಾಯದ ಮೇಲೆ ಪೂರ್ಣ-ಉದ್ದದ NEET/KCET ಅಭ್ಯಾಸ ಸೆಟ್.',note:'ಪ್ರತಿ 1-ಗಂಟೆಯ ಬ್ಲಾಕ್ Study Tips ಟ್ಯಾಬ್‌ನಂತೆಯೇ ಅದೇ 40/20 ವಿಭಜನೆಯನ್ನು ಅನುಸರಿಸುತ್ತದೆ (40 ನಿಮಿಷ ಓದುವಿಕೆ, 20 ನಿಮಿಷ ಅಭ್ಯಾಸ). ಈ ಅಧ್ಯಾಯಕ್ಕೆ ಒಟ್ಟು {hrs} ಗಂಟೆಗಳು, {days} ಅಧ್ಯಯನ ದಿನಗಳಾದ್ಯಂತ ಹರಡಿವೆ.'},
-  hi:{week:'सप्ताह',weekdays:['सोमवार','मंगलवार','बुधवार','गुरुवार','शुक्रवार'],hrs:'घंटे',weekend:'सप्ताहांत',weeklyRevisionLabel:'रिवीजन',finalRevisionLabel:'पूर्ण अध्याय रिवीजन',doneLabel:'घंटे पूरे हुए',splitLabel:'40 / 20',satAm:'शनि सुबह',satPm:'शनि दोपहर',satEve:'शनि शाम',sun:'रवि',weekRevAm:'इस सप्ताह कवर किए गए सभी {n} विषयों पर Rapid Fire.',weekRevPm:'सप्ताह पर MCQ Quiz — नोट करें किन विषयों में गलती हुई.',weekRevEve:'क्विज़ में मिले सबसे कमज़ोर विषय पर एक 1-घंटे का अध्ययन ब्लॉक.',weekRevSun:'पूर्ण मिश्रित रिवीजन, फिर आराम — रात को देर तक न पढ़ें.',finalRevAm:'इस अध्याय के सभी {n} विषयों पर शुरू से आखिर तक Rapid Fire.',finalRevPm:'Summary विषय की तुलना सारणी दोबारा देखें.',finalRevSun:'पूरे अध्याय पर पूर्ण-लंबाई का NEET/KCET अभ्यास सेट.',note:'हर 1-घंटे का ब्लॉक Study Tips टैब जैसा ही 40/20 विभाजन अपनाता है (40 मिनट पठन, 20 मिनट अभ्यास). इस अध्याय के लिए कुल {hrs} घंटे, {days} अध्ययन दिनों में फैले हुए.'}
+  en:{week:'WEEK',weekdays:['Monday','Tuesday','Wednesday','Thursday','Friday'],hrs:'hrs',hr:'hr',weekend:'Weekend',weeklyRevisionLabel:'Revision',finalRevisionLabel:'Full-chapter revision',doneLabel:'hours done',splitLabel:'40 / 20',sat:'SAT',sun:'SUN',weekRevSat:'1-hour Rapid Fire + MCQ Quiz across all {n} topics covered this week — note what you got wrong.',weekRevSun:'1-hour revision of your weak spots from the quiz, then rest — no late-night studying.',finalRevSat:'1-hour Rapid Fire across all {n} topics in this chapter, start to finish, then a quick look at the Summary topic’s comparison table.',finalRevSun:'1-hour full-length NEET/KCET Practice set on the whole chapter.',note:'Every 1-hour block follows the same 40/20 split (40 min reading, 20 min practice) as the Study Tips tab. {hrs} hours total for this chapter, spread across {days} study days.'},
+  kn:{week:'ವಾರ',weekdays:['ಸೋಮವಾರ','ಮಂಗಳವಾರ','ಬುಧವಾರ','ಗುರುವಾರ','ಶುಕ್ರವಾರ'],hrs:'ಗಂಟೆ',hr:'ಗಂಟೆ',weekend:'ವಾರಾಂತ್ಯ',weeklyRevisionLabel:'ಮರುಅಭ್ಯಾಸ',finalRevisionLabel:'ಪೂರ್ಣ ಅಧ್ಯಾಯ ಮರುಅಭ್ಯಾಸ',doneLabel:'ಗಂಟೆಗಳು ಪೂರ್ಣಗೊಂಡಿವೆ',splitLabel:'40 / 20',sat:'ಶನಿ',sun:'ಭಾನು',weekRevSat:'ಈ ವಾರ ಒಳಗೊಂಡ ಎಲ್ಲಾ {n} ವಿಷಯಗಳಾದ್ಯಂತ Rapid Fire. ಈ ವಾರದ MCQ Quiz — ಯಾವ ವಿಷಯಗಳಲ್ಲಿ ತಪ್ಪಾಯಿತು ಎಂದು ಬರೆದಿಡಿ. ಕ್ವಿಜ್‌ನಲ್ಲಿ ದುರ್ಬಲವಾದ ವಿಷಯದ ಮೇಲೆ ಒಂದು 1-ಗಂಟೆಯ ಅಧ್ಯಯನ ಬ್ಲಾಕ್.',weekRevSun:'ಪೂರ್ಣ ಮಿಶ್ರ ಮರುಅಭ್ಯಾಸ, ನಂತರ ವಿಶ್ರಾಂತಿ — ರಾತ್ರಿ ತಡವಾಗಿ ಓದಬೇಡಿ.',finalRevSat:'ಈ ಅಧ್ಯಾಯದ ಎಲ್ಲಾ {n} ವಿಷಯಗಳಾದ್ಯಂತ Rapid Fire, ಆರಂಭದಿಂದ ಕೊನೆಯವರೆಗೆ. Summary ವಿಷಯದ ಹೋಲಿಕೆ ಕೋಷ್ಟಕವನ್ನು ಮತ್ತೆ ನೋಡಿ.',finalRevSun:'ಪೂರ್ಣ ಅಧ್ಯಾಯದ ಮೇಲೆ ಪೂರ್ಣ-ಉದ್ದದ NEET/KCET ಅಭ್ಯಾಸ ಸೆಟ್.',note:'ಪ್ರತಿ 1-ಗಂಟೆಯ ಬ್ಲಾಕ್ Study Tips ಟ್ಯಾಬ್‌ನಂತೆಯೇ ಅದೇ 40/20 ವಿಭಜನೆಯನ್ನು ಅನುಸರಿಸುತ್ತದೆ (40 ನಿಮಿಷ ಓದುವಿಕೆ, 20 ನಿಮಿಷ ಅಭ್ಯಾಸ). ಈ ಅಧ್ಯಾಯಕ್ಕೆ ಒಟ್ಟು {hrs} ಗಂಟೆಗಳು, {days} ಅಧ್ಯಯನ ದಿನಗಳಾದ್ಯಂತ ಹರಡಿವೆ.'},
+  hi:{week:'सप्ताह',weekdays:['सोमवार','मंगलवार','बुधवार','गुरुवार','शुक्रवार'],hrs:'घंटे',hr:'घंटा',weekend:'सप्ताहांत',weeklyRevisionLabel:'रिवीजन',finalRevisionLabel:'पूर्ण अध्याय रिवीजन',doneLabel:'घंटे पूरे हुए',splitLabel:'40 / 20',sat:'शनि',sun:'रवि',weekRevSat:'इस सप्ताह कवर किए गए सभी {n} विषयों पर Rapid Fire. सप्ताह पर MCQ Quiz — नोट करें किन विषयों में गलती हुई. क्विज़ में मिले सबसे कमज़ोर विषय पर एक 1-घंटे का अध्ययन ब्लॉक.',weekRevSun:'पूर्ण मिश्रित रिवीजन, फिर आराम — रात को देर तक न पढ़ें.',finalRevSat:'इस अध्याय के सभी {n} विषयों पर शुरू से आखिर तक Rapid Fire. Summary विषय की तुलना सारणी दोबारा देखें.',finalRevSun:'पूरे अध्याय पर पूर्ण-लंबाई का NEET/KCET अभ्यास सेट.',note:'हर 1-घंटे का ब्लॉक Study Tips टैब जैसा ही 40/20 विभाजन अपनाता है (40 मिनट पठन, 20 मिनट अभ्यास). इस अध्याय के लिए कुल {hrs} घंटे, {days} अध्ययन दिनों में फैले हुए.'}
 };
 function pacingComputeTopicHours(topicId){
   const study = DATA.study[topicId];
@@ -1645,7 +1703,7 @@ function renderPacing(){
     html += `<div class="pacing-week-head"><span class="wk">${L.week} ${wi+1}</span></div>`;
     weekDays.forEach(dayBlocks=>{
       const dayName = L.weekdays[weekDays.indexOf(dayBlocks) % L.weekdays.length];
-      html += `<div class="pacing-day"><div class="pacing-day-top"><div class="pacing-day-name">${dayName}</div><div class="pacing-day-load">${dayBlocks.length} ${L.hrs}</div></div><div class="pacing-blocks">`;
+      html += `<div class="pacing-day"><div class="pacing-day-top"><div class="pacing-day-name">${dayName}</div><div class="pacing-day-load">${dayBlocks.length} ${dayBlocks.length===1?L.hr:L.hrs}</div></div><div class="pacing-blocks">`;
       dayBlocks.forEach(b=>{
         const done = !!progress[b.id];
         const label = b.totalParts > 1 ? `${b.name} (${b.part}/${b.totalParts})` : b.name;
@@ -1658,13 +1716,10 @@ function renderPacing(){
     const n = topicsThisWeek.size;
     html += `<div class="pacing-day rest"><div class="pacing-day-top"><div class="pacing-day-name">${L.weekend}</div><div class="pacing-day-load">${isLastWeek ? L.finalRevisionLabel : L.weeklyRevisionLabel}</div></div><div class="pacing-rest-list">`;
     if(isLastWeek){
-      html += `<div class="pacing-rest-item"><span class="prtag">${L.satAm}</span><span>${L.finalRevAm.replace('{n}', DATA.topics.length)}</span></div>`;
-      html += `<div class="pacing-rest-item"><span class="prtag">${L.satPm}</span><span>${L.finalRevPm}</span></div>`;
+      html += `<div class="pacing-rest-item"><span class="prtag">${L.sat}</span><span>${L.finalRevSat.replace('{n}', DATA.topics.length)}</span></div>`;
       html += `<div class="pacing-rest-item"><span class="prtag">${L.sun}</span><span>${L.finalRevSun}</span></div>`;
     } else {
-      html += `<div class="pacing-rest-item"><span class="prtag">${L.satAm}</span><span>${L.weekRevAm.replace('{n}', n)}</span></div>`;
-      html += `<div class="pacing-rest-item"><span class="prtag">${L.satPm}</span><span>${L.weekRevPm}</span></div>`;
-      html += `<div class="pacing-rest-item"><span class="prtag">${L.satEve}</span><span>${L.weekRevEve}</span></div>`;
+      html += `<div class="pacing-rest-item"><span class="prtag">${L.sat}</span><span>${L.weekRevSat.replace('{n}', n)}</span></div>`;
       html += `<div class="pacing-rest-item"><span class="prtag">${L.sun}</span><span>${L.weekRevSun}</span></div>`;
     }
     html += `</div></div>`;
@@ -2908,6 +2963,7 @@ function renderContent(){
   else if(currentTab==='glossary') renderGlossary();
   else if(currentTab==='papergen') renderPapergenSetup();
   else if(currentTab==='boardimp') renderBoardImportant();
+  else if(currentTab==='diagrams') renderDiagrams();
   else if(currentTab==='mynotes') renderMyNotes();
   else if(currentTab==='downloads') renderDownloads();
 }
@@ -3572,7 +3628,7 @@ renderContent();
 
 var WHATSNEW_ITEMS = [
   {key:'ch5_whatsnew_redesign_v1', html:'&#127807; <b>New look!</b> Cleaner typography and calmer colors across the app &mdash; same content, easier on the eyes.'},
-  {key:'ch5_whatsnew_pacing_v1', html:'&#128197; <b>New: Pacing tab!</b> Get your own week-by-week, hour-by-hour study plan for this chapter &mdash; sized to how much content each topic actually has. Benefits: &#128214; every topic split into focused 1-hour blocks (40 min reading + 20 min practice) &bull; &#9201;&#65039; paced at 3 hrs/day, 5 days/week, so it never feels rushed &bull; &#128257; a revision plan built in after every weekend &bull; &#9989; tick off each hour as you go &mdash; your progress saves right on your device. Open the <b>Pacing</b> tab above to start.'}
+  {key:'ch5_whatsnew_pacing_v1', html:'&#128197; <b>New: Pacing tab!</b> Get your own week-by-week, hour-by-hour study plan for this chapter &mdash; sized to how much content each topic actually has. Benefits: &#128214; every topic split into focused 1-hour blocks (40 min reading + 20 min practice) &bull; &#9201;&#65039; paced at 1 hr/day, 5 days/week, so it never feels rushed &bull; &#128257; a revision plan built in after every weekend &bull; &#9989; tick off each hour as you go &mdash; your progress saves right on your device. Open the <b>Pacing</b> tab above to start.'}
 ];
 function showNextWhatsNew(){
   var el = document.getElementById('whatsNewBanner');
