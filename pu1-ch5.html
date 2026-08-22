@@ -707,6 +707,7 @@ const TABS = [
   {id:'glossary', label:'Pronunciation'},
   {id:'papergen', label:'Paper Generator'},
   {id:'boardimp', label:'Board Important'},
+  {id:'diagrams', label:'Important Diagrams'},
   {id:'mynotes', label:'My Notes'},
   {id:'downloads', label:'Downloads'},
 ];
@@ -1552,16 +1553,30 @@ const BOARD_DIAGRAMS = [
   {key:'ws_solanaceae', fig:'Fig 5.16 — Floral Diagram &amp; Floral Formula', page:67, pr:'high', prLabel:'★★★ Very High', labels:'Mother axis dot, Calyx, Corolla, Androecium (epipetalous/diadelphous), Gynoecium (locules, placentation)'},
   {key:'ws_solanaceae', fig:'Fig 5.17 — Solanum nigrum, Family Solanaceae', page:68, pr:'high', prLabel:'★★★ Very High', labels:'Flowering twig, Flower, L.S. of flower, Stamens, Carpel, Floral diagram, Solanaceae formula'}
 ];
-function boardDiagramsBlock(key){
+function diagramRefItems(key){
   const items = BOARD_DIAGRAMS.filter(d=>d.key===key);
-  if(!items.length) return '';
-  return `<div class="diagram-ref-label">\u{1F4D6} Board Important Diagrams &mdash; View in Official NCERT PDF</div>
-  ${items.map(d=>`<div class="diagram-ref-item">
+  return items.map(d=>`<div class="diagram-ref-item">
     <div class="diagram-ref-head"><span class="diagram-ref-name">${d.fig}</span><span class="diagram-ref-priority ${d.pr}">${d.prLabel}</span></div>
     <div class="diagram-ref-labels">${d.labels}</div>
     <a class="diagram-ref-link" href="${NCERT_CH5_PDF}#page=${d.page}" target="_blank" rel="noopener">View page ${d.page} in NCERT PDF &rarr;</a>
-  </div>`).join('')}`;
+  </div>`).join('');
 }
+const DIAGRAM_SECTIONS = [
+  {key:'ws_root', title:'The Root System'},
+  {key:'ws_stem_leaf', title:'The Stem &amp; The Leaf'},
+  {key:'ws_inflorescence_flower', title:'Inflorescence &amp; Flower Architecture'},
+  {key:'ws_floral_whorls', title:'Floral Whorls &amp; Placentation'},
+  {key:'ws_fruit-seed', title:'Fruit and Seed Structure'},
+  {key:'ws_solanaceae', title:'Floral Formula &amp; Family Solanaceae'}
+];
+function renderDiagrams(){
+  let html = `<div class="dl-topic-block"><div style="color:var(--ink-dim);font-size:12px;line-height:1.5;">\u{1F4D6} Every figure in this chapter, ranked by board-exam priority, with the exact labels to practice and a direct link to the matching page of the official NCERT PDF &mdash; so you always know which diagrams matter most and where to see them.</div></div>`;
+  DIAGRAM_SECTIONS.forEach(sec=>{
+    html += `<div class="dl-topic-block"><div class="dl-section-title">${sec.title}</div>${diagramRefItems(sec.key)}</div>`;
+  });
+  document.getElementById('content').innerHTML = html;
+}
+window.renderDiagrams = renderDiagrams;
 const STUDYTIPS_CH5_EN = {
   title: "Study Tips &ndash; Morphology of Flowering Plants",
   intro: "How to study this chapter well, and what to focus on for NEET.",
@@ -1832,7 +1847,7 @@ function renderDownloads(){
   html += `<div class="dl-topic-block"><div class="dl-section-title">Study Material</div>${pdfRow('comprehensive')}${pdfRow('revision_notes')}</div>`;
   const worksheetKeys = ['ws_root','ws_stem_leaf','ws_inflorescence_flower','ws_floral_whorls','ws_fruit-seed','ws_solanaceae'];
   worksheetKeys.forEach(key=>{
-    html += `<div class="dl-topic-block"><div class="dl-section-title">${DATA.pdfs[key].title}</div>${pdfRow(key)}${boardDiagramsBlock(key)}</div>`;
+    html += `<div class="dl-topic-block"><div class="dl-section-title">${DATA.pdfs[key].title}</div>${pdfRow(key)}</div>`;
   });
   html += `<div class="dl-topic-block"><div class="dl-section-title">Full Chapter Revision</div>${pdfRow('ws_revision')}</div><div class="dl-topic-block"><div class="dl-section-title">Teacher-issued organised notes</div>${hwRow()}</div>`;
   document.getElementById('content').innerHTML = html;
@@ -2951,6 +2966,7 @@ function renderContent(){
   else if(currentTab==='glossary') renderGlossary();
   else if(currentTab==='papergen') renderPapergenSetup();
   else if(currentTab==='boardimp') renderBoardImportant();
+  else if(currentTab==='diagrams') renderDiagrams();
   else if(currentTab==='mynotes') renderMyNotes();
   else if(currentTab==='downloads') renderDownloads();
 }
