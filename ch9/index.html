@@ -3914,7 +3914,8 @@ function attachPinchZoomScroll(wrapEl, imgEl){
   });
 }
 function renderDownloads(){
-  let html = `<div class="dl-section-title">Study Material</div>${pdfRow('notes')}${pdfRow('revision_notes')}${hwRow()}${premiumStatusRow()}`;
+  let html = `<div class="dl-section-title">Premium Content</div>${premiumStatusRow()}`;
+  html += `<div class="dl-section-title">Study Material</div>${pdfRow('notes')}${pdfRow('revision_notes')}${hwRow()}`;
   html += `<div class="dl-section-title">Topic-wise Worksheets</div>`;
   DATA.topics.forEach(t=>{ html += pdfRow('ws_'+t.id); });
   html += `<div class="dl-section-title">Full Chapter Revision</div>${pdfRow('ws_revision')}`;
