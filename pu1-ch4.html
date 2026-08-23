@@ -1856,7 +1856,7 @@ function renderKcetSetup(){
     <div class="opt-row">${['10','20','60','All'].map(v=>`<div class="opt-btn ${kcetSetup.count===v?'sel':''}" onclick="kcetSetCount('${v}')">${v==='All'?'All matching':v}</div>`).join('')}</div>
     <div class="setup-label">Per-question Timer</div>
     <div class="opt-row">${['20','30','40','60','80'].map(v=>`<div class="opt-btn ${kcetSetup.timer===v?'sel':''}" onclick="kcetSetTimer('${v}')">${kcetFmtMMSS(parseInt(v))}</div>`).join('')}</div>
-    <button class="start-btn" onclick="kcetStart()">Start KCET Practice \u00b7 ${pool.length} matching</button>
+    <button class="start-btn" onclick="kcetStart()">Start KCET Practice \u00b7 ${kcetSetup.count==='All' ? pool.length+' matching' : Math.min(parseInt(kcetSetup.count), pool.length)+' questions'}</button>
   </div>`;
   document.getElementById('content').innerHTML = html;
 }
