@@ -4749,6 +4749,7 @@ const PREMIUM_DEMO_USED_KEY = 'baio_premium_demo_used_global';
 const PREMIUM_SCORE_THRESHOLD = 330;
 const PREMIUM_MASTER_CODE = 'NS-PREMIUM-2026';
 const PREMIUM_DEMO_CODE = 'BAIO-DEMO-2026';
+const PREMIUM_MASTER_DEMO_CODE = 'NS-STAFFDEMO-2026';
 const PREMIUM_DEMO_DURATION_MS = 24 * 60 * 60 * 1000;
 const PREMIUM_PRICE_RUPEES = 1999;
 const PREMIUM_PRICE_ORIGINAL = 3000;
@@ -4765,7 +4766,7 @@ function setPremiumUnlock(method, extra){
 function premiumQualifies(){
   const u = getPremiumUnlock();
   if(!u || !u.unlocked) return false;
-  if(u.method === 'demo' && (!u.ts || (Date.now() - u.ts) > PREMIUM_DEMO_DURATION_MS)){
+  if((u.method === 'demo' || u.method === 'masterdemo') && (!u.ts || (Date.now() - u.ts) > PREMIUM_DEMO_DURATION_MS)){
     try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){}
     return false;
   }
@@ -4781,7 +4782,7 @@ window.reLockPremium = reLockPremium;
 function premiumStatusRowCh2(){
   const u = getPremiumUnlock();
   if(premiumQualifies()){
-    if(u && u.method === 'demo'){
+    if(u && (u.method === 'demo' || u.method === 'masterdemo')){
       const hrsLeft = Math.max(0, Math.ceil((PREMIUM_DEMO_DURATION_MS - (Date.now() - u.ts)) / 3600000));
       return '<div class="dl-row"><div class="dl-info"><div class="dl-title">\uD83D\uDD13 Premium Content (Demo)</div>'
         + '<div class="dl-sub">Unlocked \u2014 Mind Map, Class Presentation, MCQ Quiz, NEET Practice &amp; Paper Generator &middot; expires in ' + hrsLeft + 'h</div></div></div>'
@@ -4829,6 +4830,11 @@ function premiumSubmitUnlock(tabId){
   if(!code){ msgEl.textContent = 'Please enter an unlock code.'; msgEl.className='hw-msg bad'; return; }
   if(code === PREMIUM_MASTER_CODE.toUpperCase()){
     setPremiumUnlock('master', {roll:roll || 'master-access'});
+    applyPremiumGates();
+    return;
+  }
+  if(code === PREMIUM_MASTER_DEMO_CODE.toUpperCase()){
+    setPremiumUnlock('masterdemo', {roll:roll || 'staff-demo'});
     applyPremiumGates();
     return;
   }
@@ -4963,7 +4969,7 @@ function formatDemoCountdown(msLeft){
 }
 function updateAllDemoBanners(){
   const u = getPremiumUnlock();
-  if(!premiumQualifies() || !u || u.method !== 'demo'){
+  if(!premiumQualifies() || !u || (u.method !== 'demo' && u.method !== 'masterdemo')){
     if(demoBannerInterval){ clearInterval(demoBannerInterval); demoBannerInterval = null; }
     document.querySelectorAll('.demo-access-banner').forEach(function(b){ b.remove(); });
     return;
@@ -4987,7 +4993,7 @@ function updateAllDemoBanners(){
 function applyPremiumGates(){
   const unlocked = premiumQualifies();
   const u = getPremiumUnlock();
-  const isDemo = unlocked && u && u.method === 'demo';
+  const isDemo = unlocked && u && (u.method === 'demo' || u.method === 'masterdemo');
   PREMIUM_LOCKED_TABS.forEach(function(tabId){
     const overlay = document.getElementById('premLock_' + tabId);
     if(!overlay) return;

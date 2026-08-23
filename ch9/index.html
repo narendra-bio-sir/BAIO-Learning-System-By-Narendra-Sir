@@ -1633,6 +1633,7 @@ const PREMIUM_DEMO_USED_KEY = 'baio_premium_demo_used_global';
 const PREMIUM_SCORE_THRESHOLD = 330; // out of 360 -- free unlock path
 const PREMIUM_MASTER_CODE = 'NS-PREMIUM-2026';
 const PREMIUM_DEMO_CODE = 'BAIO-DEMO-2026';
+const PREMIUM_MASTER_DEMO_CODE = 'NS-STAFFDEMO-2026';
 const PREMIUM_DEMO_DURATION_MS = 24 * 60 * 60 * 1000;
 const PREMIUM_PRICE_RUPEES = 1999;
 const PREMIUM_PRICE_ORIGINAL = 3000;
@@ -1649,7 +1650,7 @@ function setPremiumUnlock(method, extra){
 function premiumQualifies(){
   const u = getPremiumUnlock();
   if(!u || !u.unlocked) return false;
-  if(u.method === 'demo' && (!u.ts || (Date.now() - u.ts) > PREMIUM_DEMO_DURATION_MS)){
+  if((u.method === 'demo' || u.method === 'masterdemo') && (!u.ts || (Date.now() - u.ts) > PREMIUM_DEMO_DURATION_MS)){
     try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){}
     return false;
   }
@@ -1664,7 +1665,7 @@ window.reLockPremium = reLockPremium;
 function premiumStatusRow(){
   const u = getPremiumUnlock();
   if(premiumQualifies()){
-    if(u && u.method === 'demo'){
+    if(u && (u.method === 'demo' || u.method === 'masterdemo')){
       const hrsLeft = Math.max(0, Math.ceil((PREMIUM_DEMO_DURATION_MS - (Date.now() - u.ts)) / 3600000));
       return `<div class="dl-row"><div class="dl-info"><div class="t">\uD83D\uDD13 Premium Content (Demo)</div><div class="d">Unlocked \u2014 Mind Map, Class Presentation, MCQ Quiz, NEET Practice &amp; Paper Generator \u00B7 expires in ${hrsLeft}h</div></div></div>
         <div style="text-align:right; margin:-6px 0 10px;"><a href="#" class="hw-relock" onclick="reLockPremium(); return false;">Re-lock Premium</a></div>`;
@@ -1708,6 +1709,11 @@ function premiumSubmitUnlock(){
   if(!code){ msgEl.textContent = 'Please enter an unlock code.'; msgEl.className='hw-msg bad'; return; }
   if(code === PREMIUM_MASTER_CODE.toUpperCase()){
     setPremiumUnlock('master', {roll:roll || 'master-access'});
+    renderContent();
+    return;
+  }
+  if(code === PREMIUM_MASTER_DEMO_CODE.toUpperCase()){
+    setPremiumUnlock('masterdemo', {roll:roll || 'staff-demo'});
     renderContent();
     return;
   }
@@ -4026,7 +4032,7 @@ function injectDemoAccessBanner(){
   if(demoBannerInterval){ clearInterval(demoBannerInterval); demoBannerInterval = null; }
   if(!premiumQualifies()) return;
   const u = getPremiumUnlock();
-  if(!u || u.method !== 'demo') return;
+  if(!u || (u.method !== 'demo' && u.method !== 'masterdemo')) return;
   const contentEl = document.getElementById('content');
   if(!contentEl) return;
   const banner = document.createElement('div');
