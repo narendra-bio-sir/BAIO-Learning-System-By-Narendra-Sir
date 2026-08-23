@@ -2498,6 +2498,7 @@ const PREMIUM_KEY = 'pu1ch4_premium_unlock';
 const PREMIUM_DEMO_USED_KEY = 'baio_premium_demo_used_global';
 const PREMIUM_MASTER_CODE = 'NS-PREMIUM-2026';
 const PREMIUM_DEMO_CODE = 'BAIO-DEMO-2026';
+const PREMIUM_MASTER_DEMO_CODE = 'NS-STAFFDEMO-2026';
 const PREMIUM_DEMO_DURATION_MS = 24 * 60 * 60 * 1000;
 const PREMIUM_UNLOCK_LOOKUP = {};
 const PREMIUM_PRICE_RUPEES = 1999;
@@ -2513,7 +2514,7 @@ function setPremiumUnlock(method, extra){
 function premiumQualifies(){
   const u = getPremiumUnlock();
   if(!u || !u.unlocked) return false;
-  if(u.method === 'demo' && (!u.ts || (Date.now() - u.ts) > PREMIUM_DEMO_DURATION_MS)){
+  if((u.method === 'demo' || u.method === 'masterdemo') && (!u.ts || (Date.now() - u.ts) > PREMIUM_DEMO_DURATION_MS)){
     try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){}
     return false;
   }
@@ -2524,7 +2525,7 @@ window.reLockPremium = reLockPremium;
 function premiumStatusRow(){
   const u = getPremiumUnlock();
   if(premiumQualifies()){
-    if(u && u.method === 'demo'){
+    if(u && (u.method === 'demo' || u.method === 'masterdemo')){
       const hrsLeft = Math.max(0, Math.ceil((PREMIUM_DEMO_DURATION_MS - (Date.now() - u.ts)) / 3600000));
       return `<div class="dl-row"><div class="dl-info"><div class="t">🔓 Premium Content (Demo)</div><div class="d">Unlocked — ${Object.values(PREMIUM_TAB_LABELS).join(', ')} · expires in ${hrsLeft}h</div></div></div><div style="text-align:right;margin:-6px 0 10px;"><a href="#" onclick="reLockPremium(); return false;" style="font-size:11px;color:var(--ink-dim);text-decoration:underline;cursor:pointer;">Re-lock Premium</a></div>`;
     }
@@ -2562,6 +2563,9 @@ function premiumSubmitUnlock(){
   const msgEl = document.getElementById('premUnlockMsg');
   if(!code){ msgEl.textContent = 'Please enter an unlock code.'; msgEl.className='hw-msg bad'; return; }
   if(code === PREMIUM_MASTER_CODE.toUpperCase()){ setPremiumUnlock('master', {roll:roll||'master-access'}); renderContent(); renderTabbar(); return; }
+  if(code === PREMIUM_MASTER_DEMO_CODE.toUpperCase()){
+    setPremiumUnlock('masterdemo', {roll:roll||'staff-demo'}); renderContent(); renderTabbar(); return;
+  }
   if(code === PREMIUM_DEMO_CODE.toUpperCase()){
     let demoUsed = false;
     try{ demoUsed = !!localStorage.getItem(PREMIUM_DEMO_USED_KEY); }catch(e){}
@@ -2640,7 +2644,7 @@ function injectDemoAccessBanner(){
   if(demoBannerInterval){ clearInterval(demoBannerInterval); demoBannerInterval = null; }
   if(!premiumQualifies()) return;
   const u = getPremiumUnlock();
-  if(!u || u.method !== 'demo') return;
+  if(!u || (u.method !== 'demo' && u.method !== 'masterdemo')) return;
   const contentEl = document.getElementById('content');
   if(!contentEl) return;
   const banner = document.createElement('div');
