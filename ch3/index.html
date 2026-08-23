@@ -2494,8 +2494,8 @@ function pdfRow(key){
 }
 function renderDownloads(){
   const unlocked = premiumQualifies();
-  let html = `<div class="dl-row"><div class="dl-info"><div class="t">${unlocked?'\u{1F513} Premium Content':'\u{1F512} Premium Content'}</div><div class="d">${unlocked?'Unlocked on this device \u2014 MCQ Quiz, NEET Practice, Mind Map, Class Presentation, Paper Generator &amp; Board Important':'Not yet unlocked \u2014 visit any premium tab to unlock'}</div></div></div>`;
-  if(unlocked){ html += `<div style="text-align:right;margin:-6px 0 10px;"><a href="#" onclick="reLockPremium();return false;" style="font-size:11px;color:var(--ink-dim);text-decoration:underline;">Re-lock Premium on this device</a></div>`; }
+  let html = `<div class="dl-row"><div class="dl-info"><div class="t">${unlocked?'\u{1F513} Premium Content':'\u{1F512} Premium Content'}</div><div class="d">${unlocked?'Unlocked \u2014 MCQ Quiz, NEET Practice, Mind Map, Class Presentation, Paper Generator &amp; Board Important':'Not yet unlocked \u2014 visit any premium tab to unlock'}</div></div></div>`;
+  if(unlocked){ html += `<div style="text-align:right;margin:-6px 0 10px;"><a href="#" onclick="reLockPremium();return false;" style="font-size:11px;color:var(--ink-dim);text-decoration:underline;">Re-lock Premium</a></div>`; }
   html += `<div class="dl-section-title">Study Material</div>`;
   html += pdfRow('notes');
   html += hwRow();
@@ -3766,6 +3766,7 @@ window.hwToggleCodeVisibility = hwToggleCodeVisibility;
 
 /* ---- Premium Unlock System ---- */
 const PREMIUM_KEY = 'ch3_premium_unlock';
+const PREMIUM_DEMO_USED_KEY = 'ch3_premium_demo_used';
 const PREMIUM_MASTER_CODE = 'NS-PREMIUM-2026';
 const PREMIUM_DEMO_CODE = 'BAIO-DEMO-2026';
 const PREMIUM_DEMO_DURATION_MS = 24 * 60 * 60 * 1000;
@@ -3822,7 +3823,13 @@ function premiumSubmitUnlock(){
   const msgEl = document.getElementById('premUnlockMsg');
   if(!code){ msgEl.textContent = 'Please enter an unlock code.'; msgEl.className='hw-msg bad'; return; }
   if(code === PREMIUM_MASTER_CODE.toUpperCase()){ setPremiumUnlock('master', {roll:roll||'master-access'}); renderContent(); renderTabbar(); return; }
-  if(code === PREMIUM_DEMO_CODE.toUpperCase()){ setPremiumUnlock('demo', {roll:roll||'demo-access'}); renderContent(); renderTabbar(); return; }
+  if(code === PREMIUM_DEMO_CODE.toUpperCase()){
+    let demoUsed = false;
+    try{ demoUsed = !!localStorage.getItem(PREMIUM_DEMO_USED_KEY); }catch(e){}
+    if(demoUsed){ msgEl.textContent = 'This trial code has already been used. Please contact Narendra Sir for continued access.'; msgEl.className = 'hw-msg bad'; return; }
+    try{ localStorage.setItem(PREMIUM_DEMO_USED_KEY, '1'); }catch(e){}
+    setPremiumUnlock('demo', {roll:roll||'demo-access'}); renderContent(); renderTabbar(); return;
+  }
   if(!roll || !section){ msgEl.textContent = 'Please fill in section and roll number (or use the master code alone).'; msgEl.className='hw-msg bad'; return; }
   const key = premiumUnlockKey(section, roll);
   const entry = PREMIUM_UNLOCK_LOOKUP[key];
@@ -3887,7 +3894,7 @@ function injectDemoAccessBanner(){
   if(!contentEl) return;
   const banner = document.createElement('div');
   banner.className = 'demo-access-banner';
-  banner.innerHTML = `⏳ <b>Demo access</b> — this Premium content is unlocked for trial and expires in ${hrsLeft}h on this device.`;
+  banner.innerHTML = `⏳ <b>Demo access</b> — this Premium content is unlocked for trial and expires in ${hrsLeft}h.`;
   contentEl.insertBefore(banner, contentEl.firstChild);
 }
 function renderContent(){

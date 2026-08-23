@@ -1624,6 +1624,7 @@ window.hwSubmitUnlock = hwSubmitUnlock;
 
 /* ---------------- PREMIUM CONTENT UNLOCK (Mind Map, Presentation, Revision, MCQ Quiz, NEET Practice) ---------------- */
 const PREMIUM_KEY = 'ch9_premium_unlock';
+const PREMIUM_DEMO_USED_KEY = 'ch9_premium_demo_used';
 const PREMIUM_SCORE_THRESHOLD = 330; // out of 360 -- free unlock path
 const PREMIUM_MASTER_CODE = 'NS-PREMIUM-2026';
 const PREMIUM_DEMO_CODE = 'BAIO-DEMO-2026';
@@ -1660,11 +1661,11 @@ function premiumStatusRow(){
   if(premiumQualifies()){
     if(u && u.method === 'demo'){
       const hrsLeft = Math.max(0, Math.ceil((PREMIUM_DEMO_DURATION_MS - (Date.now() - u.ts)) / 3600000));
-      return `<div class="dl-row"><div class="dl-info"><div class="t">\uD83D\uDD13 Premium Content (Demo)</div><div class="d">Unlocked on this device \u2014 Mind Map, Class Presentation, MCQ Quiz, NEET Practice &amp; Paper Generator \u00B7 expires in ${hrsLeft}h</div></div></div>
-        <div style="text-align:right; margin:-6px 0 10px;"><a href="#" class="hw-relock" onclick="reLockPremium(); return false;">Re-lock Premium on this device</a></div>`;
+      return `<div class="dl-row"><div class="dl-info"><div class="t">\uD83D\uDD13 Premium Content (Demo)</div><div class="d">Unlocked \u2014 Mind Map, Class Presentation, MCQ Quiz, NEET Practice &amp; Paper Generator \u00B7 expires in ${hrsLeft}h</div></div></div>
+        <div style="text-align:right; margin:-6px 0 10px;"><a href="#" class="hw-relock" onclick="reLockPremium(); return false;">Re-lock Premium</a></div>`;
     }
-    return `<div class="dl-row"><div class="dl-info"><div class="t">\uD83D\uDD13 Premium Content</div><div class="d">Unlocked on this device \u2014 Mind Map, Class Presentation, MCQ Quiz, NEET Practice &amp; Paper Generator</div></div></div>
-      <div style="text-align:right; margin:-6px 0 10px;"><a href="#" class="hw-relock" onclick="reLockPremium(); return false;">Re-lock Premium on this device</a></div>`;
+    return `<div class="dl-row"><div class="dl-info"><div class="t">\uD83D\uDD13 Premium Content</div><div class="d">Unlocked \u2014 Mind Map, Class Presentation, MCQ Quiz, NEET Practice &amp; Paper Generator</div></div></div>
+      <div style="text-align:right; margin:-6px 0 10px;"><a href="#" class="hw-relock" onclick="reLockPremium(); return false;">Re-lock Premium</a></div>`;
   }
   return `<div class="dl-row"><div class="dl-info"><div class="t">\uD83D\uDD12 Premium Content</div><div class="d">Not yet unlocked \u2014 visit any premium tab (Mind Map, MCQ Quiz, NEET Practice, etc.) to unlock</div></div></div>`;
 }
@@ -1706,6 +1707,10 @@ function premiumSubmitUnlock(){
     return;
   }
   if(code === PREMIUM_DEMO_CODE.toUpperCase()){
+    let demoUsed = false;
+    try{ demoUsed = !!localStorage.getItem(PREMIUM_DEMO_USED_KEY); }catch(e){}
+    if(demoUsed){ msgEl.textContent = 'This trial code has already been used. Please contact Narendra Sir for continued access.'; msgEl.className = 'hw-msg bad'; return; }
+    try{ localStorage.setItem(PREMIUM_DEMO_USED_KEY, '1'); }catch(e){}
     setPremiumUnlock('demo', {roll:roll || 'demo-access'});
     renderContent();
     return;
@@ -4010,7 +4015,7 @@ function injectDemoAccessBanner(){
   if(!contentEl) return;
   const banner = document.createElement('div');
   banner.className = 'demo-access-banner';
-  banner.innerHTML = `⏳ <b>Demo access</b> — this Premium content is unlocked for trial and expires in ${hrsLeft}h on this device.`;
+  banner.innerHTML = `⏳ <b>Demo access</b> — this Premium content is unlocked for trial and expires in ${hrsLeft}h.`;
   contentEl.insertBefore(banner, contentEl.firstChild);
 }
 function renderContent(){

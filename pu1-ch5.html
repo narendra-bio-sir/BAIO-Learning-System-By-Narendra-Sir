@@ -2831,6 +2831,7 @@ window.pgToggleKey = pgToggleKey;
    chapter, via the existing code_generator.html tool with contentKey
    'CH5-PREMIUM') still work for unlocking. */
 const PREMIUM_KEY = 'pu1ch5_premium_unlock';
+const PREMIUM_DEMO_USED_KEY = 'pu1ch5_premium_demo_used';
 const PREMIUM_MASTER_CODE = 'NS-PREMIUM-2026';
 const PREMIUM_DEMO_CODE = 'BAIO-DEMO-2026';
 const PREMIUM_DEMO_DURATION_MS = 24 * 60 * 60 * 1000;
@@ -2861,9 +2862,9 @@ function premiumStatusRow(){
   if(premiumQualifies()){
     if(u && u.method === 'demo'){
       const hrsLeft = Math.max(0, Math.ceil((PREMIUM_DEMO_DURATION_MS - (Date.now() - u.ts)) / 3600000));
-      return `<div class="dl-row"><div class="dl-info"><div class="t">🔓 Premium Content (Demo)</div><div class="d">Unlocked on this device — ${Object.values(PREMIUM_TAB_LABELS).join(', ')} · expires in ${hrsLeft}h</div></div></div><div style="text-align:right;margin:-6px 0 10px;"><a href="#" onclick="reLockPremium(); return false;" style="font-size:11px;color:var(--ink-dim);text-decoration:underline;cursor:pointer;">Re-lock Premium on this device</a></div>`;
+      return `<div class="dl-row"><div class="dl-info"><div class="t">🔓 Premium Content (Demo)</div><div class="d">Unlocked — ${Object.values(PREMIUM_TAB_LABELS).join(', ')} · expires in ${hrsLeft}h</div></div></div><div style="text-align:right;margin:-6px 0 10px;"><a href="#" onclick="reLockPremium(); return false;" style="font-size:11px;color:var(--ink-dim);text-decoration:underline;cursor:pointer;">Re-lock Premium</a></div>`;
     }
-    return `<div class="dl-row"><div class="dl-info"><div class="t">🔓 Premium Content</div><div class="d">Unlocked on this device — ${Object.values(PREMIUM_TAB_LABELS).join(', ')}</div></div></div><div style="text-align:right;margin:-6px 0 10px;"><a href="#" onclick="reLockPremium(); return false;" style="font-size:11px;color:var(--ink-dim);text-decoration:underline;cursor:pointer;">Re-lock Premium on this device</a></div>`;
+    return `<div class="dl-row"><div class="dl-info"><div class="t">🔓 Premium Content</div><div class="d">Unlocked — ${Object.values(PREMIUM_TAB_LABELS).join(', ')}</div></div></div><div style="text-align:right;margin:-6px 0 10px;"><a href="#" onclick="reLockPremium(); return false;" style="font-size:11px;color:var(--ink-dim);text-decoration:underline;cursor:pointer;">Re-lock Premium</a></div>`;
   }
   return `<div class="dl-row"><div class="dl-info"><div class="t">🔒 Premium Content</div><div class="d">Not yet unlocked — visit any premium tab (${Object.values(PREMIUM_TAB_LABELS).join(', ')}) to unlock</div></div></div>`;
 }
@@ -2897,7 +2898,13 @@ function premiumSubmitUnlock(){
   const msgEl = document.getElementById('premUnlockMsg');
   if(!code){ msgEl.textContent = 'Please enter an unlock code.'; msgEl.className='hw-msg bad'; return; }
   if(code === PREMIUM_MASTER_CODE.toUpperCase()){ setPremiumUnlock('master', {roll:roll||'master-access'}); renderContent(); renderTabbar(); return; }
-  if(code === PREMIUM_DEMO_CODE.toUpperCase()){ setPremiumUnlock('demo', {roll:roll||'demo-access'}); renderContent(); renderTabbar(); return; }
+  if(code === PREMIUM_DEMO_CODE.toUpperCase()){
+    let demoUsed = false;
+    try{ demoUsed = !!localStorage.getItem(PREMIUM_DEMO_USED_KEY); }catch(e){}
+    if(demoUsed){ msgEl.textContent = 'This trial code has already been used. Please contact Narendra Sir for continued access.'; msgEl.className = 'hw-msg bad'; return; }
+    try{ localStorage.setItem(PREMIUM_DEMO_USED_KEY, '1'); }catch(e){}
+    setPremiumUnlock('demo', {roll:roll||'demo-access'}); renderContent(); renderTabbar(); return;
+  }
   if(!roll || !section){ msgEl.textContent = 'Please fill in section and roll number (or use the master code alone).'; msgEl.className='hw-msg bad'; return; }
   const key = premiumUnlockKey(section, roll);
   const entry = PREMIUM_UNLOCK_LOOKUP[key];
@@ -2965,7 +2972,7 @@ function injectDemoAccessBanner(){
   if(!contentEl) return;
   const banner = document.createElement('div');
   banner.className = 'demo-access-banner';
-  banner.innerHTML = `⏳ <b>Demo access</b> — this Premium content is unlocked for trial and expires in ${hrsLeft}h on this device.`;
+  banner.innerHTML = `⏳ <b>Demo access</b> — this Premium content is unlocked for trial and expires in ${hrsLeft}h.`;
   contentEl.insertBefore(banner, contentEl.firstChild);
 }
 function renderContent(){
