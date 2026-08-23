@@ -118,6 +118,13 @@
   .progress-fill{height:100%;background:linear-gradient(90deg,var(--leaf),var(--mint));border-radius:12px;transition:width .35s ease;}
 
   .coin{font-size:26px;}
+  .rupee-badge{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:22px;height:22px;border-radius:50%;flex:none;
+    background:linear-gradient(145deg,#FFE18C,#FFB627);
+    color:#7A4B00;font-weight:800;font-size:13px;
+    box-shadow:inset 0 -2px 3px rgba(0,0,0,0.15);
+  }
   .coin-price{
     background:var(--card);border:3px solid #EEE1CC;border-radius:18px;
     padding:14px 8px;text-align:center;cursor:pointer;font-weight:800;font-size:18px;
@@ -137,7 +144,12 @@
   @keyframes hop{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 
   .fly-coin{
-    position:fixed;font-size:28px;pointer-events:none;z-index:60;
+    position:fixed;pointer-events:none;z-index:60;
+    width:30px;height:30px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(145deg,#FFE18C,#FFB627);
+    color:#7A4B00;font-weight:800;font-size:15px;
+    box-shadow:0 2px 6px rgba(150,100,0,0.35), inset 0 -2px 3px rgba(0,0,0,0.15);
     animation:flyUp 0.8s ease-out forwards;
   }
   @keyframes flyUp{
@@ -206,7 +218,7 @@
     <button class="tb-btn no-print" id="homeBtn" title="Home">🏠</button>
     <div class="tb-spacer"></div>
     <div class="pill" id="stickerPill">🎁 <span id="stickerCount">0</span></div>
-    <div class="pill" id="coinPill">🪙 <span id="coinCount">0</span></div>
+    <div class="pill" id="coinPill"><span class="rupee-badge">₹</span> <span id="coinCount">0</span></div>
     <button class="tb-btn no-print" id="muteBtn" title="Sound">🔊</button>
   </header>
   <main id="screen"></main>
@@ -288,7 +300,7 @@
     var target = document.getElementById('coinPill').getBoundingClientRect();
     var span = document.createElement('span');
     span.className = 'fly-coin';
-    span.textContent = '🪙';
+    span.textContent = '₹';
     span.style.left = (rect.left + rect.width/2 - 14) + 'px';
     span.style.top = (rect.top + rect.height/2 - 14) + 'px';
     span.style.setProperty('--dx', (target.left - rect.left) + 'px');
@@ -300,7 +312,7 @@
   }
   function confettiBurst(){
     sfxSuccess();
-    var emojis = ['🎉','✨','🎊','⭐','🪙'];
+    var emojis = ['🎉','✨','🎊','⭐','💰'];
     for(var i=0;i<24;i++){
       (function(i){
         var s = document.createElement('span');
@@ -406,16 +418,16 @@
       '<div class="tile" data-go="learn"><span class="emoji">📖</span>Learn<div class="sub">What is a business?</div></div>'+
       '<div class="tile" data-go="offline-pick"><span class="emoji">🏪</span>Open a Shop<div class="sub">Sell in person</div></div>'+
       '<div class="tile" data-go="online-intro"><span class="emoji">📱</span>Sell Online<div class="sub">Take phone orders</div></div>'+
-      '<div class="tile" data-go="bank"><span class="emoji">🐷</span>Piggy Bank<div class="sub">'+state.coins+' coins saved</div></div>'+
+      '<div class="tile" data-go="bank"><span class="emoji">🐷</span>Piggy Bank<div class="sub">₹'+state.coins+' saved</div></div>'+
     '</div>'+
-    '<div class="tile" data-go="shop-corner" style="margin-bottom:14px;"><span class="emoji">🎁</span>Sticker Shop<div class="sub">Spend your coins for fun</div></div>'+
+    '<div class="tile" data-go="shop-corner" style="margin-bottom:14px;"><span class="emoji">🎁</span>Sticker Shop<div class="sub">Spend your rupees for fun</div></div>'+
     (unlockedCert ? '<button class="btn mint" data-go="certificate">See My Award 🏆</button>' : '')+
     '<details class="parent-note no-print"><summary>👪 Note for Parents / Teachers</summary>'+
       '<ul>'+
         '<li>Teaches: making a product, cost vs. price vs. profit, saving vs. spending.</li>'+
         '<li>Compares an <b>offline</b> shop (selling in person) with an <b>online</b> shop (taking orders from a phone/computer and delivering them).</li>'+
         '<li>All text can be read aloud (🔊) — great for a child who is still learning to read.</li>'+
-        '<li>Coins are pretend and only exist inside this game — nothing here uses real money.</li>'+
+        '<li>The ₹ amounts here are pretend play-money inside the game — nothing here uses real money.</li>'+
         '<li>Best played together, with an adult talking through each step.</li>'+
       '</ul>'+
       '<button class="footer-link" id="resetBtn">Reset all progress</button>'+
@@ -424,10 +436,10 @@
 
   /* ================= LEARN ================= */
   var learnSlides = [
-    { emoji:'🧃', text:'A business is when you make something people like, and sell it to them for coins!' },
+    { emoji:'🧃', text:'A business is when you make something people like, and sell it to them for rupees!' },
     { emoji:'🏪', text:'An OFFLINE business means people come to you — like a stand where you sell lemonade in person.' },
     { emoji:'📱', text:'An ONLINE business means people order from far away, using a phone or computer — then you send it to them!' },
-    { emoji:'💰', text:'When you sell something, keep some coins in your Piggy Bank to save for later, and use some to have fun!' }
+    { emoji:'💰', text:'When you sell something, keep some rupees in your Piggy Bank to save for later, and use some to have fun!' }
   ];
   var learnIndex = 0;
   function renderLearn(){
@@ -455,7 +467,7 @@
     '<div class="grid2">'+
       PRODUCTS.map(function(p){
         return '<div class="tile" data-product="'+p.id+'"><span class="emoji">'+p.emoji+'</span>'+p.name+
-          '<div class="sub">Costs '+p.cost+' 🪙 to make</div></div>';
+          '<div class="sub">Costs ₹'+p.cost+' to make</div></div>';
       }).join('')+
     '</div>';
   }
@@ -480,10 +492,10 @@
     '<div class="card center">'+
       '<div class="big-emoji">'+p.emoji+'</div>'+
       '<h2>Set your price</h2>'+
-      '<p>It cost you <b>'+p.cost+' 🪙</b> to make. Pick a price to sell it for — the extra coins you keep are your <b>profit</b>!</p>'+
+      '<p>It cost you <b>₹'+p.cost+'</b> to make. Pick a price to sell it for — the extra rupees you keep are your <b>profit</b>!</p>'+
       '<div class="btn-row">'+
         options.map(function(o){
-          return '<div class="coin-price" data-price="'+o+'">'+o+' 🪙</div>';
+          return '<div class="coin-price" data-price="'+o+'">₹'+o+'</div>';
         }).join('')+
       '</div>'+
       '<div style="height:14px;"></div>'+
@@ -496,7 +508,7 @@
     var done = offline.customersServed;
     if(!offline.customer){ offline.customer = { face: pick(CUSTOMERS) }; }
     return ''+
-    '<h2>'+p.emoji+' '+p.name+' Shop — '+offline.price+' 🪙 each</h2>'+
+    '<h2>'+p.emoji+' '+p.name+' Shop — ₹'+offline.price+' each</h2>'+
     '<div class="customer-box">'+
       '<div class="customer-emoji">'+offline.customer.face+'</div>'+
       '<div class="speech-bubble">I want '+(p.name==='Cookies'?'some':'a')+' '+p.name+'!</div>'+
@@ -515,9 +527,9 @@
     '<div class="card center">'+
       '<div class="big-emoji">🎉</div>'+
       '<h2>Shop Closed for the Day!</h2>'+
-      '<p>You earned <b>'+earned+' 🪙</b> selling '+p.name.toLowerCase()+'.</p>'+
-      '<p>It cost <b>'+spent+' 🪙</b> to make everything.</p>'+
-      '<p style="font-size:19px;font-weight:800;color:var(--leaf);">Your PROFIT: '+profit+' 🪙 kept! 🐷</p>'+
+      '<p>You earned <b>₹'+earned+'</b> selling '+p.name.toLowerCase()+'.</p>'+
+      '<p>It cost <b>₹'+spent+'</b> to make everything.</p>'+
+      '<p style="font-size:19px;font-weight:800;color:var(--leaf);">Your PROFIT: ₹'+profit+' kept! 🐷</p>'+
       '<div class="btn-row" style="margin-top:14px;">'+
         '<button class="btn ghost" data-go="offline-pick">Open Again</button>'+
         '<button class="btn mint" data-go="bank">See Piggy Bank</button>'+
@@ -538,7 +550,7 @@
     '<div class="grid2">'+
       PRODUCTS.map(function(p){
         return '<div class="tile" data-oproduct="'+p.id+'"><span class="emoji">'+p.emoji+'</span>'+p.name+
-          '<div class="sub">Sell for '+ (p.cost+6) +' 🪙</div></div>';
+          '<div class="sub">Sell for ₹'+ (p.cost+6) +'</div></div>';
       }).join('')+
     '</div>';
   }
@@ -572,7 +584,7 @@
     } else if(online.step === 'paid'){
       body = ''+
         '<div class="big-emoji">✅</div>'+
-        '<p style="font-weight:800;">Payment Received! +'+online.price+' 🪙</p>'+
+        '<p style="font-weight:800;">Payment Received! +₹'+online.price+'</p>'+
         '<button class="btn coral" id="nextOrderBtn">Next Order ▶</button>';
     }
     return ''+
@@ -590,7 +602,7 @@
     '<div class="card center">'+
       '<div class="big-emoji">🎉</div>'+
       '<h2>All Orders Delivered!</h2>'+
-      '<p>You earned <b>'+earned+' 🪙</b> selling '+p.name.toLowerCase()+' online!</p>'+
+      '<p>You earned <b>₹'+earned+'</b> selling '+p.name.toLowerCase()+' online!</p>'+
       '<p>People far away got to buy from you, without ever visiting a shop. That\'s the magic of online business!</p>'+
       '<div class="btn-row" style="margin-top:14px;">'+
         '<button class="btn ghost" data-go="online-intro">Sell More</button>'+
@@ -606,9 +618,9 @@
     return ''+
     '<div class="card center">'+
       '<div class="piggy">🐷</div>'+
-      '<h1>'+state.coins+' 🪙</h1>'+
+      '<h1>₹'+state.coins+'</h1>'+
       '<p>saved in your Piggy Bank</p>'+
-      '<p style="font-size:13px;">All-time earned: '+state.allTimeEarned+' 🪙 &nbsp;•&nbsp; Award goal: '+goal+' 🪙</p>'+
+      '<p style="font-size:13px;">All-time earned: ₹'+state.allTimeEarned+' &nbsp;•&nbsp; Award goal: ₹'+goal+'</p>'+
       '<div class="progress-track"><div class="progress-fill" style="width:'+pct+'%"></div></div>'+
     '</div>'+
     '<div class="btn-row">'+
@@ -623,14 +635,14 @@
   function renderShopCorner(){
     return ''+
     '<h2>🎁 Sticker Shop</h2>'+
-    '<p>Trade some of your coins for a fun sticker! This is called <b>spending</b>.</p>'+
-    '<div class="card"><p style="text-align:center;font-weight:800;">You have '+state.coins+' 🪙</p></div>'+
+    '<p>Trade some of your rupees for a fun sticker! This is called <b>spending</b>.</p>'+
+    '<div class="card"><p style="text-align:center;font-weight:800;">You have ₹'+state.coins+'</p></div>'+
     '<div class="grid2">'+
       STICKERS.map(function(s,i){
         var owned = state.stickers.indexOf(i) !== -1;
         var canBuy = state.coins >= s.cost;
         return '<div class="tile'+(owned?' selected':'')+'" '+(owned?'':'data-buy="'+i+'"')+' style="'+(!owned && !canBuy ? 'opacity:.5;' : '')+'">'+
-          '<span class="emoji">'+s.emoji+'</span>'+(owned ? 'Owned ✔' : (s.cost+' 🪙'))+
+          '<span class="emoji">'+s.emoji+'</span>'+(owned ? 'Owned ✔' : ('₹'+s.cost))+
         '</div>';
       }).join('')+
     '</div>'+
@@ -685,7 +697,7 @@
     if(current.name === 'home'){
       var reset = document.getElementById('resetBtn');
       if(reset) reset.addEventListener('click', function(){
-        if(confirm('Reset all coins, stickers and progress?')){
+        if(confirm('Reset all rupees, stickers and progress?')){
           var name = state.name;
           state = Object.assign({}, defaultState, { name:name });
           save(); go('home');
@@ -768,7 +780,7 @@
     }
 
     if(current.name === 'offline-done'){
-      speak('You earned '+(offline.price*offline.totalCustomers)+' coins! Your profit is '+((offline.price*offline.totalCustomers)-offline.product.cost)+' coins.');
+      speak('You earned '+(offline.price*offline.totalCustomers)+' rupees! Your profit is '+((offline.price*offline.totalCustomers)-offline.product.cost)+' rupees.');
     }
 
     if(current.name === 'online-intro'){
@@ -829,15 +841,15 @@
     }
 
     if(current.name === 'online-done'){
-      speak('All orders delivered! You earned '+(online.price*online.totalOrders)+' coins selling online.');
+      speak('All orders delivered! You earned '+(online.price*online.totalOrders)+' rupees selling online.');
     }
 
     if(current.name === 'bank'){
-      speak('You have '+state.coins+' coins saved in your piggy bank!');
+      speak('You have '+state.coins+' rupees saved in your piggy bank!');
     }
 
     if(current.name === 'shop-corner'){
-      speak('Spend your coins on a fun sticker!');
+      speak('Spend your rupees on a fun sticker!');
       screenEl.querySelectorAll('[data-buy]').forEach(function(el){
         el.addEventListener('click', function(){
           var i = parseInt(el.getAttribute('data-buy'),10);
