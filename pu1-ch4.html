@@ -1788,9 +1788,9 @@ function hwRow(){
   return `<div class="dl-row"><div class="dl-info"><div class="t">🔒 ${p.title}</div><div class="d">Locked teacher-issued material. Ask your teacher for a free unlock code.</div></div></div><div class="hw-unlock-form"><div class="hw-msg" id="hwUnlockMsg"></div><input type="text" id="hwNameInput" placeholder="Full name"><input type="text" id="hwSectionInput" placeholder="Section"><input type="text" id="hwRollInput" placeholder="Roll number"><div style="position:relative;"><input type="text" id="hwCodeInput" placeholder="Free unlock code" autocomplete="off" style="width:100%;"><label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-dim);margin:6px 0 0;cursor:pointer;"><input type="checkbox" id="hwCodeShowToggle" checked onchange="hwToggleCodeVisibility()" style="width:auto;margin:0;">Show code</label></div><button class="start-btn" onclick="hwSubmitUnlock()">Unlock with Code</button><div style="text-align:center;font-size:11px;color:var(--ink-dim);margin:10px 0 4px;">Ask your teacher for a free unlock code</div></div>`;
 }
 function renderDownloads(){
-  let html=`<div class="dl-topic-block"><div class="dl-section-title">Study Material</div>${pdfRow('comprehensive')}${pdfRow('revision_notes')}</div>`;
+  let html=`<div class="dl-topic-block"><div class="dl-section-title">Premium Content</div>${premiumStatusRow()}</div><div class="dl-topic-block"><div class="dl-section-title">Study Material</div>${pdfRow('comprehensive')}${pdfRow('revision_notes')}</div>`;
   DATA.topics.forEach(t=>{ html+=`<div class="dl-topic-block"><div class="dl-section-title">Worksheet — ${t.name}</div>${pdfRow('ws_'+t.id)}</div>`; });
-  html+=`<div class="dl-topic-block"><div class="dl-section-title">Full Chapter Revision</div>${pdfRow('ws_revision')}</div></div><div class="dl-topic-block"><div class="dl-section-title">Teacher-issued organised notes</div>${hwRow()}</div><div class="dl-topic-block"><div class="dl-section-title">Premium Content</div>${premiumStatusRow()}</div>`;
+  html+=`<div class="dl-topic-block"><div class="dl-section-title">Full Chapter Revision</div>${pdfRow('ws_revision')}</div></div><div class="dl-topic-block"><div class="dl-section-title">Teacher-issued organised notes</div>${hwRow()}</div>`;
   document.getElementById('content').innerHTML=html;
 }
 
