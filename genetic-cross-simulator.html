@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Genetic Cross Simulator</title>
+<meta name="description" content="Every genetic cross from Principles of Inheritance and Variation — monohybrid, dihybrid, incomplete dominance, codominance, ABO blood group, sex-linked, honey bee sex determination, pedigree analysis and more — with live Punnett squares." />
+<meta name="theme-color" content="#4f46e5" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { darkMode: 'class' };
+</script>
+<style>
+  .gamete-circle {
+    min-width: 38px; height: 38px; padding: 0 8px;
+    border: 2px solid; border-radius: 9999px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 700; transition: all 0.2s ease;
+  }
+  .punnett-table { border-collapse: collapse; }
+  .punnett-table td, .punnett-table th {
+    border: 1.5px solid; text-align: center; vertical-align: middle;
+    transition: all 0.2s ease;
+  }
+  .split-header { position: relative; }
+  .split-line { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+  .mode-pill { white-space: nowrap; flex: none; }
+  .nav-scroll::-webkit-scrollbar { height: 6px; }
+  .nav-scroll::-webkit-scrollbar-thumb { background: rgba(100,116,139,0.4); border-radius: 3px; }
+  .ref-card { break-inside: avoid; }
+</style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen py-6 px-3 sm:px-6 font-sans transition-colors duration-300">
+<div class="max-w-5xl mx-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-4 sm:p-8 transition-colors duration-300">
+
+  <!-- Top Bar -->
+  <div class="flex items-center justify-between gap-4 mb-5">
+    <div>
+      <h1 class="text-lg sm:text-xl font-extrabold text-indigo-600 dark:text-indigo-400">🧬 Genetic Cross Simulator</h1>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Principles of Inheritance &amp; Variation — every cross, built live</p>
+    </div>
+    <button onclick="toggleTheme()" class="flex items-center gap-2 px-3 py-2 rounded-xl font-semibold bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-700 transition flex-none">
+      <span id="theme-icon">🌙</span>
+      <span id="theme-text" class="text-xs sm:text-sm hidden sm:inline">Dark Mode</span>
+    </button>
+  </div>
+
+  <!-- Mode Nav -->
+  <div id="modeNav" class="nav-scroll flex gap-2 overflow-x-auto pb-3 mb-5 border-b border-slate-200 dark:border-slate-800"></div>
+
+  <!-- Views mount here -->
+  <div id="viewRoot"></div>
+
+</div>
+
+<script>
+/* =========================================================================
+   SHARED HELPERS
+   ========================================================================= */
+let isDark = true;
+function toggleTheme(){
+  isDark = !isDark;
+  document.documentElement.classList.toggle('dark', isDark);
+  document.getElementById('theme-icon').innerText = isDark ? '🌙' : '☀️';
+  document.getElementById('theme-text').innerText = isDark ? 'Dark Mode' : 'Light Mode';
+  render();
+}
+
+function gcd(a,b){ return b===0 ? a : gcd(b, a%b); }
+function ratioString(counts){
+  const vals = Object.values(counts);
+  const g = vals.reduce((a,b)=>gcd(a,b));
+  return Object.keys(counts).map(k => counts[k]/g).join(' : ');
+}
+function tally(arr){
+  const counts = {};
+  arr.forEach(x => { counts[x] = (counts[x]||0) + 1; });
+  return counts;
+}
+function randInt(n){ return Math.floor(Math.random()*n); }
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=randInt(i+1); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function uniq(arr){ return [...new Set(arr)]; }
+
+const PHENO_PALETTE = [
+  'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-slate-300 dark:border-slate-700',
+  'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-slate-300 dark:border-slate-700',
+  'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border-slate-300 dark:border-slate-700',
+  'bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 border-slate-300 dark:border-slate-700',
+  'bg-violet-50 dark:bg-violet-950/40 text-violet-700 dark:text-violet-300 border-slate-300 dark:border-slate-700',
+  'bg-lime-50 dark:bg-lime-950/40 text-lime-800 dark:text-lime-300 border-slate-300 dark:border-slate-700'
+];
+const gameteStyle = 'gamete-circle border-indigo-400 dark:border-indigo-500 bg-indigo-50 dark:bg-slate-800 text-indigo-700 dark:text-indigo-300 shadow-sm';
+
+function fillSelect(sel, options){
+  sel.innerHTML = options.map(o => `<option value="${o.v}">${o.label}</option>`).join('');
+}
+
+// Generic Punnett square: rowGametes × colGametes, combined via combineFn,
+// phenotyped via phenoFn(rowGamete, colGamete, combinedGeno) -> label string.
+// Returns { html, genoCounts, phenoCounts }.
+function buildPunnett(rowGametes, colGametes, combineFn, phenoFn, opts){
+  opts = opts || {};
+  const genoCounts = {};
+  const phenoCounts = {};
+  const colorMap = {};
+  let colorIdx = 0;
+  function colorFor(label){
+    if(!(label in colorMap)){ colorMap[label] = PHENO_PALETTE[colorIdx % PHENO_PALETTE.length]; colorIdx++; }
+    return colorMap[label];
+  }
+  const strokeColor = isDark ? '#475569' : '#cbd5e1';
+  let html = `<table class="punnett-table w-full max-w-lg text-xs sm:text-sm border-slate-300 dark:border-slate-700 mx-auto">`;
+  html += `<tr><th class="w-14 h-12 split-header p-1 border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80">
+    <svg class="split-line"><line x1="0" y1="100%" x2="100%" y2="0" stroke="${strokeColor}" stroke-width="1.5"/></svg>
+    <span class="absolute top-1 right-2 text-xs text-pink-500 font-bold">♀</span>
+    <span class="absolute bottom-1 left-2 text-xs text-blue-500 font-bold">♂</span>
+  </th>`;
+  colGametes.forEach(cg => {
+    html += `<th class="font-bold border-slate-300 dark:border-slate-700 bg-indigo-50 dark:bg-slate-800 text-indigo-700 dark:text-indigo-300 py-2 px-1">${cg}</th>`;
+  });
+  html += `</tr>`;
+  rowGametes.forEach(rg => {
+    html += `<tr><th class="font-bold border-slate-300 dark:border-slate-700 bg-indigo-50 dark:bg-slate-800 text-indigo-700 dark:text-indigo-300 py-2 px-1">${rg}</th>`;
+    colGametes.forEach(cg => {
+      const combined = combineFn(rg, cg);
+      const label = phenoFn(rg, cg, combined);
+      genoCounts[combined] = (genoCounts[combined]||0) + 1;
+      phenoCounts[label] = (phenoCounts[label]||0) + 1;
+      html += `<td class="p-1.5 ${colorFor(label)}">
+        <div class="font-bold">${combined}</div>
+        <div class="text-[10px] opacity-80 font-medium">(${label})</div>
+      </td>`;
+    });
+    html += `</tr>`;
+  });
+  html += `</table>`;
+  return { html, genoCounts, phenoCounts };
+}
+
+function ratioCard(title, label, counts, colorClass){
+  return `<div>
+    <div class="text-xs uppercase font-bold tracking-wider text-indigo-600 dark:text-indigo-400 mb-1">${title}</div>
+    <div class="text-xs text-slate-600 dark:text-slate-300 mb-0.5">${label}</div>
+    <div class="font-bold text-base ${colorClass}">= ${ratioString(counts)}</div>
+  </div>`;
+}
+
+function ratioPanel(genoCounts, phenoCounts, note){
+  return `<div class="p-4 sm:p-5 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl space-y-4">
+    ${ratioCard('Phenotypic ratio', Object.keys(phenoCounts).join(' : '), phenoCounts, 'text-emerald-600 dark:text-emerald-400')}
+    ${ratioCard('Genotypic ratio', Object.keys(genoCounts).join(' : '), genoCounts, 'text-cyan-600 dark:text-cyan-400')}
+    ${note ? `<div class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed border-t border-slate-200 dark:border-slate-700 pt-3">${note}</div>` : ''}
+  </div>`;
+}
+
+function gameteRow(gametes, extraClass){
+  return `<div class="flex flex-wrap items-center justify-center gap-1.5 ${extraClass||''}">
+    ${uniq(gametes).map(g => `<div class="${gameteStyle}">${g}</div>`).join('')}
+  </div>`;
+}
+
+/* =========================================================================
+   REFERENCE DATA (ported from the PU2 Chapter 4 study page)
+   ========================================================================= */
+const MENDEL_TRAITS = [
+  {letter:'T', dom:'Tall stem', rec:'Dwarf stem', domShort:'Tall', recShort:'Dwarf'},
+  {letter:'F', dom:'Axial flower position', rec:'Terminal flower position', domShort:'Axial', recShort:'Terminal'},
+  {letter:'C', dom:'Violet flower colour', rec:'White flower colour', domShort:'Violet', recShort:'White'},
+  {letter:'P', dom:'Inflated pod shape', rec:'Constricted pod shape', domShort:'Inflated', recShort:'Constricted'},
+  {letter:'G', dom:'Green pod colour', rec:'Yellow pod colour', domShort:'Green', recShort:'Yellow'},
+  {letter:'R', dom:'Round seed shape', rec:'Wrinkled seed shape', domShort:'Round', recShort:'Wrinkled'},
+  {letter:'Y', dom:'Yellow seed colour', rec:'Green seed colour', domShort:'Yellow', recShort:'Green'}
+];
+const SL_TRAITS = [
+  {letter:'B', dom:'Normal vision', rec:'Colour blindness'},
+  {letter:'H', dom:'Normal blood clotting', rec:'Haemophilia'}
+];
+const DISORDERS = [
+  {name:'Down Syndrome', karyotype:'47, XX/XY, +21 (Trisomy 21)', cause:'Nondisjunction of chromosome 21 during meiosis in a parent, producing a gamete with an extra copy.', features:'Small round head, furrowed tongue, partial separation of fingers, mental retardation, short stature.'},
+  {name:'Cri du Chat Syndrome', karyotype:'46, XX/XY, 5p- (partial deletion of the short arm of chromosome 5)', cause:'A structural chromosomal aberration — deletion of a segment of the short arm (p arm) of chromosome 5, not a change in chromosome number.', features:'Infant cry resembling a cat’s mewing (hence the name), microcephaly, intellectual disability, characteristic facial features (round face, wide-set eyes).'},
+  {name:'Klinefelter Syndrome', karyotype:'47, XXY', cause:'Nondisjunction of the X chromosome, producing an egg or sperm with an extra X.', features:'Overall masculine development but feminine body features (gynecomastia); sterile; tall stature.'},
+  {name:'Turner Syndrome', karyotype:'45, X (monosomy X)', cause:'Loss or nondisjunction of one X chromosome.', features:'Female with underdeveloped ovaries; sterile; short stature; webbed neck.'}
+];
+const MENDELIAN_DISORDERS = [
+  {name:'Haemophilia', inheritance:'X-linked recessive', cause:'Deficiency of a blood clotting factor (Factor VIII or IX) caused by a recessive allele on the X chromosome.', features:'Delayed/prolonged bleeding even from minor injuries; historically called the "royal disease"; almost always affects males, with females as carriers.'},
+  {name:'Colour Blindness', inheritance:'X-linked recessive', cause:'A recessive allele on the X chromosome fails to produce one or more cone photopigments needed for colour vision (commonly red-green).', features:'Difficulty distinguishing red and green; affects about 8% of men versus about 0.4% of women, since males are hemizygous for the X chromosome.'},
+  {name:'Sickle-cell Anaemia', inheritance:'Autosomal recessive', cause:'A single base substitution (GAG to GTG) in the sixth codon of the beta-globin gene, changing glutamic acid to valine and producing abnormal haemoglobin (HbS).', features:'Red blood cells become sickle-shaped under low oxygen tension; homozygotes (HbSHbS) show the disease; heterozygotes (HbAHbS) are carriers.'},
+  {name:'Phenylketonuria (PKU)', inheritance:'Autosomal recessive', cause:'Deficiency of the enzyme phenylalanine hydroxylase, which normally converts phenylalanine to tyrosine.', features:'Accumulated phenyl-ketones are excreted in urine; can cause mental retardation if untreated, managed with a phenylalanine-restricted diet from infancy.'},
+  {name:'Thalassemia', inheritance:'Autosomal recessive', cause:'A quantitative defect — reduced or absent synthesis of one of the globin chains (alpha or beta) that make up haemoglobin.', features:'Classified by which chain is deficient (alpha- or beta-thalassemia); causes anaemia of varying severity depending on how many globin genes are affected.'}
+];
+const PLEIOTROPY_EXAMPLES = [
+  {name:'Phenylketonuria (PKU)', gene:'A single mutant gene coding for the enzyme phenylalanine hydroxylase.', effects:'Mental retardation, reduced hair and skin pigmentation (fair complexion), and accumulation of phenyl-ketones in urine — several unrelated-looking symptoms all traced back to one defective enzyme.'},
+  {name:'Starch Synthesis in Garden Pea', gene:'The gene that determines round vs wrinkled seed shape (Mendel’s R/r trait).', effects:'Also affects the seed’s starch grain structure, sugar and water content, and its ability to imbibe water and germinate — a single gene, several downstream effects on the same seed.'},
+  {name:'Sickle-cell Anaemia', gene:'A single base-pair substitution in the beta-globin gene (HbS).', effects:'Abnormal, sickle-shaped RBCs cause anaemia, joint and bone pain, organ damage, and increased susceptibility to infection — many distinct symptoms from one gene change.'}
+];
+const INHERITANCE_PATTERNS_REF = [
+  {name:'Autosomal Dominant', rule:'A single copy of the mutant allele (heterozygous, Aa) is enough to show the trait. It appears in every generation; an affected × unaffected cross gives roughly 50% affected children of both sexes.', examples:'Huntington’s disease, Achondroplasia, Polydactyly, Widow’s peak hairline.'},
+  {name:'Autosomal Recessive', rule:'Both copies must carry the mutant allele (aa) to show the trait. Two unaffected carrier parents (Aa × Aa) can have an affected child; the trait often skips generations.', examples:'Sickle-cell Anaemia, Phenylketonuria (PKU), Thalassemia, Albinism, Cystic Fibrosis.'},
+  {name:'X-linked Recessive', rule:'The recessive allele sits on the X chromosome. Since males are hemizygous (only one X), a single copy is enough to show the trait in a son — so it affects far more males than females.', examples:'Haemophilia, Colour Blindness (red-green), Duchenne Muscular Dystrophy.'},
+  {name:'X-linked Dominant', rule:'A single copy on the X chromosome is enough to show the trait in either sex. An affected father passes it to all his daughters but none of his sons.', examples:'Vitamin D-resistant Rickets (Hypophosphatemia), Rett syndrome.'},
+  {name:'Y-linked (Holandric)', rule:'The gene lies only on the Y chromosome, so it passes directly and exclusively from father to every son, and never to daughters.', examples:'Hypertrichosis pinnae (excessive hair growth on the ear pinna).'}
+];
+function pedigreeSymbol(p){
+  const s = 14;
+  const fill = p.affected ? '#e07a5f' : 'none';
+  const strokeColor = isDark ? '#cbd5e1' : '#334155';
+  const dimColor = isDark ? '#94a3b8' : '#64748b';
+  let shape = p.sex === 'M'
+    ? `<rect x="${p.x-s}" y="${p.y-s}" width="${2*s}" height="${2*s}" fill="${fill}" stroke="${strokeColor}" stroke-width="2.2"/>`
+    : `<circle cx="${p.x}" cy="${p.y}" r="${s}" fill="${fill}" stroke="${strokeColor}" stroke-width="2.2"/>`;
+  if(p.carrier) shape += `<circle cx="${p.x}" cy="${p.y}" r="4.5" fill="#e3af43"/>`;
+  shape += `<text x="${p.x}" y="${p.y+s+13}" text-anchor="middle" font-size="9" fill="${dimColor}">${p.label}</text>`;
+  return shape;
+}
+function buildPedigreeSVG(preset){
+  const p1 = preset.parents[0], p2 = preset.parents[1];
+  const children = preset.children;
+  const midX = (p1.x + p2.x)/2;
+  const busY = p1.y + 35;
+  const minX = children[0].x, maxX = children[children.length-1].x;
+  const dimColor = isDark ? '#94a3b8' : '#64748b';
+  let svg = `<svg viewBox="0 0 300 175" width="100%" height="175">`;
+  svg += `<line x1="${p1.x+16}" y1="${p1.y}" x2="${p2.x-16}" y2="${p2.y}" stroke="${dimColor}" stroke-width="2"/>`;
+  svg += `<line x1="${midX}" y1="${p1.y}" x2="${midX}" y2="${busY}" stroke="${dimColor}" stroke-width="2"/>`;
+  svg += `<line x1="${minX}" y1="${busY}" x2="${maxX}" y2="${busY}" stroke="${dimColor}" stroke-width="2"/>`;
+  children.forEach(c => { svg += `<line x1="${c.x}" y1="${busY}" x2="${c.x}" y2="${c.y-14}" stroke="${dimColor}" stroke-width="2"/>`; });
+  svg += pedigreeSymbol(p1) + pedigreeSymbol(p2);
+  children.forEach(c => { svg += pedigreeSymbol(c); });
+  svg += `</svg>`;
+  return svg;
+}
+const PEDIGREE_PATTERNS = ['Autosomal Dominant','Autosomal Recessive','X-linked Recessive','X-linked Dominant'];
+const PEDIGREE_PRESETS = [
+  { name:'Pedigree A', correct:'Autosomal Dominant',
+    parents:[{x:110,y:30,sex:'M',affected:true,label:'I-1'},{x:190,y:30,sex:'F',affected:false,label:'I-2'}],
+    children:[{x:45,y:100,sex:'F',affected:true,label:'II-1'},{x:115,y:100,sex:'M',affected:false,label:'II-2'},{x:185,y:100,sex:'M',affected:true,label:'II-3'},{x:255,y:100,sex:'F',affected:false,label:'II-4'}],
+    explain:'An affected parent (I-1) has affected children of <b>both sexes</b>, in roughly equal proportion, with no skipped generation — the hallmark of <b>autosomal dominant</b> inheritance.' },
+  { name:'Pedigree B', correct:'Autosomal Recessive',
+    parents:[{x:110,y:30,sex:'M',affected:false,label:'I-1'},{x:190,y:30,sex:'F',affected:false,label:'I-2'}],
+    children:[{x:45,y:100,sex:'M',affected:false,label:'II-1'},{x:115,y:100,sex:'F',affected:true,label:'II-2'},{x:185,y:100,sex:'M',affected:false,label:'II-3'},{x:255,y:100,sex:'M',affected:true,label:'II-4'}],
+    explain:'<b>Both parents are unaffected</b> yet have affected children of both sexes — they must be unaffected carriers. The trait skips the parental generation, the diagnostic clue for <b>autosomal recessive</b> inheritance.' },
+  { name:'Pedigree C', correct:'X-linked Recessive',
+    parents:[{x:110,y:30,sex:'M',affected:false,label:'I-1'},{x:190,y:30,sex:'F',affected:false,carrier:true,label:'I-2'}],
+    children:[{x:45,y:100,sex:'M',affected:true,label:'II-1'},{x:115,y:100,sex:'F',affected:false,carrier:true,label:'II-2'},{x:185,y:100,sex:'M',affected:false,label:'II-3'},{x:255,y:100,sex:'M',affected:true,label:'II-4'}],
+    explain:'Only <b>sons</b> are affected; the unaffected (carrier) mother passes the recessive allele to about half her sons, who show the trait since they have only one X — classic <b>X-linked recessive</b> inheritance.' },
+  { name:'Pedigree D', correct:'X-linked Dominant',
+    parents:[{x:110,y:30,sex:'M',affected:true,label:'I-1'},{x:190,y:30,sex:'F',affected:false,label:'I-2'}],
+    children:[{x:45,y:100,sex:'F',affected:true,label:'II-1'},{x:115,y:100,sex:'M',affected:false,label:'II-2'},{x:185,y:100,sex:'F',affected:true,label:'II-3'},{x:255,y:100,sex:'M',affected:false,label:'II-4'}],
+    explain:'The affected father passes his single X (carrying the dominant allele) to <b>every daughter</b>, so all daughters are affected. He passes his Y to every son, so <b>no son</b> inherits the trait — "all daughters, no sons".' }
+];
+
+/* =========================================================================
+   MODE REGISTRY
+   ========================================================================= */
+const MODES = [
+  {id:'mono', label:'Monohybrid'},
+  {id:'di', label:'Dihybrid'},
+  {id:'incomplete', label:'Incomplete Dominance'},
+  {id:'codominance', label:'Codominance'},
+  {id:'abo', label:'ABO Blood Group'},
+  {id:'sexlinked', label:'Sex-Linked Cross'},
+  {id:'honeybee', label:'Honey Bee Sex'},
+  {id:'pedigree', label:'Pedigree Analysis'},
+  {id:'disorders', label:'Chromosomal Disorders'},
+  {id:'mendelian', label:'Mendelian Disorders'},
+  {id:'pleiotropy', label:'Pleiotropy'},
+  {id:'inheritance', label:'Inheritance Patterns'},
+  {id:'practice', label:'🎯 Practice Quiz'}
+];
+let currentMode = 'mono';
+
+function renderNav(){
+  const nav = document.getElementById('modeNav');
+  nav.innerHTML = MODES.map(m => {
+    const active = m.id === currentMode;
+    const cls = active
+      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
+      : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700';
+    return `<button class="mode-pill px-4 py-2 rounded-xl font-bold text-xs sm:text-sm transition ${cls}" data-mode="${m.id}">${m.label}</button>`;
+  }).join('');
+  nav.querySelectorAll('[data-mode]').forEach(btn => {
+    btn.addEventListener('click', () => { currentMode = btn.dataset.mode; render(); });
+  });
+}
+
+function render(){
+  renderNav();
+  const root = document.getElementById('viewRoot');
+  switch(currentMode){
+    case 'mono': root.innerHTML = template_generational(); afterRender_mono(); break;
+    case 'di': root.innerHTML = template_generational(); afterRender_di(); break;
+    case 'incomplete': root.innerHTML = template_single('inc', "In the 4 O'clock plant / Snapdragon, the heterozygote blends into an intermediate phenotype instead of showing the dominant one.", 'RR = Red, rr = White, Rr = Pink'); afterRender_inc(); break;
+    case 'codominance': root.innerHTML = template_single('cod', 'ABO blood group alleles (I<sup>A</sup>, I<sup>B</sup>) — the heterozygote expresses BOTH parental phenotypes fully and simultaneously, unlike incomplete dominance.', 'I<sup>A</sup>I<sup>A</sup> = Blood group A, I<sup>B</sup>I<sup>B</sup> = Blood group B, I<sup>A</sup>I<sup>B</sup> = Blood group AB'); afterRender_cod(); break;
+    case 'abo': root.innerHTML = template_single('abo', 'The full ABO system — three alleles (I<sup>A</sup>, I<sup>B</sup>, i) at one locus. I<sup>A</sup> and I<sup>B</sup> are codominant; both are dominant over i.', ''); afterRender_abo(); break;
+    case 'sexlinked': root.innerHTML = template_sexlinked(); afterRender_sl(); break;
+    case 'honeybee': root.innerHTML = template_honeybee(); afterRender_bee(); break;
+    case 'pedigree': root.innerHTML = template_pedigree(); afterRender_pedigree(); break;
+    case 'disorders': root.innerHTML = template_refList('Chromosomal Disorders', 'Quick reference — board-important chromosomal disorders', DISORDERS.map(d => refCard(d.name, [['Karyotype', d.karyotype], ['Cause', d.cause], ['Features', d.features]]))); break;
+    case 'mendelian': root.innerHTML = template_refList('Mendelian Disorders', 'Quick reference — board-important single-gene disorders', MENDELIAN_DISORDERS.map(d => refCard(d.name, [['Inheritance', d.inheritance], ['Cause', d.cause], ['Features', d.features]]))); break;
+    case 'pleiotropy': root.innerHTML = template_refList('Pleiotropy', 'One gene, multiple effects', PLEIOTROPY_EXAMPLES.map(d => refCard(d.name, [['Gene involved', d.gene], ['Multiple effects', d.effects]]))); break;
+    case 'inheritance': root.innerHTML = template_refList('Inheritance Patterns', 'Autosomal & sex-linked inheritance patterns, with examples', INHERITANCE_PATTERNS_REF.map(d => refCard(d.name, [['Pattern', d.rule], ['Examples', d.examples]]))); break;
+    case 'practice': root.innerHTML = template_practice(); afterRender_practice(); break;
+  }
+}
+
+function refCard(title, rows){
+  return `<div class="ref-card p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-1.5">
+    <h4 class="font-bold text-indigo-600 dark:text-indigo-400 mb-1">${title}</h4>
+    ${rows.map(([k,v]) => `<div class="text-xs sm:text-sm text-slate-600 dark:text-slate-300"><b class="text-slate-800 dark:text-slate-100">${k}:</b> ${v}</div>`).join('')}
+  </div>`;
+}
+function template_refList(title, sub, cards){
+  return `<div class="space-y-4">
+    <div>
+      <h2 class="text-base sm:text-lg font-bold text-indigo-600 dark:text-indigo-400">${title}</h2>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">${sub}</p>
+    </div>
+    <div class="grid gap-3 sm:grid-cols-2">${cards.join('')}</div>
+  </div>`;
+}
+
+/* =========================================================================
+   MONOHYBRID + DIHYBRID — full P -> F1 -> F1 selfed -> F2 generational flow
+   P generation is restricted to true-breeding (homozygous) genotypes only,
+   since that's a requirement for the F1 = "combine one allele from each
+   true-breeding parent" shortcut to be scientifically valid.
+   ========================================================================= */
+function template_generational(){
+  return `
+  <div class="space-y-6 text-sm sm:text-base">
+    <div id="gen-trait-picker"></div>
+
+    <div class="grid grid-cols-12 items-start gap-2">
+      <div class="col-span-12 sm:col-span-3 font-bold text-indigo-600 dark:text-indigo-400 pt-2">P generation<div class="text-[10px] font-normal text-slate-400">(true-breeding)</div></div>
+      <div class="col-span-12 sm:col-span-9 flex items-center justify-center gap-4 sm:gap-10 flex-wrap">
+        <div class="text-center">
+          <div id="gen-p1-pheno" class="text-xs sm:text-sm font-semibold mb-1 text-amber-600 dark:text-amber-400"></div>
+          <div id="gen-p1-sel" class="flex gap-1"></div>
+        </div>
+        <div class="text-xl font-bold text-slate-400">×</div>
+        <div class="text-center">
+          <div id="gen-p2-pheno" class="text-xs sm:text-sm font-semibold mb-1 text-emerald-600 dark:text-emerald-400"></div>
+          <div id="gen-p2-sel" class="flex gap-1"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-12 items-center gap-2">
+      <div class="col-span-12 sm:col-span-3 font-bold text-indigo-600 dark:text-indigo-400">Gametes</div>
+      <div class="col-span-12 sm:col-span-9 flex items-center justify-center gap-10 sm:gap-20">
+        <div id="gen-p1-gametes"></div>
+        <div id="gen-p2-gametes"></div>
+      </div>
+    </div>
+
+    <div class="flex justify-center">
+      <svg class="w-48 h-8" viewBox="0 0 192 32">
+        <line x1="30" y1="2" x2="96" y2="28" class="stroke-indigo-400 dark:stroke-indigo-500" stroke-width="2" />
+        <line x1="162" y1="2" x2="96" y2="28" class="stroke-indigo-400 dark:stroke-indigo-500" stroke-width="2" />
+      </svg>
+    </div>
+
+    <div class="grid grid-cols-12 items-center gap-2">
+      <div class="col-span-12 sm:col-span-3 font-bold text-indigo-600 dark:text-indigo-400">F<sub>1</sub> generation</div>
+      <div class="col-span-12 sm:col-span-9 text-center bg-indigo-50 dark:bg-slate-800/60 py-2 rounded-xl border border-indigo-100 dark:border-slate-700">
+        <span id="gen-f1-geno" class="font-bold text-base sm:text-lg text-amber-500 dark:text-amber-400"></span>
+        <span id="gen-f1-desc" class="text-slate-600 dark:text-slate-300 ml-2 font-medium text-xs sm:text-base"></span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-12 items-center gap-2 pt-2">
+      <div class="col-span-12 sm:col-span-3 font-bold text-indigo-600 dark:text-indigo-400">Selfing of F<sub>1</sub></div>
+      <div class="col-span-12 sm:col-span-9 flex items-center justify-center gap-8 sm:gap-16">
+        <div id="gen-f1-p1" class="font-bold text-base sm:text-lg text-amber-500 dark:text-amber-400"></div>
+        <div class="text-xl font-bold text-slate-400">×</div>
+        <div id="gen-f1-p2" class="font-bold text-base sm:text-lg text-amber-500 dark:text-amber-400"></div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-12 items-center gap-2">
+      <div class="col-span-12 sm:col-span-3 font-bold text-indigo-600 dark:text-indigo-400">Gametes</div>
+      <div class="col-span-12 sm:col-span-9 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-8">
+        <div id="gen-f1-gametes-1"></div>
+        <div class="hidden sm:block text-slate-400 font-bold text-xs">and</div>
+        <div id="gen-f1-gametes-2"></div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-12 items-start pt-4 gap-y-4">
+      <div class="col-span-12 lg:col-span-3 font-bold text-indigo-600 dark:text-indigo-400">F<sub>2</sub> generation</div>
+      <div class="col-span-12 lg:col-span-9 grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+        <div id="gen-punnett" class="overflow-x-auto"></div>
+        <div id="gen-ratios"></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function zygoteSelect(id, options, defaultIdx){
+  return options.map((o,i) => `<button type="button" class="px-3 py-1.5 rounded-lg border-2 font-bold text-sm zygote-opt" data-target="${id}" data-value="${o.v}">${o.label}</button>`).join('');
+}
+
+// ---- Monohybrid ----
+function afterRender_mono(){
+  const picker = document.getElementById('gen-trait-picker');
+  picker.innerHTML = `<div class="flex items-center justify-center gap-2 flex-wrap">
+    <label class="text-xs font-bold text-slate-500 dark:text-slate-400">Trait:</label>
+    <select id="monoTraitSel" class="bg-indigo-50 dark:bg-slate-800 border border-indigo-300 dark:border-indigo-600 text-slate-900 dark:text-white rounded-lg px-2.5 py-1.5 font-bold text-xs sm:text-sm"></select>
+  </div>`;
+  const traitSel = document.getElementById('monoTraitSel');
+  fillSelect(traitSel, MENDEL_TRAITS.map((t,i) => ({v:i, label:`${t.domShort} / ${t.recShort}`})));
+  traitSel.value = 0;
+  traitSel.addEventListener('change', updateMono);
+
+  let p1Homo = true, p2Homo = false; // true = dominant homozygous, false = recessive homozygous
+  function renderZygotePicker(containerId, isP1){
+    const t = MENDEL_TRAITS[+traitSel.value];
+    const el = document.getElementById(containerId);
+    const homo = isP1 ? p1Homo : p2Homo;
+    const domVal = t.letter.toUpperCase()+t.letter.toUpperCase();
+    const recVal = t.letter.toLowerCase()+t.letter.toLowerCase();
+    el.innerHTML = `
+      <button type="button" class="px-3 py-1.5 rounded-lg border-2 font-bold text-sm mr-1 ${homo ? 'border-indigo-500 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300' : 'border-slate-300 dark:border-slate-700 text-slate-500'}" data-p="${isP1?1:2}" data-homo="1">${domVal}</button>
+      <button type="button" class="px-3 py-1.5 rounded-lg border-2 font-bold text-sm ${!homo ? 'border-indigo-500 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300' : 'border-slate-300 dark:border-slate-700 text-slate-500'}" data-p="${isP1?1:2}" data-homo="0">${recVal}</button>
+    `;
+    el.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => {
+      const homoVal = btn.dataset.homo === '1';
+      if(btn.dataset.p === '1') p1Homo = homoVal; else p2Homo = homoVal;
+      updateMono();
+    }));
+  }
+
+  function updateMono(){
+    const t = MENDEL_TRAITS[+traitSel.value];
+    const upper = t.letter.toUpperCase(), lower = t.letter.toLowerCase();
+    renderZygotePicker('gen-p1-sel', true);
+    renderZygotePicker('gen-p2-sel', false);
+
+    const p1 = p1Homo ? upper+upper : lower+lower;
+    const p2 = p2Homo ? upper+upper : lower+lower;
+    function pheno(g){ return g.includes(upper) ? t.domShort : t.recShort; }
+    document.getElementById('gen-p1-pheno').innerText = pheno(p1);
+    document.getElementById('gen-p2-pheno').innerText = pheno(p2);
+
+    document.getElementById('gen-p1-gametes').innerHTML = gameteRow([p1[0]]);
+    document.getElementById('gen-p2-gametes').innerHTML = gameteRow([p2[0]]);
+
+    const f1Alleles = [p1[0], p2[0]].sort((a,b) => (a===upper?0:1)-(b===upper?0:1));
+    const f1Geno = f1Alleles.join('');
+    document.getElementById('gen-f1-geno').innerText = f1Geno;
+    const isHetero = f1Geno[0] !== f1Geno[1];
+    document.getElementById('gen-f1-desc').innerText = `(all are ${isHetero ? 'heterozygous' : 'homozygous'} ${pheno(f1Geno)} — ${t.dom.split(' ').slice(-1)[0]==='colour'?t.dom.toLowerCase():t.dom.toLowerCase()})`;
+    document.getElementById('gen-f1-p1').innerText = f1Geno;
+    document.getElementById('gen-f1-p2').innerText = f1Geno;
+
+    const f1Gametes = [f1Geno[0], f1Geno[1]];
+    document.getElementById('gen-f1-gametes-1').innerHTML = gameteRow(f1Gametes);
+    document.getElementById('gen-f1-gametes-2').innerHTML = gameteRow(f1Gametes);
+
+    const combineFn = (a,b) => [a,b].sort((x,y) => (x===upper?0:1)-(y===upper?0:1)).join('');
+    const phenoFn = (a,b,combined) => pheno(combined);
+    const {html, genoCounts, phenoCounts} = buildPunnett(f1Gametes, f1Gametes, combineFn, phenoFn);
+    document.getElementById('gen-punnett').innerHTML = html;
+    document.getElementById('gen-ratios').innerHTML = ratioPanel(genoCounts, phenoCounts,
+      `<b>${t.dom}</b> is dominant over <b>${t.rec}</b>. Classic Mendelian monohybrid F<sub>2</sub> ratio: phenotypic 3:1, genotypic 1:2:1.`);
+  }
+  updateMono();
+}
+
+// ---- Dihybrid ----
+function afterRender_di(){
+  const picker = document.getElementById('gen-trait-picker');
+  picker.innerHTML = `<div class="flex items-center justify-center gap-2 flex-wrap">
+    <label class="text-xs font-bold text-slate-500 dark:text-slate-400">Trait 1:</label>
+    <select id="diT1Sel" class="bg-indigo-50 dark:bg-slate-800 border border-indigo-300 dark:border-indigo-600 rounded-lg px-2 py-1.5 font-bold text-xs"></select>
+    <label class="text-xs font-bold text-slate-500 dark:text-slate-400 ml-2">Trait 2:</label>
+    <select id="diT2Sel" class="bg-indigo-50 dark:bg-slate-800 border border-indigo-300 dark:border-indigo-600 rounded-lg px-2 py-1.5 font-bold text-xs"></select>
+  </div>`;
+  const t1Sel = document.getElementById('diT1Sel'), t2Sel = document.getElementById('diT2Sel');
+  fillSelect(t1Sel, MENDEL_TRAITS.map((t,i) => ({v:i, label:`${t.domShort}/${t.recShort}`})));
+  fillSelect(t2Sel, MENDEL_TRAITS.map((t,i) => ({v:i, label:`${t.domShort}/${t.recShort}`})));
+  t1Sel.value = 5; t2Sel.value = 6; // Round/Wrinkled + Yellow/Green, the classic pair
+  t1Sel.addEventListener('change', () => { if(t1Sel.value===t2Sel.value) t2Sel.value = (+t1Sel.value+1)%MENDEL_TRAITS.length; updateDi(); });
+  t2Sel.addEventListener('change', () => { if(t2Sel.value===t1Sel.value) t1Sel.value = (+t2Sel.value+1)%MENDEL_TRAITS.length; updateDi(); });
+
+  let p1Homo1 = true, p1Homo2 = true, p2Homo1 = false, p2Homo2 = false;
+  function renderZygotePicker(containerId, letter, homoGetter, homoSetter){
+    const el = document.getElementById(containerId);
+    const upper = letter.toUpperCase(), lower = letter.toLowerCase();
+    const homo = homoGetter();
+    el.innerHTML = (el.innerHTML||'') ; // no-op, replaced below
+    return `
+      <button type="button" class="px-2 py-1 rounded-lg border-2 font-bold text-xs mr-1 di-zyg" data-homo="1" style="${homo ? 'border-color:#6366f1' : ''}">${upper}${upper}</button>
+      <button type="button" class="px-2 py-1 rounded-lg border-2 font-bold text-xs di-zyg" data-homo="0" style="${!homo ? 'border-color:#6366f1' : ''}">${lower}${lower}</button>
+    `;
+  }
+  function updateDi(){
+    const t1 = MENDEL_TRAITS[+t1Sel.value], t2 = MENDEL_TRAITS[+t2Sel.value];
+    const u1=t1.letter.toUpperCase(), l1=t1.letter.toLowerCase(), u2=t2.letter.toUpperCase(), l2=t2.letter.toLowerCase();
+
+    function buildPicker(containerId, homo1Get, homo1Set, homo2Get, homo2Set){
+      const el = document.getElementById(containerId);
+      const cls = (active) => `px-2 py-1 rounded-lg border-2 font-bold text-xs mx-0.5 ${active ? 'border-indigo-500 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300' : 'border-slate-300 dark:border-slate-700 text-slate-500'}`;
+      el.innerHTML = `
+        <div class="flex flex-col gap-1">
+          <div><button type="button" class="${cls(homo1Get())}" data-loc="1" data-homo="1">${u1}${u1}</button><button type="button" class="${cls(!homo1Get())}" data-loc="1" data-homo="0">${l1}${l1}</button></div>
+          <div><button type="button" class="${cls(homo2Get())}" data-loc="2" data-homo="1">${u2}${u2}</button><button type="button" class="${cls(!homo2Get())}" data-loc="2" data-homo="0">${l2}${l2}</button></div>
+        </div>`;
+      el.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => {
+        const val = btn.dataset.homo === '1';
+        if(btn.dataset.loc === '1') homo1Set(val); else homo2Set(val);
+        updateDi();
+      }));
+    }
+    buildPicker('gen-p1-sel', () => p1Homo1, v => p1Homo1=v, () => p1Homo2, v => p1Homo2=v);
+    buildPicker('gen-p2-sel', () => p2Homo1, v => p2Homo1=v, () => p2Homo2, v => p2Homo2=v);
+
+    const p1 = (p1Homo1?u1+u1:l1+l1) + (p1Homo2?u2+u2:l2+l2);
+    const p2 = (p2Homo1?u1+u1:l1+l1) + (p2Homo2?u2+u2:l2+l2);
+    function pheno(g){ return `${g.includes(u1)?t1.domShort:t1.recShort}, ${g.includes(u2)?t2.domShort:t2.recShort}`; }
+    document.getElementById('gen-p1-pheno').innerText = pheno(p1);
+    document.getElementById('gen-p2-pheno').innerText = pheno(p2);
+
+    function gametesOf(g){ return [g[0]+g[2]]; } // homozygous parent -> single gamete type
+    document.getElementById('gen-p1-gametes').innerHTML = gameteRow(gametesOf(p1));
+    document.getElementById('gen-p2-gametes').innerHTML = gameteRow(gametesOf(p2));
+
+    const f1Locus1 = [p1[0],p2[0]].sort((a,b)=>(a===u1?0:1)-(b===u1?0:1)).join('');
+    const f1Locus2 = [p1[2],p2[2]].sort((a,b)=>(a===u2?0:1)-(b===u2?0:1)).join('');
+    const f1Geno = f1Locus1 + f1Locus2;
+    document.getElementById('gen-f1-geno').innerText = f1Geno;
+    document.getElementById('gen-f1-desc').innerText = `(all are ${pheno(f1Geno)})`;
+    document.getElementById('gen-f1-p1').innerText = f1Geno;
+    document.getElementById('gen-f1-p2').innerText = f1Geno;
+
+    function f1Gametes(g){
+      const locus1 = [g[0],g[1]], locus2 = [g[2],g[3]];
+      const out = [];
+      locus1.forEach(a => locus2.forEach(b => out.push(a+b)));
+      return uniq(out);
+    }
+    const fg = f1Gametes(f1Geno);
+    document.getElementById('gen-f1-gametes-1').innerHTML = gameteRow(fg);
+    document.getElementById('gen-f1-gametes-2').innerHTML = gameteRow(fg);
+
+    const combineFn = (a,b) => {
+      const loc1 = [a[0],b[0]].sort((x,y)=>(x===u1?0:1)-(y===u1?0:1)).join('');
+      const loc2 = [a[1],b[1]].sort((x,y)=>(x===u2?0:1)-(y===u2?0:1)).join('');
+      return loc1+loc2;
+    };
+    const phenoFn = (a,b,combined) => pheno(combined);
+    const {html, genoCounts, phenoCounts} = buildPunnett(fg, fg, combineFn, phenoFn);
+    document.getElementById('gen-punnett').innerHTML = html;
+    document.getElementById('gen-ratios').innerHTML = ratioPanel(genoCounts, phenoCounts,
+      `Independent assortment of two unlinked genes gives the classic dihybrid F<sub>2</sub> phenotypic ratio <b>9 : 3 : 3 : 1</b>.`);
+  }
+  updateDi();
+}
+
+/* =========================================================================
+   SINGLE-GENERATION CROSSES — Incomplete Dominance, Codominance, ABO
+   (taught/tested as one direct parent × parent cross, not a P->F1->F2 flow)
+   ========================================================================= */
+function template_single(prefix, intro, legend){
+  return `
+  <div class="space-y-5 text-sm sm:text-base">
+    <div>
+      <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">${intro}</p>
+      ${legend ? `<p class="text-xs text-slate-400 dark:text-slate-500 mt-1">${legend}</p>` : ''}
+    </div>
+    <div class="grid grid-cols-12 items-center gap-2">
+      <div class="col-span-12 sm:col-span-3 font-bold text-indigo-600 dark:text-indigo-400">Parents</div>
+      <div class="col-span-12 sm:col-span-9 flex items-center justify-center gap-6 flex-wrap">
+        <div class="text-center">
+          <div id="${prefix}-p1-pheno" class="text-xs font-semibold mb-1 text-amber-600 dark:text-amber-400"></div>
+          <select id="${prefix}-p1-sel" class="bg-indigo-50 dark:bg-slate-800 border border-indigo-300 dark:border-indigo-600 rounded-lg px-2.5 py-1.5 font-bold text-xs sm:text-sm"></select>
+        </div>
+        <div class="text-xl font-bold text-slate-400">×</div>
+        <div class="text-center">
+          <div id="${prefix}-p2-pheno" class="text-xs font-semibold mb-1 text-emerald-600 dark:text-emerald-400"></div>
+          <select id="${prefix}-p2-sel" class="bg-indigo-50 dark:bg-slate-800 border border-indigo-300 dark:border-indigo-600 rounded-lg px-2.5 py-1.5 font-bold text-xs sm:text-sm"></select>
+        </div>
+      </div>
+    </div>
+    <div class="grid grid-cols-12 items-center gap-2">
+      <div class="col-span-12 sm:col-span-3 font-bold text-indigo-600 dark:text-indigo-400">Gametes</div>
+      <div class="col-span-12 sm:col-span-9 flex items-center justify-center gap-10 sm:gap-20">
+        <div id="${prefix}-p1-gametes"></div>
+        <div id="${prefix}-p2-gametes"></div>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start pt-2">
+      <div id="${prefix}-punnett" class="overflow-x-auto"></div>
+      <div id="${prefix}-ratios"></div>
+    </div>
+  </div>`;
+}
+
+function afterRender_inc(){
+  const p1 = document.getElementById('inc-p1-sel'), p2 = document.getElementById('inc-p2-sel');
+  const OPTIONS = [{v:'RR',label:'RR (Red)'},{v:'Rr',label:'Rr (Pink)'},{v:'rr',label:'rr (White)'}];
+  fillSelect(p1, OPTIONS); fillSelect(p2, OPTIONS);
+  p1.value='RR'; p2.value='rr';
+  function pheno(g){ return g==='RR' ? 'Red' : g==='rr' ? 'White' : 'Pink'; }
+  function update(){
+    const g1 = p1.value.split(''), g2 = p2.value.split('');
+    document.getElementById('inc-p1-pheno').innerText = pheno(p1.value);
+    document.getElementById('inc-p2-pheno').innerText = pheno(p2.value);
+    document.getElementById('inc-p1-gametes').innerHTML = gameteRow(g1);
+    document.getElementById('inc-p2-gametes').innerHTML = gameteRow(g2);
+    const combineFn = (a,b) => [a,b].sort((x,y)=>(x==='R'?0:1)-(y==='R'?0:1)).join('');
+    const {html, genoCounts, phenoCounts} = buildPunnett(g1, g2, combineFn, (a,b,c) => pheno(c));
+    document.getElementById('inc-punnett').innerHTML = html;
+    document.getElementById('inc-ratios').innerHTML = ratioPanel(genoCounts, phenoCounts,
+      `In incomplete dominance the <b>genotypic and phenotypic ratios are identical</b> — there's no dominant allele to mask the heterozygote, so Rr shows its own intermediate <b>Pink</b> phenotype instead of Red or White.`);
+  }
+  p1.addEventListener('change', update); p2.addEventListener('change', update);
+  update();
+}
+
+function afterRender_cod(){
+  const p1 = document.getElementById('cod-p1-sel'), p2 = document.getElementById('cod-p2-sel');
+  const OPTIONS = [{v:'AA',label:'I^A I^A (Blood group A)'},{v:'AB',label:'I^A I^B (Blood group AB)'},{v:'BB',label:'I^B I^B (Blood group B)'}];
+  fillSelect(p1, OPTIONS); fillSelect(p2, OPTIONS);
+  p1.value='AA'; p2.value='BB';
+  const PHENO_MAP = {AA:'A', AB:'AB', BB:'B'};
+  function update(){
+    const g1 = p1.value.split(''), g2 = p2.value.split('');
+    document.getElementById('cod-p1-pheno').innerText = 'Group ' + PHENO_MAP[p1.value];
+    document.getElementById('cod-p2-pheno').innerText = 'Group ' + PHENO_MAP[p2.value];
+    document.getElementById('cod-p1-gametes').innerHTML = gameteRow(g1.map(x => 'I^'+x));
+    document.getElementById('cod-p2-gametes').innerHTML = gameteRow(g2.map(x => 'I^'+x));
+    const combineFn = (a,b) => [a,b].sort((x,y)=>(x==='A'?0:1)-(y==='A'?0:1)).join('');
+    const {html, genoCounts, phenoCounts} = buildPunnett(g1, g2, combineFn, (a,b,c) => PHENO_MAP[c]);
+    document.getElementById('cod-punnett').innerHTML = html;
+    document.getElementById('cod-ratios').innerHTML = ratioPanel(genoCounts, phenoCounts,
+      `Like incomplete dominance, genotypic and phenotypic ratios match here too — but I<sup>A</sup>I<sup>B</sup> shows <b>both A and B antigens fully</b> on the RBC surface, not a blend. This is the same relationship at work in the full ABO system.`);
+  }
+  p1.addEventListener('change', update); p2.addEventListener('change', update);
+  update();
+}
+
+function afterRender_abo(){
+  const p1 = document.getElementById('abo-p1-sel'), p2 = document.getElementById('abo-p2-sel');
+  const ABO_GENO = { 'IAIA':['IA','IA'], 'IAi':['IA','i'], 'IBIB':['IB','IB'], 'IBi':['IB','i'], 'IAIB':['IA','IB'], 'ii':['i','i'] };
+  const OPTIONS = [
+    {v:'IAIA', label:'I^A I^A (Group A, homozygous)'}, {v:'IAi', label:'I^A i (Group A, heterozygous)'},
+    {v:'IBIB', label:'I^B I^B (Group B, homozygous)'}, {v:'IBi', label:'I^B i (Group B, heterozygous)'},
+    {v:'IAIB', label:'I^A I^B (Group AB)'}, {v:'ii', label:'i i (Group O)'}
+  ];
+  fillSelect(p1, OPTIONS); fillSelect(p2, OPTIONS);
+  p1.value='IAi'; p2.value='IBi';
+  function aboPheno(tokens){
+    const hasA = tokens.includes('IA'), hasB = tokens.includes('IB');
+    if(hasA && hasB) return 'AB'; if(hasA) return 'A'; if(hasB) return 'B'; return 'O';
+  }
+  const ORDER = {'IA':0,'IB':1,'i':2};
+  function genoLabel(tokens){ return tokens.slice().sort((a,b)=>ORDER[a]-ORDER[b]).join(''); }
+  function update(){
+    const g1 = ABO_GENO[p1.value], g2 = ABO_GENO[p2.value];
+    document.getElementById('abo-p1-pheno').innerText = 'Group ' + aboPheno(g1);
+    document.getElementById('abo-p2-pheno').innerText = 'Group ' + aboPheno(g2);
+    document.getElementById('abo-p1-gametes').innerHTML = gameteRow(g1);
+    document.getElementById('abo-p2-gametes').innerHTML = gameteRow(g2);
+    const combineFn = (a,b) => genoLabel([a,b]);
+    const phenoFn = (a,b) => aboPheno([a,b]);
+    const {html, genoCounts, phenoCounts} = buildPunnett(g1, g2, combineFn, phenoFn);
+    document.getElementById('abo-punnett').innerHTML = html;
+    const allGroups = ['A','B','AB','O'];
+    const impossible = allGroups.filter(g => !phenoCounts[g]);
+    const note = impossible.length
+      ? `Blood group${impossible.length>1?'s':''} <b>${impossible.join(', ')}</b> ${impossible.length>1?'are':'is'} <b>NOT possible</b> from this cross.`
+      : `All four blood groups are possible from this cross.`;
+    document.getElementById('abo-ratios').innerHTML = ratioPanel(genoCounts, phenoCounts, note);
+  }
+  p1.addEventListener('change', update); p2.addEventListener('change', update);
+  update();
+}
+
+/* =========================================================================
+   SEX-LINKED CROSS
+   ========================================================================= */
+function template_sexlinked(){
+  return `
+  <div class="space-y-5 text-sm sm:text-base">
+    <div class="flex items-center justify-center gap-2">
+      <label class="text-xs font-bold text-slate-500 dark:text-slate-400">Trait:</label>
+      <select id="slTraitSel" class="bg-indigo-50 dark:bg-slate-800 border border-indigo-300 dark:border-indigo-600 rounded-lg px-2.5 py-1.5 font-bold text-xs sm:text-sm"></select>
+    </div>
+    <div class="grid grid-cols-12 items-center gap-2">
+      <div class="col-span-12 sm:col-span-3 font-bold text-indigo-600 dark:text-indigo-400">Parents</div>
+      <div class="col-span-12 sm:col-span-9 flex items-center justify-center gap-6 flex-wrap">
+        <div class="text-center">
+          <div class="text-xs font-semibold mb-1 text-pink-500">♀ Mother</div>
+          <select id="slMomSel" class="bg-indigo-50 dark:bg-slate-800 border border-indigo-300 dark:border-indigo-600 rounded-lg px-2.5 py-1.5 font-bold text-xs sm:text-sm"></select>
+        </div>
+        <div class="text-xl font-bold text-slate-400">×</div>
+        <div class="text-center">
+          <div class="text-xs font-semibold mb-1 text-blue-500">♂ Father</div>
+          <select id="slDadSel" class="bg-indigo-50 dark:bg-slate-800 border border-indigo-300 dark:border-indigo-600 rounded-lg px-2.5 py-1.5 font-bold text-xs sm:text-sm"></select>
+        </div>
+      </div>
+    </div>
+    <div class="grid grid-cols-12 items-center gap-2">
+      <div class="col-span-12 sm:col-span-3 font-bold text-indigo-600 dark:text-indigo-400">Gametes</div>
+      <div class="col-span-12 sm:col-span-9 flex items-center justify-center gap-10 sm:gap-20">
+        <div id="sl-mom-gametes"></div>
+        <div id="sl-dad-gametes"></div>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start pt-2">
+      <div id="sl-punnett" class="overflow-x-auto"></div>
+      <div id="sl-ratios"></div>
+    </div>
+  </div>`;
+}
+function afterRender_sl(){
+  const traitSel = document.getElementById('slTraitSel');
+  fillSelect(traitSel, SL_TRAITS.map((t,i) => ({v:i, label:`${t.dom} / ${t.rec}`})));
+  const mom = document.getElementById('slMomSel'), dad = document.getElementById('slDadSel');
+
+  function momOptions(letter){
+    const up='X'+letter.toUpperCase(), lo='X'+letter.toLowerCase();
+    return [{v:up+up,label:`${up}${up} (Normal, homozygous)`},{v:up+lo,label:`${up}${lo} (Carrier)`},{v:lo+lo,label:`${lo}${lo} (Affected)`}];
+  }
+  function dadOptions(letter){
+    const up='X'+letter.toUpperCase(), lo='X'+letter.toLowerCase();
+    return [{v:up+'Y',label:`${up}Y (Normal)`},{v:lo+'Y',label:`${lo}Y (Affected)`}];
+  }
+  function genoToGametes(g){ return g.length===4 ? [g.slice(0,2), g.slice(2,4)] : [g.slice(0,2), g.slice(2,3)]; }
+  function combine(femaleG, maleG, letter){
+    const upperX = 'X'+letter.toUpperCase();
+    if(maleG === 'Y') return {genotype: femaleG+'Y', sex:'Son'};
+    const pair = [femaleG, maleG].sort((a,b)=>(a===upperX?0:1)-(b===upperX?0:1));
+    return {genotype: pair.join(''), sex:'Daughter'};
+  }
+  function phenoLabel(genotype, sex, trait){
+    const upperX = 'X'+trait.letter.toUpperCase(), lowerX = 'X'+trait.letter.toLowerCase();
+    if(sex==='Son') return (genotype.indexOf(upperX)===0 ? trait.dom : trait.rec) + ' (son)';
+    if(genotype === upperX+upperX) return trait.dom + ' (daughter)';
+    if(genotype === upperX+lowerX) return 'Carrier (daughter)';
+    return trait.rec + ' (daughter)';
+  }
+  function refreshGenoOptions(){
+    const t = SL_TRAITS[+traitSel.value];
+    fillSelect(mom, momOptions(t.letter));
+    fillSelect(dad, dadOptions(t.letter));
+    mom.value = 'X'+t.letter.toUpperCase()+'X'+t.letter.toLowerCase();
+    dad.value = 'X'+t.letter.toUpperCase()+'Y';
+  }
+  function update(){
+    const trait = SL_TRAITS[+traitSel.value];
+    const momGametes = genoToGametes(mom.value), dadGametes = genoToGametes(dad.value);
+    document.getElementById('sl-mom-gametes').innerHTML = gameteRow(momGametes);
+    document.getElementById('sl-dad-gametes').innerHTML = gameteRow(dadGametes);
+    const combineFn = (a,b) => combine(a,b,trait.letter).genotype;
+    const phenoFn = (a,b,combined) => {
+      const sex = combine(a,b,trait.letter).sex;
+      return phenoLabel(combined, sex, trait);
+    };
+    const {html, genoCounts, phenoCounts} = buildPunnett(momGametes, dadGametes, combineFn, phenoFn);
+    document.getElementById('sl-punnett').innerHTML = html;
+    document.getElementById('sl-ratios').innerHTML = ratioPanel(genoCounts, phenoCounts,
+      `X-linked trait: <b>${trait.dom}</b> is dominant over <b>${trait.rec}</b>. Sons get their only X from the mother, so a son's phenotype always matches one of her alleles directly.`);
+  }
+  traitSel.addEventListener('change', () => { refreshGenoOptions(); update(); });
+  mom.addEventListener('change', update); dad.addEventListener('change', update);
+  refreshGenoOptions(); update();
+}
+
+/* =========================================================================
+   HONEY BEE SEX DETERMINATION
+   ========================================================================= */
+function template_honeybee(){
+  return `
+  <div class="space-y-4 text-sm sm:text-base max-w-xl mx-auto">
+    <div>
+      <h2 class="text-base sm:text-lg font-bold text-indigo-600 dark:text-indigo-400">Haplodiploidy in Honey Bees (<i>Apis</i>)</h2>
+      <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">The queen (diploid, 2n = 32) mates once and stores sperm. She then decides, egg by egg, whether to fertilise it — tap either egg type below to see what it becomes.</p>
+    </div>
+    <div class="flex gap-3 justify-center">
+      <button id="beeFertBtn" class="px-5 py-2.5 rounded-xl font-bold bg-indigo-600 text-white shadow-md shadow-indigo-500/20 hover:bg-indigo-700 transition">Fertilised egg</button>
+      <button id="beeUnfertBtn" class="px-5 py-2.5 rounded-xl font-bold bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition">Unfertilised egg</button>
+    </div>
+    <div id="beeResult"></div>
+  </div>`;
+}
+function afterRender_bee(){
+  const result = document.getElementById('beeResult');
+  document.getElementById('beeFertBtn').addEventListener('click', () => {
+    result.innerHTML = refCard('Fertilised egg → Diploid (2n = 32)', [
+      ['Develops into', 'a <b>female</b> — a worker, or (if fed royal jelly throughout larval life) a new queen'],
+      ['Parentage', 'has <b>two parents</b> and develops by normal fertilisation']
+    ]);
+  });
+  document.getElementById('beeUnfertBtn').addEventListener('click', () => {
+    result.innerHTML = refCard('Unfertilised egg → Haploid (n = 16)', [
+      ['Develops into', 'a <b>male</b> (drone) by <b>parthenogenesis</b> — without fertilisation'],
+      ['Parentage', 'has <b>only a mother</b>, and produces sperm by <b>mitosis</b>, not meiosis, since he is already haploid']
+    ]);
+  });
+}
+
+/* =========================================================================
+   PEDIGREE ANALYSIS
+   ========================================================================= */
+function template_pedigree(){
+  return `
+  <div class="space-y-4 text-sm sm:text-base max-w-xl mx-auto">
+    <div>
+      <h2 class="text-base sm:text-lg font-bold text-indigo-600 dark:text-indigo-400">Pedigree Analysis</h2>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Study the pedigree, then identify the mode of inheritance</p>
+    </div>
+    <select id="pedigreeSel" class="w-full bg-indigo-50 dark:bg-slate-800 border border-indigo-300 dark:border-indigo-600 rounded-lg px-2.5 py-1.5 font-bold text-xs sm:text-sm"></select>
+    <div id="pedigreeDiagram" class="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl p-2"></div>
+    <div id="pedigreeKey" class="flex flex-wrap gap-3 text-[11px] text-slate-500 dark:text-slate-400"></div>
+    <div class="font-bold text-xs text-indigo-600 dark:text-indigo-400">What pattern does this pedigree show?</div>
+    <div id="pedigreeOptions" class="grid grid-cols-2 gap-2"></div>
+    <div id="pedigreeFeedback"></div>
+  </div>`;
+}
+function afterRender_pedigree(){
+  const sel = document.getElementById('pedigreeSel');
+  fillSelect(sel, PEDIGREE_PRESETS.map((p,i) => ({v:i, label:p.name})));
+  const diagram = document.getElementById('pedigreeDiagram');
+  const key = document.getElementById('pedigreeKey');
+  const opts = document.getElementById('pedigreeOptions');
+  const feedback = document.getElementById('pedigreeFeedback');
+
+  function renderKey(){
+    key.innerHTML = `
+      <span>⬜ Unaffected male</span> <span>⭕ Unaffected female</span>
+      <span>🟧 Affected</span> <span>🟡 Carrier dot</span>`;
+  }
+  function renderPedigree(){
+    const preset = PEDIGREE_PRESETS[+sel.value];
+    diagram.innerHTML = buildPedigreeSVG(preset);
+    renderKey();
+    opts.innerHTML = PEDIGREE_PATTERNS.map((p,i) => `<button type="button" class="ped-opt px-3 py-2 rounded-lg border-2 border-slate-300 dark:border-slate-700 font-semibold text-xs sm:text-sm hover:border-indigo-400" data-i="${i}">${p}</button>`).join('');
+    feedback.innerHTML = '';
+    opts.querySelectorAll('.ped-opt').forEach(btn => btn.addEventListener('click', () => {
+      const chosen = PEDIGREE_PATTERNS[+btn.dataset.i];
+      const correct = chosen === preset.correct;
+      opts.querySelectorAll('.ped-opt').forEach(b => {
+        b.disabled = true;
+        if(b.textContent === preset.correct) b.className = 'ped-opt px-3 py-2 rounded-lg border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-semibold text-xs sm:text-sm';
+        else if(b === btn && !correct) b.className = 'ped-opt px-3 py-2 rounded-lg border-2 border-rose-500 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 font-semibold text-xs sm:text-sm';
+      });
+      feedback.innerHTML = `<div class="p-3 rounded-xl text-xs sm:text-sm ${correct ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300' : 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300'}">${correct ? '<b>Correct!</b> ' : '<b>Not quite.</b> '}${preset.explain}</div>`;
+    }));
+  }
+  sel.addEventListener('change', renderPedigree);
+  renderPedigree();
+}
+
+/* =========================================================================
+   PRACTICE QUIZ — procedurally generated, covers all 13 modes
+   ========================================================================= */
+let pqScore = 0, pqTotal = 0, pqCurrentQ = null;
+
+function makeMonoQuestion(){
+  const t = MENDEL_TRAITS[randInt(MENDEL_TRAITS.length)];
+  const upper=t.letter.toUpperCase(), lower=t.letter.toLowerCase();
+  const opts = [upper+upper, upper+lower, lower+lower];
+  const p1 = opts[randInt(3)], p2 = opts[randInt(3)];
+  const g1=p1.split(''), g2=p2.split('');
+  const cells = [];
+  g1.forEach(a => g2.forEach(b => cells.push([a,b].sort((x,y)=>(x===upper?0:1)-(y===upper?0:1)).join(''))));
+  const phenoCells = cells.map(c => c.includes(upper) ? t.domShort : t.recShort);
+  const counts = tally(phenoCells);
+  const keys = Object.keys(counts);
+  const correctLabel = keys.length===1 ? ('All offspring: '+keys[0]) : (keys.join(' : ')+' = '+ratioString(counts));
+  const distractorPool = ['3 : 1', '1 : 1', '1 : 2 : 1', 'All offspring show one phenotype'];
+  const distractors = shuffle(distractorPool).filter(d => d!==correctLabel).slice(0,3);
+  return { prompt: `Cross: <b>${p1}</b> × <b>${p2}</b> for ${t.domShort} / ${t.recShort} (${upper}/${lower}). What is the phenotypic ratio of the offspring?`, options: shuffle([correctLabel].concat(distractors)), correct: correctLabel };
+}
+function makeDiQuestion(){
+  const i1 = randInt(MENDEL_TRAITS.length);
+  const i2 = (i1 + 1 + randInt(MENDEL_TRAITS.length-1)) % MENDEL_TRAITS.length;
+  const t1 = MENDEL_TRAITS[i1], t2 = MENDEL_TRAITS[i2];
+  return { prompt: `A dihybrid cross AaBb × AaBb (independent assortment, e.g. ${t1.domShort}/${t1.recShort} and ${t2.domShort}/${t2.recShort}) gives which F2 phenotypic ratio?`, options: shuffle(['9 : 3 : 3 : 1', '1 : 1 : 1 : 1', '3 : 3 : 1 : 1', '9 : 3 : 4']), correct: '9 : 3 : 3 : 1' };
+}
+function makeIncQuestion(){
+  return { prompt: "In the 4 O'clock plant, a cross Rr (Pink) × Rr (Pink) is made. What is the phenotypic ratio of the offspring?", options: shuffle(['1 Red : 2 Pink : 1 White', '3 Red : 1 White', '1 Red : 1 White', 'All Pink']), correct: '1 Red : 2 Pink : 1 White' };
+}
+function makeCodQuestion(){
+  const genos = ['AA','AB','BB'];
+  const p1 = genos[randInt(3)], p2 = genos[randInt(3)];
+  const PHENO_MAP = {AA:'A', AB:'AB', BB:'B'};
+  const combine = (a,b) => [a,b].sort((x,y)=>(x==='A'?0:1)-(y==='A'?0:1)).join('');
+  const g1=p1.split(''), g2=p2.split('');
+  const phenoCells = [];
+  g1.forEach(a => g2.forEach(b => phenoCells.push(PHENO_MAP[combine(a,b)])));
+  const counts = tally(phenoCells);
+  const keys = Object.keys(counts);
+  const correctLabel = keys.length===1 ? ('All offspring: '+keys[0]) : (keys.join(' : ')+' = '+ratioString(counts));
+  const distractorPool = ['1 : 2 : 1', 'All offspring AB', '3 : 1', '1 : 1'];
+  const distractors = shuffle(distractorPool).filter(d => d!==correctLabel).slice(0,3);
+  return { prompt: `Codominance cross: <b>${p1}</b> × <b>${p2}</b> (codominant I<sup>A</sup>/I<sup>B</sup> alleles). What is the phenotypic ratio of the offspring?`, options: shuffle([correctLabel].concat(distractors)), correct: correctLabel };
+}
+function makeAboQuestion(){
+  const ABO_GENO = { 'IAIA':['IA','IA'], 'IAi':['IA','i'], 'IBIB':['IB','IB'], 'IBi':['IB','i'], 'IAIB':['IA','IB'], 'ii':['i','i'] };
+  function aboPheno(tokens){ const hasA=tokens.includes('IA'), hasB=tokens.includes('IB'); if(hasA&&hasB) return 'AB'; if(hasA) return 'A'; if(hasB) return 'B'; return 'O'; }
+  const genos = Object.keys(ABO_GENO);
+  const p1 = genos[randInt(genos.length)], p2 = genos[randInt(genos.length)];
+  const g1 = ABO_GENO[p1], g2 = ABO_GENO[p2];
+  const pairs = [];
+  g1.forEach(a => g2.forEach(b => pairs.push([a,b])));
+  const phenoCounts = tally(pairs.map(aboPheno));
+  const allGroups = ['A','B','AB','O'];
+  const impossible = allGroups.filter(g => !phenoCounts[g]);
+  if(impossible.length === 0) return makeAboQuestion();
+  const correct = impossible[randInt(impossible.length)];
+  return { prompt: `Cross: <b>${p1}</b> × <b>${p2}</b>. Which blood group is <b>NOT</b> possible among the offspring?`, options: shuffle(allGroups.slice()), correct };
+}
+function makeDisorderQuestion(){
+  const d = DISORDERS[randInt(DISORDERS.length)];
+  const others = DISORDERS.filter(x => x!==d).map(x => x.name);
+  return { prompt: `Karyotype <b>${d.karyotype}</b> corresponds to which disorder?`, options: shuffle([d.name].concat(others)), correct: d.name };
+}
+function makeSexLinkedQuestion(){
+  const trait = SL_TRAITS[randInt(SL_TRAITS.length)];
+  const letter = trait.letter;
+  function momOptions(l){ const up='X'+l.toUpperCase(), lo='X'+l.toLowerCase(); return [up+up, up+lo, lo+lo]; }
+  function dadOptions(l){ const up='X'+l.toUpperCase(), lo='X'+l.toLowerCase(); return [up+'Y', lo+'Y']; }
+  const momOpts = momOptions(letter), dadOpts = dadOptions(letter);
+  const momGeno = momOpts[randInt(momOpts.length)], dadGeno = dadOpts[randInt(dadOpts.length)];
+  function genoToGametes(g){ return g.length===4 ? [g.slice(0,2), g.slice(2,4)] : [g.slice(0,2), g.slice(2,3)]; }
+  const momGametes = genoToGametes(momGeno), dadGametes = genoToGametes(dadGeno);
+  const upperX = 'X'+letter.toUpperCase();
+  function combine(fg,mg){ if(mg==='Y') return {genotype:fg+'Y', sex:'Son'}; const pair=[fg,mg].sort((a,b)=>(a===upperX?0:1)-(b===upperX?0:1)); return {genotype:pair.join(''), sex:'Daughter'}; }
+  function phenoLabel(genotype, sex){
+    const lowerX = 'X'+letter.toLowerCase();
+    if(sex==='Son') return (genotype.indexOf(upperX)===0 ? trait.dom : trait.rec) + ' (son)';
+    if(genotype===upperX+upperX) return trait.dom+' (daughter)';
+    if(genotype===upperX+lowerX) return 'Carrier (daughter)';
+    return trait.rec+' (daughter)';
+  }
+  const labels = [];
+  momGametes.forEach(m => dadGametes.forEach(d => { const c = combine(m,d); labels.push(phenoLabel(c.genotype, c.sex)); }));
+  const counts = tally(labels);
+  const correctLabel = Object.keys(counts).join(' : ')+' = '+ratioString(counts);
+  const distractorPool = ['All sons affected, all daughters normal', 'All offspring normal', '1 : 1 : 1 : 1 across all four categories', 'Only daughters affected'];
+  const distractors = shuffle(distractorPool).filter(d => d!==correctLabel).slice(0,3);
+  return { prompt: `Cross: mother <b>${momGeno}</b> × father <b>${dadGeno}</b> for ${trait.dom} / ${trait.rec} (X${letter.toUpperCase()}/X${letter.toLowerCase()}). What is the phenotypic ratio among the offspring?`, options: shuffle([correctLabel].concat(distractors)), correct: correctLabel };
+}
+function makeMendelianQuestion(){
+  const d = MENDELIAN_DISORDERS[randInt(MENDELIAN_DISORDERS.length)];
+  const others = shuffle(MENDELIAN_DISORDERS.filter(x => x!==d).map(x => x.name)).slice(0,3);
+  return { prompt: `Which disorder shows this inheritance pattern and cause: <b>${d.inheritance}</b> — ${d.cause}`, options: shuffle([d.name].concat(others)), correct: d.name };
+}
+function makePedigreeQuestion(){
+  const preset = PEDIGREE_PRESETS[randInt(PEDIGREE_PRESETS.length)];
+  return { prompt: `Study this pedigree, then identify the mode of inheritance:<div class="my-3">${buildPedigreeSVG(preset)}</div>`, options: shuffle(PEDIGREE_PATTERNS.slice()), correct: preset.correct };
+}
+function makeInheritanceQuestion(){
+  const item = INHERITANCE_PATTERNS_REF[randInt(INHERITANCE_PATTERNS_REF.length)];
+  const firstExample = item.examples.split(',')[0].replace(/\.$/,'').trim();
+  const others = shuffle(INHERITANCE_PATTERNS_REF.filter(x => x!==item).map(x => x.name)).slice(0,3);
+  return { prompt: `Which inheritance pattern does this example belong to: <b>${firstExample}</b>?`, options: shuffle([item.name].concat(others)), correct: item.name };
+}
+const BEE_QUESTIONS = [
+  { prompt: 'A honey bee egg is <b>fertilised</b>. What does it develop into?', correct: 'A diploid (2n = 32) female — a worker, or a queen if fed royal jelly', distractors: ['A haploid (n = 16) male — a drone', 'A diploid (2n = 32) male', 'A haploid (n = 16) female'] },
+  { prompt: 'A honey bee egg is left <b>unfertilised</b>. What does it develop into, and by what process?', correct: 'A haploid (n = 16) male (drone), by parthenogenesis', distractors: ['A diploid (2n = 32) female, by fertilisation', 'A haploid (n = 16) female, by meiosis', 'A diploid (2n = 32) male, by mitosis'] },
+  { prompt: 'How does a haploid honey bee drone produce sperm?', correct: 'By mitosis, not meiosis', distractors: ['By meiosis, just like other male animals', 'By parthenogenesis', 'Drones cannot produce sperm'] },
+  { prompt: 'A honey bee drone has no father, yet he can have grandsons. Why?', correct: 'He develops from an unfertilised egg (so no father), but his daughters (diploid, from fertilised eggs) can go on to have sons of their own — his grandsons', distractors: ['Because drones are sterile and never have any offspring', 'Because drones always mate with their own mother', 'Because his grandsons also hatch directly from eggs he lays himself'] }
+];
+function makeHoneybeeQuestion(){
+  const q = BEE_QUESTIONS[randInt(BEE_QUESTIONS.length)];
+  return { prompt: q.prompt, options: shuffle([q.correct].concat(q.distractors)), correct: q.correct };
+}
+function makePleiotropyQuestion(){
+  const d = PLEIOTROPY_EXAMPLES[randInt(PLEIOTROPY_EXAMPLES.length)];
+  const others = shuffle(PLEIOTROPY_EXAMPLES.filter(x => x!==d).map(x => x.name)).slice(0,3);
+  return { prompt: `A single gene produces these multiple, seemingly unrelated effects: <b>${d.effects}</b> Which example of pleiotropy is this?`, options: shuffle([d.name].concat(others)), correct: d.name };
+}
+const PQ_GENERATORS = [makeMonoQuestion, makeDiQuestion, makeIncQuestion, makeCodQuestion, makeAboQuestion, makeDisorderQuestion, makeSexLinkedQuestion, makeMendelianQuestion, makePedigreeQuestion, makeInheritanceQuestion, makeHoneybeeQuestion, makePleiotropyQuestion];
+
+function template_practice(){
+  return `
+  <div class="space-y-4 text-sm sm:text-base max-w-xl mx-auto">
+    <div class="flex items-center justify-between">
+      <div class="text-xs sm:text-sm font-semibold">Score: <b id="pqScoreEl" class="text-indigo-600 dark:text-indigo-400">0 / 0</b></div>
+      <button id="pqNextBtn" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 transition">Next question →</button>
+    </div>
+    <div id="pqQuestionEl"></div>
+  </div>`;
+}
+function afterRender_practice(){
+  const qEl = document.getElementById('pqQuestionEl');
+  const scoreEl = document.getElementById('pqScoreEl');
+  function renderQuestion(){
+    if(!pqCurrentQ) pqCurrentQ = PQ_GENERATORS[randInt(PQ_GENERATORS.length)]();
+    let html = `<div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm leading-relaxed mb-3">${pqCurrentQ.prompt}</div>`;
+    html += `<div class="space-y-2">`;
+    pqCurrentQ.options.forEach((opt,i) => {
+      html += `<button type="button" class="pq-opt w-full text-left px-3 py-2 rounded-lg border-2 border-slate-300 dark:border-slate-700 text-xs sm:text-sm font-medium hover:border-indigo-400" data-i="${i}">${opt}</button>`;
+    });
+    html += `</div>`;
+    qEl.innerHTML = html;
+    qEl.querySelectorAll('.pq-opt').forEach(btn => btn.addEventListener('click', () => {
+      const chosen = pqCurrentQ.options[+btn.dataset.i];
+      const correct = chosen === pqCurrentQ.correct;
+      pqTotal++; if(correct) pqScore++;
+      scoreEl.innerText = `${pqScore} / ${pqTotal}`;
+      qEl.querySelectorAll('.pq-opt').forEach(b => {
+        b.disabled = true;
+        if(b.textContent === pqCurrentQ.correct) b.className = 'pq-opt w-full text-left px-3 py-2 rounded-lg border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 text-xs sm:text-sm font-medium';
+        else if(b===btn && !correct) b.className = 'pq-opt w-full text-left px-3 py-2 rounded-lg border-2 border-rose-500 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 text-xs sm:text-sm font-medium';
+      });
+    }));
+  }
+  document.getElementById('pqNextBtn').addEventListener('click', () => { pqCurrentQ = null; renderQuestion(); });
+  scoreEl.innerText = `${pqScore} / ${pqTotal}`;
+  renderQuestion();
+}
+
+/* =========================================================================
+   BOOT
+   ========================================================================= */
+render();
+</script>
+</body>
+</html>
