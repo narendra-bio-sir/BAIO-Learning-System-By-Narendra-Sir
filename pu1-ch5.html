@@ -2964,7 +2964,6 @@ function premToggleCodeVisibility(){
 window.premToggleCodeVisibility = premToggleCodeVisibility;
 
 function injectDemoAccessBanner(){
-  if(PREMIUM_LOCKED_TABS.indexOf(currentTab) === -1) return;
   const u = getPremiumUnlock();
   if(!u || u.method !== 'demo') return;
   const hrsLeft = Math.max(0, Math.ceil((PREMIUM_DEMO_DURATION_MS - (Date.now() - u.ts)) / 3600000));
@@ -2972,7 +2971,7 @@ function injectDemoAccessBanner(){
   if(!contentEl) return;
   const banner = document.createElement('div');
   banner.className = 'demo-access-banner';
-  banner.innerHTML = `⏳ <b>Demo access</b> — this Premium content is unlocked for trial and expires in ${hrsLeft}h.`;
+  banner.innerHTML = `⏳ <b>Demo access</b> — Premium content on this chapter is unlocked for trial and expires in ${hrsLeft}h.`;
   contentEl.insertBefore(banner, contentEl.firstChild);
 }
 function renderContent(){
