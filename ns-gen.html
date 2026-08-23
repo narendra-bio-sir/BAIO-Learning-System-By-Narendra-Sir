@@ -446,6 +446,7 @@ function renderQuickRefTable(){
    Every chapter shares the same Premium code and the same Handwritten Notes code, so there is just
    one master row of each rather than a per-chapter breakdown. */
 const PREMIUM_MASTER_CODE = 'NS-PREMIUM-2026';
+const PREMIUM_DEMO_CODE = 'NS-DEMO-2026';
 const HANDWRITTEN_MASTER_CODE = 'NS-MASTER-2026';
 const ANALYTICS_MASTER_CODE = 'BAIO-NS-2026-R4T9';
 function renderRealMasterTable(){
@@ -453,6 +454,7 @@ function renderRealMasterTable(){
   if(!wrap) return;
   let html = '<div class="table-wrap"><table><tr><th>Master Code</th><th>Code</th></tr>';
   html += '<tr><td>Master Premium Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks Premium content on every chapter</div></td><td class="code-cell">' + codeHtml(PREMIUM_MASTER_CODE) + '</td></tr>';
+  html += '<tr><td>Demo Premium Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks Premium content on every chapter for 48 hours from the moment a student enters it, then auto-expires on that device. Hand this out for trials — same code works for everyone, each student gets their own 48-hour window from first use.</div></td><td class="code-cell">' + codeHtml(PREMIUM_DEMO_CODE) + '</td></tr>';
   html += '<tr><td>Master Handwritten Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks Handwritten Notes on every chapter</div></td><td class="code-cell">' + codeHtml(HANDWRITTEN_MASTER_CODE) + '</td></tr>';
   html += '<tr><td>Master Performance Analysis Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks class-wide analytics (bypasses per-student login)</div></td><td class="code-cell">' + codeHtml(ANALYTICS_MASTER_CODE) + '</td></tr>';
   html += '</table></div>';

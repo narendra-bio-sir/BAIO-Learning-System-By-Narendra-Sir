@@ -2829,6 +2829,8 @@ window.pgToggleKey = pgToggleKey;
    'CH5-PREMIUM') still work for unlocking. */
 const PREMIUM_KEY = 'pu1ch5_premium_unlock';
 const PREMIUM_MASTER_CODE = 'NS-PREMIUM-2026';
+const PREMIUM_DEMO_CODE = 'NS-DEMO-2026';
+const PREMIUM_DEMO_DURATION_MS = 2 * 24 * 60 * 60 * 1000;
 const PREMIUM_UNLOCK_LOOKUP = {};
 const PREMIUM_PRICE_RUPEES = 1999;
 const PREMIUM_PRICE_ORIGINAL = 3000;
@@ -2840,11 +2842,24 @@ function getPremiumUnlock(){ try{ return JSON.parse(localStorage.getItem(PREMIUM
 function setPremiumUnlock(method, extra){
   try{ localStorage.setItem(PREMIUM_KEY, JSON.stringify(Object.assign({unlocked:true, method:method, ts:Date.now()}, extra||{}))); }catch(e){}
 }
-function premiumQualifies(){ const u = getPremiumUnlock(); return !!(u && u.unlocked); }
+function premiumQualifies(){
+  const u = getPremiumUnlock();
+  if(!u || !u.unlocked) return false;
+  if(u.method === 'demo' && (!u.ts || (Date.now() - u.ts) > PREMIUM_DEMO_DURATION_MS)){
+    try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){}
+    return false;
+  }
+  return true;
+}
 function reLockPremium(){ try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){} renderContent(); renderTabbar(); }
 window.reLockPremium = reLockPremium;
 function premiumStatusRow(){
+  const u = getPremiumUnlock();
   if(premiumQualifies()){
+    if(u && u.method === 'demo'){
+      const hrsLeft = Math.max(0, Math.ceil((PREMIUM_DEMO_DURATION_MS - (Date.now() - u.ts)) / 3600000));
+      return `<div class="dl-row"><div class="dl-info"><div class="t">🔓 Premium Content (Demo)</div><div class="d">Unlocked on this device — ${Object.values(PREMIUM_TAB_LABELS).join(', ')} · expires in ${hrsLeft}h</div></div></div><div style="text-align:right;margin:-6px 0 10px;"><a href="#" onclick="reLockPremium(); return false;" style="font-size:11px;color:var(--ink-dim);text-decoration:underline;cursor:pointer;">Re-lock Premium on this device</a></div>`;
+    }
     return `<div class="dl-row"><div class="dl-info"><div class="t">🔓 Premium Content</div><div class="d">Unlocked on this device — ${Object.values(PREMIUM_TAB_LABELS).join(', ')}</div></div></div><div style="text-align:right;margin:-6px 0 10px;"><a href="#" onclick="reLockPremium(); return false;" style="font-size:11px;color:var(--ink-dim);text-decoration:underline;cursor:pointer;">Re-lock Premium on this device</a></div>`;
   }
   return `<div class="dl-row"><div class="dl-info"><div class="t">🔒 Premium Content</div><div class="d">Not yet unlocked — visit any premium tab (${Object.values(PREMIUM_TAB_LABELS).join(', ')}) to unlock</div></div></div>`;
@@ -2879,6 +2894,7 @@ function premiumSubmitUnlock(){
   const msgEl = document.getElementById('premUnlockMsg');
   if(!code){ msgEl.textContent = 'Please enter an unlock code.'; msgEl.className='hw-msg bad'; return; }
   if(code === PREMIUM_MASTER_CODE.toUpperCase()){ setPremiumUnlock('master', {roll:roll||'master-access'}); renderContent(); renderTabbar(); return; }
+  if(code === PREMIUM_DEMO_CODE.toUpperCase()){ setPremiumUnlock('demo', {roll:roll||'demo-access'}); renderContent(); renderTabbar(); return; }
   if(!roll || !section){ msgEl.textContent = 'Please fill in section and roll number (or use the master code alone).'; msgEl.className='hw-msg bad'; return; }
   const key = premiumUnlockKey(section, roll);
   const entry = PREMIUM_UNLOCK_LOOKUP[key];
