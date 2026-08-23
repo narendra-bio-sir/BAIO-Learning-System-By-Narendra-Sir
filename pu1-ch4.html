@@ -2503,8 +2503,8 @@ const PREMIUM_UNLOCK_LOOKUP = {};
 const PREMIUM_PRICE_RUPEES = 1999;
 const PREMIUM_PRICE_ORIGINAL = 3000;
 const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/uRI9JGg';
-const PREMIUM_LOCKED_TABS = ['mcq','neet','kcet','papergen','boardimp'];
-const PREMIUM_TAB_LABELS = {mcq:'MCQ Quiz', neet:'NEET Practice', kcet:'KCET Practice', papergen:'Paper Generator', boardimp:'Board Important'};
+const PREMIUM_LOCKED_TABS = ['mindmap','mcq','neet','kcet','papergen','boardimp'];
+const PREMIUM_TAB_LABELS = {mindmap:'Mind Map', mcq:'MCQ Quiz', neet:'NEET Practice', kcet:'KCET Practice', papergen:'Paper Generator', boardimp:'Board Important'};
 
 function getPremiumUnlock(){ try{ return JSON.parse(localStorage.getItem(PREMIUM_KEY) || 'null'); }catch(e){ return null; } }
 function setPremiumUnlock(method, extra){
@@ -2590,7 +2590,7 @@ function renderPremiumLock(tabId){
     <div style="text-align:center;margin-bottom:14px;">
       <div style="font-size:38px;">🔒</div>
       <h3 style="color:var(--gold);margin:6px 0 2px;font-size:17px;">${label} is Premium Content</h3>
-      <div style="color:var(--ink-dim);font-size:12px;">Part of the Premium bundle: MCQ Quiz, NEET Practice, KCET Practice, Paper Generator &amp; Board Important</div>
+      <div style="color:var(--ink-dim);font-size:12px;">Part of the Premium bundle: Mind Map, MCQ Quiz, NEET Practice, KCET Practice, Paper Generator &amp; Board Important</div>
     </div>
     <div style="text-align:center;margin-bottom:16px;">
       <span style="text-decoration:line-through;color:var(--ink-dim);font-size:14px;">₹${PREMIUM_PRICE_ORIGINAL}</span>
@@ -2838,11 +2838,97 @@ function renderBadgesCard(){
 
 /* ---- Mind Map ---- */
 function renderMindmap(){
-  document.getElementById('content').innerHTML = `<div class="setup-card" style="text-align:center;padding:44px 20px;">
-    <div style="font-size:42px;margin-bottom:12px;">🧠</div>
-    <h3 style="color:var(--gold);margin-bottom:8px;">Mind Map</h3>
-    <div style="color:var(--ink-dim);font-size:13px;line-height:1.65;max-width:400px;margin:0 auto;">A visual mind map for Animal Kingdom is coming soon. In the meantime, Tree Explorer and Compare Matrix cover the same phylum-by-phylum relationships.</div>
+  const html = `<div class="dl-topic-block"><div class="dl-section-title">Animal Kingdom &ndash; Mind Map</div>
+    <div style="color:var(--ink-dim);font-size:12px;margin:6px 0 10px;">One-page visual overview of the whole chapter &middot; scroll or drag to pan, hold Ctrl and scroll (or press +/&minus;) to zoom, arrow keys to pan when focused, pinch to zoom on touch</div>
+    <div class="board-page-wrap" id="mmWrap"><img id="mmImg" src="pu1-ch4-assets/mindmap.jpg" alt="Animal Kingdom Mind Map" onload="this.classList.add('loaded')"></div>
+    <div class="dl-row" style="margin-top:12px;">
+      <div class="dl-info">
+        <div class="t">Download Mind Map (image)</div>
+        <div class="d">Full resolution &middot; JPG</div>
+      </div>
+      <div class="dl-btns"><button class="dl-btn dl" id="mmDownloadBtn">Download</button></div>
+    </div>
   </div>`;
+  document.getElementById('content').innerHTML = html;
+  setTimeout(function(){
+    function attachPinchZoomScroll(wrapEl, imgEl){
+      let startDist = 0, startWidth = 100;
+      function dist(t){ return Math.hypot(t[0].clientX-t[1].clientX, t[0].clientY-t[1].clientY); }
+      function currentWidthPct(){
+        const m = /([\d.]+)%/.exec(imgEl.style.width);
+        return m ? parseFloat(m[1]) : 100;
+      }
+      function setWidthPct(pct){ imgEl.style.width = Math.min(Math.max(pct, 100), 400) + '%'; }
+      wrapEl.addEventListener('touchstart', (e)=>{
+        if(e.touches.length===2){ startDist = dist(e.touches); startWidth = currentWidthPct(); }
+      }, {passive:true});
+      wrapEl.addEventListener('touchmove', (e)=>{
+        if(e.touches.length===2){
+          e.preventDefault();
+          setWidthPct(startWidth*(dist(e.touches)/startDist));
+        }
+      }, {passive:false});
+      wrapEl.addEventListener('wheel', (e)=>{
+        if(!(e.ctrlKey || e.metaKey)) return;
+        e.preventDefault();
+        setWidthPct(currentWidthPct() + (e.deltaY < 0 ? 15 : -15));
+      }, {passive:false});
+      let dragging = false, dragMoved = false, dragStartX = 0, dragStartY = 0, startScrollL = 0, startScrollT = 0;
+      wrapEl.addEventListener('pointerdown', (e)=>{
+        if(e.pointerType !== 'mouse' || e.button !== 0) return;
+        dragging = true; dragMoved = false;
+        dragStartX = e.clientX; dragStartY = e.clientY;
+        startScrollL = wrapEl.scrollLeft; startScrollT = wrapEl.scrollTop;
+        wrapEl.classList.add('dragging');
+        wrapEl.setPointerCapture(e.pointerId);
+      });
+      wrapEl.addEventListener('pointermove', (e)=>{
+        if(!dragging) return;
+        const dx = e.clientX - dragStartX, dy = e.clientY - dragStartY;
+        if(Math.abs(dx) > 3 || Math.abs(dy) > 3) dragMoved = true;
+        wrapEl.scrollLeft = startScrollL - dx;
+        wrapEl.scrollTop = startScrollT - dy;
+      });
+      function endDrag(){ if(dragging){ dragging = false; wrapEl.classList.remove('dragging'); } }
+      wrapEl.addEventListener('pointerup', endDrag);
+      wrapEl.addEventListener('pointercancel', endDrag);
+      wrapEl.setAttribute('tabindex', '0');
+      wrapEl.addEventListener('keydown', (e)=>{
+        const step = 60;
+        if(e.key === 'ArrowUp'){ wrapEl.scrollTop -= step; e.preventDefault(); }
+        else if(e.key === 'ArrowDown'){ wrapEl.scrollTop += step; e.preventDefault(); }
+        else if(e.key === 'ArrowLeft'){ wrapEl.scrollLeft -= step; e.preventDefault(); }
+        else if(e.key === 'ArrowRight'){ wrapEl.scrollLeft += step; e.preventDefault(); }
+        else if(e.key === '+' || e.key === '='){ setWidthPct(currentWidthPct()+20); e.preventDefault(); }
+        else if(e.key === '-' || e.key === '_'){ setWidthPct(currentWidthPct()-20); e.preventDefault(); }
+        else if(e.key === '0'){ setWidthPct(100); e.preventDefault(); }
+      });
+      imgEl.addEventListener('click', ()=>{
+        if(dragMoved) return;
+        if(document.fullscreenElement === wrapEl || document.webkitFullscreenElement === wrapEl){
+          if(document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+          else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+        } else {
+          if(wrapEl.requestFullscreen) wrapEl.requestFullscreen().catch(()=>{});
+          else if(wrapEl.webkitRequestFullscreen) wrapEl.webkitRequestFullscreen();
+        }
+      });
+    }
+    const wrap = document.getElementById('mmWrap');
+    const img = document.getElementById('mmImg');
+    if(wrap && img) attachPinchZoomScroll(wrap, img);
+    const dlBtn = document.getElementById('mmDownloadBtn');
+    if(dlBtn){
+      dlBtn.addEventListener('click', ()=>{
+        const a = document.createElement('a');
+        a.href = img.src; a.download = 'Ch4_Animal_Kingdom_Mind_Map.jpg';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        const orig = dlBtn.textContent;
+        dlBtn.textContent = 'Downloaded ✓';
+        setTimeout(()=>{ dlBtn.textContent = orig; }, 2200);
+      });
+    }
+  }, 50);
 }
 
 /* ---- Tree Explorer ---- */
