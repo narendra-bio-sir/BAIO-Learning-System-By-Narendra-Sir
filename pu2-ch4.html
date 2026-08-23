@@ -1062,7 +1062,14 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
           setTimeout(function(){ ctx.close(); }, 1200);
         }
         if(ctx.state === 'suspended'){
-          var unlock = function(){ ctx.resume().then(ding); };
+          var unlocked = false;
+          var unlock = function(){
+            if(unlocked) return;
+            unlocked = true;
+            document.removeEventListener('pointerdown', unlock);
+            document.removeEventListener('keydown', unlock);
+            ctx.resume().then(ding);
+          };
           document.addEventListener('pointerdown', unlock, { once: true });
           document.addEventListener('keydown', unlock, { once: true });
         } else {
@@ -8957,7 +8964,46 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
       correct: item.name
     };
   }
-  var PQ_GENERATORS = [makeMonoQuestion, makeDiQuestion, makeIncQuestion, makeCodQuestion, makeAboQuestion, makeDisorderQuestion, makeSexLinkedQuestion, makeMendelianQuestion, makePedigreeQuestion, makeInheritanceQuestion];
+  var BEE_QUESTIONS = [
+    {
+      prompt: 'A honey bee egg is <b>fertilised</b>. What does it develop into?',
+      correct: 'A diploid (2n = 32) female — a worker, or a queen if fed royal jelly',
+      distractors: ['A haploid (n = 16) male — a drone', 'A diploid (2n = 32) male', 'A haploid (n = 16) female']
+    },
+    {
+      prompt: 'A honey bee egg is left <b>unfertilised</b>. What does it develop into, and by what process?',
+      correct: 'A haploid (n = 16) male (drone), by parthenogenesis',
+      distractors: ['A diploid (2n = 32) female, by fertilisation', 'A haploid (n = 16) female, by meiosis', 'A diploid (2n = 32) male, by mitosis']
+    },
+    {
+      prompt: 'How does a haploid honey bee drone produce sperm?',
+      correct: 'By mitosis, not meiosis',
+      distractors: ['By meiosis, just like other male animals', 'By parthenogenesis', 'Drones cannot produce sperm']
+    },
+    {
+      prompt: 'A honey bee drone has no father, yet he can have grandsons. Why?',
+      correct: 'He develops from an unfertilised egg (so no father), but his daughters (diploid, from fertilised eggs) can go on to have sons of their own — his grandsons',
+      distractors: ['Because drones are sterile and never have any offspring', 'Because drones always mate with their own mother', 'Because his grandsons also hatch directly from eggs he lays himself']
+    }
+  ];
+  function makeHoneybeeQuestion(){
+    var q = BEE_QUESTIONS[randInt(BEE_QUESTIONS.length)];
+    return {
+      prompt: q.prompt,
+      options: shuffle([q.correct].concat(q.distractors)),
+      correct: q.correct
+    };
+  }
+  function makePleiotropyQuestion(){
+    var d = PLEIOTROPY_EXAMPLES[randInt(PLEIOTROPY_EXAMPLES.length)];
+    var others = shuffle(PLEIOTROPY_EXAMPLES.filter(function(x){ return x!==d; }).map(function(x){ return x.name; })).slice(0,3);
+    return {
+      prompt: 'A single gene produces these multiple, seemingly unrelated effects: <b>'+d.effects+'</b> Which example of pleiotropy is this?',
+      options: shuffle([d.name].concat(others)),
+      correct: d.name
+    };
+  }
+  var PQ_GENERATORS = [makeMonoQuestion, makeDiQuestion, makeIncQuestion, makeCodQuestion, makeAboQuestion, makeDisorderQuestion, makeSexLinkedQuestion, makeMendelianQuestion, makePedigreeQuestion, makeInheritanceQuestion, makeHoneybeeQuestion, makePleiotropyQuestion];
 
   function renderPracticeQuestion(){
     if(!pqQuestionEl || !pqCurrentQ) return;
