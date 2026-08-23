@@ -6178,14 +6178,13 @@ function applyPremiumGates(){
     if(!overlay) return;
     if(unlocked){ overlay.classList.remove('show'); overlay.innerHTML = ''; premiumToggleSiblings(tabId, false); }
     else { renderPremiumLockScreenCh2(tabId); premiumToggleSiblings(tabId, true); }
-    const panel = document.getElementById('panel-' + tabId);
-    if(panel){
-      let banner = panel.querySelector('.demo-access-banner');
-      if(isDemo){
-        if(!banner){ banner = document.createElement('div'); banner.className = 'demo-access-banner'; panel.insertBefore(banner, panel.firstChild); }
-        banner.innerHTML = '⏳ <b>Demo access</b> — this Premium content is unlocked for trial and expires in ' + hrsLeft + 'h.';
-      } else if(banner){ banner.remove(); }
-    }
+  });
+  document.querySelectorAll('.panel').forEach(function(panel){
+    let banner = panel.querySelector('.demo-access-banner');
+    if(isDemo){
+      if(!banner){ banner = document.createElement('div'); banner.className = 'demo-access-banner'; panel.insertBefore(banner, panel.firstChild); }
+      banner.innerHTML = '⏳ <b>Demo access</b> — Premium content on this chapter is unlocked for trial and expires in ' + hrsLeft + 'h.';
+    } else if(banner){ banner.remove(); }
   });
   document.querySelectorAll('.tab-btn').forEach(function(btn){
     const tabId = btn.dataset.tab;
