@@ -200,16 +200,15 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .study-block i{color:var(--teal-2); font-style:italic;}
 .arrow{color:var(--teal); font-weight:700;}
 .cmp-scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; margin:10px 0 16px; position:relative;}
-table.cmp{width:100%; min-width:560px; border-collapse:collapse; margin:0; font-size:12px;}
-table.cmp th,table.cmp td{border:1px solid var(--border); padding:6px 8px; text-align:left;}
+table.cmp{width:100%; table-layout:fixed; border-collapse:collapse; margin:0; font-size:12px;}
+table.cmp th,table.cmp td{border:1px solid var(--border); padding:6px 4px; text-align:left; word-break:break-word; overflow-wrap:break-word;}
 table.cmp th{background:rgba(227,175,67,0.12); color:var(--gold-2);}
 table.cmp td{color:var(--text-dim);}
-table.cmp th:first-child,table.cmp td:first-child{
-  position:sticky; left:0; z-index:2;
-  background:var(--panel); color:var(--text);
-  box-shadow:2px 0 4px rgba(0,0,0,0.15);
-}
 table.cmp th:first-child{color:var(--gold-2); font-weight:700;}
+@media (max-width:420px){
+  table.cmp{font-size:11px;}
+  table.cmp th,table.cmp td{padding:5px 3px;}
+}
 .recap-strip{margin-top:6px;}
 .subhead{color:var(--teal-2); font-size:12.5px; font-weight:700; margin:10px 0 4px; text-transform:uppercase; letter-spacing:1px;}
 .kw-panel{margin-top:12px;border:1px solid rgba(227,175,67,0.35);border-radius:12px;background:linear-gradient(160deg,rgba(227,175,67,0.10),rgba(227,175,67,0.03));padding:12px 13px;}
