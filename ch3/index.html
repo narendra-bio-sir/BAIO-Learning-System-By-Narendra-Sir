@@ -1637,13 +1637,14 @@ function buildReportCardHtml(r){
       Narendra Sir &ndash; Lecturer in Biology<br>
       <div style="margin-top:4px;">📱 <a href="https://wa.me/919008968389" target="_blank" rel="noopener" style="color:${teal}; text-decoration:none;">9008968389</a> &nbsp;&middot;&nbsp; ✉️ <a href="mailto:bioguru102@gmail.com" style="color:${teal}; text-decoration:none;">bioguru102@gmail.com</a></div>
       <div style="margin-top:4px;">WhatsApp Channel: <a href="https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X" target="_blank" rel="noopener" style="color:${teal}; text-decoration:none;">BioGuru Narendra Sir</a></div>
-      <div>Instagram: <a href="https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw" target="_blank" rel="noopener" style="color:${teal}; text-decoration:none;">@new_gen_bioguru</a></div>
-      <div>YouTube: <a href="https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0" target="_blank" rel="noopener" style="color:${teal}; text-decoration:none;">@biogurunarendrasir</a></div>
-      <div>Telegram: <a href="https://t.me/BAIO_Learning_System" target="_blank" rel="noopener" style="color:${teal}; text-decoration:none;">BAIO Learning System</a></div>
+      <div>Instagram Channel: <a href="https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw" target="_blank" rel="noopener" style="color:${teal}; text-decoration:none;">@new_gen_bioguru</a></div>
+      <div>YouTube Channel: <a href="https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0" target="_blank" rel="noopener" style="color:${teal}; text-decoration:none;">@biogurunarendrasir</a></div>
+      <div>Telegram Channel: <a href="https://t.me/BAIO_Learning_System" target="_blank" rel="noopener" style="color:${teal}; text-decoration:none;">BAIO Learning System</a></div>
     </div>
   </div>`;
 }
-function openShareCard(r){
+async function openShareCard(r){
+  if(document.fullscreenElement){ try{ await document.exitFullscreen(); }catch(e){} }
   lastReportCard = r;
   const modal = document.createElement('div');
   modal.id = 'shareCardModal';
