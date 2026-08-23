@@ -423,6 +423,8 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .dl-btn{padding:7px 11px;border-radius:10px;font-size:11.5px;font-weight:700;border:1px solid var(--line);background:var(--panel2);color:var(--ink);cursor:pointer;white-space:nowrap;}
 .dl-btn.view{border-color:var(--teal);color:var(--teal);}
 .dl-btn.dl{border-color:var(--gold);color:var(--gold);}
+.demo-access-banner{background:linear-gradient(135deg,rgba(212,175,55,0.16),rgba(212,175,55,0.06));border:1px solid var(--gold);border-radius:12px;padding:10px 13px;margin-bottom:12px;font-size:12px;color:var(--ink);line-height:1.5;}
+.demo-access-banner b{color:var(--gold);}
 
 .diagram-ref-label{font-size:10.5px;color:var(--ink-dim);margin:8px 0 6px;text-transform:uppercase;letter-spacing:0.5px;}
 .diagram-ref-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:7px;}
@@ -3999,6 +4001,18 @@ function hwCloseViewer(){
 window.hwViewNotes = hwViewNotes; window.hwCloseViewer = hwCloseViewer;
 
 /* ---------------- ROUTER ---------------- */
+function injectDemoAccessBanner(){
+  if(PREMIUM_LOCKED_TABS.indexOf(currentTab) === -1) return;
+  const u = getPremiumUnlock();
+  if(!u || u.method !== 'demo') return;
+  const hrsLeft = Math.max(0, Math.ceil((PREMIUM_DEMO_DURATION_MS - (Date.now() - u.ts)) / 3600000));
+  const contentEl = document.getElementById('content');
+  if(!contentEl) return;
+  const banner = document.createElement('div');
+  banner.className = 'demo-access-banner';
+  banner.innerHTML = `⏳ <b>Demo access</b> — this Premium content is unlocked for trial and expires in ${hrsLeft}h on this device.`;
+  contentEl.insertBefore(banner, contentEl.firstChild);
+}
 function renderContent(){
   if(PREMIUM_LOCKED_TABS.indexOf(currentTab) !== -1 && !premiumQualifies()){
     renderPremiumLockScreen(currentTab);
@@ -4024,6 +4038,7 @@ function renderContent(){
   else if(currentTab==='downloads') renderDownloads();
   else if(currentTab==='papergen') renderPaperGenSetup();
   else if(currentTab==='mynotes') renderMyNotes();
+  injectDemoAccessBanner();
 }
 
 /* ---------------- MIND MAP ---------------- */
