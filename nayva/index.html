@@ -6,6 +6,12 @@
 <title>Nayva's Little Business</title>
 <meta name="description" content="A playful game that teaches young kids how to earn money by making and selling things, both offline and online.">
 <meta name="theme-color" content="#FFD166">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Nayva Biz">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
 <style>
@@ -229,6 +235,23 @@
 (function(){
   "use strict";
 
+  /* ---------------- Installable app ---------------- */
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('sw.js').catch(function(){});
+    });
+  }
+  var deferredInstallPrompt = null;
+  window.addEventListener('beforeinstallprompt', function(e){
+    e.preventDefault();
+    deferredInstallPrompt = e;
+    if(current.name === 'home') render();
+  });
+  window.addEventListener('appinstalled', function(){
+    deferredInstallPrompt = null;
+    if(current.name === 'home') render();
+  });
+
   /* ---------------- State ---------------- */
   var STORE_KEY = 'nayvaBiz:v1';
   var defaultState = {
@@ -422,7 +445,8 @@
       '<div class="tile" data-go="bank"><span class="emoji">🐷</span>Piggy Bank<div class="sub">₹'+state.coins+' saved</div></div>'+
     '</div>'+
     '<div class="tile" data-go="shop-corner" style="margin-bottom:14px;"><span class="emoji">🎁</span>Sticker Shop<div class="sub">Spend your rupees for fun</div></div>'+
-    (unlockedCert ? '<button class="btn mint" data-go="certificate">See My Award 🏆</button>' : '')+
+    (unlockedCert ? '<button class="btn mint" data-go="certificate">See My Award 🏆</button><div style="height:10px;"></div>' : '')+
+    (deferredInstallPrompt ? '<button class="btn sky no-print" id="installBtn">Add to Home Screen 📲</button>' : '')+
     '<details class="parent-note no-print"><summary>👪 Note for Parents / Teachers</summary>'+
       '<ul>'+
         '<li>Teaches: making a product, cost vs. price vs. profit, saving vs. spending.</li>'+
@@ -703,6 +727,16 @@
           state = Object.assign({}, defaultState, { name:name });
           save(); go('home');
         }
+      });
+      var installBtn = document.getElementById('installBtn');
+      if(installBtn) installBtn.addEventListener('click', function(){
+        if(!deferredInstallPrompt) return;
+        sfxTap();
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.finally(function(){
+          deferredInstallPrompt = null;
+          render();
+        });
       });
       speak('Hi '+state.name+'! What do you want to do today?');
     }
