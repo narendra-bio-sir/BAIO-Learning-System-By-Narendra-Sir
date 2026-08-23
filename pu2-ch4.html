@@ -5955,6 +5955,8 @@ window.hwSubmitUnlock = hwSubmitUnlock;
 const PREMIUM_KEY = 'pu2ch4_premium_unlock';
 const PREMIUM_SCORE_THRESHOLD = 330;
 const PREMIUM_MASTER_CODE = 'NS-PREMIUM-2026';
+const PREMIUM_DEMO_CODE = 'BAIO-DEMO-2026';
+const PREMIUM_DEMO_DURATION_MS = 2 * 24 * 60 * 60 * 1000;
 const PREMIUM_PRICE_RUPEES = 1999;
 const PREMIUM_PRICE_ORIGINAL = 3000;
 const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/ncmBEYAw';
@@ -5969,7 +5971,12 @@ function setPremiumUnlock(method, extra){
 }
 function premiumQualifies(){
   const u = getPremiumUnlock();
-  return !!(u && u.unlocked);
+  if(!u || !u.unlocked) return false;
+  if(u.method === 'demo' && (!u.ts || (Date.now() - u.ts) > PREMIUM_DEMO_DURATION_MS)){
+    try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){}
+    return false;
+  }
+  return true;
 }
 function reLockPremium(){
   try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){}
@@ -5979,7 +5986,14 @@ function reLockPremium(){
 }
 window.reLockPremium = reLockPremium;
 function premiumStatusRowCh2(){
+  const u = getPremiumUnlock();
   if(premiumQualifies()){
+    if(u && u.method === 'demo'){
+      const hrsLeft = Math.max(0, Math.ceil((PREMIUM_DEMO_DURATION_MS - (Date.now() - u.ts)) / 3600000));
+      return '<div class="dl-row"><div class="dl-info"><div class="dl-title">\uD83D\uDD13 Premium Content (Demo)</div>'
+        + '<div class="dl-sub">Unlocked on this device \u2014 Mind Map, Class Presentation, MCQ Quiz, NEET Practice &amp; Paper Generator &middot; expires in ' + hrsLeft + 'h</div></div></div>'
+        + '<div style="text-align:right; margin:-6px 0 10px;"><a href="#" onclick="reLockPremium(); return false;" style="font-size:11px; color:var(--text-dim); text-decoration:underline; cursor:pointer;">Re-lock Premium on this device</a></div>';
+    }
     return '<div class="dl-row"><div class="dl-info"><div class="dl-title">\uD83D\uDD13 Premium Content</div>'
       + '<div class="dl-sub">Unlocked on this device \u2014 Mind Map, Class Presentation, MCQ Quiz, NEET Practice &amp; Paper Generator</div></div></div>'
       + '<div style="text-align:right; margin:-6px 0 10px;"><a href="#" onclick="reLockPremium(); return false;" style="font-size:11px; color:var(--text-dim); text-decoration:underline; cursor:pointer;">Re-lock Premium on this device</a></div>';
@@ -6024,7 +6038,13 @@ function premiumSubmitUnlock(tabId){
     setPremiumUnlock('master', {roll:roll || 'master-access'});
     applyPremiumGates();
     return;
-  }  if(!roll || !section){ msgEl.textContent = 'Please fill in section and roll number (or use the master code alone).'; msgEl.className='hw-msg bad'; return; }
+  }
+  if(code === PREMIUM_DEMO_CODE.toUpperCase()){
+    setPremiumUnlock('demo', {roll:roll || 'demo-access'});
+    applyPremiumGates();
+    return;
+  }
+  if(!roll || !section){ msgEl.textContent = 'Please fill in section and roll number (or use the master code alone).'; msgEl.className='hw-msg bad'; return; }
   const key = hwUnlockLookupKey(section, roll);
   const entry = PREMIUM_UNLOCK_LOOKUP[key];
   if(entry && entry.code.toUpperCase() === code){
