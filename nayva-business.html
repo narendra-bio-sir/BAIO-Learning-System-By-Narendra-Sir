@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Nayva's Little Business</title>
+<meta name="description" content="A playful game that teaches young kids how to earn money by making and selling things, both offline and online.">
+<meta name="theme-color" content="#FFD166">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#FFF6E5;
+    --bg2:#FFE8C2;
+    --card:#FFFFFF;
+    --ink:#3A2E23;
+    --ink-soft:#7A6A57;
+    --sun:#FFD166;
+    --coral:#FF7A6B;
+    --mint:#4ECDC4;
+    --grape:#9B7EDE;
+    --leaf:#7BC96F;
+    --sky:#63A7E8;
+    --shadow: 0 10px 24px rgba(120,80,20,0.14);
+    --radius: 26px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    font-family:'Baloo 2','Fredoka','Trebuchet MS',sans-serif;
+    background:
+      radial-gradient(circle at 10% 10%, #FFFBEF 0%, transparent 45%),
+      radial-gradient(circle at 90% 20%, #FFE1E0 0%, transparent 40%),
+      linear-gradient(160deg, var(--bg1), var(--bg2));
+    color:var(--ink);
+    min-height:100%;
+    overscroll-behavior:none;
+    user-select:none;
+  }
+  #app{max-width:560px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom);}
+
+  /* ---------- Top bar ---------- */
+  #topbar{
+    display:flex;align-items:center;gap:10px;
+    padding:12px 14px;
+    position:sticky;top:0;z-index:20;
+    background:rgba(255,246,229,0.9);
+    backdrop-filter:blur(6px);
+  }
+  .tb-btn{
+    width:44px;height:44px;border-radius:16px;border:none;
+    background:var(--card);box-shadow:var(--shadow);
+    font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  }
+  .tb-spacer{flex:1;}
+  .pill{
+    display:flex;align-items:center;gap:6px;
+    background:var(--card);border-radius:20px;padding:8px 14px;box-shadow:var(--shadow);
+    font-weight:800;font-size:16px;
+  }
+  .pill.bounce{animation:pulse .5s ease;}
+  @keyframes pulse{0%{transform:scale(1)}40%{transform:scale(1.25)}100%{transform:scale(1)}}
+
+  /* ---------- Screen ---------- */
+  #screen{flex:1;padding:14px 16px 40px;position:relative;}
+  .screen-enter{animation:fadeUp .35s ease;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+  h1{font-size:26px;margin:6px 0 4px;font-weight:800;}
+  h2{font-size:21px;margin:0 0 8px;font-weight:800;}
+  p{line-height:1.5;color:var(--ink-soft);margin:6px 0;}
+  .center{text-align:center;}
+
+  .card{
+    background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:18px;margin-bottom:14px;
+  }
+
+  .big-emoji{font-size:64px;line-height:1;text-align:center;}
+  .mascot{font-size:56px;display:inline-block;animation:sway 3s ease-in-out infinite;}
+  @keyframes sway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+
+  .btn{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    background:var(--sun);color:var(--ink);border:none;border-radius:20px;
+    font-family:inherit;font-weight:800;font-size:18px;
+    padding:16px 20px;box-shadow:var(--shadow);cursor:pointer;width:100%;
+    transition:transform .12s ease;
+  }
+  .btn:active{transform:scale(0.95);}
+  .btn.coral{background:var(--coral);color:#fff;}
+  .btn.mint{background:var(--mint);color:#fff;}
+  .btn.grape{background:var(--grape);color:#fff;}
+  .btn.sky{background:var(--sky);color:#fff;}
+  .btn.ghost{background:var(--card);box-shadow:none;border:2px solid #EEE1CC;}
+  .btn[disabled]{opacity:.45;pointer-events:none;}
+  .btn-row{display:flex;gap:10px;}
+  .btn-row .btn{flex:1;}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .tile{
+    background:var(--card);border-radius:22px;box-shadow:var(--shadow);
+    padding:18px 10px;text-align:center;cursor:pointer;border:3px solid transparent;
+  }
+  .tile:active{transform:scale(0.96);}
+  .tile .emoji{font-size:40px;display:block;margin-bottom:6px;}
+  .tile.selected{border-color:var(--leaf);}
+  .tile .sub{font-size:12px;color:var(--ink-soft);font-weight:600;}
+
+  .speaker{
+    width:38px;height:38px;border-radius:50%;border:none;background:#FFF3D6;
+    font-size:18px;cursor:pointer;flex:none;
+  }
+  .row{display:flex;align-items:center;gap:10px;}
+
+  progress-bar{display:block;}
+  .progress-track{height:18px;background:#F2E7D3;border-radius:12px;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,0.08);}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--leaf),var(--mint));border-radius:12px;transition:width .35s ease;}
+
+  .coin{font-size:26px;}
+  .coin-price{
+    background:var(--card);border:3px solid #EEE1CC;border-radius:18px;
+    padding:14px 8px;text-align:center;cursor:pointer;font-weight:800;font-size:18px;
+  }
+  .coin-price.selected{border-color:var(--sun);background:#FFF6DE;}
+
+  .customer-box{
+    display:flex;align-items:center;justify-content:center;flex-direction:column;
+    padding:20px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+    margin-bottom:14px;min-height:180px;position:relative;
+  }
+  .speech-bubble{
+    background:#fff;border:2px solid #F0E4CE;border-radius:16px;padding:8px 14px;
+    font-weight:700;margin-top:8px;position:relative;
+  }
+  .customer-emoji{font-size:64px;animation:hop 1s ease-in-out infinite;}
+  @keyframes hop{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+  .fly-coin{
+    position:fixed;font-size:28px;pointer-events:none;z-index:60;
+    animation:flyUp 0.8s ease-out forwards;
+  }
+  @keyframes flyUp{
+    0%{opacity:1;transform:translate(0,0) scale(1);}
+    100%{opacity:0;transform:translate(var(--dx,0px),-140px) scale(1.3);}
+  }
+
+  .confetti{position:fixed;top:-20px;font-size:22px;z-index:70;animation:fall linear forwards;pointer-events:none;}
+  @keyframes fall{to{transform:translateY(110vh) rotate(360deg);opacity:0.9;}}
+
+  .badge{
+    display:inline-block;background:#FFF3D6;color:#946200;font-weight:800;
+    border-radius:14px;padding:4px 10px;font-size:12px;margin-left:6px;
+  }
+
+  .phone-shell{
+    background:#2B2B2B;border-radius:34px;padding:14px 10px;box-shadow:var(--shadow);margin-bottom:14px;
+  }
+  .phone-screen{
+    background:linear-gradient(160deg,#EAF6FF,#F5FFF2);border-radius:22px;padding:16px;min-height:220px;
+  }
+  .order-card{
+    background:#fff;border-radius:16px;padding:12px;margin-bottom:10px;box-shadow:0 4px 10px rgba(0,0,0,0.08);
+    display:flex;align-items:center;gap:10px;
+  }
+  .order-card .emoji{font-size:30px;}
+  .order-card .info{flex:1;font-weight:700;font-size:14px;}
+  .order-card .info small{display:block;color:var(--ink-soft);font-weight:600;}
+
+  .sticker-shelf{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:10px 0;}
+  .sticker-shelf .slot{
+    aspect-ratio:1;background:#FFF3D6;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;
+  }
+  .sticker-shelf .slot.empty{background:#F2E7D3;opacity:.5;}
+
+  .piggy{font-size:100px;text-align:center;animation:breathe 2.4s ease-in-out infinite;}
+  @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+
+  details.parent-note{margin-top:10px;}
+  details.parent-note summary{cursor:pointer;font-weight:800;color:var(--ink-soft);font-size:14px;padding:6px 0;}
+  details.parent-note ul{color:var(--ink-soft);font-size:14px;padding-left:20px;line-height:1.6;}
+
+  .name-input{
+    width:100%;font-size:20px;font-weight:700;text-align:center;padding:14px;border-radius:16px;
+    border:3px solid #EEE1CC;font-family:inherit;background:#fff;color:var(--ink);
+  }
+  .footer-link{background:none;border:none;color:var(--ink-soft);text-decoration:underline;font-size:13px;cursor:pointer;font-family:inherit;}
+
+  .certificate{
+    background:#fffdf6;border:8px double var(--sun);border-radius:18px;padding:26px 18px;text-align:center;
+  }
+  .certificate h1{font-size:22px;}
+  .certificate .name{font-size:28px;font-weight:800;color:var(--coral);margin:10px 0;font-family:'Baloo 2',cursive;}
+  .certificate .seal{font-size:44px;}
+
+  @media print{
+    #topbar,.no-print{display:none !important;}
+    body{background:#fff;}
+    #screen{padding:0;}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <header id="topbar">
+    <button class="tb-btn no-print" id="homeBtn" title="Home">🏠</button>
+    <div class="tb-spacer"></div>
+    <div class="pill" id="stickerPill">🎁 <span id="stickerCount">0</span></div>
+    <div class="pill" id="coinPill">🪙 <span id="coinCount">0</span></div>
+    <button class="tb-btn no-print" id="muteBtn" title="Sound">🔊</button>
+  </header>
+  <main id="screen"></main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- State ---------------- */
+  var STORE_KEY = 'nayvaBiz:v1';
+  var defaultState = {
+    name: 'Nayva',
+    coins: 0,
+    allTimeEarned: 0,
+    stickers: [],
+    muted: false,
+    learnDone: false,
+    offlineRoundsDone: 0,
+    onlineRoundsDone: 0,
+    setupDone: false
+  };
+  var state = load();
+
+  function load(){
+    try{
+      var raw = localStorage.getItem(STORE_KEY);
+      if(!raw) return Object.assign({}, defaultState);
+      var parsed = JSON.parse(raw);
+      return Object.assign({}, defaultState, parsed);
+    }catch(e){ return Object.assign({}, defaultState); }
+  }
+  function save(){
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){}
+  }
+
+  /* ---------------- Speech ---------------- */
+  function speak(text){
+    if(state.muted) return;
+    try{
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(text);
+      u.rate = 0.86; u.pitch = 1.2; u.volume = 1;
+      window.speechSynthesis.speak(u);
+    }catch(e){}
+  }
+
+  /* ---------------- Sound effects (Web Audio) ---------------- */
+  var actx = null;
+  function ctx(){
+    if(!actx){
+      try{ actx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ return null; }
+    }
+    return actx;
+  }
+  function beep(freq, dur, delay, type){
+    if(state.muted) return;
+    var c = ctx(); if(!c) return;
+    var t0 = c.currentTime + (delay||0);
+    var osc = c.createOscillator();
+    var gain = c.createGain();
+    osc.type = type || 'sine';
+    osc.frequency.setValueAtTime(freq, t0);
+    gain.gain.setValueAtTime(0.0001, t0);
+    gain.gain.exponentialRampToValueAtTime(0.18, t0 + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    osc.connect(gain).connect(c.destination);
+    osc.start(t0); osc.stop(t0 + dur + 0.02);
+  }
+  function sfxTap(){ beep(520, .08, 0, 'square'); }
+  function sfxCoin(){ beep(880,.12,0,'triangle'); beep(1180,.14,.08,'triangle'); }
+  function sfxSuccess(){ beep(523,.12,0); beep(659,.12,.1); beep(784,.2,.2); }
+  function sfxWhoosh(){ beep(300,.18,0,'sawtooth'); }
+  function sfxPing(){ beep(1046,.15,0,'sine'); }
+
+  /* ---------------- Effects: coin fly + confetti ---------------- */
+  function flyCoinFrom(el){
+    var rect = el.getBoundingClientRect();
+    var target = document.getElementById('coinPill').getBoundingClientRect();
+    var span = document.createElement('span');
+    span.className = 'fly-coin';
+    span.textContent = '🪙';
+    span.style.left = (rect.left + rect.width/2 - 14) + 'px';
+    span.style.top = (rect.top + rect.height/2 - 14) + 'px';
+    span.style.setProperty('--dx', (target.left - rect.left) + 'px');
+    document.body.appendChild(span);
+    setTimeout(function(){ span.remove(); }, 850);
+    sfxCoin();
+    var pill = document.getElementById('coinPill');
+    pill.classList.remove('bounce'); void pill.offsetWidth; pill.classList.add('bounce');
+  }
+  function confettiBurst(){
+    sfxSuccess();
+    var emojis = ['🎉','✨','🎊','⭐','🪙'];
+    for(var i=0;i<24;i++){
+      (function(i){
+        var s = document.createElement('span');
+        s.className = 'confetti';
+        s.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+        s.style.left = (Math.random()*100) + 'vw';
+        s.style.animationDuration = (1.6 + Math.random()*1.2) + 's';
+        s.style.fontSize = (16 + Math.random()*14) + 'px';
+        document.body.appendChild(s);
+        setTimeout(function(){ s.remove(); }, 3000);
+      })(i);
+    }
+  }
+
+  /* ---------------- Data ---------------- */
+  var PRODUCTS = [
+    { id:'lemonade', name:'Lemonade', emoji:'🍋', verb:'Squeeze', cost:2, taps:5 },
+    { id:'cookies',  name:'Cookies',  emoji:'🍪', verb:'Bake',    cost:3, taps:5 },
+    { id:'bracelet', name:'Bracelet', emoji:'📿', verb:'String',  cost:2, taps:5 },
+    { id:'drawing',  name:'Drawing',  emoji:'🎨', verb:'Draw',    cost:1, taps:5 }
+  ];
+  var CUSTOMERS = ['🧑','👩','👨','👵','👴','🧒','👧‍🦱','🧔'];
+  var ONLINE_NAMES = ['Aarav','Diya','Kabir','Meera','Ishaan','Zara','Vihaan','Anaya'];
+  var STICKERS = [
+    { cost:5,  emoji:'⭐' }, { cost:8,  emoji:'🦄' }, { cost:10, emoji:'🌈' },
+    { cost:12, emoji:'🐝' }, { cost:15, emoji:'🍭' }, { cost:18, emoji:'🦋' },
+    { cost:20, emoji:'🌸' }, { cost:25, emoji:'🐬' }
+  ];
+
+  function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  /* ---------------- Router ---------------- */
+  var screenEl = document.getElementById('screen');
+  var current = { name:'welcome', data:{} };
+
+  function go(name, data){
+    current = { name:name, data:data||{} };
+    render();
+    window.scrollTo(0,0);
+  }
+
+  function render(){
+    updateTopbar();
+    var html = '';
+    switch(current.name){
+      case 'welcome': html = renderWelcome(); break;
+      case 'home': html = renderHome(); break;
+      case 'learn': html = renderLearn(); break;
+      case 'offline-pick': html = renderOfflinePick(); break;
+      case 'offline-make': html = renderOfflineMake(); break;
+      case 'offline-price': html = renderOfflinePrice(); break;
+      case 'offline-sell': html = renderOfflineSell(); break;
+      case 'offline-done': html = renderOfflineDone(); break;
+      case 'online-intro': html = renderOnlineIntro(); break;
+      case 'online-play': html = renderOnlinePlay(); break;
+      case 'online-done': html = renderOnlineDone(); break;
+      case 'bank': html = renderBank(); break;
+      case 'shop-corner': html = renderShopCorner(); break;
+      case 'certificate': html = renderCertificate(); break;
+      default: html = renderHome();
+    }
+    screenEl.innerHTML = '<div class="screen-enter">'+html+'</div>';
+    bindScreenEvents();
+  }
+
+  function updateTopbar(){
+    document.getElementById('coinCount').textContent = state.coins;
+    document.getElementById('stickerCount').textContent = state.stickers.length;
+    document.getElementById('muteBtn').textContent = state.muted ? '🔇' : '🔊';
+    document.getElementById('homeBtn').style.visibility = (current.name==='welcome') ? 'hidden' : 'visible';
+  }
+
+  document.getElementById('homeBtn').addEventListener('click', function(){ sfxTap(); go('home'); });
+  document.getElementById('muteBtn').addEventListener('click', function(){
+    state.muted = !state.muted; save(); updateTopbar();
+    if(!state.muted) speak('Sound on!');
+  });
+
+  /* ================= WELCOME ================= */
+  function renderWelcome(){
+    return ''+
+    '<div class="card center">'+
+      '<div class="mascot">🐣</div>'+
+      '<h1>Hi! I\'m Coiny!</h1>'+
+      '<p>Let\'s open a little business and learn how to earn money — both in a shop and online!</p>'+
+      '<p style="margin-top:14px;font-weight:800;color:var(--ink);">What is your name?</p>'+
+      '<input id="nameInput" class="name-input" maxlength="16" value="'+escapeHtml(state.name)+'">'+
+      '<div style="height:14px;"></div>'+
+      '<button class="btn coral" id="startBtn">Let\'s Go! 🚀</button>'+
+    '</div>';
+  }
+
+  /* ================= HOME ================= */
+  function renderHome(){
+    var unlockedCert = (state.allTimeEarned >= 30 || state.stickers.length >= 3);
+    return ''+
+    '<div class="card center">'+
+      '<div class="mascot">🐣</div>'+
+      '<h1>Hi '+escapeHtml(state.name)+'!</h1>'+
+      '<p>What do you want to do today?</p>'+
+    '</div>'+
+    '<div class="grid2">'+
+      '<div class="tile" data-go="learn"><span class="emoji">📖</span>Learn<div class="sub">What is a business?</div></div>'+
+      '<div class="tile" data-go="offline-pick"><span class="emoji">🏪</span>Open a Shop<div class="sub">Sell in person</div></div>'+
+      '<div class="tile" data-go="online-intro"><span class="emoji">📱</span>Sell Online<div class="sub">Take phone orders</div></div>'+
+      '<div class="tile" data-go="bank"><span class="emoji">🐷</span>Piggy Bank<div class="sub">'+state.coins+' coins saved</div></div>'+
+    '</div>'+
+    '<div class="tile" data-go="shop-corner" style="margin-bottom:14px;"><span class="emoji">🎁</span>Sticker Shop<div class="sub">Spend your coins for fun</div></div>'+
+    (unlockedCert ? '<button class="btn mint" data-go="certificate">See My Award 🏆</button>' : '')+
+    '<details class="parent-note no-print"><summary>👪 Note for Parents / Teachers</summary>'+
+      '<ul>'+
+        '<li>Teaches: making a product, cost vs. price vs. profit, saving vs. spending.</li>'+
+        '<li>Compares an <b>offline</b> shop (selling in person) with an <b>online</b> shop (taking orders from a phone/computer and delivering them).</li>'+
+        '<li>All text can be read aloud (🔊) — great for a child who is still learning to read.</li>'+
+        '<li>Coins are pretend and only exist inside this game — nothing here uses real money.</li>'+
+        '<li>Best played together, with an adult talking through each step.</li>'+
+      '</ul>'+
+      '<button class="footer-link" id="resetBtn">Reset all progress</button>'+
+    '</details>';
+  }
+
+  /* ================= LEARN ================= */
+  var learnSlides = [
+    { emoji:'🧃', text:'A business is when you make something people like, and sell it to them for coins!' },
+    { emoji:'🏪', text:'An OFFLINE business means people come to you — like a stand where you sell lemonade in person.' },
+    { emoji:'📱', text:'An ONLINE business means people order from far away, using a phone or computer — then you send it to them!' },
+    { emoji:'💰', text:'When you sell something, keep some coins in your Piggy Bank to save for later, and use some to have fun!' }
+  ];
+  var learnIndex = 0;
+  function renderLearn(){
+    if(current.data.reset){ learnIndex = 0; }
+    var slide = learnSlides[learnIndex];
+    return ''+
+    '<div class="card center">'+
+      '<div class="big-emoji">'+slide.emoji+'</div>'+
+      '<div class="row" style="justify-content:center;margin-top:10px;">'+
+        '<button class="speaker" id="speakBtn">🔊</button>'+
+      '</div>'+
+      '<p style="font-size:18px;font-weight:700;color:var(--ink);margin-top:10px;">'+slide.text+'</p>'+
+      '<div class="progress-track" style="margin:16px 0;"><div class="progress-fill" style="width:'+(((learnIndex+1)/learnSlides.length)*100)+'%"></div></div>'+
+      '<button class="btn coral" id="nextSlide">'+(learnIndex < learnSlides.length-1 ? 'Next ▶' : 'All Done! 🎉')+'</button>'+
+    '</div>';
+  }
+
+  /* ================= OFFLINE SHOP ================= */
+  var offline = { product:null, price:null, makeProgress:0, customersServed:0, customer:null, totalCustomers:5 };
+
+  function renderOfflinePick(){
+    return ''+
+    '<h2>🏪 Pick something to make</h2>'+
+    '<p>You will make it, then sell it to people who visit your shop.</p>'+
+    '<div class="grid2">'+
+      PRODUCTS.map(function(p){
+        return '<div class="tile" data-product="'+p.id+'"><span class="emoji">'+p.emoji+'</span>'+p.name+
+          '<div class="sub">Costs '+p.cost+' 🪙 to make</div></div>';
+      }).join('')+
+    '</div>';
+  }
+
+  function renderOfflineMake(){
+    var p = offline.product;
+    var pct = (offline.makeProgress / p.taps) * 100;
+    return ''+
+    '<div class="card center">'+
+      '<div class="big-emoji">'+p.emoji+'</div>'+
+      '<h2>'+p.verb+' the '+p.name+'!</h2>'+
+      '<p>Tap the button to make it.</p>'+
+      '<div class="progress-track" style="margin:14px 0;"><div class="progress-fill" style="width:'+pct+'%"></div></div>'+
+      '<button class="btn coral" id="makeTapBtn">'+p.verb+'! 👆</button>'+
+    '</div>';
+  }
+
+  function renderOfflinePrice(){
+    var p = offline.product;
+    var options = [p.cost+3, p.cost+5, p.cost+8];
+    return ''+
+    '<div class="card center">'+
+      '<div class="big-emoji">'+p.emoji+'</div>'+
+      '<h2>Set your price</h2>'+
+      '<p>It cost you <b>'+p.cost+' 🪙</b> to make. Pick a price to sell it for — the extra coins you keep are your <b>profit</b>!</p>'+
+      '<div class="btn-row">'+
+        options.map(function(o){
+          return '<div class="coin-price" data-price="'+o+'">'+o+' 🪙</div>';
+        }).join('')+
+      '</div>'+
+      '<div style="height:14px;"></div>'+
+      '<button class="btn mint" id="confirmPrice" disabled>Open the Shop! 🏪</button>'+
+    '</div>';
+  }
+
+  function renderOfflineSell(){
+    var p = offline.product;
+    var done = offline.customersServed;
+    if(!offline.customer){ offline.customer = { face: pick(CUSTOMERS) }; }
+    return ''+
+    '<h2>'+p.emoji+' '+p.name+' Shop — '+offline.price+' 🪙 each</h2>'+
+    '<div class="customer-box">'+
+      '<div class="customer-emoji">'+offline.customer.face+'</div>'+
+      '<div class="speech-bubble">I want '+(p.name==='Cookies'?'some':'a')+' '+p.name+'!</div>'+
+    '</div>'+
+    '<div class="progress-track" style="margin-bottom:14px;"><div class="progress-fill" style="width:'+((done/offline.totalCustomers)*100)+'%"></div></div>'+
+    '<button class="btn coral" id="sellBtn">Sell it! 🤝</button>'+
+    '<p class="center" style="margin-top:10px;">Customers served: '+done+' / '+offline.totalCustomers+'</p>';
+  }
+
+  function renderOfflineDone(){
+    var p = offline.product;
+    var earned = offline.price * offline.totalCustomers;
+    var spent = p.cost;
+    var profit = earned - spent;
+    return ''+
+    '<div class="card center">'+
+      '<div class="big-emoji">🎉</div>'+
+      '<h2>Shop Closed for the Day!</h2>'+
+      '<p>You earned <b>'+earned+' 🪙</b> selling '+p.name.toLowerCase()+'.</p>'+
+      '<p>It cost <b>'+spent+' 🪙</b> to make everything.</p>'+
+      '<p style="font-size:19px;font-weight:800;color:var(--leaf);">Your PROFIT: '+profit+' 🪙 kept! 🐷</p>'+
+      '<div class="btn-row" style="margin-top:14px;">'+
+        '<button class="btn ghost" data-go="offline-pick">Open Again</button>'+
+        '<button class="btn mint" data-go="bank">See Piggy Bank</button>'+
+      '</div>'+
+    '</div>';
+  }
+
+  /* ================= ONLINE SHOP ================= */
+  var online = { product:null, price:null, order:null, step:'waiting', ordersDone:0, totalOrders:4, packTaps:0 };
+
+  function renderOnlineIntro(){
+    return ''+
+    '<div class="phone-shell"><div class="phone-screen center">'+
+      '<div class="big-emoji">📱</div>'+
+      '<h2>Selling Online</h2>'+
+      '<p>People far away can order from your phone shop! You pack it, then send it to them.</p>'+
+    '</div></div>'+
+    '<div class="grid2">'+
+      PRODUCTS.map(function(p){
+        return '<div class="tile" data-oproduct="'+p.id+'"><span class="emoji">'+p.emoji+'</span>'+p.name+
+          '<div class="sub">Sell for '+ (p.cost+6) +' 🪙</div></div>';
+      }).join('')+
+    '</div>';
+  }
+
+  function newOrder(){
+    online.order = { name: pick(ONLINE_NAMES) };
+    online.step = 'order';
+    online.packTaps = 0;
+  }
+
+  function renderOnlinePlay(){
+    var p = online.product;
+    var body = '';
+    if(online.step === 'order'){
+      body = ''+
+        '<div class="order-card"><span class="emoji">'+p.emoji+'</span>'+
+          '<div class="info">New Order! '+p.name+'<small>from '+online.order.name+' 🏠</small></div>'+
+        '</div>'+
+        '<button class="btn sky" id="packBtn">Pack it! 📦</button>';
+    } else if(online.step === 'packing'){
+      var pct = (online.packTaps/3)*100;
+      body = ''+
+        '<div class="big-emoji">📦</div>'+
+        '<div class="progress-track" style="margin:10px 0;"><div class="progress-fill" style="width:'+pct+'%"></div></div>'+
+        '<button class="btn sky" id="packTapBtn">Put it in the box!</button>';
+    } else if(online.step === 'shipping'){
+      body = ''+
+        '<div class="big-emoji">🚚</div>'+
+        '<p>Ready to ship to '+online.order.name+'!</p>'+
+        '<button class="btn grape" id="shipBtn">Send it! ✈️</button>';
+    } else if(online.step === 'paid'){
+      body = ''+
+        '<div class="big-emoji">✅</div>'+
+        '<p style="font-weight:800;">Payment Received! +'+online.price+' 🪙</p>'+
+        '<button class="btn coral" id="nextOrderBtn">Next Order ▶</button>';
+    }
+    return ''+
+    '<div class="phone-shell"><div class="phone-screen center">'+
+      '<h2>'+p.emoji+' '+p.name+' — Online Shop</h2>'+
+      body+
+    '</div></div>'+
+    '<p class="center">Orders done: '+online.ordersDone+' / '+online.totalOrders+'</p>';
+  }
+
+  function renderOnlineDone(){
+    var p = online.product;
+    var earned = online.price * online.totalOrders;
+    return ''+
+    '<div class="card center">'+
+      '<div class="big-emoji">🎉</div>'+
+      '<h2>All Orders Delivered!</h2>'+
+      '<p>You earned <b>'+earned+' 🪙</b> selling '+p.name.toLowerCase()+' online!</p>'+
+      '<p>People far away got to buy from you, without ever visiting a shop. That\'s the magic of online business!</p>'+
+      '<div class="btn-row" style="margin-top:14px;">'+
+        '<button class="btn ghost" data-go="online-intro">Sell More</button>'+
+        '<button class="btn mint" data-go="bank">See Piggy Bank</button>'+
+      '</div>'+
+    '</div>';
+  }
+
+  /* ================= BANK ================= */
+  function renderBank(){
+    var goal = 30;
+    var pct = Math.min(100, Math.round((state.allTimeEarned/goal)*100));
+    return ''+
+    '<div class="card center">'+
+      '<div class="piggy">🐷</div>'+
+      '<h1>'+state.coins+' 🪙</h1>'+
+      '<p>saved in your Piggy Bank</p>'+
+      '<p style="font-size:13px;">All-time earned: '+state.allTimeEarned+' 🪙 &nbsp;•&nbsp; Award goal: '+goal+' 🪙</p>'+
+      '<div class="progress-track"><div class="progress-fill" style="width:'+pct+'%"></div></div>'+
+    '</div>'+
+    '<div class="btn-row">'+
+      '<button class="btn coral" data-go="offline-pick">Earn More Offline</button>'+
+      '<button class="btn sky" data-go="online-intro">Earn More Online</button>'+
+    '</div>'+
+    '<div style="height:10px;"></div>'+
+    '<button class="btn grape" data-go="shop-corner">Spend on Stickers 🎁</button>';
+  }
+
+  /* ================= SHOP CORNER (spend) ================= */
+  function renderShopCorner(){
+    return ''+
+    '<h2>🎁 Sticker Shop</h2>'+
+    '<p>Trade some of your coins for a fun sticker! This is called <b>spending</b>.</p>'+
+    '<div class="card"><p style="text-align:center;font-weight:800;">You have '+state.coins+' 🪙</p></div>'+
+    '<div class="grid2">'+
+      STICKERS.map(function(s,i){
+        var owned = state.stickers.indexOf(i) !== -1;
+        var canBuy = state.coins >= s.cost;
+        return '<div class="tile'+(owned?' selected':'')+'" '+(owned?'':'data-buy="'+i+'"')+' style="'+(!owned && !canBuy ? 'opacity:.5;' : '')+'">'+
+          '<span class="emoji">'+s.emoji+'</span>'+(owned ? 'Owned ✔' : (s.cost+' 🪙'))+
+        '</div>';
+      }).join('')+
+    '</div>'+
+    '<h2 style="margin-top:18px;">My Sticker Book</h2>'+
+    '<div class="sticker-shelf">'+
+      Array.from({length:10}).map(function(_,i){
+        if(state.stickers[i] !== undefined){
+          return '<div class="slot">'+STICKERS[state.stickers[i]].emoji+'</div>';
+        }
+        return '<div class="slot empty">?</div>';
+      }).join('')+
+    '</div>';
+  }
+
+  /* ================= CERTIFICATE ================= */
+  function renderCertificate(){
+    var today = new Date().toLocaleDateString('en-IN', { year:'numeric', month:'long', day:'numeric' });
+    return ''+
+    '<div class="certificate">'+
+      '<div class="seal">🏆</div>'+
+      '<h1>Young Entrepreneur Award</h1>'+
+      '<p>This certifies that</p>'+
+      '<div class="name">'+escapeHtml(state.name)+'</div>'+
+      '<p>successfully ran a business, sold things offline and online,<br>and learned to save money — all by herself!</p>'+
+      '<p style="font-size:13px;">'+today+'</p>'+
+    '</div>'+
+    '<div class="btn-row no-print" style="margin-top:14px;">'+
+      '<button class="btn ghost" data-go="home">Back Home</button>'+
+      '<button class="btn coral" id="printBtn">Print 🖨️</button>'+
+    '</div>';
+  }
+
+  /* ---------------- Events per screen ---------------- */
+  function bindScreenEvents(){
+    // generic data-go links
+    screenEl.querySelectorAll('[data-go]').forEach(function(el){
+      el.addEventListener('click', function(){ sfxTap(); go(el.getAttribute('data-go')); });
+    });
+
+    if(current.name === 'welcome'){
+      var input = document.getElementById('nameInput');
+      document.getElementById('startBtn').addEventListener('click', function(){
+        var v = input.value.trim();
+        state.name = v || 'Nayva';
+        state.setupDone = true; save();
+        sfxSuccess();
+        speak('Hi '+state.name+'! Let\'s open a business together!');
+        go('home');
+      });
+    }
+
+    if(current.name === 'home'){
+      var reset = document.getElementById('resetBtn');
+      if(reset) reset.addEventListener('click', function(){
+        if(confirm('Reset all coins, stickers and progress?')){
+          var name = state.name;
+          state = Object.assign({}, defaultState, { name:name });
+          save(); go('home');
+        }
+      });
+      speak('Hi '+state.name+'! What do you want to do today?');
+    }
+
+    if(current.name === 'learn'){
+      document.getElementById('speakBtn').addEventListener('click', function(){ speak(learnSlides[learnIndex].text); });
+      speak(learnSlides[learnIndex].text);
+      document.getElementById('nextSlide').addEventListener('click', function(){
+        sfxTap();
+        if(learnIndex < learnSlides.length-1){ learnIndex++; render(); }
+        else { state.learnDone = true; save(); confettiBurst(); go('home'); }
+      });
+    }
+
+    if(current.name === 'offline-pick'){
+      speak('Pick something to make for your shop!');
+      screenEl.querySelectorAll('[data-product]').forEach(function(el){
+        el.addEventListener('click', function(){
+          var id = el.getAttribute('data-product');
+          offline = { product: PRODUCTS.filter(function(p){return p.id===id;})[0], price:null, makeProgress:0, customersServed:0, customer:null, totalCustomers:5 };
+          sfxTap();
+          go('offline-make');
+        });
+      });
+    }
+
+    if(current.name === 'offline-make'){
+      var p = offline.product;
+      speak(p.verb+' the '+p.name+'! Tap the button.');
+      document.getElementById('makeTapBtn').addEventListener('click', function(e){
+        sfxTap();
+        offline.makeProgress++;
+        if(offline.makeProgress >= p.taps){
+          sfxSuccess();
+          go('offline-price');
+        } else {
+          render();
+        }
+      });
+    }
+
+    if(current.name === 'offline-price'){
+      speak('Pick a price to sell your '+offline.product.name+'.');
+      var confirmBtn = document.getElementById('confirmPrice');
+      screenEl.querySelectorAll('[data-price]').forEach(function(el){
+        el.addEventListener('click', function(){
+          sfxTap();
+          screenEl.querySelectorAll('[data-price]').forEach(function(x){x.classList.remove('selected');});
+          el.classList.add('selected');
+          offline.price = parseInt(el.getAttribute('data-price'),10);
+          confirmBtn.removeAttribute('disabled');
+        });
+      });
+      confirmBtn.addEventListener('click', function(){
+        sfxTap();
+        offline.customer = null;
+        go('offline-sell');
+      });
+    }
+
+    if(current.name === 'offline-sell'){
+      speak('I want a '+offline.product.name+'!');
+      document.getElementById('sellBtn').addEventListener('click', function(e){
+        flyCoinFrom(e.currentTarget);
+        state.coins += offline.price;
+        state.allTimeEarned += offline.price;
+        offline.customersServed++;
+        save();
+        if(offline.customersServed >= offline.totalCustomers){
+          setTimeout(function(){ confettiBurst(); go('offline-done'); }, 500);
+        } else {
+          offline.customer = null;
+          setTimeout(render, 500);
+        }
+      });
+    }
+
+    if(current.name === 'offline-done'){
+      speak('You earned '+(offline.price*offline.totalCustomers)+' coins! Your profit is '+((offline.price*offline.totalCustomers)-offline.product.cost)+' coins.');
+    }
+
+    if(current.name === 'online-intro'){
+      speak('Pick something to sell online!');
+      screenEl.querySelectorAll('[data-oproduct]').forEach(function(el){
+        el.addEventListener('click', function(){
+          var id = el.getAttribute('data-oproduct');
+          var p = PRODUCTS.filter(function(x){return x.id===id;})[0];
+          online = { product:p, price:p.cost+6, order:null, step:'order', ordersDone:0, totalOrders:4, packTaps:0 };
+          newOrder();
+          sfxTap();
+          go('online-play');
+        });
+      });
+    }
+
+    if(current.name === 'online-play'){
+      if(online.step === 'order'){
+        speak('New order from '+online.order.name+' for a '+online.product.name+'!');
+        document.getElementById('packBtn').addEventListener('click', function(){
+          sfxTap(); online.step = 'packing'; online.packTaps = 0; render();
+        });
+      }
+      if(online.step === 'packing'){
+        var btn = document.getElementById('packTapBtn');
+        btn.addEventListener('click', function(){
+          sfxTap();
+          online.packTaps++;
+          if(online.packTaps >= 3){ online.step = 'shipping'; }
+          render();
+        });
+      }
+      if(online.step === 'shipping'){
+        document.getElementById('shipBtn').addEventListener('click', function(){
+          sfxWhoosh();
+          setTimeout(function(){
+            online.step = 'paid';
+            sfxPing();
+            state.coins += online.price;
+            state.allTimeEarned += online.price;
+            save();
+            render();
+          }, 400);
+        });
+      }
+      if(online.step === 'paid'){
+        document.getElementById('nextOrderBtn').addEventListener('click', function(e){
+          flyCoinFrom(e.currentTarget);
+          online.ordersDone++;
+          if(online.ordersDone >= online.totalOrders){
+            setTimeout(function(){ confettiBurst(); go('online-done'); }, 400);
+          } else {
+            newOrder();
+            setTimeout(render, 400);
+          }
+        });
+      }
+    }
+
+    if(current.name === 'online-done'){
+      speak('All orders delivered! You earned '+(online.price*online.totalOrders)+' coins selling online.');
+    }
+
+    if(current.name === 'bank'){
+      speak('You have '+state.coins+' coins saved in your piggy bank!');
+    }
+
+    if(current.name === 'shop-corner'){
+      speak('Spend your coins on a fun sticker!');
+      screenEl.querySelectorAll('[data-buy]').forEach(function(el){
+        el.addEventListener('click', function(){
+          var i = parseInt(el.getAttribute('data-buy'),10);
+          var s = STICKERS[i];
+          if(state.coins >= s.cost){
+            state.coins -= s.cost;
+            state.stickers.push(i);
+            save();
+            sfxSuccess();
+            confettiBurst();
+            render();
+          }
+        });
+      });
+    }
+
+    if(current.name === 'certificate'){
+      speak('Congratulations '+state.name+'! You are a young entrepreneur!');
+      document.getElementById('printBtn').addEventListener('click', function(){ window.print(); });
+    }
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  /* ---------------- Boot ---------------- */
+  go(state.setupDone ? 'home' : 'welcome');
+})();
+</script>
+</body>
+</html>
