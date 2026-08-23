@@ -425,6 +425,11 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .dl-btn.dl{border-color:var(--gold);color:var(--gold);}
 .demo-access-banner{background:linear-gradient(135deg,rgba(212,175,55,0.16),rgba(212,175,55,0.06));border:1px solid var(--gold);border-radius:12px;padding:10px 13px;margin-bottom:12px;font-size:12px;color:var(--ink);line-height:1.5;}
 .demo-access-banner b{color:var(--gold);}
+.demo-access-banner .demo-countdown-text{font-variant-numeric:tabular-nums;font-weight:700;}
+.demo-access-banner.demo-critical{border-color:var(--danger);background:linear-gradient(135deg,rgba(232,129,95,0.24),rgba(232,129,95,0.08));animation:demoPulse 1.4s ease-in-out infinite;}
+.demo-access-banner.demo-critical b,.demo-access-banner.demo-critical .demo-countdown-text{color:var(--danger);}
+@keyframes demoPulse{0%,100%{box-shadow:0 0 0 0 rgba(232,129,95,0.45);}50%{box-shadow:0 0 0 6px rgba(232,129,95,0);}}
+@media (prefers-reduced-motion: reduce){.demo-access-banner.demo-critical{animation:none;}}
 
 .diagram-ref-label{font-size:10.5px;color:var(--ink-dim);margin:8px 0 6px;text-transform:uppercase;letter-spacing:0.5px;}
 .diagram-ref-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:7px;}
@@ -4006,16 +4011,42 @@ function hwCloseViewer(){
 window.hwViewNotes = hwViewNotes; window.hwCloseViewer = hwCloseViewer;
 
 /* ---------------- ROUTER ---------------- */
+let demoBannerInterval = null;
+function formatDemoCountdown(msLeft){
+  if(msLeft <= 0) return '0:00';
+  const totalSec = Math.floor(msLeft / 1000);
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = totalSec % 60;
+  if(h > 0) return h + 'h ' + (m < 10 ? '0' : '') + m + 'm';
+  return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+}
 function injectDemoAccessBanner(){
+  if(demoBannerInterval){ clearInterval(demoBannerInterval); demoBannerInterval = null; }
+  if(!premiumQualifies()) return;
   const u = getPremiumUnlock();
   if(!u || u.method !== 'demo') return;
-  const hrsLeft = Math.max(0, Math.ceil((PREMIUM_DEMO_DURATION_MS - (Date.now() - u.ts)) / 3600000));
   const contentEl = document.getElementById('content');
   if(!contentEl) return;
   const banner = document.createElement('div');
   banner.className = 'demo-access-banner';
-  banner.innerHTML = `⏳ <b>Demo access</b> — Premium content on this chapter is unlocked for trial and expires in ${hrsLeft}h.`;
+  banner.innerHTML = `<span class="demo-icon">⏳</span> <b>Demo access</b> — Premium content on this chapter is unlocked for trial &middot; expires in <span class="demo-countdown-text"></span>`;
   contentEl.insertBefore(banner, contentEl.firstChild);
+  function tick(){
+    const msLeft = PREMIUM_DEMO_DURATION_MS - (Date.now() - u.ts);
+    if(!banner.isConnected){ clearInterval(demoBannerInterval); demoBannerInterval = null; return; }
+    if(msLeft <= 0){
+      clearInterval(demoBannerInterval); demoBannerInterval = null;
+      renderContent(); renderTabbar();
+      return;
+    }
+    const critical = msLeft <= 30 * 60 * 1000;
+    banner.classList.toggle('demo-critical', critical);
+    banner.querySelector('.demo-icon').textContent = critical ? '⚠️' : '⏳';
+    banner.querySelector('.demo-countdown-text').textContent = formatDemoCountdown(msLeft);
+  }
+  tick();
+  demoBannerInterval = setInterval(tick, 1000);
 }
 function renderContent(){
   if(PREMIUM_LOCKED_TABS.indexOf(currentTab) !== -1 && !premiumQualifies()){

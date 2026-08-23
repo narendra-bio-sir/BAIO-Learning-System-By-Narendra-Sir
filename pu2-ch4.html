@@ -143,6 +143,11 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .premium-lock-overlay{display:none;}
 .demo-access-banner{background:linear-gradient(135deg,rgba(227,175,67,0.16),rgba(227,175,67,0.06));border:1px solid var(--gold);border-radius:12px;padding:10px 13px;margin-bottom:12px;font-size:12px;color:var(--text);line-height:1.5;}
 .demo-access-banner b{color:var(--gold-2);}
+.demo-access-banner .demo-countdown-text{font-variant-numeric:tabular-nums;font-weight:700;}
+.demo-access-banner.demo-critical{border-color:var(--danger);background:linear-gradient(135deg,rgba(232,129,95,0.24),rgba(232,129,95,0.08));animation:demoPulse 1.4s ease-in-out infinite;}
+.demo-access-banner.demo-critical b,.demo-access-banner.demo-critical .demo-countdown-text{color:var(--danger);}
+@keyframes demoPulse{0%,100%{box-shadow:0 0 0 0 rgba(232,129,95,0.45);}50%{box-shadow:0 0 0 6px rgba(232,129,95,0);}}
+@media (prefers-reduced-motion: reduce){.demo-access-banner.demo-critical{animation:none;}}
 .premium-lock-overlay.show{display:block;}
 @keyframes fade{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
 
@@ -6168,11 +6173,43 @@ function premiumToggleSiblings(tabId, hide){
     }
   });
 }
+let demoBannerInterval = null;
+function formatDemoCountdown(msLeft){
+  if(msLeft <= 0) return '0:00';
+  const totalSec = Math.floor(msLeft / 1000);
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = totalSec % 60;
+  if(h > 0) return h + 'h ' + (m < 10 ? '0' : '') + m + 'm';
+  return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+}
+function updateAllDemoBanners(){
+  const u = getPremiumUnlock();
+  if(!premiumQualifies() || !u || u.method !== 'demo'){
+    if(demoBannerInterval){ clearInterval(demoBannerInterval); demoBannerInterval = null; }
+    document.querySelectorAll('.demo-access-banner').forEach(function(b){ b.remove(); });
+    return;
+  }
+  const msLeft = PREMIUM_DEMO_DURATION_MS - (Date.now() - u.ts);
+  if(msLeft <= 0){
+    if(demoBannerInterval){ clearInterval(demoBannerInterval); demoBannerInterval = null; }
+    applyPremiumGates();
+    return;
+  }
+  const timeText = formatDemoCountdown(msLeft);
+  const critical = msLeft <= 30 * 60 * 1000;
+  document.querySelectorAll('.demo-access-banner').forEach(function(b){
+    const span = b.querySelector('.demo-countdown-text');
+    if(span) span.textContent = timeText;
+    const icon = b.querySelector('.demo-icon');
+    if(icon) icon.textContent = critical ? '⚠️' : '⏳';
+    b.classList.toggle('demo-critical', critical);
+  });
+}
 function applyPremiumGates(){
   const unlocked = premiumQualifies();
   const u = getPremiumUnlock();
   const isDemo = unlocked && u && u.method === 'demo';
-  const hrsLeft = isDemo ? Math.max(0, Math.ceil((PREMIUM_DEMO_DURATION_MS - (Date.now() - u.ts)) / 3600000)) : 0;
   PREMIUM_LOCKED_TABS.forEach(function(tabId){
     const overlay = document.getElementById('premLock_' + tabId);
     if(!overlay) return;
@@ -6182,10 +6219,18 @@ function applyPremiumGates(){
   document.querySelectorAll('.panel').forEach(function(panel){
     let banner = panel.querySelector('.demo-access-banner');
     if(isDemo){
-      if(!banner){ banner = document.createElement('div'); banner.className = 'demo-access-banner'; panel.insertBefore(banner, panel.firstChild); }
-      banner.innerHTML = '⏳ <b>Demo access</b> — Premium content on this chapter is unlocked for trial and expires in ' + hrsLeft + 'h.';
+      if(!banner){
+        banner = document.createElement('div');
+        banner.className = 'demo-access-banner';
+        banner.innerHTML = `<span class="demo-icon">⏳</span> <b>Demo access</b> — Premium content on this chapter is unlocked for trial &middot; expires in <span class="demo-countdown-text"></span>`;
+        panel.insertBefore(banner, panel.firstChild);
+      }
     } else if(banner){ banner.remove(); }
   });
+  if(isDemo){
+    updateAllDemoBanners();
+    if(!demoBannerInterval) demoBannerInterval = setInterval(updateAllDemoBanners, 1000);
+  } else if(demoBannerInterval){ clearInterval(demoBannerInterval); demoBannerInterval = null; }
   document.querySelectorAll('.tab-btn').forEach(function(btn){
     const tabId = btn.dataset.tab;
     const isPremium = PREMIUM_LOCKED_TABS.indexOf(tabId) !== -1;
