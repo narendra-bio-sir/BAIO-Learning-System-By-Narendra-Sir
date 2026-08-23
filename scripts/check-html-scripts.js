@@ -24,6 +24,7 @@ const HTML_FILES = [
   'assignment-tracker.html',
   'board-question-assignment-builder.html',
   'practical-plasmolysis.html',
+  'practical-ts-stem.html',
   'app-walkthrough.html',
   'study-tips.html',
   'push-test.html',

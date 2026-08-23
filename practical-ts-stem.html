@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BAIO">
+<title>T.S. of Monocot &amp; Dicot Stem Practical | BAIO Learning System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B1B14; --navy2:#0F2419; --panel:#13281E; --panel2:#0E211A;
+  --gold:#D4AF37; --gold2:#B8912A; --teal:#2EE6C5; --teal2:#127566;
+  --ink:#EAF3EE; --ink-dim:#9FC4B6; --line:rgba(212,175,55,0.22);
+  --danger:#E7695B; --ok:#33C48A;
+  --ep:#E8D9A8; --hypo-d:#9FD8A6; --cortex:#CFE3C4; --endo:#7BB88F; --pericycle:#B0654A;
+  --pith:#F3EAD2; --hypo-m:#8A5A46; --ground:#E4D9BE;
+  --phloem:#E8B4CE; --xylem:#C8834E; --xylem-vessel:#8A4B22; --proto:#F6E2C8;
+  --sheath:#C79A6E; --cambium-line:#2EE6C5;
+}
+[data-theme="light"]{
+  --navy:#F7F5EE; --navy2:#EFEBDD; --panel:#FFFFFF; --panel2:#F3F0E6;
+  --gold:#B8912A; --gold2:#8A6A1A; --teal:#0F8F7A; --teal2:#0B6F5E;
+  --ink:#1E2A22; --ink-dim:#5C6E63; --line:rgba(184,145,42,0.25);
+  --danger:#C33A2C; --ok:#1F9D6C;
+  --ep:#E8D9A8; --hypo-d:#8FCB9A; --cortex:#DCEBD2; --endo:#6BA97D; --pericycle:#A6573C;
+  --pith:#F7F0DC; --hypo-m:#7A4C3A; --ground:#EFE6CC;
+  --phloem:#E29EC0; --xylem:#B97442; --xylem-vessel:#79411C; --proto:#F3DDBA;
+  --sheath:#BB8A5C; --cambium-line:#0F8F7A;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0; background:var(--navy); color:var(--ink); font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased; transition:background 0.25s, color 0.25s;}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif; margin:0;}
+.wrap{max-width:800px; margin:0 auto; padding:0 18px 70px;}
+a{color:var(--teal);}
+
+.topnav{position:sticky; top:0; z-index:30; background:rgba(11,27,20,0.94); backdrop-filter:blur(6px); border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; padding:10px 18px;}
+[data-theme="light"] .topnav{background:rgba(244,241,232,0.94);}
+.topnav .brand{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13.5px; color:var(--ink);}
+.topnav .brand span{color:var(--gold);}
+.topnav-actions{display:flex; align-items:center; gap:8px;}
+.icon-btn{flex:0 0 auto; width:34px; height:34px; border-radius:10px; border:1px solid var(--line); background:var(--panel); color:var(--ink); font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; text-decoration:none;}
+.lang-switcher{display:flex; gap:4px;}
+.lang-btn{padding:5px 9px; border-radius:12px; font-size:10px; font-weight:700; background:var(--panel2); color:var(--ink-dim); border:1px solid var(--line); cursor:pointer; white-space:nowrap;}
+.lang-btn.active{background:var(--gold); color:#1a1406; border-color:var(--gold);}
+
+.hero{padding:34px 0 22px; text-align:center;}
+.eyebrow{font-size:11px; letter-spacing:2.5px; text-transform:uppercase; color:var(--teal); font-weight:700;}
+.hero h1{font-size:27px; line-height:1.2; margin-top:10px; text-wrap:balance;}
+.hero p{font-size:13.5px; color:var(--ink-dim); line-height:1.7; margin-top:12px; max-width:600px; margin-left:auto; margin-right:auto;}
+
+.card{background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:18px 18px 16px; margin-top:14px;}
+.card h2{font-size:16px; color:var(--gold); margin-bottom:2px;}
+.card .card-note{font-size:11.5px; color:var(--ink-dim); margin:2px 0 10px;}
+.card svg{display:block; width:100%; height:auto;}
+
+.section-tag{font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--teal); font-weight:700; margin:30px 0 4px;}
+
+.materials{font-size:12.5px; color:var(--ink-dim); margin:0 0 12px; line-height:1.65;}
+.materials b{color:var(--ink);}
+.method-list{margin:0; padding-left:20px; font-size:13.5px; line-height:1.75; color:var(--ink-dim);}
+.method-list li{margin-bottom:8px;}
+.method-list li::marker{color:var(--gold); font-weight:700;}
+.method-list b{color:var(--ink);}
+
+.precaution-list{margin:0; padding-left:20px; font-size:13px; line-height:1.7; color:var(--ink-dim);}
+.precaution-list li{margin-bottom:6px;}
+.precaution-list li::marker{color:var(--danger); content:"⚠ ";}
+
+.stage-grid{display:grid; grid-template-columns:1.1fr .9fr; gap:14px; margin-top:14px;}
+@media(max-width:680px){ .stage-grid{grid-template-columns:1fr;} }
+
+.legend-list{margin:10px 0 0; padding-left:20px; font-size:12.5px; line-height:1.6; color:var(--ink-dim);}
+.legend-list li{margin-bottom:3px;}
+.legend-list b{color:var(--ink); font-family:'Space Grotesk',sans-serif;}
+
+/* ---- diagram element classes ---- */
+.wall-outline{fill:none; stroke:var(--gold); stroke-width:2;}
+.ep-fill{fill:var(--ep);}
+.hypo-d-fill{fill:var(--hypo-d);}
+.cortex-fill{fill:var(--cortex);}
+.endo-fill{fill:var(--endo);}
+.pericycle-fill{fill:var(--pericycle);}
+.pith-fill{fill:var(--pith);}
+.hypo-m-fill{fill:var(--hypo-m);}
+.ground-fill{fill:var(--ground);}
+.phloem-fill{fill:var(--phloem); stroke:var(--pericycle); stroke-width:1;}
+.xylem-fill{fill:var(--xylem);}
+.xylem-vessel-fill{fill:var(--xylem-vessel);}
+.proto-fill{fill:var(--proto); stroke:var(--xylem-vessel); stroke-width:1;}
+.sheath-fill{fill:var(--sheath);}
+.cambium-stroke{stroke:var(--cambium-line); stroke-width:2;}
+
+.badge circle{fill:var(--navy2); stroke:var(--gold); stroke-width:1.6;}
+[data-theme="light"] .badge circle{fill:var(--panel);}
+.badge text{font:700 10.5px/1 'Inter',sans-serif; fill:var(--gold); text-anchor:middle; dominant-baseline:central;}
+
+.leader{stroke:var(--ink-dim); stroke-width:1.2; fill:none;}
+.leader-dot{fill:var(--ink-dim);}
+.label-title{font:700 11px/1 'Inter',sans-serif; fill:var(--ink);}
+.label-sub{font:400 9.5px/1 'Inter',sans-serif; fill:var(--ink-dim);}
+
+.cmp-table{width:100%; border-collapse:collapse; font-size:12px; margin-top:6px;}
+.cmp-table th,.cmp-table td{border:1px solid var(--line); padding:8px 9px; text-align:left; vertical-align:top;}
+.cmp-table th{background:rgba(212,175,55,0.12); color:var(--gold); font-family:'Space Grotesk',sans-serif; font-size:11.5px;}
+.cmp-table td{color:var(--ink-dim);}
+.cmp-table td:first-child{color:var(--ink); font-weight:600;}
+.cmp-scroll{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+
+.explain p{font-size:13.5px; line-height:1.65; color:var(--ink-dim); margin:0 0 10px;}
+.explain b{color:var(--ink);}
+
+footer{font-size:11.5px; color:var(--ink-dim); text-align:center; border-top:1px solid var(--line); padding-top:16px; margin-top:26px;}
+.more-practicals{font-size:12px; text-align:center; margin-top:10px;}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="brand">BAIO <span data-i18n="brand_practical">Practical</span></div>
+  <div class="topnav-actions">
+    <div id="langSwitcher" class="lang-switcher"></div>
+    <a href="index.html" class="icon-btn" title="Back to BAIO home">🏠</a>
+    <button class="icon-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle dark/light theme">🌙</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <div class="eyebrow" data-i18n="eyebrow">Plant Anatomy · Practical</div>
+    <h1 data-i18n="h1_title">T.S. of Monocot Stem and Dicot Stem</h1>
+    <p data-i18n="intro">A thin, even free-hand transverse section, stained with safranin, is the fastest way to see how a monocot and a dicot arrange their tissues completely differently — one in a neat ring around a defined pith, the other scattered right through the ground tissue. Below is the full procedure, followed by labelled diagrams of what you should actually see under the microscope.</p>
+  </section>
+
+  <div class="section-tag" data-i18n="aim_tag">Aim</div>
+  <div class="card">
+    <p style="font-size:13.5px; line-height:1.65; color:var(--ink-dim); margin:0;" data-i18n="aim_text">To prepare temporary stained mounts of transverse sections (T.S.) of a dicot stem and a monocot stem, and to identify, label and compare their internal structure.</p>
+  </div>
+
+  <div class="section-tag" data-i18n="principle_tag">Principle</div>
+  <div class="card">
+    <p style="font-size:13.5px; line-height:1.65; color:var(--ink-dim); margin:0;" data-i18n="principle_text">A section thin enough to let light pass through reveals the internal tissues under a microscope. Safranin selectively stains lignified and cutinised cell walls — xylem, sclerenchyma and the cuticle — pink to red, so the vascular and mechanical tissues stand out clearly against the pale, thin-walled parenchyma, letting you map out the tissue zones by colour and position.</p>
+  </div>
+
+  <div class="section-tag" data-i18n="method_tag">Method</div>
+  <div class="card">
+    <h2 data-i18n="materials_title">Materials Required</h2>
+    <p class="materials" data-i18n="materials_text"><b>You need:</b> a fresh dicot stem internode (e.g. sunflower/Helianthus or Tridax) · a fresh monocot stem internode (e.g. maize/Zea mays or grass) · a sharp double-edged razor blade · a piece of pith, carrot or thermocol to hold the specimen while cutting · watch glasses · camel-hair brush · safranin stain · glycerine · distilled water · glass slides &amp; coverslips · blotting paper · compound microscope</p>
+    <h2 style="margin-top:14px;" data-i18n="procedure_title">Procedure</h2>
+    <ol class="method-list">
+      <li data-i18n="step1"><b>Select the specimen</b> — choose a fresh, straight, moderately thick internode (not a node) of the dicot stem.</li>
+      <li data-i18n="step2"><b>Cut thin sections</b> — split a piece of pith or carrot, hold the stem upright in the split, and with a sharp razor blade wetted with water, draw the blade towards you in one smooth stroke (never saw back and forth) to cut very thin transverse slices.</li>
+      <li data-i18n="step3"><b>Transfer to water</b> — lift each section immediately into a watch glass of water using a wet camel-hair brush.</li>
+      <li data-i18n="step4"><b>Select the thinnest</b> — from the sections collected, pick out only the thinnest and most even ones; thick or uneven sections look dark and opaque and cannot be studied. Discard the rest.</li>
+      <li data-i18n="step5"><b>Stain</b> — transfer the selected sections into a watch glass of safranin stain for 2–5 minutes.</li>
+      <li data-i18n="step6"><b>Wash</b> — rinse off the excess stain gently with distilled water until the washings run almost colourless.</li>
+      <li data-i18n="step7"><b>Mount</b> — place a stained section at the centre of a clean slide, add a drop of glycerine, and lower a coverslip from one edge with a needle to avoid trapping air bubbles.</li>
+      <li data-i18n="step8"><b>Observe</b> — focus first under low power to locate the section, then switch to high power to study the arrangement of tissues.</li>
+      <li data-i18n="step9"><b>Repeat</b> — repeat steps 1–8 with a fresh internode of the monocot stem to prepare its section for comparison.</li>
+    </ol>
+  </div>
+
+  <div class="section-tag" data-i18n="diagrams_tag">Diagrams &amp; Observation</div>
+
+  <div class="stage-grid">
+    <div class="card">
+      <h2 data-i18n="dicotWholeTitle">Dicot Stem — T.S. (whole)</h2>
+      <p class="card-note" data-i18n="dicotWholeNote">e.g. Sunflower — a single ring of vascular bundles around a large pith</p>
+      <svg viewBox="0 0 400 400" role="img" aria-label="Transverse section of a dicot stem showing epidermis, hypodermis, cortex, endodermis, pericycle, a ring of vascular bundles, medullary rays and a large central pith.">
+        <circle class="ep-fill" cx="200" cy="200" r="184"/>
+        <circle class="hypo-d-fill" cx="200" cy="200" r="178"/>
+        <circle class="cortex-fill" cx="200" cy="200" r="158"/>
+        <circle class="endo-fill" cx="200" cy="200" r="121"/>
+        <circle class="pericycle-fill" cx="200" cy="200" r="117"/>
+        <circle class="pith-fill" cx="200" cy="200" r="111"/>
+        <circle class="wall-outline" cx="200" cy="200" r="184"/>
+
+        <use href="#dicotBundle" transform="translate(200.0,100.0) rotate(0.0)"/>
+        <use href="#dicotBundle" transform="translate(270.7,129.3) rotate(45.0)"/>
+        <use href="#dicotBundle" transform="translate(300.0,200.0) rotate(90.0)"/>
+        <use href="#dicotBundle" transform="translate(270.7,270.7) rotate(135.0)"/>
+        <use href="#dicotBundle" transform="translate(200.0,300.0) rotate(180.0)"/>
+        <use href="#dicotBundle" transform="translate(129.3,270.7) rotate(225.0)"/>
+        <use href="#dicotBundle" transform="translate(100.0,200.0) rotate(270.0)"/>
+        <use href="#dicotBundle" transform="translate(129.3,129.3) rotate(315.0)"/>
+
+        <g class="badge"><circle cx="200" cy="17" r="11"/><text x="200" y="17">1</text></g>
+        <g class="badge"><circle cx="321.6" cy="78.4" r="11"/><text x="321.6" y="78.4">2</text></g>
+        <g class="badge"><circle cx="343" cy="200" r="11"/><text x="343" y="200">3</text></g>
+        <g class="badge"><circle cx="290.5" cy="290.5" r="11"/><text x="290.5" y="290.5">4</text></g>
+        <g class="badge"><circle cx="200" cy="338" r="11"/><text x="200" y="338">5</text></g>
+        <g class="badge"><circle cx="109.5" cy="290.5" r="11"/><text x="109.5" y="290.5">6</text></g>
+        <g class="badge"><circle cx="75.3" cy="251.7" r="11"/><text x="75.3" y="251.7">7</text></g>
+        <g class="badge"><circle cx="149.2" cy="179" r="11"/><text x="149.2" y="179">8</text></g>
+      </svg>
+      <ol class="legend-list">
+        <li data-i18n="legend_d1"><b>Epidermis</b> — single outer layer, cuticle-covered</li>
+        <li data-i18n="legend_d2"><b>Hypodermis</b> — collenchymatous</li>
+        <li data-i18n="legend_d3"><b>Cortex</b> — parenchymatous ground tissue</li>
+        <li data-i18n="legend_d4"><b>Endodermis</b> — starch sheath, innermost cortical layer</li>
+        <li data-i18n="legend_d5"><b>Pericycle</b> — sclerenchymatous patches</li>
+        <li data-i18n="legend_d6"><b>Vascular bundle</b> — conjoint, collateral, open — in a ring</li>
+        <li data-i18n="legend_d7"><b>Medullary ray</b> — connects cortex to pith between bundles</li>
+        <li data-i18n="legend_d8"><b>Pith</b> — large, central, parenchymatous</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="dicotBundleTitle">One vascular bundle, magnified</h2>
+      <p class="card-note" data-i18n="dicotBundleNote">Open bundle — cambium separates phloem from xylem</p>
+      <svg viewBox="0 0 480 350" role="img" aria-label="A single dicot vascular bundle magnified, labelled with pericycle cap, phloem, cambium and xylem with protoxylem and metaxylem.">
+        <path class="pericycle-fill" d="M 195,70 Q 240,50 285,70 Q 270,90 240,90 Q 210,90 195,70 Z"/>
+        <ellipse class="phloem-fill" cx="240" cy="112" rx="72" ry="42"/>
+        <line class="cambium-stroke" x1="168" y1="155" x2="312" y2="155"/>
+        <path class="xylem-fill" d="M 170,160 Q 240,272 310,160 Q 275,190 240,192 Q 205,190 170,160 Z"/>
+        <circle class="xylem-vessel-fill" cx="207" cy="200" r="24"/>
+        <circle class="xylem-vessel-fill" cx="273" cy="200" r="24"/>
+        <circle class="proto-fill" cx="240" cy="248" r="13"/>
+
+        <line class="leader" x1="240" y1="66" x2="240" y2="26"/>
+        <circle class="leader-dot" cx="240" cy="66" r="3"/>
+        <text class="label-title" x="240" y="18" text-anchor="middle" data-i18n="lbl_pericycle_title">PERICYCLE</text>
+        <text class="label-sub" x="240" y="31" text-anchor="middle" data-i18n="lbl_pericycle_sub">sclerenchyma cap</text>
+
+        <line class="leader" x1="303" y1="95" x2="404" y2="70"/>
+        <circle class="leader-dot" cx="303" cy="95" r="3"/>
+        <text class="label-title" x="408" y="66" text-anchor="start" data-i18n="lbl_phloem_title">PHLOEM</text>
+        <text class="label-sub" x="408" y="79" text-anchor="start" data-i18n="lbl_phloem_sub">outer, food-conducting</text>
+
+        <line class="leader" x1="315" y1="155" x2="410" y2="185"/>
+        <circle class="leader-dot" cx="315" cy="155" r="3"/>
+        <text class="label-title" x="414" y="181" text-anchor="start" data-i18n="lbl_cambium_title">CAMBIUM</text>
+        <text class="label-sub" x="414" y="194" text-anchor="start" data-i18n="lbl_cambium_sub">makes the bundle "open"</text>
+
+        <line class="leader" x1="240" y1="261" x2="240" y2="308"/>
+        <circle class="leader-dot" cx="240" cy="261" r="3"/>
+        <text class="label-title" x="240" y="323" text-anchor="middle" data-i18n="lbl_xylem_title">XYLEM</text>
+        <text class="label-sub" x="240" y="336" text-anchor="middle" data-i18n="lbl_xylem_sub">metaxylem outer, protoxylem toward pith</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="stage-grid">
+    <div class="card">
+      <h2 data-i18n="monocotWholeTitle">Monocot Stem — T.S. (whole)</h2>
+      <p class="card-note" data-i18n="monocotWholeNote">e.g. Maize — numerous bundles scattered through the ground tissue</p>
+      <svg viewBox="0 0 400 400" role="img" aria-label="Transverse section of a monocot stem showing epidermis, sclerenchymatous hypodermis, undifferentiated ground tissue and numerous scattered vascular bundles, smaller at the periphery and larger toward the centre.">
+        <circle class="ep-fill" cx="200" cy="200" r="184"/>
+        <circle class="hypo-m-fill" cx="200" cy="200" r="178"/>
+        <circle class="ground-fill" cx="200" cy="200" r="153"/>
+        <circle class="wall-outline" cx="200" cy="200" r="184"/>
+
+        <use href="#monocotBundle" transform="translate(344.0,200.0) scale(0.55)"/>
+        <use href="#monocotBundle" transform="translate(333.3,264.2) scale(0.55)"/>
+        <use href="#monocotBundle" transform="translate(294.8,318.8) scale(0.55)"/>
+        <use href="#monocotBundle" transform="translate(232.0,340.4) scale(0.55)"/>
+        <use href="#monocotBundle" transform="translate(167.1,344.3) scale(0.55)"/>
+        <use href="#monocotBundle" transform="translate(105.2,318.8) scale(0.55)"/>
+        <use href="#monocotBundle" transform="translate(70.3,262.5) scale(0.55)"/>
+        <use href="#monocotBundle" transform="translate(52.0,200.0) scale(0.55)"/>
+        <use href="#monocotBundle" transform="translate(63.1,134.0) scale(0.55)"/>
+        <use href="#monocotBundle" transform="translate(110.2,87.4) scale(0.55)"/>
+        <use href="#monocotBundle" transform="translate(167.1,55.7) scale(0.55)"/>
+        <use href="#monocotBundle" transform="translate(233.8,51.8) scale(0.55)"/>
+        <use href="#monocotBundle" transform="translate(289.8,87.4) scale(0.55)"/>
+        <use href="#monocotBundle" transform="translate(333.3,135.8) scale(0.55)"/>
+        <use href="#monocotBundle" transform="translate(298.9,232.1) scale(0.8)"/>
+        <use href="#monocotBundle" transform="translate(263.5,287.4) scale(0.8)"/>
+        <use href="#monocotBundle" transform="translate(200.0,312.0) scale(0.8)"/>
+        <use href="#monocotBundle" transform="translate(138.9,284.1) scale(0.8)"/>
+        <use href="#monocotBundle" transform="translate(97.3,233.4) scale(0.8)"/>
+        <use href="#monocotBundle" transform="translate(93.5,165.4) scale(0.8)"/>
+        <use href="#monocotBundle" transform="translate(138.9,115.9) scale(0.8)"/>
+        <use href="#monocotBundle" transform="translate(200.0,92.0) scale(0.8)"/>
+        <use href="#monocotBundle" transform="translate(265.8,109.4) scale(0.8)"/>
+        <use href="#monocotBundle" transform="translate(298.9,167.9) scale(0.8)"/>
+        <use href="#monocotBundle" transform="translate(263.2,210.0) scale(1.0)"/>
+        <use href="#monocotBundle" transform="translate(224.4,263.5) scale(1.0)"/>
+        <use href="#monocotBundle" transform="translate(154.7,256.0) scale(1.0)"/>
+        <use href="#monocotBundle" transform="translate(136.8,190.0) scale(1.0)"/>
+        <use href="#monocotBundle" transform="translate(175.6,136.5) scale(1.0)"/>
+        <use href="#monocotBundle" transform="translate(245.3,144.0) scale(1.0)"/>
+        <use href="#monocotBundle" transform="translate(218.4,215.4) scale(1.2)"/>
+        <use href="#monocotBundle" transform="translate(173.7,209.6) scale(1.2)"/>
+        <use href="#monocotBundle" transform="translate(205.6,168.5) scale(1.2)"/>
+
+        <g class="badge"><circle cx="200" cy="17" r="11"/><text x="200" y="17">1</text></g>
+        <g class="badge"><circle cx="318.8" cy="81.2" r="11"/><text x="318.8" y="81.2">2</text></g>
+        <g class="badge"><circle cx="200" cy="230" r="11"/><text x="200" y="230">3</text></g>
+        <g class="badge"><circle cx="60" cy="60" r="11"/><text x="60" y="60">4</text></g>
+      </svg>
+      <ol class="legend-list">
+        <li data-i18n="legend_m1"><b>Epidermis</b> — thick cuticle</li>
+        <li data-i18n="legend_m2"><b>Hypodermis</b> — sclerenchymatous (mechanical support)</li>
+        <li data-i18n="legend_m3"><b>Ground tissue</b> — undifferentiated — no separate cortex/pith</li>
+        <li data-i18n="legend_m4"><b>Vascular bundles</b> — scattered; smaller &amp; crowded near the periphery, larger &amp; sparser toward the centre</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="monocotBundleTitle">One vascular bundle, magnified</h2>
+      <p class="card-note" data-i18n="monocotBundleNote">Closed bundle — no cambium, oval sclerenchymatous sheath</p>
+      <svg viewBox="0 0 480 360" role="img" aria-label="A single monocot vascular bundle magnified, labelled with sclerenchymatous bundle sheath, phloem, metaxylem vessels and protoxylem lacuna.">
+        <ellipse class="sheath-fill" cx="240" cy="180" rx="118" ry="128"/>
+        <ellipse class="phloem-fill" cx="240" cy="118" rx="60" ry="36"/>
+        <path class="xylem-fill" d="M 188,150 Q 240,238 292,150 Q 265,175 240,177 Q 215,175 188,150 Z"/>
+        <circle class="xylem-vessel-fill" cx="212" cy="188" r="21"/>
+        <circle class="xylem-vessel-fill" cx="268" cy="188" r="21"/>
+        <ellipse class="proto-fill" cx="240" cy="224" rx="11" ry="15"/>
+
+        <line class="leader" x1="240" y1="63" x2="240" y2="26"/>
+        <circle class="leader-dot" cx="240" cy="63" r="3"/>
+        <text class="label-title" x="240" y="18" text-anchor="middle" data-i18n="lbl_sheath_title">BUNDLE SHEATH</text>
+        <text class="label-sub" x="240" y="31" text-anchor="middle" data-i18n="lbl_sheath_sub">sclerenchymatous</text>
+
+        <line class="leader" x1="291" y1="102" x2="404" y2="72"/>
+        <circle class="leader-dot" cx="291" cy="102" r="3"/>
+        <text class="label-title" x="408" y="68" text-anchor="start" data-i18n="lbl_phloem_title">PHLOEM</text>
+        <text class="label-sub" x="408" y="81" text-anchor="start" data-i18n="lbl_phloem_sub">outer, food-conducting</text>
+
+        <line class="leader" x1="286" y1="188" x2="404" y2="188"/>
+        <circle class="leader-dot" cx="286" cy="188" r="3"/>
+        <text class="label-title" x="408" y="184" text-anchor="start" data-i18n="lbl_metaxylem_title">METAXYLEM</text>
+        <text class="label-sub" x="408" y="197" text-anchor="start" data-i18n="lbl_metaxylem_sub">two large vessels</text>
+
+        <line class="leader" x1="240" y1="240" x2="240" y2="300"/>
+        <circle class="leader-dot" cx="240" cy="240" r="3"/>
+        <text class="label-title" x="240" y="315" text-anchor="middle" data-i18n="lbl_protoxylem_title">PROTOXYLEM LACUNA</text>
+        <text class="label-sub" x="240" y="328" text-anchor="middle" data-i18n="lbl_protoxylem_sub">conspicuous air space</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="card explain">
+    <h2 data-i18n="why_title">Key structural differences</h2>
+    <p data-i18n="why_p1"><b>Dicot stem</b> — the ground tissue is clearly zoned into a narrow cortex (outside) and a large central pith (inside), separated by a single ring of conjoint, collateral and <b>open</b> vascular bundles — "open" because a strip of cambium lies between the phloem and xylem in every bundle, which is exactly what lets the stem add secondary growth later.</p>
+    <p data-i18n="why_p2"><b>Monocot stem</b> — there is no such zoning: the ground tissue is uniform from just under the hypodermis right to the centre. The vascular bundles are conjoint, collateral and <b>closed</b> (no cambium) and lie scattered through it — smaller and more crowded near the periphery, larger and more widely spaced toward the centre. Each bundle is capped by a sclerenchymatous bundle sheath and shows a conspicuous protoxylem lacuna.</p>
+  </div>
+
+  <div class="section-tag" data-i18n="compare_tag">Dicot Stem vs Monocot Stem</div>
+  <div class="card">
+    <div class="cmp-scroll">
+      <table class="cmp-table">
+        <tr><th data-i18n="cmp_h0">Character</th><th data-i18n="cmp_h1">Dicot stem</th><th data-i18n="cmp_h2">Monocot stem</th></tr>
+        <tr><td data-i18n="cmp_r1c0">Hypodermis</td><td data-i18n="cmp_r1c1">Collenchymatous</td><td data-i18n="cmp_r1c2">Sclerenchymatous</td></tr>
+        <tr><td data-i18n="cmp_r2c0">Ground tissue</td><td data-i18n="cmp_r2c1">Differentiated into cortex, endodermis &amp; pith</td><td data-i18n="cmp_r2c2">Not differentiated — uniform</td></tr>
+        <tr><td data-i18n="cmp_r3c0">Vascular bundles</td><td data-i18n="cmp_r3c1">Arranged in a single ring</td><td data-i18n="cmp_r3c2">Scattered throughout ground tissue</td></tr>
+        <tr><td data-i18n="cmp_r4c0">Bundle size</td><td data-i18n="cmp_r4c1">More or less uniform</td><td data-i18n="cmp_r4c2">Smaller peripherally, larger centrally</td></tr>
+        <tr><td data-i18n="cmp_r5c0">Cambium</td><td data-i18n="cmp_r5c1">Present (bundle is "open")</td><td data-i18n="cmp_r5c2">Absent (bundle is "closed")</td></tr>
+        <tr><td data-i18n="cmp_r6c0">Secondary growth</td><td data-i18n="cmp_r6c1">Usually occurs</td><td data-i18n="cmp_r6c2">Does not occur</td></tr>
+        <tr><td data-i18n="cmp_r7c0">Bundle sheath</td><td data-i18n="cmp_r7c1">Absent — pericycle forms a ring instead</td><td data-i18n="cmp_r7c2">Present around each bundle (sclerenchymatous)</td></tr>
+        <tr><td data-i18n="cmp_r8c0">Pith</td><td data-i18n="cmp_r8c1">Large, well-defined, central</td><td data-i18n="cmp_r8c2">Not distinguishable from ground tissue</td></tr>
+        <tr><td data-i18n="cmp_r9c0">Protoxylem lacuna</td><td data-i18n="cmp_r9c1">Usually inconspicuous</td><td data-i18n="cmp_r9c2">Prominent, conspicuous</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-tag" data-i18n="precautions_tag">Precautions</div>
+  <div class="card">
+    <ul class="precaution-list">
+      <li data-i18n="prec1">Sections must be as thin as possible — thick sections look dark and opaque and hide internal detail.</li>
+      <li data-i18n="prec2">Always draw the blade towards yourself in one clean stroke; never saw back and forth.</li>
+      <li data-i18n="prec3">Handle the razor blade with care at all times.</li>
+      <li data-i18n="prec4">Do not over-stain — excess safranin obscures the distinction between tissues, so wash thoroughly.</li>
+      <li data-i18n="prec5">Avoid trapping air bubbles under the coverslip while mounting.</li>
+      <li data-i18n="prec6">Keep sections moist throughout — a dried-out section shrinks and distorts.</li>
+    </ul>
+  </div>
+
+  <footer data-i18n="footer_text">BAIO Learning System · T.S. of Monocot &amp; Dicot Stem Practical · Narendra Sir</footer>
+  <div class="more-practicals"><a href="practical-plasmolysis.html" data-i18n="more_practicals">🔬 More Practicals — Plasmolysis in a Rhoeo Leaf</a></div>
+</div>
+
+<svg width="0" height="0" style="position:absolute;">
+  <defs>
+    <g id="dicotBundle">
+      <ellipse class="phloem-fill" cx="0" cy="-7" rx="11" ry="6"/>
+      <line class="cambium-stroke" x1="-11" y1="0" x2="11" y2="0" stroke-width="1.4"/>
+      <path class="xylem-fill" d="M -9,1 Q 0,18 9,1 Q 4,7 0,8 Q -4,7 -9,1 Z"/>
+      <circle class="xylem-vessel-fill" cx="-4" cy="8" r="3"/>
+      <circle class="xylem-vessel-fill" cx="4" cy="8" r="3"/>
+      <circle class="proto-fill" cx="0" cy="14.5" r="1.8"/>
+    </g>
+    <g id="monocotBundle">
+      <ellipse class="sheath-fill" cx="0" cy="0" rx="15" ry="17"/>
+      <ellipse class="phloem-fill" cx="0" cy="-7" rx="8" ry="5"/>
+      <path class="xylem-fill" d="M -7,-1 Q 0,13 7,-1 Q 3,3 0,3.5 Q -3,3 -7,-1 Z"/>
+      <circle class="xylem-vessel-fill" cx="-3.5" cy="4" r="2.4"/>
+      <circle class="xylem-vessel-fill" cx="3.5" cy="4" r="2.4"/>
+      <ellipse class="proto-fill" cx="0" cy="9.5" rx="1.6" ry="2.2"/>
+    </g>
+  </defs>
+</svg>
+
+<script>
+/* Theme toggle — shared with index.html via the same localStorage key */
+(function(){
+  var THEME_KEY = 'baio_theme';
+  var btn = document.getElementById('themeToggle');
+  function applyTheme(t){
+    if(t === 'light'){ document.documentElement.setAttribute('data-theme','light'); if(btn) btn.textContent = '☀️'; }
+    else { document.documentElement.removeAttribute('data-theme'); if(btn) btn.textContent = '🌙'; }
+  }
+  var saved = null;
+  try{ saved = localStorage.getItem(THEME_KEY); }catch(e){}
+  applyTheme(saved || 'light');
+  window.toggleTheme = function(){
+    var cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+    var next = cur === 'light' ? 'dark' : 'light';
+    applyTheme(next);
+    try{ localStorage.setItem(THEME_KEY, next); }catch(e){}
+  };
+})();
+
+/* Trilingual mode (English / Kannada / Hindi) */
+const PRACTICAL_TRANSLATIONS = {"brand_practical":{"kn":"ಪ್ರಾಕ್ಟಿಕಲ್","hi":"प्रैक्टिकल"},"eyebrow":{"kn":"ಸಸ್ಯ ಅಂಗರಚನಾಶಾಸ್ತ್ರ · ಪ್ರಾಕ್ಟಿಕಲ್","hi":"पादप शारीर विज्ञान · प्रैक्टिकल"},"h1_title":{"kn":"Monocot ಮತ್ತು Dicot Stem ನ T.S.","hi":"Monocot और Dicot Stem का T.S."},"intro":{"kn":"Safranin ನಿಂದ ಬಣ್ಣ ಹಚ್ಚಿದ ತೆಳುವಾದ, ಸಮಾನವಾದ free-hand transverse section ಮೂಲಕ monocot ಮತ್ತು dicot ತಮ್ಮ ಅಂಗಾಂಶಗಳನ್ನು ಸಂಪೂರ್ಣ ಭಿನ್ನವಾಗಿ ಜೋಡಿಸಿರುವುದನ್ನು ವೇಗವಾಗಿ ನೋಡಬಹುದು — ಒಂದರಲ್ಲಿ ನಿರ್ದಿಷ್ಟ pith ಸುತ್ತ ಒಂದು ಸುಂದರ ವರ್ತುಲ, ಇನ್ನೊಂದರಲ್ಲಿ ground tissue ಉದ್ದಕ್ಕೂ ಚದುರಿದ ಜೋಡಣೆ. ಕೆಳಗೆ ಸಂಪೂರ್ಣ ವಿಧಾನ, ನಂತರ ಸೂಕ್ಷ್ಮದರ್ಶಕದಡಿಯಲ್ಲಿ ನೀವು ನಿಜವಾಗಿ ನೋಡಬೇಕಾದ ಲೇಬಲ್ ಮಾಡಿದ ಚಿತ್ರಗಳಿವೆ.","hi":"Safranin से रंगा हुआ पतला, समान free-hand transverse section देखने का सबसे तेज़ तरीका है कि monocot और dicot अपने ऊतकों को बिल्कुल अलग तरीके से सजाते हैं — एक में एक तय pith के चारों ओर एक साफ़ वलय, दूसरे में ground tissue में बिखरी हुई व्यवस्था। नीचे पूरी विधि दी गई है, उसके बाद वे लेबल किए गए चित्र हैं जो आपको सूक्ष्मदर्शी के नीचे असल में दिखने चाहिए।"},"aim_tag":{"kn":"ಉದ್ದೇಶ (Aim)","hi":"उद्देश्य (Aim)"},"aim_text":{"kn":"Dicot stem ಮತ್ತು monocot stem ಗಳ transverse section (T.S.) ಗಳ ತಾತ್ಕಾಲಿಕ ಬಣ್ಣ ಹಚ್ಚಿದ mount ಗಳನ್ನು ತಯಾರಿಸುವುದು, ಮತ್ತು ಅವುಗಳ ಆಂತರಿಕ ರಚನೆಯನ್ನು ಗುರುತಿಸಿ, ಲೇಬಲ್ ಮಾಡಿ ಹೋಲಿಸುವುದು.","hi":"Dicot stem और monocot stem के transverse section (T.S.) के अस्थायी रंगे हुए mount तैयार करना, और उनकी आंतरिक संरचना को पहचानना, लेबल करना और उनकी तुलना करना।"},"principle_tag":{"kn":"ಸಿದ್ಧಾಂತ (Principle)","hi":"सिद्धांत (Principle)"},"principle_text":{"kn":"ಬೆಳಕು ಹಾದುಹೋಗುವಷ್ಟು ತೆಳುವಾದ section ಸೂಕ್ಷ್ಮದರ್ಶಕದಡಿಯಲ್ಲಿ ಆಂತರಿಕ ಅಂಗಾಂಶಗಳನ್ನು ತೋರಿಸುತ್ತದೆ. Safranin lignified ಮತ್ತು cutinised ಕೋಶಭಿತ್ತಿಗಳನ್ನು — xylem, sclerenchyma ಮತ್ತು cuticle — ಗುಲಾಬಿಯಿಂದ ಕೆಂಪು ಬಣ್ಣಕ್ಕೆ ಆಯ್ದು ಬಣ್ಣ ಹಚ್ಚುತ್ತದೆ, ಆದ್ದರಿಂದ ತೆಳು, ತೆಳ್ಳಗಿನ ಗೋಡೆಯ parenchyma ವಿರುದ್ಧ vascular ಮತ್ತು mechanical ಅಂಗಾಂಶಗಳು ಸ್ಪಷ್ಟವಾಗಿ ಎದ್ದು ಕಾಣುತ್ತವೆ, ಇದರಿಂದ ನೀವು ಬಣ್ಣ ಮತ್ತು ಸ್ಥಾನದ ಮೂಲಕ ಅಂಗಾಂಶ ವಲಯಗಳನ್ನು ಗುರುತಿಸಬಹುದು.","hi":"इतना पतला section जिससे प्रकाश आर-पार जा सके, सूक्ष्मदर्शी के नीचे आंतरिक ऊतकों को दिखाता है। Safranin lignified और cutinised कोशिका भित्तियों को — xylem, sclerenchyma और cuticle — गुलाबी से लाल रंग में चुनकर रंग देता है, जिससे पतली, कोमल भित्ति वाले parenchyma के मुक़ाबले vascular और mechanical ऊतक साफ़ उभर आते हैं, और आप रंग व स्थिति के आधार पर ऊतक क्षेत्रों को पहचान सकते हैं।"},"method_tag":{"kn":"ವಿಧಾನ (Method)","hi":"विधि (Method)"},"materials_title":{"kn":"ಬೇಕಾಗುವ ಸಾಮಗ್ರಿಗಳು","hi":"आवश्यक सामग्री"},"materials_text":{"kn":"<b>ಬೇಕಾಗುವುದು:</b> ತಾಜಾ dicot stem internode (ಉದಾ. sunflower/Helianthus ಅಥವಾ Tridax) · ತಾಜಾ monocot stem internode (ಉದಾ. maize/Zea mays ಅಥವಾ ಹುಲ್ಲು) · ಚೂಪಾದ double-edged razor blade · specimen ಹಿಡಿದುಕೊಳ್ಳಲು pith, carrot ಅಥವಾ thermocol ತುಂಡು · watch glass ಗಳು · camel-hair brush · safranin stain · glycerine · distilled water · glass slide ಮತ್ತು coverslip ಗಳು · blotting paper · compound microscope","hi":"<b>आवश्यक:</b> ताज़ा dicot stem internode (जैसे sunflower/Helianthus या Tridax) · ताज़ा monocot stem internode (जैसे maize/Zea mays या घास) · तेज़ धार वाला double-edged razor blade · specimen पकड़ने के लिए pith, carrot या thermocol का टुकड़ा · watch glass · camel-hair brush · safranin stain · glycerine · आसुत जल · glass slide और coverslip · blotting paper · compound microscope"},"procedure_title":{"kn":"ಕ್ರಮ (Procedure)","hi":"प्रक्रिया (Procedure)"},"step1":{"kn":"<b>Specimen ಆಯ್ಕೆಮಾಡಿ</b> — dicot stem ನ ತಾಜಾ, ನೇರ, ಮಧ್ಯಮ ದಪ್ಪದ internode (node ಅಲ್ಲ) ಆಯ್ಕೆಮಾಡಿ.","hi":"<b>Specimen चुनें</b> — dicot stem का एक ताज़ा, सीधा, मध्यम मोटाई का internode (node नहीं) चुनें।"},"step2":{"kn":"<b>ತೆಳುವಾದ sections ಕತ್ತರಿಸಿ</b> — pith ಅಥವಾ carrot ತುಂಡನ್ನು ಸೀಳಿ, ಸೀಳಿನಲ್ಲಿ stem ಅನ್ನು ನೇರವಾಗಿ ಹಿಡಿದು, ನೀರಿನಿಂದ ಒದ್ದೆಯಾದ ಚೂಪಾದ razor blade ನಿಂದ ನಿಮ್ಮ ಕಡೆಗೆ ಒಂದೇ ನಯವಾದ ಎಳೆತದಲ್ಲಿ (ಎಂದಿಗೂ ಮುಂದೆ-ಹಿಂದೆ ಗರಗಸದಂತೆ ಅಲ್ಲ) ಬಹಳ ತೆಳುವಾದ transverse ಹೋಳುಗಳನ್ನು ಕತ್ತರಿಸಿ.","hi":"<b>पतले sections काटें</b> — pith या carrot का टुकड़ा चीरें, चीर में stem को सीधा पकड़ें, और पानी से गीले किए हुए तेज़ धार वाले razor blade से अपनी ओर एक ही चिकनी गति में (कभी आगे-पीछे आरे की तरह नहीं) बहुत पतले transverse टुकड़े काटें।"},"step3":{"kn":"<b>ನೀರಿಗೆ ವರ್ಗಾಯಿಸಿ</b> — ಒದ್ದೆಯಾದ camel-hair brush ಬಳಸಿ ಪ್ರತಿ section ಅನ್ನು ತಕ್ಷಣ ನೀರಿನ watch glass ಗೆ ಎತ್ತಿ.","hi":"<b>पानी में स्थानांतरित करें</b> — गीले camel-hair brush से हर section को तुरंत पानी से भरे watch glass में उठाकर डालें।"},"step4":{"kn":"<b>ಅತ್ಯಂತ ತೆಳುವಾದದ್ದನ್ನು ಆಯ್ಕೆಮಾಡಿ</b> — ಸಂಗ್ರಹಿಸಿದ sections ಗಳಿಂದ ಅತ್ಯಂತ ತೆಳುವಾದ, ಅತ್ಯಂತ ಸಮಾನವಾದವುಗಳನ್ನು ಮಾತ್ರ ಆಯ್ಕೆಮಾಡಿ; ದಪ್ಪ ಅಥವಾ ಅಸಮಾನ sections ಕಪ್ಪಾಗಿ, ಅಪಾರದರ್ಶಕವಾಗಿ ಕಂಡು ಅಧ್ಯಯನ ಮಾಡಲಾಗುವುದಿಲ್ಲ. ಉಳಿದವುಗಳನ್ನು ತೆಗೆದುಹಾಕಿ.","hi":"<b>सबसे पतला चुनें</b> — इकट्ठे किए sections में से केवल सबसे पतले, सबसे समान sections चुनें; मोटे या असमान sections गहरे, अपारदर्शी दिखते हैं और उनका अध्ययन नहीं किया जा सकता। बाकी को हटा दें।"},"step5":{"kn":"<b>ಬಣ್ಣ ಹಚ್ಚಿ</b> — ಆಯ್ಕೆಮಾಡಿದ sections ಗಳನ್ನು safranin stain ನ watch glass ಗೆ 2–5 ನಿಮಿಷಗಳ ಕಾಲ ವರ್ಗಾಯಿಸಿ.","hi":"<b>रंग दें</b> — चुने हुए sections को safranin stain से भरे watch glass में 2–5 मिनट के लिए डालें।"},"step6":{"kn":"<b>ತೊಳೆಯಿರಿ</b> — washing ಬಹುತೇಕ ಬಣ್ಣರಹಿತವಾಗಿ ಹರಿಯುವವರೆಗೆ distilled water ನಿಂದ ಹೆಚ್ಚುವರಿ ಬಣ್ಣವನ್ನು ನಿಧಾನವಾಗಿ ತೊಳೆಯಿರಿ.","hi":"<b>धोएं</b> — अतिरिक्त रंग को आसुत जल से तब तक धीरे-धीरे धोएं जब तक धोने का पानी लगभग रंगहीन न बहने लगे।"},"step7":{"kn":"<b>Mount ಮಾಡಿ</b> — ಬಣ್ಣ ಹಚ್ಚಿದ section ಅನ್ನು ಸ್ವಚ್ಛವಾದ slide ನ ಮಧ್ಯದಲ್ಲಿ ಇರಿಸಿ, ಒಂದು ಹನಿ glycerine ಸೇರಿಸಿ, ಮತ್ತು ಗಾಳಿ ಗುಳ್ಳೆಗಳನ್ನು ತಪ್ಪಿಸಲು needle ಬಳಸಿ ಒಂದು ಅಂಚಿನಿಂದ coverslip ಅನ್ನು ನಿಧಾನವಾಗಿ ಇಳಿಸಿ.","hi":"<b>Mount करें</b> — रंगे हुए section को साफ़ slide के बीच में रखें, glycerine की एक बूँद डालें, और हवा के बुलबुले से बचने के लिए needle की मदद से एक किनारे से coverslip को धीरे-धीरे नीचे रखें।"},"step8":{"kn":"<b>ವೀಕ್ಷಿಸಿ</b> — section ಪತ್ತೆಹಚ್ಚಲು ಮೊದಲು low power ನಲ್ಲಿ focus ಮಾಡಿ, ನಂತರ ಅಂಗಾಂಶಗಳ ಜೋಡಣೆಯನ್ನು ಅಧ್ಯಯನ ಮಾಡಲು high power ಗೆ ಬದಲಿಸಿ.","hi":"<b>अवलोकन करें</b> — section को खोजने के लिए पहले low power पर focus करें, फिर ऊतकों की व्यवस्था का अध्ययन करने के लिए high power पर स्विच करें।"},"step9":{"kn":"<b>ಪುನರಾವರ್ತಿಸಿ</b> — ಹೋಲಿಕೆಗಾಗಿ ಅದರ section ತಯಾರಿಸಲು monocot stem ನ ತಾಜಾ internode ನೊಂದಿಗೆ 1–8 ಹಂತಗಳನ್ನು ಪುನರಾವರ್ತಿಸಿ.","hi":"<b>दोहराएं</b> — तुलना के लिए section तैयार करने हेतु monocot stem के एक ताज़ा internode के साथ चरण 1–8 दोहराएं।"},"diagrams_tag":{"kn":"ಚಿತ್ರಗಳು ಮತ್ತು ವೀಕ್ಷಣೆ","hi":"चित्र और अवलोकन"},"dicotWholeTitle":{"kn":"Dicot Stem — T.S. (ಸಂಪೂರ್ಣ)","hi":"Dicot Stem — T.S. (पूर्ण)"},"dicotWholeNote":{"kn":"ಉದಾ. Sunflower — ದೊಡ್ಡ pith ಸುತ್ತ vascular bundle ಗಳ ಒಂದು ವರ್ತುಲ","hi":"जैसे Sunflower — बड़े pith के चारों ओर vascular bundle का एक वलय"},"dicotBundleTitle":{"kn":"ಒಂದು vascular bundle, ದೊಡ್ಡದಾಗಿ ತೋರಿಸಲಾಗಿದೆ","hi":"एक vascular bundle, बड़ा करके दिखाया गया"},"dicotBundleNote":{"kn":"Open bundle — cambium phloem ಮತ್ತು xylem ಅನ್ನು ಬೇರ್ಪಡಿಸುತ್ತದೆ","hi":"Open bundle — cambium phloem और xylem को अलग करता है"},"lbl_pericycle_title":{"kn":"PERICYCLE","hi":"PERICYCLE"},"lbl_pericycle_sub":{"kn":"sclerenchyma cap","hi":"sclerenchyma cap"},"lbl_phloem_title":{"kn":"PHLOEM","hi":"PHLOEM"},"lbl_phloem_sub":{"kn":"ಹೊರಗಿನ, ಆಹಾರ-ವಹನ","hi":"बाहरी, भोजन-संवहन"},"lbl_cambium_title":{"kn":"CAMBIUM","hi":"CAMBIUM"},"lbl_cambium_sub":{"kn":"bundle ಅನ್ನು \"open\" ಮಾಡುತ್ತದೆ","hi":"bundle को \"open\" बनाता है"},"lbl_xylem_title":{"kn":"XYLEM","hi":"XYLEM"},"lbl_xylem_sub":{"kn":"metaxylem ಹೊರಗೆ, protoxylem pith ಕಡೆಗೆ","hi":"metaxylem बाहर, protoxylem pith की ओर"},"monocotWholeTitle":{"kn":"Monocot Stem — T.S. (ಸಂಪೂರ್ಣ)","hi":"Monocot Stem — T.S. (पूर्ण)"},"monocotWholeNote":{"kn":"ಉದಾ. Maize — ground tissue ಉದ್ದಕ್ಕೂ ಚದುರಿದ ಹಲವಾರು bundle ಗಳು","hi":"जैसे Maize — ground tissue में बिखरे अनेक bundle"},"monocotBundleTitle":{"kn":"ಒಂದು vascular bundle, ದೊಡ್ಡದಾಗಿ ತೋರಿಸಲಾಗಿದೆ","hi":"एक vascular bundle, बड़ा करके दिखाया गया"},"monocotBundleNote":{"kn":"Closed bundle — cambium ಇಲ್ಲ, ಅಂಡಾಕಾರದ sclerenchymatous sheath","hi":"Closed bundle — cambium नहीं, अंडाकार sclerenchymatous sheath"},"lbl_sheath_title":{"kn":"BUNDLE SHEATH","hi":"BUNDLE SHEATH"},"lbl_sheath_sub":{"kn":"sclerenchymatous","hi":"sclerenchymatous"},"lbl_metaxylem_title":{"kn":"METAXYLEM","hi":"METAXYLEM"},"lbl_metaxylem_sub":{"kn":"ಎರಡು ದೊಡ್ಡ vessel ಗಳು","hi":"दो बड़ी vessel"},"lbl_protoxylem_title":{"kn":"PROTOXYLEM LACUNA","hi":"PROTOXYLEM LACUNA"},"lbl_protoxylem_sub":{"kn":"ಎದ್ದು ಕಾಣುವ ಗಾಳಿಯ ಜಾಗ","hi":"स्पष्ट दिखने वाली वायु-रिक्ति"},"why_title":{"kn":"ಪ್ರಮುಖ ರಚನಾತ್ಮಕ ವ್ಯತ್ಯಾಸಗಳು","hi":"मुख्य संरचनात्मक अंतर"},"why_p1":{"kn":"<b>Dicot stem</b> — ground tissue ಸ್ಪಷ್ಟವಾಗಿ ಕಿರಿದಾದ cortex (ಹೊರಗೆ) ಮತ್ತು ದೊಡ್ಡ ಕೇಂದ್ರ pith (ಒಳಗೆ) ಆಗಿ ವಲಯಗೊಂಡಿದ್ದು, conjoint, collateral ಮತ್ತು <b>open</b> vascular bundle ಗಳ ಒಂದು ವರ್ತುಲದಿಂದ ಬೇರ್ಪಟ್ಟಿದೆ — ಪ್ರತಿ bundle ನಲ್ಲಿ phloem ಮತ್ತು xylem ನಡುವೆ cambium ನ ಒಂದು ಪಟ್ಟಿ ಇರುವುದರಿಂದ ಇದನ್ನು \"open\" ಎನ್ನುತ್ತಾರೆ — ಇದೇ ಮುಂದೆ stem ಗೆ secondary growth ಸೇರಿಸಲು ಅವಕಾಶ ನೀಡುತ್ತದೆ.","hi":"<b>Dicot stem</b> — ground tissue स्पष्ट रूप से एक संकरे cortex (बाहर) और एक बड़े केंद्रीय pith (अंदर) में विभाजित है, जो conjoint, collateral और <b>open</b> vascular bundle के एक वलय से अलग होते हैं — हर bundle में phloem और xylem के बीच cambium की एक पट्टी होने के कारण इसे \"open\" कहा जाता है — यही आगे चलकर stem को secondary growth जोड़ने की अनुमति देता है।"},"why_p2":{"kn":"<b>Monocot stem</b> — ಅಂತಹ ವಲಯೀಕರಣ ಇಲ್ಲ: ground tissue hypodermis ಕೆಳಗಿನಿಂದ ಕೇಂದ್ರದವರೆಗೆ ಏಕರೂಪವಾಗಿದೆ. Vascular bundle ಗಳು conjoint, collateral ಮತ್ತು <b>closed</b> (cambium ಇಲ್ಲ) ಆಗಿದ್ದು ಅದರ ಉದ್ದಕ್ಕೂ ಚದುರಿವೆ — ಪರಿಧಿಯ ಬಳಿ ಚಿಕ್ಕದಾಗಿ ಮತ್ತು ಹೆಚ್ಚು ಗುಂಪಾಗಿ, ಕೇಂದ್ರದ ಕಡೆಗೆ ದೊಡ್ಡದಾಗಿ ಮತ್ತು ಹೆಚ್ಚು ಅಂತರದಲ್ಲಿ. ಪ್ರತಿ bundle ಒಂದು sclerenchymatous bundle sheath ನಿಂದ ಮುಚ್ಚಲ್ಪಟ್ಟಿದ್ದು ಎದ್ದು ಕಾಣುವ protoxylem lacuna ತೋರಿಸುತ್ತದೆ.","hi":"<b>Monocot stem</b> — ऐसा कोई विभाजन नहीं है: ground tissue hypodermis के ठीक नीचे से लेकर केंद्र तक एक समान है। Vascular bundle conjoint, collateral और <b>closed</b> (cambium रहित) होते हैं और इसमें बिखरे रहते हैं — परिधि के पास छोटे और अधिक भीड़ में, केंद्र की ओर बड़े और अधिक दूरी पर। हर bundle एक sclerenchymatous bundle sheath से ढका होता है और एक स्पष्ट protoxylem lacuna दिखाता है।"},"compare_tag":{"kn":"Dicot Stem ಮತ್ತು Monocot Stem ಹೋಲಿಕೆ","hi":"Dicot Stem और Monocot Stem की तुलना"},"precautions_tag":{"kn":"ಎಚ್ಚರಿಕೆಗಳು (Precautions)","hi":"सावधानियाँ (Precautions)"},"prec1":{"kn":"Sections ಸಾಧ್ಯವಾದಷ್ಟು ತೆಳುವಾಗಿರಬೇಕು — ದಪ್ಪ sections ಕಪ್ಪಾಗಿ, ಅಪಾರದರ್ಶಕವಾಗಿ ಕಂಡು ಆಂತರಿಕ ವಿವರಗಳನ್ನು ಮರೆಮಾಡುತ್ತವೆ.","hi":"Sections जितना संभव हो उतने पतले होने चाहिए — मोटे sections गहरे और अपारदर्शी दिखते हैं और आंतरिक विवरण छिपा देते हैं।"},"prec2":{"kn":"ಯಾವಾಗಲೂ blade ಅನ್ನು ನಿಮ್ಮ ಕಡೆಗೆ ಒಂದೇ ಶುಭ್ರ ಎಳೆತದಲ್ಲಿ ಎಳೆಯಿರಿ; ಎಂದಿಗೂ ಮುಂದೆ-ಹಿಂದೆ ಗರಗಸದಂತೆ ಮಾಡಬೇಡಿ.","hi":"हमेशा blade को अपनी ओर एक ही स्वच्छ गति में खींचें; कभी आगे-पीछे आरे की तरह न चलाएं।"},"prec3":{"kn":"ಯಾವಾಗಲೂ razor blade ಅನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ನಿರ್ವಹಿಸಿ.","hi":"razor blade को हमेशा सावधानी से संभालें।"},"prec4":{"kn":"ಅತಿಯಾಗಿ ಬಣ್ಣ ಹಚ್ಚಬೇಡಿ — ಹೆಚ್ಚುವರಿ safranin ಅಂಗಾಂಶಗಳ ನಡುವಿನ ವ್ಯತ್ಯಾಸವನ್ನು ಮರೆಮಾಡುತ್ತದೆ, ಆದ್ದರಿಂದ ಚೆನ್ನಾಗಿ ತೊಳೆಯಿರಿ.","hi":"अधिक रंग न दें — अतिरिक्त safranin ऊतकों के बीच का अंतर छिपा देता है, इसलिए अच्छी तरह धोएं।"},"prec5":{"kn":"Mount ಮಾಡುವಾಗ coverslip ಅಡಿಯಲ್ಲಿ ಗಾಳಿ ಗುಳ್ಳೆಗಳು ಸಿಲುಕದಂತೆ ನೋಡಿಕೊಳ್ಳಿ.","hi":"Mount करते समय coverslip के नीचे हवा के बुलबुले फंसने से बचें।"},"prec6":{"kn":"Sections ಗಳನ್ನು ಉದ್ದಕ್ಕೂ ತೇವವಾಗಿಡಿ — ಒಣಗಿದ section ಕುಗ್ಗಿ ವಿರೂಪಗೊಳ್ಳುತ್ತದೆ.","hi":"Sections को हमेशा नम रखें — सूखा हुआ section सिकुड़कर विकृत हो जाता है।"},"footer_text":{"kn":"BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಂ · Monocot ಮತ್ತು Dicot Stem T.S. ಪ್ರಾಕ್ಟಿಕಲ್ · ನರೇಂದ್ರ ಸರ್","hi":"BAIO लर्निंग सिस्टम · Monocot और Dicot Stem T.S. प्रैक्टिकल · नरेंद्र सर"},"more_practicals":{"kn":"🔬 ಇನ್ನಷ್ಟು Practicals — Rhoeo Leaf ನಲ್ಲಿ Plasmolysis","hi":"🔬 और Practicals — Rhoeo Leaf में Plasmolysis"},"legend_d1":{"kn":"<b>Epidermis</b> — ಒಂದೇ ಹೊರ ಪದರ, cuticle ಆವೃತ","hi":"<b>Epidermis</b> — एक बाहरी परत, cuticle से ढकी"},"legend_d2":{"kn":"<b>Hypodermis</b> — collenchymatous","hi":"<b>Hypodermis</b> — collenchymatous"},"legend_d3":{"kn":"<b>Cortex</b> — parenchymatous ground tissue","hi":"<b>Cortex</b> — parenchymatous ground tissue"},"legend_d4":{"kn":"<b>Endodermis</b> — starch sheath, ಒಳಗಿನ cortical ಪದರ","hi":"<b>Endodermis</b> — starch sheath, सबसे भीतरी cortical परत"},"legend_d5":{"kn":"<b>Pericycle</b> — sclerenchymatous ತೇಪೆಗಳು","hi":"<b>Pericycle</b> — sclerenchymatous धब्बे"},"legend_d6":{"kn":"<b>Vascular bundle</b> — conjoint, collateral, open — ಒಂದು ವರ್ತುಲದಲ್ಲಿ","hi":"<b>Vascular bundle</b> — conjoint, collateral, open — एक वलय में"},"legend_d7":{"kn":"<b>Medullary ray</b> — bundle ಗಳ ನಡುವೆ cortex ಅನ್ನು pith ಗೆ ಸಂಪರ್ಕಿಸುತ್ತದೆ","hi":"<b>Medullary ray</b> — bundle के बीच cortex को pith से जोड़ता है"},"legend_d8":{"kn":"<b>Pith</b> — ದೊಡ್ಡದು, ಕೇಂದ್ರ, parenchymatous","hi":"<b>Pith</b> — बड़ा, केंद्रीय, parenchymatous"},"legend_m1":{"kn":"<b>Epidermis</b> — ದಪ್ಪ cuticle","hi":"<b>Epidermis</b> — मोटी cuticle"},"legend_m2":{"kn":"<b>Hypodermis</b> — sclerenchymatous (ಯಾಂತ್ರಿಕ ಆಧಾರ)","hi":"<b>Hypodermis</b> — sclerenchymatous (यांत्रिक सहारा)"},"legend_m3":{"kn":"<b>Ground tissue</b> — ವಿಭಿನ್ನಗೊಳ್ಳದ — ಪ್ರತ್ಯೇಕ cortex/pith ಇಲ್ಲ","hi":"<b>Ground tissue</b> — अविभेदित — अलग cortex/pith नहीं"},"legend_m4":{"kn":"<b>Vascular bundles</b> — ಚದುರಿದ; ಪರಿಧಿಯ ಬಳಿ ಚಿಕ್ಕದಾಗಿ &amp; ಗುಂಪಾಗಿ, ಕೇಂದ್ರದ ಕಡೆಗೆ ದೊಡ್ಡದಾಗಿ &amp; ವಿರಳವಾಗಿ","hi":"<b>Vascular bundles</b> — बिखरे हुए; परिधि के पास छोटे &amp; सघन, केंद्र की ओर बड़े &amp; कम सघन"},"cmp_h0":{"kn":"ಲಕ್ಷಣ","hi":"गुण"},"cmp_h1":{"kn":"Dicot stem","hi":"Dicot stem"},"cmp_h2":{"kn":"Monocot stem","hi":"Monocot stem"},"cmp_r1c0":{"kn":"Hypodermis","hi":"Hypodermis"},"cmp_r1c1":{"kn":"Collenchymatous","hi":"Collenchymatous"},"cmp_r1c2":{"kn":"Sclerenchymatous","hi":"Sclerenchymatous"},"cmp_r2c0":{"kn":"Ground tissue","hi":"Ground tissue"},"cmp_r2c1":{"kn":"cortex, endodermis &amp; pith ಆಗಿ ವಿಭಿನ್ನಗೊಂಡಿದೆ","hi":"cortex, endodermis &amp; pith में विभेदित"},"cmp_r2c2":{"kn":"ವಿಭಿನ್ನಗೊಳ್ಳದ — ಏಕರೂಪ","hi":"अविभेदित — एक समान"},"cmp_r3c0":{"kn":"Vascular bundles","hi":"Vascular bundles"},"cmp_r3c1":{"kn":"ಒಂದು ವರ್ತುಲದಲ್ಲಿ ಜೋಡಣೆ","hi":"एक वलय में व्यवस्थित"},"cmp_r3c2":{"kn":"ground tissue ಉದ್ದಕ್ಕೂ ಚದುರಿದೆ","hi":"ground tissue में बिखरे हुए"},"cmp_r4c0":{"kn":"Bundle size","hi":"Bundle size"},"cmp_r4c1":{"kn":"ಬಹುತೇಕ ಏಕರೂಪ","hi":"अधिकतर एक समान"},"cmp_r4c2":{"kn":"ಪರಿಧಿಯಲ್ಲಿ ಚಿಕ್ಕದು, ಕೇಂದ್ರದಲ್ಲಿ ದೊಡ್ಡದು","hi":"परिधि पर छोटे, केंद्र में बड़े"},"cmp_r5c0":{"kn":"Cambium","hi":"Cambium"},"cmp_r5c1":{"kn":"ಇದೆ (bundle \"open\")","hi":"मौजूद (bundle \"open\")"},"cmp_r5c2":{"kn":"ಇಲ್ಲ (bundle \"closed\")","hi":"अनुपस्थित (bundle \"closed\")"},"cmp_r6c0":{"kn":"Secondary growth","hi":"Secondary growth"},"cmp_r6c1":{"kn":"ಸಾಮಾನ್ಯವಾಗಿ ಸಂಭವಿಸುತ್ತದೆ","hi":"आमतौर पर होती है"},"cmp_r6c2":{"kn":"ಸಂಭವಿಸುವುದಿಲ್ಲ","hi":"नहीं होती"},"cmp_r7c0":{"kn":"Bundle sheath","hi":"Bundle sheath"},"cmp_r7c1":{"kn":"ಇಲ್ಲ — ಬದಲಿಗೆ pericycle ವರ್ತುಲ ರೂಪಿಸುತ್ತದೆ","hi":"अनुपस्थित — इसके बजाय pericycle एक वलय बनाता है"},"cmp_r7c2":{"kn":"ಪ್ರತಿ bundle ಸುತ್ತ ಇದೆ (sclerenchymatous)","hi":"हर bundle के चारों ओर मौजूद (sclerenchymatous)"},"cmp_r8c0":{"kn":"Pith","hi":"Pith"},"cmp_r8c1":{"kn":"ದೊಡ್ಡದು, ಸ್ಪಷ್ಟವಾಗಿ ವ್ಯಾಖ್ಯಾನಿಸಲ್ಪಟ್ಟಿದೆ, ಕೇಂದ್ರ","hi":"बड़ा, स्पष्ट रूप से परिभाषित, केंद्रीय"},"cmp_r8c2":{"kn":"ground tissue ಯಿಂದ ಪ್ರತ್ಯೇಕಿಸಲಾಗದು","hi":"ground tissue से अलग नहीं किया जा सकता"},"cmp_r9c0":{"kn":"Protoxylem lacuna","hi":"Protoxylem lacuna"},"cmp_r9c1":{"kn":"ಸಾಮಾನ್ಯವಾಗಿ ಅಸ್ಪಷ್ಟ","hi":"आमतौर पर अस्पष्ट"},"cmp_r9c2":{"kn":"ಎದ್ದು ಕಾಣುತ್ತದೆ","hi":"स्पष्ट रूप से दिखाई देती है"}};
+const PRACTICAL_ORIGINAL_EN = {};
+document.querySelectorAll('[data-i18n]').forEach(function(el){
+  PRACTICAL_ORIGINAL_EN[el.getAttribute('data-i18n')] = el.innerHTML;
+});
+let currentLang = 'en';
+function setLang(lang){
+  currentLang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    const key = el.getAttribute('data-i18n');
+    if(lang === 'en'){ el.innerHTML = PRACTICAL_ORIGINAL_EN[key]; }
+    else if(PRACTICAL_TRANSLATIONS[key] && PRACTICAL_TRANSLATIONS[key][lang]){ el.innerHTML = PRACTICAL_TRANSLATIONS[key][lang]; }
+  });
+  try{ localStorage.setItem('baio_practical_lang', lang); }catch(e){}
+  renderLangSwitcher();
+}
+window.setLang = setLang;
+function renderLangSwitcher(){
+  const el = document.getElementById('langSwitcher');
+  if(!el) return;
+  const langs = [{id:'en',label:'English'},{id:'kn',label:'ಕನ್ನಡ'},{id:'hi',label:'हिंदी'}];
+  el.innerHTML = langs.map(function(l){ return '<div class="lang-btn' + (l.id===currentLang?' active':'') + '" onclick="setLang(\'' + l.id + '\')">' + l.label + '</div>'; }).join('');
+}
+(function(){
+  let saved = null;
+  try{ saved = localStorage.getItem('baio_practical_lang'); }catch(e){}
+  if(saved && saved !== 'en'){ setLang(saved); }
+  else { renderLangSwitcher(); }
+})();
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  });
+}
+</script>
+<script>
+(function(){
+  function showOfflineBanner(){
+    if(document.getElementById('baioOfflineBanner')) return;
+    var bar = document.createElement('div');
+    bar.id = 'baioOfflineBanner';
+    bar.setAttribute('role','status');
+    bar.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#B8912A;color:#0B1B14;font:600 13px/1.4 -apple-system,"Segoe UI",Roboto,sans-serif;padding:9px 40px 9px 14px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.25);';
+    bar.innerHTML = '📶 You’re offline — showing saved content, which may be out of date.'
+      + '<button type="button" aria-label="Dismiss" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#0B1B14;font-weight:800;font-size:16px;cursor:pointer;line-height:1;padding:2px 4px;">&times;</button>';
+    bar.querySelector('button').addEventListener('click', function(){ bar.remove(); });
+    document.body.prepend(bar);
+  }
+  function hideOfflineBanner(){
+    var bar = document.getElementById('baioOfflineBanner');
+    if(bar) bar.remove();
+  }
+  function checkConnectivity(isRetry){
+    if(!navigator.onLine){ showOfflineBanner(); return; }
+    fetch('manifest.json', { cache:'no-store' }).then(function(res){
+      if(res && res.ok) hideOfflineBanner();
+      else if(isRetry) showOfflineBanner();
+      else setTimeout(function(){ checkConnectivity(true); }, 1000);
+    }).catch(function(){
+      if(isRetry) showOfflineBanner();
+      else setTimeout(function(){ checkConnectivity(true); }, 1000);
+    });
+  }
+  window.addEventListener('online', function(){ checkConnectivity(); });
+  window.addEventListener('offline', showOfflineBanner);
+  if(document.readyState === 'complete' || document.readyState === 'interactive'){ checkConnectivity(); }
+  else { document.addEventListener('DOMContentLoaded', checkConnectivity); }
+})();
+</script>
+</body>
+</html>
