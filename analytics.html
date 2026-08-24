@@ -961,6 +961,7 @@ window.addEventListener('afterprint', function(){
   <button class="tab-scroll-btn" id="modeScrollLeft">&#8249;</button>
   <div class="mode-switch" id="modeSwitchRow" tabindex="0">
     <button class="mode-btn active" data-mode="student">👤 Student Report Card</button>
+    <button class="mode-btn" data-mode="adopted">🌱 Adopted Students</button>
     <button class="mode-btn" data-mode="slip">📘 Slip Test Analytics</button>
     <button class="mode-btn" data-mode="monthly">📗 Monthly Test Analytics</button>
     <button class="mode-btn" data-mode="bvo">🧬 Biology vs Others</button>
@@ -2858,6 +2859,16 @@ window.addEventListener('afterprint', function(){
 </main>
 </div><!-- /app-student -->
 
+<div class="app-container" id="app-adopted" style="display:none;">
+<main>
+  <div class="panel">
+    <h2>🌱 Adopted Students</h2>
+    <div class="desc">1st PU Science &middot; students formally adopted by Narendra Sir under the institute's mentorship programme. Tap "View Card" to jump straight to a student's full report card.</div>
+    <div id="adoptedStudentsWrap"></div>
+  </div>
+</main>
+</div><!-- /app-adopted -->
+
 <script>
 /* ---------- Theme-aware chart color helpers ---------- */
 function cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
@@ -3238,7 +3249,7 @@ document.querySelectorAll('.app-container').forEach(container=>{
 const ANALYTICS_MASTER_CODE = 'BAIO-NS-2026-R4T9';
 // Note: the teacher bypass now uses ANALYTICS_MASTER_CODE directly (defined above) \u2014
 // no separate password to remember.
-const ANALYTICS_LOCKED_MODES = ['slip', 'monthly', 'bvo', 'sections', 'neetobt', 'kcetobt', 'jeeobt', 'pucompare', 'achievers', 'bioreport', 'electronicsreport', 'reports'];
+const ANALYTICS_LOCKED_MODES = ['slip', 'monthly', 'bvo', 'sections', 'neetobt', 'kcetobt', 'jeeobt', 'pucompare', 'achievers', 'bioreport', 'electronicsreport', 'reports', 'adopted'];
 function isAnalyticsUnlocked(){
   try{ return localStorage.getItem('baio_analytics_unlock') === 'true'; }catch(e){ return false; }
 }
@@ -3258,7 +3269,7 @@ document.getElementById('analyticsRelockBtn').addEventListener('click', () => {
 function showAnalyticsLockScreen(){
   ['app-slip','app-monthly','app-bvo','app-sections','app-neetobt','app-kcetobt','app-jeeobt',
    'app-pu2slip','app-pu2monthly','app-pu2bvo','app-pu2sections','app-pu2neetobt','app-pu2kcetobt',
-   'app-pucompare','app-bioreport','app-electronicsreport','app-reports'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
+   'app-pucompare','app-bioreport','app-electronicsreport','app-reports','app-adopted'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
   document.getElementById('app-student').style.display = 'none';
   document.getElementById('analyticsLockScreen').style.display = '';
 }
@@ -3362,11 +3373,12 @@ function buildFnFor(mode){
   if(mode==='achievers') return buildAchievers;
   if(mode==='bioreport') return initBioReportTab;
   if(mode==='electronicsreport') return initElectronicsReportTab;
+  if(mode==='adopted') return renderAdoptedStudents;
   return null;
 }
 const ALL_CONTAINER_IDS = ['app-slip','app-monthly','app-bvo','app-sections','app-neetobt','app-kcetobt','app-jeeobt',
   'app-pu2slip','app-pu2monthly','app-pu2bvo','app-pu2sections','app-pu2neetobt','app-pu2kcetobt','app-pu2jeeobt',
-  'app-pucompare','app-achievers','app-bioreport','app-electronicsreport','app-keys','app-reports','app-student'];
+  'app-pucompare','app-achievers','app-bioreport','app-electronicsreport','app-keys','app-reports','app-student','app-adopted'];
 document.querySelectorAll('.mode-btn[data-mode]').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     if(ANALYTICS_LOCKED_MODES.indexOf(btn.dataset.mode) !== -1 && !isAnalyticsUnlocked()){
@@ -9467,6 +9479,95 @@ function sectionLabel(student){
   if(s==='OTHER') return 'Electronics';
   return student.section;
 }
+
+/* ---- Adopted Students: 1st PU Science students formally adopted by Narendra Sir under
+   the institute's mentorship programme. Sourced from the institute's printed adoption
+   list (enrollment code, name, parent mobile numbers as handed out) and linked back to
+   the live STUDENTS roster by code so their test scores / worksheet status / full report
+   card are one tap away. A code with no roster match (wrong/outdated code on the printed
+   sheet, or a student not yet entered) is shown flagged rather than silently guessed at. ---- */
+const ADOPTED_STUDENTS = [
+  {sno:1, code:'26MPU0087', name:'SHARANABASAPPA P K', father:'9483212266', mother:'9964250999'},
+  {sno:2, code:'26MPU0089', name:'Jyoti', father:'7899608793', mother:'9845982485'},
+  {sno:3, code:'26MPU0090', name:'KAVIRAJ', father:'8105761351', mother:'7411275491'},
+  {sno:4, code:'26MPU0092', name:'Bhavani', father:'9900285609', mother:'9663559217'},
+  {sno:5, code:'26MPU0093', name:'Shravya Biradar', father:'7396968604', mother:'7337415583'},
+  {sno:6, code:'26MPU0095', name:'Hemanth Mundada', father:'9916369250', mother:''},
+  {sno:7, code:'26MPU0096', name:'PALLAVI', father:'9686875978', mother:'9740097049'},
+  {sno:8, code:'26MPU0098', name:'KHAJA MOINUDDIN', father:'8310858669', mother:'8139988193'},
+  {sno:9, code:'26MPU0099', name:'Shrusti', father:'9110287907', mother:'8217600013'},
+  {sno:10, code:'26MPU0100', name:'SOUMYA', father:'7760494404', mother:'7975649630'},
+  {sno:11, code:'26MPU0101', name:'Srushti', father:'9902691296', mother:'9902691296'},
+  {sno:12, code:'26MPU0102', name:'FATIMA HABEEB', father:'9844081786', mother:'7090292786'},
+  {sno:13, code:'26MPU0103', name:'kanchana', father:'9743392786', mother:'7259403414'},
+  {sno:14, code:'26MPU0104', name:'OM SHARAN', father:'9481252057', mother:'9380461231'},
+  {sno:15, code:'26MPU0105', name:'MOHAMMAD FARHAN AKMAL', father:'9620725927', mother:'9742305855'},
+  {sno:16, code:'26MPU0106', name:'Ritesh', father:'9731775843', mother:'9731775843'},
+  {sno:17, code:'26MPU0108', name:'MAYURI', father:'7975504587', mother:'8277144990'},
+  {sno:18, code:'26MPU0109', name:'SHAZFA LAIBA', father:'7022236285', mother:'9008612791'}
+];
+const ADOPTED_NOTES_KEY = 'baio_adopted_notes';
+function escAttr(str){
+  return String(str||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function adoptedLatestSnapshot(student){
+  if(student.mt && student.mt.TOTAL!==null && student.mt.TOTAL!==undefined){
+    return student.mt.TOTAL+'/240'+(student.mt.RANK?' (Rank #'+student.mt.RANK+')':'');
+  }
+  if(student.june && student.june.TOTAL!==null && student.june.TOTAL!==undefined){
+    return student.june.TOTAL+'/240'+(student.june.RANK?' (Rank #'+student.june.RANK+')':'');
+  }
+  return '—';
+}
+function openAdoptedReportCard(code){
+  const student = STUDENTS.find(s=>s.code===code);
+  if(!student) return;
+  const studentModeBtn = document.querySelector('.mode-btn[data-mode="student"]');
+  if(studentModeBtn) studentModeBtn.click();
+  showReportCard(student, 1);
+  const rc = document.getElementById('reportCardWrap');
+  if(rc) rc.scrollIntoView({behavior:'smooth', block:'start'});
+}
+window.openAdoptedReportCard = openAdoptedReportCard;
+function renderAdoptedStudents(){
+  const wrap = document.getElementById('adoptedStudentsWrap');
+  if(!wrap) return;
+  let notes = {};
+  try{ notes = JSON.parse(localStorage.getItem(ADOPTED_NOTES_KEY) || '{}'); }catch(e){}
+  const rows = ADOPTED_STUDENTS.map(a=>{
+    const student = STUDENTS.find(s=>s.code===a.code);
+    const nameDisplay = student ? student.name : (a.name+' <span class="chip down" style="margin-left:6px;">Not in roster</span>');
+    const sectionDisplay = student ? sectionLabel(student) : '—';
+    const snapshot = student ? adoptedLatestSnapshot(student) : '—';
+    const fatherLink = a.father ? '<a href="tel:'+a.father+'">'+a.father+'</a>' : '—';
+    const motherLink = a.mother ? '<a href="tel:'+a.mother+'">'+a.mother+'</a>' : '—';
+    const noteVal = escAttr(notes[a.code] || '');
+    const actionCell = student
+      ? '<button class="mini-action-btn" onclick="openAdoptedReportCard(\''+a.code+'\')">View Card</button>'
+      : '<span style="color:var(--muted); font-size:11.5px;">—</span>';
+    return '<tr>'+
+      '<td>'+a.sno+'</td>'+
+      '<td>'+a.code+'</td>'+
+      '<td>'+nameDisplay+'</td>'+
+      '<td>'+sectionDisplay+'</td>'+
+      '<td>'+fatherLink+'</td>'+
+      '<td>'+motherLink+'</td>'+
+      '<td>'+snapshot+'</td>'+
+      '<td><input type="text" class="adopted-note-input" data-code="'+a.code+'" value="'+noteVal+'" placeholder="Add remark…" style="width:150px; background:var(--card); border:1px solid var(--border); color:var(--text); padding:6px 8px; border-radius:6px; font-size:12.5px; font-family:\'Inter\',sans-serif;"></td>'+
+      '<td>'+actionCell+'</td>'+
+    '</tr>';
+  }).join('');
+  wrap.innerHTML = '<div class="table-wrap"><table><thead><tr><th>#</th><th>Code</th><th>Name</th><th>Section</th><th>Father Mobile</th><th>Mother Mobile</th><th>Latest Test</th><th>Remarks</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+  wrap.querySelectorAll('.adopted-note-input').forEach(inp=>{
+    inp.addEventListener('change', ()=>{
+      let n = {};
+      try{ n = JSON.parse(localStorage.getItem(ADOPTED_NOTES_KEY) || '{}'); }catch(e){}
+      n[inp.dataset.code] = inp.value;
+      try{ localStorage.setItem(ADOPTED_NOTES_KEY, JSON.stringify(n)); }catch(e){}
+    });
+  });
+}
+window.renderAdoptedStudents = renderAdoptedStudents;
 
 /* ---- Student's own subject comparison: Biology vs Physics/Chemistry/Maths, most recent full test ---- */
 function getStudentSubjectCompare(student, pu){
