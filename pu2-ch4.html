@@ -7839,19 +7839,39 @@ enableTopicNavScrolling('conceptTopicNav', 'conceptTopicNavScrollLeft', 'concept
     $('paperOutputCard').style.display = '';
   }
 
+  function pgSelectionsValid(){
+    var topicModeOpt = document.querySelector('#pgTopicModeSeg .seg-opt.active');
+    var topicMode = topicModeOpt ? topicModeOpt.dataset.val : 'full';
+    if(topicMode === 'select' && !document.querySelector('.pgTopicCb:checked')){
+      alert('Please pick at least one topic (or switch back to "Full Chapter") before generating the paper.');
+      return false;
+    }
+    var paperType = document.querySelector('#paperTypeSeg .seg-opt.active').dataset.val;
+    if(paperType === 'neet'){
+      var typeModeOpt = document.querySelector('#pgNeetTypeModeSeg .seg-opt.active');
+      var typeMode = typeModeOpt ? typeModeOpt.dataset.val : 'all';
+      if(typeMode === 'select' && !document.querySelector('.pgNeetTypeCb:checked')){
+        alert('Please pick at least one question type (or switch back to "All Types") before generating the paper.');
+        return false;
+      }
+    }
+    return true;
+  }
   function generatePaper(){
+    if(!pgSelectionsValid()) return false;
     var type = document.querySelector('#paperTypeSeg .seg-opt.active').dataset.val;
     if(type === 'theory') buildTheoryPaper(); else buildNeetPaper();
+    return true;
   }
   $('pgGenerateBtn').addEventListener('click', function(){
-    generatePaper();
+    if(!generatePaper()) return;
     $('paperAnswerKey').style.display = 'none';
     $('pgToggleKeyBtn').innerHTML = 'View Answers';
     $('papergenSetupCard').style.display = 'none';
     $('paperOutputCard').style.display = '';
   });
   $('pgRegenBtn').addEventListener('click', function(){
-    generatePaper();
+    if(!generatePaper()) return;
     $('paperAnswerKey').style.display = 'none';
     $('pgToggleKeyBtn').innerHTML = 'View Answers';
     $('paperOutputCard').scrollIntoView({behavior:'smooth', block:'start'});

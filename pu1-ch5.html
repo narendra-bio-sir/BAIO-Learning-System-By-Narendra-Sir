@@ -2838,14 +2838,14 @@ let pgState = {
 function pgAllMcq(){ return DATA.mcq; }
 function pgAllFib(){ return DATA.neet.filter(q=>q.type==='fib'); }
 function pgAllDesc(marks){ return DESC_QUESTIONS.filter(q=>q.marks===marks); }
-function pgTopicOk(q){ return pgState.topicMode==='full' || pgState.topics.length===0 || pgState.topics.includes(q.topic); }
+function pgTopicOk(q){ return pgState.topicMode==='full' || pgState.topics.includes(q.topic); }
 function pgFilterPool(pool){
   return pool.filter(q => pgTopicOk(q) && (pgState.difficulty==='All' || q.difficulty===pgState.difficulty));
 }
 function pgNeetFilterPool(){
   return DATA.neet.filter(q => pgTopicOk(q)
     && (pgState.neetDifficulty==='All' || q.difficulty===pgState.neetDifficulty)
-    && (pgState.neetTypeMode==='all' || pgState.neetTypes.length===0 || pgState.neetTypes.includes(q.type)));
+    && (pgState.neetTypeMode==='all' || pgState.neetTypes.includes(q.type)));
 }
 function pgCountOptions(max, step){
   let out = [];
@@ -2926,6 +2926,14 @@ window.pgSetNeetCount=pgSetNeetCount; window.pgSetNeetDiff=pgSetNeetDiff; window
 
 let pgGenerated = null;
 function pgGenerate(){
+  if(pgState.topicMode==='select' && pgState.topics.length===0){
+    alert('Please pick at least one topic (or switch back to "Full Chapter") before generating the paper.');
+    return;
+  }
+  if(pgState.paperType==='neet' && pgState.neetTypeMode==='select' && pgState.neetTypes.length===0){
+    alert('Please pick at least one question type (or switch back to "All Types") before generating the paper.');
+    return;
+  }
   if(pgState.paperType==='theory'){
     const mcqPool = shuffleArr(pgFilterPool(pgAllMcq())).slice(0, pgState.mcqCount);
     const fibPool = shuffleArr(pgFilterPool(pgAllFib())).slice(0, pgState.fibCount);

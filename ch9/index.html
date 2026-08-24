@@ -4599,7 +4599,19 @@ function pgGenerateNeet(){
   document.getElementById('pgSetupCard').style.display = 'none';
   document.getElementById('paperOutputCard').style.display = '';
 }
+function pgSelectionsValid(){
+  if(pgSetup.topicMode === 'select' && pgSetup.topicIds.length === 0){
+    alert('Please pick at least one topic (or switch back to "Full Chapter") before generating the paper.');
+    return false;
+  }
+  if(pgSetup.type === 'neet' && pgSetup.neetTypeMode === 'select' && pgSetup.neetTypes.length === 0){
+    alert('Please pick at least one question type (or switch back to "All Types") before generating the paper.');
+    return false;
+  }
+  return true;
+}
 function pgGenerate(){
+  if(!pgSelectionsValid()) return;
   if(pgSetup.type === 'theory') pgGenerateTheory(); else pgGenerateNeet();
 }
 window.pgGenerate = pgGenerate;
