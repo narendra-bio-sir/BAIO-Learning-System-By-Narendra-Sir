@@ -4521,7 +4521,7 @@ function pgGenerateTheory(){
   const topicFilter = pgTopicFilter();
   const mcqPool = shuffleArrPG(pgFilterByTopic(DATA.mcq, topicFilter)).slice(0, pgSetup.mcqCount);
   const fibPool = shuffleArrPG(pgFilterByTopic(DATA.neet.filter(q=>q.type==='fib'), topicFilter)).slice(0, pgSetup.fibCount);
-  const shortPool = shuffleArrPG(pgFilterByTopic(DATA.concepts ? Object.values(DATA.concepts).flatMap(c=>c.analytical.map(a=>({q:a.q, a:a.a, topic:'multi'}))) : [], null));
+  const shortPool = shuffleArrPG(pgFilterByTopic(DATA.concepts ? Object.entries(DATA.concepts).flatMap(([topicId,c])=>c.analytical.map(a=>({q:a.q, a:a.a, topic:topicId}))) : [], topicFilter));
   const q2list = shortPool.slice(0, pgSetup.q2Count);
   const q3list = shortPool.slice(pgSetup.q2Count, pgSetup.q2Count + pgSetup.q3Count);
   const q5list = shortPool.slice(pgSetup.q2Count + pgSetup.q3Count, pgSetup.q2Count + pgSetup.q3Count + pgSetup.q5Count);
