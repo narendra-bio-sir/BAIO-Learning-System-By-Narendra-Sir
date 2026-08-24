@@ -2355,8 +2355,28 @@ window.addEventListener('afterprint', function(){
 <div class="app-container" id="app-failures" style="display:none;">
 <main>
   <div class="panel">
-    <h2>⚠️ Biology Failures &amp; Remedial Plan</h2>
-    <div class="desc">A live, auto-generated list of every student currently below the Biology passing mark on their most recent Board-pattern test (Slip Test or Monthly Test &mdash; NEET OBT is tracked separately), split by section, with a concrete remedial plan for each group. Covers both PU-I and PU-II. Refreshes from the latest data every time you open this tab.</div>
+    <h2>⚠️ Failures &amp; Remedial Plan</h2>
+    <div class="desc">A live, auto-generated list of every student currently below the passing mark on their most recent Board-pattern test (Slip Test or Monthly Test &mdash; NEET OBT is tracked separately) in their own subject &mdash; Biology, or Electronics for the Electronics stream &mdash; split by section, with a concrete remedial plan for each group. Covers both PU-I and PU-II. Refreshes from the latest data every time you open this tab.</div>
+    <div class="setup-label" style="font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--gold-soft);margin:14px 0 6px;">Filters</div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <select id="failuresPUFilter" style="flex:1; min-width:140px; padding:10px; border-radius:10px; border:1.5px solid var(--border); background:rgba(var(--overlay-rgb),0.05); color:var(--text-strong); font-size:14px; font-family:'Inter',sans-serif;">
+        <option value="all">All PU Levels</option>
+        <option value="1">🎓 PU-I only</option>
+        <option value="2">🏆 PU-II only</option>
+      </select>
+      <select id="failuresSectionFilter" style="flex:1; min-width:140px; padding:10px; border-radius:10px; border:1.5px solid var(--border); background:rgba(var(--overlay-rgb),0.05); color:var(--text-strong); font-size:14px; font-family:'Inter',sans-serif;">
+        <option value="all">All Sections</option>
+        <option value="SPARK">SPARK</option>
+        <option value="PRIME">PRIME</option>
+        <option value="CHAMPION">CHAMPION</option>
+        <option value="ELITE">ELITE</option>
+      </select>
+      <select id="failuresStreamFilter" style="flex:1; min-width:140px; padding:10px; border-radius:10px; border:1.5px solid var(--border); background:rgba(var(--overlay-rgb),0.05); color:var(--text-strong); font-size:14px; font-family:'Inter',sans-serif;">
+        <option value="all">All Streams</option>
+        <option value="bio">🧬 Biology only</option>
+        <option value="ele">⚡ Electronics only</option>
+      </select>
+    </div>
     <div class="report-actions" style="margin-top:14px;">
       <button class="report-btn secondary" id="bioFailuresRefreshBtn">🔄 Refresh</button>
     </div>
@@ -10154,16 +10174,35 @@ function getTheoryLatestBio(student, pu){
   return { theoryHist, latest: theoryHist[theoryHist.length-1], everPassed: theoryHist.some(h=>h.pct>=35) };
 }
 
+/* ---- Same Theory/Board-pattern-only latest lookup as getTheoryLatestBio, but for
+   Electronics-stream students, scored on their Electronics subject instead. ---- */
+function getTheoryLatestElectronics(student, pu){
+  const hist = getElectronicsHistory(student, pu);
+  const monthLabels = pu===2 ? Object.values(PU2_MONTH_LABELS) : Object.values(PU1_MONTH_LABELS);
+  const theoryHist = hist.filter(h => h.label.startsWith('Slip Test') || monthLabels.includes(h.label));
+  if(!theoryHist.length) return null;
+  return { theoryHist, latest: theoryHist[theoryHist.length-1], everPassed: theoryHist.some(h=>h.pct>=35) };
+}
+
 function buildFailuresRemedialReport(){
   const dateStr = new Date().toLocaleDateString('en-IN', {day:'numeric', month:'long', year:'numeric'});
-  const roster = bioCombinedRoster();
+  const puFilter = (document.getElementById('failuresPUFilter')||{}).value || 'all';
+  const secFilter = (document.getElementById('failuresSectionFilter')||{}).value || 'all';
+  const streamFilter = (document.getElementById('failuresStreamFilter')||{}).value || 'all';
+
+  let roster = bioCombinedRoster();
+  if(puFilter !== 'all') roster = roster.filter(s => String(s.pu) === puFilter);
+  if(secFilter !== 'all') roster = roster.filter(s => (s.section||'').toUpperCase() === secFilter);
 
   const failing = [];
   const sectionTotals = {};
 
   roster.forEach(s=>{
-    const sec = s.section || '—';
-    const info = getTheoryLatestBio(s, s.pu);
+    const sec = sectionLabel(s);
+    const isEle = isElectronicsOnly(s, s.pu);
+    if(streamFilter==='bio' && isEle) return;
+    if(streamFilter==='ele' && !isEle) return;
+    const info = isEle ? getTheoryLatestElectronics(s, s.pu) : getTheoryLatestBio(s, s.pu);
     if(!info) return;
     if(!sectionTotals[sec]) sectionTotals[sec] = {sum:0, n:0, failN:0};
     sectionTotals[sec].sum += info.latest.pct;
@@ -10171,7 +10210,7 @@ function buildFailuresRemedialReport(){
     if(info.latest.pct < 35){
       sectionTotals[sec].failN += 1;
       failing.push({
-        name: s.name, section: sec, pu: s.pu,
+        name: s.name, section: sec, pu: s.pu, stream: isEle ? 'Electronics' : 'Biology',
         latestLabel: info.latest.label, latestPct: info.latest.pct,
         pattern: info.everPassed ? 'Regressed' : 'Persistent',
         trend: info.theoryHist.map(h=>h.pct+'%').join(' → ')
@@ -10182,6 +10221,7 @@ function buildFailuresRemedialReport(){
   failing.sort((a,b)=> a.latestPct - b.latestPct);
   const persistent = failing.filter(f=>f.pattern==='Persistent');
   const regressed = failing.filter(f=>f.pattern==='Regressed');
+  const nameWithStream = p => p.name + (p.stream==='Electronics' ? ' (Electronics)' : '');
 
   const sectionRows = Object.keys(sectionTotals).sort().map(sec=>{
     const t = sectionTotals[sec];
@@ -10191,44 +10231,49 @@ function buildFailuresRemedialReport(){
   });
   const weakest = sectionRows.length ? sectionRows.slice().sort((a,b)=>b.failPct-a.failPct)[0] : null;
 
+  const scopeLabel = (puFilter==='all'?'PU-I & PU-II':'PU-'+(puFilter==='2'?'II':'I'))
+    + (secFilter==='all' ? '' : ' · '+secFilter)
+    + (streamFilter==='all' ? '' : ' · '+(streamFilter==='ele'?'Electronics only':'Biology only'));
+
   let html = '<div class="rp-header">'+
     '<div class="rp-tag">Global Education With Indian Values</div>'+
     '<h1>S.R.N. MEHTA PU SCIENCE COLLEGE</h1>'+
     '<p>Biology Department &middot; Failures &amp; Remedial Plan &middot; '+dateStr+'</p>'+
     '<div class="rp-badges"><span class="rp-badge">⚠️ '+failing.length+' Currently Failing</span>'+
-      '<span class="rp-badge" style="opacity:.85;">'+persistent.length+' Persistent · '+regressed.length+' Regressed</span></div>'+
+      '<span class="rp-badge" style="opacity:.85;">'+persistent.length+' Persistent · '+regressed.length+' Regressed</span>'+
+      '<span class="rp-badge" style="opacity:.7;">'+scopeLabel+'</span></div>'+
   '</div><div class="rp-body">';
 
   html += '<div class="rp-kpi-grid">'+
-    '<div class="rp-kpi"><div class="rp-kpi-label">Currently Failing Biology</div><div class="rp-kpi-value">'+failing.length+'</div><div class="rp-kpi-sub">Below 35%, latest Board-pattern test</div></div>'+
+    '<div class="rp-kpi"><div class="rp-kpi-label">Currently Failing</div><div class="rp-kpi-value">'+failing.length+'</div><div class="rp-kpi-sub">Below 35%, latest Board-pattern test, own subject</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Persistent (never passed)</div><div class="rp-kpi-value">'+persistent.length+'</div><div class="rp-kpi-sub">Needs foundational catch-up</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Regressed (passed before)</div><div class="rp-kpi-value">'+regressed.length+'</div><div class="rp-kpi-sub">Needs revision &amp; consistency</div></div>'+
     (weakest ? '<div class="rp-kpi"><div class="rp-kpi-label">Weakest Section</div><div class="rp-kpi-value">'+weakest.sec+'</div><div class="rp-kpi-sub">'+weakest.failN+'/'+weakest.n+' failing ('+weakest.failPct+'%)</div></div>' : '')+
   '</div>';
 
-  html += rpSection('Section-wise Biology Snapshot <span style="font-weight:400;font-size:12px;color:var(--muted);">(Latest Board-pattern test per student)</span>',
+  html += rpSection('Section-wise Snapshot <span style="font-weight:400;font-size:12px;color:var(--muted);">(Latest Board-pattern test per student, own subject &mdash; Biology or Electronics)</span>',
     rpTable(['Section','Avg %','Appeared','Failing','Fail Rate'], sectionRows.map(r=>[r.sec, r.avg+'%', r.n, r.failN, r.failPct+'%'])));
 
-  html += rpSection('Students Currently Failing Biology <span style="font-weight:400;font-size:12px;color:var(--muted);">(sorted lowest first)</span>',
+  html += rpSection('Students Currently Failing <span style="font-weight:400;font-size:12px;color:var(--muted);">(sorted lowest first)</span>',
     failing.length ?
-      rpTable(['Name','Section','PU','Latest Test','Biology %','Pattern','Score Trend'], failing.map(f=>[f.name, f.section, 'PU-'+(f.pu===2?'II':'I'), f.latestLabel, f.latestPct+'%', f.pattern, f.trend]))
-      : '<div class="rp-callout">No students are currently below the passing mark in Biology — excellent work!</div>');
+      rpTable(['Name','Section','PU','Subject','Latest Test','Score %','Pattern','Score Trend'], failing.map(f=>[f.name, f.section, 'PU-'+(f.pu===2?'II':'I'), f.stream, f.latestLabel, f.latestPct+'%', f.pattern, f.trend]))
+      : '<div class="rp-callout">No students in this selection are currently below the passing mark — excellent work!</div>');
 
   let remedial = '';
   if(persistent.length){
-    remedial += '<p><b>'+persistent.length+' student(s) have never crossed the Biology pass mark</b> in any recorded Slip Test or Monthly Test on file ('+persistent.map(p=>p.name).join(', ')+'). '+
+    remedial += '<p><b>'+persistent.length+' student(s) have never crossed the pass mark in their subject</b> in any recorded Slip Test or Monthly Test on file ('+persistent.map(nameWithStream).join(', ')+'). '+
       'These students need foundational catch-up, not more of the current pace: start from early-chapter basics before layering on new syllabus, assign the Answer Practice tool filtered to 1&ndash;2 mark questions only so they can build confidence with achievable wins, and use the Paper Generator to create short, low-stakes practice papers scoped to whatever chapter is currently being taught. A visible first-pass badge matters more for this group right now than more content.</p>';
   }
   if(regressed.length){
-    remedial += '<p><b>'+regressed.length+' student(s) have passed Biology before but are currently below the mark</b> ('+regressed.map(p=>p.name).join(', ')+'). '+
+    remedial += '<p><b>'+regressed.length+' student(s) have passed their subject before but are currently below the mark</b> ('+regressed.map(nameWithStream).join(', ')+'). '+
       'Their gap is consistency, not fundamentals — revision and exam technique will move them fastest: quick spaced-recall drills with Flashcards and each chapter\'s keyword checklists, plus one extra revision pass before the next Monthly Test.</p>';
   }
   if(weakest && weakest.failPct > 0){
-    remedial += '<p><b>'+weakest.sec+' has the highest Biology fail rate of any section</b> ('+weakest.failPct+'%, '+weakest.failN+' of '+weakest.n+'). '+
-      'If this gap is wider than '+weakest.sec+'\'s gap in other subjects, it points at a section-specific fix — consider an extra short revision slot for '+weakest.sec+' before each Monthly Test, or pairing its weaker students with strong Biology performers from other sections.</p>';
+    remedial += '<p><b>'+weakest.sec+' has the highest fail rate of any section in this selection</b> ('+weakest.failPct+'%, '+weakest.failN+' of '+weakest.n+'). '+
+      'If this gap is wider than '+weakest.sec+'\'s gap elsewhere, it points at a section-specific fix — consider an extra short revision slot for '+weakest.sec+' before each Monthly Test, or pairing its weaker students with strong performers from other sections.</p>';
   }
   if(!failing.length){
-    remedial = '<p>No students are currently failing Biology across any section — a genuinely strong position. Keep checking back here after every new Slip Test or Monthly Test.</p>';
+    remedial = '<p>No students in this selection are currently failing — a genuinely strong position. Keep checking back here after every new Slip Test or Monthly Test.</p>';
   }
   html += '<div class="rp-section"><div class="rp-section-title">Remedial Plan <span style="font-weight:400;font-size:12px;color:var(--muted);">(Auto-generated from current data, Narendra Sir)</span></div>'+
     '<div class="teacher-comment"><span class="tc-label">From Narendra Sir, Lecturer in Biology</span>'+remedial+'</div></div>';
@@ -10477,6 +10522,9 @@ function initFailuresTab(){
     failuresTabInitialized = true;
     document.getElementById('bioFailuresRefreshBtn').addEventListener('click', buildFailuresRemedialReport);
     document.getElementById('bioFailuresPrintBtn').addEventListener('click', ()=> window.print());
+    document.getElementById('failuresPUFilter').addEventListener('change', buildFailuresRemedialReport);
+    document.getElementById('failuresSectionFilter').addEventListener('change', buildFailuresRemedialReport);
+    document.getElementById('failuresStreamFilter').addEventListener('change', buildFailuresRemedialReport);
   }
   buildFailuresRemedialReport();
 }
