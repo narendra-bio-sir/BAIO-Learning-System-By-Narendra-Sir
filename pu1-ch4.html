@@ -53,7 +53,6 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 /* HEADER */
 .header{padding:18px 18px 14px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--navy2),var(--navy) 90%);position:sticky;top:0;z-index:20;}
 .header-actions-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px;}
-.header-actions-row .lang-switcher{flex:0 0 100%; margin-bottom:2px;}
 .theme-toggle-btn{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:16px;padding:5px 10px;font-size:14px;cursor:pointer;}
 .home-btn{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:16px;padding:5px 10px;font-size:14px;cursor:pointer;text-decoration:none;display:inline-block;}
 .notif-btn{background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:16px;padding:5px 10px;font-size:14px;cursor:pointer;position:relative;}
@@ -97,21 +96,24 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 }
 .notif-btn .bell-ring{ display:inline-block; transform-origin:50% 0; animation:bellRing 2.4s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce){ .notif-btn .bell-ring{ animation:none; } }
-.lang-switcher{display:flex;gap:6px;}
-.lang-btn{padding:5px 12px;border-radius:14px;font-size:11px;font-weight:700;background:var(--panel2);color:var(--ink-dim);border:1px solid var(--line);cursor:pointer;}
+.lang-switcher{display:flex;gap:6px;position:relative;flex-shrink:0;}
+.lang-switcher-btn{display:flex;align-items:center;gap:4px;padding:5px 12px;border-radius:14px;font-size:11px;font-weight:700;background:var(--panel2);color:var(--ink-dim);border:1px solid var(--line);cursor:pointer;white-space:nowrap;}
+.lang-switcher-caret{font-size:8px;}
+.lang-switcher-menu{position:fixed;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,0.25);padding:6px;display:none;flex-direction:column;gap:2px;min-width:120px;z-index:200;}
+.lang-switcher-menu.open{display:flex;}
+.lang-switcher-option{background:none;border:none;text-align:left;padding:7px 10px;border-radius:7px;font-size:12px;font-weight:600;color:var(--ink);cursor:pointer;}
+.lang-switcher-option:hover{background:var(--panel2);}
+.lang-switcher-option.active{color:var(--gold2);font-weight:800;}
 @media(min-width:361px) and (max-width:420px){
   .header-actions-row{gap:6px;}
-  .lang-switcher{gap:5px;}
-  .lang-btn{padding:4px 10px;font-size:10.5px;}
+  .lang-switcher-btn{padding:4px 10px;font-size:10.5px;}
   .theme-toggle-btn, .home-btn, .notif-btn{padding:4px 9px;font-size:13px;}
 }
 @media(max-width:360px){
   .header-actions-row{gap:5px;}
-  .lang-switcher{gap:4px;}
-  .lang-btn{padding:3px 8px;font-size:10px;}
+  .lang-switcher-btn{padding:3px 8px;font-size:10px;}
   .theme-toggle-btn, .home-btn, .notif-btn{padding:3px 7px;font-size:12px;}
 }
-.lang-btn.active{background:var(--gold);color:#1a1406;border-color:var(--gold);font-weight:700;}
 .eyebrow{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);font-weight:600;}
 .chapter-title{font-size:20px;font-weight:700;color:var(--ink);margin-top:4px;}
 .topic-sub{font-size:12.5px;color:var(--gold);margin-top:2px;font-weight:500;}
@@ -840,9 +842,48 @@ function renderLangSwitcher(){
   const el = document.getElementById('langSwitcher');
   if(!el) return;
   const langs = [{id:'en',label:'English'},{id:'kn',label:'ಕನ್ನಡ'},{id:'hi',label:'हिंदी'}];
-  el.innerHTML = langs.map(l=>`<div class="lang-btn${l.id===currentLang?' active':''}" onclick="setLang('${l.id}')">${l.label}</div>`).join('');
+  el.innerHTML = `<button type="button" class="lang-switcher-btn" id="langSwitcherBtn" aria-haspopup="true" aria-expanded="false">Eng/Kan/Hin <span class="lang-switcher-caret">&#9662;</span></button>`;
+  const oldMenu = document.getElementById('langSwitcherMenu');
+  if(oldMenu) oldMenu.remove();
+  const menu = document.createElement('div');
+  menu.id = 'langSwitcherMenu';
+  menu.className = 'lang-switcher-menu';
+  menu.innerHTML = langs.map(l=>`<button type="button" class="lang-switcher-option${l.id===currentLang?' active':''}" onclick="setLang('${l.id}')">${l.label}</button>`).join('');
+  document.body.appendChild(menu);
+  const langBtn = document.getElementById('langSwitcherBtn');
+  function positionLangMenu(){
+    const r = langBtn.getBoundingClientRect();
+    menu.style.top = (r.bottom + 6) + 'px';
+    menu.style.left = r.left + 'px';
+  }
+  langBtn.addEventListener('click', e=>{
+    e.stopPropagation();
+    const willOpen = !menu.classList.contains('open');
+    if(willOpen) positionLangMenu();
+    menu.classList.toggle('open', willOpen);
+    langBtn.setAttribute('aria-expanded', String(willOpen));
+  });
 }
 window.renderLangSwitcher = renderLangSwitcher;
+if(!window.__langSwitcherOutsideClickBound){
+  window.__langSwitcherOutsideClickBound = true;
+  document.addEventListener('click', e=>{
+    const langMenu = document.getElementById('langSwitcherMenu');
+    const langBtn = document.getElementById('langSwitcherBtn');
+    if(langMenu && langMenu.classList.contains('open') && !langMenu.contains(e.target) && e.target !== langBtn){
+      langMenu.classList.remove('open');
+      if(langBtn) langBtn.setAttribute('aria-expanded', 'false');
+    }
+  });
+  window.addEventListener('scroll', ()=>{
+    const langMenu = document.getElementById('langSwitcherMenu');
+    const langBtn = document.getElementById('langSwitcherBtn');
+    if(langMenu && langMenu.classList.contains('open')){
+      langMenu.classList.remove('open');
+      if(langBtn) langBtn.setAttribute('aria-expanded', 'false');
+    }
+  }, true);
+}
 
 /* ---------------- STUDY PATH GUIDANCE ---------------- */
 /* A gentle, dismissible-by-ignoring suggestion for the recommended next tab —
