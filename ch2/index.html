@@ -134,6 +134,29 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
   border-color:var(--gold); color:var(--gold-2);
   box-shadow:0 4px 14px rgba(227,175,67,0.15);
 }
+.cat-dd-wrap{ position:relative; flex:0 0 auto; }
+.cat-dd-btn{
+  display:flex; align-items:center; gap:5px; height:100%;
+  background:var(--panel-2); border:1px solid var(--border); color:var(--text);
+  padding:9px 11px; border-radius:10px; font-family:'Fraunces',Georgia,serif;
+  font-size:11px; font-weight:600; cursor:pointer; white-space:nowrap;
+}
+.cat-dd-btn .chev{ color:var(--text-dim); font-size:9px; transition:transform .15s ease; }
+.cat-dd-btn.open .chev{ transform:rotate(180deg); }
+.cat-dd-menu{
+  position:absolute; top:calc(100% + 6px); left:0; z-index:21; min-width:170px;
+  background:var(--panel); border:1px solid var(--border); border-radius:12px;
+  box-shadow:var(--shadow); padding:6px; display:none;
+}
+.cat-dd-menu.open{ display:block; }
+.cat-dd-item{
+  padding:9px 10px; border-radius:8px; font-family:'Work Sans',sans-serif;
+  font-size:12.5px; font-weight:600; color:var(--text); cursor:pointer;
+  display:flex; justify-content:space-between; gap:8px;
+}
+.cat-dd-item .n{ color:var(--text-dim); font-weight:500; }
+.cat-dd-item:hover{ background:var(--panel-2); }
+.cat-dd-item.active{ color:var(--teal); background:var(--panel-2); }
 .panel{display:none; position:relative;}
 .panel.active{display:block; animation:fade .25s ease;}
 .setup-card{
@@ -1125,6 +1148,10 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
 
   <div class="desktop-row">
   <div class="tabbar-wrap">
+    <div class="cat-dd-wrap">
+      <button type="button" class="cat-dd-btn" id="catDdBtn">&#128214; Learn <span class="chev">&#9662;</span></button>
+      <div class="cat-dd-menu" id="catDdMenu"></div>
+    </div>
     <button class="tab-scroll-btn" id="tabScrollLeft">&#8249;</button>
     <div class="tabs" id="tabsBar">
     <button class="tab-btn" data-tab="badges">Milestones</button>
@@ -6288,6 +6315,64 @@ if(!window.__langSwitcherOutsideClickBound){
   if(!tabs || !leftBtn || !rightBtn) return;
   leftBtn.addEventListener('click', function(){ tabs.scrollBy({left:-120, behavior:'smooth'}); });
   rightBtn.addEventListener('click', function(){ tabs.scrollBy({left:120, behavior:'smooth'}); });
+})();
+
+/* ---- Chapter tab bar: group the tabs into categories behind a dropdown,
+   so the same long tab list no longer needs one long scrolling row. Existing
+   tab click handlers are untouched — this only shows/hides the buttons. ---- */
+(function(){
+  var CATEGORIES = [
+    {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','concept','studytips','boardimp','diagrams']},
+    {id:'practice', label:'Practice', icon:'✍️', tabs:['flash','quiz','writeit','revision']},
+    {id:'test', label:'Test Prep', icon:'\u{1F3AF}', tabs:['adv','kcet','papergen']},
+    {id:'explore', label:'Explore', icon:'\u{1F50D}', tabs:['tree','compare','mindmap','classppt','glossary']},
+    {id:'space', label:'My Space', icon:'\u{1F4CC}', tabs:['badges','progress','pacing','mynotes','dl']}
+  ];
+  var ddBtn = document.getElementById('catDdBtn');
+  var ddMenu = document.getElementById('catDdMenu');
+  var tabsBar = document.getElementById('tabsBar');
+  if(!ddBtn || !ddMenu || !tabsBar) return;
+
+  var clusterOf = {};
+  CATEGORIES.forEach(function(c){ c.tabs.forEach(function(id){ clusterOf[id] = c.id; }); });
+
+  ddMenu.innerHTML = CATEGORIES.map(function(c){
+    return '<div class="cat-dd-item" data-cluster="' + c.id + '">' + c.icon + ' ' + c.label + '<span class="n">' + c.tabs.length + '</span></div>';
+  }).join('');
+
+  function applyCategory(clusterId){
+    var c = CATEGORIES.find(function(x){ return x.id === clusterId; });
+    if(!c) return;
+    ddBtn.innerHTML = c.icon + ' ' + c.label + ' <span class="chev">&#9662;</span>';
+    tabsBar.querySelectorAll('.tab-btn').forEach(function(btn){
+      var id = btn.getAttribute('data-tab');
+      btn.style.display = c.tabs.indexOf(id) !== -1 ? '' : 'none';
+    });
+    ddMenu.querySelectorAll('.cat-dd-item').forEach(function(el){
+      el.classList.toggle('active', el.dataset.cluster === clusterId);
+    });
+  }
+
+  function closeDd(){ ddMenu.classList.remove('open'); ddBtn.classList.remove('open'); }
+
+  ddBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    ddMenu.classList.toggle('open');
+    ddBtn.classList.toggle('open');
+  });
+  ddMenu.addEventListener('click', function(e){
+    var item = e.target.closest('[data-cluster]');
+    if(!item) return;
+    applyCategory(item.dataset.cluster);
+    closeDd();
+  });
+  document.addEventListener('click', function(e){
+    if(!e.target.closest('.cat-dd-wrap')) closeDd();
+  });
+
+  var activeBtn = tabsBar.querySelector('.tab-btn.active');
+  var initialCluster = (activeBtn && clusterOf[activeBtn.getAttribute('data-tab')]) || 'learn';
+  applyCategory(initialCluster);
 })();
 
 function enableTopicNavScrolling(navId, leftBtnId, rightBtnId){
