@@ -86,6 +86,26 @@ header{padding:34px 0 22px; text-align:center;}
 .sig-stat .n{font-size:22px; font-weight:700; color:var(--gold);}
 .sig-stat .l{font-size:10.5px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:0.6px; margin-top:2px;}
 
+.chapter-jump-menu{
+  display:none; position:fixed; z-index:50; min-width:230px; max-width:280px;
+  background:var(--panel); border:1px solid var(--line); border-radius:14px;
+  box-shadow:0 14px 34px rgba(0,0,0,0.35); padding:8px; max-height:70vh; overflow-y:auto;
+}
+.chapter-jump-menu.open{ display:block; }
+.cjm-label{
+  font-size:10.5px; letter-spacing:1px; text-transform:uppercase; color:var(--ink-dim);
+  font-weight:700; padding:8px 10px 6px;
+}
+.cjm-item{
+  display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:10px;
+  color:var(--ink); text-decoration:none; font-size:13px;
+}
+.cjm-item:hover, .cjm-item:focus-visible{ background:var(--panel2); }
+.cjm-item .ci{ font-size:16px; line-height:1; flex:none; }
+.cjm-item .ct{ font-weight:600; }
+.cjm-item .cn{ font-size:10.5px; color:var(--teal); text-transform:uppercase; letter-spacing:.4px; }
+.cjm-empty{ padding:10px; font-size:12.5px; color:var(--ink-dim); }
+
 .section-label{
   font-size:17px; letter-spacing:1px; text-transform:uppercase; color:var(--gold); font-weight:800;
   margin:34px 0 14px; display:flex; align-items:center; gap:10px;
@@ -337,7 +357,11 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle light/dark theme">&#127769;</button>
     <script>(function(){try{var t=localStorage.getItem('baio_theme')||'light';if(t==='light')document.getElementById('themeToggleBtn').innerHTML='&#9728;️';}catch(e){}})();</script>
     <button id="indexHardRefreshBtn" class="theme-toggle-btn" style="right:66px;" onclick="indexHardRefresh()" title="Force-refresh this page (clears any cached copy)" aria-label="Force-refresh this page">&#128260;</button>
+    <button id="pu2ChapterJumpBtn" class="theme-toggle-btn" style="right:108px;" title="Jump to a live PU-II chapter" aria-label="Jump to a live PU-II chapter" aria-haspopup="true" aria-expanded="false">&#127942;</button>
+    <button id="pu1ChapterJumpBtn" class="theme-toggle-btn" style="right:150px;" title="Jump to a live PU-I chapter" aria-label="Jump to a live PU-I chapter" aria-haspopup="true" aria-expanded="false">&#127891;</button>
   </div>
+
+  <div id="chapterJumpMenu" class="chapter-jump-menu" role="menu"></div>
 
   <div id="motivationBar" class="motivation-bar"></div>
 
@@ -621,6 +645,61 @@ const CHAPTERS = [
   { num: 'Chapter 12', title: 'Ecosystem', href: 'pu2-ch12.html', icon: '🌳', desc: 'Energy flow, food chains, nutrient cycling & ecological pyramids.', progressKey: 'pu2ch12_ecosystem_progress_v1', hwKey: 'pu2ch12_hw_unlock', topicCount: 8, puc: 'PUC-2' },
   { num: 'Chapter 13', title: 'Biodiversity and Conservation', href: 'pu2-ch13.html', icon: '🦋', desc: 'Biodiversity patterns, loss & conservation strategies.', progressKey: 'pu2ch13_biodiversity_progress_v1', hwKey: 'pu2ch13_hw_unlock', topicCount: 8, puc: 'PUC-2' }
 ];
+
+/* ---- Chapter jump menu: two icon buttons (PU-I / PU-II) that list only the
+   live chapters for that PU level, so students can jump straight to a chapter
+   instead of scrolling the full catalog below. ---- */
+(function(){
+  const menu = document.getElementById('chapterJumpMenu');
+  const pu1Btn = document.getElementById('pu1ChapterJumpBtn');
+  const pu2Btn = document.getElementById('pu2ChapterJumpBtn');
+  if(!menu || !pu1Btn || !pu2Btn) return;
+
+  function closeMenu(){
+    menu.classList.remove('open');
+    menu.style.display = '';
+    pu1Btn.setAttribute('aria-expanded', 'false');
+    pu2Btn.setAttribute('aria-expanded', 'false');
+  }
+
+  function openMenuFor(btn, pucValue, label){
+    const list = CHAPTERS.filter(c => c.puc === pucValue && c.live);
+    menu.innerHTML = '<div class="cjm-label">' + label + ' &middot; Live Chapters</div>' +
+      (list.length
+        ? list.map(c => '<a class="cjm-item" href="' + c.href + '" role="menuitem"><span class="ci">' + c.icon + '</span><span><span class="ct">' + c.num + ': ' + c.title + '</span><br><span class="cn">' + c.puc + '</span></span></a>').join('')
+        : '<div class="cjm-empty">No live chapters yet for ' + label + '.</div>');
+
+    const r = btn.getBoundingClientRect();
+    menu.style.display = 'block'; // measure before positioning
+    const menuW = menu.offsetWidth;
+    let left = r.right - menuW;
+    if(left < 8) left = 8;
+    menu.style.left = left + 'px';
+    menu.style.top = (r.bottom + 8) + 'px';
+    menu.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+  }
+
+  pu1Btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    const wasOpenForThis = menu.classList.contains('open') && pu1Btn.getAttribute('aria-expanded') === 'true';
+    closeMenu();
+    if(!wasOpenForThis) openMenuFor(pu1Btn, 'PUC-1', 'PU-I');
+  });
+  pu2Btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    const wasOpenForThis = menu.classList.contains('open') && pu2Btn.getAttribute('aria-expanded') === 'true';
+    closeMenu();
+    if(!wasOpenForThis) openMenuFor(pu2Btn, 'PUC-2', 'PU-II');
+  });
+  document.addEventListener('click', function(e){
+    if(!menu.contains(e.target)) closeMenu();
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') closeMenu();
+  });
+  window.addEventListener('resize', closeMenu);
+})();
 
 function readProgress(key){
   if(!key) return null;
