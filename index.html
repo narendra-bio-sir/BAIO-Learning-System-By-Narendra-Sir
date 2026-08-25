@@ -87,7 +87,7 @@ header{padding:34px 0 22px; text-align:center;}
 .sig-stat .l{font-size:10.5px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:0.6px; margin-top:2px;}
 
 .chapter-jump-menu{
-  display:none; position:fixed; z-index:50; min-width:230px; max-width:280px;
+  display:none; position:absolute; z-index:50; min-width:230px; max-width:280px;
   background:var(--panel); border:1px solid var(--line); border-radius:14px;
   box-shadow:0 14px 34px rgba(0,0,0,0.35); padding:8px; max-height:70vh; overflow-y:auto;
 }
@@ -670,12 +670,14 @@ const CHAPTERS = [
         : '<div class="cjm-empty">No live chapters yet for ' + label + '.</div>');
 
     const r = btn.getBoundingClientRect();
+    const wrapEl = document.querySelector('.wrap');
+    const wrapR = wrapEl.getBoundingClientRect();
     menu.style.display = 'block'; // measure before positioning
     const menuW = menu.offsetWidth;
-    let left = r.right - menuW;
+    let left = (r.right - wrapR.left) - menuW;
     if(left < 8) left = 8;
     menu.style.left = left + 'px';
-    menu.style.top = (r.bottom + 8) + 'px';
+    menu.style.top = (r.bottom - wrapR.top + 8) + 'px';
     menu.classList.add('open');
     btn.setAttribute('aria-expanded', 'true');
   }
