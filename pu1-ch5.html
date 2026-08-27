@@ -121,7 +121,7 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .header-details-toggle{background:none;border:none;padding:0;margin-top:6px;color:var(--teal2);font-size:11.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;}
 
 /* TABS */
-.tabbar-wrap{display:flex;align-items:stretch;gap:4px;flex-wrap:wrap;position:sticky;top:96px;z-index:19;background:var(--navy);border-bottom:1px solid var(--line);}
+.tabbar-wrap{display:flex;align-items:stretch;gap:4px;position:sticky;top:96px;z-index:19;background:var(--navy);border-bottom:1px solid var(--line);}
 .tabbar-wrap .tabbar{flex:1;}
 .tab-scroll-btn{
   flex:0 0 auto;width:26px;border:1px solid var(--line);border-radius:8px;
@@ -133,17 +133,29 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .tabbar::-webkit-scrollbar{display:none;}
 .tab{flex:0 0 auto;padding:8px 14px;border-radius:20px;font-size:12.5px;font-weight:600;color:var(--ink-dim);background:var(--panel2);border:1px solid var(--line);cursor:pointer;white-space:nowrap;}
 .tab.active{background:var(--gold);color:#1a1406;border-color:var(--gold);}
-.cat-card-row{ display:flex; gap:6px; flex-wrap:wrap; flex:1 1 100%; margin-bottom:8px; }
-.cat-card{
-  flex:1 1 auto; min-width:96px;
-  background:var(--panel); border:1px solid var(--line); color:var(--ink);
-  padding:10px 10px; border-radius:12px; font-family:'Fraunces',Georgia,serif;
-  font-size:11.5px; font-weight:600; cursor:pointer; text-align:center;
-  transition:all .15s ease; display:flex; flex-direction:column; align-items:center; gap:3px;
+.cat-dd-wrap{ position:relative; flex:0 0 auto; }
+.cat-dd-btn{
+  display:flex; align-items:center; gap:5px; height:100%;
+  background:var(--panel2); border:1px solid var(--line); color:var(--ink);
+  padding:8px 11px; border-radius:20px; font-family:'Fraunces',Georgia,serif;
+  font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap;
 }
-.cat-card .n{ font-family:'Work Sans',sans-serif; font-size:9.5px; font-weight:600; color:var(--ink-dim); }
-.cat-card.active{ background:var(--gold); color:#1a1406; border-color:var(--gold); }
-.cat-card.active .n{ color:#1a1406; opacity:.75; }
+.cat-dd-btn .chev{ color:var(--ink-dim); font-size:9px; transition:transform .15s ease; }
+.cat-dd-btn.open .chev{ transform:rotate(180deg); }
+.cat-dd-menu{
+  position:absolute; top:calc(100% + 6px); left:0; z-index:21; min-width:170px;
+  background:var(--panel); border:1px solid var(--line); border-radius:12px;
+  box-shadow:0 10px 26px rgba(0,0,0,0.18); padding:6px; display:none;
+}
+.cat-dd-menu.open{ display:block; }
+.cat-dd-item{
+  padding:9px 10px; border-radius:8px; font-family:'Work Sans',sans-serif;
+  font-size:12.5px; font-weight:600; color:var(--ink); cursor:pointer;
+  display:flex; justify-content:space-between; gap:8px;
+}
+.cat-dd-item .n{ color:var(--ink-dim); font-weight:500; }
+.cat-dd-item:hover{ background:var(--panel2); }
+.cat-dd-item.active{ color:var(--teal); background:var(--panel2); }
 
 /* TOPIC PILLS */
 .pillrow-wrap{display:flex;align-items:stretch;gap:4px;margin:0 -16px 4px;}
@@ -612,7 +624,10 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
   </div>
   <div class="desktop-row">
   <div class="tabbar-wrap">
-    <div class="cat-card-row" id="catCardRow"></div>
+    <div class="cat-dd-wrap">
+      <button type="button" class="cat-dd-btn" id="catDdBtn">&#128214; Learn <span class="chev">&#9662;</span></button>
+      <div class="cat-dd-menu" id="catDdMenu"></div>
+    </div>
     <button class="tab-scroll-btn tab-scroll-left">&#8249;</button>
     <div class="tabbar" id="tabbar"></div>
     <button class="tab-scroll-btn tab-scroll-right">&#8250;</button>
@@ -807,8 +822,10 @@ function renderTabbar(){
     const locked = PREMIUM_LOCKED_TABS.indexOf(t.id) !== -1 && !unlocked;
     return `<div class="tab ${t.id===currentTab?'active':''}" onclick="switchTab('${t.id}')">${locked?'🔒 ':''}${t.label}</div>`;
   }).join('');
-  const cardRow = document.getElementById('catCardRow');
-  if(cardRow) cardRow.querySelectorAll('.cat-card').forEach(el => {
+  const ddBtn = document.getElementById('catDdBtn');
+  const ddMenu = document.getElementById('catDdMenu');
+  if(ddBtn) ddBtn.innerHTML = cat.icon + ' ' + cat.label + ' <span class="chev">&#9662;</span>';
+  if(ddMenu) ddMenu.querySelectorAll('.cat-dd-item').forEach(el => {
     el.classList.toggle('active', el.dataset.cluster === currentCategory);
   });
 }
@@ -817,15 +834,26 @@ function switchCategory(id){
   renderTabbar();
 }
 (function(){
-  const cardRow = document.getElementById('catCardRow');
-  if(!cardRow) return;
-  cardRow.innerHTML = TAB_CATEGORIES.map(c =>
-    '<button type="button" class="cat-card" data-cluster="' + c.id + '"><span>' + c.icon + ' ' + c.label + '</span><span class="n">' + c.tabs.length + ' tabs</span></button>'
+  const ddBtn = document.getElementById('catDdBtn');
+  const ddMenu = document.getElementById('catDdMenu');
+  if(!ddBtn || !ddMenu) return;
+  ddMenu.innerHTML = TAB_CATEGORIES.map(c =>
+    '<div class="cat-dd-item" data-cluster="' + c.id + '">' + c.icon + ' ' + c.label + '<span class="n">' + c.tabs.length + '</span></div>'
   ).join('');
-  cardRow.addEventListener('click', function(e){
+  function closeDd(){ ddMenu.classList.remove('open'); ddBtn.classList.remove('open'); }
+  ddBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    ddMenu.classList.toggle('open');
+    ddBtn.classList.toggle('open');
+  });
+  ddMenu.addEventListener('click', function(e){
     const item = e.target.closest('[data-cluster]');
     if(!item) return;
     switchCategory(item.dataset.cluster);
+    closeDd();
+  });
+  document.addEventListener('click', function(e){
+    if(!e.target.closest('.cat-dd-wrap')) closeDd();
   });
 })();
 function switchTab(id){
