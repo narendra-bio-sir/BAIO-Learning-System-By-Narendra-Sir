@@ -2603,7 +2603,27 @@ function neetQuestionBody(q){
     return `<div class="ar-block">${q.s1}</div><div class="ar-block">${q.s2}</div>` + neetOptsHtml(q.options);
   }
   if(q.type==='combo'){
-    return `<div class="ar-block">${q.q}</div>` + neetOptsHtml(q.options);
+    const re = /\(([a-e])\)\s*/g;
+    let match;
+    const indices = [];
+    while((match = re.exec(q.q)) !== null){
+      indices.push({letter:match[1], start:match.index, contentStart:match.index+match[0].length});
+    }
+    if(indices.length === 0) return `<div class="ar-block">${q.q}</div>` + neetOptsHtml(q.options);
+    const intro = q.q.slice(0, indices[0].start).trim();
+    let html = intro ? `<div class="ar-block">${intro}</div>` : '';
+    let trailing = '';
+    for(let i=0;i<indices.length;i++){
+      const end = i+1<indices.length ? indices[i+1].start : q.q.length;
+      let content = q.q.slice(indices[i].contentStart, end).trim();
+      if(i === indices.length-1){
+        const qMatch = content.match(/^(.*?\.)\s+(Which[\s\S]*)$/);
+        if(qMatch){ content = qMatch[1].trim(); trailing = qMatch[2].trim(); }
+      }
+      html += `<div class="seq-item">(${indices[i].letter}) ${content}</div>`;
+    }
+    if(trailing) html += `<div class="ar-block">${trailing}</div>`;
+    return html + neetOptsHtml(q.options);
   }
   if(q.type==='seq'){
     let steps = q.steps.map(s=>`<div class="seq-item">${s}</div>`).join('');
