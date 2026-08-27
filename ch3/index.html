@@ -3764,6 +3764,27 @@ function pgGenerate(){
   pgRenderOutput();
 }
 window.pgGenerate = pgGenerate;
+function pgNeetQBody(qNum, q){
+  if(q.type==='ar'){
+    return `<div class="paper-q-text">${qNum}. Assertion (A): ${q.assertion}</div><div class="paper-q-text">Reason (R): ${q.reason}</div>`;
+  }
+  if(q.type==='match'){
+    const rows = q.colA.map((a,i)=>`<tr><td>${a}</td><td>${q.colB[i]}</td></tr>`).join('');
+    return `<div class="paper-q-text">${qNum}. Match the following:</div><table class="match-table"><tr><td><b>Column A</b></td><td><b>Column B</b></td></tr>${rows}</table>`;
+  }
+  if(q.type==='cistate'){
+    const stmts = q.statements.map(s=>`<div>${s}</div>`).join('');
+    return `<div class="paper-q-text">${qNum}. Which of the following is ${q.qtype}?</div>${stmts}`;
+  }
+  if(q.type==='s12'){
+    return `<div class="paper-q-text">${qNum}. ${q.s1}</div><div class="paper-q-text">${q.s2}</div>`;
+  }
+  if(q.type==='seq'){
+    const steps = q.steps.map(s=>`<div>${s}</div>`).join('');
+    return `<div class="paper-q-text">${qNum}. ${q.q}</div>${steps}`;
+  }
+  return `<div class="paper-q-text">${qNum}. ${q.q}</div>`;
+}
 function pgRenderOutput(){
   const g = pgGenerated;
   let qNum = 1;
@@ -3798,7 +3819,7 @@ function pgRenderOutput(){
   } else {
     body += `<div class="tbl-title">NEET-style Questions (${g.neet.length})</div>`;
     g.neet.forEach(q=>{
-      body += `<div class="paper-q"><div class="paper-q-text">${qNum}. ${q.q}</div>${q.options?`<div class="paper-options">${q.options.map((o,i)=>`<div>${String.fromCharCode(65+i)}. ${o}</div>`).join('')}</div>`:''}</div>`;
+      body += `<div class="paper-q">${pgNeetQBody(qNum, q)}${q.options?`<div class="paper-options">${q.options.map((o,i)=>`<div>${String.fromCharCode(65+i)}. ${o}</div>`).join('')}</div>`:''}</div>`;
       qNum++;
     });
   }
