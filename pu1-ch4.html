@@ -294,6 +294,12 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .aq-q{font-size:13px;color:var(--ink);margin-bottom:8px;font-weight:600;}
 .reveal-btn{font-size:11.5px;font-weight:700;background:none;border:1px solid var(--teal);color:var(--teal);padding:6px 12px;border-radius:14px;cursor:pointer;}
 .aq-a{font-size:12.5px;color:var(--ink-dim);margin-top:8px;line-height:1.55;display:none;border-top:1px dashed var(--line);padding-top:8px;}
+.wa-model{margin-top:14px;border:1px solid rgba(21,143,122,0.35);border-radius:12px;background:linear-gradient(160deg,rgba(21,143,122,0.12),rgba(21,143,122,0.03));padding:13px 14px;}
+.wa-model-head{font-size:12px;font-weight:700;color:var(--teal);display:flex;align-items:center;gap:6px;margin-bottom:8px;}
+.wa-model-body{font-size:13px;color:var(--ink);line-height:1.6;}
+.wa-model-lead{margin-bottom:8px;}
+.wa-model-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px;}
+.wa-model-marker{color:var(--teal);margin-right:2px;}
 .aq-a.show{display:block;}
 
 /* FLASHCARDS */
@@ -2248,6 +2254,47 @@ function waWeakFirst(){
 }
 window.waStart=waStart; window.waWeakFirst=waWeakFirst;
 
+function formatModelAnswer(text){
+  const ROMAN = ['i','ii','iii','iv','v','vi','vii','viii','ix','x'];
+  const rawRe = /\((i|ii|iii|iv|v|vi|vii|viii|ix|x|[a-z]|[0-9]{1,2})\)\s*/g;
+  const all = [...text.matchAll(rawRe)];
+  const cand = all.filter(m => m.index===0 || /\s/.test(text[m.index-1]));
+  if(!cand.length) return text.replace(/\n/g,'<br>');
+
+  const first = cand[0][1];
+  let scheme, val0;
+  if(ROMAN.includes(first)){ scheme='roman'; val0 = ROMAN.indexOf(first); }
+  else if(/^[0-9]+$/.test(first)){ scheme='num'; val0 = parseInt(first,10); }
+  else { scheme='alpha'; val0 = first.charCodeAt(0)-97; }
+  const startOk = (scheme==='roman' && val0===0) || (scheme==='num' && val0===1) || (scheme==='alpha' && val0===0);
+  if(!startOk) return text.replace(/\n/g,'<br>');
+
+  const matches = [];
+  let expected = val0;
+  for(const m of cand){
+    const tok = m[1];
+    let val;
+    if(scheme==='roman'){ if(!ROMAN.includes(tok)) break; val = ROMAN.indexOf(tok); }
+    else if(scheme==='num'){ if(!/^[0-9]+$/.test(tok)) break; val = parseInt(tok,10); }
+    else { if(!/^[a-z]$/.test(tok)) break; val = tok.charCodeAt(0)-97; }
+    if(val !== expected) break;
+    matches.push(m);
+    expected++;
+  }
+  if(matches.length < 2) return text.replace(/\n/g,'<br>');
+
+  let out = '';
+  const lead = text.slice(0, matches[0].index).trim();
+  if(lead) out += `<div class="wa-model-lead">${lead}</div>`;
+  const items = matches.map((m,i)=>{
+    const start = m.index + m[0].length;
+    const end = i+1 < matches.length ? matches[i+1].index : text.length;
+    const body = text.slice(start, end).trim();
+    return `<li><b class="wa-model-marker">(${m[1]})</b> ${body}</li>`;
+  });
+  return out + '<ul class="wa-model-list">' + items.join('') + '</ul>';
+}
+
 function kwPanelHtml(q){
   if(typeof DESC_KEYWORDS_CH4 === 'undefined') return '';
   const items = DESC_KEYWORDS_CH4[q.q];
@@ -2290,7 +2337,7 @@ function renderWriteItQuestion(){
       <textarea placeholder="Write your answer here..." style="width:100%; min-height:110px; padding:10px; border-radius:10px; border:1px solid var(--line); background:var(--panel2); color:var(--ink); font-family:inherit; font-size:13.5px; resize:vertical;"></textarea>
       ${!s.revealed
         ? `<button class="start-btn" style="margin-top:10px;" onclick="waReveal()">Show Model Answer</button>`
-        : `<div class="aq-a show" style="margin-top:12px;"><b>Model Answer:</b><br>${q.a.replace(/\n/g,'<br>')}</div>
+        : `<div class="wa-model"><div class="wa-model-head">✅ Model Answer</div><div class="wa-model-body">${formatModelAnswer(q.a)}</div></div>
            ${kwPanelHtml(q)}
            <div class="opt-row" style="margin:12px 0;">
              <button class="opt-btn" style="flex:1; border-color:#e0685f; color:#e0685f;" onclick="waRate(false)">😕 Still Learning</button>
