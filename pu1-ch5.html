@@ -287,6 +287,9 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .wa-model{margin-top:14px;border:1px solid rgba(21,143,122,0.35);border-radius:12px;background:linear-gradient(160deg,rgba(21,143,122,0.12),rgba(21,143,122,0.03));padding:13px 14px;}
 .wa-model-head{font-size:12px;font-weight:700;color:var(--teal);display:flex;align-items:center;gap:6px;margin-bottom:8px;}
 .wa-model-body{font-size:13px;color:var(--ink);line-height:1.6;}
+.wa-model-lead{margin-bottom:8px;}
+.wa-model-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px;}
+.wa-model-marker{color:var(--teal);margin-right:2px;}
 
 /* FLASHCARDS */
 .fc-wrap{display:flex;flex-direction:column;align-items:center;padding:10px 0;}
@@ -2677,6 +2680,22 @@ function waWeakFirst(){
 }
 window.waStart=waStart; window.waWeakFirst=waWeakFirst;
 
+function formatModelAnswer(text){
+  const re = /\((i|ii|iii|iv|v|vi|vii|viii|ix|x)\)\s*/g;
+  const matches = [...text.matchAll(re)];
+  if(matches.length < 2) return text.replace(/\n/g,'<br>');
+  let out = '';
+  const lead = text.slice(0, matches[0].index).trim();
+  if(lead) out += `<div class="wa-model-lead">${lead}</div>`;
+  const items = matches.map((m,i)=>{
+    const start = m.index + m[0].length;
+    const end = i+1 < matches.length ? matches[i+1].index : text.length;
+    const body = text.slice(start, end).trim();
+    return `<li><b class="wa-model-marker">(${m[1]})</b> ${body}</li>`;
+  });
+  return out + '<ul class="wa-model-list">' + items.join('') + '</ul>';
+}
+
 function kwPanelHtml(q){
   if(typeof DESC_KEYWORDS_CH5 === 'undefined') return '';
   const items = DESC_KEYWORDS_CH5[q.q];
@@ -2719,7 +2738,7 @@ function renderWriteItQuestion(){
       <textarea placeholder="Write your answer here..." style="width:100%; min-height:110px; padding:10px; border-radius:10px; border:1px solid var(--line); background:var(--panel2); color:var(--ink); font-family:inherit; font-size:13.5px; resize:vertical;"></textarea>
       ${!s.revealed
         ? `<button class="start-btn" style="margin-top:10px;" onclick="waReveal()">Show Model Answer</button>`
-        : `<div class="wa-model"><div class="wa-model-head">✅ Model Answer</div><div class="wa-model-body">${q.a.replace(/\n/g,'<br>')}</div></div>
+        : `<div class="wa-model"><div class="wa-model-head">✅ Model Answer</div><div class="wa-model-body">${formatModelAnswer(q.a)}</div></div>
            ${kwPanelHtml(q)}
            <div class="opt-row" style="margin:12px 0;">
              <button class="opt-btn" style="flex:1; border-color:#e0685f; color:#e0685f;" onclick="waRate(false)">😕 Still Learning</button>
