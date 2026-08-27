@@ -2364,11 +2364,12 @@ window.addEventListener('afterprint', function(){
         <option value="1">🎓 PU-I only</option>
         <option value="2">🏆 PU-II only</option>
       </select>
-      <select id="failuresSectionFilter" multiple style="flex:1; min-width:140px; padding:10px; border-radius:10px; border:1.5px solid var(--border); background:rgba(var(--overlay-rgb),0.05); color:var(--text-strong); font-size:14px; font-family:'Inter',sans-serif;">
-        <option value="SPARK" selected>SPARK</option>
-        <option value="PRIME" selected>PRIME</option>
-        <option value="CHAMPION" selected>CHAMPION</option>
-        <option value="ELITE" selected>ELITE</option>
+      <select id="failuresSectionFilter" style="flex:1; min-width:140px; padding:10px; border-radius:10px; border:1.5px solid var(--border); background:rgba(var(--overlay-rgb),0.05); color:var(--text-strong); font-size:14px; font-family:'Inter',sans-serif;">
+        <option value="all">All Sections</option>
+        <option value="SPARK">SPARK</option>
+        <option value="PRIME">PRIME</option>
+        <option value="CHAMPION">CHAMPION</option>
+        <option value="ELITE">ELITE</option>
       </select>
       <select id="failuresStreamFilter" style="flex:1; min-width:140px; padding:10px; border-radius:10px; border:1.5px solid var(--border); background:rgba(var(--overlay-rgb),0.05); color:var(--text-strong); font-size:14px; font-family:'Inter',sans-serif;">
         <option value="all">All Streams</option>
@@ -10186,13 +10187,12 @@ function getTheoryLatestElectronics(student, pu){
 function buildFailuresRemedialReport(){
   const dateStr = new Date().toLocaleDateString('en-IN', {day:'numeric', month:'long', year:'numeric'});
   const puFilter = (document.getElementById('failuresPUFilter')||{}).value || 'all';
-  const secSelect = document.getElementById('failuresSectionFilter');
-  const secFilter = secSelect ? Array.from(secSelect.selectedOptions).map(o => o.value) : [];
+  const secFilter = (document.getElementById('failuresSectionFilter')||{}).value || 'all';
   const streamFilter = (document.getElementById('failuresStreamFilter')||{}).value || 'all';
 
   let roster = bioCombinedRoster();
   if(puFilter !== 'all') roster = roster.filter(s => String(s.pu) === puFilter);
-  if(secFilter.length) roster = roster.filter(s => secFilter.includes((s.section||'').toUpperCase()));
+  if(secFilter !== 'all') roster = roster.filter(s => (s.section||'').toUpperCase() === secFilter);
 
   const failing = [];
   const sectionTotals = {};
@@ -10232,7 +10232,7 @@ function buildFailuresRemedialReport(){
   const weakest = sectionRows.length ? sectionRows.slice().sort((a,b)=>b.failPct-a.failPct)[0] : null;
 
   const scopeLabel = (puFilter==='all'?'PU-I & PU-II':'PU-'+(puFilter==='2'?'II':'I'))
-    + ((secFilter.length===0 || secFilter.length===4) ? '' : ' · '+secFilter.join('+'))
+    + (secFilter==='all' ? '' : ' · '+secFilter)
     + (streamFilter==='all' ? '' : ' · '+(streamFilter==='ele'?'Electronics only':'Biology only'));
 
   let html = '<div class="rp-header">'+
