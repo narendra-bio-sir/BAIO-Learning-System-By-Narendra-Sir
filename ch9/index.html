@@ -336,6 +336,9 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .reveal-btn{font-size:11.5px;font-weight:700;background:none;border:1px solid var(--teal);color:var(--teal);padding:6px 12px;border-radius:14px;cursor:pointer;}
 .aq-a{font-size:12.5px;color:var(--ink-dim);margin-top:8px;line-height:1.55;display:none;border-top:1px dashed var(--line);padding-top:8px;}
 .aq-a.show{display:block;}
+.wa-model{margin-top:14px;border:1px solid rgba(21,143,122,0.35);border-radius:12px;background:linear-gradient(160deg,rgba(21,143,122,0.12),rgba(21,143,122,0.03));padding:13px 14px;}
+.wa-model-head{font-size:12px;font-weight:700;color:var(--teal);display:flex;align-items:center;gap:6px;margin-bottom:8px;}
+.wa-model-body{font-size:13px;color:var(--ink);line-height:1.6;}
 .kw-panel{margin-top:12px;border:1px solid rgba(212,175,55,0.35);border-radius:12px;background:linear-gradient(160deg,rgba(212,175,55,0.10),rgba(212,175,55,0.03));padding:12px 13px;}
 .kw-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:2px;}
 .kw-title{font-size:12px;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:6px;}
@@ -3989,7 +3992,7 @@ function renderWriteItQuestion(){
       <textarea placeholder="Write your answer here..." style="width:100%; min-height:110px; padding:10px; border-radius:10px; border:1px solid var(--line); background:var(--panel2); color:var(--ink); font-family:inherit; font-size:13.5px; resize:vertical;"></textarea>
       ${!s.revealed
         ? `<button class="start-btn" style="margin-top:10px;" onclick="waReveal()">Show Model Answer</button>`
-        : `<div class="aq-a show" style="margin-top:12px;"><b>Model Answer:</b><br>${q.a.replace(/\n/g,'<br>')}</div>
+        : `<div class="wa-model"><div class="wa-model-head">✅ Model Answer</div><div class="wa-model-body">${q.a.replace(/\n/g,'<br>')}</div></div>
            ${kwPanelHtml(q)}
            <div class="opt-row" style="margin:12px 0;">
              <button class="opt-btn" style="flex:1; border-color:#e0685f; color:#e0685f;" onclick="waRate(false)">😕 Still Learning</button>
