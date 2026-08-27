@@ -121,7 +121,7 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .header-details-toggle{background:none;border:none;padding:0;margin-top:6px;color:var(--teal2);font-size:11.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;}
 
 /* TABS */
-.tabbar-wrap{display:flex;align-items:stretch;gap:4px;position:sticky;top:96px;z-index:19;background:var(--navy);border-bottom:1px solid var(--line);}
+.tabbar-wrap{display:flex;align-items:stretch;gap:4px;flex-wrap:wrap;position:sticky;top:96px;z-index:19;background:var(--navy);border-bottom:1px solid var(--line);}
 .tabbar-wrap .tabbar{flex:1;}
 .tab-scroll-btn{
   flex:0 0 auto;width:26px;border:1px solid var(--line);border-radius:8px;
@@ -133,6 +133,17 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .tabbar::-webkit-scrollbar{display:none;}
 .tab{flex:0 0 auto;padding:8px 14px;border-radius:20px;font-size:12.5px;font-weight:600;color:var(--ink-dim);background:var(--panel2);border:1px solid var(--line);cursor:pointer;white-space:nowrap;}
 .tab.active{background:var(--gold);color:#1a1406;border-color:var(--gold);}
+.cat-card-row{ display:flex; gap:6px; flex-wrap:wrap; flex:1 1 100%; margin-bottom:8px; }
+.cat-card{
+  flex:1 1 auto; min-width:96px;
+  background:var(--panel); border:1px solid var(--line); color:var(--ink);
+  padding:10px 10px; border-radius:12px; font-family:'Fraunces',Georgia,serif;
+  font-size:11.5px; font-weight:600; cursor:pointer; text-align:center;
+  transition:all .15s ease; display:flex; flex-direction:column; align-items:center; gap:3px;
+}
+.cat-card .n{ font-family:'Work Sans',sans-serif; font-size:9.5px; font-weight:600; color:var(--ink-dim); }
+.cat-card.active{ background:var(--gold); color:#1a1406; border-color:var(--gold); }
+.cat-card.active .n{ color:#1a1406; opacity:.75; }
 
 /* TOPIC PILLS */
 .pillrow-wrap{display:flex;align-items:stretch;gap:4px;margin:0 -16px 4px;}
@@ -601,6 +612,7 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
   </div>
   <div class="desktop-row">
   <div class="tabbar-wrap">
+    <div class="cat-card-row" id="catCardRow"></div>
     <button class="tab-scroll-btn tab-scroll-left">&#8249;</button>
     <div class="tabbar" id="tabbar"></div>
     <button class="tab-scroll-btn tab-scroll-right">&#8250;</button>
@@ -774,14 +786,48 @@ let currentTopic = DATA.topics[0].id;
 
 function esc(s){ return (s===undefined||s===null)?'':String(s); }
 
+/* ---- Chapter tab bar: group the tabs into categories behind a dropdown,
+   so the long tab list no longer needs one long scrolling row. ---- */
+const TAB_CATEGORIES = [
+  {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','concepts','studytips','boardimp','diagrams']},
+  {id:'practice', label:'Practice', icon:'✍️', tabs:['flashcards','mcq','writeit','revision']},
+  {id:'test', label:'Test Prep', icon:'\u{1F3AF}', tabs:['neet','kcet','papergen']},
+  {id:'explore', label:'Explore', icon:'\u{1F50D}', tabs:['tree','compare','mindmap','glossary']},
+  {id:'space', label:'My Space', icon:'\u{1F4CC}', tabs:['badges','progress','pacing','mynotes','downloads']}
+];
+const TAB_CLUSTER_OF = {};
+TAB_CATEGORIES.forEach(c => c.tabs.forEach(id => { TAB_CLUSTER_OF[id] = c.id; }));
+let currentCategory = TAB_CLUSTER_OF[currentTab] || 'learn';
+
 function renderTabbar(){
   const bar = document.getElementById('tabbar');
   const unlocked = premiumQualifies();
-  bar.innerHTML = TABS.map(t => {
+  const cat = TAB_CATEGORIES.find(c => c.id === currentCategory) || TAB_CATEGORIES[0];
+  bar.innerHTML = TABS.filter(t => cat.tabs.indexOf(t.id) !== -1).map(t => {
     const locked = PREMIUM_LOCKED_TABS.indexOf(t.id) !== -1 && !unlocked;
     return `<div class="tab ${t.id===currentTab?'active':''}" onclick="switchTab('${t.id}')">${locked?'🔒 ':''}${t.label}</div>`;
   }).join('');
+  const cardRow = document.getElementById('catCardRow');
+  if(cardRow) cardRow.querySelectorAll('.cat-card').forEach(el => {
+    el.classList.toggle('active', el.dataset.cluster === currentCategory);
+  });
 }
+function switchCategory(id){
+  currentCategory = id;
+  renderTabbar();
+}
+(function(){
+  const cardRow = document.getElementById('catCardRow');
+  if(!cardRow) return;
+  cardRow.innerHTML = TAB_CATEGORIES.map(c =>
+    '<button type="button" class="cat-card" data-cluster="' + c.id + '"><span>' + c.icon + ' ' + c.label + '</span><span class="n">' + c.tabs.length + ' tabs</span></button>'
+  ).join('');
+  cardRow.addEventListener('click', function(e){
+    const item = e.target.closest('[data-cluster]');
+    if(!item) return;
+    switchCategory(item.dataset.cluster);
+  });
+})();
 function switchTab(id){
   if(id !== currentTab) previousTab = currentTab;
   currentTab = id;
@@ -2949,6 +2995,27 @@ function pgGenerate(){
   pgRenderOutput();
 }
 window.pgGenerate = pgGenerate;
+function pgNeetQBody(qNum, q){
+  if(q.type==='ar'){
+    return `<div class="paper-q-text">${qNum}. Assertion (A): ${q.assertion}</div><div class="paper-q-text">Reason (R): ${q.reason}</div>`;
+  }
+  if(q.type==='match'){
+    const rows = q.colA.map((a,i)=>`<tr><td>${a}</td><td>${q.colB[i]}</td></tr>`).join('');
+    return `<div class="paper-q-text">${qNum}. Match the following:</div><table class="match-table"><tr><td><b>Column A</b></td><td><b>Column B</b></td></tr>${rows}</table>`;
+  }
+  if(q.type==='cistate'){
+    const stmts = q.statements.map(s=>`<div>${s}</div>`).join('');
+    return `<div class="paper-q-text">${qNum}. Which of the following is ${q.qtype}?</div>${stmts}`;
+  }
+  if(q.type==='s12'){
+    return `<div class="paper-q-text">${qNum}. ${q.s1}</div><div class="paper-q-text">${q.s2}</div>`;
+  }
+  if(q.type==='seq'){
+    const steps = q.steps.map(s=>`<div>${s}</div>`).join('');
+    return `<div class="paper-q-text">${qNum}. ${q.q}</div>${steps}`;
+  }
+  return `<div class="paper-q-text">${qNum}. ${q.q}</div>`;
+}
 function pgRenderOutput(){
   const g = pgGenerated;
   let qNum = 1;
@@ -2983,7 +3050,7 @@ function pgRenderOutput(){
   } else {
     body += `<div class="tbl-title">NEET-style Questions (${g.neet.length})</div>`;
     g.neet.forEach(q=>{
-      body += `<div class="paper-q"><div class="paper-q-text">${qNum}. ${q.q}</div>${q.options?`<div class="paper-options">${q.options.map((o,i)=>`<div>${String.fromCharCode(65+i)}. ${o}</div>`).join('')}</div>`:''}</div>`;
+      body += `<div class="paper-q">${pgNeetQBody(qNum, q)}${q.options?`<div class="paper-options">${q.options.map((o,i)=>`<div>${String.fromCharCode(65+i)}. ${o}</div>`).join('')}</div>`:''}</div>`;
       qNum++;
     });
   }

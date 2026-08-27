@@ -108,7 +108,7 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 
 /* Tabs */
 .tabbar-wrap{
-  display:flex; align-items:stretch; gap:4px;
+  display:flex; align-items:stretch; gap:4px; flex-wrap:wrap;
   margin-bottom:14px; position:sticky; top:8px; z-index:20;
   background:var(--bg-0);
 }
@@ -134,6 +134,21 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
   border-color:var(--gold); color:var(--gold-2);
   box-shadow:0 4px 14px rgba(227,175,67,0.15);
 }
+.cat-card-row{ display:flex; gap:6px; flex-wrap:wrap; flex:1 1 100%; margin-bottom:8px; }
+.cat-card{
+  flex:1 1 auto; min-width:96px;
+  background:var(--panel); border:1px solid var(--border); color:var(--text);
+  padding:10px 10px; border-radius:12px; font-family:'Fraunces',Georgia,serif;
+  font-size:11.5px; font-weight:600; cursor:pointer; text-align:center;
+  transition:all .15s ease; display:flex; flex-direction:column; align-items:center; gap:3px;
+}
+.cat-card .n{ font-family:'Work Sans',sans-serif; font-size:9.5px; font-weight:600; color:var(--text-dim); }
+.cat-card.active{
+  background:linear-gradient(135deg, rgba(227,175,67,0.18), rgba(66,198,160,0.12));
+  border-color:var(--gold); color:var(--gold-2);
+  box-shadow:0 4px 14px rgba(227,175,67,0.15);
+}
+.cat-card.active .n{ color:var(--gold-2); }
 .panel{display:none; position:relative;}
 .panel.active{display:block; animation:fade .25s ease;}
 .setup-card{
@@ -1179,6 +1194,7 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
 
   <div class="desktop-row">
   <div class="tabbar-wrap">
+    <div class="cat-card-row" id="catCardRow"></div>
     <button class="tab-scroll-btn" id="tabScrollLeft">&#8249;</button>
     <div class="tabs" id="tabsBar">
     <button class="tab-btn" data-tab="badges">Milestones</button>
@@ -7495,6 +7511,52 @@ if(!window.__langSwitcherOutsideClickBound){
   if(!tabs || !leftBtn || !rightBtn) return;
   leftBtn.addEventListener('click', function(){ tabs.scrollBy({left:-120, behavior:'smooth'}); });
   rightBtn.addEventListener('click', function(){ tabs.scrollBy({left:120, behavior:'smooth'}); });
+})();
+
+/* ---- Chapter tab bar: group the tabs into categories behind a dropdown,
+   so the same 23 tabs no longer need one long scrolling row. Existing tab
+   click handlers are untouched — this only shows/hides the buttons. ---- */
+(function(){
+  var CATEGORIES = [
+    {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','concept','studytips','boardimp','diagrams']},
+    {id:'practice', label:'Practice', icon:'✍️', tabs:['flash','quiz','writeit','cross','revision']},
+    {id:'test', label:'Test Prep', icon:'\u{1F3AF}', tabs:['adv','kcet','papergen']},
+    {id:'explore', label:'Explore', icon:'\u{1F50D}', tabs:['tree','compare','mindmap','classppt','glossary']},
+    {id:'space', label:'My Space', icon:'\u{1F4CC}', tabs:['badges','progress','pacing','mynotes','dl']}
+  ];
+  var cardRow = document.getElementById('catCardRow');
+  var tabsBar = document.getElementById('tabsBar');
+  if(!cardRow || !tabsBar) return;
+
+  var clusterOf = {};
+  CATEGORIES.forEach(function(c){ c.tabs.forEach(function(id){ clusterOf[id] = c.id; }); });
+
+  cardRow.innerHTML = CATEGORIES.map(function(c){
+    return '<button type="button" class="cat-card" data-cluster="' + c.id + '">' +
+      '<span>' + c.icon + ' ' + c.label + '</span><span class="n">' + c.tabs.length + ' tabs</span></button>';
+  }).join('');
+
+  function applyCategory(clusterId){
+    var c = CATEGORIES.find(function(x){ return x.id === clusterId; });
+    if(!c) return;
+    tabsBar.querySelectorAll('.tab-btn').forEach(function(btn){
+      var id = btn.getAttribute('data-tab');
+      btn.style.display = c.tabs.indexOf(id) !== -1 ? '' : 'none';
+    });
+    cardRow.querySelectorAll('.cat-card').forEach(function(el){
+      el.classList.toggle('active', el.dataset.cluster === clusterId);
+    });
+  }
+
+  cardRow.addEventListener('click', function(e){
+    var item = e.target.closest('[data-cluster]');
+    if(!item) return;
+    applyCategory(item.dataset.cluster);
+  });
+
+  var activeBtn = tabsBar.querySelector('.tab-btn.active');
+  var initialCluster = (activeBtn && clusterOf[activeBtn.getAttribute('data-tab')]) || 'learn';
+  applyCategory(initialCluster);
 })();
 
 function enableTopicNavScrolling(navId, leftBtnId, rightBtnId){
