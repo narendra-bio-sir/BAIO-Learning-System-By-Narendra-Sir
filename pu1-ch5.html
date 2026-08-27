@@ -1476,6 +1476,28 @@ function neetStart(){
 }
 window.neetStart = neetStart;
 
+function formatComboText(text){
+  const re = /\(([a-e])\)\s*/g;
+  let match;
+  const indices = [];
+  while((match = re.exec(text)) !== null){
+    indices.push({letter:match[1], start:match.index, contentStart:match.index+match[0].length});
+  }
+  if(indices.length === 0) return {intro:text, items:[], trailing:''};
+  const intro = text.slice(0, indices[0].start).trim();
+  const items = [];
+  let trailing = '';
+  for(let i=0;i<indices.length;i++){
+    const end = i+1<indices.length ? indices[i+1].start : text.length;
+    let content = text.slice(indices[i].contentStart, end).trim();
+    if(i === indices.length-1){
+      const qMatch = content.match(/^(.*?\.)\s+(Which[\s\S]*)$/);
+      if(qMatch){ content = qMatch[1].trim(); trailing = qMatch[2].trim(); }
+    }
+    items.push(`(${indices[i].letter}) ${content}`);
+  }
+  return {intro, items, trailing};
+}
 function neetOptsHtml(options){
   const letters = ['A','B','C','D','E','F'];
   return options.map((o,i)=>`<button class="qz-opt" id="neetopt_${i}" onclick="neetAnswer(${i})"><b>${letters[i]}.</b> ${o}</button>`).join('');
@@ -1503,7 +1525,11 @@ function neetQuestionBody(q){
     return `<div class="ar-block">${q.s1}</div><div class="ar-block">${q.s2}</div>` + neetOptsHtml(q.options);
   }
   if(q.type==='combo'){
-    return `<div class="ar-block">${q.q}</div>` + neetOptsHtml(q.options);
+    const c = formatComboText(q.q);
+    let html = c.intro ? `<div class="ar-block">${c.intro}</div>` : '';
+    html += c.items.map(s=>`<div class="seq-item">${s}</div>`).join('');
+    if(c.trailing) html += `<div class="ar-block">${c.trailing}</div>`;
+    return html + neetOptsHtml(q.options);
   }
   if(q.type==='seq'){
     let steps = q.steps.map(s=>`<div class="seq-item">${s}</div>`).join('');
@@ -3041,6 +3067,13 @@ function pgNeetQBody(qNum, q){
   if(q.type==='seq'){
     const steps = q.steps.map(s=>`<div>${s}</div>`).join('');
     return `<div class="paper-q-text">${qNum}. ${q.q}</div>${steps}`;
+  }
+  if(q.type==='combo'){
+    const c = formatComboText(q.q);
+    let html = c.intro ? `<div class="paper-q-text">${qNum}. ${c.intro}</div>` : `<div class="paper-q-text">${qNum}.</div>`;
+    html += c.items.map(s=>`<div>${s}</div>`).join('');
+    if(c.trailing) html += `<div class="paper-q-text">${c.trailing}</div>`;
+    return html;
   }
   return `<div class="paper-q-text">${qNum}. ${q.q}</div>`;
 }
