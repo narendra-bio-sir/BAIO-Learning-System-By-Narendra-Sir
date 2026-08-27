@@ -2364,13 +2364,17 @@ window.addEventListener('afterprint', function(){
         <option value="1">🎓 PU-I only</option>
         <option value="2">🏆 PU-II only</option>
       </select>
-      <select id="failuresSectionFilter" style="flex:1; min-width:140px; padding:10px; border-radius:10px; border:1.5px solid var(--border); background:rgba(var(--overlay-rgb),0.05); color:var(--text-strong); font-size:14px; font-family:'Inter',sans-serif;">
-        <option value="all">All Sections</option>
-        <option value="SPARK">SPARK</option>
-        <option value="PRIME">PRIME</option>
-        <option value="CHAMPION">CHAMPION</option>
-        <option value="ELITE">ELITE</option>
-      </select>
+      <div style="position:relative; flex:1; min-width:140px;">
+        <button type="button" id="failuresSectionFilterBtn" style="width:100%; padding:10px; border-radius:10px; border:1.5px solid var(--border); background:rgba(var(--overlay-rgb),0.05); color:var(--text-strong); font-size:14px; font-family:'Inter',sans-serif; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:6px;">
+          <span id="failuresSectionFilterLabel">All Sections</span><span style="font-size:10px; color:var(--muted);">&#9662;</span>
+        </button>
+        <div id="failuresSectionFilterMenu" style="display:none; position:absolute; top:calc(100% + 4px); left:0; right:0; z-index:30; background:var(--navy2); border:1.5px solid var(--border); border-radius:10px; padding:4px 10px; box-shadow:var(--shadow);">
+          <div class="checkbox-row"><input type="checkbox" class="failures-sec-check" value="SPARK" id="failSecSPARK" checked><label for="failSecSPARK">SPARK</label></div>
+          <div class="checkbox-row"><input type="checkbox" class="failures-sec-check" value="PRIME" id="failSecPRIME" checked><label for="failSecPRIME">PRIME</label></div>
+          <div class="checkbox-row"><input type="checkbox" class="failures-sec-check" value="CHAMPION" id="failSecCHAMPION" checked><label for="failSecCHAMPION">CHAMPION</label></div>
+          <div class="checkbox-row" style="border-bottom:none;"><input type="checkbox" class="failures-sec-check" value="ELITE" id="failSecELITE" checked><label for="failSecELITE">ELITE</label></div>
+        </div>
+      </div>
       <select id="failuresStreamFilter" style="flex:1; min-width:140px; padding:10px; border-radius:10px; border:1.5px solid var(--border); background:rgba(var(--overlay-rgb),0.05); color:var(--text-strong); font-size:14px; font-family:'Inter',sans-serif;">
         <option value="all">All Streams</option>
         <option value="bio">🧬 Biology only</option>
@@ -10187,12 +10191,12 @@ function getTheoryLatestElectronics(student, pu){
 function buildFailuresRemedialReport(){
   const dateStr = new Date().toLocaleDateString('en-IN', {day:'numeric', month:'long', year:'numeric'});
   const puFilter = (document.getElementById('failuresPUFilter')||{}).value || 'all';
-  const secFilter = (document.getElementById('failuresSectionFilter')||{}).value || 'all';
+  const secFilter = Array.from(document.querySelectorAll('.failures-sec-check:checked')).map(c => c.value);
   const streamFilter = (document.getElementById('failuresStreamFilter')||{}).value || 'all';
 
   let roster = bioCombinedRoster();
   if(puFilter !== 'all') roster = roster.filter(s => String(s.pu) === puFilter);
-  if(secFilter !== 'all') roster = roster.filter(s => (s.section||'').toUpperCase() === secFilter);
+  if(secFilter.length) roster = roster.filter(s => secFilter.includes((s.section||'').toUpperCase()));
 
   const failing = [];
   const sectionTotals = {};
@@ -10232,7 +10236,7 @@ function buildFailuresRemedialReport(){
   const weakest = sectionRows.length ? sectionRows.slice().sort((a,b)=>b.failPct-a.failPct)[0] : null;
 
   const scopeLabel = (puFilter==='all'?'PU-I & PU-II':'PU-'+(puFilter==='2'?'II':'I'))
-    + (secFilter==='all' ? '' : ' · '+secFilter)
+    + ((secFilter.length===0 || secFilter.length===4) ? '' : ' · '+secFilter.join('+'))
     + (streamFilter==='all' ? '' : ' · '+(streamFilter==='ele'?'Electronics only':'Biology only'));
 
   let html = '<div class="rp-header">'+
@@ -10523,10 +10527,35 @@ function initFailuresTab(){
     document.getElementById('bioFailuresRefreshBtn').addEventListener('click', buildFailuresRemedialReport);
     document.getElementById('bioFailuresPrintBtn').addEventListener('click', ()=> window.print());
     document.getElementById('failuresPUFilter').addEventListener('change', buildFailuresRemedialReport);
-    document.getElementById('failuresSectionFilter').addEventListener('change', buildFailuresRemedialReport);
     document.getElementById('failuresStreamFilter').addEventListener('change', buildFailuresRemedialReport);
+
+    const secBtn = document.getElementById('failuresSectionFilterBtn');
+    const secMenu = document.getElementById('failuresSectionFilterMenu');
+    secBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      secMenu.style.display = secMenu.style.display === 'none' ? 'block' : 'none';
+    });
+    document.addEventListener('click', (e) => {
+      if(secMenu.style.display !== 'none' && !secMenu.contains(e.target) && e.target !== secBtn){
+        secMenu.style.display = 'none';
+      }
+    });
+    document.querySelectorAll('.failures-sec-check').forEach(cb => {
+      cb.addEventListener('change', () => {
+        updateFailuresSectionLabel();
+        buildFailuresRemedialReport();
+      });
+    });
+    updateFailuresSectionLabel();
   }
   buildFailuresRemedialReport();
+}
+function updateFailuresSectionLabel(){
+  const checked = Array.from(document.querySelectorAll('.failures-sec-check:checked')).map(c => c.value);
+  const label = document.getElementById('failuresSectionFilterLabel');
+  if(!label) return;
+  if(checked.length === 0 || checked.length === 4) label.textContent = 'All Sections';
+  else label.textContent = checked.join(', ');
 }
 
 /* ================================================================
