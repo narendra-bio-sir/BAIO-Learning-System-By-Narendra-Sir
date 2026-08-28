@@ -331,6 +331,8 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .qz-meta{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--ink-dim);margin-bottom:10px;}
 .qz-meta-right{display:flex;align-items:center;gap:8px;}
 .qz-timer-badge{background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-family:ui-monospace,"SF Mono",Consolas,monospace;font-variant-numeric:tabular-nums;font-weight:600;color:var(--gold);font-size:12px;}
+.qz-timer-badge.low{color:var(--danger); border-color:var(--danger); font-size:13.5px; box-shadow:0 0 0 2px rgba(231,105,91,0.18); animation:qzPulse 1s infinite;}
+@keyframes qzPulse{0%,100%{opacity:1;}50%{opacity:.5;}}
 .qz-fs-btn{background:var(--panel2);border:1px solid var(--line);color:var(--ink-dim);border-radius:8px;padding:5px 10px;font-size:11px;font-weight:600;white-space:nowrap;line-height:1;cursor:pointer;flex-shrink:0;}
 .qz-fs-btn:hover{color:var(--teal);border-color:var(--teal);}
 .study-fs-btn{font-size:11px;font-weight:600;background:var(--panel2);border:1px solid var(--line);color:var(--ink-dim);border-radius:8px;padding:5px 10px;cursor:pointer;margin:8px 0 0;}
@@ -1107,33 +1109,59 @@ function fcWeakFirst(){
 }
 window.fcFlip=fcFlip; window.fcNext=fcNext; window.fcPrev=fcPrev; window.fcShuffle=fcShuffle; window.fcRate=fcRate; window.fcWeakFirst=fcWeakFirst;
 
+/* Shared countdown "tick/tock" beep + low-time threshold for MCQ Quiz / NEET Practice / KCET Practice timers */
+const TIMER_LOW_SEC = 20;
+let _tickAudioCtx = null;
+function playTickSound(lowPitch){
+  try{
+    if(!_tickAudioCtx) _tickAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if(_tickAudioCtx.state === 'suspended') _tickAudioCtx.resume();
+    const ctx = _tickAudioCtx;
+    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+    osc.type = 'square'; osc.frequency.value = lowPitch ? 700 : 1000;
+    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime + 0.08);
+  }catch(e){ /* audio not available, ignore */ }
+}
+
 /* ---------------- MCQ QUIZ ---------------- */
-let mcqSetup = {topic:'All', difficulty:'All', count:'All'};
-let mcqSession = null;
+let mcqSetup = {topicMode:'full', topics:[], difficulty:'All', count:'All'};
+const MCQ_TIMER_SEC = 60;
 function mcqFilterPool(){
-  return DATA.mcq.filter(q => (mcqSetup.topic==='All'||q.topic===mcqSetup.topic) && (mcqSetup.difficulty==='All'||q.difficulty===mcqSetup.difficulty));
+  return DATA.mcq.filter(q =>
+    (mcqSetup.topicMode==='full' || mcqSetup.topics.length===0 || mcqSetup.topics.includes(q.topic))
+    && (mcqSetup.difficulty==='All'||q.difficulty===mcqSetup.difficulty));
 }
 function renderMcqSetup(){
   const pool = mcqFilterPool();
-  let html = `<div class="marks-info">\uD83D\uDCCB <b>Marking scheme:</b> +4 marks for every correct answer, \u22121 mark for every wrong answer. Choose your filters below, then start.</div>`;
+  const topicChips = DATA.topics.map(t=>`<div class="opt-btn${mcqSetup.topics.includes(t.id)?' sel':''}" onclick="mcqToggleTopic('${t.id}')">${t.name}</div>`).join('');
+  let html = `<div class="marks-info">\uD83D\uDCCB <b>Marking scheme:</b> +4 marks for every correct answer, \u22121 mark for every wrong answer, 0 if the ${MCQ_TIMER_SEC}s timer runs out. Choose your filters below, then start.</div>`;
   html += `<div class="setup-card">
-    <div class="setup-label">Topic</div>
-    <div class="opt-row">${['All',...DATA.topics.map(t=>t.id)].map(v=>{
-      const label = v==='All'?'All Topics':DATA.topics.find(t=>t.id===v).name;
-      return `<div class="opt-btn ${mcqSetup.topic===v?'sel':''}" onclick="mcqSetTopic('${v}')">${label}</div>`;
-    }).join('')}</div>
+    <div class="setup-label">Question Coverage</div>
+    <div class="opt-row">
+      <div class="opt-btn ${mcqSetup.topicMode==='full'?'sel':''}" onclick="mcqSetTopicMode('full')">Full Chapter</div>
+      <div class="opt-btn ${mcqSetup.topicMode==='select'?'sel':''}" onclick="mcqSetTopicMode('select')">Topic-wise</div>
+    </div>
+    ${mcqSetup.topicMode==='select' ? '<div class="opt-row" style="margin-top:8px;">'+topicChips+'</div>' : ''}
     <div class="setup-label">Difficulty</div>
     <div class="opt-row">${['All','Easy','Medium','Hard'].map(v=>`<div class="opt-btn ${mcqSetup.difficulty===v?'sel':''}" onclick="mcqSetDiff('${v}')">${v}</div>`).join('')}</div>
     <div class="setup-label">Number of Questions</div>
-    <div class="opt-row">${['10','25','50','All'].map(v=>`<div class="opt-btn ${mcqSetup.count===v?'sel':''}" onclick="mcqSetCount('${v}')">${v==='All'?'All matching':v}</div>`).join('')}</div>
+    <div class="opt-row">${['10','25','50','90','All'].map(v=>`<div class="opt-btn ${mcqSetup.count===v?'sel':''}" onclick="mcqSetCount('${v}')">${v==='All'?'All matching':v}</div>`).join('')}</div>
     <button class="start-btn" onclick="mcqStart()">Start Quiz \u00b7 ${mcqSetup.count==='All' ? pool.length+' matching' : Math.min(parseInt(mcqSetup.count), pool.length)+' questions'}</button>
   </div>`;
   document.getElementById('content').innerHTML = html;
 }
-function mcqSetTopic(v){ mcqSetup.topic=v; renderMcqSetup(); }
+function mcqSetTopicMode(v){ mcqSetup.topicMode=v; renderMcqSetup(); }
+function mcqToggleTopic(id){
+  const i = mcqSetup.topics.indexOf(id);
+  if(i===-1) mcqSetup.topics.push(id); else mcqSetup.topics.splice(i,1);
+  renderMcqSetup();
+}
 function mcqSetDiff(v){ mcqSetup.difficulty=v; renderMcqSetup(); }
 function mcqSetCount(v){ mcqSetup.count=v; renderMcqSetup(); }
-window.mcqSetTopic=mcqSetTopic; window.mcqSetDiff=mcqSetDiff; window.mcqSetCount=mcqSetCount;
+window.mcqSetTopicMode=mcqSetTopicMode; window.mcqToggleTopic=mcqToggleTopic; window.mcqSetDiff=mcqSetDiff; window.mcqSetCount=mcqSetCount;
 
 function shuffleArr(a){ a=[...a]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 
@@ -1189,24 +1217,51 @@ function fireConfetti(){
   }catch(e){}
 }
 
+let mcqSession = null; let mcqTimerInt = null;
 function mcqStart(){
   let pool = shuffleArr(mcqFilterPool());
   if(mcqSetup.count!=='All'){ pool = pool.slice(0, parseInt(mcqSetup.count)); }
+  if(pool.length===0){ alert('No questions match those filters. Try widening your selection.'); return; }
   mcqSession = {
-    questions: pool, idx:0, answered:false, selected:null, correctCount:0, wrongCount:0,
-    streak:0, bestStreak:0, marks:0, startTime:Date.now(), log:[]
+    questions: pool, idx:0, answered:false, selected:null, correctCount:0, wrongCount:0, timeoutCount:0,
+    streak:0, bestStreak:0, marks:0, startTime:Date.now(), log:[], timeLeft: MCQ_TIMER_SEC
   };
   renderMcqQuestion();
 }
 window.mcqStart = mcqStart;
+function mcqClearTimer(){ if(mcqTimerInt){ clearInterval(mcqTimerInt); mcqTimerInt=null; } }
+function mcqStopTest(){
+  if(!confirm('Stop this quiz now and see your report card based on the questions you\'ve answered so far?')) return;
+  mcqClearTimer();
+  if(document.fullscreenElement) document.exitFullscreen();
+  const s = mcqSession;
+  s.questions = s.questions.slice(0, s.idx);
+  renderMcqReport();
+}
+function mcqGoBack(){
+  if(!confirm('Go back to setup? Your current progress in this quiz will be lost.')) return;
+  mcqClearTimer();
+  if(document.fullscreenElement) document.exitFullscreen();
+  mcqSession = null;
+  renderMcqSetup();
+}
+window.mcqStopTest = mcqStopTest; window.mcqGoBack = mcqGoBack;
 
 function renderMcqQuestion(){
+  mcqClearTimer();
   const s = mcqSession;
   if(s.idx >= s.questions.length){ renderMcqReport(); return; }
   const q = s.questions[s.idx];
+  s.timeLeft = MCQ_TIMER_SEC;
   const pct = Math.round((s.idx/s.questions.length)*100);
-  let html = `<div class="qz-progress"><div class="qz-progress-fill" style="width:${pct}%"></div></div>
-  <div class="qz-meta"><span>Question ${s.idx+1} / ${s.questions.length}</span><span class="qz-meta-right"><span class="streak">\uD83D\uDD25 Streak: ${s.streak}</span><button class="qz-fs-btn" title="Full Screen Mode" onclick="toggleContentFullscreen()">\u26F6 Full Screen Mode</button></span></div>
+  let html = `<div class="fs-sticky-head">
+  <div class="opt-row runner-exit-bar" style="margin-bottom:8px;">
+    <button class="opt-btn" onclick="mcqGoBack()">\u2190 Go Back</button>
+    <button class="opt-btn" onclick="mcqStopTest()">\u23F9 Stop &amp; See Report</button>
+  </div>
+  <div class="qz-progress"><div class="qz-progress-fill" style="width:${pct}%"></div></div>
+  <div class="qz-meta"><span>Question ${s.idx+1} / ${s.questions.length}</span><span class="streak">\uD83D\uDD25 Streak: ${s.streak}</span><span class="qz-meta-right"><span class="qz-timer-badge" id="mcqTimer">\u23F1 ${s.timeLeft}s</span><button class="qz-fs-btn" title="Full Screen Mode" onclick="toggleContentFullscreen()">\u26F6 Full Screen Mode</button></span></div>
+  </div>
   <div class="qz-card"><div class="qz-qtext">${q.q}</div>`;
   q.options.forEach((opt,i)=>{
     const letters = ['A','B','C','D','E','F'];
@@ -1214,10 +1269,33 @@ function renderMcqQuestion(){
   });
   html += `<div id="mcqexp"></div></div>`;
   document.getElementById('content').innerHTML = html;
+  mcqTimerInt = setInterval(()=>{
+    s.timeLeft--;
+    const el = document.getElementById('mcqTimer');
+    if(el){
+      el.textContent = '\u23F1 ' + s.timeLeft + 's';
+      el.classList.toggle('low', s.timeLeft>0 && s.timeLeft<=TIMER_LOW_SEC);
+    }
+    if(s.timeLeft>0 && s.timeLeft<=TIMER_LOW_SEC) playTickSound(s.timeLeft%2===0);
+    if(s.timeLeft<=0){ mcqTimeout(); }
+  }, 1000);
+}
+function mcqTimeout(){
+  mcqClearTimer();
+  const s = mcqSession; if(s.answered) return;
+  s.answered = true; s.timeoutCount++; s.streak = 0;
+  const q = s.questions[s.idx];
+  s.log.push({q:q.q, correct:null, timeout:true, chosen:'\u2014', right:q.options[q.answer], exp:q.exp});
+  const correctBtn = document.getElementById('mcqopt_'+q.answer);
+  if(correctBtn) correctBtn.classList.add('correct');
+  document.querySelectorAll('.qz-opt').forEach(b=>b.onclick=null);
+  const expEl = document.getElementById('mcqexp');
+  if(expEl) expEl.innerHTML = `<div class="qz-exp">\u23F0 Time's up! ${q.exp}</div><button class="qz-next" onclick="mcqNext()">${s.idx+1<s.questions.length?'Next Question \u2192':'See Report Card \u2192'}</button>`;
 }
 function mcqAnswer(i){
   const s = mcqSession;
   if(s.answered) return;
+  mcqClearTimer();
   s.answered = true; s.selected = i;
   const q = s.questions[s.idx];
   const correct = (i===q.answer);
@@ -1229,7 +1307,7 @@ function mcqAnswer(i){
   document.querySelectorAll('.qz-opt').forEach(b=>b.onclick=null);
   document.getElementById('mcqexp').innerHTML = `<div class="qz-exp">${q.exp}</div><button class="qz-next" onclick="mcqNext()">${s.idx+1<s.questions.length?'Next Question \u2192':'See Report Card \u2192'}</button>`;
 }
-function mcqNext(){ mcqSession.idx++; mcqSession.answered=false; renderMcqQuestion(); }
+function mcqNext(){ mcqClearTimer(); mcqSession.idx++; mcqSession.answered=false; renderMcqQuestion(); }
 window.mcqAnswer = mcqAnswer; window.mcqNext = mcqNext;
 
 /* ---------------- SHAREABLE REPORT CARD (PNG / PDF / WhatsApp / native share) ---------------- */
@@ -1350,6 +1428,7 @@ async function exportShareCard(mode){
 window.openShareCard = openShareCard; window.closeShareCard = closeShareCard; window.exportShareCard = exportShareCard;
 
 function renderMcqReport(){
+  mcqClearTimer();
   const s = mcqSession;
   const total = s.questions.length;
   const maxMarks = total*4;
@@ -1359,6 +1438,7 @@ function renderMcqReport(){
     <div class="stat-grid">
       <div class="stat-box"><div class="n">${s.correctCount}</div><div class="l">Correct (+4 each)</div></div>
       <div class="stat-box"><div class="n">${s.wrongCount}</div><div class="l">Wrong (\u22121 each)</div></div>
+      <div class="stat-box"><div class="n">${s.timeoutCount}</div><div class="l">Timed Out (0 each)</div></div>
       <div class="stat-box"><div class="n">${s.bestStreak}</div><div class="l">Best Streak</div></div>
       <div class="stat-box"><div class="n">${timeSec}s</div><div class="l">Time Taken</div></div>
     </div></div>
@@ -1368,8 +1448,9 @@ function renderMcqReport(){
     ${nextStepNudge('mcq')}
     <div class="setup-label">Question-by-question Review</div>`;
   s.log.forEach((l,i)=>{
+    const status = l.timeout ? '\u23F0 Timed out (0)' : (l.correct?'\u2713 (+4)':'\u2717 (\u22121)');
     html += `<div class="review-item"><div class="qq">${i+1}. ${l.q}</div>
-      <div class="${l.correct?'ans-ok':'ans-bad'}">Your answer: ${l.chosen} ${l.correct?'\u2713 (+4)':'\u2717 (\u22121)'}</div>
+      <div class="${l.timeout?'ans-bad':(l.correct?'ans-ok':'ans-bad')}">Your answer: ${l.chosen} ${status}</div>
       ${!l.correct?`<div class="ans-ok">Correct answer: ${l.right}</div>`:''}</div>`;
   });
   document.getElementById('content').innerHTML = html;
@@ -1424,6 +1505,24 @@ function neetFilterPool(){
   return DATA.neet.filter(q => (neetSetup.difficulty==='All'||q.difficulty===neetSetup.difficulty)
     && (neetSetup.qtype==='All'||q.type===neetSetup.qtype)
     && (neetSetup.topicMode==='full' || neetSetup.topics.length===0 || neetSetup.topics.includes(q.topic)));
+}
+const NEET_SEEN_KEY = 'pu1ch6_neet_seen_ids';
+function neetGetSeenIds(){
+  try{ const raw = localStorage.getItem(NEET_SEEN_KEY); return raw ? new Set(JSON.parse(raw)) : new Set(); }catch(e){ return new Set(); }
+}
+function neetSaveSeenIds(set){
+  try{ localStorage.setItem(NEET_SEEN_KEY, JSON.stringify(Array.from(set))); }catch(e){}
+}
+function neetBuildSessionPool(filteredPool, n){
+  let seen = neetGetSeenIds();
+  const allSeen = filteredPool.length > 0 && filteredPool.every(q => seen.has(q.id));
+  if(allSeen){ seen = new Set(); neetSaveSeenIds(seen); }
+  const unseen = shuffleArr(filteredPool.filter(q => !seen.has(q.id)));
+  const alreadySeen = shuffleArr(filteredPool.filter(q => seen.has(q.id)));
+  let pool = unseen.concat(alreadySeen).slice(0, n);
+  pool.forEach(q => seen.add(q.id));
+  neetSaveSeenIds(seen);
+  return pool;
 }
 function renderNeetSetup(){
   const pool = neetFilterPool();
@@ -1480,8 +1579,10 @@ window.neetSetType=neetSetType; window.neetSetDiff=neetSetDiff; window.neetSetCo
 
 let neetSession = null; let neetTimerInt = null;
 function neetStart(){
-  let pool = shuffleArr(neetFilterPool());
-  if(neetSetup.count!=='All'){ pool = pool.slice(0, parseInt(neetSetup.count)); }
+  let filtered = neetFilterPool();
+  if(filtered.length===0){ alert('No questions match those filters. Try widening your selection.'); return; }
+  const n = neetSetup.count==='All' ? filtered.length : parseInt(neetSetup.count);
+  let pool = neetBuildSessionPool(filtered, n);
   neetSession = {
     questions: pool, idx:0, answered:false, marks:0, correctCount:0, wrongCount:0, timeoutCount:0,
     startTime:Date.now(), log:[], timeLeft: parseInt(neetSetup.timer)
@@ -1571,18 +1672,24 @@ function renderNeetQuestion(){
   s.timeLeft = parseInt(neetSetup.timer);
   const pct = Math.round((s.idx/s.questions.length)*100);
   const typeLabel = NEET_TYPES.find(t=>t.id===q.type).label;
-  let html = `<div class="opt-row" style="margin-bottom:8px;">
+  let html = `<div class="fs-sticky-head">
+  <div class="opt-row runner-exit-bar" style="margin-bottom:8px;">
     <button class="opt-btn" onclick="neetGoBack()">\u2190 Go Back</button>
     <button class="opt-btn" onclick="neetStopTest()">\u23F9 Stop &amp; See Report</button>
   </div>
   <div class="qz-progress"><div class="qz-progress-fill" style="width:${pct}%"></div></div>
   <div class="qz-meta"><span>Q ${s.idx+1}/${s.questions.length} \u00b7 ${typeLabel}</span><span class="qz-meta-right"><span class="qz-timer-badge" id="neetTimer">\u23F1 ${kcetFmtMMSS(s.timeLeft)}</span><button class="qz-fs-btn" title="Full Screen Mode" onclick="toggleContentFullscreen()">\u26f6 Full Screen Mode</button></span></div>
+  </div>
   <div class="qz-card"><div class="qz-qtext">${neetQText(q)}</div>${neetQuestionBody(q)}<div id="neetexp"></div></div>`;
   document.getElementById('content').innerHTML = html;
   neetTimerInt = setInterval(()=>{
     s.timeLeft--;
     const el = document.getElementById('neetTimer');
-    if(el) el.textContent = '\u23F1 ' + kcetFmtMMSS(Math.max(s.timeLeft,0));
+    if(el){
+      el.textContent = '\u23F1 ' + kcetFmtMMSS(Math.max(s.timeLeft,0));
+      el.classList.toggle('low', s.timeLeft>0 && s.timeLeft<=TIMER_LOW_SEC);
+    }
+    if(s.timeLeft>0 && s.timeLeft<=TIMER_LOW_SEC) playTickSound(s.timeLeft%2===0);
     if(s.timeLeft<=0){ neetTimeout(); }
   }, 1000);
 }
@@ -2145,6 +2252,24 @@ function kcetFilterPool(){
     && (kcetSetup.difficulty==='All'||q.difficulty===kcetSetup.difficulty)
     && (kcetSetup.formats.length===0||kcetSetup.formats.includes(q.format)));
 }
+const KCET_SEEN_KEY = 'pu1ch6_kcet_seen_ids';
+function kcetGetSeenIds(){
+  try{ const raw = localStorage.getItem(KCET_SEEN_KEY); return raw ? new Set(JSON.parse(raw)) : new Set(); }catch(e){ return new Set(); }
+}
+function kcetSaveSeenIds(set){
+  try{ localStorage.setItem(KCET_SEEN_KEY, JSON.stringify(Array.from(set))); }catch(e){}
+}
+function kcetBuildSessionPool(filteredPool, n){
+  let seen = kcetGetSeenIds();
+  const allSeen = filteredPool.length > 0 && filteredPool.every(q => seen.has(q.id));
+  if(allSeen){ seen = new Set(); kcetSaveSeenIds(seen); }
+  const unseen = shuffleArr(filteredPool.filter(q => !seen.has(q.id)));
+  const alreadySeen = shuffleArr(filteredPool.filter(q => seen.has(q.id)));
+  let pool = unseen.concat(alreadySeen).slice(0, n);
+  pool.forEach(q => seen.add(q.id));
+  kcetSaveSeenIds(seen);
+  return pool;
+}
 function renderKcetSetup(){
   const pool = kcetFilterPool();
   const topicChips = DATA.topics.map(t=>`<div class="opt-btn${kcetSetup.topics.includes(t.id)?' sel':''}" onclick="kcetToggleTopic('${t.id}')">${t.name}</div>`).join('');
@@ -2186,10 +2311,11 @@ function renderKcetSetup(){
     <div class="setup-label">Difficulty</div>
     <div class="opt-row">${['All','Easy','Medium','Hard'].map(v=>`<div class="opt-btn ${kcetSetup.difficulty===v?'sel':''}" onclick="kcetSetDiff('${v}')">${v}</div>`).join('')}</div>
     <div class="setup-label">Number of Questions</div>
-    <div class="opt-row">${['10','20','60','All'].map(v=>`<div class="opt-btn ${kcetSetup.count===v?'sel':''}" onclick="kcetSetCount('${v}')">${v==='All'?'All matching':v}</div>`).join('')}</div>
+    <div class="opt-row">${['10','25','50','60','All'].map(v=>`<div class="opt-btn ${kcetSetup.count===v?'sel':''}" onclick="kcetSetCount('${v}')">${v==='60'?'60 (full paper)':(v==='All'?'All matching':v)}</div>`).join('')}</div>
     <div class="setup-label">Per-question Timer</div>
     <div class="opt-row">${['20','30','40','60','80'].map(v=>`<div class="opt-btn ${kcetSetup.timer===v?'sel':''}" onclick="kcetSetTimer('${v}')">${kcetFmtMMSS(parseInt(v))}</div>`).join('')}</div>
     <button class="start-btn" onclick="kcetStart()">Start KCET Practice \u00b7 ${kcetSetup.count==='All' ? pool.length+' matching' : Math.min(parseInt(kcetSetup.count), pool.length)+' questions'}</button>
+    <div style="font-size:10.5px;color:var(--ink-dim);text-align:center;margin-top:10px;">\ud83d\udd04 Prioritizes questions you haven't seen yet, so every session feels fresh</div>
   </div>`;
   document.getElementById('content').innerHTML = html;
 }
@@ -2220,9 +2346,10 @@ window.kcetSetTopicMode=kcetSetTopicMode; window.kcetToggleTopic=kcetToggleTopic
 
 let kcetSession = null; let kcetTimerInt = null;
 function kcetStart(){
-  let pool = shuffleArr(kcetFilterPool());
-  if(kcetSetup.count!=='All'){ pool = pool.slice(0, parseInt(kcetSetup.count)); }
-  if(pool.length===0){ alert('No questions match those filters. Try widening your selection.'); return; }
+  let filtered = kcetFilterPool();
+  if(filtered.length===0){ alert('No questions match those filters. Try widening your selection.'); return; }
+  const n = kcetSetup.count==='All' ? filtered.length : parseInt(kcetSetup.count);
+  let pool = kcetBuildSessionPool(filtered, n);
   kcetSession = {
     questions: pool, idx:0, answered:false, marks:0, correctCount:0, wrongCount:0, timeoutCount:0,
     startTime:Date.now(), log:[], timeLeft: parseInt(kcetSetup.timer)
@@ -2241,12 +2368,14 @@ function renderKcetQuestion(){
   const fmtLabel = (KCET_FORMATS.find(f=>f.id===q.format) || {label:'Direct NCERT Recall'}).label;
   const qTextHtml = esc(q.q).replace(/\n/g, '<br>');
   const matchHtml = (q.format==='matching' && q.colA && q.colB) ? `<table class="match-table"><tr><td><b>Column I</b></td><td><b>Column II</b></td></tr>${q.colA.map((a,i)=>`<tr><td>${a}</td><td>${q.colB[i]}</td></tr>`).join('')}</table>` : '';
-  let html = `<div class="opt-row" style="margin-bottom:8px;">
+  let html = `<div class="fs-sticky-head">
+  <div class="opt-row runner-exit-bar" style="margin-bottom:8px;">
     <button class="opt-btn" onclick="kcetGoBack()">\u2190 Go Back</button>
     <button class="opt-btn" onclick="kcetStopTest()">\u23F9 Stop &amp; See Report</button>
   </div>
   <div class="qz-progress"><div class="qz-progress-fill" style="width:${pct}%"></div></div>
   <div class="qz-meta"><span>Question ${s.idx+1} / ${s.questions.length}</span><span class="qz-meta-right"><span class="qz-timer-badge" id="kcetTimer">\u23F1 ${kcetFmtMMSS(s.timeLeft)}</span><button class="qz-fs-btn" title="Full Screen Mode" onclick="toggleContentFullscreen()">\u26F6 Full Screen Mode</button></span></div>
+  </div>
   <div style="font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:4px;">${fmtLabel}</div>
   <div class="qz-card"><div class="qz-qtext">${qTextHtml}</div>${matchHtml}`;
   q.options.forEach((opt,i)=>{
@@ -2258,7 +2387,11 @@ function renderKcetQuestion(){
   kcetTimerInt = setInterval(()=>{
     s.timeLeft--;
     const el = document.getElementById('kcetTimer');
-    if(el) el.textContent = '\u23F1 ' + kcetFmtMMSS(Math.max(s.timeLeft,0));
+    if(el){
+      el.textContent = '\u23F1 ' + kcetFmtMMSS(Math.max(s.timeLeft,0));
+      el.classList.toggle('low', s.timeLeft>0 && s.timeLeft<=TIMER_LOW_SEC);
+    }
+    if(s.timeLeft>0 && s.timeLeft<=TIMER_LOW_SEC) playTickSound(s.timeLeft%2===0);
     if(s.timeLeft<=0){ kcetTimeout(); }
   }, 1000);
 }
