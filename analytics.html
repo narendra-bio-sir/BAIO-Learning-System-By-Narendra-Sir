@@ -2230,6 +2230,7 @@ window.addEventListener('afterprint', function(){
       <button class="subtab-btn active" data-cat="theory">📖 Theory</button>
       <button class="subtab-btn" data-cat="neet">🩺 NEET</button>
       <button class="subtab-btn" data-cat="kcet">📐 KCET</button>
+      <button class="subtab-btn" data-cat="kcetpcb">📐 KCET (PCB)</button>
       <button class="subtab-btn" data-cat="jee">🎯 JEE</button>
     </div>
     <div class="custom-report-options active" style="display:block; margin-top:10px;">
@@ -2792,6 +2793,10 @@ window.addEventListener('afterprint', function(){
         <div class="checkbox-row"><input type="checkbox" class="rp-kcet-check" value="2" id="rpKcet_2" checked><label for="rpKcet_2">KCET OBT 3</label></div>
         <div class="checkbox-row"><input type="checkbox" class="rp-kcet-check" value="3" id="rpKcet_3" checked><label for="rpKcet_3">KCET CT 1</label></div>
         <div class="checkbox-row"><input type="checkbox" class="rp-kcet-check" value="4" id="rpKcet_4" checked><label for="rpKcet_4">KCET CT 2</label></div>
+      </div>
+      <div class="checkbox-row"><input type="checkbox" id="incKcetPcbObt" checked><label for="incKcetPcbObt">KCET (PCB) Overview (subject averages, section-wise, distribution)</label></div>
+      <div style="margin-left:26px; margin-bottom:6px;">
+        <div class="checkbox-row"><input type="checkbox" class="rp-kcetpcb-check" value="0" id="rpKcetPcb_0" checked><label for="rpKcetPcb_0">KCET CT 2 (PCB)</label></div>
       </div>
       <div class="checkbox-row"><input type="checkbox" id="incJeeObt" checked><label for="incJeeObt">JEE Overview (subject averages, section-wise, distribution)</label></div>
       <div style="margin-left:26px; margin-bottom:6px;">
@@ -6954,6 +6959,7 @@ const ACHIEVER_CATEGORY_META = {
   theory: { label: 'Theory', icon: '📖', desc: 'Estimated class percentile across recent theory tests (Slip Test / Monthly Test).', unit: 'percentile' },
   neet:   { label: 'NEET',   icon: '🩺', desc: 'NEET (PCB) exam readiness across NEET OBT / CT rounds.', unit: '%' },
   kcet:   { label: 'KCET',   icon: '📐', desc: 'KCET (PCM) exam readiness across KCET OBT / CT rounds.', unit: '%' },
+  kcetpcb:{ label: 'KCET (PCB)', icon: '📐', desc: 'KCET (PCB stream — Agriculture/Veterinary/Nursing/Pharma) exam readiness across KCET (PCB) rounds. PU-I only.', unit: '%' },
   jee:    { label: 'JEE',    icon: '🎯', desc: 'JEE exam readiness across JEE OBT / CT rounds.', unit: '%' }
 };
 function computeAchieversList(category, opts){
@@ -6980,6 +6986,7 @@ function computeAchieversList(category, opts){
       if(category==='theory') r = computeClassPercentileTrend(student, 1);
       else if(category==='neet') r = computeStreamReadiness(NEET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 720);
       else if(category==='kcet') r = computeStreamReadiness(KCET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1','ct2'], 135);
+      else if(category==='kcetpcb') r = (typeof KCET_PCB_BY_CODE!=='undefined') ? computeStreamReadiness(KCET_PCB_BY_CODE[student.code], ['obt1'], 135) : null;
       else if(category==='jee') r = (typeof JEE_BY_CODE!=='undefined') ? computeStreamReadiness(JEE_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 300) : null;
       pushIfQualifies(student, 1, r);
     });
@@ -8115,18 +8122,20 @@ function generateReport(){
 }
 function generatePU1Report(){
   const useSystem = document.getElementById('reportModeSystem').classList.contains('active');
-  const inc = useSystem ? {slip:true,monthly:true,sections:true,bvo:true,neetobt:true,kcetobt:true,jeeobt:true,risk:false,conclusion:true} : {
+  const inc = useSystem ? {slip:true,monthly:true,sections:true,bvo:true,neetobt:true,kcetobt:true,kcetpcbobt:true,jeeobt:true,risk:false,conclusion:true} : {
     slip: document.getElementById('incSlip').checked,
     monthly: document.getElementById('incMonthly').checked,
     sections: document.getElementById('incSections').checked,
     bvo: document.getElementById('incBvo').checked,
     neetobt: document.getElementById('incNeetObt').checked,
     kcetobt: document.getElementById('incKcetObt').checked,
+    kcetpcbobt: document.getElementById('incKcetPcbObt').checked,
     jeeobt: document.getElementById('incJeeObt').checked,
     risk: document.getElementById('incRisk').checked,
     conclusion: document.getElementById('incConclusion').checked
   };
   const rpKcetRounds = useSystem ? KCET_TESTS.map((t,i)=>i) : Array.from(document.querySelectorAll('.rp-kcet-check')).filter(b=>b.checked).map(b=>parseInt(b.value,10));
+  const rpKcetPcbRounds = (useSystem ? (typeof KCET_PCB_TESTS!=='undefined' ? KCET_PCB_TESTS.map((t,i)=>i) : []) : Array.from(document.querySelectorAll('.rp-kcetpcb-check')).filter(b=>b.checked).map(b=>parseInt(b.value,10)));
   const rpJeeRounds = useSystem ? JEE_TESTS.map((t,i)=>i) : Array.from(document.querySelectorAll('.rp-jee-check')).filter(b=>b.checked).map(b=>parseInt(b.value,10));
 
   const savedPu1MonthCurrent = pu1MonthCurrent;
@@ -8294,6 +8303,32 @@ function generatePU1Report(){
         return [sec, r.length, secAvgTotal.toFixed(1)+'/135'];
       });
       html += rpSection(test.label+' Overview <span style="font-weight:400;font-size:12px;color:var(--muted);">('+test.disp+', '+n+' students, PCM pattern)</span>',
+        '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin-bottom:8px;">Subject-wise Average</div>'+
+        rpTable(['Subject','Average','Percentage'], subjectRows) +
+        '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin:16px 0 8px;">Section-wise Summary</div>'+
+        rpTable(['Section','Students','Avg Total /135'], sectionRows) +
+        '<div class="rp-callout"><b>Overall class average:</b> '+avgTotal.toFixed(1)+'/135 ('+(avgTotal/135*100).toFixed(1)+'%).</div>');
+    });
+  }
+  if(inc.kcetpcbobt && typeof KCET_PCB_TESTS!=='undefined'){
+    rpKcetPcbRounds.forEach(idx=>{
+      const test = KCET_PCB_TESTS[idx];
+      if(!test) return;
+      const rows = test.students;
+      const n = rows.length;
+      const avg = key => rows.reduce((s,r)=>s+r[key],0)/n;
+      const avgPhy = avg('phy'), avgChe = avg('che'), avgBio = avg('bio'), avgTotal = avg('total');
+      const subjectRows = [
+        ['Physics', avgPhy.toFixed(1)+'/45', (avgPhy/45*100).toFixed(1)+'%'],
+        ['Chemistry', avgChe.toFixed(1)+'/45', (avgChe/45*100).toFixed(1)+'%'],
+        ['Biology', avgBio.toFixed(1)+'/45', (avgBio/45*100).toFixed(1)+'%']
+      ];
+      const sectionRows = ['SPARK','PRIME'].map(sec=>{
+        const r = rows.filter(x=>x.section===sec);
+        const secAvgTotal = r.length ? r.reduce((s,x)=>s+x.total,0)/r.length : 0;
+        return [sec, r.length, secAvgTotal.toFixed(1)+'/135'];
+      });
+      html += rpSection(test.label+' Overview <span style="font-weight:400;font-size:12px;color:var(--muted);">('+test.disp+', '+n+' students, PCB pattern)</span>',
         '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin-bottom:8px;">Subject-wise Average</div>'+
         rpTable(['Subject','Average','Percentage'], subjectRows) +
         '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin:16px 0 8px;">Section-wise Summary</div>'+
@@ -10294,6 +10329,23 @@ function buildFailuresRemedialReport(){
     failing.length ?
       rpTable(['Name','Section','PU','Subject','Latest Test','Score %','Pattern','Score Trend'], failing.map(f=>[f.name, f.section, 'PU-'+(f.pu===2?'II':'I'), f.stream, f.latestLabel, f.latestPct+'%', f.pattern, f.trend]))
       : '<div class="rp-callout">No students in this selection are currently below the passing mark — excellent work!</div>');
+
+  // KCET (PCB stream) — shown as context only, alongside the Board-pattern failing list above.
+  // Deliberately NOT folded into the failing/pass computation itself: KCET is a different exam
+  // pattern with a different pass bar, same reasoning as why NEET OBT is tracked separately.
+  if(typeof KCET_PCB_BY_CODE!=='undefined' && streamFilter!=='ele'){
+    const kcetPcbRows = roster.filter(s=>s.pu===1 && !isElectronicsOnly(s, s.pu)).map(s=>{
+      const rec = KCET_PCB_BY_CODE[s.code];
+      if(!rec) return null;
+      const r = computeStreamReadiness(rec, ['obt1'], 135);
+      if(!r) return null;
+      return {name: s.name, section: sectionLabel(s), pct: r.latestPct};
+    }).filter(Boolean).sort((a,b)=>a.pct-b.pct);
+    if(kcetPcbRows.length){
+      html += rpSection('KCET (PCB) — Context Only <span style="font-weight:400;font-size:12px;color:var(--muted);">(Agriculture/Veterinary/Nursing/Pharma stream, latest round &mdash; not part of the failing count above, different exam pattern)</span>',
+        rpTable(['Name','Section','Latest KCET (PCB) %'], kcetPcbRows.map(r=>[r.name, r.section, r.pct+'%'])));
+    }
+  }
 
   let remedial = '';
   if(persistent.length){
