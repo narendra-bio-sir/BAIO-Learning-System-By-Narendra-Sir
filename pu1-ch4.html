@@ -344,8 +344,17 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .qz-timer-badge{background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-family:ui-monospace,"SF Mono",Consolas,monospace;font-variant-numeric:tabular-nums;font-weight:600;color:var(--gold);font-size:12px;}
 .qz-fs-btn{background:var(--panel2);border:1px solid var(--line);color:var(--ink-dim);border-radius:8px;padding:5px 10px;font-size:11px;font-weight:600;white-space:nowrap;line-height:1;cursor:pointer;flex-shrink:0;}
 .qz-fs-btn:hover{color:var(--teal);border-color:var(--teal);}
-.study-fs-btn{font-size:11px;font-weight:600;background:var(--panel2);border:1px solid var(--line);color:var(--ink-dim);border-radius:8px;padding:5px 10px;cursor:pointer;margin:8px 0 0;}
-.study-fs-btn:hover{color:var(--teal);border-color:var(--teal);}
+/* Study Mode dropdown (topic switcher + Full Screen Mode combined) */
+.study-dd{position:relative;margin-bottom:4px;}
+.study-dd-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:11px 14px;font-family:'Work Sans',sans-serif;font-size:13.5px;font-weight:600;color:var(--ink);cursor:pointer;}
+.study-dd-btn .study-dd-chevron{color:var(--ink-dim);font-size:11px;transition:transform .15s ease;flex:none;}
+.study-dd-btn.open .study-dd-chevron{transform:rotate(180deg);}
+.study-dd-menu{position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:15;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 28px rgba(0,0,0,0.28);padding:6px;max-height:60vh;overflow-y:auto;}
+.study-dd-item{padding:10px 12px;border-radius:8px;font-size:13px;color:var(--ink);cursor:pointer;}
+.study-dd-item:hover{background:var(--panel2);}
+.study-dd-item.active{color:var(--teal);font-weight:700;background:var(--panel2);}
+.study-dd-divider{height:1px;background:var(--line);margin:6px 4px;}
+.study-dd-item.action{color:var(--gold);font-weight:600;display:flex;align-items:center;gap:7px;}
 /* Fullscreen mode for MCQ Quiz / NEET Practice / KCET Practice / Study Mode */
 .content:fullscreen{
   display:flex; flex-direction:column; justify-content:flex-start;
@@ -353,6 +362,7 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
   background:var(--navy); overflow-y:auto;
 }
 .content.fs-top-align:fullscreen{max-width:900px;}
+.content.fs-top-align:fullscreen .study-fs-header{position:sticky; top:0; z-index:5; background:var(--navy); padding-bottom:8px;}
 .content:fullscreen .qz-qtext{font-size:clamp(16px,2.6vw,22px);}
 .content:fullscreen .qz-opt{font-size:clamp(13px,2vw,16px); padding:13px 15px;}
 .content:fullscreen .qz-fs-btn{background:var(--panel);}
@@ -905,6 +915,46 @@ function topicPills(activeId, onClickName){
   return `<div class="pillrow-wrap"><button class="tab-scroll-btn pill-scroll-left">&#8249;</button><div class="pillrow">${DATA.topics.map(t=>`<div class="pill ${t.id===activeId?'active':''}" onclick="${onClickName}('${t.id}')">${t.name}</div>`).join('')}</div><button class="tab-scroll-btn pill-scroll-right">&#8250;</button></div>`;
 }
 
+function studyTopicDropdown(activeId){
+  const activeTopic = DATA.topics.find(t=>t.id===activeId);
+  const items = DATA.topics.map(t=>`<div class="study-dd-item ${t.id===activeId?'active':''}" onclick="selectStudyTopic('${t.id}');closeStudyDropdown();">${t.name}</div>`).join('');
+  return `<div class="study-dd">
+    <button class="study-dd-btn" id="studyDropdownBtn" onclick="toggleStudyDropdown(event)">
+      <span>&#128218; ${activeTopic ? activeTopic.name : 'Choose a topic'}</span>
+      <span class="study-dd-chevron">&#9662;</span>
+    </button>
+    <div class="study-dd-menu" id="studyDropdownMenu" style="display:none;">
+      ${items}
+      <div class="study-dd-divider"></div>
+      <div class="study-dd-item action" onclick="toggleContentFullscreen(true);closeStudyDropdown();">&#10688; Full Screen Mode</div>
+    </div>
+  </div>`;
+}
+function toggleStudyDropdown(e){
+  if(e) e.stopPropagation();
+  const menu = document.getElementById('studyDropdownMenu');
+  const btn = document.getElementById('studyDropdownBtn');
+  if(!menu) return;
+  const isOpen = menu.style.display === 'block';
+  menu.style.display = isOpen ? 'none' : 'block';
+  if(btn) btn.classList.toggle('open', !isOpen);
+}
+function closeStudyDropdown(){
+  const menu = document.getElementById('studyDropdownMenu');
+  const btn = document.getElementById('studyDropdownBtn');
+  if(menu) menu.style.display = 'none';
+  if(btn) btn.classList.remove('open');
+}
+document.addEventListener('click', function(e){
+  const menu = document.getElementById('studyDropdownMenu');
+  if(menu && menu.style.display === 'block' && !e.target.closest('.study-dd')){
+    closeStudyDropdown();
+  }
+});
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape') closeStudyDropdown();
+});
+
 /* ---------------- STUDY MODE ---------------- */
 function selectStudyTopic(id){ currentTopic = id; renderContent(); }
 window.selectStudyTopic = selectStudyTopic;
@@ -990,8 +1040,7 @@ function renderStudy(){
   const en = DATA.study[currentTopic];
   const trans = (currentLang!=='en') && STUDY_TRANSLATIONS_CH4[currentTopic] && STUDY_TRANSLATIONS_CH4[currentTopic][currentLang];
   const d = trans || en;
-  let html = topicPills(currentTopic, 'selectStudyTopic');
-  html += `<button class="study-fs-btn" onclick="toggleContentFullscreen(true)">&#10688; Full Screen Mode</button>`;
+  let html = `<div class="study-fs-header">${studyTopicDropdown(currentTopic)}</div>`;
   html += `<div class="chiprow">${d.recap.map(c=>`<span class="chip">${c}</span>`).join('')}</div>`;
   d.sections.forEach(sec=>{
     html += `<div class="section"><h4>${sec.h}</h4><div class="section-body">${sec.body}</div></div>`;
