@@ -7008,10 +7008,13 @@ function computeAchieversList(category, opts){
 function achieverScoreLabel(category, score){
   return category==='theory' ? '~'+score+'th pct' : score+'%';
 }
+function achieverThresholdLabel(category){
+  return category==='theory' ? 'Top 25% class percentile (75th+)' : '“Strong” readiness band (70%+ on latest attempt)';
+}
 function renderAchieverTable(list, category){
   const tbody = document.querySelector('#achieverTable tbody');
   if(!list.length){
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--muted);">No students currently clear this bar with the data on file.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--muted);">No students currently clear this bar (Threshold: '+achieverThresholdLabel(category)+') with the data on file.</td></tr>';
     return;
   }
   tbody.innerHTML = list.map((s,i)=>{
@@ -7034,12 +7037,12 @@ function buildAchievers(){
   const pu2Count = list.filter(s=>s.pu===2).length;
 
   document.getElementById('achieverKpis').innerHTML =
-    '<div class="kpi hero"><div class="kpi-label">'+meta.icon+' Potential '+meta.label+' Achievers</div><div class="kpi-value">'+list.length+'</div><div class="kpi-note">students clearing the bar</div></div>'+
+    '<div class="kpi hero"><div class="kpi-label">'+meta.icon+' Potential '+meta.label+' Achievers</div><div class="kpi-value">'+list.length+'</div><div class="kpi-note">students clearing the bar &mdash; '+achieverThresholdLabel(category)+'</div></div>'+
     '<div class="kpi"><div class="kpi-label">PU-I</div><div class="kpi-value">'+pu1Count+'</div><div class="kpi-note">Spark + Prime</div></div>'+
     '<div class="kpi"><div class="kpi-label">PU-II</div><div class="kpi-value">'+pu2Count+'</div><div class="kpi-note">Champion + Elite</div></div>';
 
   document.getElementById('achieverListTitle').textContent = 'Potential '+meta.label+' Achievers';
-  document.getElementById('achieverListDesc').textContent = meta.desc+' Threshold: '+(category==='theory' ? 'Top 25% class percentile (75th+).' : '“Strong” readiness band (70%+ on latest attempt).');
+  document.getElementById('achieverListDesc').textContent = meta.desc+' Threshold: '+achieverThresholdLabel(category)+'.';
   renderAchieverTable(list, category);
 
   attachTopperShareBar('achieverShareBar', () => ({
