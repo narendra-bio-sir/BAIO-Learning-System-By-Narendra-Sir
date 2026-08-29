@@ -2246,9 +2246,14 @@ window.addEventListener('afterprint', function(){
     <div class="subtabs" id="achieverCategoryTabs">
       <button class="subtab-btn active" data-cat="theory">📖 Theory</button>
       <button class="subtab-btn" data-cat="neet">🩺 NEET</button>
-      <button class="subtab-btn" data-cat="kcet">📐 KCET</button>
+      <button class="subtab-btn" data-cat="kcet">📐 KCET (PCM)</button>
       <button class="subtab-btn" data-cat="kcetpcb">📐 KCET (PCB)</button>
+      <button class="subtab-btn" data-cat="kcetpcmb">📐 KCET (PCMB)</button>
       <button class="subtab-btn" data-cat="jee">🎯 JEE</button>
+    </div>
+    <div class="round-scope-row" id="achieverRoundScopeRow" style="display:none; align-items:center; gap:8px; margin-top:10px;">
+      <label for="achieverRoundScope" style="font-size:11.5px; color:var(--muted);">Rounds:</label>
+      <select id="achieverRoundScope" style="padding:8px 10px; border-radius:10px; border:1.5px solid var(--border); background:rgba(var(--overlay-rgb),0.05); color:var(--text-strong); font-size:13px; font-family:'Inter',sans-serif;"></select>
     </div>
     <div class="custom-report-options active" style="display:block; margin-top:10px;">
       <div class="checkbox-row"><input type="checkbox" id="achIncludePU1" checked><label for="achIncludePU1">Include PU-I (Spark + Prime)</label></div>
@@ -2293,9 +2298,14 @@ window.addEventListener('afterprint', function(){
     <div class="desc" id="aspirantExamStatus" style="margin-top:6px; font-weight:600;"></div>
     <div class="subtabs" id="aspirantCategoryTabs">
       <button class="subtab-btn active" data-cat="neet">🩺 NEET</button>
-      <button class="subtab-btn" data-cat="kcet">📐 KCET</button>
+      <button class="subtab-btn" data-cat="kcet">📐 KCET (PCM)</button>
       <button class="subtab-btn" data-cat="kcetpcb">📐 KCET (PCB)</button>
+      <button class="subtab-btn" data-cat="kcetpcmb">📐 KCET (PCMB)</button>
       <button class="subtab-btn" data-cat="jee">🎯 JEE</button>
+    </div>
+    <div class="round-scope-row" id="aspirantRoundScopeRow" style="display:none; align-items:center; gap:8px; margin-top:10px;">
+      <label for="aspirantRoundScope" style="font-size:11.5px; color:var(--muted);">Rounds:</label>
+      <select id="aspirantRoundScope" style="padding:8px 10px; border-radius:10px; border:1.5px solid var(--border); background:rgba(var(--overlay-rgb),0.05); color:var(--text-strong); font-size:13px; font-family:'Inter',sans-serif;"></select>
     </div>
     <div class="custom-report-options active" style="display:block; margin-top:10px;">
       <div class="checkbox-row"><input type="checkbox" id="aspIncludePU1" checked><label for="aspIncludePU1">Include PU-I (Spark + Prime)</label></div>
@@ -6787,12 +6797,13 @@ function buildPU2KcetSectionHtml(student){
 /* PU-II KCET readiness: PU2_KCET_BY_CODE rounds carry their own per-subject `outof`
    (it varies test to test, unlike PU-I's fixed 135), so this can't reuse
    computeStreamReadiness as-is - same classifyReadiness/readinessCardHtml below it. */
-function computePU2KcetReadiness(student){
+function computePU2KcetReadiness(student, roundScope){
   const rec = PU2_KCET_BY_CODE[student.code];
   if(!rec) return null;
   const allKeys = Object.keys(rec).sort();
-  const attempts = allKeys.map(k=>rec[k])
+  let attempts = allKeys.map(k=>rec[k])
     .filter(r=>r && !r.ABSENT && r.TOTAL!==null && r.TOTAL!==undefined && r.outof);
+  if(roundScope && roundScope!=='all') attempts = attempts.filter(r=> (roundScope==='obt') === roundKeyIsObt(r.label));
   if(!attempts.length) return null;
   const latest = attempts[attempts.length-1];
   const first = attempts[0];
@@ -6814,8 +6825,8 @@ function computePU2KcetReadiness(student){
    screen already reads PHY/CHE/BIO out of, so derive readiness the same way, restricted
    to entries labelled "OBT" and where the student has a Biology mark (their Slip Tests
    and PCM-only rounds have BIO:null and are correctly excluded). */
-function computePU2NeetReadiness(student){
-  const attempts = [];
+function computePU2NeetReadiness(student, roundScope){
+  let attempts = [];
   PU2_TESTS.forEach(test=>{
     if(!/OBT/i.test(test.label)) return;
     const rec = test.students.find(s=>s.code===student.code);
@@ -6841,6 +6852,7 @@ function computePU2NeetReadiness(student){
       });
     }
   }
+  if(roundScope && roundScope!=='all') attempts = attempts.filter(a=> (roundScope==='obt') === roundKeyIsObt(a.label));
   attempts.sort((a,b)=> a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
   if(!attempts.length) return null;
   const latest = attempts[attempts.length-1];
@@ -6853,16 +6865,19 @@ function computePU2NeetReadiness(student){
     latestTotalScore: latest.total, latestTotalMax: latest.max, latestSubjects: latest.subjects || null,
     band: classifyReadiness(latestPct) };
 }
-function computePU2JeeReadiness(student){
+function computePU2JeeReadiness(student, roundScope){
   if(typeof PU2_JEE_BY_CODE==='undefined') return null;
   const rec = PU2_JEE_BY_CODE[student.code];
   if(!rec) return null;
   const allKeys = Object.keys(rec).sort();
-  const attempts = [];
+  let attempts = [];
   allKeys.forEach((k, idx)=>{
     const r = rec[k];
     if(r && !r.ABSENT && r.TOTAL!==null && r.TOTAL!==undefined) attempts.push({ rec: r, idx });
   });
+  if(roundScope && roundScope!=='all' && typeof PU2_JEE_TESTS!=='undefined'){
+    attempts = attempts.filter(a=> (roundScope==='obt') === roundKeyIsObt((PU2_JEE_TESTS[a.idx]||{}).label));
+  }
   if(!attempts.length) return null;
   const latest = attempts[attempts.length-1];
   const first = attempts[0];
@@ -7085,8 +7100,9 @@ function classPercentileHtml(student, pu){
 const ACHIEVER_CATEGORY_META = {
   theory: { label: 'Theory', icon: '📖', desc: 'Estimated class percentile across recent theory tests (Slip Test / Monthly Test).', unit: 'percentile' },
   neet:   { label: 'NEET',   icon: '🩺', desc: 'NEET (PCB) exam readiness across NEET OBT / CT rounds.', unit: '%' },
-  kcet:   { label: 'KCET',   icon: '📐', desc: 'KCET (PCM) exam readiness across KCET OBT / CT rounds.', unit: '%' },
+  kcet:   { label: 'KCET (PCM)', icon: '📐', desc: 'KCET (PCM) exam readiness across KCET OBT / CT rounds.', unit: '%' },
   kcetpcb:{ label: 'KCET (PCB)', icon: '📐', desc: 'KCET (PCB stream — Agriculture/Veterinary/Nursing/Pharma) exam readiness across KCET (PCB) rounds. PU-I only.', unit: '%' },
+  kcetpcmb:{ label: 'KCET (PCMB)', icon: '📐', desc: 'Combined KCET (PCM) + KCET (PCB) score for students who attempted both streams, out of 270. PU-I only.', unit: '%' },
   jee:    { label: 'JEE',    icon: '🎯', desc: 'JEE exam readiness across JEE OBT / CT rounds.', unit: '%' }
 };
 /* Shared across Potential Achievers and Blooming Aspirants (and the exam
@@ -7097,16 +7113,49 @@ const ACHIEVER_CATEGORY_META = {
    keyed to match each raw score record's field names, with each subject's
    individual max mark (PU-I scale; PU-II KCET has its own per-round max,
    computed separately in computePU2KcetReadiness since it varies by round). */
+/* Round-scope filter shared by every readiness function: "All rounds",
+   "OBT only", or "CT only", classified purely from each round's own label
+   text (works the same for PU-I's fixed round catalogs and PU-II's more
+   varied labels, since every round is named either "... OBT n" or "... CT n"
+   in this dataset). */
+const EXAM_ROUND_SCOPE_OPTIONS = [
+  { value:'all', label:'All Rounds (OBT + CT)' },
+  { value:'obt', label:'OBT Only' },
+  { value:'ct', label:'CT Only' }
+];
+function roundKeyIsObt(label){ return /obt/i.test(label || ''); }
 const EXAM_SUBJECT_SPECS = {
   neet: [{key:'PHY',label:'Phy',max:180},{key:'CHE',label:'Che',max:180},{key:'BIO',label:'Bio',max:360}],
   kcet: [{key:'PHY',label:'Phy',max:45},{key:'CHE',label:'Che',max:45},{key:'MAT',label:'Mat',max:45}],
   kcetpcb: [{key:'PHY',label:'Phy',max:45},{key:'CHE',label:'Che',max:45},{key:'BIO',label:'Bio',max:45}],
   jee: [{key:'MAT',label:'Mat',max:100},{key:'PHY',label:'Phy',max:100},{key:'CHE',label:'Che',max:100}]
 };
+/* KCET (PCMB): combined PCM + PCB score, out of 270, for students who
+   attempted both streams. PU-I only — KCET (PCB) has no PU-II data. */
+function computeKcetPcmbReadiness(student, roundScope){
+  const pcm = computeStreamReadiness(KCET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1','ct2'], 135, KCET_TESTS, EXAM_SUBJECT_SPECS.kcet, roundScope);
+  const pcb = (typeof KCET_PCB_BY_CODE!=='undefined') ? computeStreamReadiness(KCET_PCB_BY_CODE[student.code], ['obt1'], 135, KCET_PCB_TESTS, EXAM_SUBJECT_SPECS.kcetpcb, roundScope) : null;
+  if(!pcm || !pcb) return null;
+  const totalScore = pcm.latestTotalScore + pcb.latestTotalScore;
+  const totalMax = pcm.latestTotalMax + pcb.latestTotalMax;
+  const pct = Math.round((totalScore/totalMax)*1000)/10;
+  return {
+    latestPct: pct, trend: null,
+    attemptsCount: pcm.attemptsCount + pcb.attemptsCount, totalRounds: pcm.totalRounds + pcb.totalRounds,
+    latestLabel: pcm.latestLabel+' + '+pcb.latestLabel, latestDate: pcm.latestDate,
+    latestTotalScore: totalScore, latestTotalMax: totalMax,
+    latestSubjects: [
+      { label:'PCM Total', score: pcm.latestTotalScore, max: pcm.latestTotalMax },
+      { label:'PCB Total', score: pcb.latestTotalScore, max: pcb.latestTotalMax }
+    ],
+    band: classifyReadiness(pct)
+  };
+}
 function computeExamReadinessResults(category, opts){
   const out = [];
   const KNOWN_SECTIONS = ['SPARK','PRIME','CHAMPION','ELITE'];
   const sections = opts.sections || KNOWN_SECTIONS;
+  const roundScope = opts.roundScope;
   function sectionAllowed(student){
     return KNOWN_SECTIONS.indexOf(student.section) === -1 || sections.indexOf(student.section) !== -1;
   }
@@ -7114,10 +7163,11 @@ function computeExamReadinessResults(category, opts){
     STUDENTS.forEach(student=>{
       if(!sectionAllowed(student)) return;
       let r = null;
-      if(category==='neet') r = computeStreamReadiness(NEET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 720, NEET_TESTS, EXAM_SUBJECT_SPECS.neet);
-      else if(category==='kcet') r = computeStreamReadiness(KCET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1','ct2'], 135, KCET_TESTS, EXAM_SUBJECT_SPECS.kcet);
-      else if(category==='kcetpcb') r = (typeof KCET_PCB_BY_CODE!=='undefined') ? computeStreamReadiness(KCET_PCB_BY_CODE[student.code], ['obt1'], 135, KCET_PCB_TESTS, EXAM_SUBJECT_SPECS.kcetpcb) : null;
-      else if(category==='jee') r = (typeof JEE_BY_CODE!=='undefined') ? computeStreamReadiness(JEE_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 300, JEE_TESTS, EXAM_SUBJECT_SPECS.jee) : null;
+      if(category==='neet') r = computeStreamReadiness(NEET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 720, NEET_TESTS, EXAM_SUBJECT_SPECS.neet, roundScope);
+      else if(category==='kcet') r = computeStreamReadiness(KCET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1','ct2'], 135, KCET_TESTS, EXAM_SUBJECT_SPECS.kcet, roundScope);
+      else if(category==='kcetpcb') r = (typeof KCET_PCB_BY_CODE!=='undefined') ? computeStreamReadiness(KCET_PCB_BY_CODE[student.code], ['obt1'], 135, KCET_PCB_TESTS, EXAM_SUBJECT_SPECS.kcetpcb, roundScope) : null;
+      else if(category==='kcetpcmb') r = computeKcetPcmbReadiness(student, roundScope);
+      else if(category==='jee') r = (typeof JEE_BY_CODE!=='undefined') ? computeStreamReadiness(JEE_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 300, JEE_TESTS, EXAM_SUBJECT_SPECS.jee, roundScope) : null;
       if(r) out.push({ student, pu: 1, r });
     });
   }
@@ -7125,9 +7175,9 @@ function computeExamReadinessResults(category, opts){
     PU2_STUDENTS.forEach(student=>{
       if(!sectionAllowed(student)) return;
       let r = null;
-      if(category==='neet') r = computePU2NeetReadiness(student);
-      else if(category==='kcet') r = computePU2KcetReadiness(student);
-      else if(category==='jee') r = computePU2JeeReadiness(student);
+      if(category==='neet') r = computePU2NeetReadiness(student, roundScope);
+      else if(category==='kcet') r = computePU2KcetReadiness(student, roundScope);
+      else if(category==='jee') r = computePU2JeeReadiness(student, roundScope);
       if(r) out.push({ student, pu: 2, r });
     });
   }
@@ -7248,10 +7298,14 @@ function renderAchieverExamBarChart(opts){
 function buildAchievers(){
   const activeBtn = document.querySelector('#achieverCategoryTabs .subtab-btn.active');
   const category = activeBtn ? activeBtn.dataset.cat : 'theory';
+  const scopeRow = document.getElementById('achieverRoundScopeRow');
+  const scopeSelect = document.getElementById('achieverRoundScope');
+  if(scopeRow) scopeRow.style.display = category==='theory' ? 'none' : 'flex';
   const opts = {
     includePU1: document.getElementById('achIncludePU1').checked,
     includePU2: document.getElementById('achIncludePU2').checked,
-    sections: Array.from(document.querySelectorAll('.ach-section-check:checked')).map(cb=>cb.value)
+    sections: Array.from(document.querySelectorAll('.ach-section-check:checked')).map(cb=>cb.value),
+    roundScope: (scopeSelect && category!=='theory') ? scopeSelect.value : 'all'
   };
   const meta = ACHIEVER_CATEGORY_META[category];
   const list = computeAchieversList(category, opts);
@@ -7292,6 +7346,11 @@ function buildAchievers(){
   if(pu1Cb) pu1Cb.addEventListener('change', buildAchievers);
   if(pu2Cb) pu2Cb.addEventListener('change', buildAchievers);
   document.querySelectorAll('.ach-section-check').forEach(cb=> cb.addEventListener('change', buildAchievers));
+  const scopeSelect = document.getElementById('achieverRoundScope');
+  if(scopeSelect){
+    scopeSelect.innerHTML = EXAM_ROUND_SCOPE_OPTIONS.map(o=>'<option value="'+o.value+'">'+o.label+'</option>').join('');
+    scopeSelect.addEventListener('change', buildAchievers);
+  }
 })();
 
 /* ---- Blooming Aspirants: same NEET/KCET/JEE readiness data as Potential
@@ -7300,8 +7359,9 @@ function buildAchievers(){
    trajectory who haven't cleared the Achiever bar yet. ---- */
 const ASPIRANT_CATEGORY_META = {
   neet:   { label: 'NEET',   icon: '🩺', desc: 'NEET (PCB) exam readiness across NEET OBT / CT rounds.' },
-  kcet:   { label: 'KCET',   icon: '📐', desc: 'KCET (PCM) exam readiness across KCET OBT / CT rounds.' },
+  kcet:   { label: 'KCET (PCM)', icon: '📐', desc: 'KCET (PCM) exam readiness across KCET OBT / CT rounds.' },
   kcetpcb:{ label: 'KCET (PCB)', icon: '📐', desc: 'KCET (PCB stream — Agriculture/Veterinary/Nursing/Pharma) exam readiness across KCET (PCB) rounds. PU-I only.' },
+  kcetpcmb:{ label: 'KCET (PCMB)', icon: '📐', desc: 'Combined KCET (PCM) + KCET (PCB) score for students who attempted both streams, out of 270. PU-I only.' },
   jee:    { label: 'JEE',    icon: '🎯', desc: 'JEE exam readiness across JEE OBT / CT rounds.' }
 };
 const ASPIRANT_BAND_KEYS = ['competitive', 'needs-work'];
@@ -7422,10 +7482,12 @@ function renderAspirantExamBarChart(opts){
 function buildAspirants(){
   const activeBtn = document.querySelector('#aspirantCategoryTabs .subtab-btn.active');
   const category = activeBtn ? activeBtn.dataset.cat : 'neet';
+  const scopeSelect = document.getElementById('aspirantRoundScope');
   const opts = {
     includePU1: document.getElementById('aspIncludePU1').checked,
     includePU2: document.getElementById('aspIncludePU2').checked,
-    sections: Array.from(document.querySelectorAll('.asp-section-check:checked')).map(cb=>cb.value)
+    sections: Array.from(document.querySelectorAll('.asp-section-check:checked')).map(cb=>cb.value),
+    roundScope: scopeSelect ? scopeSelect.value : 'all'
   };
   const meta = ASPIRANT_CATEGORY_META[category];
   const list = computeAspirantsList(category, opts);
@@ -7467,14 +7529,26 @@ function buildAspirants(){
   if(pu1Cb) pu1Cb.addEventListener('change', buildAspirants);
   if(pu2Cb) pu2Cb.addEventListener('change', buildAspirants);
   document.querySelectorAll('.asp-section-check').forEach(cb=> cb.addEventListener('change', buildAspirants));
+  const scopeSelect = document.getElementById('aspirantRoundScope');
+  const scopeRow = document.getElementById('aspirantRoundScopeRow');
+  if(scopeSelect){
+    scopeSelect.innerHTML = EXAM_ROUND_SCOPE_OPTIONS.map(o=>'<option value="'+o.value+'">'+o.label+'</option>').join('');
+    scopeSelect.addEventListener('change', buildAspirants);
+  }
+  if(scopeRow) scopeRow.style.display = 'flex';
 })();
 
-function computeStreamReadiness(byCodeEntry, roundKeys, maxTotal, testDefs, subjectSpec){
+function computeStreamReadiness(byCodeEntry, roundKeys, maxTotal, testDefs, subjectSpec, roundScope){
   if(!byCodeEntry) return null;
   const attempts = [];
   roundKeys.forEach((k, idx)=>{
     const r = byCodeEntry[k];
-    if(r && !r.ABSENT && r.TOTAL!==null && r.TOTAL!==undefined) attempts.push({ rec: r, idx });
+    if(!r || r.ABSENT || r.TOTAL===null || r.TOTAL===undefined) return;
+    if(roundScope && roundScope!=='all' && testDefs){
+      const isObt = roundKeyIsObt((testDefs[idx]||{}).label);
+      if((roundScope==='obt') !== isObt) return;
+    }
+    attempts.push({ rec: r, idx });
   });
   if(!attempts.length) return null;
   const latest = attempts[attempts.length-1];
