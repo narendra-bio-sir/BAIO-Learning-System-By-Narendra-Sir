@@ -7114,7 +7114,7 @@ const ACHIEVER_CATEGORY_META = {
   neet:   { label: 'NEET',   icon: '🩺', desc: 'NEET (PCB) exam readiness across NEET OBT / CT rounds.', unit: '%' },
   kcet:   { label: 'KCET (PCM)', icon: '📐', desc: 'KCET (PCM) exam readiness across KCET OBT / CT rounds.', unit: '%' },
   kcetpcb:{ label: 'KCET (PCB)', icon: '📐', desc: 'KCET (PCB stream — Agriculture/Veterinary/Nursing/Pharma) exam readiness across KCET (PCB) rounds. PU-I only.', unit: '%' },
-  kcetpcmb:{ label: 'KCET (PCMB)', icon: '📐', desc: 'Combined KCET (PCM) + KCET (PCB) score for students who attempted both streams, out of 270. PU-I only.', unit: '%' },
+  kcetpcmb:{ label: 'KCET (PCMB)', icon: '📐', desc: 'Combined KCET Physics + Chemistry + Maths + Biology score (45 each, out of 180) for the one round both PCM and PCB were recorded on. PU-I only.', unit: '%' },
   jee:    { label: 'JEE',    icon: '🎯', desc: 'JEE exam readiness across JEE OBT / CT rounds.', unit: '%' }
 };
 /* Shared across Potential Achievers and Blooming Aspirants (and the exam
@@ -7149,7 +7149,10 @@ function roundCatalogForCategory(category){
   if(category==='neet') return NEET_TESTS;
   if(category==='kcet') return KCET_TESTS;
   if(category==='kcetpcb') return KCET_PCB_TESTS;
-  if(category==='kcetpcmb') return KCET_TESTS;
+  if(category==='kcetpcmb'){
+    const idx = pcmbMatchingRoundIndex();
+    return idx===-1 ? [] : [KCET_TESTS[idx]];
+  }
   if(category==='jee') return JEE_TESTS;
   return null;
 }
@@ -7180,23 +7183,40 @@ const EXAM_SUBJECT_SPECS = {
 };
 /* KCET (PCMB): combined PCM + PCB score, out of 270, for students who
    attempted both streams. PU-I only — KCET (PCB) has no PU-II data. */
-function computeKcetPcmbReadiness(student, roundScope){
-  // roundScope picks which PCM round to pair — PCB only ever has its one
-  // round, so it's always evaluated with "all" regardless of the selection.
-  const pcm = computeStreamReadiness(KCET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1','ct2'], 135, KCET_TESTS, EXAM_SUBJECT_SPECS.kcet, roundScope);
-  const pcb = (typeof KCET_PCB_BY_CODE!=='undefined') ? computeStreamReadiness(KCET_PCB_BY_CODE[student.code], ['obt1'], 135, KCET_PCB_TESTS, EXAM_SUBJECT_SPECS.kcetpcb, 'all') : null;
-  if(!pcm || !pcb) return null;
-  const totalScore = pcm.latestTotalScore + pcb.latestTotalScore;
-  const totalMax = pcm.latestTotalMax + pcb.latestTotalMax;
+/* The real KCET CT paper is one combined test worth 180 marks — Physics,
+   Chemistry, Maths, and Biology, 45 each — reported to us as two separate
+   135-mark views (PCM = Phy+Che+Mat, PCB = Phy+Che+Bio) that share the same
+   Physics and Chemistry scores. So the true combined score is NOT
+   PCM total + PCB total (that double-counts Phy+Che) — it's PCM's total
+   (which already has Phy+Che+Mat) plus PCB's Biology mark alone, out of
+   135+45=180. This only exists for the one round both were recorded on. */
+function pcmbMatchingRoundIndex(){
+  if(typeof KCET_PCB_TESTS==='undefined' || !KCET_PCB_TESTS.length) return -1;
+  const pcbDate = KCET_PCB_TESTS[0].date;
+  return KCET_TESTS.findIndex(t=>t.date === pcbDate);
+}
+function computeKcetPcmbReadiness(student){
+  const idx = pcmbMatchingRoundIndex();
+  if(idx === -1) return null;
+  const roundKeys = ['obt1','obt2','obt3','ct1','ct2'];
+  const pcmRec = (KCET_BY_CODE[student.code]||{})[roundKeys[idx]];
+  const pcbEntry = (typeof KCET_PCB_BY_CODE!=='undefined') ? KCET_PCB_BY_CODE[student.code] : null;
+  const pcbRec = pcbEntry ? pcbEntry.obt1 : null;
+  if(!pcmRec || pcmRec.ABSENT || pcmRec.TOTAL===null || pcmRec.TOTAL===undefined) return null;
+  if(!pcbRec || pcbRec.ABSENT || pcbRec.BIO===null || pcbRec.BIO===undefined) return null;
+  const totalScore = pcmRec.TOTAL + pcbRec.BIO;
+  const totalMax = 180;
   const pct = Math.round((totalScore/totalMax)*1000)/10;
+  const test = KCET_TESTS[idx];
   return {
-    latestPct: pct, trend: null,
-    attemptsCount: pcm.attemptsCount + pcb.attemptsCount, totalRounds: pcm.totalRounds + pcb.totalRounds,
-    latestLabel: pcm.latestLabel+' + '+pcb.latestLabel, latestDate: pcm.latestDate,
+    latestPct: pct, trend: null, attemptsCount: 1, totalRounds: 1,
+    latestLabel: test.label, latestDate: test.disp || test.date,
     latestTotalScore: totalScore, latestTotalMax: totalMax,
     latestSubjects: [
-      { label:'PCM Total', score: pcm.latestTotalScore, max: pcm.latestTotalMax },
-      { label:'PCB Total', score: pcb.latestTotalScore, max: pcb.latestTotalMax }
+      { label:'Phy', score: pcmRec.PHY!==undefined ? pcmRec.PHY : null, max: 45 },
+      { label:'Che', score: pcmRec.CHE!==undefined ? pcmRec.CHE : null, max: 45 },
+      { label:'Mat', score: pcmRec.MAT!==undefined ? pcmRec.MAT : null, max: 45 },
+      { label:'Bio', score: pcbRec.BIO!==undefined ? pcbRec.BIO : null, max: 45 }
     ],
     band: classifyReadiness(pct)
   };
@@ -7209,7 +7229,7 @@ function computeStudentExamReadiness(category, student, pu, roundScope){
     if(category==='neet') return computeStreamReadiness(NEET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 720, NEET_TESTS, EXAM_SUBJECT_SPECS.neet, roundScope);
     if(category==='kcet') return computeStreamReadiness(KCET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1','ct2'], 135, KCET_TESTS, EXAM_SUBJECT_SPECS.kcet, roundScope);
     if(category==='kcetpcb') return (typeof KCET_PCB_BY_CODE!=='undefined') ? computeStreamReadiness(KCET_PCB_BY_CODE[student.code], ['obt1'], 135, KCET_PCB_TESTS, EXAM_SUBJECT_SPECS.kcetpcb, roundScope) : null;
-    if(category==='kcetpcmb') return computeKcetPcmbReadiness(student, roundScope);
+    if(category==='kcetpcmb') return computeKcetPcmbReadiness(student);
     if(category==='jee') return (typeof JEE_BY_CODE!=='undefined') ? computeStreamReadiness(JEE_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 300, JEE_TESTS, EXAM_SUBJECT_SPECS.jee, roundScope) : null;
     return null;
   }
@@ -7448,7 +7468,7 @@ const ASPIRANT_CATEGORY_META = {
   neet:   { label: 'NEET',   icon: '🩺', desc: 'NEET (PCB) exam readiness across NEET OBT / CT rounds.' },
   kcet:   { label: 'KCET (PCM)', icon: '📐', desc: 'KCET (PCM) exam readiness across KCET OBT / CT rounds.' },
   kcetpcb:{ label: 'KCET (PCB)', icon: '📐', desc: 'KCET (PCB stream — Agriculture/Veterinary/Nursing/Pharma) exam readiness across KCET (PCB) rounds. PU-I only.' },
-  kcetpcmb:{ label: 'KCET (PCMB)', icon: '📐', desc: 'Combined KCET (PCM) + KCET (PCB) score for students who attempted both streams, out of 270. PU-I only.' },
+  kcetpcmb:{ label: 'KCET (PCMB)', icon: '📐', desc: 'Combined KCET Physics + Chemistry + Maths + Biology score (45 each, out of 180) for the one round both PCM and PCB were recorded on. PU-I only.' },
   jee:    { label: 'JEE',    icon: '🎯', desc: 'JEE exam readiness across JEE OBT / CT rounds.' }
 };
 const ASPIRANT_BAND_KEYS = ['competitive', 'needs-work'];
