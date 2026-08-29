@@ -2251,9 +2251,15 @@ window.addEventListener('afterprint', function(){
       <button class="subtab-btn" data-cat="kcetpcmb">📐 KCET (PCMB)</button>
       <button class="subtab-btn" data-cat="jee">🎯 JEE</button>
     </div>
-    <div class="round-scope-row" id="achieverRoundScopeRow" style="display:none; align-items:center; gap:8px; margin-top:10px;">
-      <label for="achieverRoundScope" style="font-size:11.5px; color:var(--muted);">Rounds:</label>
-      <select id="achieverRoundScope" style="padding:8px 10px; border-radius:10px; border:1.5px solid var(--border); background:rgba(var(--overlay-rgb),0.05); color:var(--text-strong); font-size:13px; font-family:'Inter',sans-serif;"></select>
+    <div class="round-scope-row" id="achieverRoundScopeRow" style="display:none; flex-wrap:wrap; align-items:center; gap:8px 16px; margin-top:10px;">
+      <span style="display:flex; align-items:center; gap:8px;">
+        <label for="achieverRoundScope" style="font-size:11.5px; color:var(--muted);">Rounds (affects score):</label>
+        <select id="achieverRoundScope" style="padding:8px 10px; border-radius:10px; border:1.5px solid var(--border); background:rgba(var(--overlay-rgb),0.05); color:var(--text-strong); font-size:13px; font-family:'Inter',sans-serif;"></select>
+      </span>
+      <span style="display:flex; align-items:center; gap:8px;">
+        <label for="achieverMarksScope" style="font-size:11.5px; color:var(--muted);">Marks shown (display only):</label>
+        <select id="achieverMarksScope" style="padding:8px 10px; border-radius:10px; border:1.5px solid var(--border); background:rgba(var(--overlay-rgb),0.05); color:var(--text-strong); font-size:13px; font-family:'Inter',sans-serif;"></select>
+      </span>
     </div>
     <div class="custom-report-options active" style="display:block; margin-top:10px;">
       <div class="checkbox-row"><input type="checkbox" id="achIncludePU1" checked><label for="achIncludePU1">Include PU-I (Spark + Prime)</label></div>
@@ -2303,9 +2309,15 @@ window.addEventListener('afterprint', function(){
       <button class="subtab-btn" data-cat="kcetpcmb">📐 KCET (PCMB)</button>
       <button class="subtab-btn" data-cat="jee">🎯 JEE</button>
     </div>
-    <div class="round-scope-row" id="aspirantRoundScopeRow" style="display:none; align-items:center; gap:8px; margin-top:10px;">
-      <label for="aspirantRoundScope" style="font-size:11.5px; color:var(--muted);">Rounds:</label>
-      <select id="aspirantRoundScope" style="padding:8px 10px; border-radius:10px; border:1.5px solid var(--border); background:rgba(var(--overlay-rgb),0.05); color:var(--text-strong); font-size:13px; font-family:'Inter',sans-serif;"></select>
+    <div class="round-scope-row" id="aspirantRoundScopeRow" style="display:none; flex-wrap:wrap; align-items:center; gap:8px 16px; margin-top:10px;">
+      <span style="display:flex; align-items:center; gap:8px;">
+        <label for="aspirantRoundScope" style="font-size:11.5px; color:var(--muted);">Rounds (affects score):</label>
+        <select id="aspirantRoundScope" style="padding:8px 10px; border-radius:10px; border:1.5px solid var(--border); background:rgba(var(--overlay-rgb),0.05); color:var(--text-strong); font-size:13px; font-family:'Inter',sans-serif;"></select>
+      </span>
+      <span style="display:flex; align-items:center; gap:8px;">
+        <label for="aspirantMarksScope" style="font-size:11.5px; color:var(--muted);">Marks shown (display only):</label>
+        <select id="aspirantMarksScope" style="padding:8px 10px; border-radius:10px; border:1.5px solid var(--border); background:rgba(var(--overlay-rgb),0.05); color:var(--text-strong); font-size:13px; font-family:'Inter',sans-serif;"></select>
+      </span>
     </div>
     <div class="custom-report-options active" style="display:block; margin-top:10px;">
       <div class="checkbox-row"><input type="checkbox" id="aspIncludePU1" checked><label for="aspIncludePU1">Include PU-I (Spark + Prime)</label></div>
@@ -6803,7 +6815,7 @@ function computePU2KcetReadiness(student, roundScope){
   const allKeys = Object.keys(rec).sort();
   let attempts = allKeys.map(k=>rec[k])
     .filter(r=>r && !r.ABSENT && r.TOTAL!==null && r.TOTAL!==undefined && r.outof);
-  if(roundScope && roundScope!=='all') attempts = attempts.filter(r=> (roundScope==='obt') === roundKeyIsObt(r.label));
+  if(roundScope) attempts = attempts.filter(r=> roundMatchesScope(r.label, roundScope));
   if(!attempts.length) return null;
   const latest = attempts[attempts.length-1];
   const first = attempts[0];
@@ -6852,7 +6864,7 @@ function computePU2NeetReadiness(student, roundScope){
       });
     }
   }
-  if(roundScope && roundScope!=='all') attempts = attempts.filter(a=> (roundScope==='obt') === roundKeyIsObt(a.label));
+  if(roundScope) attempts = attempts.filter(a=> roundMatchesScope(a.label, roundScope));
   attempts.sort((a,b)=> a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
   if(!attempts.length) return null;
   const latest = attempts[attempts.length-1];
@@ -6875,8 +6887,8 @@ function computePU2JeeReadiness(student, roundScope){
     const r = rec[k];
     if(r && !r.ABSENT && r.TOTAL!==null && r.TOTAL!==undefined) attempts.push({ rec: r, idx });
   });
-  if(roundScope && roundScope!=='all' && typeof PU2_JEE_TESTS!=='undefined'){
-    attempts = attempts.filter(a=> (roundScope==='obt') === roundKeyIsObt((PU2_JEE_TESTS[a.idx]||{}).label));
+  if(roundScope && typeof PU2_JEE_TESTS!=='undefined'){
+    attempts = attempts.filter(a=> roundMatchesScope((PU2_JEE_TESTS[a.idx]||{}).label, roundScope));
   }
   if(!attempts.length) return null;
   const latest = attempts[attempts.length-1];
@@ -7118,12 +7130,48 @@ const ACHIEVER_CATEGORY_META = {
    text (works the same for PU-I's fixed round catalogs and PU-II's more
    varied labels, since every round is named either "... OBT n" or "... CT n"
    in this dataset). */
-const EXAM_ROUND_SCOPE_OPTIONS = [
-  { value:'all', label:'All Rounds (OBT + CT)' },
-  { value:'obt', label:'OBT Only' },
-  { value:'ct', label:'CT Only' }
-];
 function roundKeyIsObt(label){ return /obt/i.test(label || ''); }
+/* A round-scope value can be 'all' (every round combined), 'obt'/'ct' (a
+   bucket — used by the display-only Marks-shown control), or the exact
+   label text of one specific round (used by the Rounds dropdown, which
+   lists every round by name so a teacher can pick e.g. "KCET CT 2"). */
+function roundMatchesScope(label, scope){
+  if(!scope || scope==='all') return true;
+  if(scope==='obt') return roundKeyIsObt(label);
+  if(scope==='ct') return !roundKeyIsObt(label);
+  return label === scope;
+}
+/* Fixed round catalog (label + date, in order) used to populate the Rounds
+   dropdown for a given exam category. KCET (PCMB) has no round series of
+   its own — it lets you pick which KCET (PCM) round to pair with KCET
+   (PCB)'s one and only round, so it reuses the PCM catalog. */
+function roundCatalogForCategory(category){
+  if(category==='neet') return NEET_TESTS;
+  if(category==='kcet') return KCET_TESTS;
+  if(category==='kcetpcb') return KCET_PCB_TESTS;
+  if(category==='kcetpcmb') return KCET_TESTS;
+  if(category==='jee') return JEE_TESTS;
+  return null;
+}
+function populateRoundScopeSelect(selectEl, category){
+  if(!selectEl) return;
+  const catalog = roundCatalogForCategory(category);
+  if(!catalog || !catalog.length){
+    selectEl.innerHTML = '<option value="all">All Combined</option>';
+    selectEl.value = 'all';
+    return;
+  }
+  selectEl.innerHTML = catalog.map(t=>'<option value="'+t.label+'">'+t.label+'</option>').join('') + '<option value="all">All Combined</option>';
+  selectEl.value = catalog[catalog.length-1].label;
+}
+/* A second, display-only control: which round's marks show in the table's
+   "Based On" column and the podium's subject breakdown. Independent of the
+   Rounds dropdown above — never changes score, band, or who qualifies. */
+const EXAM_MARKS_SCOPE_OPTIONS = [
+  { value:'same', label:'Same as score round' },
+  { value:'obt', label:'Latest OBT round' },
+  { value:'ct', label:'Latest CT round' }
+];
 const EXAM_SUBJECT_SPECS = {
   neet: [{key:'PHY',label:'Phy',max:180},{key:'CHE',label:'Che',max:180},{key:'BIO',label:'Bio',max:360}],
   kcet: [{key:'PHY',label:'Phy',max:45},{key:'CHE',label:'Che',max:45},{key:'MAT',label:'Mat',max:45}],
@@ -7133,8 +7181,10 @@ const EXAM_SUBJECT_SPECS = {
 /* KCET (PCMB): combined PCM + PCB score, out of 270, for students who
    attempted both streams. PU-I only — KCET (PCB) has no PU-II data. */
 function computeKcetPcmbReadiness(student, roundScope){
+  // roundScope picks which PCM round to pair — PCB only ever has its one
+  // round, so it's always evaluated with "all" regardless of the selection.
   const pcm = computeStreamReadiness(KCET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1','ct2'], 135, KCET_TESTS, EXAM_SUBJECT_SPECS.kcet, roundScope);
-  const pcb = (typeof KCET_PCB_BY_CODE!=='undefined') ? computeStreamReadiness(KCET_PCB_BY_CODE[student.code], ['obt1'], 135, KCET_PCB_TESTS, EXAM_SUBJECT_SPECS.kcetpcb, roundScope) : null;
+  const pcb = (typeof KCET_PCB_BY_CODE!=='undefined') ? computeStreamReadiness(KCET_PCB_BY_CODE[student.code], ['obt1'], 135, KCET_PCB_TESTS, EXAM_SUBJECT_SPECS.kcetpcb, 'all') : null;
   if(!pcm || !pcb) return null;
   const totalScore = pcm.latestTotalScore + pcb.latestTotalScore;
   const totalMax = pcm.latestTotalMax + pcb.latestTotalMax;
@@ -7151,6 +7201,23 @@ function computeKcetPcmbReadiness(student, roundScope){
     band: classifyReadiness(pct)
   };
 }
+/* Single-student readiness lookup, factored out of computeExamReadinessResults
+   so the same dispatch logic can also be used for a "which round's marks to
+   display" override that's independent of which rounds decide the score. */
+function computeStudentExamReadiness(category, student, pu, roundScope){
+  if(pu === 1){
+    if(category==='neet') return computeStreamReadiness(NEET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 720, NEET_TESTS, EXAM_SUBJECT_SPECS.neet, roundScope);
+    if(category==='kcet') return computeStreamReadiness(KCET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1','ct2'], 135, KCET_TESTS, EXAM_SUBJECT_SPECS.kcet, roundScope);
+    if(category==='kcetpcb') return (typeof KCET_PCB_BY_CODE!=='undefined') ? computeStreamReadiness(KCET_PCB_BY_CODE[student.code], ['obt1'], 135, KCET_PCB_TESTS, EXAM_SUBJECT_SPECS.kcetpcb, roundScope) : null;
+    if(category==='kcetpcmb') return computeKcetPcmbReadiness(student, roundScope);
+    if(category==='jee') return (typeof JEE_BY_CODE!=='undefined') ? computeStreamReadiness(JEE_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 300, JEE_TESTS, EXAM_SUBJECT_SPECS.jee, roundScope) : null;
+    return null;
+  }
+  if(category==='neet') return computePU2NeetReadiness(student, roundScope);
+  if(category==='kcet') return computePU2KcetReadiness(student, roundScope);
+  if(category==='jee') return computePU2JeeReadiness(student, roundScope);
+  return null;
+}
 function computeExamReadinessResults(category, opts){
   const out = [];
   const KNOWN_SECTIONS = ['SPARK','PRIME','CHAMPION','ELITE'];
@@ -7162,26 +7229,41 @@ function computeExamReadinessResults(category, opts){
   if(opts.includePU1){
     STUDENTS.forEach(student=>{
       if(!sectionAllowed(student)) return;
-      let r = null;
-      if(category==='neet') r = computeStreamReadiness(NEET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 720, NEET_TESTS, EXAM_SUBJECT_SPECS.neet, roundScope);
-      else if(category==='kcet') r = computeStreamReadiness(KCET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1','ct2'], 135, KCET_TESTS, EXAM_SUBJECT_SPECS.kcet, roundScope);
-      else if(category==='kcetpcb') r = (typeof KCET_PCB_BY_CODE!=='undefined') ? computeStreamReadiness(KCET_PCB_BY_CODE[student.code], ['obt1'], 135, KCET_PCB_TESTS, EXAM_SUBJECT_SPECS.kcetpcb, roundScope) : null;
-      else if(category==='kcetpcmb') r = computeKcetPcmbReadiness(student, roundScope);
-      else if(category==='jee') r = (typeof JEE_BY_CODE!=='undefined') ? computeStreamReadiness(JEE_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 300, JEE_TESTS, EXAM_SUBJECT_SPECS.jee, roundScope) : null;
+      const r = computeStudentExamReadiness(category, student, 1, roundScope);
       if(r) out.push({ student, pu: 1, r });
     });
   }
   if(opts.includePU2 && typeof PU2_STUDENTS!=='undefined'){
     PU2_STUDENTS.forEach(student=>{
       if(!sectionAllowed(student)) return;
-      let r = null;
-      if(category==='neet') r = computePU2NeetReadiness(student, roundScope);
-      else if(category==='kcet') r = computePU2KcetReadiness(student, roundScope);
-      else if(category==='jee') r = computePU2JeeReadiness(student, roundScope);
+      const r = computeStudentExamReadiness(category, student, 2, roundScope);
       if(r) out.push({ student, pu: 2, r });
     });
   }
   return out;
+}
+/* Overrides the marks-related fields (subjects/total/label/date/attempts) on
+   an already-scored list with a DIFFERENT round scope's marks, purely for
+   display — score/band/trend (already computed) are left untouched, so this
+   never changes who counts as an Achiever/Aspirant. */
+function applyDisplayMarksScope(list, category, marksScope){
+  if(!marksScope || marksScope==='same') return list;
+  list.forEach(item=>{
+    const r2 = computeStudentExamReadiness(category, { code: item.code }, item.pu, marksScope);
+    if(r2){
+      item.latestSubjects = r2.latestSubjects;
+      item.latestTotalScore = r2.latestTotalScore;
+      item.latestTotalMax = r2.latestTotalMax;
+      item.latestLabel = r2.latestLabel;
+      item.latestDate = r2.latestDate;
+      item.attemptsCount = r2.attemptsCount;
+      item.totalRounds = r2.totalRounds;
+      item.noMarksForScope = false;
+    } else {
+      item.noMarksForScope = true;
+    }
+  });
+  return list;
 }
 /* Count + % of that exam's own students (not a share across exams, since
    exams have different-sized attempt pools) + average readiness score
@@ -7277,7 +7359,7 @@ function renderAchieverPodium(list, category){
 function renderAchieverExamBarChart(opts){
   const chartEl = document.getElementById('achieverExamBarChart');
   if(!chartEl) return;
-  const examCats = Object.keys(ACHIEVER_CATEGORY_META).filter(cat=>cat!=='theory');
+  const examCats = Object.keys(ACHIEVER_CATEGORY_META).filter(cat=>cat!=='theory' && cat!=='kcetpcmb');
   const bandFilter = r=> r.band && r.band.key === 'strong';
   const counts = examCats.map(cat=>
     Object.assign({ cat, meta: ACHIEVER_CATEGORY_META[cat] }, examBarStat(cat, opts, bandFilter))
@@ -7309,6 +7391,8 @@ function buildAchievers(){
   };
   const meta = ACHIEVER_CATEGORY_META[category];
   const list = computeAchieversList(category, opts);
+  const marksScopeSelect = document.getElementById('achieverMarksScope');
+  if(category!=='theory') applyDisplayMarksScope(list, category, marksScopeSelect ? marksScopeSelect.value : 'same');
   const pu1Count = list.filter(s=>s.pu===1).length;
   const pu2Count = list.filter(s=>s.pu===2).length;
 
@@ -7334,10 +7418,12 @@ function buildAchievers(){
 (function wireAchieversUI(){
   const tabsWrap = document.getElementById('achieverCategoryTabs');
   if(!tabsWrap) return;
+  const scopeSelect = document.getElementById('achieverRoundScope');
   tabsWrap.querySelectorAll('.subtab-btn').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       tabsWrap.querySelectorAll('.subtab-btn').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
+      populateRoundScopeSelect(scopeSelect, btn.dataset.cat);
       buildAchievers();
     });
   });
@@ -7346,10 +7432,11 @@ function buildAchievers(){
   if(pu1Cb) pu1Cb.addEventListener('change', buildAchievers);
   if(pu2Cb) pu2Cb.addEventListener('change', buildAchievers);
   document.querySelectorAll('.ach-section-check').forEach(cb=> cb.addEventListener('change', buildAchievers));
-  const scopeSelect = document.getElementById('achieverRoundScope');
-  if(scopeSelect){
-    scopeSelect.innerHTML = EXAM_ROUND_SCOPE_OPTIONS.map(o=>'<option value="'+o.value+'">'+o.label+'</option>').join('');
-    scopeSelect.addEventListener('change', buildAchievers);
+  if(scopeSelect) scopeSelect.addEventListener('change', buildAchievers);
+  const marksScopeSelect = document.getElementById('achieverMarksScope');
+  if(marksScopeSelect){
+    marksScopeSelect.innerHTML = EXAM_MARKS_SCOPE_OPTIONS.map(o=>'<option value="'+o.value+'">'+o.label+'</option>').join('');
+    marksScopeSelect.addEventListener('change', buildAchievers);
   }
 })();
 
@@ -7384,9 +7471,11 @@ function renderAspirantTable(list){
   tbody.innerHTML = list.map((s,i)=>{
     const trendHtml = s.trend===null||s.trend===undefined ? '—' :
       (s.trend>=0 ? '<span style="color:#15803d;">↑ +'+s.trend+'</span>' : '<span style="color:#b91c1c;">↓ '+s.trend+'</span>');
-    const roundHtml = s.latestLabel
-      ? s.latestLabel+(s.latestDate?' · '+s.latestDate:'')+'<div style="font-size:10.5px;color:var(--muted);">'+(s.attemptsCount||0)+' of '+(s.totalRounds||s.attemptsCount||0)+' round'+((s.totalRounds||s.attemptsCount)===1?'':'s')+' attempted</div>'
-      : '—';
+    const roundHtml = s.noMarksForScope
+      ? '<span style="color:var(--muted);">No matching-round marks</span>'
+      : (s.latestLabel
+        ? s.latestLabel+(s.latestDate?' · '+s.latestDate:'')+'<div style="font-size:10.5px;color:var(--muted);">'+(s.attemptsCount||0)+' of '+(s.totalRounds||s.attemptsCount||0)+' round'+((s.totalRounds||s.attemptsCount)===1?'':'s')+' attempted</div>'
+        : '—');
     return '<tr><td>#'+(i+1)+'</td><td>'+s.name+'</td><td>'+s.code+'</td><td>'+s.section+'</td><td>PU-'+(s.pu===2?'II':'I')+'</td><td><b>'+aspirantScoreLabel(s.score)+'</b> '+s.band.icon+'</td><td>'+trendHtml+'</td><td>'+roundHtml+'</td></tr>';
   }).join('');
 }
@@ -7395,6 +7484,7 @@ function renderAspirantTable(list){
 /* Subject-wise marks + total for the specific round a podium card's score
    is based on — shared by both the Aspirants and Achievers podiums. */
 function podiumSubjectBreakdownHtml(s){
+  if(s.noMarksForScope) return '<div class="podium-marks">No matching-round marks for this "Marks shown" scope.</div>';
   if(!s.latestSubjects || !s.latestSubjects.length) return '';
   const subjLine = s.latestSubjects.map(sub=> sub.label+' '+(sub.score!==null && sub.score!==undefined ? sub.score : '—')+'/'+sub.max).join(' · ');
   const totalLine = (s.latestTotalScore!==null && s.latestTotalScore!==undefined && s.latestTotalMax)
@@ -7463,7 +7553,8 @@ function renderAspirantExamBarChart(opts){
   const chartEl = document.getElementById('aspirantExamBarChart');
   if(!chartEl) return;
   const bandFilter = r=> r.band && ASPIRANT_BAND_KEYS.indexOf(r.band.key) !== -1;
-  const counts = Object.keys(ASPIRANT_CATEGORY_META).map(cat=>
+  const examCats = Object.keys(ASPIRANT_CATEGORY_META).filter(cat=>cat!=='kcetpcmb');
+  const counts = examCats.map(cat=>
     Object.assign({ cat, meta: ASPIRANT_CATEGORY_META[cat] }, examBarStat(cat, opts, bandFilter))
   );
   counts.sort((a,b)=> b.count - a.count);
@@ -7491,6 +7582,8 @@ function buildAspirants(){
   };
   const meta = ASPIRANT_CATEGORY_META[category];
   const list = computeAspirantsList(category, opts);
+  const marksScopeSelect = document.getElementById('aspirantMarksScope');
+  applyDisplayMarksScope(list, category, marksScopeSelect ? marksScopeSelect.value : 'same');
   const pu1Count = list.filter(s=>s.pu===1).length;
   const pu2Count = list.filter(s=>s.pu===2).length;
 
@@ -7517,10 +7610,13 @@ function buildAspirants(){
 (function wireAspirantsUI(){
   const tabsWrap = document.getElementById('aspirantCategoryTabs');
   if(!tabsWrap) return;
+  const scopeSelect = document.getElementById('aspirantRoundScope');
+  const scopeRow = document.getElementById('aspirantRoundScopeRow');
   tabsWrap.querySelectorAll('.subtab-btn').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       tabsWrap.querySelectorAll('.subtab-btn').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
+      populateRoundScopeSelect(scopeSelect, btn.dataset.cat);
       buildAspirants();
     });
   });
@@ -7529,11 +7625,14 @@ function buildAspirants(){
   if(pu1Cb) pu1Cb.addEventListener('change', buildAspirants);
   if(pu2Cb) pu2Cb.addEventListener('change', buildAspirants);
   document.querySelectorAll('.asp-section-check').forEach(cb=> cb.addEventListener('change', buildAspirants));
-  const scopeSelect = document.getElementById('aspirantRoundScope');
-  const scopeRow = document.getElementById('aspirantRoundScopeRow');
   if(scopeSelect){
-    scopeSelect.innerHTML = EXAM_ROUND_SCOPE_OPTIONS.map(o=>'<option value="'+o.value+'">'+o.label+'</option>').join('');
+    populateRoundScopeSelect(scopeSelect, 'neet');
     scopeSelect.addEventListener('change', buildAspirants);
+  }
+  const marksScopeSelect = document.getElementById('aspirantMarksScope');
+  if(marksScopeSelect){
+    marksScopeSelect.innerHTML = EXAM_MARKS_SCOPE_OPTIONS.map(o=>'<option value="'+o.value+'">'+o.label+'</option>').join('');
+    marksScopeSelect.addEventListener('change', buildAspirants);
   }
   if(scopeRow) scopeRow.style.display = 'flex';
 })();
@@ -7544,10 +7643,7 @@ function computeStreamReadiness(byCodeEntry, roundKeys, maxTotal, testDefs, subj
   roundKeys.forEach((k, idx)=>{
     const r = byCodeEntry[k];
     if(!r || r.ABSENT || r.TOTAL===null || r.TOTAL===undefined) return;
-    if(roundScope && roundScope!=='all' && testDefs){
-      const isObt = roundKeyIsObt((testDefs[idx]||{}).label);
-      if((roundScope==='obt') !== isObt) return;
-    }
+    if(roundScope && testDefs && !roundMatchesScope((testDefs[idx]||{}).label, roundScope)) return;
     attempts.push({ rec: r, idx });
   });
   if(!attempts.length) return null;
