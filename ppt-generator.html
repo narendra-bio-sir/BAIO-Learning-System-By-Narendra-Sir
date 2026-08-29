@@ -113,10 +113,11 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 
   <div class="card">
     <h3>What goes into each deck</h3>
-    <p>A branded title slide &middot; a topic-by-topic outline with large, easy-to-read bullet points &middot; comparison tables where useful &middot; the chapter's mind map &middot; and Narendra Sir's blackboard photos as illustration slides. Pick what you want below, then tap <b>Generate</b> on any chapter.</p>
+    <p>A branded, illustrated title slide &middot; a topic-by-topic outline with large, easy-to-read bullet points &middot; comparison tables where useful &middot; the chapter's mind map &middot; Founder/CEO Narendra Sir's blackboard photos &middot; and the important-diagrams reference from his typed notes. Pick what you want below, then tap <b>Generate</b> on any chapter.</p>
     <div class="opts-row">
       <label class="opt-check"><input type="checkbox" id="optMindmap" checked> Mind map slide(s)</label>
       <label class="opt-check"><input type="checkbox" id="optBoards" checked> Blackboard photo slides</label>
+      <label class="opt-check"><input type="checkbox" id="optDiagrams" checked> Important diagrams (typed notes)</label>
       <label class="opt-check"><input type="checkbox" id="optAgenda" checked> Agenda / overview slide</label>
     </div>
   </div>
@@ -135,6 +136,25 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
   s1.onerror = function(){
     var s2 = document.createElement('script');
     s2.src = 'https://unpkg.com/pptxgenjs@3.12.0/dist/pptxgen.bundle.js';
+    document.head.appendChild(s2);
+  };
+  document.head.appendChild(s1);
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/legacy/build/pdf.min.js"></script>
+<script>
+// Renders the "important diagrams reference" PDF that ships with each
+// chapter's typed notes into slide images. Loaded lazily-ish (still a
+// plain script tag, but the deck build only ever calls into it when the
+// diagrams option is on) with the same CDN-fallback pattern as PptxGenJS.
+(function ensurePdfJsLoaded(){
+  function has(){ return !!(window.pdfjsLib || window['pdfjs-dist/build/pdf']); }
+  if(has()) return;
+  var s1 = document.createElement('script');
+  s1.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/legacy/build/pdf.min.js';
+  s1.onerror = function(){
+    var s2 = document.createElement('script');
+    s2.src = 'https://unpkg.com/pdfjs-dist@3.11.174/legacy/build/pdf.min.js';
     document.head.appendChild(s2);
   };
   document.head.appendChild(s1);
@@ -233,6 +253,22 @@ function mdRuns(str, baseOpts){
 function estimateLines(text, fontSize, boxWidthIn){
   const charsPerLine = Math.max(12, Math.floor((boxWidthIn * 92) / (fontSize * 0.52)));
   return Math.max(1, Math.ceil(text.length / charsPerLine));
+}
+
+// Picks a topic-relevant emoji for divider-slide watermarks, purely
+// cosmetic — falls back to the chapter's own icon when nothing matches.
+const TOPIC_ICONS = [
+  [/gene|mendel|cross|chromosom|linkage|mutation|pedigree|inherit|disorder/i, '🧬'],
+  [/cell|tissue|meristem|anatomy|cambium/i, '🔬'],
+  [/root|stem|leaf|leaves|flower|fruit|seed|morphology|solanaceae/i, '🌸'],
+  [/algae|bryophyte|pteridophyte|gymnosperm|angiosperm|plant kingdom|alternation of generation/i, '🌿'],
+  [/animal|phylum|porifera|coelenterata|ctenophora|platyhelminth|aschelminth|annelid|arthropod|mollusc|echinoderm|hemichordata|chordata|vertebrata|classes of/i, '🐾'],
+  [/monera|bacteria|virus|fungi|lichen|protista|kingdom classification|basis of classification/i, '🦠'],
+  [/pcr|vector|bioreactor|biotechnology|recombinant|downstream|cloning/i, '🧪']
+];
+function pickTopicIcon(title, fallback){
+  for(const [re, icon] of TOPIC_ICONS){ if(re.test(title)) return icon; }
+  return fallback || '📘';
 }
 
 /* ---------- turning STUDY_DATA[i].html into slide-ready sections ---------- */
@@ -540,6 +576,67 @@ const EXTRA_DIAGRAMS = {
 ]
 };
 
+/* ---------- "important diagrams" PDF rendering ---------- */
+
+let __pdfjsWorkerConfigured = false;
+function getPdfjsLib(){ return window.pdfjsLib || window['pdfjs-dist/build/pdf']; }
+
+function waitForPdfjs(timeoutMs){
+  return new Promise((resolve, reject) => {
+    const start = Date.now();
+    (function check(){
+      const lib = getPdfjsLib();
+      if(lib){
+        if(!__pdfjsWorkerConfigured){
+          lib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/legacy/build/pdf.worker.min.js';
+          __pdfjsWorkerConfigured = true;
+        }
+        return resolve(lib);
+      }
+      if(Date.now() - start > timeoutMs) return reject(new Error('PDF renderer unavailable'));
+      setTimeout(check, 150);
+    })();
+  });
+}
+
+// Tries each candidate filename for the chapter's "important diagrams
+// reference" PDF (naming isn't consistent across chapters yet), renders
+// every page to a PNG data URI via pdf.js + canvas, and adds one slide per
+// page. Fails silently (console.warn only) so a missing/broken PDF never
+// blocks the rest of the deck.
+async function tryAddDiagramSlides(pptx, chapter, onStatus){
+  const candidates = ['important_diagrams_reference.pdf', 'pdf-important_diagrams_reference.pdf'].map(f => chapter.assetsBase + f);
+  for(const url of candidates){
+    let buf;
+    try{
+      const resp = await fetch(url, {cache:'no-store'});
+      if(!resp.ok) continue;
+      buf = await resp.arrayBuffer();
+    }catch(e){ continue; }
+
+    try{
+      onStatus('Rendering important diagrams…');
+      const pdfjsLib = await waitForPdfjs(15000);
+      const doc = await pdfjsLib.getDocument({data:new Uint8Array(buf)}).promise;
+      const pageCount = Math.min(doc.numPages, 5);
+      for(let p = 1; p <= pageCount; p++){
+        const page = await doc.getPage(p);
+        const viewport = page.getViewport({scale:2});
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        const ctx = canvas.getContext('2d');
+        await page.render({canvasContext:ctx, viewport}).promise;
+        const dataUri = canvas.toDataURL('image/png');
+        await addImageSlide(pptx, 'Important Diagrams' + (pageCount > 1 ? ' (' + p + '/' + pageCount + ')' : ''), dataUri, "From Founder/CEO Narendra Sir's typed notes", '📐');
+      }
+    }catch(e){
+      console.warn('BAIO PPT: could not render diagrams PDF from', url, e);
+    }
+    return; // one successful fetch is enough — don't also try the alt filename
+  }
+}
+
 /* ---------- PPTX building ---------- */
 
 function defineMaster(pptx){
@@ -549,7 +646,7 @@ function defineMaster(pptx){
     objects: [
       { rect: { x:0, y:0, w:'50%', h:0.09, fill:{color:THEME.gold} } },
       { rect: { x:'50%', y:0, w:'50%', h:0.09, fill:{color:THEME.teal} } },
-      { text: { text:'BAIO Learning System  ·  Narendra Sir', options:{ x:0.4, y:7.08, w:7, h:0.3, fontFace:'Georgia', fontSize:10, color:THEME.footer, align:'left'} } }
+      { text: { text:'BAIO Learning System  ·  Founder/CEO Narendra Sir', options:{ x:0.4, y:7.08, w:8, h:0.3, fontFace:'Georgia', fontSize:10, color:THEME.footer, align:'left'} } }
     ],
     slideNumber: { x:12.5, y:7.08, fontFace:'Georgia', fontSize:10, color:THEME.footer }
   });
@@ -557,11 +654,19 @@ function defineMaster(pptx){
 
 function addTitleSlide(pptx, chapter){
   const s = pptx.addSlide({masterName:'BAIO_MASTER'});
-  s.addText(chapter.icon || '📘', {x:0, y:0.9, w:13.33, h:1.3, fontSize:60, align:'center'});
-  s.addText(chapter.title, {x:0.8, y:2.5, w:11.73, h:1.3, fontFace:'Georgia', fontSize:40, bold:true, color:THEME.gold2, align:'center', valign:'middle'});
-  s.addText((chapter.num || '') + '  ·  ' + (chapter.puc || '') + ' Biology', {x:0.8, y:3.75, w:11.73, h:0.5, fontFace:'Georgia', fontSize:18, color:THEME.teal2, align:'center'});
-  s.addShape(pptx.ShapeType.rect, {x:5.66, y:4.4, w:2, h:0.045, fill:{color:THEME.gold}});
-  s.addText('Instant class-ready slides, generated from BAIO notes', {x:0.8, y:4.7, w:11.73, h:0.5, fontFace:'Calibri', fontSize:13, color:THEME.textDim, align:'center'});
+  // decorative corner flourishes
+  s.addShape(pptx.ShapeType.ellipse, {x:9.6, y:-1.8, w:5.4, h:5.4, fill:{color:THEME.teal, transparency:92}, line:{type:'none'}});
+  s.addShape(pptx.ShapeType.ellipse, {x:-2, y:5.4, w:4.4, h:4.4, fill:{color:THEME.gold, transparency:92}, line:{type:'none'}});
+  // icon badge
+  s.addShape(pptx.ShapeType.ellipse, {x:5.97, y:0.55, w:1.4, h:1.4, fill:{color:THEME.panel}, line:{color:THEME.gold, width:1.75}});
+  s.addText(chapter.icon || '📘', {x:5.97, y:0.55, w:1.4, h:1.4, fontSize:44, align:'center', valign:'middle'});
+  s.addText(chapter.title, {x:0.8, y:2.1, w:11.73, h:1.3, fontFace:'Georgia', fontSize:40, bold:true, color:THEME.gold2, align:'center', valign:'middle'});
+  // pill-style subtitle badge
+  s.addShape(pptx.ShapeType.roundRect, {x:4.9, y:3.65, w:3.53, h:0.5, rectRadius:0.25, fill:{color:THEME.panel}, line:{color:THEME.teal, width:1}});
+  s.addText((chapter.num || '') + '  ·  ' + (chapter.puc || '') + ' Biology', {x:4.9, y:3.65, w:3.53, h:0.5, fontFace:'Georgia', fontSize:14, bold:true, color:THEME.teal2, align:'center', valign:'middle'});
+  s.addShape(pptx.ShapeType.rect, {x:5.66, y:4.35, w:2, h:0.045, fill:{color:THEME.gold}});
+  s.addText('Instant class-ready slides, generated from BAIO notes', {x:0.8, y:4.6, w:11.73, h:0.5, fontFace:'Calibri', fontSize:13, color:THEME.textDim, align:'center'});
+  s.addText('A BAIO Learning System production  ·  Founder/CEO Narendra Sir', {x:0.8, y:5.2, w:11.73, h:0.4, fontFace:'Calibri', fontSize:12.5, bold:true, color:THEME.teal2, align:'center'});
 }
 
 function addAgendaSlide(pptx, chapter, topicTitles){
@@ -573,33 +678,37 @@ function addAgendaSlide(pptx, chapter, topicTitles){
   const perCol = Math.ceil(topicTitles.length / colCount);
   topicTitles.forEach((t, i) => {
     if(colCount === 2 && i === perCol){ x = 6.85; y = 1.5; }
-    s.addText([{text:(i + 1) + '.  ', options:{bold:true, color:THEME.teal2}}, {text:t.replace(/^\d+\.\s*/, '')}], {
-      x, y, w:colW, h:0.55, fontFace:'Calibri', fontSize:18, color:THEME.text, valign:'top'
-    });
+    s.addShape(pptx.ShapeType.ellipse, {x, y:y + 0.02, w:0.42, h:0.42, fill:{color:THEME.panel}, line:{color:THEME.teal, width:1.5}});
+    s.addText(String(i + 1), {x, y:y + 0.02, w:0.42, h:0.42, fontFace:'Georgia', fontSize:13, bold:true, color:THEME.teal2, align:'center', valign:'middle'});
+    s.addText(t.replace(/^\d+\.\s*/, ''), {x:x + 0.58, y, w:colW - 0.58, h:0.55, fontFace:'Calibri', fontSize:18, color:THEME.text, valign:'top'});
     y += 0.62;
   });
 }
 
-function addDividerSlide(pptx, topicTitle, tag, index, total){
+function addDividerSlide(pptx, topicTitle, tag, index, total, icon){
   const s = pptx.addSlide({masterName:'BAIO_MASTER'});
-  s.addText('TOPIC ' + index + ' OF ' + total, {x:0.9, y:2.4, w:11.5, h:0.4, fontFace:'Calibri', fontSize:14, color:THEME.teal2, charSpacing:2});
-  s.addText(topicTitle.replace(/^\d+\.\s*/, ''), {x:0.9, y:2.85, w:11.5, h:1.3, fontFace:'Georgia', fontSize:36, bold:true, color:THEME.gold2, valign:'top'});
-  if(tag) s.addText(tag, {x:0.9, y:4.15, w:11.5, h:0.5, fontFace:'Calibri', fontSize:15, color:THEME.textDim});
-  s.addShape(pptx.ShapeType.rect, {x:0.9, y:2.2, w:1.4, h:0.045, fill:{color:THEME.gold}});
+  s.addText(icon || '📘', {x:7.6, y:0.9, w:5.7, h:5.7, fontSize:230, align:'center', valign:'middle', color:THEME.gold, transparency:88});
+  s.addShape(pptx.ShapeType.ellipse, {x:0.9, y:2.3, w:0.85, h:0.85, fill:{color:THEME.panel}, line:{color:THEME.gold, width:2}});
+  s.addText(String(index), {x:0.9, y:2.3, w:0.85, h:0.85, fontFace:'Georgia', fontSize:26, bold:true, color:THEME.gold2, align:'center', valign:'middle'});
+  s.addText('TOPIC ' + index + ' OF ' + total, {x:1.95, y:2.5, w:9, h:0.4, fontFace:'Calibri', fontSize:14, color:THEME.teal2, charSpacing:2});
+  s.addText(topicTitle.replace(/^\d+\.\s*/, ''), {x:0.9, y:3.35, w:10.7, h:1.3, fontFace:'Georgia', fontSize:34, bold:true, color:THEME.gold2, valign:'top'});
+  if(tag) s.addText(tag, {x:0.9, y:4.65, w:10.7, h:0.5, fontFace:'Calibri', fontSize:15, color:THEME.textDim});
 }
 
 // Lays out one section's bullets across as many slides as needed so text
 // never overflows and stays large & readable.
-function addContentSlides(pptx, breadcrumb, heading, blocks){
+function addContentSlides(pptx, breadcrumb, heading, blocks, icon){
   const startY = 1.35, maxY = 6.85, leftX = 0.75, fullW = 11.85;
   let slide = null, y = startY, partNum = 1;
 
   function newSlide(){
     slide = pptx.addSlide({masterName:'BAIO_MASTER'});
+    if(icon) slide.addText(icon, {x:11.35, y:5.85, w:1.7, h:1.7, fontSize:80, align:'center', valign:'middle', color:THEME.gold, transparency:92});
     slide.addText(breadcrumb, {x:0.7, y:0.32, w:11.9, h:0.3, fontFace:'Calibri', fontSize:10.5, color:THEME.footer, align:'right'});
     const headText = partNum > 1 ? heading + '  (contd.)' : heading;
     slide.addText(headText, {x:leftX, y:0.55, w:fullW, h:0.65, fontFace:'Georgia', fontSize:25, bold:true, color:THEME.gold2});
-    slide.addShape(pptx.ShapeType.rect, {x:leftX, y:1.18, w:1.1, h:0.035, fill:{color:THEME.teal}});
+    slide.addShape(pptx.ShapeType.rect, {x:leftX, y:1.18, w:0.55, h:0.035, fill:{color:THEME.teal}});
+    slide.addShape(pptx.ShapeType.rect, {x:leftX + 0.55, y:1.18, w:0.55, h:0.035, fill:{color:THEME.gold}});
     y = startY;
     partNum++;
   }
@@ -645,19 +754,26 @@ function addContentSlides(pptx, breadcrumb, heading, blocks){
   });
 }
 
-async function addImageSlide(pptx, title, imgPath, caption){
+async function addImageSlide(pptx, title, imgSrc, caption, icon){
   const s = pptx.addSlide({masterName:'BAIO_MASTER'});
-  s.addText(title, {x:0.6, y:0.4, w:12.1, h:0.65, fontFace:'Georgia', fontSize:26, bold:true, color:THEME.gold2});
-  s.addImage({path:imgPath, x:1.4, y:1.25, w:10.5, h:5.4, sizing:{type:'contain', w:10.5, h:5.4}});
-  if(caption) s.addText(caption, {x:0.6, y:6.8, w:12.1, h:0.35, fontFace:'Calibri', fontSize:12, color:THEME.textDim, align:'center'});
+  // framed backdrop behind the photo/diagram for a "mounted print" look
+  s.addShape(pptx.ShapeType.roundRect, {x:1.25, y:1.1, w:10.83, h:5.65, rectRadius:0.1, fill:{color:THEME.panel}, line:{color:'2A3A30', width:1}});
+  s.addText((icon ? icon + '  ' : '') + title, {x:0.6, y:0.4, w:12.1, h:0.65, fontFace:'Georgia', fontSize:26, bold:true, color:THEME.gold2});
+  const imgOpts = {x:1.4, y:1.25, w:10.5, h:5.4, sizing:{type:'contain', w:10.5, h:5.4}};
+  s.addImage(Object.assign(imgOpts, /^data:/.test(imgSrc) ? {data:imgSrc} : {path:imgSrc}));
+  if(caption) s.addText(caption, {x:0.6, y:6.85, w:12.1, h:0.35, fontFace:'Calibri', fontSize:12, color:THEME.textDim, align:'center'});
 }
 
 function addClosingSlide(pptx, chapter){
   const s = pptx.addSlide({masterName:'BAIO_MASTER'});
-  s.addText('🎓', {x:0, y:1.6, w:13.33, h:1.2, fontSize:56, align:'center'});
-  s.addText('Great work! Keep revising.', {x:0.8, y:3.0, w:11.73, h:0.8, fontFace:'Georgia', fontSize:30, bold:true, color:THEME.gold2, align:'center'});
-  s.addText('Open ' + chapter.title + ' in the BAIO app for flashcards, MCQ practice, NEET/KCET drills and full PDF notes.', {x:1.3, y:3.9, w:10.73, h:0.7, fontFace:'Calibri', fontSize:14, color:THEME.textDim, align:'center'});
-  s.addText('baio-learning-system.web.app', {x:0.8, y:4.9, w:11.73, h:0.4, fontFace:'Calibri', fontSize:13, color:THEME.teal2, align:'center'});
+  s.addShape(pptx.ShapeType.ellipse, {x:-2.2, y:-2.2, w:6, h:6, fill:{color:THEME.gold, transparency:93}, line:{type:'none'}});
+  s.addShape(pptx.ShapeType.ellipse, {x:10, y:4.3, w:6, h:6, fill:{color:THEME.teal, transparency:93}, line:{type:'none'}});
+  s.addText('🎓', {x:0, y:1.3, w:13.33, h:1.2, fontSize:56, align:'center'});
+  s.addText('Great work! Keep revising.', {x:0.8, y:2.6, w:11.73, h:0.8, fontFace:'Georgia', fontSize:30, bold:true, color:THEME.gold2, align:'center'});
+  s.addText('Open ' + chapter.title + ' in the BAIO app for flashcards, MCQ practice, NEET/KCET drills and full PDF notes.', {x:1.3, y:3.5, w:10.73, h:0.7, fontFace:'Calibri', fontSize:14, color:THEME.textDim, align:'center'});
+  s.addText('baio-learning-system.web.app', {x:0.8, y:4.4, w:11.73, h:0.4, fontFace:'Calibri', fontSize:13, color:THEME.teal2, align:'center'});
+  s.addShape(pptx.ShapeType.rect, {x:5.66, y:5.0, w:2, h:0.04, fill:{color:THEME.gold}});
+  s.addText('A BAIO Learning System production  ·  Founder/CEO Narendra Sir', {x:0.8, y:5.2, w:11.73, h:0.4, fontFace:'Calibri', fontSize:13, bold:true, color:THEME.teal2, align:'center'});
 }
 
 async function buildPresentation(chapter, opts, onStatus){
@@ -693,10 +809,11 @@ async function buildPresentation(chapter, opts, onStatus){
     topics.forEach((topic, i) => {
       onStatus('Building topic ' + (i + 1) + ' of ' + topics.length + '…');
       try{
-        addDividerSlide(pptx, topic.title, (topic.chips || []).join('  •  '), i + 1, topics.length);
+        const icon = pickTopicIcon(topic.title, chapter.icon);
+        addDividerSlide(pptx, topic.title, (topic.chips || []).join('  •  '), i + 1, topics.length, icon);
         const sections = parseTopicHtml(topic.title, topic.html || '');
         sections.forEach(section => {
-          addContentSlides(pptx, topic.title.replace(/^\d+\.\s*/, ''), section.heading, section.blocks);
+          addContentSlides(pptx, topic.title.replace(/^\d+\.\s*/, ''), section.heading, section.blocks, icon);
         });
       }catch(e){
         console.warn('BAIO PPT: skipped topic "' + topic.title + '" after an error', e);
@@ -707,9 +824,10 @@ async function buildPresentation(chapter, opts, onStatus){
     curated.forEach((topic, i) => {
       onStatus('Building topic ' + (i + 1) + ' of ' + curated.length + '…');
       try{
-        addDividerSlide(pptx, topic.title, topic.tag || '', i + 1, curated.length);
+        const icon = pickTopicIcon(topic.title, chapter.icon);
+        addDividerSlide(pptx, topic.title, topic.tag || '', i + 1, curated.length, icon);
         const items = topic.bullets.map(b => ({runs: mdRuns(b), level:0}));
-        addContentSlides(pptx, topic.title, topic.title, [{type:'list', items}]);
+        addContentSlides(pptx, topic.title, topic.title, [{type:'list', items}], icon);
       }catch(e){
         console.warn('BAIO PPT: skipped topic "' + topic.title + '" after an error', e);
       }
@@ -721,7 +839,7 @@ async function buildPresentation(chapter, opts, onStatus){
     const mindmapCandidates = ['mindmap.jpg','mindmap-01.jpg','mindmap-02.jpg','mindmap-03.jpg','mindmap.png'].map(f => chapter.assetsBase + f);
     const found = await probeFirst(mindmapCandidates);
     for(let i = 0; i < found.length; i++){
-      await addImageSlide(pptx, 'Mind Map' + (found.length > 1 ? ' (' + (i + 1) + '/' + found.length + ')' : ''), found[i], chapter.title);
+      await addImageSlide(pptx, 'Mind Map' + (found.length > 1 ? ' (' + (i + 1) + '/' + found.length + ')' : ''), found[i], chapter.title, '🧠');
     }
   }
 
@@ -730,7 +848,7 @@ async function buildPresentation(chapter, opts, onStatus){
     const boardCandidates = ['board-01.jpg','board-02.jpg','board-03.jpg','board-04.jpg'].map(f => chapter.assetsBase + f);
     const found = await probeFirst(boardCandidates);
     for(let i = 0; i < found.length; i++){
-      await addImageSlide(pptx, 'Blackboard Notes — Board ' + (i + 1), found[i], "Narendra Sir's classroom board");
+      await addImageSlide(pptx, 'Blackboard Notes — Board ' + (i + 1), found[i], "Founder/CEO Narendra Sir's classroom board", '📝');
     }
     const extras = EXTRA_DIAGRAMS[chapter.key];
     if(extras){
@@ -738,9 +856,14 @@ async function buildPresentation(chapter, opts, onStatus){
       for(const ex of extras){
         const url = chapter.assetsBase + ex.file;
         const ok = await probeImage(url);
-        if(ok) await addImageSlide(pptx, ex.caption, url, chapter.title);
+        if(ok) await addImageSlide(pptx, ex.caption, url, chapter.title, '📐');
       }
     }
+  }
+
+  if(opts.diagrams){
+    try{ await tryAddDiagramSlides(pptx, chapter, onStatus); }
+    catch(e){ console.warn('BAIO PPT: diagrams step failed', e); }
   }
 
   addClosingSlide(pptx, chapter);
@@ -818,6 +941,7 @@ function renderChapterGrid(chapters){
       const opts = {
         mindmap: document.getElementById('optMindmap').checked,
         boards: document.getElementById('optBoards').checked,
+        diagrams: document.getElementById('optDiagrams').checked,
         agenda: document.getElementById('optAgenda').checked
       };
       try{
