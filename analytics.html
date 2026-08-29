@@ -6806,37 +6806,72 @@ function buildPU2KcetSectionHtml(student){
 }
 
 /* PU-II KCET readiness: PU2_KCET_BY_CODE rounds carry their own per-subject `outof`
-   (it varies test to test, unlike PU-I's fixed 135), so this can't reuse
-   computeStreamReadiness as-is - same classifyReadiness/readinessCardHtml below it. */
-function computePU2KcetReadiness(student, roundScope){
+   (it varies test to test, unlike PU-I's fixed 135). Unlike PU-I, a single PU-II
+   round record already holds Physics/Chemistry/Maths and (for Bio-track students,
+   in that same record) Biology together - no separate PCM/PCB datasets to merge,
+   so no double-counting risk. But that also means the percentage must be divided
+   by however many subjects that attempt actually covered (3 for a PCM-only mark,
+   4 once Biology is present), not a fixed *3 - so PCM/PCB/PCMB each pick their
+   own subjects and their own per-attempt max instead of reusing computeStreamReadiness. */
+const PU2_KCET_VARIANT_SUBJECTS = {
+  pcm: [{key:'PHY',label:'Phy'},{key:'CHE',label:'Che'},{key:'MAT',label:'Mat'}],
+  pcb: [{key:'PHY',label:'Phy'},{key:'CHE',label:'Che'},{key:'BIO',label:'Bio'}],
+  pcmb: [{key:'PHY',label:'Phy'},{key:'CHE',label:'Che'},{key:'MAT',label:'Mat'},{key:'BIO',label:'Bio'}]
+};
+/* PU-II's own round names sometimes collide with PU-I's verbatim (both have a
+   "NEET OBT 1", a "JEE OBT 1", a "KCET OBT 2"...) despite being different tests
+   on different dates. Now that the Rounds dropdown and roundMatchesScope cover
+   both PU levels together, an unmodified collision would make one dropdown
+   entry silently match two unrelated tests - so any PU-II round whose raw label
+   also appears in the matching PU-I catalog gets tagged distinct. */
+function disambiguatePU2Label(rawLabel, pu1Labels){
+  if(!rawLabel) return rawLabel;
+  return (pu1Labels && pu1Labels.indexOf(rawLabel) !== -1) ? rawLabel+' (PU-II)' : rawLabel;
+}
+function computePU2KcetVariant(student, roundScope, variant){
   const rec = PU2_KCET_BY_CODE[student.code];
   if(!rec) return null;
+  const pu1Labels = KCET_TESTS.map(t=>t.label);
   const allKeys = Object.keys(rec).sort();
-  let attempts = allKeys.map(k=>rec[k])
-    .filter(r=>r && !r.ABSENT && r.TOTAL!==null && r.TOTAL!==undefined && r.outof);
+  let attempts = allKeys.map(k=>rec[k]).filter(r=>{
+    if(!r || r.ABSENT || r.TOTAL===null || r.TOTAL===undefined || !r.outof) return false;
+    if(variant==='pcb' && (r.BIO===null || r.BIO===undefined)) return false;
+    return true;
+  }).map(r=> Object.assign({}, r, { label: disambiguatePU2Label(r.label, pu1Labels) }));
   if(roundScope) attempts = attempts.filter(r=> roundMatchesScope(r.label, roundScope));
   if(!attempts.length) return null;
+  // PCMB treats Biology as a bonus, not a requirement (same as PU-I's PCMB):
+  // a PCM-only round/student still gets a 3-subject score; Biology, when present,
+  // is folded in as a 4th subject rather than excluding everyone without it.
+  const subjectsFor = r => {
+    if(variant==='pcmb') return (r.BIO!==null && r.BIO!==undefined) ? PU2_KCET_VARIANT_SUBJECTS.pcmb : PU2_KCET_VARIANT_SUBJECTS.pcm;
+    return PU2_KCET_VARIANT_SUBJECTS[variant];
+  };
+  const sumFor = r => subjectsFor(r).reduce((s,sub)=> s+(r[sub.key]||0), 0);
+  const maxFor = r => r.outof*subjectsFor(r).length;
   const latest = attempts[attempts.length-1];
   const first = attempts[0];
-  const latestPct = Math.round((latest.TOTAL/(latest.outof*3))*1000)/10;
-  const firstPct = Math.round((first.TOTAL/(first.outof*3))*1000)/10;
+  const latestTotal = sumFor(latest), latestMax = maxFor(latest);
+  const firstTotal = sumFor(first), firstMax = maxFor(first);
+  const latestPct = Math.round((latestTotal/latestMax)*1000)/10;
+  const firstPct = Math.round((firstTotal/firstMax)*1000)/10;
   const trend = attempts.length>1 ? Math.round((latestPct-firstPct)*10)/10 : null;
   return { latestPct, trend, attemptsCount: attempts.length, totalRounds: allKeys.length,
     latestLabel: latest.label || null, latestDate: latest.disp || null,
-    latestTotalScore: latest.TOTAL, latestTotalMax: latest.outof*3,
-    latestSubjects: [
-      { label:'Phy', score: latest.PHY!==undefined ? latest.PHY : null, max: latest.outof },
-      { label:'Che', score: latest.CHE!==undefined ? latest.CHE : null, max: latest.outof },
-      { label:'Mat', score: latest.MAT!==undefined ? latest.MAT : null, max: latest.outof }
-    ],
+    latestTotalScore: latestTotal, latestTotalMax: latestMax,
+    latestSubjects: subjectsFor(latest).map(sub=>({ label: sub.label, score: latest[sub.key]!==undefined ? latest[sub.key] : null, max: latest.outof })),
     band: classifyReadiness(latestPct) };
 }
+function computePU2KcetReadiness(student, roundScope){ return computePU2KcetVariant(student, roundScope, 'pcm'); }
+function computePU2KcetPcbReadiness(student, roundScope){ return computePU2KcetVariant(student, roundScope, 'pcb'); }
+function computePU2KcetPcmbReadiness(student, roundScope){ return computePU2KcetVariant(student, roundScope, 'pcmb'); }
 /* PU-II NEET readiness: there's no PU2_NEET_BY_CODE - the general PU2_TESTS array
    (a mix of OBT rounds and Slip Tests, every subject together) is what the "NEET OBT"
    screen already reads PHY/CHE/BIO out of, so derive readiness the same way, restricted
    to entries labelled "OBT" and where the student has a Biology mark (their Slip Tests
    and PCM-only rounds have BIO:null and are correctly excluded). */
 function computePU2NeetReadiness(student, roundScope){
+  const pu1Labels = NEET_TESTS.map(t=>t.label);
   let attempts = [];
   PU2_TESTS.forEach(test=>{
     if(!/OBT/i.test(test.label)) return;
@@ -6858,7 +6893,7 @@ function computePU2NeetReadiness(student, roundScope){
         if(!r || r.ABSENT || r.TOTAL===null || r.TOTAL===undefined) return;
         const idx = parseInt(key.replace('obt',''),10)-1;
         const test = PU2_NEET_TESTS[idx] || {};
-        attempts.push({total: r.TOTAL, max: 720, date: test.date || '9999-99-99', label: test.label, disp: test.disp,
+        attempts.push({total: r.TOTAL, max: 720, date: test.date || '9999-99-99', label: disambiguatePU2Label(test.label, pu1Labels), disp: test.disp,
           subjects: [{label:'Phy', score: r.PHY, max: 180}, {label:'Che', score: r.CHE, max: 180}, {label:'Bio', score: r.BIO, max: 360}]});
       });
     }
@@ -6880,15 +6915,17 @@ function computePU2JeeReadiness(student, roundScope){
   if(typeof PU2_JEE_BY_CODE==='undefined') return null;
   const rec = PU2_JEE_BY_CODE[student.code];
   if(!rec) return null;
+  const pu1Labels = JEE_TESTS.map(t=>t.label);
   const allKeys = Object.keys(rec).sort();
   let attempts = [];
   allKeys.forEach((k, idx)=>{
     const r = rec[k];
-    if(r && !r.ABSENT && r.TOTAL!==null && r.TOTAL!==undefined) attempts.push({ rec: r, idx });
+    if(r && !r.ABSENT && r.TOTAL!==null && r.TOTAL!==undefined){
+      const test = (typeof PU2_JEE_TESTS!=='undefined') ? PU2_JEE_TESTS[idx] : null;
+      attempts.push({ rec: r, idx, label: test ? disambiguatePU2Label(test.label, pu1Labels) : null });
+    }
   });
-  if(roundScope && typeof PU2_JEE_TESTS!=='undefined'){
-    attempts = attempts.filter(a=> roundMatchesScope((PU2_JEE_TESTS[a.idx]||{}).label, roundScope));
-  }
+  if(roundScope) attempts = attempts.filter(a=> roundMatchesScope(a.label, roundScope));
   if(!attempts.length) return null;
   const latest = attempts[attempts.length-1];
   const first = attempts[0];
@@ -6897,7 +6934,7 @@ function computePU2JeeReadiness(student, roundScope){
   const trend = attempts.length>1 ? Math.round((latestPct-firstPct)*10)/10 : null;
   const latestTest = (typeof PU2_JEE_TESTS!=='undefined') ? PU2_JEE_TESTS[latest.idx] : null;
   return { latestPct, trend, attemptsCount: attempts.length, totalRounds: allKeys.length,
-    latestLabel: latestTest ? latestTest.label : null, latestDate: latestTest ? latestTest.disp : null,
+    latestLabel: latest.label, latestDate: latestTest ? latestTest.disp : null,
     latestTotalScore: latest.rec.TOTAL, latestTotalMax: 300,
     latestSubjects: [
       { label:'Mat', score: latest.rec.MAT!==undefined ? latest.rec.MAT : null, max: 100 },
@@ -7112,8 +7149,8 @@ const ACHIEVER_CATEGORY_META = {
   theory: { label: 'Theory', icon: '📖', desc: 'Estimated class percentile across recent theory tests (Slip Test / Monthly Test).', unit: 'percentile' },
   neet:   { label: 'NEET',   icon: '🩺', desc: 'NEET (PCB) exam readiness across NEET OBT / CT rounds.', unit: '%' },
   kcet:   { label: 'KCET (PCM)', icon: '📐', desc: 'KCET (PCM) exam readiness across KCET OBT / CT rounds.', unit: '%' },
-  kcetpcb:{ label: 'KCET (PCB)', icon: '📐', desc: 'KCET (PCB stream — Agriculture/Veterinary/Nursing/Pharma) exam readiness across KCET (PCB) rounds. PU-I only.', unit: '%' },
-  kcetpcmb:{ label: 'KCET (PCMB)', icon: '📐', desc: 'KCET Physics + Chemistry + Maths score (45 each, out of 135) for the same round as KCET (PCB), plus Biology (out of 45) when a student also sat that section — 180 total for Biology-track students, 135 for Electronics-track and other PCM-only students. PU-I only.', unit: '%' },
+  kcetpcb:{ label: 'KCET (PCB)', icon: '📐', desc: 'KCET (PCB stream — Agriculture/Veterinary/Nursing/Pharma) exam readiness: Physics + Chemistry + Biology, from rounds where a Biology mark was recorded.', unit: '%' },
+  kcetpcmb:{ label: 'KCET (PCMB)', icon: '📐', desc: 'Combined KCET Physics + Chemistry + Maths score, plus Biology when a mark for it exists (4 subjects instead of 3). PU-I combines its separate PCM and PCB records for the one shared round; PU-II reads straight from a single round record.', unit: '%' },
   jee:    { label: 'JEE',    icon: '🎯', desc: 'JEE exam readiness across JEE OBT / CT rounds.', unit: '%' }
 };
 /* Shared across Potential Achievers and Blooming Aspirants (and the exam
@@ -7140,20 +7177,62 @@ function roundMatchesScope(label, scope){
   if(scope==='ct') return !roundKeyIsObt(label);
   return label === scope;
 }
-/* Fixed round catalog (label + date, in order) used to populate the Rounds
-   dropdown for a given exam category. KCET (PCMB) has no round series of
-   its own — it lets you pick which KCET (PCM) round to pair with KCET
-   (PCB)'s one and only round, so it reuses the PCM catalog. */
+/* PU-II has no fixed *_TESTS array with one entry per KCET round the way
+   everything else here does - each round's {label, disp} lives only inside
+   every student's own PU2_KCET_BY_CODE record. Build the catalog by scanning
+   once and keeping the first {label, date} seen per positional round key,
+   ordered the same way the keys already sort (obt1..obt8, chronological). */
+function pu2KcetLabelCatalog(){
+  if(typeof PU2_KCET_BY_CODE==='undefined') return [];
+  const pu1Labels = KCET_TESTS.map(t=>t.label);
+  const byKey = {};
+  Object.keys(PU2_KCET_BY_CODE).forEach(code=>{
+    const rounds = PU2_KCET_BY_CODE[code];
+    Object.keys(rounds).forEach(k=>{
+      const r = rounds[k];
+      if(r && r.label && !byKey[k]) byKey[k] = { label: disambiguatePU2Label(r.label, pu1Labels), date: r.disp || null };
+    });
+  });
+  return Object.keys(byKey).sort().map(k=>byKey[k]);
+}
+function pu2NeetRoundCatalog(){
+  const pu1Labels = NEET_TESTS.map(t=>t.label);
+  const obtRounds = (typeof PU2_TESTS!=='undefined' ? PU2_TESTS : []).filter(t=>/OBT/i.test(t.label)).map(t=>({label:t.label, date:t.date}));
+  const neetRounds = (typeof PU2_NEET_TESTS!=='undefined' ? PU2_NEET_TESTS : []).map(t=>({label: disambiguatePU2Label(t.label, pu1Labels), date:t.date}));
+  return obtRounds.concat(neetRounds);
+}
+function pu2JeeRoundCatalog(){
+  const pu1Labels = JEE_TESTS.map(t=>t.label);
+  return (typeof PU2_JEE_TESTS!=='undefined' ? PU2_JEE_TESTS : []).map(t=>({label: disambiguatePU2Label(t.label, pu1Labels), date:t.date}));
+}
+/* Round catalog (label + date, chronological) used to populate the Rounds
+   dropdown for a given exam category, merging PU-I's fixed *_TESTS array with
+   PU-II's own rounds (built above, since PU-II keeps no equivalent array) so
+   one dropdown covers whichever PU level(s) a teacher has included. KCET
+   (PCMB) has no PU-I round series of its own — it lets you pick which KCET
+   (PCM) round to pair with KCET (PCB)'s one and only round, so it reuses the
+   PCM catalog; PU-II's PCMB reads straight off its own KCET rounds instead. */
 function roundCatalogForCategory(category){
-  if(category==='neet') return NEET_TESTS;
-  if(category==='kcet') return KCET_TESTS;
-  if(category==='kcetpcb') return KCET_PCB_TESTS;
-  if(category==='kcetpcmb'){
+  let pu1Catalog, pu2Catalog;
+  if(category==='neet'){ pu1Catalog = NEET_TESTS; pu2Catalog = pu2NeetRoundCatalog(); }
+  else if(category==='kcet'){ pu1Catalog = KCET_TESTS; pu2Catalog = pu2KcetLabelCatalog(); }
+  else if(category==='kcetpcb'){ pu1Catalog = KCET_PCB_TESTS; pu2Catalog = pu2KcetLabelCatalog(); }
+  else if(category==='kcetpcmb'){
     const idx = pcmbMatchingRoundIndex();
-    return idx===-1 ? [] : [KCET_TESTS[idx]];
+    pu1Catalog = idx===-1 ? [] : [KCET_TESTS[idx]];
+    pu2Catalog = pu2KcetLabelCatalog();
   }
-  if(category==='jee') return JEE_TESTS;
-  return null;
+  else if(category==='jee'){ pu1Catalog = JEE_TESTS; pu2Catalog = pu2JeeRoundCatalog(); }
+  else return null;
+  const merged = pu1Catalog.map(t=>({label:t.label, date:t.date})).concat(pu2Catalog);
+  merged.sort((a,b)=>{
+    const ta = new Date(a.date).getTime(), tb = new Date(b.date).getTime();
+    return (isNaN(ta)?0:ta) - (isNaN(tb)?0:tb);
+  });
+  // Flagged so the dropdown can tell whether defaulting to "latest round" would
+  // silently pick a round only one PU level ever sat (see populateRoundScopeSelect).
+  merged.spansBothPULevels = pu1Catalog.length>0 && pu2Catalog.length>0;
+  return merged;
 }
 function populateRoundScopeSelect(selectEl, category){
   if(!selectEl) return;
@@ -7164,7 +7243,12 @@ function populateRoundScopeSelect(selectEl, category){
     return;
   }
   selectEl.innerHTML = catalog.map(t=>'<option value="'+t.label+'">'+t.label+'</option>').join('') + '<option value="all">All Combined</option>';
-  selectEl.value = catalog[catalog.length-1].label;
+  // A specific round belongs to exactly one PU level's calendar - defaulting to
+  // "latest round" when both PU-I and PU-II contributed rounds would silently
+  // pick whichever level happened to test last, hiding the other level's data
+  // under the default view. Default to "All Combined" instead whenever that
+  // ambiguity exists; a single-PU-level catalog still defaults to its latest.
+  selectEl.value = catalog.spansBothPULevels ? 'all' : catalog[catalog.length-1].label;
 }
 /* A second, display-only control: which round's marks show in the table's
    "Based On" column and the podium's subject breakdown. Independent of the
@@ -7239,6 +7323,8 @@ function computeStudentExamReadiness(category, student, pu, roundScope){
   }
   if(category==='neet') return computePU2NeetReadiness(student, roundScope);
   if(category==='kcet') return computePU2KcetReadiness(student, roundScope);
+  if(category==='kcetpcb') return computePU2KcetPcbReadiness(student, roundScope);
+  if(category==='kcetpcmb') return computePU2KcetPcmbReadiness(student, roundScope);
   if(category==='jee') return computePU2JeeReadiness(student, roundScope);
   return null;
 }
@@ -7471,8 +7557,8 @@ function buildAchievers(){
 const ASPIRANT_CATEGORY_META = {
   neet:   { label: 'NEET',   icon: '🩺', desc: 'NEET (PCB) exam readiness across NEET OBT / CT rounds.' },
   kcet:   { label: 'KCET (PCM)', icon: '📐', desc: 'KCET (PCM) exam readiness across KCET OBT / CT rounds.' },
-  kcetpcb:{ label: 'KCET (PCB)', icon: '📐', desc: 'KCET (PCB stream — Agriculture/Veterinary/Nursing/Pharma) exam readiness across KCET (PCB) rounds. PU-I only.' },
-  kcetpcmb:{ label: 'KCET (PCMB)', icon: '📐', desc: 'KCET Physics + Chemistry + Maths score (45 each, out of 135) for the same round as KCET (PCB), plus Biology (out of 45) when a student also sat that section — 180 total for Biology-track students, 135 for Electronics-track and other PCM-only students. PU-I only.' },
+  kcetpcb:{ label: 'KCET (PCB)', icon: '📐', desc: 'KCET (PCB stream — Agriculture/Veterinary/Nursing/Pharma) exam readiness: Physics + Chemistry + Biology, from rounds where a Biology mark was recorded.' },
+  kcetpcmb:{ label: 'KCET (PCMB)', icon: '📐', desc: 'Combined KCET Physics + Chemistry + Maths score, plus Biology when a mark for it exists (4 subjects instead of 3). PU-I combines its separate PCM and PCB records for the one shared round; PU-II reads straight from a single round record.' },
   jee:    { label: 'JEE',    icon: '🎯', desc: 'JEE exam readiness across JEE OBT / CT rounds.' }
 };
 const ASPIRANT_BAND_KEYS = ['competitive', 'needs-work'];
