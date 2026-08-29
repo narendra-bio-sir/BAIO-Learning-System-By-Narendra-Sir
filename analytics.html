@@ -961,21 +961,21 @@ window.addEventListener('afterprint', function(){
   <button class="tab-scroll-btn" id="modeScrollLeft">&#8249;</button>
   <div class="mode-switch" id="modeSwitchRow" tabindex="0">
     <button class="mode-btn active" data-mode="student">👤 Student Report Card</button>
-    <button class="mode-btn" data-mode="adopted">🌱 Adopted Students</button>
-    <button class="mode-btn" data-mode="slip">📘 Slip Test Analytics</button>
-    <button class="mode-btn" data-mode="monthly">📗 Monthly Test Analytics</button>
-    <button class="mode-btn" data-mode="bvo">🧬 Biology vs Others</button>
-    <button class="mode-btn" data-mode="sections">🏫 Section Analysis</button>
-    <button class="mode-btn" data-mode="neetobt">🧪 NEET OBT Analytics</button>
-    <button class="mode-btn" data-mode="kcetobt">📐 KCET OBT Analytics</button>
-    <button class="mode-btn" data-mode="jeeobt">🎯 JEE OBT Analytics</button>
-    <button class="mode-btn" data-mode="pucompare">⚖️ PU-I vs PU-II (Biology)</button>
-    <button class="mode-btn" data-mode="achievers">🏆 Potential Achievers</button>
-    <button class="mode-btn" data-mode="bioreport">🧬 Biology Report</button>
-    <button class="mode-btn" data-mode="failures">⚠️ Failures &amp; Remedial Plan</button>
-    <button class="mode-btn" data-mode="electronicsreport">⚡ Electronics Report</button>
-    <button class="mode-btn" data-mode="keys">🗝️ Answer Keys</button>
-    <button class="mode-btn" data-mode="reports">📄 Reports</button>
+    <button class="mode-btn teacher-mode-btn" data-mode="adopted" style="display:none;">🌱 Adopted Students</button>
+    <button class="mode-btn teacher-mode-btn" data-mode="slip" style="display:none;">📘 Slip Test Analytics</button>
+    <button class="mode-btn teacher-mode-btn" data-mode="monthly" style="display:none;">📗 Monthly Test Analytics</button>
+    <button class="mode-btn teacher-mode-btn" data-mode="bvo" style="display:none;">🧬 Biology vs Others</button>
+    <button class="mode-btn teacher-mode-btn" data-mode="sections" style="display:none;">🏫 Section Analysis</button>
+    <button class="mode-btn teacher-mode-btn" data-mode="neetobt" style="display:none;">🧪 NEET OBT Analytics</button>
+    <button class="mode-btn teacher-mode-btn" data-mode="kcetobt" style="display:none;">📐 KCET OBT Analytics</button>
+    <button class="mode-btn teacher-mode-btn" data-mode="jeeobt" style="display:none;">🎯 JEE OBT Analytics</button>
+    <button class="mode-btn teacher-mode-btn" data-mode="pucompare" style="display:none;">⚖️ PU-I vs PU-II (Biology)</button>
+    <button class="mode-btn teacher-mode-btn" data-mode="achievers" style="display:none;">🏆 Potential Achievers</button>
+    <button class="mode-btn teacher-mode-btn" data-mode="bioreport" style="display:none;">🧬 Biology Report</button>
+    <button class="mode-btn teacher-mode-btn" data-mode="failures" style="display:none;">⚠️ Failures &amp; Remedial Plan</button>
+    <button class="mode-btn teacher-mode-btn" data-mode="electronicsreport" style="display:none;">⚡ Electronics Report</button>
+    <button class="mode-btn teacher-mode-btn" data-mode="keys" style="display:none;">🗝️ Answer Keys</button>
+    <button class="mode-btn teacher-mode-btn" data-mode="reports" style="display:none;">📄 Reports</button>
   </div>
   <button class="tab-scroll-btn" id="modeScrollRight">&#8250;</button>
 </div>
@@ -3281,28 +3281,38 @@ document.querySelectorAll('.app-container').forEach(container=>{
 const ANALYTICS_MASTER_CODE = 'BAIO-NS-2026-R4T9';
 // Note: the teacher bypass now uses ANALYTICS_MASTER_CODE directly (defined above) \u2014
 // no separate password to remember.
-const ANALYTICS_LOCKED_MODES = ['slip', 'monthly', 'bvo', 'sections', 'neetobt', 'kcetobt', 'jeeobt', 'pucompare', 'achievers', 'bioreport', 'failures', 'electronicsreport', 'reports', 'adopted'];
+const ANALYTICS_LOCKED_MODES = ['slip', 'monthly', 'bvo', 'sections', 'neetobt', 'kcetobt', 'jeeobt', 'pucompare', 'achievers', 'bioreport', 'failures', 'electronicsreport', 'keys', 'reports', 'adopted'];
 function isAnalyticsUnlocked(){
   try{ return localStorage.getItem('baio_analytics_unlock') === 'true'; }catch(e){ return false; }
 }
-function syncAnalyticsRelockBtn(){
-  const btn = document.getElementById('analyticsRelockBtn');
+function isTeacherView(){
   let teacherBypassed = false;
   try{ teacherBypassed = sessionStorage.getItem('baio_teacher_bypass') === 'true'; }catch(e){}
-  if(btn) btn.style.display = (isAnalyticsUnlocked() || teacherBypassed) ? 'flex' : 'none';
+  return isAnalyticsUnlocked() || teacherBypassed;
+}
+// Students should only ever see the Student Report Card tab — every other
+// analytics tab is teacher/admin-only and stays hidden until the master
+// key (or the teacher bypass on the student login form) unlocks them.
+function syncModeButtonVisibility(){
+  const unlocked = isTeacherView();
+  document.querySelectorAll('.mode-btn.teacher-mode-btn').forEach(btn=>{
+    btn.style.display = unlocked ? '' : 'none';
+  });
+}
+function syncAnalyticsRelockBtn(){
+  const btn = document.getElementById('analyticsRelockBtn');
+  if(btn) btn.style.display = isTeacherView() ? 'flex' : 'none';
+  syncModeButtonVisibility();
 }
 document.getElementById('analyticsRelockBtn').addEventListener('click', () => {
   try{ localStorage.removeItem('baio_analytics_unlock'); }catch(e){}
   try{ sessionStorage.removeItem('baio_teacher_bypass'); }catch(e){}
   syncAnalyticsRelockBtn();
-  const activeMode = document.querySelector('.mode-btn[data-mode].active');
-  if(activeMode) activeMode.click();
+  const studentBtn = document.querySelector('.mode-btn[data-mode="student"]');
+  if(studentBtn) studentBtn.click();
 });
 function showAnalyticsLockScreen(){
-  ['app-slip','app-monthly','app-bvo','app-sections','app-neetobt','app-kcetobt','app-jeeobt',
-   'app-pu2slip','app-pu2monthly','app-pu2bvo','app-pu2sections','app-pu2neetobt','app-pu2kcetobt',
-   'app-pucompare','app-bioreport','app-electronicsreport','app-reports','app-adopted'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
-  document.getElementById('app-student').style.display = 'none';
+  ALL_CONTAINER_IDS.forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
   document.getElementById('analyticsLockScreen').style.display = '';
 }
 (function(){
@@ -3434,9 +3444,7 @@ document.querySelectorAll('.mode-btn[data-mode]').forEach(btn=>{
     if(fn) fn();
     if(btn.dataset.mode==='student'){
       initStudentSearch();
-      let teacherBypassed = false;
-      try{ teacherBypassed = sessionStorage.getItem('baio_teacher_bypass') === 'true'; }catch(e){}
-      if(isAnalyticsUnlocked() || teacherBypassed){
+      if(isTeacherView()){
         document.querySelector('#app-student .panel').style.display = 'none';
         document.getElementById('teacherSearchWrap').style.display = 'block';
         initTeacherSearch();
