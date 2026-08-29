@@ -7329,7 +7329,7 @@ function renderAchieverPodium(list, category){
 function renderAchieverExamBarChart(opts){
   const chartEl = document.getElementById('achieverExamBarChart');
   if(!chartEl) return;
-  const examCats = Object.keys(ACHIEVER_CATEGORY_META).filter(cat=>cat!=='theory');
+  const examCats = Object.keys(ACHIEVER_CATEGORY_META).filter(cat=>cat!=='theory' && cat!=='kcetpcmb');
   const bandFilter = r=> r.band && r.band.key === 'strong';
   const counts = examCats.map(cat=>
     Object.assign({ cat, meta: ACHIEVER_CATEGORY_META[cat] }, examBarStat(cat, opts, bandFilter))
@@ -7525,7 +7525,8 @@ function renderAspirantExamBarChart(opts){
   const chartEl = document.getElementById('aspirantExamBarChart');
   if(!chartEl) return;
   const bandFilter = r=> r.band && ASPIRANT_BAND_KEYS.indexOf(r.band.key) !== -1;
-  const counts = Object.keys(ASPIRANT_CATEGORY_META).map(cat=>
+  const examCats = Object.keys(ASPIRANT_CATEGORY_META).filter(cat=>cat!=='kcetpcmb');
+  const counts = examCats.map(cat=>
     Object.assign({ cat, meta: ASPIRANT_CATEGORY_META[cat] }, examBarStat(cat, opts, bandFilter))
   );
   counts.sort((a,b)=> b.count - a.count);
