@@ -29,6 +29,7 @@ const HTML_FILES = [
   'study-tips.html',
   'push-test.html',
   'genetic-cross-simulator.html',
+  'ppt-generator.html',
   'ch2/index.html',
   'ch3/index.html',
   'ch9/index.html',
