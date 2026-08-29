@@ -6815,7 +6815,7 @@ function computePU2KcetReadiness(student, roundScope){
   const allKeys = Object.keys(rec).sort();
   let attempts = allKeys.map(k=>rec[k])
     .filter(r=>r && !r.ABSENT && r.TOTAL!==null && r.TOTAL!==undefined && r.outof);
-  if(roundScope && roundScope!=='all') attempts = attempts.filter(r=> (roundScope==='obt') === roundKeyIsObt(r.label));
+  if(roundScope) attempts = attempts.filter(r=> roundMatchesScope(r.label, roundScope));
   if(!attempts.length) return null;
   const latest = attempts[attempts.length-1];
   const first = attempts[0];
@@ -6864,7 +6864,7 @@ function computePU2NeetReadiness(student, roundScope){
       });
     }
   }
-  if(roundScope && roundScope!=='all') attempts = attempts.filter(a=> (roundScope==='obt') === roundKeyIsObt(a.label));
+  if(roundScope) attempts = attempts.filter(a=> roundMatchesScope(a.label, roundScope));
   attempts.sort((a,b)=> a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
   if(!attempts.length) return null;
   const latest = attempts[attempts.length-1];
@@ -6887,8 +6887,8 @@ function computePU2JeeReadiness(student, roundScope){
     const r = rec[k];
     if(r && !r.ABSENT && r.TOTAL!==null && r.TOTAL!==undefined) attempts.push({ rec: r, idx });
   });
-  if(roundScope && roundScope!=='all' && typeof PU2_JEE_TESTS!=='undefined'){
-    attempts = attempts.filter(a=> (roundScope==='obt') === roundKeyIsObt((PU2_JEE_TESTS[a.idx]||{}).label));
+  if(roundScope && typeof PU2_JEE_TESTS!=='undefined'){
+    attempts = attempts.filter(a=> roundMatchesScope((PU2_JEE_TESTS[a.idx]||{}).label, roundScope));
   }
   if(!attempts.length) return null;
   const latest = attempts[attempts.length-1];
@@ -7130,12 +7130,40 @@ const ACHIEVER_CATEGORY_META = {
    text (works the same for PU-I's fixed round catalogs and PU-II's more
    varied labels, since every round is named either "... OBT n" or "... CT n"
    in this dataset). */
-const EXAM_ROUND_SCOPE_OPTIONS = [
-  { value:'all', label:'All Rounds (OBT + CT)' },
-  { value:'obt', label:'OBT Only' },
-  { value:'ct', label:'CT Only' }
-];
 function roundKeyIsObt(label){ return /obt/i.test(label || ''); }
+/* A round-scope value can be 'all' (every round combined), 'obt'/'ct' (a
+   bucket — used by the display-only Marks-shown control), or the exact
+   label text of one specific round (used by the Rounds dropdown, which
+   lists every round by name so a teacher can pick e.g. "KCET CT 2"). */
+function roundMatchesScope(label, scope){
+  if(!scope || scope==='all') return true;
+  if(scope==='obt') return roundKeyIsObt(label);
+  if(scope==='ct') return !roundKeyIsObt(label);
+  return label === scope;
+}
+/* Fixed round catalog (label + date, in order) used to populate the Rounds
+   dropdown for a given exam category. KCET (PCMB) has no round series of
+   its own — it lets you pick which KCET (PCM) round to pair with KCET
+   (PCB)'s one and only round, so it reuses the PCM catalog. */
+function roundCatalogForCategory(category){
+  if(category==='neet') return NEET_TESTS;
+  if(category==='kcet') return KCET_TESTS;
+  if(category==='kcetpcb') return KCET_PCB_TESTS;
+  if(category==='kcetpcmb') return KCET_TESTS;
+  if(category==='jee') return JEE_TESTS;
+  return null;
+}
+function populateRoundScopeSelect(selectEl, category){
+  if(!selectEl) return;
+  const catalog = roundCatalogForCategory(category);
+  if(!catalog || !catalog.length){
+    selectEl.innerHTML = '<option value="all">All Combined</option>';
+    selectEl.value = 'all';
+    return;
+  }
+  selectEl.innerHTML = catalog.map(t=>'<option value="'+t.label+'">'+t.label+'</option>').join('') + '<option value="all">All Combined</option>';
+  selectEl.value = catalog[catalog.length-1].label;
+}
 /* A second, display-only control: which round's marks show in the table's
    "Based On" column and the podium's subject breakdown. Independent of the
    Rounds dropdown above — never changes score, band, or who qualifies. */
@@ -7153,8 +7181,10 @@ const EXAM_SUBJECT_SPECS = {
 /* KCET (PCMB): combined PCM + PCB score, out of 270, for students who
    attempted both streams. PU-I only — KCET (PCB) has no PU-II data. */
 function computeKcetPcmbReadiness(student, roundScope){
+  // roundScope picks which PCM round to pair — PCB only ever has its one
+  // round, so it's always evaluated with "all" regardless of the selection.
   const pcm = computeStreamReadiness(KCET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1','ct2'], 135, KCET_TESTS, EXAM_SUBJECT_SPECS.kcet, roundScope);
-  const pcb = (typeof KCET_PCB_BY_CODE!=='undefined') ? computeStreamReadiness(KCET_PCB_BY_CODE[student.code], ['obt1'], 135, KCET_PCB_TESTS, EXAM_SUBJECT_SPECS.kcetpcb, roundScope) : null;
+  const pcb = (typeof KCET_PCB_BY_CODE!=='undefined') ? computeStreamReadiness(KCET_PCB_BY_CODE[student.code], ['obt1'], 135, KCET_PCB_TESTS, EXAM_SUBJECT_SPECS.kcetpcb, 'all') : null;
   if(!pcm || !pcb) return null;
   const totalScore = pcm.latestTotalScore + pcb.latestTotalScore;
   const totalMax = pcm.latestTotalMax + pcb.latestTotalMax;
@@ -7388,10 +7418,12 @@ function buildAchievers(){
 (function wireAchieversUI(){
   const tabsWrap = document.getElementById('achieverCategoryTabs');
   if(!tabsWrap) return;
+  const scopeSelect = document.getElementById('achieverRoundScope');
   tabsWrap.querySelectorAll('.subtab-btn').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       tabsWrap.querySelectorAll('.subtab-btn').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
+      populateRoundScopeSelect(scopeSelect, btn.dataset.cat);
       buildAchievers();
     });
   });
@@ -7400,11 +7432,7 @@ function buildAchievers(){
   if(pu1Cb) pu1Cb.addEventListener('change', buildAchievers);
   if(pu2Cb) pu2Cb.addEventListener('change', buildAchievers);
   document.querySelectorAll('.ach-section-check').forEach(cb=> cb.addEventListener('change', buildAchievers));
-  const scopeSelect = document.getElementById('achieverRoundScope');
-  if(scopeSelect){
-    scopeSelect.innerHTML = EXAM_ROUND_SCOPE_OPTIONS.map(o=>'<option value="'+o.value+'">'+o.label+'</option>').join('');
-    scopeSelect.addEventListener('change', buildAchievers);
-  }
+  if(scopeSelect) scopeSelect.addEventListener('change', buildAchievers);
   const marksScopeSelect = document.getElementById('achieverMarksScope');
   if(marksScopeSelect){
     marksScopeSelect.innerHTML = EXAM_MARKS_SCOPE_OPTIONS.map(o=>'<option value="'+o.value+'">'+o.label+'</option>').join('');
@@ -7582,10 +7610,13 @@ function buildAspirants(){
 (function wireAspirantsUI(){
   const tabsWrap = document.getElementById('aspirantCategoryTabs');
   if(!tabsWrap) return;
+  const scopeSelect = document.getElementById('aspirantRoundScope');
+  const scopeRow = document.getElementById('aspirantRoundScopeRow');
   tabsWrap.querySelectorAll('.subtab-btn').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       tabsWrap.querySelectorAll('.subtab-btn').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
+      populateRoundScopeSelect(scopeSelect, btn.dataset.cat);
       buildAspirants();
     });
   });
@@ -7594,10 +7625,8 @@ function buildAspirants(){
   if(pu1Cb) pu1Cb.addEventListener('change', buildAspirants);
   if(pu2Cb) pu2Cb.addEventListener('change', buildAspirants);
   document.querySelectorAll('.asp-section-check').forEach(cb=> cb.addEventListener('change', buildAspirants));
-  const scopeSelect = document.getElementById('aspirantRoundScope');
-  const scopeRow = document.getElementById('aspirantRoundScopeRow');
   if(scopeSelect){
-    scopeSelect.innerHTML = EXAM_ROUND_SCOPE_OPTIONS.map(o=>'<option value="'+o.value+'">'+o.label+'</option>').join('');
+    populateRoundScopeSelect(scopeSelect, 'neet');
     scopeSelect.addEventListener('change', buildAspirants);
   }
   const marksScopeSelect = document.getElementById('aspirantMarksScope');
@@ -7614,10 +7643,7 @@ function computeStreamReadiness(byCodeEntry, roundKeys, maxTotal, testDefs, subj
   roundKeys.forEach((k, idx)=>{
     const r = byCodeEntry[k];
     if(!r || r.ABSENT || r.TOTAL===null || r.TOTAL===undefined) return;
-    if(roundScope && roundScope!=='all' && testDefs){
-      const isObt = roundKeyIsObt((testDefs[idx]||{}).label);
-      if((roundScope==='obt') !== isObt) return;
-    }
+    if(roundScope && testDefs && !roundMatchesScope((testDefs[idx]||{}).label, roundScope)) return;
     attempts.push({ rec: r, idx });
   });
   if(!attempts.length) return null;
