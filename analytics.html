@@ -2270,6 +2270,7 @@ window.addEventListener('afterprint', function(){
   <div class="panel">
     <h2>🌸 Blooming Aspirants</h2>
     <div class="desc">Students on a promising trajectory in NEET, KCET or JEE who haven't reached Potential Achiever level yet, based on their most recent test performance — not a guarantee, just a rough guide from the data on file to see who could use a push.</div>
+    <div class="desc" id="aspirantExamStatus" style="margin-top:6px; font-weight:600;"></div>
     <div class="subtabs" id="aspirantCategoryTabs">
       <button class="subtab-btn active" data-cat="neet">🩺 NEET</button>
       <button class="subtab-btn" data-cat="kcet">📐 KCET</button>
@@ -2296,7 +2297,7 @@ window.addEventListener('afterprint', function(){
     <h2 id="aspirantListTitle">Blooming NEET Aspirants</h2>
     <div class="desc" id="aspirantListDesc"></div>
     <div class="table-wrap"><table id="aspirantTable">
-      <thead><tr><th>Rank</th><th>Name</th><th>Enroll Code</th><th>Section</th><th>PU</th><th>Score</th><th>Trend</th></tr></thead>
+      <thead><tr><th>Rank</th><th>Name</th><th>Enroll Code</th><th>Section</th><th>PU</th><th>Score</th><th>Trend</th><th>Based On</th></tr></thead>
       <tbody></tbody>
     </table></div>
     <div class="report-actions" id="aspirantShareBar" style="margin-top:12px;"></div>
@@ -6762,7 +6763,8 @@ function buildPU2KcetSectionHtml(student){
 function computePU2KcetReadiness(student){
   const rec = PU2_KCET_BY_CODE[student.code];
   if(!rec) return null;
-  const attempts = Object.keys(rec).sort().map(k=>rec[k])
+  const allKeys = Object.keys(rec).sort();
+  const attempts = allKeys.map(k=>rec[k])
     .filter(r=>r && !r.ABSENT && r.TOTAL!==null && r.TOTAL!==undefined && r.outof);
   if(!attempts.length) return null;
   const latest = attempts[attempts.length-1];
@@ -6770,7 +6772,9 @@ function computePU2KcetReadiness(student){
   const latestPct = Math.round((latest.TOTAL/(latest.outof*3))*1000)/10;
   const firstPct = Math.round((first.TOTAL/(first.outof*3))*1000)/10;
   const trend = attempts.length>1 ? Math.round((latestPct-firstPct)*10)/10 : null;
-  return { latestPct, trend, attemptsCount: attempts.length, band: classifyReadiness(latestPct) };
+  return { latestPct, trend, attemptsCount: attempts.length, totalRounds: allKeys.length,
+    latestLabel: latest.label || null, latestDate: latest.disp || null,
+    band: classifyReadiness(latestPct) };
 }
 /* PU-II NEET readiness: there's no PU2_NEET_BY_CODE - the general PU2_TESTS array
    (a mix of OBT rounds and Slip Tests, every subject together) is what the "NEET OBT"
@@ -6785,7 +6789,7 @@ function computePU2NeetReadiness(student){
     if(!rec || rec.BIO===null || rec.BIO===undefined) return;
     const total = (rec.PHY||0)+(rec.CHE||0)+(rec.BIO||0);
     const max = (rec.PHY_out||0)+(rec.CHE_out||0)+(rec.BIO_out||0);
-    if(max>0) attempts.push({total, max, date: test.date});
+    if(max>0) attempts.push({total, max, date: test.date, label: test.label, disp: test.disp});
   });
   // Also blend in the true NEET-pattern mock tests (PU2_NEET_TESTS), which score
   // Biology out of 360 like the real exam rather than the generic OBT series'
@@ -6797,7 +6801,8 @@ function computePU2NeetReadiness(student){
         const r = neetRec[key];
         if(!r || r.ABSENT || r.TOTAL===null || r.TOTAL===undefined) return;
         const idx = parseInt(key.replace('obt',''),10)-1;
-        attempts.push({total: r.TOTAL, max: 720, date: (PU2_NEET_TESTS[idx]||{}).date || '9999-99-99'});
+        const test = PU2_NEET_TESTS[idx] || {};
+        attempts.push({total: r.TOTAL, max: 720, date: test.date || '9999-99-99', label: test.label, disp: test.disp});
       });
     }
   }
@@ -6808,21 +6813,30 @@ function computePU2NeetReadiness(student){
   const latestPct = Math.round((latest.total/latest.max)*1000)/10;
   const firstPct = Math.round((first.total/first.max)*1000)/10;
   const trend = attempts.length>1 ? Math.round((latestPct-firstPct)*10)/10 : null;
-  return { latestPct, trend, attemptsCount: attempts.length, band: classifyReadiness(latestPct) };
+  return { latestPct, trend, attemptsCount: attempts.length, totalRounds: attempts.length,
+    latestLabel: latest.label || null, latestDate: latest.disp || latest.date || null,
+    band: classifyReadiness(latestPct) };
 }
 function computePU2JeeReadiness(student){
   if(typeof PU2_JEE_BY_CODE==='undefined') return null;
   const rec = PU2_JEE_BY_CODE[student.code];
   if(!rec) return null;
-  const attempts = Object.keys(rec).sort().map(k=>rec[k])
-    .filter(r=>r && !r.ABSENT && r.TOTAL!==null && r.TOTAL!==undefined);
+  const allKeys = Object.keys(rec).sort();
+  const attempts = [];
+  allKeys.forEach((k, idx)=>{
+    const r = rec[k];
+    if(r && !r.ABSENT && r.TOTAL!==null && r.TOTAL!==undefined) attempts.push({ rec: r, idx });
+  });
   if(!attempts.length) return null;
   const latest = attempts[attempts.length-1];
   const first = attempts[0];
-  const latestPct = Math.round((latest.TOTAL/300)*1000)/10;
-  const firstPct = Math.round((first.TOTAL/300)*1000)/10;
+  const latestPct = Math.round((latest.rec.TOTAL/300)*1000)/10;
+  const firstPct = Math.round((first.rec.TOTAL/300)*1000)/10;
   const trend = attempts.length>1 ? Math.round((latestPct-firstPct)*10)/10 : null;
-  return { latestPct, trend, attemptsCount: attempts.length, band: classifyReadiness(latestPct) };
+  const latestTest = (typeof PU2_JEE_TESTS!=='undefined') ? PU2_JEE_TESTS[latest.idx] : null;
+  return { latestPct, trend, attemptsCount: attempts.length, totalRounds: allKeys.length,
+    latestLabel: latestTest ? latestTest.label : null, latestDate: latestTest ? latestTest.disp : null,
+    band: classifyReadiness(latestPct) };
 }
 function buildPU2NeetSectionHtml(student){
   if(typeof PU2_NEET_BY_CODE==='undefined') return '';
@@ -7156,7 +7170,8 @@ function computeAspirantsList(category, opts){
   const list = [];
   function pushIfQualifies(student, pu, r){
     if(!r || !r.band || ASPIRANT_BAND_KEYS.indexOf(r.band.key) === -1) return;
-    list.push({ code: student.code, name: student.name, section: sectionLabel(student), pu, score: r.latestPct, trend: r.trend, band: r.band });
+    list.push({ code: student.code, name: student.name, section: sectionLabel(student), pu, score: r.latestPct, trend: r.trend, band: r.band,
+      latestLabel: r.latestLabel, latestDate: r.latestDate, attemptsCount: r.attemptsCount, totalRounds: r.totalRounds });
   }
   const KNOWN_ASP_SECTIONS = ['SPARK','PRIME','CHAMPION','ELITE'];
   const sections = opts.sections || KNOWN_ASP_SECTIONS;
@@ -7167,10 +7182,10 @@ function computeAspirantsList(category, opts){
     STUDENTS.forEach(student=>{
       if(!sectionAllowed(student)) return;
       let r = null;
-      if(category==='neet') r = computeStreamReadiness(NEET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 720);
-      else if(category==='kcet') r = computeStreamReadiness(KCET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1','ct2'], 135);
-      else if(category==='kcetpcb') r = (typeof KCET_PCB_BY_CODE!=='undefined') ? computeStreamReadiness(KCET_PCB_BY_CODE[student.code], ['obt1'], 135) : null;
-      else if(category==='jee') r = (typeof JEE_BY_CODE!=='undefined') ? computeStreamReadiness(JEE_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 300) : null;
+      if(category==='neet') r = computeStreamReadiness(NEET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 720, NEET_TESTS);
+      else if(category==='kcet') r = computeStreamReadiness(KCET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1','ct2'], 135, KCET_TESTS);
+      else if(category==='kcetpcb') r = (typeof KCET_PCB_BY_CODE!=='undefined') ? computeStreamReadiness(KCET_PCB_BY_CODE[student.code], ['obt1'], 135, KCET_PCB_TESTS) : null;
+      else if(category==='jee') r = (typeof JEE_BY_CODE!=='undefined') ? computeStreamReadiness(JEE_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 300, JEE_TESTS) : null;
       pushIfQualifies(student, 1, r);
     });
   }
@@ -7192,14 +7207,50 @@ function aspirantThresholdLabel(){ return '“Competitive” or “Needs Work”
 function renderAspirantTable(list){
   const tbody = document.querySelector('#aspirantTable tbody');
   if(!list.length){
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--muted);">No students currently fall in this band (Threshold: '+aspirantThresholdLabel()+') with the data on file.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--muted);">No students currently fall in this band (Threshold: '+aspirantThresholdLabel()+') with the data on file.</td></tr>';
     return;
   }
   tbody.innerHTML = list.map((s,i)=>{
     const trendHtml = s.trend===null||s.trend===undefined ? '—' :
       (s.trend>=0 ? '<span style="color:#15803d;">↑ +'+s.trend+'</span>' : '<span style="color:#b91c1c;">↓ '+s.trend+'</span>');
-    return '<tr><td>#'+(i+1)+'</td><td>'+s.name+'</td><td>'+s.code+'</td><td>'+s.section+'</td><td>PU-'+(s.pu===2?'II':'I')+'</td><td><b>'+aspirantScoreLabel(s.score)+'</b> '+s.band.icon+'</td><td>'+trendHtml+'</td></tr>';
+    const roundHtml = s.latestLabel
+      ? s.latestLabel+(s.latestDate?' · '+s.latestDate:'')+'<div style="font-size:10.5px;color:var(--muted);">'+(s.attemptsCount||0)+' of '+(s.totalRounds||s.attemptsCount||0)+' round'+((s.totalRounds||s.attemptsCount)===1?'':'s')+' attempted</div>'
+      : '—';
+    return '<tr><td>#'+(i+1)+'</td><td>'+s.name+'</td><td>'+s.code+'</td><td>'+s.section+'</td><td>PU-'+(s.pu===2?'II':'I')+'</td><td><b>'+aspirantScoreLabel(s.score)+'</b> '+s.band.icon+'</td><td>'+trendHtml+'</td><td>'+roundHtml+'</td></tr>';
   }).join('');
+}
+/* ---- Exam-wide "current status" summary shown at the top of the tab ----
+   Fixed round catalogs (label + date per round) already exist for PU-I;
+   PU-II has its own catalogs for NEET/JEE, and for KCET (no dedicated array)
+   the round list is read off any one student's PU2_KCET_BY_CODE record,
+   since every record shares the same round keys/labels/dates. */
+const ASPIRANT_PU1_ROUND_CATALOG = { neet: NEET_TESTS, kcet: KCET_TESTS, kcetpcb: (typeof KCET_PCB_TESTS!=='undefined'?KCET_PCB_TESTS:[]), jee: JEE_TESTS };
+function pu2KcetRoundCatalog(){
+  if(typeof PU2_KCET_BY_CODE==='undefined') return [];
+  const sample = Object.values(PU2_KCET_BY_CODE)[0];
+  if(!sample) return [];
+  return Object.keys(sample).sort().map(k=>sample[k]);
+}
+function examRoundStatusLine(puLabel, catalog){
+  if(!catalog || !catalog.length) return null;
+  const latest = catalog[catalog.length-1];
+  return puLabel+': '+catalog.length+' round'+(catalog.length===1?'':'s')+' conducted so far · latest '+latest.label+' · '+(latest.disp||latest.date);
+}
+function aspirantExamStatusSummary(category, opts){
+  const lines = [];
+  if(opts.includePU1){
+    const line = examRoundStatusLine('PU-I', ASPIRANT_PU1_ROUND_CATALOG[category]);
+    if(line) lines.push(line);
+  }
+  if(opts.includePU2){
+    let catalog = null;
+    if(category==='neet' && typeof PU2_NEET_TESTS!=='undefined') catalog = PU2_NEET_TESTS;
+    else if(category==='jee' && typeof PU2_JEE_TESTS!=='undefined') catalog = PU2_JEE_TESTS;
+    else if(category==='kcet') catalog = pu2KcetRoundCatalog();
+    const line = examRoundStatusLine('PU-II', catalog);
+    if(line) lines.push(line);
+  }
+  return lines.join('  ·  ');
 }
 function buildAspirants(){
   const activeBtn = document.querySelector('#aspirantCategoryTabs .subtab-btn.active');
@@ -7221,6 +7272,7 @@ function buildAspirants(){
 
   document.getElementById('aspirantListTitle').textContent = 'Blooming '+meta.label+' Aspirants';
   document.getElementById('aspirantListDesc').textContent = meta.desc+' Threshold: '+aspirantThresholdLabel()+'.';
+  document.getElementById('aspirantExamStatus').textContent = aspirantExamStatusSummary(category, opts);
   renderAspirantTable(list);
 
   attachTopperShareBar('aspirantShareBar', () => ({
@@ -7248,16 +7300,23 @@ function buildAspirants(){
   document.querySelectorAll('.asp-section-check').forEach(cb=> cb.addEventListener('change', buildAspirants));
 })();
 
-function computeStreamReadiness(byCodeEntry, roundKeys, maxTotal){
+function computeStreamReadiness(byCodeEntry, roundKeys, maxTotal, testDefs){
   if(!byCodeEntry) return null;
-  const attempts = roundKeys.map(k=>byCodeEntry[k]).filter(r=>r && !r.ABSENT && r.TOTAL!==null && r.TOTAL!==undefined);
+  const attempts = [];
+  roundKeys.forEach((k, idx)=>{
+    const r = byCodeEntry[k];
+    if(r && !r.ABSENT && r.TOTAL!==null && r.TOTAL!==undefined) attempts.push({ rec: r, idx });
+  });
   if(!attempts.length) return null;
   const latest = attempts[attempts.length-1];
   const first = attempts[0];
-  const latestPct = Math.round((latest.TOTAL/maxTotal)*1000)/10;
-  const firstPct = Math.round((first.TOTAL/maxTotal)*1000)/10;
+  const latestPct = Math.round((latest.rec.TOTAL/maxTotal)*1000)/10;
+  const firstPct = Math.round((first.rec.TOTAL/maxTotal)*1000)/10;
   const trend = attempts.length>1 ? Math.round((latestPct-firstPct)*10)/10 : null;
-  return { latestPct, trend, attemptsCount: attempts.length, band: classifyReadiness(latestPct) };
+  const latestTest = testDefs ? testDefs[latest.idx] : null;
+  return { latestPct, trend, attemptsCount: attempts.length, totalRounds: roundKeys.length,
+    latestLabel: latestTest ? latestTest.label : null, latestDate: latestTest ? (latestTest.disp || latestTest.date) : null,
+    band: classifyReadiness(latestPct) };
 }
 function readinessCardHtml(streamLabel, r){
   if(!r) return '';
