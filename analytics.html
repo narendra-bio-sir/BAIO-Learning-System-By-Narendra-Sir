@@ -543,6 +543,8 @@ window.addEventListener('afterprint', function(){
   .exam-bar{ width:100%; max-width:56px; border-radius:8px 8px 3px 3px; background:linear-gradient(180deg, var(--gold-soft), var(--gold)); transition:height .3s ease; min-height:4px; }
   .exam-bar-col.leader .exam-bar{ background:linear-gradient(180deg, var(--teal-soft), var(--teal)); }
   .exam-bar-label{ font-size:11.5px; color:var(--muted); margin-top:6px; text-align:center; white-space:nowrap; }
+  .exam-bar-pct{ font-size:10px; color:var(--muted); margin-bottom:3px; text-align:center; }
+  .exam-bar-avg{ font-size:10px; color:var(--gold-soft); font-weight:600; margin-top:4px; text-align:center; }
 
   .rest-list{ margin-top:18px; }
   .rest-row{
@@ -7070,48 +7072,81 @@ const ACHIEVER_CATEGORY_META = {
   kcetpcb:{ label: 'KCET (PCB)', icon: '📐', desc: 'KCET (PCB stream — Agriculture/Veterinary/Nursing/Pharma) exam readiness across KCET (PCB) rounds. PU-I only.', unit: '%' },
   jee:    { label: 'JEE',    icon: '🎯', desc: 'JEE exam readiness across JEE OBT / CT rounds.', unit: '%' }
 };
-function computeAchieversList(category, opts){
-  const list = [];
-  function pushIfQualifies(student, pu, r){
-    if(!r) return;
-    if(category==='theory'){
-      if(r.avgPct < 75) return;
-      list.push({ code: student.code, name: student.name, section: sectionLabel(student), pu, score: r.avgPct, trend: r.trend });
-    } else {
-      if(!r.band || r.band.key !== 'strong') return;
-      list.push({ code: student.code, name: student.name, section: sectionLabel(student), pu, score: r.latestPct, trend: r.trend, band: r.band });
-    }
-  }
-  const KNOWN_ACH_SECTIONS = ['SPARK','PRIME','CHAMPION','ELITE'];
-  const sections = opts.sections || KNOWN_ACH_SECTIONS;
+/* Shared across Potential Achievers and Blooming Aspirants (and the exam
+   comparison bar charts): every student who has at least one recorded
+   attempt for this exam category, with their computed readiness. Callers
+   filter by band.key for whichever list/threshold they need. */
+function computeExamReadinessResults(category, opts){
+  const out = [];
+  const KNOWN_SECTIONS = ['SPARK','PRIME','CHAMPION','ELITE'];
+  const sections = opts.sections || KNOWN_SECTIONS;
   function sectionAllowed(student){
-    return KNOWN_ACH_SECTIONS.indexOf(student.section) === -1 || sections.indexOf(student.section) !== -1;
+    return KNOWN_SECTIONS.indexOf(student.section) === -1 || sections.indexOf(student.section) !== -1;
   }
   if(opts.includePU1){
     STUDENTS.forEach(student=>{
       if(!sectionAllowed(student)) return;
       let r = null;
-      if(category==='theory') r = computeClassPercentileTrend(student, 1);
-      else if(category==='neet') r = computeStreamReadiness(NEET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 720);
-      else if(category==='kcet') r = computeStreamReadiness(KCET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1','ct2'], 135);
-      else if(category==='kcetpcb') r = (typeof KCET_PCB_BY_CODE!=='undefined') ? computeStreamReadiness(KCET_PCB_BY_CODE[student.code], ['obt1'], 135) : null;
-      else if(category==='jee') r = (typeof JEE_BY_CODE!=='undefined') ? computeStreamReadiness(JEE_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 300) : null;
-      pushIfQualifies(student, 1, r);
+      if(category==='neet') r = computeStreamReadiness(NEET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 720, NEET_TESTS);
+      else if(category==='kcet') r = computeStreamReadiness(KCET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1','ct2'], 135, KCET_TESTS);
+      else if(category==='kcetpcb') r = (typeof KCET_PCB_BY_CODE!=='undefined') ? computeStreamReadiness(KCET_PCB_BY_CODE[student.code], ['obt1'], 135, KCET_PCB_TESTS) : null;
+      else if(category==='jee') r = (typeof JEE_BY_CODE!=='undefined') ? computeStreamReadiness(JEE_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 300, JEE_TESTS) : null;
+      if(r) out.push({ student, pu: 1, r });
     });
   }
   if(opts.includePU2 && typeof PU2_STUDENTS!=='undefined'){
     PU2_STUDENTS.forEach(student=>{
       if(!sectionAllowed(student)) return;
       let r = null;
-      if(category==='theory') r = computeClassPercentileTrend(student, 2);
-      else if(category==='neet') r = computePU2NeetReadiness(student);
+      if(category==='neet') r = computePU2NeetReadiness(student);
       else if(category==='kcet') r = computePU2KcetReadiness(student);
       else if(category==='jee') r = computePU2JeeReadiness(student);
-      pushIfQualifies(student, 2, r);
+      if(r) out.push({ student, pu: 2, r });
     });
   }
-  list.sort((a,b)=> b.score - a.score);
-  return list;
+  return out;
+}
+/* Count + % of that exam's own students (not a share across exams, since
+   exams have different-sized attempt pools) + average readiness score
+   among the qualifying band — used by the exam comparison bar charts. */
+function examBarStat(category, opts, bandFilter){
+  const all = computeExamReadinessResults(category, opts);
+  const inBand = all.filter(({r})=> bandFilter(r));
+  const total = all.length;
+  const count = inBand.length;
+  const pctOfTotal = total ? Math.round((count/total)*100) : 0;
+  const avgScore = count ? Math.round((inBand.reduce((sum,{r})=>sum+r.latestPct,0)/count)*10)/10 : 0;
+  return { count, total, pctOfTotal, avgScore };
+}
+function computeAchieversList(category, opts){
+  if(category === 'theory'){
+    const list = [];
+    const KNOWN_ACH_SECTIONS = ['SPARK','PRIME','CHAMPION','ELITE'];
+    const sections = opts.sections || KNOWN_ACH_SECTIONS;
+    function sectionAllowed(student){
+      return KNOWN_ACH_SECTIONS.indexOf(student.section) === -1 || sections.indexOf(student.section) !== -1;
+    }
+    if(opts.includePU1){
+      STUDENTS.forEach(student=>{
+        if(!sectionAllowed(student)) return;
+        const r = computeClassPercentileTrend(student, 1);
+        if(r && r.avgPct >= 75) list.push({ code: student.code, name: student.name, section: sectionLabel(student), pu: 1, score: r.avgPct, trend: r.trend });
+      });
+    }
+    if(opts.includePU2 && typeof PU2_STUDENTS!=='undefined'){
+      PU2_STUDENTS.forEach(student=>{
+        if(!sectionAllowed(student)) return;
+        const r = computeClassPercentileTrend(student, 2);
+        if(r && r.avgPct >= 75) list.push({ code: student.code, name: student.name, section: sectionLabel(student), pu: 2, score: r.avgPct, trend: r.trend });
+      });
+    }
+    list.sort((a,b)=> b.score - a.score);
+    return list;
+  }
+  return computeExamReadinessResults(category, opts)
+    .filter(({r})=> r.band && r.band.key === 'strong')
+    .map(({student, pu, r})=> ({ code: student.code, name: student.name, section: sectionLabel(student), pu, score: r.latestPct, trend: r.trend, band: r.band }))
+    .sort((a,b)=> b.score - a.score);
 }
 function achieverScoreLabel(category, score){
   return category==='theory' ? '~'+score+'th pct' : score+'%';
@@ -7164,16 +7199,19 @@ function renderAchieverExamBarChart(opts){
   const chartEl = document.getElementById('achieverExamBarChart');
   if(!chartEl) return;
   const examCats = Object.keys(ACHIEVER_CATEGORY_META).filter(cat=>cat!=='theory');
-  const counts = examCats.map(cat=>({
-    cat, meta: ACHIEVER_CATEGORY_META[cat], count: computeAchieversList(cat, opts).length
-  }));
+  const bandFilter = r=> r.band && r.band.key === 'strong';
+  const counts = examCats.map(cat=>
+    Object.assign({ cat, meta: ACHIEVER_CATEGORY_META[cat] }, examBarStat(cat, opts, bandFilter))
+  );
   counts.sort((a,b)=> b.count - a.count);
   const maxCount = Math.max(1, ...counts.map(c=>c.count));
   chartEl.innerHTML = counts.map((c,i)=>{
     const heightPct = Math.round((c.count/maxCount)*100);
     return '<div class="exam-bar-col'+(i===0 && c.count>0 ? ' leader' : '')+'">'+
       '<div class="exam-bar-count">'+c.count+'</div>'+
+      '<div class="exam-bar-pct">'+c.pctOfTotal+'% of '+c.total+'</div>'+
       '<div class="exam-bar" style="height:'+heightPct+'%;"></div>'+
+      '<div class="exam-bar-avg">'+(c.count ? 'avg '+c.avgScore+'%' : '—')+'</div>'+
       '<div class="exam-bar-label">'+c.meta.icon+' '+c.meta.label+'</div>'+
       '</div>';
   }).join('');
@@ -7239,40 +7277,11 @@ const ASPIRANT_CATEGORY_META = {
 };
 const ASPIRANT_BAND_KEYS = ['competitive', 'needs-work'];
 function computeAspirantsList(category, opts){
-  const list = [];
-  function pushIfQualifies(student, pu, r){
-    if(!r || !r.band || ASPIRANT_BAND_KEYS.indexOf(r.band.key) === -1) return;
-    list.push({ code: student.code, name: student.name, section: sectionLabel(student), pu, score: r.latestPct, trend: r.trend, band: r.band,
-      latestLabel: r.latestLabel, latestDate: r.latestDate, attemptsCount: r.attemptsCount, totalRounds: r.totalRounds });
-  }
-  const KNOWN_ASP_SECTIONS = ['SPARK','PRIME','CHAMPION','ELITE'];
-  const sections = opts.sections || KNOWN_ASP_SECTIONS;
-  function sectionAllowed(student){
-    return KNOWN_ASP_SECTIONS.indexOf(student.section) === -1 || sections.indexOf(student.section) !== -1;
-  }
-  if(opts.includePU1){
-    STUDENTS.forEach(student=>{
-      if(!sectionAllowed(student)) return;
-      let r = null;
-      if(category==='neet') r = computeStreamReadiness(NEET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 720, NEET_TESTS);
-      else if(category==='kcet') r = computeStreamReadiness(KCET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1','ct2'], 135, KCET_TESTS);
-      else if(category==='kcetpcb') r = (typeof KCET_PCB_BY_CODE!=='undefined') ? computeStreamReadiness(KCET_PCB_BY_CODE[student.code], ['obt1'], 135, KCET_PCB_TESTS) : null;
-      else if(category==='jee') r = (typeof JEE_BY_CODE!=='undefined') ? computeStreamReadiness(JEE_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 300, JEE_TESTS) : null;
-      pushIfQualifies(student, 1, r);
-    });
-  }
-  if(opts.includePU2 && typeof PU2_STUDENTS!=='undefined'){
-    PU2_STUDENTS.forEach(student=>{
-      if(!sectionAllowed(student)) return;
-      let r = null;
-      if(category==='neet') r = computePU2NeetReadiness(student);
-      else if(category==='kcet') r = computePU2KcetReadiness(student);
-      else if(category==='jee') r = computePU2JeeReadiness(student);
-      pushIfQualifies(student, 2, r);
-    });
-  }
-  list.sort((a,b)=> b.score - a.score);
-  return list;
+  return computeExamReadinessResults(category, opts)
+    .filter(({r})=> r.band && ASPIRANT_BAND_KEYS.indexOf(r.band.key) !== -1)
+    .map(({student, pu, r})=> ({ code: student.code, name: student.name, section: sectionLabel(student), pu, score: r.latestPct, trend: r.trend, band: r.band,
+      latestLabel: r.latestLabel, latestDate: r.latestDate, attemptsCount: r.attemptsCount, totalRounds: r.totalRounds }))
+    .sort((a,b)=> b.score - a.score);
 }
 function aspirantScoreLabel(score){ return score+'%'; }
 function aspirantThresholdLabel(){ return '“Competitive” or “Needs Work” readiness band (30–69% on latest attempt)'; }
@@ -7353,16 +7362,19 @@ function aspirantExamStatusSummary(category, opts){
 function renderAspirantExamBarChart(opts){
   const chartEl = document.getElementById('aspirantExamBarChart');
   if(!chartEl) return;
-  const counts = Object.keys(ASPIRANT_CATEGORY_META).map(cat=>({
-    cat, meta: ASPIRANT_CATEGORY_META[cat], count: computeAspirantsList(cat, opts).length
-  }));
+  const bandFilter = r=> r.band && ASPIRANT_BAND_KEYS.indexOf(r.band.key) !== -1;
+  const counts = Object.keys(ASPIRANT_CATEGORY_META).map(cat=>
+    Object.assign({ cat, meta: ASPIRANT_CATEGORY_META[cat] }, examBarStat(cat, opts, bandFilter))
+  );
   counts.sort((a,b)=> b.count - a.count);
   const maxCount = Math.max(1, ...counts.map(c=>c.count));
   chartEl.innerHTML = counts.map((c,i)=>{
     const heightPct = Math.round((c.count/maxCount)*100);
     return '<div class="exam-bar-col'+(i===0 && c.count>0 ? ' leader' : '')+'">'+
       '<div class="exam-bar-count">'+c.count+'</div>'+
+      '<div class="exam-bar-pct">'+c.pctOfTotal+'% of '+c.total+'</div>'+
       '<div class="exam-bar" style="height:'+heightPct+'%;"></div>'+
+      '<div class="exam-bar-avg">'+(c.count ? 'avg '+c.avgScore+'%' : '—')+'</div>'+
       '<div class="exam-bar-label">'+c.meta.icon+' '+c.meta.label+'</div>'+
       '</div>';
   }).join('');
