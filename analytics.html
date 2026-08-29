@@ -956,12 +956,12 @@ window.addEventListener('afterprint', function(){
   </div>
 </div>
 
-<div class="pu-level-switch pu-sub-switch" id="puLevelSwitch" style="display:flex; gap:8px; margin:14px 5vw 10px;">
+<div class="pu-level-switch pu-sub-switch teacher-only-ui" id="puLevelSwitch" style="display:none; gap:8px; margin:14px 5vw 10px;">
   <button class="mode-btn active" data-pulevel="pu1">🎓 PU-I<br><span style="font-weight:400;opacity:.75;">Spark + Prime</span></button>
   <button class="mode-btn" data-pulevel="pu2">🏆 PU-II<br><span style="font-weight:400;opacity:.75;">Champion + Elite</span></button>
 </div>
 <div class="mode-switch-wrap">
-  <button class="tab-scroll-btn" id="modeScrollLeft">&#8249;</button>
+  <button class="tab-scroll-btn teacher-only-ui" id="modeScrollLeft" style="display:none;">&#8249;</button>
   <div class="mode-switch" id="modeSwitchRow" tabindex="0">
     <button class="mode-btn active" data-mode="student">👤 Student Report Card</button>
     <button class="mode-btn teacher-mode-btn" data-mode="adopted" style="display:none;">🌱 Adopted Students</button>
@@ -980,7 +980,7 @@ window.addEventListener('afterprint', function(){
     <button class="mode-btn teacher-mode-btn" data-mode="keys" style="display:none;">🗝️ Answer Keys</button>
     <button class="mode-btn teacher-mode-btn" data-mode="reports" style="display:none;">📄 Reports</button>
   </div>
-  <button class="tab-scroll-btn" id="modeScrollRight">&#8250;</button>
+  <button class="tab-scroll-btn teacher-only-ui" id="modeScrollRight" style="display:none;">&#8250;</button>
 </div>
 
 <div class="app-container" id="analyticsLockScreen" style="display:none; max-width:480px; margin:60px auto; text-align:center;">
@@ -3298,9 +3298,11 @@ function isTeacherView(){
 // key (or the teacher bypass on the student login form) unlocks them.
 function syncModeButtonVisibility(){
   const unlocked = isTeacherView();
-  document.querySelectorAll('.mode-btn.teacher-mode-btn').forEach(btn=>{
+  document.querySelectorAll('.mode-btn.teacher-mode-btn, .tab-scroll-btn.teacher-only-ui').forEach(btn=>{
     btn.style.display = unlocked ? '' : 'none';
   });
+  const puSwitch = document.getElementById('puLevelSwitch');
+  if(puSwitch) puSwitch.style.display = unlocked ? 'flex' : 'none';
 }
 function syncAnalyticsRelockBtn(){
   const btn = document.getElementById('analyticsRelockBtn');
