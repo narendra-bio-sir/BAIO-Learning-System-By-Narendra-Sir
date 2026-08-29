@@ -2263,6 +2263,12 @@ window.addEventListener('afterprint', function(){
   <div class="kpi-row" id="achieverKpis"></div>
 
   <div class="panel">
+    <h2>📊 Potential Achievers by Exam</h2>
+    <div class="desc">How many students currently clear the bar for each exam, with the current PU/section filters applied — tallest column has the most.</div>
+    <div class="exam-bar-chart" id="achieverExamBarChart"></div>
+  </div>
+
+  <div class="panel">
     <h2 id="achieverListTitle">Potential Theory Achievers</h2>
     <div class="desc" id="achieverListDesc"></div>
     <div class="podium" id="achieverPodium"></div>
@@ -7150,6 +7156,28 @@ function renderAchieverPodium(list, category){
     podiumEl.appendChild(card);
   });
 }
+/* Cross-exam comparison: how many Potential Achievers each exam has right
+   now, independent of whichever sub-tab happens to be open — tallest bar
+   is whichever exam currently has the most. Theory is excluded since it's
+   a class percentile, not the same 0-100% readiness-band scale. */
+function renderAchieverExamBarChart(opts){
+  const chartEl = document.getElementById('achieverExamBarChart');
+  if(!chartEl) return;
+  const examCats = Object.keys(ACHIEVER_CATEGORY_META).filter(cat=>cat!=='theory');
+  const counts = examCats.map(cat=>({
+    cat, meta: ACHIEVER_CATEGORY_META[cat], count: computeAchieversList(cat, opts).length
+  }));
+  counts.sort((a,b)=> b.count - a.count);
+  const maxCount = Math.max(1, ...counts.map(c=>c.count));
+  chartEl.innerHTML = counts.map((c,i)=>{
+    const heightPct = Math.round((c.count/maxCount)*100);
+    return '<div class="exam-bar-col'+(i===0 && c.count>0 ? ' leader' : '')+'">'+
+      '<div class="exam-bar-count">'+c.count+'</div>'+
+      '<div class="exam-bar" style="height:'+heightPct+'%;"></div>'+
+      '<div class="exam-bar-label">'+c.meta.icon+' '+c.meta.label+'</div>'+
+      '</div>';
+  }).join('');
+}
 function buildAchievers(){
   const activeBtn = document.querySelector('#achieverCategoryTabs .subtab-btn.active');
   const category = activeBtn ? activeBtn.dataset.cat : 'theory';
@@ -7170,6 +7198,7 @@ function buildAchievers(){
 
   document.getElementById('achieverListTitle').textContent = 'Potential '+meta.label+' Achievers';
   document.getElementById('achieverListDesc').textContent = meta.desc+' Threshold: '+achieverThresholdLabel(category)+'.';
+  renderAchieverExamBarChart(opts);
   renderAchieverPodium(list, category);
   renderAchieverTable(list, category);
 
