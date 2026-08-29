@@ -534,6 +534,8 @@ window.addEventListener('afterprint', function(){
   .podium-code{ font-size:10.5px; color:var(--muted); margin-bottom:8px; }
   .podium-score{ font-family:'Space Grotesk'; font-size:22px; font-weight:700; color:var(--gold-soft); }
   .podium-sub{ font-size:11px; color:var(--muted); }
+  .podium-marks{ font-size:10px; color:var(--muted); margin-top:6px; line-height:1.6; border-top:1px dashed var(--border); padding-top:6px; }
+  .podium-marks b{ color:var(--text-strong); }
 
   /* Column chart: compares a count across categories (e.g. Blooming Aspirants
      per exam) as vertical bars, tallest = highest count. */
@@ -6799,6 +6801,12 @@ function computePU2KcetReadiness(student){
   const trend = attempts.length>1 ? Math.round((latestPct-firstPct)*10)/10 : null;
   return { latestPct, trend, attemptsCount: attempts.length, totalRounds: allKeys.length,
     latestLabel: latest.label || null, latestDate: latest.disp || null,
+    latestTotalScore: latest.TOTAL, latestTotalMax: latest.outof*3,
+    latestSubjects: [
+      { label:'Phy', score: latest.PHY!==undefined ? latest.PHY : null, max: latest.outof },
+      { label:'Che', score: latest.CHE!==undefined ? latest.CHE : null, max: latest.outof },
+      { label:'Mat', score: latest.MAT!==undefined ? latest.MAT : null, max: latest.outof }
+    ],
     band: classifyReadiness(latestPct) };
 }
 /* PU-II NEET readiness: there's no PU2_NEET_BY_CODE - the general PU2_TESTS array
@@ -6814,7 +6822,8 @@ function computePU2NeetReadiness(student){
     if(!rec || rec.BIO===null || rec.BIO===undefined) return;
     const total = (rec.PHY||0)+(rec.CHE||0)+(rec.BIO||0);
     const max = (rec.PHY_out||0)+(rec.CHE_out||0)+(rec.BIO_out||0);
-    if(max>0) attempts.push({total, max, date: test.date, label: test.label, disp: test.disp});
+    if(max>0) attempts.push({total, max, date: test.date, label: test.label, disp: test.disp,
+      subjects: [{label:'Phy', score: rec.PHY, max: rec.PHY_out}, {label:'Che', score: rec.CHE, max: rec.CHE_out}, {label:'Bio', score: rec.BIO, max: rec.BIO_out}]});
   });
   // Also blend in the true NEET-pattern mock tests (PU2_NEET_TESTS), which score
   // Biology out of 360 like the real exam rather than the generic OBT series'
@@ -6827,7 +6836,8 @@ function computePU2NeetReadiness(student){
         if(!r || r.ABSENT || r.TOTAL===null || r.TOTAL===undefined) return;
         const idx = parseInt(key.replace('obt',''),10)-1;
         const test = PU2_NEET_TESTS[idx] || {};
-        attempts.push({total: r.TOTAL, max: 720, date: test.date || '9999-99-99', label: test.label, disp: test.disp});
+        attempts.push({total: r.TOTAL, max: 720, date: test.date || '9999-99-99', label: test.label, disp: test.disp,
+          subjects: [{label:'Phy', score: r.PHY, max: 180}, {label:'Che', score: r.CHE, max: 180}, {label:'Bio', score: r.BIO, max: 360}]});
       });
     }
   }
@@ -6840,6 +6850,7 @@ function computePU2NeetReadiness(student){
   const trend = attempts.length>1 ? Math.round((latestPct-firstPct)*10)/10 : null;
   return { latestPct, trend, attemptsCount: attempts.length, totalRounds: attempts.length,
     latestLabel: latest.label || null, latestDate: latest.disp || latest.date || null,
+    latestTotalScore: latest.total, latestTotalMax: latest.max, latestSubjects: latest.subjects || null,
     band: classifyReadiness(latestPct) };
 }
 function computePU2JeeReadiness(student){
@@ -6861,6 +6872,12 @@ function computePU2JeeReadiness(student){
   const latestTest = (typeof PU2_JEE_TESTS!=='undefined') ? PU2_JEE_TESTS[latest.idx] : null;
   return { latestPct, trend, attemptsCount: attempts.length, totalRounds: allKeys.length,
     latestLabel: latestTest ? latestTest.label : null, latestDate: latestTest ? latestTest.disp : null,
+    latestTotalScore: latest.rec.TOTAL, latestTotalMax: 300,
+    latestSubjects: [
+      { label:'Mat', score: latest.rec.MAT!==undefined ? latest.rec.MAT : null, max: 100 },
+      { label:'Phy', score: latest.rec.PHY!==undefined ? latest.rec.PHY : null, max: 100 },
+      { label:'Che', score: latest.rec.CHE!==undefined ? latest.rec.CHE : null, max: 100 }
+    ],
     band: classifyReadiness(latestPct) };
 }
 function buildPU2NeetSectionHtml(student){
@@ -7076,6 +7093,16 @@ const ACHIEVER_CATEGORY_META = {
    comparison bar charts): every student who has at least one recorded
    attempt for this exam category, with their computed readiness. Callers
    filter by band.key for whichever list/threshold they need. */
+/* Subject-wise mark breakdown for the "latest attempt" readiness result —
+   keyed to match each raw score record's field names, with each subject's
+   individual max mark (PU-I scale; PU-II KCET has its own per-round max,
+   computed separately in computePU2KcetReadiness since it varies by round). */
+const EXAM_SUBJECT_SPECS = {
+  neet: [{key:'PHY',label:'Phy',max:180},{key:'CHE',label:'Che',max:180},{key:'BIO',label:'Bio',max:360}],
+  kcet: [{key:'PHY',label:'Phy',max:45},{key:'CHE',label:'Che',max:45},{key:'MAT',label:'Mat',max:45}],
+  kcetpcb: [{key:'PHY',label:'Phy',max:45},{key:'CHE',label:'Che',max:45},{key:'BIO',label:'Bio',max:45}],
+  jee: [{key:'MAT',label:'Mat',max:100},{key:'PHY',label:'Phy',max:100},{key:'CHE',label:'Che',max:100}]
+};
 function computeExamReadinessResults(category, opts){
   const out = [];
   const KNOWN_SECTIONS = ['SPARK','PRIME','CHAMPION','ELITE'];
@@ -7087,10 +7114,10 @@ function computeExamReadinessResults(category, opts){
     STUDENTS.forEach(student=>{
       if(!sectionAllowed(student)) return;
       let r = null;
-      if(category==='neet') r = computeStreamReadiness(NEET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 720, NEET_TESTS);
-      else if(category==='kcet') r = computeStreamReadiness(KCET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1','ct2'], 135, KCET_TESTS);
-      else if(category==='kcetpcb') r = (typeof KCET_PCB_BY_CODE!=='undefined') ? computeStreamReadiness(KCET_PCB_BY_CODE[student.code], ['obt1'], 135, KCET_PCB_TESTS) : null;
-      else if(category==='jee') r = (typeof JEE_BY_CODE!=='undefined') ? computeStreamReadiness(JEE_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 300, JEE_TESTS) : null;
+      if(category==='neet') r = computeStreamReadiness(NEET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 720, NEET_TESTS, EXAM_SUBJECT_SPECS.neet);
+      else if(category==='kcet') r = computeStreamReadiness(KCET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1','ct2'], 135, KCET_TESTS, EXAM_SUBJECT_SPECS.kcet);
+      else if(category==='kcetpcb') r = (typeof KCET_PCB_BY_CODE!=='undefined') ? computeStreamReadiness(KCET_PCB_BY_CODE[student.code], ['obt1'], 135, KCET_PCB_TESTS, EXAM_SUBJECT_SPECS.kcetpcb) : null;
+      else if(category==='jee') r = (typeof JEE_BY_CODE!=='undefined') ? computeStreamReadiness(JEE_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 300, JEE_TESTS, EXAM_SUBJECT_SPECS.jee) : null;
       if(r) out.push({ student, pu: 1, r });
     });
   }
@@ -7145,7 +7172,8 @@ function computeAchieversList(category, opts){
   }
   return computeExamReadinessResults(category, opts)
     .filter(({r})=> r.band && r.band.key === 'strong')
-    .map(({student, pu, r})=> ({ code: student.code, name: student.name, section: sectionLabel(student), pu, score: r.latestPct, trend: r.trend, band: r.band }))
+    .map(({student, pu, r})=> ({ code: student.code, name: student.name, section: sectionLabel(student), pu, score: r.latestPct, trend: r.trend, band: r.band,
+      latestSubjects: r.latestSubjects, latestTotalScore: r.latestTotalScore, latestTotalMax: r.latestTotalMax }))
     .sort((a,b)=> b.score - a.score);
 }
 function achieverScoreLabel(category, score){
@@ -7187,7 +7215,8 @@ function renderAchieverPodium(list, category){
       '<div class="podium-name">'+s.name+'</div>'+
       '<div class="podium-code">'+s.section+' · PU-'+(s.pu===2?'II':'I')+'</div>'+
       '<div class="podium-score">'+achieverScoreLabel(category, s.score)+'</div>'+
-      (s.band ? '<div class="podium-sub">'+s.band.icon+' '+s.band.label+'</div>' : '');
+      (s.band ? '<div class="podium-sub">'+s.band.icon+' '+s.band.label+'</div>' : '')+
+      podiumSubjectBreakdownHtml(s);
     podiumEl.appendChild(card);
   });
 }
@@ -7280,7 +7309,8 @@ function computeAspirantsList(category, opts){
   return computeExamReadinessResults(category, opts)
     .filter(({r})=> r.band && ASPIRANT_BAND_KEYS.indexOf(r.band.key) !== -1)
     .map(({student, pu, r})=> ({ code: student.code, name: student.name, section: sectionLabel(student), pu, score: r.latestPct, trend: r.trend, band: r.band,
-      latestLabel: r.latestLabel, latestDate: r.latestDate, attemptsCount: r.attemptsCount, totalRounds: r.totalRounds }))
+      latestLabel: r.latestLabel, latestDate: r.latestDate, attemptsCount: r.attemptsCount, totalRounds: r.totalRounds,
+      latestSubjects: r.latestSubjects, latestTotalScore: r.latestTotalScore, latestTotalMax: r.latestTotalMax }))
     .sort((a,b)=> b.score - a.score);
 }
 function aspirantScoreLabel(score){ return score+'%'; }
@@ -7302,6 +7332,15 @@ function renderAspirantTable(list){
 }
 /* Top-3 podium visual above the full ranked table — reuses the same
    podium-card look as the Toppers/Biology podiums elsewhere in this file. */
+/* Subject-wise marks + total for the specific round a podium card's score
+   is based on — shared by both the Aspirants and Achievers podiums. */
+function podiumSubjectBreakdownHtml(s){
+  if(!s.latestSubjects || !s.latestSubjects.length) return '';
+  const subjLine = s.latestSubjects.map(sub=> sub.label+' '+(sub.score!==null && sub.score!==undefined ? sub.score : '—')+'/'+sub.max).join(' · ');
+  const totalLine = (s.latestTotalScore!==null && s.latestTotalScore!==undefined && s.latestTotalMax)
+    ? '<b>Total '+s.latestTotalScore+'/'+s.latestTotalMax+'</b>' : '';
+  return '<div class="podium-marks">'+subjLine+(totalLine ? '<br>'+totalLine : '')+'</div>';
+}
 function renderAspirantPodium(list){
   const podiumEl = document.getElementById('aspirantPodium');
   if(!podiumEl) return;
@@ -7319,7 +7358,8 @@ function renderAspirantPodium(list){
       '<div class="podium-name">'+s.name+'</div>'+
       '<div class="podium-code">'+s.section+' · PU-'+(s.pu===2?'II':'I')+'</div>'+
       '<div class="podium-score">'+aspirantScoreLabel(s.score)+'</div>'+
-      '<div class="podium-sub">'+s.band.icon+' '+s.band.label+'</div>';
+      '<div class="podium-sub">'+s.band.icon+' '+s.band.label+'</div>'+
+      podiumSubjectBreakdownHtml(s);
     podiumEl.appendChild(card);
   });
 }
@@ -7429,7 +7469,7 @@ function buildAspirants(){
   document.querySelectorAll('.asp-section-check').forEach(cb=> cb.addEventListener('change', buildAspirants));
 })();
 
-function computeStreamReadiness(byCodeEntry, roundKeys, maxTotal, testDefs){
+function computeStreamReadiness(byCodeEntry, roundKeys, maxTotal, testDefs, subjectSpec){
   if(!byCodeEntry) return null;
   const attempts = [];
   roundKeys.forEach((k, idx)=>{
@@ -7445,6 +7485,8 @@ function computeStreamReadiness(byCodeEntry, roundKeys, maxTotal, testDefs){
   const latestTest = testDefs ? testDefs[latest.idx] : null;
   return { latestPct, trend, attemptsCount: attempts.length, totalRounds: roundKeys.length,
     latestLabel: latestTest ? latestTest.label : null, latestDate: latestTest ? (latestTest.disp || latestTest.date) : null,
+    latestTotalScore: latest.rec.TOTAL, latestTotalMax: maxTotal,
+    latestSubjects: subjectSpec ? subjectSpec.map(s=>({ label: s.label, score: (latest.rec[s.key]!==undefined && latest.rec[s.key]!==null) ? latest.rec[s.key] : null, max: s.max })) : null,
     band: classifyReadiness(latestPct) };
 }
 function readinessCardHtml(streamLabel, r){
