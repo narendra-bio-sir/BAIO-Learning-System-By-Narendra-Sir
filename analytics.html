@@ -974,6 +974,7 @@ window.addEventListener('afterprint', function(){
     <button class="mode-btn teacher-mode-btn" data-mode="jeeobt" style="display:none;">🎯 JEE OBT Analytics</button>
     <button class="mode-btn teacher-mode-btn" data-mode="pucompare" style="display:none;">⚖️ PU-I vs PU-II (Biology)</button>
     <button class="mode-btn teacher-mode-btn" data-mode="achievers" style="display:none;">🏆 Potential Achievers</button>
+    <button class="mode-btn teacher-mode-btn" data-mode="aspirants" style="display:none;">🌸 Blooming Aspirants</button>
     <button class="mode-btn teacher-mode-btn" data-mode="bioreport" style="display:none;">🧬 Biology Report</button>
     <button class="mode-btn teacher-mode-btn" data-mode="failures" style="display:none;">⚠️ Failures &amp; Remedial Plan</button>
     <button class="mode-btn teacher-mode-btn" data-mode="electronicsreport" style="display:none;">⚡ Electronics Report</button>
@@ -2264,6 +2265,45 @@ window.addEventListener('afterprint', function(){
 </main>
 </div><!-- /app-achievers -->
 
+<div class="app-container" id="app-aspirants" style="display:none;">
+<main>
+  <div class="panel">
+    <h2>🌸 Blooming Aspirants</h2>
+    <div class="desc">Students on a promising trajectory in NEET, KCET or JEE who haven't reached Potential Achiever level yet, based on their most recent test performance — not a guarantee, just a rough guide from the data on file to see who could use a push.</div>
+    <div class="subtabs" id="aspirantCategoryTabs">
+      <button class="subtab-btn active" data-cat="neet">🩺 NEET</button>
+      <button class="subtab-btn" data-cat="kcet">📐 KCET</button>
+      <button class="subtab-btn" data-cat="kcetpcb">📐 KCET (PCB)</button>
+      <button class="subtab-btn" data-cat="jee">🎯 JEE</button>
+    </div>
+    <div class="custom-report-options active" style="display:block; margin-top:10px;">
+      <div class="checkbox-row"><input type="checkbox" id="aspIncludePU1" checked><label for="aspIncludePU1">Include PU-I (Spark + Prime)</label></div>
+      <div style="margin-left:26px; margin-bottom:6px;">
+        <div class="checkbox-row"><input type="checkbox" class="asp-section-check" value="SPARK" id="aspSecSPARK" checked><label for="aspSecSPARK">SPARK</label></div>
+        <div class="checkbox-row"><input type="checkbox" class="asp-section-check" value="PRIME" id="aspSecPRIME" checked><label for="aspSecPRIME">PRIME</label></div>
+      </div>
+      <div class="checkbox-row"><input type="checkbox" id="aspIncludePU2" checked><label for="aspIncludePU2">Include PU-II (Champion + Elite)</label></div>
+      <div style="margin-left:26px; margin-bottom:6px;">
+        <div class="checkbox-row"><input type="checkbox" class="asp-section-check" value="CHAMPION" id="aspSecCHAMPION" checked><label for="aspSecCHAMPION">CHAMPION</label></div>
+        <div class="checkbox-row"><input type="checkbox" class="asp-section-check" value="ELITE" id="aspSecELITE" checked><label for="aspSecELITE">ELITE</label></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-row" id="aspirantKpis"></div>
+
+  <div class="panel">
+    <h2 id="aspirantListTitle">Blooming NEET Aspirants</h2>
+    <div class="desc" id="aspirantListDesc"></div>
+    <div class="table-wrap"><table id="aspirantTable">
+      <thead><tr><th>Rank</th><th>Name</th><th>Enroll Code</th><th>Section</th><th>PU</th><th>Score</th><th>Trend</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <div class="report-actions" id="aspirantShareBar" style="margin-top:12px;"></div>
+  </div>
+</main>
+</div><!-- /app-aspirants -->
+
 <div class="app-container" id="app-bioreport" style="display:none;">
 <main>
   <div class="subtabs">
@@ -3284,7 +3324,7 @@ document.querySelectorAll('.app-container').forEach(container=>{
 const ANALYTICS_MASTER_CODE = 'BAIO-NS-2026-R4T9';
 // Note: the teacher bypass now uses ANALYTICS_MASTER_CODE directly (defined above) \u2014
 // no separate password to remember.
-const ANALYTICS_LOCKED_MODES = ['slip', 'monthly', 'bvo', 'sections', 'neetobt', 'kcetobt', 'jeeobt', 'pucompare', 'achievers', 'bioreport', 'failures', 'electronicsreport', 'keys', 'reports', 'adopted'];
+const ANALYTICS_LOCKED_MODES = ['slip', 'monthly', 'bvo', 'sections', 'neetobt', 'kcetobt', 'jeeobt', 'pucompare', 'achievers', 'aspirants', 'bioreport', 'failures', 'electronicsreport', 'keys', 'reports', 'adopted'];
 function isAnalyticsUnlocked(){
   try{ return localStorage.getItem('baio_analytics_unlock') === 'true'; }catch(e){ return false; }
 }
@@ -3418,6 +3458,7 @@ function buildFnFor(mode){
   if(mode==='keys') return buildKeyAnswers;
   if(mode==='pucompare') return buildPuCompare;
   if(mode==='achievers') return buildAchievers;
+  if(mode==='aspirants') return buildAspirants;
   if(mode==='bioreport') return initBioReportTab;
   if(mode==='failures') return initFailuresTab;
   if(mode==='electronicsreport') return initElectronicsReportTab;
@@ -3426,7 +3467,7 @@ function buildFnFor(mode){
 }
 const ALL_CONTAINER_IDS = ['app-slip','app-monthly','app-bvo','app-sections','app-neetobt','app-kcetobt','app-jeeobt',
   'app-pu2slip','app-pu2monthly','app-pu2bvo','app-pu2sections','app-pu2neetobt','app-pu2kcetobt','app-pu2jeeobt',
-  'app-pucompare','app-achievers','app-bioreport','app-failures','app-electronicsreport','app-keys','app-reports','app-student','app-adopted'];
+  'app-pucompare','app-achievers','app-aspirants','app-bioreport','app-failures','app-electronicsreport','app-keys','app-reports','app-student','app-adopted'];
 document.querySelectorAll('.mode-btn[data-mode]').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     if(ANALYTICS_LOCKED_MODES.indexOf(btn.dataset.mode) !== -1 && !isAnalyticsUnlocked()){
@@ -3444,6 +3485,7 @@ document.querySelectorAll('.mode-btn[data-mode]').forEach(btn=>{
       if(el) el.style.display = (id===activeId) ? '' : 'none';
     });
     if(btn.dataset.mode === 'achievers') syncAchieversToPULevel();
+    if(btn.dataset.mode === 'aspirants') syncAspirantsToPULevel();
     if(btn.dataset.mode === 'reports') renderReportPUBlocks();
     const fn = buildFnFor(btn.dataset.mode);
     if(fn) fn();
@@ -3480,6 +3522,19 @@ function syncAchieversToPULevel(){
   if(champBox) champBox.checked = pu2Box.checked;
   if(eliteBox) eliteBox.checked = pu2Box.checked;
 }
+function syncAspirantsToPULevel(){
+  const pu1Box = document.getElementById('aspIncludePU1');
+  const pu2Box = document.getElementById('aspIncludePU2');
+  if(!pu1Box || !pu2Box) return;
+  pu1Box.checked = currentPULevel === 'pu1';
+  pu2Box.checked = currentPULevel === 'pu2';
+  const sparkBox = document.getElementById('aspSecSPARK'), primeBox = document.getElementById('aspSecPRIME');
+  const champBox = document.getElementById('aspSecCHAMPION'), eliteBox = document.getElementById('aspSecELITE');
+  if(sparkBox) sparkBox.checked = pu1Box.checked;
+  if(primeBox) primeBox.checked = pu1Box.checked;
+  if(champBox) champBox.checked = pu2Box.checked;
+  if(eliteBox) eliteBox.checked = pu2Box.checked;
+}
 document.querySelectorAll('#puLevelSwitch [data-pulevel]').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     if(btn.dataset.pulevel === currentPULevel) return;
@@ -3492,6 +3547,9 @@ document.querySelectorAll('#puLevelSwitch [data-pulevel]').forEach(btn=>{
     } else if(activeMode && activeMode.dataset.mode === 'achievers'){
       syncAchieversToPULevel();
       buildAchievers();
+    } else if(activeMode && activeMode.dataset.mode === 'aspirants'){
+      syncAspirantsToPULevel();
+      buildAspirants();
     } else if(activeMode && activeMode.dataset.mode === 'reports'){
       renderReportPUBlocks();
       const previewWrap = document.getElementById('reportPreviewWrap');
@@ -7082,6 +7140,114 @@ function buildAchievers(){
   if(pu2Cb) pu2Cb.addEventListener('change', buildAchievers);
   document.querySelectorAll('.ach-section-check').forEach(cb=> cb.addEventListener('change', buildAchievers));
 })();
+
+/* ---- Blooming Aspirants: same NEET/KCET/JEE readiness data as Potential
+   Achievers, but for the Competitive + Needs Work bands (30-69% on the
+   latest attempt) instead of Strong (70%+) — students on a promising
+   trajectory who haven't cleared the Achiever bar yet. ---- */
+const ASPIRANT_CATEGORY_META = {
+  neet:   { label: 'NEET',   icon: '🩺', desc: 'NEET (PCB) exam readiness across NEET OBT / CT rounds.' },
+  kcet:   { label: 'KCET',   icon: '📐', desc: 'KCET (PCM) exam readiness across KCET OBT / CT rounds.' },
+  kcetpcb:{ label: 'KCET (PCB)', icon: '📐', desc: 'KCET (PCB stream — Agriculture/Veterinary/Nursing/Pharma) exam readiness across KCET (PCB) rounds. PU-I only.' },
+  jee:    { label: 'JEE',    icon: '🎯', desc: 'JEE exam readiness across JEE OBT / CT rounds.' }
+};
+const ASPIRANT_BAND_KEYS = ['competitive', 'needs-work'];
+function computeAspirantsList(category, opts){
+  const list = [];
+  function pushIfQualifies(student, pu, r){
+    if(!r || !r.band || ASPIRANT_BAND_KEYS.indexOf(r.band.key) === -1) return;
+    list.push({ code: student.code, name: student.name, section: sectionLabel(student), pu, score: r.latestPct, trend: r.trend, band: r.band });
+  }
+  const KNOWN_ASP_SECTIONS = ['SPARK','PRIME','CHAMPION','ELITE'];
+  const sections = opts.sections || KNOWN_ASP_SECTIONS;
+  function sectionAllowed(student){
+    return KNOWN_ASP_SECTIONS.indexOf(student.section) === -1 || sections.indexOf(student.section) !== -1;
+  }
+  if(opts.includePU1){
+    STUDENTS.forEach(student=>{
+      if(!sectionAllowed(student)) return;
+      let r = null;
+      if(category==='neet') r = computeStreamReadiness(NEET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 720);
+      else if(category==='kcet') r = computeStreamReadiness(KCET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1','ct2'], 135);
+      else if(category==='kcetpcb') r = (typeof KCET_PCB_BY_CODE!=='undefined') ? computeStreamReadiness(KCET_PCB_BY_CODE[student.code], ['obt1'], 135) : null;
+      else if(category==='jee') r = (typeof JEE_BY_CODE!=='undefined') ? computeStreamReadiness(JEE_BY_CODE[student.code], ['obt1','obt2','obt3','ct1'], 300) : null;
+      pushIfQualifies(student, 1, r);
+    });
+  }
+  if(opts.includePU2 && typeof PU2_STUDENTS!=='undefined'){
+    PU2_STUDENTS.forEach(student=>{
+      if(!sectionAllowed(student)) return;
+      let r = null;
+      if(category==='neet') r = computePU2NeetReadiness(student);
+      else if(category==='kcet') r = computePU2KcetReadiness(student);
+      else if(category==='jee') r = computePU2JeeReadiness(student);
+      pushIfQualifies(student, 2, r);
+    });
+  }
+  list.sort((a,b)=> b.score - a.score);
+  return list;
+}
+function aspirantScoreLabel(score){ return score+'%'; }
+function aspirantThresholdLabel(){ return '“Competitive” or “Needs Work” readiness band (30–69% on latest attempt)'; }
+function renderAspirantTable(list){
+  const tbody = document.querySelector('#aspirantTable tbody');
+  if(!list.length){
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--muted);">No students currently fall in this band (Threshold: '+aspirantThresholdLabel()+') with the data on file.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map((s,i)=>{
+    const trendHtml = s.trend===null||s.trend===undefined ? '—' :
+      (s.trend>=0 ? '<span style="color:#15803d;">↑ +'+s.trend+'</span>' : '<span style="color:#b91c1c;">↓ '+s.trend+'</span>');
+    return '<tr><td>#'+(i+1)+'</td><td>'+s.name+'</td><td>'+s.code+'</td><td>'+s.section+'</td><td>PU-'+(s.pu===2?'II':'I')+'</td><td><b>'+aspirantScoreLabel(s.score)+'</b> '+s.band.icon+'</td><td>'+trendHtml+'</td></tr>';
+  }).join('');
+}
+function buildAspirants(){
+  const activeBtn = document.querySelector('#aspirantCategoryTabs .subtab-btn.active');
+  const category = activeBtn ? activeBtn.dataset.cat : 'neet';
+  const opts = {
+    includePU1: document.getElementById('aspIncludePU1').checked,
+    includePU2: document.getElementById('aspIncludePU2').checked,
+    sections: Array.from(document.querySelectorAll('.asp-section-check:checked')).map(cb=>cb.value)
+  };
+  const meta = ASPIRANT_CATEGORY_META[category];
+  const list = computeAspirantsList(category, opts);
+  const pu1Count = list.filter(s=>s.pu===1).length;
+  const pu2Count = list.filter(s=>s.pu===2).length;
+
+  document.getElementById('aspirantKpis').innerHTML =
+    '<div class="kpi hero"><div class="kpi-label">'+meta.icon+' Blooming '+meta.label+' Aspirants</div><div class="kpi-value">'+list.length+'</div><div class="kpi-note">students in this band &mdash; '+aspirantThresholdLabel()+'</div></div>'+
+    '<div class="kpi"><div class="kpi-label">PU-I</div><div class="kpi-value">'+pu1Count+'</div><div class="kpi-note">Spark + Prime</div></div>'+
+    '<div class="kpi"><div class="kpi-label">PU-II</div><div class="kpi-value">'+pu2Count+'</div><div class="kpi-note">Champion + Elite</div></div>';
+
+  document.getElementById('aspirantListTitle').textContent = 'Blooming '+meta.label+' Aspirants';
+  document.getElementById('aspirantListDesc').textContent = meta.desc+' Threshold: '+aspirantThresholdLabel()+'.';
+  renderAspirantTable(list);
+
+  attachTopperShareBar('aspirantShareBar', () => ({
+    title: 'Blooming '+meta.label+' Aspirants',
+    subtitle: 'BAIO Learning System · '+list.length+' student'+(list.length===1?'':'s'),
+    rows: list.map(s=>({ name: s.name, section: s.section+' · PU-'+(s.pu===2?'II':'I'), score: aspirantScoreLabel(s.score) })),
+    outOf: null,
+    filenameBase: 'blooming-'+category+'-aspirants'
+  }));
+}
+(function wireAspirantsUI(){
+  const tabsWrap = document.getElementById('aspirantCategoryTabs');
+  if(!tabsWrap) return;
+  tabsWrap.querySelectorAll('.subtab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      tabsWrap.querySelectorAll('.subtab-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      buildAspirants();
+    });
+  });
+  const pu1Cb = document.getElementById('aspIncludePU1');
+  const pu2Cb = document.getElementById('aspIncludePU2');
+  if(pu1Cb) pu1Cb.addEventListener('change', buildAspirants);
+  if(pu2Cb) pu2Cb.addEventListener('change', buildAspirants);
+  document.querySelectorAll('.asp-section-check').forEach(cb=> cb.addEventListener('change', buildAspirants));
+})();
+
 function computeStreamReadiness(byCodeEntry, roundKeys, maxTotal){
   if(!byCodeEntry) return null;
   const attempts = roundKeys.map(k=>byCodeEntry[k]).filter(r=>r && !r.ABSENT && r.TOTAL!==null && r.TOTAL!==undefined);
