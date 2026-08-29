@@ -607,17 +607,22 @@ function addContentSlides(pptx, breadcrumb, heading, blocks){
 
   blocks.forEach(block => {
     if(block.type === 'table'){
+      // Give every table its own fresh slide (max available height) and skip
+      // PptxGenJS's `autoPage` table-splitting — it throws "Array expected!"
+      // on some table shapes, which otherwise aborts the whole deck.
+      newSlide();
       const rows = block.rows.map((row, ri) => row.map(cell => ({
         text: cell,
-        options: ri === 0 ? {bold:true, color:THEME.gold2, fill:{color:'1F3327'}, fontSize:12.5} : {color:THEME.text, fontSize:12}
+        options: ri === 0 ? {bold:true, color:THEME.gold2, fill:{color:'1F3327'}, fontSize:13} : {color:THEME.text, fontSize:12.5}
       })));
-      const availH = maxY - y;
-      if(availH < 1.6){ newSlide(); }
-      slide.addTable(rows, {
-        x:leftX, y, w:fullW, autoPage:true,
-        border:{type:'solid', color:'2A3A30', pt:0.75}, fill:{color:THEME.bg0},
-        fontFace:'Calibri', valign:'middle', margin:4
-      });
+      if(Array.isArray(rows) && rows.length && Array.isArray(rows[0]) && rows[0].length){
+        const colW = new Array(rows[0].length).fill(fullW / rows[0].length);
+        slide.addTable(rows, {
+          x:leftX, y:startY, w:fullW, colW,
+          border:{type:'solid', color:'2A3A30', pt:0.75}, fill:{color:THEME.bg0},
+          fontFace:'Calibri', valign:'middle', margin:4
+        });
+      }
       y = maxY; // force a fresh slide after a table for anything that follows
       return;
     }
@@ -687,19 +692,27 @@ async function buildPresentation(chapter, opts, onStatus){
   if(topics){
     topics.forEach((topic, i) => {
       onStatus('Building topic ' + (i + 1) + ' of ' + topics.length + '…');
-      addDividerSlide(pptx, topic.title, (topic.chips || []).join('  •  '), i + 1, topics.length);
-      const sections = parseTopicHtml(topic.title, topic.html || '');
-      sections.forEach(section => {
-        addContentSlides(pptx, topic.title.replace(/^\d+\.\s*/, ''), section.heading, section.blocks);
-      });
+      try{
+        addDividerSlide(pptx, topic.title, (topic.chips || []).join('  •  '), i + 1, topics.length);
+        const sections = parseTopicHtml(topic.title, topic.html || '');
+        sections.forEach(section => {
+          addContentSlides(pptx, topic.title.replace(/^\d+\.\s*/, ''), section.heading, section.blocks);
+        });
+      }catch(e){
+        console.warn('BAIO PPT: skipped topic "' + topic.title + '" after an error', e);
+      }
     });
   }else{
     const curated = CURATED_OUTLINES[chapter.key] || [];
     curated.forEach((topic, i) => {
       onStatus('Building topic ' + (i + 1) + ' of ' + curated.length + '…');
-      addDividerSlide(pptx, topic.title, topic.tag || '', i + 1, curated.length);
-      const items = topic.bullets.map(b => ({runs: mdRuns(b), level:0}));
-      addContentSlides(pptx, topic.title, topic.title, [{type:'list', items}]);
+      try{
+        addDividerSlide(pptx, topic.title, topic.tag || '', i + 1, curated.length);
+        const items = topic.bullets.map(b => ({runs: mdRuns(b), level:0}));
+        addContentSlides(pptx, topic.title, topic.title, [{type:'list', items}]);
+      }catch(e){
+        console.warn('BAIO PPT: skipped topic "' + topic.title + '" after an error', e);
+      }
     });
   }
 
