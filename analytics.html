@@ -2256,6 +2256,7 @@ window.addEventListener('afterprint', function(){
   <div class="panel">
     <h2 id="achieverListTitle">Potential Theory Achievers</h2>
     <div class="desc" id="achieverListDesc"></div>
+    <div class="podium" id="achieverPodium"></div>
     <div class="table-wrap"><table id="achieverTable">
       <thead><tr><th>Rank</th><th>Name</th><th>Enroll Code</th><th>Section</th><th>PU</th><th>Score</th><th>Trend</th></tr></thead>
       <tbody></tbody>
@@ -2296,6 +2297,7 @@ window.addEventListener('afterprint', function(){
   <div class="panel">
     <h2 id="aspirantListTitle">Blooming NEET Aspirants</h2>
     <div class="desc" id="aspirantListDesc"></div>
+    <div class="podium" id="aspirantPodium"></div>
     <div class="table-wrap"><table id="aspirantTable">
       <thead><tr><th>Rank</th><th>Name</th><th>Enroll Code</th><th>Section</th><th>PU</th><th>Score</th><th>Trend</th><th>Based On</th></tr></thead>
       <tbody></tbody>
@@ -7056,7 +7058,7 @@ function computeAchieversList(category, opts){
       list.push({ code: student.code, name: student.name, section: sectionLabel(student), pu, score: r.avgPct, trend: r.trend });
     } else {
       if(!r.band || r.band.key !== 'strong') return;
-      list.push({ code: student.code, name: student.name, section: sectionLabel(student), pu, score: r.latestPct, trend: r.trend });
+      list.push({ code: student.code, name: student.name, section: sectionLabel(student), pu, score: r.latestPct, trend: r.trend, band: r.band });
     }
   }
   const KNOWN_ACH_SECTIONS = ['SPARK','PRIME','CHAMPION','ELITE'];
@@ -7108,6 +7110,31 @@ function renderAchieverTable(list, category){
     return '<tr><td>#'+(i+1)+'</td><td>'+s.name+'</td><td>'+s.code+'</td><td>'+s.section+'</td><td>PU-'+(s.pu===2?'II':'I')+'</td><td><b>'+achieverScoreLabel(category, s.score)+'</b></td><td>'+trendHtml+'</td></tr>';
   }).join('');
 }
+/* Top-3 podium visual for the exam categories (NEET/KCET/KCET(PCB)/JEE) —
+   Theory is left as a plain ranked table since it's a percentile, not the
+   same readiness-band scale, so it has no medal-worthy "band" to show. */
+function renderAchieverPodium(list, category){
+  const podiumEl = document.getElementById('achieverPodium');
+  if(!podiumEl) return;
+  podiumEl.innerHTML = '';
+  if(category === 'theory') return;
+  const order = [1,0,2];
+  const top3 = list.slice(0,3);
+  order.forEach(idx=>{
+    if(!top3[idx]) return;
+    const s = top3[idx];
+    const rank = idx+1;
+    const card = document.createElement('div');
+    card.className = 'podium-card rank-'+rank;
+    const medal = rank===1?'🥇':rank===2?'🥈':'🥉';
+    card.innerHTML = '<div class="rank-badge" style="font-size:15px;">'+medal+'</div>'+
+      '<div class="podium-name">'+s.name+'</div>'+
+      '<div class="podium-code">'+s.section+' · PU-'+(s.pu===2?'II':'I')+'</div>'+
+      '<div class="podium-score">'+achieverScoreLabel(category, s.score)+'</div>'+
+      (s.band ? '<div class="podium-sub">'+s.band.icon+' '+s.band.label+'</div>' : '');
+    podiumEl.appendChild(card);
+  });
+}
 function buildAchievers(){
   const activeBtn = document.querySelector('#achieverCategoryTabs .subtab-btn.active');
   const category = activeBtn ? activeBtn.dataset.cat : 'theory';
@@ -7128,6 +7155,7 @@ function buildAchievers(){
 
   document.getElementById('achieverListTitle').textContent = 'Potential '+meta.label+' Achievers';
   document.getElementById('achieverListDesc').textContent = meta.desc+' Threshold: '+achieverThresholdLabel(category)+'.';
+  renderAchieverPodium(list, category);
   renderAchieverTable(list, category);
 
   attachTopperShareBar('achieverShareBar', () => ({
@@ -7219,6 +7247,29 @@ function renderAspirantTable(list){
     return '<tr><td>#'+(i+1)+'</td><td>'+s.name+'</td><td>'+s.code+'</td><td>'+s.section+'</td><td>PU-'+(s.pu===2?'II':'I')+'</td><td><b>'+aspirantScoreLabel(s.score)+'</b> '+s.band.icon+'</td><td>'+trendHtml+'</td><td>'+roundHtml+'</td></tr>';
   }).join('');
 }
+/* Top-3 podium visual above the full ranked table — reuses the same
+   podium-card look as the Toppers/Biology podiums elsewhere in this file. */
+function renderAspirantPodium(list){
+  const podiumEl = document.getElementById('aspirantPodium');
+  if(!podiumEl) return;
+  podiumEl.innerHTML = '';
+  const order = [1,0,2];
+  const top3 = list.slice(0,3);
+  order.forEach(idx=>{
+    if(!top3[idx]) return;
+    const s = top3[idx];
+    const rank = idx+1;
+    const card = document.createElement('div');
+    card.className = 'podium-card rank-'+rank;
+    const medal = rank===1?'🥇':rank===2?'🥈':'🥉';
+    card.innerHTML = '<div class="rank-badge" style="font-size:15px;">'+medal+'</div>'+
+      '<div class="podium-name">'+s.name+'</div>'+
+      '<div class="podium-code">'+s.section+' · PU-'+(s.pu===2?'II':'I')+'</div>'+
+      '<div class="podium-score">'+aspirantScoreLabel(s.score)+'</div>'+
+      '<div class="podium-sub">'+s.band.icon+' '+s.band.label+'</div>';
+    podiumEl.appendChild(card);
+  });
+}
 /* ---- Exam-wide "current status" summary shown at the top of the tab ----
    Fixed round catalogs (label + date per round) already exist for PU-I;
    PU-II has its own catalogs for NEET/JEE, and for KCET (no dedicated array)
@@ -7273,6 +7324,7 @@ function buildAspirants(){
   document.getElementById('aspirantListTitle').textContent = 'Blooming '+meta.label+' Aspirants';
   document.getElementById('aspirantListDesc').textContent = meta.desc+' Threshold: '+aspirantThresholdLabel()+'.';
   document.getElementById('aspirantExamStatus').textContent = aspirantExamStatusSummary(category, opts);
+  renderAspirantPodium(list);
   renderAspirantTable(list);
 
   attachTopperShareBar('aspirantShareBar', () => ({
