@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>BAIO | Instant PowerPoint Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-0:#0A140E; --bg-1:#0C1610; --bg-2:#0E1912;
+  --panel:#16241C; --panel-2:#1C2B21;
+  --border:rgba(166,188,172,0.18);
+  --gold:#E3AF43; --gold-2:#F6D998;
+  --teal:#42C6A0; --teal-2:#8FE8CC;
+  --text:#ECF3E9; --text-dim:#A6BCAC;
+  --danger:#E8815F; --ok:#3FBE8E;
+  --radius:14px; --shadow:0 10px 30px rgba(0,0,0,0.45);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(1200px 700px at 85% -10%, rgba(66,198,160,0.08), transparent 60%),
+    radial-gradient(900px 600px at -10% 110%, rgba(227,175,67,0.08), transparent 60%),
+    linear-gradient(180deg, var(--bg-0), var(--bg-1) 40%, var(--bg-2));
+  color:var(--text); font-family:'Work Sans',sans-serif; min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
+.app{max-width:920px;margin:0 auto;padding:18px 16px 60px;}
+.header{
+  background:linear-gradient(180deg, var(--bg-2), var(--bg-1) 90%);
+  border-bottom:1px solid var(--border);
+  padding:20px 18px 16px; position:sticky; top:0; z-index:20; overflow:hidden;
+  margin:-18px -16px 18px -16px;
+}
+.header::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg, var(--gold), var(--teal));height:3px;top:0;}
+.eyebrow{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--teal-2);font-weight:600;margin-bottom:6px;}
+.header h1{font-size:23px;color:var(--gold-2);line-height:1.25;}
+.header .sub{color:var(--text-dim);font-size:13px;margin-top:6px;line-height:1.5;}
+.back-link{display:inline-block;margin-top:10px;color:var(--teal-2);font-size:12.5px;font-weight:600;text-decoration:none;}
+.back-link:hover{text-decoration:underline;}
+
+.card{
+  background:linear-gradient(180deg, var(--panel), var(--panel-2));
+  border:1px solid var(--border); border-radius:var(--radius);
+  padding:16px; margin-bottom:14px; box-shadow:var(--shadow);
+}
+.card h3{color:var(--gold-2);font-size:15px;margin-bottom:6px;}
+.card p{color:var(--text-dim);font-size:12.5px;line-height:1.6;margin:0;}
+
+.opts-row{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;}
+.opt-check{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-dim);}
+.opt-check input{accent-color:var(--teal);width:15px;height:15px;}
+
+.chapter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:6px;}
+.chapter-card{
+  background:linear-gradient(180deg, var(--panel), var(--panel-2));
+  border:1px solid var(--border); border-radius:12px; padding:14px;
+  display:flex; flex-direction:column; gap:8px;
+}
+.chapter-card .top{display:flex;align-items:center;gap:10px;}
+.chapter-card .icon{font-size:26px;line-height:1;}
+.chapter-card .titlewrap{flex:1;min-width:0;}
+.chapter-card .num{font-size:10.5px;color:var(--teal-2);font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.chapter-card .title{font-family:'Fraunces',Georgia,serif;font-size:14.5px;color:var(--gold-2);font-weight:600;line-height:1.3;}
+.chapter-card .puc{font-size:10.5px;color:var(--text-dim);}
+.chapter-card .desc{font-size:11.5px;color:var(--text-dim);line-height:1.5;flex:1;}
+.gen-btn{
+  background:linear-gradient(135deg, var(--gold), #c98f2c);
+  color:#1a1300; border:none; border-radius:10px; padding:10px 12px;
+  font-family:'Fraunces',Georgia,serif; font-weight:700; font-size:13px;
+  cursor:pointer; transition:transform .1s ease, opacity .15s ease;
+}
+.gen-btn:active{transform:scale(0.97);}
+.gen-btn:disabled{opacity:0.6;cursor:wait;}
+.gen-btn.done{background:linear-gradient(135deg, var(--teal), #1f8f6d); color:#04241a;}
+.status-line{font-size:11px;color:var(--text-dim);min-height:15px;}
+.status-line.err{color:var(--danger);}
+.status-line.ok{color:var(--ok);}
+
+.loading-banner{
+  display:flex;align-items:center;gap:10px;background:var(--panel-2);
+  border:1px solid var(--border);border-radius:10px;padding:10px 12px;
+  font-size:12.5px;color:var(--text-dim);margin-bottom:14px;
+}
+.loading-banner.hide{display:none;}
+.spin{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--gold);animation:spin 0.8s linear infinite;flex:0 0 auto;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+.footer-note{font-size:11px;color:var(--text-dim);text-align:center;margin-top:24px;line-height:1.7;}
+.footer-note b{color:var(--teal-2);}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="eyebrow">BAIO Learning System</div>
+    <h1>&#128421;&#65039; Instant PowerPoint Generator</h1>
+    <div class="sub">Turn any live chapter's notes, mind maps &amp; blackboard photos into a beautiful, exam-ready .pptx &mdash; built right in your browser, no upload, no waiting.</div>
+    <a class="back-link" href="index.html">&larr; Back to BAIO Home</a>
+  </div>
+
+  <div id="loadingBanner" class="loading-banner">
+    <div class="spin"></div>
+    <div id="loadingText">Loading chapter list&hellip;</div>
+  </div>
+
+  <div class="card">
+    <h3>What goes into each deck</h3>
+    <p>A branded title slide &middot; a topic-by-topic outline with large, easy-to-read bullet points &middot; comparison tables where useful &middot; the chapter's mind map &middot; and Narendra Sir's blackboard photos as illustration slides. Pick what you want below, then tap <b>Generate</b> on any chapter.</p>
+    <div class="opts-row">
+      <label class="opt-check"><input type="checkbox" id="optMindmap" checked> Mind map slide(s)</label>
+      <label class="opt-check"><input type="checkbox" id="optBoards" checked> Blackboard photo slides</label>
+      <label class="opt-check"><input type="checkbox" id="optAgenda" checked> Agenda / overview slide</label>
+    </div>
+  </div>
+
+  <div id="chapterGrid" class="chapter-grid"></div>
+
+  <div class="footer-note">Everything runs locally in your browser using <b>PptxGenJS</b> &mdash; your notes never leave your device. Works best when this page is opened from the live BAIO site (so it can read each chapter's images and notes).</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js" onerror="window.__pptxLoadFailed1=true"></script>
+<script>
+(function ensurePptxLoaded(){
+  if(window.PptxGenJS) return;
+  var s1 = document.createElement('script');
+  s1.src = 'https://cdnjs.cloudflare.com/ajax/libs/pptxgenjs/3.12.0/pptxgen.bundle.js';
+  s1.onerror = function(){
+    var s2 = document.createElement('script');
+    s2.src = 'https://unpkg.com/pptxgenjs@3.12.0/dist/pptxgen.bundle.js';
+    document.head.appendChild(s2);
+  };
+  document.head.appendChild(s1);
+})();
+</script>
+<script>
+/* =========================================================================
+   BAIO Instant PowerPoint Generator
+   Reads the live BAIO app's own chapter list + each chapter's structured
+   study notes (when available) and turns them into a branded .pptx, built
+   entirely client-side. Falls back to a hand-written topic outline for
+   chapters that haven't been migrated to the structured notes format yet.
+   ========================================================================= */
+
+const THEME = {
+  bg0:'0A140E', panel:'16241C', gold:'E3AF43', gold2:'F6D998',
+  teal:'42C6A0', teal2:'8FE8CC', text:'ECF3E9', textDim:'9FB3A6', footer:'5E7A67'
+};
+
+/* ---------- small helpers ---------- */
+
+function fetchText(url){
+  return fetch(url, {cache:'no-store'}).then(r=>{
+    if(!r.ok) throw new Error('HTTP ' + r.status + ' for ' + url);
+    return r.text();
+  });
+}
+
+// Pulls "const NAME = [ ... ];" out of a page's source, respecting string/
+// template-literal boundaries so brackets inside the notes text don't
+// confuse the scan. Returns the array literal's source text, or null.
+function extractArrayLiteral(src, varName){
+  const markers = ['const ' + varName + ' = [', 'const ' + varName + '=['];
+  let start = -1;
+  for(const m of markers){
+    const i = src.indexOf(m);
+    if(i !== -1){ start = i + m.length - 1; break; }
+  }
+  if(start === -1) return null;
+  let depth = 0, inStr = null, out = '';
+  for(let i = start; i < src.length; i++){
+    const c = src[i];
+    out += c;
+    if(inStr){
+      if(c === '\\'){ i++; if(i < src.length) out += src[i]; continue; }
+      if(c === inStr) inStr = null;
+      continue;
+    }
+    if(c === '`' || c === '"' || c === "'"){ inStr = c; continue; }
+    if(c === '[') depth++;
+    else if(c === ']'){ depth--; if(depth === 0) return out; }
+  }
+  return null;
+}
+
+function materialize(arrText){
+  try{ return (new Function('"use strict"; return (' + arrText + ');'))(); }
+  catch(e){ console.warn('BAIO PPT: could not parse notes data', e); return null; }
+}
+
+function probeImage(url){
+  return new Promise(resolve=>{
+    const img = new Image();
+    let done = false;
+    const finish = ok => { if(!done){ done = true; resolve(ok ? url : null); } };
+    img.onload = () => finish(true);
+    img.onerror = () => finish(false);
+    img.src = url;
+    setTimeout(() => finish(false), 6000);
+  });
+}
+
+async function probeFirst(urls){
+  const results = await Promise.all(urls.map(probeImage));
+  return results.filter(Boolean);
+}
+
+// Splits "plain text with **bold** markers" into PptxGenJS text runs.
+// Bold/plain is decided by each segment's index in the ORIGINAL split
+// (odd = inside **..**), then empties are dropped — filtering first would
+// shift indices and flip bold on/off for everything after an empty segment.
+function mdRuns(str, baseOpts){
+  baseOpts = baseOpts || {};
+  const parts = String(str).split('**');
+  const runs = [];
+  parts.forEach((p, i) => {
+    if(!p.length) return;
+    runs.push({
+      text: p,
+      options: Object.assign({}, baseOpts, i % 2 === 1 ? {bold:true, color:THEME.gold2} : {})
+    });
+  });
+  return runs;
+}
+
+function estimateLines(text, fontSize, boxWidthIn){
+  const charsPerLine = Math.max(12, Math.floor((boxWidthIn * 92) / (fontSize * 0.52)));
+  return Math.max(1, Math.ceil(text.length / charsPerLine));
+}
+
+/* ---------- turning STUDY_DATA[i].html into slide-ready sections ---------- */
+
+// A "section" is one heading (a subhead, or the topic title for the intro
+// block) plus an ordered list of blocks: {type:'list', items:[{runs, level}]}
+// or {type:'table', rows:[[...]]}.
+function parseTopicHtml(topicTitle, htmlStr){
+  const root = new DOMParser().parseFromString('<div>' + htmlStr + '</div>', 'text/html').body.firstChild;
+  const sections = [];
+  let current = { heading: topicTitle.replace(/^\d+\.\s*/, ''), blocks: [] };
+
+  function inlineRuns(node){
+    let runs = [];
+    node.childNodes.forEach(child => {
+      if(child.nodeType === Node.TEXT_NODE){
+        const t = child.textContent.replace(/\s+/g, ' ');
+        if(t.trim().length || (runs.length && /\s$/.test(t))) runs.push({text:t});
+      } else if(child.nodeType === Node.ELEMENT_NODE){
+        const tag = child.tagName;
+        if(tag === 'UL' || tag === 'OL') return; // handled separately as sub-items
+        if(tag === 'B' || tag === 'STRONG'){
+          inlineRuns(child).forEach(r => runs.push({text:r.text, options:Object.assign({bold:true, color:THEME.gold2}, r.options)}));
+        } else if(tag === 'I' || tag === 'EM'){
+          inlineRuns(child).forEach(r => runs.push({text:r.text, options:Object.assign({italic:true}, r.options)}));
+        } else {
+          runs = runs.concat(inlineRuns(child));
+        }
+      }
+    });
+    return runs;
+  }
+
+  function extractItems(ulEl, level){
+    const items = [];
+    Array.from(ulEl.children).forEach(li => {
+      if(li.tagName !== 'LI') return;
+      const runs = inlineRuns(li);
+      if(runs.length) items.push({runs, level});
+      const nestedUl = Array.from(li.children).find(c => c.tagName === 'UL' || c.tagName === 'OL');
+      if(nestedUl && level < 2) items.push(...extractItems(nestedUl, level + 1));
+    });
+    return items;
+  }
+
+  function flushIfNonEmpty(){
+    if(current.blocks.length) sections.push(current);
+  }
+
+  Array.from(root.children).forEach(el => {
+    const tag = el.tagName;
+    const cls = el.className || '';
+    if(tag === 'DIV' && /\bsubhead\b/.test(cls)){
+      flushIfNonEmpty();
+      current = { heading: el.textContent.trim(), blocks: [] };
+    } else if(tag === 'UL' || tag === 'OL'){
+      const items = extractItems(el, 0);
+      if(items.length) current.blocks.push({type:'list', items});
+    } else if(tag === 'TABLE' || el.querySelector('table')){
+      const table = tag === 'TABLE' ? el : el.querySelector('table');
+      const rows = Array.from(table.rows).map(tr => Array.from(tr.cells).map(td => td.textContent.trim()));
+      if(rows.length) current.blocks.push({type:'table', rows});
+    } else {
+      const text = el.textContent.trim();
+      if(text) current.blocks.push({type:'list', items:[{runs:[{text}], level:0}]});
+    }
+  });
+  flushIfNonEmpty();
+  return sections;
+}
+
+/* ---------- curated fallback outlines (used when a chapter has no
+   structured STUDY_DATA yet) ---------- */
+
+const CURATED_OUTLINES = {
+'ch3': [
+{title:'Algae', tag:'Chlorophyceae • Phaeophyceae • Rhodophyceae', bullets:[
+ "**Algae** are chlorophyll-bearing, simple thalloid organisms found in fresh water, sea water and moist habitats; their study is called **phycology**.",
+ "Classified mainly by pigments, stored food and flagella into **Chlorophyceae** (green), **Phaeophyceae** (brown) and **Rhodophyceae** (red).",
+ "**Chlorophyceae** — grass green (chlorophyll a & b), stores starch, cellulose cell wall; e.g. *Chlamydomonas, Volvox, Ulothrix, Spirogyra, Chara*.",
+ "**Phaeophyceae** — brown (fucoxanthin), stores mannitol/laminarin; body has holdfast, stipe & frond; e.g. *Ectocarpus, Laminaria, Sargassum, Fucus*.",
+ "**Rhodophyceae** — red (r-phycoerythrin), stores floridean starch; e.g. *Polysiphonia, Porphyra, Gracilaria, Gelidium*.",
+ "**Economic importance:** agar from *Gelidium/Gracilaria*; food (*Porphyra, Laminaria*); marine algae fix roughly half of global CO₂ and release O₂."
+]},
+{title:'Bryophytes', tag:"Amphibians of the plant kingdom", bullets:[
+ "Called the **'amphibians of the plant kingdom'** — need water for fertilisation but live on land.",
+ "Thalloid body, no true root/stem/leaves or vascular tissue; attached to substrate by **rhizoids**.",
+ "**Dominant, independent gametophyte** bears antheridia & archegonia; the sporophyte stays dependent on it for nutrition.",
+ "Divided into **Liverworts** (*Marchantia*), **Mosses** (*Funaria, Sphagnum*) and **Hornworts** (*Anthoceros*).",
+ "Ecological role: pioneer colonisers of bare rock; *Sphagnum* (peat moss) yields peat used as fuel; bryophytes reduce soil erosion."
+]},
+{title:'Pteridophytes', tag:'First vascular plants', bullets:[
+ "First terrestrial plants with **vascular tissue** (xylem & phloem) — the Tracheophyta.",
+ "**Sporophyte is the dominant, independent** plant body (true root/stem/leaves); the gametophyte is a small, free-living **prothallus**.",
+ "Leaves may be small (**microphyllous**, e.g. *Selaginella*) or large (**macrophyllous**, most ferns); sporangia often form **strobili/cones**.",
+ "May be **homosporous** (*Equisetum*, most ferns) or **heterosporous** (*Selaginella, Salvinia*) — heterospory is the precursor of the seed habit.",
+ "Examples: *Selaginella, Equisetum, Pteris, Adiantum*; used ornamentally and for soil-binding."
+]},
+{title:'Gymnosperms', tag:'Naked seeds', bullets:[
+ "**Gymnosperm** = 'naked seed' — ovules and seeds are not enclosed by any ovary wall/fruit.",
+ "Tall trees & shrubs with a taproot; xerophytic leaves (thick cuticle, sunken stomata), e.g. needle-like leaves of *Pinus*.",
+ "**Heterosporous** — micro- and megaspores form male & female gametophytes retained on the sporophyte, often in cones.",
+ "Pollination is usually by **wind (anemophily)**, with a long gap between pollination and fertilisation.",
+ "Examples: *Cycas, Pinus, Ginkgo* (living fossil), *Gnetum*; economic uses include timber, resin & turpentine."
+]},
+{title:'Angiosperms', tag:'Flowering plants — Monocots & Dicots', bullets:[
+ "Flowering plants; seeds develop enclosed within a **fruit**, formed from the ovary after fertilisation.",
+ "Pollen grains and ovules develop within a highly evolved reproductive organ, the **flower**.",
+ "Male gametophyte (3-celled **pollen grain**) and female gametophyte (7-celled/8-nucleate **embryo sac**) are both highly reduced.",
+ "Show **double fertilisation**, unique to angiosperms — one sperm fuses with the egg (syngamy), the other with the polar nuclei (triple fusion).",
+ "Two classes: **Dicotyledons** (2 cotyledons, reticulate venation, tap root) and **Monocotyledons** (1 cotyledon, parallel venation, fibrous root)."
+]},
+{title:'Alternation of Generations', tag:'Haplontic • Diplontic • Haplodiplontic', bullets:[
+ "All plants alternate a haploid **gametophytic** phase with a diploid **sporophytic** phase.",
+ "**Haplontic:** the free-living gametophyte (n) is the only visible phase, e.g. most algae (*Volvox, Spirogyra*).",
+ "**Diplontic:** the independent, photosynthetic sporophyte (2n) is the visible plant; gametes are the only haploid cells — all seed plants.",
+ "**Haplodiplontic:** both phases are multicellular — bryophytes (gametophyte dominant) and pteridophytes (sporophyte dominant)."
+]}
+],
+'ch9': [
+{title:'Principles of Biotechnology', tag:'Genetic engineering + Bioprocess technology', bullets:[
+ "**Biotechnology** uses live organisms/enzymes to make products and processes useful to humans.",
+ "Rests on two techniques: **Genetic Engineering** (altering DNA/RNA to change a host's phenotype) and **Bioprocess Engineering** (maintaining sterile, large-scale conditions in bioreactors).",
+ "Modern biotechnology depends on **recombinant DNA (rDNA) technology** — joining DNA from two different sources.",
+ "The first rDNA molecule was made by **Stanley Cohen & Herbert Boyer (1972)**, linking an antibiotic-resistance gene into a *Salmonella* plasmid."
+]},
+{title:'Tools of Recombinant DNA Technology', tag:'Restriction enzymes • Vectors • Host', bullets:[
+ "**Restriction enzymes** ('molecular scissors') cut DNA at specific palindromic sites; e.g. **EcoRI** cuts GAATTC, leaving 'sticky ends'.",
+ "**Cloning vectors** (plasmids, bacteriophages) carry foreign DNA into the host; a good vector needs an **origin of replication (ori)**, a **selectable marker**, and unique restriction sites.",
+ "Large inserts need vectors like **BAC** and **YAC** since plasmids/phages carry only small (~10 kb) fragments.",
+ "The host must be made **'competent'** to take up DNA — typically CaCl₂ treatment plus a heat shock, or methods like micro-injection, the gene gun, or disarmed *Agrobacterium tumefaciens*."
+]},
+{title:'Processes of Recombinant DNA Technology', tag:'Isolate → Cut → Amplify → Ligate → Insert → Express', bullets:[
+ "**Isolation of DNA:** cells are lysed, treated with RNase/proteases to purify DNA, which precipitates as fine threads with chilled ethanol.",
+ "**Cutting:** restriction enzymes cut around the gene of interest; fragments are separated by **gel electrophoresis** and visualised under UV after ethidium bromide staining, then eluted.",
+ "**Amplification** of the gene using **PCR**, then **ligation** into a vector using **DNA ligase** to form recombinant DNA.",
+ "**Insertion** of the rDNA into a host cell (transformation), followed by culturing transformed cells and obtaining the foreign gene product."
+]},
+{title:'PCR (Polymerase Chain Reaction)', tag:'Denature → Anneal → Extend', bullets:[
+ "Amplifies a single gene/DNA segment into millions of copies, in vitro.",
+ "Needs the DNA template, two **primers** complementary to flanking regions, and thermostable **Taq polymerase** (from *Thermus aquaticus*).",
+ "Three repeated steps: **Denaturation** (~94–96°C separates strands), **Annealing** (~50–65°C, primers bind), **Extension** (~72°C, polymerase extends primers using dNTPs).",
+ "Amplified DNA is used as a probe for diagnosis, or ligated into a vector for cloning."
+]},
+{title:'Cloning Vector Design', tag:'ori • Selectable marker • Insertional inactivation', bullets:[
+ "**Origin of replication (ori)** — where replication starts; also controls copy number.",
+ "**Selectable markers** (antibiotic-resistance genes) let only transformed cells grow.",
+ "A vector needs very few, ideally unique, restriction sites so cutting doesn't fragment it.",
+ "**Insertional inactivation:** foreign DNA inserted into a marker gene (e.g. *lacZ*) disables it — recombinants show up as colourless colonies against blue non-recombinants."
+]},
+{title:'Bioreactors', tag:'Large-scale, aseptic culture', bullets:[
+ "A **bioreactor** biologically converts raw materials into products using microbial, plant, animal or human cells under optimum growth conditions.",
+ "**Stirred-tank bioreactors** are the most common — cylindrical, curved base, with a stirrer, aeration and temperature/pH control.",
+ "**Sparged stirred-tank bioreactors** bubble compressed air through spargers to supply oxygen.",
+ "The stirrer ensures even mixing and even oxygen distribution throughout the vessel."
+]},
+{title:'Downstream Processing', tag:'Separation • Purification • Formulation', bullets:[
+ "Covers everything done after the biosynthetic stage to **separate and purify** the product before marketing.",
+ "Involves separation, purification and, for drugs, treatment with a preservative.",
+ "Drug products must pass **clinical trials** and rigorous **quality control** testing.",
+ "Every product is manufactured under strict, standardised quality norms."
+]}
+],
+'pu1-ch4': [
+{title:'Basis of Classification', tag:'Symmetry • Germ layers • Coelom • Segmentation', bullets:[
+ "**Levels of organisation:** cellular (sponges), tissue (coelenterates), organ (platyhelminthes), organ-system (higher phyla) — with **open** or **closed** circulatory systems.",
+ "**Symmetry:** *Asymmetrical* (*Amoeba*), *Radial* (coelenterates, echinoderms), *Bilateral* (annelids to chordates).",
+ "**Diploblastic** (2 germ layers — coelenterates) vs **Triploblastic** (3 germ layers — platyhelminthes onward).",
+ "**Coelom:** true coelom in **coelomates** (annelids to chordates); unlined cavity in **pseudocoelomates** (aschelminthes); none in **acoelomates** (platyhelminthes).",
+ "**Segmentation (metamerism):** serial repetition of body segments, e.g. earthworm. **Notochord** presence separates **Chordates** from **Non-chordates**."
+]},
+{title:'Porifera & Coelenterata', tag:'Pore-bearers • Stinging cells', bullets:[
+ "**Porifera:** mostly marine, asymmetrical, cellular-level; a unique **canal system** moves water through **ostia** and out the **osculum**; skeleton of spicules/spongin; e.g. *Sycon, Spongilla*.",
+ "**Coelenterata (Cnidaria):** radially symmetrical, diploblastic, tissue-level; a single gastrovascular cavity (coelenteron) with one opening.",
+ "Characteristic **cnidoblasts** on tentacles for defence/prey capture; shows **polymorphism** — polyp (*Hydra*) and medusa (*Aurelia*) forms.",
+ "Corals (e.g. *Meandrina*) are exclusively marine with a calcium-carbonate skeleton."
+]},
+{title:'Ctenophora & Platyhelminthes', tag:'Comb jellies • Flatworms', bullets:[
+ "**Ctenophora:** exclusively marine, radially symmetrical, diploblastic; **8 rows of ciliated comb plates** aid locomotion; bioluminescent; e.g. *Pleurobrachia*.",
+ "**Platyhelminthes:** dorsoventrally flattened, bilateral, triploblastic, **acoelomate**; many are parasites (*Fasciola*, *Taenia*).",
+ "Have **flame cells** for osmoregulation; free-living forms (*Planaria*) regenerate readily.",
+ "Mostly hermaphrodite (both sexes in one individual)."
+]},
+{title:'Aschelminthes & Annelida', tag:'Roundworms • Segmented worms', bullets:[
+ "**Aschelminthes:** cylindrical, bilateral, triploblastic, **pseudocoelomate**; complete alimentary canal; sexes separate, e.g. *Ascaris, Wuchereria, Ancylostoma*.",
+ "**Annelida:** bilateral, triploblastic, **true coelomate**, metamerically segmented; marine, freshwater & terrestrial.",
+ "Closed circulatory system; paired ganglia joined by a double ventral nerve cord; excretion via **nephridia**.",
+ "Examples: *Nereis* (marine, parapodia), *Pheretima* (earthworm), *Hirudinaria* (leech)."
+]},
+{title:'Arthropoda & Mollusca', tag:'Jointed legs • Soft-bodied, shelled', bullets:[
+ "**Arthropoda:** the LARGEST phylum, over two-thirds of all named species; jointed appendages, chitinous exoskeleton, open circulatory system.",
+ "Respiration by gills, book gills, book lungs or trachea; e.g. *Apis, Bombyx, Laccifer, Limulus* (living fossil).",
+ "**Mollusca:** the SECOND largest phylum; unsegmented body with head, muscular foot & visceral hump, usually a calcareous shell.",
+ "Mantle cavity houses **gills (ctenidia)**; e.g. *Pila, Pinctada, Sepia, Octopus, Chaetopleura*."
+]},
+{title:'Echinodermata & Hemichordata', tag:'Spiny-skinned • Acorn worms', bullets:[
+ "**Echinodermata:** exclusively marine, triploblastic, coelomate; radial symmetry in adults but bilateral larvae; unique **water vascular system** for locomotion & feeding.",
+ "Calcareous ossicle skeleton, external fertilisation; e.g. *Asterias, Echinus, Antedon, Cucumaria*.",
+ "**Hemichordata:** small worm-like marine animals, body in **proboscis, collar & trunk**; open circulatory system; e.g. *Balanoglossus*."
+]},
+{title:'Phylum Chordata — General Features', tag:'Notochord • Dorsal nerve cord • Gill slits', bullets:[
+ "Four defining features at some life stage: **notochord**, **dorsal hollow nerve cord**, **paired pharyngeal gill slits**, **post-anal tail**.",
+ "Three subphyla: **Urochordata**, **Cephalochordata**, **Vertebrata**.",
+ "In vertebrates the notochord is replaced by a **vertebral column**; heart is ventral & muscular; endoskeleton is bony/cartilaginous.",
+ "Vertebrata splits into **Agnatha** (jawless) and **Gnathostomata** (jawed — Pisces & Tetrapoda)."
+]},
+{title:'Classes of Vertebrata', tag:'Cyclostomata → Mammalia', bullets:[
+ "**Cyclostomata:** jawless, eel-like, ectoparasitic on fish; e.g. *Petromyzon, Myxine*.",
+ "**Chondrichthyes:** cartilaginous, marine, placoid scales; e.g. *Scoliodon, Pristis, Trygon*. **Osteichthyes:** bony, operculum-covered gills; e.g. *Labeo, Exocoetus, Hippocampus*.",
+ "**Amphibia:** aquatic & terrestrial, moist scaleless skin; e.g. *Rana, Bufo, Hyla*. **Reptilia:** dry cornified skin with scales, ectothermic; e.g. *Chelone, Crocodilus, Hemidactylus*.",
+ "**Aves:** warm-blooded, feathers, wings; e.g. *Corvus, Columba, Aptenodytes*. **Mammalia:** mammary glands, hair, pinna; e.g. *Ornithorhynchus, Macropus, Balaenoptera* (largest living animal)."
+]}
+],
+'pu1-ch5': [
+{title:'The Root', tag:'Tap root • Adventitious • Modifications', bullets:[
+ "The root is the descending, positively geotropic part of the axis, developing from the **radicle**.",
+ "**Tap root system** (most dicots) vs **fibrous, adventitious root system** (most monocots).",
+ "Regions tip to base: **root cap, meristematic zone, elongation zone, maturation zone** (bears root hairs).",
+ "**Modifications:** prop/stilt roots for support (*banyan, maize*); tuberous/tap storage roots (*carrot, sweet potato*); **pneumatophores** for respiration in swampy plants (*Rhizophora*)."
+]},
+{title:'The Stem', tag:'Nodes • Internodes • Modifications', bullets:[
+ "Develops from the **plumule**; ascending, bears **nodes**, **internodes**, terminal & axillary **buds**.",
+ "**Underground modifications for storage:** rhizome (*ginger*), tuber (*potato*), bulb (*onion*), corm (*Colocasia*).",
+ "**Modifications for support:** tendrils (*grapevine*), thorns (*Citrus*); flattened, photosynthetic **cladodes** (*Opuntia*).",
+ "**Vegetative propagation:** runner, sucker, offset, stolon."
+]},
+{title:'The Leaf', tag:'Venation • Phyllotaxy • Types', bullets:[
+ "A lateral, exogenous structure at a node: leaf base, petiole, lamina (midrib, veins, veinlets).",
+ "**Reticulate venation** (dicots) vs **Parallel venation** (monocots).",
+ "**Simple leaf** (incision not reaching midrib) vs **Compound leaf** — **pinnate** (neem) or **palmate** (silk cotton).",
+ "**Phyllotaxy:** *Alternate* (China rose), *Opposite* (guava), *Whorled* (Alstonia)."
+]},
+{title:'Inflorescence & The Flower', tag:'Racemose vs Cymose • Floral whorls', bullets:[
+ "**Racemose** inflorescence: main axis keeps growing, flowers acropetal. **Cymose:** main axis ends in a flower, growth basipetal.",
+ "The **flower** is a modified shoot for sexual reproduction; **actinomorphic** (radial) or **zygomorphic** (bilateral) symmetry.",
+ "Four whorls: **Calyx** (sepals), **Corolla** (petals), **Androecium** (stamens — anther + filament), **Gynoecium** (pistil — stigma, style, ovary + ovules).",
+ "**Aestivation** (valvate, twisted, imbricate, vexillary) and **placentation** (marginal, axile, parietal, free central, basal) describe whorl arrangement."
+]},
+{title:'The Fruit', tag:'True vs False • Simple, Aggregate, Composite', bullets:[
+ "The fruit develops from the ovary after fertilisation — a ripened ovary.",
+ "**True fruit** from the ovary alone (mango, gram); **false fruit** from the thalamus + ovary (apple, cashew).",
+ "Has a **pericarp** (wall, fleshy or dry) and **seeds**.",
+ "**Simple** (single ovary), **aggregate** (many free carpels of one flower — custard apple), **composite/multiple** (whole inflorescence — pineapple, mulberry)."
+]},
+{title:'The Seed', tag:'Monocot vs Dicot seed structure', bullets:[
+ "Comprises a **seed coat** (testa + tegmen) and an **embryo** (radicle, axis, cotyledons).",
+ "**Albuminous** seeds retain endosperm (wheat, maize, castor); **exalbuminous** seeds use it up during development (pea, gram).",
+ "**Dicot seed** (gram): two fleshy cotyledons, short embryonal axis with radicle & plumule.",
+ "**Monocot seed** (maize): single shield-shaped cotyledon (**scutellum**); axis enclosed in **coleorhiza** & **coleoptile** sheaths."
+]},
+{title:'Family Solanaceae', tag:'The potato family', bullets:[
+ "A large family of herbs/shrubs (*Solanum, Datura, Petunia*) with a branched tap root.",
+ "Leaves alternate, simple, unicostate reticulate venation.",
+ "Flower bisexual, actinomorphic; 5-merous gamosepalous calyx & gamopetalous corolla; 5 epipetalous stamens; bicarpellary syncarpous superior ovary, axile placentation.",
+ "**Economic importance:** food (potato, brinjal, tomato), spice (chilli), medicine (*Atropa, Withania*), ornamentals (*Petunia*)."
+]}
+],
+'pu1-ch6': [
+{title:'The Tissue System', tag:'Meristematic vs Permanent tissues', bullets:[
+ "A **tissue** is a group of cells of common origin performing a common function — broadly **meristematic** or **permanent**.",
+ "**Meristematic tissue** by position: *apical* (tips), *intercalary* (internodes), *lateral* (cambium).",
+ "**Simple permanent tissues:** parenchyma (storage), collenchyma (support in growing regions), sclerenchyma (rigidity, lignified, dead).",
+ "**Complex permanent tissues:** **Xylem** (water/mineral transport — tracheids, vessels, fibres, parenchyma) and **Phloem** (food transport — sieve tubes, companion cells, fibres, parenchyma)."
+]},
+{title:'Dicot Root vs Monocot Root', tag:'Vascular bundles: limited vs many', bullets:[
+ "Outside to inside: **epiblema, cortex, endodermis** (with **casparian strips**), **pericycle**, central **vascular bundle**.",
+ "**Dicot root:** xylem 2–4 (diarch to tetrarch); small conjunctive tissue; **secondary growth occurs**.",
+ "**Monocot root:** xylem **polyarch** (many groups); well-developed pith; **no secondary growth**.",
+ "Xylem & phloem alternate radially in both."
+]},
+{title:'Dicot Stem vs Monocot Stem', tag:'Cambium present vs absent', bullets:[
+ "Both show epidermis, hypodermis, cortex, endodermis (starch sheath), pericycle, and vascular bundles.",
+ "**Dicot stem:** vascular bundles limited, ring-arranged; **conjoint, collateral, open** (cambium present) — **secondary growth occurs**.",
+ "**Monocot stem:** bundles numerous, scattered; **conjoint, collateral, closed** (no cambium) — **no secondary growth**; bundles have a sclerenchymatous sheath.",
+ "Monocot stem ground tissue is undifferentiated into cortex/pericycle/pith, unlike the dicot stem."
+]},
+{title:'Dicot Leaf vs Monocot Leaf', tag:'Dorsiventral vs Isobilateral', bullets:[
+ "Leaf T.S. shows **epidermis** (stomata mostly lower in dicots), **mesophyll**, and **vascular bundles**.",
+ "**Dicot leaf** is **dorsiventral**: mesophyll differentiated into palisade (upper) & spongy (lower) parenchyma.",
+ "**Monocot leaf** is **isobilateral**: mesophyll undifferentiated; stomata on both surfaces; large **bulliform cells** aid rolling/unrolling under water stress.",
+ "Vascular bundles are surrounded by a **bundle sheath** in both."
+]},
+{title:'Secondary Growth in Stems', tag:'Vascular cambium • Cork cambium', bullets:[
+ "**Secondary growth** — increase in girth via the **vascular cambium** and **cork cambium**; common in dicots/gymnosperms, usually absent in monocots.",
+ "Intrafascicular + interfascicular cambium form a ring, cutting **secondary xylem** inward and **secondary phloem** outward.",
+ "Seasonal cambial activity forms **spring wood** and **autumn wood**, together an **annual ring** used to estimate tree age.",
+ "**Cork cambium (phellogen)** forms **cork (phellem)** outward and **phelloderm** inward; together with phellogen these form the **periderm**; gas exchange occurs via **lenticels**."
+]}
+]
+};
+
+/* extra illustration images with captions, beyond mind map/boards, for
+   chapters where labelled diagrams are especially useful */
+const EXTRA_DIAGRAMS = {
+'pu1-ch6': [
+ {file:'dicot-root.jpg', caption:'Dicot Root — T.S.'},
+ {file:'monocot-root.jpg', caption:'Monocot Root — T.S.'},
+ {file:'dicot-stem.jpg', caption:'Dicot Stem — T.S.'},
+ {file:'monocot-stem.jpg', caption:'Monocot Stem — T.S.'},
+ {file:'dicot-leaf.jpg', caption:'Dicot Leaf — T.S.'},
+ {file:'monocot-leaf.jpg', caption:'Monocot Leaf — T.S.'},
+ {file:'stomata.jpg', caption:'Stomatal Apparatus'},
+ {file:'vb-conjoint-radial.jpg', caption:'Vascular Bundle — Conjoint vs Radial'},
+ {file:'vb-open-closed.jpg', caption:'Vascular Bundle — Open vs Closed'}
+]
+};
+
+/* ---------- PPTX building ---------- */
+
+function defineMaster(pptx){
+  pptx.defineSlideMaster({
+    title: 'BAIO_MASTER',
+    background: { color: THEME.bg0 },
+    objects: [
+      { rect: { x:0, y:0, w:'50%', h:0.09, fill:{color:THEME.gold} } },
+      { rect: { x:'50%', y:0, w:'50%', h:0.09, fill:{color:THEME.teal} } },
+      { text: { text:'BAIO Learning System  ·  Narendra Sir', options:{ x:0.4, y:7.08, w:7, h:0.3, fontFace:'Georgia', fontSize:10, color:THEME.footer, align:'left'} } }
+    ],
+    slideNumber: { x:12.5, y:7.08, fontFace:'Georgia', fontSize:10, color:THEME.footer }
+  });
+}
+
+function addTitleSlide(pptx, chapter){
+  const s = pptx.addSlide({masterName:'BAIO_MASTER'});
+  s.addText(chapter.icon || '📘', {x:0, y:0.9, w:13.33, h:1.3, fontSize:60, align:'center'});
+  s.addText(chapter.title, {x:0.8, y:2.5, w:11.73, h:1.3, fontFace:'Georgia', fontSize:40, bold:true, color:THEME.gold2, align:'center', valign:'middle'});
+  s.addText((chapter.num || '') + '  ·  ' + (chapter.puc || '') + ' Biology', {x:0.8, y:3.75, w:11.73, h:0.5, fontFace:'Georgia', fontSize:18, color:THEME.teal2, align:'center'});
+  s.addShape(pptx.ShapeType.rect, {x:5.66, y:4.4, w:2, h:0.045, fill:{color:THEME.gold}});
+  s.addText('Instant class-ready slides, generated from BAIO notes', {x:0.8, y:4.7, w:11.73, h:0.5, fontFace:'Calibri', fontSize:13, color:THEME.textDim, align:'center'});
+}
+
+function addAgendaSlide(pptx, chapter, topicTitles){
+  const s = pptx.addSlide({masterName:'BAIO_MASTER'});
+  s.addText('What We’ll Cover', {x:0.7, y:0.5, w:11.9, h:0.7, fontFace:'Georgia', fontSize:28, bold:true, color:THEME.gold2});
+  const colCount = topicTitles.length > 6 ? 2 : 1;
+  const colW = colCount === 2 ? 5.75 : 11.9;
+  let x = 0.7, y = 1.5;
+  const perCol = Math.ceil(topicTitles.length / colCount);
+  topicTitles.forEach((t, i) => {
+    if(colCount === 2 && i === perCol){ x = 6.85; y = 1.5; }
+    s.addText([{text:(i + 1) + '.  ', options:{bold:true, color:THEME.teal2}}, {text:t.replace(/^\d+\.\s*/, '')}], {
+      x, y, w:colW, h:0.55, fontFace:'Calibri', fontSize:18, color:THEME.text, valign:'top'
+    });
+    y += 0.62;
+  });
+}
+
+function addDividerSlide(pptx, topicTitle, tag, index, total){
+  const s = pptx.addSlide({masterName:'BAIO_MASTER'});
+  s.addText('TOPIC ' + index + ' OF ' + total, {x:0.9, y:2.4, w:11.5, h:0.4, fontFace:'Calibri', fontSize:14, color:THEME.teal2, charSpacing:2});
+  s.addText(topicTitle.replace(/^\d+\.\s*/, ''), {x:0.9, y:2.85, w:11.5, h:1.3, fontFace:'Georgia', fontSize:36, bold:true, color:THEME.gold2, valign:'top'});
+  if(tag) s.addText(tag, {x:0.9, y:4.15, w:11.5, h:0.5, fontFace:'Calibri', fontSize:15, color:THEME.textDim});
+  s.addShape(pptx.ShapeType.rect, {x:0.9, y:2.2, w:1.4, h:0.045, fill:{color:THEME.gold}});
+}
+
+// Lays out one section's bullets across as many slides as needed so text
+// never overflows and stays large & readable.
+function addContentSlides(pptx, breadcrumb, heading, blocks){
+  const startY = 1.35, maxY = 6.85, leftX = 0.75, fullW = 11.85;
+  let slide = null, y = startY, partNum = 1;
+
+  function newSlide(){
+    slide = pptx.addSlide({masterName:'BAIO_MASTER'});
+    slide.addText(breadcrumb, {x:0.7, y:0.32, w:11.9, h:0.3, fontFace:'Calibri', fontSize:10.5, color:THEME.footer, align:'right'});
+    const headText = partNum > 1 ? heading + '  (contd.)' : heading;
+    slide.addText(headText, {x:leftX, y:0.55, w:fullW, h:0.65, fontFace:'Georgia', fontSize:25, bold:true, color:THEME.gold2});
+    slide.addShape(pptx.ShapeType.rect, {x:leftX, y:1.18, w:1.1, h:0.035, fill:{color:THEME.teal}});
+    y = startY;
+    partNum++;
+  }
+  newSlide();
+
+  blocks.forEach(block => {
+    if(block.type === 'table'){
+      const rows = block.rows.map((row, ri) => row.map(cell => ({
+        text: cell,
+        options: ri === 0 ? {bold:true, color:THEME.gold2, fill:{color:'1F3327'}, fontSize:12.5} : {color:THEME.text, fontSize:12}
+      })));
+      const availH = maxY - y;
+      if(availH < 1.6){ newSlide(); }
+      slide.addTable(rows, {
+        x:leftX, y, w:fullW, autoPage:true,
+        border:{type:'solid', color:'2A3A30', pt:0.75}, fill:{color:THEME.bg0},
+        fontFace:'Calibri', valign:'middle', margin:4
+      });
+      y = maxY; // force a fresh slide after a table for anything that follows
+      return;
+    }
+    block.items.forEach(item => {
+      const fontSize = item.level === 0 ? 19 : (item.level === 1 ? 16 : 14.5);
+      const x = leftX + item.level * 0.4;
+      const w = fullW - item.level * 0.4;
+      const plain = item.runs.map(r => r.text).join('');
+      const lines = estimateLines(plain, fontSize, w);
+      const h = Math.max(0.32, lines * (fontSize / 72) * 1.55);
+      if(y + h > maxY){ newSlide(); }
+      const bulletOpt = item.level === 0 ? {code:'25CF'} : {code:'2013'};
+      slide.addText(item.runs.map(r => ({text:r.text, options:r.options || {}})), {
+        x, y, w, h, fontFace:'Calibri', fontSize,
+        color: item.level === 0 ? THEME.text : '#C7D6CC',
+        bullet: bulletOpt, valign:'top', lineSpacingMultiple:1.18, paraSpaceAfter:4
+      });
+      y += h + (item.level === 0 ? 0.14 : 0.08);
+    });
+  });
+}
+
+async function addImageSlide(pptx, title, imgPath, caption){
+  const s = pptx.addSlide({masterName:'BAIO_MASTER'});
+  s.addText(title, {x:0.6, y:0.4, w:12.1, h:0.65, fontFace:'Georgia', fontSize:26, bold:true, color:THEME.gold2});
+  s.addImage({path:imgPath, x:1.4, y:1.25, w:10.5, h:5.4, sizing:{type:'contain', w:10.5, h:5.4}});
+  if(caption) s.addText(caption, {x:0.6, y:6.8, w:12.1, h:0.35, fontFace:'Calibri', fontSize:12, color:THEME.textDim, align:'center'});
+}
+
+function addClosingSlide(pptx, chapter){
+  const s = pptx.addSlide({masterName:'BAIO_MASTER'});
+  s.addText('🎓', {x:0, y:1.6, w:13.33, h:1.2, fontSize:56, align:'center'});
+  s.addText('Great work! Keep revising.', {x:0.8, y:3.0, w:11.73, h:0.8, fontFace:'Georgia', fontSize:30, bold:true, color:THEME.gold2, align:'center'});
+  s.addText('Open ' + chapter.title + ' in the BAIO app for flashcards, MCQ practice, NEET/KCET drills and full PDF notes.', {x:1.3, y:3.9, w:10.73, h:0.7, fontFace:'Calibri', fontSize:14, color:THEME.textDim, align:'center'});
+  s.addText('baio-learning-system.web.app', {x:0.8, y:4.9, w:11.73, h:0.4, fontFace:'Calibri', fontSize:13, color:THEME.teal2, align:'center'});
+}
+
+async function buildPresentation(chapter, opts, onStatus){
+  const pptx = new PptxGenJS();
+  pptx.defineLayout({name:'BAIO_WIDE', width:13.333, height:7.5});
+  pptx.layout = 'BAIO_WIDE';
+  defineMaster(pptx);
+
+  addTitleSlide(pptx, chapter);
+
+  onStatus('Reading chapter notes…');
+  let topics = null;
+  try{
+    const pageHtml = await fetchText(chapter.pageUrl);
+    const arrText = extractArrayLiteral(pageHtml, 'STUDY_DATA');
+    if(arrText){
+      const data = materialize(arrText);
+      if(Array.isArray(data) && data.length) topics = data;
+    }
+  }catch(e){ console.warn('BAIO PPT: fetch/parse failed for', chapter.pageUrl, e); }
+
+  let topicTitles;
+  if(topics){
+    topicTitles = topics.map(t => t.title);
+  }else{
+    const curated = CURATED_OUTLINES[chapter.key] || [];
+    topicTitles = curated.map(t => t.title);
+  }
+
+  if(opts.agenda && topicTitles.length) addAgendaSlide(pptx, chapter, topicTitles);
+
+  if(topics){
+    topics.forEach((topic, i) => {
+      onStatus('Building topic ' + (i + 1) + ' of ' + topics.length + '…');
+      addDividerSlide(pptx, topic.title, (topic.chips || []).join('  •  '), i + 1, topics.length);
+      const sections = parseTopicHtml(topic.title, topic.html || '');
+      sections.forEach(section => {
+        addContentSlides(pptx, topic.title.replace(/^\d+\.\s*/, ''), section.heading, section.blocks);
+      });
+    });
+  }else{
+    const curated = CURATED_OUTLINES[chapter.key] || [];
+    curated.forEach((topic, i) => {
+      onStatus('Building topic ' + (i + 1) + ' of ' + curated.length + '…');
+      addDividerSlide(pptx, topic.title, topic.tag || '', i + 1, curated.length);
+      const items = topic.bullets.map(b => ({runs: mdRuns(b), level:0}));
+      addContentSlides(pptx, topic.title, topic.title, [{type:'list', items}]);
+    });
+  }
+
+  if(opts.mindmap){
+    onStatus('Adding the mind map…');
+    const mindmapCandidates = ['mindmap.jpg','mindmap-01.jpg','mindmap-02.jpg','mindmap-03.jpg','mindmap.png'].map(f => chapter.assetsBase + f);
+    const found = await probeFirst(mindmapCandidates);
+    for(let i = 0; i < found.length; i++){
+      await addImageSlide(pptx, 'Mind Map' + (found.length > 1 ? ' (' + (i + 1) + '/' + found.length + ')' : ''), found[i], chapter.title);
+    }
+  }
+
+  if(opts.boards){
+    onStatus('Adding blackboard notes…');
+    const boardCandidates = ['board-01.jpg','board-02.jpg','board-03.jpg','board-04.jpg'].map(f => chapter.assetsBase + f);
+    const found = await probeFirst(boardCandidates);
+    for(let i = 0; i < found.length; i++){
+      await addImageSlide(pptx, 'Blackboard Notes — Board ' + (i + 1), found[i], "Narendra Sir's classroom board");
+    }
+    const extras = EXTRA_DIAGRAMS[chapter.key];
+    if(extras){
+      onStatus('Adding labelled diagrams…');
+      for(const ex of extras){
+        const url = chapter.assetsBase + ex.file;
+        const ok = await probeImage(url);
+        if(ok) await addImageSlide(pptx, ex.caption, url, chapter.title);
+      }
+    }
+  }
+
+  addClosingSlide(pptx, chapter);
+
+  onStatus('Packaging your .pptx…');
+  const fileName = 'BAIO_' + chapter.title.replace(/[^a-z0-9]+/gi, '_') + '.pptx';
+  await pptx.writeFile({fileName});
+}
+
+/* ---------- chapter manifest + UI wiring ---------- */
+
+function keyFromHref(href){
+  return href.replace(/\/$/, '').replace(/\.html$/, '');
+}
+
+function assetsBaseFromHref(href, key){
+  return href.endsWith('/') ? (href + 'assets/') : (key + '-assets/');
+}
+
+function pageUrlFromHref(href){
+  return href.endsWith('/') ? (href + 'index.html') : href;
+}
+
+async function loadChapters(){
+  const indexHtml = await fetchText('index.html');
+  const arrText = extractArrayLiteral(indexHtml, 'CHAPTERS');
+  if(!arrText) throw new Error('Could not find the chapter list on index.html');
+  const raw = materialize(arrText);
+  if(!Array.isArray(raw)) throw new Error('Chapter list did not parse');
+  return raw.filter(c => c.live).map(c => {
+    const key = keyFromHref(c.href);
+    return {
+      key, title: c.title, num: c.num, puc: c.puc, icon: c.icon, desc: c.desc,
+      pageUrl: pageUrlFromHref(c.href), assetsBase: assetsBaseFromHref(c.href, key)
+    };
+  });
+}
+
+function waitForPptxGenJS(timeoutMs){
+  return new Promise((resolve, reject) => {
+    const start = Date.now();
+    (function check(){
+      if(window.PptxGenJS) return resolve();
+      if(Date.now() - start > timeoutMs) return reject(new Error('PptxGenJS failed to load'));
+      setTimeout(check, 150);
+    })();
+  });
+}
+
+function renderChapterGrid(chapters){
+  const grid = document.getElementById('chapterGrid');
+  grid.innerHTML = '';
+  chapters.forEach(chapter => {
+    const card = document.createElement('div');
+    card.className = 'chapter-card';
+    card.innerHTML =
+      '<div class="top">' +
+        '<div class="icon">' + (chapter.icon || '📘') + '</div>' +
+        '<div class="titlewrap">' +
+          '<div class="num">' + chapter.num + '</div>' +
+          '<div class="title">' + chapter.title + '</div>' +
+          '<div class="puc">' + chapter.puc + ' Biology</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="desc">' + (chapter.desc || '') + '</div>' +
+      '<button type="button" class="gen-btn">✨ Generate PowerPoint</button>' +
+      '<div class="status-line"></div>';
+    const btn = card.querySelector('.gen-btn');
+    const status = card.querySelector('.status-line');
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      btn.classList.remove('done');
+      status.className = 'status-line';
+      status.textContent = 'Starting…';
+      const opts = {
+        mindmap: document.getElementById('optMindmap').checked,
+        boards: document.getElementById('optBoards').checked,
+        agenda: document.getElementById('optAgenda').checked
+      };
+      try{
+        await waitForPptxGenJS(15000);
+        await buildPresentation(chapter, opts, msg => { status.textContent = msg; });
+        status.className = 'status-line ok';
+        status.textContent = 'Downloaded! Check your Downloads folder.';
+        btn.classList.add('done');
+        btn.textContent = '✅ Generate Again';
+      }catch(e){
+        console.error(e);
+        status.className = 'status-line err';
+        status.textContent = 'Could not build this deck (' + e.message + ').';
+      }finally{
+        btn.disabled = false;
+      }
+    });
+    grid.appendChild(card);
+  });
+}
+
+(async function init(){
+  const banner = document.getElementById('loadingBanner');
+  const loadingText = document.getElementById('loadingText');
+  try{
+    const chapters = await loadChapters();
+    renderChapterGrid(chapters);
+    banner.classList.add('hide');
+    const params = new URLSearchParams(location.search);
+    const preselect = params.get('ch');
+    if(preselect){
+      const idx = chapters.findIndex(c => c.key === preselect);
+      if(idx !== -1){
+        const btn = document.querySelectorAll('.gen-btn')[idx];
+        if(btn) btn.click();
+      }
+    }
+  }catch(e){
+    console.error(e);
+    loadingText.textContent = 'Could not load the chapter list. Open this page from the live BAIO site (not from a local file) and try again.';
+    banner.style.borderColor = 'var(--danger)';
+  }
+})();
+</script>
+</body>
+</html>
