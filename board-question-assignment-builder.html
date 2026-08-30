@@ -139,6 +139,25 @@ button, select, input{font-family:var(--sans);}
 }
 .panel .sub{margin:0 0 14px; font-size:12px; color:var(--ink-faint);}
 
+/* ---------- Auto-generate panel ---------- */
+.autogen-panel{grid-column:1 / -1;}
+.autogen-grid{display:grid; grid-template-columns:1fr 1fr; gap:24px;}
+@media (max-width:1050px){ .autogen-grid{grid-template-columns:minmax(0,1fr);} }
+.ag-label{display:block; font-size:12px; font-weight:700; color:var(--ink-dim); margin-bottom:8px; text-transform:uppercase; letter-spacing:.03em;}
+.ag-scope-actions{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;}
+.ag-chapter-picker{max-height:230px; overflow-y:auto; border:1px solid var(--line); border-radius:8px; padding:8px 10px; background:var(--bg-0);}
+.ag-chap-row{display:flex; align-items:center; gap:7px; padding:5px 2px; font-size:12.5px; cursor:pointer;}
+.ag-chap-row input{flex:0 0 auto;}
+.ag-kind-counts{border:1px solid var(--line); border-radius:8px; padding:4px 10px; background:var(--bg-0);}
+.ag-kind-row{display:flex; justify-content:space-between; align-items:center; gap:10px; padding:7px 0; border-bottom:1px dashed var(--line); font-size:12.5px;}
+.ag-kind-row:last-child{border-bottom:none;}
+.ag-kind-marks{color:var(--ink-faint); font-weight:400;}
+.ag-count-input{width:56px; background:var(--bg-1); border:1px solid var(--line); color:var(--ink); border-radius:6px; padding:5px 6px; text-align:center; font-size:13px;}
+.ag-presets{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:12px;}
+.ag-preset-label{font-size:11px; color:var(--ink-faint);}
+.ag-actions{display:flex; align-items:center; gap:14px; margin-top:16px; flex-wrap:wrap;}
+.ag-status{font-size:12.5px; color:var(--teal-soft);}
+
 /* ---------- Toolbar ---------- */
 .toolbar{
   display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:14px;
@@ -374,6 +393,38 @@ footer.foot b{color:var(--gold-soft);}
 </header>
 
 <div class="app">
+
+  <!-- FULL WIDTH: auto-generate -->
+  <div class="panel autogen-panel">
+    <h2>🎲 Auto-Generate Paper</h2>
+    <p class="sub">Pick chapters and how many questions you want per section — this randomly builds a paper spread evenly across those chapters (a NEET/board-style mock across the whole syllabus, or just one chapter). You can still review, swap or add questions manually afterwards, before printing.</p>
+    <div class="autogen-grid">
+      <div>
+        <label class="ag-label">Chapters to draw from</label>
+        <div class="ag-scope-actions">
+          <button class="btn small" id="agSelPuc1">All I PUC</button>
+          <button class="btn small" id="agSelPuc2">All II PUC</button>
+          <button class="btn small" id="agSelAllChapters">All chapters</button>
+          <button class="btn small" id="agSelNoneChapters">None</button>
+        </div>
+        <div class="ag-chapter-picker" id="agChapterPicker"></div>
+      </div>
+      <div>
+        <label class="ag-label">Questions per section</label>
+        <div class="ag-kind-counts" id="agKindCounts"></div>
+        <div class="ag-presets">
+          <span class="ag-preset-label">Presets:</span>
+          <button class="btn small" id="agPresetNeet">NEET Mock (40 MCQ)</button>
+          <button class="btn small" id="agPresetBoard">Board-style template</button>
+          <button class="btn small" id="agPresetClear">Clear counts</button>
+        </div>
+      </div>
+    </div>
+    <div class="ag-actions">
+      <button class="btn gold" id="agGenerateBtn">🎲 Generate paper</button>
+      <span class="ag-status" id="agStatus"></span>
+    </div>
+  </div>
 
   <!-- LEFT: browse & select -->
   <div>
@@ -1214,6 +1265,130 @@ function toggleTheme(){
       setSavedPapers(list);
       renderSavedList();
     }
+  });
+
+  // ---------------- auto-generate paper ----------------
+  var agPickerEl = document.getElementById('agChapterPicker');
+  var agKindCountsEl = document.getElementById('agKindCounts');
+
+  function buildAgPickerHtml(){
+    var html = '';
+    DATA.forEach(function(ch){
+      html += '<label class="ag-chap-row"><input type="checkbox" class="ag-chap-cb" value="'+ch.num+'" checked>'
+        + '<span class="badge gold" style="margin-right:2px;">'+esc(ch.puc||'')+'</span>'
+        + '<span>'+esc(DISPLAY_NUM[ch.num]+'. '+ch.title)+'</span></label>';
+    });
+    agPickerEl.innerHTML = html;
+  }
+  function getCheckedAgChapters(){
+    return Array.prototype.map.call(agPickerEl.querySelectorAll('.ag-chap-cb:checked'), function(cb){ return cb.value; });
+  }
+  function setAgChapterScope(puc){
+    agPickerEl.querySelectorAll('.ag-chap-cb').forEach(function(cb){
+      if(puc === null){ cb.checked = false; return; }
+      if(puc === 'all'){ cb.checked = true; return; }
+      var ch = DATA.find(function(c){ return String(c.num) === cb.value; });
+      cb.checked = !!(ch && ch.puc === puc);
+    });
+  }
+
+  function buildAgKindCountsHtml(){
+    var html = '';
+    KIND_ORDER.forEach(function(k){
+      var meta = KIND_META[k];
+      html += '<div class="ag-kind-row"><label for="ag_count_'+k+'">'+esc(meta.label)+' <span class="ag-kind-marks">('+meta.marks+' mark'+(meta.marks>1?'s':'')+' each)</span></label>'
+        + '<input type="number" min="0" id="ag_count_'+k+'" class="ag-count-input" value="0"></div>';
+    });
+    agKindCountsEl.innerHTML = html;
+  }
+  function setAgCounts(obj){
+    KIND_ORDER.forEach(function(k){
+      var el = document.getElementById('ag_count_'+k);
+      if(el) el.value = (obj[k] != null) ? obj[k] : 0;
+    });
+  }
+
+  buildAgPickerHtml();
+  buildAgKindCountsHtml();
+
+  document.getElementById('agSelAllChapters').addEventListener('click', function(){ setAgChapterScope('all'); });
+  document.getElementById('agSelNoneChapters').addEventListener('click', function(){ setAgChapterScope(null); });
+  document.getElementById('agSelPuc1').addEventListener('click', function(){ setAgChapterScope('I'); });
+  document.getElementById('agSelPuc2').addEventListener('click', function(){ setAgChapterScope('II'); });
+
+  document.getElementById('agPresetNeet').addEventListener('click', function(){
+    setAgCounts({mcq:40, fill:0, short2:0, short3:0, long5:0, long5d:0});
+    setAgChapterScope('all');
+  });
+  document.getElementById('agPresetBoard').addEventListener('click', function(){
+    setAgCounts({mcq:5, fill:5, short2:6, short3:4, long5:3, long5d:2});
+  });
+  document.getElementById('agPresetClear').addEventListener('click', function(){
+    setAgCounts({mcq:0, fill:0, short2:0, short3:0, long5:0, long5d:0});
+  });
+
+  document.getElementById('agGenerateBtn').addEventListener('click', function(){
+    var chapterNums = getCheckedAgChapters();
+    var statusEl = document.getElementById('agStatus');
+    if(chapterNums.length === 0){ statusEl.textContent = 'Pick at least one chapter first.'; return; }
+
+    var counts = {}, anyCount = false, totalRequested = 0;
+    KIND_ORDER.forEach(function(k){
+      var el = document.getElementById('ag_count_'+k);
+      var v = parseInt((el && el.value) || '0', 10) || 0;
+      counts[k] = v;
+      if(v > 0){ anyCount = true; totalRequested += v; }
+    });
+    if(!anyCount){ statusEl.textContent = 'Enter how many questions you want for at least one section.'; return; }
+
+    if(selected.size > 0 && !confirm('This replaces your current '+selected.size+' selected question(s) with a freshly generated set. Continue?')) return;
+
+    listEl.querySelectorAll('input[type=checkbox]:checked').forEach(function(cb){ cb.checked = false; });
+    selected.clear();
+
+    var chapters = DATA.filter(function(ch){ return chapterNums.indexOf(String(ch.num)) !== -1; });
+    var totalPicked = 0;
+
+    KIND_ORDER.forEach(function(k){
+      var want = counts[k];
+      if(want <= 0) return;
+      // one shuffled pool of leftover question numbers per chapter for this kind,
+      // consumed round-robin so the picks spread evenly across chapters instead
+      // of exhausting one chapter before touching the next.
+      var pools = chapters.map(function(ch){
+        var sec = ch.sections.find(function(s){ return s.kind === k; });
+        if(!sec) return {chapNum:ch.num, roman:null, ids:[]};
+        var ids = sec.questions.map(function(q){ return q.n; });
+        ids.sort(function(){ return Math.random() - 0.5; });
+        return {chapNum:ch.num, roman:sec.roman, ids:ids};
+      }).filter(function(p){ return p.ids.length > 0; });
+
+      var picked = 0;
+      while(picked < want && pools.length){
+        var anyLeft = false;
+        for(var i = 0; i < pools.length && picked < want; i++){
+          var p = pools[i];
+          if(p.ids.length === 0) continue;
+          anyLeft = true;
+          var n = p.ids.shift();
+          var cb = listEl.querySelector('input[type=checkbox][data-chap="'+p.chapNum+'"][data-roman="'+p.roman+'"][data-n="'+n+'"]');
+          if(cb){ cb.checked = true; handleCheck(p.chapNum, p.roman, n, true); picked++; totalPicked++; }
+        }
+        if(!anyLeft) break;
+      }
+    });
+
+    chapterNums.forEach(function(cn){
+      var chEl = listEl.querySelector('.chapter[data-chap="'+cn+'"]');
+      if(chEl) chEl.classList.add('open');
+    });
+
+    if(totalPicked < totalRequested){
+      statusEl.textContent = 'Generated '+totalPicked+' of '+totalRequested+' requested (the chosen chapters ran out of unique questions for some sections). Review below — add more manually if needed.';
+    } else {
+      statusEl.textContent = 'Generated '+totalPicked+' question(s) across '+chapterNums.length+' chapter(s), spread evenly. Review below, then Preview & Print.';
+    }
+    document.getElementById('chapterList').scrollIntoView({behavior:'smooth', block:'start'});
   });
 
   // init
