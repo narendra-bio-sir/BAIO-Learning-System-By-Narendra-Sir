@@ -109,9 +109,8 @@ input[type=text], input[type=number], select{
   font-size:13px; font-family:var(--sans); box-sizing:border-box;
 }
 input[type=text]:focus, input[type=number]:focus, select:focus{ outline:none; border-color:var(--teal); }
-select.qp-chapter-select{ padding:6px; }
+select.qp-chapter-select{ padding:9px 10px; }
 select.qp-chapter-select option{ padding:6px 8px; }
-select.qp-chapter-select option:disabled{ color:var(--ink-faint); font-style:italic; }
 .chip-row{ display:flex; flex-wrap:wrap; gap:8px; }
 .pg-topic-chip{
   display:flex; align-items:center; gap:6px; cursor:pointer; font-size:12px; background:var(--bg-0);
@@ -179,18 +178,17 @@ select.qp-chapter-select option:disabled{ color:var(--ink-faint); font-style:ita
   <!-- LEFT: chapter & topic picker -->
   <div class="panel">
     <h2>📚 Pick chapters &amp; topics</h2>
-    <p class="sub">Every chapter currently live in the BAIO Learning System app is listed below. Questions are pulled straight from the topics you've built inside the app itself — same question banks students see in Study Mode, MCQ Quiz and NEET Practice. Chapters marked "coming soon" are live in the app but don't have a topic-tagged question bank wired into this generator yet.</p>
+    <p class="sub">Questions are pulled straight from the topics you've built inside the BAIO Learning System app itself — same question banks students see in Study Mode, MCQ Quiz and NEET Practice. Only chapters with a fully built topic-tagged question bank are listed here; more chapters will appear in these dropdowns as their question banks get wired in.</p>
     <div class="setup-grid">
       <div>
-        <label class="field-label">PU-I Chapters</label>
-        <select id="puISelect" class="qp-chapter-select" multiple size="5"></select>
+        <label class="field-label">PU-I Chapter</label>
+        <select id="puISelect" class="qp-chapter-select"></select>
       </div>
       <div>
-        <label class="field-label">PU-II Chapters</label>
-        <select id="puIISelect" class="qp-chapter-select" multiple size="5"></select>
+        <label class="field-label">PU-II Chapter</label>
+        <select id="puIISelect" class="qp-chapter-select"></select>
       </div>
     </div>
-    <p class="sub" style="margin:8px 0 0;">Ctrl/Cmd-click (or tap each on mobile) to select more than one chapter from a dropdown.</p>
     <div id="chapterPicker" style="margin-top:14px;"></div>
   </div>
 
@@ -324,40 +322,24 @@ function toggleTheme(){
     return t ? t.title : 'this topic';
   }
 
-  /* ---------------- chapter dropdowns (every chapter live in the app) ---------------- */
-  // Matches the `live: true` chapter list in index.html. Chapters whose id
-  // isn't in DATA don't have a topic-tagged question bank extracted into this
-  // generator yet, so they're listed (for visibility of what's live in the
-  // app) but disabled with a "coming soon" note.
-  var LIVE_CHAPTERS = {
-    I: [
-      {id:'ch2', title:'Chapter 2: Biological Classification'},
-      {id:'ch3', title:'Chapter 3: Plant Kingdom'},
-      {id:'pu1ch4', title:'Chapter 4: Animal Kingdom'},
-      {id:'pu1ch5', title:'Chapter 5: Morphology of Flowering Plants'},
-      {id:'pu1ch6', title:'Chapter 6: Anatomy of Flowering Plants'}
-    ],
-    II: [
-      {id:'pu2ch4', title:'Chapter 4: Principles of Inheritance and Variation'},
-      {id:'ch9', title:'Chapter 9: Biotechnology: Principles and Processes'}
-    ]
-  };
-  function buildChapterSelect(selectEl, list){
-    selectEl.innerHTML = list.map(function(c){
-      var wired = !!chapterById(c.id);
-      var label = c.title + (wired ? '' : ' (coming soon)');
-      return '<option value="' + c.id + '"' + (wired ? ' selected' : ' disabled') + '>' + esc(label) + '</option>';
+  /* ---------------- chapter dropdowns (one per PU level, wired chapters only) ---------------- */
+  function buildChapterSelect(selectEl, puc){
+    var chapters = DATA.filter(function(c){ return c.puc === puc; });
+    var options = '<option value="">None</option>' + chapters.map(function(c){
+      return '<option value="' + c.id + '" selected>' + esc(c.title) + '</option>';
     }).join('');
+    selectEl.innerHTML = options;
+    // with one real chapter per level today, default to it being picked
+    if(chapters.length) selectEl.value = chapters[0].id;
   }
-  buildChapterSelect($('puISelect'), LIVE_CHAPTERS.I);
-  buildChapterSelect($('puIISelect'), LIVE_CHAPTERS.II);
+  buildChapterSelect($('puISelect'), 'I');
+  buildChapterSelect($('puIISelect'), 'II');
 
   function getSelectedWiredChapterIds(){
     var ids = [];
     ['puISelect','puIISelect'].forEach(function(selId){
-      Array.prototype.forEach.call($(selId).selectedOptions, function(opt){
-        if(!opt.disabled && chapterById(opt.value)) ids.push(opt.value);
-      });
+      var v = $(selId).value;
+      if(v && chapterById(v)) ids.push(v);
     });
     return ids;
   }
@@ -367,7 +349,7 @@ function toggleTheme(){
   function buildChapterPicker(){
     var chapIds = getSelectedWiredChapterIds();
     if(chapIds.length === 0){
-      pickerEl.innerHTML = '<p class="qp-none-note">Pick at least one chapter above that isn\'t marked "coming soon" to see its topics.</p>';
+      pickerEl.innerHTML = '<p class="qp-none-note">Pick a chapter from at least one dropdown above to see its topics.</p>';
       return;
     }
     var html = '';
