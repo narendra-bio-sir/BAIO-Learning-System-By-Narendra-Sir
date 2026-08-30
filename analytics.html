@@ -6840,15 +6840,20 @@ function computePU2KcetVariant(student, roundScope, variant){
   }).map(r=> Object.assign({}, r, { label: disambiguatePU2Label(r.label, pu1Labels) }));
   if(roundScope) attempts = attempts.filter(r=> roundMatchesScope(r.label, roundScope));
   if(!attempts.length) return null;
-  // PCMB treats Biology as a bonus, not a requirement (same as PU-I's PCMB):
-  // a PCM-only round/student still gets a 3-subject score; Biology, when present,
-  // is folded in as a 4th subject rather than excluding everyone without it.
+  // PCMB never excludes a PCM-only student for lacking Biology (same as
+  // PU-I's PCMB), but unlike PU-I's other variants it's always scored out of
+  // all 4 subjects' worth of marks - an Electronics-track student without a
+  // Biology (or, eventually, Electronics) mark yet just scores 0 on that
+  // slot for now, rather than having the max shrink to make their score
+  // look complete.
   const subjectsFor = r => {
-    if(variant==='pcmb') return (r.BIO!==null && r.BIO!==undefined) ? PU2_KCET_VARIANT_SUBJECTS.pcmb : PU2_KCET_VARIANT_SUBJECTS.pcm;
-    return PU2_KCET_VARIANT_SUBJECTS[variant];
+    if(variant!=='pcmb') return PU2_KCET_VARIANT_SUBJECTS[variant];
+    const hasBio = r.BIO!==null && r.BIO!==undefined;
+    return [{key:'PHY',label:'Phy'},{key:'CHE',label:'Che'},{key:'MAT',label:'Mat'},
+      hasBio ? {key:'BIO',label:'Bio'} : {key:'ELE',label:'Ele'}];
   };
   const sumFor = r => subjectsFor(r).reduce((s,sub)=> s+(r[sub.key]||0), 0);
-  const maxFor = r => r.outof*subjectsFor(r).length;
+  const maxFor = r => r.outof * (variant==='pcmb' ? 4 : subjectsFor(r).length);
   const latest = attempts[attempts.length-1];
   const first = attempts[0];
   const latestTotal = sumFor(latest), latestMax = maxFor(latest);
@@ -7150,7 +7155,7 @@ const ACHIEVER_CATEGORY_META = {
   neet:   { label: 'NEET',   icon: '🩺', desc: 'NEET (PCB) exam readiness across NEET OBT / CT rounds.', unit: '%' },
   kcet:   { label: 'KCET (PCM)', icon: '📐', desc: 'KCET (PCM) exam readiness across KCET OBT / CT rounds.', unit: '%' },
   kcetpcb:{ label: 'KCET (PCB)', icon: '📐', desc: 'KCET (PCB stream — Agriculture/Veterinary/Nursing/Pharma) exam readiness: Physics + Chemistry + Biology, from rounds where a Biology mark was recorded.', unit: '%' },
-  kcetpcmb:{ label: 'KCET (PCMB)', icon: '📐', desc: 'Combined KCET Physics + Chemistry + Maths score, plus Biology when a mark for it exists (4 subjects instead of 3). PU-I combines its separate PCM and PCB records for the one shared round; PU-II reads straight from a single round record.', unit: '%' },
+  kcetpcmb:{ label: 'KCET (PCMB)', icon: '📐', desc: 'Combined KCET Physics + Chemistry + Maths + Biology score, always out of 180 (45 each). Electronics-track students without a Biology mark yet score 0 on that slot rather than being scored out of a smaller total. PU-I combines its separate PCM and PCB records for the one shared round; PU-II reads straight from a single round record.', unit: '%' },
   jee:    { label: 'JEE',    icon: '🎯', desc: 'JEE exam readiness across JEE OBT / CT rounds.', unit: '%' }
 };
 /* Shared across Potential Achievers and Blooming Aspirants (and the exam
@@ -7286,13 +7291,16 @@ function computeKcetPcmbReadiness(student){
   if(!pcmRec || pcmRec.ABSENT || pcmRec.TOTAL===null || pcmRec.TOTAL===undefined) return null;
   // Biology is a bonus, not a requirement — Electronics-stream students (and
   // anyone else without a KCET (PCB) record for this round) still show up
-  // here on their PCM score alone, out of 135; students who also sat the
-  // Biology section get it added, out of 180.
+  // here on their PCM score alone. The total is still marked out of 180
+  // (not 135) even for them: Electronics students sit a 4th paper of their
+  // own that isn't recorded yet, so their percentage is deliberately held
+  // down by the missing marks until that data arrives, rather than quietly
+  // rescaling the max to make their score look complete.
   const pcbEntry = (typeof KCET_PCB_BY_CODE!=='undefined') ? KCET_PCB_BY_CODE[student.code] : null;
   const pcbRec = pcbEntry ? pcbEntry.obt1 : null;
   const hasBio = !!(pcbRec && !pcbRec.ABSENT && pcbRec.BIO!==null && pcbRec.BIO!==undefined);
   const totalScore = pcmRec.TOTAL + (hasBio ? pcbRec.BIO : 0);
-  const totalMax = 135 + (hasBio ? 45 : 0);
+  const totalMax = 180;
   const pct = Math.round((totalScore/totalMax)*1000)/10;
   const test = KCET_TESTS[idx];
   const subjects = [
@@ -7300,7 +7308,9 @@ function computeKcetPcmbReadiness(student){
     { label:'Che', score: pcmRec.CHE!==undefined ? pcmRec.CHE : null, max: 45 },
     { label:'Mat', score: pcmRec.MAT!==undefined ? pcmRec.MAT : null, max: 45 }
   ];
-  if(hasBio) subjects.push({ label:'Bio', score: pcbRec.BIO!==undefined ? pcbRec.BIO : null, max: 45 });
+  subjects.push(hasBio
+    ? { label:'Bio', score: pcbRec.BIO!==undefined ? pcbRec.BIO : null, max: 45 }
+    : { label:'Ele', score: null, max: 45 });
   return {
     latestPct: pct, trend: null, attemptsCount: 1, totalRounds: 1,
     latestLabel: test.label, latestDate: test.disp || test.date,
@@ -7558,7 +7568,7 @@ const ASPIRANT_CATEGORY_META = {
   neet:   { label: 'NEET',   icon: '🩺', desc: 'NEET (PCB) exam readiness across NEET OBT / CT rounds.' },
   kcet:   { label: 'KCET (PCM)', icon: '📐', desc: 'KCET (PCM) exam readiness across KCET OBT / CT rounds.' },
   kcetpcb:{ label: 'KCET (PCB)', icon: '📐', desc: 'KCET (PCB stream — Agriculture/Veterinary/Nursing/Pharma) exam readiness: Physics + Chemistry + Biology, from rounds where a Biology mark was recorded.' },
-  kcetpcmb:{ label: 'KCET (PCMB)', icon: '📐', desc: 'Combined KCET Physics + Chemistry + Maths score, plus Biology when a mark for it exists (4 subjects instead of 3). PU-I combines its separate PCM and PCB records for the one shared round; PU-II reads straight from a single round record.' },
+  kcetpcmb:{ label: 'KCET (PCMB)', icon: '📐', desc: 'Combined KCET Physics + Chemistry + Maths + Biology score, always out of 180 (45 each). Electronics-track students without a Biology mark yet score 0 on that slot rather than being scored out of a smaller total. PU-I combines its separate PCM and PCB records for the one shared round; PU-II reads straight from a single round record.' },
   jee:    { label: 'JEE',    icon: '🎯', desc: 'JEE exam readiness across JEE OBT / CT rounds.' }
 };
 const ASPIRANT_BAND_KEYS = ['competitive', 'needs-work'];
