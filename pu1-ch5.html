@@ -786,6 +786,7 @@ const TABS = [
   {id:'progress', label:'Progress'},
   {id:'study', label:'Study Mode'},
   {id:'notebooklm', label:'AI Notebook'},
+  {id:'podcast', label:'Audio Podcast'},
   {id:'studytips', label:'Study Tips'},
   {id:'pacing', label:'Pacing'},
   {id:'concepts', label:'Concepts'},
@@ -815,7 +816,7 @@ function esc(s){ return (s===undefined||s===null)?'':String(s); }
 /* ---- Chapter tab bar: group the tabs into categories behind a dropdown,
    so the long tab list no longer needs one long scrolling row. ---- */
 const TAB_CATEGORIES = [
-  {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','concepts','notebooklm','studytips','boardimp','diagrams']},
+  {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','concepts','notebooklm','podcast','studytips','boardimp','diagrams']},
   {id:'practice', label:'Practice', icon:'✍️', tabs:['flashcards','mcq','writeit','revision']},
   {id:'test', label:'Test Prep', icon:'\u{1F3AF}', tabs:['neet','kcet','papergen']},
   {id:'explore', label:'Explore', icon:'\u{1F50D}', tabs:['tree','compare','mindmap','glossary']},
@@ -1014,6 +1015,16 @@ function renderNotebookLM(){
     <h3 style="color:var(--gold);margin-bottom:4px;">📓 AI Notebook (NotebookLM)</h3>
     <div style="color:var(--ink-dim);font-size:12px;margin-bottom:16px;line-height:1.6;">An AI-generated NotebookLM notebook built from this chapter &mdash; audio overview, summaries, and source-grounded Q&amp;A to help you revise Morphology of Flowering Plants in a different format. Opens in a new tab (Google sign-in may be required).</div>
     <a href="${NOTEBOOKLM_CH5_URL}" target="_blank" rel="noopener" class="start-btn" style="display:block;text-align:center;text-decoration:none;">Open the NotebookLM Notebook &rarr;</a>
+  </div>`;
+}
+
+const PODCAST_CH5_URL = 'pu1-ch5-assets/podcast-kannada.mp3';
+function renderPodcast(){
+  document.getElementById('content').innerHTML = `<div class="setup-card">
+    <h3 style="color:var(--gold);margin-bottom:4px;">🎧 Audio Podcast (Kannada)</h3>
+    <div style="color:var(--ink-dim);font-size:12px;margin-bottom:16px;line-height:1.6;">A Kannada-language audio walkthrough of this chapter &mdash; listen while commuting or revising away from your notes.</div>
+    <audio controls preload="none" style="width:100%;" src="${PODCAST_CH5_URL}"></audio>
+    <a href="${PODCAST_CH5_URL}" download class="opt-btn" style="display:block;text-align:center;text-decoration:none;margin-top:12px;">Download Audio</a>
   </div>`;
 }
 
@@ -3399,6 +3410,7 @@ function renderContent(){
   else if(currentTab==='progress') renderProgress();
   else if(currentTab==='study') renderStudy();
   else if(currentTab==='notebooklm') renderNotebookLM();
+  else if(currentTab==='podcast') renderPodcast();
   else if(currentTab==='studytips') renderStudyTips();
   else if(currentTab==='pacing') renderPacing();
   else if(currentTab==='concepts') renderConcepts();
