@@ -1215,6 +1215,7 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
     <button class="tab-btn" data-tab="badges">Milestones</button>
     <button class="tab-btn" data-tab="progress">Progress</button>
     <button class="tab-btn active" data-tab="study">Study Mode</button>
+    <button class="tab-btn" data-tab="podcast">Audio Podcast</button>
     <button class="tab-btn" data-tab="studytips">Study Tips</button>
     <button class="tab-btn" data-tab="pacing">Pacing</button>
     <button class="tab-btn" data-tab="concept">Concepts</button>
@@ -1251,6 +1252,17 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       </div>
       <div class="card" id="studyContent"></div>
     </div>
+  </div>
+
+  <!-- ===================== AUDIO PODCAST ===================== -->
+  <div class="panel" id="panel-podcast">
+    <div class="card">
+      <h3 style="color:var(--gold-2); margin-bottom:4px;">🎧 Audio Podcast</h3>
+      <div style="color:var(--text-dim); font-size:12px; margin-bottom:12px; line-height:1.6;">An audio walkthrough of this chapter &mdash; listen right here in the app while revising.</div>
+      <div class="opt-row" id="podcastLangRow" style="display:flex; flex-wrap:wrap; gap:7px; margin-bottom:12px;"></div>
+      <audio id="podcastPlayer" controls controlsList="nodownload noplaybackrate" oncontextmenu="return false;" preload="none" style="width:100%;"></audio>
+    </div>
+    <div class="premium-lock-overlay" id="premLock_podcast"></div>
   </div>
 
   <!-- ===================== STUDY TIPS ===================== -->
@@ -6071,8 +6083,26 @@ const PREMIUM_PRICE_RUPEES = 1999;
 const PREMIUM_PRICE_ORIGINAL = 3000;
 const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/ncmBEYAw';
 const PREMIUM_UNLOCK_LOOKUP = {};
-const PREMIUM_LOCKED_TABS = ['mindmap', 'classppt', 'quiz', 'adv', 'kcet', 'writeit', 'papergen', 'boardimp'];
-const PREMIUM_TAB_LABELS = {mindmap:'Mind Map', classppt:'Class Presentation', revision:'Revision', quiz:'MCQ Quiz', adv:'NEET Practice', kcet:'KCET Practice', writeit:'Answer Practice', papergen:'Paper Generator', boardimp:'Board Important'};
+const PREMIUM_LOCKED_TABS = ['mindmap', 'classppt', 'quiz', 'adv', 'kcet', 'writeit', 'papergen', 'boardimp', 'podcast'];
+const PREMIUM_TAB_LABELS = {mindmap:'Mind Map', classppt:'Class Presentation', revision:'Revision', quiz:'MCQ Quiz', adv:'NEET Practice', kcet:'KCET Practice', writeit:'Answer Practice', papergen:'Paper Generator', boardimp:'Board Important', podcast:'Audio Podcast'};
+
+const PODCASTS_CH4 = {
+  kn: {label:'Kannada', url:'pu2-ch4-assets/podcast-kannada.mp3'},
+  hi: {label:'Hindi', url:'pu2-ch4-assets/podcast-hindi.mp3'}
+};
+let podcastLangCh4 = 'kn';
+function renderPodcastLangCh4(){
+  const row = document.getElementById('podcastLangRow');
+  const player = document.getElementById('podcastPlayer');
+  if(!row || !player) return;
+  row.innerHTML = Object.keys(PODCASTS_CH4).map(function(k){
+    return '<button class="btn' + (podcastLangCh4===k?'':' secondary') + '" onclick="podcastSetLangCh4(\'' + k + '\')">' + PODCASTS_CH4[k].label + '</button>';
+  }).join('');
+  player.src = PODCASTS_CH4[podcastLangCh4].url;
+}
+function podcastSetLangCh4(lang){ podcastLangCh4 = lang; renderPodcastLangCh4(); }
+window.podcastSetLangCh4 = podcastSetLangCh4;
+renderPodcastLangCh4();
 function getPremiumUnlock(){
   try{ return JSON.parse(localStorage.getItem(PREMIUM_KEY) || 'null'); }catch(e){ return null; }
 }
@@ -6224,7 +6254,7 @@ function renderPremiumLockScreenCh2(tabId){
     + '<div style="text-align:center; margin-bottom:14px;">'
     + '<div style="font-size:38px;">\uD83D\uDD12</div>'
     + '<h3 style="color:var(--gold-2); margin:6px 0 2px; font-size:17px;">' + label + ' is Premium Content</h3>'
-    + '<div style="color:var(--text-dim); font-size:12px;">Part of the Premium bundle: Mind Map, Class Presentation, Revision, MCQ Quiz &amp; NEET Practice</div>'
+    + '<div style="color:var(--text-dim); font-size:12px;">Part of the Premium bundle: Mind Map, Class Presentation, Revision, MCQ Quiz, NEET Practice &amp; Audio Podcast</div>'
     + '</div>'
     + '<div style="text-align:center; margin-bottom:16px;">'
     + '<span style="text-decoration:line-through; color:var(--text-dim); font-size:14px;">\u20B9' + PREMIUM_PRICE_ORIGINAL + '</span>'
@@ -7544,7 +7574,7 @@ if(!window.__langSwitcherOutsideClickBound){
    click handlers are untouched — this only shows/hides the buttons. ---- */
 (function(){
   var CATEGORIES = [
-    {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','concept','studytips','boardimp','diagrams']},
+    {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','concept','podcast','studytips','boardimp','diagrams']},
     {id:'practice', label:'Practice', icon:'✍️', tabs:['flash','quiz','writeit','cross','revision']},
     {id:'test', label:'Test Prep', icon:'\u{1F3AF}', tabs:['adv','kcet','papergen']},
     {id:'explore', label:'Explore', icon:'\u{1F50D}', tabs:['tree','compare','mindmap','classppt','glossary']},
