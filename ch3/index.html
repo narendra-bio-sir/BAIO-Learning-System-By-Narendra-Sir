@@ -752,7 +752,8 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
       {key:'ch3_whatsnew_redesign_v1', html:'&#127807; <b>New look!</b> Cleaner typography and calmer colors across the app &mdash; same content, easier on the eyes.'},
       {key:'ch3_whatsnew_fullscreen_v1', html:'&#128421;&#65039; <b>Full Screen Mode</b> is here! Tap the button on MCQ Quiz, NEET Practice, KCET Practice, or Study Mode to focus distraction-free.'},
       {key:'ch3_whatsnew_pacing_v1', html:'&#128197; <b>New: Pacing tab!</b> Get your own week-by-week, hour-by-hour study plan for this chapter &mdash; sized to how much content each topic actually has. Benefits: &#128214; every topic split into focused 1-hour blocks (40 min reading + 20 min practice) &bull; &#9201;&#65039; paced at 1 hr/day, 5 days/week, so it never feels rushed &bull; &#128257; a revision plan built in after every weekend &bull; &#9989; tick off each hour as you go &mdash; your progress saves right on your device. Open the <b>Pacing</b> tab above to start.'},
-      {key:'ch3_whatsnew_diagram_marks_v1', html:'&#128202; <b>Important Diagrams now show mark weightage!</b> Every figure in the Important Diagrams tab shows a &ldquo;3 M&rdquo; / &ldquo;2&ndash;3 M&rdquo; badge next to its priority rating, so you know exactly how many marks it&rsquo;s worth in the board exam &mdash; plus a downloadable reference guide PDF right at the top of the tab.'}
+      {key:'ch3_whatsnew_diagram_marks_v1', html:'&#128202; <b>Important Diagrams now show mark weightage!</b> Every figure in the Important Diagrams tab shows a &ldquo;3 M&rdquo; / &ldquo;2&ndash;3 M&rdquo; badge next to its priority rating, so you know exactly how many marks it&rsquo;s worth in the board exam &mdash; plus a downloadable reference guide PDF right at the top of the tab.'},
+      {key:'ch3_whatsnew_podcast_v1', html:'&#127911; <b>New: Audio Podcast, in English, Kannada &amp; Hindi!</b> Listen to a full audio walkthrough of this chapter right inside the app &mdash; great for revising Algae, Bryophytes, Pteridophytes, Gymnosperms &amp; Angiosperms on the go. Open the <b>Audio Podcast</b> tab above to try it. (Part of Premium Content.)'}
     ];
     function showNextWhatsNew(){
       var el = document.getElementById('whatsNewBanner');
@@ -1232,6 +1233,7 @@ const TABS = [
   {id:'badges', label:'Milestones'},
   {id:'progress', label:'Progress'},
   {id:'study', label:'Study Mode'},
+  {id:'podcast', label:'Audio Podcast'},
   {id:'studytips', label:'Study Tips'},
   {id:'pacing', label:'Pacing'},
   {id:'concepts', label:'Concepts'},
@@ -1260,7 +1262,7 @@ function esc(s){ return (s===undefined||s===null)?'':String(s); }
 /* ---- Chapter tab bar: group the tabs into categories behind a dropdown,
    so the long tab list no longer needs one long scrolling row. ---- */
 const TAB_CATEGORIES = [
-  {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','concepts','studytips','boardimp','diagrams']},
+  {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','concepts','podcast','studytips','boardimp','diagrams']},
   {id:'practice', label:'Practice', icon:'\u270D\uFE0F', tabs:['flashcards','mcq','writeit','revision']},
   {id:'test', label:'Test Prep', icon:'\u{1F3AF}', tabs:['neet','kcet','papergen']},
   {id:'explore', label:'Explore', icon:'\u{1F50D}', tabs:['tree','compare','mindmap','classppt','glossary']},
@@ -1407,6 +1409,26 @@ function nextStepNudge(fromTab){
   return `<div class="setup-card" style="margin-top:14px; border:1px solid var(--gold); background:rgba(227,175,67,.08); display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
     <div style="font-size:12.5px; color:var(--ink-dim);">📍 Next step in your study path</div>
     <button class="opt-btn sel" onclick="switchTab('${next.id}')">${next.label} →</button>
+  </div>`;
+}
+
+const PODCASTS_CH3 = {
+  en: {label:'English', url:'assets/podcast-english.mp3'},
+  kn: {label:'Kannada', url:'assets/podcast-kannada.mp3'},
+  hi: {label:'Hindi', url:'assets/podcast-hindi.mp3'}
+};
+let podcastLang = 'en';
+function podcastSetLang(lang){ podcastLang = lang; renderContent(); }
+window.podcastSetLang = podcastSetLang;
+function renderPodcast(){
+  const langBtns = Object.keys(PODCASTS_CH3).map(k =>
+    `<div class="opt-btn ${podcastLang===k?'sel':''}" onclick="podcastSetLang('${k}')">${PODCASTS_CH3[k].label}</div>`
+  ).join('');
+  document.getElementById('content').innerHTML = `<div class="setup-card">
+    <h3 style="color:var(--gold);margin-bottom:4px;">🎧 Audio Podcast</h3>
+    <div style="color:var(--ink-dim);font-size:12px;margin-bottom:12px;line-height:1.6;">An audio walkthrough of this chapter &mdash; listen right here in the app while revising.</div>
+    <div class="opt-row" style="margin-bottom:12px;">${langBtns}</div>
+    <audio controls controlsList="nodownload noplaybackrate" oncontextmenu="return false;" preload="none" style="width:100%;" src="${PODCASTS_CH3[podcastLang].url}"></audio>
   </div>`;
 }
 
@@ -4055,8 +4077,8 @@ const PREMIUM_PRICE_RUPEES = 1999;
 const PREMIUM_PRICE_ORIGINAL = 3000;
 const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/3WXDfYoj';
 const HW_RAZORPAY_LINK = 'https://rzp.io/rzp/ZFZzLN9e';
-const PREMIUM_LOCKED_TABS = ['mcq','neet','kcet','writeit','mindmap','classppt','papergen','boardimp'];
-const PREMIUM_TAB_LABELS = {mcq:'MCQ Quiz', neet:'NEET Practice', kcet:'KCET Practice', writeit:'Answer Practice', mindmap:'Mind Map', classppt:'Class Presentation', papergen:'Paper Generator', boardimp:'Board Important'};
+const PREMIUM_LOCKED_TABS = ['mcq','neet','kcet','writeit','mindmap','classppt','papergen','boardimp','podcast'];
+const PREMIUM_TAB_LABELS = {mcq:'MCQ Quiz', neet:'NEET Practice', kcet:'KCET Practice', writeit:'Answer Practice', mindmap:'Mind Map', classppt:'Class Presentation', papergen:'Paper Generator', boardimp:'Board Important', podcast:'Audio Podcast'};
 
 function getPremiumUnlock(){ try{ return JSON.parse(localStorage.getItem(PREMIUM_KEY) || 'null'); }catch(e){ return null; } }
 function setPremiumUnlock(method, extra){
@@ -4133,7 +4155,7 @@ function renderPremiumLock(tabId){
     <div style="text-align:center;margin-bottom:14px;">
       <div style="font-size:38px;">\uD83D\uDD12</div>
       <h3 style="color:var(--gold);margin:6px 0 2px;font-size:17px;">${label} is Premium Content</h3>
-      <div style="color:var(--ink-dim);font-size:12px;">Part of the Premium bundle: MCQ Quiz, NEET Practice, Mind Map, Class Presentation, Paper Generator &amp; Board Important</div>
+      <div style="color:var(--ink-dim);font-size:12px;">Part of the Premium bundle: ${Object.values(PREMIUM_TAB_LABELS).join(', ')}</div>
     </div>
     <div style="text-align:center;margin-bottom:16px;">
       <span style="text-decoration:line-through;color:var(--ink-dim);font-size:14px;">\u20B9${PREMIUM_PRICE_ORIGINAL}</span>
@@ -4211,6 +4233,7 @@ function renderContent(){
     return;
   }
   if(currentTab==='study') renderStudy();
+  else if(currentTab==='podcast') renderPodcast();
   else if(currentTab==='studytips') renderStudyTips();
   else if(currentTab==='pacing') renderPacing();
   else if(currentTab==='concepts') renderConcepts();
