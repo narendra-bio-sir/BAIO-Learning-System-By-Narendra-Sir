@@ -1018,12 +1018,22 @@ function renderNotebookLM(){
   </div>`;
 }
 
-const PODCAST_CH5_URL = 'pu1-ch5-assets/podcast-kannada.mp3';
+const PODCASTS_CH5 = {
+  en: {label:'English', url:'pu1-ch5-assets/podcast-english.mp3'},
+  kn: {label:'Kannada', url:'pu1-ch5-assets/podcast-kannada.mp3'}
+};
+let podcastLang = 'en';
+function podcastSetLang(lang){ podcastLang = lang; renderPodcast(); }
+window.podcastSetLang = podcastSetLang;
 function renderPodcast(){
+  const langBtns = Object.keys(PODCASTS_CH5).map(k =>
+    `<div class="opt-btn ${podcastLang===k?'sel':''}" onclick="podcastSetLang('${k}')">${PODCASTS_CH5[k].label}</div>`
+  ).join('');
   document.getElementById('content').innerHTML = `<div class="setup-card">
-    <h3 style="color:var(--gold);margin-bottom:4px;">🎧 Audio Podcast (Kannada)</h3>
-    <div style="color:var(--ink-dim);font-size:12px;margin-bottom:16px;line-height:1.6;">A Kannada-language audio walkthrough of this chapter &mdash; listen right here in the app while revising.</div>
-    <audio controls controlsList="nodownload noplaybackrate" oncontextmenu="return false;" preload="none" style="width:100%;" src="${PODCAST_CH5_URL}"></audio>
+    <h3 style="color:var(--gold);margin-bottom:4px;">🎧 Audio Podcast</h3>
+    <div style="color:var(--ink-dim);font-size:12px;margin-bottom:12px;line-height:1.6;">An audio walkthrough of this chapter &mdash; listen right here in the app while revising.</div>
+    <div class="opt-row" style="margin-bottom:12px;">${langBtns}</div>
+    <audio controls controlsList="nodownload noplaybackrate" oncontextmenu="return false;" preload="none" style="width:100%;" src="${PODCASTS_CH5[podcastLang].url}"></audio>
   </div>`;
 }
 
