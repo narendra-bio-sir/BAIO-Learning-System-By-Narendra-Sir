@@ -1445,12 +1445,7 @@ window.addEventListener('afterprint', function(){
 
   <div class="panel">
     <h2>Why Biology Leads</h2>
-    <ul class="action-list">
-      <li><span class="action-num">1</span><span>Biology posts the <b>highest average score</b> of any subject in both the Slip Tests (58.9% combined) and the Monthly Test (70.8%).</span></li>
-      <li><span class="action-num">2</span><span>Biology has the <b>lowest failure rate</b> among core subjects in both assessments &mdash; 15.05% combined in Slip Tests, and just 5 failures (out of 80 who appeared) in the Monthly Test.</span></li>
-      <li><span class="action-num">3</span><span>Biology shows the <b>highest topper density</b> &mdash; 27.96% scoring &gt;15/20 in Slip Tests, and 25 students (the most of any subject) scoring 35+/40 in the Monthly Test.</span></li>
-      <li><span class="action-num">4</span><span>Physics, Chemistry, and Mathematics consistently show <b>failure rates above 25&ndash;55%</b> across both assessment types &mdash; the gap with Biology is structural, not a one-test effect.</span></li>
-    </ul>
+    <ul class="action-list" id="whyBiologyLeadsList"></ul>
   </div>
 
   <div class="footer-note" style="text-align:center;">
@@ -3619,10 +3614,12 @@ function buildOverview(){
     <div class="kpi hero"><div class="kpi-label">Biology Avg % (T1 &rarr; T2)</div><div class="kpi-value">${bio1}% &rarr; ${bio2}%</div><div class="kpi-note up">Highest of all core subjects, both tests</div></div>
     <div class="kpi gold"><div class="kpi-label">Biology Topper Density (&gt;15/20)</div><div class="kpi-value">${D.subjects.combined.BIO.topper_pct}%</div><div class="kpi-note">vs. &lt;4% combined in Physics &amp; Chemistry</div></div>
     <div class="kpi"><div class="kpi-label">Biology's Lead Widened</div><div class="kpi-value">+${lead1} &rarr; +${lead2} pts</div><div class="kpi-note">Gap over next-best core subject</div></div>
-    <div class="kpi warn"><div class="kpi-label">Chemistry Fail Rate (T2)</div><div class="kpi-value">${D.fail.test2.CHE.fail_rate_pct}%</div><div class="kpi-note down">Steepest subject decline</div></div>
+    <div class="kpi warn"><div class="kpi-label">Chemistry Fail Rate (T2)</div><div class="kpi-value">${D.fail.test2.CHE.fail_rate_pct}%</div><div class="kpi-note down">Highest fail rate of any subject, Test 2</div></div>
     ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">Biology Spread (SD, T2)</div><div class="kpi-value">${bioSD2Pct}%</div><div class="kpi-note">${sdLabel(bioSD2Pct,100)}</div></div>`:''}
     ${sdOptions.classWide?`<div class="kpi"><div class="kpi-label">Class-wide Spread (Total Score, T2)</div><div class="kpi-value">${classSDPct!==null?classSDPct+'%':'—'}</div><div class="kpi-note">${classSDPct!==null?sdLabel(classSDPct,100):''} across ${classTotalStats.n} students, all subjects combined</div></div>`:''}
   `;
+  const whyBioEl = document.getElementById('whyBiologyLeadsList');
+  if(whyBioEl) whyBioEl.innerHTML = buildWhyBiologyLeadsBullets();
 
   if(ovAvgChart) ovAvgChart.destroy();
   ovAvgChart = new Chart(document.getElementById('ovAvgChart'), {
@@ -4063,6 +4060,78 @@ function computePU1MonthlySubjectWide(monthKey){
   });
   totalStudents = seen.size;
   return { order, names, colors, avgPctCoreSTEM, avgPct, sdPct, highPerformers, failures, appeared, totalStudents };
+}
+
+/* Whether Biology is actually the top core-STEM subject for a given avgPctCoreSTEM snapshot —
+   used so the "Highest of all core STEM subjects" claim never goes stale if another subject
+   (e.g. Chemistry) overtakes Biology in a given month's results. */
+function bioCoreStemStandingNote(avgPctCoreSTEM){
+  const rivals = {PHY:'Physics', CHE:'Chemistry', MAT:'Mathematics'};
+  const top = Object.keys(rivals).reduce((a,b)=> avgPctCoreSTEM[b]>avgPctCoreSTEM[a] ? b : a, 'PHY');
+  if(avgPctCoreSTEM.BIO >= avgPctCoreSTEM[top]) return { text:'Highest of all core STEM subjects', cls:'up' };
+  const diff = Math.round((avgPctCoreSTEM[top]-avgPctCoreSTEM.BIO)*10)/10;
+  return { text:`${diff} pts behind ${rivals[top]} (highest this month)`, cls:'' };
+}
+
+/* Whether Biology actually has the most 35+/40 high-performers of all 8 subjects taught that
+   month — same staleness guard as bioCoreStemStandingNote(), for the High-Performers KPI. */
+function bioHighPerformerStandingNote(pu1sw){
+  const bioVal = pu1sw.highPerformers.BIO;
+  let top = 'BIO', topVal = bioVal;
+  pu1sw.order.forEach(subj=>{
+    if(pu1sw.highPerformers[subj] > topVal){ top = subj; topVal = pu1sw.highPerformers[subj]; }
+  });
+  if(top === 'BIO') return { ok:true, text: '35+/40, highest of 8 subjects' };
+  return { ok:false, text: `35+/40 — ${pu1sw.names[top]} leads with ${topVal}` };
+}
+
+/* Generic "where does this key rank among its peers" helper (higher value = better rank),
+   used so any "#1 of N" chip is computed from the actual numbers instead of assumed. */
+function rankAmong(valuesObj, key){
+  const vals = Object.values(valuesObj);
+  const target = valuesObj[key];
+  const better = vals.filter(v=>v>target).length;
+  const tied = vals.filter(v=>v===target).length > 1;
+  return { rank: better+1, total: vals.length, tied };
+}
+function rankChipHtml(rankInfo){
+  const cls = rankInfo.rank===1 ? 'up' : (rankInfo.rank<=Math.ceil(rankInfo.total/2) ? 'gold' : 'down');
+  return `<span class="chip ${cls}">#${rankInfo.rank} of ${rankInfo.total}${rankInfo.tied?' (tied)':''}</span>`;
+}
+
+/* Whether Biology actually has the lowest failure rate of the 4 core subjects for whichever
+   month is selected — same staleness guard as bioCoreStemStandingNote()/bioHighPerformerStandingNote(). */
+function bioFailRateStandingNote(pu1sw){
+  const core = ['BIO','PHY','CHE','MAT'];
+  const rateOf = s => pu1sw.appeared[s] ? pu1sw.failures[s]/pu1sw.appeared[s] : 0;
+  let lowest = 'BIO', lowestRate = rateOf('BIO');
+  core.forEach(s=>{ const r = rateOf(s); if(r < lowestRate){ lowest = s; lowestRate = r; } });
+  if(lowest === 'BIO') return { ok:true, text: `just ${pu1sw.failures.BIO} failures (out of ${pu1sw.appeared.BIO} who appeared)` };
+  return { ok:false, text: `${pu1sw.failures.BIO}/${pu1sw.appeared.BIO} — ${pu1sw.names[lowest]} has the lowest failure rate this month` };
+}
+
+/* Builds the "Why Biology Leads" bullet list from the CURRENT Slip Test (static, historical)
+   and Monthly Test (live, changes as new months are added) data, instead of a hand-written
+   snapshot that goes stale the moment another subject overtakes Biology in a given month. */
+function buildWhyBiologyLeadsBullets(){
+  const pu1sw = computePU1MonthlySubjectWide(pu1MonthCurrent);
+  const monthLabel = pu1CurrentMonthLabel();
+  const avgNote = bioCoreStemStandingNote(pu1sw.avgPctCoreSTEM);
+  const failNote = bioFailRateStandingNote(pu1sw);
+  const topperNote = bioHighPerformerStandingNote(pu1sw);
+  const avgLine = avgNote.cls==='up'
+    ? `Biology posts the <b>highest average score</b> of any subject in both the Slip Tests (${D.subjects.combined.BIO.avg_pct}% combined) and ${monthLabel} (${pu1sw.avgPctCoreSTEM.BIO}%).`
+    : `Biology posts the <b>highest average score</b> of any subject in the Slip Tests (${D.subjects.combined.BIO.avg_pct}% combined), though in ${monthLabel} it's ${pu1sw.avgPctCoreSTEM.BIO}% — ${avgNote.text}.`;
+  const failLine = failNote.ok
+    ? `Biology has the <b>lowest failure rate</b> among core subjects in both assessments — ${D.subjects.combined.BIO.fail_pct}% combined in Slip Tests, and ${failNote.text} in ${monthLabel}.`
+    : `Biology has the <b>lowest failure rate</b> among core subjects in the Slip Tests (${D.subjects.combined.BIO.fail_pct}% combined), though in ${monthLabel} it posts ${failNote.text}.`;
+  const topperLine = topperNote.ok
+    ? `Biology shows the <b>highest topper density</b> — ${D.subjects.combined.BIO.topper_pct}% scoring &gt;15/20 in Slip Tests, and ${pu1sw.highPerformers.BIO} students (the most of any subject) scoring 35+/40 in ${monthLabel}.`
+    : `Biology shows the <b>highest topper density</b> in Slip Tests (${D.subjects.combined.BIO.topper_pct}% scoring &gt;15/20), though in ${monthLabel} ${pu1sw.highPerformers.BIO} students scored 35+/40 — ${topperNote.text.replace(/^35\+\/40\s*[—-]\s*/,'')}.`;
+  return `<li><span class="action-num">1</span><span>${avgLine}</span></li>`+
+    `<li><span class="action-num">2</span><span>${failLine}</span></li>`+
+    `<li><span class="action-num">3</span><span>${topperLine}</span></li>`+
+    `<li><span class="action-num">4</span><span>Physics, Chemistry, and Mathematics consistently show <b>failure rates above 25&ndash;55%</b> in the Slip Tests &mdash; the gap with Biology there is structural, not a one-test effect.</span></li>`;
 }
 
 /* ---- Section-level (SPARK/PRIME) Biology stats for whichever PU-I month is selected — shared by
@@ -5117,6 +5186,18 @@ let bvoBuilt = false;
 let neetTestIdx = NEET_TESTS.length - 1; // default to latest
 function neetCurrentTest(){ return NEET_TESTS[neetTestIdx]; }
 
+/* Accurate "strongest/weakest of N" note for a 3-way (or more) subject %-comparison KPI card \u2014
+   checks the actual numbers instead of assuming one named subject always wins/loses, so the
+   claim doesn't go stale when a round's results flip the usual ranking. */
+function subjectStandingNote(vals, key, superlative){
+  const keys = Object.keys(vals);
+  const best = superlative==='strongest'
+    ? keys.reduce((a,b)=> vals[b]>vals[a] ? b : a)
+    : keys.reduce((a,b)=> vals[b]<vals[a] ? b : a);
+  if(best===key) return `${superlative} of the ${keys.length} subjects`;
+  const diff = Math.round(Math.abs(vals[key]-vals[best])*10)/10;
+  return superlative==='strongest' ? `${diff} pts behind ${best} (actual ${superlative})` : `${diff} pts ahead of ${best} (actual ${superlative})`;
+}
 function buildNeetObtOverview(){
   const test = neetCurrentTest();
   const rows = test.students;
@@ -5128,6 +5209,7 @@ function buildNeetObtOverview(){
   const pctPhyNum = avgPhy/180*100, pctCheNum = avgChe/180*100, pctBioNum = avgBio/360*100, pctTotalNum = avgTotal/720*100;
   const pctPhy = pctPhyNum.toFixed(1), pctChe = pctCheNum.toFixed(1),
         pctBio = pctBioNum.toFixed(1), pctTotal = pctTotalNum.toFixed(1);
+  const subjPct = {Physics:pctPhyNum, Chemistry:pctCheNum, Biology:pctBioNum};
   const top = rows[0];
   const overallAvgTotal = NEET_TESTS.reduce((s,t)=>s+t.students.reduce((s2,r)=>s2+r.total,0)/t.students.length,0)/NEET_TESTS.length;
 
@@ -5137,9 +5219,9 @@ function buildNeetObtOverview(){
   document.getElementById('noOverviewKpis').innerHTML = `
     <div class="kpi hero"><div class="kpi-label">Class Average (Total)</div><div class="kpi-value">${avgTotal.toFixed(0)}/720</div><div class="kpi-note">${pctTotal}% average across ${n} students</div></div>
     <div class="kpi gold"><div class="kpi-label">Overall Average (All Rounds)</div><div class="kpi-value">${overallAvgTotal.toFixed(0)}/720</div><div class="kpi-note">${(overallAvgTotal/720*100).toFixed(1)}% across ${NEET_TESTS.length} rounds</div></div>
-    <div class="kpi gold"><div class="kpi-label">Biology Average</div><div class="kpi-value">${avgBio.toFixed(0)}/360</div><div class="kpi-note up">${pctBio}% \u2014 strongest of the 3 subjects</div></div>
+    <div class="kpi gold"><div class="kpi-label">Biology Average</div><div class="kpi-value">${avgBio.toFixed(0)}/360</div><div class="kpi-note up">${pctBio}% \u2014 ${subjectStandingNote(subjPct,'Biology','strongest')}</div></div>
     <div class="kpi"><div class="kpi-label">Top Scorer</div><div class="kpi-value">${top.total}/720</div><div class="kpi-note">${top.name} (${top.section||'\u2014'})</div></div>
-    <div class="kpi warn"><div class="kpi-label">Physics Average</div><div class="kpi-value">${avgPhy.toFixed(0)}/180</div><div class="kpi-note down">${pctPhy}% \u2014 weakest of the 3 subjects</div></div>
+    <div class="kpi warn"><div class="kpi-label">Physics Average</div><div class="kpi-value">${avgPhy.toFixed(0)}/180</div><div class="kpi-note down">${pctPhy}% \u2014 ${subjectStandingNote(subjPct,'Physics','weakest')}</div></div>
     ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">Biology Spread (SD)</div><div class="kpi-value">${sdBioPct}%</div><div class="kpi-note">${sdLabel(sdBioPct,100)}</div></div>`:''}
   `;
 
@@ -5524,11 +5606,12 @@ function buildJeeObtRankings(){
 function buildBvo(){
   const pu1sw = computePU1MonthlySubjectWide(pu1MonthCurrent);
   const pu1MonthLabel = pu1CurrentMonthLabel();
+  const bioStanding = bioCoreStemStandingNote(pu1sw.avgPctCoreSTEM);
   document.getElementById('bvoKpis').innerHTML = `
     <div class="kpi hero"><div class="kpi-label">Biology Avg % &mdash; Slip Tests</div><div class="kpi-value">${D.subjects.combined.BIO.avg_pct}%</div><div class="kpi-note up">Highest of all core subjects</div></div>
-    <div class="kpi hero"><div class="kpi-label">Biology Avg % &mdash; ${pu1MonthLabel}</div><div class="kpi-value">${pu1sw.avgPctCoreSTEM.BIO}%</div><div class="kpi-note up">Highest of all core STEM subjects</div></div>
+    <div class="kpi hero"><div class="kpi-label">Biology Avg % &mdash; ${pu1MonthLabel}</div><div class="kpi-value">${pu1sw.avgPctCoreSTEM.BIO}%</div><div class="kpi-note ${bioStanding.cls}">${bioStanding.text}</div></div>
     <div class="kpi gold"><div class="kpi-label">Topper Density &mdash; Slip Tests</div><div class="kpi-value">${D.subjects.combined.BIO.topper_pct}%</div><div class="kpi-note">&gt;15/20, combined</div></div>
-    <div class="kpi gold"><div class="kpi-label">High-Performers &mdash; ${pu1MonthLabel}</div><div class="kpi-value">${pu1sw.highPerformers.BIO}</div><div class="kpi-note">35+/40, highest of 8 subjects</div></div>
+    <div class="kpi gold"><div class="kpi-label">High-Performers &mdash; ${pu1MonthLabel}</div><div class="kpi-value">${pu1sw.highPerformers.BIO}</div><div class="kpi-note">${bioHighPerformerStandingNote(pu1sw).text}</div></div>
   `;
 
   if(bvoSlipChart) bvoSlipChart.destroy();
@@ -5554,12 +5637,17 @@ function buildBvo(){
   const bvoMonthDescEl = document.querySelector('#bvoMonthlyCanvas')?.closest('.panel')?.querySelector('.desc');
   if(bvoMonthDescEl) bvoMonthDescEl.textContent = `${pu1MonthLabel}, overall percentage score by subject`;
 
+  const slipRankVals = {}; SUBJECTS.forEach(s=>{ slipRankVals[s] = D.subjects.combined[s].avg_pct; });
+  const slipRank = rankAmong(slipRankVals, 'BIO');
+  const mtRankVals = {}; pu1sw.order.forEach(s=>{ mtRankVals[s] = pu1sw.highPerformers[s]; });
+  const mtRank = rankAmong(mtRankVals, 'BIO');
+
   const tbody = document.querySelector('#bvoTable tbody');
   tbody.innerHTML = `
     <tr class="bio-row"><td>Average Score</td><td>${D.subjects.combined.BIO.avg_pct}%</td><td>${pu1sw.avgPctCoreSTEM.BIO}%</td></tr>
     <tr><td>Fail Rate</td><td>${D.subjects.combined.BIO.fail_pct}%</td><td>${pu1sw.failures.BIO} students (~${pu1sw.totalStudents} total)</td></tr>
     <tr><td>Topper / High-Performer Count</td><td>${D.subjects.combined.BIO.topper_pct}% (&gt;15/20)</td><td>${pu1sw.highPerformers.BIO} students (35+/40)</td></tr>
-    <tr><td>Rank vs Other Subjects</td><td><span class="chip up">#1 of 5</span></td><td><span class="chip up">#1 of 8</span></td></tr>
+    <tr><td>Rank vs Other Subjects</td><td>${rankChipHtml(slipRank)}</td><td>${rankChipHtml(mtRank)}</td></tr>
   `;
   bvoBuilt = true;
 }
@@ -8900,7 +8988,7 @@ function generatePU1Report(){
   html += '<div class="rp-kpi-grid">'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Slip Test 1 Class Average <span style="font-weight:400;text-transform:none;letter-spacing:0;">(all sections, all subjects)</span></div><div class="rp-kpi-value">'+o.avg1+'/80</div><div class="rp-kpi-sub">'+o.pct1+'% mean score</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Slip Test 2 Class Average <span style="font-weight:400;text-transform:none;letter-spacing:0;">(all sections, all subjects)</span></div><div class="rp-kpi-value" class="rp-red">'+o.avg2+'/80</div><div class="rp-kpi-sub">'+o.pct2+'% mean score</div></div>'+
-    '<div class="rp-kpi"><div class="rp-kpi-label">Biology Combined Average</div><div class="rp-kpi-value" class="rp-green">'+D.subjects.combined.BIO.avg_pct+'%</div><div class="rp-kpi-sub">Highest of all subjects</div></div>'+
+    '<div class="rp-kpi"><div class="rp-kpi-label">Biology Combined Average</div><div class="rp-kpi-value" class="rp-green">'+D.subjects.combined.BIO.avg_pct+'%</div><div class="rp-kpi-sub">Highest of all core subjects</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Overall Score Delta</div><div class="rp-kpi-value" class="rp-red">'+o.delta+'</div><div class="rp-kpi-sub">&#9660; '+Math.abs(o.deltaPct)+'% decline in ST2</div></div>'+
   '</div>';
 
@@ -8959,6 +9047,7 @@ function generatePU1Report(){
   if(inc.bvo){
     const slipRows = SUBJECTS.map((s,i)=>[NAMES[s], D.subjects.combined[s].avg_pct+'%', D.subjects.combined[s].fail_pct+'%']);
     const mtCore = ['BIO','CHE','PHY','MAT'];
+    const pu1sw = computePU1MonthlySubjectWide(pu1MonthCurrent);
     let mtHeaders, mtRows, mtLabel;
     if(rpShowMonthsSeparately){
       mtHeaders = ['Subject'].concat(rpPerMonthSW.flatMap(m => [m.label+' Avg %', m.label+' Failures']));
@@ -8969,17 +9058,20 @@ function generatePU1Report(){
       });
       mtLabel = 'By Month';
     } else {
-      const pu1sw = computePU1MonthlySubjectWide(pu1MonthCurrent);
       mtHeaders = ['Subject','Avg %','Failures (of appeared)'];
       mtRows = mtCore.map(s=>[pu1sw.names[s], pu1sw.avgPctCoreSTEM[s]+'%', pu1sw.failures[s]+' / '+pu1sw.appeared[s]+' ('+(pu1sw.appeared[s]?Math.round(pu1sw.failures[s]/pu1sw.appeared[s]*100):0)+'%)']);
       mtLabel = pu1CurrentMonthLabel();
     }
+    const bioStillLeadsAll = bioCoreStemStandingNote(pu1sw.avgPctCoreSTEM).cls==='up' && bioFailRateStandingNote(pu1sw).ok && bioHighPerformerStandingNote(pu1sw).ok;
+    const calloutText = bioStillLeadsAll
+      ? 'Highest average score, lowest failure rate, and highest topper density of any subject in both assessment types.'
+      : `Highest average score, lowest failure rate, and highest topper density of any subject in the Slip Tests; in ${pu1CurrentMonthLabel()}, Biology is ${pu1sw.avgPctCoreSTEM.BIO}% avg / ${pu1sw.failures.BIO} failures / ${pu1sw.highPerformers.BIO} high-performers — see the table above for how that compares to other subjects this month.`;
     html += rpSection('Biology vs Other Subjects',
       '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin-bottom:8px;">Slip Tests (Combined Average)</div>'+
       rpTable(['Subject','Combined Avg %','Fail %'], slipRows, 0) +
       '<div style="font-family:\'Space Grotesk\',sans-serif; font-size:13px; font-weight:700; color:var(--text-strong); margin:16px 0 8px;">'+mtLabel+'</div>'+
       rpTable(mtHeaders, mtRows, 0) +
-      '<div class="rp-callout"><b>Why Biology leads:</b> Highest average score, lowest failure rate, and highest topper density of any subject in both assessment types.</div>');
+      '<div class="rp-callout"><b>Why Biology leads:</b> '+calloutText+'</div>');
   }
   if(inc.neetobt){
     const n = NEETOBT.length;
