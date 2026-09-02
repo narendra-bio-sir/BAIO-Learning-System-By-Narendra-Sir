@@ -467,7 +467,7 @@ footer{text-align:center; color:var(--text-dim); font-size:11px; margin-top:22px
 /* Mind Map tab */
 .mindmap-wrap{
   overflow:auto; -webkit-overflow-scrolling:touch; touch-action:pinch-zoom pan-x pan-y;
-  border-radius:var(--radius); border:1px solid var(--border); background:#0a1610;
+  border-radius:var(--radius); border:1px solid var(--border); background:var(--bg-1);
   max-height:78vh;
 }
 .mindmap-wrap img{display:block; width:100%; height:auto;}
@@ -6402,15 +6402,15 @@ function premiumStatusRowCh2(){
     if(u && (u.method === 'demo' || u.method === 'masterdemo')){
       const hrsLeft = Math.max(0, Math.ceil((PREMIUM_DEMO_DURATION_MS - (Date.now() - u.ts)) / 3600000));
       return '<div class="dl-row"><div class="dl-info"><div class="dl-title">\uD83D\uDD13 Premium Content (Demo)</div>'
-        + '<div class="dl-sub">Unlocked \u2014 Mind Map, Class Presentation, MCQ Quiz, NEET Practice &amp; Paper Generator &middot; expires in ' + hrsLeft + 'h</div></div></div>'
+        + '<div class="dl-sub">Unlocked \u2014 ' + premiumBundleLabelList() + ' &middot; expires in ' + hrsLeft + 'h</div></div></div>'
         + '<div style="text-align:right; margin:-6px 0 10px;"><a href="#" onclick="reLockPremium(); return false;" style="font-size:11px; color:var(--text-dim); text-decoration:underline; cursor:pointer;">Re-lock Premium</a></div>';
     }
     return '<div class="dl-row"><div class="dl-info"><div class="dl-title">\uD83D\uDD13 Premium Content</div>'
-      + '<div class="dl-sub">Unlocked \u2014 Mind Map, Class Presentation, MCQ Quiz, NEET Practice &amp; Paper Generator</div></div></div>'
+      + '<div class="dl-sub">Unlocked \u2014 ' + premiumBundleLabelList() + '</div></div></div>'
       + '<div style="text-align:right; margin:-6px 0 10px;"><a href="#" onclick="reLockPremium(); return false;" style="font-size:11px; color:var(--text-dim); text-decoration:underline; cursor:pointer;">Re-lock Premium</a></div>';
   }
   return '<div class="dl-row"><div class="dl-info"><div class="dl-title">\uD83D\uDD12 Premium Content</div>'
-    + '<div class="dl-sub">Not yet unlocked \u2014 visit any premium tab (Mind Map, MCQ Quiz, NEET Practice, etc.) to unlock</div></div></div>';
+    + '<div class="dl-sub">Not yet unlocked \u2014 visit any premium tab (' + premiumBundleLabelList() + ') to unlock</div></div></div>';
 }
 /* ---------------- Student-locked unlock code (must match code_generator.html exactly) ---------------- */
 const CODE_SALT = 'BAIO-STUDENT-LOCK-2026';
