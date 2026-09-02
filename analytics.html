@@ -4065,6 +4065,29 @@ function computePU1MonthlySubjectWide(monthKey){
   return { order, names, colors, avgPctCoreSTEM, avgPct, sdPct, highPerformers, failures, appeared, totalStudents };
 }
 
+/* Whether Biology is actually the top core-STEM subject for a given avgPctCoreSTEM snapshot —
+   used so the "Highest of all core STEM subjects" claim never goes stale if another subject
+   (e.g. Chemistry) overtakes Biology in a given month's results. */
+function bioCoreStemStandingNote(avgPctCoreSTEM){
+  const rivals = {PHY:'Physics', CHE:'Chemistry', MAT:'Mathematics'};
+  const top = Object.keys(rivals).reduce((a,b)=> avgPctCoreSTEM[b]>avgPctCoreSTEM[a] ? b : a, 'PHY');
+  if(avgPctCoreSTEM.BIO >= avgPctCoreSTEM[top]) return { text:'Highest of all core STEM subjects', cls:'up' };
+  const diff = Math.round((avgPctCoreSTEM[top]-avgPctCoreSTEM.BIO)*10)/10;
+  return { text:`${diff} pts behind ${rivals[top]} (highest this month)`, cls:'' };
+}
+
+/* Whether Biology actually has the most 35+/40 high-performers of all 8 subjects taught that
+   month — same staleness guard as bioCoreStemStandingNote(), for the High-Performers KPI. */
+function bioHighPerformerStandingNote(pu1sw){
+  const bioVal = pu1sw.highPerformers.BIO;
+  let top = 'BIO', topVal = bioVal;
+  pu1sw.order.forEach(subj=>{
+    if(pu1sw.highPerformers[subj] > topVal){ top = subj; topVal = pu1sw.highPerformers[subj]; }
+  });
+  if(top === 'BIO') return '35+/40, highest of 8 subjects';
+  return `35+/40 — ${pu1sw.names[top]} leads with ${topVal}`;
+}
+
 /* ---- Section-level (SPARK/PRIME) Biology stats for whichever PU-I month is selected — shared by
    Monthly Test Analytics, Biology vs Others, PU-I vs PU-II Compare, Biology Report, and Reports. ---- */
 function computePU1SectionMonthlyStats(monthKey, section){
@@ -5524,11 +5547,12 @@ function buildJeeObtRankings(){
 function buildBvo(){
   const pu1sw = computePU1MonthlySubjectWide(pu1MonthCurrent);
   const pu1MonthLabel = pu1CurrentMonthLabel();
+  const bioStanding = bioCoreStemStandingNote(pu1sw.avgPctCoreSTEM);
   document.getElementById('bvoKpis').innerHTML = `
     <div class="kpi hero"><div class="kpi-label">Biology Avg % &mdash; Slip Tests</div><div class="kpi-value">${D.subjects.combined.BIO.avg_pct}%</div><div class="kpi-note up">Highest of all core subjects</div></div>
-    <div class="kpi hero"><div class="kpi-label">Biology Avg % &mdash; ${pu1MonthLabel}</div><div class="kpi-value">${pu1sw.avgPctCoreSTEM.BIO}%</div><div class="kpi-note up">Highest of all core STEM subjects</div></div>
+    <div class="kpi hero"><div class="kpi-label">Biology Avg % &mdash; ${pu1MonthLabel}</div><div class="kpi-value">${pu1sw.avgPctCoreSTEM.BIO}%</div><div class="kpi-note ${bioStanding.cls}">${bioStanding.text}</div></div>
     <div class="kpi gold"><div class="kpi-label">Topper Density &mdash; Slip Tests</div><div class="kpi-value">${D.subjects.combined.BIO.topper_pct}%</div><div class="kpi-note">&gt;15/20, combined</div></div>
-    <div class="kpi gold"><div class="kpi-label">High-Performers &mdash; ${pu1MonthLabel}</div><div class="kpi-value">${pu1sw.highPerformers.BIO}</div><div class="kpi-note">35+/40, highest of 8 subjects</div></div>
+    <div class="kpi gold"><div class="kpi-label">High-Performers &mdash; ${pu1MonthLabel}</div><div class="kpi-value">${pu1sw.highPerformers.BIO}</div><div class="kpi-note">${bioHighPerformerStandingNote(pu1sw)}</div></div>
   `;
 
   if(bvoSlipChart) bvoSlipChart.destroy();
