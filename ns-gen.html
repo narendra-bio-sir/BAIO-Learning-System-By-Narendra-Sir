@@ -589,7 +589,13 @@ function runLookup(){
     html += '<div class="result-meta" style="font-size:13px; color:var(--gold); font-weight:700; margin-bottom:8px;">' +
       escapeHtml(s.name) + ' &middot; ' + escapeHtml(s.roll) + ' &middot; ' + escapeHtml(s.section) +
       (s.__saved ? ' <span style="color:var(--teal); font-weight:400; font-size:11px;">(saved on this device)</span>' : '') + '</div>';
-    const labels = Object.keys(s.codes);
+    const labels = Object.keys(s.codes).sort((a, b) => {
+      const aRC = /Report Card Password/i.test(a);
+      const bRC = /Report Card Password/i.test(b);
+      if(aRC && !bRC) return -1;
+      if(bRC && !aRC) return 1;
+      return 0;
+    });
     if(!labels.length){
       html += '<div class="hint">No codes on file for this student.</div>';
     } else {
