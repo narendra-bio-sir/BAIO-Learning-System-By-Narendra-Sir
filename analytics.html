@@ -5256,7 +5256,7 @@ function buildNeetObtOverview(){
   topTable.innerHTML = '';
   rows.slice(0,10).forEach(r => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td><span class="place-chip">${r.rank}</span></td><td>${r.name}</td><td>${r.section||'\u2014'}</td><td>${r.phy}</td><td>${r.che}</td><td>${r.bio}</td><td><b>${r.total}</b></td>`;
+    tr.innerHTML = `<td><span class="place-chip">${r.rank}</span></td><td>${r.name}</td><td>${r.section||'\u2014'}</td><td>${r.phy}</td><td>${r.che}</td><td>${r.bio}</td><td><b>${r.total}</b><div style="font-size:10px; color:var(--muted); font-weight:400;">${(r.total/720*100).toFixed(1)}%</div></td>`;
     topTable.appendChild(tr);
   });
 
@@ -5313,7 +5313,7 @@ function buildNeetObtRankings(){
   fullTable.innerHTML = '';
   test.students.forEach(r => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${r.rank}</td><td>${r.name}</td><td>${r.section||'\u2014'}</td><td>${r.phy}</td><td>${r.che}</td><td>${r.bio}</td><td><b>${r.total}</b></td>`;
+    tr.innerHTML = `<td>${r.rank}</td><td>${r.name}</td><td>${r.section||'\u2014'}</td><td>${r.phy}</td><td>${r.che}</td><td>${r.bio}</td><td><b>${r.total}</b><div style="font-size:10px; color:var(--muted); font-weight:400;">${(r.total/720*100).toFixed(1)}%</div></td>`;
     fullTable.appendChild(tr);
   });
 }
@@ -5387,7 +5387,7 @@ function buildKcetObtOverview(){
   topTable.innerHTML = '';
   rows.slice(0,10).forEach(r => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td><span class="place-chip">${r.rank}</span></td><td>${r.name}</td><td>${r.section||'\u2014'}</td><td>${r.phy}</td><td>${r.che}</td><td>${r.mat}</td><td><b>${r.total}</b></td>`;
+    tr.innerHTML = `<td><span class="place-chip">${r.rank}</span></td><td>${r.name}</td><td>${r.section||'\u2014'}</td><td>${r.phy}</td><td>${r.che}</td><td>${r.mat}</td><td><b>${r.total}</b><div style="font-size:10px; color:var(--muted); font-weight:400;">${(r.total/135*100).toFixed(1)}%</div></td>`;
     topTable.appendChild(tr);
   });
 
@@ -5423,7 +5423,7 @@ function buildKcetObtRankings(){
   fullTable.innerHTML = '';
   test.students.forEach(r => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${r.rank}</td><td>${r.name}</td><td>${r.section||'\u2014'}</td><td>${r.phy}</td><td>${r.che}</td><td>${r.mat}</td><td><b>${r.total}</b></td>`;
+    tr.innerHTML = `<td>${r.rank}</td><td>${r.name}</td><td>${r.section||'\u2014'}</td><td>${r.phy}</td><td>${r.che}</td><td>${r.mat}</td><td><b>${r.total}</b><div style="font-size:10px; color:var(--muted); font-weight:400;">${(r.total/135*100).toFixed(1)}%</div></td>`;
     fullTable.appendChild(tr);
   });
 }
@@ -9815,7 +9815,7 @@ function buildPU2NeetObt(){
     options:{ scales:{ y:{ beginAtZero:true } } }
   });
 
-  document.querySelector('#pu2NoTopTable tbody').innerHTML = rows.slice(0,10).map((r,i)=>`<tr><td>${i+1}</td><td>${r.name}</td><td>${r.section||'\u2014'}</td><td>${r.PHY}</td><td>${r.CHE}</td><td>${r.BIO}</td><td><b>${r.neetTotal}</b></td></tr>`).join('');
+  document.querySelector('#pu2NoTopTable tbody').innerHTML = rows.slice(0,10).map((r,i)=>`<tr><td>${i+1}</td><td>${r.name}</td><td>${r.section||'\u2014'}</td><td>${r.PHY}</td><td>${r.CHE}</td><td>${r.BIO}</td><td><b>${r.neetTotal}</b><div style="font-size:10px; color:var(--muted); font-weight:400;">${(r.neetTotal/maxTotal*100).toFixed(1)}%</div></td></tr>`).join('');
 
   const trendLabels = PU2_TESTS.map(t=>t.label);
   const trendData = PU2_TESTS.map(t=>pu2ClassAvgPct(t,'BIO'));
@@ -9846,7 +9846,7 @@ function buildPU2NeetObt(){
       <div class="mini-kpi"><div class="v">${secTotals[i].toFixed(0)}</div><div class="l">${sec} Avg Total</div></div>`;
   }).join('');
 
-  document.querySelector('#pu2NoFullTable tbody').innerHTML = rows.map((r,i)=>`<tr><td>${i+1}</td><td>${r.name}</td><td>${r.section||'\u2014'}</td><td>${r.PHY}/${test.outof.PHY}</td><td>${r.CHE}/${test.outof.CHE}</td><td>${r.BIO}/${test.outof.BIO}</td><td><b>${r.neetTotal}</b></td></tr>`).join('');
+  document.querySelector('#pu2NoFullTable tbody').innerHTML = rows.map((r,i)=>`<tr><td>${i+1}</td><td>${r.name}</td><td>${r.section||'\u2014'}</td><td>${r.PHY}/${test.outof.PHY}</td><td>${r.CHE}/${test.outof.CHE}</td><td>${r.BIO}/${test.outof.BIO}</td><td><b>${r.neetTotal}</b><div style="font-size:10px; color:var(--muted); font-weight:400;">${(r.neetTotal/maxTotal*100).toFixed(1)}%</div></td></tr>`).join('');
 }
 (function(){
   const sel = document.getElementById('pu2NeetTestSelect');
@@ -9907,7 +9907,7 @@ function buildPU2KcetObtOverview(){
     options:{ scales:{ y:{ beginAtZero:true } } }
   });
 
-  document.querySelector('#pu2KcTopTable tbody').innerHTML = rows.slice(0,10).map(r=>`<tr><td>${r.rank}</td><td>${r.name}</td><td>${r.section||'\u2014'}</td><td>${r.phy}</td><td>${r.che}</td><td>${r.mat}</td><td><b>${r.total}</b></td></tr>`).join('');
+  document.querySelector('#pu2KcTopTable tbody').innerHTML = rows.slice(0,10).map(r=>`<tr><td>${r.rank}</td><td>${r.name}</td><td>${r.section||'\u2014'}</td><td>${r.phy}</td><td>${r.che}</td><td>${r.mat}</td><td><b>${r.total}</b><div style="font-size:10px; color:var(--muted); font-weight:400;">${(r.total/(test.outof*3)*100).toFixed(1)}%</div></td></tr>`).join('');
 
   const sections = ['CHAMPION','ELITE'];
   const totals = sections.map(sec=>{ const r=rows.filter(x=>x.section===sec); return r.length?r.reduce((s,x)=>s+x.total,0)/r.length:0; });
@@ -9922,7 +9922,7 @@ function buildPU2KcetObtOverview(){
       <div class="mini-kpi"><div class="v">${totals[i].toFixed(0)}</div><div class="l">${sec} Avg Total</div></div>`;
   }).join('');
 
-  document.querySelector('#pu2KcFullTable tbody').innerHTML = rows.map(r=>`<tr><td>${r.rank}</td><td>${r.name}</td><td>${r.section||'\u2014'}</td><td>${r.phy}/${test.outof}</td><td>${r.che}/${test.outof}</td><td>${r.mat}/${test.outof}</td><td><b>${r.total}</b></td></tr>`).join('');
+  document.querySelector('#pu2KcFullTable tbody').innerHTML = rows.map(r=>`<tr><td>${r.rank}</td><td>${r.name}</td><td>${r.section||'\u2014'}</td><td>${r.phy}/${test.outof}</td><td>${r.che}/${test.outof}</td><td>${r.mat}/${test.outof}</td><td><b>${r.total}</b><div style="font-size:10px; color:var(--muted); font-weight:400;">${(r.total/(test.outof*3)*100).toFixed(1)}%</div></td></tr>`).join('');
 
   buildPU2StreamComparison();
 }
