@@ -988,6 +988,7 @@ window.addEventListener('afterprint', function(){
     <button class="mode-btn teacher-mode-btn" data-mode="pucompare" style="display:none;">⚖️ PU-I vs PU-II (Biology)</button>
     <button class="mode-btn teacher-mode-btn" data-mode="achievers" style="display:none;">🏆 Potential Achievers</button>
     <button class="mode-btn teacher-mode-btn" data-mode="aspirants" style="display:none;">🌸 Blooming Aspirants</button>
+    <button class="mode-btn teacher-mode-btn" data-mode="examrisk" style="display:none;">🚨 Exam Risk &amp; Failures</button>
     <button class="mode-btn teacher-mode-btn" data-mode="bioreport" style="display:none;">🧬 Biology Report</button>
     <button class="mode-btn teacher-mode-btn" data-mode="failures" style="display:none;">⚠️ Failures &amp; Remedial Plan</button>
     <button class="mode-btn teacher-mode-btn" data-mode="electronicsreport" style="display:none;">⚡ Electronics Report</button>
@@ -2349,6 +2350,63 @@ window.addEventListener('afterprint', function(){
 </main>
 </div><!-- /app-aspirants -->
 
+<div class="app-container" id="app-examrisk" style="display:none;">
+<main>
+  <div class="panel">
+    <h2>🚨 Exam Risk &amp; Failures</h2>
+    <div class="desc">Students currently in the High Risk band (below 30% on their latest attempt) in NEET, KCET or JEE — the ones most in need of a remedial push. Sorted worst-first.</div>
+    <div class="desc" id="examRiskExamStatus" style="margin-top:6px; font-weight:600;"></div>
+    <div class="subtabs" id="examRiskCategoryTabs">
+      <button class="subtab-btn active" data-cat="neet">🩺 NEET</button>
+      <button class="subtab-btn" data-cat="kcet">📐 KCET (PCM)</button>
+      <button class="subtab-btn" data-cat="kcetpcb">📐 KCET (PCB)</button>
+      <button class="subtab-btn" data-cat="kcetpcmb">📐 KCET (PCMB)</button>
+      <button class="subtab-btn" data-cat="jee">🎯 JEE</button>
+    </div>
+    <div class="round-scope-row" id="examRiskRoundScopeRow" style="display:none; flex-wrap:wrap; align-items:center; gap:8px 16px; margin-top:10px;">
+      <span style="display:flex; align-items:center; gap:8px;">
+        <label for="examRiskRoundScope" style="font-size:11.5px; color:var(--muted);">Rounds (affects score):</label>
+        <select id="examRiskRoundScope" style="padding:8px 10px; border-radius:10px; border:1.5px solid var(--border); background:rgba(var(--overlay-rgb),0.05); color:var(--text-strong); font-size:13px; font-family:'Inter',sans-serif;"></select>
+      </span>
+      <span style="display:flex; align-items:center; gap:8px;">
+        <label for="examRiskMarksScope" style="font-size:11.5px; color:var(--muted);">Marks shown (display only):</label>
+        <select id="examRiskMarksScope" style="padding:8px 10px; border-radius:10px; border:1.5px solid var(--border); background:rgba(var(--overlay-rgb),0.05); color:var(--text-strong); font-size:13px; font-family:'Inter',sans-serif;"></select>
+      </span>
+    </div>
+    <div class="custom-report-options active" style="display:block; margin-top:10px;">
+      <div class="checkbox-row"><input type="checkbox" id="exrIncludePU1" checked><label for="exrIncludePU1">Include PU-I (Spark + Prime)</label></div>
+      <div style="margin-left:26px; margin-bottom:6px;">
+        <div class="checkbox-row"><input type="checkbox" class="exr-section-check" value="SPARK" id="exrSecSPARK" checked><label for="exrSecSPARK">SPARK</label></div>
+        <div class="checkbox-row"><input type="checkbox" class="exr-section-check" value="PRIME" id="exrSecPRIME" checked><label for="exrSecPRIME">PRIME</label></div>
+      </div>
+      <div class="checkbox-row"><input type="checkbox" id="exrIncludePU2" checked><label for="exrIncludePU2">Include PU-II (Champion + Elite)</label></div>
+      <div style="margin-left:26px; margin-bottom:6px;">
+        <div class="checkbox-row"><input type="checkbox" class="exr-section-check" value="CHAMPION" id="exrSecCHAMPION" checked><label for="exrSecCHAMPION">CHAMPION</label></div>
+        <div class="checkbox-row"><input type="checkbox" class="exr-section-check" value="ELITE" id="exrSecELITE" checked><label for="exrSecELITE">ELITE</label></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-row" id="examRiskKpis"></div>
+
+  <div class="panel">
+    <h2>📊 Exam Risk by Exam</h2>
+    <div class="desc">How many students currently fall in the High Risk band for each exam, with the current PU/section filters applied — tallest column has the most.</div>
+    <div class="exam-bar-chart" id="examRiskExamBarChart"></div>
+  </div>
+
+  <div class="panel">
+    <h2 id="examRiskListTitle">NEET At-Risk Students</h2>
+    <div class="desc" id="examRiskListDesc"></div>
+    <div class="table-wrap"><table id="examRiskTable">
+      <thead><tr><th>Rank</th><th>Name</th><th>Enroll Code</th><th>Section</th><th>PU</th><th>Score</th><th>Trend</th><th>Based On</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <div class="report-actions" id="examRiskShareBar" style="margin-top:12px;"></div>
+  </div>
+</main>
+</div><!-- /app-examrisk -->
+
 <div class="app-container" id="app-bioreport" style="display:none;">
 <main>
   <div class="subtabs">
@@ -3368,7 +3426,7 @@ document.querySelectorAll('.app-container').forEach(container=>{
 const ANALYTICS_MASTER_CODE = 'BAIO-NS-2026-R4T9';
 // Note: the teacher bypass now uses ANALYTICS_MASTER_CODE directly (defined above) \u2014
 // no separate password to remember.
-const ANALYTICS_LOCKED_MODES = ['slip', 'monthly', 'bvo', 'sections', 'neetobt', 'kcetobt', 'jeeobt', 'pucompare', 'achievers', 'aspirants', 'bioreport', 'failures', 'electronicsreport', 'keys', 'reports', 'adopted'];
+const ANALYTICS_LOCKED_MODES = ['slip', 'monthly', 'bvo', 'sections', 'neetobt', 'kcetobt', 'jeeobt', 'pucompare', 'achievers', 'aspirants', 'examrisk', 'bioreport', 'failures', 'electronicsreport', 'keys', 'reports', 'adopted'];
 function isAnalyticsUnlocked(){
   try{ return localStorage.getItem('baio_analytics_unlock') === 'true'; }catch(e){ return false; }
 }
@@ -3503,6 +3561,7 @@ function buildFnFor(mode){
   if(mode==='pucompare') return buildPuCompare;
   if(mode==='achievers') return buildAchievers;
   if(mode==='aspirants') return buildAspirants;
+  if(mode==='examrisk') return buildExamRisk;
   if(mode==='bioreport') return initBioReportTab;
   if(mode==='failures') return initFailuresTab;
   if(mode==='electronicsreport') return initElectronicsReportTab;
@@ -3511,7 +3570,7 @@ function buildFnFor(mode){
 }
 const ALL_CONTAINER_IDS = ['app-slip','app-monthly','app-bvo','app-sections','app-neetobt','app-kcetobt','app-jeeobt',
   'app-pu2slip','app-pu2monthly','app-pu2bvo','app-pu2sections','app-pu2neetobt','app-pu2kcetobt','app-pu2jeeobt',
-  'app-pucompare','app-achievers','app-aspirants','app-bioreport','app-failures','app-electronicsreport','app-keys','app-reports','app-student','app-adopted'];
+  'app-pucompare','app-achievers','app-aspirants','app-examrisk','app-bioreport','app-failures','app-electronicsreport','app-keys','app-reports','app-student','app-adopted'];
 document.querySelectorAll('.mode-btn[data-mode]').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     if(ANALYTICS_LOCKED_MODES.indexOf(btn.dataset.mode) !== -1 && !isAnalyticsUnlocked()){
@@ -3530,6 +3589,7 @@ document.querySelectorAll('.mode-btn[data-mode]').forEach(btn=>{
     });
     if(btn.dataset.mode === 'achievers') syncAchieversToPULevel();
     if(btn.dataset.mode === 'aspirants') syncAspirantsToPULevel();
+    if(btn.dataset.mode === 'examrisk') syncExamRiskToPULevel();
     if(btn.dataset.mode === 'reports') renderReportPUBlocks();
     const fn = buildFnFor(btn.dataset.mode);
     if(fn) fn();
@@ -3579,6 +3639,19 @@ function syncAspirantsToPULevel(){
   if(champBox) champBox.checked = pu2Box.checked;
   if(eliteBox) eliteBox.checked = pu2Box.checked;
 }
+function syncExamRiskToPULevel(){
+  const pu1Box = document.getElementById('exrIncludePU1');
+  const pu2Box = document.getElementById('exrIncludePU2');
+  if(!pu1Box || !pu2Box) return;
+  pu1Box.checked = currentPULevel === 'pu1';
+  pu2Box.checked = currentPULevel === 'pu2';
+  const sparkBox = document.getElementById('exrSecSPARK'), primeBox = document.getElementById('exrSecPRIME');
+  const champBox = document.getElementById('exrSecCHAMPION'), eliteBox = document.getElementById('exrSecELITE');
+  if(sparkBox) sparkBox.checked = pu1Box.checked;
+  if(primeBox) primeBox.checked = pu1Box.checked;
+  if(champBox) champBox.checked = pu2Box.checked;
+  if(eliteBox) eliteBox.checked = pu2Box.checked;
+}
 document.querySelectorAll('#puLevelSwitch [data-pulevel]').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     if(btn.dataset.pulevel === currentPULevel) return;
@@ -3594,6 +3667,9 @@ document.querySelectorAll('#puLevelSwitch [data-pulevel]').forEach(btn=>{
     } else if(activeMode && activeMode.dataset.mode === 'aspirants'){
       syncAspirantsToPULevel();
       buildAspirants();
+    } else if(activeMode && activeMode.dataset.mode === 'examrisk'){
+      syncExamRiskToPULevel();
+      buildExamRisk();
     } else if(activeMode && activeMode.dataset.mode === 'reports'){
       renderReportPUBlocks();
       const previewWrap = document.getElementById('reportPreviewWrap');
@@ -6957,7 +7033,7 @@ function computePU2KcetVariant(student, roundScope, variant){
     return [{key:'PHY',label:'Phy'},{key:'CHE',label:'Che'},{key:'MAT',label:'Mat'},
       hasBio ? {key:'BIO',label:'Bio'} : {key:'ELE',label:'Ele'}];
   };
-  const sumFor = r => subjectsFor(r).reduce((s,sub)=> s+(r[sub.key]||0), 0);
+  const sumFor = r => subjectsFor(r).reduce((s,sub)=> s+(typeof r[sub.key]==='number' ? r[sub.key] : 0), 0);
   const maxFor = r => r.outof * (variant==='pcmb' ? 4 : subjectsFor(r).length);
   const latest = attempts[attempts.length-1];
   const first = attempts[0];
@@ -7858,6 +7934,128 @@ function buildAspirants(){
   if(marksScopeSelect){
     marksScopeSelect.innerHTML = EXAM_MARKS_SCOPE_OPTIONS.map(o=>'<option value="'+o.value+'">'+o.label+'</option>').join('');
     marksScopeSelect.addEventListener('change', buildAspirants);
+  }
+  if(scopeRow) scopeRow.style.display = 'flex';
+})();
+
+/* ---- Exam Risk & Failures: same NEET/KCET/JEE readiness data as Blooming
+   Aspirants/Potential Achievers, but for the High Risk band (below 30% on
+   the latest attempt) — the students most in need of a remedial push.
+   No podium here (unlike Achievers/Aspirants) — medal styling doesn't fit
+   a list of struggling students, and the ranked table (worst-first) is
+   what's actually useful for planning remedial sessions. */
+const ATRISK_BAND_KEYS = ['high-risk'];
+function computeAtRiskList(category, opts){
+  return computeExamReadinessResults(category, opts)
+    .filter(({r})=> r.band && ATRISK_BAND_KEYS.indexOf(r.band.key) !== -1)
+    .map(({student, pu, r})=> ({ code: student.code, name: student.name, section: sectionLabel(student), pu, score: r.latestPct, trend: r.trend, band: r.band,
+      latestLabel: r.latestLabel, latestDate: r.latestDate, attemptsCount: r.attemptsCount, totalRounds: r.totalRounds,
+      latestSubjects: r.latestSubjects, latestTotalScore: r.latestTotalScore, latestTotalMax: r.latestTotalMax }))
+    .sort((a,b)=> a.score - b.score);
+}
+function atRiskThresholdLabel(){ return '“High Risk” readiness band (below 30% on latest attempt)'; }
+function renderAtRiskTable(list){
+  const tbody = document.querySelector('#examRiskTable tbody');
+  if(!list.length){
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--muted);">No students currently fall in this band (Threshold: '+atRiskThresholdLabel()+') with the data on file.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map((s,i)=>{
+    const trendHtml = s.trend===null||s.trend===undefined ? '—' :
+      (s.trend>=0 ? '<span style="color:#15803d;">↑ +'+s.trend+'</span>' : '<span style="color:#b91c1c;">↓ '+s.trend+'</span>');
+    const roundHtml = s.noMarksForScope
+      ? '<span style="color:var(--muted);">No matching-round marks</span>'
+      : (s.latestLabel
+        ? s.latestLabel+(s.latestDate?' · '+s.latestDate:'')+'<div style="font-size:10.5px;color:var(--muted);">'+(s.attemptsCount||0)+' of '+(s.totalRounds||s.attemptsCount||0)+' round'+((s.totalRounds||s.attemptsCount)===1?'':'s')+' attempted</div>'
+        : '—');
+    return '<tr><td>#'+(i+1)+'</td><td>'+s.name+'</td><td>'+s.code+'</td><td>'+s.section+'</td><td>PU-'+(s.pu===2?'II':'I')+'</td><td><b>'+aspirantScoreLabel(s.score)+'</b> '+s.band.icon+'</td><td>'+trendHtml+'</td><td>'+roundHtml+'</td></tr>';
+  }).join('');
+}
+/* Cross-exam comparison: how many At-Risk students each exam has right now,
+   independent of whichever sub-tab happens to be open. */
+function renderAtRiskExamBarChart(opts){
+  const chartEl = document.getElementById('examRiskExamBarChart');
+  if(!chartEl) return;
+  const bandFilter = r=> r.band && ATRISK_BAND_KEYS.indexOf(r.band.key) !== -1;
+  const examCats = Object.keys(ASPIRANT_CATEGORY_META).filter(cat=>cat!=='kcetpcmb');
+  const counts = examCats.map(cat=>
+    Object.assign({ cat, meta: ASPIRANT_CATEGORY_META[cat] }, examBarStat(cat, opts, bandFilter))
+  );
+  counts.sort((a,b)=> b.count - a.count);
+  const maxCount = Math.max(1, ...counts.map(c=>c.count));
+  chartEl.innerHTML = counts.map((c,i)=>{
+    const heightPct = Math.round((c.count/maxCount)*100);
+    return '<div class="exam-bar-col'+(i===0 && c.count>0 ? ' leader' : '')+'">'+
+      '<div class="exam-bar-count">'+c.count+'</div>'+
+      '<div class="exam-bar-pct">'+c.pctOfTotal+'% of '+c.total+'</div>'+
+      '<div class="exam-bar" style="height:'+heightPct+'%; background:var(--red);"></div>'+
+      '<div class="exam-bar-avg">'+(c.count ? 'avg '+c.avgScore+'%' : '—')+'</div>'+
+      '<div class="exam-bar-label">'+c.meta.icon+' '+c.meta.label+'</div>'+
+      '</div>';
+  }).join('');
+}
+function buildExamRisk(){
+  const activeBtn = document.querySelector('#examRiskCategoryTabs .subtab-btn.active');
+  const category = activeBtn ? activeBtn.dataset.cat : 'neet';
+  const scopeSelect = document.getElementById('examRiskRoundScope');
+  const opts = {
+    includePU1: document.getElementById('exrIncludePU1').checked,
+    includePU2: document.getElementById('exrIncludePU2').checked,
+    sections: Array.from(document.querySelectorAll('.exr-section-check:checked')).map(cb=>cb.value),
+    roundScope: scopeSelect ? scopeSelect.value : 'all'
+  };
+  const meta = ASPIRANT_CATEGORY_META[category];
+  const list = computeAtRiskList(category, opts);
+  const marksScopeSelect = document.getElementById('examRiskMarksScope');
+  applyDisplayMarksScope(list, category, marksScopeSelect ? marksScopeSelect.value : 'same');
+  const pu1Count = list.filter(s=>s.pu===1).length;
+  const pu2Count = list.filter(s=>s.pu===2).length;
+
+  document.getElementById('examRiskKpis').innerHTML =
+    '<div class="kpi hero"><div class="kpi-label">'+meta.icon+' '+meta.label+' At-Risk</div><div class="kpi-value">'+list.length+'</div><div class="kpi-note">students in this band &mdash; '+atRiskThresholdLabel()+'</div></div>'+
+    '<div class="kpi"><div class="kpi-label">PU-I</div><div class="kpi-value">'+pu1Count+'</div><div class="kpi-note">Spark + Prime</div></div>'+
+    '<div class="kpi"><div class="kpi-label">PU-II</div><div class="kpi-value">'+pu2Count+'</div><div class="kpi-note">Champion + Elite</div></div>';
+
+  document.getElementById('examRiskListTitle').textContent = meta.label+' At-Risk Students';
+  document.getElementById('examRiskListDesc').textContent = meta.desc+' Threshold: '+atRiskThresholdLabel()+'.';
+  document.getElementById('examRiskExamStatus').textContent = aspirantExamStatusSummary(category, opts);
+  renderAtRiskExamBarChart(opts);
+  renderAtRiskTable(list);
+
+  attachTopperShareBar('examRiskShareBar', () => ({
+    title: meta.label+' At-Risk Students',
+    subtitle: 'BAIO Learning System · '+list.length+' student'+(list.length===1?'':'s'),
+    rows: list.map(s=>({ name: s.name, section: s.section+' · PU-'+(s.pu===2?'II':'I'), score: aspirantScoreLabel(s.score) })),
+    outOf: null,
+    filenameBase: 'exam-risk-'+category
+  }));
+}
+(function wireExamRiskUI(){
+  const tabsWrap = document.getElementById('examRiskCategoryTabs');
+  if(!tabsWrap) return;
+  const scopeSelect = document.getElementById('examRiskRoundScope');
+  const scopeRow = document.getElementById('examRiskRoundScopeRow');
+  tabsWrap.querySelectorAll('.subtab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      tabsWrap.querySelectorAll('.subtab-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      populateRoundScopeSelect(scopeSelect, btn.dataset.cat);
+      buildExamRisk();
+    });
+  });
+  const pu1Cb = document.getElementById('exrIncludePU1');
+  const pu2Cb = document.getElementById('exrIncludePU2');
+  if(pu1Cb) pu1Cb.addEventListener('change', buildExamRisk);
+  if(pu2Cb) pu2Cb.addEventListener('change', buildExamRisk);
+  document.querySelectorAll('.exr-section-check').forEach(cb=> cb.addEventListener('change', buildExamRisk));
+  if(scopeSelect){
+    populateRoundScopeSelect(scopeSelect, 'neet');
+    scopeSelect.addEventListener('change', buildExamRisk);
+  }
+  const marksScopeSelect = document.getElementById('examRiskMarksScope');
+  if(marksScopeSelect){
+    marksScopeSelect.innerHTML = EXAM_MARKS_SCOPE_OPTIONS.map(o=>'<option value="'+o.value+'">'+o.label+'</option>').join('');
+    marksScopeSelect.addEventListener('change', buildExamRisk);
   }
   if(scopeRow) scopeRow.style.display = 'flex';
 })();
