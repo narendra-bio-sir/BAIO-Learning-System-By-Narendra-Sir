@@ -2122,6 +2122,16 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
     <div id="premiumStatusRowContainer"></div>
 
     <div class="dl-section-title">Study Material</div>
+    <div class="dl-row" data-pdf="00_Complete_Study_Notes.pdf">
+      <div class="dl-info">
+        <div class="dl-title">Complete Study Notes</div>
+        <div class="dl-sub">8 sections &middot; comprehensive &amp; analytical study material &middot; 5 pages</div>
+      </div>
+      <div class="dl-actions">
+        <button class="btn secondary dl-view-btn">View</button>
+        <button class="btn dl-btn">Download</button>
+      </div>
+    </div>
     <div class="dl-row" data-pdf="10_Typed_Notes.pdf">
       <div class="dl-info">
         <div class="dl-title">Narendra Sir's Typed Notes</div>
@@ -3456,7 +3466,9 @@ ADV.forEach((q,i)=>{ q._uid = i; });
    EMBEDDED PDF DOWNLOADS (base64) — offline, no external files
    ============================================================ */
 const PDF_FILES = {
-  "10_Typed_Notes.pdf": {"label": "Narendra Sir's Typed Notes.pdf", "b64": "pu2-ch5-assets/pdf-Typed_Notes.pdf?v=2"}
+  "10_Typed_Notes.pdf": {"label": "Narendra Sir's Typed Notes.pdf", "b64": "pu2-ch5-assets/pdf-Typed_Notes.pdf?v=2"},
+  "00_Complete_Study_Notes.pdf": {"label": "Complete Study Notes (Full Chapter).pdf", "b64": "pu2-ch5-assets/pdf-00_Complete_Study_Notes.pdf"},
+  "00b_Revision_Notes.pdf": {"label": "Revision Notes - Quick Summary.pdf", "b64": "pu2-ch5-assets/pdf-00b_Revision_Notes.pdf"}
 };
 
 /* ============================================================
@@ -6655,9 +6667,9 @@ function applyPremiumGates(){
 window.applyPremiumGates = applyPremiumGates;
 
 function revisionNotesRowHtmlCh2(){
-  /* No separate revision-notes PDF exists for this chapter yet, so nothing is
-     rendered here rather than linking to a file that does not exist. */
-  return '';
+  return '<div class="dl-row"><div class="dl-info"><div class="dl-title">📄 Revision Notes</div>'
+    + '<div class="dl-sub">Condensed quick-revision &amp; concept summary notes for the whole chapter</div></div>'
+    + '<div class="dl-actions"><button class="btn secondary" onclick="viewPdf(\'00b_Revision_Notes.pdf\')">View</button><button class="btn" onclick="downloadPdf(\'00b_Revision_Notes.pdf\', this)">Download</button></div></div>';
 }
 function hwDownloadBlocked(){
   alert('Viewing or downloading the handwritten notes needs a unique roll-number code (or the master code) from Narendra Sir. Score ' + HW_SCORE_THRESHOLD + '+ in a single NEET Practice session, then use "Share Report Card" to send your report card to his social media handle to get your code. Your best score so far: ' + bestNeetScoreCh2() + '.');
