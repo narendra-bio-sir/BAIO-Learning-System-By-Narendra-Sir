@@ -1067,7 +1067,8 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       {key:'pu2ch5_whatsnew_banks_v1', html:'&#127919; <b>Full question banks from day one.</b> MCQ Quiz, NEET Practice (8 question formats &mdash; assertion-reason, statement I &amp; II, matching, sequence and more) and KCET Practice are all fully loaded for this chapter, plus Answer Practice with keyword-based self-grading.'},
       {key:'pu2ch5_whatsnew_trilingual_v1', html:'&#127760; <b>English, Kannada &amp; Hindi.</b> Study Mode, Concepts, Study Tips, Pacing and the Pronunciation glossary all switch language with the globe button in the header.'},
       {key:'pu2ch5_whatsnew_pacing_v1', html:'&#128197; <b>Pacing tab.</b> Get your own week-by-week, hour-by-hour study plan for this chapter &mdash; sized to how much content each topic actually has, paced at 1 hr/day, 5 days/week, with revision built in after every weekend.'},
-      {key:'pu2ch5_whatsnew_fullscreen_v1', html:'&#128421;&#65039; <b>Full Screen Mode</b> is here! Tap the button on MCQ Quiz, NEET Practice, KCET Practice, or Study Mode to focus distraction-free.'}
+      {key:'pu2ch5_whatsnew_fullscreen_v1', html:'&#128421;&#65039; <b>Full Screen Mode</b> is here! Tap the button on MCQ Quiz, NEET Practice, KCET Practice, or Study Mode to focus distraction-free.'},
+      {key:'pu2ch5_whatsnew_podcast_v1', html:'&#127911; <b>New: Audio Podcast!</b> Listen to a full audio walkthrough of Molecular Basis of Inheritance right in the app &mdash; available in English, Kannada and Hindi. Open the new <b>Audio Podcast</b> tab above to start listening.'}
     ];
     function showNextWhatsNew(){
       var el = document.getElementById('whatsNewBanner');
@@ -1219,6 +1220,7 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
     <button class="tab-btn" data-tab="badges">Milestones</button>
     <button class="tab-btn" data-tab="progress">Progress</button>
     <button class="tab-btn active" data-tab="study">Study Mode</button>
+    <button class="tab-btn" data-tab="podcast">Audio Podcast</button>
     <button class="tab-btn" data-tab="studytips">Study Tips</button>
     <button class="tab-btn" data-tab="pacing">Pacing</button>
     <button class="tab-btn" data-tab="concept">Concepts</button>
@@ -1256,6 +1258,16 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
     </div>
   </div>
 
+  <!-- ===================== AUDIO PODCAST ===================== -->
+  <div class="panel" id="panel-podcast">
+    <div class="card">
+      <h3 style="color:var(--gold-2); margin-bottom:4px;">🎧 Audio Podcast</h3>
+      <div style="color:var(--text-dim); font-size:12px; margin-bottom:12px; line-height:1.6;">An audio walkthrough of this chapter &mdash; listen right here in the app while revising.</div>
+      <div class="opt-row" id="podcastLangRow" style="display:flex; flex-wrap:wrap; gap:7px; margin-bottom:12px;"></div>
+      <audio id="podcastPlayer" controls controlsList="nodownload noplaybackrate" oncontextmenu="return false;" preload="none" style="width:100%;"></audio>
+    </div>
+    <div class="premium-lock-overlay" id="premLock_podcast"></div>
+  </div>
 
   <!-- ===================== STUDY TIPS ===================== -->
   <div class="panel" id="panel-studytips">
@@ -6414,8 +6426,27 @@ const PREMIUM_PRICE_RUPEES = 1999;
 const PREMIUM_PRICE_ORIGINAL = 3000;
 const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/ncmBEYAw';
 const PREMIUM_UNLOCK_LOOKUP = {};
-const PREMIUM_LOCKED_TABS = ['mindmap', 'classppt', 'quiz', 'adv', 'kcet', 'writeit', 'papergen', 'boardimp'];
-const PREMIUM_TAB_LABELS = {mindmap:'Mind Map', classppt:'Class Presentation', revision:'Revision', quiz:'MCQ Quiz', adv:'NEET Practice', kcet:'KCET Practice', writeit:'Answer Practice', papergen:'Paper Generator', boardimp:'Board Important'};
+const PREMIUM_LOCKED_TABS = ['mindmap', 'classppt', 'quiz', 'adv', 'kcet', 'writeit', 'papergen', 'boardimp', 'podcast'];
+const PREMIUM_TAB_LABELS = {mindmap:'Mind Map', classppt:'Class Presentation', revision:'Revision', quiz:'MCQ Quiz', adv:'NEET Practice', kcet:'KCET Practice', writeit:'Answer Practice', papergen:'Paper Generator', boardimp:'Board Important', podcast:'Audio Podcast'};
+
+const PODCASTS_CH5 = {
+  en: {label:'English', url:'pu2-ch5-assets/podcast-english.mp3'},
+  kn: {label:'Kannada', url:'pu2-ch5-assets/podcast-kannada.mp3'},
+  hi: {label:'Hindi', url:'pu2-ch5-assets/podcast-hindi.mp3'}
+};
+let podcastLangCh5 = 'en';
+function renderPodcastLangCh5(){
+  const row = document.getElementById('podcastLangRow');
+  const player = document.getElementById('podcastPlayer');
+  if(!row || !player) return;
+  row.innerHTML = Object.keys(PODCASTS_CH5).map(function(k){
+    return '<button class="btn' + (podcastLangCh5===k?'':' secondary') + '" onclick="podcastSetLangCh5(\'' + k + '\')">' + PODCASTS_CH5[k].label + '</button>';
+  }).join('');
+  player.src = PODCASTS_CH5[podcastLangCh5].url;
+}
+function podcastSetLangCh5(lang){ podcastLangCh5 = lang; renderPodcastLangCh5(); }
+window.podcastSetLangCh5 = podcastSetLangCh5;
+renderPodcastLangCh5();
 function premiumBundleLabelList(){
   var names = PREMIUM_LOCKED_TABS.map(function(id){ return PREMIUM_TAB_LABELS[id] || id; });
   if(names.length <= 1) return names.join('');
@@ -7920,7 +7951,7 @@ if(!window.__langSwitcherOutsideClickBound){
    click handlers are untouched — this only shows/hides the buttons. ---- */
 (function(){
   var CATEGORIES = [
-    {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','concept','studytips','boardimp','diagrams']},
+    {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','concept','podcast','studytips','boardimp','diagrams']},
     {id:'practice', label:'Practice', icon:'✍️', tabs:['flash','quiz','writeit','revision']},
     {id:'test', label:'Test Prep', icon:'\u{1F3AF}', tabs:['adv','kcet','papergen']},
     {id:'explore', label:'Explore', icon:'\u{1F50D}', tabs:['tree','compare','mindmap','classppt','glossary']},
