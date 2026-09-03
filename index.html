@@ -459,7 +459,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     <div class="announce-modal">
       <div class="announce-modal-icon">&#128241;</div>
       <div class="announce-modal-text">Scan this QR code to open BAIO Learning System on your phone.</div>
-      <img src="qr-code.png" alt="QR code to open BAIO Learning System" style="width:100%; max-width:240px; border-radius:10px; background:#fff; padding:8px; margin:0 auto 18px; display:block;">
+      <img src="qr-code.png?v=2" alt="QR code to open BAIO Learning System" style="width:100%; max-width:240px; border-radius:10px; background:#fff; padding:8px; margin:0 auto 18px; display:block;">
       <button type="button" class="announce-modal-later-btn" id="qrShowModalCloseBtn">Close</button>
     </div>
   </div>
@@ -519,7 +519,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     }
     function doShareQr(e){
       e.preventDefault();
-      fetch('qr-code.png').then(function(r){ return r.blob(); }).then(function(blob){
+      fetch('qr-code.png?v=2').then(function(r){ return r.blob(); }).then(function(blob){
         var file;
         try{ file = new File([blob], 'baio-qr-code.png', {type:'image/png'}); }catch(err){ file = null; }
         if(file && navigator.canShare && navigator.canShare({files:[file]})){
@@ -534,7 +534,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
           setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
           alert('QR code image downloaded! You can now share it from your photos/gallery on WhatsApp, Instagram, etc.');
         }
-      }).catch(function(){ window.open('qr-code.png', '_blank'); });
+      }).catch(function(){ window.open('qr-code.png?v=2', '_blank'); });
     }
     if(link) link.addEventListener('click', doShare);
     if(cornerBtn) cornerBtn.addEventListener('click', doShare);
@@ -588,7 +588,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
 
 <div id="qrCornerWidget" class="qr-corner-widget">
   <button id="qrCornerCloseBtn" class="qr-corner-close" aria-label="Dismiss">&times;</button>
-  <img src="qr-code.png" alt="QR code to open BAIO Learning System on your phone" width="300" height="300">
+  <img src="qr-code.png?v=2" alt="QR code to open BAIO Learning System on your phone" width="300" height="300">
   <div class="qr-caption">📱 Scan to continue on your phone</div>
 </div>
 
