@@ -5548,7 +5548,7 @@ function buildJeeObtOverview(){
   topTable.innerHTML = '';
   rows.slice(0,10).forEach(r => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td><span class="place-chip">${r.rank}</span></td><td>${r.name}</td><td>${r.section||'—'}</td><td>${r.mat}</td><td>${r.phy}</td><td>${r.che}</td><td><b>${r.total}</b></td>`;
+    tr.innerHTML = `<td><span class="place-chip">${r.rank}</span></td><td>${r.name}</td><td>${r.section||'—'}</td><td>${r.mat}</td><td>${r.phy}</td><td>${r.che}</td><td><b>${r.total}</b><div style="font-size:10px; color:var(--muted); font-weight:400;">${(r.total/300*100).toFixed(1)}%</div></td>`;
     topTable.appendChild(tr);
   });
 
@@ -5583,7 +5583,7 @@ function buildJeeObtRankings(){
   fullTable.innerHTML = '';
   test.students.forEach(r => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${r.rank}</td><td>${r.name}</td><td>${r.section||'—'}</td><td>${r.mat}</td><td>${r.phy}</td><td>${r.che}</td><td><b>${r.total}</b></td>`;
+    tr.innerHTML = `<td>${r.rank}</td><td>${r.name}</td><td>${r.section||'—'}</td><td>${r.mat}</td><td>${r.phy}</td><td>${r.che}</td><td><b>${r.total}</b><div style="font-size:10px; color:var(--muted); font-weight:400;">${(r.total/300*100).toFixed(1)}%</div></td>`;
     fullTable.appendChild(tr);
   });
 }
@@ -10042,7 +10042,7 @@ function buildPU2JeeObt(){
   topTable.innerHTML = '';
   rows.slice(0,10).forEach(r => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td><span class="place-chip">${r.rank}</span></td><td>${r.name}</td><td>${r.section||'—'}</td><td>${r.mat}</td><td>${r.phy}</td><td>${r.che}</td><td><b>${r.total}</b></td>`;
+    tr.innerHTML = `<td><span class="place-chip">${r.rank}</span></td><td>${r.name}</td><td>${r.section||'—'}</td><td>${r.mat}</td><td>${r.phy}</td><td>${r.che}</td><td><b>${r.total}</b><div style="font-size:10px; color:var(--muted); font-weight:400;">${(r.total/300*100).toFixed(1)}%</div></td>`;
     topTable.appendChild(tr);
   });
 
@@ -10077,7 +10077,7 @@ function buildPU2JeeObtRankings(){
   fullTable.innerHTML = '';
   test.students.forEach(r => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${r.rank}</td><td>${r.name}</td><td>${r.section||'—'}</td><td>${r.mat}</td><td>${r.phy}</td><td>${r.che}</td><td><b>${r.total}</b></td>`;
+    tr.innerHTML = `<td>${r.rank}</td><td>${r.name}</td><td>${r.section||'—'}</td><td>${r.mat}</td><td>${r.phy}</td><td>${r.che}</td><td><b>${r.total}</b><div style="font-size:10px; color:var(--muted); font-weight:400;">${(r.total/300*100).toFixed(1)}%</div></td>`;
     fullTable.appendChild(tr);
   });
 }
