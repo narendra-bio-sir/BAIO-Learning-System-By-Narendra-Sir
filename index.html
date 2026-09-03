@@ -322,10 +322,25 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
   font-weight:700; font-size:12.5px; cursor:pointer;
 }
 
+.qr-corner-widget{
+  display:none; position:fixed; bottom:16px; left:16px; z-index:500;
+  background:var(--panel); border:1px solid var(--line); border-radius:14px;
+  box-shadow:0 12px 40px rgba(0,0,0,0.4); padding:12px 14px 10px; width:150px; text-align:center;
+}
+.qr-corner-widget img{width:100%; height:auto; border-radius:8px; display:block; background:#fff; padding:6px;}
+.qr-corner-widget .qr-caption{font-size:11px; color:var(--ink-dim); margin-top:8px; line-height:1.4;}
+.qr-corner-close{
+  position:absolute; top:-8px; right:-8px; width:22px; height:22px; border-radius:50%;
+  background:var(--panel2); border:1px solid var(--line); color:var(--ink-dim); cursor:pointer;
+  font-size:14px; line-height:1; display:flex; align-items:center; justify-content:center;
+}
+.qr-corner-close:hover{color:var(--ink); border-color:var(--gold);}
+
 /* ============ DESKTOP LAYOUT (>=1024px) ============ */
 @media(min-width:1024px){
   .wrap{max-width:1180px;}
   .catalog{grid-template-columns:1fr 1fr 1fr;}
+  .qr-corner-widget{display:block;}
 }
 </style>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN_HERE"}'></script>
@@ -440,6 +455,12 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
 
 </div>
 
+<div id="qrCornerWidget" class="qr-corner-widget">
+  <button id="qrCornerCloseBtn" class="qr-corner-close" aria-label="Dismiss">&times;</button>
+  <img src="qr-code.png" alt="QR code to open BAIO Learning System on your phone" width="300" height="300">
+  <div class="qr-caption">📱 Scan to continue on your phone</div>
+</div>
+
 <button id="faqChatBtn" class="faq-chat-btn" aria-label="Open help chat">
   <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#1a1406" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
@@ -458,6 +479,21 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
   </div>
 </div>
 
+<script>
+(function(){
+  try{
+    var qrWidget = document.getElementById('qrCornerWidget');
+    var qrCloseBtn = document.getElementById('qrCornerCloseBtn');
+    if(qrWidget && qrCloseBtn){
+      if(localStorage.getItem('baio_qr_widget_dismissed')) qrWidget.style.display = 'none';
+      qrCloseBtn.addEventListener('click', function(){
+        qrWidget.style.display = 'none';
+        try{ localStorage.setItem('baio_qr_widget_dismissed', '1'); }catch(e){}
+      });
+    }
+  }catch(e){}
+})();
+</script>
 <script>
 (function(){
   function setBadgeCount(n){
