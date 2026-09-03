@@ -85,6 +85,11 @@ header{padding:34px 0 22px; text-align:center;}
 .sig-stat{min-width:90px;}
 .sig-stat .n{font-size:22px; font-weight:700; color:var(--gold);}
 .sig-stat .l{font-size:10.5px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:0.6px; margin-top:2px;}
+.share-corner-btn{
+  position:absolute; top:0; right:0; width:32px; height:32px; border-radius:50%;
+  border:1px solid var(--line); background:var(--panel2); font-size:14px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+}
 
 .chapter-jump-menu{
   display:none; position:absolute; z-index:50; min-width:230px; max-width:280px;
@@ -368,6 +373,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       <div class="sig-stat"><div class="n" id="statChapters">&hellip;</div><div class="l">Chapters Live</div></div>
       <div class="sig-stat"><div class="n" id="statQuestions">400+</div><div class="l">Practice Questions</div></div>
       <div class="sig-stat"><div class="n" id="statSessions">&ndash;</div><div class="l">Your Sessions Logged</div></div>
+      <button id="shareAppBtn" class="share-corner-btn" title="Share this app" aria-label="Share this app">&#128228;</button>
     </div>
     <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle light/dark theme">&#127769;</button>
     <script>(function(){try{var t=localStorage.getItem('baio_theme')||'light';if(t==='light')document.getElementById('themeToggleBtn').innerHTML='&#9728;️';}catch(e){}})();</script>
@@ -456,7 +462,8 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
   <script>
   (function(){
     var link = document.getElementById('shareAppLink');
-    if(!link) return;
+    var cornerBtn = document.getElementById('shareAppBtn');
+    if(!link && !cornerBtn) return;
     var APP_URL = 'https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/';
     var shareText = '📚 BAIO Learning System — Biology All In One for PU-I & PU-II, NEET/KCET aligned. Study notes, MCQs, NEET practice, flashcards & more, chapter by chapter — by Narendra Sir.';
     function fallbackCopy(text){
@@ -475,7 +482,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       if(ok) alert('Link copied to clipboard!\n\n' + APP_URL + '\n\nShare it with a friend.');
       else prompt('Copy this link to share:', APP_URL);
     }
-    link.addEventListener('click', function(e){
+    function doShare(e){
       e.preventDefault();
       if(navigator.share){
         navigator.share({title:'BAIO Learning System', text:shareText, url:APP_URL}).catch(function(){});
@@ -484,7 +491,9 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       } else {
         afterCopy(fallbackCopy(shareText + '\n' + APP_URL));
       }
-    });
+    }
+    if(link) link.addEventListener('click', doShare);
+    if(cornerBtn) cornerBtn.addEventListener('click', doShare);
   })();
   </script>
 
