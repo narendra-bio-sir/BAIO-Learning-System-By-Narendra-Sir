@@ -373,6 +373,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       <div class="sig-stat"><div class="n" id="statChapters">&hellip;</div><div class="l">Chapters Live</div></div>
       <div class="sig-stat"><div class="n" id="statQuestions">400+</div><div class="l">Practice Questions</div></div>
       <div class="sig-stat"><div class="n" id="statSessions">&ndash;</div><div class="l">Your Sessions Logged</div></div>
+      <button id="shareQrBtn" class="share-corner-btn" style="right:38px; font-size:10px; font-weight:700;" title="Share QR code" aria-label="Share QR code">QR</button>
       <button id="shareAppBtn" class="share-corner-btn" title="Share this app" aria-label="Share this app">&#128228;</button>
     </div>
     <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle light/dark theme">&#127769;</button>
@@ -463,7 +464,8 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
   (function(){
     var link = document.getElementById('shareAppLink');
     var cornerBtn = document.getElementById('shareAppBtn');
-    if(!link && !cornerBtn) return;
+    var qrBtn = document.getElementById('shareQrBtn');
+    if(!link && !cornerBtn && !qrBtn) return;
     var APP_URL = 'https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/';
     var shareText = '📚 BAIO Learning System — Biology All In One for PU-I & PU-II, NEET/KCET aligned. Study notes, MCQs, NEET practice, flashcards & more, chapter by chapter — by Narendra Sir.';
     function fallbackCopy(text){
@@ -492,8 +494,28 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
         afterCopy(fallbackCopy(shareText + '\n' + APP_URL));
       }
     }
+    function doShareQr(e){
+      e.preventDefault();
+      fetch('qr-code.png').then(function(r){ return r.blob(); }).then(function(blob){
+        var file;
+        try{ file = new File([blob], 'baio-qr-code.png', {type:'image/png'}); }catch(err){ file = null; }
+        if(file && navigator.canShare && navigator.canShare({files:[file]})){
+          navigator.share({files:[file], title:'BAIO Learning System', text:'📱 Scan this QR code to open BAIO Learning System on your phone.'}).catch(function(){});
+        } else if(navigator.share){
+          navigator.share({title:'BAIO Learning System', text:shareText, url:APP_URL}).catch(function(){});
+        } else {
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url; a.download = 'baio-qr-code.png';
+          document.body.appendChild(a); a.click(); document.body.removeChild(a);
+          setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+          alert('QR code image downloaded! You can now share it from your photos/gallery on WhatsApp, Instagram, etc.');
+        }
+      }).catch(function(){ window.open('qr-code.png', '_blank'); });
+    }
     if(link) link.addEventListener('click', doShare);
     if(cornerBtn) cornerBtn.addEventListener('click', doShare);
+    if(qrBtn) qrBtn.addEventListener('click', doShareQr);
   })();
   </script>
 
