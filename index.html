@@ -69,7 +69,7 @@ header{padding:34px 0 22px; text-align:center;}
 }
 
 .hero{
-  border:1px solid var(--line); border-radius:20px; padding:26px 24px; margin-top:26px;
+  border:1px solid var(--line); border-radius:20px; padding:26px 24px 78px; margin-top:26px;
   background:linear-gradient(160deg, var(--panel), var(--panel2));
   position:relative; overflow:hidden;
 }
@@ -374,6 +374,40 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     <button id="indexHardRefreshBtn" class="theme-toggle-btn" style="right:66px;" onclick="indexHardRefresh()" title="Force-refresh this page (clears any cached copy)" aria-label="Force-refresh this page">&#128260;</button>
     <button id="pu2ChapterJumpBtn" class="theme-toggle-btn" style="right:108px;" title="Jump to a live PU-II chapter" aria-label="Jump to a live PU-II chapter" aria-haspopup="true" aria-expanded="false">&#127942;</button>
     <button id="pu1ChapterJumpBtn" class="theme-toggle-btn" style="right:150px;" title="Jump to a live PU-I chapter" aria-label="Jump to a live PU-I chapter" aria-haspopup="true" aria-expanded="false">&#127891;</button>
+    <button id="shareAppBtn" class="theme-toggle-btn" style="right:24px; bottom:68px;" title="Share this app" aria-label="Share this app">&#128228;</button>
+    <script>
+    (function(){
+      var btn = document.getElementById('shareAppBtn');
+      if(!btn) return;
+      var APP_URL = 'https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/';
+      var shareText = '📚 BAIO Learning System — Biology All In One for PU-I & PU-II, NEET/KCET aligned. Study notes, MCQs, NEET practice, flashcards & more, chapter by chapter — by Narendra Sir.';
+      function fallbackCopy(text){
+        try{
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed'; ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.focus(); ta.select();
+          var ok = document.execCommand('copy');
+          document.body.removeChild(ta);
+          return ok;
+        }catch(e){ return false; }
+      }
+      function afterCopy(ok){
+        if(ok) alert('Link copied to clipboard!\n\n' + APP_URL + '\n\nShare it with a friend.');
+        else prompt('Copy this link to share:', APP_URL);
+      }
+      btn.addEventListener('click', function(){
+        if(navigator.share){
+          navigator.share({title:'BAIO Learning System', text:shareText, url:APP_URL}).catch(function(){});
+        } else if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(shareText + '\n' + APP_URL).then(function(){ afterCopy(true); }).catch(function(){ afterCopy(fallbackCopy(shareText + '\n' + APP_URL)); });
+        } else {
+          afterCopy(fallbackCopy(shareText + '\n' + APP_URL));
+        }
+      });
+    })();
+    </script>
   </div>
 
   <div id="chapterJumpMenu" class="chapter-jump-menu" role="menu"></div>
