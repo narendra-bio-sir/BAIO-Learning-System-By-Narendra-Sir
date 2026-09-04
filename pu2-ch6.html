@@ -1263,11 +1263,13 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
 
   <!-- ===================== AUDIO PODCAST ===================== -->
   <div class="panel" id="panel-podcast">
-    <div class="card" style="opacity:0.75;">
-      <h3 style="color:var(--gold-2); margin-bottom:4px;">🎧 Audio Podcast <span style="background:var(--panel-2); color:var(--text-dim); font-size:10.5px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; padding:2px 8px; border-radius:20px; margin-left:6px; vertical-align:middle;">Coming soon</span></h3>
-      <div style="color:var(--text-dim); font-size:12px; margin-bottom:4px; line-height:1.6;">An audio walkthrough of this chapter (English, Kannada &amp; Hindi) is being recorded and will be added here soon &mdash; just like the Molecular Basis of Inheritance chapter's podcast.</div>
-      <div style="color:var(--text-dim); font-size:12px; line-height:1.6;">Meanwhile, use the <b>Study Mode</b> and <b>Study Tips</b> tabs for a full walkthrough of Evolution, or download the <b>Typed Notes</b> PDF from the Downloads tab.</div>
+    <div class="card">
+      <h3 style="color:var(--gold-2); margin-bottom:4px;">🎧 Audio Podcast</h3>
+      <div style="color:var(--text-dim); font-size:12px; margin-bottom:12px; line-height:1.6;">An audio walkthrough of this chapter &mdash; listen right here in the app while revising.</div>
+      <div class="opt-row" id="podcastLangRow" style="display:flex; flex-wrap:wrap; gap:7px; margin-bottom:12px;"></div>
+      <audio id="podcastPlayer" controls controlsList="nodownload noplaybackrate" oncontextmenu="return false;" preload="none" style="width:100%;"></audio>
     </div>
+    <div class="premium-lock-overlay" id="premLock_podcast"></div>
   </div>
 
   <!-- ===================== STUDY TIPS ===================== -->
@@ -4598,11 +4600,30 @@ const PREMIUM_PRICE_RUPEES = 1999;
 const PREMIUM_PRICE_ORIGINAL = 3000;
 const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/jaOHL7c';
 const PREMIUM_UNLOCK_LOOKUP = {};
-const PREMIUM_LOCKED_TABS = ['mindmap', 'classppt', 'quiz', 'adv', 'kcet', 'writeit', 'papergen', 'boardimp'];
-const PREMIUM_TAB_LABELS = {mindmap:'Mind Map', classppt:'Class Presentation', revision:'Revision', quiz:'MCQ Quiz', adv:'NEET Practice', kcet:'KCET Practice', writeit:'Answer Practice', papergen:'Paper Generator', boardimp:'Board Important'};
+const PREMIUM_LOCKED_TABS = ['mindmap', 'classppt', 'quiz', 'adv', 'kcet', 'writeit', 'papergen', 'boardimp', 'podcast'];
+const PREMIUM_TAB_LABELS = {mindmap:'Mind Map', classppt:'Class Presentation', revision:'Revision', quiz:'MCQ Quiz', adv:'NEET Practice', kcet:'KCET Practice', writeit:'Answer Practice', papergen:'Paper Generator', boardimp:'Board Important', podcast:'Audio Podcast'};
 
-// Audio Podcast for this chapter has not been recorded yet — the Audio Podcast tab
-// shows a "Coming soon" placeholder (see panel-podcast) instead of a player.
+const PODCASTS_CH6 = {
+  en: {label:'English', url:'pu2-ch6-assets/podcast-english.mp3'},
+  kn: {label:'Kannada', url:'pu2-ch6-assets/podcast-kannada.mp3'},
+  hi: {label:'Hindi', url:'pu2-ch6-assets/podcast-hindi.mp3'},
+  ur: {label:'Urdu', url:'pu2-ch6-assets/podcast-urdu.mp3'},
+  mr: {label:'Marathi', url:'pu2-ch6-assets/podcast-marathi.mp3'}
+};
+let podcastLangCh6 = 'en';
+function renderPodcastLangCh6(){
+  const row = document.getElementById('podcastLangRow');
+  const player = document.getElementById('podcastPlayer');
+  if(!row || !player) return;
+  row.innerHTML = Object.keys(PODCASTS_CH6).map(function(k){
+    return '<button class="btn' + (podcastLangCh6===k?'':' secondary') + '" onclick="podcastSetLangCh6(\'' + k + '\')">' + PODCASTS_CH6[k].label + '</button>';
+  }).join('');
+  player.src = PODCASTS_CH6[podcastLangCh6].url;
+}
+function podcastSetLangCh6(lang){ podcastLangCh6 = lang; renderPodcastLangCh6(); }
+window.podcastSetLangCh6 = podcastSetLangCh6;
+renderPodcastLangCh6();
+
 function premiumBundleLabelList(){
   var names = PREMIUM_LOCKED_TABS.map(function(id){ return PREMIUM_TAB_LABELS[id] || id; });
   if(names.length <= 1) return names.join('');
