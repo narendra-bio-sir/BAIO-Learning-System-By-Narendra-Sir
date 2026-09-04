@@ -1215,6 +1215,10 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       <div style="color:var(--text-dim); font-size:12px; margin-bottom:12px; line-height:1.6;">An audio walkthrough of this chapter &mdash; listen right here in the app while revising.</div>
       <div class="opt-row" id="podcastLangRow" style="display:flex; flex-wrap:wrap; gap:7px; margin-bottom:12px;"></div>
       <audio id="podcastPlayer" controls controlsList="nodownload noplaybackrate" oncontextmenu="return false;" preload="none" style="width:100%;"></audio>
+      <div style="display:flex; gap:8px; justify-content:center; margin-top:10px;">
+        <button class="btn secondary" onclick="podcastSkip(-10)">&#9664;&#9664; 10s</button>
+        <button class="btn secondary" onclick="podcastSkip(10)">10s &#9654;&#9654;</button>
+      </div>
     </div>
     <div class="premium-lock-overlay" id="premLock_podcast"></div>
   </div>
@@ -5393,6 +5397,13 @@ function renderPodcastLangCh2(){
 function podcastSetLangCh2(lang){ podcastLangCh2 = lang; renderPodcastLangCh2(); }
 window.podcastSetLangCh2 = podcastSetLangCh2;
 renderPodcastLangCh2();
+function podcastSkip(sec){
+  const el = document.getElementById('podcastPlayer');
+  if(!el) return;
+  const dur = isFinite(el.duration) ? el.duration : (el.currentTime + Math.max(sec,0));
+  el.currentTime = Math.max(0, Math.min(dur, el.currentTime + sec));
+}
+window.podcastSkip = podcastSkip;
 function getPremiumUnlock(){
   try{ return JSON.parse(localStorage.getItem(PREMIUM_KEY) || 'null'); }catch(e){ return null; }
 }
