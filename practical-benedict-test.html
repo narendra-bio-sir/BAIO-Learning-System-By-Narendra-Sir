@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BAIO">
+<title>Benedict's Test Practical | BAIO Learning System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B1B14; --navy2:#0F2419; --panel:#13281E; --panel2:#0E211A;
+  --gold:#D4AF37; --gold2:#B8912A; --teal:#2EE6C5; --teal2:#127566;
+  --ink:#EAF3EE; --ink-dim:#9FC4B6; --line:rgba(212,175,55,0.22);
+  --danger:#E7695B; --ok:#33C48A;
+  --liq-empty:var(--panel2); --liq-benedict:#2F6FB0; --liq-green:#4C9A4C; --liq-yellow:#D9B23A; --liq-orange:#D97B2E; --liq-brickred:#B5432A; --precip-color:#8A3420;
+}
+[data-theme="light"]{
+  --navy:#F7F5EE; --navy2:#EFEBDD; --panel:#FFFFFF; --panel2:#F3F0E6;
+  --gold:#B8912A; --gold2:#8A6A1A; --teal:#0F8F7A; --teal2:#0B6F5E;
+  --ink:#1E2A22; --ink-dim:#5C6E63; --line:rgba(184,145,42,0.25);
+  --danger:#C33A2C; --ok:#1F9D6C;
+  --liq-empty:var(--panel2); --liq-benedict:#2F6FB0; --liq-green:#4C9A4C; --liq-yellow:#D9B23A; --liq-orange:#D97B2E; --liq-brickred:#B5432A; --precip-color:#8A3420;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0; background:var(--navy); color:var(--ink); font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased; transition:background 0.25s, color 0.25s;}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif; margin:0;}
+.wrap{max-width:760px; margin:0 auto; padding:0 18px 70px;}
+a{color:var(--teal);}
+
+.topnav{position:sticky; top:0; z-index:30; background:rgba(11,27,20,0.94); backdrop-filter:blur(6px); border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; padding:10px 18px;}
+[data-theme="light"] .topnav{background:rgba(244,241,232,0.94);}
+.topnav .brand{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13.5px; color:var(--ink);}
+.topnav .brand span{color:var(--gold);}
+.topnav-actions{display:flex; align-items:center; gap:8px;}
+.icon-btn{flex:0 0 auto; width:34px; height:34px; border-radius:10px; border:1px solid var(--line); background:var(--panel); color:var(--ink); font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; text-decoration:none;}
+.lang-switcher{display:flex; gap:4px;}
+.lang-btn{padding:5px 9px; border-radius:12px; font-size:10px; font-weight:700; background:var(--panel2); color:var(--ink-dim); border:1px solid var(--line); cursor:pointer; white-space:nowrap;}
+.lang-btn.active{background:var(--gold); color:#1a1406; border-color:var(--gold);}
+
+.practicals-dd{position:relative;}
+.practicals-menu{
+  position:absolute; top:calc(100% + 8px); right:0; z-index:50; display:none; flex-direction:column; gap:2px;
+  min-width:230px; padding:6px; background:var(--panel); border:1px solid var(--line); border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.28);
+}
+.practicals-menu.open{display:flex;}
+.practicals-menu a{display:block; padding:9px 11px; border-radius:8px; font-size:12.5px; line-height:1.4; color:var(--ink); text-decoration:none;}
+.practicals-menu a:hover{background:var(--panel2);}
+.practicals-menu a.current{color:var(--gold); font-weight:700; background:rgba(212,175,55,0.1); pointer-events:none;}
+
+.hero{padding:34px 0 22px; text-align:center;}
+.eyebrow{font-size:11px; letter-spacing:2.5px; text-transform:uppercase; color:var(--teal); font-weight:700;}
+.hero h1{font-size:29px; line-height:1.15; margin-top:10px; text-wrap:balance;}
+.hero p{font-size:13.5px; color:var(--ink-dim); line-height:1.7; margin-top:12px; max-width:560px; margin-left:auto; margin-right:auto;}
+
+.section-tag{font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); font-weight:700; margin:26px 0 4px;}
+
+.stage-grid{display:grid; grid-template-columns:1.05fr .95fr; gap:14px; margin-top:26px;}
+@media(max-width:680px){ .stage-grid{grid-template-columns:1fr;} }
+.card{background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:18px 18px 14px; margin-top:14px;}
+.card h2{font-size:15px; color:var(--gold); margin-bottom:2px;}
+.card .card-note{font-size:11.5px; color:var(--ink-dim); margin:0 0 10px;}
+.card svg{display:block; width:100%; height:auto; max-width:220px; margin:0 auto;}
+
+.tube-outline{ fill:none; stroke:var(--ink-dim); stroke-width:3; stroke-linejoin:round; }
+.tube-stand{ stroke:var(--line); stroke-width:4; stroke-linecap:round; }
+.tube-clamp{ fill:var(--panel2); stroke:var(--line); stroke-width:1.5; }
+.liquid{ transform-box:fill-box; transform-origin:50% 100%; transform:scaleY(var(--level)); fill:var(--lcolor); transition:transform 1.2s cubic-bezier(.4,0,.2,1), fill 1.2s ease; }
+.drop{ opacity:0; transition:opacity .9s ease; }
+.flame{ opacity:0; transition:opacity .7s ease; }
+.bubble{ opacity:0; transition:opacity .8s ease; }
+.precip{ opacity:0; transition:opacity 1.1s ease; }
+.label-sub{ font:400 10px/1 'Inter',sans-serif; fill:var(--ink-dim); }
+
+svg[data-stage="0"]{ --level:0; --lcolor:var(--liq-empty); }
+svg[data-stage="1"]{ --level:.5; --lcolor:var(--liq-benedict); }
+svg[data-stage="2"]{ --level:.58; --lcolor:var(--liq-benedict); }
+svg[data-stage="3"]{ --level:.58; --lcolor:var(--liq-benedict); }
+svg[data-stage="4"]{ --level:.58; --lcolor:var(--liq-yellow); }
+svg[data-stage="5"]{ --level:.58; --lcolor:var(--liq-orange); }
+
+svg[data-stage="2"] .drop-sample{ opacity:1; }
+svg[data-stage="3"] .flame, svg[data-stage="3"] .bubble,
+svg[data-stage="4"] .flame, svg[data-stage="4"] .bubble{ opacity:1; }
+svg[data-stage="5"] .precip{ opacity:1; }
+
+.color-key{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:6px; }
+.key-item{ text-align:center; width:76px; }
+.key-tube{ width:30px; height:46px; margin:0 auto 6px; border-radius:6px 6px 14px 14px; border:2px solid var(--line); position:relative; overflow:hidden; background:var(--panel2); }
+.key-tube i{ position:absolute; left:0; right:0; bottom:0; display:block; }
+.key-item .kt-label{ font-size:10.5px; font-weight:700; color:var(--ink); }
+.key-item .kt-sub{ font-size:9.5px; color:var(--ink-dim); line-height:1.3; margin-top:2px; }
+
+.controls{ background:var(--panel2); border:1px solid var(--line); border-radius:16px; padding:16px 18px 18px; margin-top:14px; }
+.transport{ display:flex; align-items:center; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
+button.ctl{ font:600 12.5px/1 'Inter',sans-serif; border-radius:9px; border:1px solid var(--line); background:var(--panel); color:var(--ink); padding:8px 13px; cursor:pointer; }
+button.ctl.primary{ background:linear-gradient(135deg,var(--gold),var(--gold2)); border-color:var(--gold); color:#1a1406; padding:8px 16px; }
+[data-theme="light"] button.ctl.primary{ color:#fff; }
+button.ctl:disabled{ opacity:.4; cursor:default; }
+.stopwatch{ margin-left:auto; font:700 13px/1 'Inter',sans-serif; font-variant-numeric:tabular-nums; color:var(--ink-dim); }
+
+.stepper{ position:relative; height:24px; margin-bottom:12px; }
+.stepper-rail{ position:absolute; left:6px; right:6px; top:11px; height:3px; background:var(--line); border-radius:3px; }
+.stepper-fill{ position:absolute; left:6px; top:11px; height:3px; width:0%; background:var(--gold); border-radius:3px; transition:width .9s ease; }
+.stepper-dots{ position:absolute; left:0; right:0; top:0; display:flex; justify-content:space-between; }
+.dot{ width:22px; height:22px; border-radius:50%; border:2px solid var(--line); background:var(--panel); cursor:pointer; padding:0; position:relative; }
+.dot::after{ content:""; position:absolute; inset:5px; border-radius:50%; background:transparent; }
+.dot.active{ border-color:var(--gold); }
+.dot.active::after{ background:var(--gold); }
+.dot.done{ border-color:var(--teal2); }
+.dot.done::after{ background:var(--teal); }
+
+.caption{ font-size:13.5px; line-height:1.55; color:var(--ink); min-height:40px; }
+
+.method-list{ margin:0; padding-left:18px; font-size:13px; line-height:1.7; color:var(--ink-dim); }
+.method-list li::marker{ color:var(--gold); font-weight:700; }
+.materials{ font-size:12px; color:var(--ink-dim); margin:0 0 10px; line-height:1.6; }
+.materials b{ color:var(--ink); }
+.explain p{ font-size:13.5px; line-height:1.65; color:var(--ink-dim); margin:0 0 10px; }
+.explain b{ color:var(--ink); }
+
+.obs-table{ width:100%; border-collapse:collapse; font-size:12px; margin-top:2px; }
+.obs-table th,.obs-table td{ border:1px solid var(--line); padding:8px 9px; text-align:left; vertical-align:top; }
+.obs-table th{ background:rgba(212,175,55,0.12); color:var(--gold); font-family:'Space Grotesk',sans-serif; font-size:11.5px; }
+.obs-table td{ color:var(--ink-dim); }
+.obs-table td:first-child{ color:var(--ink); font-weight:600; }
+
+.inference-list{ margin:0; padding-left:20px; font-size:13px; line-height:1.7; color:var(--ink-dim); }
+.inference-list li{ margin-bottom:8px; }
+.inference-list li::marker{ color:var(--gold); font-weight:700; }
+.inference-list b{ color:var(--ink); }
+
+.precaution-list{ margin:0; padding-left:20px; font-size:13px; line-height:1.7; color:var(--ink-dim); }
+.precaution-list li{ margin-bottom:6px; }
+.precaution-list li::marker{ color:var(--danger); font-weight:700; }
+
+.more-practicals{font-size:12px; text-align:center; margin-top:10px;}
+footer{ font-size:11.5px; color:var(--ink-dim); text-align:center; border-top:1px solid var(--line); padding-top:16px; margin-top:26px; }
+
+@media (prefers-reduced-motion:reduce){
+  .liquid, .drop, .flame, .bubble, .precip{ transition-duration:.01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="brand">BAIO <span data-i18n="brand_practical">Practical</span></div>
+  <div class="topnav-actions">
+    <div id="langSwitcher" class="lang-switcher"></div>
+    <div class="practicals-dd">
+      <button class="icon-btn" id="practicalsBtn" title="All Practicals" aria-haspopup="true" aria-expanded="false">🔬</button>
+      <div class="practicals-menu" id="practicalsMenu" role="menu">
+        <a href="practical-plasmolysis.html" data-i18n="menuPlasmolysis" role="menuitem">🧪 Plasmolysis in a Rhoeo Leaf</a>
+        <a href="practical-ts-stem.html" data-i18n="menuTsStem" role="menuitem">🌿 T.S. of Monocot &amp; Dicot Stem</a>
+        <a href="practical-biuret-test.html" data-i18n="menuBiuret" role="menuitem">🧫 Biuret Test for Proteins</a>
+        <a href="practical-benedict-test.html" class="current" data-i18n="menuBenedict" role="menuitem">🧪 Benedict's Test for Sugars</a>
+      </div>
+    </div>
+    <a href="index.html" class="icon-btn" title="Back to BAIO home">🏠</a>
+    <button class="icon-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle dark/light theme">🌙</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <div class="eyebrow" data-i18n="eyebrow">Biochemistry · Practical</div>
+    <h1 data-i18n="h1_title">Benedict's Test for Reducing Sugars</h1>
+    <p data-i18n="intro">Benedict's reagent turns from blue to brick-red when it meets a reducing sugar like glucose — and heating is what drives the reaction. Press play to add the unknown sample, heat the tube in a water bath, and watch the colour march from blue through green and yellow to orange, and finally to a brick-red precipitate.</p>
+  </section>
+
+  <div class="section-tag" data-i18n="aim_tag">Aim</div>
+  <div class="card">
+    <p style="font-size:13.5px; line-height:1.65; color:var(--ink-dim); margin:0;" data-i18n="aim_text">To test a given unknown sample solution for the presence of reducing sugars (such as glucose) using Benedict's test.</p>
+  </div>
+
+  <div class="section-tag" data-i18n="principle_tag">Principle</div>
+  <div class="card explain">
+    <p data-i18n="why_p1">Benedict's reagent is an alkaline solution of copper sulphate, sodium carbonate and sodium citrate — a deep blue liquid because of its Cu&sup2;&#8314; ions. A <b>reducing sugar</b> (one with a free aldehyde or ketone group, such as glucose, fructose, maltose or lactose) reduces these Cu&sup2;&#8314; ions to Cu&#8314; on heating.</p>
+    <p data-i18n="why_p2">The Cu&#8314; ions combine with hydroxide ions to form insoluble, brick-red <b>cuprous oxide (Cu&#8322;O)</b>, which settles out as a precipitate. Non-reducing sugars, such as sucrose, have no free aldehyde/ketone group and so give a negative test unless first hydrolysed into their reducing components.</p>
+  </div>
+
+  <div class="section-tag" data-i18n="method_tag">Method</div>
+  <div class="card">
+    <h2 data-i18n="requirements_title">Requirements</h2>
+    <p class="materials" data-i18n="method_materials"><b>You need:</b> unknown sample solution · Benedict's reagent · clean test tubes · dropper · water bath / beaker of boiling water · test tube holder</p>
+    <h2 style="margin-top:16px;" data-i18n="procedure_title">Procedure</h2>
+    <ol class="method-list">
+      <li data-i18n="method_step1">Take 2 mL of Benedict's reagent in a clean test tube.</li>
+      <li data-i18n="method_step2">Add 8&ndash;10 drops of the unknown sample solution and mix.</li>
+      <li data-i18n="method_step3">Place the tube in a beaker of boiling water for 2&ndash;3 minutes.</li>
+      <li data-i18n="method_step4">Remove the tube carefully with a holder and let it cool slightly.</li>
+      <li data-i18n="method_step5">Note the colour change or precipitate formed.</li>
+    </ol>
+  </div>
+
+  <div class="section-tag" data-i18n="diagrams_tag">Diagrams &amp; Observation</div>
+
+  <div class="stage-grid">
+    <div class="card">
+      <h2 data-i18n="card1_title">The test, step by step</h2>
+      <p class="card-note" data-i18n="card1_note">Heat drives the colour change from blue to brick-red</p>
+      <svg data-stage="0" viewBox="0 0 200 320" role="img" aria-label="A test tube of Benedict's reagent being mixed with the unknown sample, heated, and turning from blue through green and yellow to a brick-red precipitate.">
+        <defs>
+          <clipPath id="tubeClipBenedict"><path d="M74,24 L74,244 A26,26 0 0 0 126,244 L126,24 Z"/></clipPath>
+        </defs>
+        <line class="tube-stand" x1="42" y1="286" x2="158" y2="286"/>
+        <line class="tube-stand" x1="56" y1="60" x2="56" y2="286"/>
+        <rect class="tube-clamp" x="50" y="54" width="30" height="10" rx="4"/>
+        <rect class="liquid" x="74" y="24" width="52" height="220" clip-path="url(#tubeClipBenedict)"/>
+        <g class="precip" clip-path="url(#tubeClipBenedict)">
+          <circle cx="86" cy="238" r="4" fill="var(--precip-color)"/>
+          <circle cx="98" cy="240" r="5" fill="var(--precip-color)"/>
+          <circle cx="110" cy="238" r="4" fill="var(--precip-color)"/>
+          <circle cx="118" cy="240" r="3.5" fill="var(--precip-color)"/>
+          <circle cx="92" cy="242" r="3" fill="var(--precip-color)"/>
+        </g>
+        <path class="tube-outline" d="M74,24 L74,244 A26,26 0 0 0 126,244 L126,24"/>
+        <g class="drop drop-sample">
+          <path d="M100,4 c8,10 8,17 0,22 c-8,-5 -8,-12 0,-22 Z" fill="var(--liq-empty)" stroke="var(--ink-dim)" stroke-width="1.2"/>
+          <text x="112" y="18" class="label-sub" data-i18n="dropLabel">Sample</text>
+        </g>
+        <g class="flame">
+          <path d="M100,268 c-6,10 -6,18 0,24 c6,-6 6,-14 0,-24 Z" fill="var(--liq-orange)"/>
+          <path d="M88,272 c-4,8 -4,14 0,18 c4,-4 4,-10 0,-18 Z" fill="var(--liq-yellow)"/>
+          <path d="M112,272 c-4,8 -4,14 0,18 c4,-4 4,-10 0,-18 Z" fill="var(--liq-yellow)"/>
+        </g>
+        <g class="bubble">
+          <circle cx="90" cy="200" r="3"/>
+          <circle cx="106" cy="180" r="2.5"/>
+          <circle cx="98" cy="150" r="2"/>
+          <circle cx="112" cy="120" r="2.5"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="card2_title">Reading the result</h2>
+      <p class="card-note" data-i18n="card2_note">The colour scale is roughly proportional to sugar content</p>
+      <div class="color-key">
+        <div class="key-item">
+          <div class="key-tube"><i style="height:65%; background:var(--liq-benedict);"></i></div>
+          <div class="kt-label" data-i18n="keyBlueLabel">Blue</div>
+          <div class="kt-sub" data-i18n="keyBlueSub">Nil / negative</div>
+        </div>
+        <div class="key-item">
+          <div class="key-tube"><i style="height:65%; background:var(--liq-green);"></i></div>
+          <div class="kt-label" data-i18n="keyGreenLabel">Green</div>
+          <div class="kt-sub" data-i18n="keyGreenSub">Trace sugar</div>
+        </div>
+        <div class="key-item">
+          <div class="key-tube"><i style="height:65%; background:var(--liq-yellow);"></i></div>
+          <div class="kt-label" data-i18n="keyYellowLabel">Yellow</div>
+          <div class="kt-sub" data-i18n="keyYellowSub">~0.5&ndash;1%</div>
+        </div>
+        <div class="key-item">
+          <div class="key-tube"><i style="height:65%; background:var(--liq-orange);"></i></div>
+          <div class="kt-label" data-i18n="keyOrangeLabel">Orange</div>
+          <div class="kt-sub" data-i18n="keyOrangeSub">~1&ndash;1.5%</div>
+        </div>
+        <div class="key-item">
+          <div class="key-tube"><i style="height:65%; background:var(--liq-brickred);"></i></div>
+          <div class="kt-label" data-i18n="keyRedLabel">Brick-red</div>
+          <div class="kt-sub" data-i18n="keyRedSub">&gt;2%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="transport">
+      <button class="ctl primary" id="playBtn" type="button">▶ Play</button>
+      <button class="ctl" id="prevBtn" type="button">◀ Back</button>
+      <button class="ctl" id="nextBtn" type="button">Next ▶</button>
+      <span class="stopwatch" id="stopwatch">⏱ 0:00</span>
+    </div>
+    <div class="stepper">
+      <div class="stepper-rail"></div>
+      <div class="stepper-fill" id="stepperFill"></div>
+      <div class="stepper-dots" id="stepperDots"></div>
+    </div>
+    <p class="caption" id="caption" aria-live="polite"></p>
+  </div>
+
+  <div class="section-tag" data-i18n="observations_tag">Observations</div>
+  <div class="card">
+    <div style="overflow-x:auto;">
+      <table class="obs-table">
+        <tr><th data-i18n="obs_h0">Test tube</th><th data-i18n="obs_h1">Observation</th><th data-i18n="obs_h2">Inference</th></tr>
+        <tr><td data-i18n="obs_r1c0">Positive control (glucose solution)</td><td data-i18n="obs_r1c1">Colour changes to orange / brick-red precipitate on heating.</td><td data-i18n="obs_r1c2">Reducing sugar present.</td></tr>
+        <tr><td data-i18n="obs_r2c0">Negative control (distilled water)</td><td data-i18n="obs_r2c1">Solution stays blue &mdash; no colour change even on heating.</td><td data-i18n="obs_r2c2">No reducing sugar.</td></tr>
+        <tr><td data-i18n="obs_r3c0">Unknown sample solution</td><td data-i18n="obs_r3c1">Record the colour actually observed after heating your tube.</td><td data-i18n="obs_r3c2">Reducing sugar present only if the colour shifts away from blue.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-tag" data-i18n="inference_tag">Inference</div>
+  <div class="card">
+    <ul class="inference-list">
+      <li data-i18n="inf1">An orange or brick-red precipitate in the unknown sample after heating confirms the presence of a <b>reducing sugar</b> such as glucose.</li>
+      <li data-i18n="inf2">No colour change (the solution stays Benedict's-reagent blue) means the sample does <b>not</b> contain a reducing sugar &mdash; it may still contain a non-reducing sugar like sucrose.</li>
+      <li data-i18n="inf3">The exact colour reached &mdash; green, yellow, orange or brick-red &mdash; roughly indicates how much reducing sugar is present, from a trace up to a high concentration.</li>
+    </ul>
+  </div>
+
+  <div class="section-tag" data-i18n="precaution_tag">Precautions</div>
+  <div class="card">
+    <ul class="precaution-list">
+      <li data-i18n="prec1">Heat the tube gently and evenly in a water bath rather than directly over a flame, to avoid the liquid spurting out.</li>
+      <li data-i18n="prec2">Use a test tube holder while removing the hot tube from the water bath.</li>
+      <li data-i18n="prec3">Do not confuse this with the Biuret test &mdash; Benedict's test needs heat, while Biuret works at room temperature.</li>
+    </ul>
+  </div>
+
+  <footer data-i18n="footer_text">BAIO Learning System · Benedict's Test Practical · Narendra Sir</footer>
+  <div class="more-practicals"><a href="practical-biuret-test.html" data-i18n="more_practicals">🧫 More Practicals &mdash; Biuret Test for Proteins</a></div>
+</div>
+
+<script>
+/* Theme toggle — shared with index.html via the same localStorage key */
+(function(){
+  var THEME_KEY = 'baio_theme';
+  var btn = document.getElementById('themeToggle');
+  function applyTheme(t){
+    if(t === 'light'){ document.documentElement.setAttribute('data-theme','light'); if(btn) btn.textContent = '☀️'; }
+    else { document.documentElement.removeAttribute('data-theme'); if(btn) btn.textContent = '🌙'; }
+  }
+  var saved = null;
+  try{ saved = localStorage.getItem(THEME_KEY); }catch(e){}
+  applyTheme(saved || 'light');
+  window.toggleTheme = function(){
+    var cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+    var next = cur === 'light' ? 'dark' : 'light';
+    applyTheme(next);
+    try{ localStorage.setItem(THEME_KEY, next); }catch(e){}
+  };
+})();
+
+/* Practicals dropdown menu */
+(function(){
+  var btn = document.getElementById('practicalsBtn');
+  var menu = document.getElementById('practicalsMenu');
+  if(!btn || !menu) return;
+  function close(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    var open = menu.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  document.addEventListener('click', function(e){
+    if(!menu.contains(e.target) && e.target !== btn) close();
+  });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') close(); });
+})();
+
+/* Trilingual mode (English / Kannada / Hindi) */
+const PRACTICAL_TRANSLATIONS = {"brand_practical":{"kn":"ಪ್ರಾಕ್ಟಿಕಲ್","hi":"प्रैक्टिकल"},"eyebrow":{"kn":"ಜೀವರಸಾಯನಶಾಸ್ತ್ರ · ಪ್ರಾಕ್ಟಿಕಲ್","hi":"जैव रसायन · प्रैक्टिकल"},"h1_title":{"kn":"ಅಪಕರ್ಷಕ ಸಕ್ಕರೆಗಳಿಗಾಗಿ ಬೆನೆಡಿಕ್ಟ್ ಪರೀಕ್ಷೆ","hi":"अपचायक शर्करा के लिए बेनेडिक्ट परीक्षण"},"intro":{"kn":"ಬೆನೆಡಿಕ್ಟ್ ಕಾರಕವು ಗ್ಲುಕೋಸ್‌ನಂತಹ ಅಪಕರ್ಷಕ ಸಕ್ಕರೆಯನ್ನು ಭೇಟಿಯಾದಾಗ ನೀಲಿಯಿಂದ ಇಟ್ಟಿಗೆ-ಕೆಂಪು ಬಣ್ಣಕ್ಕೆ ತಿರುಗುತ್ತದೆ &mdash; ಮತ್ತು ಬಿಸಿ ಮಾಡುವುದೇ ಈ ಕ್ರಿಯೆಯನ್ನು ಚಾಲನೆ ಮಾಡುತ್ತದೆ. ಅಜ್ಞಾತ ಮಾದರಿಯನ್ನು ಸೇರಿಸಲು, ಕೊಳವೆಯನ್ನು ನೀರಿನ ಸ್ನಾನದಲ್ಲಿ ಬಿಸಿ ಮಾಡಲು ಪ್ಲೇ ಒತ್ತಿ, ಮತ್ತು ಬಣ್ಣ ನೀಲಿಯಿಂದ ಹಸಿರು ಮತ್ತು ಹಳದಿಯ ಮೂಲಕ ಕಿತ್ತಳೆಗೆ, ಕೊನೆಗೆ ಇಟ್ಟಿಗೆ-ಕೆಂಪು ಅವಕ್ಷೇಪಕ್ಕೆ ಸಾಗುವುದನ್ನು ಗಮನಿಸಿ.","hi":"बेनेडिक्ट अभिकर्मक ग्लूकोज जैसी अपचायक शर्करा से मिलने पर नीले से ईंट-लाल रंग में बदल जाता है &mdash; और गर्म करना ही इस अभिक्रिया को गति देता है। अज्ञात नमूना मिलाने, परखनली को जल स्नान में गर्म करने के लिए प्ले दबाएँ, और रंग को नीले से हरे और पीले होते हुए नारंगी तक, और अंत में ईंट-लाल अवक्षेप तक बढ़ते हुए देखें।"},"aim_tag":{"kn":"ಉದ್ದೇಶ (Aim)","hi":"उद्देश्य (Aim)"},"aim_text":{"kn":"ಬೆನೆಡಿಕ್ಟ್ ಪರೀಕ್ಷೆಯನ್ನು ಬಳಸಿ ನೀಡಲಾದ ಅಜ್ಞಾತ ಮಾದರಿ ದ್ರಾವಣದಲ್ಲಿ ಅಪಕರ್ಷಕ ಸಕ್ಕರೆಗಳ (ಗ್ಲುಕೋಸ್‌ನಂತಹ) ಇರುವಿಕೆಯನ್ನು ಪರೀಕ್ಷಿಸುವುದು.","hi":"बेनेडिक्ट परीक्षण का उपयोग करके दिए गए अज्ञात नमूना घोल में अपचायक शर्करा (जैसे ग्लूकोज) की उपस्थिति की जाँच करना।"},"principle_tag":{"kn":"ಸಿದ್ಧಾಂತ (Principle)","hi":"सिद्धांत (Principle)"},"why_p1":{"kn":"ಬೆನೆಡಿಕ್ಟ್ ಕಾರಕವು ಕಾಪರ್ ಸಲ್ಫೇಟ್, ಸೋಡಿಯಂ ಕಾರ್ಬೋನೇಟ್ ಮತ್ತು ಸೋಡಿಯಂ ಸಿಟ್ರೇಟ್‌ನ ಕ್ಷಾರೀಯ ದ್ರಾವಣ &mdash; ಇದರ Cu&sup2;&#8314; ಅಯಾನುಗಳಿಂದಾಗಿ ಗಾಢ ನೀಲಿ ದ್ರವ. <b>ಅಪಕರ್ಷಕ ಸಕ್ಕರೆ</b> (ಗ್ಲುಕೋಸ್, ಫ್ರಕ್ಟೋಸ್, ಮಾಲ್ಟೋಸ್ ಅಥವಾ ಲ್ಯಾಕ್ಟೋಸ್‌ನಂತಹ ಮುಕ್ತ ಆಲ್ಡಿಹೈಡ್ ಅಥವಾ ಕೀಟೋನ್ ಗುಂಪು ಹೊಂದಿರುವ ಸಕ್ಕರೆ) ಬಿಸಿ ಮಾಡಿದಾಗ ಈ Cu&sup2;&#8314; ಅಯಾನುಗಳನ್ನು Cu&#8314; ಗೆ ಅಪಕರ್ಷಿಸುತ್ತದೆ.","hi":"बेनेडिक्ट अभिकर्मक कॉपर सल्फेट, सोडियम कार्बोनेट और सोडियम सिट्रेट का एक क्षारीय घोल है &mdash; इसके Cu&sup2;&#8314; आयनों के कारण गहरा नीला तरल। <b>अपचायक शर्करा</b> (ग्लूकोज, फ्रक्टोज, माल्टोज़ या लैक्टोज़ जैसी मुक्त एल्डिहाइड या कीटोन समूह वाली शर्करा) गर्म करने पर इन Cu&sup2;&#8314; आयनों को Cu&#8314; में अपचयित कर देती है।"},"why_p2":{"kn":"Cu&#8314; ಅಯಾನುಗಳು ಹೈಡ್ರಾಕ್ಸೈಡ್ ಅಯಾನುಗಳೊಂದಿಗೆ ಸಂಯೋಜಿಸಿ ಕರಗದ, ಇಟ್ಟಿಗೆ-ಕೆಂಪು <b>ಕ್ಯುಪ್ರಸ್ ಆಕ್ಸೈಡ್ (Cu&#8322;O)</b> ಅನ್ನು ರೂಪಿಸುತ್ತವೆ, ಇದು ಅವಕ್ಷೇಪವಾಗಿ ನೆಲೆಗೊಳ್ಳುತ್ತದೆ. ಸುಕ್ರೋಸ್‌ನಂತಹ ಅಪಕರ್ಷಕವಲ್ಲದ ಸಕ್ಕರೆಗಳಲ್ಲಿ ಮುಕ್ತ ಆಲ್ಡಿಹೈಡ್/ಕೀಟೋನ್ ಗುಂಪು ಇಲ್ಲದಿರುವುದರಿಂದ, ಮೊದಲು ಜಲವಿಚ್ಛೇದನೆಗೊಳಿಸದ ಹೊರತು ಋಣಾತ್ಮಕ ಫಲಿತಾಂಶ ನೀಡುತ್ತವೆ.","hi":"Cu&#8314; आयन हाइड्रॉक्साइड आयनों से संयोजित होकर अघुलनशील, ईंट-लाल <b>क्यूप्रस ऑक्साइड (Cu&#8322;O)</b> बनाते हैं, जो अवक्षेप के रूप में जम जाता है। सुक्रोज़ जैसी अपचायक-रहित शर्करा में मुक्त एल्डिहाइड/कीटोन समूह न होने के कारण, जब तक उन्हें पहले जल-अपघटित न किया जाए, वे ऋणात्मक परिणाम देती हैं।"},"method_tag":{"kn":"ವಿಧಾನ (Method)","hi":"विधि (Method)"},"requirements_title":{"kn":"ಬೇಕಾಗುವ ಸಾಮಗ್ರಿಗಳು (Requirements)","hi":"आवश्यक सामग्री (Requirements)"},"method_materials":{"kn":"<b>ಬೇಕಾಗುವ ವಸ್ತುಗಳು:</b> ಅಜ್ಞಾತ ಮಾದರಿ ದ್ರಾವಣ · ಬೆನೆಡಿಕ್ಟ್ ಕಾರಕ · ಶುದ್ಧ ಪರೀಕ್ಷಾ ಕೊಳವೆಗಳು · ಡ್ರಾಪರ್ · ನೀರಿನ ಸ್ನಾನ / ಕುದಿಯುವ ನೀರಿನ ಬೀಕರ್ · ಪರೀಕ್ಷಾ ಕೊಳವೆ ಹಿಡಿಕೆ","hi":"<b>आवश्यक सामग्री:</b> अज्ञात नमूना घोल · बेनेडिक्ट अभिकर्मक · स्वच्छ परखनलियाँ · ड्रॉपर · जल स्नान / उबलते पानी का बीकर · परखनली होल्डर"},"procedure_title":{"kn":"ಕ್ರಮ (Procedure)","hi":"प्रक्रिया (Procedure)"},"method_step1":{"kn":"ಶುದ್ಧ ಪರೀಕ್ಷಾ ಕೊಳವೆಯಲ್ಲಿ 2 mL ಬೆನೆಡಿಕ್ಟ್ ಕಾರಕವನ್ನು ತೆಗೆದುಕೊಳ್ಳಿ.","hi":"एक स्वच्छ परखनली में 2 mL बेनेडिक्ट अभिकर्मक लें।"},"method_step2":{"kn":"8&ndash;10 ಹನಿ ಅಜ್ಞಾತ ಮಾದರಿ ದ್ರಾವಣವನ್ನು ಸೇರಿಸಿ ಮಿಶ್ರಣಗೊಳಿಸಿ.","hi":"8&ndash;10 बूँदें अज्ञात नमूना घोल की मिलाकर मिश्रित करें।"},"method_step3":{"kn":"ಕೊಳವೆಯನ್ನು ಕುದಿಯುವ ನೀರಿನ ಬೀಕರ್‌ನಲ್ಲಿ 2&ndash;3 ನಿಮಿಷ ಇರಿಸಿ.","hi":"परखनली को उबलते पानी के बीकर में 2&ndash;3 मिनट रखें।"},"method_step4":{"kn":"ಹಿಡಿಕೆಯಿಂದ ಕೊಳವೆಯನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ತೆಗೆದು ಸ್ವಲ್ಪ ತಣ್ಣಗಾಗಲು ಬಿಡಿ.","hi":"होल्डर से परखनली को सावधानीपूर्वक निकालें और थोड़ा ठंडा होने दें।"},"method_step5":{"kn":"ಉಂಟಾದ ಬಣ್ಣ ಬದಲಾವಣೆ ಅಥವಾ ಅವಕ್ಷೇಪವನ್ನು ಗಮನಿಸಿ.","hi":"बने रंग परिवर्तन या अवक्षेप को नोट करें।"},"diagrams_tag":{"kn":"ಚಿತ್ರಗಳು ಮತ್ತು ವೀಕ್ಷಣೆ","hi":"चित्र और अवलोकन"},"card1_title":{"kn":"ಪರೀಕ್ಷೆ, ಹಂತ ಹಂತವಾಗಿ","hi":"परीक्षण, चरण दर चरण"},"card1_note":{"kn":"ಬಿಸಿಯು ನೀಲಿಯಿಂದ ಇಟ್ಟಿಗೆ-ಕೆಂಪಿಗೆ ಬಣ್ಣ ಬದಲಾವಣೆಯನ್ನು ಚಾಲನೆ ಮಾಡುತ್ತದೆ","hi":"गर्मी नीले से ईंट-लाल तक रंग परिवर्तन को गति देती है"},"card2_title":{"kn":"ಫಲಿತಾಂಶವನ್ನು ಓದುವುದು","hi":"परिणाम पढ़ना"},"card2_note":{"kn":"ಬಣ್ಣದ ಪ್ರಮಾಣ ಸ್ಥೂಲವಾಗಿ ಸಕ್ಕರೆಯ ಪ್ರಮಾಣಕ್ಕೆ ಅನುಗುಣವಾಗಿದೆ","hi":"रंग का पैमाना मोटे तौर पर शर्करा की मात्रा के अनुपात में है"},"dropLabel":{"kn":"ಮಾದರಿ","hi":"नमूना"},"keyBlueLabel":{"kn":"ನೀಲಿ","hi":"नीला"},"keyBlueSub":{"kn":"ಶೂನ್ಯ / ಋಣಾತ್ಮಕ","hi":"शून्य / ऋणात्मक"},"keyGreenLabel":{"kn":"ಹಸಿರು","hi":"हरा"},"keyGreenSub":{"kn":"ಸ್ವಲ್ಪ ಸಕ್ಕರೆ","hi":"थोड़ी शर्करा"},"keyYellowLabel":{"kn":"ಹಳದಿ","hi":"पीला"},"keyYellowSub":{"kn":"~0.5&ndash;1%","hi":"~0.5&ndash;1%"},"keyOrangeLabel":{"kn":"ಕಿತ್ತಳೆ","hi":"नारंगी"},"keyOrangeSub":{"kn":"~1&ndash;1.5%","hi":"~1&ndash;1.5%"},"keyRedLabel":{"kn":"ಇಟ್ಟಿಗೆ-ಕೆಂಪು","hi":"ईंट-लाल"},"keyRedSub":{"kn":"&gt;2%","hi":"&gt;2%"},"observations_tag":{"kn":"ವೀಕ್ಷಣೆಗಳು (Observations)","hi":"अवलोकन (Observations)"},"obs_h0":{"kn":"ಪರೀಕ್ಷಾ ಕೊಳವೆ","hi":"परखनली"},"obs_h1":{"kn":"ವೀಕ್ಷಣೆ","hi":"अवलोकन"},"obs_h2":{"kn":"ತೀರ್ಮಾನ","hi":"निष्कर्ष"},"obs_r1c0":{"kn":"ಧನಾತ್ಮಕ ನಿಯಂತ್ರಣ (ಗ್ಲುಕೋಸ್ ದ್ರಾವಣ)","hi":"धनात्मक नियंत्रण (ग्लूकोज घोल)"},"obs_r1c1":{"kn":"ಬಿಸಿ ಮಾಡಿದಾಗ ಬಣ್ಣ ಕಿತ್ತಳೆ / ಇಟ್ಟಿಗೆ-ಕೆಂಪು ಅವಕ್ಷೇಪಕ್ಕೆ ಬದಲಾಗುತ್ತದೆ.","hi":"गर्म करने पर रंग नारंगी / ईंट-लाल अवक्षेप में बदल जाता है।"},"obs_r1c2":{"kn":"ಅಪಕರ್ಷಕ ಸಕ್ಕರೆ ಇದೆ.","hi":"अपचायक शर्करा उपस्थित है।"},"obs_r2c0":{"kn":"ಋಣಾತ್ಮಕ ನಿಯಂತ್ರಣ (ಬಟ್ಟಿ ಇಳಿಸಿದ ನೀರು)","hi":"ऋणात्मक नियंत्रण (आसुत जल)"},"obs_r2c1":{"kn":"ದ್ರಾವಣ ನೀಲಿಯಾಗಿಯೇ ಉಳಿಯುತ್ತದೆ &mdash; ಬಿಸಿ ಮಾಡಿದರೂ ಬಣ್ಣ ಬದಲಾಗುವುದಿಲ್ಲ.","hi":"घोल नीला ही रहता है &mdash; गर्म करने पर भी रंग नहीं बदलता।"},"obs_r2c2":{"kn":"ಅಪಕರ್ಷಕ ಸಕ್ಕರೆ ಇಲ್ಲ.","hi":"अपचायक शर्करा नहीं है।"},"obs_r3c0":{"kn":"ಅಜ್ಞಾತ ಮಾದರಿ ದ್ರಾವಣ","hi":"अज्ञात नमूना घोल"},"obs_r3c1":{"kn":"ನಿಮ್ಮ ಕೊಳವೆಯನ್ನು ಬಿಸಿ ಮಾಡಿದ ನಂತರ ನಿಜವಾಗಿ ಕಂಡುಬಂದ ಬಣ್ಣವನ್ನು ದಾಖಲಿಸಿ.","hi":"अपनी परखनली को गर्म करने के बाद वास्तव में दिखे रंग को दर्ज करें।"},"obs_r3c2":{"kn":"ಬಣ್ಣ ನೀಲಿಯಿಂದ ಬದಲಾದರೆ ಮಾತ್ರ ಅಪಕರ್ಷಕ ಸಕ್ಕರೆ ಇದೆ.","hi":"रंग नीले से बदलने पर ही अपचायक शर्करा उपस्थित है।"},"inference_tag":{"kn":"ತೀರ್ಮಾನ (Inference)","hi":"निष्कर्ष (Inference)"},"inf1":{"kn":"ಬಿಸಿ ಮಾಡಿದ ನಂತರ ಅಜ್ಞಾತ ಮಾದರಿಯಲ್ಲಿ ಕಿತ್ತಳೆ ಅಥವಾ ಇಟ್ಟಿಗೆ-ಕೆಂಪು ಅವಕ್ಷೇಪ <b>ಅಪಕರ್ಷಕ ಸಕ್ಕರೆ</b> (ಗ್ಲುಕೋಸ್‌ನಂತಹ) ಇರುವಿಕೆಯನ್ನು ದೃಢಪಡಿಸುತ್ತದೆ.","hi":"गर्म करने के बाद अज्ञात नमूने में नारंगी या ईंट-लाल अवक्षेप <b>अपचायक शर्करा</b> (जैसे ग्लूकोज) की उपस्थिति की पुष्टि करता है।"},"inf2":{"kn":"ಬಣ್ಣ ಬದಲಾಗದಿದ್ದರೆ (ದ್ರಾವಣ ಬೆನೆಡಿಕ್ಟ್ ಕಾರಕದ ನೀಲಿಯಾಗಿಯೇ ಉಳಿದರೆ) ಮಾದರಿಯಲ್ಲಿ ಅಪಕರ್ಷಕ ಸಕ್ಕರೆ <b>ಇಲ್ಲ</b> ಎಂದರ್ಥ &mdash; ಆದರೆ ಸುಕ್ರೋಸ್‌ನಂತಹ ಅಪಕರ್ಷಕವಲ್ಲದ ಸಕ್ಕರೆ ಇನ್ನೂ ಇರಬಹುದು.","hi":"रंग न बदलना (घोल का बेनेडिक्ट अभिकर्मक जैसा नीला ही बना रहना) यह दर्शाता है कि नमूने में अपचायक शर्करा <b>नहीं</b> है &mdash; लेकिन सुक्रोज़ जैसी अपचायक-रहित शर्करा फिर भी उपस्थित हो सकती है।"},"inf3":{"kn":"ತಲುಪಿದ ನಿಖರ ಬಣ್ಣ &mdash; ಹಸಿರು, ಹಳದಿ, ಕಿತ್ತಳೆ ಅಥವಾ ಇಟ್ಟಿಗೆ-ಕೆಂಪು &mdash; ಎಷ್ಟು ಅಪಕರ್ಷಕ ಸಕ್ಕರೆ ಇದೆ ಎಂಬುದನ್ನು ಸ್ಥೂಲವಾಗಿ ಸೂಚಿಸುತ್ತದೆ, ಸ್ವಲ್ಪದಿಂದ ಹೆಚ್ಚಿನ ಸಾಂದ್ರತೆಯವರೆಗೆ.","hi":"पहुँचा हुआ सटीक रंग &mdash; हरा, पीला, नारंगी या ईंट-लाल &mdash; मोटे तौर पर यह दर्शाता है कि कितनी अपचायक शर्करा उपस्थित है, थोड़ी मात्रा से लेकर उच्च सांद्रता तक।"},"precaution_tag":{"kn":"ಎಚ್ಚರಿಕೆಗಳು (Precautions)","hi":"सावधानियाँ (Precautions)"},"prec1":{"kn":"ದ್ರವ ಚಿಮ್ಮುವುದನ್ನು ತಪ್ಪಿಸಲು ಕೊಳವೆಯನ್ನು ನೇರ ಜ್ವಾಲೆಯ ಬದಲು ನೀರಿನ ಸ್ನಾನದಲ್ಲಿ ನಿಧಾನವಾಗಿ, ಸಮನಾಗಿ ಬಿಸಿ ಮಾಡಿ.","hi":"तरल के छिटकने से बचने के लिए परखनली को सीधी लौ के बजाय जल स्नान में धीरे-धीरे, समान रूप से गर्म करें।"},"prec2":{"kn":"ಬಿಸಿ ಕೊಳವೆಯನ್ನು ನೀರಿನ ಸ್ನಾನದಿಂದ ತೆಗೆಯುವಾಗ ಪರೀಕ್ಷಾ ಕೊಳವೆ ಹಿಡಿಕೆಯನ್ನು ಬಳಸಿ.","hi":"गर्म परखनली को जल स्नान से निकालते समय परखनली होल्डर का उपयोग करें।"},"prec3":{"kn":"ಇದನ್ನು ಬಯುರೆಟ್ ಪರೀಕ್ಷೆಯೊಂದಿಗೆ ಗೊಂದಲಗೊಳಿಸಬೇಡಿ &mdash; ಬೆನೆಡಿಕ್ಟ್ ಪರೀಕ್ಷೆಗೆ ಬಿಸಿ ಬೇಕು, ಬಯುರೆಟ್ ಕೋಣೆಯ ಉಷ್ಣಾಂಶದಲ್ಲೇ ಕೆಲಸ ಮಾಡುತ್ತದೆ.","hi":"इसे बाइयूरेट परीक्षण के साथ भ्रमित न करें &mdash; बेनेडिक्ट परीक्षण को गर्मी चाहिए, जबकि बाइयूरेट कमरे के तापमान पर ही काम करता है।"},"footer_text":{"kn":"BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಂ · ಬೆನೆಡಿಕ್ಟ್ ಪರೀಕ್ಷೆ ಪ್ರಾಕ್ಟಿಕಲ್ · ನರೇಂದ್ರ ಸರ್","hi":"BAIO लर्निंग सिस्टम · बेनेडिक्ट परीक्षण प्रैक्टिकल · नरेंद्र सर"},"more_practicals":{"kn":"🧫 ಇನ್ನಷ್ಟು ಪ್ರಾಕ್ಟಿಕಲ್‌ಗಳು &mdash; ಪ್ರೋಟೀನ್‌ಗಾಗಿ ಬಯುರೆಟ್ ಪರೀಕ್ಷೆ","hi":"🧫 और प्रैक्टिकल &mdash; प्रोटीन के लिए बाइयूरेट परीक्षण"},"menuPlasmolysis":{"kn":"🧪 Rhoeo ಎಲೆಯಲ್ಲಿ Plasmolysis","hi":"🧪 Rhoeo पत्ती में Plasmolysis"},"menuTsStem":{"kn":"🌿 Monocot &amp; Dicot Stem ನ T.S.","hi":"🌿 Monocot &amp; Dicot Stem का T.S."},"menuBiuret":{"kn":"🧫 ಪ್ರೋಟೀನ್‌ಗಾಗಿ ಬಯುರೆಟ್ ಪರೀಕ್ಷೆ","hi":"🧫 प्रोटीन के लिए बाइयूरेट परीक्षण"},"menuBenedict":{"kn":"🧪 ಸಕ್ಕರೆಗಳಿಗಾಗಿ ಬೆನೆಡಿಕ್ಟ್ ಪರೀಕ್ಷೆ","hi":"🧪 शर्करा के लिए बेनेडिक्ट परीक्षण"},"stage0":{"kn":"ಶುದ್ಧ, ಖಾಲಿ ಪರೀಕ್ಷಾ ಕೊಳವೆ &mdash; ಪರೀಕ್ಷೆಗೆ ಸಿದ್ಧ.","hi":"स्वच्छ, खाली परखनली &mdash; परीक्षण के लिए तैयार।"},"stage1":{"kn":"ಪರೀಕ್ಷಾ ಕೊಳವೆಯಲ್ಲಿ 2 mL ಬೆನೆಡಿಕ್ಟ್ ಕಾರಕವನ್ನು (ನೀಲಿ) ತೆಗೆದುಕೊಳ್ಳಲಾಗಿದೆ.","hi":"परखनली में 2 mL बेनेडिक्ट अभिकर्मक (नीला) लिया गया है।"},"stage2":{"kn":"8&ndash;10 ಹನಿ ಅಜ್ಞಾತ ಮಾದರಿ ದ್ರಾವಣವನ್ನು ಸೇರಿಸಿ ಮಿಶ್ರಣಗೊಳಿಸಲಾಗಿದೆ.","hi":"8&ndash;10 बूँदें अज्ञात नमूना घोल मिलाई और मिश्रित की गई हैं।"},"stage3":{"kn":"ಕೊಳವೆಯನ್ನು ಕುದಿಯುವ ನೀರಿನ ಸ್ನಾನದಲ್ಲಿ 2&ndash;3 ನಿಮಿಷ ಬಿಸಿ ಮಾಡಲಾಗುತ್ತಿದೆ.","hi":"परखनली को उबलते जल स्नान में 2&ndash;3 मिनट गर्म किया जा रहा है।"},"stage4":{"kn":"ಅಪಕರ್ಷಕ ಸಕ್ಕರೆ Cu&sup2;&#8314; ಅನ್ನು Cu&#8314; ಗೆ ಅಪಕರ್ಷಿಸುತ್ತಿದ್ದಂತೆ, ಬಣ್ಣ ಹಸಿರು ಮತ್ತು ಹಳದಿಯ ಮೂಲಕ ಬದಲಾಗಲು ಆರಂಭಿಸುತ್ತದೆ.","hi":"जैसे-जैसे अपचायक शर्करा Cu&sup2;&#8314; को Cu&#8314; में अपचयित करती है, रंग हरे और पीले होते हुए बदलना शुरू होता है।"},"stage5":{"kn":"ಧನಾತ್ಮಕ ಫಲಿತಾಂಶ: ಕ್ಯುಪ್ರಸ್ ಆಕ್ಸೈಡ್‌ನ (Cu&#8322;O) ಕಿತ್ತಳೆಯಿಂದ ಇಟ್ಟಿಗೆ-ಕೆಂಪು ಅವಕ್ಷೇಪ ನೆಲೆಗೊಳ್ಳುತ್ತದೆ, ಅಪಕರ್ಷಕ ಸಕ್ಕರೆಯನ್ನು ದೃಢಪಡಿಸುತ್ತದೆ.","hi":"धनात्मक परिणाम: क्यूप्रस ऑक्साइड (Cu&#8322;O) का नारंगी से ईंट-लाल अवक्षेप जमता है, जो अपचायक शर्करा की पुष्टि करता है।"},"btn_play":{"kn":"▶ ಪ್ಲೇ","hi":"▶ प्ले"},"btn_pause":{"kn":"⏸ ವಿರಾಮ","hi":"⏸ रोकें"},"btn_replay":{"kn":"↻ ಮತ್ತೆ ಪ್ಲೇ","hi":"↻ फिर से चलाएँ"},"btn_back":{"kn":"◀ ಹಿಂದೆ","hi":"◀ पीछे"},"btn_next":{"kn":"ಮುಂದೆ ▶","hi":"आगे ▶"}};
+const PRACTICAL_ORIGINAL_EN = {};
+document.querySelectorAll('[data-i18n]').forEach(function(el){
+  PRACTICAL_ORIGINAL_EN[el.getAttribute('data-i18n')] = el.innerHTML;
+});
+let currentLang = 'en';
+function setLang(lang){
+  currentLang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    const key = el.getAttribute('data-i18n');
+    if(lang === 'en'){ el.innerHTML = PRACTICAL_ORIGINAL_EN[key]; }
+    else if(PRACTICAL_TRANSLATIONS[key] && PRACTICAL_TRANSLATIONS[key][lang]){ el.innerHTML = PRACTICAL_TRANSLATIONS[key][lang]; }
+  });
+  try{ localStorage.setItem('baio_practical_lang', lang); }catch(e){}
+  renderLangSwitcher();
+  if(typeof refreshDynamicText === 'function') refreshDynamicText();
+}
+window.setLang = setLang;
+function renderLangSwitcher(){
+  const el = document.getElementById('langSwitcher');
+  if(!el) return;
+  const langs = [{id:'en',label:'English'},{id:'kn',label:'ಕನ್ನಡ'},{id:'hi',label:'हिंदी'}];
+  el.innerHTML = langs.map(function(l){ return '<div class="lang-btn' + (l.id===currentLang?' active':'') + '" onclick="setLang(\'' + l.id + '\')">' + l.label + '</div>'; }).join('');
+}
+
+/* Stage animation */
+var STAGE_KEYS = ['stage0','stage1','stage2','stage3','stage4','stage5'];
+var STAGE_TIMES = ['0:00','0:15','0:35','1:00','1:45','2:30'];
+var STAGE_EN_CAPTIONS = [
+  'Clean, empty test tube — ready for testing.',
+  '2 mL of Benedict\'s reagent (blue) is taken in the test tube.',
+  '8–10 drops of the unknown sample solution are added and mixed.',
+  'The tube is heated in a boiling water bath for 2–3 minutes.',
+  'As reducing sugar reduces Cu²⁺ to Cu⁺, the colour begins to shift through green and yellow.',
+  'Positive result: an orange to brick-red precipitate of cuprous oxide (Cu₂O) settles, confirming a reducing sugar.'
+];
+var BTN_EN = { play:'▶ Play', pause:'⏸ Pause', replay:'↻ Replay', back:'◀ Back', next:'Next ▶' };
+
+function stageCaption(i){
+  var key = STAGE_KEYS[i];
+  if(currentLang !== 'en' && PRACTICAL_TRANSLATIONS[key] && PRACTICAL_TRANSLATIONS[key][currentLang]){
+    return PRACTICAL_TRANSLATIONS[key][currentLang];
+  }
+  return STAGE_EN_CAPTIONS[i];
+}
+function btnLabel(name){
+  var key = 'btn_' + name;
+  if(currentLang !== 'en' && PRACTICAL_TRANSLATIONS[key] && PRACTICAL_TRANSLATIONS[key][currentLang]){
+    return PRACTICAL_TRANSLATIONS[key][currentLang];
+  }
+  return BTN_EN[name];
+}
+
+var diagrams = Array.prototype.slice.call(document.querySelectorAll('svg[data-stage]'));
+var dotsWrap = document.getElementById('stepperDots');
+var fillEl = document.getElementById('stepperFill');
+var captionEl = document.getElementById('caption');
+var stopwatchEl = document.getElementById('stopwatch');
+var playBtn = document.getElementById('playBtn');
+var prevBtn = document.getElementById('prevBtn');
+var nextBtn = document.getElementById('nextBtn');
+
+var dots = STAGE_KEYS.map(function(key, i){
+  var b = document.createElement('button');
+  b.className = 'dot';
+  b.type = 'button';
+  b.addEventListener('click', function(){ stopPlaying(); applyStage(i); });
+  dotsWrap.appendChild(b);
+  return b;
+});
+
+var idx = 0, playing = false, timer = null;
+
+function applyStage(i){
+  idx = i;
+  diagrams.forEach(function(svg){ svg.setAttribute('data-stage', i); });
+  captionEl.textContent = stageCaption(i);
+  stopwatchEl.textContent = '⏱ ' + STAGE_TIMES[i];
+  fillEl.style.width = (i / (STAGE_KEYS.length - 1) * 100) + '%';
+  dots.forEach(function(d, j){
+    d.classList.toggle('active', j === i);
+    d.classList.toggle('done', j < i);
+    d.setAttribute('aria-label', STAGE_TIMES[j] + ' — ' + stageCaption(j));
+  });
+  prevBtn.disabled = i === 0;
+  nextBtn.disabled = i === STAGE_KEYS.length - 1;
+}
+
+function updatePlayLabel(){
+  playBtn.textContent = playing ? btnLabel('pause') : (idx >= STAGE_KEYS.length - 1 ? btnLabel('replay') : btnLabel('play'));
+}
+
+function stopPlaying(){
+  playing = false;
+  if (timer) clearInterval(timer);
+  updatePlayLabel();
+}
+
+function startPlaying(){
+  if (idx >= STAGE_KEYS.length - 1) applyStage(0);
+  playing = true;
+  updatePlayLabel();
+  timer = setInterval(function(){
+    if (idx >= STAGE_KEYS.length - 1) { stopPlaying(); return; }
+    applyStage(idx + 1);
+  }, 2200);
+}
+
+function refreshDynamicText(){
+  prevBtn.textContent = btnLabel('back');
+  nextBtn.textContent = btnLabel('next');
+  updatePlayLabel();
+  applyStage(idx);
+}
+
+playBtn.addEventListener('click', function(){ playing ? stopPlaying() : startPlaying(); });
+nextBtn.addEventListener('click', function(){ stopPlaying(); if (idx < STAGE_KEYS.length - 1) applyStage(idx + 1); });
+prevBtn.addEventListener('click', function(){ stopPlaying(); if (idx > 0) applyStage(idx - 1); });
+
+prevBtn.textContent = btnLabel('back');
+nextBtn.textContent = btnLabel('next');
+applyStage(0);
+
+(function(){
+  let saved = null;
+  try{ saved = localStorage.getItem('baio_practical_lang'); }catch(e){}
+  if(saved && saved !== 'en'){ setLang(saved); }
+  else { renderLangSwitcher(); }
+})();
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  });
+}
+</script>
+<script>
+(function(){
+  function showOfflineBanner(){
+    if(document.getElementById('baioOfflineBanner')) return;
+    var bar = document.createElement('div');
+    bar.id = 'baioOfflineBanner';
+    bar.setAttribute('role','status');
+    bar.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#B8912A;color:#0B1B14;font:600 13px/1.4 -apple-system,"Segoe UI",Roboto,sans-serif;padding:9px 40px 9px 14px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.25);';
+    bar.innerHTML = '📶 You’re offline — showing saved content, which may be out of date.'
+      + '<button type="button" aria-label="Dismiss" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#0B1B14;font-weight:800;font-size:16px;cursor:pointer;line-height:1;padding:2px 4px;">&times;</button>';
+    bar.querySelector('button').addEventListener('click', function(){ bar.remove(); });
+    document.body.prepend(bar);
+  }
+  function hideOfflineBanner(){
+    var bar = document.getElementById('baioOfflineBanner');
+    if(bar) bar.remove();
+  }
+  function checkConnectivity(isRetry){
+    if(!navigator.onLine){ showOfflineBanner(); return; }
+    fetch('manifest.json', { cache:'no-store' }).then(function(res){
+      if(res && res.ok) hideOfflineBanner();
+      else if(isRetry) showOfflineBanner();
+      else setTimeout(function(){ checkConnectivity(true); }, 1000);
+    }).catch(function(){
+      if(isRetry) showOfflineBanner();
+      else setTimeout(function(){ checkConnectivity(true); }, 1000);
+    });
+  }
+  window.addEventListener('online', function(){ checkConnectivity(); });
+  window.addEventListener('offline', showOfflineBanner);
+  if(document.readyState === 'complete' || document.readyState === 'interactive'){ checkConnectivity(); }
+  else { document.addEventListener('DOMContentLoaded', checkConnectivity); }
+})();
+</script>
+</body>
+</html>
