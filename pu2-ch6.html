@@ -1642,6 +1642,19 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
     </div>
 
     <div class="card">
+      <div class="dl-row">
+        <div class="dl-info">
+          <div class="dl-title">Board Important &mdash; Repeated Question Bank</div>
+          <div class="dl-sub">Categorized model answers and value points for the most-repeated board questions.</div>
+        </div>
+        <div class="dl-actions">
+          <button class="btn secondary dl-view-btn" onclick="viewPdf('board_important_qa.pdf', this)">View</button>
+          <button class="btn dl-btn" onclick="downloadPdf('board_important_qa.pdf', this)">Download</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
       <div class="rev-block">
         <h3>&#11088;&#11088;&#11088; Top priority &ndash; almost always asked</h3>
         <ul class="rev-list">
@@ -1684,6 +1697,16 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
     <div class="card">
       <h3 style="color:var(--gold-2); margin-bottom:4px;">Important Diagrams</h3>
       <div style="color:var(--text-dim); font-size:12px; line-height:1.5;">&#128214; Every high-yield figure in this chapter, ranked by board-exam priority with its typical mark weightage and the exact labels you must show &mdash; so you always know which diagrams matter most.</div>
+      <div class="dl-row" style="margin-top:12px;">
+        <div class="dl-info">
+          <div class="dl-title">Evolution — Important Diagrams &amp; Marks Guide</div>
+          <div class="dl-sub">Board-exam priority list of key diagrams with mark weightage, crucial labels and marking scheme notes.</div>
+        </div>
+        <div class="dl-actions">
+          <button class="btn secondary dl-view-btn" onclick="viewPdf('important_diagrams_reference.pdf', this)">View</button>
+          <button class="btn dl-btn" onclick="downloadPdf('important_diagrams_reference.pdf', this)">Download</button>
+        </div>
+      </div>
     </div>
 
     <div class="card">
@@ -2055,6 +2078,16 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
     <div id="premiumStatusRowContainer"></div>
 
     <div class="dl-section-title">Study Material</div>
+    <div class="dl-row" data-pdf="00_Complete_Study_Notes.pdf">
+      <div class="dl-info">
+        <div class="dl-title">Complete Study Notes</div>
+        <div class="dl-sub">Comprehensive &amp; analytical NEET study material &middot; 10 pages</div>
+      </div>
+      <div class="dl-actions">
+        <button class="btn secondary dl-view-btn">View</button>
+        <button class="btn dl-btn">Download</button>
+      </div>
+    </div>
     <div class="dl-row" data-pdf="10_Typed_Notes.pdf">
       <div class="dl-info">
         <div class="dl-title">Narendra Sir's Typed Notes</div>
@@ -3008,11 +3041,14 @@ ADV.forEach((q,i)=>{ q._uid = i; });
    EMBEDDED PDF DOWNLOADS (base64) — offline, no external files
    ============================================================ */
 const PDF_FILES = {
-  "10_Typed_Notes.pdf": {"label": "Narendra Sir's Typed Notes.pdf", "b64": "pu2-ch6-assets/pdf-Typed_Notes.pdf?v=1"}
-  // Complete Study Notes / Revision Notes / Important Diagrams / Board Important PDFs were
-  // additive follow-ups on Chapter 5 built after the base chapter — not part of this chapter's
-  // launch. Board Important and Important Diagrams are instead built as rich inline content
-  // in their own tabs below, so those tabs are fully functional without extra PDF assets.
+  "10_Typed_Notes.pdf": {"label": "Narendra Sir's Typed Notes.pdf", "b64": "pu2-ch6-assets/pdf-Typed_Notes.pdf?v=1"},
+  "00_Complete_Study_Notes.pdf": {"label": "Complete Study Notes (Full Chapter).pdf", "b64": "pu2-ch6-assets/pdf-00_Complete_Study_Notes.pdf"},
+  "00b_Revision_Notes.pdf": {"label": "Revision Notes - Quick Summary.pdf", "b64": "pu2-ch6-assets/pdf-00b_Revision_Notes.pdf"},
+  "board_important_qa.pdf": {"label": "Board Important - Repeated Question Bank.pdf", "b64": "pu2-ch6-assets/pdf-board_important_qa.pdf"},
+  "important_diagrams_reference.pdf": {"label": "Evolution - Important Diagrams & Marks Guide.pdf", "b64": "pu2-ch6-assets/pdf-important_diagrams_reference.pdf"}
+  // A second Board Important (topics blueprint) PDF wasn't provided for this chapter — the
+  // single Board Important PDF above supplements (not replaces) that tab's existing inline
+  // content, same as the Important Diagrams PDF above supplements this tab's inline content.
 };
 
 /* ============================================================
@@ -4854,9 +4890,9 @@ function applyPremiumGates(){
 window.applyPremiumGates = applyPremiumGates;
 
 function revisionNotesRowHtmlCh2(){
-  // No separate "Revision Notes" PDF has been prepared for this chapter yet —
-  // render nothing rather than a row that points at a file that doesn't exist.
-  return '';
+  return '<div class="dl-row"><div class="dl-info"><div class="dl-title">📄 Revision Notes</div>'
+    + '<div class="dl-sub">Condensed quick-revision &amp; concept summary notes for the whole chapter</div></div>'
+    + '<div class="dl-actions"><button class="btn secondary" onclick="viewPdf(\'00b_Revision_Notes.pdf\')">View</button><button class="btn" onclick="downloadPdf(\'00b_Revision_Notes.pdf\', this)">Download</button></div></div>';
 }
 function hwDownloadBlocked(){
   alert('Viewing or downloading the handwritten notes needs a unique roll-number code (or the master code) from Narendra Sir. Score ' + HW_SCORE_THRESHOLD + '+ in a single NEET Practice session, then use "Share Report Card" to send your report card to his social media handle to get your code. Your best score so far: ' + bestNeetScoreCh2() + '.');
