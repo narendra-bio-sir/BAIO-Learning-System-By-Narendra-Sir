@@ -203,6 +203,11 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
   padding:8px 12px; border-radius:99px; font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap;
 }
 .topic-pill.active{background:var(--gold); color:#1A1406; border-color:var(--gold); font-weight:700;}
+/* Wrapping topic/marks filter rows (e.g. Answer Practice setup) — unlike the horizontally
+   scrolling topic-nav strip, pills here must wrap their own text and shrink to fit the
+   viewport instead of forcing the row wider than the screen. */
+.topic-pill-row{ max-width:100%; }
+.topic-pill-row .topic-pill{ flex:0 1 auto; white-space:normal; min-width:0; text-align:center; }
 /* Study Mode dropdown (topic switcher + Full Screen Mode combined) */
 .study-dd{position:relative; margin-bottom:10px;}
 .study-dd-btn{width:100%; display:flex; align-items:center; justify-content:space-between; gap:8px; background:var(--panel-2); border:1px solid var(--border); border-radius:10px; padding:11px 14px; font-family:'Work Sans',sans-serif; font-size:13.5px; font-weight:600; color:var(--text); cursor:pointer;}
@@ -4371,9 +4376,9 @@ function renderWriteItSetup(){
   }).join('');
   html += `<div class="card">
     <label class="field-label">Topic</label>
-    <div style="display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;">${topicChips}</div>
+    <div class="topic-pill-row" style="display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;">${topicChips}</div>
     <label class="field-label" style="margin-top:12px;">Marks</label>
-    <div style="display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;">${marksChips}</div>
+    <div class="topic-pill-row" style="display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;">${marksChips}</div>
     <div class="btn-row" style="margin-top:14px;">
       <button class="btn" onclick="waStart()">Start Practice · ${pool.length} matching</button>
     </div>
