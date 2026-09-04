@@ -1065,6 +1065,7 @@ const PODCASTS_CH5 = {
   hi: {label:'Hindi', url:'pu1-ch5-assets/podcast-hindi.mp3'}
 };
 let podcastLang = 'en';
+let podcastSpeed = 1;
 function podcastSetLang(lang){ podcastLang = lang; renderPodcast(); }
 window.podcastSetLang = podcastSetLang;
 function renderPodcast(){
@@ -1076,12 +1077,26 @@ function renderPodcast(){
     <div style="color:var(--ink-dim);font-size:12px;margin-bottom:12px;line-height:1.6;">An audio walkthrough of this chapter &mdash; listen right here in the app while revising.</div>
     <div class="opt-row" style="margin-bottom:12px;">${langBtns}</div>
     <audio id="podcastPlayer" controls controlsList="nodownload noplaybackrate" oncontextmenu="return false;" preload="none" style="width:100%;" src="${PODCASTS_CH5[podcastLang].url}"></audio>
-    <div style="display:flex; gap:8px; justify-content:center; margin-top:10px;">
+    <div style="display:flex; gap:8px; justify-content:center; margin-top:10px; flex-wrap:wrap;">
       <button class="opt-btn" onclick="podcastSkip(-10)">&#9664;&#9664; 10s</button>
+      <button class="opt-btn" id="podcastSpeedBtn" onclick="podcastCycleSpeed()">${podcastSpeed}x Speed</button>
       <button class="opt-btn" onclick="podcastSkip(10)">10s &#9654;&#9654;</button>
     </div>
   </div>`;
+  const audioEl = document.getElementById('podcastPlayer');
+  if(audioEl) audioEl.playbackRate = podcastSpeed;
 }
+function podcastCycleSpeed(){
+  const speeds = [1, 1.25, 1.5, 1.75, 2, 0.75];
+  let idx = speeds.indexOf(podcastSpeed);
+  if(idx === -1) idx = 0;
+  podcastSpeed = speeds[(idx + 1) % speeds.length];
+  const el = document.getElementById('podcastPlayer');
+  if(el) el.playbackRate = podcastSpeed;
+  const btn = document.getElementById('podcastSpeedBtn');
+  if(btn) btn.textContent = podcastSpeed + 'x Speed';
+}
+window.podcastCycleSpeed = podcastCycleSpeed;
 function podcastSkip(sec){
   const el = document.getElementById('podcastPlayer');
   if(!el) return;
