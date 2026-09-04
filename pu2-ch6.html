@@ -494,6 +494,18 @@ footer{text-align:center; color:var(--text-dim); font-size:11px; margin-top:22px
   padding:9px 11px; font-size:12px; color:var(--text-dim);
 }
 .quickfact b{display:block; color:var(--gold-2); font-size:13px; margin-bottom:2px;}
+.rapid-overlay{position:fixed; inset:0; background:var(--bg-0); z-index:100; display:none; flex-direction:column; padding:16px;}
+.rapid-overlay.show{display:flex;}
+.rapid-close{align-self:flex-end; background:none; border:1px solid var(--border); color:var(--text-dim); border-radius:20px; padding:6px 12px; font-size:12px; cursor:pointer; flex:0 0 auto;}
+.rapid-card{flex:1 1 auto; min-height:0; overflow-y:auto; display:flex; flex-direction:column; justify-content:center; max-width:520px; margin:0 auto; width:100%; padding-bottom:10px;}
+.rapid-topic{font-size:11px; color:var(--teal); text-transform:uppercase; letter-spacing:1px; font-weight:700; text-align:center;}
+.rapid-name{font-size:26px; font-weight:700; color:var(--gold); text-align:center; margin:6px 0 14px;}
+.rapid-list{font-size:15px; color:var(--text); line-height:1.7; text-align:center;}
+.rapid-nav{display:flex; justify-content:space-between; align-items:center; margin-top:10px; max-width:520px; margin-left:auto; margin-right:auto; width:100%; flex:0 0 auto; padding-top:10px; border-top:1px solid var(--border);}
+.rev-strip{display:flex; align-items:center; justify-content:space-between; gap:10px; background:var(--panel-2); border:1px solid var(--border); border-radius:12px; padding:10px 14px; margin-bottom:12px; flex-wrap:wrap;}
+.rev-strip .txt{font-size:13px; font-weight:700; color:var(--text);}
+.rev-strip .txt small{display:block; font-size:11px; font-weight:400; color:var(--text-dim); margin-top:2px;}
+.rev-go{background:linear-gradient(135deg,var(--gold),var(--gold-2)); color:#1a1406; border:none; padding:9px 16px; border-radius:20px; font-size:12.5px; font-weight:700; cursor:pointer; white-space:nowrap;}
 .mnemonic-box{
   background:rgba(66,198,160,0.08); border:1px solid rgba(66,198,160,0.3); border-radius:10px;
   padding:11px 13px; font-size:12.5px; line-height:1.6; color:var(--text); margin:10px 0;
@@ -1058,6 +1070,20 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
         <span><b>Chapter 9</b><span class="chapter-jump-title">Biotechnology: Principles and Processes</span></span>
       </a>
       <button class="btn" id="chapterJumpCloseBtn" style="width:100%; margin-top:4px;">Close</button>
+    </div>
+  </div>
+
+  <div class="rapid-overlay" id="rapidOverlay">
+    <button class="rapid-close" onclick="closeRapid()">Close</button>
+    <div class="rapid-card">
+      <div class="rapid-topic" id="rapidTopicTag"></div>
+      <div class="rapid-name" id="rapidName"></div>
+      <div class="rapid-list" id="rapidList"></div>
+    </div>
+    <div class="rapid-nav">
+      <button class="btn secondary" onclick="rapidPrev()">&larr; Prev</button>
+      <span id="rapidCounter" style="align-self:center; font-size:12px; color:var(--text-dim);"></span>
+      <button class="btn" onclick="rapidNext()">Next &rarr;</button>
     </div>
   </div>
 
@@ -1864,6 +1890,8 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
     <div class="card">
       <h3 style="color:var(--gold-2); margin-bottom:4px;">Last-Minute Revision</h3>
       <div style="color:var(--text-dim); font-size:12px; margin-bottom:10px;">Condensed cheat-sheet &middot; jump to a topic or scroll through</div>
+      <div class="rev-strip"><div class="txt">Quick Recall Mode<small>All 12 quick facts, one at a time for fast last-minute review</small></div>
+        <button class="rev-go" onclick="openRapid()">Rapid Fire &#9654;</button></div>
       <div class="rev-jump">
         <a href="#rv1">1. Origin of Universe &amp; Earth</a>
         <a href="#rv2">2. Theories of Origin of Life</a>
@@ -4353,7 +4381,7 @@ function waAllPool(){
     return {...q, topicName, idx: i};
   });
 }
-let waSetup = {topic:'All', marks:'All'};
+let waSetup = {topics:[], marks:'All'};
 let waSession = null;
 const WA_WEIGHTS_KEY = 'pu2ch6_writeit_weights_v1';
 function getWaWeights(){
@@ -4366,14 +4394,15 @@ function setWaWeight(idx, gotIt){
   try{ localStorage.setItem(WA_WEIGHTS_KEY, JSON.stringify(w)); }catch(e){}
 }
 function waFilterPool(){
-  return waAllPool().filter(q => (waSetup.topic==='All' || q.topic===waSetup.topic)
+  return waAllPool().filter(q => (waSetup.topics.length===0 || waSetup.topics.indexOf(q.topic)!==-1)
     && (waSetup.marks==='All' || q.marks===parseInt(waSetup.marks,10)));
 }
 function renderWriteItSetup(){
   const pool = waFilterPool();
-  const topicChips = ['All', ...STUDY_DATA.map(t=>t.id)].map(id=>{
-    const label = id==='All' ? 'All Topics' : STUDY_DATA.find(t=>t.id===id).title.replace(/^\d+\.\s*/, '');
-    return `<div class="topic-pill ${waSetup.topic===id?'active':''}" onclick="waSetTopic('${id}')">${label}</div>`;
+  const topicChecks = STUDY_DATA.map(t=>{
+    const name = t.title.replace(/^\d+\.\s*/, '');
+    const checked = waSetup.topics.indexOf(t.id)!==-1 ? 'checked' : '';
+    return `<label class="pg-topic-chip"><input type="checkbox" class="waTopicCb" value="${t.id}" ${checked}>${name}</label>`;
   }).join('');
   let html = `<div class="card" style="background:linear-gradient(135deg,#0F6653,#0a4239); color:#EFFFFA; font-size:12.5px; line-height:1.6;">✍️ <b>How it works:</b> Grab a pen and paper — write your answer by hand, just like in the exam, then reveal the model answer to see what you missed. Typing is fine in a pinch, but handwriting it builds the speed and habit you'll need on exam day.</div>`;
   const marksChips = ['All','1','2','3','5'].map(v=>{
@@ -4381,8 +4410,8 @@ function renderWriteItSetup(){
     return `<div class="topic-pill ${waSetup.marks===v?'active':''}" onclick="waSetMarks('${v}')">${label}</div>`;
   }).join('');
   html += `<div class="card">
-    <label class="field-label">Topic</label>
-    <div class="topic-pill-row" style="display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;">${topicChips}</div>
+    <label class="field-label">Topic <span style="font-weight:400; color:var(--text-dim); font-size:11px;">(pick as many as you like &mdash; leave all unchecked for the full chapter)</span></label>
+    <div class="chip-row" id="waTopicChecks">${topicChecks}</div>
     <label class="field-label" style="margin-top:12px;">Marks</label>
     <div class="topic-pill-row" style="display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;">${marksChips}</div>
     <div class="btn-row" style="margin-top:14px;">
@@ -4393,9 +4422,16 @@ function renderWriteItSetup(){
   html += nextStepNudge('writeit');
   document.getElementById('writeitContent').innerHTML = html;
 }
-function waSetTopic(id){ waSetup.topic=id; renderWriteItSetup(); }
+document.getElementById('writeitContent').addEventListener('change', function(e){
+  if(!e.target.classList.contains('waTopicCb')) return;
+  const v = e.target.value;
+  const idx = waSetup.topics.indexOf(v);
+  if(e.target.checked && idx===-1) waSetup.topics.push(v);
+  else if(!e.target.checked && idx!==-1) waSetup.topics.splice(idx,1);
+  renderWriteItSetup();
+});
 function waSetMarks(v){ waSetup.marks=v; renderWriteItSetup(); }
-window.waSetTopic=waSetTopic; window.waSetMarks=waSetMarks;
+window.waSetMarks=waSetMarks;
 
 function waStart(){
   const pool = shuffleArr(waFilterPool());
@@ -6647,6 +6683,33 @@ document.getElementById('mnemoInput').addEventListener('keydown', (e)=>{
   if(e.key==='Enter') document.getElementById('mnemoSaveBtn').click();
 });
 try{ renderMnemonics(); }catch(e){ console.error('renderMnemonics failed:', e); }
+
+/* ---- Rapid Fire: flip fast through the Revision tab's quick-fact cards, one at a time.
+   Reads live from the .quickfact-grid DOM rather than a separate data array, so it can
+   never drift out of sync with the cheat-sheet itself. ---- */
+let rapidIdx = 0;
+let rapidItems = [];
+function openRapid(){
+  rapidItems = Array.prototype.slice.call(document.querySelectorAll('#panel-revision .quickfact-grid .quickfact'));
+  if(!rapidItems.length) return;
+  rapidIdx = 0;
+  document.getElementById('rapidOverlay').classList.add('show');
+  renderRapidCard();
+}
+function closeRapid(){ document.getElementById('rapidOverlay').classList.remove('show'); }
+function renderRapidCard(){
+  const item = rapidItems[rapidIdx];
+  const bEl = item.querySelector('b');
+  const label = bEl ? bEl.textContent : '';
+  const bodyHtml = bEl ? item.innerHTML.slice(bEl.outerHTML.length) : item.innerHTML;
+  document.getElementById('rapidTopicTag').textContent = `Quick Fact ${rapidIdx+1} of ${rapidItems.length}`;
+  document.getElementById('rapidName').textContent = label;
+  document.getElementById('rapidList').innerHTML = bodyHtml;
+  document.getElementById('rapidCounter').textContent = `${rapidIdx+1} / ${rapidItems.length}`;
+}
+function rapidNext(){ rapidIdx=(rapidIdx+1)%rapidItems.length; renderRapidCard(); }
+function rapidPrev(){ rapidIdx=(rapidIdx-1+rapidItems.length)%rapidItems.length; renderRapidCard(); }
+window.openRapid=openRapid; window.closeRapid=closeRapid; window.rapidNext=rapidNext; window.rapidPrev=rapidPrev;
 
 /* ============================================================
    ADDITIONAL FEATURES: Theme toggle, Student profile,
