@@ -1436,9 +1436,20 @@ function renderPodcast(){
     <h3 style="color:var(--gold);margin-bottom:4px;">🎧 Audio Podcast</h3>
     <div style="color:var(--ink-dim);font-size:12px;margin-bottom:12px;line-height:1.6;">An audio walkthrough of this chapter &mdash; listen right here in the app while revising.</div>
     <div class="opt-row" style="margin-bottom:12px;">${langBtns}</div>
-    <audio controls controlsList="nodownload noplaybackrate" oncontextmenu="return false;" preload="none" style="width:100%;" src="${PODCASTS_CH3[podcastLang].url}"></audio>
+    <audio id="podcastPlayer" controls controlsList="nodownload noplaybackrate" oncontextmenu="return false;" preload="none" style="width:100%;" src="${PODCASTS_CH3[podcastLang].url}"></audio>
+    <div style="display:flex; gap:8px; justify-content:center; margin-top:10px;">
+      <button class="opt-btn" onclick="podcastSkip(-10)">&#9664;&#9664; 10s</button>
+      <button class="opt-btn" onclick="podcastSkip(10)">10s &#9654;&#9654;</button>
+    </div>
   </div>`;
 }
+function podcastSkip(sec){
+  const el = document.getElementById('podcastPlayer');
+  if(!el) return;
+  const dur = isFinite(el.duration) ? el.duration : (el.currentTime + Math.max(sec,0));
+  el.currentTime = Math.max(0, Math.min(dur, el.currentTime + sec));
+}
+window.podcastSkip = podcastSkip;
 
 /* ---------------- STUDY MODE ---------------- */
 function selectStudyTopic(id){ currentTopic = id; renderContent(); }
