@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BAIO">
+<title>Extraction of Plant Pigments Practical | BAIO Learning System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B1B14; --navy2:#0F2419; --panel:#13281E; --panel2:#0E211A;
+  --gold:#D4AF37; --gold2:#B8912A; --teal:#2EE6C5; --teal2:#127566;
+  --ink:#EAF3EE; --ink-dim:#9FC4B6; --line:rgba(212,175,55,0.22);
+  --danger:#E7695B; --ok:#33C48A;
+  --liq-empty:var(--panel2); --liq-green:#2F5233;
+}
+[data-theme="light"]{
+  --navy:#F7F5EE; --navy2:#EFEBDD; --panel:#FFFFFF; --panel2:#F3F0E6;
+  --gold:#B8912A; --gold2:#8A6A1A; --teal:#0F8F7A; --teal2:#0B6F5E;
+  --ink:#1E2A22; --ink-dim:#5C6E63; --line:rgba(184,145,42,0.25);
+  --danger:#C33A2C; --ok:#1F9D6C;
+  --liq-empty:var(--panel2); --liq-green:#2F5233;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0; background:var(--navy); color:var(--ink); font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased; transition:background 0.25s, color 0.25s;}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif; margin:0;}
+.wrap{max-width:760px; margin:0 auto; padding:0 18px 70px;}
+a{color:var(--teal);}
+
+.topnav{position:sticky; top:0; z-index:30; background:rgba(11,27,20,0.94); backdrop-filter:blur(6px); border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; padding:10px 18px;}
+[data-theme="light"] .topnav{background:rgba(244,241,232,0.94);}
+.topnav .brand{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13.5px; color:var(--ink);}
+.topnav .brand span{color:var(--gold);}
+.topnav-actions{display:flex; align-items:center; gap:8px;}
+.icon-btn{flex:0 0 auto; width:34px; height:34px; border-radius:10px; border:1px solid var(--line); background:var(--panel); color:var(--ink); font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; text-decoration:none;}
+.lang-switcher{display:flex; gap:4px;}
+.lang-btn{padding:5px 9px; border-radius:12px; font-size:10px; font-weight:700; background:var(--panel2); color:var(--ink-dim); border:1px solid var(--line); cursor:pointer; white-space:nowrap;}
+.lang-btn.active{background:var(--gold); color:#1a1406; border-color:var(--gold);}
+
+.practicals-dd{position:relative;}
+.practicals-menu{
+  position:absolute; top:calc(100% + 8px); right:0; z-index:50; display:none; flex-direction:column; gap:2px;
+  min-width:230px; padding:6px; background:var(--panel); border:1px solid var(--line); border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.28);
+}
+.practicals-menu.open{display:flex;}
+.practicals-menu a{display:block; padding:9px 11px; border-radius:8px; font-size:12.5px; line-height:1.4; color:var(--ink); text-decoration:none;}
+.practicals-menu a:hover{background:var(--panel2);}
+.practicals-menu a.current{color:var(--gold); font-weight:700; background:rgba(212,175,55,0.1); pointer-events:none;}
+
+.hero{padding:34px 0 22px; text-align:center;}
+.eyebrow{font-size:11px; letter-spacing:2.5px; text-transform:uppercase; color:var(--teal); font-weight:700;}
+.hero h1{font-size:29px; line-height:1.15; margin-top:10px; text-wrap:balance;}
+.hero p{font-size:13.5px; color:var(--ink-dim); line-height:1.7; margin-top:12px; max-width:560px; margin-left:auto; margin-right:auto;}
+
+.section-tag{font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); font-weight:700; margin:26px 0 4px;}
+
+.stage-grid{display:grid; grid-template-columns:1.05fr .95fr; gap:14px; margin-top:26px;}
+@media(max-width:680px){ .stage-grid{grid-template-columns:1fr;} }
+.card{background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:18px 18px 14px; margin-top:14px;}
+.card h2{font-size:15px; color:var(--gold); margin-bottom:2px;}
+.card .card-note{font-size:11.5px; color:var(--ink-dim); margin:0 0 10px;}
+.card svg{display:block; width:100%; height:auto; max-width:220px; margin:0 auto;}
+
+.tube-outline{ fill:none; stroke:var(--ink-dim); stroke-width:3; stroke-linejoin:round; }
+.label-title{ font:700 11.5px/1 'Inter',sans-serif; fill:var(--ink); }
+.label-sub{ font:400 10px/1 'Inter',sans-serif; fill:var(--ink-dim); }
+
+.scene-mortar{ opacity:var(--mortar-op,1); transition:opacity .8s ease; }
+.scene-jar{ opacity:var(--jar-op,0); transition:opacity .8s ease; }
+.mortar-leaves{ opacity:var(--leaf-op,1); transition:opacity .8s ease; }
+.mortar-liquid{ opacity:var(--liq-op,0); transition:opacity .8s ease; }
+.mortar-drop{ opacity:var(--drop-op,0); transition:opacity .8s ease; }
+.mortar-vial{ opacity:var(--vial-op,0); transition:opacity .8s ease; }
+.jar-lid{ opacity:var(--lid-op,0); transition:opacity .8s ease; }
+.jar-solvent{ opacity:var(--solvent-op,0); transition:opacity .8s ease; }
+.jar-spot{ opacity:var(--spot-op,0); transition:opacity .8s ease; }
+.jar-front{ opacity:var(--front-op,0); transform:translateY(calc(var(--front-y,225) * 1px)); transition:opacity .8s ease, transform 1.1s cubic-bezier(.4,0,.2,1); }
+.band-carotene{ opacity:var(--op-carotene,0); transition:opacity 1s ease; }
+.band-xantho{ opacity:var(--op-xantho,0); transition:opacity 1s ease; }
+.band-chla{ opacity:var(--op-chla,0); transition:opacity 1s ease; }
+.band-chlb{ opacity:var(--op-chlb,0); transition:opacity 1s ease; }
+
+svg[data-stage="0"]{ --mortar-op:1; --jar-op:0; --leaf-op:1; --liq-op:0; --drop-op:1; --vial-op:0; }
+svg[data-stage="1"]{ --mortar-op:1; --jar-op:0; --leaf-op:.2; --liq-op:1; --drop-op:0; --vial-op:1; }
+svg[data-stage="2"]{ --mortar-op:0; --jar-op:1; --lid-op:0; --solvent-op:0; --spot-op:1; --front-op:0; --front-y:225; --op-carotene:0; --op-xantho:0; --op-chla:0; --op-chlb:0; }
+svg[data-stage="3"]{ --mortar-op:0; --jar-op:1; --lid-op:1; --solvent-op:1; --spot-op:1; --front-op:1; --front-y:225; --op-carotene:0; --op-xantho:0; --op-chla:0; --op-chlb:0; }
+svg[data-stage="4"]{ --mortar-op:0; --jar-op:1; --lid-op:1; --solvent-op:1; --spot-op:.4; --front-op:1; --front-y:140; --op-carotene:0; --op-xantho:0; --op-chla:1; --op-chlb:1; }
+svg[data-stage="5"]{ --mortar-op:0; --jar-op:1; --lid-op:1; --solvent-op:1; --spot-op:0; --front-op:1; --front-y:60; --op-carotene:1; --op-xantho:1; --op-chla:1; --op-chlb:1; }
+
+.pig-key{ display:flex; flex-direction:column; gap:8px; }
+.pig-row{ display:flex; align-items:center; gap:10px; }
+.pig-swatch{ flex:0 0 auto; width:38px; height:16px; border-radius:4px; border:1px solid var(--line); }
+.pig-text{ flex:1 1 auto; }
+.pig-text .pt-label{ font-size:12px; font-weight:700; color:var(--ink); }
+.pig-text .pt-sub{ font-size:10.5px; color:var(--ink-dim); line-height:1.4; }
+
+.controls{ background:var(--panel2); border:1px solid var(--line); border-radius:16px; padding:16px 18px 18px; margin-top:14px; }
+.transport{ display:flex; align-items:center; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
+button.ctl{ font:600 12.5px/1 'Inter',sans-serif; border-radius:9px; border:1px solid var(--line); background:var(--panel); color:var(--ink); padding:8px 13px; cursor:pointer; }
+button.ctl.primary{ background:linear-gradient(135deg,var(--gold),var(--gold2)); border-color:var(--gold); color:#1a1406; padding:8px 16px; }
+[data-theme="light"] button.ctl.primary{ color:#fff; }
+button.ctl:disabled{ opacity:.4; cursor:default; }
+.stopwatch{ margin-left:auto; font:700 13px/1 'Inter',sans-serif; font-variant-numeric:tabular-nums; color:var(--ink-dim); }
+
+.stepper{ position:relative; height:24px; margin-bottom:12px; }
+.stepper-rail{ position:absolute; left:6px; right:6px; top:11px; height:3px; background:var(--line); border-radius:3px; }
+.stepper-fill{ position:absolute; left:6px; top:11px; height:3px; width:0%; background:var(--gold); border-radius:3px; transition:width .9s ease; }
+.stepper-dots{ position:absolute; left:0; right:0; top:0; display:flex; justify-content:space-between; }
+.dot{ width:22px; height:22px; border-radius:50%; border:2px solid var(--line); background:var(--panel); cursor:pointer; padding:0; position:relative; }
+.dot::after{ content:""; position:absolute; inset:5px; border-radius:50%; background:transparent; }
+.dot.active{ border-color:var(--gold); }
+.dot.active::after{ background:var(--gold); }
+.dot.done{ border-color:var(--teal2); }
+.dot.done::after{ background:var(--teal); }
+
+.caption{ font-size:13.5px; line-height:1.55; color:var(--ink); min-height:40px; }
+
+.method-list{ margin:0; padding-left:18px; font-size:13px; line-height:1.7; color:var(--ink-dim); }
+.method-list li::marker{ color:var(--gold); font-weight:700; }
+.materials{ font-size:12px; color:var(--ink-dim); margin:0 0 10px; line-height:1.6; }
+.materials b{ color:var(--ink); }
+.explain p{ font-size:13.5px; line-height:1.65; color:var(--ink-dim); margin:0 0 10px; }
+.explain b{ color:var(--ink); }
+
+.obs-table{ width:100%; border-collapse:collapse; font-size:12px; margin-top:2px; }
+.obs-table th,.obs-table td{ border:1px solid var(--line); padding:8px 9px; text-align:left; vertical-align:top; }
+.obs-table th{ background:rgba(212,175,55,0.12); color:var(--gold); font-family:'Space Grotesk',sans-serif; font-size:11.5px; }
+.obs-table td{ color:var(--ink-dim); }
+.obs-table td:first-child{ color:var(--ink); font-weight:600; }
+
+.inference-list{ margin:0; padding-left:20px; font-size:13px; line-height:1.7; color:var(--ink-dim); }
+.inference-list li{ margin-bottom:8px; }
+.inference-list li::marker{ color:var(--gold); font-weight:700; }
+.inference-list b{ color:var(--ink); }
+
+.precaution-list{ margin:0; padding-left:20px; font-size:13px; line-height:1.7; color:var(--ink-dim); }
+.precaution-list li{ margin-bottom:6px; }
+.precaution-list li::marker{ color:var(--danger); font-weight:700; }
+
+.more-practicals{font-size:12px; text-align:center; margin-top:10px;}
+footer{ font-size:11.5px; color:var(--ink-dim); text-align:center; border-top:1px solid var(--line); padding-top:16px; margin-top:26px; }
+
+@media (prefers-reduced-motion:reduce){
+  .scene-mortar, .scene-jar, .mortar-leaves, .mortar-liquid, .mortar-drop, .mortar-vial, .jar-lid, .jar-solvent, .jar-spot, .jar-front, .band-carotene, .band-xantho, .band-chla, .band-chlb{ transition-duration:.01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="brand">BAIO <span data-i18n="brand_practical">Practical</span></div>
+  <div class="topnav-actions">
+    <div id="langSwitcher" class="lang-switcher"></div>
+    <div class="practicals-dd">
+      <button class="icon-btn" id="practicalsBtn" title="All Practicals" aria-haspopup="true" aria-expanded="false">🔬</button>
+      <div class="practicals-menu" id="practicalsMenu" role="menu">
+        <a href="practical-plasmolysis.html" data-i18n="menuPlasmolysis" role="menuitem">🧪 Plasmolysis in a Rhoeo Leaf</a>
+        <a href="practical-ts-stem.html" data-i18n="menuTsStem" role="menuitem">🌿 T.S. of Monocot &amp; Dicot Stem</a>
+        <a href="practical-biuret-test.html" data-i18n="menuBiuret" role="menuitem">🧫 Biuret Test for Proteins</a>
+        <a href="practical-benedict-test.html" data-i18n="menuBenedict" role="menuitem">🧪 Benedict's Test for Sugars</a>
+        <a href="practical-pigment-extraction.html" class="current" data-i18n="menuPigment" role="menuitem">🌈 Extraction of Plant Pigments</a>
+      </div>
+    </div>
+    <a href="index.html" class="icon-btn" title="Back to BAIO home">🏠</a>
+    <button class="icon-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle dark/light theme">🌙</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <div class="eyebrow" data-i18n="eyebrow">Plant Physiology · Practical</div>
+    <h1 data-i18n="h1_title">Extraction &amp; Chromatography of Leaf Pigments</h1>
+    <p data-i18n="intro">A green leaf is never just "green" — it hides three or four different pigments behind the dominant colour of chlorophyll. Press play to grind a leaf into a pigment extract, spot it onto chromatography paper, and watch the rising solvent pull each pigment apart into its own coloured band.</p>
+  </section>
+
+  <div class="section-tag" data-i18n="aim_tag">Aim</div>
+  <div class="card">
+    <p style="font-size:13.5px; line-height:1.65; color:var(--ink-dim); margin:0;" data-i18n="aim_text">To extract the pigments present in a green leaf and to separate them by paper chromatography.</p>
+  </div>
+
+  <div class="section-tag" data-i18n="principle_tag">Principle</div>
+  <div class="card explain">
+    <p data-i18n="why_p1">Leaves contain more than one photosynthetic pigment &mdash; <b>chlorophyll a</b>, <b>chlorophyll b</b>, <b>carotene</b> and <b>xanthophyll</b> &mdash; all held inside the thylakoid membranes. Because all four are lipid-soluble, grinding the leaf with an organic solvent such as acetone extracts them together into one dark green solution.</p>
+    <p data-i18n="why_p2">Paper chromatography separates this mixture because each pigment has a different <b>solubility in the moving solvent (mobile phase)</b> versus <b>adsorption onto the paper (stationary phase)</b>. The less polar pigments travel fastest and farthest with the solvent front, while the more polar ones lag behind. The ratio of the distance a pigment travels to the distance the solvent front travels is its <b>R<sub>f</sub> value</b> &mdash; a constant, identifying property for a given solvent system.</p>
+  </div>
+
+  <div class="section-tag" data-i18n="method_tag">Method</div>
+  <div class="card">
+    <h2 data-i18n="requirements_title">Requirements</h2>
+    <p class="materials" data-i18n="method_materials"><b>You need:</b> fresh green leaves · mortar and pestle · acetone · chromatography paper (Whatman No. 1) strip · fine capillary tube or dropper · chromatography jar with lid · solvent mixture (petroleum ether : acetone, about 9:1) · pencil &amp; scale</p>
+    <h2 style="margin-top:16px;" data-i18n="procedure_title">Procedure</h2>
+    <ol class="method-list">
+      <li data-i18n="method_step1">Cut a few fresh, healthy green leaves into small pieces and grind them with a little acetone using a mortar and pestle until a dark green extract is obtained.</li>
+      <li data-i18n="method_step2">Filter the extract through a fine cloth into a small, stoppered vial. Keep it away from bright light and heat, as pigments degrade quickly.</li>
+      <li data-i18n="method_step3">Take a strip of chromatography paper and draw a faint pencil line ("origin") about 2 cm from one end.</li>
+      <li data-i18n="method_step4">Using a fine capillary tube, apply a small, concentrated spot of the extract exactly on this line. Let it dry and repeat 8&ndash;10 times, keeping the spot as small as possible.</li>
+      <li data-i18n="method_step5">Pour the solvent mixture into the chromatography jar to a shallow depth, and suspend the paper so that the origin stays clearly above the solvent surface &mdash; the spot must never touch the solvent directly.</li>
+      <li data-i18n="method_step6">Cover the jar with its lid to keep the atmosphere saturated with solvent vapour, and allow the solvent to rise undisturbed.</li>
+      <li data-i18n="method_step7">When the solvent front is about 2&ndash;3 cm from the top, remove the paper and immediately mark the solvent front with a pencil before it evaporates. Allow it to air-dry.</li>
+    </ol>
+  </div>
+
+  <div class="section-tag" data-i18n="diagrams_tag">Diagrams &amp; Observation</div>
+
+  <div class="stage-grid">
+    <div class="card">
+      <h2 data-i18n="card1_title">From leaf to chromatogram</h2>
+      <p class="card-note" data-i18n="card1_note">Watch the pigments separate as the solvent rises</p>
+      <svg data-stage="0" viewBox="0 0 200 320" role="img" aria-label="A leaf ground into a green extract, spotted onto chromatography paper, then separated into four coloured pigment bands as the solvent rises up the paper.">
+        <defs>
+          <clipPath id="mortarClipPig"><path d="M45,150 L65,225 A35,10 0 0 0 135,225 L155,150 Z"/></clipPath>
+          <clipPath id="jarClipPig"><path d="M50,35 L50,265 A45,45 0 0 0 140,265 L140,35 Z"/></clipPath>
+        </defs>
+
+        <g class="scene-mortar">
+          <g class="mortar-leaves">
+            <path d="M65,120 q10,-16 24,-4 q-6,16 -24,4 Z" fill="var(--teal2)" stroke="var(--ink-dim)" stroke-width="1"/>
+            <path d="M115,128 q10,-14 22,-2 q-6,14 -22,2 Z" fill="var(--teal2)" stroke="var(--ink-dim)" stroke-width="1"/>
+          </g>
+          <ellipse cx="100" cy="140" rx="55" ry="10" class="tube-outline"/>
+          <rect class="mortar-liquid" x="45" y="140" width="110" height="90" clip-path="url(#mortarClipPig)" fill="var(--liq-green)"/>
+          <path d="M45,140 L65,225 A35,10 0 0 0 135,225 L155,140" class="tube-outline"/>
+          <g class="mortar-drop">
+            <path d="M100,4 c8,10 8,17 0,22 c-8,-5 -8,-12 0,-22 Z" fill="var(--ink-dim)" stroke="var(--ink-dim)" stroke-width="1.2"/>
+            <text x="112" y="18" class="label-sub">Acetone</text>
+          </g>
+          <g transform="rotate(16 100 100)">
+            <rect x="93" y="35" width="14" height="115" rx="7" fill="var(--panel2)" stroke="var(--ink-dim)" stroke-width="2"/>
+            <ellipse cx="100" cy="158" rx="16" ry="10" fill="var(--panel2)" stroke="var(--ink-dim)" stroke-width="2"/>
+          </g>
+          <g class="mortar-vial">
+            <rect x="160" y="180" width="26" height="52" rx="10" fill="var(--liq-green)" stroke="var(--ink-dim)" stroke-width="2"/>
+            <text x="173" y="270" text-anchor="middle" class="label-sub">Extract</text>
+          </g>
+        </g>
+
+        <g class="scene-jar">
+          <path d="M50,35 L50,265 A45,45 0 0 0 140,265 L140,35" class="tube-outline"/>
+          <rect x="70" y="27" width="50" height="8" rx="4" fill="var(--panel2)" stroke="var(--ink-dim)" stroke-width="1.5"/>
+          <ellipse class="jar-lid" cx="95" cy="30" rx="50" ry="8" fill="var(--panel2)" stroke="var(--ink-dim)" stroke-width="2"/>
+          <rect class="jar-solvent" x="50" y="233" width="90" height="32" clip-path="url(#jarClipPig)" fill="#E2CC8C" fill-opacity="0.35"/>
+          <rect x="87" y="45" width="16" height="205" rx="2" fill="#EDE6D3" stroke="var(--ink-dim)" stroke-width="1.5"/>
+          <line x1="87" y1="225" x2="103" y2="225" stroke="var(--ink-dim)" stroke-width="1" stroke-dasharray="2,2"/>
+          <circle class="jar-spot" cx="95" cy="225" r="4.5" fill="var(--liq-green)"/>
+          <rect class="band-carotene" x="88" y="68" width="14" height="9" rx="1.5" fill="#E8890C"/>
+          <rect class="band-xantho" x="88" y="104" width="14" height="9" rx="1.5" fill="#D9C21A"/>
+          <rect class="band-chla" x="88" y="144" width="14" height="9" rx="1.5" fill="#1F6B4A"/>
+          <rect class="band-chlb" x="88" y="184" width="14" height="9" rx="1.5" fill="#77A32E"/>
+          <line class="jar-front" x1="85" y1="0" x2="105" y2="0" stroke="var(--gold)" stroke-width="1.5" stroke-dasharray="3,2"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="card2_title">Reading the chromatogram</h2>
+      <p class="card-note" data-i18n="card2_note">Top to bottom, in order of decreasing R<sub>f</sub></p>
+      <div class="pig-key">
+        <div class="pig-row">
+          <div class="pig-swatch" style="background:#E8890C;"></div>
+          <div class="pig-text"><div class="pt-label" data-i18n="pigCarotLabel">Carotene &mdash; orange</div><div class="pt-sub" data-i18n="pigCarotSub">Highest R<sub>f</sub> (&asymp;0.95) &mdash; least polar, travels farthest</div></div>
+        </div>
+        <div class="pig-row">
+          <div class="pig-swatch" style="background:#D9C21A;"></div>
+          <div class="pig-text"><div class="pt-label" data-i18n="pigXanthoLabel">Xanthophyll &mdash; yellow</div><div class="pt-sub" data-i18n="pigXanthoSub">R<sub>f</sub> &asymp; 0.71</div></div>
+        </div>
+        <div class="pig-row">
+          <div class="pig-swatch" style="background:#1F6B4A;"></div>
+          <div class="pig-text"><div class="pt-label" data-i18n="pigChlaLabel">Chlorophyll a &mdash; blue-green</div><div class="pt-sub" data-i18n="pigChlaSub">R<sub>f</sub> &asymp; 0.53</div></div>
+        </div>
+        <div class="pig-row">
+          <div class="pig-swatch" style="background:#77A32E;"></div>
+          <div class="pig-text"><div class="pt-label" data-i18n="pigChlbLabel">Chlorophyll b &mdash; yellow-green</div><div class="pt-sub" data-i18n="pigChlbSub">Lowest R<sub>f</sub> (&asymp;0.42) &mdash; most polar, stays closest to the origin</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="transport">
+      <button class="ctl primary" id="playBtn" type="button">▶ Play</button>
+      <button class="ctl" id="prevBtn" type="button">◀ Back</button>
+      <button class="ctl" id="nextBtn" type="button">Next ▶</button>
+      <span class="stopwatch" id="stopwatch">⏱ 0:00</span>
+    </div>
+    <div class="stepper">
+      <div class="stepper-rail"></div>
+      <div class="stepper-fill" id="stepperFill"></div>
+      <div class="stepper-dots" id="stepperDots"></div>
+    </div>
+    <p class="caption" id="caption" aria-live="polite"></p>
+  </div>
+
+  <div class="section-tag" data-i18n="observations_tag">Observations</div>
+  <div class="card">
+    <div style="overflow-x:auto;">
+      <table class="obs-table">
+        <tr><th data-i18n="obs_h0">Pigment band (top &rarr; bottom)</th><th data-i18n="obs_h1">Colour observed</th><th data-i18n="obs_h2">Approx. R<sub>f</sub></th></tr>
+        <tr><td data-i18n="obs_r1c0">Carotene</td><td data-i18n="obs_r1c1">Orange</td><td data-i18n="obs_r1c2">&asymp; 0.95</td></tr>
+        <tr><td data-i18n="obs_r2c0">Xanthophyll</td><td data-i18n="obs_r2c1">Yellow</td><td data-i18n="obs_r2c2">&asymp; 0.71</td></tr>
+        <tr><td data-i18n="obs_r3c0">Chlorophyll a</td><td data-i18n="obs_r3c1">Blue-green</td><td data-i18n="obs_r3c2">&asymp; 0.53</td></tr>
+        <tr><td data-i18n="obs_r4c0">Chlorophyll b</td><td data-i18n="obs_r4c1">Yellow-green</td><td data-i18n="obs_r4c2">&asymp; 0.42</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-tag" data-i18n="inference_tag">Inference</div>
+  <div class="card">
+    <ul class="inference-list">
+      <li data-i18n="inf1">A "green" leaf actually contains at least four distinct pigments &mdash; two chlorophylls and two carotenoids &mdash; the chlorophylls simply dominate and mask the others until they are separated.</li>
+      <li data-i18n="inf2">The order of separation (carotene &gt; xanthophyll &gt; chlorophyll a &gt; chlorophyll b, top to bottom) reflects <b>decreasing R<sub>f</sub></b>, i.e. decreasing solubility in the non-polar solvent and increasing polarity.</li>
+      <li data-i18n="inf3">Because R<sub>f</sub> = (distance travelled by the pigment) &divide; (distance travelled by the solvent front), each pigment has a characteristic, reproducible R<sub>f</sub> value for a given solvent system &mdash; useful for identifying an unknown pigment.</li>
+    </ul>
+  </div>
+
+  <div class="section-tag" data-i18n="precaution_tag">Precautions</div>
+  <div class="card">
+    <ul class="precaution-list">
+      <li data-i18n="prec1">Keep the extract and the developing chromatogram away from direct sunlight and heat &mdash; chlorophylls degrade (bleach) readily.</li>
+      <li data-i18n="prec2">The pigment spot must be small, concentrated and completely dry, and must never dip directly into the solvent &mdash; only the paper below the spot should touch it.</li>
+      <li data-i18n="prec3">Always keep the jar covered so the atmosphere stays saturated with solvent vapour; this keeps the solvent front even and prevents streaking.</li>
+      <li data-i18n="prec4">Mark the solvent front the instant the paper is removed &mdash; it evaporates and becomes invisible within minutes.</li>
+      <li data-i18n="prec5">Work in a well-ventilated area, away from any flame &mdash; acetone and petroleum ether are volatile and highly flammable.</li>
+    </ul>
+  </div>
+
+  <footer data-i18n="footer_text">BAIO Learning System · Extraction of Plant Pigments Practical · Narendra Sir</footer>
+  <div class="more-practicals"><a href="practical-plasmolysis.html" data-i18n="more_practicals">🔬 More Practicals &mdash; Plasmolysis in a Rhoeo Leaf</a></div>
+</div>
+
+<script>
+/* Theme toggle — shared with index.html via the same localStorage key */
+(function(){
+  var THEME_KEY = 'baio_theme';
+  var btn = document.getElementById('themeToggle');
+  function applyTheme(t){
+    if(t === 'light'){ document.documentElement.setAttribute('data-theme','light'); if(btn) btn.textContent = '☀️'; }
+    else { document.documentElement.removeAttribute('data-theme'); if(btn) btn.textContent = '🌙'; }
+  }
+  var saved = null;
+  try{ saved = localStorage.getItem(THEME_KEY); }catch(e){}
+  applyTheme(saved || 'light');
+  window.toggleTheme = function(){
+    var cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+    var next = cur === 'light' ? 'dark' : 'light';
+    applyTheme(next);
+    try{ localStorage.setItem(THEME_KEY, next); }catch(e){}
+  };
+})();
+
+/* Practicals dropdown menu */
+(function(){
+  var btn = document.getElementById('practicalsBtn');
+  var menu = document.getElementById('practicalsMenu');
+  if(!btn || !menu) return;
+  function close(){ menu.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    var open = menu.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  document.addEventListener('click', function(e){
+    if(!menu.contains(e.target) && e.target !== btn) close();
+  });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') close(); });
+})();
+
+/* Trilingual mode (English / Kannada / Hindi) */
+const PRACTICAL_TRANSLATIONS = {"brand_practical":{"kn":"ಪ್ರಾಕ್ಟಿಕಲ್","hi":"प्रैक्टिकल"},"eyebrow":{"kn":"ಸಸ್ಯ ಶರೀರಶಾಸ್ತ್ರ · ಪ್ರಾಕ್ಟಿಕಲ್","hi":"पादप कार्यिकी · प्रैक्टिकल"},"h1_title":{"kn":"ಎಲೆಯ ವರ್ಣದ್ರವ್ಯಗಳ ಹೊರತೆಗೆಯುವಿಕೆ ಮತ್ತು ಕ್ರೊಮ್ಯಾಟೋಗ್ರಫಿ","hi":"पत्ती के वर्णकों का निष्कर्षण और क्रोमैटोग्राफी"},"intro":{"kn":"ಹಸಿರು ಎಲೆ ಎಂದಿಗೂ ಕೇವಲ 'ಹಸಿರು' ಅಲ್ಲ &mdash; ಅದು ಕ್ಲೋರೊಫಿಲ್‌ನ ಪ್ರಬಲ ಬಣ್ಣದ ಹಿಂದೆ ಮೂರು ಅಥವಾ ನಾಲ್ಕು ವಿಭಿನ್ನ ವರ್ಣದ್ರವ್ಯಗಳನ್ನು ಬಚ್ಚಿಟ್ಟುಕೊಂಡಿರುತ್ತದೆ. ಎಲೆಯನ್ನು ಅರೆದು ವರ್ಣದ್ರವ್ಯ ಸಾರವನ್ನು ಪಡೆಯಲು, ಅದನ್ನು ಕ್ರೊಮ್ಯಾಟೋಗ್ರಫಿ ಪೇಪರ್ ಮೇಲೆ ಸ್ಪಾಟ್ ಮಾಡಲು, ಮತ್ತು ಏರುತ್ತಿರುವ ದ್ರಾವಕ ಪ್ರತಿ ವರ್ಣದ್ರವ್ಯವನ್ನು ಅದರದೇ ಬಣ್ಣದ ಪಟ್ಟಿಯಾಗಿ ಬೇರ್ಪಡಿಸುವುದನ್ನು ನೋಡಲು ಪ್ಲೇ ಒತ್ತಿ.","hi":"एक हरी पत्ती कभी भी सिर्फ़ 'हरी' नहीं होती &mdash; वह क्लोरोफिल के प्रभावी रंग के पीछे तीन या चार अलग-अलग वर्णक छुपाए रखती है। पत्ती को पीसकर वर्णक सत्व प्राप्त करने, उसे क्रोमैटोग्राफी पेपर पर स्पॉट करने, और ऊपर चढ़ते विलायक को हर वर्णक को उसके अपने रंगीन बैंड में अलग करते देखने के लिए प्ले दबाएँ।"},"aim_tag":{"kn":"ಉದ್ದೇಶ (Aim)","hi":"उद्देश्य (Aim)"},"aim_text":{"kn":"ಹಸಿರು ಎಲೆಯಲ್ಲಿ ಇರುವ ವರ್ಣದ್ರವ್ಯಗಳನ್ನು ಹೊರತೆಗೆಯುವುದು ಮತ್ತು ಅವುಗಳನ್ನು ಪೇಪರ್ ಕ್ರೊಮ್ಯಾಟೋಗ್ರಫಿಯಿಂದ ಬೇರ್ಪಡಿಸುವುದು.","hi":"एक हरी पत्ती में उपस्थित वर्णकों का निष्कर्षण करना और पेपर क्रोमैटोग्राफी द्वारा उन्हें अलग करना।"},"principle_tag":{"kn":"ಸಿದ್ಧಾಂತ (Principle)","hi":"सिद्धांत (Principle)"},"why_p1":{"kn":"ಎಲೆಗಳು ಒಂದಕ್ಕಿಂತ ಹೆಚ್ಚು ದ್ಯುತಿಸಂಶ್ಲೇಷಕ ವರ್ಣದ್ರವ್ಯಗಳನ್ನು ಹೊಂದಿರುತ್ತವೆ &mdash; <b>ಕ್ಲೋರೊಫಿಲ್ a</b>, <b>ಕ್ಲೋರೊಫಿಲ್ b</b>, <b>ಕ್ಯಾರೊಟೀನ್</b> ಮತ್ತು <b>ಕ್ಸಾಂಥೋಫಿಲ್</b> &mdash; ಎಲ್ಲವೂ ಥೈಲಕಾಯ್ಡ್ ಪೊರೆಗಳಲ್ಲಿ ಇರಿಸಲ್ಪಟ್ಟಿರುತ್ತವೆ. ಈ ನಾಲ್ಕೂ ಕೊಬ್ಬು-ಕರಗುವ ಗುಣ ಹೊಂದಿರುವುದರಿಂದ, ಎಲೆಯನ್ನು ಅಸಿಟೋನ್‌ನಂತಹ ಸಾವಯವ ದ್ರಾವಕದೊಂದಿಗೆ ಅರೆದಾಗ ಅವೆಲ್ಲವೂ ಒಟ್ಟಿಗೆ ಒಂದೇ ಗಾಢ ಹಸಿರು ದ್ರಾವಣವಾಗಿ ಹೊರತೆಗೆಯಲ್ಪಡುತ್ತವೆ.","hi":"पत्तियों में एक से अधिक प्रकाश-संश्लेषक वर्णक होते हैं &mdash; <b>क्लोरोफिल a</b>, <b>क्लोरोफिल b</b>, <b>कैरोटीन</b> और <b>जैंथोफिल</b> &mdash; सभी थायलेकॉइड झिल्लियों में स्थित। ये चारों वसा में घुलनशील होने के कारण, पत्ती को एसीटोन जैसे कार्बनिक विलायक के साथ पीसने पर ये सभी एक साथ एक गहरे हरे घोल के रूप में निष्कर्षित हो जाते हैं।"},"why_p2":{"kn":"ಪೇಪರ್ ಕ್ರೊಮ್ಯಾಟೋಗ್ರಫಿ ಈ ಮಿಶ್ರಣವನ್ನು ಬೇರ್ಪಡಿಸುತ್ತದೆ, ಏಕೆಂದರೆ ಪ್ರತಿ ವರ್ಣದ್ರವ್ಯವು <b>ಚಲಿಸುವ ದ್ರಾವಕದಲ್ಲಿ (ಮೊಬೈಲ್ ಫೇಸ್) ಕರಗುವಿಕೆ</b> ಮತ್ತು <b>ಪೇಪರ್ ಮೇಲೆ (ಸ್ಥಾಯಿ ಫೇಸ್) ಹೀರಿಕೊಳ್ಳುವಿಕೆ</b> ವಿಷಯದಲ್ಲಿ ಭಿನ್ನವಾಗಿರುತ್ತದೆ. ಕಡಿಮೆ ಧ್ರುವೀಯ ವರ್ಣದ್ರವ್ಯಗಳು ದ್ರಾವಕದ ಮುಂಚೂಣಿಯೊಂದಿಗೆ ಅತ್ಯಂತ ವೇಗವಾಗಿ ಮತ್ತು ದೂರಕ್ಕೆ ಚಲಿಸುತ್ತವೆ, ಹೆಚ್ಚು ಧ್ರುವೀಯವಾದವು ಹಿಂದೆ ಉಳಿಯುತ್ತವೆ. ವರ್ಣದ್ರವ್ಯ ಚಲಿಸಿದ ದೂರ ಮತ್ತು ದ್ರಾವಕ ಮುಂಚೂಣಿ ಚಲಿಸಿದ ದೂರದ ಅನುಪಾತವೇ ಅದರ <b>R<sub>f</sub> ಮೌಲ್ಯ</b> &mdash; ಒಂದು ನಿರ್ದಿಷ್ಟ ದ್ರಾವಕ ವ್ಯವಸ್ಥೆಗೆ ಇದು ಸ್ಥಿರವಾದ, ಗುರುತಿಸುವ ಗುಣಲಕ್ಷಣ.","hi":"पेपर क्रोमैटोग्राफी इस मिश्रण को अलग करती है, क्योंकि प्रत्येक वर्णक की <b>गतिशील विलायक (मोबाइल फेज़) में घुलनशीलता</b> और <b>पेपर पर (स्थिर फेज़) अधिशोषण</b> अलग-अलग होती है। कम ध्रुवीय वर्णक विलायक अग्र के साथ सबसे तेज़ और सबसे दूर तक चलते हैं, जबकि अधिक ध्रुवीय वर्णक पीछे रह जाते हैं। वर्णक द्वारा तय की गई दूरी और विलायक अग्र द्वारा तय की गई दूरी का अनुपात ही उसका <b>R<sub>f</sub> मान</b> है &mdash; किसी दिए गए विलायक तंत्र के लिए एक स्थिर, पहचान कराने वाला गुण।"},"method_tag":{"kn":"ವಿಧಾನ (Method)","hi":"विधि (Method)"},"requirements_title":{"kn":"ಬೇಕಾಗುವ ಸಾಮಗ್ರಿಗಳು (Requirements)","hi":"आवश्यक सामग्री (Requirements)"},"method_materials":{"kn":"<b>ಬೇಕಾಗುವ ವಸ್ತುಗಳು:</b> ತಾಜಾ ಹಸಿರು ಎಲೆಗಳು · ಒರಳು ಮತ್ತು ಒನಕೆ · ಅಸಿಟೋನ್ · ಕ್ರೊಮ್ಯಾಟೋಗ್ರಫಿ ಪೇಪರ್ (Whatman No. 1) ಪಟ್ಟಿ · ಸೂಕ್ಷ್ಮ ಕ್ಯಾಪಿಲರಿ ಟ್ಯೂಬ್ ಅಥವಾ ಡ್ರಾಪರ್ · ಮುಚ್ಚಳವಿರುವ ಕ್ರೊಮ್ಯಾಟೋಗ್ರಫಿ ಜಾರ್ · ದ್ರಾವಕ ಮಿಶ್ರಣ (ಪೆಟ್ರೋಲಿಯಂ ಈಥರ್ : ಅಸಿಟೋನ್, ಸುಮಾರು 9:1) · ಪೆನ್ಸಿಲ್ ಮತ್ತು ಸ್ಕೇಲ್","hi":"<b>आवश्यक सामग्री:</b> ताज़ी हरी पत्तियाँ · खरल और मूसल · एसीटोन · क्रोमैटोग्राफी पेपर (Whatman No. 1) की पट्टी · महीन केशनली या ड्रॉपर · ढक्कन वाला क्रोमैटोग्राफी जार · विलायक मिश्रण (पेट्रोलियम ईथर : एसीटोन, लगभग 9:1) · पेंसिल और स्केल"},"procedure_title":{"kn":"ಕ್ರಮ (Procedure)","hi":"प्रक्रिया (Procedure)"},"method_step1":{"kn":"ಕೆಲವು ತಾಜಾ, ಆರೋಗ್ಯಕರ ಹಸಿರು ಎಲೆಗಳನ್ನು ಸಣ್ಣ ತುಂಡುಗಳಾಗಿ ಕತ್ತರಿಸಿ, ಗಾಢ ಹಸಿರು ಸಾರ ಸಿಗುವವರೆಗೆ ಸ್ವಲ್ಪ ಅಸಿಟೋನ್‌ನೊಂದಿಗೆ ಒರಳು-ಒನಕೆಯಲ್ಲಿ ಅರೆಯಿರಿ.","hi":"कुछ ताज़ी, स्वस्थ हरी पत्तियों को छोटे टुकड़ों में काटें और खरल-मूसल में थोड़े एसीटोन के साथ तब तक पीसें जब तक गहरा हरा सत्व न मिल जाए।"},"method_step2":{"kn":"ಸಾರವನ್ನು ಸೂಕ್ಷ್ಮ ಬಟ್ಟೆಯ ಮೂಲಕ ಸಣ್ಣ, ಮುಚ್ಚಳವಿರುವ ಬಾಟಲಿಗೆ ಸೋಸಿ. ಪ್ರಬಲ ಬೆಳಕು ಮತ್ತು ಶಾಖದಿಂದ ದೂರವಿಡಿ, ಏಕೆಂದರೆ ವರ್ಣದ್ರವ್ಯಗಳು ಬೇಗನೆ ಕೆಡುತ್ತವೆ.","hi":"सत्व को महीन कपड़े से छानकर एक छोटी, ढक्कन वाली शीशी में लें। तेज़ रोशनी और गर्मी से दूर रखें, क्योंकि वर्णक जल्दी नष्ट हो जाते हैं।"},"method_step3":{"kn":"ಕ್ರೊಮ್ಯಾಟೋಗ್ರಫಿ ಪೇಪರ್‌ನ ಒಂದು ಪಟ್ಟಿಯನ್ನು ತೆಗೆದುಕೊಂಡು, ಒಂದು ತುದಿಯಿಂದ ಸುಮಾರು 2 cm ದೂರದಲ್ಲಿ ಮಸುಕಾದ ಪೆನ್ಸಿಲ್ ರೇಖೆಯನ್ನು (&#39;ಮೂಲ&#39;) ಎಳೆಯಿರಿ.","hi":"क्रोमैटोग्राफी पेपर की एक पट्टी लें और एक सिरे से लगभग 2 cm दूरी पर एक हल्की पेंसिल रेखा ('मूल बिंदु') खींचें।"},"method_step4":{"kn":"ಸೂಕ್ಷ್ಮ ಕ್ಯಾಪಿಲರಿ ಟ್ಯೂಬ್ ಬಳಸಿ, ಈ ರೇಖೆಯ ಮೇಲೆಯೇ ಸಾರದ ಒಂದು ಸಣ್ಣ, ಸಾಂದ್ರ ಸ್ಪಾಟ್ ಅನ್ನು ಅನ್ವಯಿಸಿ. ಒಣಗಲು ಬಿಟ್ಟು 8&ndash;10 ಬಾರಿ ಪುನರಾವರ್ತಿಸಿ, ಸ್ಪಾಟ್ ಅನ್ನು ಸಾಧ್ಯವಾದಷ್ಟು ಚಿಕ್ಕದಾಗಿಡಿ.","hi":"महीन केशनली की सहायता से, इसी रेखा पर सत्व की एक छोटी, सांद्र बूँद लगाएँ। सूखने दें और 8&ndash;10 बार दोहराएँ, बूँद को यथासंभव छोटा रखें।"},"method_step5":{"kn":"ದ್ರಾವಕ ಮಿಶ್ರಣವನ್ನು ಕ್ರೊಮ್ಯಾಟೋಗ್ರಫಿ ಜಾರ್‌ಗೆ ಆಳವಿಲ್ಲದ ಪ್ರಮಾಣದಲ್ಲಿ ಸುರಿಯಿರಿ, ಮತ್ತು ಮೂಲ ರೇಖೆ ದ್ರಾವಕ ಮಟ್ಟದಿಂದ ಸ್ಪಷ್ಟವಾಗಿ ಮೇಲಿರುವಂತೆ ಪೇಪರ್ ಅನ್ನು ತೂಗುಹಾಕಿ &mdash; ಸ್ಪಾಟ್ ಎಂದಿಗೂ ದ್ರಾವಕವನ್ನು ನೇರವಾಗಿ ಮುಟ್ಟಬಾರದು.","hi":"विलायक मिश्रण को क्रोमैटोग्राफी जार में थोड़ी गहराई तक डालें, और पेपर को इस तरह लटकाएँ कि मूल बिंदु विलायक की सतह से स्पष्ट रूप से ऊपर रहे &mdash; बूँद कभी भी सीधे विलायक को नहीं छूनी चाहिए।"},"method_step6":{"kn":"ವಾತಾವರಣವನ್ನು ದ್ರಾವಕ ಆವಿಯಿಂದ ಸ್ಯಾಚುರೇಟ್ ಆಗಿಡಲು ಜಾರ್ ಅನ್ನು ಮುಚ್ಚಳದಿಂದ ಮುಚ್ಚಿ, ದ್ರಾವಕವನ್ನು ಅಡೆತಡೆಯಿಲ್ಲದೆ ಏರಲು ಬಿಡಿ.","hi":"वातावरण को विलायक की वाष्प से संतृप्त बनाए रखने के लिए जार को ढक्कन से ढकें, और विलायक को बिना किसी बाधा के ऊपर चढ़ने दें।"},"method_step7":{"kn":"ದ್ರಾವಕ ಮುಂಚೂಣಿ ಮೇಲಿನಿಂದ ಸುಮಾರು 2&ndash;3 cm ಇರುವಾಗ, ಪೇಪರ್ ಅನ್ನು ತೆಗೆದು, ಅದು ಆವಿಯಾಗುವ ಮೊದಲೇ ದ್ರಾವಕ ಮುಂಚೂಣಿಯನ್ನು ಪೆನ್ಸಿಲ್‌ನಿಂದ ತಕ್ಷಣ ಗುರುತಿಸಿ. ಗಾಳಿಯಲ್ಲಿ ಒಣಗಲು ಬಿಡಿ.","hi":"जब विलायक अग्र शीर्ष से लगभग 2&ndash;3 cm दूर रह जाए, पेपर को निकालें और वाष्पित होने से पहले ही विलायक अग्र को पेंसिल से तुरंत चिह्नित करें। हवा में सूखने दें।"},"diagrams_tag":{"kn":"ಚಿತ್ರಗಳು ಮತ್ತು ವೀಕ್ಷಣೆ","hi":"चित्र और अवलोकन"},"card1_title":{"kn":"ಎಲೆಯಿಂದ ಕ್ರೊಮ್ಯಾಟೋಗ್ರಾಂವರೆಗೆ","hi":"पत्ती से क्रोमैटोग्राम तक"},"card1_note":{"kn":"ದ್ರಾವಕ ಏರುತ್ತಿದ್ದಂತೆ ವರ್ಣದ್ರವ್ಯಗಳು ಬೇರ್ಪಡುವುದನ್ನು ಗಮನಿಸಿ","hi":"विलायक के चढ़ने के साथ वर्णकों को अलग होते देखें"},"card2_title":{"kn":"ಕ್ರೊಮ್ಯಾಟೋಗ್ರಾಂ ಓದುವುದು","hi":"क्रोमैटोग्राम पढ़ना"},"card2_note":{"kn":"ಮೇಲಿನಿಂದ ಕೆಳಗೆ, ಕಡಿಮೆಯಾಗುತ್ತಿರುವ R<sub>f</sub> ಕ್ರಮದಲ್ಲಿ","hi":"ऊपर से नीचे, घटते R<sub>f</sub> क्रम में"},"pigCarotLabel":{"kn":"ಕ್ಯಾರೊಟೀನ್ &mdash; ಕಿತ್ತಳೆ","hi":"कैरोटीन &mdash; नारंगी"},"pigCarotSub":{"kn":"ಅತ್ಯಧಿಕ R<sub>f</sub> (&asymp;0.95) &mdash; ಕಡಿಮೆ ಧ್ರುವೀಯ, ಅತಿ ದೂರ ಚಲಿಸುತ್ತದೆ","hi":"सबसे अधिक R<sub>f</sub> (&asymp;0.95) &mdash; सबसे कम ध्रुवीय, सबसे दूर तक जाता है"},"pigXanthoLabel":{"kn":"ಕ್ಸಾಂಥೋಫಿಲ್ &mdash; ಹಳದಿ","hi":"जैंथोफिल &mdash; पीला"},"pigXanthoSub":{"kn":"R<sub>f</sub> &asymp; 0.71","hi":"R<sub>f</sub> &asymp; 0.71"},"pigChlaLabel":{"kn":"ಕ್ಲೋರೊಫಿಲ್ a &mdash; ನೀಲಿ-ಹಸಿರು","hi":"क्लोरोफिल a &mdash; नीला-हरा"},"pigChlaSub":{"kn":"R<sub>f</sub> &asymp; 0.53","hi":"R<sub>f</sub> &asymp; 0.53"},"pigChlbLabel":{"kn":"ಕ್ಲೋರೊಫಿಲ್ b &mdash; ಹಳದಿ-ಹಸಿರು","hi":"क्लोरोफिल b &mdash; पीला-हरा"},"pigChlbSub":{"kn":"ಅತ್ಯಂತ ಕಡಿಮೆ R<sub>f</sub> (&asymp;0.42) &mdash; ಅತ್ಯಂತ ಧ್ರುವೀಯ, ಮೂಲಕ್ಕೆ ಹತ್ತಿರವೇ ಉಳಿಯುತ್ತದೆ","hi":"सबसे कम R<sub>f</sub> (&asymp;0.42) &mdash; सबसे अधिक ध्रुवीय, मूल बिंदु के सबसे नज़दीक रहता है"},"observations_tag":{"kn":"ವೀಕ್ಷಣೆಗಳು (Observations)","hi":"अवलोकन (Observations)"},"obs_h0":{"kn":"ವರ್ಣದ್ರವ್ಯ ಪಟ್ಟಿ (ಮೇಲಿನಿಂದ ಕೆಳಗೆ)","hi":"वर्णक बैंड (ऊपर से नीचे)"},"obs_h1":{"kn":"ಗಮನಿಸಿದ ಬಣ್ಣ","hi":"देखा गया रंग"},"obs_h2":{"kn":"ಅಂದಾಜು R<sub>f</sub>","hi":"अनुमानित R<sub>f</sub>"},"obs_r1c0":{"kn":"ಕ್ಯಾರೊಟೀನ್","hi":"कैरोटीन"},"obs_r1c1":{"kn":"ಕಿತ್ತಳೆ","hi":"नारंगी"},"obs_r2c0":{"kn":"ಕ್ಸಾಂಥೋಫಿಲ್","hi":"जैंथोफिल"},"obs_r2c1":{"kn":"ಹಳದಿ","hi":"पीला"},"obs_r3c0":{"kn":"ಕ್ಲೋರೊಫಿಲ್ a","hi":"क्लोरोफिल a"},"obs_r3c1":{"kn":"ನೀಲಿ-ಹಸಿರು","hi":"नीला-हरा"},"obs_r4c0":{"kn":"ಕ್ಲೋರೊಫಿಲ್ b","hi":"क्लोरोफिल b"},"obs_r4c1":{"kn":"ಹಳದಿ-ಹಸಿರು","hi":"पीला-हरा"},"inference_tag":{"kn":"ತೀರ್ಮಾನ (Inference)","hi":"निष्कर्ष (Inference)"},"inf1":{"kn":"'ಹಸಿರು' ಎಲೆಯು ವಾಸ್ತವವಾಗಿ ಕನಿಷ್ಠ ನಾಲ್ಕು ಪ್ರತ್ಯೇಕ ವರ್ಣದ್ರವ್ಯಗಳನ್ನು ಹೊಂದಿದೆ &mdash; ಎರಡು ಕ್ಲೋರೊಫಿಲ್‌ಗಳು ಮತ್ತು ಎರಡು ಕ್ಯಾರೊಟಿನಾಯ್ಡ್‌ಗಳು &mdash; ಕ್ಲೋರೊಫಿಲ್‌ಗಳು ಬೇರ್ಪಡಿಸುವವರೆಗೆ ಇತರವುಗಳನ್ನು ಪ್ರಾಬಲ್ಯಗೊಳಿಸಿ ಮರೆಮಾಡುತ್ತವೆ.","hi":"एक 'हरी' पत्ती वास्तव में कम से कम चार अलग-अलग वर्णक रखती है &mdash; दो क्लोरोफिल और दो कैरोटिनॉइड &mdash; क्लोरोफिल केवल तब तक अन्य को छुपाए रखते हैं जब तक उन्हें अलग नहीं किया जाता।"},"inf2":{"kn":"ಬೇರ್ಪಡುವಿಕೆಯ ಕ್ರಮ (ಕ್ಯಾರೊಟೀನ್ &gt; ಕ್ಸಾಂಥೋಫಿಲ್ &gt; ಕ್ಲೋರೊಫಿಲ್ a &gt; ಕ್ಲೋರೊಫಿಲ್ b, ಮೇಲಿನಿಂದ ಕೆಳಗೆ) <b>ಕಡಿಮೆಯಾಗುತ್ತಿರುವ R<sub>f</sub></b> ಅನ್ನು ಪ್ರತಿಬಿಂಬಿಸುತ್ತದೆ, ಅಂದರೆ ಅಧ್ರುವೀಯ ದ್ರಾವಕದಲ್ಲಿ ಕಡಿಮೆಯಾಗುತ್ತಿರುವ ಕರಗುವಿಕೆ ಮತ್ತು ಹೆಚ್ಚುತ್ತಿರುವ ಧ್ರುವೀಯತೆ.","hi":"पृथक्करण का क्रम (कैरोटीन &gt; जैंथोफिल &gt; क्लोरोफिल a &gt; क्लोरोफिल b, ऊपर से नीचे) <b>घटते R<sub>f</sub></b> को दर्शाता है, अर्थात अध्रुवीय विलायक में घटती घुलनशीलता और बढ़ती ध्रुवीयता।"},"inf3":{"kn":"R<sub>f</sub> = (ವರ್ಣದ್ರವ್ಯ ಚಲಿಸಿದ ದೂರ) &divide; (ದ್ರಾವಕ ಮುಂಚೂಣಿ ಚಲಿಸಿದ ದೂರ) ಆಗಿರುವುದರಿಂದ, ಪ್ರತಿ ವರ್ಣದ್ರವ್ಯವು ನಿರ್ದಿಷ್ಟ ದ್ರಾವಕ ವ್ಯವಸ್ಥೆಗೆ ವಿಶಿಷ್ಟವಾದ, ಪುನರಾವರ್ತಿಸಬಹುದಾದ R<sub>f</sub> ಮೌಲ್ಯವನ್ನು ಹೊಂದಿರುತ್ತದೆ &mdash; ಇದು ಅಜ್ಞಾತ ವರ್ಣದ್ರವ್ಯವನ್ನು ಗುರುತಿಸಲು ಉಪಯುಕ್ತ.","hi":"चूँकि R<sub>f</sub> = (वर्णक द्वारा तय दूरी) &divide; (विलायक अग्र द्वारा तय दूरी), प्रत्येक वर्णक का किसी दिए गए विलायक तंत्र के लिए एक विशिष्ट, दोहराया जा सकने वाला R<sub>f</sub> मान होता है &mdash; जो किसी अज्ञात वर्णक की पहचान में उपयोगी है।"},"precaution_tag":{"kn":"ಎಚ್ಚರಿಕೆಗಳು (Precautions)","hi":"सावधानियाँ (Precautions)"},"prec1":{"kn":"ಸಾರ ಮತ್ತು ಬೆಳೆಯುತ್ತಿರುವ ಕ್ರೊಮ್ಯಾಟೋಗ್ರಾಂ ಅನ್ನು ನೇರ ಸೂರ್ಯನ ಬೆಳಕು ಮತ್ತು ಶಾಖದಿಂದ ದೂರವಿಡಿ &mdash; ಕ್ಲೋರೊಫಿಲ್‌ಗಳು ಸುಲಭವಾಗಿ ಕೆಡುತ್ತವೆ (ಬಣ್ಣಗುಂದುತ್ತವೆ).","hi":"सत्व और विकसित हो रहे क्रोमैटोग्राम को सीधी धूप और गर्मी से दूर रखें &mdash; क्लोरोफिल आसानी से नष्ट (रंगहीन) हो जाते हैं।"},"prec2":{"kn":"ವರ್ಣದ್ರವ್ಯ ಸ್ಪಾಟ್ ಚಿಕ್ಕದಾಗಿ, ಸಾಂದ್ರವಾಗಿ ಮತ್ತು ಸಂಪೂರ್ಣ ಒಣಗಿರಬೇಕು, ಮತ್ತು ಎಂದಿಗೂ ದ್ರಾವಕವನ್ನು ನೇರವಾಗಿ ಮುಟ್ಟಬಾರದು &mdash; ಸ್ಪಾಟ್‌ನ ಕೆಳಗಿನ ಪೇಪರ್ ಮಾತ್ರ ಅದನ್ನು ಸ್ಪರ್ಶಿಸಬೇಕು.","hi":"वर्णक की बूँद छोटी, सांद्र और पूरी तरह सूखी होनी चाहिए, और उसे कभी भी सीधे विलायक को नहीं छूना चाहिए &mdash; बूँद के नीचे का पेपर ही उसे छूना चाहिए।"},"prec3":{"kn":"ವಾತಾವರಣ ದ್ರಾವಕ ಆವಿಯಿಂದ ಸ್ಯಾಚುರೇಟ್ ಆಗಿರಲು ಜಾರ್ ಅನ್ನು ಯಾವಾಗಲೂ ಮುಚ್ಚಿಡಿ; ಇದು ದ್ರಾವಕ ಮುಂಚೂಣಿಯನ್ನು ಸಮನಾಗಿಟ್ಟು ಪಟ್ಟೆಗಳನ್ನು ತಪ್ಪಿಸುತ್ತದೆ.","hi":"वातावरण को विलायक की वाष्प से संतृप्त बनाए रखने के लिए जार को हमेशा ढककर रखें; इससे विलायक अग्र सम बना रहता है और धारियाँ नहीं बनतीं।"},"prec4":{"kn":"ಪೇಪರ್ ಅನ್ನು ತೆಗೆದ ಕ್ಷಣವೇ ದ್ರಾವಕ ಮುಂಚೂಣಿಯನ್ನು ಗುರುತಿಸಿ &mdash; ಅದು ಕೆಲವೇ ನಿಮಿಷಗಳಲ್ಲಿ ಆವಿಯಾಗಿ ಕಾಣದಂತಾಗುತ್ತದೆ.","hi":"पेपर निकालते ही तुरंत विलायक अग्र को चिह्नित करें &mdash; वह कुछ ही मिनटों में वाष्पित होकर अदृश्य हो जाता है।"},"prec5":{"kn":"ಚೆನ್ನಾಗಿ ಗಾಳಿಯಾಡುವ ಸ್ಥಳದಲ್ಲಿ, ಯಾವುದೇ ಜ್ವಾಲೆಯಿಂದ ದೂರವಿದ್ದು ಕೆಲಸ ಮಾಡಿ &mdash; ಅಸಿಟೋನ್ ಮತ್ತು ಪೆಟ್ರೋಲಿಯಂ ಈಥರ್ ಬಾಷ್ಪಶೀಲ ಮತ್ತು ಹೆಚ್ಚು ಸುಡುವ ಗುಣ ಹೊಂದಿವೆ.","hi":"अच्छी हवादार जगह पर, किसी भी लपट से दूर काम करें &mdash; एसीटोन और पेट्रोलियम ईथर वाष्पशील और अत्यधिक ज्वलनशील होते हैं।"},"footer_text":{"kn":"BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಂ · ಎಲೆಯ ವರ್ಣದ್ರವ್ಯಗಳ ಹೊರತೆಗೆಯುವಿಕೆ ಪ್ರಾಕ್ಟಿಕಲ್ · ನರೇಂದ್ರ ಸರ್","hi":"BAIO लर्निंग सिस्टम · पत्ती के वर्णकों के निष्कर्षण का प्रैक्टिकल · नरेंद्र सर"},"more_practicals":{"kn":"🔬 ಇನ್ನಷ್ಟು ಪ್ರಾಕ್ಟಿಕಲ್‌ಗಳು &mdash; Rhoeo ಎಲೆಯಲ್ಲಿ Plasmolysis","hi":"🔬 और प्रैक्टिकल &mdash; Rhoeo पत्ती में Plasmolysis"},"menuPlasmolysis":{"kn":"🧪 Rhoeo ಎಲೆಯಲ್ಲಿ Plasmolysis","hi":"🧪 Rhoeo पत्ती में Plasmolysis"},"menuTsStem":{"kn":"🌿 Monocot &amp; Dicot Stem ನ T.S.","hi":"🌿 Monocot &amp; Dicot Stem का T.S."},"menuBiuret":{"kn":"🧫 ಪ್ರೋಟೀನ್‌ಗಾಗಿ ಬಯುರೆಟ್ ಪರೀಕ್ಷೆ","hi":"🧫 प्रोटीन के लिए बाइयूरेट परीक्षण"},"menuBenedict":{"kn":"🧪 ಸಕ್ಕರೆಗಳಿಗಾಗಿ ಬೆನೆಡಿಕ್ಟ್ ಪರೀಕ್ಷೆ","hi":"🧪 शर्करा के लिए बेनेडिक्ट परीक्षण"},"menuPigment":{"kn":"🌈 ಸಸ್ಯ ವರ್ಣದ್ರವ್ಯಗಳ ಹೊರತೆಗೆಯುವಿಕೆ","hi":"🌈 पादप वर्णकों का निष्कर्षण"},"stage0":{"kn":"ತಾಜಾ ಎಲೆಯ ತುಂಡುಗಳನ್ನು ಒರಳಿನಲ್ಲಿ ಇರಿಸಲಾಗಿದೆ; ಅರೆಯಲು ಸ್ವಲ್ಪ ಅಸಿಟೋನ್ ಸೇರಿಸಲಾಗುತ್ತಿದೆ.","hi":"ताज़ी पत्ती के टुकड़े खरल में रखे गए हैं; पीसने के लिए थोड़ा एसीटोन मिलाया जा रहा है।"},"stage1":{"kn":"ಎಲೆಯನ್ನು ಅರೆದ ನಂತರ ಗಾಢ ಹಸಿರು ಸಾರ ದೊರೆತಿದೆ ಮತ್ತು ಸೋಸಿ ಒಂದು ಬಾಟಲಿಗೆ ಸಂಗ್ರಹಿಸಲಾಗಿದೆ.","hi":"पत्ती पीसने के बाद गहरा हरा सत्व मिला है और छानकर एक शीशी में एकत्र किया गया है।"},"stage2":{"kn":"ಕ್ರೊಮ್ಯಾಟೋಗ್ರಫಿ ಪೇಪರ್‌ನ ಮೂಲ ರೇಖೆಯ ಮೇಲೆ ಸಾರದ ಒಂದು ಸಣ್ಣ, ಸಾಂದ್ರ ಸ್ಪಾಟ್ ಅನ್ನು ಪದೇ ಪದೇ ಅನ್ವಯಿಸಿ ಒಣಗಿಸಲಾಗಿದೆ.","hi":"क्रोमैटोग्राफी पेपर के मूल बिंदु पर सत्व की एक छोटी, सांद्र बूँद बार-बार लगाकर सुखाई गई है।"},"stage3":{"kn":"ಪೇಪರ್ ಅನ್ನು ಮುಚ್ಚಳವಿರುವ ಜಾರ್‌ನಲ್ಲಿ ಇಳಿಬಿಡಲಾಗಿದೆ, ಮೂಲ ರೇಖೆ ದ್ರಾವಕ ಮಟ್ಟಕ್ಕಿಂತ ಸ್ಪಷ್ಟವಾಗಿ ಮೇಲಿದೆ; ದ್ರಾವಕ ಈಗಷ್ಟೇ ಪೇಪರ್‌ ಅನ್ನು ಏರತೊಡಗಿದೆ.","hi":"पेपर को ढक्कन वाले जार में लटकाया गया है, मूल बिंदु विलायक स्तर से स्पष्ट रूप से ऊपर है; विलायक ने अभी-अभी पेपर पर चढ़ना शुरू किया है।"},"stage4":{"kn":"ದ್ರಾವಕ ಮುಂಚೂಣಿ ಪೇಪರ್‌ನ ಸುಮಾರು ಅರ್ಧದಷ್ಟು ಏರಿದೆ; ಕ್ಲೋರೊಫಿಲ್ a ಮತ್ತು b ಈಗಾಗಲೇ ಪ್ರತ್ಯೇಕ ಪಟ್ಟಿಗಳಾಗಿ ಕಾಣಿಸಿಕೊಳ್ಳುತ್ತಿವೆ.","hi":"विलायक अग्र पेपर पर लगभग आधा ऊपर चढ़ चुका है; क्लोरोफिल a और b पहले ही अलग-अलग बैंड के रूप में दिखने लगे हैं।"},"stage5":{"kn":"ದ್ರಾವಕ ಮುಂಚೂಣಿ ಬಹುತೇಕ ಮೇಲ್ಭಾಗವನ್ನು ತಲುಪಿದೆ — ಕ್ಯಾರೊಟೀನ್, ಕ್ಸಾಂಥೋಫಿಲ್, ಕ್ಲೋರೊಫಿಲ್ a ಮತ್ತು ಕ್ಲೋರೊಫಿಲ್ b ಈಗ ನಾಲ್ಕು ಸ್ಪಷ್ಟ ಬಣ್ಣದ ಪಟ್ಟಿಗಳಾಗಿ ಸಂಪೂರ್ಣವಾಗಿ ಬೇರ್ಪಟ್ಟಿವೆ.","hi":"विलायक अग्र लगभग शीर्ष तक पहुँच चुका है — कैरोटीन, जैंथोफिल, क्लोरोफिल a और क्लोरोफिल b अब चार स्पष्ट रंगीन बैंड के रूप में पूरी तरह अलग हो चुके हैं।"},"btn_play":{"kn":"▶ ಪ್ಲೇ","hi":"▶ प्ले"},"btn_pause":{"kn":"⏸ ವಿರಾಮ","hi":"⏸ रोकें"},"btn_replay":{"kn":"↻ ಮತ್ತೆ ಪ್ಲೇ","hi":"↻ फिर से चलाएँ"},"btn_back":{"kn":"◀ ಹಿಂದೆ","hi":"◀ पीछे"},"btn_next":{"kn":"ಮುಂದೆ ▶","hi":"आगे ▶"}};
+const PRACTICAL_ORIGINAL_EN = {};
+document.querySelectorAll('[data-i18n]').forEach(function(el){
+  PRACTICAL_ORIGINAL_EN[el.getAttribute('data-i18n')] = el.innerHTML;
+});
+let currentLang = 'en';
+function setLang(lang){
+  currentLang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    const key = el.getAttribute('data-i18n');
+    if(lang === 'en'){ el.innerHTML = PRACTICAL_ORIGINAL_EN[key]; }
+    else if(PRACTICAL_TRANSLATIONS[key] && PRACTICAL_TRANSLATIONS[key][lang]){ el.innerHTML = PRACTICAL_TRANSLATIONS[key][lang]; }
+  });
+  try{ localStorage.setItem('baio_practical_lang', lang); }catch(e){}
+  renderLangSwitcher();
+  if(typeof refreshDynamicText === 'function') refreshDynamicText();
+}
+window.setLang = setLang;
+function renderLangSwitcher(){
+  const el = document.getElementById('langSwitcher');
+  if(!el) return;
+  const langs = [{id:'en',label:'English'},{id:'kn',label:'ಕನ್ನಡ'},{id:'hi',label:'हिंदी'}];
+  el.innerHTML = langs.map(function(l){ return '<div class="lang-btn' + (l.id===currentLang?' active':'') + '" onclick="setLang(\'' + l.id + '\')">' + l.label + '</div>'; }).join('');
+}
+
+/* Stage animation */
+var STAGE_KEYS = ['stage0','stage1','stage2','stage3','stage4','stage5'];
+var STAGE_TIMES = ['0:00','0:20','0:45','1:05','1:35','2:10'];
+var STAGE_EN_CAPTIONS = [
+  'Fresh leaf pieces are placed in a mortar; a little acetone is added to help grind them.',
+  'After grinding, a dark green extract is obtained, filtered and collected in a small vial.',
+  'A small, concentrated spot of the extract is applied to the origin line on the chromatography paper, and dried repeatedly.',
+  'The paper is suspended in a covered jar, with the origin clearly above the solvent — the solvent has just begun rising up the paper.',
+  'The solvent front has risen about halfway up the paper; chlorophyll a and b are already appearing as separate bands.',
+  'The solvent front has nearly reached the top — carotene, xanthophyll, chlorophyll a and chlorophyll b are now fully separated into four distinct coloured bands.'
+];
+var BTN_EN = { play:'▶ Play', pause:'⏸ Pause', replay:'↻ Replay', back:'◀ Back', next:'Next ▶' };
+
+function stageCaption(i){
+  var key = STAGE_KEYS[i];
+  if(currentLang !== 'en' && PRACTICAL_TRANSLATIONS[key] && PRACTICAL_TRANSLATIONS[key][currentLang]){
+    return PRACTICAL_TRANSLATIONS[key][currentLang];
+  }
+  return STAGE_EN_CAPTIONS[i];
+}
+function btnLabel(name){
+  var key = 'btn_' + name;
+  if(currentLang !== 'en' && PRACTICAL_TRANSLATIONS[key] && PRACTICAL_TRANSLATIONS[key][currentLang]){
+    return PRACTICAL_TRANSLATIONS[key][currentLang];
+  }
+  return BTN_EN[name];
+}
+
+var diagrams = Array.prototype.slice.call(document.querySelectorAll('svg[data-stage]'));
+var dotsWrap = document.getElementById('stepperDots');
+var fillEl = document.getElementById('stepperFill');
+var captionEl = document.getElementById('caption');
+var stopwatchEl = document.getElementById('stopwatch');
+var playBtn = document.getElementById('playBtn');
+var prevBtn = document.getElementById('prevBtn');
+var nextBtn = document.getElementById('nextBtn');
+
+var dots = STAGE_KEYS.map(function(key, i){
+  var b = document.createElement('button');
+  b.className = 'dot';
+  b.type = 'button';
+  b.addEventListener('click', function(){ stopPlaying(); applyStage(i); });
+  dotsWrap.appendChild(b);
+  return b;
+});
+
+var idx = 0, playing = false, timer = null;
+
+function applyStage(i){
+  idx = i;
+  diagrams.forEach(function(svg){ svg.setAttribute('data-stage', i); });
+  captionEl.textContent = stageCaption(i);
+  stopwatchEl.textContent = '⏱ ' + STAGE_TIMES[i];
+  fillEl.style.width = (i / (STAGE_KEYS.length - 1) * 100) + '%';
+  dots.forEach(function(d, j){
+    d.classList.toggle('active', j === i);
+    d.classList.toggle('done', j < i);
+    d.setAttribute('aria-label', STAGE_TIMES[j] + ' — ' + stageCaption(j));
+  });
+  prevBtn.disabled = i === 0;
+  nextBtn.disabled = i === STAGE_KEYS.length - 1;
+}
+
+function updatePlayLabel(){
+  playBtn.textContent = playing ? btnLabel('pause') : (idx >= STAGE_KEYS.length - 1 ? btnLabel('replay') : btnLabel('play'));
+}
+
+function stopPlaying(){
+  playing = false;
+  if (timer) clearInterval(timer);
+  updatePlayLabel();
+}
+
+function startPlaying(){
+  if (idx >= STAGE_KEYS.length - 1) applyStage(0);
+  playing = true;
+  updatePlayLabel();
+  timer = setInterval(function(){
+    if (idx >= STAGE_KEYS.length - 1) { stopPlaying(); return; }
+    applyStage(idx + 1);
+  }, 2200);
+}
+
+function refreshDynamicText(){
+  prevBtn.textContent = btnLabel('back');
+  nextBtn.textContent = btnLabel('next');
+  updatePlayLabel();
+  applyStage(idx);
+}
+
+playBtn.addEventListener('click', function(){ playing ? stopPlaying() : startPlaying(); });
+nextBtn.addEventListener('click', function(){ stopPlaying(); if (idx < STAGE_KEYS.length - 1) applyStage(idx + 1); });
+prevBtn.addEventListener('click', function(){ stopPlaying(); if (idx > 0) applyStage(idx - 1); });
+
+prevBtn.textContent = btnLabel('back');
+nextBtn.textContent = btnLabel('next');
+applyStage(0);
+
+(function(){
+  let saved = null;
+  try{ saved = localStorage.getItem('baio_practical_lang'); }catch(e){}
+  if(saved && saved !== 'en'){ setLang(saved); }
+  else { renderLangSwitcher(); }
+})();
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  });
+}
+</script>
+<script>
+(function(){
+  function showOfflineBanner(){
+    if(document.getElementById('baioOfflineBanner')) return;
+    var bar = document.createElement('div');
+    bar.id = 'baioOfflineBanner';
+    bar.setAttribute('role','status');
+    bar.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#B8912A;color:#0B1B14;font:600 13px/1.4 -apple-system,"Segoe UI",Roboto,sans-serif;padding:9px 40px 9px 14px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.25);';
+    bar.innerHTML = '📶 You’re offline — showing saved content, which may be out of date.'
+      + '<button type="button" aria-label="Dismiss" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#0B1B14;font-weight:800;font-size:16px;cursor:pointer;line-height:1;padding:2px 4px;">&times;</button>';
+    bar.querySelector('button').addEventListener('click', function(){ bar.remove(); });
+    document.body.prepend(bar);
+  }
+  function hideOfflineBanner(){
+    var bar = document.getElementById('baioOfflineBanner');
+    if(bar) bar.remove();
+  }
+  function checkConnectivity(isRetry){
+    if(!navigator.onLine){ showOfflineBanner(); return; }
+    fetch('manifest.json', { cache:'no-store' }).then(function(res){
+      if(res && res.ok) hideOfflineBanner();
+      else if(isRetry) showOfflineBanner();
+      else setTimeout(function(){ checkConnectivity(true); }, 1000);
+    }).catch(function(){
+      if(isRetry) showOfflineBanner();
+      else setTimeout(function(){ checkConnectivity(true); }, 1000);
+    });
+  }
+  window.addEventListener('online', function(){ checkConnectivity(); });
+  window.addEventListener('offline', showOfflineBanner);
+  if(document.readyState === 'complete' || document.readyState === 'interactive'){ checkConnectivity(); }
+  else { document.addEventListener('DOMContentLoaded', checkConnectivity); }
+})();
+</script>
+</body>
+</html>
