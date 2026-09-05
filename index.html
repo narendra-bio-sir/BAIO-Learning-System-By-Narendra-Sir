@@ -90,16 +90,12 @@ header{padding:34px 0 22px; text-align:center;}
   border:1px solid var(--line); background:var(--panel2); color:var(--ink); font-size:14px; cursor:pointer;
   display:flex; align-items:center; justify-content:center;
 }
-.qr-share-menu{
-  position:fixed; z-index:600; background:var(--panel); border:1px solid var(--line); border-radius:10px;
-  box-shadow:0 12px 30px rgba(0,0,0,0.35); padding:6px; display:none; flex-direction:column; gap:2px; min-width:130px;
+.qr-modal-btn-row{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+.qr-modal-share-btn{
+  background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#0B1B14; border:none;
+  padding:9px 18px; border-radius:10px; font-weight:700; font-size:12.5px; cursor:pointer;
+  display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
 }
-.qr-share-menu.open{display:flex;}
-.qr-share-menu button{
-  background:none; border:none; text-align:left; padding:9px 12px; font-size:12.5px; font-weight:600;
-  color:var(--ink); cursor:pointer; border-radius:6px; display:flex; align-items:center; gap:8px;
-}
-.qr-share-menu button:hover{background:var(--panel2);}
 
 .chapter-jump-menu{
   display:none; position:absolute; z-index:50; min-width:230px; max-width:280px;
@@ -383,12 +379,8 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       <div class="sig-stat"><div class="n" id="statChapters">&hellip;</div><div class="l">Chapters Live</div></div>
       <div class="sig-stat"><div class="n" id="statQuestions">400+</div><div class="l">Practice Questions</div></div>
       <div class="sig-stat"><div class="n" id="statSessions">&ndash;</div><div class="l">Your Sessions Logged</div></div>
-      <button id="shareQrBtn" class="share-corner-btn" style="right:38px; font-size:10px; font-weight:700;" title="QR code options" aria-label="QR code options" aria-haspopup="true" aria-expanded="false">QR</button>
+      <button id="shareQrBtn" class="share-corner-btn" style="right:38px; font-size:10px; font-weight:700;" title="Show QR code" aria-label="Show QR code">QR</button>
       <button id="shareAppBtn" class="share-corner-btn" title="Share this app" aria-label="Share this app">&#128228;</button>
-    </div>
-    <div id="qrShareMenu" class="qr-share-menu">
-      <button type="button" id="qrMenuShareBtn">&#128228; Share</button>
-      <button type="button" id="qrMenuShowBtn">&#128065; Show</button>
     </div>
     <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle light/dark theme">&#127769;</button>
     <script>(function(){try{var t=localStorage.getItem('baio_theme')||'light';if(t==='light')document.getElementById('themeToggleBtn').innerHTML='&#9728;️';}catch(e){}})();</script>
@@ -460,7 +452,10 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       <div class="announce-modal-icon">&#128241;</div>
       <div class="announce-modal-text">Scan this QR code to open BAIO Learning System on your phone.</div>
       <img src="qr-code.png?v=2" alt="QR code to open BAIO Learning System" style="width:100%; max-width:240px; border-radius:10px; background:#fff; padding:8px; margin:0 auto 18px; display:block;">
-      <button type="button" class="announce-modal-later-btn" id="qrShowModalCloseBtn">Close</button>
+      <div class="qr-modal-btn-row">
+        <button type="button" class="announce-modal-later-btn" id="qrShowModalCloseBtn">Close</button>
+        <button type="button" class="qr-modal-share-btn" id="qrShowModalShareBtn">&#128228; Share</button>
+      </div>
     </div>
   </div>
 
@@ -539,46 +534,18 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     if(link) link.addEventListener('click', doShare);
     if(cornerBtn) cornerBtn.addEventListener('click', doShare);
 
-    var qrMenu = document.getElementById('qrShareMenu');
     var qrShowOverlay = document.getElementById('qrShowModalOverlay');
-    if(qrBtn && qrMenu){
-      function positionQrMenu(){
-        var r = qrBtn.getBoundingClientRect();
-        qrMenu.style.top = (r.bottom + 6) + 'px';
-        var left = r.right - qrMenu.offsetWidth;
-        if(left < 8) left = 8;
-        qrMenu.style.left = left + 'px';
-      }
-      function closeQrMenu(){
-        qrMenu.classList.remove('open');
-        qrBtn.setAttribute('aria-expanded', 'false');
-      }
-      function toggleQrMenu(e){
+    if(qrBtn && qrShowOverlay){
+      qrBtn.addEventListener('click', function(e){
         e.preventDefault();
-        e.stopPropagation();
-        if(qrMenu.classList.contains('open')){ closeQrMenu(); return; }
-        qrMenu.classList.add('open');
-        positionQrMenu();
-        qrBtn.setAttribute('aria-expanded', 'true');
-      }
-      qrBtn.addEventListener('click', toggleQrMenu);
-      document.addEventListener('click', function(e){
-        if(qrMenu.classList.contains('open') && !qrMenu.contains(e.target) && e.target !== qrBtn){ closeQrMenu(); }
-      });
-      window.addEventListener('resize', function(){ if(qrMenu.classList.contains('open')) positionQrMenu(); });
-
-      var qrMenuShareBtn = document.getElementById('qrMenuShareBtn');
-      var qrMenuShowBtn = document.getElementById('qrMenuShowBtn');
-      if(qrMenuShareBtn) qrMenuShareBtn.addEventListener('click', function(e){ closeQrMenu(); doShareQr(e); });
-      if(qrMenuShowBtn) qrMenuShowBtn.addEventListener('click', function(e){
-        e.preventDefault();
-        closeQrMenu();
-        if(qrShowOverlay) qrShowOverlay.style.display = 'flex';
+        qrShowOverlay.style.display = 'flex';
       });
     }
     if(qrShowOverlay){
       var qrShowCloseBtn = document.getElementById('qrShowModalCloseBtn');
+      var qrShowShareBtn = document.getElementById('qrShowModalShareBtn');
       if(qrShowCloseBtn) qrShowCloseBtn.addEventListener('click', function(){ qrShowOverlay.style.display = 'none'; });
+      if(qrShowShareBtn) qrShowShareBtn.addEventListener('click', doShareQr);
       qrShowOverlay.addEventListener('click', function(e){ if(e.target === qrShowOverlay) qrShowOverlay.style.display = 'none'; });
     }
   })();
