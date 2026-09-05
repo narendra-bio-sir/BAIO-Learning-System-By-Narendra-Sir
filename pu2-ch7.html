@@ -1173,6 +1173,7 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
     <button class="tab-btn" data-tab="badges">Milestones</button>
     <button class="tab-btn" data-tab="progress">Progress</button>
     <button class="tab-btn active" data-tab="study">Study Mode</button>
+    <button class="tab-btn" data-tab="podcast">Audio Podcast</button>
     <button class="tab-btn" data-tab="studytips">Study Tips</button>
     <button class="tab-btn" data-tab="pacing">Pacing</button>
     <button class="tab-btn" data-tab="concept">Concepts</button>
@@ -1205,6 +1206,22 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       </div>
       <div class="card" id="studyContent"></div>
     </div>
+  </div>
+
+  <!-- ===================== AUDIO PODCAST ===================== -->
+  <div class="panel" id="panel-podcast">
+    <div class="card">
+      <h3 style="color:var(--gold-2); margin-bottom:4px;">🎧 Audio Podcast</h3>
+      <div style="color:var(--text-dim); font-size:12px; margin-bottom:12px; line-height:1.6;">An audio walkthrough of this chapter &mdash; listen right here in the app while revising.</div>
+      <div class="opt-row" id="podcastLangRow" style="display:flex; flex-wrap:wrap; gap:7px; margin-bottom:12px;"></div>
+      <audio id="podcastPlayer" controls controlsList="nodownload noplaybackrate" oncontextmenu="return false;" preload="none" style="width:100%;"></audio>
+      <div style="display:flex; gap:8px; justify-content:center; margin-top:10px; flex-wrap:wrap;">
+        <button class="btn secondary" onclick="podcastSkip(-10)">&#9664;&#9664; 10s</button>
+        <button class="btn secondary" id="podcastSpeedBtn" onclick="podcastCycleSpeed()">1x Speed</button>
+        <button class="btn secondary" onclick="podcastSkip(10)">10s &#9654;&#9654;</button>
+      </div>
+    </div>
+    <div class="premium-lock-overlay" id="premLock_podcast"></div>
   </div>
 
   <!-- ===================== STUDY TIPS ===================== -->
@@ -5076,8 +5093,47 @@ const PREMIUM_PRICE_RUPEES = 1999;
 const PREMIUM_PRICE_ORIGINAL = 3000;
 const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/jaOHL7c';
 const PREMIUM_UNLOCK_LOOKUP = {};
-const PREMIUM_LOCKED_TABS = ['mindmap', 'classppt', 'quiz', 'adv', 'kcet', 'writeit', 'papergen'];
-const PREMIUM_TAB_LABELS = {mindmap:'Mind Map', classppt:'Class Presentation', quiz:'MCQ Quiz', adv:'NEET Practice', kcet:'KCET Practice', writeit:'Answer Practice', papergen:'Paper Generator'};
+const PREMIUM_LOCKED_TABS = ['mindmap', 'classppt', 'quiz', 'adv', 'kcet', 'writeit', 'papergen', 'podcast'];
+const PREMIUM_TAB_LABELS = {mindmap:'Mind Map', classppt:'Class Presentation', quiz:'MCQ Quiz', adv:'NEET Practice', kcet:'KCET Practice', writeit:'Answer Practice', papergen:'Paper Generator', podcast:'Audio Podcast'};
+
+const PODCASTS_CH7 = {
+  en: {label:'English', url:'pu2-ch7-assets/podcast-english.mp3'},
+  kn: {label:'Kannada', url:'pu2-ch7-assets/podcast-kannada.mp3'},
+  hi: {label:'Hindi', url:'pu2-ch7-assets/podcast-hindi.mp3'},
+  ur: {label:'Urdu', url:'pu2-ch7-assets/podcast-urdu.mp3'},
+  mr: {label:'Marathi', url:'pu2-ch7-assets/podcast-marathi.mp3'}
+};
+let podcastLangCh7 = 'en';
+function renderPodcastLangCh7(){
+  const row = document.getElementById('podcastLangRow');
+  const player = document.getElementById('podcastPlayer');
+  if(!row || !player) return;
+  row.innerHTML = Object.keys(PODCASTS_CH7).map(function(k){
+    return '<button class="btn' + (podcastLangCh7===k?'':' secondary') + '" onclick="podcastSetLangCh7(\'' + k + '\')">' + PODCASTS_CH7[k].label + '</button>';
+  }).join('');
+  player.src = PODCASTS_CH7[podcastLangCh7].url;
+}
+function podcastSetLangCh7(lang){ podcastLangCh7 = lang; renderPodcastLangCh7(); }
+window.podcastSetLangCh7 = podcastSetLangCh7;
+renderPodcastLangCh7();
+function podcastSkip(sec){
+  const el = document.getElementById('podcastPlayer');
+  if(!el) return;
+  const dur = isFinite(el.duration) ? el.duration : (el.currentTime + Math.max(sec,0));
+  el.currentTime = Math.max(0, Math.min(dur, el.currentTime + sec));
+}
+window.podcastSkip = podcastSkip;
+function podcastCycleSpeed(){
+  const el = document.getElementById('podcastPlayer');
+  if(!el) return;
+  const speeds = [1, 1.25, 1.5, 1.75, 2, 0.75];
+  let idx = speeds.indexOf(el.playbackRate);
+  if(idx === -1) idx = 0;
+  el.playbackRate = speeds[(idx + 1) % speeds.length];
+  const btn = document.getElementById('podcastSpeedBtn');
+  if(btn) btn.textContent = el.playbackRate + 'x Speed';
+}
+window.podcastCycleSpeed = podcastCycleSpeed;
 
 function premiumBundleLabelList(){
   var names = PREMIUM_LOCKED_TABS.map(function(id){ return PREMIUM_TAB_LABELS[id] || id; });
@@ -6561,7 +6617,7 @@ renderLangSwitcher();
 /* ---- Category dropdown for mobile ---- */
 (function(){
   var CATEGORIES = [
-    {id:'learn', label:'Learn', icon:'📖', tabs:['study','concept','studytips']},
+    {id:'learn', label:'Learn', icon:'📖', tabs:['study','concept','podcast','studytips']},
     {id:'practice', label:'Practice', icon:'✍️', tabs:['flash','quiz','writeit','revision']},
     {id:'test', label:'Test Prep', icon:'🎯', tabs:['adv','kcet','papergen']},
     {id:'explore', label:'Explore', icon:'🔍', tabs:['tree','compare','mindmap','classppt','glossary']},
