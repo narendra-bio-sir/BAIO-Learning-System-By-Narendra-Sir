@@ -764,15 +764,20 @@ const EXISTING_CONTENT_TYPES = [
   { key: 'CH9-PREMIUM',  label: 'PU2 Chapter 9 \u2014 Premium Unlock Code' },
   { key: 'CH9-HWNOTES',  label: 'PU2 Chapter 9 \u2014 Handwritten Notes' },
 ];
-function puGroupOf(label){ return /^PU2\b/.test(label) ? 'PU2' : (/^PU1\b/.test(label) ? 'PU1' : null); }
+function puGroupOf(label){
+  if(/Report Card Password/i.test(label)) return 'RC';
+  return /^PU2\b/.test(label) ? 'PU2' : (/^PU1\b/.test(label) ? 'PU1' : null);
+}
 function puGroupHeaderRow(group){
-  return '<tr><td colspan="3" style="background:var(--teal2); color:var(--ink); font-weight:700; font-size:11px; letter-spacing:0.5px; padding:6px 10px;">' + (group === 'PU1' ? 'PU-I CHAPTERS' : 'PU-II CHAPTERS') + '</td></tr>';
+  const text = group === 'RC' ? 'REPORT CARD PASSWORDS' : (group === 'PU1' ? 'PU-I CHAPTERS' : 'PU-II CHAPTERS');
+  return '<tr><td colspan="3" style="background:var(--teal2); color:var(--ink); font-weight:700; font-size:11px; letter-spacing:0.5px; padding:6px 10px;">' + text + '</td></tr>';
 }
 function codeLabelSortKey(label){
-  const pu = /^PU2\b/.test(label) ? 2 : 1;
   const isRC = /Report Card Password/i.test(label);
+  const pu = /^PU2\b/.test(label) ? 2 : 1;
+  if(isRC) return [0, pu, 0];
   const m = label.match(/Chapter (\d+)/);
-  const chapter = m ? parseInt(m[1], 10) : (isRC ? -1 : 999);
+  const chapter = m ? parseInt(m[1], 10) : 999;
   const isHW = /Handwritten/i.test(label);
   return [pu, chapter, isHW ? 1 : 0];
 }
