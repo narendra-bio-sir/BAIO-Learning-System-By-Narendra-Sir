@@ -62,6 +62,15 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
   display:none; align-items:center; justify-content:center; line-height:1;
   box-shadow:0 0 0 2px var(--panel);
 }
+.pacing-summary .streak-chip{flex:0 0 auto; display:flex; flex-direction:column; align-items:center; gap:1px; cursor:pointer; padding:5px 12px; border-radius:10px; background:var(--panel2); border:1px solid var(--line);}
+.pacing-summary .streak-chip .flame{font-size:16px; line-height:1;}
+.pacing-summary .streak-chip .num{font-size:12px; font-weight:800; color:var(--gold2);}
+.streak-modal-flame{font-size:42px; text-align:center; line-height:1;}
+.streak-modal-current{font-size:34px; font-weight:800; text-align:center; color:var(--gold2); margin-top:6px;}
+.streak-modal-current span{font-size:14px; font-weight:600; color:var(--ink-dim); margin-left:6px;}
+.streak-modal-sub{text-align:center; font-size:12.5px; color:var(--ink-dim); margin:4px 0 14px;}
+.streak-modal-longest{text-align:center; font-size:13px; font-weight:700; margin-bottom:14px; color:var(--ink);}
+.streak-modal-hint{font-size:12px; color:var(--ink-dim); line-height:1.6; background:var(--panel2); border:1px solid var(--line); border-radius:10px; padding:10px 12px;}
 .notif-modal-overlay{
   position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:110;
   display:flex; align-items:center; justify-content:center; padding:20px;
@@ -668,6 +677,14 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
         <span><b>Chapter 9</b><span class="chapter-jump-title">Biotechnology: Principles and Processes</span></span>
       </a>
       <button class="sm-save-btn" id="chapterJumpCloseBtn">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="streakModalOverlay" style="display:none;">
+    <div class="notif-modal">
+      <h3>🔥 Daily Study Streak</h3>
+      <div id="streakModalBody"></div>
+      <button class="sm-save-btn" id="streakModalCloseBtn">Close</button>
     </div>
   </div>
 
@@ -1990,7 +2007,7 @@ function pacingGetProgress(){ try{ return JSON.parse(localStorage.getItem(PACING
 function pacingSetProgress(p){ try{ localStorage.setItem(PACING_PROGRESS_KEY, JSON.stringify(p)); }catch(e){} }
 function pacingToggleBlock(blockId){
   const p = pacingGetProgress();
-  if(p[blockId]) delete p[blockId]; else p[blockId] = true;
+  if(p[blockId]) delete p[blockId]; else { p[blockId] = true; if(typeof streakRecordActivity === 'function') streakRecordActivity(); }
   pacingSetProgress(p);
   renderPacing();
 }
@@ -2002,7 +2019,8 @@ function renderPacing(){
   const progress = pacingGetProgress();
   const doneCount = blocks.filter(b=>progress[b.id]).length;
   const pct = blocks.length ? Math.round(doneCount/blocks.length*100) : 0;
-  let html = `<div class="pacing-summary" style="--pct:${pct};"><div class="ring"><b>${pct}%</b></div><div class="txt"><b>${doneCount} / ${blocks.length}</b> ${L.doneLabel}</div></div>`;
+  const __streakInfo = (typeof streakCurrentDisplay === 'function') ? streakCurrentDisplay() : {current:0,longest:0};
+  let html = `<div class="pacing-summary" style="--pct:${pct};"><div class="ring"><b>${pct}%</b></div><div class="txt"><b>${doneCount} / ${blocks.length}</b> ${L.doneLabel}</div><div class="streak-chip" onclick="openStreakModal()" title="Daily study streak"><span class="flame">🔥</span><span class="num">${__streakInfo.current}</span></div></div>`;
   html += `<div class="pacing-note">${L.note.replace('{hrs}', blocks.length).replace('{days}', Math.ceil(blocks.length/PACING_HOURS_PER_DAY))}</div>`;
   weeks.forEach((weekDays, wi)=>{
     const isLastWeek = wi === weeks.length - 1;
@@ -4490,6 +4508,62 @@ function closeChapterJump(){
   if(jumpCloseBtn) jumpCloseBtn.addEventListener('click', closeChapterJump);
   var jumpOverlay = document.getElementById('chapterJumpOverlay');
   if(jumpOverlay) jumpOverlay.addEventListener('click', function(e){ if(e.target === jumpOverlay) closeChapterJump(); });
+})();
+
+function streakTodayStr(d){
+  d = d || new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function streakGetData(){
+  try{
+    var raw = localStorage.getItem('baio_streak_v1');
+    return raw ? JSON.parse(raw) : {lastActiveDate:null, current:0, longest:0};
+  }catch(e){ return {lastActiveDate:null, current:0, longest:0}; }
+}
+function streakSetData(d){
+  try{ localStorage.setItem('baio_streak_v1', JSON.stringify(d)); }catch(e){}
+}
+function streakRecordActivity(){
+  var data = streakGetData();
+  var today = streakTodayStr();
+  if(data.lastActiveDate === today){ return; }
+  var y = new Date(); y.setDate(y.getDate()-1);
+  var yesterday = streakTodayStr(y);
+  data.current = (data.lastActiveDate === yesterday) ? (data.current||0) + 1 : 1;
+  data.lastActiveDate = today;
+  if(data.current > (data.longest||0)) data.longest = data.current;
+  streakSetData(data);
+}
+function streakCurrentDisplay(){
+  var data = streakGetData();
+  var today = streakTodayStr();
+  var y = new Date(); y.setDate(y.getDate()-1);
+  var yesterday = streakTodayStr(y);
+  var active = data.lastActiveDate === today || data.lastActiveDate === yesterday;
+  return { current: active ? (data.current||0) : 0, longest: data.longest||0 };
+}
+function openStreakModal(){
+  var s = streakCurrentDisplay();
+  var body = document.getElementById('streakModalBody');
+  if(body){
+    body.innerHTML = '<div class="streak-modal-flame">\uD83D\uDD25</div>' +
+      '<div class="streak-modal-current">' + s.current + '<span>day' + (s.current===1?'':'s') + '</span></div>' +
+      '<div class="streak-modal-sub">' + (s.current===0 ? 'No active streak yet \u2014 tick off a Pacing block today to start one!' : 'Current streak') + '</div>' +
+      '<div class="streak-modal-longest">\uD83C\uDFC6 Longest streak: ' + s.longest + ' day' + (s.longest===1?'':'s') + '</div>' +
+      '<div class="streak-modal-hint">Tip: check off at least one hour in your <b>Pacing</b> plan each day to keep your streak alive.</div>';
+  }
+  var overlay = document.getElementById('streakModalOverlay');
+  if(overlay) overlay.style.display = 'flex';
+}
+function closeStreakModal(){
+  var overlay = document.getElementById('streakModalOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+(function(){
+  var streakCloseBtn = document.getElementById('streakModalCloseBtn');
+  if(streakCloseBtn) streakCloseBtn.addEventListener('click', closeStreakModal);
+  var streakOverlay = document.getElementById('streakModalOverlay');
+  if(streakOverlay) streakOverlay.addEventListener('click', function(e){ if(e.target === streakOverlay) closeStreakModal(); });
 })();
 </script>
 <script>
