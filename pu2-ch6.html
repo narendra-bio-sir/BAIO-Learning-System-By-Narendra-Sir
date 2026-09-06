@@ -665,6 +665,9 @@ table.cmp.punnett-tbl td.punnett-cell[data-pheno-label="White"], .pheno-chip[dat
 .streak-modal-sub{text-align:center; font-size:12.5px; color:var(--text-dim); margin:4px 0 14px;}
 .streak-modal-longest{text-align:center; font-size:13px; font-weight:700; margin-bottom:14px; color:var(--text);}
 .streak-modal-hint{font-size:12px; color:var(--text-dim); line-height:1.6; background:var(--panel-2); border:1px solid var(--border); border-radius:10px; padding:10px 12px;}
+.fb-stars{display:flex; gap:6px; font-size:30px; cursor:pointer; user-select:none; line-height:1;}
+.fb-star{color:var(--border); transition:color .15s;}
+.fb-star.active{color:var(--gold-2);}
 .notif-modal-overlay{
   position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:110;
   display:flex; align-items:center; justify-content:center; padding:20px;
@@ -1318,6 +1321,46 @@ function closeStreakModal(){
   var streakOverlay = document.getElementById('streakModalOverlay');
   if(streakOverlay) streakOverlay.addEventListener('click', function(e){ if(e.target === streakOverlay) closeStreakModal(); });
 })();
+
+var fbRating = 0;
+function fbSetRating(v){
+  fbRating = v;
+  document.querySelectorAll('#fbStars .fb-star').forEach(function(s){
+    s.classList.toggle('active', parseInt(s.getAttribute('data-val'),10) <= v);
+  });
+}
+function fbInitStars(){
+  document.querySelectorAll('#fbStars .fb-star').forEach(function(s){
+    s.addEventListener('click', function(){ fbSetRating(parseInt(s.getAttribute('data-val'),10)); });
+  });
+}
+function fbSubmit(){
+  var msgEl = document.getElementById('fbMsg');
+  if(fbRating === 0){
+    if(msgEl){ msgEl.textContent = 'Please tap a star to rate this chapter first.'; msgEl.style.color = '#c0392b'; }
+    return;
+  }
+  var commentEl = document.getElementById('fbComment');
+  var comment = commentEl ? commentEl.value : '';
+  var profile = null;
+  try{ profile = JSON.parse(localStorage.getItem('baio_student') || 'null'); }catch(e){}
+  var name = profile && profile.name ? profile.name : '(name not set)';
+  var roll = profile && profile.roll ? profile.roll : '(roll not set)';
+  var section = profile && profile.section ? profile.section : '(section not set)';
+  var stars = '';
+  for(var i=0;i<fbRating;i++) stars += '\u2B50';
+  var msg = 'Hi Narendra Sir, here is my feedback for ' + document.title + '.\n\n'
+    + 'Rating: ' + stars + ' (' + fbRating + '/5)\n'
+    + 'Name: ' + name + '\nRoll Number: ' + roll + '\nSection: ' + section
+    + (comment.trim() ? ('\n\nComments: ' + comment.trim()) : '');
+  window.open('https://wa.me/919008968389?text=' + encodeURIComponent(msg), '_blank');
+  if(msgEl){ msgEl.textContent = 'Thanks! Opening WhatsApp with your feedback...'; msgEl.style.color = ''; }
+}
+document.addEventListener('DOMContentLoaded', function(){
+  fbInitStars();
+  var fbBtn = document.getElementById('fbSubmitBtn');
+  if(fbBtn) fbBtn.addEventListener('click', fbSubmit);
+});
   </script>
 
   <div class="desktop-row">
@@ -1350,6 +1393,7 @@ function closeStreakModal(){
     <button class="tab-btn" data-tab="boardimp">Board Important</button>
     <button class="tab-btn" data-tab="diagrams">Important Diagrams</button>
     <button class="tab-btn" data-tab="mynotes">My Notes</button>
+    <button class="tab-btn" data-tab="feedback">💬 Feedback</button>
     <button class="tab-btn" data-tab="dl">Downloads</button>
     </div>
     <button class="tab-scroll-btn" id="tabScrollRight">&#8250;</button>
@@ -1964,6 +2008,28 @@ function closeStreakModal(){
         <button class="btn" id="myNotesShareBtn">📤 Share Notes</button>
       </div>
       <div id="notesRenderCard" style="position:absolute; left:-9999px; top:0;"></div>
+    </div>
+  </div>
+
+  <!-- ===================== FEEDBACK ===================== -->
+  <div class="panel" id="panel-feedback">
+    <div class="card">
+      <h3 style="color:var(--gold-2); margin-bottom:4px;">💬 Share Your Feedback</h3>
+      <div style="color:var(--text-dim); font-size:12px; margin-bottom:14px;">Help Narendra Sir improve this app &mdash; rate your experience with this chapter and tell him what's working or what's not. Takes 10 seconds.</div>
+      <div class="field-label" style="margin-bottom:8px;">How would you rate this chapter?</div>
+      <div class="fb-stars" id="fbStars">
+        <span class="fb-star" data-val="1">★</span>
+        <span class="fb-star" data-val="2">★</span>
+        <span class="fb-star" data-val="3">★</span>
+        <span class="fb-star" data-val="4">★</span>
+        <span class="fb-star" data-val="5">★</span>
+      </div>
+      <div class="field-label" style="margin-top:14px;">Anything you'd like to tell Narendra Sir? (optional)</div>
+      <textarea id="fbComment" placeholder="e.g. loved the podcast, the MCQs were too easy, I want more diagrams..." style="width:100%; min-height:100px; box-sizing:border-box; background:var(--panel-2); border:1px solid var(--border); border-radius:10px; color:var(--text); font-family:'Work Sans',sans-serif; font-size:14px; line-height:1.6; padding:12px; resize:vertical; margin-top:6px;"></textarea>
+      <div class="btn-row" style="margin-top:14px;">
+        <button class="btn" id="fbSubmitBtn">📤 Send Feedback on WhatsApp</button>
+      </div>
+      <div id="fbMsg" style="font-size:11px; color:var(--text-dim); margin-top:8px;"></div>
     </div>
   </div>
 
@@ -7094,7 +7160,7 @@ if(!window.__langSwitcherOutsideClickBound){
     {id:'practice', label:'Practice', icon:'✍️', tabs:['flash','quiz','writeit','revision']},
     {id:'test', label:'Test Prep', icon:'\u{1F3AF}', tabs:['adv','kcet','papergen']},
     {id:'explore', label:'Explore', icon:'\u{1F50D}', tabs:['tree','compare','mindmap','classppt','glossary']},
-    {id:'space', label:'My Space', icon:'\u{1F4CC}', tabs:['badges','progress','pacing','mynotes','dl']}
+    {id:'space', label:'My Space', icon:'\u{1F4CC}', tabs:['badges','progress','pacing','mynotes','feedback','dl']}
   ];
   var ddBtn = document.getElementById('catDdBtn');
   var ddMenu = document.getElementById('catDdMenu');
