@@ -658,7 +658,13 @@ function buildSnapshotNode(meta, selected){
   div.style.color = getComputedStyle(document.body).color;
   div.style.background = getComputedStyle(document.querySelector('.panel2, body')).backgroundColor || '#0E211A';
   let inner = '<div style="font-family:Space Grotesk,sans-serif; font-weight:700; color:var(--gold); margin-bottom:10px; font-size:14px;">' + escapeHtml(meta) + '</div>';
+  let lastGroup = null;
   selected.forEach(s=>{
+    const group = puGroupOf(s.label);
+    if(group && group !== lastGroup){
+      inner += '<div style="margin:14px 0 8px; padding:5px 9px; background:var(--teal2); color:var(--ink); font-weight:700; font-size:11px; letter-spacing:0.5px; border-radius:4px;">' + puGroupHeaderText(group) + '</div>';
+      lastGroup = group;
+    }
     inner += '<div style="margin-bottom:8px;"><div style="font-size:11px; color:var(--ink-dim); text-transform:uppercase;">' + escapeHtml(s.label) + '</div>' +
       '<div style="font-family:\'JetBrains Mono\',monospace; font-weight:700; font-size:17px; letter-spacing:1px;">' + codeHtml(s.code) + '</div></div>';
   });
@@ -768,9 +774,11 @@ function puGroupOf(label){
   if(/Report Card Password/i.test(label)) return 'RC';
   return /^PU2\b/.test(label) ? 'PU2' : (/^PU1\b/.test(label) ? 'PU1' : null);
 }
+function puGroupHeaderText(group){
+  return group === 'RC' ? 'REPORT CARD PASSWORDS' : (group === 'PU1' ? 'PU-I CHAPTERS' : 'PU-II CHAPTERS');
+}
 function puGroupHeaderRow(group){
-  const text = group === 'RC' ? 'REPORT CARD PASSWORDS' : (group === 'PU1' ? 'PU-I CHAPTERS' : 'PU-II CHAPTERS');
-  return '<tr><td colspan="3" style="background:var(--teal2); color:var(--ink); font-weight:700; font-size:11px; letter-spacing:0.5px; padding:6px 10px;">' + text + '</td></tr>';
+  return '<tr><td colspan="3" style="background:var(--teal2); color:var(--ink); font-weight:700; font-size:11px; letter-spacing:0.5px; padding:6px 10px;">' + puGroupHeaderText(group) + '</td></tr>';
 }
 function codeLabelSortKey(label){
   const isRC = /Report Card Password/i.test(label);
