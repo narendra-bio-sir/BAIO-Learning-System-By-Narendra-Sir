@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>B1 Time Table &ndash; Narendra Sir</title>
+<style>
+:root{
+  --navy:#0C1610; --navy2:#0E1912; --panel:#16241C; --panel2:#1C2B21;
+  --gold:#E3AF43; --gold2:#C99530; --teal:#42C6A0; --teal2:#1E7A63;
+  --ink:#ECF3E9; --ink-dim:#A6BCAC; --line:rgba(166,188,172,0.18);
+  --danger:#E8815F; --ok:#3FBE8E;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; min-height:100vh; background:var(--navy);
+  font-family:'Segoe UI', Roboto, 'Work Sans', Arial, sans-serif;
+  color:var(--ink); display:flex; align-items:center; justify-content:center; padding:16px;
+}
+.wrap{ width:100%; max-width:520px; }
+.card{
+  background:var(--panel); border:1px solid var(--line); border-radius:16px;
+  padding:24px 22px; box-shadow:0 8px 30px rgba(0,0,0,0.35);
+}
+h1{ font-size:19px; margin:0 0 4px; color:var(--gold); }
+.sub{ font-size:12.5px; color:var(--ink-dim); margin:0 0 20px; line-height:1.5; }
+label{ display:block; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; color:var(--ink-dim); margin-bottom:6px; }
+input[type="password"], input[type="text"]{
+  width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--line);
+  background:var(--panel2); color:var(--ink); font-size:15px; margin-bottom:6px;
+}
+input:focus{ outline:2px solid var(--teal); outline-offset:1px; }
+.show-toggle{ display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--ink-dim); margin:6px 0 16px; cursor:pointer; }
+.show-toggle input{ width:auto; margin:0; }
+.btn{
+  width:100%; padding:13px; border:none; border-radius:10px; background:var(--gold);
+  color:#1a1406; font-weight:700; font-size:14.5px; cursor:pointer; transition:filter .15s;
+}
+.btn:hover{ filter:brightness(1.08); }
+.btn.secondary{ background:var(--panel2); color:var(--ink); border:1px solid var(--line); margin-top:10px; }
+.msg{ font-size:12.5px; color:var(--danger); min-height:16px; margin:4px 0 10px; }
+.lock-icon{ font-size:32px; text-align:center; margin-bottom:8px; }
+
+/* --- unlocked view --- */
+.tt-header{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px; flex-wrap:wrap;}
+.tt-header h1{ margin:0; }
+.relock{ font-size:11px; color:var(--ink-dim); text-decoration:underline; cursor:pointer; background:none; border:none; padding:0; }
+.pdf-frame-wrap{
+  width:100%; aspect-ratio:1/1.35; border:1px solid var(--line); border-radius:12px;
+  overflow:hidden; background:#0a0a0a; margin-bottom:14px;
+}
+.pdf-frame-wrap iframe{ width:100%; height:100%; border:0; }
+.btn-row{ display:flex; gap:10px; }
+.btn-row .btn{ flex:1; }
+.hint{ font-size:11.5px; color:var(--ink-dim); text-align:center; margin-top:12px; line-height:1.5; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="card" id="gateCard">
+    <div class="lock-icon">&#128274;</div>
+    <h1>B1 Time Table</h1>
+    <p class="sub">This page is private &mdash; Narendra Sir only. Enter your access code to view it.</p>
+    <label for="pwInput">Access Code</label>
+    <input type="password" id="pwInput" placeholder="Enter access code" autocomplete="off" onkeydown="if(event.key==='Enter')attemptUnlock()">
+    <label class="show-toggle"><input type="checkbox" id="pwShowToggle" onchange="togglePwVisibility()"> Show code</label>
+    <div class="msg" id="gateMsg"></div>
+    <button class="btn" onclick="attemptUnlock()">Unlock</button>
+  </div>
+
+  <div class="card" id="ttCard" style="display:none;">
+    <div class="tt-header">
+      <h1>&#128197; B1 Time Table</h1>
+      <button class="relock" onclick="relock()">Lock again</button>
+    </div>
+    <p class="sub">1st &amp; 2nd PUC Science &mdash; Faculty/Subject Timetable: B1 (Biology 1). Revised master schedule across SHARP, SMART &amp; CHAMPION sections.</p>
+    <div class="pdf-frame-wrap">
+      <iframe src="timetable-assets/B1-timetable.pdf" title="B1 Time Table PDF"></iframe>
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="viewTimetable()">Open Full View</button>
+      <button class="btn secondary" onclick="downloadTimetable()" id="dlBtn">Download PDF</button>
+    </div>
+    <div class="hint">If the preview above doesn't render on your device, use &ldquo;Open Full View&rdquo; &mdash; it opens the PDF directly in your browser or PDF app.</div>
+  </div>
+
+</div>
+<script>
+const ACCESS_CODE = 'BAIO-NS-2026-R4T9';
+const LOCK_KEY = 'baio_timetable_unlocked';
+
+function togglePwVisibility(){
+  const input = document.getElementById('pwInput');
+  input.type = document.getElementById('pwShowToggle').checked ? 'text' : 'password';
+}
+
+function attemptUnlock(){
+  const val = document.getElementById('pwInput').value.trim();
+  const msg = document.getElementById('gateMsg');
+  if(val.toUpperCase() === ACCESS_CODE.toUpperCase()){
+    try{ localStorage.setItem(LOCK_KEY, 'true'); }catch(e){}
+    showTimetable();
+  } else {
+    msg.textContent = 'Incorrect access code. Try again.';
+  }
+}
+
+function showTimetable(){
+  document.getElementById('gateCard').style.display = 'none';
+  document.getElementById('ttCard').style.display = 'block';
+}
+
+function relock(){
+  try{ localStorage.removeItem(LOCK_KEY); }catch(e){}
+  document.getElementById('pwInput').value = '';
+  document.getElementById('gateMsg').textContent = '';
+  document.getElementById('ttCard').style.display = 'none';
+  document.getElementById('gateCard').style.display = 'block';
+}
+
+function viewTimetable(){
+  window.open('timetable-assets/B1-timetable.pdf', '_blank');
+}
+
+function downloadTimetable(){
+  const a = document.createElement('a');
+  a.href = 'timetable-assets/B1-timetable.pdf';
+  a.download = 'B1_Time_Table.pdf';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  const btn = document.getElementById('dlBtn');
+  const orig = btn.textContent;
+  btn.textContent = 'Downloaded ✓';
+  setTimeout(()=>btn.textContent = orig, 1800);
+}
+
+(function init(){
+  try{
+    if(localStorage.getItem(LOCK_KEY) === 'true'){ showTimetable(); }
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
