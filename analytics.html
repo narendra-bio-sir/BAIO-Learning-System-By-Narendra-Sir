@@ -3028,6 +3028,7 @@ window.addEventListener('afterprint', function(){
       <div class="report-card" id="reportCardAssignContent"></div>
       <div class="report-actions">
         <button class="report-btn secondary" id="rcAssignRefreshBtn">🔄 Refresh Status</button>
+        <button class="report-btn secondary" id="rcHardRefreshBtn" title="Force-reload this page and clear any cached copy — use this if new worksheets or chapters aren't showing up">🧹 Force-Refresh Page</button>
       </div>
     </div>
   </div>
@@ -12620,6 +12621,31 @@ function renderShareableInsight(student, pu){
   document.getElementById('shareInsightPrintBtn').addEventListener('click', ()=> window.print());
 })();
 
+</script>
+<script>
+/* Force-refresh: unregisters the service worker and clears every cache so a
+   stale copy of this page (new worksheets/chapters not showing up) can't
+   linger, then reloads with a cache-busting query param. Same approach as
+   index.html's hard-refresh button. */
+async function analyticsHardRefresh(){
+  const btn = document.getElementById('rcHardRefreshBtn');
+  if(btn) btn.textContent = '⏳';
+  try{
+    if('serviceWorker' in navigator){
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for(const r of regs) await r.unregister();
+    }
+    if('caches' in window){
+      const keys = await caches.keys();
+      for(const k of keys) await caches.delete(k);
+    }
+  }catch(e){}
+  location.href = location.pathname + '?_r=' + Date.now();
+}
+(function(){
+  const btn = document.getElementById('rcHardRefreshBtn');
+  if(btn) btn.addEventListener('click', analyticsHardRefresh);
+})();
 </script>
 <script>
 if('serviceWorker' in navigator){
