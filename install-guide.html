@@ -148,6 +148,9 @@ footer{text-align:center; margin-top:40px; font-size:11px; color:var(--ink-dim);
     <h1>Install the <span class="accent">BAIO Learning App</span> in under a minute</h1>
     <p>BAIO isn't downloaded from the Play Store or App Store — it installs straight from your browser as an app icon on your phone or laptop. No app store, no separate download. Pick your device below and follow the steps.</p>
     <div class="status-badge">📲 Works on Android, iPhone, and any laptop</div>
+    <div style="margin-top:14px;">
+      <button type="button" id="shareGuideBtn" class="cta-btn" style="margin-top:0; cursor:pointer; border:none;">📤 Share this guide</button>
+    </div>
   </section>
 
   <!-- ANDROID -->
@@ -395,6 +398,37 @@ footer{text-align:center; margin-top:40px; font-size:11px; color:var(--ink-dim);
     applyTheme(next);
     try{ localStorage.setItem(THEME_KEY, next); }catch(e){}
   };
+})();
+
+/* Share this guide */
+(function(){
+  var btn = document.getElementById('shareGuideBtn');
+  if(!btn) return;
+  var GUIDE_URL = 'https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/install-guide.html';
+  var shareText = '📲 Here’s how to install the BAIO Learning App on your phone or laptop — takes under a minute:';
+  function fallbackCopy(text){
+    try{
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      var ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      return ok;
+    }catch(e){ return false; }
+  }
+  function afterCopy(ok){
+    if(ok) alert('Link copied to clipboard!\n\n' + GUIDE_URL + '\n\nShare it with a friend.');
+    else prompt('Copy this link to share:', GUIDE_URL);
+  }
+  btn.addEventListener('click', function(){
+    if(navigator.share){
+      navigator.share({title:'Install the BAIO Learning App', text:shareText, url:GUIDE_URL}).catch(function(){});
+    } else if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(shareText + '\n' + GUIDE_URL).then(function(){ afterCopy(true); }).catch(function(){ afterCopy(fallbackCopy(shareText + '\n' + GUIDE_URL)); });
+    } else {
+      afterCopy(fallbackCopy(shareText + '\n' + GUIDE_URL));
+    }
+  });
 })();
 
 /* Highlight the current section in the top nav as the student scrolls */
