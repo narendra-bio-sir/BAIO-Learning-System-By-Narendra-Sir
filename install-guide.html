@@ -43,6 +43,10 @@ a{color:var(--teal);}
 .nav-pill.active{background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#1a1406; border-color:var(--gold);}
 [data-theme="light"] .nav-pill.active{color:#fff;}
 .icon-btn{flex:0 0 auto; width:34px; height:34px; border-radius:10px; border:1px solid var(--line); background:var(--panel); color:var(--ink); font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; text-decoration:none;}
+.topnav-lang-row{display:flex; align-items:center; justify-content:center; gap:8px; padding:8px 18px; border-top:1px solid var(--line);}
+.lang-switcher{display:flex; gap:4px;}
+.lang-btn{padding:5px 10px; border-radius:12px; font-size:10.5px; font-weight:700; background:var(--panel2); color:var(--ink-dim); border:1px solid var(--line); cursor:pointer; white-space:nowrap;}
+.lang-btn.active{background:var(--gold); color:#1a1406; border-color:var(--gold);}
 
 /* ---- Hero ---- */
 .hero{padding:38px 0 26px; text-align:center;}
@@ -127,39 +131,44 @@ footer{text-align:center; margin-top:40px; font-size:11px; color:var(--ink-dim);
 </head>
 <body>
 
-<nav class="topnav"><div class="topnav-inner">
-  <a href="index.html" class="icon-btn" title="Back to BAIO home">🏠</a>
-  <div class="topnav-scroll" id="topnavInner">
-    <a href="#start" class="nav-pill">Welcome</a>
-    <a href="#android" class="nav-pill">Android</a>
-    <a href="#iphone" class="nav-pill">iPhone</a>
-    <a href="#laptop" class="nav-pill">Laptop</a>
-    <a href="#qr" class="nav-pill">QR Code</a>
-    <a href="#faq" class="nav-pill">FAQ</a>
-    <a href="#help" class="nav-pill">Get Help</a>
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="topnav-scroll" id="topnavInner">
+      <a href="#start" class="nav-pill" data-i18n="nav_welcome">Welcome</a>
+      <a href="#android" class="nav-pill" data-i18n="nav_android">Android</a>
+      <a href="#iphone" class="nav-pill" data-i18n="nav_iphone">iPhone</a>
+      <a href="#laptop" class="nav-pill" data-i18n="nav_laptop">Laptop</a>
+      <a href="#qr" class="nav-pill" data-i18n="nav_qr">QR Code</a>
+      <a href="#faq" class="nav-pill" data-i18n="nav_faq">FAQ</a>
+      <a href="#help" class="nav-pill" data-i18n="nav_help">Get Help</a>
+    </div>
   </div>
-  <button class="icon-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle dark/light theme">🌙</button>
-</div></nav>
+  <div class="topnav-lang-row">
+    <div id="langSwitcher" class="lang-switcher"></div>
+    <a href="index.html" class="icon-btn" title="Back to BAIO home">🏠</a>
+    <button class="icon-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle dark/light theme">🌙</button>
+  </div>
+</nav>
 
 <div class="wrap">
 
   <section class="hero" id="start">
-    <div class="eyebrow">BAIO Learning System &middot; Install Guide</div>
-    <h1>Install the <span class="accent">BAIO Learning App</span> in under a minute</h1>
-    <p>BAIO isn't downloaded from the Play Store or App Store — it installs straight from your browser as an app icon on your phone or laptop. No app store, no separate download. Pick your device below and follow the steps.</p>
-    <div class="status-badge">📲 Works on Android, iPhone, and any laptop</div>
+    <div class="eyebrow" data-i18n="hero_eyebrow">BAIO Learning System &middot; Install Guide</div>
+    <h1 data-i18n="hero_h1">Install the <span class="accent">BAIO Learning App</span> in under a minute</h1>
+    <p data-i18n="hero_intro">BAIO isn't downloaded from the Play Store or App Store — it installs straight from your browser as an app icon on your phone or laptop. No app store, no separate download. Pick your device below and follow the steps.</p>
+    <div class="status-badge" data-i18n="status_badge">📲 Works on Android, iPhone, and any laptop</div>
     <div style="margin-top:14px;">
-      <button type="button" id="shareGuideBtn" class="cta-btn" style="margin-top:0; cursor:pointer; border:none;">📤 Share this guide</button>
+      <button type="button" id="shareGuideBtn" class="cta-btn" style="margin-top:0; cursor:pointer; border:none;" data-i18n="share_btn">📤 Share this guide</button>
     </div>
   </section>
 
   <!-- ANDROID -->
   <section class="step" id="android">
-    <div class="step-head"><span class="step-num">STEP 1</span><h2>Install on Android (Chrome)</h2></div>
+    <div class="step-head"><span class="step-num" data-i18n="step1_num">STEP 1</span><h2 data-i18n="step1_title">Install on Android (Chrome)</h2></div>
     <div class="card">
       <div class="substep">
         <div class="dot">1</div>
-        <div class="txt">Open <b>Chrome</b> and go to <a href="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/" target="_blank" rel="noopener">the BAIO website</a>.</div>
+        <div class="txt" data-i18n="step1_sub1">Open <b>Chrome</b> and go to <a href="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/" target="_blank" rel="noopener">the BAIO website</a>.</div>
       </div>
       <figure class="guide-fig">
         <svg viewBox="0 0 260 220" role="img" aria-label="Chrome address bar with the three-dot menu open, Install app highlighted as the second tap">
@@ -189,32 +198,32 @@ footer{text-align:center; margin-top:40px; font-size:11px; color:var(--ink-dim);
           <circle cx="219" cy="80" r="11" fill="var(--gold)"/>
           <text x="219" y="84" font-size="12" font-weight="700" text-anchor="middle" fill="#1a1406">2</text>
         </svg>
-        <figcaption>① Tap the ⋮ menu top-right → ② tap <b style="color:var(--ink);">Install app</b> in the list that opens.</figcaption>
+        <figcaption data-i18n="fig1_caption">① Tap the ⋮ menu top-right → ② tap <b style="color:var(--ink);">Install app</b> in the list that opens.</figcaption>
       </figure>
       <div class="substep">
         <div class="dot">2</div>
-        <div class="txt">Tap the <b>⋮ (three-dot) menu</b> in the top-right corner.</div>
+        <div class="txt" data-i18n="step1_sub2">Tap the <b>⋮ (three-dot) menu</b> in the top-right corner.</div>
       </div>
       <div class="substep">
         <div class="dot">3</div>
-        <div class="txt">Tap <b>Install app</b> (or <b>Add to Home screen</b>) and confirm.</div>
+        <div class="txt" data-i18n="step1_sub3">Tap <b>Install app</b> (or <b>Add to Home screen</b>) and confirm.</div>
         <div class="mock">⋮ Menu → Install app → Install</div>
       </div>
       <div class="substep">
         <div class="dot">4</div>
-        <div class="txt">The <b>BAIO icon</b> now appears on your home screen. Tap it to open the app — full screen, no browser bar, just like any other app.</div>
+        <div class="txt" data-i18n="step1_sub4">The <b>BAIO icon</b> now appears on your home screen. Tap it to open the app — full screen, no browser bar, just like any other app.</div>
       </div>
     </div>
   </section>
 
   <!-- IPHONE -->
   <section class="step" id="iphone">
-    <div class="step-head"><span class="step-num">STEP 2</span><h2>Install on iPhone / iPad (Safari)</h2></div>
+    <div class="step-head"><span class="step-num" data-i18n="step2_num">STEP 2</span><h2 data-i18n="step2_title">Install on iPhone / iPad (Safari)</h2></div>
     <div class="card">
-      <p class="dim">On iPhone this <b style="color:var(--ink);">must be done in Safari</b> — Chrome on iPhone can't install apps to the home screen.</p>
+      <p class="dim" data-i18n="step2_note">On iPhone this <b style="color:var(--ink);">must be done in Safari</b> — Chrome on iPhone can't install apps to the home screen.</p>
       <div class="substep">
         <div class="dot">1</div>
-        <div class="txt">Open <b>Safari</b> and go to <a href="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/" target="_blank" rel="noopener">the BAIO website</a>.</div>
+        <div class="txt" data-i18n="step2_sub1">Open <b>Safari</b> and go to <a href="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/" target="_blank" rel="noopener">the BAIO website</a>.</div>
       </div>
       <figure class="guide-fig">
         <svg viewBox="0 0 260 220" role="img" aria-label="Safari bottom toolbar with the Share icon highlighted as the first tap, and Add to Home Screen highlighted in the share sheet as the second tap">
@@ -246,32 +255,32 @@ footer{text-align:center; margin-top:40px; font-size:11px; color:var(--ink-dim);
           <circle cx="209" cy="139" r="11" fill="var(--gold)"/>
           <text x="209" y="143" font-size="12" font-weight="700" text-anchor="middle" fill="#1a1406">2</text>
         </svg>
-        <figcaption>① Tap the Share icon in Safari's bottom bar → ② tap <b style="color:var(--ink);">Add to Home Screen</b>.</figcaption>
+        <figcaption data-i18n="fig2_caption">① Tap the Share icon in Safari's bottom bar → ② tap <b style="color:var(--ink);">Add to Home Screen</b>.</figcaption>
       </figure>
       <div class="substep">
         <div class="dot">2</div>
-        <div class="txt">Tap the <b>Share icon</b> (the square with an arrow pointing up) at the bottom of the screen.</div>
+        <div class="txt" data-i18n="step2_sub2">Tap the <b>Share icon</b> (the square with an arrow pointing up) at the bottom of the screen.</div>
       </div>
       <div class="substep">
         <div class="dot">3</div>
-        <div class="txt">Scroll down and tap <b>Add to Home Screen</b>.</div>
+        <div class="txt" data-i18n="step2_sub3">Scroll down and tap <b>Add to Home Screen</b>.</div>
         <div class="mock">Share ⬆ → Add to Home Screen → Add</div>
       </div>
       <div class="substep">
         <div class="dot">4</div>
-        <div class="txt">Tap <b>Add</b> in the top-right corner. The BAIO icon now sits on your home screen like any other app.</div>
+        <div class="txt" data-i18n="step2_sub4">Tap <b>Add</b> in the top-right corner. The BAIO icon now sits on your home screen like any other app.</div>
       </div>
     </div>
   </section>
 
   <!-- LAPTOP -->
   <section class="step" id="laptop">
-    <div class="step-head"><span class="step-num">STEP 3</span><h2>Install on a Laptop or Desktop</h2></div>
+    <div class="step-head"><span class="step-num" data-i18n="step3_num">STEP 3</span><h2 data-i18n="step3_title">Install on a Laptop or Desktop</h2></div>
     <div class="card">
-      <p class="dim">Works in Chrome or Edge on Windows, Mac, or Chromebook.</p>
+      <p class="dim" data-i18n="step3_note">Works in Chrome or Edge on Windows, Mac, or Chromebook.</p>
       <div class="substep">
         <div class="dot">1</div>
-        <div class="txt">Open <a href="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/" target="_blank" rel="noopener">the BAIO website</a> in Chrome or Edge.</div>
+        <div class="txt" data-i18n="step3_sub1">Open <a href="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/" target="_blank" rel="noopener">the BAIO website</a> in Chrome or Edge.</div>
       </div>
       <figure class="guide-fig wide">
         <svg viewBox="0 0 320 190" role="img" aria-label="Browser address bar with the install icon highlighted as the first tap, and the Install button in the popup highlighted as the second tap">
@@ -301,82 +310,82 @@ footer{text-align:center; margin-top:40px; font-size:11px; color:var(--ink-dim);
           <circle cx="150" cy="85" r="11" fill="var(--gold)"/>
           <text x="150" y="89" font-size="12" font-weight="700" text-anchor="middle" fill="#1a1406">2</text>
         </svg>
-        <figcaption>① Click the install icon at the end of the address bar → ② click <b style="color:var(--ink);">Install</b> in the popup.</figcaption>
+        <figcaption data-i18n="fig3_caption">① Click the install icon at the end of the address bar → ② click <b style="color:var(--ink);">Install</b> in the popup.</figcaption>
       </figure>
       <div class="substep">
         <div class="dot">2</div>
-        <div class="txt">Look for the <b>install icon</b> (a small ⊕ / monitor icon) at the right end of the address bar, and click it.</div>
+        <div class="txt" data-i18n="step3_sub2">Look for the <b>install icon</b> (a small ⊕ / monitor icon) at the right end of the address bar, and click it.</div>
       </div>
       <div class="substep">
         <div class="dot">3</div>
-        <div class="txt">Click <b>Install</b> in the popup that appears.</div>
+        <div class="txt" data-i18n="step3_sub3">Click <b>Install</b> in the popup that appears.</div>
         <div class="mock">Address bar ⊕ icon → Install</div>
       </div>
       <div class="substep">
         <div class="dot">4</div>
-        <div class="txt">BAIO now opens as its own app window from your desktop, taskbar, or Start Menu — no need to open a browser tab first.</div>
+        <div class="txt" data-i18n="step3_sub4">BAIO now opens as its own app window from your desktop, taskbar, or Start Menu — no need to open a browser tab first.</div>
       </div>
-      <p class="dim" style="margin-top:12px;">Don't see the install icon? Not a problem — you can always just open the website link in your browser and use it normally; nothing is locked behind installing.</p>
+      <p class="dim" style="margin-top:12px;" data-i18n="step3_footer">Don't see the install icon? Not a problem — you can always just open the website link in your browser and use it normally; nothing is locked behind installing.</p>
     </div>
   </section>
 
   <!-- QR CODE -->
   <section class="step" id="qr">
-    <div class="step-head"><span class="step-num">STEP 4</span><h2>Fastest Way: Scan the QR Code</h2></div>
+    <div class="step-head"><span class="step-num" data-i18n="step4_num">STEP 4</span><h2 data-i18n="step4_title">Fastest Way: Scan the QR Code</h2></div>
     <div class="card">
       <div class="qr-block">
         <img src="qr-code.png?v=2" alt="QR code to open BAIO Learning System">
-        <p class="dim" style="flex:1 1 220px; margin:0;">Open your phone's camera app and point it at this QR code. Tap the link that pops up — it opens the BAIO website directly, and from there just follow the Android or iPhone steps above to add it to your home screen.</p>
+        <p class="dim" style="flex:1 1 220px; margin:0;" data-i18n="step4_body">Open your phone's camera app and point it at this QR code. Tap the link that pops up — it opens the BAIO website directly, and from there just follow the Android or iPhone steps above to add it to your home screen.</p>
       </div>
     </div>
   </section>
 
   <!-- FAQ -->
   <section class="step" id="faq">
-    <div class="step-head"><span class="step-num">STEP 5</span><h2>Frequently Asked Questions</h2></div>
+    <div class="step-head"><span class="step-num" data-i18n="step5_num">STEP 5</span><h2 data-i18n="step5_title">Frequently Asked Questions</h2></div>
 
     <details>
-      <summary>Do I need to pay or search the Play Store / App Store?</summary>
-      <p>No. BAIO is a web app — there's nothing to search for or buy in an app store. Just visit the website link and install it from your browser as shown above.</p>
+      <summary data-i18n="faq1_q">Do I need to pay or search the Play Store / App Store?</summary>
+      <p data-i18n="faq1_a">No. BAIO is a web app — there's nothing to search for or buy in an app store. Just visit the website link and install it from your browser as shown above.</p>
     </details>
     <details>
-      <summary>How much space does it take on my phone?</summary>
-      <p>Only a few MB — far less than a typical app store app, since it loads content as you use it.</p>
+      <summary data-i18n="faq2_q">How much space does it take on my phone?</summary>
+      <p data-i18n="faq2_a">Only a few MB — far less than a typical app store app, since it loads content as you use it.</p>
     </details>
     <details>
-      <summary>Will it work without internet?</summary>
-      <p>Once installed, the app shell loads instantly and shows an offline banner if your connection drops, but you'll need internet to load new chapters, quizzes, and updates.</p>
+      <summary data-i18n="faq3_q">Will it work without internet?</summary>
+      <p data-i18n="faq3_a">Once installed, the app shell loads instantly and shows an offline banner if your connection drops, but you'll need internet to load new chapters, quizzes, and updates.</p>
     </details>
     <details>
-      <summary>I don't see "Install app" in my Chrome menu — what now?</summary>
-      <p>Make sure Chrome is updated to the latest version. If it's still missing, use <b>Add to Home screen</b> instead — it gives the same full-screen app icon.</p>
+      <summary data-i18n="faq4_q">I don't see "Install app" in my Chrome menu — what now?</summary>
+      <p data-i18n="faq4_a">Make sure Chrome is updated to the latest version. If it's still missing, use <b>Add to Home screen</b> instead — it gives the same full-screen app icon.</p>
     </details>
     <details>
-      <summary>I installed it — now what?</summary>
-      <p>Open the BAIO icon from your home screen, then head to the <a href="guide.html">Student Guide</a> to learn how sections, chapters, and codes work.</p>
+      <summary data-i18n="faq5_q">I installed it — now what?</summary>
+      <p data-i18n="faq5_a">Open the BAIO icon from your home screen, then head to the <a href="guide.html">Student Guide</a> to learn how sections, chapters, and codes work.</p>
     </details>
   </section>
 
   <!-- HELP -->
   <section class="step" id="help">
-    <div class="step-head"><span class="step-num">STEP 6</span><h2>Still Stuck?</h2></div>
+    <div class="step-head"><span class="step-num" data-i18n="step6_num">STEP 6</span><h2 data-i18n="step6_title">Still Stuck?</h2></div>
     <div class="card">
-      <p class="dim">If installation isn't working on your device, reach out directly and your teacher will walk you through it.</p>
+      <p class="dim" data-i18n="step6_body">If installation isn't working on your device, reach out directly and your teacher will walk you through it.</p>
       <div class="support-grid">
-        <div class="support-item"><div class="ico">💬</div><div class="lbl">WhatsApp Number</div><a class="val" style="display:block; text-decoration:none;" href="https://wa.me/919008968389" target="_blank">9008968389</a></div>
-        <div class="support-item"><div class="ico">✉️</div><div class="lbl">Email</div><a class="val" style="display:block; text-decoration:none; word-break:break-all;" href="mailto:bioguru102@gmail.com">bioguru102@gmail.com</a></div>
+        <div class="support-item"><div class="ico">💬</div><div class="lbl" data-i18n="support_whatsapp_label">WhatsApp Number</div><a class="val" style="display:block; text-decoration:none;" href="https://wa.me/919008968389" target="_blank">9008968389</a></div>
+        <div class="support-item"><div class="ico">✉️</div><div class="lbl" data-i18n="support_email_label">Email</div><a class="val" style="display:block; text-decoration:none; word-break:break-all;" href="mailto:bioguru102@gmail.com">bioguru102@gmail.com</a></div>
       </div>
-      <a class="cta-btn" href="guide.html">📘 Continue to the Student Guide</a>
+      <a class="cta-btn" href="guide.html" data-i18n="cta_continue">📘 Continue to the Student Guide</a>
     </div>
 
     <div class="founder-msg">
-      <div class="fm-quote">"Getting started shouldn't be the hard part. Scan the code, tap install, and you're in — the real work is what you do after that."</div>
+      <div class="fm-quote" data-i18n="founder_quote">"Getting started shouldn't be the hard part. Scan the code, tap install, and you're in — the real work is what you do after that."</div>
       <div class="fm-sign">— Narendra Sir</div>
-      <div class="fm-role">Biology Lecturer &middot; Founder &amp; CEO, BAIO Learning System</div>
+      <div class="fm-role" data-i18n="founder_role">Biology Lecturer &middot; Founder &amp; CEO, BAIO Learning System</div>
     </div>
   </section>
 
-  <footer>BAIO Learning System &middot; Install Guide</footer>
+  <footer data-i18n="footer_text">BAIO Learning System &middot; Install Guide</footer>
 </div>
 
 <script>
@@ -486,6 +495,38 @@ if('serviceWorker' in navigator){
   window.addEventListener('offline', showOfflineBanner);
   if(document.readyState === 'complete' || document.readyState === 'interactive'){ checkConnectivity(); }
   else { document.addEventListener('DOMContentLoaded', checkConnectivity); }
+})();
+</script>
+<script>
+/* Trilingual mode (English / Kannada / Hindi) */
+const INSTALL_TRANSLATIONS = {"nav_welcome":{"kn":"ಸ್ವಾಗತ","hi":"स्वागत"},"nav_android":{"kn":"ಆಂಡ್ರಾಯ್ಡ್","hi":"एंड्रॉइड"},"nav_iphone":{"kn":"ಐಫೋನ್","hi":"आईफोन"},"nav_laptop":{"kn":"ಲ್ಯಾಪ್‌ಟಾಪ್","hi":"लैपटॉप"},"nav_qr":{"kn":"QR ಕೋಡ್","hi":"QR कोड"},"nav_faq":{"kn":"ಪ್ರಶ್ನೋತ್ತರ","hi":"सामान्य प्रश्न"},"nav_help":{"kn":"ಸಹಾಯ ಪಡೆಯಿರಿ","hi":"सहायता प्राप्त करें"},"hero_eyebrow":{"kn":"BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಂ &middot; ಇನ್‌ಸ್ಟಾಲ್ ಮಾರ್ಗದರ್ಶಿ","hi":"BAIO लर्निंग सिस्टम &middot; इंस्टॉल गाइड"},"hero_h1":{"kn":"ಒಂದು ನಿಮಿಷದೊಳಗೆ <span class=\"accent\">BAIO ಲರ್ನಿಂಗ್ ಆ್ಯಪ್</span> ಅನ್ನು ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ","hi":"एक मिनट से भी कम समय में <span class=\"accent\">BAIO लर्निंग ऐप</span> इंस्टॉल करें"},"hero_intro":{"kn":"BAIO ಅನ್ನು Play Store ಅಥವಾ App Store ನಿಂದ ಡೌನ್‌ಲೋಡ್ ಮಾಡಲಾಗುವುದಿಲ್ಲ — ಇದು ನಿಮ್ಮ ಬ್ರೌಸರ್‌ನಿಂದ ನೇರವಾಗಿ ನಿಮ್ಮ ಫೋನ್ ಅಥವಾ ಲ್ಯಾಪ್‌ಟಾಪ್‌ನಲ್ಲಿ ಆ್ಯಪ್ ಐಕಾನ್ ಆಗಿ ಇನ್‌ಸ್ಟಾಲ್ ಆಗುತ್ತದೆ. ಯಾವುದೇ ಆ್ಯಪ್ ಸ್ಟೋರ್ ಇಲ್ಲ, ಪ್ರತ್ಯೇಕ ಡೌನ್‌ಲೋಡ್ ಇಲ್ಲ. ಕೆಳಗೆ ನಿಮ್ಮ ಸಾಧನವನ್ನು ಆಯ್ಕೆಮಾಡಿ ಮತ್ತು ಹಂತಗಳನ್ನು ಅನುಸರಿಸಿ.","hi":"BAIO को Play Store या App Store से डाउनलोड नहीं किया जाता — यह आपके ब्राउज़र से सीधे आपके फ़ोन या लैपटॉप पर ऐप आइकन के रूप में इंस्टॉल हो जाता है। कोई ऐप स्टोर नहीं, कोई अलग डाउनलोड नहीं। नीचे अपना डिवाइस चुनें और चरणों का पालन करें।"},"status_badge":{"kn":"📲 ಆಂಡ್ರಾಯ್ಡ್, ಐಫೋನ್ ಮತ್ತು ಯಾವುದೇ ಲ್ಯಾಪ್‌ಟಾಪ್‌ನಲ್ಲಿ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ","hi":"📲 एंड्रॉइड, आईफोन और किसी भी लैपटॉप पर काम करता है"},"share_btn":{"kn":"📤 ಈ ಮಾರ್ಗದರ್ಶಿಯನ್ನು ಹಂಚಿಕೊಳ್ಳಿ","hi":"📤 यह गाइड साझा करें"},"step1_num":{"kn":"ಹಂತ 1","hi":"चरण 1"},"step1_title":{"kn":"ಆಂಡ್ರಾಯ್ಡ್‌ನಲ್ಲಿ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ (Chrome)","hi":"एंड्रॉइड पर इंस्टॉल करें (Chrome)"},"step1_sub1":{"kn":"<b>Chrome</b> ತೆರೆಯಿರಿ ಮತ್ತು <a href=\"https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/\" target=\"_blank\" rel=\"noopener\">BAIO ವೆಬ್‌ಸೈಟ್</a>‌ಗೆ ಹೋಗಿ.","hi":"<b>Chrome</b> खोलें और <a href=\"https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/\" target=\"_blank\" rel=\"noopener\">BAIO वेबसाइट</a> पर जाएँ।"},"fig1_caption":{"kn":"① ಮೇಲಿನ-ಬಲಭಾಗದ ⋮ ಮೆನುವನ್ನು ಟ್ಯಾಪ್ ಮಾಡಿ → ② ತೆರೆಯುವ ಪಟ್ಟಿಯಲ್ಲಿ <b style=\"color:var(--ink);\">Install app</b> ಟ್ಯಾಪ್ ಮಾಡಿ.","hi":"① ऊपर-दाईं ओर ⋮ मेनू पर टैप करें → ② खुलने वाली सूची में <b style=\"color:var(--ink);\">Install app</b> पर टैप करें।"},"step1_sub2":{"kn":"ಮೇಲಿನ-ಬಲಭಾಗದ ಮೂಲೆಯಲ್ಲಿರುವ <b>⋮ (three-dot) menu</b> ಅನ್ನು ಟ್ಯಾಪ್ ಮಾಡಿ.","hi":"ऊपर-दाईं ओर के कोने में <b>⋮ (three-dot) menu</b> पर टैप करें।"},"step1_sub3":{"kn":"<b>Install app</b> (ಅಥವಾ <b>Add to Home screen</b>) ಟ್ಯಾಪ್ ಮಾಡಿ ಮತ್ತು ದೃಢೀಕರಿಸಿ.","hi":"<b>Install app</b> (या <b>Add to Home screen</b>) पर टैप करें और पुष्टि करें।"},"step1_sub4":{"kn":"<b>BAIO ಐಕಾನ್</b> ಈಗ ನಿಮ್ಮ ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ನಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ. ಆ್ಯಪ್ ತೆರೆಯಲು ಅದನ್ನು ಟ್ಯಾಪ್ ಮಾಡಿ — ಪೂರ್ಣ ಪರದೆ, ಬ್ರೌಸರ್ ಬಾರ್ ಇಲ್ಲ, ಬೇರೆ ಯಾವುದೇ ಆ್ಯಪ್‌ನಂತೆ.","hi":"अब आपकी होम स्क्रीन पर <b>BAIO आइकन</b> दिखाई देता है। ऐप खोलने के लिए उस पर टैप करें — पूरी स्क्रीन, कोई ब्राउज़र बार नहीं, बिल्कुल किसी और ऐप की तरह।"},"step2_num":{"kn":"ಹಂತ 2","hi":"चरण 2"},"step2_title":{"kn":"ಐಫೋನ್ / ಐಪ್ಯಾಡ್‌ನಲ್ಲಿ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ (Safari)","hi":"आईफोन / आईपैड पर इंस्टॉल करें (Safari)"},"step2_note":{"kn":"ಐಫೋನ್‌ನಲ್ಲಿ ಇದನ್ನು <b style=\"color:var(--ink);\">Safari ಯಲ್ಲಿಯೇ ಮಾಡಬೇಕು</b> — ಐಫೋನ್‌ನಲ್ಲಿ Chrome ಆ್ಯಪ್‌ಗಳನ್ನು ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ಗೆ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಲು ಸಾಧ್ಯವಿಲ್ಲ.","hi":"आईफोन पर यह काम <b style=\"color:var(--ink);\">Safari में ही करना ज़रूरी है</b> — आईफोन पर Chrome ऐप्स को होम स्क्रीन पर इंस्टॉल नहीं कर सकता।"},"step2_sub1":{"kn":"<b>Safari</b> ತೆರೆಯಿರಿ ಮತ್ತು <a href=\"https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/\" target=\"_blank\" rel=\"noopener\">BAIO ವೆಬ್‌ಸೈಟ್</a>‌ಗೆ ಹೋಗಿ.","hi":"<b>Safari</b> खोलें और <a href=\"https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/\" target=\"_blank\" rel=\"noopener\">BAIO वेबसाइट</a> पर जाएँ।"},"fig2_caption":{"kn":"① Safari ಯ ಕೆಳಭಾಗದ ಬಾರ್‌ನಲ್ಲಿರುವ Share ಐಕಾನ್ ಟ್ಯಾಪ್ ಮಾಡಿ → ② <b style=\"color:var(--ink);\">Add to Home Screen</b> ಟ್ಯಾಪ್ ಮಾಡಿ.","hi":"① Safari के निचले बार में Share आइकन पर टैप करें → ② <b style=\"color:var(--ink);\">Add to Home Screen</b> पर टैप करें।"},"step2_sub2":{"kn":"ಪರದೆಯ ಕೆಳಭಾಗದಲ್ಲಿರುವ <b>Share icon</b> (ಮೇಲಕ್ಕೆ ಬಾಣ ಇರುವ ಚೌಕ) ಟ್ಯಾಪ್ ಮಾಡಿ.","hi":"स्क्रीन के नीचे मौजूद <b>Share icon</b> (ऊपर की ओर तीर वाला वर्ग) पर टैप करें।"},"step2_sub3":{"kn":"ಕೆಳಗೆ ಸ್ಕ್ರಾಲ್ ಮಾಡಿ ಮತ್ತು <b>Add to Home Screen</b> ಟ್ಯಾಪ್ ಮಾಡಿ.","hi":"नीचे स्क्रॉल करें और <b>Add to Home Screen</b> पर टैप करें।"},"step2_sub4":{"kn":"ಮೇಲಿನ-ಬಲಭಾಗದ ಮೂಲೆಯಲ್ಲಿ <b>Add</b> ಟ್ಯಾಪ್ ಮಾಡಿ. BAIO ಐಕಾನ್ ಈಗ ಬೇರೆ ಯಾವುದೇ ಆ್ಯಪ್‌ನಂತೆ ನಿಮ್ಮ ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ನಲ್ಲಿ ಇರುತ್ತದೆ.","hi":"ऊपर-दाईं ओर के कोने में <b>Add</b> पर टैप करें। BAIO आइकन अब किसी भी और ऐप की तरह आपकी होम स्क्रीन पर मौजूद रहता है।"},"step3_num":{"kn":"ಹಂತ 3","hi":"चरण 3"},"step3_title":{"kn":"ಲ್ಯಾಪ್‌ಟಾಪ್ ಅಥವಾ ಡೆಸ್ಕ್‌ಟಾಪ್‌ನಲ್ಲಿ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ","hi":"लैपटॉप या डेस्कटॉप पर इंस्टॉल करें"},"step3_note":{"kn":"Windows, Mac ಅಥವಾ Chromebook ನಲ್ಲಿ Chrome ಅಥವಾ Edge ನಲ್ಲಿ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ.","hi":"Windows, Mac या Chromebook पर Chrome या Edge में काम करता है।"},"step3_sub1":{"kn":"Chrome ಅಥವಾ Edge ನಲ್ಲಿ <a href=\"https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/\" target=\"_blank\" rel=\"noopener\">BAIO ವೆಬ್‌ಸೈಟ್</a> ತೆರೆಯಿರಿ.","hi":"Chrome या Edge में <a href=\"https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/\" target=\"_blank\" rel=\"noopener\">BAIO वेबसाइट</a> खोलें।"},"fig3_caption":{"kn":"① ವಿಳಾಸ ಪಟ್ಟಿಯ ಕೊನೆಯಲ್ಲಿರುವ ಇನ್‌ಸ್ಟಾಲ್ ಐಕಾನ್ ಕ್ಲಿಕ್ ಮಾಡಿ → ② ಪಾಪ್‌ಅಪ್‌ನಲ್ಲಿ <b style=\"color:var(--ink);\">Install</b> ಕ್ಲಿಕ್ ಮಾಡಿ.","hi":"① एड्रेस बार के अंत में इंस्टॉल आइकन पर क्लिक करें → ② पॉपअप में <b style=\"color:var(--ink);\">Install</b> पर क्लिक करें।"},"step3_sub2":{"kn":"ವಿಳಾಸ ಪಟ್ಟಿಯ ಬಲಭಾಗದ ತುದಿಯಲ್ಲಿರುವ <b>install icon</b> (ಚಿಕ್ಕ ⊕ / ಮಾನಿಟರ್ ಐಕಾನ್) ಅನ್ನು ಹುಡುಕಿ ಮತ್ತು ಅದನ್ನು ಕ್ಲಿಕ್ ಮಾಡಿ.","hi":"एड्रेस बार के दाईं ओर के छोर पर <b>install icon</b> (छोटा ⊕ / मॉनिटर आइकन) देखें और उस पर क्लिक करें।"},"step3_sub3":{"kn":"ಕಾಣಿಸುವ ಪಾಪ್‌ಅಪ್‌ನಲ್ಲಿ <b>Install</b> ಕ್ಲಿಕ್ ಮಾಡಿ.","hi":"दिखाई देने वाले पॉपअप में <b>Install</b> पर क्लिक करें।"},"step3_sub4":{"kn":"BAIO ಈಗ ನಿಮ್ಮ ಡೆಸ್ಕ್‌ಟಾಪ್, ಟಾಸ್ಕ್‌ಬಾರ್ ಅಥವಾ Start Menu ನಿಂದ ತನ್ನದೇ ಆದ ಆ್ಯಪ್ ವಿಂಡೋ ಆಗಿ ತೆರೆಯುತ್ತದೆ — ಮೊದಲು ಬ್ರೌಸರ್ ಟ್ಯಾಬ್ ತೆರೆಯುವ ಅಗತ್ಯವಿಲ್ಲ.","hi":"अब BAIO आपके डेस्कटॉप, टास्कबार या Start Menu से अपनी खुद की ऐप विंडो के रूप में खुलता है — पहले ब्राउज़र टैब खोलने की ज़रूरत नहीं।"},"step3_footer":{"kn":"ಇನ್‌ಸ್ಟಾಲ್ ಐಕಾನ್ ಕಾಣುತ್ತಿಲ್ಲವೇ? ಸಮಸ್ಯೆ ಇಲ್ಲ — ನೀವು ಯಾವಾಗಲೂ ವೆಬ್‌ಸೈಟ್ ಲಿಂಕ್ ಅನ್ನು ನಿಮ್ಮ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ತೆರೆದು ಸಾಮಾನ್ಯವಾಗಿ ಬಳಸಬಹುದು; ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡುವುದರ ಹಿಂದೆ ಏನೂ ಲಾಕ್ ಆಗಿಲ್ಲ.","hi":"इंस्टॉल आइकन नहीं दिख रहा? कोई बात नहीं — आप हमेशा वेबसाइट लिंक को अपने ब्राउज़र में खोलकर सामान्य रूप से उपयोग कर सकते हैं; इंस्टॉल करने के पीछे कुछ भी लॉक नहीं है।"},"step4_num":{"kn":"ಹಂತ 4","hi":"चरण 4"},"step4_title":{"kn":"ವೇಗದ ಮಾರ್ಗ: QR ಕೋಡ್ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ","hi":"सबसे तेज़ तरीका: QR कोड स्कैन करें"},"step4_body":{"kn":"ನಿಮ್ಮ ಫೋನ್‌ನ ಕ್ಯಾಮೆರಾ ಆ್ಯಪ್ ತೆರೆಯಿರಿ ಮತ್ತು ಈ QR ಕೋಡ್‌ನತ್ತ ತೋರಿಸಿ. ಕಾಣಿಸುವ ಲಿಂಕ್ ಅನ್ನು ಟ್ಯಾಪ್ ಮಾಡಿ — ಇದು ನೇರವಾಗಿ BAIO ವೆಬ್‌ಸೈಟ್ ತೆರೆಯುತ್ತದೆ, ಅಲ್ಲಿಂದ ನಿಮ್ಮ ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ಗೆ ಸೇರಿಸಲು ಮೇಲಿನ ಆಂಡ್ರಾಯ್ಡ್ ಅಥವಾ ಐಫೋನ್ ಹಂತಗಳನ್ನು ಅನುಸರಿಸಿ.","hi":"अपने फ़ोन का कैमरा ऐप खोलें और इसे इस QR कोड की ओर करें। दिखाई देने वाले लिंक पर टैप करें — यह सीधे BAIO वेबसाइट खोलता है, और वहाँ से बस अपनी होम स्क्रीन पर जोड़ने के लिए ऊपर दिए एंड्रॉइड या आईफोन चरणों का पालन करें।"},"step5_num":{"kn":"ಹಂತ 5","hi":"चरण 5"},"step5_title":{"kn":"ಪದೇ ಪದೇ ಕೇಳಲಾಗುವ ಪ್ರಶ್ನೆಗಳು","hi":"अक्सर पूछे जाने वाले प्रश्न"},"faq1_q":{"kn":"ನಾನು ಪಾವತಿಸಬೇಕೇ ಅಥವಾ Play Store / App Store ಹುಡುಕಬೇಕೇ?","hi":"क्या मुझे भुगतान करना होगा या Play Store / App Store में खोजना होगा?"},"faq1_a":{"kn":"ಇಲ್ಲ. BAIO ಒಂದು ವೆಬ್ ಆ್ಯಪ್ — ಆ್ಯಪ್ ಸ್ಟೋರ್‌ನಲ್ಲಿ ಹುಡುಕಲು ಅಥವಾ ಖರೀದಿಸಲು ಏನೂ ಇಲ್ಲ. ಮೇಲೆ ತೋರಿಸಿದಂತೆ ವೆಬ್‌ಸೈಟ್ ಲಿಂಕ್ ಭೇಟಿ ನೀಡಿ ಮತ್ತು ನಿಮ್ಮ ಬ್ರೌಸರ್‌ನಿಂದ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ.","hi":"नहीं। BAIO एक वेब ऐप है — ऐप स्टोर में खोजने या खरीदने के लिए कुछ भी नहीं है। बस ऊपर दिखाए अनुसार वेबसाइट लिंक पर जाएँ और अपने ब्राउज़र से इंस्टॉल करें।"},"faq2_q":{"kn":"ಇದು ನನ್ನ ಫೋನ್‌ನಲ್ಲಿ ಎಷ್ಟು ಸ್ಥಳ ತೆಗೆದುಕೊಳ್ಳುತ್ತದೆ?","hi":"यह मेरे फ़ोन पर कितनी जगह लेता है?"},"faq2_a":{"kn":"ಕೆಲವೇ MB — ಇದು ಬಳಸುವಾಗ ವಿಷಯವನ್ನು ಲೋಡ್ ಮಾಡುವುದರಿಂದ, ವಿಶಿಷ್ಟ ಆ್ಯಪ್ ಸ್ಟೋರ್ ಆ್ಯಪ್‌ಗಿಂತ ಬಹಳ ಕಡಿಮೆ.","hi":"केवल कुछ MB — एक सामान्य ऐप स्टोर ऐप से काफ़ी कम, क्योंकि यह उपयोग करते समय सामग्री लोड करता है।"},"faq3_q":{"kn":"ಇಂಟರ್ನೆಟ್ ಇಲ್ಲದೆ ಇದು ಕೆಲಸ ಮಾಡುತ್ತದೆಯೇ?","hi":"क्या यह बिना इंटरनेट के काम करेगा?"},"faq3_a":{"kn":"ಒಮ್ಮೆ ಇನ್‌ಸ್ಟಾಲ್ ಆದ ನಂತರ, ಆ್ಯಪ್ ಶೆಲ್ ತಕ್ಷಣ ಲೋಡ್ ಆಗುತ್ತದೆ ಮತ್ತು ನಿಮ್ಮ ಸಂಪರ್ಕ ಕಡಿತಗೊಂಡರೆ ಆಫ್‌ಲೈನ್ ಬ್ಯಾನರ್ ತೋರಿಸುತ್ತದೆ, ಆದರೆ ಹೊಸ ಅಧ್ಯಾಯಗಳು, ಕ್ವಿಜ್‌ಗಳು ಮತ್ತು ಅಪ್‌ಡೇಟ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ನಿಮಗೆ ಇಂಟರ್ನೆಟ್ ಬೇಕಾಗುತ್ತದೆ.","hi":"एक बार इंस्टॉल होने के बाद, ऐप शेल तुरंत लोड होता है और कनेक्शन टूटने पर ऑफलाइन बैनर दिखाता है, लेकिन नए अध्याय, क्विज़ और अपडेट लोड करने के लिए आपको इंटरनेट चाहिए होगा।"},"faq4_q":{"kn":"ನನ್ನ Chrome ಮೆನುವಿನಲ್ಲಿ \"Install app\" ಕಾಣುತ್ತಿಲ್ಲ — ಈಗ ಏನು?","hi":"मुझे अपने Chrome मेनू में \"Install app\" नहीं दिख रहा — अब क्या करूँ?"},"faq4_a":{"kn":"Chrome ಇತ್ತೀಚಿನ ಆವೃತ್ತಿಗೆ ನವೀಕರಿಸಲಾಗಿದೆಯೇ ಎಂದು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ. ಇನ್ನೂ ಕಾಣದಿದ್ದರೆ, ಬದಲಿಗೆ <b>Add to Home screen</b> ಬಳಸಿ — ಇದು ಅದೇ ಪೂರ್ಣ ಪರದೆಯ ಆ್ಯಪ್ ಐಕಾನ್ ನೀಡುತ್ತದೆ.","hi":"सुनिश्चित करें कि Chrome नवीनतम वर्शन पर अपडेट है। फिर भी न दिखे तो इसके बजाय <b>Add to Home screen</b> का उपयोग करें — यह वही फुल-स्क्रीन ऐप आइकन देता है।"},"faq5_q":{"kn":"ನಾನು ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿದೆ — ಈಗ ಏನು?","hi":"मैंने इंस्टॉल कर लिया — अब क्या?"},"faq5_a":{"kn":"ನಿಮ್ಮ ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ನಿಂದ BAIO ಐಕಾನ್ ತೆರೆಯಿರಿ, ನಂತರ ವಿಭಾಗಗಳು, ಅಧ್ಯಾಯಗಳು ಮತ್ತು ಕೋಡ್‌ಗಳು ಹೇಗೆ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತವೆ ಎಂದು ತಿಳಿಯಲು <a href=\"guide.html\">Student Guide</a> ಗೆ ಹೋಗಿ.","hi":"अपनी होम स्क्रीन से BAIO आइकन खोलें, फिर सेक्शन, अध्याय और कोड कैसे काम करते हैं यह जानने के लिए <a href=\"guide.html\">Student Guide</a> पर जाएँ।"},"step6_num":{"kn":"ಹಂತ 6","hi":"चरण 6"},"step6_title":{"kn":"ಇನ್ನೂ ಸಮಸ್ಯೆ ಇದೆಯೇ?","hi":"अभी भी अटके हुए हैं?"},"step6_body":{"kn":"ನಿಮ್ಮ ಸಾಧನದಲ್ಲಿ ಇನ್‌ಸ್ಟಾಲೇಶನ್ ಕೆಲಸ ಮಾಡದಿದ್ದರೆ, ನೇರವಾಗಿ ಸಂಪರ್ಕಿಸಿ ಮತ್ತು ನಿಮ್ಮ ಶಿಕ್ಷಕರು ನಿಮಗೆ ಮಾರ್ಗದರ್ಶನ ನೀಡುತ್ತಾರೆ.","hi":"यदि आपके डिवाइस पर इंस्टॉलेशन काम नहीं कर रहा, तो सीधे संपर्क करें और आपके शिक्षक आपको इसमें मदद करेंगे।"},"support_whatsapp_label":{"kn":"WhatsApp ಸಂಖ್ಯೆ","hi":"WhatsApp नंबर"},"support_email_label":{"kn":"ಇಮೇಲ್","hi":"ईमेल"},"cta_continue":{"kn":"📘 Student Guide ಗೆ ಮುಂದುವರಿಯಿರಿ","hi":"📘 Student Guide पर जारी रखें"},"founder_quote":{"kn":"\"ಪ್ರಾರಂಭಿಸುವುದು ಕಷ್ಟದ ಭಾಗವಾಗಬಾರದು. ಕೋಡ್ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ, ಇನ್‌ಸ್ಟಾಲ್ ಟ್ಯಾಪ್ ಮಾಡಿ, ಮತ್ತು ನೀವು ಒಳಗೆ — ನಿಜವಾದ ಕೆಲಸ ಅದರ ನಂತರ ನೀವು ಮಾಡುವುದು.\"","hi":"\"शुरुआत करना मुश्किल हिस्सा नहीं होना चाहिए। कोड स्कैन करें, इंस्टॉल पर टैप करें, और आप अंदर हैं — असली काम वह है जो आप उसके बाद करते हैं।\""},"founder_role":{"kn":"ಜೀವಶಾಸ್ತ್ರ ಉಪನ್ಯಾಸಕರು &middot; ಸಂಸ್ಥಾಪಕರು &amp; CEO, BAIO Learning System","hi":"जीव विज्ञान व्याख्याता &middot; संस्थापक &amp; CEO, BAIO Learning System"},"footer_text":{"kn":"BAIO Learning System &middot; ಇನ್‌ಸ್ಟಾಲ್ ಮಾರ್ಗದರ್ಶಿ","hi":"BAIO Learning System &middot; इंस्टॉल गाइड"}};
+const INSTALL_ORIGINAL_EN = {};
+document.querySelectorAll('[data-i18n]').forEach(function(el){
+  INSTALL_ORIGINAL_EN[el.getAttribute('data-i18n')] = el.innerHTML;
+});
+let currentLang = 'en';
+function setLang(lang){
+  currentLang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    const key = el.getAttribute('data-i18n');
+    if(lang === 'en'){ el.innerHTML = INSTALL_ORIGINAL_EN[key]; }
+    else if(INSTALL_TRANSLATIONS[key] && INSTALL_TRANSLATIONS[key][lang]){ el.innerHTML = INSTALL_TRANSLATIONS[key][lang]; }
+  });
+  try{ localStorage.setItem('baio_guide_lang', lang); }catch(e){}
+  renderLangSwitcher();
+}
+window.setLang = setLang;
+function renderLangSwitcher(){
+  const el = document.getElementById('langSwitcher');
+  if(!el) return;
+  const langs = [{id:'en',label:'English'},{id:'kn',label:'ಕನ್ನಡ'},{id:'hi',label:'हिंदी'}];
+  el.innerHTML = langs.map(function(l){ return '<div class="lang-btn' + (l.id===currentLang?' active':'') + '" onclick="setLang(\'' + l.id + '\')">' + l.label + '</div>'; }).join('');
+}
+(function(){
+  let saved = null;
+  try{ saved = localStorage.getItem('baio_guide_lang'); }catch(e){}
+  if(saved && saved !== 'en'){ setLang(saved); }
+  else { renderLangSwitcher(); }
 })();
 </script>
 </body>
