@@ -97,6 +97,14 @@ header{padding:34px 0 22px; text-align:center;}
   padding:9px 14px; border-radius:10px; font-weight:700; font-size:12.5px; cursor:pointer;
   display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
 }
+.study-timer-presets{display:flex; justify-content:center; gap:8px; margin:14px 0 18px;}
+.study-timer-preset{
+  background:var(--panel2); border:1px solid var(--line); color:var(--ink-dim);
+  padding:6px 12px; border-radius:20px; font-size:11.5px; font-weight:700; cursor:pointer;
+}
+.study-timer-preset.active{background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#0B1B14; border-color:var(--gold);}
+.study-timer-display{font-family:'Space Grotesk',sans-serif; font-size:48px; font-weight:700; color:var(--gold); letter-spacing:1px; margin:4px 0;}
+.study-timer-mode{font-size:12.5px; color:var(--ink-dim); margin-bottom:16px;}
 
 .chapter-jump-menu{
   display:none; position:absolute; z-index:50; min-width:230px; max-width:280px;
@@ -380,7 +388,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       <div class="sig-stat"><div class="n" id="statChapters">&hellip;</div><div class="l">Chapters Live</div></div>
       <div class="sig-stat"><div class="n" id="statQuestions">400+</div><div class="l">Practice Questions</div></div>
       <div class="sig-stat"><div class="n" id="statSessions">&ndash;</div><div class="l">Your Sessions Logged</div></div>
-      <button id="ambientMusicBtn" class="share-corner-btn" style="right:38px;" title="Play calm background music while you study" aria-label="Play calm background music while you study" aria-pressed="false">&#127925;</button>
+      <button id="studyTimerBtn" class="share-corner-btn" style="right:38px;" title="Study Timer (Pomodoro)" aria-label="Open study timer" aria-pressed="false">&#9200;</button>
       <button id="shareAppBtn" class="share-corner-btn" title="Show QR code &amp; share this app" aria-label="Show QR code and share this app">&#128228;</button>
     </div>
     <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle light/dark theme">&#127769;</button>
@@ -459,6 +467,25 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
         <button type="button" class="announce-modal-later-btn" id="qrShowModalCloseBtn">Close</button>
         <button type="button" class="qr-modal-share-btn" id="qrShowModalShareQrBtn">&#128228; Share QR</button>
         <button type="button" class="qr-modal-share-btn" id="qrShowModalShareLinkBtn">&#128279; Share Link</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="studyTimerModalOverlay" class="announce-modal-overlay" style="display:none;">
+    <div class="announce-modal">
+      <div class="announce-modal-icon">&#9200;</div>
+      <div class="announce-modal-text">Stay on track with a focus timer, right here on the homepage.</div>
+      <div class="study-timer-presets">
+        <button type="button" class="study-timer-preset active" data-focus="25" data-break="5">25 / 5</button>
+        <button type="button" class="study-timer-preset" data-focus="50" data-break="10">50 / 10</button>
+        <button type="button" class="study-timer-preset" data-focus="15" data-break="3">15 / 3</button>
+      </div>
+      <div class="study-timer-display" id="studyTimerDisplay">25:00</div>
+      <div class="study-timer-mode" id="studyTimerModeLabel">🎯 Focus session</div>
+      <div class="qr-modal-btn-row">
+        <button type="button" class="announce-modal-later-btn" id="studyTimerCloseBtn">Close</button>
+        <button type="button" class="qr-modal-share-btn" id="studyTimerResetBtn">&#8635; Reset</button>
+        <button type="button" class="qr-modal-share-btn" id="studyTimerStartBtn">&#9654; Start</button>
       </div>
     </div>
   </div>
@@ -2404,73 +2431,107 @@ window.indexHardRefresh = indexHardRefresh;
 })();
 </script>
 <script>
-/* Calm background music while studying — a soft synthesized pad, no audio file needed. */
+/* Study Timer (Pomodoro-style focus/break countdown). */
 (function(){
-  var btn = document.getElementById('ambientMusicBtn');
-  if(!btn) return;
-  var ctx, masterGain, filter, playing = false;
+  var btn = document.getElementById('studyTimerBtn');
+  var overlay = document.getElementById('studyTimerModalOverlay');
+  if(!btn || !overlay) return;
 
-  function buildGraph(){
-    var AC = window.AudioContext || window.webkitAudioContext;
-    if(!AC) return false;
-    ctx = new AC();
-    masterGain = ctx.createGain();
-    masterGain.gain.value = 0;
-    masterGain.connect(ctx.destination);
-    filter = ctx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.value = 900;
-    filter.connect(masterGain);
-    var freqs = [130.81, 164.81, 196.00, 246.94];
-    freqs.forEach(function(f, i){
-      var osc = ctx.createOscillator();
-      osc.type = (i % 2 === 0) ? 'sine' : 'triangle';
-      osc.frequency.value = f;
-      osc.detune.value = (i - 1.5) * 4;
-      var g = ctx.createGain();
-      g.gain.value = 0.22;
-      osc.connect(g);
-      g.connect(filter);
-      osc.start();
+  var display = document.getElementById('studyTimerDisplay');
+  var modeLabel = document.getElementById('studyTimerModeLabel');
+  var startBtn = document.getElementById('studyTimerStartBtn');
+  var resetBtn = document.getElementById('studyTimerResetBtn');
+  var closeBtn = document.getElementById('studyTimerCloseBtn');
+  var presetBtns = document.querySelectorAll('.study-timer-preset');
+
+  var FOCUS_MIN = 25, BREAK_MIN = 5;
+  var totalSeconds = FOCUS_MIN * 60;
+  var remaining = totalSeconds;
+  var mode = 'focus';
+  var running = false;
+  var tickHandle = null;
+
+  function fmt(sec){
+    var m = Math.floor(sec / 60), s = sec % 60;
+    return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  }
+  function render(){
+    display.textContent = fmt(remaining);
+    modeLabel.textContent = mode === 'focus' ? '🎯 Focus session' : '☕ Short break';
+    startBtn.textContent = running ? '⏸ Pause' : (remaining === totalSeconds ? '▶ Start' : '▶ Resume');
+    btn.setAttribute('aria-pressed', running ? 'true' : 'false');
+  }
+  function beep(){
+    try{
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return;
+      var ctx = new AC();
+      [880, 1108, 1318].forEach(function(freq, i){
+        var osc = ctx.createOscillator();
+        var g = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        var t = ctx.currentTime + i * 0.18;
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(0.18, t + 0.03);
+        g.gain.linearRampToValueAtTime(0, t + 0.32);
+        osc.connect(g); g.connect(ctx.destination);
+        osc.start(t); osc.stop(t + 0.35);
+      });
+      setTimeout(function(){ ctx.close(); }, 1200);
+    }catch(e){}
+  }
+  function switchMode(next){
+    mode = next;
+    totalSeconds = (mode === 'focus' ? FOCUS_MIN : BREAK_MIN) * 60;
+    remaining = totalSeconds;
+    render();
+  }
+  function tick(){
+    remaining--;
+    if(remaining <= 0){
+      stop();
+      beep();
+      try{ if(Notification && Notification.permission === 'granted') new Notification('BAIO Study Timer', {body: mode === 'focus' ? 'Focus session done — take a break!' : 'Break over — back to it!'}); }catch(e){}
+      switchMode(mode === 'focus' ? 'break' : 'focus');
+      return;
+    }
+    render();
+  }
+  function start(){
+    if(running) return;
+    running = true;
+    tickHandle = setInterval(tick, 1000);
+    render();
+  }
+  function stop(){
+    running = false;
+    if(tickHandle){ clearInterval(tickHandle); tickHandle = null; }
+    render();
+  }
+  function reset(){
+    stop();
+    remaining = totalSeconds;
+    render();
+  }
+
+  btn.addEventListener('click', function(){ overlay.style.display = 'flex'; });
+  closeBtn.addEventListener('click', function(){ overlay.style.display = 'none'; });
+  overlay.addEventListener('click', function(e){ if(e.target === overlay) overlay.style.display = 'none'; });
+  startBtn.addEventListener('click', function(){ running ? stop() : start(); });
+  resetBtn.addEventListener('click', reset);
+  presetBtns.forEach(function(pb){
+    pb.addEventListener('click', function(){
+      FOCUS_MIN = parseInt(pb.getAttribute('data-focus'), 10);
+      BREAK_MIN = parseInt(pb.getAttribute('data-break'), 10);
+      presetBtns.forEach(function(b){ b.classList.remove('active'); });
+      pb.classList.add('active');
+      switchMode('focus');
+      stop();
     });
-    var lfo = ctx.createOscillator();
-    lfo.frequency.value = 0.05;
-    var lfoGain = ctx.createGain();
-    lfoGain.gain.value = 220;
-    lfo.connect(lfoGain);
-    lfoGain.connect(filter.frequency);
-    lfo.start();
-    return true;
-  }
-
-  function play(){
-    if(!ctx && !buildGraph()) return;
-    if(ctx.state === 'suspended'){ ctx.resume().catch(function(){}); }
-    var now = ctx.currentTime;
-    masterGain.gain.cancelScheduledValues(now);
-    masterGain.gain.setValueAtTime(masterGain.gain.value, now);
-    masterGain.gain.linearRampToValueAtTime(0.07, now + 2.5);
-    playing = true;
-    btn.textContent = '⏸️';
-    btn.setAttribute('aria-pressed', 'true');
-    btn.title = 'Pause background music';
-    btn.setAttribute('aria-label', 'Pause background music');
-  }
-  function pause(){
-    if(!ctx) return;
-    var now = ctx.currentTime;
-    masterGain.gain.cancelScheduledValues(now);
-    masterGain.gain.setValueAtTime(masterGain.gain.value, now);
-    masterGain.gain.linearRampToValueAtTime(0, now + 1.2);
-    playing = false;
-    btn.textContent = '🎵';
-    btn.setAttribute('aria-pressed', 'false');
-    btn.title = 'Play calm background music while you study';
-    btn.setAttribute('aria-label', 'Play calm background music while you study');
-  }
-  btn.addEventListener('click', function(){
-    if(playing) pause(); else play();
   });
+
+  render();
 })();
 </script>
 </body>
