@@ -46,11 +46,11 @@ input:focus{ outline:2px solid var(--teal); outline-offset:1px; }
 .tt-header{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px; flex-wrap:wrap;}
 .tt-header h1{ margin:0; }
 .relock{ font-size:11px; color:var(--ink-dim); text-decoration:underline; cursor:pointer; background:none; border:none; padding:0; }
-.pdf-frame-wrap{
-  width:100%; aspect-ratio:1/1.35; border:1px solid var(--line); border-radius:12px;
-  overflow:hidden; background:#0a0a0a; margin-bottom:14px;
+.pdf-pages{ margin-bottom:14px; }
+.pdf-pages img{
+  display:block; width:100%; height:auto; border:1px solid var(--line);
+  border-radius:12px; margin-bottom:10px; background:#fff;
 }
-.pdf-frame-wrap iframe{ width:100%; height:100%; border:0; }
 .btn-row{ display:flex; gap:10px; }
 .btn-row .btn{ flex:1; }
 .hint{ font-size:11.5px; color:var(--ink-dim); text-align:center; margin-top:12px; line-height:1.5; }
@@ -76,14 +76,15 @@ input:focus{ outline:2px solid var(--teal); outline-offset:1px; }
       <button class="relock" onclick="relock()">Lock again</button>
     </div>
     <p class="sub">1st &amp; 2nd PUC Science &mdash; Faculty/Subject Timetable: B1 (Biology 1). Revised master schedule across SHARP, SMART &amp; CHAMPION sections.</p>
-    <div class="pdf-frame-wrap">
-      <iframe src="timetable-assets/B1-timetable.pdf" title="B1 Time Table PDF"></iframe>
+    <div class="pdf-pages">
+      <img src="timetable-assets/timetable-page1.jpg" alt="B1 Time Table - Page 1" loading="lazy">
+      <img src="timetable-assets/timetable-page2.jpg" alt="B1 Time Table - Page 2" loading="lazy">
     </div>
     <div class="btn-row">
-      <button class="btn" onclick="viewTimetable()">Open Full View</button>
+      <button class="btn" onclick="viewTimetable()">Open PDF</button>
       <button class="btn secondary" onclick="downloadTimetable()" id="dlBtn">Download PDF</button>
     </div>
-    <div class="hint">If the preview above doesn't render on your device, use &ldquo;Open Full View&rdquo; &mdash; it opens the PDF directly in your browser or PDF app.</div>
+    <div class="hint">Pinch to zoom on the pages above for a closer look, or use &ldquo;Open PDF&rdquo; for the original file.</div>
   </div>
 
 </div>
