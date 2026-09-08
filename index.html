@@ -67,6 +67,7 @@ header{padding:34px 0 22px; text-align:center;}
   border:1px solid var(--line); background:var(--panel2); font-size:15px; cursor:pointer;
   display:flex; align-items:center; justify-content:center; z-index:2;
 }
+.theme-toggle-btn[aria-pressed="true"]{border-color:var(--gold); box-shadow:0 0 0 2px rgba(212,175,55,0.25);}
 
 .hero{
   border:1px solid var(--line); border-radius:20px; padding:26px 24px; margin-top:26px;
@@ -387,6 +388,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     <button id="indexHardRefreshBtn" class="theme-toggle-btn" style="right:66px;" onclick="indexHardRefresh()" title="Force-refresh this page (clears any cached copy)" aria-label="Force-refresh this page">&#128260;</button>
     <button id="pu2ChapterJumpBtn" class="theme-toggle-btn" style="right:108px;" title="Jump to a live PU-II chapter" aria-label="Jump to a live PU-II chapter" aria-haspopup="true" aria-expanded="false">&#127942;</button>
     <button id="pu1ChapterJumpBtn" class="theme-toggle-btn" style="right:150px;" title="Jump to a live PU-I chapter" aria-label="Jump to a live PU-I chapter" aria-haspopup="true" aria-expanded="false">&#127891;</button>
+    <button id="ambientMusicBtn" class="theme-toggle-btn" style="right:192px;" title="Play calm background music while you study" aria-label="Play calm background music while you study" aria-pressed="false">&#127925;</button>
   </div>
 
   <div id="chapterJumpMenu" class="chapter-jump-menu" role="menu"></div>
@@ -2399,6 +2401,76 @@ window.indexHardRefresh = indexHardRefresh;
   window.addEventListener('offline', showOfflineBanner);
   if(document.readyState === 'complete' || document.readyState === 'interactive'){ checkConnectivity(); }
   else { document.addEventListener('DOMContentLoaded', checkConnectivity); }
+})();
+</script>
+<script>
+/* Calm background music while studying — a soft synthesized pad, no audio file needed. */
+(function(){
+  var btn = document.getElementById('ambientMusicBtn');
+  if(!btn) return;
+  var ctx, masterGain, filter, playing = false;
+
+  function buildGraph(){
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return false;
+    ctx = new AC();
+    masterGain = ctx.createGain();
+    masterGain.gain.value = 0;
+    masterGain.connect(ctx.destination);
+    filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 900;
+    filter.connect(masterGain);
+    var freqs = [130.81, 164.81, 196.00, 246.94];
+    freqs.forEach(function(f, i){
+      var osc = ctx.createOscillator();
+      osc.type = (i % 2 === 0) ? 'sine' : 'triangle';
+      osc.frequency.value = f;
+      osc.detune.value = (i - 1.5) * 4;
+      var g = ctx.createGain();
+      g.gain.value = 0.22;
+      osc.connect(g);
+      g.connect(filter);
+      osc.start();
+    });
+    var lfo = ctx.createOscillator();
+    lfo.frequency.value = 0.05;
+    var lfoGain = ctx.createGain();
+    lfoGain.gain.value = 220;
+    lfo.connect(lfoGain);
+    lfoGain.connect(filter.frequency);
+    lfo.start();
+    return true;
+  }
+
+  function play(){
+    if(!ctx && !buildGraph()) return;
+    if(ctx.state === 'suspended'){ ctx.resume().catch(function(){}); }
+    var now = ctx.currentTime;
+    masterGain.gain.cancelScheduledValues(now);
+    masterGain.gain.setValueAtTime(masterGain.gain.value, now);
+    masterGain.gain.linearRampToValueAtTime(0.07, now + 2.5);
+    playing = true;
+    btn.textContent = '⏸️';
+    btn.setAttribute('aria-pressed', 'true');
+    btn.title = 'Pause background music';
+    btn.setAttribute('aria-label', 'Pause background music');
+  }
+  function pause(){
+    if(!ctx) return;
+    var now = ctx.currentTime;
+    masterGain.gain.cancelScheduledValues(now);
+    masterGain.gain.setValueAtTime(masterGain.gain.value, now);
+    masterGain.gain.linearRampToValueAtTime(0, now + 1.2);
+    playing = false;
+    btn.textContent = '🎵';
+    btn.setAttribute('aria-pressed', 'false');
+    btn.title = 'Play calm background music while you study';
+    btn.setAttribute('aria-label', 'Play calm background music while you study');
+  }
+  btn.addEventListener('click', function(){
+    if(playing) pause(); else play();
+  });
 })();
 </script>
 </body>
