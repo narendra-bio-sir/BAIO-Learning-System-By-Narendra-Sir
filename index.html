@@ -103,6 +103,12 @@ header{padding:34px 0 22px; text-align:center;}
   padding:6px 12px; border-radius:20px; font-size:11.5px; font-weight:700; cursor:pointer;
 }
 .study-timer-preset.active{background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#0B1B14; border-color:var(--gold);}
+.study-timer-custom-row{display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:10px; margin:-6px 0 16px;}
+.study-timer-custom-row label{font-size:11.5px; color:var(--ink-dim); display:inline-flex; align-items:center; gap:5px;}
+.study-timer-custom-row input{
+  width:48px; background:var(--panel2); border:1px solid var(--line); color:var(--ink);
+  border-radius:8px; padding:5px 6px; font-size:12.5px; text-align:center;
+}
 .study-timer-display{font-family:'Space Grotesk',sans-serif; font-size:48px; font-weight:700; color:var(--gold); letter-spacing:1px; margin:4px 0;}
 .study-timer-mode{font-size:12.5px; color:var(--ink-dim); margin-bottom:16px;}
 
@@ -479,6 +485,12 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
         <button type="button" class="study-timer-preset active" data-focus="25" data-break="5">25 / 5</button>
         <button type="button" class="study-timer-preset" data-focus="50" data-break="10">50 / 10</button>
         <button type="button" class="study-timer-preset" data-focus="15" data-break="3">15 / 3</button>
+        <button type="button" class="study-timer-preset" id="studyTimerCustomToggle">&#9881;&#65039; Custom</button>
+      </div>
+      <div class="study-timer-custom-row" id="studyTimerCustomRow" style="display:none;">
+        <label>Focus <input type="number" id="studyTimerCustomFocus" min="1" max="180" value="25"> min</label>
+        <label>Break <input type="number" id="studyTimerCustomBreak" min="1" max="60" value="5"> min</label>
+        <button type="button" class="qr-modal-share-btn" id="studyTimerCustomApply">Set</button>
       </div>
       <div class="study-timer-display" id="studyTimerDisplay">25:00</div>
       <div class="study-timer-mode" id="studyTimerModeLabel">🎯 Focus session</div>
@@ -2442,7 +2454,12 @@ window.indexHardRefresh = indexHardRefresh;
   var startBtn = document.getElementById('studyTimerStartBtn');
   var resetBtn = document.getElementById('studyTimerResetBtn');
   var closeBtn = document.getElementById('studyTimerCloseBtn');
-  var presetBtns = document.querySelectorAll('.study-timer-preset');
+  var presetBtns = document.querySelectorAll('.study-timer-preset[data-focus]');
+  var customToggle = document.getElementById('studyTimerCustomToggle');
+  var customRow = document.getElementById('studyTimerCustomRow');
+  var customFocusInput = document.getElementById('studyTimerCustomFocus');
+  var customBreakInput = document.getElementById('studyTimerCustomBreak');
+  var customApplyBtn = document.getElementById('studyTimerCustomApply');
 
   var FOCUS_MIN = 25, BREAK_MIN = 5;
   var totalSeconds = FOCUS_MIN * 60;
@@ -2525,11 +2542,39 @@ window.indexHardRefresh = indexHardRefresh;
       FOCUS_MIN = parseInt(pb.getAttribute('data-focus'), 10);
       BREAK_MIN = parseInt(pb.getAttribute('data-break'), 10);
       presetBtns.forEach(function(b){ b.classList.remove('active'); });
+      if(customToggle) customToggle.classList.remove('active');
+      if(customRow) customRow.style.display = 'none';
       pb.classList.add('active');
       switchMode('focus');
       stop();
     });
   });
+  if(customToggle && customRow){
+    customToggle.addEventListener('click', function(){
+      var showing = customRow.style.display !== 'none';
+      customRow.style.display = showing ? 'none' : 'flex';
+      if(!showing){
+        presetBtns.forEach(function(b){ b.classList.remove('active'); });
+        customToggle.classList.add('active');
+      }
+    });
+  }
+  if(customApplyBtn){
+    customApplyBtn.addEventListener('click', function(){
+      var f = parseInt(customFocusInput.value, 10);
+      var b = parseInt(customBreakInput.value, 10);
+      if(!f || f < 1) f = 1;
+      if(!b || b < 1) b = 1;
+      f = Math.min(f, 180); b = Math.min(b, 60);
+      customFocusInput.value = f; customBreakInput.value = b;
+      FOCUS_MIN = f; BREAK_MIN = b;
+      presetBtns.forEach(function(pb){ pb.classList.remove('active'); });
+      customToggle.classList.add('active');
+      switchMode('focus');
+      stop();
+      customRow.style.display = 'none';
+    });
+  }
 
   render();
 })();
