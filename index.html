@@ -140,6 +140,12 @@ header{padding:34px 0 22px; text-align:center;}
 
 .catalog{display:grid; grid-template-columns:1fr; gap:14px;}
 @media(min-width:640px){ .catalog{grid-template-columns:1fr 1fr;} }
+/* From ~500px wide, the heading/paragraph wrap onto fewer lines and the
+   hero card shrinks enough that the top icon row (share-corner-btn,
+   anchored to the stats row) and the bottom icon row (theme-toggle-btn,
+   anchored to the card's bottom edge) collide. A min-height keeps them
+   apart without moving either group from its usual spot. */
+@media(min-width:480px){ .hero{min-height:340px;} }
 
 .slide-card{
   position:relative; border:1px solid var(--line); border-radius:16px; background:var(--panel);
