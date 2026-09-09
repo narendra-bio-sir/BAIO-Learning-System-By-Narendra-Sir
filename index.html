@@ -239,7 +239,7 @@ header{padding:34px 0 22px; text-align:center;}
 .progress-strip.show{display:block;}
 .progress-strip .row{display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.05);}
 
-.widget-row{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:16px; position:relative; padding-top:22px;}
+.widget-row{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:16px;}
 .widget-tile{
   border:1px solid var(--line); border-radius:14px; padding:12px 8px; background:var(--panel);
   text-align:center;
@@ -400,6 +400,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       <div class="sig-stat"><div class="n" id="statChapters">&hellip;</div><div class="l">Chapters Live</div></div>
       <div class="sig-stat"><div class="n" id="statQuestions">400+</div><div class="l">Practice Questions</div></div>
       <div class="sig-stat"><div class="n" id="statSessions">&ndash;</div><div class="l">Your Sessions Logged</div></div>
+      <button id="studyTimerBtn" class="share-corner-btn" style="right:38px;" title="Study Timer (Pomodoro)" aria-label="Open study timer" aria-pressed="false">&#9200;</button>
       <button id="shareAppBtn" class="share-corner-btn" title="Show QR code &amp; share this app" aria-label="Show QR code and share this app">&#128228;</button>
     </div>
     <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle light/dark theme">&#127769;</button>
@@ -407,7 +408,6 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     <button id="indexHardRefreshBtn" class="theme-toggle-btn" style="right:66px;" onclick="indexHardRefresh()" title="Force-refresh this page (clears any cached copy)" aria-label="Force-refresh this page">&#128260;</button>
     <button id="pu2ChapterJumpBtn" class="theme-toggle-btn" style="right:108px;" title="Jump to a live PU-II chapter" aria-label="Jump to a live PU-II chapter" aria-haspopup="true" aria-expanded="false">&#127942;</button>
     <button id="pu1ChapterJumpBtn" class="theme-toggle-btn" style="right:150px;" title="Jump to a live PU-I chapter" aria-label="Jump to a live PU-I chapter" aria-haspopup="true" aria-expanded="false">&#127891;</button>
-    <a href="dashboard.html" class="theme-toggle-btn" style="right:192px; color:var(--ink); text-decoration:none;" title="Try the new alternative dashboard" aria-label="Try the new alternative dashboard">&#128202;</a>
   </div>
 
   <div id="chapterJumpMenu" class="chapter-jump-menu" role="menu"></div>
@@ -435,7 +435,6 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
   </div>
 
   <div id="statWidgets" class="widget-row">
-    <button id="studyTimerBtn" class="share-corner-btn" title="Study Timer (Pomodoro)" aria-label="Open study timer" aria-pressed="false">&#9200;</button>
     <div class="widget-tile"><div class="wt-icon">🔥</div><div class="wt-n" id="wtStreak">–</div><div class="wt-l">Day Streak</div></div>
     <div class="widget-tile"><div class="wt-icon">📚</div><div class="wt-n" id="wtChapters">–</div><div class="wt-l">Chapters Started</div></div>
     <div class="widget-tile"><div class="wt-icon">⭐</div><div class="wt-n" id="wtAvg">–</div><div class="wt-l">Avg Score</div></div>
@@ -501,6 +500,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       </div>
       <div class="study-timer-display" id="studyTimerDisplay">25:00</div>
       <div class="study-timer-mode" id="studyTimerModeLabel">🎯 Focus session</div>
+      <a href="dashboard.html" style="display:block; margin-top:14px; font-size:11.5px; font-weight:700; color:var(--teal); text-decoration:none;">&#128202; Try the new alternative dashboard &rarr;</a>
       <div class="qr-modal-btn-row">
         <button type="button" class="announce-modal-later-btn" id="studyTimerCloseBtn">Close</button>
         <button type="button" class="qr-modal-share-btn" id="studyTimerResetBtn">&#8635; Reset</button>
