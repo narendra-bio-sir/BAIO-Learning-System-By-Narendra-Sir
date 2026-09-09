@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="BAIO">
-<title>BAIO Learning System — Biology All In One</title>
+<title>BAIO Dashboard — Biology All In One</title>
 <script>
 (function(){
   try{
@@ -62,12 +62,19 @@ header{padding:34px 0 22px; text-align:center;}
 .brand{font-size:26px; font-weight:700; margin-top:8px; letter-spacing:-0.5px;}
 .brand span{color:var(--gold);}
 .tag{font-size:13px; color:var(--ink-dim); margin-top:6px; font-weight:500;}
-.theme-toggle-btn{
-  position:absolute; bottom:26px; right:24px; width:34px; height:34px; border-radius:50%;
-  border:1px solid var(--line); background:var(--panel2); font-size:15px; cursor:pointer;
-  display:flex; align-items:center; justify-content:center; z-index:2;
+.icon-row{display:flex; justify-content:center; gap:8px; margin:14px 0 0; flex-wrap:wrap; position:relative;}
+.theme-toggle-btn, .share-corner-btn{
+  width:34px; height:34px; border-radius:50%;
+  border:1px solid var(--line); background:var(--panel2); color:var(--ink); font-size:15px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; flex:0 0 auto; position:relative;
 }
 .theme-toggle-btn[aria-pressed="true"], .share-corner-btn[aria-pressed="true"]{border-color:var(--gold); box-shadow:0 0 0 2px rgba(212,175,55,0.25);}
+.icon-row .tip{
+  position:absolute; bottom:calc(100% + 7px); left:50%; transform:translateX(-50%);
+  background:var(--ink); color:var(--navy); font-size:10.5px; font-weight:600; white-space:nowrap;
+  padding:5px 9px; border-radius:7px; opacity:0; pointer-events:none; transition:opacity .15s; z-index:5;
+}
+.icon-row button:hover .tip, .icon-row button:focus-visible .tip{opacity:1;}
 
 .hero{
   border:1px solid var(--line); border-radius:20px; padding:26px 24px; margin-top:26px;
@@ -80,17 +87,7 @@ header{padding:34px 0 22px; text-align:center;}
 }
 .hero h1{font-size:21px; margin:0 0 8px; line-height:1.35; position:relative;}
 .hero p{font-size:13.5px; color:var(--ink-dim); line-height:1.7; margin:0; max-width:520px; position:relative;}
-.hero .signature{
-  margin-top:18px; display:flex; gap:18px; flex-wrap:wrap; position:relative;
-}
-.sig-stat{min-width:90px;}
-.sig-stat .n{font-size:22px; font-weight:700; color:var(--gold);}
-.sig-stat .l{font-size:10.5px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:0.6px; margin-top:2px;}
-.share-corner-btn{
-  position:absolute; top:4px; right:0; width:32px; height:32px; border-radius:50%;
-  border:1px solid var(--line); background:var(--panel2); color:var(--ink); font-size:14px; cursor:pointer;
-  display:flex; align-items:center; justify-content:center;
-}
+.hero .tile-row{margin-top:18px; position:relative;}
 .qr-modal-btn-row{display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:10px;}
 .qr-modal-share-btn{
   background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#0B1B14; border:none;
@@ -140,12 +137,6 @@ header{padding:34px 0 22px; text-align:center;}
 
 .catalog{display:grid; grid-template-columns:1fr; gap:14px;}
 @media(min-width:640px){ .catalog{grid-template-columns:1fr 1fr;} }
-/* From ~500px wide, the heading/paragraph wrap onto fewer lines and the
-   hero card shrinks enough that the top icon row (share-corner-btn,
-   anchored to the stats row) and the bottom icon row (theme-toggle-btn,
-   anchored to the card's bottom edge) collide. A min-height keeps them
-   apart without moving either group from its usual spot. */
-@media(min-width:480px){ .hero{min-height:340px;} }
 
 .slide-card{
   position:relative; border:1px solid var(--line); border-radius:16px; background:var(--panel);
@@ -172,14 +163,6 @@ header{padding:34px 0 22px; text-align:center;}
 .slide-card.soon:hover{ transform:none; border-color:var(--line); box-shadow:none; }
 .slide-card.soon .tab{background:var(--panel2); color:var(--ink-dim);}
 
-.quick-actions-row{display:flex; flex-wrap:wrap; gap:12px; margin-top:18px;}
-.quick-action-btn{
-  flex:1 1 calc(50% - 6px); min-width:140px; text-align:center; padding:13px 16px; border-radius:12px;
-  border:1px solid var(--gold); background:transparent; color:var(--gold);
-  font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13.5px;
-  text-decoration:none; cursor:pointer; transition:background .15s ease;
-}
-.quick-action-btn:hover{background:rgba(212,175,55,0.08);}
 @keyframes bellRing{
   0%, 45%, 100%{ transform:rotate(0); }
   5%{ transform:rotate(15deg); } 10%{ transform:rotate(-13deg); }
@@ -230,7 +213,6 @@ header{padding:34px 0 22px; text-align:center;}
   background:none; border:none; color:var(--ink-dim); font-weight:800; font-size:16px;
   cursor:pointer; line-height:1; padding:2px 4px; flex:0 0 auto;
 }
-@media(max-width:420px){ .quick-actions-row{flex-direction:column;} }
 
 .progress-strip{
   border:1px solid var(--line); border-radius:14px; padding:16px 18px; background:var(--panel2);
@@ -374,6 +356,86 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
   .catalog{grid-template-columns:1fr 1fr 1fr;}
   .qr-corner-widget{display:block;}
 }
+
+/* ============ DASHBOARD (alt homepage) additions ============ */
+.dash-banner{
+  display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+  background:rgba(46,230,197,0.08); border:1px solid var(--line); border-radius:12px;
+  padding:10px 14px; margin:14px 0 0; font-size:12px; color:var(--ink-dim);
+}
+.dash-banner a{color:var(--teal); font-weight:700; text-decoration:none;}
+.mono{font-variant-numeric:tabular-nums; font-family:'Space Grotesk',monospace;}
+
+.tile-row{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+.tile-row + .tile-row{margin-top:8px;}
+.tile{background:var(--panel2); border:1px solid var(--line); border-radius:11px; padding:10px 11px;}
+.tile .n{font-size:17px; font-weight:700; color:var(--gold);}
+.tile .l{font-size:9.5px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:var(--ink-dim); margin-top:3px;}
+
+.dash-section-title{display:flex; align-items:baseline; justify-content:space-between; margin:26px 0 12px;}
+.dash-section-title h3{font-size:15px; font-weight:700; font-family:'Space Grotesk',sans-serif;}
+.dash-section-title .sub{font-size:11px; color:var(--ink-dim); font-weight:600;}
+
+.quick-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+.quick-tile{
+  display:flex; flex-direction:column; align-items:center; gap:6px; text-align:center;
+  background:var(--panel2); border:1px solid var(--line); border-radius:12px; padding:12px 8px 10px;
+  cursor:pointer; font-family:inherit; color:var(--ink); text-decoration:none; position:relative;
+}
+.quick-tile .ico{font-size:18px;}
+.quick-tile .lbl{font-size:10.5px; font-weight:700; line-height:1.25;}
+@media(max-width:420px){ .quick-grid{grid-template-columns:repeat(2,1fr);} }
+
+.level-tabs{display:flex; gap:8px; margin-bottom:12px;}
+.level-tabs button{
+  flex:1; border:1px solid var(--line); background:var(--panel2); color:var(--ink-dim);
+  font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12.5px; padding:9px 0; border-radius:10px; cursor:pointer;
+}
+.level-tabs button.active{background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#1a1406; border-color:var(--gold);}
+
+.scan-tabs{display:flex; gap:16px; margin-bottom:10px; overflow-x:auto; scrollbar-width:none; padding-bottom:2px;}
+.scan-tabs::-webkit-scrollbar{display:none;}
+.scan-tabs button{
+  flex:none; border:none; background:none; color:var(--ink-dim); font-size:12.5px; font-weight:700; padding:6px 0;
+  cursor:pointer; position:relative; white-space:nowrap; font-family:inherit;
+}
+.scan-tabs button.active{color:var(--ink);}
+.scan-tabs button.active:after{content:''; position:absolute; left:0; right:0; bottom:-3px; height:2px; border-radius:2px;}
+.scan-tabs button.active[data-tone="ok"]:after{background:var(--ok);}
+.scan-tabs button.active[data-tone="danger"]:after{background:#E7695B;}
+.scan-tabs button.active[data-tone="gold"]:after{background:var(--gold);}
+.scan-tabs button.active[data-tone="teal"]:after{background:var(--teal);}
+
+.ch-row{display:flex; align-items:center; gap:11px; padding:10px 0; border-bottom:1px solid var(--line); text-decoration:none; color:inherit;}
+.ch-row:last-child{border-bottom:none;}
+.ch-ico{
+  flex:none; width:32px; height:32px; border-radius:9px; background:var(--panel2); border:1px solid var(--line);
+  display:flex; align-items:center; justify-content:center; font-size:15px;
+}
+.ch-main{flex:1; min-width:0;}
+.ch-main .nm{font-size:13px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.ch-main .meta{font-size:10.5px; color:var(--ink-dim); margin-top:2px;}
+.ch-side{flex:none; text-align:right;}
+.ch-side .pct{font-size:13px; font-weight:700;}
+.ch-side .delta{font-size:10.5px; font-weight:600; margin-top:2px;}
+.ch-side .delta.up{color:var(--ok);} .ch-side .delta.down{color:#E7695B;} .ch-side .delta.flat{color:var(--ink-dim);}
+.scan-empty{font-size:12.5px; color:var(--ink-dim); padding:14px 0; text-align:center;}
+
+.signal{
+  margin-top:22px; border-radius:15px; padding:16px 17px 15px; border:1px solid var(--line);
+  background:linear-gradient(135deg, rgba(231,105,91,0.10), transparent 65%);
+}
+.signal-top{display:flex; justify-content:space-between; align-items:center;}
+.signal-top .t{font-size:13.5px; font-weight:700; font-family:'Space Grotesk',sans-serif;}
+.signal-top .badge{
+  font-size:9.5px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:#fff;
+  background:#E7695B; padding:3px 9px; border-radius:20px;
+}
+.signal-sub{font-size:11px; color:var(--ink-dim); margin:3px 0 12px;}
+.signal-body{display:flex; align-items:center; gap:14px;}
+.signal-info .nm{font-size:13px; font-weight:700; text-decoration:none; color:var(--ink);}
+.signal-info .path{font-size:11px; color:var(--ink-dim); margin-top:1px;}
+.signal-info .score{font-size:12px; font-weight:700; color:#E7695B; margin-top:5px;}
 </style>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN_HERE"}'></script>
 </head>
@@ -386,7 +448,21 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     <div class="brand">Biology All In One <span>(BAIO)</span></div>
     <div class="tag">Founder &amp; CEO &ndash; Narendra Naslai</div>
     <div class="tag" style="margin-top:2px; letter-spacing:1px; font-size:11px;">Learn. Analyse. Improve. Achieve.</div>
+    <div class="icon-row">
+      <button id="studyTimerBtn" class="share-corner-btn" title="Study Timer (Pomodoro)" aria-label="Open study timer" aria-pressed="false">&#9200;<span class="tip">Study Timer</span></button>
+      <button id="shareAppBtn" class="share-corner-btn" title="Show QR code &amp; share this app" aria-label="Show QR code and share this app">&#128228;<span class="tip">Share / QR code</span></button>
+      <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle light/dark theme">&#127769;<span class="tip">Toggle theme</span></button>
+      <script>(function(){try{var t=localStorage.getItem('baio_theme')||'light';if(t==='light')document.getElementById('themeToggleBtn').innerHTML='&#9728;️';}catch(e){}})();</script>
+      <button id="indexHardRefreshBtn" class="theme-toggle-btn" onclick="indexHardRefresh()" title="Force-refresh this page (clears any cached copy)" aria-label="Force-refresh this page">&#128260;<span class="tip">Force-refresh</span></button>
+      <button id="pu2ChapterJumpBtn" class="theme-toggle-btn" title="Jump to a live PU-II chapter" aria-label="Jump to a live PU-II chapter" aria-haspopup="true" aria-expanded="false">&#127942;<span class="tip">Jump: PU-II</span></button>
+      <button id="pu1ChapterJumpBtn" class="theme-toggle-btn" title="Jump to a live PU-I chapter" aria-label="Jump to a live PU-I chapter" aria-haspopup="true" aria-expanded="false">&#127891;<span class="tip">Jump: PU-I</span></button>
+    </div>
   </header>
+
+  <div class="dash-banner">
+    <span>📊 You're viewing the <b>alternative dashboard</b> — same account, same progress.</span>
+    <a href="index.html">Back to classic home &rarr;</a>
+  </div>
 
   <div id="announcementBanner" class="announce-banner" style="display:none;">
     <a href="announcements.html" class="announce-banner-link">📢 <strong id="announceBannerText">New announcement waiting</strong> &mdash; tap to read</a>
@@ -396,18 +472,11 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
   <div class="hero">
     <h1>One place for every chapter, built the same way each time.</h1>
     <p>Study notes, flashcards, MCQs, NEET-style practice, paper generation, and your own notes &mdash; consistent across every chapter, so once you know your way around one, you know your way around all of them.</p>
-    <div class="signature">
-      <div class="sig-stat"><div class="n" id="statChapters">&hellip;</div><div class="l">Chapters Live</div></div>
-      <div class="sig-stat"><div class="n" id="statQuestions">400+</div><div class="l">Practice Questions</div></div>
-      <div class="sig-stat"><div class="n" id="statSessions">&ndash;</div><div class="l">Your Sessions Logged</div></div>
-      <button id="studyTimerBtn" class="share-corner-btn" style="right:38px;" title="Study Timer (Pomodoro)" aria-label="Open study timer" aria-pressed="false">&#9200;</button>
-      <button id="shareAppBtn" class="share-corner-btn" title="Show QR code &amp; share this app" aria-label="Show QR code and share this app">&#128228;</button>
+    <div class="tile-row">
+      <div class="tile"><div class="n mono" id="statChapters">&hellip;</div><div class="l">Chapters Live</div></div>
+      <div class="tile"><div class="n mono" id="statQuestions">400+</div><div class="l">Practice Qs</div></div>
+      <div class="tile"><div class="n mono" id="statSessions">&ndash;</div><div class="l">Sessions Logged</div></div>
     </div>
-    <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle light/dark theme">&#127769;</button>
-    <script>(function(){try{var t=localStorage.getItem('baio_theme')||'light';if(t==='light')document.getElementById('themeToggleBtn').innerHTML='&#9728;️';}catch(e){}})();</script>
-    <button id="indexHardRefreshBtn" class="theme-toggle-btn" style="right:66px;" onclick="indexHardRefresh()" title="Force-refresh this page (clears any cached copy)" aria-label="Force-refresh this page">&#128260;</button>
-    <button id="pu2ChapterJumpBtn" class="theme-toggle-btn" style="right:108px;" title="Jump to a live PU-II chapter" aria-label="Jump to a live PU-II chapter" aria-haspopup="true" aria-expanded="false">&#127942;</button>
-    <button id="pu1ChapterJumpBtn" class="theme-toggle-btn" style="right:150px;" title="Jump to a live PU-I chapter" aria-label="Jump to a live PU-I chapter" aria-haspopup="true" aria-expanded="false">&#127891;</button>
   </div>
 
   <div id="chapterJumpMenu" class="chapter-jump-menu" role="menu"></div>
@@ -446,18 +515,44 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     <div class="sp-sub" id="spSub"></div>
   </div>
 
-  <div class="quick-actions-row">
-    <a href="analytics.html" class="quick-action-btn">📊 Performance Analysis</a>
-    <a href="timetable.html" class="quick-action-btn">🗓️ Time Table</a>
-    <a href="announcements.html" class="quick-action-btn"><span class="bell-wrap"><span id="bellIcon">🔔</span><span id="bellCount" class="bell-count"></span></span> Announcements</a>
-    <a href="install-guide.html" class="quick-action-btn">📲 Install Guide</a>
-    <a href="guide.html" class="quick-action-btn">📘 Student Guide</a>
-    <a href="app-walkthrough.html" class="quick-action-btn">🧭 App Walkthrough</a>
-    <a href="ppt-generator.html" class="quick-action-btn">🖥️ PPT Generator</a>
-    <a href="study-tips.html" class="quick-action-btn">🎯 Study Tips</a>
-    <a href="practical-plasmolysis.html" class="quick-action-btn">🔬 Practicals</a>
-    <a href="about.html" class="quick-action-btn">ℹ️ About</a>
-    <a href="call-whatsapp-help.html" class="quick-action-btn">📞 Call &amp; WhatsApp Help</a>
+  <div class="dash-section-title"><h3>Quick Actions</h3></div>
+  <div class="quick-grid">
+    <a href="analytics.html" class="quick-tile"><span class="ico">📊</span><span class="lbl">Performance Analysis</span></a>
+    <a href="timetable.html" class="quick-tile"><span class="ico">🗓️</span><span class="lbl">Time Table</span></a>
+    <a href="announcements.html" class="quick-tile"><span class="bell-wrap ico"><span id="bellIcon">🔔</span><span id="bellCount" class="bell-count"></span></span><span class="lbl">Announcements</span></a>
+    <a href="install-guide.html" class="quick-tile"><span class="ico">📲</span><span class="lbl">Install Guide</span></a>
+    <a href="guide.html" class="quick-tile"><span class="ico">📘</span><span class="lbl">Student Guide</span></a>
+    <a href="app-walkthrough.html" class="quick-tile"><span class="ico">🧭</span><span class="lbl">App Walkthrough</span></a>
+    <a href="ppt-generator.html" class="quick-tile"><span class="ico">🖥️</span><span class="lbl">PPT Generator</span></a>
+    <a href="study-tips.html" class="quick-tile"><span class="ico">🎯</span><span class="lbl">Study Tips</span></a>
+    <a href="practical-plasmolysis.html" class="quick-tile"><span class="ico">🔬</span><span class="lbl">Practicals</span></a>
+    <a href="about.html" class="quick-tile"><span class="ico">ℹ️</span><span class="lbl">About</span></a>
+    <a href="call-whatsapp-help.html" class="quick-tile"><span class="ico">📞</span><span class="lbl">Call &amp; WhatsApp</span></a>
+  </div>
+
+  <div class="dash-section-title"><h3>Chapter Scanners</h3><span class="sub">Based on your own topic-level quiz mastery</span></div>
+  <div class="level-tabs" id="levelTabs">
+    <button class="active" data-level="PUC-1">PU-I</button>
+    <button data-level="PUC-2">PU-II</button>
+  </div>
+  <div class="scan-tabs" id="scanTabs">
+    <button class="active" data-tone="ok" data-scan="up">🚀 Improving Fastest</button>
+    <button data-tone="danger" data-scan="down">⚠️ Needing Attention</button>
+    <button data-tone="gold" data-scan="new">🆕 Recently Updated</button>
+    <button data-tone="teal" data-scan="volume">🔥 Most Practiced</button>
+  </div>
+  <div id="scanList"></div>
+
+  <div class="signal" id="studySignal" style="display:none;">
+    <div class="signal-top"><div class="t">Study Signal</div><div class="badge">Auto-flagged</div></div>
+    <div class="signal-sub">Your single weakest topic, pulled out from a chapter average</div>
+    <div class="signal-body">
+      <div class="signal-info">
+        <a class="nm" id="signalTopic" href="#"></a>
+        <div class="path" id="signalChapter"></div>
+        <div class="score mono" id="signalScore"></div>
+      </div>
+    </div>
   </div>
 
   <div id="announcementModalOverlay" class="announce-modal-overlay" style="display:none;">
@@ -500,7 +595,6 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       </div>
       <div class="study-timer-display" id="studyTimerDisplay">25:00</div>
       <div class="study-timer-mode" id="studyTimerModeLabel">🎯 Focus session</div>
-      <a href="dashboard.html" style="display:block; margin-top:14px; font-size:11.5px; font-weight:700; color:var(--teal); text-decoration:none;">&#128202; Try the new alternative dashboard &rarr;</a>
       <div class="qr-modal-btn-row">
         <button type="button" class="announce-modal-later-btn" id="studyTimerCloseBtn">Close</button>
         <button type="button" class="qr-modal-share-btn" id="studyTimerResetBtn">&#8635; Reset</button>
@@ -2019,6 +2113,150 @@ const MOTIVATION_QUOTES = [
   document.getElementById('spPct').textContent = pct + '%';
   document.getElementById('spSub').textContent = totalMastered + ' of ' + totalTopics + ' topics mastered (90%+ scores) across live chapters';
   document.getElementById('syllabusProgress').style.display = 'block';
+})();
+
+/* Chapter Scanners + Study Signal: real per-chapter, per-topic mastery
+   computed from this browser's own quiz logs - same getRawLog/
+   getTopicMasteryFromLog helpers and >85% threshold as the mastery bar
+   above, just broken down per chapter instead of summed across all of
+   them, plus a week-old snapshot (for "gained this week") and the most
+   recent log date (for "idle N days"). */
+(function(){
+  const levelTabs = document.getElementById('levelTabs');
+  const scanTabs = document.getElementById('scanTabs');
+  const scanList = document.getElementById('scanList');
+  if(!levelTabs || !scanTabs || !scanList) return;
+
+  const DAY_MS = 86400000;
+  const weekAgo = new Date(Date.now() - 7 * DAY_MS);
+
+  // Which chapters got new worksheets/content recently - this is about
+  // site content, not a student's own activity, so it can't be derived
+  // from their local log. Short hand-maintained list instead.
+  const RECENTLY_UPDATED = {
+    pu1ch8_cell_progress_v1: '8 worksheets added',
+    pu1ch6_anatomy_progress_v1: '3 worksheets added'
+  };
+
+  function daysSince(date){
+    const a = new Date(); a.setHours(0,0,0,0);
+    const b = new Date(date); b.setHours(0,0,0,0);
+    return Math.round((a - b) / DAY_MS);
+  }
+
+  function masteredCount(quizLog, cutoff){
+    const best = {};
+    quizLog.forEach(l => {
+      if(!l.topicScope) return;
+      const d = new Date(l.date);
+      if(isNaN(d.getTime()) || (cutoff && d > cutoff)) return;
+      if(!best[l.topicScope] || l.pct > best[l.topicScope]) best[l.topicScope] = l.pct;
+    });
+    return Object.values(best).filter(p => p > 85).length;
+  }
+
+  function chapterStats(ch){
+    const log = getRawLog(ch.progressKey).filter(l => l && l.date);
+    const quizLog = log.filter(l => l.type === 'MCQ Quiz');
+    const topicCount = ch.topicCount || 8;
+    const masteredNow = masteredCount(quizLog, null);
+    const masteredWeekAgo = masteredCount(quizLog, weekAgo);
+    let lastDate = null;
+    log.forEach(l => { const d = new Date(l.date); if(!isNaN(d.getTime()) && (!lastDate || d > lastDate)) lastDate = d; });
+    return {
+      pctNow: Math.round((masteredNow / topicCount) * 100),
+      deltaTopics: masteredNow - masteredWeekAgo,
+      idleDays: lastDate ? daysSince(lastDate) : null,
+      quizAttempts: quizLog.length,
+      hasActivity: log.length > 0
+    };
+  }
+
+  function rowHtml(ch, s, headline, delta, deltaTone){
+    return '<a class="ch-row" href="' + ch.href + '">' +
+      '<div class="ch-ico">' + (ch.icon || '📘') + '</div>' +
+      '<div class="ch-main"><div class="nm">' + ch.title + '</div><div class="meta">' + (ch.num) + '</div></div>' +
+      '<div class="ch-side"><div class="pct mono">' + headline + '</div><div class="delta mono ' + deltaTone + '">' + delta + '</div></div>' +
+    '</a>';
+  }
+
+  function render(){
+    const level = levelTabs.querySelector('button.active').getAttribute('data-level');
+    const scan = scanTabs.querySelector('button.active').getAttribute('data-scan');
+    const chapters = CHAPTERS.filter(ch => ch.live && ch.puc === level);
+    const withStats = chapters.map(ch => ({ ch: ch, s: chapterStats(ch) }));
+    let rows = [];
+
+    if(scan === 'up'){
+      rows = withStats.filter(x => x.s.deltaTopics > 0)
+        .sort((a,b) => b.s.deltaTopics - a.s.deltaTopics)
+        .slice(0,5)
+        .map(x => rowHtml(x.ch, x.s, x.s.pctNow + '%', '+' + x.s.deltaTopics + ' topic' + (x.s.deltaTopics>1?'s':'') + ' this wk', 'up'));
+      if(!rows.length) rows = ['<div class="scan-empty">No chapter gained mastery in the last 7 days yet — keep going!</div>'];
+    } else if(scan === 'down'){
+      rows = withStats.sort((a,b) => a.s.pctNow - b.s.pctNow)
+        .slice(0,5)
+        .map(x => {
+          const meta = !x.s.hasActivity ? 'Not started yet'
+            : x.s.idleDays > 0 ? 'Idle ' + x.s.idleDays + ' day' + (x.s.idleDays>1?'s':'')
+            : x.s.deltaTopics < 0 ? (x.s.deltaTopics) + ' topic' + (x.s.deltaTopics<-1?'s':'') + ' this wk'
+            : 'Studied today';
+          const tone = x.s.deltaTopics < 0 ? 'down' : 'flat';
+          return rowHtml(x.ch, x.s, x.s.pctNow + '%', meta, tone);
+        });
+      if(!rows.length) rows = ['<div class="scan-empty">Nothing flagged — every live chapter here looks on track.</div>'];
+    } else if(scan === 'new'){
+      rows = chapters.filter(ch => RECENTLY_UPDATED[ch.progressKey])
+        .map(ch => rowHtml(ch, {}, 'NEW', RECENTLY_UPDATED[ch.progressKey], 'flat'));
+      if(!rows.length) rows = ['<div class="scan-empty">Nothing recently updated in this section.</div>'];
+    } else if(scan === 'volume'){
+      rows = withStats.filter(x => x.s.quizAttempts > 0)
+        .sort((a,b) => b.s.quizAttempts - a.s.quizAttempts)
+        .slice(0,5)
+        .map(x => rowHtml(x.ch, x.s, String(x.s.quizAttempts), 'quiz attempts', 'flat'));
+      if(!rows.length) rows = ['<div class="scan-empty">No quiz attempts logged in this section yet.</div>'];
+    }
+    scanList.innerHTML = rows.join('');
+  }
+
+  levelTabs.addEventListener('click', function(e){
+    const b = e.target.closest('button[data-level]');
+    if(!b) return;
+    levelTabs.querySelectorAll('button').forEach(x => x.classList.toggle('active', x===b));
+    render();
+  });
+  scanTabs.addEventListener('click', function(e){
+    const b = e.target.closest('button[data-scan]');
+    if(!b) return;
+    scanTabs.querySelectorAll('button[data-scan]').forEach(x => x.classList.toggle('active', x===b));
+    render();
+  });
+  render();
+
+  /* Study Signal: the single lowest-scoring topic across every live
+     chapter this browser has attempted a topic-scoped quiz in. */
+  (function(){
+    const card = document.getElementById('studySignal');
+    if(!card) return;
+    let worst = null;
+    CHAPTERS.filter(ch => ch.live).forEach(ch => {
+      getRawLog(ch.progressKey).forEach(l => {
+        if(l.type !== 'MCQ Quiz' || !l.topicScope || !l.date) return;
+        const d = new Date(l.date);
+        if(isNaN(d.getTime())) return;
+        if(!worst || l.pct < worst.pct || (l.pct === worst.pct && d > worst.date)){
+          worst = { pct: l.pct, topic: l.topicScope, date: d, ch: ch };
+        }
+      });
+    });
+    if(!worst) return;
+    document.getElementById('signalTopic').textContent = worst.topic;
+    document.getElementById('signalTopic').setAttribute('href', worst.ch.href);
+    document.getElementById('signalChapter').textContent = worst.ch.title;
+    const idle = daysSince(worst.date);
+    document.getElementById('signalScore').textContent = 'Last quiz: ' + worst.pct + '% · ' + (idle<=0?'today':idle===1?'yesterday':idle+' days ago');
+    card.style.display = 'block';
+  })();
 })();
 
 /* Streak-milestone celebration: fires once per newly reached milestone,
