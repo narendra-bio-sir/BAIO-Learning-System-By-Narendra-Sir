@@ -1828,7 +1828,16 @@ document.addEventListener('DOMContentLoaded', function(){
     <div id="premiumStatusRowContainer"></div>
 
     <div class="dl-section-title">Study Material</div>
-    <div style="background:rgba(227,175,67,0.08); border:1px solid rgba(227,175,67,0.25); border-radius:10px; padding:10px 12px; margin-bottom:12px; font-size:12px; color:var(--text-dim);">📄 <b>Coming soon</b> &ndash; Narendra Sir's typed &amp; complete study notes PDFs for this chapter haven't been added yet.</div>
+    <div class="dl-row" data-pdf="10_Typed_Notes.pdf">
+      <div class="dl-info">
+        <div class="dl-title">Narendra Sir's Typed Notes</div>
+        <div class="dl-sub">Full chapter, original typed format</div>
+      </div>
+      <div class="dl-actions">
+        <button class="btn secondary dl-view-btn">View</button>
+        <button class="btn dl-btn">Download</button>
+      </div>
+    </div>
     <div id="hwRowContainer"></div>
     <div id="revNotesRowContainer"></div>
     <div id="dlTopicList"></div>
@@ -4077,7 +4086,9 @@ const PREMIUM_UNLOCK_LOOKUP = {};
 const PREMIUM_LOCKED_TABS = ['mindmap', 'classppt', 'quiz', 'adv', 'kcet', 'writeit', 'papergen', 'boardimp', 'podcast'];
 const PREMIUM_TAB_LABELS = {mindmap:'Mind Map', classppt:'Class Presentation', quiz:'MCQ Quiz', adv:'NEET Practice', kcet:'KCET Practice', writeit:'Answer Practice', papergen:'Paper Generator', boardimp:'Board Important', podcast:'Audio Podcast'};
 
-const PDF_FILES = {};
+const PDF_FILES = {
+  "10_Typed_Notes.pdf": {"label": "Narendra Sir's Typed Notes.pdf", "b64": "pu2-ch8-assets/pdf-Typed_Notes.pdf"}
+};
 const TOPIC_WORKSHEET_FILES = {};
 
 const PODCASTS_CH8 = {
