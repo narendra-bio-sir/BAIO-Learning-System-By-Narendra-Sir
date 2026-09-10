@@ -3647,6 +3647,116 @@ function revisionNotesRowHtmlCh2(){
     + '<div class="dl-sub">Condensed quick-revision &amp; concept summary notes for the whole chapter</div></div>'
     + '<div class="dl-actions"><button class="btn secondary" onclick="viewPdf(\'00b_Revision_Notes.pdf\')">View</button><button class="btn" onclick="downloadPdf(\'00b_Revision_Notes.pdf\', this)">Download</button></div></div>';
 }
+/* =========================================================
+   HANDWRITTEN NOTES LOCK SYSTEM
+   The actual PDF hasn't been added yet (hwRowHtml() below always shows
+   "Coming soon" for now), but the unlock-code backend is wired up ahead of
+   time — same as PU2 Chapter 4 and 6 — so codes can already be generated
+   in ns-gen.html and will work the moment the real notes are dropped in
+   and hwRowHtml() is swapped for the full unlock-form version.
+   ========================================================= */
+const HW_KEY = '11_Handwritten_Notes.pdf';
+const HW_UNLOCK_KEY = 'pu2ch8_hw_unlock';
+const HW_SCORE_THRESHOLD = 290;
+const HW_MASTER_CODE = 'NS-MASTER-2027';
+
+/* ---------------- PAYMENT UNLOCK (Razorpay Payment Link, no backend, no script loading) ----------------
+   1. In your Razorpay Dashboard, open your Chapter 8 Payment Button/Page and copy its
+      direct link (looks like "https://rzp.io/l/xxxxxxx" or "https://rzp.io/i/xxxxxxx").
+   2. Paste that link below. That's the only setup step.
+   This is a plain link (not a script widget), so it can never fail to "load" the way the
+   old embedded button could -- it just opens Razorpay's secure payment page directly. */
+const HW_UNLOCK_PRICE_RUPEES = 100; // just for the on-screen label; the real price is set on the Razorpay link itself
+const RAZORPAY_PAYMENT_LINK = 'https://razorpay.me/@narendrabiosir?amount=ZFm4ghdmeB6pF5PK8Ki64w%3D%3D';
+
+function hwInjectPaymentButton(){
+  var container = document.getElementById('rzpButtonContainer');
+  if(!container) return;
+  if(RAZORPAY_PAYMENT_LINK.indexOf('YOUR_LINK_HERE') !== -1){
+    container.innerHTML = '<div style="font-size:11px; color:var(--text-dim);">Payment isn’t set up yet — Narendra Sir needs to add his Razorpay payment link here.</div>';
+    return;
+  }
+  container.innerHTML = '<a href="' + RAZORPAY_PAYMENT_LINK + '" target="_blank" rel="noopener" class="btn" style="display:inline-block; text-decoration:none; background:linear-gradient(135deg,#0F8F7A,#0B6F5E); border:none; color:#fff;">💳 Pay ₹' + HW_UNLOCK_PRICE_RUPEES + ' to Unlock</a>';
+}
+const UNLOCK_LOOKUP = {};
+
+function getHwUnlock(){
+  try{ return JSON.parse(localStorage.getItem(HW_UNLOCK_KEY) || 'null'); }catch(e){ return null; }
+}
+function setHwUnlock(method, extra){
+  try{ localStorage.setItem(HW_UNLOCK_KEY, JSON.stringify(Object.assign({unlocked:true, method:method, ts:Date.now()}, extra||{}))); }catch(e){}
+}
+function reLockHw(){
+  try{ localStorage.removeItem(HW_UNLOCK_KEY); }catch(e){}
+  if(document.getElementById('panel-dl').classList.contains('active')) try{ renderDownloadsList(); }catch(e){ console.error('renderDownloadsList failed:', e); }
+}
+window.reLockHw = reLockHw;
+function hwQualifies(){
+  const unlock = getHwUnlock();
+  return !!(unlock && unlock.unlocked && (unlock.method === 'master' || unlock.method === 'code'));
+}
+function hwSubmitUnlock(){
+  const nameInput = document.getElementById('hwNameInput');
+  const rollInput = document.getElementById('hwRollInput');
+  const codeInput = document.getElementById('hwCodeInput');
+  const sectionInput = document.getElementById('hwSectionInput');
+  const msgEl = document.getElementById('hwUnlockMsg');
+  const name = nameInput ? nameInput.value.trim() : '';
+  const roll = rollInput.value.trim();
+  const section = sectionInput.value.trim();
+  const code = codeInput.value.trim().toUpperCase();
+  if(!code){ msgEl.textContent = 'Please enter an unlock code.'; msgEl.className='hw-msg bad'; return; }
+  if(code === HW_MASTER_CODE.toUpperCase()){
+    setHwUnlock('master', {roll:roll || 'master-access'});
+    try{ renderDownloadsList(); }catch(e){ console.error('renderDownloadsList failed:', e); }
+    return;
+  }  if(!roll || !section){ msgEl.textContent = 'Please fill in section and roll number (or use the master code alone).'; msgEl.className='hw-msg bad'; return; }
+  const key = hwUnlockLookupKey(section, roll);
+  const entry = UNLOCK_LOOKUP[key];
+  if(entry && entry.code.toUpperCase() === code){
+    setHwUnlock('code', {roll:roll, section:section});
+    try{ renderDownloadsList(); }catch(e){ console.error('renderDownloadsList failed:', e); }
+    return;
+  }
+  if(name && computeStudentCode(name, roll, section, 'CH8-PU2-HWNOTES') === code){
+    setHwUnlock('code', {roll:roll, section:section, name:name});
+    try{ renderDownloadsList(); }catch(e){ console.error('renderDownloadsList failed:', e); }
+    return;
+  }
+  if(!name){
+    msgEl.textContent = 'That roll number / code combination was not recognized. If Narendra Sir gave you a new-style code, please also enter your full name above.';
+  } else {
+    msgEl.textContent = 'That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir.';
+  }
+  msgEl.className = 'hw-msg bad';
+}
+window.hwSubmitUnlock = hwSubmitUnlock;
+function hwDownloadBlocked(){
+  alert('Viewing or downloading the handwritten notes needs a unique roll-number code (or the master code) from Narendra Sir. Score ' + HW_SCORE_THRESHOLD + '+ in a single NEET Practice session, then use "Share Report Card" to send your report card to his social media handle to get your code. Your best score so far: ' + bestNeetScoreCh2() + '.');
+}
+function hwViewNotes(){
+  if(!hwQualifies()){ hwDownloadBlocked(); return; }
+  viewPdf(HW_KEY);
+}
+function hwDownloadNotes(){
+  if(!hwQualifies()){ hwDownloadBlocked(); return; }
+  downloadPdf(HW_KEY, document.getElementById('hwDlBtn'));
+}
+window.hwViewNotes = hwViewNotes; window.hwDownloadNotes = hwDownloadNotes;
+
+function hwPaymentWaLinkCh2(){
+  var profile = null;
+  try{ profile = JSON.parse(localStorage.getItem('baio_student') || 'null'); }catch(e){}
+  var name = profile && profile.name ? profile.name : '(please add your name)';
+  var roll = profile && profile.roll ? profile.roll : '(please add your roll number)';
+  var section = profile && profile.section ? profile.section : '(please add your section)';
+  var bestScore = bestNeetScoreCh2();
+  var msg = 'Hi Narendra Sir, here\'s my payment confirmation for the Chapter 8 handwritten notes unlock.\n\n'
+    + 'Name: ' + name + '\nRoll Number: ' + roll + '\nSection: ' + section
+    + '\nAmount Paid: ₹' + HW_UNLOCK_PRICE_RUPEES + '\nBest NEET Practice Score: ' + bestScore
+    + '\n\n(Attaching my payment screenshot below)';
+  return 'https://wa.me/919008968389?text=' + encodeURIComponent(msg);
+}
 function hwRowHtml(){
   return '<div style="background:rgba(227,175,67,0.08); border:1px solid rgba(227,175,67,0.25); border-radius:10px; padding:10px 12px; margin-bottom:12px; font-size:12px; color:var(--text-dim);">📝 <b>Coming soon</b> – Narendra Sir\'s handwritten notes for this chapter haven\'t been added yet.</div>';
 }
