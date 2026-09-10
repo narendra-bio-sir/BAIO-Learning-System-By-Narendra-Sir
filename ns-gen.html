@@ -191,7 +191,7 @@ input[type="checkbox"]{width:16px; height:16px; accent-color:var(--teal2); curso
       </div>
     </div>
     <div id="existingChapterCodesWrap" class="hidden" style="margin-top:16px;">
-      <h3 style="font-size:13px;">✅ Existing Chapter Codes (PU1 Ch2, PU1 Ch3, PU2 Ch4, PU1 Ch5, PU2 Ch9)</h3>
+      <h3 style="font-size:13px;">✅ Existing Chapter Codes (<span id="existingChapterListSingle">PU1 Ch2, PU1 Ch3, PU2 Ch4, PU1 Ch5, PU2 Ch9</span>)</h3>
       <div class="hint" style="margin-bottom:10px;">These are live right now &mdash; each one only unlocks its own chapter and content type for this exact name + roll + section. Tick which ones to share, then use a button below.</div>
       <div style="display:flex; gap:8px; margin-bottom:8px;">
         <button class="action-btn" onclick="toggleAllExistingCodes(true)">Select All</button>
@@ -210,7 +210,7 @@ input[type="checkbox"]{width:16px; height:16px; accent-color:var(--teal2); curso
     </div>
     <div id="singleChapterCodesWrap" class="hidden" style="margin-top:16px;">
       <h3 style="font-size:13px;">⚡ Upcoming Chapter Codes</h3>
-      <div class="hint" style="margin-bottom:10px;">These are for chapters that don't have a live unlock page yet — Chapter 10 onward. They will only work once you build that chapter's page using the matching formula (ask me when you're ready). <b>These do not apply to Chapter 2, 3, 4, 5, 6, or 9</b> — those already have their own real codes, shown in the Lookup tab.</div>
+      <div class="hint" style="margin-bottom:10px;">These are for chapters that don't have a live unlock page yet — Chapter 10 onward. They will only work once you build that chapter's page using the matching formula (ask me when you're ready). <b>These do not apply to Chapter <span id="existingChapterNumsSingle">2, 3, 4, 5, 6, or 9</span></b> — those already have their own real codes, shown in the Lookup tab.</div>
       <div id="singleChapterCodesTable"></div>
       <button class="btn secondary" style="margin-top:10px;" onclick="copySingleChapterCodesAsCSV()">📋 Copy All as CSV</button>
     </div>
@@ -224,7 +224,7 @@ Anjali Rao, 26MPU0018, Prime
 Kiran Kumar, 26MPU0042, Spark"></textarea>
     <div class="hint">Each line needs exactly 3 values separated by commas: Name, Roll Number, Section. Blank lines are ignored.</div>
     <label style="margin-top:14px;">⚡ Upcoming chapter codes to generate (optional)</label>
-    <div class="hint" style="margin-bottom:6px;">Report Card Password is always included. These checkboxes are for chapters without a live unlock page yet (Chapter 10+) — they won't work in Chapter 2, 3, 4, 5, 6, or 9, which already have their own real codes.</div>
+    <div class="hint" style="margin-bottom:6px;">Report Card Password is always included. These checkboxes are for chapters without a live unlock page yet (Chapter 10+) — they won't work in Chapter <span id="existingChapterNumsBulk">2, 3, 4, 5, 6, or 9</span>, which already have their own real codes.</div>
     <div id="bulkContentTypeChecks"></div>
     <button class="btn" onclick="generateBulk()" style="margin-top:12px;">Generate All Codes</button>
     <div id="bulkOutput"></div>
@@ -259,7 +259,7 @@ Kiran Kumar, 26MPU0042, Spark"></textarea>
     </div>
 
     <div id="existingMasterCodesWrap" class="hidden" style="margin-top:16px;">
-      <h3 style="font-size:13px;">✅ Existing Chapter Master Codes (PU1 Ch2, PU1 Ch3, PU2 Ch4, PU1 Ch5, PU2 Ch9)</h3>
+      <h3 style="font-size:13px;">✅ Existing Chapter Master Codes (<span id="existingChapterListMaster">PU1 Ch2, PU1 Ch3, PU2 Ch4, PU1 Ch5, PU2 Ch9</span>)</h3>
       <div class="hint" style="margin-bottom:10px;">Same label, one distinct code per chapter and content type &mdash; a Ch2 one won't work as a Ch3 one. Remember: to actually put one of these live, you'd still need to paste it into that chapter's own <code>HW_MASTER_CODE</code> / <code>PREMIUM_MASTER_CODE</code> constant &mdash; ask me when you're ready and I'll do it for you.</div>
       <div style="display:flex; gap:8px; margin-bottom:8px;">
         <button class="action-btn" onclick="toggleAllExistingMaster(true)">Select All</button>
@@ -388,7 +388,8 @@ function computeStudentCode(name, roll, section, contentKey){
 window.computeStudentCode = computeStudentCode;
 
 /* ---------------- UPCOMING CHAPTERS registry — for chapters that don't have a live
-   unlock system yet. PU1 Ch2, PU1 Ch3, PU2 Ch4, PU1 Ch5, and PU2 Ch9 are NOT listed here
+   unlock system yet. Chapters already listed in EXISTING_CONTENT_TYPES below (see the
+   existingChapterListText() helper for the current live set) are NOT listed here
    on purpose: those already
    have their own real, working codes hardcoded into each chapter's page (a different
    student database), and a deterministic code from this list would NOT match what
@@ -512,6 +513,7 @@ document.addEventListener('click', function(e){
 });
 document.addEventListener('DOMContentLoaded', function(){
   renderBulkContentTypeChecks();
+  renderExistingChapterSummaries();
   const nameInput = document.getElementById('lkName');
   if(nameInput){
     nameInput.addEventListener('keydown', function(e){
@@ -771,6 +773,47 @@ const EXISTING_CONTENT_TYPES = [
   { key: 'CH9-PREMIUM',  label: 'PU2 Chapter 9 \u2014 Premium Unlock Code' },
   { key: 'CH9-HWNOTES',  label: 'PU2 Chapter 9 \u2014 Handwritten Notes' },
 ];
+
+/* Derives the "these chapters already have live codes" summaries shown in a few places
+   (Single Student tab, Bulk tab, Master Codes tab) straight from EXISTING_CONTENT_TYPES,
+   so adding a chapter to the list above updates every mention automatically \u2014 nobody has
+   to remember to hunt down and edit each hardcoded "(PU1 Ch2, PU1 Ch3, ...)" string by hand. */
+function existingChapterEntries(){
+  const seen = new Set();
+  const out = [];
+  EXISTING_CONTENT_TYPES.forEach(ct => {
+    const m = ct.label.match(/^(PU1|PU2) Chapter (\d+)/);
+    if(!m) return;
+    const pu = m[1], num = parseInt(m[2], 10);
+    const key = pu + '-' + num;
+    if(seen.has(key)) return;
+    seen.add(key);
+    out.push({pu, num});
+  });
+  out.sort((a, b) => a.pu === b.pu ? a.num - b.num : (a.pu < b.pu ? -1 : 1));
+  return out;
+}
+function existingChapterListText(){
+  return existingChapterEntries().map(e => e.pu + ' Ch' + e.num).join(', ');
+}
+function existingChapterNumsText(){
+  const nums = Array.from(new Set(existingChapterEntries().map(e => e.num))).sort((a, b) => a - b);
+  if(nums.length === 0) return '';
+  if(nums.length === 1) return String(nums[0]);
+  return nums.slice(0, -1).join(', ') + ', or ' + nums[nums.length - 1];
+}
+function renderExistingChapterSummaries(){
+  const listText = existingChapterListText();
+  const numsText = existingChapterNumsText();
+  ['existingChapterListSingle', 'existingChapterListMaster'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.textContent = listText;
+  });
+  ['existingChapterNumsSingle', 'existingChapterNumsBulk'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.textContent = numsText;
+  });
+}
 function puGroupOf(label){
   if(/Report Card Password/i.test(label)) return 'RC';
   return /^PU2\b/.test(label) ? 'PU2' : (/^PU1\b/.test(label) ? 'PU1' : null);
@@ -960,7 +1003,7 @@ function copyMaster(){
   copySingle();
 }
 
-/* ---------------- Existing chapters (PU1 Ch2, PU1 Ch3, PU2 Ch4, PU1 Ch5, PU2 Ch9) master codes ---------------- */
+/* ---------------- Existing chapters (see EXISTING_CONTENT_TYPES above) master codes ---------------- */
 function renderExistingMasterCodes(label){
   window.__lastExistingMasterRows = EXISTING_CONTENT_TYPES.map((ct, i) => ({
     id: 'exmrow_' + i,
