@@ -564,7 +564,7 @@ function runLookup(){
     if(qRoll && !r.includes(qRoll)) return false;
     if(qSection && !sec.includes(qSection)) return false;
     return true;
-  }).map(s => Object.assign({}, s, {__saved: false}));
+  }).map(s => Object.assign(withComputedCodes(s), {__saved: false}));
 
   const savedMatches = getSavedStudents().filter(s=>{
     const n = normalizeField(s.name);
@@ -574,7 +574,7 @@ function runLookup(){
     if(qRoll && !r.includes(qRoll)) return false;
     if(qSection && !sec.includes(qSection)) return false;
     return true;
-  }).map(s => Object.assign({}, s, {__saved: true}));
+  }).map(s => Object.assign(withComputedCodes(s), {__saved: true}));
 
   const allMatches = matches.concat(savedMatches);
 
@@ -813,6 +813,29 @@ function renderExistingChapterSummaries(){
     const el = document.getElementById(id);
     if(el) el.textContent = numsText;
   });
+}
+
+/* Imported records (STUDENT_DB, from Excel) and saved students only ever have codes for
+   whichever chapters existed at the time they were captured — a chapter added to
+   EXISTING_CONTENT_TYPES afterwards (e.g. Chapter 7, Chapter 8) will never appear in that
+   frozen data. Fill in the gap live: for any student, compute a code for every chapter in
+   EXISTING_CONTENT_TYPES that isn't already present under some spelling of its label, the
+   same way the Single Student tab already does. Matching is done via codeLabelSortKey()
+   (PU group + chapter number + Premium/Handwritten), not a raw string compare, because
+   imported labels say "... Handwritten Notes Code" while EXISTING_CONTENT_TYPES says
+   "... Handwritten Notes" — different wording, same chapter+content-type. */
+function computedCodesForStudent(name, roll, section, existingCodes){
+  const haveKeys = new Set(Object.keys(existingCodes || {}).map(k => codeLabelSortKey(k).join('|')));
+  const out = {};
+  EXISTING_CONTENT_TYPES.forEach(ct => {
+    if(haveKeys.has(codeLabelSortKey(ct.label).join('|'))) return;
+    out[ct.label] = computeStudentCode(name, roll, section, ct.key);
+  });
+  return out;
+}
+function withComputedCodes(s){
+  const codes = Object.assign({}, computedCodesForStudent(s.name, s.roll, s.section, s.codes), s.codes);
+  return Object.assign({}, s, {codes: codes});
 }
 function puGroupOf(label){
   if(/Report Card Password/i.test(label)) return 'RC';
