@@ -3394,10 +3394,18 @@ const PDF_FILES = {
   "00_Complete_Study_Notes.pdf": {"label": "Complete Study Notes (Full Chapter).pdf", "b64": "pu2-ch6-assets/pdf-00_Complete_Study_Notes.pdf"},
   "00b_Revision_Notes.pdf": {"label": "Revision Notes - Quick Summary.pdf", "b64": "pu2-ch6-assets/pdf-00b_Revision_Notes.pdf"},
   "board_important_qa.pdf": {"label": "Board Important - Repeated Question Bank.pdf", "b64": "pu2-ch6-assets/pdf-board_important_qa.pdf"},
-  "important_diagrams_reference.pdf": {"label": "Evolution - Important Diagrams & Marks Guide.pdf", "b64": "pu2-ch6-assets/pdf-important_diagrams_reference.pdf"}
+  "important_diagrams_reference.pdf": {"label": "Evolution - Important Diagrams & Marks Guide.pdf", "b64": "pu2-ch6-assets/pdf-important_diagrams_reference.pdf"},
   // A second Board Important (topics blueprint) PDF wasn't provided for this chapter — the
   // single Board Important PDF above supplements (not replaces) that tab's existing inline
   // content, same as the Important Diagrams PDF above supplements this tab's inline content.
+  "ws_t1": {"label": "Origin of Universe and Earth - Worksheet.html", "b64": "pu2-ch6-assets/worksheet-t1-origin-of-universe-and-earth.html"},
+  "ws_t2": {"label": "Theories of Origin of Life - Worksheet.html", "b64": "pu2-ch6-assets/worksheet-t2-theories-of-origin-of-life.html"},
+  "ws_t3": {"label": "Chemical Evolution of Life - Worksheet.html", "b64": "pu2-ch6-assets/worksheet-t3-chemical-evolution-of-life.html"},
+  "ws_t4": {"label": "Evidences of Evolution - Worksheet.html", "b64": "pu2-ch6-assets/worksheet-t4-evidences-of-evolution.html"},
+  "ws_t5": {"label": "Lamarckism - Theory of Inheritance of Acquired Characters - Worksheet.html", "b64": "pu2-ch6-assets/worksheet-t5-lamarckism-theory-of-inheritance-of-acqu.html"},
+  "ws_t6": {"label": "Darwinism - Theory of Natural Selection - Worksheet.html", "b64": "pu2-ch6-assets/worksheet-t6-darwinism-theory-of-natural-selection.html"},
+  "ws_t7": {"label": "Mutation Theory and the Hardy-Weinberg Principle - Worksheet.html", "b64": "pu2-ch6-assets/worksheet-t7-mutation-theory-and-the-hardy-weinberg-p.html"},
+  "ws_t8": {"label": "Origin and Evolution of Man - Worksheet.html", "b64": "pu2-ch6-assets/worksheet-t8-origin-and-evolution-of-man.html"}
 };
 
 /* ============================================================
@@ -5543,7 +5551,7 @@ function showKcetReport(){
 /* No per-topic worksheet PDFs exist for this chapter yet, so the Downloads tab
    deliberately offers only the one real file (Narendra Sir's typed notes) rather
    than linking to files that do not exist. */
-const TOPIC_WORKSHEET_FILES = {};
+const TOPIC_WORKSHEET_FILES = {"t1":"ws_t1", "t2":"ws_t2", "t3":"ws_t3", "t4":"ws_t4", "t5":"ws_t5", "t6":"ws_t6", "t7":"ws_t7", "t8":"ws_t8"};
 /* =========================================================
    HANDWRITTEN NOTES LOCK SYSTEM
    ========================================================= */
@@ -6023,7 +6031,7 @@ function renderDownloadsList(){
         return `<div class="dl-row" data-pdf="${fname}">
           <div class="dl-info">
             <div class="dl-title">${label}</div>
-            <div class="dl-sub">Worksheet &middot; 4 pages</div>
+            <div class="dl-sub">Worksheet &middot; 2 pages</div>
           </div>
           <div class="dl-actions">
             <button class="btn secondary dl-view-btn">View</button>
