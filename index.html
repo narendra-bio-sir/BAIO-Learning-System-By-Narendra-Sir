@@ -706,31 +706,16 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     }catch(e){}
   }
 
-  fetch('announcements.html', { cache: 'no-store' })
-    .then(res => res.ok ? res.text() : Promise.reject())
-    .then(htmlText => {
-      const doc = new DOMParser().parseFromString(htmlText, 'text/html');
-      // Parse every archived .notice block (newest first, matching how new
-      // announcements are always prepended) so unread state can be a real
-      // count of how many are newer than what this student last saw, not
-      // just a single latest/seen flag.
-      const parsed = Array.from(doc.querySelectorAll('.notice')).map(notice => {
-        const title = notice.querySelector('h1');
-        if(!title) return null;
-        const lede = notice.querySelector('.lede');
-        const metaRow = notice.querySelector('.meta-row');
-        const img = notice.querySelector('img');
-        const titleText = title.textContent.trim();
-        const ledeText = lede ? lede.textContent.trim() : '';
-        let dateText = '';
-        if(metaRow){
-          const spans = Array.from(metaRow.querySelectorAll('span'));
-          const postedSpan = spans.find(s => /posted/i.test(s.textContent));
-          if(postedSpan) dateText = postedSpan.textContent.replace(/^\s*\S+\s*/, '').trim();
-        }
-        return {titleText: titleText, ledeText: ledeText, dateText: dateText, img: img, fingerprint: titleText + '::' + dateText};
-      }).filter(Boolean);
-      if(parsed.length === 0) return;
+  // announcements.html has grown to 1.7MB+ from embedded images in past
+  // entries, so the popup reads a small text-only index instead of
+  // downloading and DOM-parsing the whole archive on every visit.
+  // Keep announcements-index.json in sync (title/lede/date, newest first)
+  // whenever a new entry is added to announcements.html.
+  fetch('announcements-index.json', { cache: 'no-store' })
+    .then(res => res.ok ? res.json() : Promise.reject())
+    .then(parsed => {
+      if(!Array.isArray(parsed) || parsed.length === 0) return;
+      parsed = parsed.map(p => ({titleText: p.title, ledeText: p.lede, dateText: p.date, fingerprint: p.fingerprint}));
 
       const latest = parsed[0];
       const seenKey = 'baio_last_seen_announcement';
@@ -764,10 +749,6 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
         banner.style.display = 'flex';
       }
 
-      const iconEl = document.querySelector('#announcementModalOverlay .announce-modal-icon');
-      if(latest.img && iconEl){
-        iconEl.outerHTML = '<img src="' + latest.img.src + '" alt="Announcement" style="width:100%; border-radius:10px; margin-bottom:10px; display:block;">';
-      }
       document.getElementById('announceModalDate').textContent = latest.dateText;
       document.getElementById('announceModalText').innerHTML =
         '<b style="display:block; margin-bottom:6px; font-size:15px;">' + latest.titleText + '</b>' + latest.ledeText;
@@ -794,7 +775,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
         a.addEventListener('click', markAnnouncementSeen);
       });
     })
-    .catch(() => { /* announcements.html not uploaded yet, or fetch blocked \u2014 skip popup silently */ });
+    .catch(() => { /* announcements-index.json not uploaded yet, or fetch blocked \u2014 skip popup silently */ });
 })();
 
 const CHAPTERS = [
