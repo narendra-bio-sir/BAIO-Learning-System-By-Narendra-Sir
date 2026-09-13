@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0B1B14">
+<title>Build Your Own Bundle — PU-II Biology | BAIO</title>
+<script>
+  try{
+    var t = localStorage.getItem('baio_theme') || 'light';
+    if(t === 'light') document.documentElement.setAttribute('data-theme','light');
+  }catch(e){}
+</script>
+<style>
+:root{
+  --navy:#0B1B14; --navy2:#0F2419; --panel:#13281E; --panel2:#0E211A;
+  --gold:#D4AF37; --gold2:#B8912A; --teal:#2EE6C5; --teal2:#127566;
+  --ink:#EAF3EE; --ink-dim:#9FC4B6; --line:rgba(212,175,55,0.22);
+}
+[data-theme="light"]{
+  --navy:#F7F5EE; --navy2:#EFEBDD; --panel:#FFFFFF; --panel2:#F3F0E6;
+  --gold:#B8912A; --gold2:#8A6A1A; --teal:#0F8F7A; --teal2:#0B6F5E;
+  --ink:#1E2A22; --ink-dim:#5C6E63; --line:rgba(184,145,42,0.25);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+body{
+  margin:0; background:var(--navy); color:var(--ink);
+  font-family:'Inter',-apple-system,sans-serif; -webkit-font-smoothing:antialiased;
+  padding-bottom:110px;
+}
+.wrap{max-width:640px; margin:0 auto; padding:0 18px 30px;}
+header{padding:24px 0 16px; text-align:center;}
+.eyebrow{font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--teal); font-weight:600;}
+.brand{font-size:22px; font-weight:700; margin-top:8px;}
+.tag{font-size:13px; color:var(--ink-dim); margin-top:6px; max-width:460px; margin-left:auto; margin-right:auto;}
+a.back-link{display:inline-block; margin-top:12px; font-size:12px; color:var(--teal); text-decoration:none; font-weight:600;}
+
+.profile-card{
+  border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin:14px 0;
+  background:var(--panel);
+}
+.profile-card .label{font-size:11px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;}
+.profile-card input{
+  width:100%; padding:10px 12px; margin-bottom:8px; border-radius:8px; border:1px solid var(--line);
+  background:var(--panel2); color:var(--ink); font-size:13px;
+}
+.profile-card input:last-child{margin-bottom:0;}
+
+.select-all-row{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  border:1px dashed var(--gold); border-radius:12px; padding:10px 14px; margin-bottom:10px;
+  font-size:12.5px; color:var(--ink-dim); cursor:pointer;
+}
+.select-all-row b{color:var(--gold2);}
+
+.chapter-row{
+  display:flex; align-items:center; gap:12px;
+  border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-bottom:8px;
+  background:var(--panel); cursor:pointer; transition:border-color .15s ease;
+}
+.chapter-row.checked{border-color:var(--teal);}
+.chapter-row input{width:18px; height:18px; flex:none; accent-color:var(--teal);}
+.chapter-row .info{flex:1; min-width:0;}
+.chapter-row .num{font-size:10.5px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:0.5px;}
+.chapter-row .title{font-size:13.5px; font-weight:600;}
+.chapter-row .price{font-size:13px; font-weight:700; color:var(--gold2); flex:none;}
+
+.summary-bar{
+  position:fixed; left:0; right:0; bottom:0; z-index:10;
+  background:var(--panel); border-top:1px solid var(--line);
+  padding:12px 18px calc(12px + env(safe-area-inset-bottom));
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+}
+.summary-bar .count{font-size:11.5px; color:var(--ink-dim);}
+.summary-bar .price-line{font-size:17px; font-weight:800; color:var(--gold2);}
+.summary-bar .price-line .strike{text-decoration:line-through; color:var(--ink-dim); font-size:13px; font-weight:600; margin-right:4px;}
+.summary-bar .badge{
+  display:inline-block; background:var(--gold2); color:var(--navy); font-size:9.5px; font-weight:800;
+  padding:2px 6px; border-radius:5px; margin-left:6px; vertical-align:2px;
+}
+.summary-bar button{
+  padding:12px 18px; border-radius:10px; border:none; font-weight:700; font-size:13px; cursor:pointer;
+  background:linear-gradient(135deg,#0F8F7A,#0B6F5E); color:#fff; white-space:nowrap;
+}
+.summary-bar button:disabled{opacity:0.4; cursor:not-allowed;}
+.footnote{font-size:10.5px; color:var(--ink-dim); text-align:center; margin-top:14px; line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">PU-II Biology &middot; Premium Content</div>
+    <div class="brand">🛒 Build Your Own Bundle</div>
+    <div class="tag">Pick exactly the chapters you want — ₹3000 each, or select all 13 for the 15% bundle discount. Share your selection with Narendra Sir on WhatsApp and he'll send you a payment link for the total.</div>
+    <a href="index.html" class="back-link">&larr; Back to Home</a>
+  </header>
+
+  <div class="profile-card">
+    <div class="label">Your Details</div>
+    <input type="text" id="cartName" placeholder="Full name (e.g. Vishwapal)">
+    <input type="text" id="cartSection" placeholder="Section (e.g. Spark)">
+    <input type="text" id="cartRoll" placeholder="Roll number (e.g. 25MPU0087)">
+  </div>
+
+  <div class="select-all-row" id="selectAllRow">
+    <span>🎁 <b>Select all 13 chapters</b> &mdash; get the 15% bundle discount automatically</span>
+    <input type="checkbox" id="selectAllBox" style="width:18px; height:18px; accent-color:var(--gold2);">
+  </div>
+
+  <div id="chapterList"></div>
+
+  <div class="footnote">Payment isn't collected here &mdash; this just builds your order summary. After you share it, Narendra Sir will send a Razorpay link for the exact total, and issue your unlock code(s) once you've paid.</div>
+</div>
+
+<div class="summary-bar">
+  <div>
+    <div class="count" id="summaryCount">0 chapters selected</div>
+    <div class="price-line" id="summaryPrice">₹0</div>
+  </div>
+  <button id="checkoutBtn" disabled>💬 Share on WhatsApp</button>
+</div>
+
+<script>
+var CHAPTERS = [
+  {num:1, title:'Sexual Reproduction in Flowering Plants'},
+  {num:2, title:'Human Reproduction'},
+  {num:3, title:'Reproductive Health'},
+  {num:4, title:'Principles of Inheritance and Variation'},
+  {num:5, title:'Molecular Basis of Inheritance'},
+  {num:6, title:'Evolution'},
+  {num:7, title:'Human Health and Disease'},
+  {num:8, title:'Microbes in Human Welfare'},
+  {num:9, title:'Biotechnology: Principles and Processes'},
+  {num:10, title:'Biotechnology and its Applications'},
+  {num:11, title:'Organisms and Populations'},
+  {num:12, title:'Ecosystem'},
+  {num:13, title:'Biodiversity and Conservation'}
+];
+var PRICE_PER_CHAPTER = 3000;
+var BUNDLE_PRICE = 33150;
+var selected = {};
+
+function renderChapters(){
+  var listEl = document.getElementById('chapterList');
+  listEl.innerHTML = CHAPTERS.map(function(ch){
+    return '<label class="chapter-row" id="row_' + ch.num + '">'
+      + '<input type="checkbox" data-num="' + ch.num + '">'
+      + '<div class="info"><div class="num">Chapter ' + ch.num + '</div><div class="title">' + ch.title + '</div></div>'
+      + '<div class="price">₹' + PRICE_PER_CHAPTER + '</div>'
+      + '</label>';
+  }).join('');
+  Array.prototype.forEach.call(listEl.querySelectorAll('input[type="checkbox"]'), function(box){
+    box.addEventListener('change', function(){
+      selected[box.dataset.num] = box.checked;
+      document.getElementById('row_' + box.dataset.num).classList.toggle('checked', box.checked);
+      syncSelectAll();
+      updateSummary();
+    });
+  });
+}
+
+function syncSelectAll(){
+  var count = Object.keys(selected).filter(function(k){ return selected[k]; }).length;
+  document.getElementById('selectAllBox').checked = (count === CHAPTERS.length);
+}
+
+function updateSummary(){
+  var count = Object.keys(selected).filter(function(k){ return selected[k]; }).length;
+  var countEl = document.getElementById('summaryCount');
+  var priceEl = document.getElementById('summaryPrice');
+  var btn = document.getElementById('checkoutBtn');
+  if(count === 0){
+    countEl.textContent = '0 chapters selected';
+    priceEl.textContent = '₹0';
+    btn.disabled = true;
+    return;
+  }
+  btn.disabled = false;
+  if(count === CHAPTERS.length){
+    countEl.textContent = 'All 13 chapters selected';
+    priceEl.innerHTML = '<span class="strike">₹' + (PRICE_PER_CHAPTER * 13) + '</span>₹' + BUNDLE_PRICE + '<span class="badge">15% OFF</span>';
+  } else {
+    countEl.textContent = count + ' chapter' + (count > 1 ? 's' : '') + ' selected';
+    priceEl.textContent = '₹' + (count * PRICE_PER_CHAPTER);
+  }
+}
+
+document.getElementById('selectAllBox').addEventListener('change', function(){
+  var checkAll = this.checked;
+  CHAPTERS.forEach(function(ch){
+    selected[ch.num] = checkAll;
+    var box = document.querySelector('#row_' + ch.num + ' input[type="checkbox"]');
+    if(box) box.checked = checkAll;
+    var row = document.getElementById('row_' + ch.num);
+    if(row) row.classList.toggle('checked', checkAll);
+  });
+  updateSummary();
+});
+
+document.getElementById('checkoutBtn').addEventListener('click', function(){
+  var chosenNums = CHAPTERS.filter(function(ch){ return selected[ch.num]; }).map(function(ch){ return ch.num; });
+  if(chosenNums.length === 0) return;
+  var name = document.getElementById('cartName').value.trim();
+  var section = document.getElementById('cartSection').value.trim();
+  var roll = document.getElementById('cartRoll').value.trim();
+  var chosen = CHAPTERS.filter(function(ch){ return selected[ch.num]; });
+  var isFullBundle = chosen.length === CHAPTERS.length;
+  var total = isFullBundle ? BUNDLE_PRICE : chosen.length * PRICE_PER_CHAPTER;
+  var lines = chosen.map(function(ch){ return ch.num + '. Chapter ' + ch.num + ': ' + ch.title; }).join('\n');
+  var msg = 'Hi Narendra Sir, I\'d like to buy Premium access for these PU-II chapters:\n\n'
+    + lines + '\n\n'
+    + 'Total: ₹' + total + (isFullBundle ? ' (15% OFF bundle price for all 13 chapters)' : ' (' + chosen.length + ' chapter' + (chosen.length > 1 ? 's' : '') + ' × ₹' + PRICE_PER_CHAPTER + ')') + '\n\n'
+    + 'Name: ' + (name || '(please add my name)') + '\n'
+    + 'Roll Number: ' + (roll || '(please add my roll number)') + '\n'
+    + 'Section: ' + (section || '(please add my section)') + '\n\n'
+    + 'Could you please send me a payment link for this amount?';
+  window.open('https://wa.me/919008968389?text=' + encodeURIComponent(msg), '_blank');
+});
+
+(function(){
+  try{
+    var profile = JSON.parse(localStorage.getItem('baio_student') || 'null');
+    if(profile){
+      if(profile.name) document.getElementById('cartName').value = profile.name;
+      if(profile.section) document.getElementById('cartSection').value = profile.section;
+      if(profile.roll) document.getElementById('cartRoll').value = profile.roll;
+    }
+  }catch(e){}
+  renderChapters();
+  updateSummary();
+})();
+</script>
+</body>
+</html>
