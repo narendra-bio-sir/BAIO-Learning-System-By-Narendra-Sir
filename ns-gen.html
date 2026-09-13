@@ -785,19 +785,7 @@ const EXISTING_CONTENT_TYPES = [
   { key: 'CH3-PU2-HWNOTES',  label: 'PU2 Chapter 3 \u2014 Handwritten Notes' },
   { key: 'CH10-PU2-PREMIUM',  label: 'PU2 Chapter 10 \u2014 Premium Unlock Code' },
   { key: 'CH10-PU2-HWNOTES',  label: 'PU2 Chapter 10 \u2014 Handwritten Notes' },
-  { key: 'PU2-ALL-PREMIUM',  label: 'PU2 Chapter 1 \u2014 Bundle Unlock Code (unlocks all 13 chapters)' },
-  { key: 'PU2-ALL-PREMIUM',  label: 'PU2 Chapter 2 \u2014 Bundle Unlock Code (unlocks all 13 chapters)' },
-  { key: 'PU2-ALL-PREMIUM',  label: 'PU2 Chapter 3 \u2014 Bundle Unlock Code (unlocks all 13 chapters)' },
-  { key: 'PU2-ALL-PREMIUM',  label: 'PU2 Chapter 4 \u2014 Bundle Unlock Code (unlocks all 13 chapters)' },
-  { key: 'PU2-ALL-PREMIUM',  label: 'PU2 Chapter 5 \u2014 Bundle Unlock Code (unlocks all 13 chapters)' },
-  { key: 'PU2-ALL-PREMIUM',  label: 'PU2 Chapter 6 \u2014 Bundle Unlock Code (unlocks all 13 chapters)' },
-  { key: 'PU2-ALL-PREMIUM',  label: 'PU2 Chapter 7 \u2014 Bundle Unlock Code (unlocks all 13 chapters)' },
-  { key: 'PU2-ALL-PREMIUM',  label: 'PU2 Chapter 8 \u2014 Bundle Unlock Code (unlocks all 13 chapters)' },
-  { key: 'PU2-ALL-PREMIUM',  label: 'PU2 Chapter 9 \u2014 Bundle Unlock Code (unlocks all 13 chapters)' },
-  { key: 'PU2-ALL-PREMIUM',  label: 'PU2 Chapter 10 \u2014 Bundle Unlock Code (unlocks all 13 chapters)' },
-  { key: 'PU2-ALL-PREMIUM',  label: 'PU2 Chapter 11 \u2014 Bundle Unlock Code (unlocks all 13 chapters)' },
-  { key: 'PU2-ALL-PREMIUM',  label: 'PU2 Chapter 12 \u2014 Bundle Unlock Code (unlocks all 13 chapters)' },
-  { key: 'PU2-ALL-PREMIUM',  label: 'PU2 Chapter 13 \u2014 Bundle Unlock Code (unlocks all 13 chapters)' },
+  { key: 'PU2-ALL-PREMIUM',  label: 'PU2 All 13 Chapters \u2014 Premium Bundle Unlock Code (entered on any one chapter, unlocks all)' },
 ];
 
 /* Derives the "these chapters already have live codes" summaries shown in a few places
@@ -871,7 +859,7 @@ function puGroupHeaderText(group){
   return group === 'RC' ? 'REPORT CARD PASSWORDS' : (group === 'PU1' ? 'PU-I CHAPTERS' : 'PU-II CHAPTERS');
 }
 function puGroupHeaderRow(group){
-  return '<tr><td colspan="3" style="background:var(--teal2); color:#fff; font-weight:700; font-size:11px; letter-spacing:0.5px; padding:6px 10px;">' + puGroupHeaderText(group) + '</td></tr>';
+  return '<tr><td colspan="3" style="background:var(--teal2); color:var(--ink); font-weight:700; font-size:11px; letter-spacing:0.5px; padding:6px 10px;">' + puGroupHeaderText(group) + '</td></tr>';
 }
 function codeLabelSortKey(label){
   const isRC = /Report Card Password/i.test(label);
@@ -880,8 +868,7 @@ function codeLabelSortKey(label){
   const m = label.match(/Chapter (\d+)/);
   const chapter = m ? parseInt(m[1], 10) : 999;
   const isHW = /Handwritten/i.test(label);
-  const isBundle = /Bundle/i.test(label);
-  return [pu, chapter, isBundle ? 2 : (isHW ? 1 : 0)];
+  return [pu, chapter, isHW ? 1 : 0];
 }
 function compareCodeLabels(a, b){
   const ka = codeLabelSortKey(a), kb = codeLabelSortKey(b);
