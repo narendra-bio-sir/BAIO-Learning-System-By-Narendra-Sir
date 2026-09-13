@@ -3490,6 +3490,8 @@ function premiumQualifies(){
 function reLockPremium(){
   try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){}
   applyPremiumGates();
+  const revContainer = document.getElementById('premiumStatusRowContainer');
+  if(revContainer) revContainer.innerHTML = premiumStatusRowCh2();
 }
 window.reLockPremium = reLockPremium;
 
