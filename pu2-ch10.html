@@ -3427,7 +3427,7 @@ function unlockAllPu2Premium(method, extra){
   PU2_ALL_PREMIUM_KEYS.forEach(function(k){ try{ localStorage.setItem(k, payload); }catch(e){} });
 }
 const PREMIUM_DEMO_DURATION_MS = 24 * 60 * 60 * 1000;
-const PREMIUM_PRICE_RUPEES = 1999;
+const PREMIUM_PRICE_RUPEES = 3000;
 const PREMIUM_PRICE_ORIGINAL = 3000;
 const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/C3SawdN';
 const PU2_BUNDLE_PRICE_RUPEES = 33150;
@@ -3655,8 +3655,7 @@ function renderPremiumLockScreenCh2(tabId){
     + '<div style="color:var(--text-dim); font-size:12px;">Part of the Premium bundle: ' + premiumBundleLabelList() + '</div>'
     + '</div>'
     + '<div style="text-align:center; margin-bottom:16px;">'
-    + '<span style="text-decoration:line-through; color:var(--text-dim); font-size:14px;">₹' + PREMIUM_PRICE_ORIGINAL + '</span>'
-    + '<span style="color:var(--gold-2); font-size:22px; font-weight:800; margin-left:8px;">₹' + PREMIUM_PRICE_RUPEES + '</span>'
+    + '<span style="color:var(--gold-2); font-size:22px; font-weight:800;">₹' + PREMIUM_PRICE_RUPEES + '</span>'
     + '<div style="color:var(--text-dim); font-size:11px; margin-top:2px;">one-time unlock &middot; covers all ' + PREMIUM_LOCKED_TABS.length + ' premium features in this chapter</div>'
     + '</div>'
     + '<div style="color:var(--text-dim); font-size:12px; text-align:center; margin-bottom:14px;">'
@@ -3676,7 +3675,8 @@ function renderPremiumLockScreenCh2(tabId){
     + '</div>'
     + '<div style="border-top:1px solid var(--border); margin-top:14px; padding-top:12px; text-align:center;">'
     + '<div style="font-size:12px; color:var(--text-dim); margin-bottom:8px;">Prefer all 13 PU-II chapters instead of just this one?</div>'
-    + '<div style="color:var(--gold-2); font-size:15px; font-weight:800; margin-bottom:8px;">₹' + PU2_BUNDLE_PRICE_RUPEES + ' &mdash; unlocks every PU-II chapter</div>'
+    + '<div style="margin-bottom:2px;"><span style="text-decoration:line-through; color:var(--text-dim); font-size:13px;">₹' + (PREMIUM_PRICE_RUPEES*13) + '</span> <span style="color:var(--gold-2); font-size:16px; font-weight:800; margin-left:6px;">₹' + PU2_BUNDLE_PRICE_RUPEES + '</span> <span style="background:var(--gold-2); color:#0B1B14; font-size:10px; font-weight:800; padding:2px 7px; border-radius:6px; margin-left:6px; vertical-align:2px;">15% OFF</span></div>'
+    + '<div style="font-size:11px; color:var(--text-dim); margin-bottom:8px;">unlocks every PU-II chapter</div>'
     + '<div id="premBundleRzpContainer_' + tabId + '" style="display:flex; justify-content:center;"></div>'
     + '<div style="font-size:10.5px; color:var(--text-dim); margin-top:6px;">Same process &mdash; pay, then message Narendra Sir for your one bundle unlock code.</div>'
     + '</div>'
