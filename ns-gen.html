@@ -445,6 +445,7 @@ function renderQuickRefTable(){
 const PREMIUM_MASTER_CODE = 'NS-PREMIUM-2027';
 const PREMIUM_DEMO_CODE = 'BAIO-DEMO-2027';
 const PREMIUM_MASTER_DEMO_CODE = 'NS-STAFFDEMO-2027';
+const PREMIUM_MASTER_CODE_PU2_ALL = 'NS-PU2-ALL-2027';
 const HANDWRITTEN_MASTER_CODE = 'NS-MASTER-2027';
 const ANALYTICS_MASTER_CODE = 'BAIO-NS-2026-R4T9';
 function renderRealMasterTable(){
@@ -454,6 +455,7 @@ function renderRealMasterTable(){
   html += '<tr><td>Demo Premium Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks Premium content on every chapter for 24 hours from the moment a student enters it, then auto-expires on that device. Hand this out for trials — same code works for everyone, each student gets their own 24-hour window from first use.</div></td><td class="code-cell">' + codeHtml(PREMIUM_DEMO_CODE) + '</td></tr>';
   html += '<tr><td>Staff Demo Code (yours) <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Same 24-hour Premium unlock as the trial code, but reusable — keep it for yourself to demo the app on any device without burning a student\'s one-time trial.</div></td><td class="code-cell">' + codeHtml(PREMIUM_MASTER_DEMO_CODE) + '</td></tr>';
   html += '<tr><td>Master Premium Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks Premium content on every chapter</div></td><td class="code-cell">' + codeHtml(PREMIUM_MASTER_CODE) + '</td></tr>';
+  html += '<tr><td>Master PU2-All Bundle Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks Premium content on all 13 PU-II chapters at once, entered on any single one (localStorage is shared across chapters on the same site)</div></td><td class="code-cell">' + codeHtml(PREMIUM_MASTER_CODE_PU2_ALL) + '</td></tr>';
   html += '<tr><td>Master Handwritten Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks Handwritten Notes on every chapter</div></td><td class="code-cell">' + codeHtml(HANDWRITTEN_MASTER_CODE) + '</td></tr>';
   html += '<tr><td>Master Performance Analysis Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks class-wide analytics (bypasses per-student login)</div></td><td class="code-cell">' + codeHtml(ANALYTICS_MASTER_CODE) + '</td></tr>';
   html += '</table></div>';
@@ -783,6 +785,7 @@ const EXISTING_CONTENT_TYPES = [
   { key: 'CH3-PU2-HWNOTES',  label: 'PU2 Chapter 3 \u2014 Handwritten Notes' },
   { key: 'CH10-PU2-PREMIUM',  label: 'PU2 Chapter 10 \u2014 Premium Unlock Code' },
   { key: 'CH10-PU2-HWNOTES',  label: 'PU2 Chapter 10 \u2014 Handwritten Notes' },
+  { key: 'PU2-ALL-PREMIUM',  label: 'PU2 All 13 Chapters \u2014 Premium Bundle Unlock Code (entered on any one chapter, unlocks all)' },
 ];
 
 /* Derives the "these chapters already have live codes" summaries shown in a few places
