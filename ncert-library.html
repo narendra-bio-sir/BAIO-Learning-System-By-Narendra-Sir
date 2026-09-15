@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="BAIO">
-<title>NCERT Textbook Library — BAIO Learning System</title>
+<title>NCERT Resource Library — BAIO Learning System</title>
 <script>
 (function(){
   try{
@@ -74,26 +74,45 @@ h1{font-size:24px; font-weight:700; margin-top:8px; letter-spacing:-0.3px; line-
 .ch-list{display:flex; flex-direction:column; gap:8px;}
 .ch-row{
   display:flex; align-items:center; gap:12px; border:1px solid var(--line); border-radius:12px;
-  padding:11px 14px; background:var(--panel);
+  padding:11px 14px; background:var(--panel); flex-wrap:wrap;
 }
 .ch-num{
   flex:0 0 auto; width:30px; height:30px; border-radius:8px; background:var(--panel2);
   display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif;
   font-weight:700; font-size:12px; color:var(--gold);
 }
-.ch-body{flex:1 1 auto; min-width:0;}
+.ch-body{flex:1 1 auto; min-width:160px;}
 .ch-title{font-size:13px; font-weight:600; color:var(--ink); line-height:1.3;}
 .ch-inapp{font-size:10.5px; margin-top:2px;}
 .ch-inapp a{color:var(--teal); text-decoration:none; font-weight:600;}
 .ch-inapp a:hover{text-decoration:underline;}
 .ch-inapp .soon{color:var(--ink-dim); font-weight:500;}
+.ch-links{flex:0 0 auto; display:flex; gap:6px;}
 .ch-link{
-  flex:0 0 auto; display:flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700;
+  flex:0 0 auto; display:flex; align-items:center; gap:5px; font-size:11px; font-weight:700;
   color:#1a1406; background:linear-gradient(135deg,var(--gold),var(--gold2)); text-decoration:none;
-  padding:8px 12px; border-radius:9px; white-space:nowrap;
+  padding:7px 10px; border-radius:9px; white-space:nowrap;
+}
+.ch-link.exemplar{
+  color:var(--teal); background:var(--panel2); border:1px solid var(--teal2);
 }
 [data-theme="light"] .ch-link{color:#fff;}
-.ch-link:hover{opacity:0.9;}
+[data-theme="light"] .ch-link.exemplar{color:var(--teal2);}
+.ch-link:hover{opacity:0.85;}
+
+.practical-grid{display:flex; flex-wrap:wrap; gap:12px;}
+.practical-card{
+  flex:1 1 260px; border:1px solid var(--line); border-radius:14px; padding:16px; background:var(--panel);
+}
+.practical-card h3{font-size:14px; color:var(--ink); margin-bottom:6px;}
+.practical-card p{font-size:11.5px; color:var(--ink-dim); line-height:1.55; margin:0 0 12px;}
+.practical-link{
+  display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700;
+  color:#1a1406; background:linear-gradient(135deg,var(--gold),var(--gold2)); text-decoration:none;
+  padding:8px 14px; border-radius:9px;
+}
+[data-theme="light"] .practical-link{color:#fff;}
+.practical-link:hover{opacity:0.9;}
 
 .back-row{margin-top:36px; text-align:center;}
 .back-row a{color:var(--ink-dim); text-decoration:none; font-size:12.5px;}
@@ -107,11 +126,11 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
   <header>
     <button class="theme-toggle-btn" id="themeToggle">🌙</button>
     <div class="eyebrow">BAIO Learning System</div>
-    <h1>NCERT Textbook Library</h1>
-    <p class="tag">Direct links to the official NCERT PDF for every PU-I and PU-II Biology chapter — the same source Narendra Sir's diagram references and Important Diagrams pages point to. Useful any time you want to see a figure, table, or the original text in full.</p>
+    <h1>NCERT Resource Library</h1>
+    <p class="tag">Direct links to the official NCERT textbook, Exemplar practice problems, and Laboratory Manual for every PU-I and PU-II Biology chapter — the same source Narendra Sir's diagram references point to. Useful any time you want extra practice problems, the original text, or your practical syllabus.</p>
   </header>
 
-  <div class="notice">📖 <b>How chapter numbers map to file names:</b> Karnataka's PU-I book uses the code <b>kebo1</b> + chapter number (e.g. Chapter 9 → <code>kebo109.pdf</code>); the PU-II book uses <b>lebo1</b> + chapter number (e.g. Chapter 9 → <code>lebo109.pdf</code>). Every link below opens the official file at <b>ncert.nic.in</b>.</div>
+  <div class="notice">📖 <b>Two links per chapter:</b> <b>Textbook</b> opens the official NCERT theory PDF (Karnataka's PU-I book uses code <b>kebo1</b> + chapter number, e.g. Chapter 9 → <code>kebo109.pdf</code>; PU-II uses <b>lebo1</b> + chapter number). <b>Exemplar</b> opens NCERT's supplementary practice-problems book for that same chapter — it uses the <i>original, national NCERT chapter numbering</i> (which is a few numbers higher for later PU-I/PU-II chapters, since Karnataka's own textbook renumbers after dropping a few chapters) — every Exemplar link below has already been matched to the correct chapter by topic, not by number alone.</div>
 
   <div class="section-label">📗 PU-I &middot; 19 Chapters</div>
   <div class="section-sub">Class 11 Biology (Karnataka PU-I syllabus)</div>
@@ -120,6 +139,21 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
   <div class="section-label">📘 PU-II &middot; 13 Chapters</div>
   <div class="section-sub">Class 12 Biology (Karnataka PU-II syllabus)</div>
   <div class="ch-list" id="pu2List"></div>
+
+  <div class="section-label">🧪 Practical / Laboratory Manual</div>
+  <div class="section-sub">NCERT's official lab manual, covering all practicals for the year — not split by theory chapter</div>
+  <div class="practical-grid">
+    <div class="practical-card">
+      <h3>PU-I Laboratory Manual</h3>
+      <p>Class 11 Biology practicals: microscopy, tissue study, physiology experiments and more.</p>
+      <a class="practical-link" href="https://ncert.nic.in/science-laboratory-manual.php?ln=en" target="_blank" rel="noopener">🧪 Browse PU-I Practicals</a>
+    </div>
+    <div class="practical-card">
+      <h3>PU-II Laboratory Manual</h3>
+      <p>Class 12 Biology practicals: pollen studies, food adulteration tests, ecology field work and more.</p>
+      <a class="practical-link" href="https://ncert.nic.in/science-laboratory-manual.php?ln=en" target="_blank" rel="noopener">🧪 Browse PU-II Practicals</a>
+    </div>
+  </div>
 
   <div class="back-row"><a href="index.html">&larr; Back to BAIO Learning System</a></div>
 
@@ -140,38 +174,42 @@ const PU1_CHAPTERS = [
   {n:8, title:'Cell: The Unit of Life', href:'pu1-ch8.html'},
   {n:9, title:'Biomolecules', href:'pu1-ch9.html'},
   {n:10, title:'Cell Cycle and Cell Division'},
-  {n:11, title:'Photosynthesis in Higher Plants'},
-  {n:12, title:'Respiration in Plants'},
-  {n:13, title:'Plant Growth and Development'},
-  {n:14, title:'Breathing and Exchange of Gases'},
-  {n:15, title:'Body Fluids and Circulation'},
-  {n:16, title:'Excretory Products and their Elimination'},
-  {n:17, title:'Locomotion and Movement'},
-  {n:18, title:'Neural Control and Coordination'},
-  {n:19, title:'Chemical Coordination and Integration'},
+  {n:11, title:'Photosynthesis in Higher Plants', orig:13},
+  {n:12, title:'Respiration in Plants', orig:14},
+  {n:13, title:'Plant Growth and Development', orig:15},
+  {n:14, title:'Breathing and Exchange of Gases', orig:17},
+  {n:15, title:'Body Fluids and Circulation', orig:18},
+  {n:16, title:'Excretory Products and their Elimination', orig:19},
+  {n:17, title:'Locomotion and Movement', orig:20},
+  {n:18, title:'Neural Control and Coordination', orig:21},
+  {n:19, title:'Chemical Coordination and Integration', orig:22},
 ];
 const PU2_CHAPTERS = [
-  {n:1, title:'Sexual Reproduction in Flowering Plants', href:'pu2-ch1.html'},
-  {n:2, title:'Human Reproduction', href:'pu2-ch2.html'},
-  {n:3, title:'Reproductive Health', href:'pu2-ch3.html'},
-  {n:4, title:'Principles of Inheritance and Variation', href:'pu2-ch4.html'},
-  {n:5, title:'Molecular Basis of Inheritance', href:'pu2-ch5.html'},
-  {n:6, title:'Evolution', href:'pu2-ch6.html'},
-  {n:7, title:'Human Health and Disease', href:'pu2-ch7.html'},
-  {n:8, title:'Microbes in Human Welfare', href:'pu2-ch8.html'},
-  {n:9, title:'Biotechnology: Principles and Processes', href:'ch9/'},
-  {n:10, title:'Biotechnology and its Applications', href:'pu2-ch10.html'},
-  {n:11, title:'Organisms and Populations', href:'pu2-ch11.html'},
-  {n:12, title:'Ecosystem', href:'pu2-ch12.html'},
-  {n:13, title:'Biodiversity and Conservation', href:'pu2-ch13.html'},
+  {n:1, title:'Sexual Reproduction in Flowering Plants', href:'pu2-ch1.html', orig:2},
+  {n:2, title:'Human Reproduction', href:'pu2-ch2.html', orig:3},
+  {n:3, title:'Reproductive Health', href:'pu2-ch3.html', orig:4},
+  {n:4, title:'Principles of Inheritance and Variation', href:'pu2-ch4.html', orig:5},
+  {n:5, title:'Molecular Basis of Inheritance', href:'pu2-ch5.html', orig:6},
+  {n:6, title:'Evolution', href:'pu2-ch6.html', orig:7},
+  {n:7, title:'Human Health and Disease', href:'pu2-ch7.html', orig:8},
+  {n:8, title:'Microbes in Human Welfare', href:'pu2-ch8.html', orig:10},
+  {n:9, title:'Biotechnology: Principles and Processes', href:'ch9/', orig:11},
+  {n:10, title:'Biotechnology and its Applications', href:'pu2-ch10.html', orig:12},
+  {n:11, title:'Organisms and Populations', href:'pu2-ch11.html', orig:13},
+  {n:12, title:'Ecosystem', href:'pu2-ch12.html', orig:14},
+  {n:13, title:'Biodiversity and Conservation', href:'pu2-ch13.html', orig:15},
 ];
 
 function pad2(n){ return n < 10 ? '0'+n : ''+n; }
-function renderList(containerId, chapters, ncertPrefix){
+function renderList(containerId, chapters, textbookPrefix, exemplarPrefix){
   const el = document.getElementById(containerId);
   el.innerHTML = chapters.map(c => {
-    const code = ncertPrefix + '1' + pad2(c.n);
-    const ncertUrl = 'https://ncert.nic.in/textbook/pdf/' + code + '.pdf';
+    const textbookCode = textbookPrefix + '1' + pad2(c.n);
+    const textbookUrl = 'https://ncert.nic.in/textbook/pdf/' + textbookCode + '.pdf';
+    const origN = c.orig || c.n;
+    const examplarClass = textbookPrefix === 'kebo' ? 'classXI' : 'classXII';
+    const exemplarCode = exemplarPrefix + '4' + pad2(origN);
+    const exemplarUrl = 'https://ncert.nic.in/pdf/publication/exemplarproblem/' + examplarClass + '/biology/' + exemplarCode + '.pdf';
     const inApp = c.href
       ? `<a href="${c.href}">Open in app &rarr;</a>`
       : `<span class="soon">Chapter not built in app yet</span>`;
@@ -181,12 +219,15 @@ function renderList(containerId, chapters, ncertPrefix){
         <div class="ch-title">${c.title}</div>
         <div class="ch-inapp">${inApp}</div>
       </div>
-      <a class="ch-link" href="${ncertUrl}" target="_blank" rel="noopener">📄 NCERT PDF</a>
+      <div class="ch-links">
+        <a class="ch-link" href="${textbookUrl}" target="_blank" rel="noopener">📄 Textbook</a>
+        <a class="ch-link exemplar" href="${exemplarUrl}" target="_blank" rel="noopener">📝 Exemplar</a>
+      </div>
     </div>`;
   }).join('');
 }
-renderList('pu1List', PU1_CHAPTERS, 'kebo');
-renderList('pu2List', PU2_CHAPTERS, 'lebo');
+renderList('pu1List', PU1_CHAPTERS, 'kebo', 'ke');
+renderList('pu2List', PU2_CHAPTERS, 'lebo', 'le');
 </script>
 
 <script>
