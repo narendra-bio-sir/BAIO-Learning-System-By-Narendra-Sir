@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BAIO">
+<title>NCERT Textbook Library — BAIO Learning System</title>
+<script>
+(function(){
+  try{
+    var t = localStorage.getItem('baio_theme') || 'light';
+    if(t === 'light'){
+      document.documentElement.setAttribute('data-theme','light');
+      var m = document.querySelector('meta[name="theme-color"]');
+      if(m) m.setAttribute('content', '#F7F5EE');
+    }
+  }catch(e){}
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B1B14; --navy2:#0F2419; --panel:#13281E; --panel2:#0E211A;
+  --gold:#D4AF37; --gold2:#B8912A; --teal:#2EE6C5; --teal2:#127566;
+  --ink:#EAF3EE; --ink-dim:#9FC4B6; --line:rgba(212,175,55,0.22);
+}
+[data-theme="light"]{
+  --navy:#F7F5EE; --navy2:#EFEBDD; --panel:#FFFFFF; --panel2:#F3F0E6;
+  --gold:#B8912A; --gold2:#8A6A1A; --teal:#0F8F7A; --teal2:#0B6F5E;
+  --ink:#1E2A22; --ink-dim:#5C6E63; --line:rgba(184,145,42,0.25);
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:
+    radial-gradient(circle at 15% 8%, rgba(46,230,197,0.05), transparent 40%),
+    radial-gradient(circle at 85% 92%, rgba(212,175,55,0.06), transparent 45%),
+    var(--navy);
+  color:var(--ink); font-family:'Inter',-apple-system,sans-serif; -webkit-font-smoothing:antialiased;
+  transition:background-color .2s ease, color .2s ease;
+}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif; margin:0;}
+.wrap{max-width:760px; margin:0 auto; padding:0 18px 60px;}
+
+header{padding:30px 0 18px; text-align:center; position:relative;}
+.eyebrow{font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--teal); font-weight:600;}
+h1{font-size:24px; font-weight:700; margin-top:8px; letter-spacing:-0.3px; line-height:1.25;}
+.tag{font-size:13px; color:var(--ink-dim); margin-top:8px; line-height:1.6; max-width:540px; margin-left:auto; margin-right:auto;}
+.theme-toggle-btn{
+  position:absolute; top:6px; right:0; width:34px; height:34px; border-radius:50%;
+  border:1px solid var(--line); background:var(--panel2); font-size:15px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+}
+
+.notice{
+  border:1px solid var(--line); border-radius:14px; padding:12px 16px; margin-top:20px;
+  background:var(--panel2); font-size:12px; color:var(--ink-dim); line-height:1.6;
+}
+.notice b{color:var(--gold);}
+
+.section-label{
+  font-size:16px; letter-spacing:0.5px; color:var(--gold); font-weight:800;
+  margin:30px 0 12px; display:flex; align-items:center; gap:10px;
+}
+.section-label:after{content:''; flex:1; height:2px; background:var(--line);}
+.section-sub{font-size:11.5px; color:var(--ink-dim); margin-top:-6px; margin-bottom:12px;}
+
+.ch-list{display:flex; flex-direction:column; gap:8px;}
+.ch-row{
+  display:flex; align-items:center; gap:12px; border:1px solid var(--line); border-radius:12px;
+  padding:11px 14px; background:var(--panel);
+}
+.ch-num{
+  flex:0 0 auto; width:30px; height:30px; border-radius:8px; background:var(--panel2);
+  display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif;
+  font-weight:700; font-size:12px; color:var(--gold);
+}
+.ch-body{flex:1 1 auto; min-width:0;}
+.ch-title{font-size:13px; font-weight:600; color:var(--ink); line-height:1.3;}
+.ch-inapp{font-size:10.5px; margin-top:2px;}
+.ch-inapp a{color:var(--teal); text-decoration:none; font-weight:600;}
+.ch-inapp a:hover{text-decoration:underline;}
+.ch-inapp .soon{color:var(--ink-dim); font-weight:500;}
+.ch-link{
+  flex:0 0 auto; display:flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700;
+  color:#1a1406; background:linear-gradient(135deg,var(--gold),var(--gold2)); text-decoration:none;
+  padding:8px 12px; border-radius:9px; white-space:nowrap;
+}
+[data-theme="light"] .ch-link{color:#fff;}
+.ch-link:hover{opacity:0.9;}
+
+.back-row{margin-top:36px; text-align:center;}
+.back-row a{color:var(--ink-dim); text-decoration:none; font-size:12.5px;}
+.back-row a:hover{color:var(--gold);}
+
+footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px; padding-top:16px; border-top:1px solid var(--line);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <button class="theme-toggle-btn" id="themeToggle">🌙</button>
+    <div class="eyebrow">BAIO Learning System</div>
+    <h1>NCERT Textbook Library</h1>
+    <p class="tag">Direct links to the official NCERT PDF for every PU-I and PU-II Biology chapter — the same source Narendra Sir's diagram references and Important Diagrams pages point to. Useful any time you want to see a figure, table, or the original text in full.</p>
+  </header>
+
+  <div class="notice">📖 <b>How chapter numbers map to file names:</b> Karnataka's PU-I book uses the code <b>kebo1</b> + chapter number (e.g. Chapter 9 → <code>kebo109.pdf</code>); the PU-II book uses <b>lebo1</b> + chapter number (e.g. Chapter 9 → <code>lebo109.pdf</code>). Every link below opens the official file at <b>ncert.nic.in</b>.</div>
+
+  <div class="section-label">📗 PU-I &middot; 19 Chapters</div>
+  <div class="section-sub">Class 11 Biology (Karnataka PU-I syllabus)</div>
+  <div class="ch-list" id="pu1List"></div>
+
+  <div class="section-label">📘 PU-II &middot; 13 Chapters</div>
+  <div class="section-sub">Class 12 Biology (Karnataka PU-II syllabus)</div>
+  <div class="ch-list" id="pu2List"></div>
+
+  <div class="back-row"><a href="index.html">&larr; Back to BAIO Learning System</a></div>
+
+  <footer>
+    Biology All In One (BAIO) Learning System &middot; Narendra Sir &mdash; Lecturer in Biology
+  </footer>
+</div>
+
+<script>
+const PU1_CHAPTERS = [
+  {n:1, title:'The Living World'},
+  {n:2, title:'Biological Classification', href:'ch2/'},
+  {n:3, title:'Plant Kingdom', href:'ch3/'},
+  {n:4, title:'Animal Kingdom', href:'pu1-ch4.html'},
+  {n:5, title:'Morphology of Flowering Plants', href:'pu1-ch5.html'},
+  {n:6, title:'Anatomy of Flowering Plants', href:'pu1-ch6.html'},
+  {n:7, title:'Structural Organisation in Animals'},
+  {n:8, title:'Cell: The Unit of Life', href:'pu1-ch8.html'},
+  {n:9, title:'Biomolecules', href:'pu1-ch9.html'},
+  {n:10, title:'Cell Cycle and Cell Division'},
+  {n:11, title:'Photosynthesis in Higher Plants'},
+  {n:12, title:'Respiration in Plants'},
+  {n:13, title:'Plant Growth and Development'},
+  {n:14, title:'Breathing and Exchange of Gases'},
+  {n:15, title:'Body Fluids and Circulation'},
+  {n:16, title:'Excretory Products and their Elimination'},
+  {n:17, title:'Locomotion and Movement'},
+  {n:18, title:'Neural Control and Coordination'},
+  {n:19, title:'Chemical Coordination and Integration'},
+];
+const PU2_CHAPTERS = [
+  {n:1, title:'Sexual Reproduction in Flowering Plants', href:'pu2-ch1.html'},
+  {n:2, title:'Human Reproduction', href:'pu2-ch2.html'},
+  {n:3, title:'Reproductive Health', href:'pu2-ch3.html'},
+  {n:4, title:'Principles of Inheritance and Variation', href:'pu2-ch4.html'},
+  {n:5, title:'Molecular Basis of Inheritance', href:'pu2-ch5.html'},
+  {n:6, title:'Evolution', href:'pu2-ch6.html'},
+  {n:7, title:'Human Health and Disease', href:'pu2-ch7.html'},
+  {n:8, title:'Microbes in Human Welfare', href:'pu2-ch8.html'},
+  {n:9, title:'Biotechnology: Principles and Processes', href:'ch9/'},
+  {n:10, title:'Biotechnology and its Applications', href:'pu2-ch10.html'},
+  {n:11, title:'Organisms and Populations', href:'pu2-ch11.html'},
+  {n:12, title:'Ecosystem', href:'pu2-ch12.html'},
+  {n:13, title:'Biodiversity and Conservation', href:'pu2-ch13.html'},
+];
+
+function pad2(n){ return n < 10 ? '0'+n : ''+n; }
+function renderList(containerId, chapters, ncertPrefix){
+  const el = document.getElementById(containerId);
+  el.innerHTML = chapters.map(c => {
+    const code = ncertPrefix + '1' + pad2(c.n);
+    const ncertUrl = 'https://ncert.nic.in/textbook/pdf/' + code + '.pdf';
+    const inApp = c.href
+      ? `<a href="${c.href}">Open in app &rarr;</a>`
+      : `<span class="soon">Chapter not built in app yet</span>`;
+    return `<div class="ch-row">
+      <div class="ch-num">${c.n}</div>
+      <div class="ch-body">
+        <div class="ch-title">${c.title}</div>
+        <div class="ch-inapp">${inApp}</div>
+      </div>
+      <a class="ch-link" href="${ncertUrl}" target="_blank" rel="noopener">📄 NCERT PDF</a>
+    </div>`;
+  }).join('');
+}
+renderList('pu1List', PU1_CHAPTERS, 'kebo');
+renderList('pu2List', PU2_CHAPTERS, 'lebo');
+</script>
+
+<script>
+(function(){
+  const root = document.documentElement;
+  const btn = document.getElementById('themeToggle');
+  const isLight = root.getAttribute('data-theme') === 'light';
+  btn.textContent = isLight ? '🌙' : '☀️';
+  btn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    const now = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    if(now === 'light') root.setAttribute('data-theme', 'light');
+    else root.removeAttribute('data-theme');
+    btn.textContent = now === 'light' ? '🌙' : '☀️';
+    try{ localStorage.setItem('baio_theme', now); }catch(e){}
+  });
+})();
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  });
+}
+</script>
+</body>
+</html>
