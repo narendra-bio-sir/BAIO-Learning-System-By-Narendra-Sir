@@ -100,19 +100,12 @@ h1{font-size:24px; font-weight:700; margin-top:8px; letter-spacing:-0.3px; line-
 [data-theme="light"] .ch-link.exemplar{color:var(--teal2);}
 .ch-link:hover{opacity:0.85;}
 
-.practical-grid{display:flex; flex-wrap:wrap; gap:12px;}
-.practical-card{
-  flex:1 1 260px; border:1px solid var(--line); border-radius:14px; padding:16px; background:var(--panel);
+.more-row{
+  text-align:center; font-size:11.5px; color:var(--ink-dim); font-style:italic; padding:12px 14px;
+  border:1px dashed var(--line); border-radius:12px;
 }
-.practical-card h3{font-size:14px; color:var(--ink); margin-bottom:6px;}
-.practical-card p{font-size:11.5px; color:var(--ink-dim); line-height:1.55; margin:0 0 12px;}
-.practical-link{
-  display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700;
-  color:#1a1406; background:linear-gradient(135deg,var(--gold),var(--gold2)); text-decoration:none;
-  padding:8px 14px; border-radius:9px;
-}
-[data-theme="light"] .practical-link{color:#fff;}
-.practical-link:hover{opacity:0.9;}
+.more-row a{color:var(--teal); text-decoration:none; font-weight:600; font-style:normal;}
+.more-row a:hover{text-decoration:underline;}
 
 .back-row{margin-top:36px; text-align:center;}
 .back-row a{color:var(--ink-dim); text-decoration:none; font-size:12.5px;}
@@ -140,20 +133,13 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
   <div class="section-sub">Class 12 Biology (Karnataka PU-II syllabus)</div>
   <div class="ch-list" id="pu2List"></div>
 
-  <div class="section-label">🧪 Practical / Laboratory Manual</div>
-  <div class="section-sub">NCERT's official lab manual, covering all practicals for the year — not split by theory chapter</div>
-  <div class="practical-grid">
-    <div class="practical-card">
-      <h3>PU-I Laboratory Manual</h3>
-      <p>Class 11 Biology practicals: microscopy, tissue study, physiology experiments and more.</p>
-      <a class="practical-link" href="https://ncert.nic.in/science-laboratory-manual.php?ln=en" target="_blank" rel="noopener">🧪 Browse PU-I Practicals</a>
-    </div>
-    <div class="practical-card">
-      <h3>PU-II Laboratory Manual</h3>
-      <p>Class 12 Biology practicals: pollen studies, food adulteration tests, ecology field work and more.</p>
-      <a class="practical-link" href="https://ncert.nic.in/science-laboratory-manual.php?ln=en" target="_blank" rel="noopener">🧪 Browse PU-II Practicals</a>
-    </div>
-  </div>
+  <div class="section-label">🧪 PU-I Laboratory Manual</div>
+  <div class="section-sub">Class 11 Biology practicals, individually verified against the real NCERT PDF</div>
+  <div class="ch-list" id="pu1LabList"></div>
+
+  <div class="section-label">🧪 PU-II Laboratory Manual</div>
+  <div class="section-sub">Class 12 Biology practicals, individually verified against the real NCERT PDF</div>
+  <div class="ch-list" id="pu2LabList"></div>
 
   <div class="back-row"><a href="index.html">&larr; Back to BAIO Learning System</a></div>
 
@@ -228,6 +214,38 @@ function renderList(containerId, chapters, textbookPrefix, exemplarPrefix){
 }
 renderList('pu1List', PU1_CHAPTERS, 'kebo', 'ke');
 renderList('pu2List', PU2_CHAPTERS, 'lebo', 'le');
+
+/* ---- Laboratory Manual: individually verified against the real NCERT PDF filenames
+   (not a guessed sequential pattern — the file numbering doesn't reliably match
+   exercise numbering, so each row below was confirmed one at a time). Anything
+   not yet verified is left out rather than linked with a guessed file number. ---- */
+const PU1_LAB = [
+  {title:'Parts of a Compound Microscope', code:'kelm301'},
+  {title:'Morphology of Representative Bacteria, Fungi & Plant Groups', code:'kelm302'},
+  {title:'Selected Animals by External Features (Spotting)', code:'kelm303'},
+  {title:'Plant Tissues — Diversity in Shape & Size', code:'kelm304'},
+  {title:'Temporary Slide of Animal Tissues', code:'kelm305'},
+];
+const PU2_LAB = [
+  {title:'Percentage of Pollen Germination', code:'lelm202'},
+  {title:'Stages of Gametogenesis in Mammalian Testis & Ovary', code:'lelm203'},
+];
+function renderLabList(containerId, items, classFolder, fullManualUrl, totalKnown){
+  const el = document.getElementById(containerId);
+  const rows = items.map((it, i) => `<div class="ch-row">
+    <div class="ch-num">${i+1}</div>
+    <div class="ch-body"><div class="ch-title">${it.title}</div></div>
+    <div class="ch-links">
+      <a class="ch-link" href="https://ncert.nic.in/pdf/publication/sciencelaboratorymanuals/${classFolder}/biology/${it.code}.pdf" target="_blank" rel="noopener">📄 Open</a>
+    </div>
+  </div>`).join('');
+  const more = totalKnown
+    ? `<div class="more-row">+ ~${totalKnown - items.length} more practicals in the full manual (34 total) — not yet individually verified here, so not guessed. <a href="${fullManualUrl}" target="_blank" rel="noopener">Browse the complete manual &rarr;</a></div>`
+    : `<div class="more-row">More practicals exist in the full manual — not yet individually verified here, so not guessed. <a href="${fullManualUrl}" target="_blank" rel="noopener">Browse the complete manual &rarr;</a></div>`;
+  el.innerHTML = rows + more;
+}
+renderLabList('pu1LabList', PU1_LAB, 'classXI', 'https://ncert.nic.in/science-laboratory-manual.php?ln=en', 34);
+renderLabList('pu2LabList', PU2_LAB, 'classXII', 'https://ncert.nic.in/science-laboratory-manual.php?ln=en', null);
 </script>
 
 <script>
