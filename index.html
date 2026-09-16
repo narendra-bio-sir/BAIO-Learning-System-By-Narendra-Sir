@@ -180,6 +180,23 @@ header{padding:34px 0 22px; text-align:center;}
   text-decoration:none; cursor:pointer; transition:background .15s ease;
 }
 .quick-action-btn:hover{background:rgba(212,175,55,0.08);}
+.qb-dropdown{flex:1 1 calc(50% - 6px); min-width:140px;}
+.qb-dropdown summary{
+  text-align:center; padding:13px 16px; border-radius:12px; list-style:none; cursor:pointer;
+  border:1px solid var(--gold); background:transparent; color:var(--gold);
+  font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13.5px;
+  transition:background .15s ease;
+}
+.qb-dropdown summary::-webkit-details-marker{display:none;}
+.qb-dropdown summary:hover{background:rgba(212,175,55,0.08);}
+.qb-dropdown-menu{display:flex; flex-direction:column; gap:8px; margin-top:8px;}
+.qb-dropdown-menu a{
+  display:block; text-align:center; padding:11px 16px; border-radius:10px;
+  border:1px solid var(--gold); color:var(--gold); text-decoration:none;
+  font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12.5px;
+  background:transparent; transition:background .15s ease;
+}
+.qb-dropdown-menu a:hover{background:rgba(212,175,55,0.08);}
 @keyframes bellRing{
   0%, 45%, 100%{ transform:rotate(0); }
   5%{ transform:rotate(15deg); } 10%{ transform:rotate(-13deg); }
@@ -464,8 +481,13 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     <a href="download-notes-guide.html" class="quick-action-btn">📥 Download Notes Guide</a>
     <a href="ncert-library.html" class="quick-action-btn">📚 NCERT Resource Library</a>
     <a href="ncert-library.html#kcet" class="quick-action-btn">🎯 KCET Previous Year Papers</a>
-    <a href="https://dpue-pragathi.karnataka.gov.in/question_bank/Biology/IPUC-%20BIOLOGY%20REVISED%20QB-2024-25%20%20FINAL%20(1).pdf" class="quick-action-btn" target="_blank" rel="noopener">📚 PU-I Question Bank</a>
-    <a href="https://dpue-pragathi.karnataka.gov.in/question_bank/Biology/IIPUC-BIOLOGY%20REVISED%20QB%202024%20-%2025%20FinaL.pdf" class="quick-action-btn" target="_blank" rel="noopener">📚 PU-II Question Bank</a>
+    <details class="qb-dropdown">
+      <summary>📚 PU Question Bank</summary>
+      <div class="qb-dropdown-menu">
+        <a href="https://dpue-pragathi.karnataka.gov.in/question_bank/Biology/IPUC-%20BIOLOGY%20REVISED%20QB-2024-25%20%20FINAL%20(1).pdf" target="_blank" rel="noopener">PU-I Question Bank</a>
+        <a href="https://dpue-pragathi.karnataka.gov.in/question_bank/Biology/IIPUC-BIOLOGY%20REVISED%20QB%202024%20-%2025%20FinaL.pdf" target="_blank" rel="noopener">PU-II Question Bank</a>
+      </div>
+    </details>
     <a href="app-walkthrough.html" class="quick-action-btn">🧭 App Walkthrough</a>
     <a href="ppt-generator.html" class="quick-action-btn">🖥️ PPT Generator</a>
     <a href="study-tips.html" class="quick-action-btn">🎯 Study Tips</a>
