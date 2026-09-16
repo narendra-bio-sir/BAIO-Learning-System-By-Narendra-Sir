@@ -6991,7 +6991,7 @@ function buildPU2ObtSectionsHtml(student){
     const totalOut = test.outof.PHY+test.outof.CHE+test.outof.MAT+test.outof.BIO+(test.outof.ELE?0:0);
     html += '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">'+test.label+' ('+test.disp+')</h3>'+
       '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th>'+(sdOptions.student?'<th>z-Score</th>':'')+'</tr></thead>'+
-      '<tbody>'+rows+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(rec.total!==null&&rec.total!==undefined?rec.total+'/'+totalOut:'\u2014')+'</b></td></tr></tbody></table></div>';
+      '<tbody>'+rows+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(rec.total!==null&&rec.total!==undefined?rec.total+'/'+totalOut+' ('+Math.round((rec.total/totalOut)*1000)/10+'%)':'\u2014')+'</b></td></tr></tbody></table></div>';
   });
   return html;
 }
@@ -7015,7 +7015,7 @@ function buildPU2KcetSectionHtml(student){
       '<tbody><tr><td>Physics</td><td>'+(r.PHY!==null&&r.PHY!==undefined?r.PHY:'\u2014')+'/'+r.outof+'</td></tr>'+
       '<tr><td>Chemistry</td><td>'+(r.CHE!==null&&r.CHE!==undefined?r.CHE:'\u2014')+'/'+r.outof+'</td></tr>'+
       '<tr><td>Mathematics</td><td>'+(r.MAT!==null&&r.MAT!==undefined?r.MAT:'\u2014')+'/'+r.outof+'</td></tr>'+
-      '<tr><td><b>Total</b></td><td><b>'+(r.TOTAL!==null&&r.TOTAL!==undefined?r.TOTAL:'\u2014')+'/'+(r.outof*3)+'</b></td></tr></tbody></table></div>';
+      '<tr><td><b>Total</b></td><td><b>'+(r.TOTAL!==null&&r.TOTAL!==undefined?r.TOTAL+'/'+(r.outof*3)+' ('+Math.round((r.TOTAL/(r.outof*3))*1000)/10+'%)':'\u2014')+'</b></td></tr></tbody></table></div>';
   });
   return html;
 }
@@ -7180,7 +7180,7 @@ function buildPU2NeetSectionHtml(student){
       '<tbody><tr><td>Physics</td><td>'+(r.PHY!==null&&r.PHY!==undefined?r.PHY:'—')+'/180</td></tr>'+
       '<tr><td>Chemistry</td><td>'+(r.CHE!==null&&r.CHE!==undefined?r.CHE:'—')+'/180</td></tr>'+
       '<tr class="bio-row"><td><b>★ Biology</b></td><td><b>'+(r.BIO!==null&&r.BIO!==undefined?r.BIO:'—')+'/360</b></td></tr>'+
-      '<tr><td><b>Total</b></td><td><b>'+(r.TOTAL!==null&&r.TOTAL!==undefined?r.TOTAL:'—')+'/720</b></td></tr></tbody></table></div>';
+      '<tr><td><b>Total</b></td><td><b>'+(r.TOTAL!==null&&r.TOTAL!==undefined?r.TOTAL+'/720 ('+Math.round((r.TOTAL/720)*1000)/10+'%)':'—')+'</b></td></tr></tbody></table></div>';
   });
   return html;
 }
@@ -7201,7 +7201,7 @@ function buildPU2JeeSectionHtml(student){
       '<tbody><tr><td>Mathematics</td><td>'+(r.MAT!==null&&r.MAT!==undefined?r.MAT:'—')+'/100</td></tr>'+
       '<tr><td>Physics</td><td>'+(r.PHY!==null&&r.PHY!==undefined?r.PHY:'—')+'/100</td></tr>'+
       '<tr><td>Chemistry</td><td>'+(r.CHE!==null&&r.CHE!==undefined?r.CHE:'—')+'/100</td></tr>'+
-      '<tr><td><b>Total</b></td><td><b>'+(r.TOTAL!==null&&r.TOTAL!==undefined?r.TOTAL:'—')+'/300</b></td></tr></tbody></table></div>';
+      '<tr><td><b>Total</b></td><td><b>'+(r.TOTAL!==null&&r.TOTAL!==undefined?r.TOTAL+'/300 ('+Math.round((r.TOTAL/300)*1000)/10+'%)':'—')+'</b></td></tr></tbody></table></div>';
   });
   return html;
 }
@@ -8467,19 +8467,19 @@ function showReportCard(student, pu){
   const juneSection = juneRows ?
     '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">June Monthly Test'+(student.june && student.june.RANK?' &mdash; Class Rank #'+student.june.RANK:'')+'</h3>'+
     '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th>'+(sdOptions.student?'<th>z-Score</th>':'')+'</tr></thead>'+
-    '<tbody>'+juneRows+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(student.june && student.june.TOTAL!==null?student.june.TOTAL+'/240':'\u2014')+'</b></td></tr></tbody></table></div>'
+    '<tbody>'+juneRows+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(student.june && student.june.TOTAL!==null?student.june.TOTAL+'/240 ('+Math.round((student.june.TOTAL/240)*1000)/10+'%)':'\u2014')+'</b></td></tr></tbody></table></div>'
     : '';
   const mtRows = mtSubjectRowsHtml(student, 'july');
   const mtSection = mtRows ?
     '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">July Monthly Test'+(student.mt.RANK?' &mdash; Class Rank #'+student.mt.RANK:'')+'</h3>'+
     '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th>'+(sdOptions.student?'<th>z-Score</th>':'')+'</tr></thead>'+
-    '<tbody>'+mtRows+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(student.mt.TOTAL!==null?student.mt.TOTAL+'/240':'\u2014')+'</b></td></tr></tbody></table></div>'
+    '<tbody>'+mtRows+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(student.mt.TOTAL!==null?student.mt.TOTAL+'/240 ('+Math.round((student.mt.TOTAL/240)*1000)/10+'%)':'\u2014')+'</b></td></tr></tbody></table></div>'
     : '';
   const augustRows = mtSubjectRowsHtml(student, 'august');
   const augustSection = augustRows ?
     '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">August Monthly Test'+(student.august && student.august.RANK?' &mdash; Class Rank #'+student.august.RANK:'')+'</h3>'+
     '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th>'+(sdOptions.student?'<th>z-Score</th>':'')+'</tr></thead>'+
-    '<tbody>'+augustRows+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(student.august && student.august.TOTAL!==null?student.august.TOTAL+'/240':'\u2014')+'</b></td></tr></tbody></table></div>'
+    '<tbody>'+augustRows+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(student.august && student.august.TOTAL!==null?student.august.TOTAL+'/240 ('+Math.round((student.august.TOTAL/240)*1000)/10+'%)':'\u2014')+'</b></td></tr></tbody></table></div>'
     : (juneSection || mtSection ? '' : '<div class="desc" style="text-align:center; margin-top:12px;">Monthly Test data not available for this student.</div>');
   const examSection = buildPU1ExamSectionsHtml(student);
   document.getElementById('reportCardContent').innerHTML =
@@ -8494,10 +8494,10 @@ function showReportCard(student, pu){
     classPercentileHtml(student, 1)+
     '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">Slip Test 1 (13\u201315 Jun 2026)</h3>'+
     '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th>'+(sdOptions.student?'<th>z-Score</th>':'')+'</tr></thead>'+
-    '<tbody>'+subjectRowsHtml('t1')+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(student.t1.TOTAL!==null?student.t1.TOTAL+'/80':'\u2014')+'</b></td></tr></tbody></table></div>'+
+    '<tbody>'+subjectRowsHtml('t1')+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(student.t1.TOTAL!==null?student.t1.TOTAL+'/80 ('+Math.round((student.t1.TOTAL/80)*1000)/10+'%)':'\u2014')+'</b></td></tr></tbody></table></div>'+
     '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">Slip Test 2 (17\u201320 Jul 2026)</h3>'+
     '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th>'+(sdOptions.student?'<th>z-Score</th>':'')+'</tr></thead>'+
-    '<tbody>'+subjectRowsHtml('t2')+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(student.t2.TOTAL!==null?student.t2.TOTAL+'/80':'\u2014')+'</b></td></tr></tbody></table></div>'+
+    '<tbody>'+subjectRowsHtml('t2')+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(student.t2.TOTAL!==null?student.t2.TOTAL+'/80 ('+Math.round((student.t2.TOTAL/80)*1000)/10+'%)':'\u2014')+'</b></td></tr></tbody></table></div>'+
     juneSection+
     mtSection+
     augustSection+
@@ -8748,7 +8748,7 @@ function downloadReportCardImage(){
       y += 28;
     });
     ctx.fillStyle = strongText; ctx.font='bold 15px Arial';
-    ctx.fillText('Total: ' + (student[test].TOTAL!==null ? student[test].TOTAL+'/80' : '\u2014'), 60, y+6);
+    ctx.fillText('Total: ' + (student[test].TOTAL!==null ? student[test].TOTAL+'/80 ('+Math.round((student[test].TOTAL/80)*1000)/10+'%)' : '\u2014'), 60, y+6);
     y += 50;
   });
 
@@ -8784,7 +8784,7 @@ function downloadReportCardImage(){
       y += 28;
     });
     ctx.fillStyle = strongText; ctx.font='bold 15px Arial';
-    ctx.fillText('Total: ' + (rec.TOTAL!==null ? rec.TOTAL+'/240' : '\u2014'), 60, y+6);
+    ctx.fillText('Total: ' + (rec.TOTAL!==null ? rec.TOTAL+'/240 ('+Math.round((rec.TOTAL/240)*1000)/10+'%)' : '\u2014'), 60, y+6);
     y += 50;
   });
 
@@ -8805,7 +8805,7 @@ function downloadReportCardImage(){
       y += 28;
     });
     ctx.fillStyle = strongText; ctx.font='bold 15px Arial';
-    ctx.fillText('Total: ' + no.TOTAL + '/720', 60, y+6);
+    ctx.fillText('Total: ' + no.TOTAL + '/720 ('+Math.round((no.TOTAL/720)*1000)/10+'%)', 60, y+6);
     y += 50;
   }
 
