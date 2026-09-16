@@ -150,6 +150,10 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
   <div class="ch-list" id="kcetList"></div>
   <div class="kcet-note">Only years individually confirmed on KEA's site are listed here — KCET's file naming isn't consistent year to year the way NCERT's is, so more years will be added here as each one is verified.</div>
 
+  <div class="section-label" id="pu-board">📋 PU Board Model Question Papers</div>
+  <div class="section-sub">Karnataka DPUE/KSEAB official Model QP &amp; Blue Print, for board exam pattern practice</div>
+  <div class="ch-list" id="puBoardList"></div>
+
   <div class="back-row"><a href="index.html">&larr; Back to BAIO Learning System</a></div>
 
   <footer>
@@ -280,6 +284,29 @@ function renderKcetList(containerId, items){
   }).join('');
 }
 renderKcetList('kcetList', KCET_PAPERS);
+
+/* ---- PU Board Model Question Papers: individually confirmed against the real
+   DPUE/KSEAB published filenames (search-indexed, not guessed). ---- */
+const PU_BOARD_MQP = [
+  {label:'I', title:'PU-I Biology &middot; Model QP 2023&ndash;24',
+    mqp:'https://dpue-exam.karnataka.gov.in/MODEL_QP2023/websiteupload/I%20PUC-MODEL%20QP%20%20IN%20PDF%20FORMAT/36.%20BIOLOGY%20MODEL%20QP%20%20I%20PUC%202023-24%20PDF.pdf',
+    blueprint:'https://dpue-exam.karnataka.gov.in/MODEL_QP2023/websiteupload/I%20PUC-BLUE%20PRINT%20IN%20PDF%20FORMAT/36.%20BIOLOGY%20BLUE%20PRINT%20%20I%20PUC%202023-24%20PDF.pdf'},
+  {label:'II', title:'PU-II Biology &middot; Model QP 2023&ndash;24',
+    mqp:'https://dpue-exam.karnataka.gov.in/MODEL_QP2023/websiteupload/MODEL%20QP%20FNAL%20pdf/36.%20BIOLOGY%20MQP%20II%20PU%202023%20-%202024.pdf',
+    blueprint:'https://dpue-exam.karnataka.gov.in/MODEL_QP2023/websiteupload/blue%20print%20pdf/36.%20BIOLOGY%20BLUE%20PRINTII%20PU%202023%20-%202024.pdf'},
+];
+function renderPuBoardList(containerId, items){
+  const el = document.getElementById(containerId);
+  el.innerHTML = items.map(it => `<div class="ch-row">
+    <div class="ch-num">${it.label}</div>
+    <div class="ch-body"><div class="ch-title">${it.title}</div></div>
+    <div class="ch-links">
+      <a class="ch-link" href="${it.mqp}" target="_blank" rel="noopener">📄 Model QP</a>
+      <a class="ch-link exemplar" href="${it.blueprint}" target="_blank" rel="noopener">📐 Blue Print</a>
+    </div>
+  </div>`).join('');
+}
+renderPuBoardList('puBoardList', PU_BOARD_MQP);
 </script>
 
 <script>
