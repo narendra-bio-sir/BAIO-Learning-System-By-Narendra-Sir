@@ -8867,7 +8867,18 @@ function roundRectPath(ctx,x,y,w,h,r){
 async function buildStudentAchievementCard(student, pu){
   const navy = '#0B1B14', navy2 = '#0F2419', gold = '#D4AF37', ink = '#EAF3EE', inkDim = '#9FC4B6';
   const bandColorHex = {'Top 10%':'#2bb3a3','Top 25%':'#D4AF37','Top Half':'#f0b429','Bottom Half':'#e0685f'};
-  const W = 1080, H = 1350;
+  const trend = computeClassPercentileTrend(student, pu);
+
+  // Height adapts to content instead of a fixed guess (same approach as the report card
+  // image resize) - without this, a student with a percentile block leaves a large dead
+  // gap before the footer, and one without it (no trend yet) would overflow a short fixed
+  // canvas. headerH covers the branding/name block; contentH covers whichever percentile
+  // block or fallback text is drawn below it; footerH covers the divider/QR/captions.
+  const W = 1080;
+  const headerH = 340;
+  const contentH = trend ? 330 : 160;
+  const footerH = 340;
+  const H = headerH + contentH + footerH;
   const canvas = document.createElement('canvas');
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
@@ -8889,8 +8900,7 @@ async function buildStudentAchievementCard(student, pu){
   ctx.fillStyle = inkDim; ctx.font = '22px Arial';
   ctx.fillText((pu===2?'2nd':'1st')+' PUC Science · Section: '+sectionLabel(student), W/2, 278);
 
-  const trend = computeClassPercentileTrend(student, pu);
-  let cy = 340;
+  let cy = headerH;
   if(trend){
     const band = PERCENTILE_BANDS.find(b=>trend.avgPct>=b.min) || PERCENTILE_BANDS[PERCENTILE_BANDS.length-1];
     const bandColor = bandColorHex[band.label] || gold;
@@ -8916,18 +8926,18 @@ async function buildStudentAchievementCard(student, pu){
   }
 
   ctx.strokeStyle = 'rgba(212,175,55,0.3)'; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(120, H-260); ctx.lineTo(W-120, H-260); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(120, cy+30); ctx.lineTo(W-120, cy+30); ctx.stroke();
 
   try{
     const qr = await loadImageAsync('qr-code.png');
     const qrSize = 150;
-    ctx.drawImage(qr, W/2-qrSize/2, H-230, qrSize, qrSize);
+    ctx.drawImage(qr, W/2-qrSize/2, cy+60, qrSize, qrSize);
   }catch(e){}
 
   ctx.fillStyle = gold; ctx.font = 'bold 18px Arial';
-  ctx.fillText('\u{1F4F2} Scan to join BAIO Learning System', W/2, H-58);
+  ctx.fillText('\u{1F4F2} Scan to join BAIO Learning System', W/2, cy+250);
   ctx.fillStyle = inkDim; ctx.font = 'italic 15px Arial';
-  ctx.fillText('by Narendra Sir · Biology Lecturer, Founder & CEO', W/2, H-30);
+  ctx.fillText('by Narendra Sir · Biology Lecturer, Founder & CEO', W/2, cy+278);
 
   return canvas;
 }
