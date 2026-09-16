@@ -74,6 +74,17 @@ h1{font-size:24px; font-weight:700; margin-top:8px; letter-spacing:-0.3px; line-
 .section-label:after{content:''; flex:1; height:2px; background:var(--line);}
 .section-sub{font-size:11.5px; color:var(--ink-dim); margin-top:-6px; margin-bottom:12px;}
 
+.lab-details{margin-top:6px;}
+.lab-summary{
+  font-size:16px; letter-spacing:0.5px; color:var(--gold); font-weight:800;
+  margin:30px 0 12px; display:flex; align-items:center; gap:10px; cursor:pointer; list-style:none;
+}
+.lab-summary::-webkit-details-marker{display:none;}
+.lab-summary:after{content:''; flex:1; height:2px; background:var(--line);}
+.lab-summary .chevron{font-size:12px; color:var(--ink-dim); transition:transform .15s ease; margin-left:-2px;}
+.lab-details[open] .lab-summary .chevron{transform:rotate(90deg);}
+.lab-details .section-sub{margin-top:0;}
+
 .ch-list{display:flex; flex-direction:column; gap:8px;}
 .ch-row{
   display:flex; align-items:center; gap:12px; border:1px solid var(--line); border-radius:12px;
@@ -146,13 +157,17 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
   <div class="section-sub">Class 12 Biology (Karnataka PU-II syllabus)</div>
   <div class="ch-list" id="pu2List"></div>
 
-  <div class="section-label" id="labs">🧪 PU-I Laboratory Manual</div>
-  <div class="section-sub">Class 11 Biology practicals, individually verified against the real NCERT PDF</div>
-  <div class="ch-list" id="pu1LabList"></div>
+  <details class="lab-details" id="labs">
+    <summary class="lab-summary">🧪 PU-I Laboratory Manual <span class="chevron">▸</span></summary>
+    <div class="section-sub">Class 11 Biology practicals, individually verified against the real NCERT PDF</div>
+    <div class="ch-list" id="pu1LabList"></div>
+  </details>
 
-  <div class="section-label">🧪 PU-II Laboratory Manual</div>
-  <div class="section-sub">Class 12 Biology practicals, individually verified against the real NCERT PDF</div>
-  <div class="ch-list" id="pu2LabList"></div>
+  <details class="lab-details">
+    <summary class="lab-summary">🧪 PU-II Laboratory Manual <span class="chevron">▸</span></summary>
+    <div class="section-sub">Class 12 Biology practicals, individually verified against the real NCERT PDF</div>
+    <div class="ch-list" id="pu2LabList"></div>
+  </details>
 
   <div class="section-label" id="kcet">🎯 KCET Previous Year Papers</div>
   <div class="section-sub">Karnataka CET Biology — question papers &amp; answer keys, direct from KEA</div>
@@ -248,10 +263,14 @@ const PU1_LAB = [
   {title:'Selected Animals by External Features (Spotting)', code:'kelm303'},
   {title:'Plant Tissues — Diversity in Shape & Size', code:'kelm304'},
   {title:'Temporary Slide of Animal Tissues', code:'kelm305'},
+  {title:'Study of Mitosis', code:'kelm306'},
+  {title:'Modifications of Root', code:'kelm307'},
+  {title:'Herbarium Sheets of Flowering Plants', code:'kelm310'},
 ];
 const PU2_LAB = [
   {title:'Percentage of Pollen Germination', code:'lelm202'},
   {title:'Stages of Gametogenesis in Mammalian Testis & Ovary', code:'lelm203'},
+  {title:'Homologous and Analogous Organs in Plants and Animals', code:'lelm215'},
 ];
 function renderLabList(containerId, items, classFolder, fullManualUrl, totalKnown){
   const el = document.getElementById(containerId);
@@ -263,12 +282,12 @@ function renderLabList(containerId, items, classFolder, fullManualUrl, totalKnow
     </div>
   </div>`).join('');
   const more = totalKnown
-    ? `<div class="more-row">+ ~${totalKnown - items.length} more practicals in the full manual (34 total) — not yet individually verified here, so not guessed. <a href="${fullManualUrl}" target="_blank" rel="noopener">Browse the complete manual &rarr;</a></div>`
+    ? `<div class="more-row">+ ~${totalKnown - items.length} more practicals in the full manual (~${totalKnown} total) — not yet individually verified here, so not guessed. <a href="${fullManualUrl}" target="_blank" rel="noopener">Browse the complete manual &rarr;</a></div>`
     : `<div class="more-row">More practicals exist in the full manual — not yet individually verified here, so not guessed. <a href="${fullManualUrl}" target="_blank" rel="noopener">Browse the complete manual &rarr;</a></div>`;
   el.innerHTML = rows + more;
 }
 renderLabList('pu1LabList', PU1_LAB, 'classXI', 'https://ncert.nic.in/science-laboratory-manual.php?ln=en', 34);
-renderLabList('pu2LabList', PU2_LAB, 'classXII', 'https://ncert.nic.in/science-laboratory-manual.php?ln=en', null);
+renderLabList('pu2LabList', PU2_LAB, 'classXII', 'https://ncert.nic.in/science-laboratory-manual.php?ln=en', 25);
 
 /* ---- KCET Previous Year Papers: individually confirmed against KEA's real published
    filenames (search-indexed, not guessed) — KEA's naming isn't a fixed formula like
