@@ -752,6 +752,23 @@ window.addEventListener('afterprint', function(){
   .sd-options-details[open] summary::before{ transform:rotate(90deg); }
   .sd-options-details .custom-report-options{ margin-top:8px; }
 
+  .achievement-preview-overlay{
+    display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.72);
+    align-items:flex-start; justify-content:center; padding:24px 16px; overflow-y:auto;
+  }
+  .achievement-preview-overlay.active{ display:flex; }
+  .achievement-preview-card{
+    background:var(--navy2); border:1px solid var(--border); border-radius:16px;
+    padding:16px; max-width:480px; width:100%; margin:auto;
+  }
+  .achievement-preview-card img{ width:100%; height:auto; border-radius:10px; display:block; }
+  .achievement-preview-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+  .achievement-preview-close{
+    background:transparent; border:1.5px solid var(--border); color:var(--text);
+    border-radius:10px; padding:11px 20px; font-family:'Space Grotesk'; font-weight:700;
+    font-size:13.5px; cursor:pointer;
+  }
+
   .student-search-wrap{ position:relative; }
   .student-results{
     position:absolute; top:100%; left:0; right:0; background:var(--navy2); border:1px solid var(--border);
@@ -3024,6 +3041,7 @@ window.addEventListener('afterprint', function(){
       <div class="report-actions">
         <button class="report-btn" id="downloadCardBtn">📥 Download as Image</button>
         <button class="report-btn secondary" id="printCardBtn">🖨️ Print / Save as PDF</button>
+        <button class="report-btn secondary" id="previewAchievementBtn">👁️ Preview Achievement</button>
         <button class="report-btn secondary" id="shareAchievementBtn">📱 Share Achievement</button>
       </div>
     </div>
@@ -3037,6 +3055,16 @@ window.addEventListener('afterprint', function(){
   </div>
   <div id="worksheetCoverSlipArea"></div>
   <canvas id="reportCanvas" width="800" height="1750"></canvas>
+  <div class="achievement-preview-overlay" id="achievementPreviewOverlay">
+    <div class="achievement-preview-card">
+      <img id="achievementPreviewImg" alt="Achievement card preview">
+      <div class="achievement-preview-actions">
+        <button class="report-btn" id="previewShareBtn">📱 Share</button>
+        <button class="report-btn secondary" id="previewDownloadBtn">📥 Download</button>
+        <button class="achievement-preview-close" id="achievementPreviewCloseBtn">✕ Close</button>
+      </div>
+    </div>
+  </div>
 </main>
 </div><!-- /app-student -->
 
@@ -8539,6 +8567,17 @@ function initStudentSearch(){
   document.getElementById('printCardBtn').addEventListener('click', ()=> window.print());
   document.getElementById('downloadCardBtn').addEventListener('click', downloadReportCardImage);
   document.getElementById('shareAchievementBtn').addEventListener('click', shareStudentAchievementCard);
+  document.getElementById('previewAchievementBtn').addEventListener('click', previewStudentAchievementCard);
+  document.getElementById('achievementPreviewCloseBtn').addEventListener('click', closeAchievementPreview);
+  document.getElementById('achievementPreviewOverlay').addEventListener('click', (e)=>{
+    if(e.target.id === 'achievementPreviewOverlay') closeAchievementPreview();
+  });
+  document.getElementById('previewShareBtn').addEventListener('click', ()=>{
+    if(window.__achievementPreviewCanvas && window.__currentStudent) shareCanvasAsAchievement(window.__achievementPreviewCanvas, window.__currentStudent);
+  });
+  document.getElementById('previewDownloadBtn').addEventListener('click', ()=>{
+    if(window.__achievementPreviewCanvas && window.__currentStudent) downloadCanvasAsAchievement(window.__achievementPreviewCanvas, window.__currentStudent);
+  });
   document.getElementById('rcTabScoresBtn').addEventListener('click', ()=>{
     document.getElementById('rcPaneScores').style.display = 'block';
     document.getElementById('rcPaneAssign').style.display = 'none';
@@ -9014,11 +9053,7 @@ async function buildStudentAchievementCard(student, pu){
 
   return canvas;
 }
-async function shareStudentAchievementCard(){
-  const student = window.__currentStudent;
-  const pu = window.__currentStudentPu;
-  if(!student) return;
-  const canvas = await buildStudentAchievementCard(student, pu);
+function shareCanvasAsAchievement(canvas, student){
   canvas.toBlob(function(blob){
     if(!blob){ alert('Could not generate the image on this device.'); return; }
     const file = new File([blob], student.name.replace(/\s+/g,'_')+'_Achievement.png', {type:'image/png'});
@@ -9033,6 +9068,42 @@ async function shareStudentAchievementCard(){
       alert('Sharing isn’t supported directly in this browser, so the image has been downloaded instead — you can share it from your gallery/downloads.');
     }
   }, 'image/png');
+}
+function downloadCanvasAsAchievement(canvas, student){
+  const link = document.createElement('a');
+  link.download = student.name.replace(/\s+/g,'_')+'_Achievement.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+async function shareStudentAchievementCard(){
+  const student = window.__currentStudent;
+  const pu = window.__currentStudentPu;
+  if(!student) return;
+  const canvas = await buildStudentAchievementCard(student, pu);
+  shareCanvasAsAchievement(canvas, student);
+}
+/* Builds the card once and shows it in an on-page modal before the student
+   commits to sharing/downloading it - so they can check how it looks first,
+   same content either way since the Share/Download buttons inside the modal
+   reuse this same canvas rather than rebuilding it. */
+async function previewStudentAchievementCard(){
+  const student = window.__currentStudent;
+  const pu = window.__currentStudentPu;
+  if(!student) return;
+  const btn = document.getElementById('previewAchievementBtn');
+  const originalLabel = btn.textContent;
+  btn.disabled = true; btn.textContent = '⏳ Building preview…';
+  try{
+    const canvas = await buildStudentAchievementCard(student, pu);
+    window.__achievementPreviewCanvas = canvas;
+    document.getElementById('achievementPreviewImg').src = canvas.toDataURL('image/png');
+    document.getElementById('achievementPreviewOverlay').classList.add('active');
+  } finally {
+    btn.disabled = false; btn.textContent = originalLabel;
+  }
+}
+function closeAchievementPreview(){
+  document.getElementById('achievementPreviewOverlay').classList.remove('active');
 }
 
 /* ================= TEACHER REPORTS (System / Custom) ================= */
