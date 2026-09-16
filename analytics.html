@@ -8634,13 +8634,77 @@ function downloadReportCardImage(){
   if(!student) return;
   const canvas = document.getElementById('reportCanvas');
   const ctx = canvas.getContext('2d');
-  const W = canvas.width, H = canvas.height;
+  const W = canvas.width;
   const dark = document.documentElement.getAttribute('data-theme')==='dark';
   const bg = dark ? '#0B1B14' : '#F7F5EE';
   const text = dark ? '#EAF3EE' : '#1E2A22';
   const muted = dark ? '#9FC4B6' : '#5C6E63';
   const gold = '#D4AF37';
   const strongText = dark ? '#ffffff' : '#0B1B14';
+
+  // Teacher's remark — word-wrapped AND justified (even left/right margins), shown in English,
+  // Kannada, and Hindi. Defined and measured up front (measureText doesn't depend on the canvas's
+  // pixel size) so the comment's height can factor into the canvas resize below.
+  const comment = generateTeacherComment(student);
+  const boxX = 60, boxW = W-120, boxPad = 16;
+  const innerW = boxW - boxPad*2;
+  const lineHeight = 21;
+  function wrapLines(str, font){
+    ctx.font = font;
+    const words = str.split(' ');
+    const lines = [];
+    let line = '';
+    words.forEach(w=>{
+      const t = line ? line+' '+w : w;
+      if(ctx.measureText(t).width > innerW){ lines.push(line); line = w; }
+      else line = t;
+    });
+    if(line) lines.push(line);
+    return lines;
+  }
+  function drawJustified(lines, font, color, startY){
+    ctx.font = font; ctx.fillStyle = color;
+    lines.forEach((l,i)=>{
+      const ly = startY + i*lineHeight;
+      const isLast = i===lines.length-1;
+      const words = l.split(' ');
+      if(isLast || words.length===1){
+        ctx.fillText(l, boxX+boxPad, ly);
+        return;
+      }
+      const wordWidths = words.map(w=>ctx.measureText(w).width);
+      const naturalWidth = wordWidths.reduce((a,b)=>a+b,0);
+      const gapCount = words.length-1;
+      const spaceWidth = (innerW - naturalWidth)/gapCount;
+      let cx = boxX+boxPad;
+      words.forEach((w,wi)=>{
+        ctx.fillText(w, cx, ly);
+        cx += wordWidths[wi] + (wi<gapCount ? spaceWidth : 0);
+      });
+    });
+    return lines.length*lineHeight;
+  }
+  const selectedLang = window.__remarkLang || 'en';
+  const selectedStr = comment[selectedLang] || comment.en;
+  const commentLines = wrapLines(selectedStr, '13px Arial');
+  const boxH = 34 + commentLines.length*lineHeight + 24;
+
+  // Resize the canvas to fit this student's actual content — a student with June, July AND
+  // August monthly tests plus a NEET round needs a lot more room than one with just Slip Tests,
+  // and a fixed height either clips content or leaves the image mostly blank below the footer.
+  // Each monthly-test section is sized for its full 8-subject table (worst case) so a student
+  // missing a few subjects (absent, or KAN/HIN/ELE not applicable) never overflows it.
+  const sectionH = subCount => 112 + subCount*28; // label(30) + header row(32) + rows + total/spacing(50)
+  let neededH = 224; // top header block
+  neededH += sectionH(5) * 2; // Slip Test 1 + Slip Test 2 (5 subjects each)
+  if(student.june) neededH += sectionH(8);
+  if(student.mt) neededH += sectionH(8);
+  if(student.august) neededH += sectionH(8);
+  if(student.neetobt) neededH += sectionH(3);
+  neededH += boxH + 30; // teacher's remark box + gap
+  neededH += 50; // footer margin
+  canvas.height = Math.max(1750, neededH);
+  const H = canvas.height;
 
   ctx.fillStyle = bg; ctx.fillRect(0,0,W,H);
   ctx.textAlign='center';
@@ -8688,8 +8752,11 @@ function downloadReportCardImage(){
     y += 50;
   });
 
-  if(student.mt){
-    const label = 'July Monthly Test' + (student.mt.RANK ? '  \u00b7  Class Rank #'+student.mt.RANK : '');
+  // Monthly tests: June, July, August \u2014 same table layout, each only drawn if this student
+  // has a record for it (mirrors the on-screen report card's June/July/August sections).
+  [['june','June Monthly Test',student.june],['july','July Monthly Test',student.mt],['august','August Monthly Test',student.august]].forEach(([monthKey,labelBase,rec])=>{
+    if(!rec) return;
+    const label = labelBase + (rec.RANK ? '  \u00b7  Class Rank #'+rec.RANK : '');
     ctx.textAlign='left'; ctx.fillStyle = gold; ctx.font='bold 16px Arial';
     ctx.fillText(label, 60, y);
     y += 30;
@@ -8701,9 +8768,9 @@ function downloadReportCardImage(){
     ctx.strokeStyle = 'rgba(150,150,150,0.3)'; ctx.beginPath(); ctx.moveTo(60,y); ctx.lineTo(W-60,y); ctx.stroke();
     y += 24;
     mtSubs.forEach(s=>{
-      const val = student.mt[s];
+      const val = rec[s];
       if(val===null || val===undefined) return;
-      const avg = pu1MonthClassAvgRaw('july', s);
+      const avg = pu1MonthClassAvgRaw(monthKey, s);
       const isBio = s==='BIO';
       ctx.fillStyle = isBio ? '#2bb3a3' : text; ctx.font = isBio ? 'bold 14px Arial' : '14px Arial';
       ctx.fillText((isBio?'\u2605 ':'')+mtNames[s], 60, y);
@@ -8717,9 +8784,9 @@ function downloadReportCardImage(){
       y += 28;
     });
     ctx.fillStyle = strongText; ctx.font='bold 15px Arial';
-    ctx.fillText('Total: ' + (student.mt.TOTAL!==null ? student.mt.TOTAL+'/240' : '\u2014'), 60, y+6);
+    ctx.fillText('Total: ' + (rec.TOTAL!==null ? rec.TOTAL+'/240' : '\u2014'), 60, y+6);
     y += 50;
-  }
+  });
 
   if(student.neetobt){
     const no = student.neetobt;
@@ -8742,58 +8809,9 @@ function downloadReportCardImage(){
     y += 50;
   }
 
-  // Teacher's remark — word-wrapped AND justified (even left/right margins),
-  // shown in English, Kannada, and Hindi.
-  const comment = generateTeacherComment(student);
+  // Teacher's remark box (comment/commentLines/boxH/boxX/boxW/boxPad already computed
+  // above, before the canvas resize, since the box height needed to factor into it).
   ctx.textAlign='left';
-  const boxX = 60, boxW = W-120, boxPad = 16;
-  const innerW = boxW - boxPad*2;
-  const lineHeight = 21;
-
-  // Wraps `str` into lines that fit innerW, then draws each line justified
-  // (extra space distributed evenly between words) except the final line
-  // of the whole block, which is left-aligned as usual for justified text.
-  function wrapLines(str, font){
-    ctx.font = font;
-    const words = str.split(' ');
-    const lines = [];
-    let line = '';
-    words.forEach(w=>{
-      const t = line ? line+' '+w : w;
-      if(ctx.measureText(t).width > innerW){ lines.push(line); line = w; }
-      else line = t;
-    });
-    if(line) lines.push(line);
-    return lines;
-  }
-  function drawJustified(lines, font, color, startY){
-    ctx.font = font; ctx.fillStyle = color;
-    lines.forEach((l,i)=>{
-      const ly = startY + i*lineHeight;
-      const isLast = i===lines.length-1;
-      const words = l.split(' ');
-      if(isLast || words.length===1){
-        ctx.fillText(l, boxX+boxPad, ly);
-        return;
-      }
-      const wordWidths = words.map(w=>ctx.measureText(w).width);
-      const naturalWidth = wordWidths.reduce((a,b)=>a+b,0);
-      const gapCount = words.length-1;
-      const spaceWidth = (innerW - naturalWidth)/gapCount;
-      let cx = boxX+boxPad;
-      words.forEach((w,wi)=>{
-        ctx.fillText(w, cx, ly);
-        cx += wordWidths[wi] + (wi<gapCount ? spaceWidth : 0);
-      });
-    });
-    return lines.length*lineHeight;
-  }
-
-  const selectedLang = window.__remarkLang || 'en';
-  const selectedStr = comment[selectedLang] || comment.en;
-  const commentLines = wrapLines(selectedStr, '13px Arial');
-  const boxH = 34 + commentLines.length*lineHeight + 24;
-
   ctx.fillStyle = 'rgba(212,175,55,0.08)';
   ctx.fillRect(boxX, y, boxW, boxH);
   ctx.fillStyle = gold; ctx.strokeStyle = gold; ctx.lineWidth = 3;
