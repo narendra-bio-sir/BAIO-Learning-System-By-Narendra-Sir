@@ -8903,6 +8903,19 @@ function roundRectPath(ctx,x,y,w,h,r){
   ctx.arcTo(x,y,x+w,y,r);
   ctx.closePath();
 }
+function wrapLinesFor(ctx, str, font, maxWidth){
+  ctx.font = font;
+  const words = str.split(' ');
+  const lines = [];
+  let line = '';
+  words.forEach(w=>{
+    const t = line ? line+' '+w : w;
+    if(ctx.measureText(t).width > maxWidth){ lines.push(line); line = w; }
+    else line = t;
+  });
+  if(line) lines.push(line);
+  return lines;
+}
 /* One-line teacher's remark per performance category, from the same raw score
    percentage already computed for it — a short read, not a replacement for the
    fuller generateTeacherComment() paragraph already on the report card itself. */
@@ -8954,19 +8967,29 @@ async function buildStudentAchievementCard(student, pu){
   const rawPctColor = pct => pct>=70?'#2bb3a3':pct>=50?'#D4AF37':pct>=35?'#f0b429':'#e0685f';
   const trend = computeClassPercentileTrend(student, pu);
   const cats = studentPerformanceCategories(student, pu);
+  const comment = generateTeacherComment(student);
+  const commentPad = 22;
 
   // Height adapts to content instead of a fixed guess (same approach as the report card
   // image resize) - headerH covers the branding/name block, percentileH the compact
   // percentile strip, rowsH one row per performance category (or a fallback line if
-  // none exist yet), footerH the divider/QR/captions.
+  // none exist yet), commentBoxH the personal Teacher's Remark (the same text already
+  // on the on-screen report card - "my remarks", not a generic substitute for it),
+  // footerH the divider/QR/captions. Text is measured on a throwaway canvas before the
+  // real one is sized, since the comment's length varies student to student.
   const W = 1080;
+  const measureCtx = document.createElement('canvas').getContext('2d');
+  const commentInnerW = (W-240) - commentPad*2;
+  const commentLines = wrapLinesFor(measureCtx, comment.en, '15px Arial', commentInnerW);
+  const commentLineH = 23;
+  const commentBoxH = 44 + commentLines.length*commentLineH + 34;
   const headerH = 340;
   const percentileH = trend ? 110 : 90;
   const sectionTitleH = 50;
   const rowH = 92;
   const rowsH = cats.length ? cats.length*rowH : 60;
   const footerH = 340;
-  const H = headerH + percentileH + sectionTitleH + rowsH + footerH;
+  const H = headerH + percentileH + sectionTitleH + rowsH + 30 + commentBoxH + footerH;
   const canvas = document.createElement('canvas');
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
@@ -9035,6 +9058,21 @@ async function buildStudentAchievementCard(student, pu){
     ctx.fillText('No test results on file yet.', W/2, cy+30);
     cy += 60;
   }
+  cy += 30;
+
+  ctx.fillStyle = 'rgba(212,175,55,0.06)';
+  roundRectPath(ctx, 120, cy, W-240, commentBoxH, 16); ctx.fill();
+  ctx.strokeStyle = gold; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(120, cy); ctx.lineTo(120, cy+commentBoxH); ctx.stroke();
+  ctx.textAlign='left'; ctx.fillStyle = gold; ctx.font = 'bold 17px Arial';
+  ctx.fillText('\u{1F4AC} Teacher’s Remark', 120+commentPad, cy+30);
+  ctx.fillStyle = ink; ctx.font = '15px Arial';
+  commentLines.forEach((l,i)=>{
+    ctx.fillText(l, 120+commentPad, cy+58+i*commentLineH);
+  });
+  ctx.textAlign='right'; ctx.fillStyle = inkDim; ctx.font = 'italic 14px Arial';
+  ctx.fillText('— Narendra Sir', W-120-commentPad, cy+commentBoxH-14);
+  cy += commentBoxH;
 
   ctx.strokeStyle = 'rgba(212,175,55,0.3)'; ctx.lineWidth = 1;
   ctx.textAlign = 'center';
