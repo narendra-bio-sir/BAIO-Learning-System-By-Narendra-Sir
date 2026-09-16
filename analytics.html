@@ -3024,6 +3024,7 @@ window.addEventListener('afterprint', function(){
       <div class="report-actions">
         <button class="report-btn" id="downloadCardBtn">📥 Download as Image</button>
         <button class="report-btn secondary" id="printCardBtn">🖨️ Print / Save as PDF</button>
+        <button class="report-btn secondary" id="shareAchievementBtn">📱 Share Achievement</button>
       </div>
     </div>
     <div id="rcPaneAssign" style="display:none;">
@@ -7329,7 +7330,7 @@ function computeClassPercentileTrend(student, pu){
   if(!roster) return null;
   const testDefs = pu===2
     ? [['march','March Monthly'],['april','April Monthly'],['may','May Monthly'],['june','June Monthly'],['july','July Monthly']]
-    : [['t1','Slip Test 1'],['t2','Slip Test 2'],['june','June Monthly'],['mt','July Monthly']];
+    : [['t1','Slip Test 1'],['t2','Slip Test 2'],['june','June Monthly'],['mt','July Monthly'],['august','August Monthly']];
   const points = [];
   testDefs.forEach(([key,label])=>{
     const rec = student[key];
@@ -8537,6 +8538,7 @@ function initStudentSearch(){
   });
   document.getElementById('printCardBtn').addEventListener('click', ()=> window.print());
   document.getElementById('downloadCardBtn').addEventListener('click', downloadReportCardImage);
+  document.getElementById('shareAchievementBtn').addEventListener('click', shareStudentAchievementCard);
   document.getElementById('rcTabScoresBtn').addEventListener('click', ()=>{
     document.getElementById('rcPaneScores').style.display = 'block';
     document.getElementById('rcPaneAssign').style.display = 'none';
@@ -8833,6 +8835,121 @@ function downloadReportCardImage(){
   link.download = student.name.replace(/\s+/g,'_')+'_Report_Card.png';
   link.href = canvas.toDataURL('image/png');
   link.click();
+}
+
+/* ================================================================
+   STUDENT ACHIEVEMENT SHARE CARD
+   A separate, portrait "brag card" for social media — distinct from
+   the dense tabular report card above. Headlines the student's
+   estimated class percentile (the same computeClassPercentileTrend()
+   figure already shown on-screen) plus their most recent test, with
+   BAIO branding and the app's install QR code (qr-code.png, the same
+   one used on the Install Guide) so a share doubles as an install
+   nudge for whoever sees it.
+   ================================================================ */
+function loadImageAsync(src){
+  return new Promise((resolve, reject)=>{
+    const img = new Image();
+    img.onload = ()=> resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+function roundRectPath(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+async function buildStudentAchievementCard(student, pu){
+  const navy = '#0B1B14', navy2 = '#0F2419', gold = '#D4AF37', ink = '#EAF3EE', inkDim = '#9FC4B6';
+  const bandColorHex = {'Top 10%':'#2bb3a3','Top 25%':'#D4AF37','Top Half':'#f0b429','Bottom Half':'#e0685f'};
+  const W = 1080, H = 1350;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const grad = ctx.createLinearGradient(0,0,W,H);
+  grad.addColorStop(0, navy); grad.addColorStop(1, navy2);
+  ctx.fillStyle = grad; ctx.fillRect(0,0,W,H);
+
+  ctx.textAlign='center';
+  ctx.fillStyle = gold; ctx.font = 'bold 30px Arial';
+  ctx.fillText('BAIO LEARNING SYSTEM', W/2, 90);
+  ctx.fillStyle = inkDim; ctx.font = 'italic 20px Arial';
+  ctx.fillText('Learn · Analyse · Improve · Achieve', W/2, 124);
+  ctx.strokeStyle = gold; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(120,152); ctx.lineTo(W-120,152); ctx.stroke();
+
+  ctx.fillStyle = ink; ctx.font = 'bold 52px Georgia, serif';
+  ctx.fillText(student.name, W/2, 240);
+  ctx.fillStyle = inkDim; ctx.font = '22px Arial';
+  ctx.fillText((pu===2?'2nd':'1st')+' PUC Science · Section: '+sectionLabel(student), W/2, 278);
+
+  const trend = computeClassPercentileTrend(student, pu);
+  let cy = 340;
+  if(trend){
+    const band = PERCENTILE_BANDS.find(b=>trend.avgPct>=b.min) || PERCENTILE_BANDS[PERCENTILE_BANDS.length-1];
+    const bandColor = bandColorHex[band.label] || gold;
+    ctx.fillStyle = 'rgba(212,175,55,0.10)';
+    roundRectPath(ctx, 120, cy, W-240, 220, 24); ctx.fill();
+    ctx.strokeStyle = gold; ctx.lineWidth = 2;
+    roundRectPath(ctx, 120, cy, W-240, 220, 24); ctx.stroke();
+    ctx.fillStyle = inkDim; ctx.font = 'bold 18px Arial';
+    ctx.fillText('ESTIMATED CLASS PERCENTILE', W/2, cy+48);
+    ctx.fillStyle = bandColor; ctx.font = 'bold 64px Arial';
+    ctx.fillText(band.icon+' ~'+trend.avgPct+'th', W/2, cy+128);
+    ctx.fillStyle = ink; ctx.font = 'bold 24px Arial';
+    ctx.fillText(band.label, W/2, cy+170);
+    cy += 260;
+    const latest = trend.points[trend.points.length-1];
+    ctx.fillStyle = inkDim; ctx.font = '20px Arial';
+    ctx.fillText('Latest: '+latest.label+' · Class Rank #'+latest.rank+' of '+latest.n, W/2, cy);
+    cy += 70;
+  } else {
+    ctx.fillStyle = inkDim; ctx.font = '22px Arial';
+    ctx.fillText('Building test history — check back after the next test.', W/2, cy+80);
+    cy += 160;
+  }
+
+  ctx.strokeStyle = 'rgba(212,175,55,0.3)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(120, H-260); ctx.lineTo(W-120, H-260); ctx.stroke();
+
+  try{
+    const qr = await loadImageAsync('qr-code.png');
+    const qrSize = 150;
+    ctx.drawImage(qr, W/2-qrSize/2, H-230, qrSize, qrSize);
+  }catch(e){}
+
+  ctx.fillStyle = gold; ctx.font = 'bold 18px Arial';
+  ctx.fillText('\u{1F4F2} Scan to join BAIO Learning System', W/2, H-58);
+  ctx.fillStyle = inkDim; ctx.font = 'italic 15px Arial';
+  ctx.fillText('by Narendra Sir · Biology Lecturer, Founder & CEO', W/2, H-30);
+
+  return canvas;
+}
+async function shareStudentAchievementCard(){
+  const student = window.__currentStudent;
+  const pu = window.__currentStudentPu;
+  if(!student) return;
+  const canvas = await buildStudentAchievementCard(student, pu);
+  canvas.toBlob(function(blob){
+    if(!blob){ alert('Could not generate the image on this device.'); return; }
+    const file = new File([blob], student.name.replace(/\s+/g,'_')+'_Achievement.png', {type:'image/png'});
+    const shareText = student.name+'’s progress on BAIO Learning System';
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      navigator.share({files:[file], title:'BAIO Learning System', text:shareText}).catch(()=>{});
+    } else if(navigator.share){
+      navigator.share({title:'BAIO Learning System', text:shareText}).catch(()=>{});
+    } else {
+      const link = document.createElement('a');
+      link.download = file.name; link.href = URL.createObjectURL(blob); link.click();
+      alert('Sharing isn’t supported directly in this browser, so the image has been downloaded instead — you can share it from your gallery/downloads.');
+    }
+  }, 'image/png');
 }
 
 /* ================= TEACHER REPORTS (System / Custom) ================= */
