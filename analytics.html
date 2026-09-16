@@ -8864,10 +8864,70 @@ function roundRectPath(ctx,x,y,w,h,r){
   ctx.arcTo(x,y,x+w,y,r);
   ctx.closePath();
 }
+/* One-line teacher's remark per performance category, from the same raw score
+   percentage already computed for it — a short read, not a replacement for the
+   fuller generateTeacherComment() paragraph already on the report card itself. */
+function performanceRemark(pct){
+  if(pct>=85) return 'Excellent — top-tier performance!';
+  if(pct>=70) return 'Strong performance, keep it up.';
+  if(pct>=50) return 'Steady — some room to sharpen further.';
+  if(pct>=35) return 'Room to grow with focused practice.';
+  return 'Early days — focused effort here will pay off fast.';
+}
+/* Gathers this student's latest attempt in every category that actually has
+   data on file — Slip Test and Monthly Test (raw marks %), plus NEET/KCET/JEE
+   exam readiness (computeStudentExamReadiness(), the same function the report
+   card's readiness cards already use, so the % and band here always match).
+   A category with no attempts on file is left out rather than shown as 0%. */
+function studentPerformanceCategories(student, pu){
+  const cats = [];
+  if(pu===1){
+    const st = (student.t2 && student.t2.TOTAL!==null && student.t2.TOTAL!==undefined && student.t2.TOTAL>0) ? student.t2 : student.t1;
+    if(st && st.TOTAL!==null && st.TOTAL!==undefined) cats.push({label:'Slip Test', pct: Math.round((st.TOTAL/80)*1000)/10});
+    const monthOrder = [['august','Aug'],['mt','Jul'],['june','Jun']];
+    for(const [key,short] of monthOrder){
+      const rec = student[key];
+      if(rec && rec.TOTAL!==null && rec.TOTAL!==undefined){
+        cats.push({label:'Monthly Test ('+short+')', pct: Math.round((rec.TOTAL/240)*1000)/10});
+        break;
+      }
+    }
+  } else {
+    const monthOrder = [['july','Jul'],['june','Jun'],['may','May'],['april','Apr'],['march','Mar']];
+    for(const [key,short] of monthOrder){
+      const rec = student[key];
+      if(rec && rec.TOTAL!==null && rec.TOTAL!==undefined){
+        cats.push({label:'Monthly Test ('+short+')', pct: Math.round((rec.TOTAL/240)*1000)/10});
+        break;
+      }
+    }
+  }
+  [['neet','NEET'],['kcet','KCET'],['jee','JEE']].forEach(([key,label])=>{
+    const r = computeStudentExamReadiness(key, student, pu, null);
+    if(r && r.latestPct!==null && r.latestPct!==undefined) cats.push({label:label, pct:r.latestPct, band:r.band});
+  });
+  return cats.sort((a,b)=> b.pct-a.pct);
+}
 async function buildStudentAchievementCard(student, pu){
   const navy = '#0B1B14', navy2 = '#0F2419', gold = '#D4AF37', ink = '#EAF3EE', inkDim = '#9FC4B6';
   const bandColorHex = {'Top 10%':'#2bb3a3','Top 25%':'#D4AF37','Top Half':'#f0b429','Bottom Half':'#e0685f'};
-  const W = 1080, H = 1350;
+  const readinessColorHex = {'Strong':'#2bb3a3','Competitive':'#D4AF37','Needs Work':'#f0b429','High Risk':'#e0685f'};
+  const rawPctColor = pct => pct>=70?'#2bb3a3':pct>=50?'#D4AF37':pct>=35?'#f0b429':'#e0685f';
+  const trend = computeClassPercentileTrend(student, pu);
+  const cats = studentPerformanceCategories(student, pu);
+
+  // Height adapts to content instead of a fixed guess (same approach as the report card
+  // image resize) - headerH covers the branding/name block, percentileH the compact
+  // percentile strip, rowsH one row per performance category (or a fallback line if
+  // none exist yet), footerH the divider/QR/captions.
+  const W = 1080;
+  const headerH = 340;
+  const percentileH = trend ? 110 : 90;
+  const sectionTitleH = 50;
+  const rowH = 92;
+  const rowsH = cats.length ? cats.length*rowH : 60;
+  const footerH = 340;
+  const H = headerH + percentileH + sectionTitleH + rowsH + footerH;
   const canvas = document.createElement('canvas');
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
@@ -8889,45 +8949,68 @@ async function buildStudentAchievementCard(student, pu){
   ctx.fillStyle = inkDim; ctx.font = '22px Arial';
   ctx.fillText((pu===2?'2nd':'1st')+' PUC Science · Section: '+sectionLabel(student), W/2, 278);
 
-  const trend = computeClassPercentileTrend(student, pu);
-  let cy = 340;
+  let cy = headerH;
   if(trend){
     const band = PERCENTILE_BANDS.find(b=>trend.avgPct>=b.min) || PERCENTILE_BANDS[PERCENTILE_BANDS.length-1];
     const bandColor = bandColorHex[band.label] || gold;
-    ctx.fillStyle = 'rgba(212,175,55,0.10)';
-    roundRectPath(ctx, 120, cy, W-240, 220, 24); ctx.fill();
-    ctx.strokeStyle = gold; ctx.lineWidth = 2;
-    roundRectPath(ctx, 120, cy, W-240, 220, 24); ctx.stroke();
-    ctx.fillStyle = inkDim; ctx.font = 'bold 18px Arial';
-    ctx.fillText('ESTIMATED CLASS PERCENTILE', W/2, cy+48);
-    ctx.fillStyle = bandColor; ctx.font = 'bold 64px Arial';
-    ctx.fillText(band.icon+' ~'+trend.avgPct+'th', W/2, cy+128);
-    ctx.fillStyle = ink; ctx.font = 'bold 24px Arial';
-    ctx.fillText(band.label, W/2, cy+170);
-    cy += 260;
-    const latest = trend.points[trend.points.length-1];
-    ctx.fillStyle = inkDim; ctx.font = '20px Arial';
-    ctx.fillText('Latest: '+latest.label+' · Class Rank #'+latest.rank+' of '+latest.n, W/2, cy);
-    cy += 70;
+    ctx.fillStyle = 'rgba(212,175,55,0.08)';
+    roundRectPath(ctx, 120, cy, W-240, 80, 16); ctx.fill();
+    ctx.strokeStyle = gold; ctx.lineWidth = 1.5;
+    roundRectPath(ctx, 120, cy, W-240, 80, 16); ctx.stroke();
+    ctx.fillStyle = inkDim; ctx.font = 'bold 14px Arial';
+    ctx.fillText('ESTIMATED CLASS PERCENTILE (THEORY)', W/2, cy+28);
+    ctx.fillStyle = bandColor; ctx.font = 'bold 28px Arial';
+    ctx.fillText(band.icon+' ~'+trend.avgPct+'th percentile · '+band.label, W/2, cy+62);
+    cy += 80+30;
   } else {
-    ctx.fillStyle = inkDim; ctx.font = '22px Arial';
-    ctx.fillText('Building test history — check back after the next test.', W/2, cy+80);
-    cy += 160;
+    ctx.fillStyle = inkDim; ctx.font = '20px Arial';
+    ctx.fillText('Building theory test history — check back after the next test.', W/2, cy+30);
+    cy += 90;
+  }
+
+  ctx.fillStyle = gold; ctx.font = 'bold 24px Arial';
+  ctx.fillText('\u{1F3C6} OVERALL PERFORMANCE', W/2, cy+32);
+  cy += sectionTitleH;
+
+  if(cats.length){
+    cats.forEach((c,i)=>{
+      const medal = i===0?'\u{1F947}':i===1?'\u{1F948}':i===2?'\u{1F949}':'#'+(i+1);
+      const isTop3 = i<3;
+      const color = c.band ? (readinessColorHex[c.band.label] || gold) : rawPctColor(c.pct);
+      ctx.fillStyle = isTop3 ? 'rgba(212,175,55,0.06)' : 'rgba(255,255,255,0.03)';
+      roundRectPath(ctx, 120, cy, W-240, rowH-14, 14); ctx.fill();
+      ctx.textAlign='left';
+      ctx.fillStyle = isTop3 ? gold : ink; ctx.font = isTop3 ? 'bold 22px Arial' : 'bold 18px Arial';
+      ctx.fillText(medal+'  '+c.label, 150, cy+32);
+      ctx.textAlign='right';
+      ctx.fillStyle = color; ctx.font = isTop3 ? 'bold 26px Arial' : 'bold 20px Arial';
+      ctx.fillText(c.pct+'%'+(c.band ? '  '+c.band.icon : ''), W-150, cy+32);
+      ctx.textAlign='left';
+      ctx.fillStyle = inkDim; ctx.font = 'italic 14px Arial';
+      ctx.fillText(performanceRemark(c.pct), 150, cy+58);
+      cy += rowH;
+    });
+  } else {
+    ctx.textAlign='center';
+    ctx.fillStyle = inkDim; ctx.font = '20px Arial';
+    ctx.fillText('No test results on file yet.', W/2, cy+30);
+    cy += 60;
   }
 
   ctx.strokeStyle = 'rgba(212,175,55,0.3)'; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(120, H-260); ctx.lineTo(W-120, H-260); ctx.stroke();
+  ctx.textAlign = 'center';
+  ctx.beginPath(); ctx.moveTo(120, cy+30); ctx.lineTo(W-120, cy+30); ctx.stroke();
 
   try{
     const qr = await loadImageAsync('qr-code.png');
     const qrSize = 150;
-    ctx.drawImage(qr, W/2-qrSize/2, H-230, qrSize, qrSize);
+    ctx.drawImage(qr, W/2-qrSize/2, cy+60, qrSize, qrSize);
   }catch(e){}
 
   ctx.fillStyle = gold; ctx.font = 'bold 18px Arial';
-  ctx.fillText('\u{1F4F2} Scan to join BAIO Learning System', W/2, H-58);
+  ctx.fillText('\u{1F4F2} Scan to join BAIO Learning System', W/2, cy+250);
   ctx.fillStyle = inkDim; ctx.font = 'italic 15px Arial';
-  ctx.fillText('by Narendra Sir · Biology Lecturer, Founder & CEO', W/2, H-30);
+  ctx.fillText('by Narendra Sir · Biology Lecturer, Founder & CEO', W/2, cy+278);
 
   return canvas;
 }
