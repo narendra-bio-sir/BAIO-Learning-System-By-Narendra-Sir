@@ -58,6 +58,15 @@ h1{font-size:24px; font-weight:700; margin-top:8px; letter-spacing:-0.3px; line-
   display:flex; align-items:center; justify-content:center;
 }
 
+.jump-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:22px;}
+.jump-btn{
+  flex:1 1 calc(33.333% - 6px); min-width:100px; text-align:center; padding:11px 10px; border-radius:12px;
+  border:1px solid var(--gold); background:transparent; color:var(--gold);
+  font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12px;
+  text-decoration:none; cursor:pointer; transition:background .15s ease;
+}
+.jump-btn:hover{background:rgba(212,175,55,0.08);}
+
 .section-label{
   font-size:16px; letter-spacing:0.5px; color:var(--gold); font-weight:800;
   margin:30px 0 12px; display:flex; align-items:center; gap:10px;
@@ -121,15 +130,23 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
     <p class="tag">Direct links to the official NCERT textbook, Exemplar practice problems, and Laboratory Manual for every PU-I and PU-II Biology chapter — the same source Narendra Sir's diagram references point to. Useful any time you want extra practice problems, the original text, or your practical syllabus.</p>
   </header>
 
-  <div class="section-label">📗 PU-I &middot; 19 Chapters</div>
+  <div class="jump-row">
+    <a class="jump-btn" href="#pu1">📗 PU-I</a>
+    <a class="jump-btn" href="#pu2">📘 PU-II</a>
+    <a class="jump-btn" href="#labs">🧪 Lab Manual</a>
+    <a class="jump-btn" href="#kcet">🎯 KCET PYQs</a>
+    <a class="jump-btn" href="#pu-board">📋 PU Board MQP</a>
+  </div>
+
+  <div class="section-label" id="pu1">📗 PU-I &middot; 19 Chapters</div>
   <div class="section-sub">Class 11 Biology (Karnataka PU-I syllabus)</div>
   <div class="ch-list" id="pu1List"></div>
 
-  <div class="section-label">📘 PU-II &middot; 13 Chapters</div>
+  <div class="section-label" id="pu2">📘 PU-II &middot; 13 Chapters</div>
   <div class="section-sub">Class 12 Biology (Karnataka PU-II syllabus)</div>
   <div class="ch-list" id="pu2List"></div>
 
-  <div class="section-label">🧪 PU-I Laboratory Manual</div>
+  <div class="section-label" id="labs">🧪 PU-I Laboratory Manual</div>
   <div class="section-sub">Class 11 Biology practicals, individually verified against the real NCERT PDF</div>
   <div class="ch-list" id="pu1LabList"></div>
 
