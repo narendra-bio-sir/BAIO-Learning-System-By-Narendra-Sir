@@ -8960,6 +8960,17 @@ function studentPerformanceCategories(student, pu){
   });
   return cats.sort((a,b)=> b.pct-a.pct);
 }
+/* Short, precise, single-sentence remark for the shareable card — distinct from
+   generateTeacherComment()'s full multi-sentence paragraph on the private report
+   card. Data-driven from the same categories already ranked above (not a
+   truncation of the long comment, which can read oddly cut off mid-thought). */
+function shortAchievementRemark(student, cats){
+  if(!cats.length) return student.name+', keep attending tests so we can start tracking progress here.';
+  const best = cats[0];
+  const weakest = cats[cats.length-1];
+  if(cats.length===1 || best.pct-weakest.pct<15) return student.name+', solid all-round showing at '+best.pct+'% in '+best.label+' — keep it up!';
+  return student.name+', strong in '+best.label+' ('+best.pct+'%) — bring that same focus to '+weakest.label+'.';
+}
 async function buildStudentAchievementCard(student, pu){
   const navy = '#0B1B14', navy2 = '#0F2419', gold = '#D4AF37', ink = '#EAF3EE', inkDim = '#9FC4B6';
   const bandColorHex = {'Top 10%':'#2bb3a3','Top 25%':'#D4AF37','Top Half':'#f0b429','Bottom Half':'#e0685f'};
@@ -8967,21 +8978,20 @@ async function buildStudentAchievementCard(student, pu){
   const rawPctColor = pct => pct>=70?'#2bb3a3':pct>=50?'#D4AF37':pct>=35?'#f0b429':'#e0685f';
   const trend = computeClassPercentileTrend(student, pu);
   const cats = studentPerformanceCategories(student, pu);
-  const comment = generateTeacherComment(student);
+  const remark = shortAchievementRemark(student, cats);
   const commentPad = 22;
 
   // Height adapts to content instead of a fixed guess (same approach as the report card
   // image resize) - headerH covers the branding/name block, percentileH the compact
   // percentile strip, rowsH one row per performance category (or a fallback line if
-  // none exist yet), commentBoxH the personal Teacher's Remark (the same text already
-  // on the on-screen report card - "my remarks", not a generic substitute for it),
-  // footerH the divider/QR/captions. Text is measured on a throwaway canvas before the
-  // real one is sized, since the comment's length varies student to student.
+  // none exist yet), commentBoxH the short Teacher's Remark, footerH the divider/QR/
+  // captions. Text is measured on a throwaway canvas before the real one is sized,
+  // since the remark's length still varies a little student to student.
   const W = 1080;
   const measureCtx = document.createElement('canvas').getContext('2d');
   const commentInnerW = (W-240) - commentPad*2;
-  const commentLines = wrapLinesFor(measureCtx, comment.en, '15px Arial', commentInnerW);
-  const commentLineH = 23;
+  const commentLines = wrapLinesFor(measureCtx, remark, '16px Arial', commentInnerW);
+  const commentLineH = 24;
   const commentBoxH = 44 + commentLines.length*commentLineH + 34;
   const headerH = 340;
   const percentileH = trend ? 110 : 90;
@@ -9066,7 +9076,7 @@ async function buildStudentAchievementCard(student, pu){
   ctx.beginPath(); ctx.moveTo(120, cy); ctx.lineTo(120, cy+commentBoxH); ctx.stroke();
   ctx.textAlign='left'; ctx.fillStyle = gold; ctx.font = 'bold 17px Arial';
   ctx.fillText('\u{1F4AC} Teacher’s Remark', 120+commentPad, cy+30);
-  ctx.fillStyle = ink; ctx.font = '15px Arial';
+  ctx.fillStyle = ink; ctx.font = '16px Arial';
   commentLines.forEach((l,i)=>{
     ctx.fillText(l, 120+commentPad, cy+58+i*commentLineH);
   });
