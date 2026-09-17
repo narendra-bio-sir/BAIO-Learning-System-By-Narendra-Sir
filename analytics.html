@@ -6766,7 +6766,7 @@ function mtClassAvgRaw(subj){
    source sheet (ABSENT_SUBJECTS, currently only populated for July). */
 function studentSubjectPool(student, pu){
   const subs = ['KAN','HIN','ENG','PHY','CHE','MAT','BIO','ELE'];
-  const keys = pu===2 ? ['march','april','may','june','july'] : ['t1','t2','june','mt'];
+  const keys = pu===2 ? ['march','april','may','june','july'] : ['t1','t2','june','mt','august'];
   const pool = new Set();
   keys.forEach(k=>{
     const d = student[k];
@@ -7165,7 +7165,7 @@ function computePU2JeeReadiness(student, roundScope){
   const rec = PU2_JEE_BY_CODE[student.code];
   if(!rec) return null;
   const pu1Labels = JEE_TESTS.map(t=>t.label);
-  const allKeys = Object.keys(rec).sort();
+  const allKeys = sortObtKeys(Object.keys(rec));
   let attempts = [];
   allKeys.forEach((k, idx)=>{
     const r = rec[k];
@@ -7197,7 +7197,7 @@ function buildPU2NeetSectionHtml(student){
   const rec = PU2_NEET_BY_CODE[student.code];
   if(!rec) return '';
   let html = '';
-  Object.keys(rec).sort().forEach(key=>{
+  sortObtKeys(Object.keys(rec)).forEach(key=>{
     const r = rec[key];
     const idx = parseInt(key.replace('obt',''),10)-1;
     const test = PU2_NEET_TESTS[idx];
@@ -7218,7 +7218,7 @@ function buildPU2JeeSectionHtml(student){
   const rec = PU2_JEE_BY_CODE[student.code];
   if(!rec) return '';
   let html = '';
-  Object.keys(rec).sort().forEach(key=>{
+  sortObtKeys(Object.keys(rec)).forEach(key=>{
     const r = rec[key];
     const idx = parseInt(key.replace('obt',''),10)-1;
     const test = PU2_JEE_TESTS[idx];
@@ -10800,6 +10800,10 @@ function getPU1BioHistory(student){
     const avg = pu1MonthClassAvgRaw('july','BIO');
     hist.push({label:'July Monthly Test', score:student.mt.BIO, outOf:40, pct:Math.round(student.mt.BIO/40*1000)/10, classAvg: avg!==null?Math.round(avg/40*1000)/10:null});
   }
+  if(student.august && student.august.BIO!==null && student.august.BIO!==undefined){
+    const avg = pu1MonthClassAvgRaw('august','BIO');
+    hist.push({label:'August Monthly Test', score:student.august.BIO, outOf:40, pct:Math.round(student.august.BIO/40*1000)/10, classAvg: avg!==null?Math.round(avg/40*1000)/10:null});
+  }
   const neetRec = (typeof NEET_BY_CODE!=='undefined') ? NEET_BY_CODE[student.code] : null;
   if(neetRec){
     NEET_TESTS.forEach((test,i)=>{
@@ -10845,7 +10849,7 @@ function getPU2BioHistory(student){
   if(typeof PU2_KCET_BY_CODE!=='undefined'){
     const kcetRec = PU2_KCET_BY_CODE[student.code];
     if(kcetRec){
-      Object.keys(kcetRec).sort().forEach(key=>{
+      sortObtKeys(Object.keys(kcetRec)).forEach(key=>{
         const r = kcetRec[key];
         if(!r || r.BIO===null || r.BIO===undefined) return;
         hist.push({label:(r.label||'KCET')+' (Bio optional)', score:r.BIO, outOf:r.outof||60, pct:Math.round(r.BIO/(r.outof||60)*1000)/10, classAvg:null});
@@ -10875,10 +10879,11 @@ function isElectronicsOnly(student, pu){
   const bioT1 = student.t1 && student.t1.BIO!==null && student.t1.BIO!==undefined;
   const bioT2 = student.t2 && student.t2.BIO!==null && student.t2.BIO!==undefined;
   const bioMt = student.mt && student.mt.BIO!==null && student.mt.BIO!==undefined;
+  const bioAugust = student.august && student.august.BIO!==null && student.august.BIO!==undefined;
   const neetRec = (typeof NEET_BY_CODE!=='undefined') ? NEET_BY_CODE[student.code] : null;
   const bioNeet = neetRec ? ['obt1','obt2','obt3','obt4'].some(k=>neetRec[k] && neetRec[k].BIO!==null && neetRec[k].BIO!==undefined)
     : (student.neetobt && student.neetobt.BIO!==null && student.neetobt.BIO!==undefined);
-  return !(bioT1 || bioT2 || bioMt || bioNeet);
+  return !(bioT1 || bioT2 || bioMt || bioAugust || bioNeet);
 }
 
 /* ---- PU-I Electronics student: Electronics-subject history across Slip Test 1/2, Monthly, KCET OBT ---- */
@@ -10899,6 +10904,10 @@ function getPU1ElectronicsHistory(student){
   if(student.mt && student.mt.ELE!==null && student.mt.ELE!==undefined){
     const avg = pu1MonthClassAvgRaw('july','ELE');
     hist.push({label:'July Monthly Test', score:student.mt.ELE, outOf:40, pct:Math.round(student.mt.ELE/40*1000)/10, classAvg: avg!==null?Math.round(avg/40*1000)/10:null});
+  }
+  if(student.august && student.august.ELE!==null && student.august.ELE!==undefined){
+    const avg = pu1MonthClassAvgRaw('august','ELE');
+    hist.push({label:'August Monthly Test', score:student.august.ELE, outOf:40, pct:Math.round(student.august.ELE/40*1000)/10, classAvg: avg!==null?Math.round(avg/40*1000)/10:null});
   }
   return hist;
 }
