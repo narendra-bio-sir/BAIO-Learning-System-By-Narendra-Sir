@@ -2042,6 +2042,43 @@ function qA(q, field){
   const v = q[field + '_' + currentLang];
   return Array.isArray(v) ? v : q[field];
 }
+/* Fixed UI strings used inside the NEET (advanced) question runner for
+   formats whose instructional text / option sets are not per-question data
+   (match, ci, combo, seq headers; AR and S12 answer-choice sets). */
+const ADV_UI_STRINGS = {
+  en: {
+    matchInstruction: 'Match Column A with Column B:', colA: 'Column A', colB: 'Column B',
+    ciQuestion: (p)=>`Which of the following statements is <b>${p}</b>?`,
+    consider: 'Consider the following statements:', whichAboveCorrect: 'Which of the above are correct?',
+    arrangeSteps: 'Arrange the following steps in the correct sequence:',
+    promptCorrect: 'CORRECT', promptIncorrect: 'INCORRECT',
+    arOpts: ["Both A and R are true, and R is the correct explanation of A","Both A and R are true, but R is NOT the correct explanation of A","A is true, but R is false","A is false, but R is true"],
+    s12Opts: ["Both Statement I and II are correct","Statement I is correct, Statement II is incorrect","Statement I is incorrect, Statement II is correct","Both Statement I and II are incorrect"]
+  },
+  kn: {
+    matchInstruction: 'ಕಾಲಂ A ಅನ್ನು ಕಾಲಂ B ಯೊಂದಿಗೆ ಹೊಂದಿಸಿ:', colA: 'ಕಾಲಂ A', colB: 'ಕಾಲಂ B',
+    ciQuestion: (p)=>`ಈ ಕೆಳಗಿನ ಯಾವ ಹೇಳಿಕೆ <b>${p}</b>?`,
+    consider: 'ಈ ಕೆಳಗಿನ ಹೇಳಿಕೆಗಳನ್ನು ಪರಿಗಣಿಸಿ:', whichAboveCorrect: 'ಮೇಲಿನವುಗಳಲ್ಲಿ ಯಾವುದು ಸರಿಯಾಗಿದೆ?',
+    arrangeSteps: 'ಈ ಕೆಳಗಿನ ಹಂತಗಳನ್ನು ಸರಿಯಾದ ಅನುಕ್ರಮದಲ್ಲಿ ಜೋಡಿಸಿ:',
+    promptCorrect: 'ಸರಿಯಾದ', promptIncorrect: 'ತಪ್ಪಾದ',
+    arOpts: ["A ಮತ್ತು R ಎರಡೂ ನಿಜ, ಮತ್ತು R ಎಂಬುದು Aಯ ಸರಿಯಾದ ವಿವರಣೆಯಾಗಿದೆ","A ಮತ್ತು R ಎರಡೂ ನಿಜ, ಆದರೆ R ಎಂಬುದು Aಯ ಸರಿಯಾದ ವಿವರಣೆಯಲ್ಲ","A ನಿಜ, ಆದರೆ R ಸುಳ್ಳು","A ಸುಳ್ಳು, ಆದರೆ R ನಿಜ"],
+    s12Opts: ["ಹೇಳಿಕೆ I ಮತ್ತು II ಎರಡೂ ಸರಿಯಾಗಿವೆ","ಹೇಳಿಕೆ I ಸರಿಯಾಗಿದೆ, ಹೇಳಿಕೆ II ತಪ್ಪಾಗಿದೆ","ಹೇಳಿಕೆ I ತಪ್ಪಾಗಿದೆ, ಹೇಳಿಕೆ II ಸರಿಯಾಗಿದೆ","ಹೇಳಿಕೆ I ಮತ್ತು II ಎರಡೂ ತಪ್ಪಾಗಿವೆ"]
+  },
+  hi: {
+    matchInstruction: 'कॉलम A का कॉलम B से मिलान कीजिए:', colA: 'कॉलम A', colB: 'कॉलम B',
+    ciQuestion: (p)=>`निम्नलिखित में से कौन-सा कथन <b>${p}</b> है?`,
+    consider: 'निम्नलिखित कथनों पर विचार कीजिए:', whichAboveCorrect: 'उपरोक्त में से कौन-से सही हैं?',
+    arrangeSteps: 'निम्नलिखित चरणों को सही क्रम में व्यवस्थित कीजिए:',
+    promptCorrect: 'सही', promptIncorrect: 'गलत',
+    arOpts: ["A और R दोनों सत्य हैं, और R, A की सही व्याख्या है","A और R दोनों सत्य हैं, परंतु R, A की सही व्याख्या नहीं है","A सत्य है, परंतु R असत्य है","A असत्य है, परंतु R सत्य है"],
+    s12Opts: ["कथन I और II दोनों सही हैं","कथन I सही है, कथन II गलत है","कथन I गलत है, कथन II सही है","कथन I और II दोनों गलत हैं"]
+  }
+};
+function advUI(){ return ADV_UI_STRINGS[currentLang] || ADV_UI_STRINGS.en; }
+function advPromptLabel(prompt){
+  const L = advUI();
+  return prompt === 'CORRECT' ? L.promptCorrect : L.promptIncorrect;
+}
 </script>
 <script>
 /* ============================================================
@@ -3009,26 +3046,28 @@ function renderAdvQuestion(){
   } else if(q.type==='fib'){
     body = `<div class="q-text">${qT(q,'s')}</div><div id="advOpts"></div>`;
   } else if(q.type==='match'){
-    body = `<div class="q-text">Match Column A with Column B:</div>
+    const L = advUI();
+    body = `<div class="q-text">${L.matchInstruction}</div>
       <div class="match-cols">
-        <div class="match-col"><div class="lbl">Column A</div>${qA(q,'colA').map(x=>`<div>${x}</div>`).join('')}</div>
-        <div class="match-col"><div class="lbl">Column B</div>${qA(q,'colB').map(x=>`<div>${x}</div>`).join('')}</div>
+        <div class="match-col"><div class="lbl">${L.colA}</div>${qA(q,'colA').map(x=>`<div>${x}</div>`).join('')}</div>
+        <div class="match-col"><div class="lbl">${L.colB}</div>${qA(q,'colB').map(x=>`<div>${x}</div>`).join('')}</div>
       </div>
       <div id="advOpts"></div>`;
   } else if(q.type==='ci'){
-    body = `<div class="q-text">Which of the following statements is <b>${q.prompt}</b>?</div><div id="advOpts"></div>`;
+    body = `<div class="q-text">${advUI().ciQuestion(advPromptLabel(q.prompt))}</div><div id="advOpts"></div>`;
   } else if(q.type==='s12'){
     body = `<div class="q-text"><b>${qT(q,'s1')}</b><br><b>${qT(q,'s2')}</b></div><div id="advOpts"></div>`;
   } else if(q.type==='combo'){
-    body = `<div class="q-text">Consider the following statements:</div>
+    const L = advUI();
+    body = `<div class="q-text">${L.consider}</div>
       <div class="seq-list">${qA(q,'stmts').map(x=>`<div>${x}</div>`).join('')}</div>
-      <div class="q-text">Which of the above are correct?</div><div id="advOpts"></div>`;
+      <div class="q-text">${L.whichAboveCorrect}</div><div id="advOpts"></div>`;
   } else if(q.type==='seq'){
     const steps = qA(q,'steps');
     const shuffledLabels = steps.map((s2,i)=>({text:s2, origIdx:i}));
     const display = shuffleArr(shuffledLabels);
     q._display = display;
-    body = `<div class="q-text">Arrange the following steps in the correct sequence:</div>
+    body = `<div class="q-text">${advUI().arrangeSteps}</div>
       <div class="seq-list">${display.map((d,i)=>`<div><span class="lbl">${String.fromCharCode(65+i)}.</span>${d.text}</div>`).join('')}</div>
       <div id="advOpts"></div>`;
   }
@@ -3036,10 +3075,10 @@ function renderAdvQuestion(){
 
   const optsDiv = document.getElementById('advOpts');
   if(q.type==='ar'){
-    const arOpts = ["Both A and R are true, and R is the correct explanation of A","Both A and R are true, but R is NOT the correct explanation of A","A is true, but R is false","A is false, but R is true"];
+    const arOpts = advUI().arOpts;
     arOpts.forEach((opt,i)=>{ const b=document.createElement('button'); b.className='opt'; b.textContent=`(${String.fromCharCode(65+i)}) ${opt}`; b.addEventListener('click',()=>selectAdvAnswer(i,q.a)); optsDiv.appendChild(b); });
   } else if(q.type==='s12'){
-    const s12Opts = ["Both Statement I and II are correct","Statement I is correct, Statement II is incorrect","Statement I is incorrect, Statement II is correct","Both Statement I and II are incorrect"];
+    const s12Opts = advUI().s12Opts;
     s12Opts.forEach((opt,i)=>{ const b=document.createElement('button'); b.className='opt'; b.textContent=`(${String.fromCharCode(65+i)}) ${opt}`; b.addEventListener('click',()=>selectAdvAnswer(i,q.a)); optsDiv.appendChild(b); });
   } else if(q.type==='mcq' || q.type==='fib' || q.type==='match' || q.type==='combo'){
     qA(q,'o').forEach((opt,i)=>{ const b=document.createElement('button'); b.className='opt'; b.textContent=`(${String.fromCharCode(65+i)}) ${opt}`; b.addEventListener('click',()=>selectAdvAnswer(i,q.a)); optsDiv.appendChild(b); });
