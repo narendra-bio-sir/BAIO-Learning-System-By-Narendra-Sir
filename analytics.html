@@ -11004,6 +11004,9 @@ function escAttr(str){
   return String(str||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 function adoptedLatestSnapshot(student){
+  if(student.august && student.august.TOTAL!==null && student.august.TOTAL!==undefined){
+    return student.august.TOTAL+'/240'+(student.august.RANK?' (Rank #'+student.august.RANK+')':'');
+  }
   if(student.mt && student.mt.TOTAL!==null && student.mt.TOTAL!==undefined){
     return student.mt.TOTAL+'/240'+(student.mt.RANK?' (Rank #'+student.mt.RANK+')':'');
   }
