@@ -6766,7 +6766,7 @@ function mtClassAvgRaw(subj){
    source sheet (ABSENT_SUBJECTS, currently only populated for July). */
 function studentSubjectPool(student, pu){
   const subs = ['KAN','HIN','ENG','PHY','CHE','MAT','BIO','ELE'];
-  const keys = pu===2 ? ['march','april','may','june','july'] : ['t1','t2','june','mt'];
+  const keys = pu===2 ? ['march','april','may','june','july'] : ['t1','t2','june','mt','august'];
   const pool = new Set();
   keys.forEach(k=>{
     const d = student[k];
@@ -7165,7 +7165,7 @@ function computePU2JeeReadiness(student, roundScope){
   const rec = PU2_JEE_BY_CODE[student.code];
   if(!rec) return null;
   const pu1Labels = JEE_TESTS.map(t=>t.label);
-  const allKeys = Object.keys(rec).sort();
+  const allKeys = sortObtKeys(Object.keys(rec));
   let attempts = [];
   allKeys.forEach((k, idx)=>{
     const r = rec[k];
@@ -7197,7 +7197,7 @@ function buildPU2NeetSectionHtml(student){
   const rec = PU2_NEET_BY_CODE[student.code];
   if(!rec) return '';
   let html = '';
-  Object.keys(rec).sort().forEach(key=>{
+  sortObtKeys(Object.keys(rec)).forEach(key=>{
     const r = rec[key];
     const idx = parseInt(key.replace('obt',''),10)-1;
     const test = PU2_NEET_TESTS[idx];
@@ -7218,7 +7218,7 @@ function buildPU2JeeSectionHtml(student){
   const rec = PU2_JEE_BY_CODE[student.code];
   if(!rec) return '';
   let html = '';
-  Object.keys(rec).sort().forEach(key=>{
+  sortObtKeys(Object.keys(rec)).forEach(key=>{
     const r = rec[key];
     const idx = parseInt(key.replace('obt',''),10)-1;
     const test = PU2_JEE_TESTS[idx];
@@ -8903,6 +8903,19 @@ function roundRectPath(ctx,x,y,w,h,r){
   ctx.arcTo(x,y,x+w,y,r);
   ctx.closePath();
 }
+function wrapLinesFor(ctx, str, font, maxWidth){
+  ctx.font = font;
+  const words = str.split(' ');
+  const lines = [];
+  let line = '';
+  words.forEach(w=>{
+    const t = line ? line+' '+w : w;
+    if(ctx.measureText(t).width > maxWidth){ lines.push(line); line = w; }
+    else line = t;
+  });
+  if(line) lines.push(line);
+  return lines;
+}
 /* One-line teacher's remark per performance category, from the same raw score
    percentage already computed for it — a short read, not a replacement for the
    fuller generateTeacherComment() paragraph already on the report card itself. */
@@ -8947,6 +8960,17 @@ function studentPerformanceCategories(student, pu){
   });
   return cats.sort((a,b)=> b.pct-a.pct);
 }
+/* Short, precise, single-sentence remark for the shareable card — distinct from
+   generateTeacherComment()'s full multi-sentence paragraph on the private report
+   card. Data-driven from the same categories already ranked above (not a
+   truncation of the long comment, which can read oddly cut off mid-thought). */
+function shortAchievementRemark(student, cats){
+  if(!cats.length) return student.name+', keep attending tests so we can start tracking progress here.';
+  const best = cats[0];
+  const weakest = cats[cats.length-1];
+  if(cats.length===1 || best.pct-weakest.pct<15) return student.name+', solid all-round showing at '+best.pct+'% in '+best.label+' — keep it up!';
+  return student.name+', strong in '+best.label+' ('+best.pct+'%) — bring that same focus to '+weakest.label+'.';
+}
 async function buildStudentAchievementCard(student, pu){
   const navy = '#0B1B14', navy2 = '#0F2419', gold = '#D4AF37', ink = '#EAF3EE', inkDim = '#9FC4B6';
   const bandColorHex = {'Top 10%':'#2bb3a3','Top 25%':'#D4AF37','Top Half':'#f0b429','Bottom Half':'#e0685f'};
@@ -8954,19 +8978,28 @@ async function buildStudentAchievementCard(student, pu){
   const rawPctColor = pct => pct>=70?'#2bb3a3':pct>=50?'#D4AF37':pct>=35?'#f0b429':'#e0685f';
   const trend = computeClassPercentileTrend(student, pu);
   const cats = studentPerformanceCategories(student, pu);
+  const remark = shortAchievementRemark(student, cats);
+  const commentPad = 22;
 
   // Height adapts to content instead of a fixed guess (same approach as the report card
   // image resize) - headerH covers the branding/name block, percentileH the compact
   // percentile strip, rowsH one row per performance category (or a fallback line if
-  // none exist yet), footerH the divider/QR/captions.
+  // none exist yet), commentBoxH the short Teacher's Remark, footerH the divider/QR/
+  // captions. Text is measured on a throwaway canvas before the real one is sized,
+  // since the remark's length still varies a little student to student.
   const W = 1080;
+  const measureCtx = document.createElement('canvas').getContext('2d');
+  const commentInnerW = (W-240) - commentPad*2;
+  const commentLines = wrapLinesFor(measureCtx, remark, '16px Arial', commentInnerW);
+  const commentLineH = 24;
+  const commentBoxH = 44 + commentLines.length*commentLineH + 34;
   const headerH = 340;
   const percentileH = trend ? 110 : 90;
   const sectionTitleH = 50;
   const rowH = 92;
   const rowsH = cats.length ? cats.length*rowH : 60;
   const footerH = 340;
-  const H = headerH + percentileH + sectionTitleH + rowsH + footerH;
+  const H = headerH + percentileH + sectionTitleH + rowsH + 30 + commentBoxH + footerH;
   const canvas = document.createElement('canvas');
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
@@ -9035,6 +9068,21 @@ async function buildStudentAchievementCard(student, pu){
     ctx.fillText('No test results on file yet.', W/2, cy+30);
     cy += 60;
   }
+  cy += 30;
+
+  ctx.fillStyle = 'rgba(212,175,55,0.06)';
+  roundRectPath(ctx, 120, cy, W-240, commentBoxH, 16); ctx.fill();
+  ctx.strokeStyle = gold; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(120, cy); ctx.lineTo(120, cy+commentBoxH); ctx.stroke();
+  ctx.textAlign='left'; ctx.fillStyle = gold; ctx.font = 'bold 17px Arial';
+  ctx.fillText('\u{1F4AC} Teacher’s Remark', 120+commentPad, cy+30);
+  ctx.fillStyle = ink; ctx.font = '16px Arial';
+  commentLines.forEach((l,i)=>{
+    ctx.fillText(l, 120+commentPad, cy+58+i*commentLineH);
+  });
+  ctx.textAlign='right'; ctx.fillStyle = inkDim; ctx.font = 'italic 14px Arial';
+  ctx.fillText('— Narendra Sir', W-120-commentPad, cy+commentBoxH-14);
+  cy += commentBoxH;
 
   ctx.strokeStyle = 'rgba(212,175,55,0.3)'; ctx.lineWidth = 1;
   ctx.textAlign = 'center';
@@ -10752,6 +10800,10 @@ function getPU1BioHistory(student){
     const avg = pu1MonthClassAvgRaw('july','BIO');
     hist.push({label:'July Monthly Test', score:student.mt.BIO, outOf:40, pct:Math.round(student.mt.BIO/40*1000)/10, classAvg: avg!==null?Math.round(avg/40*1000)/10:null});
   }
+  if(student.august && student.august.BIO!==null && student.august.BIO!==undefined){
+    const avg = pu1MonthClassAvgRaw('august','BIO');
+    hist.push({label:'August Monthly Test', score:student.august.BIO, outOf:40, pct:Math.round(student.august.BIO/40*1000)/10, classAvg: avg!==null?Math.round(avg/40*1000)/10:null});
+  }
   const neetRec = (typeof NEET_BY_CODE!=='undefined') ? NEET_BY_CODE[student.code] : null;
   if(neetRec){
     NEET_TESTS.forEach((test,i)=>{
@@ -10797,7 +10849,7 @@ function getPU2BioHistory(student){
   if(typeof PU2_KCET_BY_CODE!=='undefined'){
     const kcetRec = PU2_KCET_BY_CODE[student.code];
     if(kcetRec){
-      Object.keys(kcetRec).sort().forEach(key=>{
+      sortObtKeys(Object.keys(kcetRec)).forEach(key=>{
         const r = kcetRec[key];
         if(!r || r.BIO===null || r.BIO===undefined) return;
         hist.push({label:(r.label||'KCET')+' (Bio optional)', score:r.BIO, outOf:r.outof||60, pct:Math.round(r.BIO/(r.outof||60)*1000)/10, classAvg:null});
@@ -10827,10 +10879,11 @@ function isElectronicsOnly(student, pu){
   const bioT1 = student.t1 && student.t1.BIO!==null && student.t1.BIO!==undefined;
   const bioT2 = student.t2 && student.t2.BIO!==null && student.t2.BIO!==undefined;
   const bioMt = student.mt && student.mt.BIO!==null && student.mt.BIO!==undefined;
+  const bioAugust = student.august && student.august.BIO!==null && student.august.BIO!==undefined;
   const neetRec = (typeof NEET_BY_CODE!=='undefined') ? NEET_BY_CODE[student.code] : null;
   const bioNeet = neetRec ? ['obt1','obt2','obt3','obt4'].some(k=>neetRec[k] && neetRec[k].BIO!==null && neetRec[k].BIO!==undefined)
     : (student.neetobt && student.neetobt.BIO!==null && student.neetobt.BIO!==undefined);
-  return !(bioT1 || bioT2 || bioMt || bioNeet);
+  return !(bioT1 || bioT2 || bioMt || bioAugust || bioNeet);
 }
 
 /* ---- PU-I Electronics student: Electronics-subject history across Slip Test 1/2, Monthly, KCET OBT ---- */
@@ -10851,6 +10904,10 @@ function getPU1ElectronicsHistory(student){
   if(student.mt && student.mt.ELE!==null && student.mt.ELE!==undefined){
     const avg = pu1MonthClassAvgRaw('july','ELE');
     hist.push({label:'July Monthly Test', score:student.mt.ELE, outOf:40, pct:Math.round(student.mt.ELE/40*1000)/10, classAvg: avg!==null?Math.round(avg/40*1000)/10:null});
+  }
+  if(student.august && student.august.ELE!==null && student.august.ELE!==undefined){
+    const avg = pu1MonthClassAvgRaw('august','ELE');
+    hist.push({label:'August Monthly Test', score:student.august.ELE, outOf:40, pct:Math.round(student.august.ELE/40*1000)/10, classAvg: avg!==null?Math.round(avg/40*1000)/10:null});
   }
   return hist;
 }
@@ -10947,6 +11004,9 @@ function escAttr(str){
   return String(str||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 function adoptedLatestSnapshot(student){
+  if(student.august && student.august.TOTAL!==null && student.august.TOTAL!==undefined){
+    return student.august.TOTAL+'/240'+(student.august.RANK?' (Rank #'+student.august.RANK+')':'');
+  }
   if(student.mt && student.mt.TOTAL!==null && student.mt.TOTAL!==undefined){
     return student.mt.TOTAL+'/240'+(student.mt.RANK?' (Rank #'+student.mt.RANK+')':'');
   }
