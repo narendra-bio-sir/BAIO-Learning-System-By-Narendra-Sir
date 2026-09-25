@@ -8125,6 +8125,250 @@ showKcetReport = function(){
 
 
 /* =========================================================
+   4b. REVISION TAB — data-driven, trilingual
+   ========================================================= */
+const REV_QUICKFACTS_EN = [
+  {"b":"Meischer","t":"First isolated DNA from the nucleus and named it &lsquo;Nuclein&rsquo;"},
+  {"b":"1928","t":"Frederick Griffith &ndash; transforming principle in <i>Streptococcus pneumoniae</i>"},
+  {"b":"1933&ndash;44","t":"Avery, MacLeod &amp; McCarty &ndash; the transforming principle is DNA"},
+  {"b":"1952","t":"Hershey &amp; Chase &ndash; <sup>35</sup>S / <sup>32</sup>P bacteriophage experiment"},
+  {"b":"1953","t":"Watson &amp; Crick &ndash; double helix model; semi-conservative replication proposed"},
+  {"b":"1958","t":"Meselson &amp; Stahl (<i>E. coli</i>) and Taylor (<i>Vicia faba</i>) &ndash; semi-conservative proof"},
+  {"b":"1961","t":"Jacob &amp; Monod &ndash; the lac operon"},
+  {"b":"1970","t":"Temin &amp; Baltimore &ndash; reverse transcription (Teminism)"},
+  {"b":"1990&ndash;2003","t":"Human Genome Project &ndash; a 13-year mega project"},
+  {"b":"May 2006","t":"Chromosome 1 sequenced &ndash; last of the 24 human chromosomes"},
+  {"b":"Alec Jeffreys","t":"Developed DNA fingerprinting using VNTR probes"}
+];
+
+const REV_MNEMONICS_EN = [
+  `<b>Mnemonic (features of the genetic code):</b> "<b>T</b>ry <b>U</b>nderstanding <b>D</b>NA <b>U</b>sing <b>C</b>ommon-sense" &rarr; <b>T</b>riplet, <b>U</b>nambiguous, <b>D</b>egenerate, <b>U</b>niversal, <b>C</b>ommaless`,
+  `<b>Mnemonic (lac operon genes, in order):</b> "<b>i</b>&nbsp;<b>p</b>lease <b>o</b>rder <b>z</b>ebra <b>y</b>ellow <b>a</b>pples" &rarr; i (repressor), p (promoter), o (operator), z (&beta;-galactosidase), y (permease), a (transacetylase)`,
+  `<b>Mnemonic (hnRNA processing):</b> "<b>C</b>ap, <b>T</b>ail, <b>S</b>plice" &rarr; <b>C</b>apping at the 5&prime; end, <b>T</b>ailing at the 3&prime; end, <b>S</b>plicing removes introns`,
+  `<b>Mnemonic (stop codons):</b> "<b>U</b> <b>A</b>re <b>A</b>way, <b>U</b> <b>A</b>re <b>G</b>one, <b>U</b> <b>G</b>o <b>A</b>way" &rarr; UAA (ochre), UAG (amber), UGA (opal)`,
+  `<b>Mnemonic (DNA numbers):</b> "3.4 &ndash; 10 &ndash; 0.34 &ndash; 20" &rarr; pitch 3.4 nm, 10 bp per turn, 0.34 nm between base pairs, diameter 20 &Aring;`
+];
+
+const REV_QUICKFACTS_KN = [
+  {"b":"ಮೀಷರ್","t":"ಕೇಂದ್ರಕದಿಂದ DNA ಅನ್ನು ಮೊದಲು ಬೇರ್ಪಡಿಸಿ ಅದಕ್ಕೆ &lsquo;ನ್ಯೂಕ್ಲಿಯಿನ್&rsquo; ಎಂದು ಹೆಸರಿಟ್ಟರು"},
+  {"b":"1928","t":"ಫ್ರೆಡರಿಕ್ ಗ್ರಿಫಿತ್ &ndash; <i>Streptococcus pneumoniae</i>ಯಲ್ಲಿ ರೂಪಾಂತರಕಾರಿ ತತ್ವ"},
+  {"b":"1933&ndash;44","t":"ಏವರಿ, ಮ್ಯಾಕ್ಲಿಯೋಡ್ &amp; ಮೆಕಾರ್ಟಿ &ndash; ರೂಪಾಂತರಕಾರಿ ತತ್ವ DNA ಆಗಿದೆ"},
+  {"b":"1952","t":"ಹರ್ಷೆ &amp; ಚೇಸ್ &ndash; <sup>35</sup>S / <sup>32</sup>P ಬ್ಯಾಕ್ಟೀರಿಯೋಫೇಜ್ ಪ್ರಯೋಗ"},
+  {"b":"1953","t":"ವಾಟ್ಸನ್ &amp; ಕ್ರಿಕ್ &ndash; ದ್ವಿ ಸುರುಳಿ ಮಾದರಿ; ಅರೆ-ಸಂರಕ್ಷಣಾತ್ಮಕ ಪ್ರತಿಕೃತಿಯ ಪ್ರಸ್ತಾಪ"},
+  {"b":"1958","t":"ಮೆಸೆಲ್ಸನ್ &amp; ಸ್ಟಾಲ್ (<i>E. coli</i>) ಮತ್ತು ಟೇಲರ್ (<i>Vicia faba</i>) &ndash; ಅರೆ-ಸಂರಕ್ಷಣಾತ್ಮಕ ಪ್ರತಿಕೃತಿಯ ಪುರಾವೆ"},
+  {"b":"1961","t":"ಜೇಕಬ್ &amp; ಮೊನೊಡ್ &ndash; lac ಆಪರಾನ್"},
+  {"b":"1970","t":"ಟೆಮಿನ್ &amp; ಬಾಲ್ಟಿಮೋರ್ &ndash; ರಿವರ್ಸ್ ಟ್ರಾನ್ಸ್‌ಕ್ರಿಪ್ಷನ್ (ಟೆಮಿನಿಸಂ)"},
+  {"b":"1990&ndash;2003","t":"ಮಾನವ ಜೀನೋಮ್ ಯೋಜನೆ &ndash; 13 ವರ್ಷಗಳ ಬೃಹತ್ ಯೋಜನೆ"},
+  {"b":"ಮೇ 2006","t":"ವರ್ಣತಂತು 1ರ ಅನುಕ್ರಮಣಿಕೆ ಪೂರ್ಣಗೊಂಡಿತು &ndash; 24 ಮಾನವ ವರ್ಣತಂತುಗಳಲ್ಲಿ ಕೊನೆಯದು"},
+  {"b":"ಅಲೆಕ್ ಜೆಫ್ರೀಸ್","t":"VNTR ಪ್ರೋಬ್‌ಗಳನ್ನು ಬಳಸಿ DNA ಫಿಂಗರ್‌ಪ್ರಿಂಟಿಂಗ್ ಅನ್ನು ಅಭಿವೃದ್ಧಿಪಡಿಸಿದರು"}
+];
+
+const REV_QUICKFACTS_HI = [
+  {"b":"मीशर","t":"केंद्रक से DNA को सबसे पहले अलग किया और इसे &lsquo;न्यूक्लिइन&rsquo; नाम दिया"},
+  {"b":"1928","t":"फ्रेडरिक ग्रिफ़िथ &ndash; <i>Streptococcus pneumoniae</i> में रूपांतरण सिद्धांत (transforming principle)"},
+  {"b":"1933&ndash;44","t":"एवरी, मैक्लॉयड व मैकार्टी &ndash; रूपांतरण सिद्धांत DNA ही है"},
+  {"b":"1952","t":"हर्षे व चेज़ &ndash; <sup>35</sup>S / <sup>32</sup>P बैक्टीरियोफ़ाज प्रयोग"},
+  {"b":"1953","t":"वाटसन व क्रिक &ndash; द्विकुंडलिनी मॉडल; अर्ध-संरक्षी प्रतिकृति का प्रस्ताव"},
+  {"b":"1958","t":"मेसेल्सन व स्टाल (<i>E. coli</i>) तथा टेलर (<i>Vicia faba</i>) &ndash; अर्ध-संरक्षी प्रतिकृति का प्रमाण"},
+  {"b":"1961","t":"जैकब व मोनो &ndash; lac ऑपेरॉन"},
+  {"b":"1970","t":"टेमिन व बाल्टीमोर &ndash; रिवर्स ट्रांसक्रिप्शन (टेमिनिज़्म)"},
+  {"b":"1990&ndash;2003","t":"मानव जीनोम परियोजना &ndash; 13 वर्षों की महापरियोजना"},
+  {"b":"मई 2006","t":"गुणसूत्र 1 का अनुक्रमण पूर्ण &ndash; 24 मानव गुणसूत्रों में अंतिम"},
+  {"b":"एलेक जेफ्रीज","t":"VNTR प्रोब का उपयोग करके DNA फिंगरप्रिंटिंग विकसित की"}
+];
+
+const REV_MNEMONICS_KN = [
+  `<b>ನೆನಪಿನ ತಂತ್ರ (ಆನುವಂಶಿಕ ಸಂಕೇತದ ಲಕ್ಷಣಗಳು):</b> "<b>T</b>ry <b>U</b>nderstanding <b>D</b>NA <b>U</b>sing <b>C</b>ommon-sense" &rarr; <b>ತ್ರಿ</b>ವಳಿ, <b>ಅ</b>ಸ್ಪಷ್ಟತೆ-ರಹಿತ, <b>ಅ</b>ವನತಿ, <b>ಸಾ</b>ರ್ವತ್ರಿಕ, <b>ಕಾ</b>ಮಾ-ರಹಿತ`,
+  `<b>ನೆನಪಿನ ತಂತ್ರ (lac ಆಪರಾನ್ ಜೀನ್‌ಗಳು, ಕ್ರಮವಾಗಿ):</b> "<b>i</b>&nbsp;<b>p</b>lease <b>o</b>rder <b>z</b>ebra <b>y</b>ellow <b>a</b>pples" &rarr; i (ದಮನಕಾರಿ), p (ಪ್ರವರ್ತಕ), o (ಆಪರೇಟರ್), z (&beta;-ಗ್ಯಾಲಕ್ಟೊಸಿಡೇಸ್), y (ಪರ್ಮಿಯೇಸ್), a (ಟ್ರಾನ್ಸ್‌ಅಸಿಟೈಲೇಸ್)`,
+  `<b>ನೆನಪಿನ ತಂತ್ರ (hnRNA ಸಂಸ್ಕರಣೆ):</b> "<b>C</b>ap, <b>T</b>ail, <b>S</b>plice" &rarr; 5&prime; ತುದಿಯಲ್ಲಿ <b>ಕ್ಯಾ</b>ಪಿಂಗ್, 3&prime; ತುದಿಯಲ್ಲಿ <b>ಟೈ</b>ಲಿಂಗ್, ಇಂಟ್ರಾನ್‌ಗಳನ್ನು ತೆಗೆಯುವ <b>ಸ್ಪ್ಲೈ</b>ಸಿಂಗ್`,
+  `<b>ನೆನಪಿನ ತಂತ್ರ (ನಿಲುಗಡೆ ಕೋಡಾನ್‌ಗಳು):</b> "<b>U</b> <b>A</b>re <b>A</b>way, <b>U</b> <b>A</b>re <b>G</b>one, <b>U</b> <b>G</b>o <b>A</b>way" &rarr; UAA (ಓಕರ್), UAG (ಆಂಬರ್), UGA (ಒಪಾಲ್)`,
+  `<b>ನೆನಪಿನ ತಂತ್ರ (DNA ಸಂಖ್ಯೆಗಳು):</b> "3.4 &ndash; 10 &ndash; 0.34 &ndash; 20" &rarr; ಪಿಚ್ 3.4 nm, ಪ್ರತಿ ತಿರುವಿಗೆ 10 bp, ಬೇಸ್ ಜೋಡಿಗಳ ನಡುವೆ 0.34 nm, ವ್ಯಾಸ 20 &Aring;`
+];
+
+const REV_MNEMONICS_HI = [
+  `<b>स्मरण तकनीक (आनुवंशिक कूट की विशेषताएँ):</b> "<b>T</b>ry <b>U</b>nderstanding <b>D</b>NA <b>U</b>sing <b>C</b>ommon-sense" &rarr; <b>त्रि</b>क, <b>अ</b>स्पष्टता-रहित, <b>अ</b>पह्रासित, <b>सा</b>र्वभौमिक, <b>अ</b>ल्पविराम-रहित`,
+  `<b>स्मरण तकनीक (lac ऑपेरॉन जीन, क्रम में):</b> "<b>i</b>&nbsp;<b>p</b>lease <b>o</b>rder <b>z</b>ebra <b>y</b>ellow <b>a</b>pples" &rarr; i (दमनकारी), p (प्रवर्तक), o (संचालक), z (&beta;-गैलेक्टोसिडेज़), y (परमिएज़), a (ट्रांसएसिटाइलेज़)`,
+  `<b>स्मरण तकनीक (hnRNA प्रसंस्करण):</b> "<b>C</b>ap, <b>T</b>ail, <b>S</b>plice" &rarr; 5&prime; सिरे पर <b>कै</b>पिंग, 3&prime; सिरे पर <b>टे</b>लिंग, इंट्रॉन हटाने वाली <b>स्प्लाइ</b>सिंग`,
+  `<b>स्मरण तकनीक (समापक कोडॉन):</b> "<b>U</b> <b>A</b>re <b>A</b>way, <b>U</b> <b>A</b>re <b>G</b>one, <b>U</b> <b>G</b>o <b>A</b>way" &rarr; UAA (ओकर), UAG (एंबर), UGA (ओपल)`,
+  `<b>स्मरण तकनीक (DNA की संख्याएँ):</b> "3.4 &ndash; 10 &ndash; 0.34 &ndash; 20" &rarr; पिच 3.4 nm, प्रति चक्कर 10 bp, क्षारक युग्मों के बीच 0.34 nm, व्यास 20 &Aring;`
+];
+
+const REV_DATA = [
+  {"id":"rv1","title":"1. DNA: The Genetic Material","html":`<ul class="rev-list">
+          <li><b>Nucleoside</b> = base + sugar (N-glycosidic bond); <b>nucleotide</b> = nucleoside + phosphate (phosphoester bond); chain joined by <b>3&prime;-5&prime; phosphodiester bonds</b>, free phosphate at the 5&prime; end and free &ndash;OH at the 3&prime; end.</li>
+          <li><b>Scientists:</b> Meischer (Nuclein) &middot; Wilkins &amp; Franklin (X-ray diffraction) &middot; Watson &amp; Crick (double helix) &middot; Chargaff (A:T = G:C = 1).</li>
+          <li><b>Double helix:</b> two antiparallel chains, right-handed; A=T (2 H-bonds), G&equiv;C (3 H-bonds); <b>pitch 3.4 nm</b>, <b>10 bp/turn</b>, <b>0.34 nm</b> between base pairs, <b>diameter 20 &Aring;</b>; stability from H-bonding + <b>base stacking</b>.</li>
+          <li><b>Central dogma</b> (Crick): DNA &rarr; RNA &rarr; Protein. <b>Reverse transcription</b> (Temin &amp; Baltimore, 1970) = Teminism.</li>
+        </ul>`,
+   "title_kn":"1. DNA: ಆನುವಂಶಿಕ ವಸ್ತು","html_kn":`<ul class="rev-list">
+          <li><b>ನ್ಯೂಕ್ಲಿಯೊಸೈಡ್</b> = ಪ್ರತ್ಯಾಮ್ಲ + ಸಕ್ಕರೆ (N-ಗ್ಲೈಕೋಸಿಡಿಕ್ ಬಂಧ); <b>ನ್ಯೂಕ್ಲಿಯೊಟೈಡ್</b> = ನ್ಯೂಕ್ಲಿಯೊಸೈಡ್ + ಫಾಸ್ಫೇಟ್ (ಫಾಸ್ಫೋಎಸ್ಟರ್ ಬಂಧ); ಸರಪಳಿಯು <b>3&prime;-5&prime; ಫಾಸ್ಫೋಡೈಎಸ್ಟರ್ ಬಂಧಗಳಿಂದ</b> ಜೋಡಣೆಗೊಳ್ಳುತ್ತದೆ, 5&prime; ತುದಿಯಲ್ಲಿ ಮುಕ್ತ ಫಾಸ್ಫೇಟ್ ಮತ್ತು 3&prime; ತುದಿಯಲ್ಲಿ ಮುಕ್ತ &ndash;OH ಇರುತ್ತದೆ.</li>
+          <li><b>ವಿಜ್ಞಾನಿಗಳು:</b> ಮೀಷರ್ (ನ್ಯೂಕ್ಲಿಯಿನ್) &middot; ವಿಲ್ಕಿನ್ಸ್ &amp; ಫ್ರಾಂಕ್ಲಿನ್ (X-ಕಿರಣ ವಿವರ್ತನೆ) &middot; ವಾಟ್ಸನ್ &amp; ಕ್ರಿಕ್ (ದ್ವಿ ಸುರುಳಿ) &middot; ಚಾರ್ಗಾಫ್ (A:T = G:C = 1).</li>
+          <li><b>ದ್ವಿ ಸುರುಳಿ:</b> ಎರಡು ಪ್ರತಿಸಮಾಂತರ ಎಳೆಗಳು, ಬಲಗೈ ದಿಕ್ಕಿನ ಸುರುಳಿ; A=T (2 ಹೈಡ್ರೋಜನ್ ಬಂಧಗಳು), G&equiv;C (3 ಹೈಡ್ರೋಜನ್ ಬಂಧಗಳು); <b>ಪಿಚ್ 3.4 nm</b>, <b>10 bp/ತಿರುವು</b>, ಬೇಸ್ ಜೋಡಿಗಳ ನಡುವೆ <b>0.34 nm</b>, <b>ವ್ಯಾಸ 20 &Aring;</b>; ಹೈಡ್ರೋಜನ್ ಬಂಧ + <b>ಬೇಸ್ ಸ್ಟ್ಯಾಕಿಂಗ್</b>ನಿಂದ ಸ್ಥಿರತೆ.</li>
+          <li><b>ಕೇಂದ್ರ ಸಿದ್ಧಾಂತ</b> (ಕ್ರಿಕ್): DNA &rarr; RNA &rarr; ಪ್ರೋಟೀನ್. <b>ರಿವರ್ಸ್ ಟ್ರಾನ್ಸ್‌ಕ್ರಿಪ್ಷನ್</b> (ಟೆಮಿನ್ &amp; ಬಾಲ್ಟಿಮೋರ್, 1970) = ಟೆಮಿನಿಸಂ.</li>
+        </ul>`,
+   "title_hi":"1. DNA: आनुवंशिक पदार्थ","html_hi":`<ul class="rev-list">
+          <li><b>न्यूक्लियोसाइड</b> = क्षार + शर्करा (N-ग्लाइकोसिडिक बंध); <b>न्यूक्लियोटाइड</b> = न्यूक्लियोसाइड + फॉस्फेट (फॉस्फोएस्टर बंध); शृंखला <b>3&prime;-5&prime; फॉस्फोडाइएस्टर बंधों</b> से जुड़ती है, 5&prime; सिरे पर मुक्त फॉस्फेट तथा 3&prime; सिरे पर मुक्त &ndash;OH होता है।</li>
+          <li><b>वैज्ञानिक:</b> मीशर (न्यूक्लिइन) &middot; विल्किंस व फ्रैंकलिन (X-किरण विवर्तन) &middot; वाटसन व क्रिक (द्विकुंडलिनी) &middot; चारगाफ (A:T = G:C = 1)।</li>
+          <li><b>द्विकुंडलिनी:</b> दो प्रतिसमानांतर शृंखलाएँ, दक्षिणावर्त; A=T (2 हाइड्रोजन बंध), G&equiv;C (3 हाइड्रोजन बंध); <b>पिच 3.4 nm</b>, <b>10 bp/चक्कर</b>, क्षारक युग्मों के बीच <b>0.34 nm</b>, <b>व्यास 20 &Aring;</b>; हाइड्रोजन बंधन + <b>क्षारक स्तरीकरण (base stacking)</b> से स्थिरता।</li>
+          <li><b>केंद्रीय सिद्धांत</b> (क्रिक): DNA &rarr; RNA &rarr; प्रोटीन। <b>रिवर्स ट्रांसक्रिप्शन</b> (टेमिन व बाल्टीमोर, 1970) = टेमिनिज़्म।</li>
+        </ul>`},
+  {"id":"rv2","title":"2. Packaging of DNA &amp; DNA Organisation","html":`<ul class="rev-list">
+          <li><b>Length calculation:</b> 6.6 &times; 10<sup>9</sup> bp &times; 0.34 &times; 10<sup>&minus;9</sup> m = <b>~2.2 m</b>, versus a nucleus of ~10<sup>&minus;6</sup> m.</li>
+          <li><b>DNA lengths:</b> &Phi;X174 &ndash; 5386 nucleotides; lambda phage &ndash; 48502 bp; <i>E. coli</i> &ndash; 4.6 &times; 10<sup>6</sup> bp; human haploid &ndash; 3.3 &times; 10<sup>9</sup> bp.</li>
+          <li><b>Prokaryotes:</b> no nucleus; DNA in large loops in the <b>nucleoid</b>, held by positively charged non-histone proteins.</li>
+          <li><b>Eukaryotes:</b> histones are basic (rich in <b>lysine &amp; arginine</b>); <b>histone octamer</b> (8 molecules); <b>nucleosome</b> = ~200 bp of DNA on the octamer; nucleosomes &rarr; <b>beads-on-string chromatin</b> &rarr; chromatin fibre (with <b>NHC proteins</b>) &rarr; chromosome at metaphase.</li>
+          <li><b>Euchromatin</b> = loose, light-staining, active; <b>heterochromatin</b> = dense, dark-staining, inactive.</li>
+        </ul>`,
+   "title_kn":"2. DNA ಪ್ಯಾಕೇಜಿಂಗ್ ಮತ್ತು DNA ಸಂಘಟನೆ","html_kn":`<ul class="rev-list">
+          <li><b>ಉದ್ದದ ಲೆಕ್ಕಾಚಾರ:</b> 6.6 &times; 10<sup>9</sup> bp &times; 0.34 &times; 10<sup>&minus;9</sup> m = <b>~2.2 ಮೀ</b>, ಆದರೆ ಕೇಂದ್ರಕದ ಗಾತ್ರ ~10<sup>&minus;6</sup> m ಮಾತ್ರ.</li>
+          <li><b>DNA ಉದ್ದಗಳು:</b> &Phi;X174 &ndash; 5386 ನ್ಯೂಕ್ಲಿಯೊಟೈಡ್‌ಗಳು; ಲ್ಯಾಂಬ್ಡಾ ಫೇಜ್ &ndash; 48502 bp; <i>E. coli</i> &ndash; 4.6 &times; 10<sup>6</sup> bp; ಮಾನವ ಅರ್ಧವರ್ಣತಂತು (haploid) &ndash; 3.3 &times; 10<sup>9</sup> bp.</li>
+          <li><b>ಪ್ರೊಕ್ಯಾರಿಯೋಟ್‌ಗಳು:</b> ಕೇಂದ್ರಕವಿಲ್ಲ; DNA ದೊಡ್ಡ ಕುಣಿಕೆಗಳ ರೂಪದಲ್ಲಿ <b>ನ್ಯೂಕ್ಲಿಯಾಯ್ಡ್</b>ನಲ್ಲಿ, ಧನ ಆವೇಶದ non-histone ಪ್ರೋಟೀನ್‌ಗಳಿಂದ ಹಿಡಿಯಲ್ಪಟ್ಟಿರುತ್ತದೆ.</li>
+          <li><b>ಯೂಕ್ಯಾರಿಯೋಟ್‌ಗಳು:</b> ಹಿಸ್ಟೋನ್‌ಗಳು ಪ್ರತ್ಯಾಮ್ಲೀಯ (<b>ಲೈಸಿನ್ &amp; ಆರ್ಜಿನೈನ್</b> ಸಮೃದ್ಧ); <b>ಹಿಸ್ಟೋನ್ ಆಕ್ಟಮರ್</b> (8 ಅಣುಗಳು); <b>ನ್ಯೂಕ್ಲಿಯೊಸೋಮ್</b> = ಆಕ್ಟಮರ್ ಮೇಲೆ ~200 bp DNA; ನ್ಯೂಕ್ಲಿಯೊಸೋಮ್‌ಗಳು &rarr; <b>ದಾರದ ಮೇಲಿನ ಮಣಿಗಳಂತಹ ಕ್ರೊಮಾಟಿನ್</b> &rarr; ಕ್ರೊಮಾಟಿನ್ ಎಳೆ (<b>NHC ಪ್ರೋಟೀನ್‌ಗಳೊಂದಿಗೆ</b>) &rarr; ಮೆಟಾಫೇಸ್‌ನಲ್ಲಿ ವರ್ಣತಂತು.</li>
+          <li><b>ಯೂಕ್ರೊಮಾಟಿನ್</b> = ಸಡಿಲ, ತಿಳಿ ಬಣ್ಣಕ್ಕೆ ಒಳಗಾಗುವ, ಸಕ್ರಿಯ; <b>ಹೆಟೆರೊಕ್ರೊಮಾಟಿನ್</b> = ದಟ್ಟ, ಗಾಢ ಬಣ್ಣಕ್ಕೆ ಒಳಗಾಗುವ, ನಿಷ್ಕ್ರಿಯ.</li>
+        </ul>`,
+   "title_hi":"2. DNA का पैकेजिंग तथा DNA संगठन","html_hi":`<ul class="rev-list">
+          <li><b>लंबाई की गणना:</b> 6.6 &times; 10<sup>9</sup> bp &times; 0.34 &times; 10<sup>&minus;9</sup> m = <b>~2.2 मी</b>, जबकि केंद्रक का आकार केवल ~10<sup>&minus;6</sup> m।</li>
+          <li><b>DNA की लंबाई:</b> &Phi;X174 &ndash; 5386 न्यूक्लियोटाइड; लैम्ब्डा फ़ाज &ndash; 48502 bp; <i>E. coli</i> &ndash; 4.6 &times; 10<sup>6</sup> bp; मानव अगुणित (haploid) &ndash; 3.3 &times; 10<sup>9</sup> bp।</li>
+          <li><b>प्रोकैरियोट:</b> केंद्रक नहीं होता; DNA बड़े लूपों में <b>न्यूक्लियॉइड</b> क्षेत्र में, धनावेशित non-histone प्रोटीनों द्वारा थामा जाता है।</li>
+          <li><b>यूकैरियोट:</b> हिस्टोन क्षारकीय (<b>लाइसिन व आर्जिनिन</b> से भरपूर); <b>हिस्टोन ऑक्टामर</b> (8 अणु); <b>न्यूक्लिओसोम</b> = ऑक्टामर पर ~200 bp DNA; न्यूक्लिओसोम &rarr; <b>डोरी पर मोती जैसा क्रोमेटिन</b> &rarr; क्रोमेटिन तंतु (<b>NHC प्रोटीनों सहित</b>) &rarr; मेटाफेज़ पर गुणसूत्र।</li>
+          <li><b>यूक्रोमेटिन</b> = शिथिल, हल्का अभिरंजित, सक्रिय; <b>हेटरोक्रोमेटिन</b> = सघन, गहरा अभिरंजित, निष्क्रिय।</li>
+        </ul>`},
+  {"id":"rv3","title":"3. The Search for Genetic Material","html":`<ul class="rev-list">
+          <li><b>Griffith (1928):</b> S strain = smooth, coated, virulent; R strain = rough, uncoated, non-virulent. Live R + heat-killed S &rarr; mice die, live S recovered &rarr; a <b>transforming principle</b> exists (chemical nature unknown).</li>
+          <li><b>Avery, MacLeod &amp; McCarty (1933&ndash;44):</b> proteases and RNases had no effect; <b>DNase abolished transformation</b> &rarr; DNA is the transforming principle.</li>
+          <li><b>Hershey &amp; Chase (1952):</b> <sup>35</sup>S labels protein, <sup>32</sup>P labels DNA; blend + centrifuge; <b>only <sup>32</sup>P entered the bacteria</b> &rarr; DNA is the genetic material.</li>
+          <li><b>Properties of genetic material:</b> replicate &middot; be chemically &amp; structurally stable &middot; allow mutation &middot; express as Mendelian characters.</li>
+          <li><b>Why DNA is more stable:</b> no reactive 2&prime;-OH &middot; thymine instead of uracil &middot; double-stranded and repairable &middot; RNA is a reactive biocatalyst. <b>RNA evolved first</b>; DNA evolved from RNA. RNA is genetic material in <b>TMV</b> and <b>Q&beta; bacteriophage</b>.</li>
+        </ul>`,
+   "title_kn":"3. ಆನುವಂಶಿಕ ವಸ್ತುವಿನ ಹುಡುಕಾಟ","html_kn":`<ul class="rev-list">
+          <li><b>ಗ್ರಿಫಿತ್ (1928):</b> S ತಳಿ = ನಯವಾದ ಪದರ, ವೈರುಲೆಂಟ್; R ತಳಿ = ಒರಟಾದ, ಪದರರಹಿತ, ಅವೈರುಲೆಂಟ್. ಜೀವಂತ R + ಶಾಖದಿಂದ ಕೊಲ್ಲಲ್ಪಟ್ಟ S &rarr; ಇಲಿಗಳು ಸಾಯುತ್ತವೆ, ಜೀವಂತ S ಮರುಪಡೆಯಲಾಗುತ್ತದೆ &rarr; ಒಂದು <b>ರೂಪಾಂತರಕಾರಿ ತತ್ವ</b> ಅಸ್ತಿತ್ವದಲ್ಲಿದೆ (ರಾಸಾಯನಿಕ ಸ್ವರೂಪ ಅಜ್ಞಾತ).</li>
+          <li><b>ಏವರಿ, ಮ್ಯಾಕ್ಲಿಯೋಡ್ &amp; ಮೆಕಾರ್ಟಿ (1933&ndash;44):</b> ಪ್ರೋಟಿಯೇಸ್ ಮತ್ತು RNaseಗಳಿಂದ ಯಾವುದೇ ಪರಿಣಾಮವಿಲ್ಲ; <b>DNase ರೂಪಾಂತರವನ್ನು ನಿಲ್ಲಿಸಿತು</b> &rarr; DNA ಯೇ ರೂಪಾಂತರಕಾರಿ ತತ್ವ.</li>
+          <li><b>ಹರ್ಷೆ &amp; ಚೇಸ್ (1952):</b> <sup>35</sup>S ಪ್ರೋಟೀನ್‌ಗೆ, <sup>32</sup>P DNAಗೆ ಲೇಬಲ್ ಮಾಡಲಾಯಿತು; ಮಿಶ್ರಣ + ಅಪಕೇಂದ್ರೀಕರಣ; <b>ಕೇವಲ <sup>32</sup>P ಬ್ಯಾಕ್ಟೀರಿಯಾವನ್ನು ಪ್ರವೇಶಿಸಿತು</b> &rarr; DNA ಆನುವಂಶಿಕ ವಸ್ತು.</li>
+          <li><b>ಆನುವಂಶಿಕ ವಸ್ತುವಿನ ಗುಣಲಕ್ಷಣಗಳು:</b> ಪ್ರತಿಕೃತಿ ಮಾಡುವಿಕೆ &middot; ರಾಸಾಯನಿಕ ಮತ್ತು ರಚನಾತ್ಮಕವಾಗಿ ಸ್ಥಿರವಾಗಿರುವುದು &middot; ರೂಪಾಂತರಕ್ಕೆ ಅವಕಾಶ ನೀಡುವುದು &middot; ಮೆಂಡೆಲಿಯನ್ ಲಕ್ಷಣಗಳಾಗಿ ವ್ಯಕ್ತವಾಗುವುದು.</li>
+          <li><b>DNA ಹೆಚ್ಚು ಸ್ಥಿರವಾಗಿರಲು ಕಾರಣ:</b> ಪ್ರತಿಕ್ರಿಯಾಶೀಲ 2&prime;-OH ಇಲ್ಲದಿರುವುದು &middot; ಯುರಾಸಿಲ್ ಬದಲು ಥೈಮಿನ್ &middot; ದ್ವಿ-ಎಳೆಯ ಮತ್ತು ದುರಸ್ತಿಗೊಳ್ಳಬಲ್ಲುದು &middot; RNA ಒಂದು ಪ್ರತಿಕ್ರಿಯಾಶೀಲ ಜೈವಿಕ ವೇಗವರ್ಧಕ. <b>RNA ಮೊದಲು ವಿಕಾಸಗೊಂಡಿತು</b>; DNA RNAಯಿಂದ ವಿಕಾಸಗೊಂಡಿತು. <b>TMV</b> ಮತ್ತು <b>Q&beta; ಬ್ಯಾಕ್ಟೀರಿಯೋಫೇಜ್</b>ನಲ್ಲಿ RNA ಆನುವಂಶಿಕ ವಸ್ತು.</li>
+        </ul>`,
+   "title_hi":"3. आनुवंशिक पदार्थ की खोज","html_hi":`<ul class="rev-list">
+          <li><b>ग्रिफ़िथ (1928):</b> S प्रभेद = चिकना आवरण, विषाणुजनक; R प्रभेद = खुरदरा, आवरणरहित, अविषाणुजनक। जीवित R + ऊष्मा-मृत S &rarr; चूहे मर जाते हैं, जीवित S प्राप्त होता है &rarr; एक <b>रूपांतरण सिद्धांत</b> विद्यमान है (रासायनिक प्रकृति अज्ञात)।</li>
+          <li><b>एवरी, मैक्लॉयड व मैकार्टी (1933&ndash;44):</b> प्रोटिएज़ व RNase का कोई प्रभाव नहीं; <b>DNase ने रूपांतरण को समाप्त कर दिया</b> &rarr; DNA ही रूपांतरण सिद्धांत है।</li>
+          <li><b>हर्षे व चेज़ (1952):</b> <sup>35</sup>S प्रोटीन को, <sup>32</sup>P DNA को चिह्नित करता है; मिश्रण + अपकेंद्रण; <b>केवल <sup>32</sup>P जीवाणु में प्रवेश किया</b> &rarr; DNA ही आनुवंशिक पदार्थ है।</li>
+          <li><b>आनुवंशिक पदार्थ के गुण:</b> प्रतिकृति बनाना &middot; रासायनिक व संरचनात्मक रूप से स्थिर होना &middot; उत्परिवर्तन की अनुमति देना &middot; मेंडेलियन लक्षणों के रूप में अभिव्यक्त होना।</li>
+          <li><b>DNA अधिक स्थिर क्यों है:</b> प्रतिक्रियाशील 2&prime;-OH का अभाव &middot; यूरेसिल के स्थान पर थाइमिन &middot; द्विरज्जुकी व मरम्मत-योग्य &middot; RNA एक प्रतिक्रियाशील जैवउत्प्रेरक है। <b>RNA पहले विकसित हुआ</b>; DNA, RNA से विकसित हुआ। <b>TMV</b> तथा <b>Q&beta; बैक्टीरियोफ़ाज</b> में RNA ही आनुवंशिक पदार्थ है।</li>
+        </ul>`},
+  {"id":"rv4","title":"4. DNA Replication","html":`<ul class="rev-list">
+          <li><b>Semi-conservative</b> &ndash; each daughter DNA has one parental + one new strand; proposed by <b>Watson &amp; Crick (1953)</b>; occurs in the <b>S phase</b>.</li>
+          <li><b>Meselson &amp; Stahl (1958):</b> <i>E. coli</i> in <sup>15</sup>NH<sub>4</sub>Cl &rarr; shifted to <sup>14</sup>N &rarr; <b>CsCl density gradient</b>; hybrid DNA at 20 min, equal hybrid + light at 40 min. <b><sup>15</sup>N is NOT radioactive.</b></li>
+          <li><b>Taylor (1958):</b> radioactive thymidine in <i>Vicia faba</i> &rarr; chromosomal DNA also replicates semi-conservatively.</li>
+          <li><b>Enzymes:</b> DNA polymerase (5&prime;&rarr;3&prime; only), helicase, topoisomerase, RNA primase, DNA ligase. <b>dNTPs</b> = substrate + energy source. Start at the <b>origin of replication</b>; a <b>replication fork</b> forms.</li>
+          <li><b>Leading strand</b> continuous (3&prime;&rarr;5&prime; template); <b>lagging strand</b> discontinuous &rarr; <b>Okazaki fragments</b> joined by <b>DNA ligase</b>.</li>
+          <li><b>Rate:</b> <i>E. coli</i> 4.6 &times; 10<sup>6</sup> bp in 38 min &rarr; <b>~2000 bp/sec</b>. Failure of cell division after replication &rarr; <b>polyploidy</b>.</li>
+        </ul>`,
+   "title_kn":"4. DNA ಪ್ರತಿಕೃತಿ","html_kn":`<ul class="rev-list">
+          <li><b>ಅರೆ-ಸಂರಕ್ಷಣಾತ್ಮಕ</b> &ndash; ಪ್ರತಿ ಪುತ್ರಿ DNA ಒಂದು ಪೋಷಕ + ಒಂದು ಹೊಸ ಎಳೆಯನ್ನು ಹೊಂದಿರುತ್ತದೆ; <b>ವಾಟ್ಸನ್ &amp; ಕ್ರಿಕ್ (1953)</b> ಪ್ರಸ್ತಾಪಿಸಿದರು; <b>S ಹಂತ</b>ದಲ್ಲಿ ನಡೆಯುತ್ತದೆ.</li>
+          <li><b>ಮೆಸೆಲ್ಸನ್ &amp; ಸ್ಟಾಲ್ (1958):</b> <i>E. coli</i> ಯನ್ನು <sup>15</sup>NH<sub>4</sub>Cl ನಲ್ಲಿ ಬೆಳೆಸಿ &rarr; <sup>14</sup>Nಗೆ ಬದಲಾಯಿಸಲಾಯಿತು &rarr; <b>CsCl ಸಾಂದ್ರತಾ ಗ್ರೇಡಿಯಂಟ್</b>; 20 ನಿಮಿಷಕ್ಕೆ ಹೈಬ್ರಿಡ್ DNA, 40 ನಿಮಿಷಕ್ಕೆ ಸಮಾನ ಹೈಬ್ರಿಡ್ + ಹಗುರ DNA. <b><sup>15</sup>N ವಿಕಿರಣಶೀಲವಲ್ಲ.</b></li>
+          <li><b>ಟೇಲರ್ (1958):</b> <i>Vicia faba</i>ಯಲ್ಲಿ ವಿಕಿರಣಶೀಲ ಥೈಮಿಡಿನ್ ಬಳಸಿ &rarr; ವರ್ಣತಂತು DNA ಕೂಡ ಅರೆ-ಸಂರಕ್ಷಣಾತ್ಮಕವಾಗಿ ಪ್ರತಿಕೃತಿಗೊಳ್ಳುತ್ತದೆ ಎಂದು ತೋರಿಸಿದರು.</li>
+          <li><b>ಕಿಣ್ವಗಳು:</b> DNA ಪಾಲಿಮರೇಸ್ (5&prime;&rarr;3&prime; ಮಾತ್ರ), ಹೆಲಿಕೇಸ್, ಟೊಪೊಐಸೊಮರೇಸ್, RNA ಪ್ರೈಮೇಸ್, DNA ಲೈಗೇಸ್. <b>dNTPಗಳು</b> = ಆಧಾರವಸ್ತು + ಶಕ್ತಿಯ ಮೂಲ. <b>ಪ್ರತಿಕೃತಿ ಆರಂಭ ಬಿಂದು</b>ದಲ್ಲಿ ಆರಂಭ; <b>ಪ್ರತಿಕೃತಿ ಫೋರ್ಕ್</b> ರೂಪುಗೊಳ್ಳುತ್ತದೆ.</li>
+          <li><b>ಮುಂದಾಳು ಎಳೆ</b> ನಿರಂತರ (3&prime;&rarr;5&prime; ಟೆಂಪ್ಲೇಟ್); <b>ಹಿಂದುಳಿದ ಎಳೆ</b> ಅನಿರಂತರ &rarr; <b>ಒಕಾಜಾಕಿ ತುಣುಕುಗಳು</b> DNA ಲೈಗೇಸ್‌ನಿಂದ ಜೋಡಿಸಲ್ಪಡುತ್ತವೆ.</li>
+          <li><b>ದರ:</b> <i>E. coli</i>ಯಲ್ಲಿ 4.6 &times; 10<sup>6</sup> bp 38 ನಿಮಿಷದಲ್ಲಿ &rarr; <b>~2000 bp/ಸೆಕೆಂಡ್</b>. ಪ್ರತಿಕೃತಿಯ ನಂತರ ಕೋಶ ವಿಭಜನೆ ವಿಫಲವಾದರೆ &rarr; <b>ಪಾಲಿಪ್ಲಾಯ್ಡಿ</b>.</li>
+        </ul>`,
+   "title_hi":"4. DNA प्रतिकृति","html_hi":`<ul class="rev-list">
+          <li><b>अर्ध-संरक्षी</b> &ndash; प्रत्येक पुत्री DNA में एक मातृक + एक नई शृंखला होती है; <b>वाटसन व क्रिक (1953)</b> द्वारा प्रस्तावित; <b>S अवस्था</b> में होती है।</li>
+          <li><b>मेसेल्सन व स्टाल (1958):</b> <i>E. coli</i> को <sup>15</sup>NH<sub>4</sub>Cl में उगाया &rarr; <sup>14</sup>N में स्थानांतरित किया गया &rarr; <b>CsCl सांद्रता प्रवणता</b>; 20 मिनट पर संकर (hybrid) DNA, 40 मिनट पर समान संकर + हल्का DNA। <b><sup>15</sup>N रेडियोधर्मी नहीं है।</b></li>
+          <li><b>टेलर (1958):</b> <i>Vicia faba</i> में रेडियोधर्मी थाइमिडीन का उपयोग करके &rarr; दिखाया कि गुणसूत्रीय DNA भी अर्ध-संरक्षी ढंग से प्रतिकृति बनाता है।</li>
+          <li><b>एंजाइम:</b> DNA पॉलिमरेज़ (केवल 5&prime;&rarr;3&prime;), हेलिकेज़, टोपोआइसोमरेज़, RNA प्राइमेज़, DNA लाइगेज़। <b>dNTP</b> = सब्सट्रेट + ऊर्जा स्रोत। <b>प्रतिकृति उद्गम</b> पर आरंभ; <b>प्रतिकृति कांटा</b> बनता है।</li>
+          <li><b>अग्रगामी रज्जुक</b> सतत (3&prime;&rarr;5&prime; टेम्पलेट); <b>पश्चगामी रज्जुक</b> असतत &rarr; <b>ओकाजाकी खंड</b> DNA लाइगेज़ द्वारा जोड़े जाते हैं।</li>
+          <li><b>दर:</b> <i>E. coli</i> में 4.6 &times; 10<sup>6</sup> bp, 38 मिनट में &rarr; <b>~2000 bp/सेकंड</b>। प्रतिकृति के बाद कोशिका विभाजन विफल होने पर &rarr; <b>बहुगुणिता (polyploidy)</b>।</li>
+        </ul>`},
+  {"id":"rv5","title":"5. Transcription","html":`<ul class="rev-list">
+          <li><b>Transcription unit</b> = promoter + structural gene + terminator. Promoter is <b>upstream (5&prime;)</b> and terminator <b>downstream (3&prime;)</b> of the <b>coding</b> strand.</li>
+          <li><b>Template strand</b> = 3&prime;&rarr;5&prime; (antisense, actually read); <b>coding strand</b> = 5&prime;&rarr;3&prime; (sense, not transcribed, same as mRNA with T for U) &ndash; a misnomer.</li>
+          <li><b>Both strands are not transcribed</b> because (i) one gene would give two different proteins and (ii) the two complementary RNAs would form untranslatable dsRNA.</li>
+          <li><b>Cistron</b> = DNA coding for one polypeptide. Eukaryotes: <b>monocistronic, split genes</b> (exons = expressed; introns = transcribed but not translated). Prokaryotes: <b>polycistronic</b>.</li>
+          <li><b>RNA types:</b> mRNA (template) &middot; tRNA (adaptor) &middot; rRNA (structural + catalytic).</li>
+          <li><b>Steps:</b> initiation (<b>sigma factor</b> + promoter) &rarr; elongation &rarr; termination (<b>rho factor</b>).</li>
+          <li><b>Eukaryotic polymerases:</b> <b>Pol I</b> &rarr; rRNA (28S, 18S, 5.8S); <b>Pol II</b> &rarr; hnRNA; <b>Pol III</b> &rarr; tRNA, 5S rRNA, snRNA. Prokaryotes: one polymerase, transcription and translation <b>coupled</b>.</li>
+          <li><b>hnRNA processing:</b> <b>capping</b> (methyl guanosine triphosphate, 5&prime; end), <b>tailing</b> (200&ndash;300 adenylate residues, 3&prime; end), <b>splicing</b> (introns out, exons joined).</li>
+        </ul>`},
+  {"id":"rv6","title":"6. Genetic Code &amp; tRNA","html":`<ul class="rev-list">
+          <li><b>Gamow:</b> 4<sup>1</sup> = 4 and 4<sup>2</sup> = 16 are too few for 20 amino acids; <b>4<sup>3</sup> = 64</b> &rarr; the code is a <b>triplet</b>. <b>Khorana</b> (synthetic RNA), <b>Nirenberg</b> (cell-free systems), <b>Ochoa</b> (polynucleotide phosphorylase).</li>
+          <li><b>Features:</b> triplet &middot; unambiguous &middot; degenerate &middot; universal &middot; commaless; <b>AUG</b> = start + methionine. <b>61</b> codons code amino acids, <b>3</b> stop: <b>UAA (ochre), UAG (amber), UGA (opal)</b> = nonsense/terminator codons.</li>
+          <li><b>Exceptions:</b> in <i>Paramecium</i> and some ciliates UAA and UGA code for <b>glutamine</b>; in human mitochondria AGA/AGG = stop, UGA = <b>tryptophan</b>, AUA = <b>methionine</b>.</li>
+          <li><b>Point mutation:</b> single base pair change &ndash; sickle-cell anaemia (<b>CTC &rarr; CAC</b>, <b>Glu &rarr; Val</b> in the beta-globin chain). <b>Frameshift:</b> insertion/deletion; adding or deleting <b>three</b> bases restores the frame &ndash; the proof that the codon is a triplet.</li>
+          <li><b>tRNA</b> (adaptor, postulated by Crick): <b>anticodon loop</b> + <b>amino acid acceptor end (3&prime;)</b>; clover-leaf secondary, inverted-L 3D. <b>Initiator tRNA</b> carries methionine and pairs with AUG. <b>No tRNAs for stop codons.</b></li>
+        </ul>`},
+  {"id":"rv7","title":"7. Translation &amp; Regulation of Gene Expression","html":`<ul class="rev-list">
+          <li><b>Steps:</b> activation (ATP) &rarr; charging/aminoacylation of tRNA &rarr; initiation (small subunit at AUG + initiator tRNA, then large subunit) &rarr; elongation (peptide bond by <b>23S rRNA = ribozyme</b>; ribosome moves 5&prime;&rarr;3&prime;) &rarr; termination (<b>release factor</b>).</li>
+          <li>Ribosome = rRNA + ~80 proteins, in <b>two subunits</b>. <b>Translational unit</b> = start codon to stop codon; <b>UTRs</b> (5&prime; and 3&prime;) are untranslated but needed for efficient translation.</li>
+          <li><b>Levels of regulation:</b> transcriptional &middot; processing (splicing) &middot; transport of mRNA &middot; translational. In prokaryotes, mainly the <b>rate of transcriptional initiation</b>.</li>
+          <li><b>Operon</b> = polycistronic gene + common promoter + regulatory genes. <b>Inducible</b> (catabolic, e.g. lac) vs <b>repressible</b> (anabolic, e.g. trp).</li>
+          <li><b>Lac operon</b> (Jacob &amp; Monod, 1961): <b>i</b> = repressor, <b>p</b> = promoter, <b>o</b> = operator, <b>z</b> = &beta;-galactosidase, <b>y</b> = permease, <b>a</b> = transacetylase.</li>
+          <li><b>No lactose:</b> repressor binds the operator &rarr; z, y, a not transcribed = <b>negative regulation</b>. <b>With lactose/allolactose:</b> the inducer inactivates the repressor &rarr; RNA polymerase transcribes &rarr; lactose is metabolised.</li>
+          <li><b>Trp operon:</b> normally ON; structural genes <b>trp E, D, C, B, A</b>; <b>aporepressor</b> (from trp R) + <b>corepressor tryptophan</b> = active repressor &rarr; operator blocked = <b>feedback repression</b>. Leader sequence (L) and attenuator (A) fine-tune it.</li>
+        </ul>`},
+  {"id":"rv8","title":"8. Human Genome Project &amp; DNA Fingerprinting","html":`<ul class="rev-list">
+          <li><b>HGP:</b> 13 years, <b>1990&ndash;2003</b>; US Dept of Energy + NIH, later the Wellcome Trust (UK). Goals: identify ~20,000&ndash;25,000 genes, sequence 3 billion bp, store data, transfer technology, address <b>ELSI</b>.</li>
+          <li><b>Cost:</b> $3 per bp &rarr; ~<b>US $9 billion</b>; data would fill <b>3300 books of 1000 pages</b> &rarr; hence <b>bioinformatics</b>.</li>
+          <li><b>Firsts:</b> <i>Haemophilus influenzae</i> (first genome) &middot; <i>Caenorhabditis elegans</i> (first animal) &middot; <i>Arabidopsis</i> (first plant) &middot; <i>Drosophila</i> (2000) &middot; chromosome 1 (May 2006, last of 24).</li>
+          <li><b>Methods:</b> <b>ESTs</b> (expressed regions only) vs <b>sequence annotation</b> (whole genome, then assign function). Vectors <b>BAC/YAC</b>; hosts bacteria and yeast; <b>Sanger</b> automated sequencing; alignment by overlaps. Maps by <b>restriction polymorphism</b> and <b>microsatellites</b>.</li>
+          <li><b>Salient features:</b> 3 &times; 10<sup>9</sup> (3164.7 million) bases &middot; average gene 3000 bases &middot; largest gene <b>dystrophin, 2.4 Mb</b> &middot; <b>~30,000 genes</b> &middot; &gt;50% of unknown function &middot; <b>&lt;2% codes for protein</b> &middot; chromosome 1 has most genes (<b>2968</b>), Y the fewest (<b>231</b>) &middot; <b>SNPs at ~1.4 million sites</b>.</li>
+          <li><b>DNA fingerprinting:</b> <b>99.9%</b> of sequences identical, <b>0.1%</b> unique. Satellite DNA forms a <b>smaller peak</b> in density gradient centrifugation (micro- and mini-satellites). Polymorphism arises in non-coding DNA because such mutations do not affect reproductive ability.</li>
+          <li><b>Method (Alec Jeffreys, VNTR probes, 0.1&ndash;20 kb):</b> isolate DNA &rarr; cut with <b>restriction endonucleases</b> &rarr; <b>gel electrophoresis</b> &rarr; <b>Southern blotting</b> onto nylon/nitrocellulose &rarr; hybridise with VNTR probe &rarr; <b>autoradiography</b>. Unique to every individual <b>except identical twins</b>.</li>
+          <li><b>Applications:</b> forensic science &middot; paternity/parentage testing &middot; genetic diversity and evolutionary studies.</li>
+        </ul>`}
+];
+
+const REVISION_UI_STRINGS = {
+  en:{title:"Last-Minute Revision", sub:"Condensed cheat-sheet &middot; jump to a topic or scroll through", workspace:"My Mnemonic Workspace", workspaceSub:"Write your own memory tricks below &ndash; they're saved on this device automatically.", placeholder:"e.g. My trick for remembering the lac operon genes...", save:"Save"},
+  kn:{title:"ಕೊನೆಯ ಕ್ಷಣದ ಮರುಅಭ್ಯಾಸ", sub:"ಸಂಕ್ಷಿಪ್ತ ಚೀಟ್-ಶೀಟ್ &middot; ಒಂದು ವಿಷಯಕ್ಕೆ ಜಿಗಿಯಿರಿ ಅಥವಾ ಸ್ಕ್ರಾಲ್ ಮಾಡಿ", workspace:"ನನ್ನ ಸ್ಮರಣ ತಂತ್ರ ಕಾರ್ಯಸ್ಥಳ", workspaceSub:"ನಿಮ್ಮ ಸ್ವಂತ ಸ್ಮರಣ ತಂತ್ರಗಳನ್ನು ಕೆಳಗೆ ಬರೆಯಿರಿ &ndash; ಇವು ಈ ಸಾಧನದಲ್ಲಿ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಉಳಿಸಲ್ಪಡುತ್ತವೆ.", placeholder:"ಉದಾ: lac ಆಪರಾನ್ ಜೀನ್‌ಗಳನ್ನು ನೆನಪಿಡಲು ನನ್ನ ತಂತ್ರ...", save:"ಉಳಿಸಿ"},
+  hi:{title:"अंतिम-क्षण रिवीजन", sub:"संक्षिप्त चीट-शीट &middot; किसी विषय पर जाएँ या स्क्रॉल करें", workspace:"मेरा स्मृति तकनीक कार्यक्षेत्र", workspaceSub:"अपनी खुद की स्मृति तकनीकें नीचे लिखें &ndash; ये इस डिवाइस पर स्वचालित रूप से सहेजी जाती हैं।", placeholder:"जैसे, lac ऑपेरॉन जीन को याद रखने की मेरी तकनीक...", save:"सहेजें"}
+};
+
+function renderRevision(){
+  const L = REVISION_UI_STRINGS[currentLang] || REVISION_UI_STRINGS.en;
+  const qf = currentLang==='kn' ? REV_QUICKFACTS_KN : currentLang==='hi' ? REV_QUICKFACTS_HI : REV_QUICKFACTS_EN;
+  const jumpLinks = REV_DATA.map(r=>{
+    const t = currentLang==='kn' ? r.title_kn : currentLang==='hi' ? r.title_hi : r.title;
+    return `<a href="#${r.id}">${t}</a>`;
+  }).join('');
+  const topHtml = `
+    <h3 style="color:var(--gold-2); margin-bottom:4px;">${L.title}</h3>
+    <div style="color:var(--text-dim); font-size:12px; margin-bottom:10px;">${L.sub}</div>
+    <div class="rev-jump">${jumpLinks}</div>
+    <div class="quickfact-grid">${qf.map(q=>`<div class="quickfact"><b>${q.b}</b>${q.t}</div>`).join('')}</div>
+  `;
+  document.getElementById('revisionTopContent').innerHTML = topHtml;
+
+  const mnemos = currentLang==='kn' ? REV_MNEMONICS_KN : currentLang==='hi' ? REV_MNEMONICS_HI : REV_MNEMONICS_EN;
+  const blocksHtml = REV_DATA.map(r=>{
+    const t = currentLang==='kn' ? r.title_kn : currentLang==='hi' ? r.title_hi : r.title;
+    const h = currentLang==='kn' ? r.html_kn : currentLang==='hi' ? r.html_hi : r.html;
+    return `<div class="rev-block" id="${r.id}"><h3>${t}</h3>${h}</div>`;
+  }).join('') + mnemos.map(m=>`<div class="mnemonic-box">${m}</div>`).join('')
+    + `<div class="subhead" style="margin-top:16px;">${L.workspace}</div>
+       <div style="color:var(--text-dim); font-size:12px; margin-bottom:8px;">${L.workspaceSub}</div>
+       <div style="display:flex; gap:8px; margin-bottom:10px;">
+         <input type="text" id="mnemoInput" placeholder="${L.placeholder}" style="flex:1; padding:9px 12px; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(227,175,67,0.3); color:var(--text); font-family:'Work Sans',sans-serif;">
+         <button class="btn" id="mnemoSaveBtn">${L.save}</button>
+       </div>
+       <div id="mnemoList"></div>`;
+  document.getElementById('revisionBlocksContent').innerHTML = blocksHtml;
+
+  const saveBtn = document.getElementById('mnemoSaveBtn');
+  const input = document.getElementById('mnemoInput');
+  if(saveBtn) saveBtn.addEventListener('click', ()=>{
+    const val = input.value.trim();
+    if(!val) return;
+    const arr = loadMnemonics();
+    arr.push(val);
+    saveMnemonics(arr);
+    input.value='';
+    try{ renderMnemonics(); }catch(e){ console.error('renderMnemonics failed:', e); }
+  });
+  if(input) input.addEventListener('keydown', (e)=>{ if(e.key==='Enter') saveBtn.click(); });
+  try{ renderMnemonics(); }catch(e){ console.error('renderMnemonics failed:', e); }
+}
+window.renderRevision = renderRevision;
+
+/* =========================================================
    5. SMART MNEMONIC WORKSPACE (localStorage)
    ========================================================= */
 const MNEMO_KEY = 'pu2ch5_molecinherit_mnemonics_v1';
