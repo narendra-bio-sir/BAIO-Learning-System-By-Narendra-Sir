@@ -2460,8 +2460,8 @@ function setFcWeight(idx, gotIt){
 }
 function renderFlashcard(){
   const idx = fcOrder[fcIndex];
-  document.getElementById('fcFrontText').textContent = FLASHCARDS[idx][0];
-  document.getElementById('fcBackText').textContent = FLASHCARDS[idx][1];
+  document.getElementById('fcFrontText').innerHTML = FLASHCARDS[idx][0];
+  document.getElementById('fcBackText').innerHTML = FLASHCARDS[idx][1];
   document.getElementById('fcProgress').textContent = `Card ${fcIndex+1} / ${FLASHCARDS.length}`;
   document.getElementById('fcCard').classList.remove('flipped');
   document.getElementById('fcRateRow').style.display = 'none';
@@ -2744,6 +2744,7 @@ document.getElementById('quizStartBtn').addEventListener('click', ()=>{
   pool = shuffleArr(pool);
   const countVal = segVal('quizCountSeg');
   const n = countVal==='all' ? pool.length : Math.min(parseInt(countVal), pool.length);
+  if(countVal!=='all' && parseInt(countVal) > pool.length){ alert(`Only ${pool.length} questions match your filters (you selected ${countVal}) — starting with all ${pool.length}.`); }
   pool = pool.slice(0,n);
   if(pool.length===0){ alert('No questions match those filters. Try widening your selection.'); return; }
   const topicScope = (quizTopicMode==='select' && quizTopicIds.length===1) ? quizTopicIds[0] : null;
@@ -2808,11 +2809,12 @@ function quizGoBack(){
   document.getElementById('quizSetup').style.display='block';
 }
 function quizStopTest(){
-  if(!confirm('Stop this quiz now and see your report card based on the questions you\'ve answered so far?')) return;
+  if(!confirm('Stop this quiz now and see your report card? Unanswered questions will count as incorrect toward your selected total.')) return;
   quizClearTimer();
   if(document.fullscreenElement) document.exitFullscreen();
   const s = quizState;
-  s.pool = s.pool.slice(0, s.idx);
+  const remaining = s.pool.length - s.idx;
+  if(remaining > 0) s.timedOut += remaining;
   showQuizReport();
 }
 function quizTimeout(){
@@ -3003,6 +3005,7 @@ document.getElementById('advStartBtn').addEventListener('click', ()=>{
     && (advTopicMode==='full' || advTopicIds.length===0 || advTopicIds.indexOf(q.top)!==-1));
   const countVal = segVal('advCountSeg');
   const n = countVal==='all' ? pool.length : Math.min(parseInt(countVal), pool.length);
+  if(countVal!=='all' && parseInt(countVal) > pool.length){ alert(`Only ${pool.length} questions match your filters (you selected ${countVal}) — starting with all ${pool.length}.`); }
   pool = advBuildSessionPool(pool, n);
   if(pool.length===0){ alert('No questions match those filters. Try widening your selection.'); return; }
   const timerSec = parseInt(segVal('advTimerSeg'));
@@ -3141,10 +3144,11 @@ function advGoBack(){
   document.getElementById('advSetup').style.display='block';
 }
 function advStopTest(){
-  if(!confirm('Stop this test now and see your report card based on the questions you\'ve answered so far?')) return;
+  if(!confirm('Stop this test now and see your report card? Unanswered questions will count as 0 marks toward your selected total.')) return;
   const s = advState; clearInterval(s.timerHandle);
   if(document.fullscreenElement) document.exitFullscreen();
-  s.pool = s.pool.slice(0, s.idx);
+  const remaining = s.pool.length - s.idx;
+  if(remaining > 0) s.skipped += remaining;
   showAdvReport();
 }
 function advTimeout(){
@@ -3279,6 +3283,30 @@ if(kcetPracticeWeakBtn){
 
 segSetup('kcetCountSeg'); segSetup('kcetTimerSeg');
 
+function fixCountSegDefault(containerId, total){
+  const el = document.getElementById(containerId);
+  if(!el || !total) return;
+  const opts = Array.from(el.querySelectorAll('.seg-opt'));
+  const active = el.querySelector('.seg-opt.active');
+  if(!active) return;
+  const av = active.dataset.val;
+  if(av==='all'||av==='All') return;
+  if(parseInt(av) <= total) return;
+  let best = null;
+  opts.forEach(o=>{
+    const v = o.dataset.val;
+    if(v==='all'||v==='All') return;
+    const n = parseInt(v);
+    if(n<=total && (!best || n>parseInt(best.dataset.val))) best = o;
+  });
+  const allOpt = opts.find(o=>o.dataset.val==='all'||o.dataset.val==='All');
+  opts.forEach(o=>o.classList.remove('active'));
+  (best || allOpt || opts[0]).classList.add('active');
+}
+fixCountSegDefault('quizCountSeg', MCQ.length);
+fixCountSegDefault('advCountSeg', ADV.length);
+fixCountSegDefault('kcetCountSeg', KCET_QUESTIONS.length);
+
 const KCET_SEEN_KEY = 'pu2ch3_kcet_seen_ids';
 function kcetGetSeenIds(){
   try{ const raw = localStorage.getItem(KCET_SEEN_KEY); return raw ? new Set(JSON.parse(raw)) : new Set(); }catch(e){ return new Set(); }
@@ -3305,6 +3333,7 @@ document.getElementById('kcetStartBtn').addEventListener('click', ()=>{
     && (kcetTopicMode==='full' || kcetTopicIds.length===0 || kcetTopicIds.indexOf(q.topic)!==-1));
   const countVal = segVal('kcetCountSeg');
   const n = countVal==='all' ? pool.length : Math.min(parseInt(countVal), pool.length);
+  if(countVal!=='all' && parseInt(countVal) > pool.length){ alert(`Only ${pool.length} questions match your filters (you selected ${countVal}) — starting with all ${pool.length}.`); }
   pool = kcetBuildSessionPool(pool, n);
   if(pool.length===0){ alert('No questions match those filters. Try widening your selection.'); return; }
   const timerSec = parseInt(segVal('kcetTimerSeg'));
@@ -3341,11 +3370,12 @@ function updateKcetTimerUI(playSound){
   if(playSound && isLow) playTickSound(kcetState.timeLeft%2===0);
 }
 function kcetStopTest(){
-  if(!confirm('Stop this test now and see your report card based on the questions you\'ve answered so far?')) return;
+  if(!confirm('Stop this test now and see your report card? Unanswered questions will count as 0 marks toward your selected total.')) return;
   kcetClearTimer();
   if(document.fullscreenElement) document.exitFullscreen();
   const s = kcetState;
-  s.pool = s.pool.slice(0, s.idx);
+  const remaining = s.pool.length - s.idx;
+  if(remaining > 0) s.skipped += remaining;
   showKcetReport();
 }
 function kcetGoBack(){
