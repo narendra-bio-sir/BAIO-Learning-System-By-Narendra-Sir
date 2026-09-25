@@ -4536,6 +4536,13 @@ function qT(q, field){
   const v = q[field + '_' + currentLang];
   return (v !== undefined && v !== null && v !== '') ? v : q[field];
 }
+/* Array-valued counterpart of qT — for fields like options (o), whose
+   translated variant, if present, must itself be an array. */
+function qA(q, field){
+  if(currentLang === 'en') return q[field];
+  const v = q[field + '_' + currentLang];
+  return Array.isArray(v) ? v : q[field];
+}
 /* ---------- Answer Practice (Write It, Then Compare) ---------- */
 function waAllPool(){
   return DESC_QUESTIONS.map((q,i)=>{
@@ -4775,13 +4782,13 @@ function renderQuizQuestion(){
     </div>
     <div class="progress-bar"><div class="progress-fill" style="width:${(s.idx/s.pool.length)*100}%"></div></div>
     <div class="q-meta"><span class="chip">${q.d}</span></div>
-    <div class="q-text">${q.q}</div>
+    <div class="q-text">${qT(q,'q')}</div>
     <div id="quizOpts"></div>
     <div id="quizExplain"></div>
     <div class="btn-row" style="margin-top:12px;"><button class="btn" id="quizNextBtn" style="display:none;">Next</button></div>
   `;
   const opts = document.getElementById('quizOpts');
-  q.o.forEach((opt,i)=>{
+  qA(q,'o').forEach((opt,i)=>{
     const b = document.createElement('button');
     b.className='opt'; b.textContent = `(${String.fromCharCode(65+i)}) ${opt}`;
     b.addEventListener('click', ()=>selectQuizAnswer(i));
@@ -4822,8 +4829,8 @@ function quizTimeout(){
   opts.forEach(o=>o.classList.add('disabled'));
   if(opts[q.a]) opts[q.a].classList.add('correct');
   s.timedOut++; s.streak=0;
-  s.answers.push({q:q.q, chosen:null, correctText:q.o[q.a], isCorrect:false, timedOut:true, explain:q.e});
-  document.getElementById('quizExplain').innerHTML = `<div class="explain-box"><b>⏰ Time's up.</b> ${q.e}</div>`;
+  s.answers.push({q:qT(q,'q'), chosen:null, correctText:qA(q,'o')[q.a], isCorrect:false, timedOut:true, explain:qT(q,'e')});
+  document.getElementById('quizExplain').innerHTML = `<div class="explain-box"><b>⏰ Time's up.</b> ${qT(q,'e')}</div>`;
   const nb = document.getElementById('quizNextBtn'); nb.style.display='inline-block';
   nb.onclick = ()=>{ s.idx++; if(s.idx<s.pool.length){ renderQuizQuestion(); } else { showQuizReport(); } };
 }
@@ -4836,8 +4843,8 @@ function selectQuizAnswer(i){
   const isCorrect = i===q.a;
   if(!isCorrect) opts[i].classList.add('wrong');
   if(isCorrect){ s.correct++; s.streak++; s.maxStreak=Math.max(s.maxStreak,s.streak); } else { s.wrong++; s.streak=0; }
-  s.answers.push({q:q.q, chosen:q.o[i], correctText:q.o[q.a], isCorrect, explain:q.e});
-  document.getElementById('quizExplain').innerHTML = `<div class="explain-box"><b>${isCorrect?'✓ Correct.':'✗ Not quite.'}</b> ${q.e}</div>`;
+  s.answers.push({q:qT(q,'q'), chosen:qA(q,'o')[i], correctText:qA(q,'o')[q.a], isCorrect, explain:qT(q,'e')});
+  document.getElementById('quizExplain').innerHTML = `<div class="explain-box"><b>${isCorrect?'✓ Correct.':'✗ Not quite.'}</b> ${qT(q,'e')}</div>`;
   const nb = document.getElementById('quizNextBtn'); nb.style.display='inline-block';
   nb.onclick = ()=>{ s.idx++; if(s.idx<s.pool.length){ renderQuizQuestion(); } else { showQuizReport(); } };
 }
@@ -5067,31 +5074,32 @@ function renderAdvQuestion(){
   const runner = document.getElementById('advRunner');
   let body = '';
   if(q.type==='mcq'){
-    body = `<div class="q-text">${q.q}</div><div id="advOpts"></div>`;
+    body = `<div class="q-text">${qT(q,'q')}</div><div id="advOpts"></div>`;
   } else if(q.type==='ar'){
-    body = `<div class="q-text"><b>${q.as}</b><br><b>${q.re}</b></div>
+    body = `<div class="q-text"><b>${qT(q,'as')}</b><br><b>${qT(q,'re')}</b></div>
       <div id="advOpts"></div>`;
   } else if(q.type==='fib'){
-    body = `<div class="q-text">${q.s}</div><div id="advOpts"></div>`;
+    body = `<div class="q-text">${qT(q,'s')}</div><div id="advOpts"></div>`;
   } else if(q.type==='match'){
     const L = advUI();
     body = `<div class="q-text">${L.matchInstruction}</div>
       <div class="match-cols">
-        <div class="match-col"><div class="lbl">${L.colA}</div>${q.colA.map(x=>`<div>${x}</div>`).join('')}</div>
-        <div class="match-col"><div class="lbl">${L.colB}</div>${q.colB.map(x=>`<div>${x}</div>`).join('')}</div>
+        <div class="match-col"><div class="lbl">${L.colA}</div>${qA(q,'colA').map(x=>`<div>${x}</div>`).join('')}</div>
+        <div class="match-col"><div class="lbl">${L.colB}</div>${qA(q,'colB').map(x=>`<div>${x}</div>`).join('')}</div>
       </div>
       <div id="advOpts"></div>`;
   } else if(q.type==='ci'){
     body = `<div class="q-text">${advUI().ciQuestion(advPromptLabel(q.prompt))}</div><div id="advOpts"></div>`;
   } else if(q.type==='s12'){
-    body = `<div class="q-text"><b>${q.s1}</b><br><b>${q.s2}</b></div><div id="advOpts"></div>`;
+    body = `<div class="q-text"><b>${qT(q,'s1')}</b><br><b>${qT(q,'s2')}</b></div><div id="advOpts"></div>`;
   } else if(q.type==='combo'){
     const L = advUI();
     body = `<div class="q-text">${L.consider}</div>
-      <div class="seq-list">${q.stmts.map(x=>`<div>${x}</div>`).join('')}</div>
+      <div class="seq-list">${qA(q,'stmts').map(x=>`<div>${x}</div>`).join('')}</div>
       <div class="q-text">${L.whichAboveCorrect}</div><div id="advOpts"></div>`;
   } else if(q.type==='seq'){
-    const shuffledLabels = q.steps.map((s2,i)=>({text:s2, origIdx:i}));
+    const steps = qA(q,'steps');
+    const shuffledLabels = steps.map((s2,i)=>({text:s2, origIdx:i}));
     const display = shuffleArr(shuffledLabels);
     q._display = display; // store mapping for this render
     body = `<div class="q-text">${advUI().arrangeSteps}</div>
@@ -5108,9 +5116,9 @@ function renderAdvQuestion(){
     const s12Opts = advUI().s12Opts;
     s12Opts.forEach((opt,i)=>{ const b=document.createElement('button'); b.className='opt'; b.textContent=`(${String.fromCharCode(65+i)}) ${opt}`; b.addEventListener('click',()=>selectAdvAnswer(i,q.a)); optsDiv.appendChild(b); });
   } else if(q.type==='mcq' || q.type==='fib' || q.type==='match' || q.type==='combo'){
-    q.o.forEach((opt,i)=>{ const b=document.createElement('button'); b.className='opt'; b.textContent=`(${String.fromCharCode(65+i)}) ${opt}`; b.addEventListener('click',()=>selectAdvAnswer(i,q.a)); optsDiv.appendChild(b); });
+    qA(q,'o').forEach((opt,i)=>{ const b=document.createElement('button'); b.className='opt'; b.textContent=`(${String.fromCharCode(65+i)}) ${opt}`; b.addEventListener('click',()=>selectAdvAnswer(i,q.a)); optsDiv.appendChild(b); });
   } else if(q.type==='ci'){
-    q.st.forEach((opt,i)=>{ const b=document.createElement('button'); b.className='opt'; b.textContent=`(${String.fromCharCode(65+i)}) ${opt}`; b.addEventListener('click',()=>selectAdvAnswer(i,q.a)); optsDiv.appendChild(b); });
+    qA(q,'st').forEach((opt,i)=>{ const b=document.createElement('button'); b.className='opt'; b.textContent=`(${String.fromCharCode(65+i)}) ${opt}`; b.addEventListener('click',()=>selectAdvAnswer(i,q.a)); optsDiv.appendChild(b); });
   } else if(q.type==='seq'){
     // build 4 order options: correct + 3 shuffled decoys, expressed as letter sequences relative to displayed order
     const display = q._display;
@@ -5140,8 +5148,8 @@ function selectAdvAnswer(i, correctIdx){
   if(!isCorrect) opts[i].classList.add('wrong');
   if(isCorrect){ s.correct++; s.marks+=4; } else { s.wrong++; s.marks-=1; }
   recordTopicStat(q.top, isCorrect);
-  s.answers.push({label:advQuestionLabel(q), isCorrect, timedOut:false, explain:q.e});
-  document.getElementById('advExplain').innerHTML = `<div class="explain-box"><b>${isCorrect?'✓ Correct. (+4)':'✗ Incorrect. (−1)'}</b> ${q.e}</div>`;
+  s.answers.push({label:advQuestionLabel(q), isCorrect, timedOut:false, explain:qT(q,'e')});
+  document.getElementById('advExplain').innerHTML = `<div class="explain-box"><b>${isCorrect?'✓ Correct. (+4)':'✗ Incorrect. (−1)'}</b> ${qT(q,'e')}</div>`;
   const nb = document.getElementById('advNextBtn'); nb.style.display='inline-block';
   nb.onclick = advGoNext;
 }
@@ -5165,18 +5173,18 @@ function advTimeout(){
   const q = s.pool[s.idx];
   const opts = document.querySelectorAll('#advOpts .opt'); opts.forEach(o=>o.classList.add('disabled'));
   s.skipped++;
-  s.answers.push({label:advQuestionLabel(q), isCorrect:false, timedOut:true, explain:q.e});
-  document.getElementById('advExplain').innerHTML = `<div class="explain-box"><b>⏱ Time's up. (0 marks)</b> ${q.e}</div>`;
+  s.answers.push({label:advQuestionLabel(q), isCorrect:false, timedOut:true, explain:qT(q,'e')});
+  document.getElementById('advExplain').innerHTML = `<div class="explain-box"><b>⏱ Time's up. (0 marks)</b> ${qT(q,'e')}</div>`;
   const nb = document.getElementById('advNextBtn'); nb.style.display='inline-block';
   nb.onclick = advGoNext;
 }
 function advQuestionLabel(q){
-  if(q.type==='mcq') return q.q;
-  if(q.type==='ar') return q.as;
-  if(q.type==='fib') return q.s;
+  if(q.type==='mcq') return qT(q,'q');
+  if(q.type==='ar') return qT(q,'as');
+  if(q.type==='fib') return qT(q,'s');
   if(q.type==='match') return 'Match the Following';
   if(q.type==='ci') return `Which is ${q.prompt}?`;
-  if(q.type==='s12') return q.s1;
+  if(q.type==='s12') return qT(q,'s1');
   if(q.type==='combo') return 'Statement combination';
   if(q.type==='seq') return 'Sequential arrangement';
   return 'Question';
@@ -5576,9 +5584,10 @@ function renderKcetQuestion(){
   const s = kcetState; const q = s.pool[s.idx]; s.locked=false;
   const runner = document.getElementById('kcetRunner');
   const fmtLabel = KCET_TYPE_LABELS[q.format] || 'Direct NCERT Recall';
-  const matchHtml = (q.format==='matching' && q.colA && q.colB) ? `<div class="match-cols">
-      <div class="match-col"><div class="lbl">Column A</div>${q.colA.map(x=>`<div>${x}</div>`).join('')}</div>
-      <div class="match-col"><div class="lbl">Column B</div>${q.colB.map(x=>`<div>${x}</div>`).join('')}</div>
+  const colA = qA(q,'colA'), colB = qA(q,'colB');
+  const matchHtml = (q.format==='matching' && colA && colB) ? `<div class="match-cols">
+      <div class="match-col"><div class="lbl">Column A</div>${colA.map(x=>`<div>${x}</div>`).join('')}</div>
+      <div class="match-col"><div class="lbl">Column B</div>${colB.map(x=>`<div>${x}</div>`).join('')}</div>
     </div>` : '';
   runner.innerHTML = `<div class="fs-sticky-head">
     <div class="btn-row runner-exit-bar" style="margin-bottom:8px;">
@@ -5595,7 +5604,7 @@ function renderKcetQuestion(){
     </div>
     <div class="progress-bar"><div class="progress-fill" style="width:${(s.idx/s.pool.length)*100}%"></div></div>
     <div class="q-meta"><span class="chip">${q.difficulty}</span><span class="chip gold">${fmtLabel}</span></div>
-    <div class="q-text">${q.q}</div>
+    <div class="q-text">${qT(q,'q')}</div>
     ${matchHtml}
     <div id="kcetOpts"></div>
     <div id="kcetExplain"></div>
@@ -5603,7 +5612,7 @@ function renderKcetQuestion(){
   document.getElementById('kcetGoBackBtn').addEventListener('click', kcetGoBack);
   document.getElementById('kcetStopBtn').addEventListener('click', kcetStopTest);
   const optsDiv = document.getElementById('kcetOpts');
-  q.options.forEach((opt,i)=>{ const b=document.createElement('button'); b.className='opt'; b.textContent=`(${String.fromCharCode(65+i)}) ${opt}`; b.addEventListener('click',()=>kcetAnswer(i)); optsDiv.appendChild(b); });
+  qA(q,'options').forEach((opt,i)=>{ const b=document.createElement('button'); b.className='opt'; b.textContent=`(${String.fromCharCode(65+i)}) ${opt}`; b.addEventListener('click',()=>kcetAnswer(i)); optsDiv.appendChild(b); });
   startKcetTimer();
 }
 function kcetAnswer(i){
@@ -5617,8 +5626,8 @@ function kcetAnswer(i){
   if(!isCorrect) opts[i].classList.add('wrong');
   if(isCorrect){ s.correct++; s.marks+=1; } else { s.wrong++; }
   recordTopicStat(q.topic, isCorrect);
-  s.answers.push({label:q.q, isCorrect, timedOut:false, explain:q.exp});
-  document.getElementById('kcetExplain').innerHTML = `<div class="explain-box"><b>${isCorrect?'✓ Correct. (+1)':'✗ Incorrect. (0)'}</b> ${q.exp}</div>`;
+  s.answers.push({label:qT(q,'q'), isCorrect, timedOut:false, explain:qT(q,'exp')});
+  document.getElementById('kcetExplain').innerHTML = `<div class="explain-box"><b>${isCorrect?'✓ Correct. (+1)':'✗ Incorrect. (0)'}</b> ${qT(q,'exp')}</div>`;
   const nb = document.getElementById('kcetNextBtn'); nb.style.display='inline-block';
   nb.onclick = kcetGoNext;
 }
@@ -5628,8 +5637,8 @@ function kcetTimeout(){
   const opts = document.querySelectorAll('#kcetOpts .opt'); opts.forEach(o=>o.classList.add('disabled'));
   if(opts[q.answer]) opts[q.answer].classList.add('correct');
   s.skipped++;
-  s.answers.push({label:q.q, isCorrect:false, timedOut:true, explain:q.exp});
-  document.getElementById('kcetExplain').innerHTML = `<div class="explain-box"><b>⏱ Time's up. (0 marks)</b> ${q.exp}</div>`;
+  s.answers.push({label:qT(q,'q'), isCorrect:false, timedOut:true, explain:qT(q,'exp')});
+  document.getElementById('kcetExplain').innerHTML = `<div class="explain-box"><b>⏱ Time's up. (0 marks)</b> ${qT(q,'exp')}</div>`;
   const nb = document.getElementById('kcetNextBtn'); nb.style.display='inline-block';
   nb.onclick = kcetGoNext;
 }
