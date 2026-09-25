@@ -4158,6 +4158,14 @@ const DESC_KEYWORDS_CH9 = {
 };
 
 /* ---------------- ANSWER PRACTICE (Write It, Then Compare) ---------------- */
+/* Translation helper for per-question data fields (DESC_QUESTIONS etc.).
+   Each question object may carry <field>_kn / <field>_hi variants; qT falls
+   back to the English field when a translation is missing. */
+function qT(q, field){
+  if(currentLang === 'en') return q[field];
+  const v = q[field + '_' + currentLang];
+  return (v !== undefined && v !== null && v !== '') ? v : q[field];
+}
 let WA_ALL_POOL = null;
 function waAllPool(){
   if(WA_ALL_POOL) return WA_ALL_POOL;
@@ -4271,12 +4279,12 @@ function renderWriteItQuestion(){
         <span class="opt-btn" style="cursor:default;">${q.difficulty}</span>
         <span class="opt-btn" style="cursor:default;">${topicName}</span>
       </div>
-      <div class="aq-q" style="margin-bottom:12px;">${q.q}</div>
+      <div class="aq-q" style="margin-bottom:12px;">${qT(q,'q')}</div>
       <div style="font-size:11.5px; color:var(--ink-dim); margin-bottom:6px;">📝 Write this out on paper first, like the real exam — use the box below only as a rough scratchpad.</div>
       <textarea placeholder="Write your answer here..." style="width:100%; min-height:110px; padding:10px; border-radius:10px; border:1px solid var(--line); background:var(--panel2); color:var(--ink); font-family:inherit; font-size:13.5px; resize:vertical;"></textarea>
       ${!s.revealed
         ? `<button class="start-btn" style="margin-top:10px;" onclick="waReveal()">Show Model Answer</button>`
-        : `<div class="wa-model"><div class="wa-model-head">✅ Model Answer</div><div class="wa-model-body">${formatModelAnswer(q.a)}</div></div>
+        : `<div class="wa-model"><div class="wa-model-head">✅ Model Answer</div><div class="wa-model-body">${formatModelAnswer(qT(q,'a'))}</div></div>
            ${kwPanelHtml(q)}
            <div class="opt-row" style="margin:12px 0;">
              <button class="opt-btn" style="flex:1; border-color:#e0685f; color:#e0685f;" onclick="waRate(false)">😕 Still Learning</button>
@@ -4352,11 +4360,18 @@ function renderKeyList(d){
   return `<div class="section" style="margin-top:8px;"><h4>${d.keyList.title}</h4>` +
     d.keyList.items.map(it=>`<div class="rev-line">\u2022 ${it}</div>`).join('') + `</div>`;
 }
+const REVISION_UI_STRINGS = {
+  en:{ quickMode:"Quick Recall Mode", quickSub:"All 8 topics, condensed for last-minute revision", rapidBtn:"Rapid Fire \u25B6", topicOf:(n,total)=>`Topic ${n} of ${total}` },
+  kn:{ quickMode:"\u0CA4\u0CCD\u0CB5\u0CB0\u0CBF\u0CA4 \u0CB8\u0CCD\u0CAE\u0CB0\u0CA3 \u0C95\u0CCD\u0CB0\u0CAE", quickSub:"\u0C8E\u0CB2\u0CCD\u0CB2\u0CBE 8 \u0CB5\u0CBF\u0CB7\u0CAF\u0C97\u0CB3\u0CC1, \u0C95\u0CCA\u0CA8\u0CC6\u0CAF \u0C95\u0CCD\u0CB7\u0CA3\u0CA6 \u0CAE\u0CB0\u0CC1\u0C85\u0CAD\u0CCD\u0CAF\u0CBE\u0CB8\u0C95\u0CCD\u0C95\u0CBE\u0C97\u0CBF \u0CB8\u0C82\u0C95\u0CCD\u0CB7\u0CBF\u0CAA\u0CCD\u0CA4\u0C97\u0CCA\u0CB3\u0CBF\u0CB8\u0CB2\u0CBE\u0C97\u0CBF\u0CA6\u0CC6", rapidBtn:"Rapid Fire \u25B6", topicOf:(n,total)=>`\u0CB5\u0CBF\u0CB7\u0CAF ${n} / ${total}` },
+  hi:{ quickMode:"\u0924\u094D\u0935\u0930\u093F\u0924 \u0938\u094D\u092E\u0930\u0923 \u092E\u094B\u0921", quickSub:"\u0938\u092D\u0940 8 \u0935\u093F\u0937\u092F, \u0905\u0902\u0924\u093F\u092E-\u0915\u094D\u0937\u0923 \u0930\u093F\u0935\u0940\u091C\u0928 \u0939\u0947\u0924\u0941 \u0938\u0902\u0915\u094D\u0937\u093F\u092A\u094D\u0924 \u0915\u093F\u090F \u0917\u090F", rapidBtn:"Rapid Fire \u25B6", topicOf:(n,total)=>`\u0935\u093F\u0937\u092F ${n} / ${total}` }
+};
+function revUI(){ return REVISION_UI_STRINGS[currentLang] || REVISION_UI_STRINGS.en; }
 function renderRevision(){
-  let html = `<div class="rev-strip"><div class="txt">Quick Recall Mode<small>All 8 topics, condensed for last-minute revision</small></div>
-    <button class="rev-go" onclick="openRapid()">Rapid Fire \u25B6</button></div>`;
+  const L = revUI();
+  let html = `<div class="rev-strip"><div class="txt">${L.quickMode}<small>${L.quickSub}</small></div>
+    <button class="rev-go" onclick="openRapid()">${L.rapidBtn}</button></div>`;
   DATA.topics.forEach((t,i)=>{
-    const d = DATA.study[t.id];
+    const d = (STUDY_TRANSLATIONS[t.id] && STUDY_TRANSLATIONS[t.id][currentLang]) || DATA.study[t.id];
     const cs = condenseSections(d.sections);
     const isOpen = !!revOpen[t.id];
     html += `<div class="rev-panel">
@@ -4380,8 +4395,9 @@ function openRapid(){
 function closeRapid(){ document.getElementById('rapidOverlay').classList.remove('show'); }
 function renderRapidCard(){
   const t = DATA.topics[rapidIdx];
-  const d = DATA.study[t.id];
-  document.getElementById('rapidTopicTag').textContent = `Topic ${rapidIdx+1} of ${DATA.topics.length}`;
+  const d = (STUDY_TRANSLATIONS[t.id] && STUDY_TRANSLATIONS[t.id][currentLang]) || DATA.study[t.id];
+  const L = revUI();
+  document.getElementById('rapidTopicTag').textContent = L.topicOf(rapidIdx+1, DATA.topics.length);
   document.getElementById('rapidName').textContent = t.name;
   let html = `<div class="chiprow" style="justify-content:center;">${d.recap.map(c=>`<span class="chip">${c}</span>`).join('')}</div>`;
   html += condenseSections(d.sections).map(c=>`<div class="rev-line"><b>${c.h}:</b> ${c.line}</div>`).join('');
