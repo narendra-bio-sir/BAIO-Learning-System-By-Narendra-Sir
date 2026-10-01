@@ -1708,10 +1708,11 @@ function renderNeetQuestion(){
   }, 1000);
 }
 function neetStopTest(){
-  if(!confirm('Stop this test now and see your report card based on the questions you\'ve answered so far?')) return;
+  if(!confirm('Stop this test now and see your report card? Unanswered questions will count as 0 marks toward your selected total.')) return;
   neetClearTimer();
   const s = neetSession;
-  s.questions = s.questions.slice(0, s.idx);
+  const remaining = s.questions.length - s.idx;
+  if(remaining > 0) s.timeoutCount += remaining;
   renderNeetReport();
 }
 function neetGoBack(){
@@ -2281,10 +2282,11 @@ function kcetAnswer(i){
 }
 function kcetNext(){ kcetSession.idx++; kcetSession.answered=false; renderKcetQuestion(); }
 function kcetStopTest(){
-  if(!confirm('Stop this test now and see your report card based on the questions you\'ve answered so far?')) return;
+  if(!confirm('Stop this test now and see your report card? Unanswered questions will count as 0 marks toward your selected total.')) return;
   kcetClearTimer();
   const s = kcetSession;
-  s.questions = s.questions.slice(0, s.idx);
+  const remaining = s.questions.length - s.idx;
+  if(remaining > 0) s.timeoutCount += remaining;
   renderKcetReport();
 }
 function kcetGoBack(){
