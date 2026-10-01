@@ -4151,7 +4151,15 @@ function getHwUnlock(){ try{ return JSON.parse(localStorage.getItem(HW_UNLOCK_KE
 function setHwUnlock(method, extra){
   try{ localStorage.setItem(HW_UNLOCK_KEY, JSON.stringify(Object.assign({unlocked:true, method:method, ts:Date.now()}, extra||{}))); }catch(e){}
 }
-function hwQualifies(){ const u = getHwUnlock(); return !!(u && u.unlocked); }
+function hwQualifies(){
+  const u = getHwUnlock();
+  if(!u || !u.unlocked) return false;
+  if(u.method === 'code' && Date.now() > STUDENT_CODE_EXPIRY){
+    try{ localStorage.removeItem(HW_UNLOCK_KEY); }catch(e){}
+    return false;
+  }
+  return true;
+}
 function reLockHw(){ try{ localStorage.removeItem(HW_UNLOCK_KEY); }catch(e){} renderDownloads(); }
 window.reLockHw = reLockHw;
 function bestNeetScore(){
@@ -4174,7 +4182,7 @@ function hwSubmitUnlock(){
   if(entry && entry.code.toUpperCase() === code){ setHwUnlock('code', {roll:roll, section:section}); renderDownloads(); return; }
   if(name && computeStudentCode(name, roll, section, 'CH3-HWNOTES') === code){ setHwUnlock('code', {roll:roll, section:section, name:name}); renderDownloads(); return; }
   if(!name){ msgEl.textContent = 'That roll number / code combination was not recognized. If Narendra Sir gave you a new-style code, please also enter your full name above.'; }
-  else { msgEl.textContent = 'That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir.'; }
+  else { msgEl.textContent = 'That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir, or note that student unlock codes expire on 25 Oct 2026 and may need to be renewed.'; }
   msgEl.className = 'hw-msg bad';
 }
 window.hwSubmitUnlock = hwSubmitUnlock;
@@ -4246,6 +4254,10 @@ function premiumQualifies(){
     try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){}
     return false;
   }
+  if(u.method === 'code' && Date.now() > STUDENT_CODE_EXPIRY){
+    try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){}
+    return false;
+  }
   return true;
 }
 function reLockPremium(){ try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){} renderContent(); renderTabbar(); }
@@ -4253,6 +4265,9 @@ window.reLockPremium = reLockPremium;
 function premiumUnlockKey(section, roll){ return (section||'').trim().toUpperCase()+'_'+(roll||'').trim().toUpperCase(); }
 /* ---------------- Student-locked unlock code (must match code_generator.html exactly) ---------------- */
 const CODE_SALT = 'BAIO-STUDENT-LOCK-2026';
+/* Student-entered unlock codes (not the master code) stop granting access after this
+   date - Narendra Sir can renew access for everyone by moving this one date forward. */
+const STUDENT_CODE_EXPIRY = new Date('2026-10-25T23:59:59+05:30').getTime();
 const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 function normalizeField(s){ return (s || '').toString().trim().toUpperCase().replace(/\s+/g, ' '); }
 function fnv1aHash(str){
@@ -4296,7 +4311,7 @@ function premiumSubmitUnlock(){
   if(entry && entry.code.toUpperCase() === code){ setPremiumUnlock('code', {roll:roll, section:section}); renderContent(); renderTabbar(); return; }
   if(name && (computeStudentCode(name, roll, section, 'CH3-PREMIUM') === code || computeStudentCode(name, roll, section) === code)){ setPremiumUnlock('code', {roll:roll, section:section, name:name}); renderContent(); renderTabbar(); return; }
   if(!name){ msgEl.textContent = 'That roll number / code combination was not recognized. If Narendra Sir gave you a new-style code, please also enter your full name above.'; }
-  else { msgEl.textContent = 'That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir.'; }
+  else { msgEl.textContent = 'That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir, or note that student unlock codes expire on 25 Oct 2026 and may need to be renewed.'; }
   msgEl.className='hw-msg bad';
 }
 window.premiumSubmitUnlock = premiumSubmitUnlock;
