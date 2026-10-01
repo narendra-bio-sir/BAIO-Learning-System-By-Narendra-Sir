@@ -6694,7 +6694,7 @@ function generateTeacherComment(student){
   // Optional NEET OBT Biology trend addendum, when this student has 2+ NEET OBT attempts
   const neetRec = (typeof NEET_BY_CODE!=='undefined') ? NEET_BY_CODE[student.code] : null;
   if(neetRec){
-    const bios = ['obt1','obt2','obt3','obt4'].map(k=>neetRec[k]?neetRec[k].BIO:null).filter(v=>v!==null && v!==undefined);
+    const bios = ['obt1','obt2','obt3','obt4','obt5'].map(k=>neetRec[k]?neetRec[k].BIO:null).filter(v=>v!==null && v!==undefined);
     if(bios.length>=2){
       const d = Math.round((bios[bios.length-1]-bios[0])*10)/10;
       const dirEn = d>=0 ? 'improved' : 'dropped', dirKn = d>=0 ? 'ಸುಧಾರಿಸಿದೆ' : 'ಕುಸಿದಿದೆ', dirHi = d>=0 ? 'सुधरा है' : 'गिरा है';
@@ -7578,11 +7578,11 @@ function computeKcetPcmbReadiness(student){
    display" override that's independent of which rounds decide the score. */
 function computeStudentExamReadiness(category, student, pu, roundScope){
   if(pu === 1){
-    if(category==='neet') return computeStreamReadiness(NEET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1','obt4'], 720, NEET_TESTS, EXAM_SUBJECT_SPECS.neet, roundScope);
+    if(category==='neet') return computeStreamReadiness(NEET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1','obt4','obt5'], 720, NEET_TESTS, EXAM_SUBJECT_SPECS.neet, roundScope);
     if(category==='kcet') return computeStreamReadiness(KCET_BY_CODE[student.code], ['obt1','obt2','obt3','ct1','obt4'], 135, KCET_TESTS, EXAM_SUBJECT_SPECS.kcet, roundScope);
     if(category==='kcetpcb') return (typeof KCET_PCB_BY_CODE!=='undefined') ? computeStreamReadiness(KCET_PCB_BY_CODE[student.code], ['obt1'], 135, KCET_PCB_TESTS, EXAM_SUBJECT_SPECS.kcetpcb, roundScope) : null;
     if(category==='kcetpcmb') return computeKcetPcmbReadiness(student);
-    if(category==='jee') return (typeof JEE_BY_CODE!=='undefined') ? computeStreamReadiness(JEE_BY_CODE[student.code], ['obt1','obt2','obt3','ct1','obt4'], 300, JEE_TESTS, EXAM_SUBJECT_SPECS.jee, roundScope) : null;
+    if(category==='jee') return (typeof JEE_BY_CODE!=='undefined') ? computeStreamReadiness(JEE_BY_CODE[student.code], ['obt1','obt2','obt3','ct1','obt4','obt5'], 300, JEE_TESTS, EXAM_SUBJECT_SPECS.jee, roundScope) : null;
     return null;
   }
   if(category==='neet') return computePU2NeetReadiness(student, roundScope);
@@ -8177,8 +8177,8 @@ function buildPU1ExamSectionsHtml(student){
 
   if(kcet){ html += readinessCardHtml('KCET (PCM)', computeStreamReadiness(kcet, ['obt1','obt2','obt3','ct1','obt4'], 135)); }
   if(kcetPcb){ html += readinessCardHtml('KCET (PCB)', computeStreamReadiness(kcetPcb, ['obt1'], 135)); }
-  if(neet){ html += readinessCardHtml('NEET (PCB)', computeStreamReadiness(neet, ['obt1','obt2','obt3','ct1','obt4'], 720)); }
-  if(jee){ html += readinessCardHtml('JEE', computeStreamReadiness(jee, ['obt1','obt2','obt3','ct1','obt4'], 300)); }
+  if(neet){ html += readinessCardHtml('NEET (PCB)', computeStreamReadiness(neet, ['obt1','obt2','obt3','ct1','obt4','obt5'], 720)); }
+  if(jee){ html += readinessCardHtml('JEE', computeStreamReadiness(jee, ['obt1','obt2','obt3','ct1','obt4','obt5'], 300)); }
 
   if(kcet){
     const kcetMeta = KCET_TESTS.map((t,i)=>({key: i<3 ? 'obt'+(i+1) : (i===3 ? 'ct1' : 'obt'+i), test: t}));
@@ -11025,6 +11025,9 @@ function escAttr(str){
   return String(str||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 function adoptedLatestSnapshot(student){
+  if(student.t3 && student.t3.TOTAL!==null && student.t3.TOTAL!==undefined){
+    return student.t3.TOTAL+'/80';
+  }
   if(student.august && student.august.TOTAL!==null && student.august.TOTAL!==undefined){
     return student.august.TOTAL+'/240'+(student.august.RANK?' (Rank #'+student.august.RANK+')':'');
   }
