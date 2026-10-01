@@ -3096,11 +3096,12 @@ window.mcqStart = mcqStart;
 
 function mcqClearTimer(){ if(mcqTimerInt){ clearInterval(mcqTimerInt); mcqTimerInt=null; } }
 function mcqStopTest(){
-  if(!confirm('Stop this quiz now and see your report card based on the questions you\'ve answered so far?')) return;
+  if(!confirm('Stop this quiz now and see your report card? Unanswered questions will count as 0 marks toward your selected total.')) return;
   mcqClearTimer();
   if(document.fullscreenElement) document.exitFullscreen();
   const s = mcqSession;
-  s.questions = s.questions.slice(0, s.idx);
+  const remaining = s.questions.length - s.idx;
+  if(remaining > 0) s.timeoutCount += remaining;
   renderMcqReport();
 }
 function mcqGoBack(){
@@ -3405,11 +3406,12 @@ function neetQText(q){
 }
 function neetClearTimer(){ if(neetTimerInt){ clearInterval(neetTimerInt); neetTimerInt=null; } }
 function neetStopTest(){
-  if(!confirm('Stop this test now and see your report card based on the questions you\'ve answered so far?')) return;
+  if(!confirm('Stop this test now and see your report card? Unanswered questions will count as 0 marks toward your selected total.')) return;
   neetClearTimer();
   if(document.fullscreenElement) document.exitFullscreen();
   const s = neetSession;
-  s.questions = s.questions.slice(0, s.idx);
+  const remaining = s.questions.length - s.idx;
+  if(remaining > 0) s.timeoutCount += remaining;
   renderNeetReport();
 }
 function neetGoBack(){
@@ -3649,11 +3651,12 @@ function kcetStart(){
 window.kcetStart = kcetStart;
 function kcetClearTimer(){ if(kcetTimerInt){ clearInterval(kcetTimerInt); kcetTimerInt=null; } }
 function kcetStopTest(){
-  if(!confirm('Stop this test now and see your report card based on the questions you\'ve answered so far?')) return;
+  if(!confirm('Stop this test now and see your report card? Unanswered questions will count as 0 marks toward your selected total.')) return;
   kcetClearTimer();
   if(document.fullscreenElement) document.exitFullscreen();
   const s = kcetSession;
-  s.questions = s.questions.slice(0, s.idx);
+  const remaining = s.questions.length - s.idx;
+  if(remaining > 0) s.timeoutCount += remaining;
   renderKcetReport();
 }
 function kcetGoBack(){
