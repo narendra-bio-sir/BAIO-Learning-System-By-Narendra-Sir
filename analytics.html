@@ -1618,7 +1618,8 @@ window.addEventListener('afterprint', function(){
       <div class="subtabs">
         <button class="subtab-btn active" data-ele-top="t1">Slip Test 1</button>
         <button class="subtab-btn" data-ele-top="t2">Slip Test 2</button>
-        <button class="subtab-btn" data-ele-top="combined">Both (Avg)</button>
+        <button class="subtab-btn" data-ele-top="t3">Slip Test 3</button>
+        <button class="subtab-btn" data-ele-top="combined">Test 1 &amp; 2 (Avg)</button>
       </div>
       <div id="electronicsTopList"></div>
       <div class="topper-share-bar" id="electronicsTopShareBar"></div>
@@ -1628,6 +1629,7 @@ window.addEventListener('afterprint', function(){
       <div class="subtabs">
         <button class="subtab-btn active" data-ele-fail="t1">Slip Test 1</button>
         <button class="subtab-btn" data-ele-fail="t2">Slip Test 2</button>
+        <button class="subtab-btn" data-ele-fail="t3">Slip Test 3</button>
       </div>
       <div class="table-wrap"><table id="electronicsFailSecTable"><thead><tr><th>Name</th><th>Enroll Code</th><th>Section</th><th>Subjects Failed</th><th>Total /80</th></tr></thead><tbody></tbody></table></div>
     </div>
@@ -5303,6 +5305,7 @@ function buildElectronicsSection(){
   const roster = computeElectronicsRoster();
   const t1Stats = computeElectronicsSubjectStats(roster, 't1');
   const t2Stats = computeElectronicsSubjectStats(roster, 't2');
+  const t3Stats = computeElectronicsSubjectStats(roster, 't3');
   const eleAvg1 = t1Stats.ELE.avg_pct, eleAvg2 = t2Stats.ELE.avg_pct;
   const cheFailT2 = Math.round((100 - t2Stats.CHE.pass_rate_pct)*10)/10;
 
@@ -5320,7 +5323,8 @@ function buildElectronicsSection(){
     type:'bar',
     data:{ labels:ELE_SUBJECTS.map(s=>NAMES[s]), datasets:[
       {label:'Test 1', data:ELE_SUBJECTS.map(s=>t1Stats[s].avg_pct), backgroundColor:'#8ecae6', borderRadius:6},
-      {label:'Test 2', data:ELE_SUBJECTS.map(s=>t2Stats[s].avg_pct), backgroundColor:'#f4a261', borderRadius:6}
+      {label:'Test 2', data:ELE_SUBJECTS.map(s=>t2Stats[s].avg_pct), backgroundColor:'#f4a261', borderRadius:6},
+      {label:'Test 3', data:ELE_SUBJECTS.map(s=>t3Stats[s].avg_pct), backgroundColor:'#2bb3a3', borderRadius:6}
     ]},
     options:{ plugins:{legend:{labels:{color:chartText()}}}, scales:{
       x:{ticks:{color:chartMuted()}, grid:{color:chartGridSoft()}},
@@ -5332,7 +5336,8 @@ function buildElectronicsSection(){
     type:'bar',
     data:{ labels:ELE_SUBJECTS.map(s=>NAMES[s]), datasets:[
       {label:'Test 1', data:ELE_SUBJECTS.map(s=>t1Stats[s].pass_rate_pct), backgroundColor:'#8ecae6', borderRadius:6},
-      {label:'Test 2', data:ELE_SUBJECTS.map(s=>t2Stats[s].pass_rate_pct), backgroundColor:'#d4af37', borderRadius:6}
+      {label:'Test 2', data:ELE_SUBJECTS.map(s=>t2Stats[s].pass_rate_pct), backgroundColor:'#d4af37', borderRadius:6},
+      {label:'Test 3', data:ELE_SUBJECTS.map(s=>t3Stats[s].pass_rate_pct), backgroundColor:'#2bb3a3', borderRadius:6}
     ]},
     options:{ plugins:{legend:{labels:{color:chartText()}}}, scales:{
       x:{ticks:{color:chartMuted()}, grid:{color:chartGridSoft()}},
@@ -6572,6 +6577,11 @@ function generateElectronicsTeacherComment(student, pu){
     prevTest = withData.length>1 ? withData[withData.length-2] : null;
     latestLabel = latestTest ? latestTest.label : '';
     prevLabel = prevTest ? prevTest.label : '';
+  } else if(student.t3 && student.t3.TOTAL!==null && student.t3.TOTAL>0){
+    latestTest = 't3';
+    prevTest = (student.t2 && student.t2.TOTAL!==null && student.t2.TOTAL>0) ? 't2' : 't1';
+    latestLabel = 'Slip Test 3';
+    prevLabel = prevTest==='t2' ? 'Slip Test 2' : 'Slip Test 1';
   } else {
     latestTest = (student.t2 && student.t2.TOTAL!==null && student.t2.TOTAL>0) ? 't2' : 't1';
     prevTest = latestTest==='t2' ? 't1' : null;
@@ -6672,11 +6682,27 @@ function generateTeacherComment(student){
      Biology teacher's report card. Everything below is driven by the
      student's own Biology marks first; other subjects only appear as a
      brief secondary note. */
+  /* ---- Latest/previous attempted Slip Test, prioritizing Test 3 over Test 2
+     over Test 1 - so a student with Slip Test 3 data gets a remark about
+     their actual latest performance instead of one frozen at Test 2. ---- */
   const bioT1 = student.t1.BIO, bioT2 = student.t2.BIO;
-  const bioNow = (bioT2!==null && bioT2!==undefined) ? bioT2 : bioT1;
-  const bioDelta = (bioT1!==null && bioT1!==undefined && bioT2!==null && bioT2!==undefined) ? Math.round((bioT2-bioT1)*10)/10 : null;
-  const bioAvgT2 = classAvgRaw('t2','BIO');
-  const bioVsAvg = (bioNow!==null && bioNow!==undefined && bioAvgT2!==null) ? Math.round((bioNow-bioAvgT2)*10)/10 : null;
+  const bioT3 = (student.t3 && student.t3.BIO!==null && student.t3.BIO!==undefined) ? student.t3.BIO : null;
+  const SLIP_LABEL_EN = {t1:'Slip Test 1', t2:'Slip Test 2', t3:'Slip Test 3'};
+  const SLIP_LABEL_KN = {t1:'ಸ್ಲಿಪ್ ಟೆಸ್ಟ್ 1', t2:'ಸ್ಲಿಪ್ ಟೆಸ್ಟ್ 2', t3:'ಸ್ಲಿಪ್ ಟೆಸ್ಟ್ 3'};
+  const SLIP_LABEL_HI = {t1:'स्लिप टेस्ट 1', t2:'स्लिप टेस्ट 2', t3:'स्लिप टेस्ट 3'};
+  const bioByKey = {t1:bioT1, t2:bioT2, t3:bioT3};
+  let latestBioKey, prevBioKey;
+  if(bioT3!==null){ latestBioKey='t3'; prevBioKey = (bioT2!==null && bioT2!==undefined) ? 't2' : ((bioT1!==null && bioT1!==undefined) ? 't1' : null); }
+  else if(bioT2!==null && bioT2!==undefined){ latestBioKey='t2'; prevBioKey = (bioT1!==null && bioT1!==undefined) ? 't1' : null; }
+  else { latestBioKey='t1'; prevBioKey=null; }
+  const bioNow = bioByKey[latestBioKey];
+  const bioPrevScore = prevBioKey ? bioByKey[prevBioKey] : null;
+  const fromLabelEn = prevBioKey ? SLIP_LABEL_EN[prevBioKey] : null, toLabelEn = SLIP_LABEL_EN[latestBioKey];
+  const fromLabelKn = prevBioKey ? SLIP_LABEL_KN[prevBioKey] : null, toLabelKn = SLIP_LABEL_KN[latestBioKey];
+  const fromLabelHi = prevBioKey ? SLIP_LABEL_HI[prevBioKey] : null, toLabelHi = SLIP_LABEL_HI[latestBioKey];
+  const bioDelta = (bioPrevScore!==null && bioPrevScore!==undefined && bioNow!==null && bioNow!==undefined) ? Math.round((bioNow-bioPrevScore)*10)/10 : null;
+  const bioAvgLatest = classAvgRaw(latestBioKey,'BIO');
+  const bioVsAvg = (bioNow!==null && bioNow!==undefined && bioAvgLatest!==null) ? Math.round((bioNow-bioAvgLatest)*10)/10 : null;
 
   /* ---- Secondary, non-Biology insight: that student's weakest & strongest
      among Physics/Chemistry/Maths/Electronics, used only as a brief closing
@@ -6685,7 +6711,7 @@ function generateTeacherComment(student){
   const SUBJ_NAMES_KN = {PHY:'ಭೌತಶಾಸ್ತ್ರ', CHE:'ರಸಾಯನಶಾಸ್ತ್ರ', MAT:'ಗಣಿತ', ELE:'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್'};
   const SUBJ_NAMES_HI = {PHY:'भौतिकी', CHE:'रसायन विज्ञान', MAT:'गणित', ELE:'इलेक्ट्रॉनिक्स'};
   function subjectInsight(){
-    const useTest = (student.t2 && student.t2.TOTAL!==null && student.t2.TOTAL>0) ? student.t2 : student.t1;
+    const useTest = student[latestBioKey];
     if(!useTest) return null;
     let weakest=null, weakestVal=Infinity;
     ['PHY','CHE','MAT','ELE'].forEach(s=>{
@@ -6720,27 +6746,26 @@ function generateTeacherComment(student){
 
   let en, kn, hi;
   if(isTopper){
-    en = `${firstName} has been a consistent Biology topper across both Slip Tests \u2014 excellent grasp of concepts. Keep this consistency going into NEET-level practice; try adding a few high-difficulty questions to your Biology revision.${otherSubjectNote('en')}${rankLine('en')}`;
-    kn = `${firstName} ಎರಡೂ ಸ್ಲಿಪ್ ಟೆಸ್ಟ್‌ಗಳಲ್ಲಿ ಜೀವಶಾಸ್ತ್ರದಲ್ಲಿ ಸ್ಥಿರವಾಗಿ ಅಗ್ರಸ್ಥಾನ ಗಳಿಸಿದ್ದಾರೆ \u2014 ಪರಿಕಲ್ಪನೆಗಳ ಬಗ್ಗೆ ಅತ್ಯುತ್ತಮ ಹಿಡಿತ. ಈ ಸ್ಥಿರತೆಯನ್ನು NEET ಮಟ್ಟದ ಅಭ್ಯಾಸದವರೆಗೆ ಮುಂದುವರಿಸಿ; ಜೀವಶಾಸ್ತ್ರದ ಪುನರಾವರ್ತನೆಯಲ್ಲಿ ಕೆಲವು ಕಠಿಣ ಪ್ರಶ್ನೆಗಳನ್ನು ಸೇರಿಸಿ.${otherSubjectNote('kn')}${rankLine('kn')}`;
-    hi = `${firstName} ने दोनों स्लिप टेस्ट में जीव विज्ञान में लगातार टॉप किया है \u2014 विषय की उत्कृष्ट समझ। यह निरंतरता NEET स्तर के अभ्यास तक बनाए रखें; अपनी जीव विज्ञान रिवीजन में कुछ कठिन प्रश्न भी शामिल करें।${otherSubjectNote('hi')}${rankLine('hi')}`;
+    en = `${firstName} has been a consistent Biology topper across every Slip Test attempted \u2014 excellent grasp of concepts. Keep this consistency going into NEET-level practice; try adding a few high-difficulty questions to your Biology revision.${otherSubjectNote('en')}${rankLine('en')}`;
+    kn = `${firstName} ಪ್ರತಿ ಸ್ಲಿಪ್ ಟೆಸ್ಟ್‌ನಲ್ಲೂ ಜೀವಶಾಸ್ತ್ರದಲ್ಲಿ ಸ್ಥಿರವಾಗಿ ಅಗ್ರಸ್ಥಾನ ಗಳಿಸಿದ್ದಾರೆ \u2014 ಪರಿಕಲ್ಪನೆಗಳ ಬಗ್ಗೆ ಅತ್ಯುತ್ತಮ ಹಿಡಿತ. ಈ ಸ್ಥಿರತೆಯನ್ನು NEET ಮಟ್ಟದ ಅಭ್ಯಾಸದವರೆಗೆ ಮುಂದುವರಿಸಿ; ಜೀವಶಾಸ್ತ್ರದ ಪುನರಾವರ್ತನೆಯಲ್ಲಿ ಕೆಲವು ಕಠಿಣ ಪ್ರಶ್ನೆಗಳನ್ನು ಸೇರಿಸಿ.${otherSubjectNote('kn')}${rankLine('kn')}`;
+    hi = `${firstName} ने हर स्लिप टेस्ट में जीव विज्ञान में लगातार टॉप किया है \u2014 विषय की उत्कृष्ट समझ। यह निरंतरता NEET स्तर के अभ्यास तक बनाए रखें; अपनी जीव विज्ञान रिवीजन में कुछ कठिन प्रश्न भी शामिल करें।${otherSubjectNote('hi')}${rankLine('hi')}`;
   } else if(isBigDrop && bioDelta!==null && bioDelta<0){
     const absd = Math.abs(bioDelta);
-    en = `${firstName}, your Biology score dropped by ${absd} marks between Slip Test 1 and Slip Test 2 (${bioT1}/20 \u2192 ${bioT2}/20). This is worth a conversation \u2014 let's identify whether it was a syllabus gap, exam pressure, or preparation time, and get Biology back on track before the next test.${otherSubjectNote('en')}${rankLine('en')}`;
-    kn = `${firstName}, ಸ್ಲಿಪ್ ಟೆಸ್ಟ್ 1 ಮತ್ತು 2 ರ ನಡುವೆ ನಿಮ್ಮ ಜೀವಶಾಸ್ತ್ರ ಅಂಕಗಳು ${absd} ಅಂಕಗಳಷ್ಟು ಕುಸಿದಿವೆ (${bioT1}/20 \u2192 ${bioT2}/20). ಇದರ ಬಗ್ಗೆ ಮಾತನಾಡುವುದು ಅಗತ್ಯ \u2014 ಪಠ್ಯಕ್ರಮದ ಕೊರತೆಯೋ, ಪರೀಕ್ಷಾ ಒತ್ತಡವೋ ಅಥವಾ ತಯಾರಿ ಸಮಯದ ಕೊರತೆಯೋ ಎಂಬುದನ್ನು ಗುರುತಿಸಿ, ಮುಂದಿನ ಪರೀಕ್ಷೆಗೂ ಮುನ್ನ ಜೀವಶಾಸ್ತ್ರವನ್ನು ಸರಿದಾರಿಗೆ ತರೋಣ.${otherSubjectNote('kn')}${rankLine('kn')}`;
-    hi = `${firstName}, स्लिप टेस्ट 1 और 2 के बीच आपका जीव विज्ञान स्कोर ${absd} अंक गिर गया (${bioT1}/20 \u2192 ${bioT2}/20)। इस पर बातचीत जरूरी है \u2014 यह पाठ्यक्रम की कमी थी, परीक्षा का दबाव था, या तैयारी के समय की कमी, इसे पहचान कर अगली परीक्षा से पहले जीव विज्ञान को फिर से पटरी पर लाएं।${otherSubjectNote('hi')}${rankLine('hi')}`;
-  } else if(isCritical){
+    en = `${firstName}, your Biology score dropped by ${absd} marks between ${fromLabelEn} and ${toLabelEn} (${bioPrevScore}/20 \u2192 ${bioNow}/20). This is worth a conversation \u2014 let's identify whether it was a syllabus gap, exam pressure, or preparation time, and get Biology back on track before the next test.${otherSubjectNote('en')}${rankLine('en')}`;
+    kn = `${firstName}, ${fromLabelKn} ಮತ್ತು ${toLabelKn} ರ ನಡುವೆ ನಿಮ್ಮ ಜೀವಶಾಸ್ತ್ರ ಅಂಕಗಳು ${absd} ಅಂಕಗಳಷ್ಟು ಕುಸಿದಿವೆ (${bioPrevScore}/20 \u2192 ${bioNow}/20). ಇದರ ಬಗ್ಗೆ ಮಾತನಾಡುವುದು ಅಗತ್ಯ \u2014 ಪಠ್ಯಕ್ರಮದ ಕೊರತೆಯೋ, ಪರೀಕ್ಷಾ ಒತ್ತಡವೋ ಅಥವಾ ತಯಾರಿ ಸಮಯದ ಕೊರತೆಯೋ ಎಂಬುದನ್ನು ಗುರುತಿಸಿ, ಮುಂದಿನ ಪರೀಕ್ಷೆಗೂ ಮುನ್ನ ಜೀವಶಾಸ್ತ್ರವನ್ನು ಸರಿದಾರಿಗೆ ತರೋಣ.${otherSubjectNote('kn')}${rankLine('kn')}`;
+    hi = `${firstName}, ${fromLabelHi} और ${toLabelHi} के बीच आपका जीव विज्ञान स्कोर ${absd} अंक गिर गया (${bioPrevScore}/20 \u2192 ${bioNow}/20)। इस पर बातचीत जरूरी है \u2014 यह पाठ्यक्रम की कमी थी, परीक्षा का दबाव था, या तैयारी के समय की कमी, इसे पहचान कर अगली परीक्षा से पहले जीव विज्ञान को फिर से पटरी पर लाएं।${otherSubjectNote('hi')}${rankLine('hi')}`;
     en = `${firstName} is currently below the passing mark in Biology. Please attend the remedial sessions and revise the basics topic-by-topic \u2014 there is time to turn this around before the next assessment. I'm available for extra help.${otherSubjectNote('en')}${rankLine('en')}`;
     kn = `${firstName} ಪ್ರಸ್ತುತ ಜೀವಶಾಸ್ತ್ರದಲ್ಲಿ ಉತ್ತೀರ್ಣ ಅಂಕಗಳಿಗಿಂತ ಕಡಿಮೆ ಇದ್ದಾರೆ. ದಯವಿಟ್ಟು ಪರಿಹಾರ ತರಗತಿಗಳಿಗೆ ಹಾಜರಾಗಿ ಮತ್ತು ಮೂಲಭೂತ ವಿಷಯಗಳನ್ನು ಹಂತ ಹಂತವಾಗಿ ಪುನರಾವರ್ತಿಸಿ \u2014 ಮುಂದಿನ ಮೌಲ್ಯಮಾಪನದ ಮೊದಲು ಇದನ್ನು ಸರಿಪಡಿಸಲು ಸಮಯವಿದೆ. ಹೆಚ್ಚುವರಿ ಸಹಾಯಕ್ಕಾಗಿ ನಾನು ಲಭ್ಯವಿದ್ದೇನೆ.${otherSubjectNote('kn')}${rankLine('kn')}`;
     hi = `${firstName} फिलहाल जीव विज्ञान में पासिंग मार्क्स से नीचे हैं। कृपया रेमेडियल कक्षाओं में शामिल हों और बुनियादी विषयों को क्रमवार दोहराएं \u2014 अगली परीक्षा से पहले इसे सुधारने का समय है। अतिरिक्त सहायता के लिए मैं उपलब्ध हूं।${otherSubjectNote('hi')}${rankLine('hi')}`;
   } else if(bioDelta!==null && bioDelta>=5){
-    en = `Good improvement in Biology, ${firstName}! Your score rose from ${bioT1}/20 to ${bioT2}/20 between the two Slip Tests.${vsAvgPhrase('en')} Whatever changed in your Biology preparation is working \u2014 keep building on it.${otherSubjectNote('en')}${rankLine('en')}`;
-    kn = `ಜೀವಶಾಸ್ತ್ರದಲ್ಲಿ ಉತ್ತಮ ಸುಧಾರಣೆ, ${firstName}! ಎರಡು ಸ್ಲಿಪ್ ಟೆಸ್ಟ್‌ಗಳ ನಡುವೆ ನಿಮ್ಮ ಅಂಕಗಳು ${bioT1}/20 ರಿಂದ ${bioT2}/20 ಕ್ಕೆ ಏರಿವೆ.${vsAvgPhrase('kn')} ನಿಮ್ಮ ಜೀವಶಾಸ್ತ್ರ ತಯಾರಿಯಲ್ಲಿ ಏನು ಬದಲಾಗಿದೆಯೋ ಅದು ಕೆಲಸ ಮಾಡುತ್ತಿದೆ \u2014 ಇದನ್ನು ಮುಂದುವರಿಸಿ.${otherSubjectNote('kn')}${rankLine('kn')}`;
-    hi = `जीव विज्ञान में अच्छा सुधार, ${firstName}! दोनों स्लिप टेस्ट के बीच आपका स्कोर ${bioT1}/20 से ${bioT2}/20 हो गया है।${vsAvgPhrase('hi')} आपकी जीव विज्ञान की तैयारी में जो भी बदलाव हुआ है वह काम कर रहा है \u2014 इसे जारी रखें।${otherSubjectNote('hi')}${rankLine('hi')}`;
+    en = `Good improvement in Biology, ${firstName}! Your score rose from ${bioPrevScore}/20 to ${bioNow}/20 between the two Slip Tests.${vsAvgPhrase('en')} Whatever changed in your Biology preparation is working \u2014 keep building on it.${otherSubjectNote('en')}${rankLine('en')}`;
+    kn = `ಜೀವಶಾಸ್ತ್ರದಲ್ಲಿ ಉತ್ತಮ ಸುಧಾರಣೆ, ${firstName}! ಎರಡು ಸ್ಲಿಪ್ ಟೆಸ್ಟ್‌ಗಳ ನಡುವೆ ನಿಮ್ಮ ಅಂಕಗಳು ${bioPrevScore}/20 ರಿಂದ ${bioNow}/20 ಕ್ಕೆ ಏರಿವೆ.${vsAvgPhrase('kn')} ನಿಮ್ಮ ಜೀವಶಾಸ್ತ್ರ ತಯಾರಿಯಲ್ಲಿ ಏನು ಬದಲಾಗಿದೆಯೋ ಅದು ಕೆಲಸ ಮಾಡುತ್ತಿದೆ \u2014 ಇದನ್ನು ಮುಂದುವರಿಸಿ.${otherSubjectNote('kn')}${rankLine('kn')}`;
+    hi = `जीव विज्ञान में अच्छा सुधार, ${firstName}! दोनों स्लिप टेस्ट के बीच आपका स्कोर ${bioPrevScore}/20 से ${bioNow}/20 हो गया है।${vsAvgPhrase('hi')} आपकी जीव विज्ञान की तैयारी में जो भी बदलाव हुआ है वह काम कर रहा है \u2014 इसे जारी रखें।${otherSubjectNote('hi')}${rankLine('hi')}`;
   } else if(bioDelta!==null && bioDelta<0){
     const absd = Math.abs(bioDelta);
-    en = `${firstName}, your Biology score slipped a little between the two tests (${bioT1}/20 \u2192 ${bioT2}/20, down ${absd}). Nothing to worry about, but let's revisit that portion of the syllabus before the next test.${otherSubjectNote('en')}${rankLine('en')}`;
-    kn = `${firstName}, ಎರಡು ಪರೀಕ್ಷೆಗಳ ನಡುವೆ ನಿಮ್ಮ ಜೀವಶಾಸ್ತ್ರ ಅಂಕಗಳು ಸ್ವಲ್ಪ ಕುಸಿದಿವೆ (${bioT1}/20 \u2192 ${bioT2}/20, ${absd} ಅಂಕ ಕಡಿಮೆ). ಚಿಂತಿಸುವ ಅಗತ್ಯವಿಲ್ಲ, ಆದರೆ ಮುಂದಿನ ಪರೀಕ್ಷೆಯ ಮೊದಲು ಆ ಭಾಗವನ್ನು ಮತ್ತೊಮ್ಮೆ ಪರಿಶೀಲಿಸೋಣ.${otherSubjectNote('kn')}${rankLine('kn')}`;
-    hi = `${firstName}, दोनों टेस्ट के बीच आपका जीव विज्ञान स्कोर थोड़ा गिर गया (${bioT1}/20 \u2192 ${bioT2}/20, ${absd} अंक कम)। चिंता की बात नहीं, लेकिन अगली परीक्षा से पहले उस हिस्से को फिर से देख लें।${otherSubjectNote('hi')}${rankLine('hi')}`;
+    en = `${firstName}, your Biology score slipped a little between the two tests (${bioPrevScore}/20 \u2192 ${bioNow}/20, down ${absd}). Nothing to worry about, but let's revisit that portion of the syllabus before the next test.${otherSubjectNote('en')}${rankLine('en')}`;
+    kn = `${firstName}, ಎರಡು ಪರೀಕ್ಷೆಗಳ ನಡುವೆ ನಿಮ್ಮ ಜೀವಶಾಸ್ತ್ರ ಅಂಕಗಳು ಸ್ವಲ್ಪ ಕುಸಿದಿವೆ (${bioPrevScore}/20 \u2192 ${bioNow}/20, ${absd} ಅಂಕ ಕಡಿಮೆ). ಚಿಂತಿಸುವ ಅಗತ್ಯವಿಲ್ಲ, ಆದರೆ ಮುಂದಿನ ಪರೀಕ್ಷೆಯ ಮೊದಲು ಆ ಭಾಗವನ್ನು ಮತ್ತೊಮ್ಮೆ ಪರಿಶೀಲಿಸೋಣ.${otherSubjectNote('kn')}${rankLine('kn')}`;
+    hi = `${firstName}, दोनों टेस्ट के बीच आपका जीव विज्ञान स्कोर थोड़ा गिर गया (${bioPrevScore}/20 \u2192 ${bioNow}/20, ${absd} अंक कम)। चिंता की बात नहीं, लेकिन अगली परीक्षा से पहले उस हिस्से को फिर से देख लें।${otherSubjectNote('hi')}${rankLine('hi')}`;
   } else if(bioNow!==null && bioNow!==undefined && bioNow>=15){
     en = `Solid, steady performance in Biology, ${firstName} \u2014 ${bioNow}/20.${vsAvgPhrase('en')} Keep the consistency and look for opportunities to push into the distinction range.${otherSubjectNote('en')}${rankLine('en')}`;
     kn = `ಜೀವಶಾಸ್ತ್ರದಲ್ಲಿ ಸ್ಥಿರ ಮತ್ತು ಉತ್ತಮ ಸಾಧನೆ, ${firstName} \u2014 ${bioNow}/20.${vsAvgPhrase('kn')} ಈ ಸ್ಥಿರತೆಯನ್ನು ಮುಂದುವರಿಸಿ ಮತ್ತು ಡಿಸ್ಟಿಂಕ್ಷನ್ ವ್ಯಾಪ್ತಿಗೆ ತಲುಪಲು ಪ್ರಯತ್ನಿಸಿ.${otherSubjectNote('kn')}${rankLine('kn')}`;
@@ -8601,6 +8626,11 @@ function showReportCard(student, pu){
     '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">Slip Test 2 (17\u201320 Jul 2026)</h3>'+
     '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th>'+(sdOptions.student?'<th>z-Score</th>':'')+'</tr></thead>'+
     '<tbody>'+subjectRowsHtml('t2')+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(student.t2.TOTAL!==null?student.t2.TOTAL+'/80 ('+Math.round((student.t2.TOTAL/80)*1000)/10+'%)':'\u2014')+'</b></td></tr></tbody></table></div>'+
+    (student.t3 && student.t3.TOTAL!==null && student.t3.TOTAL!==undefined ?
+    '<h3 style="font-family:\'Space Grotesk\'; font-size:14px; color:var(--text-strong); margin-bottom:8px;">Slip Test 3 (21 Sep 2026)</h3>'+
+    '<div class="table-wrap"><table class="rc-table"><thead><tr><th>Subject</th><th>Score</th><th>Class Avg</th><th>vs Avg</th>'+(sdOptions.student?'<th>z-Score</th>':'')+'</tr></thead>'+
+    '<tbody>'+subjectRowsHtml('t3')+'<tr><td><b>Total</b></td><td colspan="'+(sdOptions.student?4:3)+'"><b>'+(student.t3.TOTAL+'/80 ('+Math.round((student.t3.TOTAL/80)*1000)/10+'%)')+'</b></td></tr></tbody></table></div>'
+    : '')+
     juneSection+
     mtSection+
     augustSection+
@@ -8810,8 +8840,9 @@ function downloadReportCardImage(){
   // Each monthly-test section is sized for its full 8-subject table (worst case) so a student
   // missing a few subjects (absent, or KAN/HIN/ELE not applicable) never overflows it.
   const sectionH = subCount => 112 + subCount*28; // label(30) + header row(32) + rows + total/spacing(50)
+  const hasT3 = student.t3 && student.t3.TOTAL!==null && student.t3.TOTAL!==undefined;
   let neededH = 224; // top header block
-  neededH += sectionH(5) * 2; // Slip Test 1 + Slip Test 2 (5 subjects each)
+  neededH += sectionH(5) * (hasT3 ? 3 : 2); // Slip Test 1 + Slip Test 2 (+ Slip Test 3 if attempted), 5 subjects each
   if(student.june) neededH += sectionH(8);
   if(student.mt) neededH += sectionH(8);
   if(student.august) neededH += sectionH(8);
@@ -8834,8 +8865,8 @@ function downloadReportCardImage(){
   ctx.fillText('Enrollment: '+student.code+'  \u00b7  Section: '+sectionLabel(student)+'  \u00b7  1st PUC Science', W/2, 173);
 
   let y = 224;
-  ['t1','t2'].forEach((test)=>{
-    const label = test==='t1' ? 'Slip Test 1 (13-15 Jun 2026)' : 'Slip Test 2 (17-20 Jul 2026)';
+  (hasT3 ? ['t1','t2','t3'] : ['t1','t2']).forEach((test)=>{
+    const label = test==='t1' ? 'Slip Test 1 (13-15 Jun 2026)' : test==='t2' ? 'Slip Test 2 (17-20 Jul 2026)' : 'Slip Test 3 (21 Sep 2026)';
     ctx.textAlign='left'; ctx.fillStyle = gold; ctx.font='bold 16px Arial';
     ctx.fillText(label, 60, y);
     y += 30;
@@ -9008,7 +9039,8 @@ function performanceRemark(pct){
 function studentPerformanceCategories(student, pu){
   const cats = [];
   if(pu===1){
-    const st = (student.t2 && student.t2.TOTAL!==null && student.t2.TOTAL!==undefined && student.t2.TOTAL>0) ? student.t2 : student.t1;
+    const st = (student.t3 && student.t3.TOTAL!==null && student.t3.TOTAL!==undefined && student.t3.TOTAL>0) ? student.t3
+      : (student.t2 && student.t2.TOTAL!==null && student.t2.TOTAL!==undefined && student.t2.TOTAL>0) ? student.t2 : student.t1;
     if(st && st.TOTAL!==null && st.TOTAL!==undefined) cats.push({label:'Slip Test', pct: Math.round((st.TOTAL/80)*1000)/10});
     const monthOrder = [['august','Aug'],['mt','Jul'],['june','Jun']];
     for(const [key,short] of monthOrder){
@@ -11033,10 +11065,11 @@ function getStudentElectronicsCompare(student, pu){
     };
   } else {
     const has = rec => rec && rec.ELE!==null && rec.ELE!==undefined;
-    const useTest = has(student.mt) ? student.mt : has(student.june) ? student.june : has(student.t2) ? student.t2 : student.t1;
+    // Chronological latest-first: Slip Test 3 (21 Sep) > August Monthly > July Monthly > June Monthly > Slip Test 2 (Jul) > Slip Test 1 (Jun).
+    const useTest = has(student.t3) ? student.t3 : has(student.august) ? student.august : has(student.mt) ? student.mt : has(student.june) ? student.june : has(student.t2) ? student.t2 : student.t1;
     if(!useTest) return null;
-    const outOf = (useTest===student.mt || useTest===student.june) ? 40 : 20;
-    const testLabel = useTest===student.mt ? 'July Monthly Test' : useTest===student.june ? 'June Monthly Test' : useTest===student.t2 ? 'Slip Test 2' : 'Slip Test 1';
+    const outOf = (useTest===student.mt || useTest===student.june || useTest===student.august) ? 40 : 20;
+    const testLabel = useTest===student.t3 ? 'Slip Test 3' : useTest===student.august ? 'August Monthly Test' : useTest===student.mt ? 'July Monthly Test' : useTest===student.june ? 'June Monthly Test' : useTest===student.t2 ? 'Slip Test 2' : 'Slip Test 1';
     const subjs = ['PHY','CHE','MAT','ELE'];
     const nice = {PHY:'Physics',CHE:'Chemistry',MAT:'Maths',ELE:'Electronics'};
     return {
@@ -11168,10 +11201,11 @@ function getStudentSubjectCompare(student, pu){
     };
   } else {
     const has = rec => rec && rec.BIO!==null && rec.BIO!==undefined;
-    const useTest = has(student.mt) ? student.mt : has(student.june) ? student.june : has(student.t2) ? student.t2 : student.t1;
+    // Chronological latest-first: Slip Test 3 (21 Sep) > August Monthly > July Monthly > June Monthly > Slip Test 2 (Jul) > Slip Test 1 (Jun).
+    const useTest = has(student.t3) ? student.t3 : has(student.august) ? student.august : has(student.mt) ? student.mt : has(student.june) ? student.june : has(student.t2) ? student.t2 : student.t1;
     if(!useTest) return null;
-    const outOf = (useTest===student.mt || useTest===student.june) ? 40 : 20;
-    const testLabel = useTest===student.mt ? 'July Monthly Test' : useTest===student.june ? 'June Monthly Test' : useTest===student.t2 ? 'Slip Test 2' : 'Slip Test 1';
+    const outOf = (useTest===student.mt || useTest===student.june || useTest===student.august) ? 40 : 20;
+    const testLabel = useTest===student.t3 ? 'Slip Test 3' : useTest===student.august ? 'August Monthly Test' : useTest===student.mt ? 'July Monthly Test' : useTest===student.june ? 'June Monthly Test' : useTest===student.t2 ? 'Slip Test 2' : 'Slip Test 1';
     const subjs = ['PHY','CHE','MAT','BIO'];
     const nice = {PHY:'Physics',CHE:'Chemistry',MAT:'Maths',BIO:'Biology'};
     return {
