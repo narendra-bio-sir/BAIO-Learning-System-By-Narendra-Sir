@@ -3586,6 +3586,10 @@ function premiumQualifies(){
     try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){}
     return false;
   }
+  if(u.method === 'code' && Date.now() > STUDENT_CODE_EXPIRY){
+    try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){}
+    return false;
+  }
   return true;
 }
 function reLockPremium(){
@@ -3597,6 +3601,9 @@ function reLockPremium(){
 window.reLockPremium = reLockPremium;
 
 const CODE_SALT = 'BAIO-STUDENT-LOCK-2026';
+/* Student-entered unlock codes (not the master code) stop granting access after this
+   date - Narendra Sir can renew access for everyone by moving this one date forward. */
+const STUDENT_CODE_EXPIRY = new Date('2026-10-25T23:59:59+05:30').getTime();
 const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 function normalizeField(s){ return (s || '').toString().trim().toUpperCase().replace(/\s+/g, ' '); }
 function fnv1aHash(str){
@@ -3682,7 +3689,7 @@ function premiumSubmitUnlock(tabId){
   if(!name){
     msgEl.textContent = 'That roll number / code combination was not recognized. If Narendra Sir gave you a new-style code, please also enter your full name above.';
   } else {
-    msgEl.textContent = 'That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir.';
+    msgEl.textContent = 'That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir, or note that student unlock codes expire on 25 Oct 2026 and may need to be renewed.';
   }
   msgEl.className = 'hw-msg bad';
 }
@@ -3936,7 +3943,12 @@ function reLockHw(){
 window.reLockHw = reLockHw;
 function hwQualifies(){
   const unlock = getHwUnlock();
-  return !!(unlock && unlock.unlocked && (unlock.method === 'master' || unlock.method === 'code'));
+  if(!unlock || !unlock.unlocked || (unlock.method !== 'master' && unlock.method !== 'code')) return false;
+  if(unlock.method === 'code' && Date.now() > STUDENT_CODE_EXPIRY){
+    try{ localStorage.removeItem(HW_UNLOCK_KEY); }catch(e){}
+    return false;
+  }
+  return true;
 }
 function hwSubmitUnlock(){
   const nameInput = document.getElementById('hwNameInput');
@@ -3969,7 +3981,7 @@ function hwSubmitUnlock(){
   if(!name){
     msgEl.textContent = 'That roll number / code combination was not recognized. If Narendra Sir gave you a new-style code, please also enter your full name above.';
   } else {
-    msgEl.textContent = 'That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir.';
+    msgEl.textContent = 'That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir, or note that student unlock codes expire on 25 Oct 2026 and may need to be renewed.';
   }
   msgEl.className = 'hw-msg bad';
 }
