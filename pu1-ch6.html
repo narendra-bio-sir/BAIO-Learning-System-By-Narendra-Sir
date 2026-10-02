@@ -328,6 +328,24 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .tip-list.neet li{border-left-color:var(--gold);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel2);color:var(--gold2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--line);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--line);color:var(--ink);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--ink-dim);line-height:1.55;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--ink-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--ink);min-width:20px;font-weight:700;color:var(--gold2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .marks-info{background:#0F6653;border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:12.5px;color:#EFFFFA;line-height:1.6;}
 .marks-info b{color:var(--gold);}
 .whatsnew-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;font-size:12px;color:#EFFFFA;background:linear-gradient(135deg,var(--teal2),#0a4239);border-bottom:1px solid var(--line);line-height:1.5;}
@@ -736,6 +754,14 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="sm-save-btn" id="streakModalCloseBtn">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="sm-save-btn" id="tipExampleCloseBtn">Close</button>
     </div>
   </div>
 
@@ -2097,6 +2123,86 @@ const STUDYTIPS_CH6_EN = {
   ]
 };
 const STUDYTIPS_CH6_TRANSLATIONS = {"kn": {"title": "ಅಧ್ಯಯನ ಸಲಹೆಗಳು &ndash; ಹೂಬಿಡುವ ಸಸ್ಯಗಳ ಅಂಗರಚನಾಶಾಸ್ತ್ರ", "intro": "ಈ ಅಧ್ಯಾಯವನ್ನು ಚೆನ್ನಾಗಿ ಅಧ್ಯಯನ ಮಾಡುವುದು ಹೇಗೆ, ಮತ್ತು NEET ಗಾಗಿ ಏನನ್ನು ಗಮನಿಸಬೇಕು.", "theoryHead": "📘 ಸಿದ್ಧಾಂತ &mdash; ಈ ಅಧ್ಯಾಯವನ್ನು ಹೇಗೆ ಅಧ್ಯಯನ ಮಾಡುವುದು", "neetHead": "🎯 ಈ ಅಧ್ಯಾಯಕ್ಕಾಗಿ NEET ಕಾರ್ಯತಂತ್ರ", "theory": ["ಈ ಅಧ್ಯಾಯ ಸಂಪೂರ್ಣವಾಗಿ T.S. ರೇಖಾಚಿತ್ರಗಳಿಂದ ಕೂಡಿದೆ &mdash; ದ್ವಿಬೀಜಪತ್ರ ಬೇರು, ಏಕಬೀಜಪತ್ರ ಬೇರು, ದ್ವಿಬೀಜಪತ್ರ ಕಾಂಡ, ಏಕಬೀಜಪತ್ರ ಕಾಂಡ, ದ್ವಿಬೀಜಪತ್ರ ಎಲೆ ಮತ್ತು ಏಕಬೀಜಪತ್ರ ಎಲೆಯನ್ನು ಕೇವಲ ಓದುವ ಬದಲು, ನೆನಪಿನಿಂದ ಬಿಡಿಸಿ ಲೇಬಲ್ ಮಾಡುವ ಅಭ್ಯಾಸ ಮಾಡಿ.", "ಒಂದೇ ಮಾಸ್ಟರ್ ಟೇಬಲ್ ಕಟ್ಟಿ: ಪ್ರತಿ ಅಂಗಕ್ಕೂ (ಬೇರು/ಕಾಂಡ/ಎಲೆ) ದ್ವಿಬೀಜಪತ್ರ ಲಕ್ಷಣ vs ಏಕಬೀಜಪತ್ರ ಲಕ್ಷಣವನ್ನು ಪಕ್ಕಪಕ್ಕದಲ್ಲಿ ಪಟ್ಟಿಮಾಡಿ &mdash; ಈ ಒಂದೇ ಟೇಬಲ್ ಬಹುತೇಕ ಎಲ್ಲಾ ವ್ಯತ್ಯಾಸ-ಆಧಾರಿತ ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸುತ್ತದೆ.", "ನಾಲ್ಕು-ಹಂತದ ರೋಗನಿರ್ಣಯವನ್ನು ಬಾಯಿಪಾಠ ಮಾಡಿ: (1) ರೇಡಿಯಲ್ ಅಥವಾ ಕಾನ್ಜಾಯಿಂಟ್? (2) ಕ್ಯಾಂಬಿಯಂ ಇದೆಯೇ (ಓಪನ್) ಇಲ್ಲವೇ (ಕ್ಲೋಸ್ಡ್)? (3) ಉಂಗುರ ಅಥವಾ ಚದುರಿದ? (4) ಮಿಸೊಫಿಲ್ ವಿಭಿನ್ನಗೊಂಡಿದೆಯೇ ಇಲ್ಲವೇ? &mdash; ಇದು ಯಾವುದೇ ಅಪರಿಚಿತ T.S. ಅನ್ನು ತಕ್ಷಣ ಗುರುತಿಸುತ್ತದೆ.", "ವಿರುದ್ಧಾರ್ಥಕ ಆದರೆ ಒಂದೇ ರೀತಿ ಕೇಳಿಸುವ ಪದಗಳೊಂದಿಗೆ ನಿಖರವಾಗಿರಿ: ಎಕ್ಸಾರ್ಚ್ vs ಎಂಡಾರ್ಚ್, ಒಲಿಗೋಆರ್ಚ್ vs ಪಾಲಿಆರ್ಚ್, ಓಪನ್ vs ಕ್ಲೋಸ್ಡ್, ಕಾನ್ಜಾಯಿಂಟ್ vs ರೇಡಿಯಲ್, ಡಾರ್ಸಿವೆಂಟ್ರಲ್ vs ಐಸೊಬಿಲ್ಯಾಟರಲ್.", "ಬೇರಿನ ಲಕ್ಷಣವನ್ನು ದ್ವಿಬೀಜಪತ್ರ/ಏಕಬೀಜಪತ್ರ ಲಕ್ಷಣದೊಂದಿಗೆ ಗೊಂದಲಗೊಳಿಸಬೇಡಿ &mdash; ಎಕ್ಸಾರ್ಚ್ ಕ್ಸೈಲಂ ಎಲ್ಲಾ ಬೇರುಗಳಿಗೆ (ದ್ವಿಬೀಜಪತ್ರ ಮತ್ತು ಏಕಬೀಜಪತ್ರ ಎರಡಕ್ಕೂ) ಅನ್ವಯಿಸುತ್ತದೆ; ಎಂಡಾರ್ಚ್ ಎಲ್ಲಾ ಕಾಂಡಗಳಿಗೆ ಅನ್ವಯಿಸುತ್ತದೆ. ಕ್ಯಾಂಬಿಯಂ ಇರುವಿಕೆ ಮತ್ತು ಬಂಡಲ್ ಜೋಡಣೆ ಮಾತ್ರ ದ್ವಿಬೀಜಪತ್ರವನ್ನು ಏಕಬೀಜಪತ್ರದಿಂದ ಬೇರ್ಪಡಿಸುತ್ತದೆ."], "neet": ["ಚಿತ್ರ-ಆಧಾರಿತ 'ಲೇಬಲ್ ಮಾಡಿದ ಭಾಗವನ್ನು ಗುರುತಿಸಿ' ಪ್ರಶ್ನೆಗಳು ಈ ಅಧ್ಯಾಯದಿಂದ ಅತ್ಯಂತ ಸಾಮಾನ್ಯ &mdash; ಇಲ್ಲಿನ ಬೋರ್ಡ್ ಮಹತ್ವದ ಪುಟಗಳು ಮತ್ತು ಪ್ರಮುಖ ರೇಖಾಚಿತ್ರಗಳ ಟ್ಯಾಬ್ ನಿಮ್ಮ ಅತ್ಯಂತ ಮೌಲ್ಯಯುತ ಸಿದ್ಧತೆ.", "ಹೊಂದಾಣಿಕೆ ಮಾಡಿ ಮತ್ತು ಹೇಳಿಕೆ-ಆಧಾರಿತ ಪ್ರಶ್ನೆಗಳು (ಅಂಗಾಂಶ↔ಲಕ್ಷಣ, ದ್ವಿಬೀಜಪತ್ರ ಅಂಗ↔ಏಕಬೀಜಪತ್ರ ಅಂಗ) KCET/NEET ಶೈಲಿಯ ಪತ್ರಿಕೆಗಳಲ್ಲಿ ಬಹುತೇಕ ಪ್ರತಿ ವರ್ಷ ಕಾಣಿಸಿಕೊಳ್ಳುತ್ತವೆ.", "ಅಧ್ಯಾಯದ ಆರಂಭದ ಅಂಗಾಂಶ-ವ್ಯವಸ್ಥೆಯ ಮೂಲಭೂತ ಅಂಶಗಳನ್ನು (ಸ್ಟೊಮಾಟಾ, ಟ್ರೈಕೋಮ್‌ಗಳು, ಓಪನ್/ಕ್ಲೋಸ್ಡ್/ಕಾನ್ಜಾಯಿಂಟ್/ರೇಡಿಯಲ್ ನಾಳೀಯ ಬಂಡಲ್‌ಗಳು) ನಿರ್ಲಕ್ಷಿಸಬೇಡಿ &mdash; ಇವು ವೇಗದ, ಖಚಿತ 1&ndash;2 ಅಂಕಗಳ ಪ್ರಶ್ನೆಗಳು.", "ಈ ಅಧ್ಯಾಯ ಹೂಬಿಡುವ ಸಸ್ಯಗಳ ರೂಪವಿಜ್ಞಾನದೊಂದಿಗೆ (ಬಾಹ್ಯ ರಚನೆ) ಸ್ವಾಭಾವಿಕವಾಗಿ ಜೋಡಿಯಾಗುತ್ತದೆ &mdash; ಬೇರು, ಕಾಂಡ ಮತ್ತು ಎಲೆಯ ಬಾಹ್ಯ ರೂಪವಿಜ್ಞಾನ ಗಟ್ಟಿಯಾಗಿದ್ದರೆ, ಇಲ್ಲಿನ ಆಂತರಿಕ ಅಂಗರಚನೆಯನ್ನು ಕಲ್ಪಿಸಿಕೊಳ್ಳುವುದು ಹೆಚ್ಚು ಸುಲಭ."]}, "hi": {"title": "अध्ययन सुझाव &ndash; पुष्पी पादपों की शारीरिकी", "intro": "इस अध्याय को अच्छी तरह कैसे पढ़ें, और NEET के लिए किस पर ध्यान केंद्रित करें।", "theoryHead": "📘 सिद्धांत &mdash; इस अध्याय को कैसे पढ़ें", "neetHead": "🎯 इस अध्याय के लिए NEET रणनीति", "theory": ["यह अध्याय पूरी तरह T.S. आरेखों पर आधारित है &mdash; द्विबीजपत्री जड़, एकबीजपत्री जड़, द्विबीजपत्री तना, एकबीजपत्री तना, द्विबीजपत्री पत्ती और एकबीजपत्री पत्ती को केवल पढ़ने के बजाय स्मृति से बनाने और लेबल करने का अभ्यास करें।", "एक मास्टर तालिका बनाएँ: प्रत्येक अंग (जड़/तना/पत्ती) के लिए द्विबीजपत्री लक्षण बनाम एकबीजपत्री लक्षण को साथ-साथ सूचीबद्ध करें &mdash; यह एक तालिका लगभग हर अंतर-आधारित प्रश्न का उत्तर दे देती है।", "चार-चरणीय निदान याद रखें: (1) अरीय या संयुक्त? (2) कैम्बियम उपस्थित (खुला) या अनुपस्थित (बंद)? (3) वलय या बिखरा? (4) पर्णमध्योतक विभेदित है या नहीं? &mdash; यह किसी भी अज्ञात T.S. को तुरंत पहचान लेता है।", "विपरीत अर्थ वाले लेकिन एक जैसे सुनाई देने वाले शब्दों के साथ सटीक रहें: बहिर्वारित बनाम अंतर्वारित, अल्पआर्च बनाम बहुआर्च, खुला बनाम बंद, संयुक्त बनाम अरीय, पृष्ठाधारी बनाम समद्विपार्श्विक।", "जड़ के लक्षण को द्विबीजपत्री/एकबीजपत्री लक्षण के साथ भ्रमित न करें &mdash; बहिर्वारित जाइलम सभी जड़ों (द्विबीजपत्री और एकबीजपत्री दोनों) पर लागू होता है; अंतर्वारित सभी तनों पर लागू होता है। केवल कैम्बियम की उपस्थिति और बंडल व्यवस्था ही द्विबीजपत्री को एकबीजपत्री से अलग करती है।"], "neet": ["चित्र-आधारित 'लेबल किए गए भाग को पहचानें' प्रश्न इस अध्याय से बेहद सामान्य हैं &mdash; यहाँ के बोर्ड महत्वपूर्ण पृष्ठ और महत्वपूर्ण आरेख टैब आपकी सबसे मूल्यवान तैयारी हैं।", "मिलान और कथन-आधारित प्रश्न (ऊतक↔लक्षण, द्विबीजपत्री अंग↔एकबीजपत्री अंग) KCET/NEET शैली के प्रश्नपत्रों में लगभग हर साल आते हैं।", "अध्याय की शुरुआत के ऊतक-तंत्र की मूल बातों (रंध्र, रोमिकाएँ, खुले/बंद/संयुक्त/अरीय संवहन बंडल) की उपेक्षा न करें &mdash; ये त्वरित, सुनिश्चित 1&ndash;2 अंकों के प्रश्न हैं।", "यह अध्याय पुष्पी पादपों की आकारिकी (बाह्य संरचना) के साथ स्वाभाविक रूप से जुड़ता है &mdash; यदि जड़, तना और पत्ती की बाह्य आकारिकी मजबूत है, तो यहाँ की आंतरिक शारीरिकी की कल्पना करना कहीं आसान हो जाता है।"]}};
+/* ---- Study Tips "View example" popovers: the master table and the four-step
+   diagnostic are both just instructions in the tip text ("build a table...",
+   "learn the four steps...") with nothing to look at. These two buttons show
+   the actual filled-in artifact the tip is describing, built from this
+   chapter's own Compare Matrix (COMPARE_DATA, defined further down this same
+   script) so the facts always match the Summary tab - nothing is duplicated
+   or re-typed by hand. ---- */
+const TIP_EXAMPLE_INDEX = {1:'master-table', 2:'diagnostic'};
+const TIP_EXAMPLES = {
+  'master-table': {
+    title: '📊 Sample Master Table — Dicot vs Monocot',
+    render: function(){
+      const rows = [
+        {organ:'Root', dicot:COMPARE_DATA[0], monocot:COMPARE_DATA[1]},
+        {organ:'Stem', dicot:COMPARE_DATA[2], monocot:COMPARE_DATA[3]},
+        {organ:'Leaf', dicot:COMPARE_DATA[4], monocot:COMPARE_DATA[5]}
+      ];
+      const cell = c => `<b>${c.structuralChange}</b><br>${c.keyFeature}`;
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">This is exactly the table the tip describes — one row per organ, Dicot feature vs Monocot feature side by side, built from this chapter's own Compare Matrix.</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Organ</th><th>Dicot</th><th>Monocot</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.organ}</td><td>${cell(r.dicot)}</td><td>${cell(r.monocot)}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">Full detail (purpose, examples) for every row is in the <b>Summary</b> tab's Compare Matrix — this is the condensed version worth memorising first.</div>`;
+    }
+  },
+  'diagnostic': {
+    title: '🔍 Four-Step Diagnostic — Worked Examples',
+    render: function(){
+      function step(q, a, skip){ return `<div class="tipex-step"><span class="tipex-q">${q}.</span><span class="${skip?'tipex-skip':''}">${a}</span></div>`; }
+      const cases = [
+        { title: 'Unknown T.S. #1 (a root)',
+          steps:[ step(1,'Radial or conjoint? → <b>Radial</b> — only roots are radial, so this is a root.'),
+                  step(2,'Cambium open/closed? — <i>not needed, roots are settled by Q1 + xylem patch count</i>', true),
+                  step(3,'Ring or scattered? — <i>not applicable to roots</i>', true),
+                  step(4,'Mesophyll differentiated? — <i>not applicable, a root has no mesophyll</i>', true) ],
+          extra:'Count the xylem patches instead: 2–4 patches (oligoarch) → <b>Dicot Root</b>. More than 6 patches (polyarch) → <b>Monocot Root</b>.',
+          diagnosis:'Root confirmed by Q1 — Dicot vs Monocot settled by xylem patch count' },
+        { title: 'Unknown T.S. #2 (a stem)',
+          steps:[ step(1,'Radial or conjoint? → <b>Conjoint</b> — rules out root; it\'s a stem or leaf.'),
+                  step(2,'Cambium open or closed? → <b>Open</b> — cambium visible between xylem and phloem.'),
+                  step(3,'Ring or scattered? → <b>Ring</b> — bundles arranged in a circle around a large pith.'),
+                  step(4,'Mesophyll differentiated? — <i>not needed, already identified by Q1–Q3</i>', true) ],
+          diagnosis:'Conjoint + Open + Ring = Dicot Stem' },
+        { title: 'Unknown T.S. #3 (a stem)',
+          steps:[ step(1,'Radial or conjoint? → <b>Conjoint</b> — stem or leaf.'),
+                  step(2,'Cambium open or closed? → <b>Closed</b> — no cambium between xylem and phloem.'),
+                  step(3,'Ring or scattered? → <b>Scattered</b> — bundles spread through the ground tissue, no visible pith.'),
+                  step(4,'Mesophyll differentiated? — <i>not needed, already identified by Q1–Q3</i>', true) ],
+          diagnosis:'Conjoint + Closed + Scattered = Monocot Stem' },
+        { title: 'Unknown T.S. #4 (a leaf)',
+          steps:[ step(1,'Radial or conjoint? → <b>Conjoint</b> — leaf bundles are always conjoint.'),
+                  step(2,'Cambium open or closed? → <b>Closed</b> — leaf bundles are always closed, in both dicot and monocot.'),
+                  step(3,'Ring or scattered? — <i>not meaningful for a leaf — bundles sit in the veins, not a stem-style ring</i>', true),
+                  step(4,'Mesophyll differentiated? → the deciding question for a leaf.') ],
+          extra:'Palisade + spongy layers clearly separated → <b>Dicot Leaf</b> (dorsiventral). One uniform mesophyll layer with bulliform cells → <b>Monocot Leaf</b> (isobilateral).',
+          diagnosis:'Q1–Q2 only confirm "leaf, not stem" — Q4 is what actually separates Dicot from Monocot here' }
+      ];
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">The same four questions, applied to four different unknown sections — notice how a root is settled after Q1, a stem after Q3, and a leaf needs all the way to Q4.</div>
+        ${cases.map(c=>`<div class="tipex-case"><div class="tipex-case-title">${c.title}</div>${c.steps.join('')}${c.extra?`<div class="tipex-step"><span class="tipex-q">→</span><span>${c.extra}</span></div>`:''}<div class="tipex-diagnosis">✓ ${c.diagnosis}</div></div>`).join('')}`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  document.getElementById('tipExampleTitle').textContent = ex.title;
+  document.getElementById('tipExampleBody').innerHTML = ex.render();
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTips(){
   const en = STUDYTIPS_CH6_EN;
   const tr = (currentLang !== 'en') && STUDYTIPS_CH6_TRANSLATIONS[currentLang];
@@ -2105,7 +2211,7 @@ function renderStudyTips(){
     <h3 style="color:var(--gold);margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--ink-dim);font-size:12px;margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ View example</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   </div>`;
