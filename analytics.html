@@ -1595,6 +1595,7 @@ window.addEventListener('afterprint', function(){
         <thead><tr><th>Interest Category</th><th>Students</th><th>% of Roster</th></tr></thead>
         <tbody></tbody>
       </table></div>
+      <div id="examInterestListPU1"></div>
     </div>
     <div class="panel">
       <h2>Note</h2>
@@ -2064,6 +2065,7 @@ window.addEventListener('afterprint', function(){
         <thead><tr><th>Interest Category</th><th>Students</th><th>% of Roster</th></tr></thead>
         <tbody></tbody>
       </table></div>
+      <div id="examInterestListPU2"></div>
     </div>
   </section>
   <section class="view" id="view-pu2sec-electronics-tab">
@@ -11224,17 +11226,60 @@ function computeClassExamInterest(pu){
   const both = counts['Exploring Both Equally'];
   return { rosterSize: roster.length, attempted, noAttempts, medicalLeaning, engineeringLeaning, both, counts };
 }
+/* Merged-bucket key -> which exact EXAM_INTEREST_CATEGORIES values belong to it,
+   so the 4 KPI tiles (which merge "X only" into "Leaning X") and the 6-row
+   breakdown table can share one student-list lookup. */
+const EXAM_INTEREST_BUCKETS = {
+  medical: ['Medical (NEET) only','Leaning Medical'],
+  engineering: ['Engineering (KCET/JEE) only','Leaning Engineering'],
+  both: ['Exploring Both Equally'],
+  none: ['No competitive exam attempts on file yet']
+};
+function classExamInterestStudents(pu, categories){
+  const roster = pu===2 ? PU2_CHAMPION.concat(PU2_ELITE) : STUDENTS;
+  return roster
+    .map(s=>({ student: s, r: computeExamInterest(s, pu) }))
+    .filter(({r})=> categories.indexOf(r.leaning) !== -1)
+    .map(({student, r})=> ({
+      name: student.name, code: student.code, section: sectionLabel(student),
+      medicalAttempts: r.medicalAttempts, engineeringAttempts: r.engineeringAttempts
+    }))
+    .sort((a,b)=> (b.medicalAttempts+b.engineeringAttempts) - (a.medicalAttempts+a.engineeringAttempts) || a.name.localeCompare(b.name));
+}
+function renderExamInterestList(listElId, pu, categories, label){
+  const el = document.getElementById(listElId);
+  if(!el) return;
+  const list = classExamInterestStudents(pu, categories);
+  el.innerHTML = '<div class="panel" style="margin-top:12px; background:var(--panel-soft,rgba(255,255,255,.03));">'+
+    '<h2 style="font-size:13px;">'+label+' <span class="chip gold">'+list.length+' student'+(list.length===1?'':'s')+'</span></h2>'+
+    '<div class="search-box"><input type="text" id="'+listElId+'Search" placeholder="Search by name or enrollment code..."></div>'+
+    '<div class="scroll-box"><div class="table-wrap"><table>'+
+    '<thead><tr><th>Name</th><th>Enroll Code</th><th>Section</th><th>NEET Attempts</th><th>KCET/JEE Attempts</th></tr></thead>'+
+    '<tbody id="'+listElId+'Tbody"></tbody></table></div></div>'+
+    '</div>';
+  function renderRows(query){
+    const q = (query||'').trim().toLowerCase();
+    const filtered = q ? list.filter(s=> s.name.toLowerCase().includes(q) || s.code.toLowerCase().includes(q)) : list;
+    document.getElementById(listElId+'Tbody').innerHTML = filtered.map(s=>
+      '<tr><td>'+s.name+'</td><td>'+s.code+'</td><td>'+s.section+'</td><td>'+s.medicalAttempts+'</td><td>'+s.engineeringAttempts+'</td></tr>'
+    ).join('') || '<tr><td colspan="5" style="text-align:center; color:var(--muted);">No students match.</td></tr>';
+  }
+  renderRows('');
+  document.getElementById(listElId+'Search').addEventListener('input', e=> renderRows(e.target.value));
+  el.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
 function renderClassExamInterest(kpiElId, tableElId, pu){
   const s = computeClassExamInterest(pu);
   const pct = n => s.rosterSize ? Math.round(n/s.rosterSize*1000)/10 : 0;
+  const listElId = tableElId.replace('examInterestTable','examInterestList');
   document.getElementById(kpiElId).innerHTML = `
-    <div class="kpi hero"><div class="kpi-label">🩺 Leaning Medical (NEET)</div><div class="kpi-value">${s.medicalLeaning}</div><div class="kpi-note">${pct(s.medicalLeaning)}% of roster</div></div>
-    <div class="kpi gold"><div class="kpi-label">⚙️ Leaning Engineering (KCET/JEE)</div><div class="kpi-value">${s.engineeringLeaning}</div><div class="kpi-note">${pct(s.engineeringLeaning)}% of roster</div></div>
-    <div class="kpi"><div class="kpi-label">⚖️ Exploring Both Equally</div><div class="kpi-value">${s.both}</div><div class="kpi-note">${pct(s.both)}% of roster</div></div>
-    <div class="kpi warn"><div class="kpi-label">❓ No Exam Attempts Yet</div><div class="kpi-value">${s.noAttempts}</div><div class="kpi-note">${pct(s.noAttempts)}% of roster</div></div>
+    <div class="kpi hero" style="cursor:pointer;" onclick="renderExamInterestList('${listElId}', ${pu}, EXAM_INTEREST_BUCKETS.medical, '🩺 Leaning Medical (NEET)')"><div class="kpi-label">🩺 Leaning Medical (NEET)</div><div class="kpi-value">${s.medicalLeaning}</div><div class="kpi-note">${pct(s.medicalLeaning)}% of roster &middot; tap to view list</div></div>
+    <div class="kpi gold" style="cursor:pointer;" onclick="renderExamInterestList('${listElId}', ${pu}, EXAM_INTEREST_BUCKETS.engineering, '⚙️ Leaning Engineering (KCET/JEE)')"><div class="kpi-label">⚙️ Leaning Engineering (KCET/JEE)</div><div class="kpi-value">${s.engineeringLeaning}</div><div class="kpi-note">${pct(s.engineeringLeaning)}% of roster &middot; tap to view list</div></div>
+    <div class="kpi" style="cursor:pointer;" onclick="renderExamInterestList('${listElId}', ${pu}, EXAM_INTEREST_BUCKETS.both, '⚖️ Exploring Both Equally')"><div class="kpi-label">⚖️ Exploring Both Equally</div><div class="kpi-value">${s.both}</div><div class="kpi-note">${pct(s.both)}% of roster &middot; tap to view list</div></div>
+    <div class="kpi warn" style="cursor:pointer;" onclick="renderExamInterestList('${listElId}', ${pu}, EXAM_INTEREST_BUCKETS.none, '❓ No Exam Attempts Yet')"><div class="kpi-label">❓ No Exam Attempts Yet</div><div class="kpi-value">${s.noAttempts}</div><div class="kpi-note">${pct(s.noAttempts)}% of roster &middot; tap to view list</div></div>
   `;
   document.querySelector('#'+tableElId+' tbody').innerHTML = EXAM_INTEREST_CATEGORIES.map(c=>
-    `<tr><td>${EXAM_INTEREST_ICONS[c]} ${c}</td><td>${s.counts[c]}</td><td>${pct(s.counts[c])}%</td></tr>`
+    `<tr style="cursor:pointer;" onclick="renderExamInterestList('${listElId}', ${pu}, ['${c}'], '${EXAM_INTEREST_ICONS[c]} ${c}')"><td>${EXAM_INTEREST_ICONS[c]} ${c}</td><td>${s.counts[c]}</td><td>${pct(s.counts[c])}%</td></tr>`
   ).join('');
 }
 
