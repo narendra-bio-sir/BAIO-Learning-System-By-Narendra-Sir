@@ -2131,65 +2131,165 @@ const STUDYTIPS_CH6_TRANSLATIONS = {"kn": {"title": "ಅಧ್ಯಯನ ಸಲ�
    script) so the facts always match the Summary tab - nothing is duplicated
    or re-typed by hand. ---- */
 const TIP_EXAMPLE_INDEX = {1:'master-table', 2:'diagnostic'};
+const TIP_EXAMPLE_BTN_LABEL = {en:'View example', kn:'ಉದಾಹರಣೆ ನೋಡಿ', hi:'उदाहरण देखें'};
+/* Trilingual content below reuses the exact vetted Kannada/Hindi botanical
+   vocabulary already established in GLOSSARY_TRANSLATIONS_CH6 and
+   STUDYTIPS_CH6_TRANSLATIONS (dicot/monocot, radial/conjoint, open/closed,
+   ring/scattered, exarch/endarch, oligoarch/polyarch, pith, mesophyll, etc.)
+   so terminology stays consistent with the rest of the chapter rather than
+   introducing new, unverified translations. */
 const TIP_EXAMPLES = {
   'master-table': {
-    title: '📊 Sample Master Table — Dicot vs Monocot',
-    render: function(){
-      const rows = [
-        {organ:'Root', dicot:COMPARE_DATA[0], monocot:COMPARE_DATA[1]},
-        {organ:'Stem', dicot:COMPARE_DATA[2], monocot:COMPARE_DATA[3]},
-        {organ:'Leaf', dicot:COMPARE_DATA[4], monocot:COMPARE_DATA[5]}
-      ];
-      const cell = c => `<b>${c.structuralChange}</b><br>${c.keyFeature}`;
-      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">This is exactly the table the tip describes — one row per organ, Dicot feature vs Monocot feature side by side, built from this chapter's own Compare Matrix.</div>
-        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Organ</th><th>Dicot</th><th>Monocot</th></tr></thead><tbody>
-        ${rows.map(r=>`<tr><td class="tipex-organ">${r.organ}</td><td>${cell(r.dicot)}</td><td>${cell(r.monocot)}</td></tr>`).join('')}
+    title: {
+      en: '📊 Sample Master Table — Dicot vs Monocot',
+      kn: '📊 ಮಾದರಿ ಮಾಸ್ಟರ್ ಟೇಬಲ್ — ದ್ವಿಬೀಜಪತ್ರ vs ಏಕಬೀಜಪತ್ರ',
+      hi: '📊 नमूना मास्टर तालिका — द्विबीजपत्री बनाम एकबीजपत्री'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"This is exactly the table the tip describes — one row per organ, Dicot feature vs Monocot feature side by side, built from this chapter's own Compare Matrix.",
+              th:['Organ','Dicot','Monocot'],
+              rows:[
+                {organ:'Root', dicot:['Radial vascular bundle, exarch, 2–4 xylem patches (oligoarch); cambium ring forms later','Small, inconspicuous pith'], monocot:['Radial vascular bundle, exarch, more than 6 xylem patches (polyarch)','Large, well-developed pith; pericycle never forms cambium']},
+                {organ:'Stem', dicot:['Ring of conjoint, open, endarch vascular bundles around a large pith','Collenchymatous hypodermis; sclerenchymatous pericycle patches'], monocot:['Scattered conjoint, closed, endarch vascular bundles in undifferentiated ground tissue','Sclerenchymatous hypodermis; no pith; sclerenchymatous bundle sheath']},
+                {organ:'Leaf', dicot:['Mesophyll differentiated into palisade (upper) and spongy (lower) parenchyma','More stomata on abaxial surface; reticulate venation'], monocot:['Mesophyll undifferentiated; bulliform cells on adaxial epidermis','Roughly equal stomata on both surfaces; parallel venation']}
+              ],
+              note:'Full detail (purpose, examples) for every row is in the <b>Summary</b> tab\'s Compare Matrix — this is the condensed version worth memorising first.' },
+        kn: { intro:'ಇದು ಸಲಹೆ ವಿವರಿಸುವ ನಿಖರವಾದ ಟೇಬಲ್ — ಪ್ರತಿ ಅಂಗಕ್ಕೂ ಒಂದು ಸಾಲು, ದ್ವಿಬೀಜಪತ್ರ ಲಕ್ಷಣ vs ಏಕಬೀಜಪತ್ರ ಲಕ್ಷಣ ಪಕ್ಕಪಕ್ಕದಲ್ಲಿ, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Compare Matrix ನಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ.',
+              th:['ಅಂಗ','ದ್ವಿಬೀಜಪತ್ರ','ಏಕಬೀಜಪತ್ರ'],
+              rows:[
+                {organ:'ಬೇರು', dicot:['ರೇಡಿಯಲ್ ನಾಳೀಯ ಬಂಡಲ್, ಎಕ್ಸಾರ್ಚ್, 2–4 ಕ್ಸೈಲಂ ತೇಪೆಗಳು (ಒಲಿಗೋಆರ್ಚ್); ಕ್ಯಾಂಬಿಯಂ ಉಂಗುರ ನಂತರ ರೂಪುಗೊಳ್ಳುತ್ತದೆ','ಚಿಕ್ಕ, ಅಸ್ಪಷ್ಟ ಪಿತ್'], monocot:['ರೇಡಿಯಲ್ ನಾಳೀಯ ಬಂಡಲ್, ಎಕ್ಸಾರ್ಚ್, 6ಕ್ಕಿಂತ ಹೆಚ್ಚು ಕ್ಸೈಲಂ ತೇಪೆಗಳು (ಪಾಲಿಆರ್ಚ್)','ದೊಡ್ಡ, ಚೆನ್ನಾಗಿ ಬೆಳೆದ ಪಿತ್; ಪೆರಿಸೈಕಲ್ ಎಂದಿಗೂ ಕ್ಯಾಂಬಿಯಂ ರೂಪಿಸುವುದಿಲ್ಲ']},
+                {organ:'ಕಾಂಡ', dicot:['ಕಾನ್ಜಾಯಿಂಟ್, ಓಪನ್, ಎಂಡಾರ್ಚ್ ನಾಳೀಯ ಬಂಡಲ್‌ಗಳ ಉಂಗುರ, ದೊಡ್ಡ ಪಿತ್ ಸುತ್ತಲೂ','ಕೊಲೆಂಕೈಮಾಟಸ್ ಹೈಪೋಡರ್ಮಿಸ್; ಪೆರಿಸೈಕಲ್‌ನಲ್ಲಿ ಸ್ಕ್ಲೀರೆಂಕೈಮಾ ತೇಪೆಗಳು'], monocot:['ವಿಭಿನ್ನಗೊಳ್ಳದ ಗ್ರೌಂಡ್ ಅಂಗಾಂಶದಲ್ಲಿ ಚದುರಿದ ಕಾನ್ಜಾಯಿಂಟ್, ಕ್ಲೋಸ್ಡ್, ಎಂಡಾರ್ಚ್ ನಾಳೀಯ ಬಂಡಲ್‌ಗಳು','ಸ್ಕ್ಲೀರೆಂಕೈಮಾ ಹೈಪೋಡರ್ಮಿಸ್; ಪಿತ್ ಇಲ್ಲ; ಸ್ಕ್ಲೀರೆಂಕೈಮಾ ಬಂಡಲ್ ಹೊದಿಕೆ']},
+                {organ:'ಎಲೆ', dicot:['ಮಿಸೊಫಿಲ್ ಪ್ಯಾಲಿಸೇಡ್ (ಮೇಲ್ಭಾಗ) ಮತ್ತು ಸ್ಪಂಜಿ (ಕೆಳಭಾಗ) ಪ್ಯಾರೆಂಕೈಮಾ ಆಗಿ ವಿಭಿನ್ನಗೊಂಡಿದೆ','ಅಬಾಕ್ಷಿಯಲ್ ಮೇಲ್ಮೈಯಲ್ಲಿ ಹೆಚ್ಚು ಸ್ಟೊಮಾಟಾ; ಜಾಲಾಕಾರ ಸಿರಾವಿನ್ಯಾಸ'], monocot:['ಮಿಸೊಫಿಲ್ ವಿಭಿನ್ನಗೊಂಡಿಲ್ಲ; ಅಡಾಕ್ಷಿಯಲ್ ಎಪಿಡರ್ಮಿಸ್‌ನಲ್ಲಿ ಬುಲಿಫಾರ್ಮ್ ಕೋಶಗಳು','ಎರಡೂ ಮೇಲ್ಮೈಗಳಲ್ಲಿ ಸರಿಸುಮಾರು ಸಮಾನ ಸ್ಟೊಮಾಟಾ; ಸಮಾನಾಂತರ ಸಿರಾವಿನ್ಯಾಸ']}
+              ],
+              note:'ಪ್ರತಿ ಸಾಲಿನ ಪೂರ್ಣ ವಿವರ (ಉದ್ದೇಶ, ಉದಾಹರಣೆಗಳು) <b>Summary</b> ಟ್ಯಾಬ್‌ನ Compare Matrix ನಲ್ಲಿದೆ — ಇದು ಮೊದಲು ಕಂಠಪಾಠ ಮಾಡಲು ಯೋಗ್ಯವಾದ ಸಂಕ್ಷಿಪ್ತ ಆವೃತ್ತಿ.' },
+        hi: { intro:'यह ठीक वही तालिका है जिसका वर्णन यह सुझाव करता है — प्रत्येक अंग के लिए एक पंक्ति, द्विबीजपत्री लक्षण बनाम एकबीजपत्री लक्षण साथ-साथ, इस अध्याय के अपने Compare Matrix से बनाई गई।',
+              th:['अंग','द्विबीजपत्री','एकबीजपत्री'],
+              rows:[
+                {organ:'जड़', dicot:['रेडियल संवहन बंडल, बहिर्वारित, 2–4 जाइलम पैच (अल्पआर्च); कैम्बियम वलय बाद में बनता है','छोटी, अस्पष्ट मज्जा'], monocot:['रेडियल संवहन बंडल, बहिर्वारित, 6 से अधिक जाइलम पैच (बहुआर्च)','बड़ी, अच्छी तरह विकसित मज्जा; परिरंभ कभी कैम्बियम नहीं बनाता']},
+                {organ:'तना', dicot:['बड़ी मज्जा के चारों ओर संयुक्त, खुले, अंतर्वारित संवहन बंडलों का वलय','कॉलेन्काइमेटस अधस्त्वचा; परिरंभ में दृढ़ोतक के टुकड़े'], monocot:['अविभेदित आधारी ऊतक में बिखरे हुए संयुक्त, बंद, अंतर्वारित संवहन बंडल','दृढ़ोतकी अधस्त्वचा; मज्जा अनुपस्थित; दृढ़ोतकी बंडल आवरण']},
+                {organ:'पत्ती', dicot:['पर्णमध्योतक खंभ (ऊपरी) और स्पंजी (निचली) मृदूतक में विभेदित','अपाक्ष सतह पर अधिक रंध्र; जालिका शिराविन्यास'], monocot:['पर्णमध्योतक अविभेदित; अभ्यक्ष एपिडर्मिस पर बुलिफॉर्म कोशिकाएँ','दोनों सतहों पर लगभग समान रंध्र; समानांतर शिराविन्यास']}
+              ],
+              note:'हर पंक्ति का पूरा विवरण (उद्देश्य, उदाहरण) <b>Summary</b> टैब के Compare Matrix में है — यह पहले याद करने योग्य संक्षिप्त संस्करण है।' }
+      };
+      const l = L[lang] || L.en;
+      const cell = pair => `<b>${pair[0]}</b><br>${pair[1]}`;
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${l.th[1]}</th><th>${l.th[2]}</th></tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r.organ}</td><td>${cell(r.dicot)}</td><td>${cell(r.monocot)}</td></tr>`).join('')}
         </tbody></table></div>
-        <div class="tipex-note">Full detail (purpose, examples) for every row is in the <b>Summary</b> tab's Compare Matrix — this is the condensed version worth memorising first.</div>`;
+        <div class="tipex-note">${l.note}</div>`;
     }
   },
   'diagnostic': {
-    title: '🔍 Four-Step Diagnostic — Worked Examples',
-    render: function(){
+    title: {
+      en: '🔍 Four-Step Diagnostic — Worked Examples',
+      kn: '🔍 ನಾಲ್ಕು-ಹಂತದ ರೋಗನಿರ್ಣಯ — ಉದಾಹರಣೆಗಳು',
+      hi: '🔍 चार-चरणीय निदान — हल किए गए उदाहरण'
+    },
+    render: function(lang){
       function step(q, a, skip){ return `<div class="tipex-step"><span class="tipex-q">${q}.</span><span class="${skip?'tipex-skip':''}">${a}</span></div>`; }
-      const cases = [
-        { title: 'Unknown T.S. #1 (a root)',
-          steps:[ step(1,'Radial or conjoint? → <b>Radial</b> — only roots are radial, so this is a root.'),
-                  step(2,'Cambium open/closed? — <i>not needed, roots are settled by Q1 + xylem patch count</i>', true),
-                  step(3,'Ring or scattered? — <i>not applicable to roots</i>', true),
-                  step(4,'Mesophyll differentiated? — <i>not applicable, a root has no mesophyll</i>', true) ],
-          extra:'Count the xylem patches instead: 2–4 patches (oligoarch) → <b>Dicot Root</b>. More than 6 patches (polyarch) → <b>Monocot Root</b>.',
-          diagnosis:'Root confirmed by Q1 — Dicot vs Monocot settled by xylem patch count' },
-        { title: 'Unknown T.S. #2 (a stem)',
-          steps:[ step(1,'Radial or conjoint? → <b>Conjoint</b> — rules out root; it\'s a stem or leaf.'),
-                  step(2,'Cambium open or closed? → <b>Open</b> — cambium visible between xylem and phloem.'),
-                  step(3,'Ring or scattered? → <b>Ring</b> — bundles arranged in a circle around a large pith.'),
-                  step(4,'Mesophyll differentiated? — <i>not needed, already identified by Q1–Q3</i>', true) ],
-          diagnosis:'Conjoint + Open + Ring = Dicot Stem' },
-        { title: 'Unknown T.S. #3 (a stem)',
-          steps:[ step(1,'Radial or conjoint? → <b>Conjoint</b> — stem or leaf.'),
-                  step(2,'Cambium open or closed? → <b>Closed</b> — no cambium between xylem and phloem.'),
-                  step(3,'Ring or scattered? → <b>Scattered</b> — bundles spread through the ground tissue, no visible pith.'),
-                  step(4,'Mesophyll differentiated? — <i>not needed, already identified by Q1–Q3</i>', true) ],
-          diagnosis:'Conjoint + Closed + Scattered = Monocot Stem' },
-        { title: 'Unknown T.S. #4 (a leaf)',
-          steps:[ step(1,'Radial or conjoint? → <b>Conjoint</b> — leaf bundles are always conjoint.'),
-                  step(2,'Cambium open or closed? → <b>Closed</b> — leaf bundles are always closed, in both dicot and monocot.'),
-                  step(3,'Ring or scattered? — <i>not meaningful for a leaf — bundles sit in the veins, not a stem-style ring</i>', true),
-                  step(4,'Mesophyll differentiated? → the deciding question for a leaf.') ],
-          extra:'Palisade + spongy layers clearly separated → <b>Dicot Leaf</b> (dorsiventral). One uniform mesophyll layer with bulliform cells → <b>Monocot Leaf</b> (isobilateral).',
-          diagnosis:'Q1–Q2 only confirm "leaf, not stem" — Q4 is what actually separates Dicot from Monocot here' }
-      ];
-      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">The same four questions, applied to four different unknown sections — notice how a root is settled after Q1, a stem after Q3, and a leaf needs all the way to Q4.</div>
-        ${cases.map(c=>`<div class="tipex-case"><div class="tipex-case-title">${c.title}</div>${c.steps.join('')}${c.extra?`<div class="tipex-step"><span class="tipex-q">→</span><span>${c.extra}</span></div>`:''}<div class="tipex-diagnosis">✓ ${c.diagnosis}</div></div>`).join('')}`;
+      const DATA = {
+        en: { intro:'The same four questions, applied to four different unknown sections — notice how a root is settled after Q1, a stem after Q3, and a leaf needs all the way to Q4.',
+          cases:[
+            { title: 'Unknown T.S. #1 (a root)',
+              steps:[ ['Radial or conjoint? → <b>Radial</b> — only roots are radial, so this is a root.',false],
+                      ['Cambium open/closed? — <i>not needed, roots are settled by Q1 + xylem patch count</i>',true],
+                      ['Ring or scattered? — <i>not applicable to roots</i>',true],
+                      ['Mesophyll differentiated? — <i>not applicable, a root has no mesophyll</i>',true] ],
+              extra:'Count the xylem patches instead: 2–4 patches (oligoarch) → <b>Dicot Root</b>. More than 6 patches (polyarch) → <b>Monocot Root</b>.',
+              diagnosis:'Root confirmed by Q1 — Dicot vs Monocot settled by xylem patch count' },
+            { title: 'Unknown T.S. #2 (a stem)',
+              steps:[ ['Radial or conjoint? → <b>Conjoint</b> — rules out root; it\'s a stem or leaf.',false],
+                      ['Cambium open or closed? → <b>Open</b> — cambium visible between xylem and phloem.',false],
+                      ['Ring or scattered? → <b>Ring</b> — bundles arranged in a circle around a large pith.',false],
+                      ['Mesophyll differentiated? — <i>not needed, already identified by Q1–Q3</i>',true] ],
+              diagnosis:'Conjoint + Open + Ring = Dicot Stem' },
+            { title: 'Unknown T.S. #3 (a stem)',
+              steps:[ ['Radial or conjoint? → <b>Conjoint</b> — stem or leaf.',false],
+                      ['Cambium open or closed? → <b>Closed</b> — no cambium between xylem and phloem.',false],
+                      ['Ring or scattered? → <b>Scattered</b> — bundles spread through the ground tissue, no visible pith.',false],
+                      ['Mesophyll differentiated? — <i>not needed, already identified by Q1–Q3</i>',true] ],
+              diagnosis:'Conjoint + Closed + Scattered = Monocot Stem' },
+            { title: 'Unknown T.S. #4 (a leaf)',
+              steps:[ ['Radial or conjoint? → <b>Conjoint</b> — leaf bundles are always conjoint.',false],
+                      ['Cambium open or closed? → <b>Closed</b> — leaf bundles are always closed, in both dicot and monocot.',false],
+                      ['Ring or scattered? — <i>not meaningful for a leaf — bundles sit in the veins, not a stem-style ring</i>',true],
+                      ['Mesophyll differentiated? → the deciding question for a leaf.',false] ],
+              extra:'Palisade + spongy layers clearly separated → <b>Dicot Leaf</b> (dorsiventral). One uniform mesophyll layer with bulliform cells → <b>Monocot Leaf</b> (isobilateral).',
+              diagnosis:'Q1–Q2 only confirm "leaf, not stem" — Q4 is what actually separates Dicot from Monocot here' }
+          ] },
+        kn: { intro:'ಅದೇ ನಾಲ್ಕು ಪ್ರಶ್ನೆಗಳನ್ನು ನಾಲ್ಕು ವಿಭಿನ್ನ ಅಪರಿಚಿತ ವಿಭಾಗಗಳಿಗೆ ಅನ್ವಯಿಸಲಾಗಿದೆ — ಬೇರು Q1 ನಂತರವೇ, ಕಾಂಡ Q3 ನಂತರ, ಮತ್ತು ಎಲೆಗೆ Q4 ವರೆಗೂ ಬೇಕಾಗುತ್ತದೆ ಎಂಬುದನ್ನು ಗಮನಿಸಿ.',
+          cases:[
+            { title: 'ಅಪರಿಚಿತ T.S. #1 (ಒಂದು ಬೇರು)',
+              steps:[ ['ರೇಡಿಯಲ್ ಅಥವಾ ಕಾನ್ಜಾಯಿಂಟ್? → <b>ರೇಡಿಯಲ್</b> — ಬೇರುಗಳು ಮಾತ್ರ ರೇಡಿಯಲ್ ಆಗಿರುತ್ತವೆ, ಆದ್ದರಿಂದ ಇದು ಬೇರು.',false],
+                      ['ಕ್ಯಾಂಬಿಯಂ ಓಪನ್/ಕ್ಲೋಸ್ಡ್? — <i>ಅಗತ್ಯವಿಲ್ಲ, ಬೇರುಗಳನ್ನು Q1 + ಕ್ಸೈಲಂ ತೇಪೆ ಎಣಿಕೆಯಿಂದ ನಿರ್ಧರಿಸಲಾಗುತ್ತದೆ</i>',true],
+                      ['ಉಂಗುರ ಅಥವಾ ಚದುರಿದ? — <i>ಬೇರುಗಳಿಗೆ ಅನ್ವಯಿಸುವುದಿಲ್ಲ</i>',true],
+                      ['ಮಿಸೊಫಿಲ್ ವಿಭಿನ್ನಗೊಂಡಿದೆಯೇ? — <i>ಅನ್ವಯಿಸುವುದಿಲ್ಲ, ಬೇರಿನಲ್ಲಿ ಮಿಸೊಫಿಲ್ ಇರುವುದಿಲ್ಲ</i>',true] ],
+              extra:'ಬದಲಿಗೆ ಕ್ಸೈಲಂ ತೇಪೆಗಳನ್ನು ಎಣಿಸಿ: 2–4 ತೇಪೆಗಳು (ಒಲಿಗೋಆರ್ಚ್) → <b>ದ್ವಿಬೀಜಪತ್ರ ಬೇರು</b>. 6ಕ್ಕಿಂತ ಹೆಚ್ಚು ತೇಪೆಗಳು (ಪಾಲಿಆರ್ಚ್) → <b>ಏಕಬೀಜಪತ್ರ ಬೇರು</b>.',
+              diagnosis:'Q1 ಮೂಲಕ ಬೇರು ದೃಢಪಟ್ಟಿದೆ — ದ್ವಿಬೀಜಪತ್ರ vs ಏಕಬೀಜಪತ್ರ ಅನ್ನು ಕ್ಸೈಲಂ ತೇಪೆ ಎಣಿಕೆಯಿಂದ ನಿರ್ಧರಿಸಲಾಗಿದೆ' },
+            { title: 'ಅಪರಿಚಿತ T.S. #2 (ಒಂದು ಕಾಂಡ)',
+              steps:[ ['ರೇಡಿಯಲ್ ಅಥವಾ ಕಾನ್ಜಾಯಿಂಟ್? → <b>ಕಾನ್ಜಾಯಿಂಟ್</b> — ಬೇರನ್ನು ಹೊರತುಪಡಿಸುತ್ತದೆ; ಇದು ಕಾಂಡ ಅಥವಾ ಎಲೆ.',false],
+                      ['ಕ್ಯಾಂಬಿಯಂ ಓಪನ್ ಅಥವಾ ಕ್ಲೋಸ್ಡ್? → <b>ಓಪನ್</b> — ಕ್ಸೈಲಂ ಮತ್ತು ಫ್ಲೋಯಂ ನಡುವೆ ಕ್ಯಾಂಬಿಯಂ ಕಾಣಿಸುತ್ತದೆ.',false],
+                      ['ಉಂಗುರ ಅಥವಾ ಚದುರಿದ? → <b>ಉಂಗುರ</b> — ಬಂಡಲ್‌ಗಳು ದೊಡ್ಡ ಪಿತ್ ಸುತ್ತ ವೃತ್ತದಲ್ಲಿ ಜೋಡಣೆಗೊಂಡಿವೆ.',false],
+                      ['ಮಿಸೊಫಿಲ್ ವಿಭಿನ್ನಗೊಂಡಿದೆಯೇ? — <i>ಅಗತ್ಯವಿಲ್ಲ, Q1–Q3 ಮೂಲಕ ಈಗಾಗಲೇ ಗುರುತಿಸಲಾಗಿದೆ</i>',true] ],
+              diagnosis:'ಕಾನ್ಜಾಯಿಂಟ್ + ಓಪನ್ + ಉಂಗುರ = ದ್ವಿಬೀಜಪತ್ರ ಕಾಂಡ' },
+            { title: 'ಅಪರಿಚಿತ T.S. #3 (ಒಂದು ಕಾಂಡ)',
+              steps:[ ['ರೇಡಿಯಲ್ ಅಥವಾ ಕಾನ್ಜಾಯಿಂಟ್? → <b>ಕಾನ್ಜಾಯಿಂಟ್</b> — ಕಾಂಡ ಅಥವಾ ಎಲೆ.',false],
+                      ['ಕ್ಯಾಂಬಿಯಂ ಓಪನ್ ಅಥವಾ ಕ್ಲೋಸ್ಡ್? → <b>ಕ್ಲೋಸ್ಡ್</b> — ಕ್ಸೈಲಂ ಮತ್ತು ಫ್ಲೋಯಂ ನಡುವೆ ಕ್ಯಾಂಬಿಯಂ ಇಲ್ಲ.',false],
+                      ['ಉಂಗುರ ಅಥವಾ ಚದುರಿದ? → <b>ಚದುರಿದ</b> — ಬಂಡಲ್‌ಗಳು ಗ್ರೌಂಡ್ ಅಂಗಾಂಶದ ಉದ್ದಕ್ಕೂ ಹರಡಿವೆ, ಪಿತ್ ಕಾಣಿಸುವುದಿಲ್ಲ.',false],
+                      ['ಮಿಸೊಫಿಲ್ ವಿಭಿನ್ನಗೊಂಡಿದೆಯೇ? — <i>ಅಗತ್ಯವಿಲ್ಲ, Q1–Q3 ಮೂಲಕ ಈಗಾಗಲೇ ಗುರುತಿಸಲಾಗಿದೆ</i>',true] ],
+              diagnosis:'ಕಾನ್ಜಾಯಿಂಟ್ + ಕ್ಲೋಸ್ಡ್ + ಚದುರಿದ = ಏಕಬೀಜಪತ್ರ ಕಾಂಡ' },
+            { title: 'ಅಪರಿಚಿತ T.S. #4 (ಒಂದು ಎಲೆ)',
+              steps:[ ['ರೇಡಿಯಲ್ ಅಥವಾ ಕಾನ್ಜಾಯಿಂಟ್? → <b>ಕಾನ್ಜಾಯಿಂಟ್</b> — ಎಲೆಯ ಬಂಡಲ್‌ಗಳು ಯಾವಾಗಲೂ ಕಾನ್ಜಾಯಿಂಟ್ ಆಗಿರುತ್ತವೆ.',false],
+                      ['ಕ್ಯಾಂಬಿಯಂ ಓಪನ್ ಅಥವಾ ಕ್ಲೋಸ್ಡ್? → <b>ಕ್ಲೋಸ್ಡ್</b> — ಎಲೆಯ ಬಂಡಲ್‌ಗಳು ದ್ವಿಬೀಜಪತ್ರ ಮತ್ತು ಏಕಬೀಜಪತ್ರ ಎರಡರಲ್ಲೂ ಯಾವಾಗಲೂ ಕ್ಲೋಸ್ಡ್ ಆಗಿರುತ್ತವೆ.',false],
+                      ['ಉಂಗುರ ಅಥವಾ ಚದುರಿದ? — <i>ಎಲೆಗೆ ಅರ್ಥಪೂರ್ಣವಲ್ಲ — ಬಂಡಲ್‌ಗಳು ಸಿರೆಗಳಲ್ಲಿವೆ, ಕಾಂಡದ ಶೈಲಿಯ ಉಂಗುರದಲ್ಲಿ ಅಲ್ಲ</i>',true],
+                      ['ಮಿಸೊಫಿಲ್ ವಿಭಿನ್ನಗೊಂಡಿದೆಯೇ? → ಎಲೆಗೆ ನಿರ್ಣಾಯಕ ಪ್ರಶ್ನೆ.',false] ],
+              extra:'ಪ್ಯಾಲಿಸೇಡ್ + ಸ್ಪಂಜಿ ಪದರಗಳು ಸ್ಪಷ್ಟವಾಗಿ ಬೇರ್ಪಟ್ಟಿವೆ → <b>ದ್ವಿಬೀಜಪತ್ರ ಎಲೆ</b> (ಡಾರ್ಸಿವೆಂಟ್ರಲ್). ಬುಲಿಫಾರ್ಮ್ ಕೋಶಗಳೊಂದಿಗೆ ಏಕರೂಪ ಮಿಸೊಫಿಲ್ ಪದರ → <b>ಏಕಬೀಜಪತ್ರ ಎಲೆ</b> (ಐಸೊಬಿಲ್ಯಾಟರಲ್).',
+              diagnosis:"Q1–Q2 ಕೇವಲ 'ಕಾಂಡವಲ್ಲ, ಎಲೆ' ಎಂದು ದೃಢಪಡಿಸುತ್ತವೆ — ಇಲ್ಲಿ ದ್ವಿಬೀಜಪತ್ರ ಮತ್ತು ಏಕಬೀಜಪತ್ರವನ್ನು ನಿಜವಾಗಿ ಬೇರ್ಪಡಿಸುವುದು Q4" }
+          ] },
+        hi: { intro:'वही चार प्रश्न, चार अलग-अलग अज्ञात खंडों पर लागू — ध्यान दें कि जड़ Q1 के बाद ही तय हो जाती है, तना Q3 के बाद, और पत्ती के लिए पूरे Q4 तक जाना पड़ता है।',
+          cases:[
+            { title: 'अज्ञात T.S. #1 (एक जड़)',
+              steps:[ ['अरीय या संयुक्त? → <b>अरीय</b> — केवल जड़ें अरीय होती हैं, इसलिए यह एक जड़ है।',false],
+                      ['कैम्बियम खुला/बंद? — <i>आवश्यक नहीं, जड़ों का निर्णय Q1 + जाइलम पैच गिनती से हो जाता है</i>',true],
+                      ['वलय या बिखरा? — <i>जड़ों पर लागू नहीं</i>',true],
+                      ['पर्णमध्योतक विभेदित है? — <i>लागू नहीं, जड़ में पर्णमध्योतक नहीं होता</i>',true] ],
+              extra:'इसके बजाय जाइलम पैच गिनें: 2–4 पैच (अल्पआर्च) → <b>द्विबीजपत्री जड़</b>। 6 से अधिक पैच (बहुआर्च) → <b>एकबीजपत्री जड़</b>।',
+              diagnosis:'Q1 से जड़ की पुष्टि — द्विबीजपत्री बनाम एकबीजपत्री का निर्णय जाइलम पैच गिनती से' },
+            { title: 'अज्ञात T.S. #2 (एक तना)',
+              steps:[ ['अरीय या संयुक्त? → <b>संयुक्त</b> — जड़ को खारिज करता है; यह तना या पत्ती है।',false],
+                      ['कैम्बियम खुला या बंद? → <b>खुला</b> — जाइलम और फ्लोएम के बीच कैम्बियम दिखाई देता है।',false],
+                      ['वलय या बिखरा? → <b>वलय</b> — बंडल बड़ी मज्जा के चारों ओर एक वृत्त में व्यवस्थित हैं।',false],
+                      ['पर्णमध्योतक विभेदित है? — <i>आवश्यक नहीं, Q1–Q3 से पहले ही पहचान हो चुकी है</i>',true] ],
+              diagnosis:'संयुक्त + खुला + वलय = द्विबीजपत्री तना' },
+            { title: 'अज्ञात T.S. #3 (एक तना)',
+              steps:[ ['अरीय या संयुक्त? → <b>संयुक्त</b> — तना या पत्ती।',false],
+                      ['कैम्बियम खुला या बंद? → <b>बंद</b> — जाइलम और फ्लोएम के बीच कैम्बियम नहीं है।',false],
+                      ['वलय या बिखरा? → <b>बिखरा</b> — बंडल आधारी ऊतक में फैले हैं, मज्जा दिखाई नहीं देती।',false],
+                      ['पर्णमध्योतक विभेदित है? — <i>आवश्यक नहीं, Q1–Q3 से पहले ही पहचान हो चुकी है</i>',true] ],
+              diagnosis:'संयुक्त + बंद + बिखरा = एकबीजपत्री तना' },
+            { title: 'अज्ञात T.S. #4 (एक पत्ती)',
+              steps:[ ['अरीय या संयुक्त? → <b>संयुक्त</b> — पत्ती के बंडल हमेशा संयुक्त होते हैं।',false],
+                      ['कैम्बियम खुला या बंद? → <b>बंद</b> — पत्ती के बंडल द्विबीजपत्री और एकबीजपत्री दोनों में हमेशा बंद होते हैं।',false],
+                      ['वलय या बिखरा? — <i>पत्ती के लिए सार्थक नहीं — बंडल शिराओं में होते हैं, तने जैसे वलय में नहीं</i>',true],
+                      ['पर्णमध्योतक विभेदित है? → पत्ती के लिए निर्णायक प्रश्न।',false] ],
+              extra:'खंभ + स्पंजी परतें स्पष्ट रूप से अलग → <b>द्विबीजपत्री पत्ती</b> (पृष्ठाधारी)। बुलिफॉर्म कोशिकाओं के साथ एक समरूप पर्णमध्योतक परत → <b>एकबीजपत्री पत्ती</b> (समद्विपार्श्विक)।',
+              diagnosis:'Q1–Q2 केवल "तना नहीं, पत्ती" की पुष्टि करते हैं — यहाँ द्विबीजपत्री और एकबीजपत्री को असल में अलग करने वाला प्रश्न Q4 है' }
+          ] }
+      };
+      const d = DATA[lang] || DATA.en;
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">${d.intro}</div>
+        ${d.cases.map(c=>`<div class="tipex-case"><div class="tipex-case-title">${c.title}</div>${c.steps.map((s,i)=>step(i+1, s[0], s[1])).join('')}${c.extra?`<div class="tipex-step"><span class="tipex-q">→</span><span>${c.extra}</span></div>`:''}<div class="tipex-diagnosis">✓ ${c.diagnosis}</div></div>`).join('')}`;
     }
   }
 };
 function openTipExample(key){
   const ex = TIP_EXAMPLES[key];
   if(!ex) return;
-  document.getElementById('tipExampleTitle').textContent = ex.title;
-  document.getElementById('tipExampleBody').innerHTML = ex.render();
+  const lang = (typeof currentLang!=='undefined' && ex.title[currentLang]) ? currentLang : 'en';
+  document.getElementById('tipExampleTitle').textContent = ex.title[lang];
+  document.getElementById('tipExampleBody').innerHTML = ex.render(lang);
   document.getElementById('tipExampleOverlay').style.display = 'flex';
 }
 function closeTipExample(){
@@ -2211,7 +2311,7 @@ function renderStudyTips(){
     <h3 style="color:var(--gold);margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--ink-dim);font-size:12px;margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ View example</button>`:''}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ ${TIP_EXAMPLE_BTN_LABEL[currentLang]||TIP_EXAMPLE_BTN_LABEL.en}</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   </div>`;

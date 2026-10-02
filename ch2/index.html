@@ -185,6 +185,24 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .tip-list.neet li{border-left-color:var(--gold-2);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold-2);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel-2);color:var(--gold-2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--border);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--border);color:var(--text);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--text-dim);line-height:1.55;background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--text-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--text);min-width:20px;font-weight:700;color:var(--gold-2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .chip-row{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;}
 .chip{
   font-size:11px; padding:4px 9px; border-radius:99px; background:rgba(66,198,160,0.1);
@@ -1070,6 +1088,14 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="btn" id="streakModalCloseBtn" style="width:100%; margin-top:4px;">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="btn" id="tipExampleCloseBtn" style="width:100%; margin-top:4px;">Close</button>
     </div>
   </div>
 
@@ -4151,6 +4177,168 @@ const STUDYTIPS_CH2_TRANSLATIONS = {
     ]
   }
 };
+/* ---- Study Tips "View example" popovers: three tips describe a concrete
+   artifact ("build a comparison table...", "memorize one example per fungal
+   class...", "draw and label a virus/bacteriophage...") with nothing to look
+   at. These buttons show the actual filled-in artifact, built from this
+   chapter's own data (the Five Kingdom table already in the Last-Minute
+   Revision tab, the fungal-class COMPARE_DATA used by the Compare & Contrast
+   tab, and the TMV/bacteriophage label lists already in the Important
+   Diagrams tab) so the facts always match the rest of the chapter - nothing
+   is duplicated or re-typed by hand. ---- */
+const TIP_EXAMPLE_INDEX = {0:'five-kingdom', 2:'fungal-classes', 3:'virus-labels'};
+const TIP_EXAMPLE_BTN_LABEL = {en:'View example', kn:'ಉದಾಹರಣೆ ನೋಡಿ', hi:'उदाहरण देखें'};
+/* Trilingual content below reuses the exact vetted Kannada/Hindi vocabulary
+   already established in GLOSSARY_TRANSLATIONS_CH2, STUDYTIPS_CH2_TRANSLATIONS
+   and the Kingdom/Fungi comparison tables already in the Last-Minute Revision
+   tab (Monera/Protista/.../Animalia, Phycomycetes/Ascomycetes/..., capsid,
+   capsomeres, etc.) so terminology stays consistent with the rest of the
+   chapter rather than introducing new, unverified translations. */
+const TIP_EXAMPLES = {
+  'five-kingdom': {
+    title: {
+      en: '📊 Sample Comparison Table — Five Kingdoms',
+      kn: '📊 ಮಾದರಿ ಹೋಲಿಕೆ ಟೇಬಲ್ — ಪಂಚ ಸಾಮ್ರಾಜ್ಯಗಳು',
+      hi: '📊 नमूना तुलना तालिका — पंच जगत'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"This is exactly the table the tip describes — one row per character, all five kingdoms side by side, matching the table already in the Last-Minute Revision tab.",
+              kingdoms:['Monera','Protista','Fungi','Plantae','Animalia'],
+              rows:[
+                {ch:'Cell type', vals:['Prokaryotic','Eukaryotic','Eukaryotic','Eukaryotic','Eukaryotic']},
+                {ch:'Cell wall', vals:['Non-cellulosic (peptidoglycan)','Present in some','Chitin (no cellulose)','Cellulose','Absent']},
+                {ch:'Nuclear membrane', vals:['Absent','Present','Present','Present','Present']},
+                {ch:'Body organisation', vals:['Cellular','Cellular','Multicellular/loose tissue','Tissue/organ','Tissue/organ/organ system']},
+                {ch:'Nutrition', vals:['Auto + Hetero','Auto + Hetero','Heterotrophic (saprophytic/parasitic)','Autotrophic (photosynthetic)','Heterotrophic']}
+              ],
+              note:'Full detail (merits, examples) is in the <b>Last-Minute Revision</b> tab (Five Kingdoms section) — this is the condensed version worth memorising first.' },
+        kn: { intro:'ಇದು ಸಲಹೆ ವಿವರಿಸುವ ನಿಖರವಾದ ಟೇಬಲ್ — ಪ್ರತಿ ಗುಣಲಕ್ಷಣಕ್ಕೂ ಒಂದು ಸಾಲು, ಎಲ್ಲಾ ಐದು ಸಾಮ್ರಾಜ್ಯಗಳು ಪಕ್ಕಪಕ್ಕದಲ್ಲಿ, Last-Minute Revision ಟ್ಯಾಬ್‌ನಲ್ಲಿರುವ ಟೇಬಲ್‌ಗೆ ಹೊಂದಿಕೆಯಾಗುತ್ತದೆ.',
+              kingdoms:['ಮೊನೇರಾ','ಪ್ರೊಟಿಸ್ಟಾ','ಶಿಲೀಂಧ್ರ','ಪ್ಲಾಂಟೇ','ಅನಿಮೇಲಿಯಾ'],
+              rows:[
+                {ch:'ಕೋಶ ವಿಧ', vals:['ಪ್ರೊಕ್ಯಾರಿಯೋಟಿಕ್','ಯೂಕ್ಯಾರಿಯೋಟಿಕ್','ಯೂಕ್ಯಾರಿಯೋಟಿಕ್','ಯೂಕ್ಯಾರಿಯೋಟಿಕ್','ಯೂಕ್ಯಾರಿಯೋಟಿಕ್']},
+                {ch:'ಕೋಶ ಗೋಡೆ', vals:['ಸೆಲ್ಯುಲೋಸ್‌ರಹಿತ (ಪೆಪ್ಟಿಡೋಗ್ಲೈಕನ್)','ಕೆಲವುಗಳಲ್ಲಿ ಇದೆ','ಚಿಟಿನ್ (ಸೆಲ್ಯುಲೋಸ್ ಇಲ್ಲ)','ಸೆಲ್ಯುಲೋಸ್','ಇಲ್ಲ']},
+                {ch:'ನ್ಯೂಕ್ಲಿಯರ್ ಮೆಂಬ್ರೇನ್', vals:['ಇಲ್ಲ','ಇದೆ','ಇದೆ','ಇದೆ','ಇದೆ']},
+                {ch:'ದೇಹ ಸಂಘಟನೆ', vals:['ಕೋಶೀಯ','ಕೋಶೀಯ','ಬಹುಕೋಶೀಯ/ಸಡಿಲ ಅಂಗಾಂಶ','ಅಂಗಾಂಶ/ಅಂಗ','ಅಂಗಾಂಶ/ಅಂಗ/ಅಂಗ ವ್ಯವಸ್ಥೆ']},
+                {ch:'ಪೋಷಣೆ', vals:['ಸ್ವ + ವಿಷಮ','ಸ್ವ + ವಿಷಮ','ವಿಷಮಪೋಷಕ (ಸಪ್ರೋಫೈಟಿಕ್/ಪರಾವಲಂಬಿ)','ಸ್ವಪೋಷಕ (ದ್ಯುತಿಸಂಶ್ಲೇಷಕ)','ವಿಷಮಪೋಷಕ']}
+              ],
+              note:'ಪ್ರತಿ ವಿವರ (ಅನುಕೂಲಗಳು, ಉದಾಹರಣೆಗಳು) <b>Last-Minute Revision</b> ಟ್ಯಾಬ್‌ನಲ್ಲಿ (ಪಂಚ ಸಾಮ್ರಾಜ್ಯ ವಿಭಾಗ) ಇದೆ — ಇದು ಮೊದಲು ಕಂಠಪಾಠ ಮಾಡಲು ಯೋಗ್ಯವಾದ ಸಂಕ್ಷಿಪ್ತ ಆವೃತ್ತಿ.' },
+        hi: { intro:'यह ठीक वही तालिका है जिसका वर्णन यह सुझाव करता है — प्रत्येक लक्षण के लिए एक पंक्ति, सभी पांच जगत साथ-साथ, Last-Minute Revision टैब की तालिका से मेल खाती हुई।',
+              kingdoms:['मोनेरा','प्रोटिस्टा','कवक','प्लांटी','एनिमेलिया'],
+              rows:[
+                {ch:'कोशिका प्रकार', vals:['प्रोकैरियोटिक','यूकैरियोटिक','यूकैरियोटिक','यूकैरियोटिक','यूकैरियोटिक']},
+                {ch:'कोशिका भित्ति', vals:['असेल्युलोसिक (पेप्टिडोग्लाइकन)','कुछ में मौजूद','काइटिन (सेल्युलोज़ नहीं)','सेल्युलोज़','अनुपस्थित']},
+                {ch:'केंद्रकीय झिल्ली', vals:['अनुपस्थित','उपस्थित','उपस्थित','उपस्थित','उपस्थित']},
+                {ch:'शारीरिक संगठन', vals:['कोशिकीय','कोशिकीय','बहुकोशिकीय/शिथिल ऊतक','ऊतक/अंग','ऊतक/अंग/अंग तंत्र']},
+                {ch:'पोषण', vals:['स्व + विषम','स्व + विषम','विषमपोषी (मृतोपजीवी/परजीवी)','स्वपोषी (प्रकाशसंश्लेषी)','विषमपोषी']}
+              ],
+              note:'पूरा विवरण (गुण, उदाहरण) <b>Last-Minute Revision</b> टैब में (पंच जगत खंड) है — यह पहले याद करने योग्य संक्षिप्त संस्करण है।' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${lang==='kn'?'ಗುಣಲಕ್ಷಣ':(lang==='hi'?'लक्षण':'Character')}</th>${l.kingdoms.map(k=>`<th>${k}</th>`).join('')}</tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r.ch}</td>${r.vals.map(v=>`<td>${v}</td>`).join('')}</tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">${l.note}</div>`;
+    }
+  },
+  'fungal-classes': {
+    title: {
+      en: '🍄 Sample Table — One Example + Reproductive Structure per Fungal Class',
+      kn: '🍄 ಮಾದರಿ ಟೇಬಲ್ — ಪ್ರತಿ ಶಿಲೀಂಧ್ರ ವರ್ಗಕ್ಕೆ ಒಂದು ಉದಾಹರಣೆ + ಸಂತಾನೋತ್ಪತ್ತಿ ರಚನೆ',
+      hi: '🍄 नमूना तालिका — प्रत्येक कवक वर्ग के लिए एक उदाहरण + जनन संरचना'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"The exact one-example-per-class table the tip describes, pulled straight from this chapter's own Compare &amp; Contrast data.",
+              th:['Class','Distinguishing Reproductive Structure','Classic Example'],
+              rows:[
+                {name:'Phycomycetes', reproduction:'Zoospores/aplanospores (asexual); zygospore (sexual)', example:'Mucor, Rhizopus, Albugo'},
+                {name:'Ascomycetes', reproduction:'Ascospores in an ascus (sexual); conidia (asexual)', example:'Penicillium, Aspergillus, yeast'},
+                {name:'Basidiomycetes', reproduction:'Basidiospores on a basidium (exogenous)', example:'Agaricus (mushroom), rust &amp; smut fungi'},
+                {name:'Deuteromycetes', reproduction:'Only asexual spores (conidia) known', example:'Alternaria, Trichoderma'}
+              ],
+              note:'Full detail (cell wall, mycelium, nutrition) for each class is in the <b>Compare &amp; Contrast Matrix</b> on the Rapid Fire / Compare tab.' },
+        kn: { intro:'ಇದು ಸಲಹೆ ವಿವರಿಸುವ ನಿಖರವಾದ ಪ್ರತಿ-ವರ್ಗಕ್ಕೆ-ಒಂದು-ಉದಾಹರಣೆ ಟೇಬಲ್, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Compare &amp; Contrast ಡೇಟಾದಿಂದ ನೇರವಾಗಿ ಪಡೆಯಲಾಗಿದೆ.',
+              th:['ವರ್ಗ','ವಿಶಿಷ್ಟ ಸಂತಾನೋತ್ಪತ್ತಿ ರಚನೆ','ಕ್ಲಾಸಿಕ್ ಉದಾಹರಣೆ'],
+              rows:[
+                {name:'ಫೈಕೊಮೈಸಿಟೀಸ್', reproduction:'ಝೂಸ್ಪೋರ್/ಅಪ್ಲಾನೋಸ್ಪೋರ್ (ಅಲೈಂಗಿಕ); ಝೈಗೋಸ್ಪೋರ್ (ಲೈಂಗಿಕ)', example:'Mucor, Rhizopus, Albugo'},
+                {name:'ಆಸ್ಕೊಮೈಸಿಟೀಸ್', reproduction:'ಆಸ್ಕಿಯಲ್ಲಿ ಆಸ್ಕೋಸ್ಪೋರ್‌ಗಳು (ಲೈಂಗಿಕ); ಕೋನಿಡಿಯಾ (ಅಲೈಂಗಿಕ)', example:'Penicillium, Aspergillus, ಯೀಸ್ಟ್'},
+                {name:'ಬೇಸಿಡಿಯೋಮೈಸಿಟೀಸ್', reproduction:'ಬೇಸಿಡಿಯಂನ ಮೇಲೆ ಬೇಸಿಡಿಯೋಸ್ಪೋರ್‌ಗಳು (ಬಾಹ್ಯ)', example:'Agaricus (ಮಶ್ರೂಮ್), ರಸ್ಟ್ ಮತ್ತು ಸ್ಮಟ್ ಶಿಲೀಂಧ್ರಗಳು'},
+                {name:'ಡ್ಯೂಟೆರೋಮೈಸಿಟೀಸ್', reproduction:'ಕೇವಲ ಕೋನಿಡಿಯಾ (ಅಲೈಂಗಿಕ ಬೀಜಕಗಳು) ಮಾತ್ರ ತಿಳಿದಿವೆ', example:'Alternaria, Trichoderma'}
+              ],
+              note:'ಪ್ರತಿ ವರ್ಗದ ಪೂರ್ಣ ವಿವರ (ಕೋಶ ಗೋಡೆ, ಮೈಸಿಲಿಯಂ, ಪೋಷಣೆ) Rapid Fire / Compare ಟ್ಯಾಬ್‌ನ <b>Compare &amp; Contrast Matrix</b> ನಲ್ಲಿದೆ.' },
+        hi: { intro:'यह ठीक वही प्रत्येक-वर्ग-के-लिए-एक-उदाहरण तालिका है जिसका वर्णन यह सुझाव करता है, जो इस अध्याय के अपने Compare &amp; Contrast डेटा से सीधे ली गई है।',
+              th:['वर्ग','विशिष्ट जनन संरचना','क्लासिक उदाहरण'],
+              rows:[
+                {name:'फाइकोमाइसिटीज़', reproduction:'चलबीजाणु/अचलबीजाणु (अलैंगिक); युग्मबीजाणु (लैंगिक)', example:'Mucor, Rhizopus, Albugo'},
+                {name:'एस्कोमाइसिटीज़', reproduction:'एस्काई में एस्कोस्पोर (लैंगिक); कोनिडिया (अलैंगिक)', example:'Penicillium, Aspergillus, यीस्ट'},
+                {name:'बेसिडियोमाइसिटीज़', reproduction:'बेसिडियम पर बेसिडियोस्पोर (बाह्य)', example:'Agaricus (मशरूम), रतुआ और कंडुआ कवक'},
+                {name:'ड्यूटेरोमाइसिटीज़', reproduction:'केवल कोनिडिया (अलैंगिक बीजाणु) ही ज्ञात हैं', example:'Alternaria, Trichoderma'}
+              ],
+              note:'प्रत्येक वर्ग का पूरा विवरण (कोशिका भित्ति, माइसीलियम, पोषण) Rapid Fire / Compare टैब के <b>Compare &amp; Contrast Matrix</b> में है।' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${l.th[1]}</th><th>${l.th[2]}</th></tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td>${r.reproduction}</td><td>${r.example}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">${l.note}</div>`;
+    }
+  },
+  'virus-labels': {
+    title: {
+      en: '🦠 Label Checklist — TMV vs Bacteriophage',
+      kn: '🦠 ಲೇಬಲ್ ಪರಿಶೀಲನಾ ಪಟ್ಟಿ — TMV vs ಬ್ಯಾಕ್ಟೀರಿಯೋಫೇಜ್',
+      hi: '🦠 लेबल चेकलिस्ट — TMV बनाम बैक्टीरियोफेज'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"These are the exact labels this chapter's Important Diagrams tab flags as board-exam-priority for each figure — practice drawing both from memory and labelling every part below.",
+              items:[
+                {name:'Tobacco Mosaic Virus (TMV) — Fig 2.6(a)', labels:'Helical Capsid (Capsomeres), Single-stranded RNA (ssRNA) core'},
+                {name:'Bacteriophage — Fig 2.6(b)', labels:'Hexagonal Head (dsDNA), Collar, Helical Sheath, Tail fibres, Base plate'}
+              ],
+              note:'Both figures are ★★★ Top Priority, 2–3 marks — see the <b>Important Diagrams</b> tab for the linked NCERT page.' },
+        kn: { intro:'ಇವು ಈ ಅಧ್ಯಾಯದ Important Diagrams ಟ್ಯಾಬ್ ಪ್ರತಿ ಚಿತ್ರಕ್ಕೂ ಬೋರ್ಡ್-ಪರೀಕ್ಷೆ-ಆದ್ಯತೆ ಎಂದು ಗುರುತಿಸಿದ ನಿಖರವಾದ ಲೇಬಲ್‌ಗಳು — ಎರಡನ್ನೂ ನೆನಪಿನಿಂದ ಬಿಡಿಸಿ ಕೆಳಗಿನ ಪ್ರತಿ ಭಾಗವನ್ನೂ ಲೇಬಲ್ ಮಾಡುವ ಅಭ್ಯಾಸ ಮಾಡಿ.',
+              items:[
+                {name:'ತಂಬಾಕು ಮೊಸಾಯಿಕ್ ವೈರಸ್ (TMV) — Fig 2.6(a)', labels:'ಹೆಲಿಕಲ್ ಕ್ಯಾಪ್ಸಿಡ್ (ಕ್ಯಾಪ್ಸೋಮಿಯರ್‌ಗಳು), ಸಿಂಗಲ್-ಸ್ಟ್ರಾಂಡೆಡ್ RNA (ssRNA) ಕೋರ್'},
+                {name:'ಬ್ಯಾಕ್ಟೀರಿಯೋಫೇಜ್ — Fig 2.6(b)', labels:'ಹೆಕ್ಸಾಗೋನಲ್ ಹೆಡ್ (dsDNA), ಕಾಲರ್, ಹೆಲಿಕಲ್ ಶೀಥ್, ಟೈಲ್ ಫೈಬರ್‌ಗಳು, ಬೇಸ್ ಪ್ಲೇಟ್'}
+              ],
+              note:'ಎರಡೂ ಚಿತ್ರಗಳು ★★★ Top Priority, 2–3 ಅಂಕಗಳು — ಲಿಂಕ್ ಮಾಡಲಾದ NCERT ಪುಟಕ್ಕಾಗಿ <b>Important Diagrams</b> ಟ್ಯಾಬ್ ನೋಡಿ.' },
+        hi: { intro:'ये इस अध्याय के Important Diagrams टैब द्वारा हर चित्र के लिए बोर्ड-परीक्षा-प्राथमिकता के रूप में चिह्नित सटीक लेबल हैं — दोनों को याददाश्त से बनाकर नीचे दिए हर भाग को लेबल करने का अभ्यास करें।',
+              items:[
+                {name:'तंबाकू मोज़ेक वायरस (TMV) — Fig 2.6(a)', labels:'कुंडलित कैप्सिड (कैप्सोमियर), एकल-रज्जुक RNA (ssRNA) कोर'},
+                {name:'बैक्टीरियोफेज — Fig 2.6(b)', labels:'हेक्सागोनल हेड (dsDNA), कॉलर, कुंडलित शीथ, टेल फाइबर, बेस प्लेट'}
+              ],
+              note:'दोनों चित्र ★★★ Top Priority, 2–3 अंक — लिंक किए गए NCERT पृष्ठ के लिए <b>Important Diagrams</b> टैब देखें।' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        ${l.items.map(it=>`<div class="tipex-case"><div class="tipex-case-title">${it.name}</div><div class="tipex-step"><span class="tipex-q">✓</span><span>${it.labels}</span></div></div>`).join('')}
+        <div class="tipex-note">${l.note}</div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  const lang = (typeof currentLang!=='undefined' && ex.title[currentLang]) ? currentLang : 'en';
+  document.getElementById('tipExampleTitle').textContent = ex.title[lang];
+  document.getElementById('tipExampleBody').innerHTML = ex.render(lang);
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTipsCh2(){
   const el = document.getElementById('studyTipsContent');
   if(!el) return;
@@ -4161,7 +4349,7 @@ function renderStudyTipsCh2(){
     <h3 style="color:var(--gold-2); margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ ${TIP_EXAMPLE_BTN_LABEL[currentLang]||TIP_EXAMPLE_BTN_LABEL.en}</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   `;

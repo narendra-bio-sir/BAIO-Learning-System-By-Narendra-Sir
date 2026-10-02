@@ -328,6 +328,24 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .tip-list.neet li{border-left-color:var(--gold);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel2);color:var(--gold2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--line);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--line);color:var(--ink);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--ink-dim);line-height:1.55;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--ink-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--ink);min-width:20px;font-weight:700;color:var(--gold2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .marks-info{background:#0F6653;border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:12.5px;color:#EFFFFA;line-height:1.6;}
 .marks-info b{color:var(--gold);}
 .whatsnew-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;font-size:12px;color:#EFFFFA;background:linear-gradient(135deg,var(--teal2),#0a4239);border-bottom:1px solid var(--line);line-height:1.5;}
@@ -740,6 +758,14 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="sm-save-btn" id="streakModalCloseBtn">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="sm-save-btn" id="tipExampleCloseBtn">Close</button>
     </div>
   </div>
 
@@ -1999,6 +2025,172 @@ function renderDiagrams(){
 window.renderDiagrams = renderDiagrams;
 const STUDYTIPS_CH9_EN = {"title":"Study Tips &ndash; Biomolecules","intro":"How to study this chapter well, and what to focus on for NEET.","theoryHead":"📘 Theory &mdash; How to Study This Chapter","neetHead":"🎯 NEET Strategy for This Chapter","theory":["This chapter is essentially a vocabulary-building chapter &mdash; build one master ladder per concept: base &rarr; nucleoside &rarr; nucleotide &rarr; polynucleotide, and amino acid &rarr; peptide bond &rarr; primary &rarr; secondary &rarr; tertiary &rarr; quaternary structure, rather than memorising isolated facts.","Group biomolecules by the acid-soluble vs acid-insoluble fractionation split first &mdash; it directly explains why lipids behave like macromolecules despite being small (~800 Da) and non-polymeric.","Be precise with numbers examiners love to swap: 1000 Da (micro- vs macromolecule cut-off), alpha-1,4 (starch) vs beta-1,4 (cellulose), thymine (DNA) vs uracil (RNA), 2 alpha + 2 beta (haemoglobin subunits), and the 6 enzyme classes.","Don't confuse the three cofactor types &mdash; prosthetic group (tight/permanent, e.g. haem) vs coenzyme (transient, e.g. NAD) vs metal ion (inorganic, e.g. Zn&#8322;&#8314;) &mdash; a very common matching-type question.","Connect enzyme kinetics as one flowing story: substrate binds &rarr; ES complex &rarr; transition state (needs activation energy) &rarr; catalytic cycle &rarr; product released &rarr; Vmax/Km describe how this scales with substrate concentration &mdash; rather than four separate facts."],"neet":["Direct recall questions (nucleotide/nucleoside naming, essential vs non-essential amino acids, enzyme class names) are extremely common and are the fastest, safest marks in this chapter &mdash; the Concepts and Flashcards tabs target exactly these.","Assertion-Reason and Statement-based questions on DNA vs RNA, and on the four levels of protein structure, appear almost every year in NEET/KCET-style papers.","Don't neglect the enzyme kinetics section (Km, Vmax, competitive inhibition) &mdash; these numeric/graph-based concepts are quick, guaranteed marks that many students skip while chasing structural detail.","This chapter pairs naturally with later chapters on cell cycle, respiration and molecular basis of inheritance &mdash; a solid grip on nucleotide and protein structure here makes those chapters much easier."]};
 const STUDYTIPS_CH9_TRANSLATIONS = {};
+/* ---- Study Tips "View example" popovers: the two master ladders, the
+   cofactor types and the enzyme-kinetics story are all just instructions in
+   the tip text ("build a ladder...", "don't confuse...", "connect as one
+   story...") with nothing to look at. These three buttons show the actual
+   filled-in artifact each tip is describing, built from this chapter's own
+   Glossary (GLOSSARY_DATA), Compare Matrix (COMPARE_DATA) and Tree Explorer
+   (TREE_DATA) data - all defined further down this same script - so the
+   facts always match the other tabs; nothing is duplicated or re-typed by
+   hand. ---- */
+const TIP_EXAMPLE_INDEX = {0:'ladders', 3:'cofactors', 4:'enzyme-kinetics'};
+const TIP_EXAMPLE_BTN_LABEL = {en:'View example', kn:'ಉದಾಹರಣೆ ನೋಡಿ', hi:'उदाहरण देखें'};
+/* Trilingual content below: GLOSSARY_TRANSLATIONS_CH9 and STUDYTIPS_CH9_TRANSLATIONS
+   are both empty in this file (no prior Kannada/Hindi vocabulary has been vetted
+   for this chapter), so the Kannada/Hindi below uses only standard, high-confidence
+   NCERT-level biochemistry vocabulary (amino acid, enzyme, nucleotide, catalysis,
+   etc.) and plain connecting words; anything less certain (e.g. prosthetic group,
+   cofactor) is kept close to a direct transliteration rather than guessed at. */
+const TIP_EXAMPLES = {
+  'ladders': {
+    title: {
+      en: '🪜 Two Master Ladders — Nucleotides & Proteins',
+      kn: '🪜 ಎರಡು ಮಾಸ್ಟರ್ ಏಣಿಗಳು — ನ್ಯೂಕ್ಲಿಯೋಟೈಡ್‌ಗಳು ಮತ್ತು ಪ್ರೋಟೀನ್‌ಗಳು',
+      hi: '🪜 दो मास्टर सीढ़ियाँ — न्यूक्लियोटाइड और प्रोटीन'
+    },
+    render: function(lang){
+      function step(q, label, note){ return `<div class="tipex-step"><span class="tipex-q">${q}</span><span><b>${label}:</b> ${note}</span></div>`; }
+      const L = {
+        en: { intro:"The two ladders the tip describes, each rung defined from this chapter's own Glossary.",
+          nucTitle:'Nucleotide Ladder', protTitle:'Protein Ladder',
+          nucLabels:['Base','Nucleoside','Nucleotide','Polynucleotide'],
+          nucDefs:['A two-ring nitrogenous base (adenine, guanine) or a single-ring nitrogenous base (thymine, uracil, cytosine).','A nitrogenous base bonded to a pentose sugar (base + sugar).','A nucleoside with a phosphate group attached (base + sugar + phosphate); the monomer of nucleic acids.','A chain of many nucleotides linked together, forming a nucleic acid.'],
+          nucDiag:'Base &rarr; Nucleoside &rarr; Nucleotide &rarr; Polynucleotide',
+          protLabels:['Amino acid','Peptide bond','Primary structure','Secondary structure','Tertiary structure','Quaternary structure'],
+          protDefs:['An organic molecule with an alpha carbon bearing an amino group, a carboxyl group, hydrogen, and a variable R group; the monomer of proteins.','The bond linking successive amino acids in a polypeptide chain &ndash; links successive amino acids into a polypeptide.','The linear sequence of amino acids in a protein.','Local folding of the polypeptide chain into alpha helices or beta sheets.','The overall three-dimensional fold of a single polypeptide chain; the protein becomes biologically active here.','The arrangement of multiple polypeptide subunits relative to each other in a multi-chain protein &ndash; e.g. adult haemoglobin&rsquo;s 2 alpha + 2 beta subunits.'],
+          protDiag:'Amino acid &rarr; Peptide bond &rarr; Primary &rarr; Secondary &rarr; Tertiary &rarr; Quaternary' },
+        kn: { intro:'ಸಲಹೆ ವಿವರಿಸುವ ಎರಡು ಏಣಿಗಳು, ಪ್ರತಿ ಹಂತವನ್ನು ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ ಗ್ಲಾಸರಿಯಿಂದ ವ್ಯಾಖ್ಯಾನಿಸಲಾಗಿದೆ.',
+          nucTitle:'ನ್ಯೂಕ್ಲಿಯೋಟೈಡ್ ಏಣಿ', protTitle:'ಪ್ರೋಟೀನ್ ಏಣಿ',
+          nucLabels:['ಬೇಸ್','ನ್ಯೂಕ್ಲಿಯೊಸೈಡ್','ನ್ಯೂಕ್ಲಿಯೋಟೈಡ್','ಪಾಲಿನ್ಯೂಕ್ಲಿಯೋಟೈಡ್'],
+          nucDefs:['ಎರಡು ವಲಯಗಳ ನೈಟ್ರೋಜನ್ ಬೇಸ್ (ಅಡೆನಿನ್, ಗ್ವಾನಿನ್) ಅಥವಾ ಒಂದು ವಲಯದ ನೈಟ್ರೋಜನ್ ಬೇಸ್ (ಥೈಮಿನ್, ಯುರಾಸಿಲ್, ಸೈಟೋಸಿನ್).','ಪೆಂಟೋಸ್ ಸಕ್ಕರೆಗೆ ಬಂಧಿತವಾದ ನೈಟ್ರೋಜನ್ ಬೇಸ್ (ಬೇಸ್ + ಸಕ್ಕರೆ).','ಫಾಸ್ಫೇಟ್ ಗುಂಪು ಜೋಡಿಸಿದ ನ್ಯೂಕ್ಲಿಯೊಸೈಡ್ (ಬೇಸ್ + ಸಕ್ಕರೆ + ಫಾಸ್ಫೇಟ್); ನ್ಯೂಕ್ಲಿಯಿಕ್ ಆಮ್ಲಗಳ ಮಾನೋಮರ್.','ಅನೇಕ ನ್ಯೂಕ್ಲಿಯೋಟೈಡ್‌ಗಳು ಒಂದಕ್ಕೊಂದು ಜೋಡಣೆಗೊಂಡ ಸರಪಳಿ, ಇದು ನ್ಯೂಕ್ಲಿಯಿಕ್ ಆಮ್ಲವನ್ನು ರೂಪಿಸುತ್ತದೆ.'],
+          nucDiag:'ಬೇಸ್ &rarr; ನ್ಯೂಕ್ಲಿಯೊಸೈಡ್ &rarr; ನ್ಯೂಕ್ಲಿಯೋಟೈಡ್ &rarr; ಪಾಲಿನ್ಯೂಕ್ಲಿಯೋಟೈಡ್',
+          protLabels:['ಅಮೈನೋ ಆಮ್ಲ','ಪೆಪ್ಟೈಡ್ ಬಾಂಡ್','ಪ್ರಾಥಮಿಕ ರಚನೆ','ದ್ವಿತೀಯ ರಚನೆ','ತೃತೀಯ ರಚನೆ','ಚತುರ್ಥ ರಚನೆ'],
+          protDefs:['ಆಲ್ಫಾ ಕಾರ್ಬನ್‌ಗೆ ಅಮೈನೋ ಗುಂಪು, ಕಾರ್ಬಾಕ್ಸಿಲ್ ಗುಂಪು, ಹೈಡ್ರೊಜನ್ ಮತ್ತು ಬದಲಾಗುವ R ಗುಂಪು ಜೋಡಿಸಿದ ಸಾವಯವ ಅಣು; ಪ್ರೋಟೀನ್‌ಗಳ ಮಾನೋಮರ್.','ಪಾಲಿಪೆಪ್ಟೈಡ್ ಸರಪಳಿಯಲ್ಲಿ ಸತತ ಅಮೈನೋ ಆಮ್ಲಗಳನ್ನು ಜೋಡಿಸುವ ಬಾಂಡ್ &ndash; ಸತತ ಅಮೈನೋ ಆಮ್ಲಗಳನ್ನು ಪಾಲಿಪೆಪ್ಟೈಡ್ ಆಗಿ ಜೋಡಿಸುತ್ತದೆ.','ಪ್ರೋಟೀನ್‌ನಲ್ಲಿ ಅಮೈನೋ ಆಮ್ಲಗಳ ರೇಖೀಯ ಅನುಕ್ರಮ.','ಪಾಲಿಪೆಪ್ಟೈಡ್ ಸರಪಳಿಯ ಸ್ಥಳೀಯ ಮುದುರುವಿಕೆ, ಆಲ್ಫಾ ಹೆಲಿಕ್ಸ್ ಅಥವಾ ಬೀಟಾ ಶೀಟ್‌ಗಳಾಗಿ.','ಒಂದೇ ಪಾಲಿಪೆಪ್ಟೈಡ್ ಸರಪಳಿಯ ಒಟ್ಟಾರೆ ತ್ರಿ-ಆಯಾಮದ ಮುದುರುವಿಕೆ; ಇಲ್ಲಿ ಪ್ರೋಟೀನ್ ಜೈವಿಕವಾಗಿ ಕ್ರಿಯಾಶೀಲವಾಗುತ್ತದೆ.','ಬಹು-ಸರಪಳಿ ಪ್ರೋಟೀನ್‌ನಲ್ಲಿ ಹಲವು ಪಾಲಿಪೆಪ್ಟೈಡ್ ಉಪಘಟಕಗಳ ಪರಸ್ಪರ ಜೋಡಣೆ &ndash; ಉದಾ. ವಯಸ್ಕ ಹಿಮೋಗ್ಲೋಬಿನ್‌ನ 2 ಆಲ್ಫಾ + 2 ಬೀಟಾ ಉಪಘಟಕಗಳು.'],
+          protDiag:'ಅಮೈನೋ ಆಮ್ಲ &rarr; ಪೆಪ್ಟೈಡ್ ಬಾಂಡ್ &rarr; ಪ್ರಾಥಮಿಕ &rarr; ದ್ವಿತೀಯ &rarr; ತೃತೀಯ &rarr; ಚತುರ್ಥ' },
+        hi: { intro:'सुझाव द्वारा वर्णित दो सीढ़ियाँ, हर पायदान इस अध्याय की अपनी शब्दावली (ग्लॉसरी) से परिभाषित।',
+          nucTitle:'न्यूक्लियोटाइड सीढ़ी', protTitle:'प्रोटीन सीढ़ी',
+          nucLabels:['क्षार (Base)','न्यूक्लियोसाइड','न्यूक्लियोटाइड','पॉलीन्यूक्लियोटाइड'],
+          nucDefs:['दो वलय वाला नाइट्रोजनी क्षार (एडेनिन, गुआनिन) या एक वलय वाला नाइट्रोजनी क्षार (थायमिन, यूरेसिल, साइटोसिन)।','पेंटोस शर्करा से जुड़ा नाइट्रोजनी क्षार (क्षार + शर्करा)।','फॉस्फेट समूह जुड़ा न्यूक्लियोसाइड (क्षार + शर्करा + फॉस्फेट); न्यूक्लिक अम्लों का मोनोमर।','अनेक न्यूक्लियोटाइडों की परस्पर जुड़ी श्रृंखला, जो न्यूक्लिक अम्ल बनाती है।'],
+          nucDiag:'क्षार &rarr; न्यूक्लियोसाइड &rarr; न्यूक्लियोटाइड &rarr; पॉलीन्यूक्लियोटाइड',
+          protLabels:['अमीनो अम्ल','पेप्टाइड बंध','प्राथमिक संरचना','द्वितीयक संरचना','तृतीयक संरचना','चतुर्धातुक संरचना'],
+          protDefs:['ऐल्फा कार्बन से जुड़े अमीनो समूह, कार्बोक्सिल समूह, हाइड्रोजन और परिवर्तनशील R समूह वाला कार्बनिक अणु; प्रोटीनों का मोनोमर।','पॉलीपेप्टाइड श्रृंखला में क्रमागत अमीनो अम्लों को जोड़ने वाला बंध &ndash; क्रमागत अमीनो अम्लों को पॉलीपेप्टाइड में जोड़ता है।','प्रोटीन में अमीनो अम्लों का रेखीय अनुक्रम।','पॉलीपेप्टाइड श्रृंखला की स्थानीय वलन, ऐल्फा हेलिक्स या बीटा शीट के रूप में।','एक ही पॉलीपेप्टाइड श्रृंखला की संपूर्ण त्रि-आयामी वलन; यहीं प्रोटीन जैविक रूप से सक्रिय बनता है।','बहु-श्रृंखला प्रोटीन में कई पॉलीपेप्टाइड उपइकाइयों की परस्पर व्यवस्था &ndash; उदा. वयस्क हीमोग्लोबिन की 2 ऐल्फा + 2 बीटा उपइकाइयाँ।'],
+          protDiag:'अमीनो अम्ल &rarr; पेप्टाइड बंध &rarr; प्राथमिक &rarr; द्वितीयक &rarr; तृतीयक &rarr; चतुर्धातुक' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">${l.intro}</div>
+        <div class="tipex-case">
+          <div class="tipex-case-title">${l.nucTitle}</div>
+          ${l.nucLabels.map((lab,i)=>step(String(i+1), lab, l.nucDefs[i])).join('')}
+          <div class="tipex-diagnosis">✓ ${l.nucDiag}</div>
+        </div>
+        <div class="tipex-case">
+          <div class="tipex-case-title">${l.protTitle}</div>
+          ${l.protLabels.map((lab,i)=>step(String(i+1), lab, l.protDefs[i])).join('')}
+          <div class="tipex-diagnosis">✓ ${l.protDiag}</div>
+        </div>`;
+    }
+  },
+  'cofactors': {
+    title: {
+      en: '📊 Sample Comparison Table — Three Cofactor Types',
+      kn: '📊 ಮಾದರಿ ಹೋಲಿಕೆ ಟೇಬಲ್ — ಮೂರು ಸಹಕಾರಕ ವಿಧಗಳು',
+      hi: '📊 नमूना तुलना तालिका — तीन सहकारक प्रकार'
+    },
+    render: function(lang){
+      const TR = {
+        'Prosthetic group': { name:{kn:'ಪ್ರಾಸ್ಥೆಟಿಕ್ ಗುಂಪು',hi:'प्रोस्थेटिक समूह'}, structuralChange:{kn:'ಸಾವಯವ, ಬಿಗಿಯಾಗಿ/ಶಾಶ್ವತವಾಗಿ ಬಂಧಿತ',hi:'कार्बनिक, कसकर/स्थायी रूप से बंधा हुआ'}, keyFeature:{kn:'ವೇಗವರ್ಧನೆಗೆ ಮುನ್ನ ಮತ್ತು ಸಮಯದಲ್ಲಿ ಬಂಧಿತ',hi:'उत्प्रेरण से पहले और उसके दौरान बंधा हुआ'}, example:{kn:'ಹೀಮ್',hi:'हीम'} },
+        'Coenzyme': { name:{kn:'ಸಹಕಿಣ್ವ',hi:'सहएंजाइम'}, structuralChange:{kn:'ಸಾವಯವ, ತಾತ್ಕಾಲಿಕ ಸಂಯೋಗ',hi:'कार्बनिक, अस्थायी संगति'}, keyFeature:{kn:'ವೇಗವರ್ಧನೆಯ ಸಮಯದಲ್ಲಿ ಮಾತ್ರ ಬಂಧಿತ',hi:'केवल उत्प्रेरण के दौरान बंधता है'}, example:{kn:'NAD, NADP',hi:'NAD, NADP'} },
+        'Metal ion cofactor': { name:{kn:'ಲೋಹ ಅಯಾನ್ ಸಹಕಾರಕ',hi:'धात्विक आयन सहकारक'}, structuralChange:{kn:'ಅಜೈವಿಕ',hi:'अकार्बनिक'}, keyFeature:{kn:'ಕಿಣ್ವ ಮತ್ತು ತಲಾಧಾರವನ್ನು ಸಂಯೋಜಿಸುತ್ತದೆ',hi:'एंजाइम व क्रियाधार को समन्वित करता है'}, example:{kn:'ಕಾರ್ಬಾಕ್ಸಿಪೆಪ್ಟಿಡೇಸ್‌ನಲ್ಲಿ Zn2+',hi:'कार्बोक्सीपेप्टिडेज़ में Zn2+'} }
+      };
+      const L = {
+        en: { intro:"This is exactly the three-way comparison the tip describes — built from this chapter's own Compare Matrix.",
+              th:['Cofactor Type','Structural Nature','Key Feature','Example'],
+              note:"Full detail (purpose) for every row is in the <b>Summary</b> tab's Compare Matrix — this is the condensed version worth memorising first." },
+        kn: { intro:'ಇದು ಸಲಹೆ ವಿವರಿಸುವ ನಿಖರವಾದ ಮೂರು-ಬಗೆಯ ಹೋಲಿಕೆ — ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Compare Matrix ನಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ.',
+              th:['ಸಹಕಾರಕ ವಿಧ','ರಚನಾತ್ಮಕ ಸ್ವರೂಪ','ಮುಖ್ಯ ಲಕ್ಷಣ','ಉದಾಹರಣೆ'],
+              note:'ಪ್ರತಿ ಸಾಲಿನ ಪೂರ್ಣ ವಿವರ (ಉದ್ದೇಶ) <b>Summary</b> ಟ್ಯಾಬ್‌ನ Compare Matrix ನಲ್ಲಿದೆ — ಇದು ಮೊದಲು ಕಂಠಪಾಠ ಮಾಡಲು ಯೋಗ್ಯವಾದ ಸಂಕ್ಷಿಪ್ತ ಆವೃತ್ತಿ.' },
+        hi: { intro:'यह ठीक वही त्रि-विध तुलना है जिसका वर्णन यह सुझाव करता है — इस अध्याय के अपने Compare Matrix से बनाई गई।',
+              th:['सहकारक प्रकार','संरचनात्मक स्वरूप','मुख्य लक्षण','उदाहरण'],
+              note:'हर पंक्ति का पूरा विवरण (उद्देश्य) <b>Summary</b> टैब के Compare Matrix में है — यह पहले याद करने योग्य संक्षिप्त संस्करण है।' }
+      };
+      const l = L[lang] || L.en;
+      const rows = COMPARE_DATA.filter(c=>['Prosthetic group','Coenzyme','Metal ion cofactor'].indexOf(c.name) !== -1).map(r=>{
+        const t = TR[r.name];
+        if(lang==='en' || !t) return r;
+        return { name: t.name[lang]||r.name, structuralChange: t.structuralChange[lang]||r.structuralChange, keyFeature: t.keyFeature[lang]||r.keyFeature, example: t.example[lang]||r.example };
+      });
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${l.th[1]}</th><th>${l.th[2]}</th><th>${l.th[3]}</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td>${r.structuralChange}</td><td>${r.keyFeature}</td><td>${r.example}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">${l.note}</div>`;
+    }
+  },
+  'enzyme-kinetics': {
+    title: {
+      en: '🔍 Enzyme Kinetics — One Flowing Story',
+      kn: '🔍 ಕಿಣ್ವ ಚಲನಶಾಸ್ತ್ರ — ಒಂದು ಹರಿಯುವ ಕಥೆ',
+      hi: '🔍 एंजाइम गतिकी — एक प्रवाहित कहानी'
+    },
+    render: function(lang){
+      function step(q, a){ return `<div class="tipex-step"><span class="tipex-q">${q}.</span><span>${a}</span></div>`; }
+      const DATA = {
+        en: { intro:"The same reaction, followed start to finish as one story — built from this chapter's own Board Important answers and Tree Explorer.",
+          caseTitle:'Substrate &rarr; Product, step by step',
+          steps:[ 'Substrate binds the enzyme\'s active site &mdash; the crevice/pocket in its tertiary structure &mdash; forming the <b>ES complex</b> (E + S &#8596; ES).',
+                  'The ES complex passes through a high-energy <b>transition state</b>, which needs <b>activation energy</b> to reach.',
+                  'The 4-step catalytic cycle runs: bind &rarr; shape adjusts &rarr; bond breaks / EP forms &rarr; product released.',
+                  'Product is released and the free enzyme (E) is ready to bind another substrate molecule (E + P).' ],
+          extra:'As substrate concentration rises, reaction velocity rises toward <b>Vmax</b> (enzyme fully saturated); <b>Km</b> = the substrate concentration at half of Vmax. A competitive inhibitor (e.g. malonate on succinic dehydrogenase) resembles the substrate and blocks the active site reversibly.',
+          diagnosis:'One flowing story, not four separate facts' },
+        kn: { intro:'ಅದೇ ಪ್ರತಿಕ್ರಿಯೆಯನ್ನು, ಆರಂಭದಿಂದ ಅಂತ್ಯದವರೆಗೆ ಒಂದೇ ಕಥೆಯಾಗಿ ಅನುಸರಿಸಲಾಗಿದೆ — ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Board Important ಉತ್ತರಗಳು ಮತ್ತು Tree Explorer ನಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ.',
+          caseTitle:'ತಲಾಧಾರ &rarr; ಉತ್ಪನ್ನ, ಹಂತ ಹಂತವಾಗಿ',
+          steps:[ 'ತಲಾಧಾರವು ಕಿಣ್ವದ ಸಕ್ರಿಯ ತಾಣಕ್ಕೆ (ಇದರ ತೃತೀಯ ರಚನೆಯಲ್ಲಿನ ಬಿರುಕು/ಪಾಕೆಟ್) ಬಂಧಿಸಿ, <b>ES ಸಂಕೀರ್ಣ</b>ವನ್ನು ರೂಪಿಸುತ್ತದೆ (E + S &#8596; ES).',
+                  'ES ಸಂಕೀರ್ಣವು ಹೆಚ್ಚಿನ-ಶಕ್ತಿಯ <b>ಪರಿವರ್ತನ ಸ್ಥಿತಿ</b>ಯ ಮೂಲಕ ಹಾದುಹೋಗುತ್ತದೆ, ಇದನ್ನು ತಲುಪಲು <b>ಸಕ್ರಿಯಗೊಳಿಸುವ ಶಕ್ತಿ</b> ಬೇಕಾಗುತ್ತದೆ.',
+                  '4-ಹಂತದ ವೇಗವರ್ಧಕ ಚಕ್ರ ನಡೆಯುತ್ತದೆ: ಬಂಧಿಸುವಿಕೆ &rarr; ಆಕಾರ ಹೊಂದಾಣಿಕೆ &rarr; ಬಾಂಡ್ ಒಡೆಯುವಿಕೆ / EP ರೂಪಿಸುವಿಕೆ &rarr; ಉತ್ಪನ್ನ ಬಿಡುಗಡೆ.',
+                  'ಉತ್ಪನ್ನ ಬಿಡುಗಡೆಯಾಗುತ್ತದೆ ಮತ್ತು ಮುಕ್ತ ಕಿಣ್ವ (E) ಇನ್ನೊಂದು ತಲಾಧಾರ ಅಣುವನ್ನು ಬಂಧಿಸಲು ಸಿದ್ಧವಾಗುತ್ತದೆ (E + P).' ],
+          extra:'ತಲಾಧಾರದ ಸಾಂದ್ರತೆ ಹೆಚ್ಚಾದಂತೆ, ಪ್ರತಿಕ್ರಿಯೆಯ ವೇಗ <b>Vmax</b> ಕಡೆಗೆ ಹೆಚ್ಚುತ್ತದೆ (ಕಿಣ್ವ ಸಂಪೂರ್ಣ ಸಂತೃಪ್ತವಾದಾಗ); <b>Km</b> = Vmax ನ ಅರ್ಧದಲ್ಲಿರುವ ತಲಾಧಾರ ಸಾಂದ್ರತೆ. ಒಂದು ಸ್ಪರ್ಧಾತ್ಮಕ ಪ್ರತಿಬಂಧಕ (ಉದಾ. succinic dehydrogenase ಮೇಲೆ malonate) ತಲಾಧಾರವನ್ನು ಹೋಲುತ್ತದೆ ಮತ್ತು ಸಕ್ರಿಯ ತಾಣವನ್ನು ಹಿಂತಿರುಗಿಸಬಹುದಾದ ರೀತಿಯಲ್ಲಿ ತಡೆಯುತ್ತದೆ.',
+          diagnosis:'ಒಂದು ಹರಿಯುವ ಕಥೆ, ನಾಲ್ಕು ಪ್ರತ್ಯೇಕ ಸಂಗತಿಗಳಲ್ಲ' },
+        hi: { intro:'वही अभिक्रिया, आरंभ से अंत तक एक कहानी के रूप में अनुसरण की गई — इस अध्याय के अपने Board Important उत्तरों और Tree Explorer से बनाई गई।',
+          caseTitle:'क्रियाधार &rarr; उत्पाद, चरण दर चरण',
+          steps:[ 'क्रियाधार एंजाइम के सक्रिय स्थल से &mdash; जो उसकी तृतीयक संरचना में एक दरार/गर्तिका है &mdash; जुड़कर <b>ES संकुल</b> बनाता है (E + S &#8596; ES)।',
+                  'ES संकुल एक उच्च-ऊर्जा <b>संक्रमण अवस्था</b> से गुजरता है, जिसे पाने के लिए <b>सक्रियण ऊर्जा</b> आवश्यक है।',
+                  '4-चरणीय उत्प्रेरक चक्र चलता है: बंधन &rarr; आकार समायोजन &rarr; बंध टूटना / EP बनना &rarr; उत्पाद मुक्त होना।',
+                  'उत्पाद मुक्त हो जाता है और मुक्त एंजाइम (E) किसी अन्य क्रियाधार अणु से बंधने हेतु तैयार हो जाता है (E + P)।' ],
+          extra:'जैसे-जैसे क्रियाधार की सांद्रता बढ़ती है, अभिक्रिया वेग <b>Vmax</b> की ओर बढ़ता है (जब एंजाइम पूर्णतः संतृप्त हो); <b>Km</b> = वह क्रियाधार सांद्रता जिस पर वेग Vmax के आधे के बराबर होता है। एक प्रतिस्पर्धी अवरोधक (उदा. succinic dehydrogenase पर malonate) क्रियाधार जैसा दिखता है और सक्रिय स्थल को प्रतिवर्ती रूप से अवरुद्ध करता है।',
+          diagnosis:'एक प्रवाहित कहानी, चार अलग तथ्य नहीं' }
+      };
+      const d = DATA[lang] || DATA.en;
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">${d.intro}</div>
+        <div class="tipex-case">
+          <div class="tipex-case-title">${d.caseTitle}</div>
+          ${d.steps.map((s,i)=>step(i+1, s)).join('')}
+          <div class="tipex-step"><span class="tipex-q">→</span><span>${d.extra}</span></div>
+          <div class="tipex-diagnosis">✓ ${d.diagnosis}</div>
+        </div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  const lang = (typeof currentLang!=='undefined' && ex.title[currentLang]) ? currentLang : 'en';
+  document.getElementById('tipExampleTitle').textContent = ex.title[lang];
+  document.getElementById('tipExampleBody').innerHTML = ex.render(lang);
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTips(){
   const en = STUDYTIPS_CH9_EN;
   const tr = (currentLang !== 'en') && STUDYTIPS_CH9_TRANSLATIONS[currentLang];
@@ -2007,7 +2199,7 @@ function renderStudyTips(){
     <h3 style="color:var(--gold);margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--ink-dim);font-size:12px;margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ ${TIP_EXAMPLE_BTN_LABEL[currentLang]||TIP_EXAMPLE_BTN_LABEL.en}</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   </div>`;

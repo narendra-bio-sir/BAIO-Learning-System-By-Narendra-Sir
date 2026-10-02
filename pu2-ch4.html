@@ -185,6 +185,24 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .tip-list.neet li{border-left-color:var(--gold-2);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold-2);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel-2);color:var(--gold-2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--border);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--border);color:var(--text);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--text-dim);line-height:1.55;background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--text-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--text);min-width:20px;font-weight:700;color:var(--gold-2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .chip-row{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;}
 .chip{
   font-size:11px; padding:4px 9px; border-radius:99px; background:rgba(66,198,160,0.1);
@@ -1113,6 +1131,14 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="btn" id="streakModalCloseBtn" style="width:100%; margin-top:4px;">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="btn" id="tipExampleCloseBtn" style="width:100%; margin-top:4px;">Close</button>
     </div>
   </div>
 
@@ -4863,6 +4889,143 @@ const STUDYTIPS_CH4_TRANSLATIONS = {
     ]
   }
 };
+/* ---- Study Tips "View example" popovers: the deviations-from-Mendelism
+   table and the genetic-disorders 4-part-fact table are both just
+   instructions in the tip text ("build one comparison table...", "learn it
+   as a 4-part fact...") with nothing to look at. These two buttons show the
+   actual filled-in artifact, built strictly from facts already stated
+   elsewhere in this same chapter file (the Concept tab's deviations list,
+   and this chapter's own Compare Matrix, COMPARE_DATA, defined further down
+   this same script) — nothing is invented or duplicated by hand. ---- */
+const TIP_EXAMPLE_INDEX = {1:'deviations-table', 2:'disorders-table'};
+const TIP_EXAMPLE_BTN_LABEL = {en:'View example', kn:'ಉದಾಹರಣೆ ನೋಡಿ', hi:'उदाहरण देखें'};
+/* Trilingual content below reuses the exact vetted Kannada/Hindi genetics
+   vocabulary already established in GLOSSARY_TRANSLATIONS_CH4 and the
+   Genetic-Disorders / Deviations-from-Mendelism topic cards of
+   STUDY_TRANSLATIONS_CH4 (incomplete/co-dominance, multiple alleles,
+   pleiotropy, polygenic inheritance, and every disorder's inheritance
+   mode/chromosome/cause/symptom) so terminology stays consistent with the
+   rest of the chapter rather than introducing new, unverified translations. */
+const TIP_EXAMPLES = {
+  'deviations-table': {
+    title: {
+      en: '📊 Deviations from Mendelism — Filled In',
+      kn: '📊 ಮೆಂಡೆಲ್‌ವಾದದಿಂದ ವಿಚಲನೆಗಳು — ಭರ್ತಿಮಾಡಲಾಗಿದೆ',
+      hi: '📊 मेंडलवाद से विचलन — भरा हुआ'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"This is exactly the table the tip describes — one row per deviation with its worked example, built from this chapter's own Concept-tab notes.",
+              th:['Deviation','Discoverer','Worked Example','Key Point'],
+              rows:[
+                {dev:'Incomplete dominance', who:'Carl Correns, 1903', ex:'Mirabilis jalapa: RR (red) &times; rr (white) &rarr; Rr pink F1; F2 = 1:2:1 (Red:Pink:White)', key:'Phenotypic ratio = genotypic ratio; heterozygote is a blended, intermediate phenotype'},
+                {dev:'Co-dominance', who:'&mdash;', ex:'AB blood group (I<sup>A</sup>I<sup>B</sup>); sickle-cell carriers (Hb<sup>A</sup>Hb<sup>S</sup>)', key:'Both alleles express fully &amp; independently; F1 resembles BOTH parents, no blending'},
+                {dev:'Multiple alleles', who:'Landsteiner 1901; Bernstein 1924', ex:'ABO blood group: gene I with alleles I<sup>A</sup>, I<sup>B</sup>, i', key:'&gt;2 allelic forms in the population; 6 genotypes but only 4 phenotypes'},
+                {dev:'Pleiotropy', who:'&mdash;', ex:'Sickle-cell gene alters both Hb type AND RBC shape; starch synthesis in pea (BB/Bb/bb); PKU', key:'ONE gene &rarr; MANY traits'},
+                {dev:'Polygenic inheritance', who:'F. Galton (coined &ldquo;eugenics&rdquo;); Nilsson-Ehle (first experimental proof)', ex:'Human skin colour: AABBCC darkest, aabbcc lightest; wheat kernel colour', key:'Trait controlled by 3+ genes with an additive/cumulative effect'}
+              ],
+              note:'Remember the mnemonic from the Concept tab: &ldquo;I Can\'t Make People Perfect&rdquo; &rarr; Incomplete dominance, Co-dominance, Multiple alleles, Pleiotropy, Polygenic inheritance.' },
+        kn: { intro:'ಇದು ಸಲಹೆ ವಿವರಿಸುವ ನಿಖರವಾದ ಟೇಬಲ್ — ಪ್ರತಿ ವಿಚಲನೆಗೂ ಅದರ ಉದಾಹರಣೆಯೊಂದಿಗೆ ಒಂದು ಸಾಲು, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Concept ಟ್ಯಾಬ್ ಟಿಪ್ಪಣಿಗಳಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ.',
+              th:['ವಿಚಲನೆ','ಕಂಡುಹಿಡಿದವರು','ಉದಾಹರಣೆ','ಪ್ರಮುಖ ಅಂಶ'],
+              rows:[
+                {dev:'ಅಪೂರ್ಣ ಪ್ರಾಬಲ್ಯ', who:'ಕಾರ್ಲ್ ಕೊರೆನ್ಸ್, 1903', ex:'Mirabilis jalapa: RR (ಕೆಂಪು) &times; rr (ಬಿಳಿ) &rarr; Rr ಗುಲಾಬಿ F1; F2 = 1:2:1 (ಕೆಂಪು:ಗುಲಾಬಿ:ಬಿಳಿ)', key:'ಫಿನೋಟೈಪಿಕ್ ಅನುಪಾತ = ಜೀನೋಟೈಪಿಕ್ ಅನುಪಾತ; ವಿಜಾತಿ ಸಂಯುಕ್ತವು ಮಿಶ್ರಿತ, ಮಧ್ಯಂತರ ಫಿನೋಟೈಪ್ ಆಗಿದೆ'},
+                {dev:'ಸಹ-ಪ್ರಾಬಲ್ಯ', who:'&mdash;', ex:'AB ರಕ್ತಗುಂಪು (I<sup>A</sup>I<sup>B</sup>); ಕುಡುಗೋಲು-ಕಣ ವಾಹಕರು (Hb<sup>A</sup>Hb<sup>S</sup>)', key:'ಎರಡೂ ಆಲಿಲ್‌ಗಳು ಸಂಪೂರ್ಣವಾಗಿ ಮತ್ತು ಸ್ವತಂತ್ರವಾಗಿ ವ್ಯಕ್ತವಾಗುತ್ತವೆ; F1 ಎರಡೂ ಪೋಷಕರನ್ನು ಹೋಲುತ್ತದೆ, ಮಿಶ್ರಣವಿಲ್ಲ'},
+                {dev:'ಬಹು ಆಲಿಲಿಸಂ', who:'ಕಾರ್ಲ್ ಲ್ಯಾಂಡ್‌ಸ್ಟೈನರ್ 1901; ಫೆಲಿಕ್ಸ್ ಬರ್ನ್‌ಸ್ಟೈನ್ 1924', ex:'ABO ರಕ್ತಗುಂಪು: ಆಲಿಲ್‌ಗಳಾದ I<sup>A</sup>, I<sup>B</sup>, i ಹೊಂದಿರುವ "I" ಜೀನ್', key:'ಜನಸಂಖ್ಯೆಯಲ್ಲಿ 2ಕ್ಕಿಂತ ಹೆಚ್ಚು ಆಲಿಲಿಕ್ ರೂಪಗಳು; 6 ಜೀನೋಟೈಪ್‌ಗಳು ಆದರೆ ಕೇವಲ 4 ಫಿನೋಟೈಪ್‌ಗಳು'},
+                {dev:'ಬಹುಪ್ರಭಾವ (ಪ್ಲಿಯೋಟ್ರೊಪಿ)', who:'&mdash;', ex:'ಕುಡುಗೋಲು-ಕಣ ಜೀನ್ ಹಿಮೋಗ್ಲೋಬಿನ್‌ನ ವಿಧ ಮತ್ತು RBCಯ ಆಕಾರ ಎರಡನ್ನೂ ಬದಲಾಯಿಸುತ್ತದೆ; ಬಟಾಣಿಯಲ್ಲಿ ಪಿಷ್ಟ ಸಂಶ್ಲೇಷಣೆ (BB/Bb/bb); PKU', key:'ಒಂದೇ ಜೀನ್ &rarr; ಹಲವು ಲಕ್ಷಣಗಳು'},
+                {dev:'ಬಹುಜೀನ ಅನುವಂಶಿಕತೆ', who:'ಎಫ್. ಗಾಲ್ಟನ್ ("ಯುಜೆನಿಕ್ಸ್" ಪದ ಸೃಷ್ಟಿಸಿದರು); ನಿಲ್ಸನ್-ಎಹ್ಲೆ (ಮೊದಲ ಪ್ರಾಯೋಗಿಕ ಪುರಾವೆ)', ex:'ಮಾನವನ ಚರ್ಮದ ಬಣ್ಣ: AABBCC ಅತ್ಯಂತ ಗಾಢ, aabbcc ಅತ್ಯಂತ ತಿಳಿ; ಗೋಧಿ ಕಾಳಿನ ಬಣ್ಣ', key:'ಸಂಚಿತ/ಸಂಕಲಿತ ಪರಿಣಾಮದೊಂದಿಗೆ 3+ ಜೀನ್‌ಗಳಿಂದ ನಿಯಂತ್ರಿಸಲ್ಪಡುವ ಲಕ್ಷಣ'}
+              ],
+              note:'Concept ಟ್ಯಾಬ್‌ನ ಈ ಸ್ಮರಣ ಸೂತ್ರ ನೆನಪಿಡಿ: "I Can\'t Make People Perfect" &rarr; ಅಪೂರ್ಣ ಪ್ರಾಬಲ್ಯ, ಸಹ-ಪ್ರಾಬಲ್ಯ, ಬಹು ಆಲಿಲಿಸಂ, ಬಹುಪ್ರಭಾವ, ಬಹುಜೀನ ಅನುವಂಶಿಕತೆ.' },
+        hi: { intro:'यह ठीक वही तालिका है जिसका वर्णन यह सुझाव करता है — प्रत्येक विचलन के लिए उसके उदाहरण के साथ एक पंक्ति, इस अध्याय के अपने Concept टैब की टिप्पणियों से बनाई गई।',
+              th:['विचलन','खोजकर्ता','उदाहरण','मुख्य बिंदु'],
+              rows:[
+                {dev:'अपूर्ण प्रभाविता', who:'कार्ल कोरेंस, 1903', ex:'Mirabilis jalapa: RR (लाल) &times; rr (सफेद) &rarr; Rr गुलाबी F1; F2 = 1:2:1 (लाल:गुलाबी:सफेद)', key:'फीनोटाइपिक अनुपात = जीनोटाइपिक अनुपात; विषमयुग्मजी एक मिश्रित, मध्यवर्ती फीनोटाइप है'},
+                {dev:'सह-प्रभाविता', who:'&mdash;', ex:'AB रक्त समूह (I<sup>A</sup>I<sup>B</sup>); दात्र कोशिका वाहक (Hb<sup>A</sup>Hb<sup>S</sup>)', key:'दोनों एलील पूरी तरह तथा स्वतंत्र रूप से व्यक्त होते हैं; F1 दोनों जनकों से मिलता-जुलता है, कोई मिश्रण नहीं'},
+                {dev:'बहुविकल्पता', who:'कार्ल लैंडस्टाइनर 1901; फेलिक्स बर्नस्टाइन 1924', ex:'ABO रक्त समूह: एलील I<sup>A</sup>, I<sup>B</sup>, i वाला "I" जीन', key:'जनसंख्या में 2 से अधिक एलीलिक रूप; 6 जीनोटाइप परंतु केवल 4 फीनोटाइप'},
+                {dev:'बहुप्रभाविता (प्लियोट्रॉपी)', who:'&mdash;', ex:'दात्र-कोशिका जीन हीमोग्लोबिन के प्रकार तथा RBC के आकार दोनों को बदल देता है; मटर में स्टार्च संश्लेषण (BB/Bb/bb); PKU', key:'एक जीन &rarr; कई लक्षण'},
+                {dev:'बहुजीनी वंशागति', who:'एफ. गाल्टन ("यूजेनिक्स" शब्द गढ़ा); निल्सन-एले (पहला प्रायोगिक प्रमाण)', ex:'मानव त्वचा का रंग: AABBCC सबसे गहरा, aabbcc सबसे हल्का; गेहूँ के दाने का रंग', key:'3+ जीनों के संचयी/योगात्मक प्रभाव से नियंत्रित लक्षण'}
+              ],
+              note:'Concept टैब का यह सूत्र याद रखें: "I Can\'t Make People Perfect" &rarr; अपूर्ण प्रभाविता, सह-प्रभाविता, बहुविकल्पता, बहुप्रभाविता, बहुजीनी वंशागति।' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${l.th[1]}</th><th>${l.th[2]}</th><th>${l.th[3]}</th></tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r.dev}</td><td>${r.who}</td><td>${r.ex}</td><td>${r.key}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">${l.note}</div>`;
+    }
+  },
+  'disorders-table': {
+    title: {
+      en: '📊 Genetic Disorders — Filled In 4-Part Facts',
+      kn: '📊 ಅನುವಂಶಿಕ ವಿಕಾರಗಳು — ಭರ್ತಿಮಾಡಿದ 4-ಭಾಗದ ಅಂಶಗಳು',
+      hi: '📊 आनुवंशिक विकार — भरे गए 4-भाग वाले तथ्य'
+    },
+    render: function(lang){
+      const names = ['Sickle cell anaemia','Thalassemia','Phenylketonuria (PKU)','Haemophilia A','Colour blindness (Daltonism)','Hypertrichosis',"Down's syndrome","Klinefelter's syndrome","Turner's syndrome",'Cri du chat syndrome'];
+      const enRows = COMPARE_DATA.filter(d=>names.includes(d.name));
+      const knRows = [
+        {name:'ಕುಡುಗೋಲು ಕಣ ರಕ್ತಹೀನತೆ', inheritance:'ಆಟೊಸೋಮಲ್ ಅಪ್ರಬಲ', chromosome:'11', cause:'ಜೀನ್‌ನಲ್ಲಿ GAG ಅನ್ನು GUG ಆಗಿ ಬದಲಾಯಿಸುವಿಕೆ; ಬೀಟಾ ಗ್ಲೋಬಿನ್ ಸರಪಳಿಯ 6ನೇ ಸ್ಥಾನದಲ್ಲಿ Glu ಅನ್ನು Val ನಿಂದ ಬದಲಾಯಿಸುತ್ತದೆ', keyFeature:'Hb<sup>S</sup>Hb<sup>S</sup> RBCಗಳು ಕಡಿಮೆ O&#8322; ಒತ್ತಡದಲ್ಲಿ ಕುಡುಗೋಲಿನಂತಾಗುತ್ತವೆ (ಮಾರಣಾಂತಿಕ); Hb<sup>A</sup>Hb<sup>S</sup> ವಾಹಕರಲ್ಲಿ ಸೌಮ್ಯ ರಕ್ತಹೀನತೆ ಮಾತ್ರ'},
+        {name:'ಥಲಸ್ಸೀಮಿಯಾ', inheritance:'ಆಟೊಸೋಮಲ್ ಸಂಬಂಧಿ ಅಪ್ರಬಲ', chromosome:'16 (ಆಲ್ಫಾ, HBA1/HBA2) ಅಥವಾ 11 (ಬೀಟಾ, HBB)', cause:'ಆಲ್ಫಾ ಅಥವಾ ಬೀಟಾ ಗ್ಲೋಬಿನ್ ಸರಪಳಿಗೆ ದೋಷಯುಕ್ತ ಜೀನ್(ಗಳು), ಹಿಮೋಗ್ಲೋಬಿನ್ ಪ್ರಮಾಣ ಕಡಿಮೆಯಾಗುವಿಕೆ', keyFeature:'ಪರಿಮಾಣಾತ್ಮಕ Hb ಕೊರತೆ &rarr; ಅತಿಯಾದ RBC ನಾಶ &rarr; ರಕ್ತಹೀನತೆ'},
+        {name:'ಫಿನೈಲ್‌ಕೀಟೋನೂರಿಯಾ (PKU)', inheritance:'ಆಟೊಸೋಮಲ್ ಅಪ್ರಬಲ', chromosome:'12', cause:'ಫಿನೈಲ್‌ಅಲನೈನ್ ಹೈಡ್ರಾಕ್ಸಿಲೇಸ್ ಕಿಣ್ವಕ್ಕೆ ಸಂಕೇತಿಸುವ ಜೀನ್‌ನಲ್ಲಿ ರೂಪಾಂತರ', keyFeature:'ಫಿನೈಲ್‌ಅಲನೈನ್ ಫಿನೈಲ್‌ಪೈರುವಿಕ್ ಆಮ್ಲವಾಗಿ ಪರಿವರ್ತನೆ, ಮೆದುಳಿನಲ್ಲಿ ಶೇಖರಣೆ &rarr; ಬೌದ್ಧಿಕ ಹಿಂದುಳಿಯುವಿಕೆ, ಕಡಿಮೆ ವರ್ಣದ್ರವ್ಯ'},
+        {name:'ಹಿಮೋಫಿಲಿಯಾ A', inheritance:'X-ಸಂಬಂಧಿ ಅಪ್ರಬಲ', chromosome:'X', cause:'ದೋಷಯುಕ್ತ ಫ್ಯಾಕ್ಟರ್ VIII (ರಕ್ತ ಹೆಪ್ಪುಗಟ್ಟುವಿಕೆ ಪ್ರೋಟೀನ್)', keyFeature:"ಕ್ರಿಸ್-ಕ್ರಾಸ್/ಜಿಗ್-ಜಾಗ್ ಅನುವಂಶಿಕತೆ ತೋರುತ್ತದೆ; 'ರಾಜ ಕಾಯಿಲೆ' (ರಾಣಿ ವಿಕ್ಟೋರಿಯಾ) ಎಂದು ಕರೆಯಲ್ಪಡುತ್ತದೆ"},
+        {name:'ವರ್ಣಾಂಧತೆ (ಡಾಲ್ಟನಿಸಂ)', inheritance:'X-ಸಂಬಂಧಿ ಅಪ್ರಬಲ', chromosome:'X', cause:'X ವರ್ಣತಂತುವಿನ ಮೇಲಿನ ಕೆಂಪು/ಹಸಿರು ಕೋನ್ ಜೀನ್‌ಗಳಲ್ಲಿ ರೂಪಾಂತರ', keyFeature:'ಸುಮಾರು 8% ಗಂಡುಗಳಲ್ಲಿ ಆದರೆ ಕೇವಲ 0.4% ಹೆಣ್ಣುಗಳಲ್ಲಿ ಸಂಭವಿಸುತ್ತದೆ'},
+        {name:'ಹೈಪರ್‌ಟ್ರೈಕೋಸಿಸ್', inheritance:'Y-ಸಂಬಂಧಿ (ಹೊಲಾಂಡ್ರಿಕ್)', chromosome:'Y', cause:'ಕೇವಲ Y ವರ್ಣತಂತುವಿನ ಮೇಲೆ ಇರುವ ಜೀನ್', keyFeature:'ಪುರುಷ-ಲಿಂಗ ಸೀಮಿತ ಲಕ್ಷಣ; ತಂದೆಯಿಂದ ಎಲ್ಲಾ ಪುತ್ರರಿಗೆ, ಪುತ್ರಿಯರಿಗೆ ಎಂದಿಗೂ ಇಲ್ಲ'},
+        {name:'ಡೌನ್ ಸಿಂಡ್ರೋಮ್', inheritance:'ವರ್ಣತಂತು ಸಂಬಂಧಿ (ಆಟೊಸೋಮಲ್ ಟ್ರೈಸೋಮಿ)', chromosome:'21 (ಆಟೊಸೋಮ್)', cause:'ಕ್ರೊಮಾಟಿಡ್ ಪ್ರತ್ಯೇಕೀಕರಣ ವೈಫಲ್ಯದಿಂದ ವರ್ಣತಂತು 21ರ ಹೆಚ್ಚುವರಿ ಪ್ರತಿ', keyFeature:'ಕುಳ್ಳ ಎತ್ತರ, ನೆರಿಗೆಯುಳ್ಳ ನಾಲಿಗೆ, ಅಂಗೈ ಗೆರೆ, ಜನ್ಮಜಾತ ಹೃದಯ ಕಾಯಿಲೆ, ಬೌದ್ಧಿಕ ಹಿಂದುಳಿಯುವಿಕೆ'},
+        {name:'ಕ್ಲೈನ್‌ಫೆಲ್ಟರ್ ಸಿಂಡ್ರೋಮ್', inheritance:'ವರ್ಣತಂತು ಸಂಬಂಧಿ (ಅಲೋಸೋಮಲ್ ಟ್ರೈಸೋಮಿ)', chromosome:'X (47, XXY)', cause:'X ವರ್ಣತಂತುವಿನ ಹೆಚ್ಚುವರಿ ಪ್ರತಿ', keyFeature:'ಬಂಜೆ ಪುರುಷ; ಗೈನೆಕೊಮಾಸ್ಟಿಯಾ; ಕಳಪೆ ಗಡ್ಡ ಬೆಳವಣಿಗೆ; ಅಗಲ ಸೊಂಟ'},
+        {name:'ಟರ್ನರ್ ಸಿಂಡ್ರೋಮ್', inheritance:'ವರ್ಣತಂತು ಸಂಬಂಧಿ (ಅಲೋಸೋಮಲ್ ಮಾನೊಸೋಮಿ)', chromosome:'X (45, XO)', cause:'ಒಂದು X ವರ್ಣತಂತುವಿನ ಅನುಪಸ್ಥಿತಿ', keyFeature:'ಬಂಜೆ ಹೆಣ್ಣು; ಅಪಕ್ವ ಅಂಡಾಶಯಗಳು; ಜಾಲಬಂಧ ಕುತ್ತಿಗೆ; ಋತುಚಕ್ರ ಇಲ್ಲದಿರುವುದು'},
+        {name:'ಕ್ರೀ ಡ್ಯೂ ಚಾ ಸಿಂಡ್ರೋಮ್', inheritance:'ವರ್ಣತಂತು ಸಂಬಂಧಿ (ಭಾಗಶಃ ಮಾನೊಸೋಮಿ)', chromosome:'5 (ಭಾಗಶಃ ಅಳಿಸುವಿಕೆ)', cause:'ವರ್ಣತಂತು 5ರ ಚಿಕ್ಕ ತೋಳಿನ ಅಳಿಸುವಿಕೆ', keyFeature:'ಎತ್ತರದ, ಬೆಕ್ಕಿನಂತಹ ಅಳು; ತೀವ್ರ ಬೌದ್ಧಿಕ ಹಿಂದುಳಿಯುವಿಕೆ'}
+      ];
+      const hiRows = [
+        {name:'दात्र कोशिका अरक्तता', inheritance:'दैहिक अप्रभावी', chromosome:'11', cause:'जीन में GAG का स्थान GUG लेना; बीटा ग्लोबिन शृंखला के छठे स्थान पर Glu का स्थान Val लेना', keyFeature:'Hb<sup>S</sup>Hb<sup>S</sup> RBC कम ऑक्सीजन दाब पर दात्राकार हो जाती हैं (घातक); Hb<sup>A</sup>Hb<sup>S</sup> वाहकों में केवल हल्की अरक्तता'},
+        {name:'थैलेसीमिया', inheritance:'दैहिक सहलग्न अप्रभावी', chromosome:'16 (अल्फा, HBA1/HBA2) या 11 (बीटा, HBB)', cause:'अल्फा या बीटा ग्लोबिन शृंखला के लिए दोषपूर्ण जीन, हीमोग्लोबिन की मात्रा में कमी', keyFeature:'मात्रात्मक Hb न्यूनता &rarr; अत्यधिक RBC विनाश &rarr; अरक्तता'},
+        {name:'फीनाइलकीटोनूरिया (PKU)', inheritance:'दैहिक अप्रभावी', chromosome:'12', cause:'फीनाइलएलानिन हाइड्रॉक्सिलेज़ एंज़ाइम के लिए कोड करने वाले जीन में उत्परिवर्तन', keyFeature:'फीनाइलएलानिन का फीनाइलपाइरुविक अम्ल में रूपांतरण, मस्तिष्क में जमाव &rarr; मानसिक मंदता, कम रंजकता'},
+        {name:'हीमोफीलिया A', inheritance:'X-सहलग्न अप्रभावी', chromosome:'X', cause:'दोषपूर्ण फैक्टर VIII (रक्त के थक्के जमने का प्रोटीन)', keyFeature:"क्रिस-क्रॉस/ज़िग-ज़ैग वंशागति दर्शाता है; 'राजसी रोग' (महारानी विक्टोरिया) भी कहलाता है"},
+        {name:'वर्णांधता (डाल्टनिज़्म)', inheritance:'X-सहलग्न अप्रभावी', chromosome:'X', cause:'X गुणसूत्र पर लाल/हरे शंकु जीन में उत्परिवर्तन', keyFeature:'लगभग 8% नरों में परंतु केवल 0.4% मादाओं में होता है'},
+        {name:'हाइपरट्राइकोसिस', inheritance:'Y-सहलग्न (होलैंड्रिक)', chromosome:'Y', cause:'केवल Y गुणसूत्र पर उपस्थित जीन', keyFeature:'नर-लिंग सीमित लक्षण; पिता से सभी पुत्रों में, पुत्रियों में कभी नहीं'},
+        {name:'डाउन सिंड्रोम', inheritance:'गुणसूत्रीय (दैहिक त्रिसूत्रता)', chromosome:'21 (दैहिक)', cause:'क्रोमैटिड पृथक्करण विफलता से गुणसूत्र 21 की अतिरिक्त प्रति', keyFeature:'छोटा कद, धारीदार जीभ, हथेली की सिलवट, जन्मजात हृदय रोग, मानसिक मंदता'},
+        {name:'क्लाइनफेल्टर सिंड्रोम', inheritance:'गुणसूत्रीय (लिंग गुणसूत्रीय त्रिसूत्रता)', chromosome:'X (47, XXY)', cause:'X गुणसूत्र की अतिरिक्त प्रति', keyFeature:'बंध्य पुरुष; गाइनेकोमास्टिया; दाढ़ी की खराब वृद्धि; चौड़े कूल्हे'},
+        {name:'टर्नर सिंड्रोम', inheritance:'गुणसूत्रीय (लिंग गुणसूत्रीय एकसूत्रता)', chromosome:'X (45, XO)', cause:'एक X गुणसूत्र की अनुपस्थिति', keyFeature:'बंध्य मादा; अल्पविकसित अंडाशय; जालयुक्त गर्दन; मासिक धर्म का न होना'},
+        {name:'क्राई डू शा सिंड्रोम', inheritance:'गुणसूत्रीय (आंशिक एकसूत्रता)', chromosome:'5 (आंशिक विलोपन)', cause:'गुणसूत्र 5 की छोटी भुजा का विलोपन', keyFeature:'तीखी, बिल्ली जैसी चीख़; गंभीर मानसिक मंदता'}
+      ];
+      const T = {
+        en: { intro:"The same 4-part shape the tip describes — mode of inheritance, chromosome/gene, molecular cause, key symptom — for every disorder in this chapter, pulled straight from this chapter's own Compare Matrix.",
+              th:['Disorder','Mode of Inheritance','Chromosome / Gene','Molecular Cause','Key Symptom(s)'], rows:enRows,
+              note:'Full detail (plus a side-by-side comparison picker) is in the <b>Compare Matrix</b> tool further down this chapter — this table is the condensed 4-part shape worth memorising first.' },
+        kn: { intro:'ಸಲಹೆ ವಿವರಿಸುವ ಅದೇ 4-ಭಾಗದ ಆಕಾರ — ಅನುವಂಶಿಕತೆಯ ವಿಧಾನ, ವರ್ಣತಂತು/ಜೀನ್, ಆಣ್ವಿಕ ಕಾರಣ, ಪ್ರಮುಖ ಲಕ್ಷಣ — ಈ ಅಧ್ಯಾಯದ ಪ್ರತಿ ವಿಕಾರಕ್ಕೂ, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Compare Matrix ನಿಂದ ನೇರವಾಗಿ ಪಡೆಯಲಾಗಿದೆ.',
+              th:['ವಿಕಾರ','ಅನುವಂಶಿಕತೆಯ ವಿಧಾನ','ವರ್ಣತಂತು / ಜೀನ್','ಆಣ್ವಿಕ ಕಾರಣ','ಪ್ರಮುಖ ಲಕ್ಷಣ(ಗಳು)'], rows:knRows,
+              note:'ಸಂಪೂರ್ಣ ವಿವರ (ಜೊತೆಗೆ ಪಕ್ಕಪಕ್ಕದ ಹೋಲಿಕೆ ಆಯ್ಕೆ) ಈ ಅಧ್ಯಾಯದ ಕೆಳಗಿನ <b>Compare Matrix</b> ಉಪಕರಣದಲ್ಲಿದೆ — ಇದು ಮೊದಲು ಕಂಠಪಾಠ ಮಾಡಲು ಯೋಗ್ಯವಾದ ಸಂಕ್ಷಿಪ್ತ 4-ಭಾಗದ ಆಕಾರ.' },
+        hi: { intro:'वही 4-भाग वाला ढाँचा जिसका वर्णन यह सुझाव करता है — वंशागति विधि, गुणसूत्र/जीन, आणविक कारण, मुख्य लक्षण — इस अध्याय के हर विकार के लिए, इस अध्याय के अपने Compare Matrix से सीधे लिया गया।',
+              th:['विकार','वंशागति विधि','गुणसूत्र / जीन','आणविक कारण','मुख्य लक्षण'], rows:hiRows,
+              note:'पूरा विवरण (साथ ही एक साथ-साथ तुलना चयनकर्ता) इस अध्याय के आगे दिए गए <b>Compare Matrix</b> टूल में है — यह पहले याद करने योग्य संक्षिप्त 4-भाग वाला ढाँचा है।' }
+      };
+      const t = T[lang] || T.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${t.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${t.th[0]}</th><th>${t.th[1]}</th><th>${t.th[2]}</th><th>${t.th[3]}</th><th>${t.th[4]}</th></tr></thead><tbody>
+        ${t.rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td>${r.inheritance}</td><td>${r.chromosome}</td><td>${r.cause}</td><td>${r.keyFeature}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">${t.note}</div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  const lang = (typeof currentLang!=='undefined' && ex.title[currentLang]) ? currentLang : 'en';
+  document.getElementById('tipExampleTitle').textContent = ex.title[lang];
+  document.getElementById('tipExampleBody').innerHTML = ex.render(lang);
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTipsCh2(){
   const el = document.getElementById('studyTipsContent');
   if(!el) return;
@@ -4873,7 +5036,7 @@ function renderStudyTipsCh2(){
     <h3 style="color:var(--gold-2); margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ ${TIP_EXAMPLE_BTN_LABEL[currentLang]||TIP_EXAMPLE_BTN_LABEL.en}</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   `;

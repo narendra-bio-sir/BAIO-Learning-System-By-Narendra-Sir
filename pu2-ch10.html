@@ -191,6 +191,24 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .tip-list.neet li{border-left-color:var(--gold-2);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold-2);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel-2);color:var(--gold-2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--border);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--border);color:var(--text);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--text-dim);line-height:1.55;background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--text-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--text);min-width:20px;font-weight:700;color:var(--gold-2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .chip-row{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;}
 .chip{
   font-size:11px; padding:4px 9px; border-radius:99px; background:rgba(66,198,160,0.1);
@@ -1060,6 +1078,14 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="btn" id="streakModalCloseBtn" style="width:100%; margin-top:4px;">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="btn" id="tipExampleCloseBtn" style="width:100%; margin-top:4px;">Close</button>
     </div>
   </div>
 
@@ -2412,6 +2438,199 @@ try{ renderConceptTopicNav(); }catch(e){ console.error('renderConceptTopicNav fa
 /* ---------- Study Tips ---------- */
 const STUDYTIPS_CH10_EN = {"title":"Study Tips &ndash; Biotechnology and its Applications","intro":"How to study this chapter well, and what to focus on for NEET/KCET.","theoryHead":"📘 Theory &mdash; How to Study This Chapter","neetHead":"🎯 NEET/KCET Strategy for This Chapter","theory":["Study this chapter as five 'applications' &mdash; agriculture (Bt crops, RNAi), medicine (recombinant insulin, gene therapy), diagnosis (PCR, ELISA, probes), transgenic animals, and ethics/biopiracy. Making a one-page map with these five heads first makes every fact easier to place.","Learn every process as an ordered flow chart, not as a paragraph: protoxin &rarr; alkaline gut &rarr; active toxin &rarr; pores in midgut cells &rarr; lysis &rarr; death; and A/B chain genes &rarr; <i>E. coli</i> plasmids &rarr; separate chains &rarr; disulphide bonds &rarr; insulin. Flow charts are exactly what sequence and assertion-reason questions test.","Make a small table of numbers and names as you read &mdash; 1983 Eli Lilly insulin, 1990 first gene therapy (4-year-old girl, ADA), 1997 Rosie (2.4 g/litre alpha-lactalbumin) and the 1997 Basmati patent, 95% transgenic animals are mice, 3 chains in proinsulin vs 2 in insulin.","Write the cry-gene pairs separately in bold: cryIAc and cryIIAb &rarr; cotton bollworm; cryIAb &rarr; corn borer. Examiners very often swap just one Roman numeral or letter, so drill these until the pairing is automatic.","After finishing, close the book and explain aloud the difference between the four 'silencing/detecting' ideas &mdash; RNAi, PCR, ELISA and probe-plus-autoradiography. If you can state the principle and one use of each in a single sentence, the chapter is secure."],"neet":["The commonest trap is pH: the Bt protoxin is activated in the ALKALINE gut of the insect, never in an acidic medium. Any option saying 'acidic' is wrong, and this same fact explains why Bt crops are harmless to humans.","Watch the insulin chain-number trap: the PRO-hormone has three chains (A, B, C) and the MATURE hormone has two (A and B) joined by disulphide bonds. Questions often state 'insulin has three chains' without the word 'pro'.","In probe hybridisation questions, remember the negative logic &mdash; a mutated region does NOT bind the probe, so it does NOT appear on the autoradiograph. Absence of a band, not a stronger band, indicates the mutation.","Distinguish the products precisely: alpha-1-antitrypsin treats emphysema, alpha-lactalbumin was the protein in Rosie's milk, and adenosine deaminase is the gene-therapy enzyme. Names beginning with 'alpha' are deliberately mixed up in options.","For the ethics section, remember the exact bodies and years: GEAC (Genetic Engineering Approval Committee) regulates GM research in India; the 1997 Basmati patent was given by the US Patent and Trademark Office to an American company; Neem and turmeric are the other two dispute examples; and the second amendment to the Indian Patents Bill addresses biopiracy."]};
 const STUDYTIPS_CH10_TRANSLATIONS = {};
+/* ---- Study Tips "View example" popovers: five of the theory tips describe
+   something to build/draw/memorise (a five-application map, two process
+   flow charts, a numbers-and-names table, a cry-gene pairing table, a
+   method-comparison table) with nothing to look at. These buttons show the
+   actual filled-in artifact, built strictly from this chapter's own data
+   (COMPARE_DATA used by the Compare tab, and the exact mechanism/figure
+   facts already given in the Topics content) so nothing is invented or
+   duplicated by hand. ---- */
+const TIP_EXAMPLE_INDEX = {0:'applications-map', 1:'flowcharts', 2:'numbers-table', 3:'cry-gene-pairs', 4:'diagnostic-methods'};
+const TIP_EXAMPLE_BTN_LABEL = {en:'View example', kn:'ಉದಾಹರಣೆ ನೋಡಿ', hi:'उदाहरण देखें'};
+const TIP_EXAMPLES = {
+  'applications-map': {
+    title: {en:'🗺️ Five Applications — One-Page Map', kn:'🗺️ ಐದು ಅನ್ವಯಗಳು — ಒಂದು-ಪುಟದ ನಕ್ಷೆ', hi:'🗺️ पांच अनुप्रयोग — एक-पृष्ठ मानचित्र'},
+    render: function(lang){
+      const L = {
+        en:{note:"Exactly the one-page map the tip describes, built from this chapter's own Compare tab heads and topics.", h:'Application Head', c:'Covers', e:'Example(s)',
+          rows:[
+            {h:'Agriculture', c:'GM crops, RNAi', e:'Bt cotton (<i>cry</i> genes); engineered RNAi gives transgenic tobacco nematode resistance'},
+            {h:'Medicine', c:'Recombinant therapeutics, gene therapy', e:'Recombinant human insulin (Eli Lilly, 1983); ADA-deficiency gene therapy (1990)'},
+            {h:'Diagnosis', c:'PCR, ELISA, probes', e:'PCR detects HIV/cancer mutations; ELISA detects antigen or antibody; probe + autoradiography localises a mutation'},
+            {h:'Transgenic animals', c:'Disease models &amp; biological-product animals', e:'Transgenic mouse disease models; Rosie the cow (human alpha-lactalbumin in milk)'},
+            {h:'Ethics &amp; Biopiracy', c:'Regulation &amp; bio-resource exploitation', e:'GEAC approves/regulates GM research; 1997 Basmati patent dispute'}
+          ]},
+        kn:{note:"ಈ ಸಲಹೆ ವಿವರಿಸುವ ನಿಖರ ಒಂದು-ಪುಟದ ನಕ್ಷೆ, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Compare ಟ್ಯಾಬ್ ಶೀರ್ಷಿಕೆಗಳು ಮತ್ತು ವಿಷಯಗಳಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ.", h:'ಅನ್ವಯ ಶೀರ್ಷಿಕೆ', c:'ಒಳಗೊಂಡಿದೆ', e:'ಉದಾಹರಣೆ(ಗಳು)',
+          rows:[
+            {h:'ಕೃಷಿ', c:'GM ಬೆಳೆಗಳು, RNAi', e:'Bt ಹತ್ತಿ (<i>cry</i> ಜೀನ್‌ಗಳು); ಎಂಜಿನಿಯರ್ ಮಾಡಲಾದ RNAi ಟ್ರಾನ್ಸ್‌ಜೆನಿಕ್ ತಂಬಾಕಿಗೆ ನೆಮಟೋಡ್ ನಿರೋಧಕತೆ ನೀಡುತ್ತದೆ'},
+            {h:'ವೈದ್ಯಕೀಯ', c:'ರೀಕಾಂಬಿನಂಟ್ ಔಷಧಗಳು, ಜೀನ್ ಚಿಕಿತ್ಸೆ', e:'ರೀಕಾಂಬಿನಂಟ್ ಮಾನವ ಇನ್ಸುಲಿನ್ (ಎಲಿ ಲಿಲ್ಲಿ, 1983); ADA-ಕೊರತೆ ಜೀನ್ ಚಿಕಿತ್ಸೆ (1990)'},
+            {h:'ರೋಗನಿರ್ಣಯ', c:'PCR, ELISA, ಶೋಧಕಗಳು', e:'PCR HIV/ಕ್ಯಾನ್ಸರ್ ರೂಪಾಂತರಗಳನ್ನು ಪತ್ತೆಹಚ್ಚುತ್ತದೆ; ELISA ಆಂಟಿಜೆನ್ ಅಥವಾ ಆಂಟಿಬಾಡಿಯನ್ನು ಪತ್ತೆಹಚ್ಚುತ್ತದೆ; ಶೋಧಕ + ಆಟೋರೇಡಿಯೋಗ್ರಫಿ ರೂಪಾಂತರದ ಸ್ಥಳವನ್ನು ಗುರುತಿಸುತ್ತದೆ'},
+            {h:'ಟ್ರಾನ್ಸ್‌ಜೆನಿಕ್ ಪ್ರಾಣಿಗಳು', c:'ರೋಗ ಮಾದರಿಗಳು ಮತ್ತು ಜೈವಿಕ-ಉತ್ಪನ್ನ ಪ್ರಾಣಿಗಳು', e:'ಟ್ರಾನ್ಸ್‌ಜೆನಿಕ್ ಇಲಿ ರೋಗ ಮಾದರಿಗಳು; ರೋಸಿ ಹಸು (ಹಾಲಿನಲ್ಲಿ ಮಾನವ ಆಲ್ಫಾ-ಲ್ಯಾಕ್ಟಾಲ್ಬುಮಿನ್)'},
+            {h:'ನೈತಿಕತೆ ಮತ್ತು ಜೈವಿಕ ಕಳ್ಳತನ', c:'ನಿಯಂತ್ರಣ ಮತ್ತು ಜೈವಿಕ-ಸಂಪನ್ಮೂಲ ಶೋಷಣೆ', e:'GEAC GM ಸಂಶೋಧನೆಯನ್ನು ಅನುಮೋದಿಸುತ್ತದೆ/ನಿಯಂತ್ರಿಸುತ್ತದೆ; 1997ರ ಬಾಸ್ಮತಿ ಪೇಟೆಂಟ್ ವಿವಾದ'}
+          ]},
+        hi:{note:"यह सलाह वर्णित सटीक एक-पृष्ठ मानचित्र, इस अध्याय के अपने Compare टैब शीर्षकों और विषयों से बनाया गया है।", h:'अनुप्रयोग शीर्षक', c:'समाविष्ट', e:'उदाहरण',
+          rows:[
+            {h:'कृषि', c:'GM फसलें, RNAi', e:'Bt कपास (<i>cry</i> जीन); इंजीनियर की गई RNAi ट्रांसजेनिक तंबाकू को सूत्रकृमि प्रतिरोध देती है'},
+            {h:'चिकित्सा', c:'पुनर्योगज चिकित्सीय, जीन चिकित्सा', e:'पुनर्योगज मानव इंसुलिन (एली लिली, 1983); ADA-कमी जीन चिकित्सा (1990)'},
+            {h:'निदान', c:'PCR, ELISA, प्रोब', e:'PCR HIV/कैंसर उत्परिवर्तन का पता लगाता है; ELISA प्रतिजन या प्रतिरक्षी का पता लगाता है; प्रोब + ऑटोरेडियोग्राफी उत्परिवर्तन का स्थान बताती है'},
+            {h:'ट्रांसजेनिक प्राणी', c:'रोग मॉडल और जैविक-उत्पाद प्राणी', e:'ट्रांसजेनिक चूहा रोग मॉडल; रोज़ी गाय (दूध में मानव अल्फा-लैक्टलब्यूमिन)'},
+            {h:'नैतिकता और जैव-चोरी', c:'विनियमन और जैव-संसाधन शोषण', e:'GEAC GM अनुसंधान को स्वीकृति/विनियमित करता है; 1997 का बासमती पेटेंट विवाद'}
+          ]}
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.note}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.h}</th><th>${l.c}</th><th>${l.e}</th></tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r.h}</td><td>${r.c}</td><td>${r.e}</td></tr>`).join('')}
+        </tbody></table></div>`;
+    }
+  },
+  'flowcharts': {
+    title: {en:'➡️ Two Ordered Flow Charts', kn:'➡️ ಎರಡು ಕ್ರಮಬದ್ಧ ಫ್ಲೋ ಚಾರ್ಟ್‌ಗಳು', hi:'➡️ दो क्रमबद्ध फ्लो चार्ट'},
+    render: function(lang){
+      const L = {
+        en:{note:"The exact two flow charts the tip describes, using only this chapter's own Bt-toxin and insulin-production facts.", case1:'Bt toxin mechanism', case2:'Recombinant insulin production',
+          bt:['<i>B. thuringiensis</i> forms a protein crystal containing an inactive <b>protoxin</b>.','Insect ingests the crystal; the <b>alkaline pH</b> of its gut converts the protoxin into the <b>active toxin</b>.','Active toxin binds to <b>epithelial cells of the insect midgut</b>, creating pores.','Cells <b>swell and lyse</b> (burst).','Insect <b>dies</b>.'],
+          btSum:'✓ Protoxin → alkaline gut → active toxin → pores in midgut cells → lysis → death',
+          ins:['A-chain gene and B-chain gene inserted <b>separately</b> into <i>E. coli</i> plasmids.','Each plasmid produces its own <b>chain</b> (A or B) independently.','The two chains are <b>extracted</b>.','Chains are <b>combined via disulphide bonds</b>.','Result: <b>mature human insulin</b> (Eli Lilly, 1983).'],
+          insSum:'✓ A/B chain genes → <i>E. coli</i> plasmids → separate chains → disulphide bonds → insulin'},
+        kn:{note:"ಈ ಸಲಹೆ ವಿವರಿಸುವ ನಿಖರ ಎರಡು ಫ್ಲೋ ಚಾರ್ಟ್‌ಗಳು, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Bt-ಟಾಕ್ಸಿನ್ ಮತ್ತು ಇನ್ಸುಲಿನ್-ಉತ್ಪಾದನೆಯ ಸಂಗತಿಗಳನ್ನು ಮಾತ್ರ ಬಳಸಿ.", case1:'Bt ಟಾಕ್ಸಿನ್ ಕಾರ್ಯವಿಧಾನ', case2:'ರೀಕಾಂಬಿನಂಟ್ ಇನ್ಸುಲಿನ್ ಉತ್ಪಾದನೆ',
+          bt:['<i>B. thuringiensis</i> ನಿಷ್ಕ್ರಿಯ ಪ್ರೊಟಾಕ್ಸಿನ್ ಹೊಂದಿರುವ ಪ್ರೋಟೀನ್ ಸ್ಫಟಿಕವನ್ನು ರೂಪಿಸುತ್ತದೆ.','ಕೀಟ ಸ್ಫಟಿಕವನ್ನು ಸೇವಿಸುತ್ತದೆ; ಅದರ ಕರುಳಿನ ಕ್ಷಾರೀಯ pH ಪ್ರೊಟಾಕ್ಸಿನ್ ಅನ್ನು ಸಕ್ರಿಯ ಟಾಕ್ಸಿನ್ ಆಗಿ ಪರಿವರ್ತಿಸುತ್ತದೆ.','ಸಕ್ರಿಯ ಟಾಕ್ಸಿನ್ ಕೀಟದ ಮಧ್ಯ ಕರುಳಿನ ಎಪಿಥೀಲಿಯಲ್ ಜೀವಕೋಶಗಳಿಗೆ ಬಂಧಿಸಿ ರಂಧ್ರಗಳನ್ನು ಸೃಷ್ಟಿಸುತ್ತದೆ.','ಜೀವಕೋಶಗಳು ಊದಿಕೊಂಡು ಲೈಸಿಸ್ (ಒಡೆಯುವಿಕೆ) ಹೊಂದುತ್ತವೆ.','ಕೀಟ ಸಾಯುತ್ತದೆ.'],
+          btSum:'✓ ಪ್ರೊಟಾಕ್ಸಿನ್ → ಕ್ಷಾರೀಯ ಕರುಳು → ಸಕ್ರಿಯ ಟಾಕ್ಸಿನ್ → ಮಧ್ಯ ಕರುಳಿನ ಜೀವಕೋಶಗಳಲ್ಲಿ ರಂಧ್ರಗಳು → ಲೈಸಿಸ್ → ಸಾವು',
+          ins:['A-ಸರಪಳಿ ಜೀನ್ ಮತ್ತು B-ಸರಪಳಿ ಜೀನ್ ಅನ್ನು ಪ್ರತ್ಯೇಕವಾಗಿ <i>E. coli</i> ಪ್ಲಾಸ್ಮಿಡ್‌ಗಳಿಗೆ ಸೇರಿಸಲಾಗುತ್ತದೆ.','ಪ್ರತಿ ಪ್ಲಾಸ್ಮಿಡ್ ತನ್ನದೇ ಆದ ಸರಪಳಿಯನ್ನು (A ಅಥವಾ B) ಸ್ವತಂತ್ರವಾಗಿ ಉತ್ಪಾದಿಸುತ್ತದೆ.','ಎರಡು ಸರಪಳಿಗಳನ್ನು ಹೊರತೆಗೆಯಲಾಗುತ್ತದೆ.','ಸರಪಳಿಗಳನ್ನು ಡೈಸಲ್ಫೈಡ್ ಬಂಧಗಳ ಮೂಲಕ ಜೋಡಿಸಲಾಗುತ್ತದೆ.','ಫಲಿತಾಂಶ: ಪ್ರೌಢ ಮಾನವ ಇನ್ಸುಲಿನ್ (ಎಲಿ ಲಿಲ್ಲಿ, 1983).'],
+          insSum:'✓ A/B ಸರಪಳಿ ಜೀನ್‌ಗಳು → <i>E. coli</i> ಪ್ಲಾಸ್ಮಿಡ್‌ಗಳು → ಪ್ರತ್ಯೇಕ ಸರಪಳಿಗಳು → ಡೈಸಲ್ಫೈಡ್ ಬಂಧಗಳು → ಇನ್ಸುಲಿನ್'},
+        hi:{note:"यह सलाह वर्णित सटीक दो फ्लो चार्ट, केवल इस अध्याय के अपने Bt-विष और इंसुलिन-उत्पादन तथ्यों का उपयोग करते हुए।", case1:'Bt विष क्रियाविधि', case2:'पुनर्योगज इंसुलिन उत्पादन',
+          bt:['<i>B. thuringiensis</i> एक निष्क्रिय प्रोटॉक्सिन युक्त प्रोटीन क्रिस्टल बनाता है।','कीट क्रिस्टल को खा जाता है; इसकी आंत का क्षारीय pH प्रोटॉक्सिन को सक्रिय विष में बदल देता है।','सक्रिय विष कीट की मध्य आंत्र की उपकला कोशिकाओं से जुड़कर छिद्र बनाता है।','कोशिकाएँ फूलकर फट (लाइज़) जाती हैं।','कीट मर जाता है।'],
+          btSum:'✓ प्रोटॉक्सिन → क्षारीय आंत्र → सक्रिय विष → मध्य आंत्र कोशिकाओं में छिद्र → लाइसिस → मृत्यु',
+          ins:['A-श्रृंखला जीन और B-श्रृंखला जीन को अलग-अलग <i>E. coli</i> प्लाज़्मिड में डाला जाता है।','प्रत्येक प्लाज़्मिड स्वतंत्र रूप से अपनी ही श्रृंखला (A या B) का उत्पादन करता है।','दोनों श्रृंखलाओं को निकाला जाता है।','श्रृंखलाओं को डाइसल्फाइड बंधों के माध्यम से जोड़ा जाता है।','परिणाम: परिपक्व मानव इंसुलिन (एली लिली, 1983)।'],
+          insSum:'✓ A/B श्रृंखला जीन → <i>E. coli</i> प्लाज़्मिड → अलग-अलग श्रृंखलाएँ → डाइसल्फाइड बंध → इंसुलिन'}
+      };
+      const l = L[lang] || L.en;
+      function step(q, a){ return `<div class="tipex-step"><span class="tipex-q">${q}.</span><span>${a}</span></div>`; }
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.note}</div>
+        <div class="tipex-case"><div class="tipex-case-title">${l.case1}</div>
+        ${l.bt.map((s,i)=>step(i+1,s)).join('')}
+        <div class="tipex-diagnosis">${l.btSum}</div></div>
+        <div class="tipex-case"><div class="tipex-case-title">${l.case2}</div>
+        ${l.ins.map((s,i)=>step(i+1,s)).join('')}
+        <div class="tipex-diagnosis">${l.insSum}</div></div>`;
+    }
+  },
+  'numbers-table': {
+    title: {en:'🔢 Numbers & Names Worth Memorising', kn:'🔢 ನೆನಪಿಡಬೇಕಾದ ಸಂಖ್ಯೆಗಳು ಮತ್ತು ಹೆಸರುಗಳು', hi:'🔢 याद रखने योग्य संख्याएँ और नाम'},
+    render: function(lang){
+      const L = {
+        en:{note:"Exactly the small table of numbers and names the tip asks you to build as you read, using only this chapter's own facts.", f:'Fact', n:'Number / Name',
+          rows:[
+            {f:'Eli Lilly&rsquo;s recombinant insulin', n:'1983'},
+            {f:'First human gene therapy (ADA deficiency, 4-year-old girl)', n:'1990'},
+            {f:'Rosie the transgenic cow &mdash; human alpha-lactalbumin in milk', n:'1997 &middot; 2.4 g/litre'},
+            {f:'Basmati rice patent dispute', n:'1997 &middot; US Patent and Trademark Office'},
+            {f:'Proportion of transgenic animals that are mice', n:'~95%'},
+            {f:'Chains in proinsulin vs mature insulin', n:'3 chains (A, B, C) vs 2 chains (A, B)'}
+          ]},
+        kn:{note:"ಈ ಸಲಹೆ ಓದುತ್ತಿರುವಾಗ ನಿರ್ಮಿಸಲು ಕೇಳುವ ನಿಖರ ಸಣ್ಣ ಸಂಖ್ಯೆಗಳು ಮತ್ತು ಹೆಸರುಗಳ ಕೋಷ್ಟಕ, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ ಸಂಗತಿಗಳನ್ನು ಮಾತ್ರ ಬಳಸಿ.", f:'ಸಂಗತಿ', n:'ಸಂಖ್ಯೆ / ಹೆಸರು',
+          rows:[
+            {f:'ಎಲಿ ಲಿಲ್ಲಿಯ ರೀಕಾಂಬಿನಂಟ್ ಇನ್ಸುಲಿನ್', n:'1983'},
+            {f:'ಮೊದಲ ಮಾನವ ಜೀನ್ ಚಿಕಿತ್ಸೆ (ADA ಕೊರತೆ, 4 ವರ್ಷದ ಬಾಲಕಿ)', n:'1990'},
+            {f:'ಟ್ರಾನ್ಸ್‌ಜೆನಿಕ್ ಹಸು ರೋಸಿ — ಹಾಲಿನಲ್ಲಿ ಮಾನವ ಆಲ್ಫಾ-ಲ್ಯಾಕ್ಟಾಲ್ಬುಮಿನ್', n:'1997 · 2.4 ಗ್ರಾಂ/ಲೀಟರ್'},
+            {f:'ಬಾಸ್ಮತಿ ಅಕ್ಕಿ ಪೇಟೆಂಟ್ ವಿವಾದ', n:'1997 · US ಪೇಟೆಂಟ್ ಮತ್ತು ಟ್ರೇಡ್‌ಮಾರ್ಕ್ ಕಚೇರಿ'},
+            {f:'ಇಲಿಗಳಾಗಿರುವ ಟ್ರಾನ್ಸ್‌ಜೆನಿಕ್ ಪ್ರಾಣಿಗಳ ಪ್ರಮಾಣ', n:'~95%'},
+            {f:'ಪ್ರೊಇನ್ಸುಲಿನ್ ವಿರುದ್ಧ ಪ್ರೌಢ ಇನ್ಸುಲಿನ್‌ನಲ್ಲಿರುವ ಸರಪಳಿಗಳು', n:'3 ಸರಪಳಿಗಳು (A, B, C) ವಿರುದ್ಧ 2 ಸರಪಳಿಗಳು (A, B)'}
+          ]},
+        hi:{note:"यह सलाह पढ़ते समय बनाने के लिए कहती है, संख्याओं और नामों की सटीक छोटी तालिका, केवल इस अध्याय के अपने तथ्यों का उपयोग करते हुए।", f:'तथ्य', n:'संख्या / नाम',
+          rows:[
+            {f:'एली लिली का पुनर्योगज इंसुलिन', n:'1983'},
+            {f:'पहली मानव जीन चिकित्सा (ADA कमी, 4 वर्षीय बालिका)', n:'1990'},
+            {f:'ट्रांसजेनिक गाय रोज़ी — दूध में मानव अल्फा-लैक्टलब्यूमिन', n:'1997 · 2.4 ग्राम/लीटर'},
+            {f:'बासमती चावल पेटेंट विवाद', n:'1997 · US पेटेंट और ट्रेडमार्क कार्यालय'},
+            {f:'चूहे होने वाले ट्रांसजेनिक प्राणियों का अनुपात', n:'~95%'},
+            {f:'प्रोइंसुलिन बनाम परिपक्व इंसुलिन में श्रृंखलाएँ', n:'3 श्रृंखलाएँ (A, B, C) बनाम 2 श्रृंखलाएँ (A, B)'}
+          ]}
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.note}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.f}</th><th>${l.n}</th></tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r.f}</td><td>${r.n}</td></tr>`).join('')}
+        </tbody></table></div>`;
+    }
+  },
+  'cry-gene-pairs': {
+    title: {en:'🧬 Cry-Gene Pairs — Kept Straight', kn:'🧬 Cry-ಜೀನ್ ಜೋಡಣೆಗಳು — ಸ್ಪಷ್ಟವಾಗಿ ನೆನಪಿಡಿ', hi:'🧬 Cry-जीन युग्म — स्पष्ट रूप से याद रखें'},
+    render: function(lang){
+      const L = {
+        en:{note:"Exactly the pairing the tip asks you to drill, using only this chapter's own Cry Genes facts.", g:'<i>cry</i> Gene(s)', p:'Target Pest',
+          r1g:'<i>cry</i>IAc and <i>cry</i>IIAb', r1p:'Cotton bollworm', r2g:'<i>cry</i>IAb', r2p:'Corn borer',
+          note2:'All three are Bt (<i>Bacillus thuringiensis</i>) toxin genes &mdash; examiners often swap just one Roman numeral or letter between these pairings.'},
+        kn:{note:"ಈ ಸಲಹೆ ಅಭ್ಯಾಸ ಮಾಡಲು ಕೇಳುವ ನಿಖರ ಜೋಡಣೆ, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Cry Genes ಸಂಗತಿಗಳನ್ನು ಮಾತ್ರ ಬಳಸಿ.", g:'<i>cry</i> ಜೀನ್(ಗಳು)', p:'ಗುರಿ ಪೀಡೆ',
+          r1g:'<i>cry</i>IAc ಮತ್ತು <i>cry</i>IIAb', r1p:'ಹತ್ತಿ ಬೋಲ್‌ವರ್ಮ್', r2g:'<i>cry</i>IAb', r2p:'ಜೋಳದ ಕೊರಕ ಹುಳು',
+          note2:'ಮೂರೂ Bt (<i>Bacillus thuringiensis</i>) ಟಾಕ್ಸಿನ್ ಜೀನ್‌ಗಳಾಗಿವೆ — ಪರೀಕ್ಷಕರು ಆಗಾಗ್ಗೆ ಈ ಜೋಡಣೆಗಳ ನಡುವೆ ಕೇವಲ ಒಂದು ರೋಮನ್ ಅಂಕಿ ಅಥವಾ ಅಕ್ಷರವನ್ನು ಬದಲಾಯಿಸುತ್ತಾರೆ.'},
+        hi:{note:"यह सलाह अभ्यास के लिए कहती है, सटीक युग्मन, केवल इस अध्याय के अपने Cry Genes तथ्यों का उपयोग करते हुए।", g:'<i>cry</i> जीन', p:'लक्ष्य कीट',
+          r1g:'<i>cry</i>IAc और <i>cry</i>IIAb', r1p:'कपास बॉलवर्म', r2g:'<i>cry</i>IAb', r2p:'मक्का तनाबेधक',
+          note2:'तीनों Bt (<i>Bacillus thuringiensis</i>) विष जीन हैं &mdash; परीक्षक अक्सर इन युग्मों के बीच केवल एक रोमन अंक या अक्षर बदल देते हैं।'}
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.note}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.g}</th><th>${l.p}</th></tr></thead><tbody>
+        <tr><td class="tipex-organ">${l.r1g}</td><td>${l.r1p}</td></tr>
+        <tr><td class="tipex-organ">${l.r2g}</td><td>${l.r2p}</td></tr>
+        </tbody></table></div>
+        <div class="tipex-note">${l.note2}</div>`;
+    }
+  },
+  'diagnostic-methods': {
+    title: {en:'🔬 Four Silencing/Detecting Ideas — Side by Side', kn:'🔬 ನಾಲ್ಕು ಮೌನಗೊಳಿಕೆ/ಪತ್ತೆಹಚ್ಚುವ ಕಲ್ಪನೆಗಳು — ಅಕ್ಕಪಕ್ಕ', hi:'🔬 चार मौन/पहचान विचार — साथ-साथ'},
+    render: function(lang){
+      const L = {
+        en:{note:"Exactly the one-sentence principle + one use for each of the four ideas, using only this chapter's own RNAi/Diagnosis facts.", m:'Idea', p:'Principle', u:'One Use',
+          rows:[
+            {m:'RNAi', p:'Double-stranded RNA triggers silencing of the matching mRNA', u:'Engineered RNAi gives transgenic tobacco resistance to the nematode <i>Meloidegyne incognitia</i>'},
+            {m:'PCR', p:'Amplifies (multiplies) a target DNA sequence several-fold', u:'Detecting HIV in suspected AIDS patients; detecting cancer-related gene mutations'},
+            {m:'ELISA', p:'Based on antigen&ndash;antibody interaction', u:"Detecting a pathogen's antigen, OR the antibody the patient's immune system made against it"},
+            {m:'Probe + Autoradiography', p:'A gene-specific probe hybridises (base-pairs) with the patient&rsquo;s DNA; a mutated region will not bind it', u:'A missing band on the autoradiograph reveals the location of a mutation'}
+          ]},
+        kn:{note:"ನಾಲ್ಕು ಕಲ್ಪನೆಗಳ ಪ್ರತಿಯೊಂದಕ್ಕೂ ನಿಖರ ಒಂದು-ವಾಕ್ಯ ತತ್ವ + ಒಂದು ಉಪಯೋಗ, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ RNAi/ರೋಗನಿರ್ಣಯ ಸಂಗತಿಗಳನ್ನು ಮಾತ್ರ ಬಳಸಿ.", m:'ಕಲ್ಪನೆ', p:'ತತ್ವ', u:'ಒಂದು ಉಪಯೋಗ',
+          rows:[
+            {m:'RNAi', p:'ಉಭಯ-ಎಳೆಯ RNA ಹೊಂದಾಣಿಕೆಯಾಗುವ mRNA ಯ ಮೌನಗೊಳಿಕೆಯನ್ನು ಪ್ರಚೋದಿಸುತ್ತದೆ', u:'ಎಂಜಿನಿಯರ್ ಮಾಡಲಾದ RNAi ಟ್ರಾನ್ಸ್‌ಜೆನಿಕ್ ತಂಬಾಕಿಗೆ <i>ಮೆಲೊಯ್ಡಿಜೈನಿ ಇನ್ಕಾಗ್ನಿಟಿಯಾ</i> ನೆಮಟೋಡ್‌ ವಿರುದ್ಧ ನಿರೋಧಕತೆ ನೀಡುತ್ತದೆ'},
+            {m:'PCR', p:'ಗುರಿ DNA ಅನುಕ್ರಮವನ್ನು ಹಲವು ಪಟ್ಟು ವರ್ಧಿಸುತ್ತದೆ (ಗುಣಿಸುತ್ತದೆ)', u:'ಶಂಕಿತ ಏಡ್ಸ್ ರೋಗಿಗಳಲ್ಲಿ HIV ಪತ್ತೆ; ಕ್ಯಾನ್ಸರ್-ಸಂಬಂಧಿತ ಜೀನ್ ರೂಪಾಂತರಗಳ ಪತ್ತೆ'},
+            {m:'ELISA', p:'ಆಂಟಿಜೆನ್–ಆಂಟಿಬಾಡಿ ಪರಸ್ಪರ ಕ್ರಿಯೆಯ ಆಧಾರದ ಮೇಲೆ', u:'ರೋಗಕಾರಕದ ಆಂಟಿಜೆನ್ ಅಥವಾ ರೋಗಿಯ ಪ್ರತಿರಕ್ಷಣಾ ವ್ಯವಸ್ಥೆ ತಯಾರಿಸಿದ ಆಂಟಿಬಾಡಿಯನ್ನು ಪತ್ತೆಹಚ್ಚುವುದು'},
+            {m:'ಶೋಧಕ + ಆಟೋರೇಡಿಯೋಗ್ರಫಿ', p:'ಜೀನ್-ನಿರ್ದಿಷ್ಟ ಶೋಧಕ ರೋಗಿಯ DNA ಜೊತೆ ಸಂಕರೀಕರಣಗೊಳ್ಳುತ್ತದೆ (ಬೇಸ್-ಜೋಡಿಯಾಗುತ್ತದೆ); ರೂಪಾಂತರಗೊಂಡ ಪ್ರದೇಶ ಅದಕ್ಕೆ ಬಂಧಿಸುವುದಿಲ್ಲ', u:'ಆಟೋರೇಡಿಯೋಗ್ರಾಫ್‌ನಲ್ಲಿ ಕಾಣೆಯಾದ ಬ್ಯಾಂಡ್ ರೂಪಾಂತರದ ಸ್ಥಳವನ್ನು ಬಹಿರಂಗಪಡಿಸುತ್ತದೆ'}
+          ]},
+        hi:{note:"चार विचारों में से प्रत्येक के लिए सटीक एक-वाक्य सिद्धांत + एक उपयोग, केवल इस अध्याय के अपने RNAi/निदान तथ्यों का उपयोग करते हुए।", m:'विचार', p:'सिद्धांत', u:'एक उपयोग',
+          rows:[
+            {m:'RNAi', p:'द्विरज्जुकी RNA मेल खाने वाले mRNA के मौन (साइलेंसिंग) को प्रेरित करता है', u:'इंजीनियर की गई RNAi ट्रांसजेनिक तंबाकू को <i>मेलॉइडिजाइनी इन्कॉग्निटिया</i> सूत्रकृमि के विरुद्ध प्रतिरोध देती है'},
+            {m:'PCR', p:'लक्ष्य DNA अनुक्रम को कई गुना प्रवर्धित (बढ़ाता) करता है', u:'संदिग्ध एड्स रोगियों में HIV का पता लगाना; कैंसर-संबंधी जीन उत्परिवर्तनों का पता लगाना'},
+            {m:'ELISA', p:'प्रतिजन–प्रतिरक्षी अंतःक्रिया पर आधारित', u:'रोगजनक के प्रतिजन, या रोगी की प्रतिरक्षा प्रणाली द्वारा बनाई गई प्रतिरक्षी—दोनों में से किसी का पता लगाना'},
+            {m:'प्रोब + ऑटोरेडियोग्राफी', p:'जीन-विशिष्ट प्रोब रोगी के DNA से संकरण (बेस-युग्मन) करता है; उत्परिवर्तित क्षेत्र इससे नहीं जुड़ेगा', u:'ऑटोरेडियोग्राफ पर अनुपस्थित बैंड उत्परिवर्तन के स्थान को उजागर करता है'}
+          ]}
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.note}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.m}</th><th>${l.p}</th><th>${l.u}</th></tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r.m}</td><td>${r.p}</td><td>${r.u}</td></tr>`).join('')}
+        </tbody></table></div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  const lang = (typeof currentLang!=='undefined' && ex.title[currentLang]) ? currentLang : 'en';
+  document.getElementById('tipExampleTitle').textContent = ex.title[lang];
+  document.getElementById('tipExampleBody').innerHTML = ex.render(lang);
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTipsCh8(){
   const el = document.getElementById('studyTipsContent');
   if(!el) return;
@@ -2422,7 +2641,7 @@ function renderStudyTipsCh8(){
     <h3 style="color:var(--gold-2); margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ ${TIP_EXAMPLE_BTN_LABEL[currentLang]||TIP_EXAMPLE_BTN_LABEL.en}</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   `;

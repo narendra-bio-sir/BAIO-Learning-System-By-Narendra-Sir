@@ -191,6 +191,24 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .tip-list.neet li{border-left-color:var(--gold-2);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold-2);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel-2);color:var(--gold-2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--border);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--border);color:var(--text);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--text-dim);line-height:1.55;background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--text-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--text);min-width:20px;font-weight:700;color:var(--gold-2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .chip-row{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;}
 .chip{
   font-size:11px; padding:4px 9px; border-radius:99px; background:rgba(66,198,160,0.1);
@@ -1060,6 +1078,14 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="btn" id="streakModalCloseBtn" style="width:100%; margin-top:4px;">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="btn" id="tipExampleCloseBtn" style="width:100%; margin-top:4px;">Close</button>
     </div>
   </div>
 
@@ -2400,6 +2426,175 @@ try{ renderConceptTopicNav(); }catch(e){ console.error('renderConceptTopicNav fa
 /* ---------- Study Tips ---------- */
 const STUDYTIPS_CH13_EN = {"title":"Study Tips &ndash; Biodiversity and Conservation","intro":"How to study this chapter well, and what to focus on for NEET/KCET.","theoryHead":"📘 Theory &mdash; How to Study This Chapter","neetHead":"🎯 NEET/KCET Strategy for This Chapter","theory":["Fix the three levels of biodiversity first &mdash; <b>genetic, species, ecological</b> &mdash; and attach one example to each: reserpine variation in <i>Rauwolfia vomitoria</i> and 50,000 rice strains (genetic), Western Ghats vs Eastern Ghats amphibians (species), India vs Norway habitats (ecological). Almost every question in this chapter hangs off one of these three pegs.","This is a numbers-heavy chapter, so make one single 'figures table' and revise only that: 1.5 million recorded / ~7 million estimated (Robert May), 70% insects, 2.4% land and 8.1% species for India, 12 mega diversity countries, 45,000 plants and ~90,000 animals in India, 784 extinctions in 500 years (338 + 359 + 87), 27 in the last 20 years, 34 hotspots with 3 in India, &lt;2% land, 30% extinction reduction.","Learn the species&ndash;area relationship as a picture, not a formula: arithmetic plot = rectangular hyperbola, log plot = straight line log S = log C + Z log A. Then simply remember what each letter is (S richness, A area, Z slope, C intercept) and the two Z ranges &mdash; 0.1&ndash;0.2 for small areas/countries, 0.6&ndash;1.2 for continents, 1.15 for frugivorous birds and mammals.","Group the causes of biodiversity loss as the 'evil quartet' &mdash; habitat loss and fragmentation, over-exploitation, alien species invasion, co-extinction &mdash; and tag exactly one example to each. Keep the extinct animals with their countries in a single line: Dodo (Mauritius), Quagga (Africa), Thylacine (Australia), Steller's sea cow (Russia), plus the Bali, Caspian and Javan tigers.","Draw a two-column chart of <b>in situ</b> (hotspots, biosphere reserves, national parks, wildlife sanctuaries, sacred groves) against <b>ex situ</b> (zoos, botanical gardens, safari parks, cryopreservation, IVF, tissue culture, seed banks, gene banks). Sorting every conservation term into one of these two columns is the single most examined skill in the chapter."],"neet":["The commonest trap is swapping India's two percentages: India has <b>2.4% of the land</b> and <b>8.1% of the species</b>. Read the sentence twice before answering &mdash; examiners routinely reverse them.","Distinguish <b>recorded</b> from <b>estimated</b> species numbers: IUCN (2004) has recorded slightly more than 1.5 million, whereas Robert May <i>estimates</i> the global total at about 7 million, leaving roughly 6 million still undescribed. Questions phrase this very carefully.","Narrow vs broad utilitarian is a guaranteed question type. Ask yourself: is it a <b>product I can sell</b> (food, firewood, fibre, timber, dyes, resins, 25,000 medicinal plants) &rarr; narrow; or a <b>free service nature performs</b> (Amazon's 20% oxygen, pollination, flood and erosion control, nutrient replenishment, waste recycling, aesthetic pleasure) &rarr; broad. Intrinsic value and duty to future generations &rarr; ethical.","Keep the two summits separate: <b>Rio de Janeiro, 1992</b> = Convention on Biological Diversity / Earth Summit; <b>Johannesburg, 2002</b> = World Summit on Sustainable Development, where 190 countries pledged to reduce the rate of biodiversity loss by 2010. Assertion&ndash;Reason items love to mix these two.","For assertion&ndash;reason and statement-based questions on the rivet popper hypothesis, remember two things only: species = rivets, and <b>wing rivets (key species) matter more than seat or window rivets</b>. Any option claiming all species are equally important, or that wing rivets are minor, is false."]};
 const STUDYTIPS_CH13_TRANSLATIONS = {};
+/* ---- Study Tips "View example" popovers: these three tips describe something to
+   build/memorise (a figures table, the evil quartet, an in-situ/ex-situ chart) but
+   give nothing to look at. The popovers below show the actual filled-in artifact,
+   built from this chapter's own Concept tab and Compare Matrix (COMPARE_DATA,
+   defined further down this same script) - nothing invented or duplicated by hand. ---- */
+const TIP_EXAMPLE_INDEX = {1:'figures', 3:'evil-quartet', 4:'in-situ-ex-situ'};
+const TIP_EXAMPLE_BTN_LABEL = {en:'View example', kn:'ಉದಾಹರಣೆ ನೋಡಿ', hi:'उदाहरण देखें'};
+const TIP_EXAMPLES = {
+  'figures': {
+    title: {en:'🔢 The Core Figures Table', kn:'🔢 ಪ್ರಮುಖ ಅಂಕಿಅಂಶಗಳ ಕೋಷ್ಟಕ', hi:'🔢 मुख्य आंकड़ों की तालिका'},
+    render: function(lang){
+      const L = {
+        en:{note:"Exactly the single 'figures table' the tip tells you to build and revise — every number pulled from this chapter's own Concept tab.", f:'Figure', w:'What it measures',
+          rows:[
+            {fig:'1.5 million (IUCN, 2004)', what:'Species recorded so far on Earth'},
+            {fig:'&asymp;7 million (Robert May)', what:'Estimated total number of species on Earth'},
+            {fig:'70%', what:'Share of recorded animal species that are insects'},
+            {fig:'2.4% / 8.1%', what:"India's share of the world's land area / the world's species"},
+            {fig:'12', what:'Mega diversity countries in the world (India is one)'},
+            {fig:'45,000 / &asymp;90,000', what:'Plant species / animal species recorded in India'},
+            {fig:'784 (338+359+87)', what:'Species (vertebrates+invertebrates+plants) extinct in the last 500 years'},
+            {fig:'27', what:'Species lost in just the last 20 years'},
+            {fig:'34 (3 in India)', what:'Biodiversity hotspots worldwide (India has three)'},
+            {fig:'&lt;2%', what:"Share of Earth's land area covered by all hotspots combined"},
+            {fig:'&asymp;30%', what:'Possible cut in mass extinctions if hotspots are strictly protected'}
+          ]},
+        kn:{note:"ಈ ಸಲಹೆ ನಿರ್ಮಿಸಿ ಪುನರ್ಮನನ ಮಾಡಲು ಕೇಳುವ ನಿಖರ ಒಂದು 'ಅಂಕಿಅಂಶಗಳ ಕೋಷ್ಟಕ' — ಪ್ರತಿ ಸಂಖ್ಯೆ ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Concept ಟ್ಯಾಬ್‌ನಿಂದ ಪಡೆಯಲಾಗಿದೆ.", f:'ಅಂಕಿ', w:'ಇದು ಅಳೆಯುವುದು',
+          rows:[
+            {fig:'1.5 ದಶಲಕ್ಷ (IUCN, 2004)', what:'ಭೂಮಿಯಲ್ಲಿ ಇಲ್ಲಿಯವರೆಗೆ ದಾಖಲಾದ ಪ್ರಭೇದಗಳು'},
+            {fig:'&asymp;7 ದಶಲಕ್ಷ (ರಾಬರ್ಟ್ ಮೇ)', what:'ಭೂಮಿಯ ಮೇಲಿನ ಪ್ರಭೇದಗಳ ಅಂದಾಜು ಒಟ್ಟು ಸಂಖ್ಯೆ'},
+            {fig:'70%', what:'ದಾಖಲಾದ ಪ್ರಾಣಿ ಪ್ರಭೇದಗಳಲ್ಲಿ ಕೀಟಗಳ ಪಾಲು'},
+            {fig:'2.4% / 8.1%', what:'ವಿಶ್ವದ ಭೂಪ್ರದೇಶ / ವಿಶ್ವದ ಪ್ರಭೇದಗಳಲ್ಲಿ ಭಾರತದ ಪಾಲು'},
+            {fig:'12', what:'ವಿಶ್ವದ ಮೆಗಾ ವೈವಿಧ್ಯ ರಾಷ್ಟ್ರಗಳು (ಭಾರತ ಒಂದು)'},
+            {fig:'45,000 / &asymp;90,000', what:'ಭಾರತದಲ್ಲಿ ದಾಖಲಾದ ಸಸ್ಯ ಪ್ರಭೇದಗಳು / ಪ್ರಾಣಿ ಪ್ರಭೇದಗಳು'},
+            {fig:'784 (338+359+87)', what:'ಕಳೆದ 500 ವರ್ಷಗಳಲ್ಲಿ ಅಳಿದುಹೋದ ಪ್ರಭೇದಗಳು (ಕಶೇರುಕಗಳು+ಅಕಶೇರುಕಗಳು+ಸಸ್ಯಗಳು)'},
+            {fig:'27', what:'ಕೇವಲ ಕಳೆದ 20 ವರ್ಷಗಳಲ್ಲಿ ಕಳೆದುಹೋದ ಪ್ರಭೇದಗಳು'},
+            {fig:'34 (ಭಾರತದಲ್ಲಿ 3)', what:'ವಿಶ್ವದಾದ್ಯಂತ ಜೀವವೈವಿಧ್ಯ ಹಾಟ್‌ಸ್ಪಾಟ್‌ಗಳು (ಭಾರತದಲ್ಲಿ ಮೂರು)'},
+            {fig:'&lt;2%', what:'ಎಲ್ಲಾ ಹಾಟ್‌ಸ್ಪಾಟ್‌ಗಳು ಒಟ್ಟಾಗಿ ಆವರಿಸುವ ಭೂಮಿಯ ಭೂಪ್ರದೇಶದ ಪಾಲು'},
+            {fig:'&asymp;30%', what:'ಹಾಟ್‌ಸ್ಪಾಟ್‌ಗಳನ್ನು ಕಟ್ಟುನಿಟ್ಟಾಗಿ ರಕ್ಷಿಸಿದರೆ ಸಾಮೂಹಿಕ ಅಳಿವುಗಳಲ್ಲಿ ಸಾಧ್ಯವಾಗುವ ಕಡಿತ'}
+          ]},
+        hi:{note:"यह सलाह बनाने और दोहराने के लिए कहती है, सटीक एक 'आंकड़ों की तालिका' — प्रत्येक संख्या इस अध्याय के अपने Concept टैब से ली गई है।", f:'आंकड़ा', w:'यह क्या मापता है',
+          rows:[
+            {fig:'15 लाख (IUCN, 2004)', what:'पृथ्वी पर अब तक दर्ज की गई प्रजातियाँ'},
+            {fig:'&asymp;70 लाख (रॉबर्ट मे)', what:'पृथ्वी पर प्रजातियों की अनुमानित कुल संख्या'},
+            {fig:'70%', what:'दर्ज जंतु प्रजातियों में कीटों का हिस्सा'},
+            {fig:'2.4% / 8.1%', what:'विश्व के भूक्षेत्र / विश्व की प्रजातियों में भारत की हिस्सेदारी'},
+            {fig:'12', what:'विश्व के महा विविधता देश (भारत एक)'},
+            {fig:'45,000 / &asymp;90,000', what:'भारत में दर्ज पादप प्रजातियाँ / जंतु प्रजातियाँ'},
+            {fig:'784 (338+359+87)', what:'पिछले 500 वर्षों में विलुप्त प्रजातियाँ (कशेरुकी+अकशेरुकी+पादप)'},
+            {fig:'27', what:'केवल पिछले 20 वर्षों में खोई गई प्रजातियाँ'},
+            {fig:'34 (भारत में 3)', what:'विश्व भर में जैव विविधता हॉटस्पॉट (भारत में तीन)'},
+            {fig:'&lt;2%', what:'सभी हॉटस्पॉट मिलाकर घेरते भूक्षेत्र का हिस्सा'},
+            {fig:'&asymp;30%', what:'हॉटस्पॉट की कड़ी सुरक्षा से सामूहिक विलोपन में संभावित कमी'}
+          ]}
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.note}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.f}</th><th>${l.w}</th></tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r.fig}</td><td>${r.what}</td></tr>`).join('')}
+        </tbody></table></div>`;
+    }
+  },
+  'evil-quartet': {
+    title: {en:'🦖 The Evil Quartet — Cause, Mechanism & Example', kn:'🦖 ದುಷ್ಟ ಚತುಷ್ಕ — ಕಾರಣ, ಕಾರ್ಯವಿಧಾನ ಮತ್ತು ಉದಾಹರಣೆ', hi:'🦖 ईविल क्वार्टेट — कारण, क्रियाविधि और उदाहरण'},
+    render: function(lang){
+      const habitat = COMPARE_DATA[4], alien = COMPARE_DATA[5];
+      const L = {
+        en:{note:"The four causes grouped as the tip describes, one example tagged to each — straight from this chapter's Concept tab and Compare Matrix.", c:'Cause', w:'What happens', e:'Example',
+          rows:[
+            {name:'Habitat loss &amp; fragmentation', what:habitat.keyFeature, ex:habitat.example},
+            {name:'Over-exploitation', what:'Human greed over-harvests commercially important species of plants and animals.', ex:"Steller's sea cow and the passenger pigeon driven extinct in the last 500 years."},
+            {name:'Alien species invasion', what:alien.mechanism, ex:alien.example},
+            {name:'Co-extinction', what:'When a species becomes extinct, another species obligately dependent on it also becomes extinct.', ex:'Loss of one partner in a plant&ndash;pollinator mutualism dooms the other.'}
+          ],
+          note2:"Recent extinctions with their countries (this chapter's own list): Dodo (Mauritius), Quagga (Africa), Thylacine (Australia), Steller's sea cow (Russia), plus the Bali, Caspian and Javan tiger subspecies."},
+        kn:{note:"ಈ ಸಲಹೆ ವಿವರಿಸಿದಂತೆ ನಾಲ್ಕು ಕಾರಣಗಳನ್ನು ಗುಂಪುಗೊಳಿಸಲಾಗಿದೆ, ಪ್ರತಿಯೊಂದಕ್ಕೂ ಒಂದು ಉದಾಹರಣೆ ಟ್ಯಾಗ್ ಮಾಡಲಾಗಿದೆ — ಈ ಅಧ್ಯಾಯದ Concept ಟ್ಯಾಬ್ ಮತ್ತು Compare Matrix ನಿಂದ ನೇರವಾಗಿ.", c:'ಕಾರಣ', w:'ಏನಾಗುತ್ತದೆ', e:'ಉದಾಹರಣೆ',
+          rows:[
+            {name:'ಆವಾಸಸ್ಥಾನ ನಷ್ಟ ಮತ್ತು ವಿಘಟನೆ', what:'ಇದು ಜೀವವೈವಿಧ್ಯ ನಷ್ಟದ ಪ್ರಮುಖ (ಅತಿ ಮುಖ್ಯ) ಕಾರಣವಾಗಿದೆ.', ex:'ಅಮೆಜಾನ್ ಮಳೆಕಾಡು ಹಿಂದೆ ಭೂಮಿಯ ಭೂಪ್ರದೇಶದ 14% ಅನ್ನು ಆವರಿಸಿತ್ತು, ಈಗ 6% ಕ್ಕಿಂತ ಕಡಿಮೆಗೆ ಇಳಿದಿದೆ.'},
+            {name:'ಅತಿ ಶೋಷಣೆ', what:'ಮಾನವ ದುರಾಸೆ ವಾಣಿಜ್ಯಿಕವಾಗಿ ಪ್ರಮುಖವಾದ ಸಸ್ಯ ಮತ್ತು ಪ್ರಾಣಿ ಪ್ರಭೇದಗಳನ್ನು ಅತಿಯಾಗಿ ಕೊಯ್ಲು ಮಾಡುತ್ತದೆ.', ex:'ಸ್ಟೆಲ್ಲರ್‌ನ ಸೀ ಕೌ ಮತ್ತು ಪ್ಯಾಸೆಂಜರ್ ಪಾರಿವಾಳ ಕಳೆದ 500 ವರ್ಷಗಳಲ್ಲಿ ಅಳಿವಿಗೆ ಒಳಗಾದವು.'},
+            {name:'ಅನ್ಯ ಪ್ರಭೇದಗಳ ಆಕ್ರಮಣ', what:'ಅನ್ಯ ಪ್ರಭೇದಗಳ ಉದ್ದೇಶಪೂರ್ವಕವಲ್ಲದ ಅಥವಾ ಉದ್ದೇಶಪೂರ್ವಕ ಪರಿಚಯವು ಸ್ಥಳೀಯ (ದೇಶೀಯ) ಪ್ರಭೇದಗಳ ಅವನತಿಗೆ ಕಾರಣವಾಗುತ್ತದೆ.', ex:'ಲೇಕ್ ವಿಕ್ಟೋರಿಯಾಕ್ಕೆ ಪರಿಚಯಿಸಲಾದ ನೈಲ್ ಪರ್ಚ್ ಆ ಸರೋವರದಲ್ಲಿ 200ಕ್ಕಿಂತ ಹೆಚ್ಚು ಸಿಕ್ಲಿಡ್ ಮೀನು ಪ್ರಭೇದಗಳ ಅಳಿವಿಗೆ ಕಾರಣವಾಯಿತು.'},
+            {name:'ಸಹ-ಅಳಿವು', what:'ಒಂದು ಪ್ರಭೇದ ಅಳಿದಾಗ, ಅದರ ಮೇಲೆ ಕಡ್ಡಾಯವಾಗಿ ಅವಲಂಬಿತವಾಗಿರುವ ಇನ್ನೊಂದು ಪ್ರಭೇದವೂ ಅಳಿಯುತ್ತದೆ.', ex:'ಸಸ್ಯ-ಪರಾಗಸ್ಪರ್ಶಕ ಪರಸ್ಪರ ಸಹಜೀವನದಲ್ಲಿ, ಒಂದು ಪಾಲುದಾರನ ಅಳಿವು ಇನ್ನೊಂದರ ಅಳಿವಿಗೂ ಕಾರಣವಾಗುತ್ತದೆ.'}
+          ],
+          note2:'ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ ಪಟ್ಟಿಯ ಇತ್ತೀಚಿನ ಅಳಿವುಗಳು, ಅವುಗಳ ದೇಶಗಳೊಂದಿಗೆ: ಡೋಡೋ (ಮಾರಿಷಸ್), ಕ್ವಗ್ಗಾ (ಆಫ್ರಿಕಾ), ಥೈಲಸೀನ್ (ಆಸ್ಟ್ರೇಲಿಯಾ), ಸ್ಟೆಲ್ಲರ್‌ನ ಸೀ ಕೌ (ರಷ್ಯಾ), ಮತ್ತು ಹುಲಿಯ ಬಾಲಿ, ಕ್ಯಾಸ್ಪಿಯನ್ ಮತ್ತು ಜಾವನ್ ಉಪಪ್ರಭೇದಗಳು.'},
+        hi:{note:"यह सलाह वर्णित चार कारणों को समूहित किया गया है, प्रत्येक के साथ एक उदाहरण जोड़ा गया है — सीधे इस अध्याय के Concept टैब और Compare Matrix से।", c:'कारण', w:'क्या होता है', e:'उदाहरण',
+          rows:[
+            {name:'आवास हानि और विखंडन', what:'यह जैव विविधता की हानि का प्रमुख (सबसे महत्वपूर्ण) कारण है।', ex:'अमेज़न वर्षावन पहले पृथ्वी के भूक्षेत्र के 14% भाग को घेरता था, अब घटकर 6% से भी कम रह गया है।'},
+            {name:'अति-दोहन', what:'मानवीय लालच व्यावसायिक रूप से महत्वपूर्ण पादप और जंतु प्रजातियों का अति-दोहन करता है।', ex:'स्टेलर की समुद्री गाय और पैसेंजर कबूतर पिछले 500 वर्षों में विलुप्त हो गए।'},
+            {name:'विदेशी प्रजातियों का आक्रमण', what:'विदेशी (बाह्य) प्रजातियों का अनजाने या जानबूझकर किया गया प्रवेश स्वदेशी (मूल) प्रजातियों के ह्रास का कारण बनता है।', ex:'विक्टोरिया झील में प्रवेशित नील पर्च ने उस झील में 200 से अधिक सिक्लिड मछली प्रजातियों के विलुप्त होने का कारण बना।'},
+            {name:'सह-विलोपन', what:'जब कोई प्रजाति विलुप्त हो जाती है, तो उस पर अनिवार्य रूप से निर्भर एक अन्य प्रजाति भी विलुप्त हो जाती है।', ex:'पादप-परागणक सहोपकारिता में, एक साझेदार के विलुप्त होने से अंततः दूसरे का भी विलोपन होता है।'}
+          ],
+          note2:'इस अध्याय की अपनी सूची की हाल की विलुप्तियाँ, उनके देशों के साथ: डोडो (मॉरीशस), क्वागा (अफ्रीका), थायलेसीन (ऑस्ट्रेलिया), स्टेलर की समुद्री गाय (रूस), और बाघ की बाली, कैस्पियन और जावा उपजातियाँ।'}
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.note}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.c}</th><th>${l.w}</th><th>${l.e}</th></tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td>${r.what}</td><td>${r.ex}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">${l.note2}</div>`;
+    }
+  },
+  'in-situ-ex-situ': {
+    title: {en:'🏞️ In-Situ vs Ex-Situ — Sorted', kn:'🏞️ ಸ್ವಸ್ಥಾನ ವಿರುದ್ಧ ಪರಸ್ಥಾನ — ವಿಂಗಡಿಸಲಾಗಿದೆ', hi:'🏞️ यथास्थान बनाम बहिःस्थाने — वर्गीकृत'},
+    render: function(lang){
+      const hotspot = COMPARE_DATA[8], grove = COMPARE_DATA[9], cryo = COMPARE_DATA[10], seed = COMPARE_DATA[11];
+      const L = {
+        en:{note:"Sorting every conservation term into one of these two columns, as the tip describes — every item from this chapter's Concept tab and Compare Matrix.", c1:'In-Situ (on-site)', c2:'Ex-Situ (off-site)',
+          in1l:'Biodiversity hotspots', in1v:hotspot.keyFeature,
+          in2:'Protected areas &mdash; biosphere reserves, national parks, wildlife sanctuaries (the whole ecosystem is protected together).',
+          in3l:'Sacred groves', in3v:grove.example,
+          ex1:'Zoos, botanical gardens, safari parks &mdash; threatened species taken out of their natural habitat and given special care.',
+          ex2l:'Cryopreservation', ex2v:cryo.definition,
+          ex3:'IVF &amp; tissue culture &mdash; propagate endangered animals and plants rapidly from preserved gametes or tissue.',
+          ex4l:'Seed banks', ex4v:seed.definition,
+          ex5:'Gene banks &mdash; a comprehensive public database that stores DNA and RNA sequences along with their protein translations.'},
+        kn:{note:"ಈ ಸಲಹೆ ವಿವರಿಸಿದಂತೆ ಪ್ರತಿಯೊಂದು ಸಂರಕ್ಷಣಾ ಪದವನ್ನು ಈ ಎರಡು ಕಾಲಮ್‌ಗಳಲ್ಲಿ ಒಂದಕ್ಕೆ ವಿಂಗಡಿಸುವುದು — ಪ್ರತಿ ಅಂಶ ಈ ಅಧ್ಯಾಯದ Concept ಟ್ಯಾಬ್ ಮತ್ತು Compare Matrix ನಿಂದ.", c1:'ಸ್ವಸ್ಥಾನ (ಸ್ಥಳದಲ್ಲೇ)', c2:'ಪರಸ್ಥಾನ (ಸ್ಥಳದಿಂದ ಹೊರಗೆ)',
+          in1l:'ಜೀವವೈವಿಧ್ಯ ಹಾಟ್‌ಸ್ಪಾಟ್‌ಗಳು', in1v:'34 ಹಾಟ್‌ಸ್ಪಾಟ್‌ಗಳು ಭೂಮಿಯ ಭೂಪ್ರದೇಶದ 2% ಕ್ಕಿಂತ ಕಡಿಮೆ ಆವರಿಸಿದ್ದರೂ, ಅವುಗಳ ಕಟ್ಟುನಿಟ್ಟಾದ ರಕ್ಷಣೆಯು ಸಾಮೂಹಿಕ ಅಳಿವುಗಳನ್ನು ಸುಮಾರು 30% ರಷ್ಟು ಕಡಿಮೆ ಮಾಡಬಹುದು.',
+          in2:'ಸಂರಕ್ಷಿತ ಪ್ರದೇಶಗಳು — ಜೀವಗೋಳ ಮೀಸಲುಗಳು, ರಾಷ್ಟ್ರೀಯ ಉದ್ಯಾನಗಳು, ವನ್ಯಜೀವಿ ಅಭಯಾರಣ್ಯಗಳು (ಇಡೀ ಪರಿಸರ ವ್ಯವಸ್ಥೆಯನ್ನು ಒಟ್ಟಿಗೆ ರಕ್ಷಿಸಲಾಗುತ್ತದೆ).',
+          in3l:'ಪವಿತ್ರ ವನಗಳು', in3v:'ಮೇಘಾಲಯದ ಖಾಸಿ ಮತ್ತು ಜೈಂತಿಯಾ ಬೆಟ್ಟಗಳ ಪವಿತ್ರ ವನಗಳು.',
+          ex1:'ಪ್ರಾಣಿಸಂಗ್ರಹಾಲಯಗಳು, ಸಸ್ಯೋದ್ಯಾನಗಳು, ಸಫಾರಿ ಉದ್ಯಾನಗಳು — ಅಳಿವಿನಂಚಿನಲ್ಲಿರುವ ಪ್ರಭೇದಗಳನ್ನು ಅವುಗಳ ನೈಸರ್ಗಿಕ ಆವಾಸಸ್ಥಾನದಿಂದ ಹೊರತೆಗೆದು ವಿಶೇಷ ಆರೈಕೆ ನೀಡಲಾಗುತ್ತದೆ.',
+          ex2l:'ಶೀತಸಂರಕ್ಷಣೆ', ex2v:'ಅಳಿವಿನಂಚಿನಲ್ಲಿರುವ ಪ್ರಭೇದಗಳ ಬೀಜಕೋಶಗಳನ್ನು ಅತಿ ಕಡಿಮೆ ತಾಪಮಾನದಲ್ಲಿ ಸಂರಕ್ಷಿಸುವ ಪರಸ್ಥಾನ ತಂತ್ರ.',
+          ex3:'ಕೃತಕ ಗರ್ಭಧಾರಣೆ (IVF) ಮತ್ತು ಅಂಗಾಂಶ ಕೃಷಿ — ಸಂರಕ್ಷಿಸಿದ ವೀರ್ಯಾಣುಗಳು ಅಥವಾ ಅಂಗಾಂಶದಿಂದ ಅಳಿವಿನಂಚಿನಲ್ಲಿರುವ ಪ್ರಾಣಿ ಮತ್ತು ಸಸ್ಯಗಳನ್ನು ವೇಗವಾಗಿ ಪ್ರವರ್ಧಿಸಲಾಗುತ್ತದೆ.',
+          ex4l:'ಬೀಜ ಬ್ಯಾಂಕ್‌ಗಳು', ex4v:'ವಾಣಿಜ್ಯಿಕವಾಗಿ ಪ್ರಮುಖವಾದ ಸಸ್ಯಗಳ ವಿಭಿನ್ನ ಆನುವಂಶಿಕ ತಳಿಗಳ ಬೀಜಗಳನ್ನು ಸಂಗ್ರಹಿಸುವ ಪರಸ್ಥಾನ ಸೌಲಭ್ಯ.',
+          ex5:'ಜೀನ್ ಬ್ಯಾಂಕ್‌ಗಳು — DNA ಮತ್ತು RNA ಅನುಕ್ರಮಗಳನ್ನು ಅವುಗಳ ಪ್ರೋಟೀನ್ ಅನುವಾದಗಳೊಂದಿಗೆ ಸಂಗ್ರಹಿಸುವ ಸಮಗ್ರ ಸಾರ್ವಜನಿಕ ದತ್ತಸಂಚಯ.'},
+        hi:{note:"यह सलाह वर्णित हर संरक्षण शब्द को इन दो स्तंभों में से एक में वर्गीकृत करना — प्रत्येक वस्तु इस अध्याय के Concept टैब और Compare Matrix से।", c1:'यथास्थान (उसी स्थान पर)', c2:'बहिःस्थाने (स्थान से बाहर)',
+          in1l:'जैव विविधता हॉटस्पॉट', in1v:'34 हॉटस्पॉट पृथ्वी के भूक्षेत्र के 2% से भी कम भाग को घेरते हैं, फिर भी उनकी कड़ी सुरक्षा सामूहिक विलोपन को लगभग 30% तक कम कर सकती है।',
+          in2:'संरक्षित क्षेत्र — जीवमंडल आरक्षित क्षेत्र, राष्ट्रीय उद्यान, वन्यजीव अभयारण्य (संपूर्ण पारिस्थितिकी तंत्र को एक साथ संरक्षित किया जाता है)।',
+          in3l:'पवित्र उपवन', in3v:'मेघालय की खासी और जयंतिया पहाड़ियों के पवित्र उपवन।',
+          ex1:'चिड़ियाघर, वनस्पति उद्यान, सफारी पार्क — संकटग्रस्त प्रजातियों को उनके प्राकृतिक आवास से बाहर निकालकर विशेष देखभाल दी जाती है।',
+          ex2l:'क्रायोप्रिज़र्वेशन', ex2v:'संकटग्रस्त प्रजातियों के युग्मकों को अत्यंत निम्न तापमान पर संरक्षित करने वाली बहिःस्थाने तकनीक।',
+          ex3:'बाह्य निषेचन (IVF) और ऊतक संवर्धन — संरक्षित युग्मकों या ऊतक से संकटग्रस्त जंतुओं और पादपों को तेज़ी से प्रवर्धित किया जाता है।',
+          ex4l:'बीज बैंक', ex4v:'व्यावसायिक रूप से महत्वपूर्ण पादपों की विभिन्न आनुवंशिक किस्मों के बीजों को संग्रहीत करने वाली बहिःस्थाने सुविधा।',
+          ex5:'जीन बैंक — DNA और RNA अनुक्रमों को उनके प्रोटीन अनुवादों सहित संग्रहीत करने वाला व्यापक सार्वजनिक डेटाबेस।'}
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.note}</div>
+        <div class="tipex-case"><div class="tipex-case-title">${l.c1}</div>
+          <div class="tipex-step"><span class="tipex-q">•</span><span><b>${l.in1l}</b> &mdash; ${l.in1v}</span></div>
+          <div class="tipex-step"><span class="tipex-q">•</span><span>${l.in2}</span></div>
+          <div class="tipex-step"><span class="tipex-q">•</span><span><b>${l.in3l}</b> &mdash; ${l.in3v}</span></div>
+        </div>
+        <div class="tipex-case"><div class="tipex-case-title">${l.c2}</div>
+          <div class="tipex-step"><span class="tipex-q">•</span><span>${l.ex1}</span></div>
+          <div class="tipex-step"><span class="tipex-q">•</span><span><b>${l.ex2l}</b> &mdash; ${l.ex2v}</span></div>
+          <div class="tipex-step"><span class="tipex-q">•</span><span>${l.ex3}</span></div>
+          <div class="tipex-step"><span class="tipex-q">•</span><span><b>${l.ex4l}</b> &mdash; ${l.ex4v}</span></div>
+          <div class="tipex-step"><span class="tipex-q">•</span><span>${l.ex5}</span></div>
+        </div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  const lang = (typeof currentLang!=='undefined' && ex.title[currentLang]) ? currentLang : 'en';
+  document.getElementById('tipExampleTitle').textContent = ex.title[lang];
+  document.getElementById('tipExampleBody').innerHTML = ex.render(lang);
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTipsCh8(){
   const el = document.getElementById('studyTipsContent');
   if(!el) return;
@@ -2410,7 +2605,7 @@ function renderStudyTipsCh8(){
     <h3 style="color:var(--gold-2); margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ ${TIP_EXAMPLE_BTN_LABEL[currentLang]||TIP_EXAMPLE_BTN_LABEL.en}</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   `;

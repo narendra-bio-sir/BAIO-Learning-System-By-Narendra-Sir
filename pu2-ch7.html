@@ -191,6 +191,24 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .tip-list.neet li{border-left-color:var(--gold-2);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold-2);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel-2);color:var(--gold-2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--border);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--border);color:var(--text);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--text-dim);line-height:1.55;background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--text-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--text);min-width:20px;font-weight:700;color:var(--gold-2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .chip-row{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;}
 .chip{
   font-size:11px; padding:4px 9px; border-radius:99px; background:rgba(66,198,160,0.1);
@@ -1060,6 +1078,14 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="btn" id="streakModalCloseBtn" style="width:100%; margin-top:4px;">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="btn" id="tipExampleCloseBtn" style="width:100%; margin-top:4px;">Close</button>
     </div>
   </div>
 
@@ -4486,6 +4512,331 @@ const STUDYTIPS_CH7_TRANSLATIONS = {
     ]
   }
 };
+/* ---- Study Tips "View example" popovers: five of the theory tips describe
+   something to build/draw/memorise (a disease master table, a life-cycle
+   diagram, two comparison tables, an antibody structure diagram, a
+   replication sequence) with nothing to look at. These buttons show the
+   actual filled-in artifact, built strictly from this chapter's own data
+   (COMPARE_DATA/CMP_FIELDS used by the Compare tab, and the exact pathogen/
+   transmission/symptom/sequence facts already given in the Topics content)
+   so nothing is invented or duplicated by hand. ---- */
+const TIP_EXAMPLE_INDEX = {0:'disease-master-table', 1:'plasmodium-cycle', 2:'immunity-tables', 3:'antibody-structure', 4:'hiv-cycle'};
+const TIP_EXAMPLE_BTN_LABEL = {en:'View example', kn:'ಉದಾಹರಣೆ ನೋಡಿ', hi:'उदाहरण देखें'};
+/* Trilingual content below reuses the exact vetted Kannada/Hindi vocabulary
+   already established in STUDY_TRANSLATIONS_CH7 and CONCEPT_TRANSLATIONS_CH7
+   (disease names, Plasmodium cycle terms, innate/acquired/active/passive
+   immunity, antibody H2L2 structure, HIV/AIDS terms) so terminology stays
+   consistent with the rest of the chapter. */
+const TIP_EXAMPLES = {
+  'disease-master-table': {
+    title: {
+      en: '📊 Master Table — 8 Infectious Diseases',
+      kn: '📊 ಮಾಸ್ಟರ್ ಟೇಬಲ್ — 8 ಸೋಂಕುಜನ್ಯ ರೋಗಗಳು',
+      hi: '📊 मास्टर तालिका — 8 संक्रामक रोग'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"Exactly the four-column table the tip describes, for all eight diseases, built from this chapter's own disease-by-disease facts.",
+          th:['Disease','Causative Organism','Transmission','Main Symptoms','Prevention/Control'],
+          rows:[
+            {d:'Typhoid', o:'<i>Salmonella typhi</i> (bacterium)', t:'Contaminated food and water', s:'High fever (plateau 39&ndash;40&deg;C by 2nd/3rd week), stomach pain, headache, loss of appetite, constipation, intestinal perforation in severe cases', p:'Personal &amp; public hygiene, clean drinking water'},
+            {d:'Pneumonia', o:'<i>Streptococcus pneumoniae</i>, <i>Haemophilus influenzae</i> (bacteria)', t:'Droplets/aerosols from an infected person; shared glasses/utensils', s:'Fever, chills, cough, headache; lips/nail beds turn grey-bluish in severe cases', p:'Avoid close contact with infected persons/belongings'},
+            {d:'Common cold', o:'Rhinoviruses', t:'Droplets from coughing/sneezing; contaminated objects (pens, cups, doorknobs)', s:'Nasal congestion &amp; discharge, sore throat, cough, headache, tiredness (3&ndash;7 days)', p:'Avoid close contact with infected persons/belongings'},
+            {d:'Malaria', o:'<i>Plasmodium</i> sp. (protozoan)', t:'Bite of female <i>Anopheles</i> mosquito', s:'High-grade fever recurring periodically, with chills', p:'Vector/breeding-place control, mosquito nets, wire mesh'},
+            {d:'Amoebiasis', o:'<i>Entamoeba histolytica</i> (protozoan)', t:'Housefly (mechanical vector)', s:'Constipation, abdominal pain &amp; cramps, stools with excess mucous and blood clots', p:'Personal &amp; public hygiene, clean drinking water'},
+            {d:'Ringworm', o:'<i>Microsporum, Trichophyton, Epidermophyton</i> (fungi)', t:'Towels, clothes, combs (fungus originally from soil)', s:'Dry, scaly lesions with intense itching, aggravated by sweating', p:'Avoid sharing towels/clothes/combs; personal hygiene'},
+            {d:'Ascariasis', o:'<i>Ascaris</i> (roundworm)', t:'Water, vegetables, fruits contaminated with infected faeces', s:'Internal bleeding, muscular pain, fever, anaemia, blockage of intestinal passage', p:'Personal &amp; public hygiene, clean drinking water'},
+            {d:'Elephantiasis (filariasis)', o:'<i>Wuchereria</i> (<i>W. bancrofti</i>, <i>W. malayi</i>)', t:'Bite of a female mosquito vector', s:'Chronic inflammation of lymphatic vessels (usually lower limbs), gross deformity', p:'Vector/breeding-place control, mosquito nets, wire mesh'}
+          ] },
+        kn: { intro:'ಸಲಹೆ ವಿವರಿಸುವ ನಿಖರವಾದ ನಾಲ್ಕು-ಕಾಲಮ್ ಟೇಬಲ್, ಎಲ್ಲಾ ಎಂಟು ರೋಗಗಳಿಗೆ, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ ರೋಗ-ವಾರು ಸಂಗತಿಗಳಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ.',
+          th:['ರೋಗ','ರೋಗಾಣು','ಹರಡುವಿಕೆ','ಮುಖ್ಯ ಲಕ್ಷಣಗಳು','ತಡೆ/ನಿಯಂತ್ರಣ'],
+          rows:[
+            {d:'ಟೈಫಾಯಿಡ್', o:'<i>Salmonella typhi</i> (ಬ್ಯಾಕ್ಟೀರಿಯಾ)', t:'ಕಲುಷಿತ ಆಹಾರ ಮತ್ತು ನೀರು', s:'ಅಧಿಕ ಜ್ವರ (ಎರಡು/ಮೂರನೇ ವಾರದಲ್ಲಿ 39&ndash;40&deg;C ಗೆ ತಲುಪಬಹುದು), ಹೊಟ್ಟೆ ನೋವು, ತಲೆನೋವು, ಹಸಿವಿನ ಕೊರತೆ, ಮಲಬದ್ಧತೆ, ತೀವ್ರ ಪ್ರಕರಣಗಳಲ್ಲಿ ಕರುಳಿನ ರಂಧ್ರೀಕರಣ', p:'ವೈಯಕ್ತಿಕ &amp; ಸಾರ್ವಜನಿಕ ಸ್ವಚ್ಛತೆ, ಶುದ್ಧ ಕುಡಿಯುವ ನೀರು'},
+            {d:'ನ್ಯುಮೋನಿಯಾ', o:'<i>Streptococcus pneumoniae</i>, <i>Haemophilus influenzae</i> (ಬ್ಯಾಕ್ಟೀರಿಯಾ)', t:'ಸೋಂಕಿತ ವ್ಯಕ್ತಿಯಿಂದ ಹನಿಗಳು/ಏರೋಸಾಲ್‌ಗಳು; ಹಂಚಿಕೊಂಡ ಗ್ಲಾಸ್/ಪಾತ್ರೆಗಳು', s:'ಜ್ವರ, ನಡುಕ, ಕೆಮ್ಮು, ತಲೆನೋವು; ತೀವ್ರ ಪ್ರಕರಣಗಳಲ್ಲಿ ತುಟಿ/ಉಗುರುಗಳು ಬೂದು-ನೀಲಿ ಬಣ್ಣಕ್ಕೆ ತಿರುಗುವುದು', p:'ಸೋಂಕಿತ ವ್ಯಕ್ತಿಗಳ/ವಸ್ತುಗಳ ಹತ್ತಿರದ ಸಂಪರ್ಕ ತಪ್ಪಿಸಿ'},
+            {d:'ಸಾಮಾನ್ಯ ಶೀತ', o:'ರೈನೋವೈರಸ್‌ಗಳು', t:'ಕೆಮ್ಮು/ಸೀನುವಿಕೆಯ ಹನಿಗಳು; ಕಲುಷಿತ ವಸ್ತುಗಳು (ಪೆನ್, ಕಪ್, ಬಾಗಿಲ ಹಿಡಿಕೆ)', s:'ಮೂಗು ಕಟ್ಟುವಿಕೆ &amp; ಸ್ರವಿಸುವಿಕೆ, ಗಂಟಲು ನೋವು, ಕೆಮ್ಮು, ತಲೆನೋವು, ಆಯಾಸ (3&ndash;7 ದಿನಗಳು)', p:'ಸೋಂಕಿತ ವ್ಯಕ್ತಿಗಳ/ವಸ್ತುಗಳ ಹತ್ತಿರದ ಸಂಪರ್ಕ ತಪ್ಪಿಸಿ'},
+            {d:'ಮಲೇರಿಯಾ', o:'<i>Plasmodium</i> sp. (ಪ್ರೋಟೊಜೋವನ್)', t:'ಹೆಣ್ಣು <i>Anopheles</i> ಸೊಳ್ಳೆಯ ಕಡಿತ', s:'ಆವರ್ತಕವಾಗಿ ಮರುಕಳಿಸುವ ಅಧಿಕ ಜ್ವರ, ನಡುಕದೊಂದಿಗೆ', p:'ವಾಹಕ/ಸಂತಾನೋತ್ಪತ್ತಿ ಸ್ಥಳ ನಿಯಂತ್ರಣ, ಸೊಳ್ಳೆ ಪರದೆ, ತಂತಿ ಜಾಲರಿ'},
+            {d:'ಅಮೀಬಿಯಾಸಿಸ್', o:'<i>Entamoeba histolytica</i> (ಪ್ರೋಟೊಜೋವನ್)', t:'ಮನೆ ನೊಣ (ಯಾಂತ್ರಿಕ ವಾಹಕ)', s:'ಮಲಬದ್ಧತೆ, ಹೊಟ್ಟೆ ನೋವು &amp; ಸೆಳೆತ, ಹೆಚ್ಚು ಲೋಳೆ ಮತ್ತು ರಕ್ತ ಹೆಪ್ಪುಗಟ್ಟುವಿಕೆಯುಳ್ಳ ಮಲ', p:'ವೈಯಕ್ತಿಕ &amp; ಸಾರ್ವಜನಿಕ ಸ್ವಚ್ಛತೆ, ಶುದ್ಧ ಕುಡಿಯುವ ನೀರು'},
+            {d:'ರಿಂಗ್‌ವರ್ಮ್', o:'<i>Microsporum, Trichophyton, Epidermophyton</i> (ಶಿಲೀಂಧ್ರಗಳು)', t:'ಟವೆಲ್, ಬಟ್ಟೆ, ಬಾಚಣಿಗೆ (ಶಿಲೀಂಧ್ರ ಮೂಲತಃ ಮಣ್ಣಿನಿಂದ)', s:'ಒಣ, ಚಿಪ್ಪುಳ್ಳ ಗಾಯಗಳು ತೀವ್ರ ತುರಿಕೆಯೊಂದಿಗೆ, ಬೆವರುವಿಕೆಯಿಂದ ಉಲ್ಬಣ', p:'ಟವೆಲ್/ಬಟ್ಟೆ/ಬಾಚಣಿಗೆ ಹಂಚಿಕೊಳ್ಳುವುದನ್ನು ತಪ್ಪಿಸಿ; ವೈಯಕ್ತಿಕ ಸ್ವಚ್ಛತೆ'},
+            {d:'ಅಸ್ಕರಿಯಾಸಿಸ್', o:'<i>Ascaris</i> (ದುಂಡುಹುಳು)', t:'ಸೋಂಕಿತ ವ್ಯಕ್ತಿಯ ಮಲದಿಂದ ಕಲುಷಿತ ನೀರು, ತರಕಾರಿ, ಹಣ್ಣುಗಳು', s:'ಆಂತರಿಕ ರಕ್ತಸ್ರಾವ, ಸ್ನಾಯು ನೋವು, ಜ್ವರ, ರಕ್ತಹೀನತೆ, ಕರುಳಿನ ಮಾರ್ಗದ ಅಡಚಣೆ', p:'ವೈಯಕ್ತಿಕ &amp; ಸಾರ್ವಜನಿಕ ಸ್ವಚ್ಛತೆ, ಶುದ್ಧ ಕುಡಿಯುವ ನೀರು'},
+            {d:'ಎಲಿಫೆಂಟಿಯಾಸಿಸ್ (ಫೈಲೇರಿಯಾಸಿಸ್)', o:'<i>Wuchereria</i> (<i>W. bancrofti</i>, <i>W. malayi</i>)', t:'ಹೆಣ್ಣು ಸೊಳ್ಳೆ ವಾಹಕದ ಕಡಿತ', s:'ದುಗ್ಧನಾಳಗಳ (ಸಾಮಾನ್ಯವಾಗಿ ಕೆಳಗಿನ ಅಂಗಗಳ) ದೀರ್ಘಕಾಲಿಕ ಉರಿಯೂತ, ತೀವ್ರ ವಿರೂಪತೆ', p:'ವಾಹಕ/ಸಂತಾನೋತ್ಪತ್ತಿ ಸ್ಥಳ ನಿಯಂತ್ರಣ, ಸೊಳ್ಳೆ ಪರದೆ, ತಂತಿ ಜಾಲರಿ'}
+          ] },
+        hi: { intro:'वह ठीक चार-स्तंभ वाली तालिका जिसका वर्णन सुझाव करता है, सभी आठ रोगों के लिए, इस अध्याय के अपने रोग-दर-रोग तथ्यों से बनाई गई।',
+          th:['रोग','रोगजनक','फैलाव','मुख्य लक्षण','रोकथाम/नियंत्रण'],
+          rows:[
+            {d:'टाइफाइड', o:'<i>Salmonella typhi</i> (जीवाणु)', t:'दूषित भोजन और पानी', s:'तेज़ बुखार (दूसरे/तीसरे सप्ताह तक 39&ndash;40&deg;C तक), पेट दर्द, सिरदर्द, भूख न लगना, कब्ज़, गंभीर मामलों में आंतों में छिद्र', p:'व्यक्तिगत &amp; सार्वजनिक स्वच्छता, स्वच्छ पेयजल'},
+            {d:'न्यूमोनिया', o:'<i>Streptococcus pneumoniae</i>, <i>Haemophilus influenzae</i> (जीवाणु)', t:'संक्रमित व्यक्ति से बूँदें/एरोसोल; साझा गिलास/बर्तन', s:'बुखार, कंपकंपी, खाँसी, सिरदर्द; अत्यंत गंभीर मामलों में होंठ/नाखून धूसर-नीले', p:'संक्रमित व्यक्तियों/सामान से निकट संपर्क से बचें'},
+            {d:'सामान्य सर्दी', o:'राइनोवायरस', t:'खाँसने/छींकने की बूँदें; दूषित वस्तुएँ (पेन, कप, दरवाज़े के हैंडल)', s:'नाक बंद होना &amp; स्राव, गले में खराश, खाँसी, सिरदर्द, थकान (3&ndash;7 दिन)', p:'संक्रमित व्यक्तियों/सामान से निकट संपर्क से बचें'},
+            {d:'मलेरिया', o:'<i>Plasmodium</i> sp. (प्रोटोज़ोआ)', t:'मादा <i>Anopheles</i> मच्छर का काटना', s:'आवर्ती रूप से लौटने वाला तेज़ बुखार, कंपकंपी के साथ', p:'वाहक/प्रजनन स्थल नियंत्रण, मच्छरदानी, तार जाली'},
+            {d:'अमीबियासिस', o:'<i>Entamoeba histolytica</i> (प्रोटोज़ोआ)', t:'घरेलू मक्खी (यांत्रिक वाहक)', s:'कब्ज़, पेट दर्द &amp; ऐंठन, अधिक श्लेष्म व रक्त के थक्कों वाला मल', p:'व्यक्तिगत &amp; सार्वजनिक स्वच्छता, स्वच्छ पेयजल'},
+            {d:'दाद (रिंगवर्म)', o:'<i>Microsporum, Trichophyton, Epidermophyton</i> (कवक)', t:'तौलिये, कपड़े, कंघी (कवक मूलतः मिट्टी से)', s:'सूखे, पपड़ीदार घाव तीव्र खुजली के साथ, पसीने से बढ़ना', p:'तौलिये/कपड़े/कंघी साझा करने से बचें; व्यक्तिगत स्वच्छता'},
+            {d:'एस्कारियासिस', o:'<i>Ascaris</i> (गोलकृमि)', t:'संक्रमित व्यक्ति के मल से दूषित पानी, सब्ज़ियाँ, फल', s:'आंतरिक रक्तस्राव, मांसपेशियों में दर्द, बुखार, रक्ताल्पता, आंत्र मार्ग में रुकावट', p:'व्यक्तिगत &amp; सार्वजनिक स्वच्छता, स्वच्छ पेयजल'},
+            {d:'हाथीपाँव (फाइलेरिया)', o:'<i>Wuchereria</i> (<i>W. bancrofti</i>, <i>W. malayi</i>)', t:'मादा मच्छर वाहक का काटना', s:'लसीका वाहिकाओं (आमतौर पर निचले अंगों) की दीर्घकालिक सूजन, गंभीर विकृति', p:'वाहक/प्रजनन स्थल नियंत्रण, मच्छरदानी, तार जाली'}
+          ] }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${l.th[1]}</th><th>${l.th[2]}</th><th>${l.th[3]}</th><th>${l.th[4]}</th></tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r.d}</td><td>${r.o}</td><td>${r.t}</td><td>${r.s}</td><td>${r.p}</td></tr>`).join('')}
+        </tbody></table></div>`;
+    }
+  },
+  'plasmodium-cycle': {
+    title: {
+      en: '🦟 Plasmodium Life Cycle — Step by Step',
+      kn: '🦟 Plasmodium ಜೀವನ ಚಕ್ರ — ಹಂತ ಹಂತವಾಗಿ',
+      hi: '🦟 Plasmodium जीवन चक्र — चरण दर चरण'
+    },
+    render: function(lang){
+      function step(q, a){ return `<div class="tipex-step"><span class="tipex-q">${q}.</span><span>${a}</span></div>`; }
+      const L = {
+        en: { intro:"The exact nine-step cycle the tip asks you to draw and label from memory, using only this chapter's own Life Cycle of Plasmodium facts.",
+          caseTitle:'<i>Plasmodium</i> — two hosts, one cycle',
+          steps:[
+            'Female <i>Anopheles</i> mosquito bites a healthy person and releases <b>sporozoites</b> (the infectious form) into the blood.',
+            'Sporozoites reach the <b>liver</b>, multiply asexually inside liver cells, then burst them, releasing more parasites into the blood.',
+            'These parasites enter <b>RBCs</b> and multiply asexually there too, eventually bursting the RBCs as well.',
+            'Bursting RBCs release <b>haemozoin</b>, a toxic substance associated with the recurring <b>fever and chills</b>.',
+            'Inside RBCs, some parasites instead change into <b>gametocytes</b> (the sexual stage).',
+            'When the diseased person is bitten again by a female <i>Anopheles</i> mosquito, the gametocytes enter the mosquito&rsquo;s body.',
+            'Inside the mosquito&rsquo;s intestine, the gametocytes fertilise and develop into <b>sporozoites</b>.',
+            'Sporozoites migrate to and are stored in the mosquito&rsquo;s <b>salivary glands</b>, ready for the next bite &mdash; completing the cycle.'
+          ],
+          diagnosis:'Human = intermediate host (asexual) &middot; Female <i>Anopheles</i> = definitive host (sexual)' },
+        kn: { intro:'ಸಲಹೆ ನಿಮಗೆ ನೆನಪಿನಿಂದ ಬಿಡಿಸಿ ಲೇಬಲ್ ಮಾಡಲು ಹೇಳುವ ನಿಖರವಾದ ಒಂಬತ್ತು-ಹಂತದ ಚಕ್ರ, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Life Cycle of Plasmodium ಸಂಗತಿಗಳನ್ನು ಮಾತ್ರ ಬಳಸಿ.',
+          caseTitle:'<i>Plasmodium</i> — ಎರಡು ಆತಿಥೇಯಗಳು, ಒಂದು ಚಕ್ರ',
+          steps:[
+            'ಹೆಣ್ಣು <i>Anopheles</i> ಸೊಳ್ಳೆ ಆರೋಗ್ಯವಂತ ವ್ಯಕ್ತಿಯನ್ನು ಕಚ್ಚಿದಾಗ, ಅದು ಪರಾವಲಂಬಿಯ ಸೋಂಕುಕಾರಕ ರೂಪವಾದ <b>ಸ್ಪೊರೊಜೊಯಿಟ್</b>ಗಳನ್ನು ವ್ಯಕ್ತಿಯ ರಕ್ತಕ್ಕೆ ಬಿಡುಗಡೆ ಮಾಡುತ್ತದೆ.',
+            'ಸ್ಪೊರೊಜೊಯಿಟ್‌ಗಳು <b>ಯಕೃತ್ತು</b> ತಲುಪಿ, ಯಕೃತ್ತಿನ ಕೋಶಗಳೊಳಗೆ ಅಲೈಂಗಿಕವಾಗಿ ಗುಣಿಸಿ, ಅಂತಿಮವಾಗಿ ಆ ಕೋಶಗಳನ್ನು ಸಿಡಿಸಿ ರಕ್ತಕ್ಕೆ ಹೆಚ್ಚಿನ ಪರಾವಲಂಬಿಗಳನ್ನು ಬಿಡುಗಡೆ ಮಾಡುತ್ತವೆ.',
+            'ಈ ಪರಾವಲಂಬಿಗಳು <b>RBC</b>ಗಳನ್ನು ಪ್ರವೇಶಿಸಿ ಅಲ್ಲಿಯೂ ಅಲೈಂಗಿಕವಾಗಿ ಗುಣಿಸುತ್ತವೆ, ಅಂತಿಮವಾಗಿ RBCಗಳನ್ನೂ ಸಿಡಿಸುತ್ತವೆ.',
+            'ಸಿಡಿಯುವ RBCಗಳು <b>ಹೀಮೊಜೊಯಿನ್</b> ಎಂಬ ವಿಷಕಾರಿ ವಸ್ತುವನ್ನು ಬಿಡುಗಡೆ ಮಾಡುತ್ತವೆ, ಇದು ಆವರ್ತಕ <b>ಜ್ವರ ಮತ್ತು ನಡುಕ</b>ದೊಂದಿಗೆ ಸಂಬಂಧಿಸಿದೆ.',
+            'RBCಗಳ ಒಳಗೆ, ಕೆಲವು ಪರಾವಲಂಬಿಗಳು ಬದಲಿಗೆ <b>ಗ್ಯಾಮಿಟೋಸೈಟ್</b>ಗಳಾಗಿ (ಲೈಂಗಿಕ ಹಂತ) ಬದಲಾಗುತ್ತವೆ.',
+            'ರೋಗಪೀಡಿತ ವ್ಯಕ್ತಿಯನ್ನು ಹೆಣ್ಣು <i>Anopheles</i> ಸೊಳ್ಳೆ ಮತ್ತೆ ಕಚ್ಚಿದಾಗ, ಗ್ಯಾಮಿಟೋಸೈಟ್‌ಗಳು ಸೊಳ್ಳೆಯ ದೇಹ ಪ್ರವೇಶಿಸುತ್ತವೆ.',
+            'ಸೊಳ್ಳೆಯ ಕರುಳಿನೊಳಗೆ, ಗ್ಯಾಮಿಟೋಸೈಟ್‌ಗಳು ಫಲೀಕರಣಗೊಂಡು <b>ಸ್ಪೊರೊಜೊಯಿಟ್</b>ಗಳಾಗಿ ಬೆಳವಣಿಗೆ ಹೊಂದುತ್ತವೆ.',
+            'ಸ್ಪೊರೊಜೊಯಿಟ್‌ಗಳು ಸೊಳ್ಳೆಯ <b>ಲಾಲಾ ಗ್ರಂಥಿ</b>ಗಳಿಗೆ ವಲಸೆ ಹೋಗಿ ಅಲ್ಲಿ ಸಂಗ್ರಹಗೊಂಡು, ಮುಂದಿನ ಕಡಿತಕ್ಕೆ ಸಿದ್ಧವಾಗುತ್ತವೆ &mdash; ಚಕ್ರ ಪೂರ್ಣಗೊಳ್ಳುತ್ತದೆ.'
+          ],
+          diagnosis:'ಮಾನವ = ಮಧ್ಯಂತರ ಆತಿಥೇಯ (ಅಲೈಂಗಿಕ) &middot; ಹೆಣ್ಣು <i>Anopheles</i> = ನಿಶ್ಚಿತ ಆತಿಥೇಯ (ಲೈಂಗಿಕ)' },
+        hi: { intro:'वह ठीक नौ-चरणीय चक्र जिसे यह सुझाव आपसे स्मृति से बनाने व नामांकित करने को कहता है, इस अध्याय के अपने Life Cycle of Plasmodium तथ्यों का ही उपयोग करते हुए।',
+          caseTitle:'<i>Plasmodium</i> — दो परपोषी, एक चक्र',
+          steps:[
+            'जब मादा <i>Anopheles</i> मच्छर किसी स्वस्थ व्यक्ति को काटती है, तो वह परजीवी के संक्रामक रूप <b>स्पोरोज़ोइट</b> को व्यक्ति के रक्त में छोड़ती है।',
+            'स्पोरोज़ोइट <b>यकृत</b> तक पहुँचते हैं, यकृत कोशिकाओं के भीतर अलैंगिक रूप से बढ़ते हैं और अंततः उन कोशिकाओं को फोड़कर रक्त में और परजीवी छोड़ते हैं।',
+            'ये परजीवी <b>RBC</b> में प्रवेश करके वहाँ भी अलैंगिक रूप से बढ़ते हैं, अंततः RBC को भी फोड़ देते हैं।',
+            'RBC के फटने के साथ <b>हीमोज़ोइन</b> नामक विषैला पदार्थ निकलता है, जो आवर्ती <b>बुखार व कंपकंपी</b> से जुड़ा है।',
+            'RBC के भीतर, कुछ परजीवी अलैंगिक वृद्धि जारी रखने के बजाय <b>गैमीटोसाइट</b> (लैंगिक चरण) में बदल जाते हैं।',
+            'जब रोगग्रस्त व्यक्ति को मादा <i>Anopheles</i> मच्छर पुनः काटती है, तो ये गैमीटोसाइट मच्छर के शरीर में प्रवेश करते हैं।',
+            'मच्छर की आंत के भीतर, गैमीटोसाइट निषेचित होकर <b>स्पोरोज़ोइट</b> में विकसित होते हैं।',
+            'स्पोरोज़ोइट मच्छर की <b>लार ग्रंथियों</b> में जाकर संचित हो जाते हैं, अगली काट के लिए तैयार &mdash; इस प्रकार चक्र पूरा होता है।'
+          ],
+          diagnosis:'मानव = मध्यवर्ती परपोषी (अलैंगिक) &middot; मादा <i>Anopheles</i> = निश्चायक परपोषी (लैंगिक)' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        <div class="tipex-case"><div class="tipex-case-title">${l.caseTitle}</div>
+        ${l.steps.map((s,i)=>step(i+1,s)).join('')}
+        <div class="tipex-diagnosis">✓ ${l.diagnosis}</div></div>`;
+    }
+  },
+  'immunity-tables': {
+    title: {
+      en: '📊 Two Worked Immunity Tables',
+      kn: '📊 ಎರಡು ಉದಾಹರಣೆ ರೋಗ ನಿರೋಧಕತೆ ಕೋಷ್ಟಕಗಳು',
+      hi: '📊 दो हल की गई प्रतिरक्षा तालिकाएँ'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"Exactly the two tables the tip describes, built from this chapter's own Compare tab data (COMPARE_DATA) &mdash; nothing re-typed by hand.",
+          note:'Full detail for every row is in the <b>Compare</b> tab &mdash; this is the condensed version worth memorising first.',
+          pairs:[
+            { nameA:'Innate immunity', nameB:'Acquired immunity',
+              rows:[
+                {label:'What it Is', a:'Non-specific defence present from birth', b:"Specific, pathogen-targeted defence developed over the body's lifetime"},
+                {label:'Mechanism / How it Works', a:'Physical, physiological, cellular and cytokine barriers act immediately', b:'Lymphocytes recognize a specific antigen; primary then secondary response'},
+                {label:'Causative Agent / Category', a:'Barriers (skin, mucus, WBCs, interferons)', b:'B and T lymphocytes, antibodies'},
+                {label:'Key Distinguishing Feature', a:'Same response every time, no memory formed', b:'Has memory — faster, stronger response on re-exposure'},
+                {label:'NEET-frequent Example', a:'Skin blocking a cut from infection', b:'Faster recovery from chickenpox the second time exposed'}
+              ] },
+            { nameA:'Active immunity', nameB:'Passive immunity',
+              rows:[
+                {label:'What it Is', a:"Body's own immune system actively produces antibodies", b:'Ready-made antibodies given directly to the body'},
+                {label:'Mechanism / How it Works', a:'Exposure to antigen (infection or vaccine) triggers antibody production + memory cells', b:"Pre-formed antibodies transferred without activating the recipient's own immune system"},
+                {label:'Causative Agent / Category', a:'Self-produced antibodies', b:'Donor/animal-derived antibodies'},
+                {label:'Key Distinguishing Feature', a:'Slower onset, but long-lasting', b:'Immediate but short-lived, no memory formed'},
+                {label:'NEET-frequent Example', a:'Vaccination (artificial active immunity)', b:'Antiserum injection (artificial passive immunity)'}
+              ] }
+          ] },
+        kn: { intro:'ಸಲಹೆ ವಿವರಿಸುವ ನಿಖರವಾಗಿ ಎರಡು ಕೋಷ್ಟಕಗಳು, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Compare ಟ್ಯಾಬ್ ಡೇಟಾ (COMPARE_DATA) ನಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ &mdash; ಏನನ್ನೂ ಕೈಯಿಂದ ಮರುಟೈಪ್ ಮಾಡಿಲ್ಲ.',
+          note:'ಪ್ರತಿ ಸಾಲಿನ ಪೂರ್ಣ ವಿವರ <b>Compare</b> ಟ್ಯಾಬ್‌ನಲ್ಲಿದೆ &mdash; ಇದು ಮೊದಲು ಕಂಠಪಾಠ ಮಾಡಲು ಯೋಗ್ಯವಾದ ಸಂಕ್ಷಿಪ್ತ ಆವೃತ್ತಿ.',
+          pairs:[
+            { nameA:'ಸಹಜ ರೋಗ ನಿರೋಧಕತೆ', nameB:'ಸ್ವಾಧೀನಪಡಿಸಿಕೊಂಡ ರೋಗ ನಿರೋಧಕತೆ',
+              rows:[
+                {label:'ಇದು ಏನು', a:'ಹುಟ್ಟಿನಿಂದಲೇ ಇರುವ ಅನಿರ್ದಿಷ್ಟ ರಕ್ಷಣೆ', b:'ದೇಹದ ಜೀವಿತಾವಧಿಯಲ್ಲಿ ಬೆಳೆದ ನಿರ್ದಿಷ್ಟ, ರೋಗಾಣು-ಗುರಿಯ ರಕ್ಷಣೆ'},
+                {label:'ಕಾರ್ಯವಿಧಾನ', a:'ಭೌತಿಕ, ಶರೀರಶಾಸ್ತ್ರೀಯ, ಜೀವಕೋಶೀಯ ಮತ್ತು ಸೈಟೋಕೈನ್ ತಡೆಗಳು ತಕ್ಷಣ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತವೆ', b:'ಲಿಂಫೋಸೈಟ್‌ಗಳು ನಿರ್ದಿಷ್ಟ ಆಂಟಿಜನ್ ಗುರುತಿಸುತ್ತವೆ; ಪ್ರಾಥಮಿಕ ನಂತರ ದ್ವಿತೀಯ ಪ್ರತಿಕ್ರಿಯೆ'},
+                {label:'ಕಾರಣಕಾರಿ ಅಂಶ / ವಿಭಾಗ', a:'ತಡೆಗಳು (ಚರ್ಮ, ಲೋಳೆ, WBCಗಳು, ಇಂಟರ್ಫೆರಾನ್‌ಗಳು)', b:'B ಮತ್ತು T ಲಿಂಫೋಸೈಟ್‌ಗಳು, ಆಂಟಿಬಾಡಿಗಳು'},
+                {label:'ಪ್ರಮುಖ ವಿಭಿನ್ನ ಲಕ್ಷಣ', a:'ಪ್ರತಿ ಬಾರಿ ಒಂದೇ ಪ್ರತಿಕ್ರಿಯೆ, ಸ್ಮರಣೆ ರಚನೆಯಾಗುವುದಿಲ್ಲ', b:'ಸ್ಮರಣೆ ಹೊಂದಿದೆ — ಮರು-ಒಡ್ಡುವಿಕೆಯಲ್ಲಿ ವೇಗ, ಬಲಿಷ್ಠ ಪ್ರತಿಕ್ರಿಯೆ'},
+                {label:'NEET-ಆಗಾಗ್ಗೆ ಬರುವ ಉದಾಹರಣೆ', a:'ಕಟ್‌ಗೆ ಸೋಂಕು ಬರದಂತೆ ಚರ್ಮ ತಡೆಯುವುದು', b:'ಎರಡನೇ ಬಾರಿ ಒಡ್ಡಿಕೊಂಡಾಗ ಚಿಕನ್‌ಪಾಕ್ಸ್‌ನಿಂದ ವೇಗದ ಗುಣಮುಖ'}
+              ] },
+            { nameA:'ಸಕ್ರಿಯ ರೋಗ ನಿರೋಧಕತೆ', nameB:'ನಿಷ್ಕ್ರಿಯ ರೋಗ ನಿರೋಧಕತೆ',
+              rows:[
+                {label:'ಇದು ಏನು', a:'ದೇಹದ ಸ್ವಂತ ರೋಗ ನಿರೋಧಕ ವ್ಯವಸ್ಥೆ ಸಕ್ರಿಯವಾಗಿ ಆಂಟಿಬಾಡಿ ಉತ್ಪಾದಿಸುತ್ತದೆ', b:'ಸಿದ್ಧ ಆಂಟಿಬಾಡಿಗಳನ್ನು ದೇಹಕ್ಕೆ ನೇರವಾಗಿ ನೀಡಲಾಗುತ್ತದೆ'},
+                {label:'ಕಾರ್ಯವಿಧಾನ', a:'ಆಂಟಿಜನ್‌ಗೆ ಒಡ್ಡುವಿಕೆ (ಸೋಂಕು ಅಥವಾ ಲಸಿಕೆ) ಆಂಟಿಬಾಡಿ ಉತ್ಪಾದನೆ + ಸ್ಮರಣ ಕೋಶಗಳನ್ನು ಪ್ರಚೋದಿಸುತ್ತದೆ', b:'ಪಡೆಯುವವರ ಸ್ವಂತ ರೋಗ ನಿರೋಧಕ ವ್ಯವಸ್ಥೆಯನ್ನು ಸಕ್ರಿಯಗೊಳಿಸದೆ ಸಿದ್ಧ ಆಂಟಿಬಾಡಿಗಳ ವರ್ಗಾವಣೆ'},
+                {label:'ಕಾರಣಕಾರಿ ಅಂಶ / ವಿಭಾಗ', a:'ಸ್ವಯಂ-ಉತ್ಪಾದಿತ ಆಂಟಿಬಾಡಿಗಳು', b:'ದಾನಿ/ಪ್ರಾಣಿಯಿಂದ ಪಡೆದ ಆಂಟಿಬಾಡಿಗಳು'},
+                {label:'ಪ್ರಮುಖ ವಿಭಿನ್ನ ಲಕ್ಷಣ', a:'ನಿಧಾನ ಆರಂಭ, ಆದರೆ ದೀರ್ಘಕಾಲ ಬಾಳಿಕೆ', b:'ತಕ್ಷಣ ಆದರೆ ಅಲ್ಪಕಾಲಿಕ, ಸ್ಮರಣೆ ರಚನೆಯಾಗುವುದಿಲ್ಲ'},
+                {label:'NEET-ಆಗಾಗ್ಗೆ ಬರುವ ಉದಾಹರಣೆ', a:'ಲಸಿಕೆ (ಕೃತಕ ಸಕ್ರಿಯ ರೋಗ ನಿರೋಧಕತೆ)', b:'ಆಂಟಿಸೀರಮ್ ಚುಚ್ಚುಮದ್ದು (ಕೃತಕ ನಿಷ್ಕ್ರಿಯ ರೋಗ ನಿರೋಧಕತೆ)'}
+              ] }
+          ] },
+        hi: { intro:'वे ठीक दो तालिकाएँ जिनका वर्णन सुझाव करता है, इस अध्याय के अपने Compare टैब डेटा (COMPARE_DATA) से बनाई गई &mdash; कुछ भी हाथ से दोबारा नहीं टाइप किया गया।',
+          note:'हर पंक्ति का पूरा विवरण <b>Compare</b> टैब में है &mdash; यह पहले याद करने योग्य संक्षिप्त संस्करण है।',
+          pairs:[
+            { nameA:'सहज प्रतिरक्षा', nameB:'अर्जित प्रतिरक्षा',
+              rows:[
+                {label:'यह क्या है', a:'जन्म से मौजूद अविशिष्ट रक्षा', b:'शरीर के जीवनकाल में विकसित विशिष्ट, रोगजनक-लक्षित रक्षा'},
+                {label:'क्रियाविधि', a:'भौतिक, शारीरिक, कोशिकीय व साइटोकाइन अवरोध तुरंत कार्य करते हैं', b:'लिम्फोसाइट विशिष्ट प्रतिजन को पहचानते हैं; प्राथमिक फिर द्वितीयक अनुक्रिया'},
+                {label:'कारक तत्व / श्रेणी', a:'अवरोध (त्वचा, श्लेष्म, WBC, इंटरफेरॉन)', b:'B व T लिम्फोसाइट, प्रतिरक्षी'},
+                {label:'प्रमुख विभेदक लक्षण', a:'हर बार समान अनुक्रिया, कोई स्मृति नहीं बनती', b:'स्मृति होती है — पुनः संपर्क पर तेज़, मज़बूत अनुक्रिया'},
+                {label:'NEET-सामान्य उदाहरण', a:'त्वचा का कट को संक्रमण से रोकना', b:'दूसरी बार चेचक से तेज़ी से उबरना'}
+              ] },
+            { nameA:'सक्रिय प्रतिरक्षा', nameB:'निष्क्रिय प्रतिरक्षा',
+              rows:[
+                {label:'यह क्या है', a:'शरीर की अपनी प्रतिरक्षा प्रणाली सक्रिय रूप से प्रतिरक्षी बनाती है', b:'तैयार प्रतिरक्षी सीधे शरीर को दिए जाते हैं'},
+                {label:'क्रियाविधि', a:'प्रतिजन के संपर्क (संक्रमण या टीका) से प्रतिरक्षी उत्पादन + स्मृति कोशिकाएँ बनती हैं', b:'प्राप्तकर्ता की स्वयं की प्रतिरक्षा प्रणाली को सक्रिय किए बिना पूर्व-निर्मित प्रतिरक्षी स्थानांतरित किए जाते हैं'},
+                {label:'कारक तत्व / श्रेणी', a:'स्वयं-निर्मित प्रतिरक्षी', b:'दाता/पशु से प्राप्त प्रतिरक्षी'},
+                {label:'प्रमुख विभेदक लक्षण', a:'धीमी शुरुआत, पर लंबे समय तक टिकने वाली', b:'तुरंत पर अल्पकालिक, कोई स्मृति नहीं बनती'},
+                {label:'NEET-सामान्य उदाहरण', a:'टीकाकरण (कृत्रिम सक्रिय प्रतिरक्षा)', b:'एंटीसीरम इंजेक्शन (कृत्रिम निष्क्रिय प्रतिरक्षा)'}
+              ] }
+          ] }
+      };
+      const l = L[lang] || L.en;
+      function cmpTable(p){
+        return `<div class="tipex-case"><div class="tipex-case-title">${p.nameA} vs ${p.nameB}</div>
+          <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Character</th><th>${p.nameA}</th><th>${p.nameB}</th></tr></thead><tbody>
+          ${p.rows.map(r=>`<tr><td class="tipex-organ">${r.label}</td><td>${r.a}</td><td>${r.b}</td></tr>`).join('')}
+          </tbody></table></div></div>`;
+      }
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        ${l.pairs.map(cmpTable).join('')}
+        <div class="tipex-note">${l.note}</div>`;
+    }
+  },
+  'antibody-structure': {
+    title: {
+      en: '🔬 Antibody (H₂L₂) Structure — Labelled Parts',
+      kn: '🔬 ಆಂಟಿಬಾಡಿ (H₂L₂) ರಚನೆ — ಲೇಬಲ್ ಮಾಡಲಾದ ಭಾಗಗಳು',
+      hi: '🔬 प्रतिरक्षी (H₂L₂) संरचना — नामांकित भाग'
+    },
+    render: function(lang){
+      function step(q, a){ return `<div class="tipex-step"><span class="tipex-q">${q}.</span><span>${a}</span></div>`; }
+      const L = {
+        en: { intro:"The exact labels the tip asks you to put on the Y-shaped diagram, using only this chapter's own antibody-structure facts.",
+          caseTitle:'Antibody monomer — general formula H<sub>2</sub>L<sub>2</sub>',
+          steps:[
+            'Overall shape: a <b>Y-shaped</b> immunoglobulin monomer.',
+            '<b>2 identical Heavy (H) chains</b> &mdash; the two longer chains forming the stem and arms of the Y.',
+            '<b>2 identical Light (L) chains</b> &mdash; the two shorter chains paired alongside the heavy chains.',
+            'Heavy and light chains are held together by inter-chain <b>disulfide (&ndash;S&ndash;S&ndash;) bonds</b>.',
+            '<b>Variable region (V<sub>H</sub>, V<sub>L</sub>)</b> at the amino (N-terminal) tips of each arm &mdash; this is the <b>antigen-binding site</b>.',
+            '<b>Constant region (C<sub>H</sub>, C<sub>L</sub>)</b> at the carboxy (C-terminal) stem.'
+          ],
+          diagnosis:'2 Heavy + 2 Light chains = H₂L₂' },
+        kn: { intro:'ಸಲಹೆ ನಿಮಗೆ Y-ಆಕಾರದ ಚಿತ್ರದ ಮೇಲೆ ಹಾಕಲು ಹೇಳುವ ನಿಖರವಾದ ಲೇಬಲ್‌ಗಳು, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ ಆಂಟಿಬಾಡಿ-ರಚನೆ ಸಂಗತಿಗಳನ್ನು ಮಾತ್ರ ಬಳಸಿ.',
+          caseTitle:'ಆಂಟಿಬಾಡಿ ಮಾನೊಮರ್ — ಸಾಮಾನ್ಯ ಸೂತ್ರ H<sub>2</sub>L<sub>2</sub>',
+          steps:[
+            'ಒಟ್ಟಾರೆ ಆಕಾರ: ಒಂದು <b>Y-ಆಕಾರದ</b> ಇಮ್ಯುನೊಗ್ಲಾಬ್ಯುಲಿನ್ ಮಾನೊಮರ್.',
+            '<b>2 ಒಂದೇ ರೀತಿಯ ಭಾರ (H) ಸರಪಳಿಗಳು</b> &mdash; Y ಯ ಕಾಂಡ ಮತ್ತು ಕೈಗಳನ್ನು ರಚಿಸುವ ಎರಡು ಉದ್ದವಾದ ಸರಪಳಿಗಳು.',
+            '<b>2 ಒಂದೇ ರೀತಿಯ ಹಗುರ (L) ಸರಪಳಿಗಳು</b> &mdash; ಭಾರ ಸರಪಳಿಗಳ ಪಕ್ಕದಲ್ಲಿ ಜೋಡಿಯಾಗಿರುವ ಎರಡು ಕಿರಿದಾದ ಸರಪಳಿಗಳು.',
+            'ಭಾರ ಮತ್ತು ಹಗುರ ಸರಪಳಿಗಳು ಅಂತರ-ಸರಪಳಿ <b>ಡೈಸಲ್ಫೈಡ್ (&ndash;S&ndash;S&ndash;) ಬಂಧ</b>ಗಳಿಂದ ಒಟ್ಟಿಗೆ ಹಿಡಿದಿರುತ್ತವೆ.',
+            'ಪ್ರತಿ ಕೈಯ ಅಮೈನೊ (N-ಟರ್ಮಿನಲ್) ತುದಿಯಲ್ಲಿ <b>ಚರ ಪ್ರದೇಶ (V<sub>H</sub>, V<sub>L</sub>)</b> &mdash; ಇದೇ <b>ಆಂಟಿಜನ್-ಬಂಧನ ಸ್ಥಳ</b>.',
+            'ಕಾರ್ಬಾಕ್ಸಿ (C-ಟರ್ಮಿನಲ್) ಕಾಂಡದಲ್ಲಿ <b>ಸ್ಥಿರ ಪ್ರದೇಶ (C<sub>H</sub>, C<sub>L</sub>)</b>.'
+          ],
+          diagnosis:'2 ಭಾರ + 2 ಹಗುರ ಸರಪಳಿಗಳು = H₂L₂' },
+        hi: { intro:'वे ठीक लेबल जिन्हें यह सुझाव Y-आकार के चित्र पर लगाने को कहता है, इस अध्याय के अपने प्रतिरक्षी-संरचना तथ्यों का ही उपयोग करते हुए।',
+          caseTitle:'प्रतिरक्षी मोनोमर — सामान्य सूत्र H<sub>2</sub>L<sub>2</sub>',
+          steps:[
+            'कुल आकार: एक <b>Y-आकार</b> का इम्युनोग्लोबुलिन मोनोमर।',
+            '<b>2 समान भारी (H) शृंखलाएँ</b> &mdash; Y के तने व बाहुओं को बनाने वाली दो लंबी शृंखलाएँ।',
+            '<b>2 समान हल्की (L) शृंखलाएँ</b> &mdash; भारी शृंखलाओं के साथ जोड़ी बनी दो छोटी शृंखलाएँ।',
+            'भारी व हल्की शृंखलाएँ अंतर-शृंखला <b>डाइसल्फाइड (&ndash;S&ndash;S&ndash;) बंधों</b> द्वारा साथ जुड़ी रहती हैं।',
+            'प्रत्येक बाहु के अमीनो (N-टर्मिनल) सिरे पर <b>परिवर्ती क्षेत्र (V<sub>H</sub>, V<sub>L</sub>)</b> &mdash; यही <b>प्रतिजन-बंधन स्थल</b> है।',
+            'कार्बोक्सी (C-टर्मिनल) तने पर <b>स्थिर क्षेत्र (C<sub>H</sub>, C<sub>L</sub>)</b>।'
+          ],
+          diagnosis:'2 भारी + 2 हल्की शृंखलाएँ = H₂L₂' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        <div class="tipex-case"><div class="tipex-case-title">${l.caseTitle}</div>
+        ${l.steps.map((s,i)=>step(i+1,s)).join('')}
+        <div class="tipex-diagnosis">✓ ${l.diagnosis}</div></div>`;
+    }
+  },
+  'hiv-cycle': {
+    title: {
+      en: '🧬 HIV Replication Cycle — Step by Step',
+      kn: '🧬 HIV ಪುನರುತ್ಪಾದನಾ ಚಕ್ರ — ಹಂತ ಹಂತವಾಗಿ',
+      hi: '🧬 HIV प्रतिकृति चक्र — चरण दर चरण'
+    },
+    render: function(lang){
+      function step(q, a){ return `<div class="tipex-step"><span class="tipex-q">${q}.</span><span>${a}</span></div>`; }
+      const L = {
+        en: { intro:"The exact numbered sequence the tip asks you to learn, using only this chapter's own HIV replication facts.",
+          caseTitle:'How HIV spreads inside the body',
+          steps:[
+            'HIV (a <b>retrovirus</b>) enters the body and infects <b>macrophages</b>.',
+            'Inside the macrophage, viral RNA is <b>reverse-transcribed into viral DNA</b> (reverse transcriptase), which gets incorporated into the host&rsquo;s own DNA.',
+            'The infected macrophage keeps producing new HIV particles &mdash; becoming a <b>&lsquo;virtual HIV factory&rsquo;</b>.',
+            'HIV released from macrophages enters <b>helper T-lymphocytes</b> (T<sub>H</sub> cells) and replicates further there.',
+            'Progeny virus particles released from T<sub>H</sub> cells go on to attack <b>other helper T-lymphocytes</b>.',
+            'Helper T-lymphocyte numbers <b>progressively decrease</b>, severely weakening the person&rsquo;s immune response &mdash; over months to years, this leads to AIDS.'
+          ],
+          diagnosis:'Macrophage ("HIV factory") → Helper T-cells → T-cell decline → AIDS' },
+        kn: { intro:'ಸಲಹೆ ನಿಮಗೆ ಕಲಿಯಲು ಹೇಳುವ ನಿಖರವಾದ ಸಂಖ್ಯೆ ಮಾಡಿದ ಅನುಕ್ರಮ, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ HIV ಪುನರುತ್ಪಾದನೆ ಸಂಗತಿಗಳನ್ನು ಮಾತ್ರ ಬಳಸಿ.',
+          caseTitle:'HIV ದೇಹದೊಳಗೆ ಹೇಗೆ ಹರಡುತ್ತದೆ',
+          steps:[
+            'HIV (ಒಂದು <b>ರೆಟ್ರೋವೈರಸ್</b>) ದೇಹ ಪ್ರವೇಶಿಸಿ <b>ಮ್ಯಾಕ್ರೊಫೇಜ್</b>ಗಳಿಗೆ ಸೋಂಕು ತಗುಲಿಸುತ್ತದೆ.',
+            'ಮ್ಯಾಕ್ರೊಫೇಜ್ ಒಳಗೆ, ವೈರಲ್ RNA <b>ರಿವರ್ಸ್-ಟ್ರಾನ್ಸ್‌ಕ್ರಿಪ್ಟ್</b> ಆಗಿ ವೈರಲ್ DNA ಆಗಿ ಬದಲಾಗುತ್ತದೆ (ರಿವರ್ಸ್ ಟ್ರಾನ್ಸ್‌ಕ್ರಿಪ್ಟೇಸ್ ಕಿಣ್ವ ಬಳಸಿ), ಇದು ಆತಿಥೇಯ DNA ಗೆ ಸೇರ್ಪಡೆಗೊಳ್ಳುತ್ತದೆ.',
+            'ಸೋಂಕಿತ ಮ್ಯಾಕ್ರೊಫೇಜ್ ಹೊಸ HIV ಕಣಗಳನ್ನು ಉತ್ಪಾದಿಸುತ್ತಲೇ ಇರುತ್ತದೆ &mdash; ಪರಿಣಾಮಕಾರಿಯಾಗಿ <b>&lsquo;ವಾಸ್ತವಿಕ HIV ಕಾರ್ಖಾನೆ&rsquo;</b>ಯಾಗಿ ಬದಲಾಗುತ್ತದೆ.',
+            'ಮ್ಯಾಕ್ರೊಫೇಜ್‌ಗಳಿಂದ ಬಿಡುಗಡೆಯಾದ HIV <b>ಸಹಾಯಕ T-ಲಿಂಫೋಸೈಟ್‌</b>ಗಳಿಗೆ (T<sub>H</sub> ಕೋಶಗಳಿಗೆ) ಪ್ರವೇಶಿಸಿ ಅಲ್ಲಿ ಮತ್ತಷ್ಟು ಪುನರುತ್ಪಾದನೆ ಹೊಂದುತ್ತದೆ.',
+            'T<sub>H</sub> ಕೋಶಗಳಿಂದ ಬಿಡುಗಡೆಯಾದ ಸಂತತಿ ವೈರಸ್ ಕಣಗಳು <b>ಇತರ ಸಹಾಯಕ T-ಲಿಂಫೋಸೈಟ್‌ಗಳ</b> ಮೇಲೆ ಆಕ್ರಮಣ ಮಾಡುತ್ತವೆ.',
+            'ಸಹಾಯಕ T-ಲಿಂಫೋಸೈಟ್‌ಗಳ ಸಂಖ್ಯೆ <b>ಕ್ರಮೇಣ ಕುಸಿಯುತ್ತದೆ</b>, ವ್ಯಕ್ತಿಯ ರೋಗ ನಿರೋಧಕ ಪ್ರತಿಕ್ರಿಯೆ ತೀವ್ರವಾಗಿ ದುರ್ಬಲಗೊಳ್ಳುತ್ತದೆ &mdash; ತಿಂಗಳುಗಳಿಂದ ವರ್ಷಗಳಲ್ಲಿ, ಇದು AIDS ಗೆ ಕಾರಣವಾಗುತ್ತದೆ.'
+          ],
+          diagnosis:'ಮ್ಯಾಕ್ರೊಫೇಜ್ ("HIV ಕಾರ್ಖಾನೆ") → ಸಹಾಯಕ T-ಕೋಶಗಳು → T-ಕೋಶ ಕುಸಿತ → AIDS' },
+        hi: { intro:'वह ठीक संख्यांकित अनुक्रम जिसे यह सुझाव सीखने को कहता है, इस अध्याय के अपने HIV प्रतिकृति तथ्यों का ही उपयोग करते हुए।',
+          caseTitle:'HIV शरीर के भीतर कैसे फैलता है',
+          steps:[
+            'HIV (एक <b>रेट्रोवायरस</b>) शरीर में प्रवेश कर <b>मैक्रोफेज</b> को संक्रमित करता है।',
+            'मैक्रोफेज के भीतर, विषाणु RNA <b>रिवर्स-ट्रांसक्राइब</b> होकर विषाणु DNA में बदलता है (रिवर्स ट्रांसक्रिप्टेज एंज़ाइम का उपयोग करके), जो परपोषी के DNA में समाहित हो जाता है।',
+            'संक्रमित मैक्रोफेज लगातार नए HIV कण बनाता रहता है &mdash; प्रभावी रूप से एक <b>&lsquo;वास्तविक HIV फैक्ट्री&rsquo;</b> बन जाता है।',
+            'मैक्रोफेज से मुक्त HIV <b>सहायक T-लिम्फोसाइट</b> (T<sub>H</sub> कोशिकाओं) में प्रवेश करता है, जहाँ यह और अधिक प्रतिकृति बनाता है।',
+            'T<sub>H</sub> कोशिकाओं से मुक्त संतति विषाणु कण <b>अन्य सहायक T-लिम्फोसाइट</b> पर आक्रमण करते हैं।',
+            'सहायक T-लिम्फोसाइट की संख्या <b>धीरे-धीरे घटती</b> जाती है, व्यक्ति की प्रतिरक्षा अनुक्रिया गंभीर रूप से कमज़ोर हो जाती है &mdash; महीनों से वर्षों में, यह एड्स की ओर ले जाती है।'
+          ],
+          diagnosis:'मैक्रोफेज ("HIV फैक्ट्री") → सहायक T-कोशिकाएँ → T-कोशिका में कमी → एड्स' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        <div class="tipex-case"><div class="tipex-case-title">${l.caseTitle}</div>
+        ${l.steps.map((s,i)=>step(i+1,s)).join('')}
+        <div class="tipex-diagnosis">✓ ${l.diagnosis}</div></div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  const lang = (typeof currentLang!=='undefined' && ex.title[currentLang]) ? currentLang : 'en';
+  document.getElementById('tipExampleTitle').textContent = ex.title[lang];
+  document.getElementById('tipExampleBody').innerHTML = ex.render(lang);
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTipsCh7(){
   const el = document.getElementById('studyTipsContent');
   if(!el) return;
@@ -4496,7 +4847,7 @@ function renderStudyTipsCh7(){
     <h3 style="color:var(--gold-2); margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ ${TIP_EXAMPLE_BTN_LABEL[currentLang]||TIP_EXAMPLE_BTN_LABEL.en}</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   `;

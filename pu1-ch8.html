@@ -328,6 +328,24 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .tip-list.neet li{border-left-color:var(--gold);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel2);color:var(--gold2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--line);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--line);color:var(--ink);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--ink-dim);line-height:1.55;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--ink-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--ink);min-width:20px;font-weight:700;color:var(--gold2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .marks-info{background:#0F6653;border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:12.5px;color:#EFFFFA;line-height:1.6;}
 .marks-info b{color:var(--gold);}
 .whatsnew-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;font-size:12px;color:#EFFFFA;background:linear-gradient(135deg,var(--teal2),#0a4239);border-bottom:1px solid var(--line);line-height:1.5;}
@@ -736,6 +754,14 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="sm-save-btn" id="streakModalCloseBtn">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="sm-save-btn" id="tipExampleCloseBtn">Close</button>
     </div>
   </div>
 
@@ -2076,6 +2102,136 @@ function renderDiagrams(){
 window.renderDiagrams = renderDiagrams;
 const STUDYTIPS_CH8_EN = {"title": "Study Tips &ndash; Cell: The Unit of Life", "intro": "How to study this chapter well, and what to focus on for NEET.", "theoryHead": "📘 Theory &mdash; How to Study This Chapter", "neetHead": "🎯 NEET Strategy for This Chapter", "theory": ["This chapter is dense with named structures &mdash; build one master table per organelle (structure, membrane type, key function, S-value/size if relevant) instead of memorising isolated facts.", "Group organelles by membrane type first: non-membrane-bound (ribosome, centriole), single-membrane (ER, Golgi, lysosome, vacuole, microbody), double-membrane (mitochondria, chloroplast, nucleus) &mdash; this one grouping answers a huge share of 'which of these is/isn't...' questions.", "Be precise with numbers that examiners love to swap: 70S vs 80S ribosomes, 9+2 (axoneme) vs 9+0 (centriole), 50S+30S vs 60S+40S subunits, 23 pairs of human chromosomes.", "Don't confuse mitochondria and chloroplasts' shared 'semi-autonomous' features (own DNA, own 70S ribosomes, divide by fission) with the fact that they are NOT part of the endomembrane system.", "Connect the endomembrane system as one coordinated pathway (RER &rarr; Golgi cis face &rarr; trans face &rarr; lysosome/secretion) rather than four separate topics &mdash; most 'sequence of events' questions test exactly this flow."], "neet": ["Direct recall questions ('who discovered/coined...', S-values, chromosome types) are extremely common and are the fastest, safest marks in this chapter &mdash; the Concepts and Flashcards tabs target exactly these.", "Assertion-Reason and Statement-based questions on prokaryote vs eukaryote and membrane-bound vs non-membrane-bound organelles appear almost every year in NEET/KCET-style papers.", "Don't neglect the cell theory/discovery-history section at the start of the chapter &mdash; these are quick, guaranteed 1&ndash;2 mark questions that many students skip while chasing organelle detail.", "This chapter pairs naturally with later chapters on cell division and biomolecules &mdash; a solid grip on chromosome structure and the nucleus here makes those chapters much easier."]};
 const STUDYTIPS_CH8_TRANSLATIONS = {"kn": {"title": "ಅಧ್ಯಯನ ಸಲಹೆಗಳು &ndash; ಜೀವಕೋಶ: ಜೀವನದ ಘಟಕ", "intro": "ಈ ಅಧ್ಯಾಯವನ್ನು ಚೆನ್ನಾಗಿ ಅಧ್ಯಯನ ಮಾಡುವುದು ಹೇಗೆ, ಮತ್ತು NEET ಗಾಗಿ ಏನನ್ನು ಗಮನಿಸಬೇಕು.", "theoryHead": "📘 ಸಿದ್ಧಾಂತ &mdash; ಈ ಅಧ್ಯಾಯವನ್ನು ಹೇಗೆ ಅಧ್ಯಯನ ಮಾಡುವುದು", "neetHead": "🎯 ಈ ಅಧ್ಯಾಯಕ್ಕಾಗಿ NEET ಕಾರ್ಯತಂತ್ರ", "theory": ["ಈ ಅಧ್ಯಾಯದಲ್ಲಿ ಹೆಸರಿಸಲಾದ ರಚನೆಗಳು ಸಾಂದ್ರವಾಗಿವೆ &mdash; ಪ್ರತ್ಯೇಕ ಸಂಗತಿಗಳನ್ನು ಬಾಯಿಪಾಠ ಮಾಡುವ ಬದಲು ಪ್ರತಿ ಆರ್ಗನೆಲ್‌ಗೆ ಒಂದು ಮಾಸ್ಟರ್ ಟೇಬಲ್ (ರಚನೆ, ಪೊರೆಯ ವಿಧ, ಮುಖ್ಯ ಕಾರ್ಯ, S-ಮೌಲ್ಯ/ಗಾತ್ರ) ಕಟ್ಟಿ.", "ಮೊದಲು ಆರ್ಗನೆಲ್‌ಗಳನ್ನು ಪೊರೆಯ ವಿಧದ ಪ್ರಕಾರ ಗುಂಪು ಮಾಡಿ: ಪೊರೆಯಿಲ್ಲದ (ರೈಬೋಸೋಮ್, ಸೆಂಟ್ರಿಯೋಲ್), ಏಕ-ಪೊರೆ (ER, ಗಾಲ್ಗಿ, ಲೈಸೋಸೋಮ್, ರಿಕ್ತಿಕೆ, ಮೈಕ್ರೊಬಾಡಿ), ದ್ವಿ-ಪೊರೆ (ಮೈಟೊಕಾಂಡ್ರಿಯ, ಕ್ಲೋರೊಪ್ಲಾಸ್ಟ್, ಕೇಂದ್ರಕ) &mdash; ಈ ಒಂದೇ ಗುಂಪೀಕರಣ ಬಹಳಷ್ಟು 'ಇವುಗಳಲ್ಲಿ ಯಾವುದು/ಯಾವುದಲ್ಲ' ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸುತ್ತದೆ.", "ಪರೀಕ್ಷಕರು ಬದಲಾಯಿಸಲು ಇಷ್ಟಪಡುವ ಸಂಖ್ಯೆಗಳ ಬಗ್ಗೆ ನಿಖರವಾಗಿರಿ: 70S vs 80S ರೈಬೋಸೋಮ್‌ಗಳು, 9+2 (ಆಕ್ಸೊನೀಮ್) vs 9+0 (ಸೆಂಟ್ರಿಯೋಲ್), 50S+30S vs 60S+40S ಉಪಘಟಕಗಳು, ಮಾನವರ 23 ಜೋಡಿ ವರ್ಣತಂತುಗಳು.", "ಮೈಟೊಕಾಂಡ್ರಿಯ ಮತ್ತು ಕ್ಲೋರೊಪ್ಲಾಸ್ಟ್‌ಗಳ ಹಂಚಿಕೆಯ 'ಅರೆ-ಸ್ವಾಯತ್ತ' ಲಕ್ಷಣಗಳನ್ನು (ಸ್ವಂತ DNA, ಸ್ವಂತ 70S ರೈಬೋಸೋಮ್‌ಗಳು, ಫಿಷನ್‌ನಿಂದ ವಿಭಜನೆ) ಅವು ಎಂಡೋಮೆಂಬ್ರೇನ್ ವ್ಯವಸ್ಥೆಯ ಭಾಗವಲ್ಲ ಎಂಬ ಅಂಶದೊಂದಿಗೆ ಗೊಂದಲಗೊಳಿಸಬೇಡಿ.", "ಎಂಡೋಮೆಂಬ್ರೇನ್ ವ್ಯವಸ್ಥೆಯನ್ನು ನಾಲ್ಕು ಪ್ರತ್ಯೇಕ ವಿಷಯಗಳಾಗಿ ಅಲ್ಲ, ಒಂದೇ ಸಂಘಟಿತ ಮಾರ್ಗವಾಗಿ (RER &rarr; ಗಾಲ್ಗಿ cis ಮುಖ &rarr; trans ಮುಖ &rarr; ಲೈಸೋಸೋಮ್/ಸ್ರವಿಸುವಿಕೆ) ಸಂಪರ್ಕಿಸಿ &mdash; ಹೆಚ್ಚಿನ 'ಘಟನೆಗಳ ಅನುಕ್ರಮ' ಪ್ರಶ್ನೆಗಳು ಇದನ್ನೇ ಪರೀಕ್ಷಿಸುತ್ತವೆ."], "neet": ["ನೇರ ಜ್ಞಾಪಕ ಪ್ರಶ್ನೆಗಳು ('ಯಾರು ಕಂಡುಹಿಡಿದರು/ಹೆಸರಿಸಿದರು...', S-ಮೌಲ್ಯಗಳು, ವರ್ಣತಂತು ವಿಧಗಳು) ಅತ್ಯಂತ ಸಾಮಾನ್ಯ ಮತ್ತು ಈ ಅಧ್ಯಾಯದ ಅತ್ಯಂತ ವೇಗದ, ಸುರಕ್ಷಿತ ಅಂಕಗಳಾಗಿವೆ &mdash; ಕಾನ್ಸೆಪ್ಟ್ಸ್ ಮತ್ತು ಫ್ಲ್ಯಾಶ್‌ಕಾರ್ಡ್ಸ್ ಟ್ಯಾಬ್‌ಗಳು ನಿಖರವಾಗಿ ಇವುಗಳನ್ನೇ ಗುರಿಯಾಗಿಸುತ್ತವೆ.", "ಪ್ರೊಕ್ಯಾರಿಯೋಟ್ vs ಯುಕ್ಯಾರಿಯೋಟ್ ಮತ್ತು ಪೊರೆ-ಬಂಧಿತ vs ಪೊರೆಯಿಲ್ಲದ ಆರ್ಗನೆಲ್‌ಗಳ ಮೇಲಿನ ಅಸಷನ್-ರೀಸನ್ ಮತ್ತು ಸ್ಟೇಟ್‌ಮೆಂಟ್-ಆಧಾರಿತ ಪ್ರಶ್ನೆಗಳು NEET/KCET ಶೈಲಿಯ ಪತ್ರಿಕೆಗಳಲ್ಲಿ ಬಹುತೇಕ ಪ್ರತಿ ವರ್ಷ ಕಾಣಿಸಿಕೊಳ್ಳುತ್ತವೆ.", "ಅಧ್ಯಾಯದ ಆರಂಭದ ಜೀವಕೋಶ ಸಿದ್ಧಾಂತ/ಆವಿಷ್ಕಾರ ಇತಿಹಾಸ ವಿಭಾಗವನ್ನು ನಿರ್ಲಕ್ಷಿಸಬೇಡಿ &mdash; ಇವು ವೇಗದ, ಖಚಿತ 1&ndash;2 ಅಂಕಗಳ ಪ್ರಶ್ನೆಗಳಾಗಿದ್ದು, ಅನೇಕ ವಿದ್ಯಾರ್ಥಿಗಳು ಆರ್ಗನೆಲ್ ವಿವರಗಳ ಹಿಂದೆ ಬಿದ್ದು ಇವನ್ನು ಬಿಟ್ಟುಬಿಡುತ್ತಾರೆ.", "ಈ ಅಧ್ಯಾಯ ನಂತರದ ಜೀವಕೋಶ ವಿಭಜನೆ ಮತ್ತು ಜೈವಿಕ ಅಣುಗಳ ಅಧ್ಯಾಯಗಳೊಂದಿಗೆ ಸ್ವಾಭಾವಿಕವಾಗಿ ಜೋಡಿಯಾಗುತ್ತದೆ &mdash; ಇಲ್ಲಿ ವರ್ಣತಂತು ರಚನೆ ಮತ್ತು ಕೇಂದ್ರಕದ ಗಟ್ಟಿ ಹಿಡಿತ, ಆ ಅಧ್ಯಾಯಗಳನ್ನು ಸುಲಭಗೊಳಿಸುತ್ತದೆ."]}, "hi": {"title": "अध्ययन सुझाव &ndash; कोशिका: जीवन की इकाई", "intro": "इस अध्याय को अच्छी तरह कैसे पढ़ें, और NEET के लिए किस पर ध्यान केंद्रित करें।", "theoryHead": "📘 सिद्धांत &mdash; इस अध्याय को कैसे पढ़ें", "neetHead": "🎯 इस अध्याय के लिए NEET रणनीति", "theory": ["इस अध्याय में नामित संरचनाएँ सघन हैं &mdash; अलग-अलग तथ्य रटने के बजाय हर अंगक के लिए एक मास्टर तालिका (संरचना, झिल्ली प्रकार, मुख्य कार्य, S-मान/आकार) बनाएँ।", "पहले अंगकों को झिल्ली के प्रकार से समूहित करें: झिल्ली-रहित (राइबोसोम, तारककाय), एकल-झिल्ली (ER, गॉल्जी, लाइसोसोम, रसधानी, माइक्रोबॉडी), द्वि-झिल्ली (माइटोकॉन्ड्रिया, हरितलवक, केंद्रक) &mdash; यही एक समूहीकरण अधिकांश 'इनमें से कौन-सा/कौन-सा नहीं' प्रश्नों का उत्तर दे देता है।", "उन संख्याओं में सटीक रहें जिन्हें परीक्षक बदलना पसंद करते हैं: 70S बनाम 80S राइबोसोम, 9+2 (एक्सोनीम) बनाम 9+0 (तारककाय), 50S+30S बनाम 60S+40S उपइकाइयाँ, मनुष्य के 23 जोड़े गुणसूत्र।", "माइटोकॉन्ड्रिया और हरितलवक की साझा 'अर्ध-स्वायत्त' विशेषताओं (अपना DNA, अपने 70S राइबोसोम, विखंडन से विभाजन) को इस तथ्य के साथ भ्रमित न करें कि वे अंतर्द्रव्यी झिल्ली-तंत्र का हिस्सा नहीं हैं।", "अंतर्द्रव्यी झिल्ली-तंत्र को चार अलग विषयों के बजाय एक समन्वित मार्ग के रूप में जोड़ें (RER → गॉल्जी cis फलक → trans फलक → लाइसोसोम/स्रवण) &mdash; अधिकांश 'घटनाओं के क्रम' वाले प्रश्न ठीक इसी की जाँच करते हैं।"], "neet": ["सीधे स्मरण वाले प्रश्न ('किसने खोजा/नाम दिया...', S-मान, गुणसूत्र प्रकार) अत्यंत सामान्य हैं और इस अध्याय के सबसे तेज़, सुरक्षित अंक हैं &mdash; कॉन्सेप्ट्स और फ्लैशकार्ड्स टैब ठीक इन्हीं को लक्षित करते हैं।", "प्रोकैरियोट बनाम यूकैरियोट और झिल्ली-बद्ध बनाम झिल्ली-रहित अंगकों पर अभिकथन-कारण और कथन-आधारित प्रश्न NEET/KCET शैली के प्रश्नपत्रों में लगभग हर साल आते हैं।", "अध्याय की शुरुआत के कोशिका सिद्धांत/खोज इतिहास खंड की उपेक्षा न करें &mdash; ये त्वरित, सुनिश्चित 1&ndash;2 अंकों के प्रश्न हैं, जिन्हें कई छात्र अंगक विवरण के पीछे भागते हुए छोड़ देते हैं।", "यह अध्याय आगे आने वाले कोशिका विभाजन और जैव-अणु अध्यायों से स्वाभाविक रूप से जुड़ता है &mdash; यहाँ गुणसूत्र संरचना और केंद्रक की मजबूत पकड़, उन अध्यायों को कहीं आसान बना देती है।"]}};
+/* ---- Study Tips "View example" popovers: the master organelle table and the
+   endomembrane pathway are both just instructions in the tip text ("build a
+   table...", "connect the pathway...") with nothing to look at. These two
+   buttons show the actual filled-in artifact the tip is describing, built
+   from this chapter's own Compare Matrix (COMPARE_DATA) and Board Important
+   Q&amp;As (BOARD_IMPORTANT_CH8, both defined further down this same script)
+   so the facts always match the other tabs - nothing is duplicated or
+   re-typed by hand. ---- */
+const TIP_EXAMPLE_INDEX = {0:'organelle-table', 4:'endomembrane-flow'};
+const TIP_EXAMPLE_BTN_LABEL = {en:'View example', kn:'ಉದಾಹರಣೆ ನೋಡಿ', hi:'उदाहरण देखें'};
+/* Trilingual content below reuses the exact vetted Kannada/Hindi vocabulary
+   already established in GLOSSARY_TRANSLATIONS_CH8 and STUDYTIPS_CH8_TRANSLATIONS
+   (organelle names, membrane/organelle category words, etc.) so terminology
+   stays consistent with the rest of the chapter rather than introducing new,
+   unverified translations. Terms with no vetted equivalent anywhere in this
+   file (e.g. Chromatin, Chromoplast, Leucoplast, Prokaryotic/Eukaryotic) are
+   transliterated rather than guessed at. */
+const TIP_EXAMPLES = {
+  'organelle-table': {
+    title: {
+      en: '📊 Sample Master Table — Organelles',
+      kn: '📊 ಮಾದರಿ ಮಾಸ್ಟರ್ ಟೇಬಲ್ — ಆರ್ಗನೆಲ್‌ಗಳು',
+      hi: '📊 नमूना मास्टर तालिका — अंगक'
+    },
+    render: function(lang){
+      const TR = {
+        'Prokaryotic Cell': { name:{kn:'ಪ್ರೊಕ್ಯಾರಿಯೋಟಿಕ್ ಕೋಶ',hi:'प्रोकैरियोटिक कोशिका'}, organ:{kn:'ಕೋಶದ ವಿಧ',hi:'कोशिका प्रकार'}, purpose:{kn:'ಆಂತರಿಕ ವಿಭಾಗೀಕರಣವಿಲ್ಲದೆ ಮೂಲಭೂತ ಜೀವನ ಕ್ರಿಯೆಗಳು',hi:'आंतरिक कक्षीकरण के बिना मूल जीवन-क्रियाएँ'}, keyFeature:{kn:'ನಿಜ ಕೇಂದ್ರಕದ ಬದಲು ನ್ಯೂಕ್ಲಿಯಾಯ್ಡ್',hi:'वास्तविक केंद्रक के स्थान पर न्यूक्लियॉइड'} },
+        'Eukaryotic Cell': { name:{kn:'ಯುಕ್ಯಾರಿಯೋಟಿಕ್ ಕೋಶ',hi:'यूकैरियोटिक कोशिका'}, organ:{kn:'ಕೋಶದ ವಿಧ',hi:'कोशिका प्रकार'}, purpose:{kn:'ವಿಭಾಗೀಕೃತ ಜೀವನ ಕ್ರಿಯೆಗಳು',hi:'कक्षीकृत (विभाजित) जीवन-क्रियाएँ'}, keyFeature:{kn:'80S ಸೈಟೋಪ್ಲಾಸ್ಮಿಕ್ ರೈಬೋಸೋಮ್‌ಗಳು',hi:'80S कोशिकाद्रव्यी राइबोसोम'} },
+        'Rough ER (RER)': { name:{kn:'ಒರಟು ER (RER)',hi:'खुरदरा ER (RER)'}, organ:{kn:'ಎಂಡೋಮೆಂಬ್ರೇನ್ ವ್ಯವಸ್ಥೆ',hi:'अंतर्द्रव्यी झिल्ली-तंत्र'}, purpose:{kn:'ಪ್ರೋಟೀನ್ ಸಂಶ್ಲೇಷಣೆ',hi:'प्रोटीन संश्लेषण'}, keyFeature:{kn:'ಸ್ರವಿಸುವ ಕೋಶಗಳಲ್ಲಿ ಹೇರಳವಾಗಿದೆ',hi:'स्रवणशील कोशिकाओं में प्रचुर'} },
+        'Smooth ER (SER)': { name:{kn:'ನುಣುಪು ER (SER)',hi:'चिकना ER (SER)'}, organ:{kn:'ಎಂಡೋಮೆಂಬ್ರೇನ್ ವ್ಯವಸ್ಥೆ',hi:'अंतर्द्रव्यी झिल्ली-तंत्र'}, purpose:{kn:'ಲಿಪಿಡ್ ಸಂಶ್ಲೇಷಣೆ',hi:'लिपिड संश्लेषण'}, keyFeature:{kn:'ಸ್ಟಿರಾಯಿಡ್ ಸ್ರವಿಸುವ ಕೋಶಗಳಲ್ಲಿ ಹೇರಳವಾಗಿದೆ',hi:'स्टेरॉयड-स्रावी कोशिकाओं में प्रचुर'} },
+        'Mitochondrion': { name:{kn:'ಮೈಟೊಕಾಂಡ್ರಿಯ',hi:'माइटोकॉन्ड्रिया'}, organ:{kn:'ಅರೆ-ಸ್ವಾಯತ್ತ ಆರ್ಗನೆಲ್',hi:'अर्ध-स्वायत्त अंगक'}, purpose:{kn:'ಆಕ್ಸಿಜನ್‌ಯುಕ್ತ ಉಸಿರಾಟ, ATP ಉತ್ಪಾದನೆ',hi:'ऑक्सी-श्वसन, ATP उत्पादन'}, keyFeature:{kn:'ಸ್ವಂತ ವೃತ್ತಾಕಾರ DNA + 70S ರೈಬೋಸೋಮ್‌ಗಳು; ಫಿಷನ್‌ನಿಂದ ವಿಭಜನೆ',hi:'अपना वृत्ताकार DNA + 70S राइबोसोम; विखंडन से विभाजन'} },
+        'Chloroplast': { name:{kn:'ಕ್ಲೋರೊಪ್ಲಾಸ್ಟ್',hi:'हरितलवक'}, organ:{kn:'ಅರೆ-ಸ್ವಾಯತ್ತ ಆರ್ಗನೆಲ್',hi:'अर्ध-स्वायत्त अंगक'}, purpose:{kn:'ದ್ಯುತಿಸಂಶ್ಲೇಷಣೆ',hi:'प्रकाश-संश्लेषण'}, keyFeature:{kn:'ಸ್ವಂತ ವೃತ್ತಾಕಾರ DNA + 70S ರೈಬೋಸೋಮ್‌ಗಳು',hi:'अपना वृत्ताकार DNA + 70S राइबोसोम'} },
+        'Lysosome': { name:{kn:'ಲೈಸೋಸೋಮ್',hi:'लाइसोसोम'}, organ:{kn:'ಎಂಡೋಮೆಂಬ್ರೇನ್ ವ್ಯವಸ್ಥೆ',hi:'अंतर्द्रव्यी झिल्ली-तंत्र'}, purpose:{kn:'ಅಂತರಕೋಶೀಯ ಜೀರ್ಣಕ್ರಿಯೆ',hi:'अंतःकोशिकीय पाचन'}, keyFeature:{kn:'ಆಮ್ಲೀಯ ಪರಿಸರದಲ್ಲಿ ಉತ್ತಮವಾಗಿ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ',hi:'अम्लीय वातावरण में सर्वोत्तम कार्य करता है'} },
+        'Vacuole': { name:{kn:'ರಿಕ್ತಿಕೆ',hi:'रसधानी'}, organ:{kn:'ಎಂಡೋಮೆಂಬ್ರೇನ್ ವ್ಯವಸ್ಥೆ',hi:'अंतर्द्रव्यी झिल्ली-तंत्र'}, purpose:{kn:'ಸಂಗ್ರಹಣೆ, ವಿಸರ್ಜನೆ, ನೀರಿನ ಸಮತೋಲನ',hi:'संग्रहण, उत्सर्जन, जल संतुलन'}, keyFeature:{kn:'ಟೋನೊಪ್ಲಾಸ್ಟ್ ಗ್ರೇಡಿಯಂಟ್‌ಗೆ ವಿರುದ್ಧವಾಗಿ ಅಯಾನುಗಳನ್ನು ಪಂಪ್ ಮಾಡುತ್ತದೆ',hi:'टोनोप्लास्ट प्रवणता के विरुद्ध आयनों को पंप करता है'} },
+        'Cilia': { name:{kn:'ಸಿಲಿಯಂ',hi:'पक्ष्माभ'}, organ:{kn:'ಕೋಶ ಮೇಲ್ಮೈ / ಚಲನಶೀಲ ರಚನೆ',hi:'कोशिका सतह / गति संरचना'}, purpose:{kn:'ಚಲನಶೀಲತೆ (ಹುಟ್ಟಿನಂತೆ ಬೀಸುವಿಕೆ)',hi:'गतिशीलता (चप्पू जैसी गति)'}, keyFeature:{kn:'ಚಿಕ್ಕದಾಗಿದ್ದು, ಹೆಚ್ಚಿನ ಸಂಖ್ಯೆಯಲ್ಲಿವೆ',hi:'छोटे, अधिक संख्या में'} },
+        'Flagella': { name:{kn:'ಫ್ಲ್ಯಾಜೆಲ್ಲಂ',hi:'कशाभिका'}, organ:{kn:'ಕೋಶ ಮೇಲ್ಮೈ / ಚಲನಶೀಲ ರಚನೆ',hi:'कोशिका सतह / गति संरचना'}, purpose:{kn:'ಚಲನಶೀಲತೆ',hi:'गतिशीलता'}, keyFeature:{kn:'ಉದ್ದವಾಗಿದ್ದು, ಕಡಿಮೆ ಸಂಖ್ಯೆಯಲ್ಲಿವೆ',hi:'लंबे, कम संख्या में'} },
+        'Centriole': { name:{kn:'ಸೆಂಟ್ರಿಯೋಲ್',hi:'तारककाय'}, organ:{kn:'ಪೊರೆಯಿಲ್ಲದ ಆರ್ಗನೆಲ್',hi:'झिल्ली-रहित अंगक'}, purpose:{kn:'ಬೇಸಲ್ ಬಾಡಿ ಮತ್ತು ಸ್ಪಿಂಡಲ್ ಫೈಬರ್ ಅನ್ನು ಸಂಘಟಿಸುತ್ತದೆ',hi:'आधार काय और तर्कु तंतु को संगठित करता है'}, keyFeature:{kn:'ಪ್ರತಿ ಸೆಂಟ್ರೊಸೋಮ್‌ಗೆ ಎರಡು ಸೆಂಟ್ರಿಯೋಲ್‌ಗಳು, ಪರಸ್ಪರ ಲಂಬವಾಗಿ',hi:'प्रत्येक सेंट्रोसोम में दो तारककाय, परस्पर लंबवत'} },
+        'Chromatin': { name:{kn:'ಕ್ರೊಮಾಟಿನ್',hi:'क्रोमैटिन'}, organ:{kn:'ಕೇಂದ್ರಕ',hi:'केंद्रक'}, purpose:{kn:'ಜೀನ್ ಓದುವಿಕೆ/DNA ಪ್ರತಿಕೃತಿಗೆ ಲಭ್ಯವಿರುವ ರೂಪ',hi:'जीन वाचन/DNA प्रतिकृति हेतु सुलभ रूप'}, keyFeature:{kn:'ಇಂಟರ್‌ಫೇಸ್‌ನಲ್ಲಿ ಇರುತ್ತದೆ',hi:'अंतरावस्था (इंटरफेज़) में उपस्थित'} },
+        'Chromosome': { name:{kn:'ವರ್ಣತಂತು',hi:'गुणसूत्र'}, organ:{kn:'ಕೇಂದ್ರಕ',hi:'केंद्रक'}, purpose:{kn:'ಆನುವಂಶಿಕ ವಸ್ತುವಿನ ಸುರಕ್ಷಿತ ಪ್ರತ್ಯೇಕತೆ',hi:'आनुवंशिक पदार्थ का सुरक्षित पृथक्करण'}, keyFeature:{kn:'ಜೀವಕೋಶ ವಿಭಜನೆಯ ವೇಳೆ ಇರುತ್ತದೆ, ಸೆಂಟ್ರೊಮಿಯರ್ ಹೊಂದಿದೆ',hi:'कोशिका विभाजन के दौरान उपस्थित, सेंट्रोमियर रखता है'} },
+        'Chromoplast': { name:{kn:'ಕ್ರೊಮೊಪ್ಲಾಸ್ಟ್',hi:'क्रोमोप्लास्ट'}, organ:{kn:'ಪ್ಲಾಸ್ಟಿಡ್',hi:'प्लास्टिड'}, purpose:{kn:'ವರ್ಣೀಕರಣ (ದ್ಯುತಿಸಂಶ್ಲೇಷಣೆಯಲ್ಲದ)',hi:'वर्णन (अप्रकाश-संश्लेषी)'}, keyFeature:{kn:'ಹಳದಿ/ಕಿತ್ತಳೆ/ಕೆಂಪು ಬಣ್ಣ ನೀಡುತ್ತದೆ',hi:'पीला/नारंगी/लाल रंग देता है'} },
+        'Leucoplast': { name:{kn:'ಲ್ಯೂಕೊಪ್ಲಾಸ್ಟ್',hi:'ल्यूकोप्लास्ट'}, organ:{kn:'ಪ್ಲಾಸ್ಟಿಡ್',hi:'प्लास्टिड'}, purpose:{kn:'ಸಂಗ್ರಹಣೆ',hi:'संग्रहण'}, keyFeature:{kn:'ಅಮೈಲೋಪ್ಲಾಸ್ಟ್ (ಪಿಷ್ಟ), ಎಲಾಯೋಪ್ಲಾಸ್ಟ್ (ಎಣ್ಣೆ), ಅಲ್ಯುರೋಪ್ಲಾಸ್ಟ್ (ಪ್ರೋಟೀನ್)',hi:'एमाइलोप्लास्ट (स्टार्च), इलायोप्लास्ट (तेल), एल्यूरोप्लास्ट (प्रोटीन)'} }
+      };
+      const L = {
+        en: { intro:"This is exactly the table the tip describes — one row per organelle (category, function, key feature) — built from this chapter's own Compare Matrix.",
+              th:['Organelle','Category','Function &amp; Key Feature'],
+              note:"Full detail (structural change, example) for every row is in the <b>Summary</b> tab's Compare Matrix — this is the condensed version worth memorising first." },
+        kn: { intro:'ಇದು ಸಲಹೆ ವಿವರಿಸುವ ನಿಖರವಾದ ಟೇಬಲ್ — ಪ್ರತಿ ಆರ್ಗನೆಲ್‌ಗೂ ಒಂದು ಸಾಲು (ವರ್ಗ, ಕಾರ್ಯ, ಮುಖ್ಯ ಲಕ್ಷಣ) — ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Compare Matrix ನಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ.',
+              th:['ಆರ್ಗನೆಲ್','ವರ್ಗ','ಕಾರ್ಯ ಮತ್ತು ಮುಖ್ಯ ಲಕ್ಷಣ'],
+              note:'ಪ್ರತಿ ಸಾಲಿನ ಪೂರ್ಣ ವಿವರ (ರಚನಾತ್ಮಕ ಬದಲಾವಣೆ, ಉದಾಹರಣೆ) <b>Summary</b> ಟ್ಯಾಬ್‌ನ Compare Matrix ನಲ್ಲಿದೆ — ಇದು ಮೊದಲು ಕಂಠಪಾಠ ಮಾಡಲು ಯೋಗ್ಯವಾದ ಸಂಕ್ಷಿಪ್ತ ಆವೃತ್ತಿ.' },
+        hi: { intro:'यह ठीक वही तालिका है जिसका वर्णन यह सुझाव करता है — प्रत्येक अंगक के लिए एक पंक्ति (वर्ग, कार्य, मुख्य लक्षण) — इस अध्याय के अपने Compare Matrix से बनाई गई।',
+              th:['अंगक','वर्ग','कार्य और मुख्य लक्षण'],
+              note:'हर पंक्ति का पूरा विवरण (संरचनात्मक परिवर्तन, उदाहरण) <b>Summary</b> टैब के Compare Matrix में है — यह पहले याद करने योग्य संक्षिप्त संस्करण है।' }
+      };
+      const l = L[lang] || L.en;
+      const rows = COMPARE_DATA.map(r=>{
+        const t = TR[r.name];
+        if(lang==='en' || !t) return r;
+        return { name: t.name[lang]||r.name, organ: t.organ[lang]||r.organ, purpose: t.purpose[lang]||r.purpose, keyFeature: t.keyFeature[lang]||r.keyFeature };
+      });
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${l.th[1]}</th><th>${l.th[2]}</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td>${r.organ}</td><td><b>${r.purpose}</b><br>${r.keyFeature}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">${l.note}</div>`;
+    }
+  },
+  'endomembrane-flow': {
+    title: {
+      en: '🔗 Endomembrane System — One Coordinated Pathway',
+      kn: '🔗 ಎಂಡೋಮೆಂಬ್ರೇನ್ ವ್ಯವಸ್ಥೆ — ಒಂದು ಸಂಘಟಿತ ಮಾರ್ಗ',
+      hi: '🔗 अंतर्द्रव्यी झिल्ली-तंत्र — एक समन्वित मार्ग'
+    },
+    render: function(lang){
+      function step(q, a){ return `<div class="tipex-step"><span class="tipex-q">${q}.</span><span>${a}</span></div>`; }
+      const DATA = {
+        en: { intro:"The same four organelles, followed start to finish as one pathway — built from this chapter's own Board Important answers and Compare Matrix.",
+          caseTitle:'RER &rarr; Golgi (cis &rarr; cisternae &rarr; trans) &rarr; Lysosome / Secretion',
+          steps:[ '<b>Rough ER (RER):</b> ribosomes studded on its outer surface synthesise secretory proteins.',
+                  '<b>Transport vesicle</b> buds off the RER and fuses with the Golgi\'s <b>cis face</b> (forming, convex) &mdash; the face that faces the ER and receives newly synthesised vesicles.',
+                  'Inside the stacked <b>cisternae</b>, the Golgi carries out post-translational modification, phosphorylation and glycosylation (building glycoproteins &amp; glycolipids).',
+                  'The <b>trans face</b> (maturing, concave) faces the plasma membrane and releases the mature secretory vesicles.' ],
+          extra:'Those vesicles are packaged into <b>primary lysosomes</b> (rich in hydrolytic enzymes, for intracellular digestion) or sent for <b>secretion</b> out of the cell.',
+          diagnosis:'One flowing pathway, not four separate topics' },
+        kn: { intro:'ಅದೇ ನಾಲ್ಕು ಆರ್ಗನೆಲ್‌ಗಳನ್ನು, ಆರಂಭದಿಂದ ಅಂತ್ಯದವರೆಗೆ ಒಂದೇ ಮಾರ್ಗವಾಗಿ ಅನುಸರಿಸಲಾಗಿದೆ — ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Board Important ಉತ್ತರಗಳು ಮತ್ತು Compare Matrix ನಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ.',
+          caseTitle:'RER &rarr; ಗಾಲ್ಗಿ (cis &rarr; cisternae &rarr; trans) &rarr; ಲೈಸೋಸೋಮ್ / ಸ್ರವಿಸುವಿಕೆ',
+          steps:[ '<b>ಒರಟು ER (RER):</b> ಇದರ ಹೊರಮೈಯಲ್ಲಿ ಹುದುಗಿದ ರೈಬೋಸೋಮ್‌ಗಳು ಸ್ರವಿಸುವ ಪ್ರೋಟೀನ್‌ಗಳನ್ನು ಸಂಶ್ಲೇಷಿಸುತ್ತವೆ.',
+                  '<b>ಟ್ರಾನ್ಸ್‌ಪೋರ್ಟ್ ವೆಸಿಕಲ್</b> RER ನಿಂದ ಮೊಗ್ಗಾಗಿ ಬೇರ್ಪಟ್ಟು ಗಾಲ್ಗಿಯ <b>cis ಮುಖ</b>ದೊಂದಿಗೆ (ರೂಪಿಸುವ, ಪೀನ) ಬೆಸೆಯುತ್ತದೆ &mdash; ಇದು ER ಕಡೆಗೆ ಮುಖಮಾಡಿದ್ದು, ಹೊಸದಾಗಿ ಸಂಶ್ಲೇಷಿತ ವೆಸಿಕಲ್‌ಗಳನ್ನು ಪಡೆಯುವ ಮುಖ.',
+                  'ಒಂದರ ಮೇಲೊಂದು ಜೋಡಿಸಲ್ಪಟ್ಟ <b>cisternae</b> ಯೊಳಗೆ, ಗಾಲ್ಗಿ ಪೋಸ್ಟ್-ಟ್ರಾನ್ಸ್‌ಲೇಷನಲ್ ಮಾರ್ಪಾಡು, ಫಾಸ್ಫೊರಿಲೇಷನ್ ಮತ್ತು ಗ್ಲೈಕೊಸಿಲೇಷನ್ (ಗ್ಲೈಕೊಪ್ರೋಟೀನ್ ಮತ್ತು ಗ್ಲೈಕೊಲಿಪಿಡ್‌ಗಳ ನಿರ್ಮಾಣ) ನಡೆಸುತ್ತದೆ.',
+                  '<b>trans ಮುಖ</b> (ಪರಿಪಕ್ವಗೊಳಿಸುವ, ಕಾನ್ಕೇವ್) ಪ್ಲಾಸ್ಮಾ ಪೊರೆಯ ಕಡೆಗೆ ಮುಖಮಾಡಿ, ಪರಿಪಕ್ವ ಸ್ರವಿಸುವ ವೆಸಿಕಲ್‌ಗಳನ್ನು ಬಿಡುಗಡೆ ಮಾಡುತ್ತದೆ.' ],
+          extra:'ಆ ವೆಸಿಕಲ್‌ಗಳನ್ನು <b>ಪ್ರಾಥಮಿಕ ಲೈಸೋಸೋಮ್‌ಗಳಾಗಿ</b> (ಹೈಡ್ರೊಲೈಟಿಕ್ ಕಿಣ್ವಗಳಿಂದ ಸಮೃದ್ಧ, ಅಂತರಕೋಶೀಯ ಜೀರ್ಣಕ್ರಿಯೆಗಾಗಿ) ಪ್ಯಾಕ್ ಮಾಡಲಾಗುತ್ತದೆ ಅಥವಾ ಕೋಶದಿಂದ ಹೊರಗೆ <b>ಸ್ರವಿಸುವಿಕೆ</b>ಗಾಗಿ ಕಳುಹಿಸಲಾಗುತ್ತದೆ.',
+          diagnosis:'ಒಂದು ನಿರಂತರ ಹರಿಯುವ ಮಾರ್ಗ, ನಾಲ್ಕು ಪ್ರತ್ಯೇಕ ವಿಷಯಗಳಲ್ಲ' },
+        hi: { intro:'वही चार अंगक, आरंभ से अंत तक एक मार्ग के रूप में अनुसरण किए गए — इस अध्याय के अपने Board Important उत्तरों और Compare Matrix से बनाया गया।',
+          caseTitle:'RER &rarr; गॉल्जी (cis &rarr; cisternae &rarr; trans) &rarr; लाइसोसोम / स्रवण',
+          steps:[ '<b>खुरदरा ER (RER):</b> इसकी बाहरी सतह पर जुड़े राइबोसोम स्रावी प्रोटीन संश्लेषित करते हैं।',
+                  '<b>परिवहन पुटिका (ट्रांसपोर्ट वेसिकल)</b> RER से कली के रूप में अलग होकर गॉल्जी के <b>cis फलक</b> (निर्माणकारी, उत्तल) से जुड़ जाती है &mdash; यह वह फलक है जो ER की ओर होता है और नई संश्लेषित पुटिकाओं को प्राप्त करता है।',
+                  'स्तूपित <b>cisternae</b> के भीतर, गॉल्जी अनुवाद-पश्चात रूपांतरण, फॉस्फोरिलेशन और ग्लाइकोसिलेशन (ग्लाइकोप्रोटीन व ग्लाइकोलिपिड का निर्माण) करता है।',
+                  '<b>trans फलक</b> (परिपक्वकारी, अवतल) प्लाज्मा झिल्ली की ओर होता है और परिपक्व स्रावी पुटिकाओं को मुक्त करता है।' ],
+          extra:'उन पुटिकाओं को <b>प्राथमिक लाइसोसोम</b> (हाइड्रोलिटिक एंजाइम से भरपूर, अंतःकोशिकीय पाचन हेतु) के रूप में पैक किया जाता है या कोशिका से बाहर <b>स्रवण</b> हेतु भेजा जाता है।',
+          diagnosis:'एक सतत प्रवाहित मार्ग, चार अलग विषय नहीं' }
+      };
+      const d = DATA[lang] || DATA.en;
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">${d.intro}</div>
+        <div class="tipex-case">
+          <div class="tipex-case-title">${d.caseTitle}</div>
+          ${d.steps.map((s,i)=>step(i+1, s)).join('')}
+          <div class="tipex-step"><span class="tipex-q">→</span><span>${d.extra}</span></div>
+          <div class="tipex-diagnosis">✓ ${d.diagnosis}</div>
+        </div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  const lang = (typeof currentLang!=='undefined' && ex.title[currentLang]) ? currentLang : 'en';
+  document.getElementById('tipExampleTitle').textContent = ex.title[lang];
+  document.getElementById('tipExampleBody').innerHTML = ex.render(lang);
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTips(){
   const en = STUDYTIPS_CH8_EN;
   const tr = (currentLang !== 'en') && STUDYTIPS_CH8_TRANSLATIONS[currentLang];
@@ -2084,7 +2240,7 @@ function renderStudyTips(){
     <h3 style="color:var(--gold);margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--ink-dim);font-size:12px;margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ ${TIP_EXAMPLE_BTN_LABEL[currentLang]||TIP_EXAMPLE_BTN_LABEL.en}</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   </div>`;

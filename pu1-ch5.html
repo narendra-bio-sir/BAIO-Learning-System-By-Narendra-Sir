@@ -328,6 +328,24 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .tip-list.neet li{border-left-color:var(--gold);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel2);color:var(--gold2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--line);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--line);color:var(--ink);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--ink-dim);line-height:1.55;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--ink-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--ink);min-width:20px;font-weight:700;color:var(--gold2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .marks-info{background:#0F6653;border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:12.5px;color:#EFFFFA;line-height:1.6;}
 .marks-info b{color:var(--gold);}
 .whatsnew-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;font-size:12px;color:#EFFFFA;background:linear-gradient(135deg,var(--teal2),#0a4239);border-bottom:1px solid var(--line);line-height:1.5;}
@@ -724,6 +742,14 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="sm-save-btn" id="streakModalCloseBtn">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="sm-save-btn" id="tipExampleCloseBtn">Close</button>
     </div>
   </div>
 
@@ -2002,6 +2028,118 @@ const STUDYTIPS_CH5_TRANSLATIONS = {
     ]
   }
 };
+/* ---- Study Tips "View example" popovers: the modifications table and the
+   floral formula are both just instructions in the tip text ("build a
+   table...", "learn the notation...") with nothing to look at. These two
+   buttons show the actual filled-in artifact the tip is describing, built
+   from this chapter's own Compare Matrix (COMPARE_DATA), Glossary
+   (GLOSSARY_DATA) and Tree Explorer (TREE_DATA) data - all defined further
+   down this same script - so the facts always match the other tabs; nothing
+   is duplicated or re-typed by hand. ---- */
+const TIP_EXAMPLE_INDEX = {1:'modifications-table', 2:'floral-formula'};
+const TIP_EXAMPLE_BTN_LABEL = {en:'View example', kn:'ಉದಾಹರಣೆ ನೋಡಿ', hi:'उदाहरण देखें'};
+/* Trilingual content below reuses the exact vetted Kannada/Hindi botanical
+   vocabulary already established in GLOSSARY_TRANSLATIONS_CH5 and the
+   chapter's own Study Tips (ಬೇರು/जड़, ಕಾಂಡ/तना, ಎಲೆ/पत्ती, Calyx/Corolla/
+   Androecium/Gynoecium/Epipetalous definitions) so terminology stays
+   consistent with the rest of the chapter rather than introducing new,
+   unverified translations. Modification/plant names (e.g. Rhizome, Corm,
+   Phylloclade) have no vetted single-word Kannada/Hindi equivalent anywhere
+   in this file, so they are kept exactly as the Glossary itself keeps its
+   own term keys &ndash; untranslated technical names, same as every other
+   tab in this chapter. */
+const TIP_EXAMPLES = {
+  'modifications-table': {
+    title: {
+      en: '📊 Sample Table — Root / Stem / Leaf Modifications',
+      kn: '📊 ಮಾದರಿ ಟೇಬಲ್ — ಬೇರು / ಕಾಂಡ / ಎಲೆಯ ಮಾರ್ಪಾಡುಗಳು',
+      hi: '📊 नमूना तालिका — जड़ / तना / पत्ती के रूपांतरण'
+    },
+    render: function(lang){
+      const CAT = { Root:{kn:'ಬೇರು',hi:'जड़'}, Stem:{kn:'ಕಾಂಡ',hi:'तना'}, Leaf:{kn:'ಎಲೆ',hi:'पत्ती'} };
+      const L = {
+        en: { intro:"This is exactly the table the tip describes — one row per modification, grouped by organ, with one example each — built from this chapter's own Compare Matrix.",
+              th:['Organ','Modification','Example'],
+              note:"Full detail (purpose, structural change) for every row is in the <b>Summary</b> tab's Compare Matrix — this is the condensed version worth memorising first." },
+        kn: { intro:'ಇದು ಸಲಹೆ ವಿವರಿಸುವ ನಿಖರವಾದ ಟೇಬಲ್ — ಪ್ರತಿ ಮಾರ್ಪಾಡಿಗೂ ಒಂದು ಸಾಲು, ಅಂಗದ ಪ್ರಕಾರ ಗುಂಪುಗೊಳಿಸಿ, ಪ್ರತಿಯೊಂದಕ್ಕೂ ಒಂದು ಉದಾಹರಣೆ — ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Compare Matrix ನಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ.',
+              th:['ಅಂಗ','ಮಾರ್ಪಾಡು','ಉದಾಹರಣೆ'],
+              note:'ಪ್ರತಿ ಸಾಲಿನ ಪೂರ್ಣ ವಿವರ (ಉದ್ದೇಶ, ರಚನಾತ್ಮಕ ಬದಲಾವಣೆ) <b>Summary</b> ಟ್ಯಾಬ್‌ನ Compare Matrix ನಲ್ಲಿದೆ — ಇದು ಮೊದಲು ಕಂಠಪಾಠ ಮಾಡಲು ಯೋಗ್ಯವಾದ ಸಂಕ್ಷಿಪ್ತ ಆವೃತ್ತಿ.' },
+        hi: { intro:'यह ठीक वही तालिका है जिसका वर्णन यह सुझाव करता है — प्रत्येक रूपांतरण के लिए एक पंक्ति, अंग के अनुसार समूहित, हर एक के साथ एक उदाहरण — इस अध्याय के अपने Compare Matrix से बनाई गई।',
+              th:['अंग','रूपांतरण','उदाहरण'],
+              note:'हर पंक्ति का पूरा विवरण (उद्देश्य, संरचनात्मक परिवर्तन) <b>Summary</b> टैब के Compare Matrix में है — यह पहले याद करने योग्य संक्षिप्त संस्करण है।' }
+      };
+      const l = L[lang] || L.en;
+      const rows = COMPARE_DATA.map(c=>{
+        const category = c.organ.indexOf('Root')===0 ? 'Root' : c.organ.indexOf('Stem')===0 ? 'Stem' : 'Leaf';
+        const catLabel = (lang!=='en' && CAT[category][lang]) ? CAT[category][lang] : category;
+        return {category: catLabel, name:c.name, example:c.example};
+      });
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${l.th[1]}</th><th>${l.th[2]}</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.category}</td><td>${r.name}</td><td>${r.example}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">${l.note}</div>`;
+    }
+  },
+  'floral-formula': {
+    title: {
+      en: '🔍 Floral Formula Decoded — Family Solanaceae',
+      kn: '🔍 ಪುಷ್ಪ ಸೂತ್ರ ವಿವರಣೆ — Solanaceae ಕುಟುಂಬ',
+      hi: '🔍 पुष्प सूत्र की व्याख्या — कुल Solanaceae'
+    },
+    render: function(lang){
+      function gloss(term, lg){ const g = GLOSSARY_DATA.find(x=>x.term===term); if(!g) return ''; if(lg==='en') return g.def; const tr = GLOSSARY_TRANSLATIONS_CH5[term]; return (tr && tr[lg]) ? tr[lg] : g.def; }
+      function step(sym, label, note){ return `<div class="tipex-step"><span class="tipex-q">${sym}</span><span><b>${label}</b> — ${note}</span></div>`; }
+      const L = {
+        en: { intro:"The tip asks you to learn floral formula notation cold — here is the real formula for Solanaceae, decoded symbol by symbol, built from this chapter's own Tree Explorer and Glossary data.",
+              caseTitle:'K(5) C(5) A5 G(2) &ndash; typical Solanaceae flower',
+              labels:['Calyx — 5, fused','Corolla — 5, fused','Androecium — 5, epipetalous','Gynoecium — 2 fused carpels'],
+              notes:[ gloss('Calyx','en'), gloss('Corolla','en'), gloss('Androecium','en') + ' Here the stamens are epipetalous: ' + gloss('Epipetalous','en'), gloss('Gynoecium','en') + ' Here it is bicarpellary and syncarpous, with a superior ovary and axile placentation.' ],
+              extra:'Fruit: berry or capsule. Example: Tomato, Potato, Brinjal, Chilli.',
+              diagnosis:"Same four symbols (K, C, A, G) decode any flower's floral formula" },
+        kn: { intro:'ಪುಷ್ಪ ಸೂತ್ರದ ಸಂಕೇತಗಳನ್ನು ಕಂಠಪಾಠ ಮಾಡಲು ಈ ಸಲಹೆ ಕೇಳುತ್ತದೆ — ಇಲ್ಲಿದೆ Solanaceae ಯ ನಿಜವಾದ ಸೂತ್ರ, ಪ್ರತಿ ಸಂಕೇತವನ್ನೂ ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Tree Explorer ಮತ್ತು ಗ್ಲಾಸರಿ ದತ್ತಾಂಶದಿಂದ ವಿವರಿಸಲಾಗಿದೆ.',
+              caseTitle:'K(5) C(5) A5 G(2) &ndash; ವಿಶಿಷ್ಟ Solanaceae ಹೂವು',
+              labels:['ಕ್ಯಾಲಿಕ್ಸ್ — 5, ಬೆಸೆದ','ಕೊರೊಲ್ಲಾ — 5, ಬೆಸೆದ','ಆಂಡ್ರೀಸಿಯಂ — 5, ಎಪಿಪೆಟಲಸ್','ಗೈನೀಸಿಯಂ — 2 ಬೆಸೆದ ಕಾರ್ಪೆಲ್‌ಗಳು'],
+              notes:[ gloss('Calyx','kn'), gloss('Corolla','kn'), gloss('Androecium','kn') + ' ಇಲ್ಲಿ ಸ್ಟೇಮನ್‌ಗಳು ಎಪಿಪೆಟಲಸ್ ಆಗಿವೆ: ' + gloss('Epipetalous','kn'), gloss('Gynoecium','kn') + ' ಇಲ್ಲಿ ಅದು ಬೈಕಾರ್ಪೆಲ್ಲರಿ ಮತ್ತು ಸಿನ್‌ಕಾರ್ಪಸ್ ಆಗಿದ್ದು, ಸುಪೀರಿಯರ್ ಓವರಿ ಮತ್ತು ಆಕ್ಸಿಲ್ ಪ್ಲೇಸೆಂಟೇಷನ್ ಹೊಂದಿದೆ.' ],
+              extra:'ಹಣ್ಣು: ಬೆರ‍್ರಿ ಅಥವಾ ಕ್ಯಾಪ್ಸೂಲ್. ಉದಾಹರಣೆ: Tomato, Potato, Brinjal, Chilli.',
+              diagnosis:'ಅದೇ ನಾಲ್ಕು ಸಂಕೇತಗಳು (K, C, A, G) ಯಾವುದೇ ಹೂವಿನ ಪುಷ್ಪ ಸೂತ್ರವನ್ನು ವಿವರಿಸುತ್ತವೆ' },
+        hi: { intro:'यह सुझाव आपसे पुष्प सूत्र संकेतन को ठीक से सीखने के लिए कहता है — यहाँ है Solanaceae का वास्तविक सूत्र, हर संकेत को इस अध्याय के अपने Tree Explorer और शब्दावली (ग्लॉसरी) डेटा से व्याख्यायित किया गया।',
+              caseTitle:'K(5) C(5) A5 G(2) &ndash; विशिष्ट Solanaceae फूल',
+              labels:['कैलिक्स — 5, संयुक्त','कोरोला — 5, संयुक्त','एंड्रोसियम — 5, एपिपेटलस','गायनोसियम — 2 संयुक्त अंडप'],
+              notes:[ gloss('Calyx','hi'), gloss('Corolla','hi'), gloss('Androecium','hi') + ' यहाँ पुंकेसर एपिपेटलस हैं: ' + gloss('Epipetalous','hi'), gloss('Gynoecium','hi') + ' यहाँ यह द्विअंडपी और युक्ताण्डपी है, ऊर्ध्ववर्ती अंडाशय और स्तंभीय बीजांडन्यास के साथ।' ],
+              extra:'फल: बेरी या सम्फल (कैप्सूल)। उदाहरण: Tomato, Potato, Brinjal, Chilli।',
+              diagnosis:'वही चार संकेत (K, C, A, G) किसी भी फूल के पुष्प सूत्र को व्याख्यायित करते हैं' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">${l.intro}</div>
+        <div class="tipex-case">
+          <div class="tipex-case-title">${l.caseTitle}</div>
+          ${l.labels.map((lab,i)=>step(['K(5)','C(5)','A5','G(2)'][i], lab, l.notes[i])).join('')}
+          <div class="tipex-step"><span class="tipex-q">→</span><span>${l.extra}</span></div>
+          <div class="tipex-diagnosis">✓ ${l.diagnosis}</div>
+        </div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  const lang = (typeof currentLang!=='undefined' && ex.title[currentLang]) ? currentLang : 'en';
+  document.getElementById('tipExampleTitle').textContent = ex.title[lang];
+  document.getElementById('tipExampleBody').innerHTML = ex.render(lang);
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTips(){
   const en = STUDYTIPS_CH5_EN;
   const tr = (currentLang !== 'en') && STUDYTIPS_CH5_TRANSLATIONS[currentLang];
@@ -2010,7 +2148,7 @@ function renderStudyTips(){
     <h3 style="color:var(--gold);margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--ink-dim);font-size:12px;margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ ${TIP_EXAMPLE_BTN_LABEL[currentLang]||TIP_EXAMPLE_BTN_LABEL.en}</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   </div>`;

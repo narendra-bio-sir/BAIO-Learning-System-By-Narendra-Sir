@@ -198,6 +198,24 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .tip-list.neet li{border-left-color:var(--gold);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel2);color:var(--gold2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--line);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--line);color:var(--ink);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--ink-dim);line-height:1.55;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--ink-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--ink);min-width:20px;font-weight:700;color:var(--gold2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .marks-info{background:linear-gradient(135deg,var(--teal2),#0a4239);border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:12.5px;color:#EFFFFA;line-height:1.6;}
 .marks-info b{color:var(--gold);}
 .whatsnew-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;font-size:12px;color:#EFFFFA;background:linear-gradient(135deg,var(--teal2),#0a4239);border-bottom:1px solid var(--line);line-height:1.5;}
@@ -807,6 +825,14 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="sm-save-btn" id="streakModalCloseBtn">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="sm-save-btn" id="tipExampleCloseBtn">Close</button>
     </div>
   </div>
 
@@ -3542,6 +3568,161 @@ const STUDYTIPS_CH3_TRANSLATIONS = {
     ]
   }
 };
+/* ---- Study Tips "View example" popovers: three tips describe a concrete
+   artifact ("build one master table...", "memorize the algae classes with
+   pigments and stored food...", "learn one classic life cycle diagram...")
+   with nothing to look at. These buttons show the actual filled-in artifact,
+   built from this chapter's own data (COMPARE_DATA used by the Compare &
+   Contrast tab, and BOARD_DIAGRAMS used by the Important Diagrams tab) so the
+   facts always match the rest of the chapter - nothing is duplicated or
+   re-typed by hand. ---- */
+const TIP_EXAMPLE_INDEX = {0:'master-table', 2:'life-cycle-diagram', 3:'algae-pigments'};
+const TIP_EXAMPLE_BTN_LABEL = {en:'View example', kn:'ಉದಾಹರಣೆ ನೋಡಿ', hi:'उदाहरण देखें'};
+/* Trilingual content below reuses the exact vetted Kannada/Hindi vocabulary
+   already established in GLOSSARY_TRANSLATIONS_CH3 and the comparison tables
+   already built into STUDY_TRANSLATIONS_CH3 (Gymnosperm vs Angiosperm,
+   Gametophyte vs Sporophyte, Chlorophyceae/Phaeophyceae/Rhodophyceae) so
+   terminology stays consistent with the rest of the chapter rather than
+   introducing new, unverified translations. */
+const TIP_EXAMPLES = {
+  'master-table': {
+    title: {
+      en: '📊 Sample Master Table — Algae to Angiosperms',
+      kn: '📊 ಮಾದರಿ ಮಾಸ್ಟರ್ ಟೇಬಲ್ — ಪಾಚಿಯಿಂದ ಆಂಜಿಯೋಸ್ಪರ್ಮ್‌ಗಳವರೆಗೆ',
+      hi: '📊 नमूना मास्टर तालिका — शैवाल से एंजियोस्पर्म तक'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"This is exactly the table the tip describes — one row per group, built from this chapter's own Compare Matrix.",
+              th:['Group','Dominant Phase','Vascular Tissue','Fertilisation','Seed / Fruit'],
+              rows: COMPARE_DATA.map(g=>({name:g.name, domPhase:g.domPhase, vascular:g.vascular, fertilisation:g.fertilisation, seedFruit:g.seedFruit})),
+              note:'Examples for every row are in the <b>Compare &amp; Contrast Matrix</b> tab — this is the condensed version worth memorising first.' },
+        kn: { intro:'ಇದು ಸಲಹೆ ವಿವರಿಸುವ ನಿಖರವಾದ ಟೇಬಲ್ — ಪ್ರತಿ ಗುಂಪಿಗೂ ಒಂದು ಸಾಲು, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Compare Matrix ನಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ.',
+              th:['ಗುಂಪು','ಪ್ರಬಲ ಹಂತ','ವಾಹಕ ಅಂಗಾಂಶ','ಫಲೀಕರಣ','ಬೀಜ / ಹಣ್ಣು'],
+              rows:[
+                {name:'ಪಾಚಿ', domPhase:'ಗ್ಯಾಮಿಟೋಫೈಟ್ (n)', vascular:'ಇಲ್ಲ', fertilisation:'ನೀರು', seedFruit:'ಇಲ್ಲ'},
+                {name:'ಬ್ರಯೋಫೈಟ್‌ಗಳು', domPhase:'ಗ್ಯಾಮಿಟೋಫೈಟ್ (n)', vascular:'ಇಲ್ಲ', fertilisation:'ನೀರು', seedFruit:'ಇಲ್ಲ'},
+                {name:'ಟೆರಿಡೋಫೈಟ್‌ಗಳು', domPhase:'ಸ್ಪೋರೋಫೈಟ್ (2n)', vascular:'ಇದೆ', fertilisation:'ನೀರು', seedFruit:'ಇಲ್ಲ (ಹೆಟೆರೊಸ್ಪೋರಸ್ ರೂಪಗಳಲ್ಲಿ ಪೂರ್ವಗಾಮಿ)'},
+                {name:'ಜಿಮ್ನೋಸ್ಪರ್ಮ್‌ಗಳು', domPhase:'ಸ್ಪೋರೋಫೈಟ್ (2n)', vascular:'ಇದೆ', fertilisation:'ಗಾಳಿಯ ಪ್ರವಾಹಗಳು', seedFruit:'ಬೆತ್ತಲೆ ಬೀಜ'},
+                {name:'ಆಂಜಿಯೋಸ್ಪರ್ಮ್‌ಗಳು', domPhase:'ಸ್ಪೋರೋಫೈಟ್ (2n)', vascular:'ಇದೆ', fertilisation:'ಪರಾಗಸ್ಪರ್ಶಕಗಳು (ಗಾಳಿ/ಕೀಟ/ಇತ್ಯಾದಿ)', seedFruit:'ಹಣ್ಣಿನಲ್ಲಿ ಮುಚ್ಚಲ್ಪಟ್ಟ ಬೀಜ'}
+              ],
+              note:'ಪ್ರತಿ ಸಾಲಿನ ಉದಾಹರಣೆಗಳು <b>Compare &amp; Contrast Matrix</b> ಟ್ಯಾಬ್‌ನಲ್ಲಿವೆ — ಇದು ಮೊದಲು ಕಂಠಪಾಠ ಮಾಡಲು ಯೋಗ್ಯವಾದ ಸಂಕ್ಷಿಪ್ತ ಆವೃತ್ತಿ.' },
+        hi: { intro:'यह ठीक वही तालिका है जिसका वर्णन यह सुझाव करता है — प्रत्येक समूह के लिए एक पंक्ति, इस अध्याय के अपने Compare Matrix से बनाई गई।',
+              th:['समूह','प्रमुख अवस्था','संवहन ऊतक','निषेचन','बीज / फल'],
+              rows:[
+                {name:'शैवाल', domPhase:'युग्मकोद्भिद (n)', vascular:'अनुपस्थित', fertilisation:'जल', seedFruit:'अनुपस्थित'},
+                {name:'ब्रायोफाइट', domPhase:'युग्मकोद्भिद (n)', vascular:'अनुपस्थित', fertilisation:'जल', seedFruit:'अनुपस्थित'},
+                {name:'टेरिडोफाइट', domPhase:'बीजाणुद्भिद (2n)', vascular:'उपस्थित', fertilisation:'जल', seedFruit:'अनुपस्थित (विषमबीजाणुक रूपों में पूर्वगामी)'},
+                {name:'जिम्नोस्पर्म', domPhase:'बीजाणुद्भिद (2n)', vascular:'उपस्थित', fertilisation:'वायु धाराओं (हवा)', seedFruit:'नग्न बीज'},
+                {name:'एंजियोस्पर्म', domPhase:'बीजाणुद्भिद (2n)', vascular:'उपस्थित', fertilisation:'परागणक (हवा/कीट/आदि)', seedFruit:'फल में बंद बीज'}
+              ],
+              note:'हर पंक्ति के उदाहरण <b>Compare &amp; Contrast Matrix</b> टैब में हैं — यह पहले याद करने योग्य संक्षिप्त संस्करण है।' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${l.th[1]}</th><th>${l.th[2]}</th><th>${l.th[3]}</th><th>${l.th[4]}</th></tr></thead><tbody>
+        ${l.rows.map(g=>`<tr><td class="tipex-organ">${g.name}</td><td>${g.domPhase}</td><td>${g.vascular}</td><td>${g.fertilisation}</td><td>${g.seedFruit}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">${l.note}</div>`;
+    }
+  },
+  'algae-pigments': {
+    title: {
+      en: '🟢 Sample Table — Algae Classes: Pigments &amp; Stored Food',
+      kn: '🟢 ಮಾದರಿ ಟೇಬಲ್ — ಪಾಚಿ ವರ್ಗಗಳು: ವರ್ಣದ್ರವ್ಯ ಮತ್ತು ಸಂಗ್ರಹಿತ ಆಹಾರ',
+      hi: '🟢 नमूना तालिका — शैवाल वर्ग: वर्णक और संचित भोजन'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"The exact pigment / stored-food recall table the tip describes, matching this chapter's own model-answer key points.",
+              th:['Class','Pigments','Stored Food'],
+              rows:[
+                {name:'Chlorophyceae', pigments:'Chlorophyll a and b (grass green)', food:'Starch in pyrenoids (plus oil in some)'},
+                {name:'Phaeophyceae', pigments:'Chlorophyll a, c and fucoxanthin (olive-brown)', food:'Complex carbohydrates — laminarin or mannitol'},
+                {name:'Rhodophyceae', pigments:'Chlorophyll a, d and r-phycoerythrin (red)', food:'Floridean starch (like amylopectin/glycogen)'}
+              ],
+              note:'Cell wall and flagella details for each class are in the Essay/Long-Answer practice set under "Compare the cell wall composition and flagellar arrangement...".' },
+        kn: { intro:'ಇದು ಸಲಹೆ ವಿವರಿಸುವ ನಿಖರವಾದ ವರ್ಣದ್ರವ್ಯ / ಸಂಗ್ರಹಿತ ಆಹಾರ ಜ್ಞಾಪಕ ಟೇಬಲ್, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ ಮಾದರಿ-ಉತ್ತರದ ಪ್ರಮುಖ ಅಂಶಗಳಿಗೆ ಹೊಂದಿಕೆಯಾಗುತ್ತದೆ.',
+              th:['ವರ್ಗ','ವರ್ಣದ್ರವ್ಯ','ಸಂಗ್ರಹಿತ ಆಹಾರ'],
+              rows:[
+                {name:'ಕ್ಲೋರೊಫಿಸೀ', pigments:'ಕ್ಲೋರೊಫಿಲ್ a ಮತ್ತು b (ಹುಲ್ಲು-ಹಸಿರು)', food:'ಪಿಷ್ಟ (ಪೈರಿನಾಯ್ಡ್‌ನಲ್ಲಿ)/ಎಣ್ಣೆ'},
+                {name:'ಫಿಯೋಫಿಸೀ', pigments:'ಕ್ಲೋರೊಫಿಲ್ a, c ಮತ್ತು fucoxanthin (ಆಲಿವ್-ಕಂದು)', food:'ಸಂಕೀರ್ಣ ಕಾರ್ಬೋಹೈಡ್ರೇಟ್‌ಗಳು — ಲ್ಯಾಮಿನೇರಿನ್ ಅಥವಾ ಮ್ಯಾನಿಟಾಲ್'},
+                {name:'ರೋಡೊಫಿಸೀ', pigments:'ಕ್ಲೋರೊಫಿಲ್ a, d ಮತ್ತು r-ಫೈಕೊಎರಿಥ್ರಿನ್ (ಕೆಂಪು)', food:'ಫ್ಲೋರಿಡೀನ್ ಪಿಷ್ಟ (amylopectin/glycogen ನಂತೆ)'}
+              ],
+              note:'ಪ್ರತಿ ವರ್ಗದ ಜೀವಕೋಶ ಗೋಡೆ ಮತ್ತು ಫ್ಲಾಜೆಲ್ಲಾ ವಿವರಗಳು Essay/Long-Answer ಅಭ್ಯಾಸ ಸೆಟ್‌ನಲ್ಲಿ "Compare the cell wall composition and flagellar arrangement..." ಅಡಿಯಲ್ಲಿವೆ.' },
+        hi: { intro:'यह ठीक वही वर्णक / संचित भोजन याद करने वाली तालिका है जिसका वर्णन यह सुझाव करता है, जो इस अध्याय के अपने मॉडल-उत्तर के मुख्य बिंदुओं से मेल खाती है।',
+              th:['वर्ग','वर्णक','संचित भोजन'],
+              rows:[
+                {name:'क्लोरोफाइसी', pigments:'क्लोरोफिल a और b (घास-हरा)', food:'स्टार्च (पाइरेनॉइड में)/तेल'},
+                {name:'फियोफाइसी', pigments:'क्लोरोफिल a, c और fucoxanthin (जैतूनी-भूरा)', food:'जटिल कार्बोहाइड्रेट — लैमिनारिन या मैनिटॉल'},
+                {name:'रोडोफाइसी', pigments:'क्लोरोफिल a, d और r-फाइकोएरिथ्रिन (लाल)', food:'फ्लोरिडियन स्टार्च (amylopectin/glycogen जैसा)'}
+              ],
+              note:'प्रत्येक वर्ग की कोशिका भित्ति और कशाभिका (फ्लैजेला) का विवरण Essay/Long-Answer अभ्यास सेट में "Compare the cell wall composition and flagellar arrangement..." के अंतर्गत है।' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${l.th[1]}</th><th>${l.th[2]}</th></tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td>${r.pigments}</td><td>${r.food}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">${l.note}</div>`;
+    }
+  },
+  'life-cycle-diagram': {
+    title: {
+      en: '🔍 Label Checklist — One Classic Life-Cycle Diagram',
+      kn: '🔍 ಲೇಬಲ್ ಪರಿಶೀಲನಾ ಪಟ್ಟಿ — ಒಂದು ಕ್ಲಾಸಿಕ್ ಜೀವನ ಚಕ್ರ ರೇಖಾಚಿತ್ರ',
+      hi: '🔍 लेबल चेकलिस्ट — एक क्लासिक जीवन-चक्र आरेख'
+    },
+    render: function(lang){
+      const funaria = BOARD_DIAGRAMS.find(d=>d.fig.includes('Funaria'));
+      const equisetum = BOARD_DIAGRAMS.find(d=>d.fig.includes('Equisetum'));
+      const cases = [funaria, equisetum].filter(Boolean);
+      const L = {
+        en: { intro:"Pick one classic life cycle per group and learn it this deeply — these are the exact board-priority labels this chapter's Important Diagrams tab flags for each figure.",
+              cases:cases.map(c=>({fig:c.fig, labels:c.labels})),
+              prLabel:cases[0]?cases[0].prLabel:'',
+              note:'Both are {pr} figures — see the <b>Important Diagrams</b> tab for page numbers and mark weightage.' },
+        kn: { intro:'ಪ್ರತಿ ಗುಂಪಿಗೂ ಒಂದು ಕ್ಲಾಸಿಕ್ ಜೀವನ ಚಕ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ ಮತ್ತು ಅದನ್ನು ಇಷ್ಟು ಆಳವಾಗಿ ಕಲಿಯಿರಿ — ಇವು ಈ ಅಧ್ಯಾಯದ Important Diagrams ಟ್ಯಾಬ್ ಪ್ರತಿ ಚಿತ್ರಕ್ಕೂ ಗುರುತಿಸಿದ ನಿಖರವಾದ ಬೋರ್ಡ್-ಆದ್ಯತೆ ಲೇಬಲ್‌ಗಳು.',
+              cases:[
+                {fig:'Fig 3.2(c) — Funaria (ಮಾಸ್) ಗ್ಯಾಮಿಟೋಫೈಟ್ ಮತ್ತು ಸ್ಪೋರೋಫೈಟ್', labels:'Sporophyte — Capsule, Seta, Foot; Gametophyte — Leaves, ಮುಖ್ಯ ಆಕ್ಸಿಸ್, Rhizoids — ಅವಲಂಬಿತ ಡಿಪ್ಲಾಯ್ಡ್ ಸ್ಪೋರೋಫೈಟ್ ಹ್ಯಾಪ್ಲಾಯ್ಡ್ ಗ್ಯಾಮಿಟೋಫೈಟ್‌ಗೆ ಎಲ್ಲಿ ಜೋಡಣೆಗೊಂಡಿದೆ ಎಂಬುದನ್ನು ಸ್ಪಷ್ಟವಾಗಿ ಗುರುತಿಸಿ'},
+                {fig:'Fig 3.3(b) — Equisetum (ಹಾರ್ಸ್ ಟೇಲ್)', labels:'ಸ್ಟ್ರೋಬೈಲಸ್ (ಕೋನ್), ನೋಡ್, ಇಂಟರ್ನೋಡ್, ಬ್ರಾಂಚ್‌ಗಳು, ಭೂಗತ ರೈಜೋಮ್'}
+              ],
+              prLabel:cases[0]?cases[0].prLabel:'',
+              note:'ಎರಡೂ {pr} ಚಿತ್ರಗಳು — ಪುಟ ಸಂಖ್ಯೆಗಳು ಮತ್ತು ಅಂಕ ಹಂಚಿಕೆಗಾಗಿ <b>Important Diagrams</b> ಟ್ಯಾಬ್ ನೋಡಿ.' },
+        hi: { intro:'हर समूह के लिए एक क्लासिक जीवन-चक्र चुनें और उसे इतनी गहराई से सीखें — ये इस अध्याय के Important Diagrams टैब द्वारा हर चित्र के लिए चिह्नित सटीक बोर्ड-प्राथमिकता लेबल हैं।',
+              cases:[
+                {fig:'Fig 3.2(c) — Funaria (मॉस) युग्मकोद्भिद और बीजाणुद्भिद', labels:'Sporophyte — Capsule, Seta, Foot; Gametophyte — Leaves, मुख्य एक्सिस, Rhizoids — स्पष्ट रूप से चिह्नित करें कि आश्रित द्विगुणित sporophyte अगुणित gametophyte से कहाँ जुड़ता है'},
+                {fig:'Fig 3.3(b) — Equisetum (हॉर्सटेल)', labels:'स्ट्रोबिलस (शंकु), नोड, इंटरनोड, ब्रांचें, भूमिगत राइज़ोम'}
+              ],
+              prLabel:cases[0]?cases[0].prLabel:'',
+              note:'दोनों {pr} चित्र हैं — पृष्ठ संख्या और अंक भार के लिए <b>Important Diagrams</b> टैब देखें।' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">${l.intro}</div>
+        ${l.cases.map(c=>`<div class="tipex-case"><div class="tipex-case-title">${c.fig}</div><div class="tipex-step"><span class="tipex-q">✓</span><span>${c.labels}</span></div></div>`).join('')}
+        <div class="tipex-note">${l.note.replace('{pr}', l.prLabel)}</div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  const lang = (typeof currentLang!=='undefined' && ex.title[currentLang]) ? currentLang : 'en';
+  document.getElementById('tipExampleTitle').textContent = ex.title[lang];
+  document.getElementById('tipExampleBody').innerHTML = ex.render(lang);
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTips(){
   const en = STUDYTIPS_CH3_EN;
   const tr = (currentLang !== 'en') && STUDYTIPS_CH3_TRANSLATIONS[currentLang];
@@ -3550,7 +3731,7 @@ function renderStudyTips(){
     <h3 style="color:var(--gold);margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--ink-dim);font-size:12px;margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ ${TIP_EXAMPLE_BTN_LABEL[currentLang]||TIP_EXAMPLE_BTN_LABEL.en}</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   </div>`;

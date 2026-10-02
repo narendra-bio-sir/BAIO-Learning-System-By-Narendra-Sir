@@ -391,6 +391,24 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .tip-list.neet li{border-left-color:var(--gold);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel2);color:var(--gold2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--line);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--line);color:var(--ink);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--ink-dim);line-height:1.55;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--ink-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--ink);min-width:20px;font-weight:700;color:var(--gold2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .marks-info{background:#0F6653;border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:12.5px;color:#EFFFFA;line-height:1.6;}
 .marks-info b{color:var(--gold);}
 .whatsnew-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;font-size:12px;color:#EFFFFA;background:linear-gradient(135deg,var(--teal2),#0a4239);border-bottom:1px solid var(--line);line-height:1.5;}
@@ -737,6 +755,14 @@ setTimeout(function(){ if(!window.__baioReady){ var ov=document.getElementById('
         <span><b>Chapter 13</b><span class="chapter-jump-title">Biodiversity and Conservation</span></span>
       </a>
       <button class="sm-save-btn" id="chapterJumpCloseBtn">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="sm-save-btn" id="tipExampleCloseBtn">Close</button>
     </div>
   </div>
 
@@ -4739,6 +4765,148 @@ const STUDYTIPS_CH9_TRANSLATIONS = {
     ]
   }
 };
+/* ---- Study Tips "View example" popovers: three tips describe a concrete
+   artifact ("recognize a palindromic recognition sequence on sight...",
+   "learn blue-white selection as one full worked example...", "know the
+   difference between a simple and a stirred-tank bioreactor...") with
+   nothing to look at. These buttons show the actual filled-in artifact,
+   built from this chapter's own data (DATA.study.restriction's naming
+   table, the "Alternate Selectable Marker" section used by the Study tab,
+   and BOARD_DIAGRAMS used by the Important Diagrams tab) so the facts
+   always match the rest of the chapter - nothing is duplicated or re-typed
+   by hand. ---- */
+const TIP_EXAMPLE_INDEX = {1:'palindrome-naming', 3:'blue-white-example', 4:'bioreactor-types'};
+const TIP_EXAMPLE_BTN_LABEL = {en:'View example', kn:'ಉದಾಹರಣೆ ನೋಡಿ', hi:'उदाहरण देखें'};
+/* Trilingual content reuses the exact vetted Kannada/Hindi vocabulary already
+   established in this chapter's own STUDY_TRANSLATIONS (restriction/
+   galactosidase/bioreactor sections) rather than introducing new, unverified
+   terminology. */
+const TIP_EXAMPLES = {
+  'palindrome-naming': {
+    title: {
+      en: '🔍 Palindromic Site &amp; EcoRI Naming — Worked Example',
+      kn: '🔍 ಪಾಲಿಂಡ್ರೋಮಿಕ್ ತಾಣ ಮತ್ತು EcoRI ಹೆಸರಿಸುವಿಕೆ — ಉದಾಹರಣೆ',
+      hi: '🔍 पैलिंड्रोमिक स्थल और EcoRI नामकरण — हल किया गया उदाहरण'
+    },
+    render: function(lang){
+      const t = DATA.study.restriction.table;
+      const L = {
+        en: { intro:'A recognition sequence reads the same 5\'→3\' on both strands. The enzyme cuts a little off-centre, between the same two bases on opposite strands, leaving single-stranded "sticky ends".',
+              caseTitle:"EcoRI's palindromic recognition sequence", diag:'Same sequence read 5\'→3\' on both strands — this is what "palindromic" means here',
+              th:t.headers, rows:t.rows,
+              note:"Full detail (sticky ends, DNA ligase, gel electrophoresis) is in the <b>Study</b> tab's Restriction Enzymes topic." },
+        kn: { intro:"ಗುರುತಿಸುವಿಕೆ ಅನುಕ್ರಮವು ಎರಡೂ ಎಳೆಗಳಲ್ಲಿ 5'→3' ದಿಕ್ಕಿನಲ್ಲಿ ಒಂದೇ ರೀತಿ ಓದುತ್ತದೆ. ಕಿಣ್ವವು ಈ ತಾಣದ ಕೇಂದ್ರದಿಂದ ಸ್ವಲ್ಪ ದೂರದಲ್ಲಿ, ವಿರುದ್ಧ ಎಳೆಗಳಲ್ಲಿನ ಒಂದೇ ಎರಡು ಬೇಸ್‌ಗಳ ನಡುವೆ ಕತ್ತರಿಸುತ್ತದೆ, ಇದರಿಂದ ಏಕ-ಎಳೆಯ 'ಸ್ಟಿಕಿ ಎಂಡ್ಸ್' ಉಂಟಾಗುತ್ತವೆ.",
+              caseTitle:"EcoRI ನ ಪಾಲಿಂಡ್ರೋಮಿಕ್ ಗುರುತಿಸುವಿಕೆ ಅನುಕ್ರಮ", diag:"ಎರಡೂ ಎಳೆಗಳಲ್ಲಿ 5'→3' ಓದಿದಾಗ ಒಂದೇ ಅನುಕ್ರಮ — ಇಲ್ಲಿ 'ಪಾಲಿಂಡ್ರೋಮಿಕ್' ಎಂದರೆ ಇದೇ",
+              th:['ಹೆಸರಿನ ಭಾಗ','ಪ್ರತಿನಿಧಿಸುತ್ತದೆ',"'EcoRI' ನಲ್ಲಿ"],
+              rows:[['1 ನೇ ಅಕ್ಷರ','ಜಿನಸ್','E (Escherichia)'],['2 ಮತ್ತು 3 ನೇ ಅಕ್ಷರಗಳು','ಪ್ರಭೇದ','co (coli)'],['4 ನೇ ಅಕ್ಷರ','ತಳಿ','R'],['ರೋಮನ್ ಅಂಕಿ','ಪ್ರತ್ಯೇಕಿಸಿದ ಕ್ರಮ','I (ಮೊದಲು ಕಂಡುಹಿಡಿದದ್ದು)']],
+              note:"ಪೂರ್ಣ ವಿವರ (ಸ್ಟಿಕಿ ಎಂಡ್ಸ್, DNA ಲೈಗೇಸ್, ಜೆಲ್ ಎಲೆಕ್ಟ್ರೋಫೊರೆಸಿಸ್) <b>Study</b> ಟ್ಯಾಬ್‌ನ ನಿರ್ಬಂಧನಾ ಕಿಣ್ವಗಳು ವಿಷಯದಲ್ಲಿದೆ." },
+        hi: { intro:"पहचान अनुक्रम दोनों रज्जुकों पर 5'→3' दिशा में समान रूप से पढ़ा जाता है। एंज़ाइम इस स्थल के केंद्र से थोड़ा हटकर, विपरीत रज्जुकों पर समान दो क्षारों के बीच काटता है, जिससे एकल-रज्जुक 'स्टिकी सिरे' बनते हैं।",
+              caseTitle:'EcoRI का पैलिंड्रोमिक पहचान अनुक्रम', diag:"दोनों रज्जुकों पर 5'→3' पढ़ने पर समान अनुक्रम — यहाँ 'पैलिंड्रोमिक' का यही अर्थ है",
+              th:['नाम का भाग','दर्शाता है',"'EcoRI' में"],
+              rows:[['पहला अक्षर','वंश','E (Escherichia)'],['दूसरा और तीसरा अक्षर','प्रजाति','co (coli)'],['चौथा अक्षर','स्ट्रेन','R'],['रोमन अंक','पृथक्करण का क्रम','I (सबसे पहले खोजा गया)']],
+              note:'पूरा विवरण (स्टिकी सिरे, DNA लाइगेज़, जेल वैद्युतकणसंचलन) <b>Study</b> टैब के प्रतिबंधन एंज़ाइम विषय में है।' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">${l.intro}</div>
+        <div class="tipex-case"><div class="tipex-case-title">${l.caseTitle}</div>
+          <div class="tipex-step"><span class="tipex-q">5'</span><span>-G A A T T C-3'</span></div>
+          <div class="tipex-step"><span class="tipex-q">3'</span><span>-C T T A A G-5'</span></div>
+          <div class="tipex-diagnosis">✓ ${l.diag}</div>
+        </div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr>${l.th.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r[0]}</td>${r.slice(1).map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">${l.note}</div>`;
+    }
+  },
+  'blue-white-example': {
+    title: {
+      en: '🔵⚪ Blue-White Selection — Worked Example',
+      kn: '🔵⚪ ನೀಲಿ-ಬಿಳಿ ಸ್ಕ್ರೀನಿಂಗ್ — ಉದಾಹರಣೆ',
+      hi: '🔵⚪ नीला-सफ़ेद स्क्रीनिंग — हल किया गया उदाहरण'
+    },
+    render: function(lang){
+      function step(q, a){ return `<div class="tipex-step"><span class="tipex-q">${q}.</span><span>${a}</span></div>`; }
+      const L = {
+        en: { intro:'Insertional inactivation walked through step by step, using β-galactosidase as the alternate selectable marker.',
+              caseTitle:'Screening recombinants on a single plate',
+              steps:['The foreign gene of interest is inserted <b>within</b> the β-galactosidase gene on the vector.',
+                     'This disrupts (inactivates) the enzyme — called <b>insertional inactivation</b>.',
+                     'Bacteria are grown on a plate with a <b>chromogenic substrate</b> (e.g. X-gal).',
+                     '<b>Non-recombinants</b> still have an intact β-galactosidase gene → enzyme active → colony turns <b>blue</b>.',
+                     '<b>Recombinants</b> have the disrupted gene → no active enzyme → colony stays <b>colourless</b>.'],
+              diag:'Colourless = recombinant, Blue = non-recombinant — read off one plate, no replica-plating onto two antibiotic media needed',
+              note:'This is the exact reasoning behind "Why is blue-white screening often preferred over the dual antibiotic-plate method?" in the Essay/Long-Answer practice set.' },
+        kn: { intro:'ಇನ್ಸರ್ಶನಲ್ ಇನ್ಆಕ್ಟಿವೇಶನ್ ಅನ್ನು ಹಂತ ಹಂತವಾಗಿ ವಿವರಿಸಲಾಗಿದೆ, β-ಗ್ಯಾಲಕ್ಟೋಸಿಡೇಸ್ ಅನ್ನು ಪರ್ಯಾಯ ಆಯ್ಕೆ ಮಾಡಬಹುದಾದ ಗುರುತಾಗಿ ಬಳಸಿ.',
+              caseTitle:'ಒಂದೇ ಪ್ಲೇಟ್‌ನಲ್ಲಿ ಮರುಸಂಯೋಜಕಗಳನ್ನು ಸ್ಕ್ರೀನಿಂಗ್ ಮಾಡುವುದು',
+              steps:['ಆಸಕ್ತಿಯ ವಿದೇಶಿ ಜೀನ್ ಅನ್ನು ವಾಹಕದ ಮೇಲಿನ β-ಗ್ಯಾಲಕ್ಟೋಸಿಡೇಸ್ ಜೀನ್‌ನ <b>ಒಳಗೆ</b> ಸೇರಿಸಲಾಗುತ್ತದೆ.',
+                     'ಇದು ಕಿಣ್ವವನ್ನು ಅಡ್ಡಿಪಡಿಸುತ್ತದೆ (ನಿಷ್ಕ್ರಿಯಗೊಳಿಸುತ್ತದೆ) — ಇದನ್ನು <b>ಇನ್ಸರ್ಶನಲ್ ಇನ್ಆಕ್ಟಿವೇಶನ್</b> ಎನ್ನುತ್ತಾರೆ.',
+                     'ಬ್ಯಾಕ್ಟೀರಿಯಾವನ್ನು <b>ಕ್ರೋಮೋಜೆನಿಕ್ ತಲಾಧಾರ</b> (ಉದಾ. X-gal) ಇರುವ ಪ್ಲೇಟ್‌ನಲ್ಲಿ ಬೆಳೆಸಲಾಗುತ್ತದೆ.',
+                     '<b>ಮರುಸಂಯೋಜಕವಲ್ಲದವು</b> ಅಖಂಡ β-ಗ್ಯಾಲಕ್ಟೋಸಿಡೇಸ್ ಜೀನ್ ಹೊಂದಿರುತ್ತವೆ → ಕಿಣ್ವ ಸಕ್ರಿಯ → ವಸಾಹತು <b>ನೀಲಿ</b> ಬಣ್ಣಕ್ಕೆ ತಿರುಗುತ್ತದೆ.',
+                     '<b>ಮರುಸಂಯೋಜಕಗಳು</b> ಅಡ್ಡಿಪಡಿಸಿದ ಜೀನ್ ಹೊಂದಿರುತ್ತವೆ → ಸಕ್ರಿಯ ಕಿಣ್ವವಿಲ್ಲ → ವಸಾಹತು <b>ಬಣ್ಣರಹಿತ</b>ವಾಗಿ ಉಳಿಯುತ್ತದೆ.'],
+              diag:'ಬಣ್ಣರಹಿತ = ಮರುಸಂಯೋಜಕ, ನೀಲಿ = ಮರುಸಂಯೋಜಕವಲ್ಲದ — ಒಂದೇ ಪ್ಲೇಟ್‌ನಿಂದ ಓದಬಹುದು, ಎರಡು ಪ್ರತಿಜೀವಕ ಮಾಧ್ಯಮಗಳ ಮೇಲೆ ರೆಪ್ಲಿಕಾ-ಪ್ಲೇಟಿಂಗ್ ಅಗತ್ಯವಿಲ್ಲ',
+              note:"ಇದು Essay/Long-Answer ಅಭ್ಯಾಸ ಸೆಟ್‌ನಲ್ಲಿರುವ 'ನೀಲಿ-ಬಿಳಿ ಸ್ಕ್ರೀನಿಂಗ್ ಅನ್ನು ಎರಡು ಪ್ರತಿಜೀವಕ-ಪ್ಲೇಟ್ ವಿಧಾನಕ್ಕಿಂತ ಏಕೆ ಹೆಚ್ಚಾಗಿ ಆದ್ಯತೆ ನೀಡಲಾಗುತ್ತದೆ?' ಎಂಬ ಪ್ರಶ್ನೆಯ ಹಿಂದಿನ ನಿಖರ ತರ್ಕ." },
+        hi: { intro:'सम्मिलन निष्क्रियकरण को चरण दर चरण समझाया गया है, β-गैलेक्टोसिडेज़ को वैकल्पिक चयन योग्य मार्कर के रूप में उपयोग करते हुए।',
+              caseTitle:'एक ही प्लेट पर पुनर्संयोजकों की स्क्रीनिंग',
+              steps:['रुचि का बाहरी जीन वाहक पर स्थित β-गैलेक्टोसिडेज़ जीन के <b>भीतर</b> सम्मिलित किया जाता है।',
+                     'इससे एंज़ाइम बाधित (निष्क्रिय) हो जाता है — इसे <b>सम्मिलन निष्क्रियकरण</b> कहते हैं।',
+                     'जीवाणुओं को <b>क्रोमोजेनिक सब्सट्रेट</b> (जैसे X-gal) वाली प्लेट पर उगाया जाता है।',
+                     '<b>गैर-पुनर्संयोजकों</b> में अक्षुण्ण β-गैलेक्टोसिडेज़ जीन होता है → एंज़ाइम सक्रिय → कॉलोनी <b>नीली</b> हो जाती है।',
+                     '<b>पुनर्संयोजकों</b> में बाधित जीन होता है → कोई सक्रिय एंज़ाइम नहीं → कॉलोनी <b>रंगहीन</b> रहती है।'],
+              diag:'रंगहीन = पुनर्संयोजक, नीला = गैर-पुनर्संयोजक — एक ही प्लेट से पढ़ा जा सकता है, दो एंटीबायोटिक माध्यमों पर रेप्लिका-प्लेटिंग की आवश्यकता नहीं',
+              note:"यह Essay/Long-Answer अभ्यास सेट में दिए गए 'नीला-सफ़ेद स्क्रीनिंग को दोहरे एंटीबायोटिक-प्लेट विधि की तुलना में अक्सर क्यों प्राथमिकता दी जाती है?' प्रश्न के पीछे का ठीक वही तर्क है।" }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">${l.intro}</div>
+        <div class="tipex-case"><div class="tipex-case-title">${l.caseTitle}</div>
+          ${l.steps.map((s,i)=>step(i+1,s)).join('')}
+          <div class="tipex-diagnosis">✓ ${l.diag}</div>
+        </div>
+        <div class="tipex-note">${l.note}</div>`;
+    }
+  },
+  'bioreactor-types': {
+    title: {
+      en: '⚙️ Label Checklist — Simple vs Sparged Stirred-Tank Bioreactor',
+      kn: '⚙️ ಲೇಬಲ್ ಪಟ್ಟಿ — ಸಿಂಪಲ್ vs ಸ್ಪಾರ್ಜ್ಡ್ ಸ್ಟಿರ್ಡ್-ಟ್ಯಾಂಕ್ ಬಯೋರಿಯಾಕ್ಟರ್',
+      hi: '⚙️ लेबल सूची — सिंपल बनाम स्पार्ज्ड स्टिर्ड-टैंक बायोरिएक्टर'
+    },
+    render: function(lang){
+      const d = BOARD_DIAGRAMS.find(x=>x.key==='bioreactor');
+      const L = {
+        en: { intro:"These are the exact board-priority labels this chapter's Important Diagrams tab flags for this figure — practice drawing both panels from memory.",
+              note:`The aeration/agitation difference the tip refers to: the <b>simple</b> stirred-tank relies on the agitator (motor + impeller blades) alone to mix and distribute oxygen; the <b>sparged</b> version adds the <b>sparger</b>, which bubbles air in to increase surface area for oxygen transfer — essential once culture volume scales up. Both are ${d.prLabel}, ${d.marks} — see the <b>Important Diagrams</b> tab for the NCERT page link.` },
+        kn: { intro:'ಇವು ಈ ಅಧ್ಯಾಯದ Important Diagrams ಟ್ಯಾಬ್ ಈ ಚಿತ್ರಕ್ಕೆ ಗುರುತಿಸುವ ನಿಖರ ಬೋರ್ಡ್-ಆದ್ಯತೆಯ ಲೇಬಲ್‌ಗಳು — ಎರಡೂ ಫಲಕಗಳನ್ನು ನೆನಪಿನಿಂದ ಬಿಡಿಸುವ ಅಭ್ಯಾಸ ಮಾಡಿ.',
+              note:`ಸಲಹೆ ಉಲ್ಲೇಖಿಸುವ ವಾತಾಯನ/ಆಂದೋಲನ ವ್ಯತ್ಯಾಸ: ಸಿಂಪಲ್ ಸ್ಟಿರ್ಡ್-ಟ್ಯಾಂಕ್ ಮಿಶ್ರಣ ಮತ್ತು ಆಮ್ಲಜನಕ ವಿತರಣೆಗೆ ಕೇವಲ <b>ಆಂದೋಲಕ</b> (ಮೋಟಾರ್ + ಇಂಪೆಲ್ಲರ್ ಬ್ಲೇಡ್‌ಗಳು) ಅನ್ನು ಅವಲಂಬಿಸುತ್ತದೆ; <b>ಸ್ಪಾರ್ಜ್ಡ್</b> ಆವೃತ್ತಿ <b>ಸ್ಪಾರ್ಜರ್</b> ಅನ್ನು ಸೇರಿಸುತ್ತದೆ, ಇದು ಆಮ್ಲಜನಕ ವರ್ಗಾವಣೆಗೆ ಮೇಲ್ಮೈ ವಿಸ್ತೀರ್ಣ ಹೆಚ್ಚಿಸಲು ಗಾಳಿಯನ್ನು ಗುಳ್ಳೆಗಳಂತೆ ಸೇರಿಸುತ್ತದೆ — ಸಂವರ್ಧನಾ ಪ್ರಮಾಣ ಹೆಚ್ಚಾದಾಗ ಅಗತ್ಯ. ಎರಡೂ ${d.prLabel}, ${d.marks} — NCERT ಪುಟ ಲಿಂಕ್‌ಗಾಗಿ <b>Important Diagrams</b> ಟ್ಯಾಬ್ ನೋಡಿ.` },
+        hi: { intro:'ये इस अध्याय के Important Diagrams टैब द्वारा इस चित्र के लिए चिह्नित ठीक वही बोर्ड-प्राथमिकता लेबल हैं — दोनों चित्रों को याद से बनाने का अभ्यास करें।',
+              note:`सुझाव में उल्लिखित वातन/आंदोलन अंतर: सिंपल स्टिर्ड-टैंक मिश्रण और ऑक्सीजन वितरण के लिए केवल <b>आंदोलक</b> (मोटर + इम्पेलर ब्लेड) पर निर्भर करता है; <b>स्पार्ज्ड</b> संस्करण <b>स्पार्जर</b> जोड़ता है, जो ऑक्सीजन स्थानांतरण के लिए सतह क्षेत्र बढ़ाने हेतु हवा को बुलबुलों के रूप में डालता है — संवर्धन मात्रा बढ़ने पर आवश्यक। दोनों ${d.prLabel}, ${d.marks} हैं — NCERT पृष्ठ लिंक के लिए <b>Important Diagrams</b> टैब देखें।` }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">${l.intro}</div>
+        <div class="tipex-case"><div class="tipex-case-title">${d.fig}</div><div class="tipex-step"><span class="tipex-q">✓</span><span>${d.labels}</span></div></div>
+        <div class="tipex-note">${l.note}</div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  const lang = (typeof currentLang!=='undefined' && ex.title[currentLang]) ? currentLang : 'en';
+  document.getElementById('tipExampleTitle').textContent = ex.title[lang];
+  document.getElementById('tipExampleBody').innerHTML = ex.render(lang);
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTips(){
   const en = STUDYTIPS_CH9_EN;
   const tr = (currentLang !== 'en') && STUDYTIPS_CH9_TRANSLATIONS[currentLang];
@@ -4747,7 +4915,7 @@ function renderStudyTips(){
     <h3 style="color:var(--gold);margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--ink-dim);font-size:12px;margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ ${TIP_EXAMPLE_BTN_LABEL[currentLang]||TIP_EXAMPLE_BTN_LABEL.en}</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   </div>`;
