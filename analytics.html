@@ -7396,7 +7396,7 @@ function computeClassPercentileTrend(student, pu){
   if(!roster) return null;
   const testDefs = pu===2
     ? [['march','March Monthly'],['april','April Monthly'],['may','May Monthly'],['june','June Monthly'],['july','July Monthly']]
-    : [['t1','Slip Test 1'],['t2','Slip Test 2'],['june','June Monthly'],['mt','July Monthly'],['august','August Monthly']];
+    : [['t1','Slip Test 1'],['june','June Monthly'],['t2','Slip Test 2'],['mt','July Monthly'],['august','August Monthly'],['t3','Slip Test 3']];
   const points = [];
   testDefs.forEach(([key,label])=>{
     const rec = student[key];
@@ -10826,33 +10826,40 @@ function bioCombinedRoster(){
   return [...pu1, ...pu2];
 }
 
-/* ---- PU-I student: Biology history across Slip Test 1/2, Monthly, NEET OBT ---- */
+/* Approximate calendar dates for PU-I's monthly tests, used only to sort history
+   entries chronologically (never displayed) - no exact date is published anywhere
+   for these, unlike Slip Tests and NEET/KCET/JEE rounds which all carry a real one. */
+const PU1_MONTH_APPROX_DATE = { june:'2026-06-28', july:'2026-07-31', august:'2026-08-30' };
+/* ---- PU-I student: Biology history across Slip Test 1/2/3, Monthly, NEET OBT -
+   sorted chronologically at the end so a student's genuinely latest test (whichever
+   category it falls in) always appears last, instead of NEET OBT rounds - several
+   of which predate the Slip Tests and Monthly Tests - always trailing the list. ---- */
 function getPU1BioHistory(student){
   const hist = [];
   if(student.t1 && student.t1.BIO!==null && student.t1.BIO!==undefined){
     const avg = classAvgRaw('t1','BIO');
-    hist.push({label:'Slip Test 1', score:student.t1.BIO, outOf:20, pct:Math.round(student.t1.BIO/20*1000)/10, classAvg: avg!==null?Math.round(avg/20*1000)/10:null});
+    hist.push({label:'Slip Test 1', score:student.t1.BIO, outOf:20, pct:Math.round(student.t1.BIO/20*1000)/10, classAvg: avg!==null?Math.round(avg/20*1000)/10:null, date:'2026-06-15'});
   }
   if(student.t2 && student.t2.BIO!==null && student.t2.BIO!==undefined){
     const avg = classAvgRaw('t2','BIO');
-    hist.push({label:'Slip Test 2', score:student.t2.BIO, outOf:20, pct:Math.round(student.t2.BIO/20*1000)/10, classAvg: avg!==null?Math.round(avg/20*1000)/10:null});
+    hist.push({label:'Slip Test 2', score:student.t2.BIO, outOf:20, pct:Math.round(student.t2.BIO/20*1000)/10, classAvg: avg!==null?Math.round(avg/20*1000)/10:null, date:'2026-07-20'});
   }
   if(student.june && student.june.BIO!==null && student.june.BIO!==undefined){
     const avg = pu1MonthClassAvgRaw('june','BIO');
-    hist.push({label:'June Monthly Test', score:student.june.BIO, outOf:40, pct:Math.round(student.june.BIO/40*1000)/10, classAvg: avg!==null?Math.round(avg/40*1000)/10:null});
+    hist.push({label:'June Monthly Test', score:student.june.BIO, outOf:40, pct:Math.round(student.june.BIO/40*1000)/10, classAvg: avg!==null?Math.round(avg/40*1000)/10:null, date:PU1_MONTH_APPROX_DATE.june});
   }
   if(student.mt && student.mt.BIO!==null && student.mt.BIO!==undefined){
     const avg = pu1MonthClassAvgRaw('july','BIO');
-    hist.push({label:'July Monthly Test', score:student.mt.BIO, outOf:40, pct:Math.round(student.mt.BIO/40*1000)/10, classAvg: avg!==null?Math.round(avg/40*1000)/10:null});
+    hist.push({label:'July Monthly Test', score:student.mt.BIO, outOf:40, pct:Math.round(student.mt.BIO/40*1000)/10, classAvg: avg!==null?Math.round(avg/40*1000)/10:null, date:PU1_MONTH_APPROX_DATE.july});
   }
   if(student.august && student.august.BIO!==null && student.august.BIO!==undefined){
     const avg = pu1MonthClassAvgRaw('august','BIO');
-    hist.push({label:'August Monthly Test', score:student.august.BIO, outOf:40, pct:Math.round(student.august.BIO/40*1000)/10, classAvg: avg!==null?Math.round(avg/40*1000)/10:null});
+    hist.push({label:'August Monthly Test', score:student.august.BIO, outOf:40, pct:Math.round(student.august.BIO/40*1000)/10, classAvg: avg!==null?Math.round(avg/40*1000)/10:null, date:PU1_MONTH_APPROX_DATE.august});
   }
   if(student.t3 && student.t3.BIO!==null && student.t3.BIO!==undefined){
     const classVals = STUDENTS.map(s=>s.t3 && s.t3.BIO).filter(v=>v!==null&&v!==undefined);
     const avg = classVals.length ? classVals.reduce((a,b)=>a+b,0)/classVals.length : null;
-    hist.push({label:'Slip Test 3', score:student.t3.BIO, outOf:20, pct:Math.round(student.t3.BIO/20*1000)/10, classAvg: avg!==null?Math.round(avg/20*1000)/10:null});
+    hist.push({label:'Slip Test 3', score:student.t3.BIO, outOf:20, pct:Math.round(student.t3.BIO/20*1000)/10, classAvg: avg!==null?Math.round(avg/20*1000)/10:null, date:'2026-09-21'});
   }
   const neetRec = (typeof NEET_BY_CODE!=='undefined') ? NEET_BY_CODE[student.code] : null;
   if(neetRec){
@@ -10861,25 +10868,36 @@ function getPU1BioHistory(student){
       if(neetRec[k] && neetRec[k].BIO!==null && neetRec[k].BIO!==undefined){
         const classVals = test.students.map(r=>r.bio).filter(v=>v!==null&&v!==undefined);
         const classAvg = classVals.length ? classVals.reduce((a,b)=>a+b,0)/classVals.length : null;
-        hist.push({label:test.label, score:neetRec[k].BIO, outOf:360, pct:Math.round(neetRec[k].BIO/360*1000)/10, classAvg: classAvg!==null?Math.round(classAvg/360*1000)/10:null});
+        hist.push({label:test.label, score:neetRec[k].BIO, outOf:360, pct:Math.round(neetRec[k].BIO/360*1000)/10, classAvg: classAvg!==null?Math.round(classAvg/360*1000)/10:null, date:test.date});
       }
     });
   } else if(student.neetobt && student.neetobt.BIO!==null && student.neetobt.BIO!==undefined){
     const classVals = NEETOBT.map(r=>r.bio).filter(v=>v!==null&&v!==undefined);
     const classAvg = classVals.length ? classVals.reduce((a,b)=>a+b,0)/classVals.length : null;
-    hist.push({label:'NEET OBT (latest)', score:student.neetobt.BIO, outOf:360, pct:Math.round(student.neetobt.BIO/360*1000)/10, classAvg: classAvg!==null?Math.round(classAvg/360*1000)/10:null});
+    hist.push({label:'NEET OBT (latest)', score:student.neetobt.BIO, outOf:360, pct:Math.round(student.neetobt.BIO/360*1000)/10, classAvg: classAvg!==null?Math.round(classAvg/360*1000)/10:null, date:'9999-99-99'});
   }
+  hist.sort((a,b)=> (a.date||'').localeCompare(b.date||''));
   return hist;
 }
 
 /* ---- PU-II student: Biology history across all PU2_TESTS + monthly (march-june) ---- */
+/* Same reasoning as PU1_MONTH_APPROX_DATE above - no exact date is published for
+   PU-II's monthly tests, only used to sort history entries chronologically. */
+const PU2_MONTH_APPROX_DATE = { march:'2026-03-25', april:'2026-04-25', may:'2026-05-25', june:'2026-06-28', july:'2026-07-31' };
+function parseDispDate(disp){
+  const d = new Date(disp);
+  return isNaN(d.getTime()) ? '9999-99-99' : d.toISOString().slice(0,10);
+}
+/* Sorted chronologically at the end for the same reason as getPU1BioHistory - PU2_TESTS,
+   NEET, KCET and Monthly Test rounds are otherwise pushed in fixed category blocks, not
+   calendar order, so a student's genuinely latest test could land mid-list. */
 function getPU2BioHistory(student){
   const hist = [];
   PU2_TESTS.forEach(test=>{
     const rec = test.students.find(s=>s.code===student.code);
     if(rec && rec.BIO!==null && rec.BIO!==undefined){
       const classAvg = pu2ClassAvgPct(test,'BIO');
-      hist.push({label:test.label, score:rec.BIO, outOf:test.outof.BIO, pct: pu2SubjPct(rec,'BIO',test.outof.BIO), classAvg});
+      hist.push({label:test.label, score:rec.BIO, outOf:test.outof.BIO, pct: pu2SubjPct(rec,'BIO',test.outof.BIO), classAvg, date:test.date});
     }
   });
   if(typeof PU2_NEET_BY_CODE!=='undefined'){
@@ -10892,7 +10910,7 @@ function getPU2BioHistory(student){
         if(!r || r.BIO===null || r.BIO===undefined || !test) return;
         const classVals = test.students.map(s=>s.bio).filter(v=>v!==null&&v!==undefined);
         const classAvg = classVals.length ? Math.round((classVals.reduce((a,b)=>a+b,0)/classVals.length)/360*1000)/10 : null;
-        hist.push({label:test.label, score:r.BIO, outOf:360, pct:Math.round(r.BIO/360*1000)/10, classAvg});
+        hist.push({label:test.label, score:r.BIO, outOf:360, pct:Math.round(r.BIO/360*1000)/10, classAvg, date:test.date});
       });
     }
   }
@@ -10902,16 +10920,17 @@ function getPU2BioHistory(student){
       sortObtKeys(Object.keys(kcetRec)).forEach(key=>{
         const r = kcetRec[key];
         if(!r || r.BIO===null || r.BIO===undefined) return;
-        hist.push({label:(r.label||'KCET')+' (Bio optional)', score:r.BIO, outOf:r.outof||60, pct:Math.round(r.BIO/(r.outof||60)*1000)/10, classAvg:null});
+        hist.push({label:(r.label||'KCET')+' (Bio optional)', score:r.BIO, outOf:r.outof||60, pct:Math.round(r.BIO/(r.outof||60)*1000)/10, classAvg:null, date:parseDispDate(r.disp)});
       });
     }
   }
   ['march','april','may','june','july'].forEach(mk=>{
     if(student[mk] && student[mk].BIO!==null && student[mk].BIO!==undefined){
       const classAvg = pu2ClassAvgRaw(mk,'BIO');
-      hist.push({label: PU2_MONTH_LABELS[mk], score:student[mk].BIO, outOf:40, pct:Math.round(student[mk].BIO/40*1000)/10, classAvg: classAvg!==null?Math.round(classAvg/40*1000)/10:null});
+      hist.push({label: PU2_MONTH_LABELS[mk], score:student[mk].BIO, outOf:40, pct:Math.round(student[mk].BIO/40*1000)/10, classAvg: classAvg!==null?Math.round(classAvg/40*1000)/10:null, date:PU2_MONTH_APPROX_DATE[mk]});
     }
   });
+  hist.sort((a,b)=> (a.date||'').localeCompare(b.date||''));
   return hist;
 }
 
@@ -10942,29 +10961,30 @@ function getPU1ElectronicsHistory(student){
   const hist = [];
   if(student.t1 && student.t1.ELE!==null && student.t1.ELE!==undefined){
     const avg = classAvgRaw('t1','ELE');
-    hist.push({label:'Slip Test 1', score:student.t1.ELE, outOf:20, pct:Math.round(student.t1.ELE/20*1000)/10, classAvg: avg!==null?Math.round(avg/20*1000)/10:null});
+    hist.push({label:'Slip Test 1', score:student.t1.ELE, outOf:20, pct:Math.round(student.t1.ELE/20*1000)/10, classAvg: avg!==null?Math.round(avg/20*1000)/10:null, date:'2026-06-15'});
   }
   if(student.t2 && student.t2.ELE!==null && student.t2.ELE!==undefined){
     const avg = classAvgRaw('t2','ELE');
-    hist.push({label:'Slip Test 2', score:student.t2.ELE, outOf:20, pct:Math.round(student.t2.ELE/20*1000)/10, classAvg: avg!==null?Math.round(avg/20*1000)/10:null});
+    hist.push({label:'Slip Test 2', score:student.t2.ELE, outOf:20, pct:Math.round(student.t2.ELE/20*1000)/10, classAvg: avg!==null?Math.round(avg/20*1000)/10:null, date:'2026-07-20'});
   }
   if(student.june && student.june.ELE!==null && student.june.ELE!==undefined){
     const avg = pu1MonthClassAvgRaw('june','ELE');
-    hist.push({label:'June Monthly Test', score:student.june.ELE, outOf:40, pct:Math.round(student.june.ELE/40*1000)/10, classAvg: avg!==null?Math.round(avg/40*1000)/10:null});
+    hist.push({label:'June Monthly Test', score:student.june.ELE, outOf:40, pct:Math.round(student.june.ELE/40*1000)/10, classAvg: avg!==null?Math.round(avg/40*1000)/10:null, date:PU1_MONTH_APPROX_DATE.june});
   }
   if(student.mt && student.mt.ELE!==null && student.mt.ELE!==undefined){
     const avg = pu1MonthClassAvgRaw('july','ELE');
-    hist.push({label:'July Monthly Test', score:student.mt.ELE, outOf:40, pct:Math.round(student.mt.ELE/40*1000)/10, classAvg: avg!==null?Math.round(avg/40*1000)/10:null});
+    hist.push({label:'July Monthly Test', score:student.mt.ELE, outOf:40, pct:Math.round(student.mt.ELE/40*1000)/10, classAvg: avg!==null?Math.round(avg/40*1000)/10:null, date:PU1_MONTH_APPROX_DATE.july});
   }
   if(student.august && student.august.ELE!==null && student.august.ELE!==undefined){
     const avg = pu1MonthClassAvgRaw('august','ELE');
-    hist.push({label:'August Monthly Test', score:student.august.ELE, outOf:40, pct:Math.round(student.august.ELE/40*1000)/10, classAvg: avg!==null?Math.round(avg/40*1000)/10:null});
+    hist.push({label:'August Monthly Test', score:student.august.ELE, outOf:40, pct:Math.round(student.august.ELE/40*1000)/10, classAvg: avg!==null?Math.round(avg/40*1000)/10:null, date:PU1_MONTH_APPROX_DATE.august});
   }
   if(student.t3 && student.t3.ELE!==null && student.t3.ELE!==undefined){
     const classVals = STUDENTS.map(s=>s.t3 && s.t3.ELE).filter(v=>v!==null&&v!==undefined);
     const avg = classVals.length ? classVals.reduce((a,b)=>a+b,0)/classVals.length : null;
-    hist.push({label:'Slip Test 3', score:student.t3.ELE, outOf:20, pct:Math.round(student.t3.ELE/20*1000)/10, classAvg: avg!==null?Math.round(avg/20*1000)/10:null});
+    hist.push({label:'Slip Test 3', score:student.t3.ELE, outOf:20, pct:Math.round(student.t3.ELE/20*1000)/10, classAvg: avg!==null?Math.round(avg/20*1000)/10:null, date:'2026-09-21'});
   }
+  hist.sort((a,b)=> (a.date||'').localeCompare(b.date||''));
   return hist;
 }
 
@@ -10975,15 +10995,16 @@ function getPU2ElectronicsHistory(student){
     const rec = test.students.find(s=>s.code===student.code);
     if(rec && rec.ELE!==null && rec.ELE!==undefined){
       const classAvg = pu2ClassAvgPct(test,'ELE');
-      hist.push({label:test.label, score:rec.ELE, outOf:test.outof.ELE, pct: pu2SubjPct(rec,'ELE',test.outof.ELE), classAvg});
+      hist.push({label:test.label, score:rec.ELE, outOf:test.outof.ELE, pct: pu2SubjPct(rec,'ELE',test.outof.ELE), classAvg, date:test.date});
     }
   });
   ['march','april','may','june','july'].forEach(mk=>{
     if(student[mk] && student[mk].ELE!==null && student[mk].ELE!==undefined){
       const classAvg = pu2ClassAvgRaw(mk,'ELE');
-      hist.push({label: PU2_MONTH_LABELS[mk], score:student[mk].ELE, outOf:40, pct:Math.round(student[mk].ELE/40*1000)/10, classAvg: classAvg!==null?Math.round(classAvg/40*1000)/10:null});
+      hist.push({label: PU2_MONTH_LABELS[mk], score:student[mk].ELE, outOf:40, pct:Math.round(student[mk].ELE/40*1000)/10, classAvg: classAvg!==null?Math.round(classAvg/40*1000)/10:null, date:PU2_MONTH_APPROX_DATE[mk]});
     }
   });
+  hist.sort((a,b)=> (a.date||'').localeCompare(b.date||''));
   return hist;
 }
 
@@ -11004,11 +11025,11 @@ function getStudentElectronicsCompare(student, pu){
     };
   } else {
     const has = rec => rec && rec.ELE!==null && rec.ELE!==undefined;
-    // Chronological latest-first: Slip Test 3 (21 Sep) > August Monthly > July Monthly > June Monthly > Slip Test 2 (Jul) > Slip Test 1 (Jun).
-    const useTest = has(student.t3) ? student.t3 : has(student.august) ? student.august : has(student.mt) ? student.mt : has(student.june) ? student.june : has(student.t2) ? student.t2 : student.t1;
+    // Chronological latest-first: Slip Test 3 (21 Sep) > August Monthly (~30 Aug) > July Monthly (~31 Jul) > Slip Test 2 (20 Jul) > June Monthly (~28 Jun) > Slip Test 1 (15 Jun).
+    const useTest = has(student.t3) ? student.t3 : has(student.august) ? student.august : has(student.mt) ? student.mt : has(student.t2) ? student.t2 : has(student.june) ? student.june : student.t1;
     if(!useTest) return null;
     const outOf = (useTest===student.mt || useTest===student.june || useTest===student.august) ? 40 : 20;
-    const testLabel = useTest===student.t3 ? 'Slip Test 3' : useTest===student.august ? 'August Monthly Test' : useTest===student.mt ? 'July Monthly Test' : useTest===student.june ? 'June Monthly Test' : useTest===student.t2 ? 'Slip Test 2' : 'Slip Test 1';
+    const testLabel = useTest===student.t3 ? 'Slip Test 3' : useTest===student.august ? 'August Monthly Test' : useTest===student.mt ? 'July Monthly Test' : useTest===student.t2 ? 'Slip Test 2' : useTest===student.june ? 'June Monthly Test' : 'Slip Test 1';
     const subjs = ['PHY','CHE','MAT','ELE'];
     const nice = {PHY:'Physics',CHE:'Chemistry',MAT:'Maths',ELE:'Electronics'};
     return {
@@ -11140,11 +11161,11 @@ function getStudentSubjectCompare(student, pu){
     };
   } else {
     const has = rec => rec && rec.BIO!==null && rec.BIO!==undefined;
-    // Chronological latest-first: Slip Test 3 (21 Sep) > August Monthly > July Monthly > June Monthly > Slip Test 2 (Jul) > Slip Test 1 (Jun).
-    const useTest = has(student.t3) ? student.t3 : has(student.august) ? student.august : has(student.mt) ? student.mt : has(student.june) ? student.june : has(student.t2) ? student.t2 : student.t1;
+    // Chronological latest-first: Slip Test 3 (21 Sep) > August Monthly (~30 Aug) > July Monthly (~31 Jul) > Slip Test 2 (20 Jul) > June Monthly (~28 Jun) > Slip Test 1 (15 Jun).
+    const useTest = has(student.t3) ? student.t3 : has(student.august) ? student.august : has(student.mt) ? student.mt : has(student.t2) ? student.t2 : has(student.june) ? student.june : student.t1;
     if(!useTest) return null;
     const outOf = (useTest===student.mt || useTest===student.june || useTest===student.august) ? 40 : 20;
-    const testLabel = useTest===student.t3 ? 'Slip Test 3' : useTest===student.august ? 'August Monthly Test' : useTest===student.mt ? 'July Monthly Test' : useTest===student.june ? 'June Monthly Test' : useTest===student.t2 ? 'Slip Test 2' : 'Slip Test 1';
+    const testLabel = useTest===student.t3 ? 'Slip Test 3' : useTest===student.august ? 'August Monthly Test' : useTest===student.mt ? 'July Monthly Test' : useTest===student.t2 ? 'Slip Test 2' : useTest===student.june ? 'June Monthly Test' : 'Slip Test 1';
     const subjs = ['PHY','CHE','MAT','BIO'];
     const nice = {PHY:'Physics',CHE:'Chemistry',MAT:'Maths',BIO:'Biology'};
     return {
@@ -11413,6 +11434,8 @@ function buildBioTestWiseOptions(){
     {label:'Slip Test 2', pu:1, kind:'pu1_t2'},
     {label:'June Monthly Test', pu:1, kind:'pu1_mt_june'},
     {label:'July Monthly Test', pu:1, kind:'pu1_mt_july'},
+    {label:'August Monthly Test', pu:1, kind:'pu1_mt_august'},
+    {label:'Slip Test 3', pu:1, kind:'pu1_t3'},
   ];
   NEET_TESTS.forEach((t,i)=> opts.push({label:t.label, pu:1, kind:'pu1_neet', idx:i}));
   PU2_TESTS.forEach((t,i)=> opts.push({label:t.label+' (PU-II)', pu:2, kind:'pu2_test', idx:i}));
@@ -11435,8 +11458,8 @@ function populateBioTestWiseSelect(){
 }
 function getTestWiseBioData(sel){
   let rows = [], classAvgPct = null, outOf;
-  if(sel.kind==='pu1_t1' || sel.kind==='pu1_t2'){
-    const key = sel.kind==='pu1_t1' ? 't1' : 't2';
+  if(sel.kind==='pu1_t1' || sel.kind==='pu1_t2' || sel.kind==='pu1_t3'){
+    const key = sel.kind==='pu1_t1' ? 't1' : sel.kind==='pu1_t2' ? 't2' : 't3';
     outOf = 20;
     rows = STUDENTS.filter(s=>s[key] && s[key].BIO!==null && s[key].BIO!==undefined)
       .map(s=>({name:s.name, section:s.section||'\u2014', score:s[key].BIO, outOf, pct:Math.round(s[key].BIO/outOf*1000)/10}));
@@ -11448,6 +11471,10 @@ function getTestWiseBioData(sel){
     outOf = 40;
     rows = STUDENTS.filter(s=>s.mt && s.mt.BIO!==null && s.mt.BIO!==undefined)
       .map(s=>({name:s.name, section:s.section||'\u2014', score:s.mt.BIO, outOf, pct:Math.round(s.mt.BIO/outOf*1000)/10}));
+  } else if(sel.kind==='pu1_mt_august'){
+    outOf = 40;
+    rows = STUDENTS.filter(s=>s.august && s.august.BIO!==null && s.august.BIO!==undefined)
+      .map(s=>({name:s.name, section:s.section||'\u2014', score:s.august.BIO, outOf, pct:Math.round(s.august.BIO/outOf*1000)/10}));
   } else if(sel.kind==='pu1_neet'){
     const test = NEET_TESTS[sel.idx];
     outOf = 360;
@@ -11501,8 +11528,8 @@ function buildTheoryBioSection(){
   const pu1sw = computePU1MonthlySubjectWide(pu1MonthCurrent);
   const pu1MonthLabel = pu1CurrentMonthLabel();
   const pu2MonthLabel = pu2CurrentMonthLabel();
-  const pu1TrendLabels = ['Slip Test 1','Slip Test 2',pu1MonthLabel];
-  const pu1TrendVals = [D.subjects.test1.BIO.avg_pct, D.subjects.test2.BIO.avg_pct, pu1sw.avgPctCoreSTEM.BIO];
+  const pu1TrendLabels = ['Slip Test 1','Slip Test 2',pu1MonthLabel,'Slip Test 3'];
+  const pu1TrendVals = [D.subjects.test1.BIO.avg_pct, D.subjects.test2.BIO.avg_pct, pu1sw.avgPctCoreSTEM.BIO, D.subjects.test3.BIO.avg_pct];
   const pu2TrendLabels = ['march','april','may','june','july'].map(mk=>PU2_MONTH_LABELS[mk]);
   const pu2TrendVals = ['march','april','may','june','july'].map(mk=>{ const avg=pu2ClassAvgRaw(mk,'BIO'); return avg!==null?Math.round((avg/40)*1000)/10:null; });
 
@@ -11543,7 +11570,7 @@ function buildTheoryBioSection(){
 
   let html = '<div class="rp-section"><div class="rp-section-title" style="font-size:16px;">📖 Theory (Board) &mdash; Biology Performance</div></div>';
   let kpiHtml = '<div class="rp-kpi-grid">';
-  if(currentBioFilters.includePU1) kpiHtml += '<div class="rp-kpi"><div class="rp-kpi-label">PU-I Biology Avg (Theory)</div><div class="rp-kpi-value">'+pu1TrendVals[pu1TrendVals.length-1]+'%</div><div class="rp-kpi-sub">'+pu1MonthLabel+'</div></div>';
+  if(currentBioFilters.includePU1) kpiHtml += '<div class="rp-kpi"><div class="rp-kpi-label">PU-I Biology Avg (Theory)</div><div class="rp-kpi-value">'+pu1TrendVals[pu1TrendVals.length-1]+'%</div><div class="rp-kpi-sub">'+pu1TrendLabels[pu1TrendLabels.length-1]+'</div></div>';
   if(currentBioFilters.includePU2) kpiHtml += '<div class="rp-kpi"><div class="rp-kpi-label">PU-II Biology Avg (Theory)</div><div class="rp-kpi-value">'+(pu2TrendVals[pu2TrendVals.length-1]!==null?pu2TrendVals[pu2TrendVals.length-1]+'%':'\u2014')+'</div><div class="rp-kpi-sub">'+pu2MonthLabel+'</div></div>';
   kpiHtml += '</div>';
   html += kpiHtml;
@@ -12284,7 +12311,7 @@ function avgOf(arr){ return arr.length ? Math.round((arr.reduce((a,b)=>a+b,0)/ar
 
 /* ---- Per-student latest Electronics record helpers ---- */
 function pu1ElectronicsLatest(s){
-  const order = [{key:'mt',label:'July Monthly Test',outOf:40},{key:'june',label:'June Monthly Test',outOf:40},{key:'t2',label:'Slip Test 2',outOf:20},{key:'t1',label:'Slip Test 1',outOf:20}];
+  const order = [{key:'t3',label:'Slip Test 3',outOf:20},{key:'august',label:'August Monthly Test',outOf:40},{key:'mt',label:'July Monthly Test',outOf:40},{key:'t2',label:'Slip Test 2',outOf:20},{key:'june',label:'June Monthly Test',outOf:40},{key:'t1',label:'Slip Test 1',outOf:20}];
   for(const o of order){
     if(s[o.key] && s[o.key].ELE!==null && s[o.key].ELE!==undefined){
       return {pct:Math.round(s[o.key].ELE/o.outOf*1000)/10, label:o.label, raw:s[o.key].ELE, outOf:o.outOf};
@@ -12332,8 +12359,8 @@ function buildEleTheorySection(){
     pu1SubjSD[subj] = vals.length ? Math.round((st.sd/40)*1000)/10 : null;
   });
 
-  const pu1TrendLabels = ['Slip Test 1','Slip Test 2',pu1CurrentMonthLabel()];
-  const pu1TrendVals = ['t1','t2'].map(k=>computeElectronicsSubjectStats(pu1Roster,k).ELE.avg_pct).concat([pu1SubjVals.ELE]);
+  const pu1TrendLabels = ['Slip Test 1','Slip Test 2',pu1CurrentMonthLabel(),'Slip Test 3'];
+  const pu1TrendVals = ['t1','t2'].map(k=>computeElectronicsSubjectStats(pu1Roster,k).ELE.avg_pct).concat([pu1SubjVals.ELE, computeElectronicsSubjectStats(pu1Roster,'t3').ELE.avg_pct]);
   const pu2TrendLabels = ['march','april','may','june','july'].map(mk=>PU2_MONTH_LABELS[mk]);
   const pu2TrendVals = ['march','april','may','june','july'].map(mk=>{
     const vals = pu2Roster.map(s=>s[mk]&&s[mk].ELE!==null&&s[mk].ELE!==undefined?s[mk].ELE:null).filter(v=>v!==null);
@@ -12530,6 +12557,8 @@ function buildEleTestWiseOptions(){
     {label:'Slip Test 2', pu:1, kind:'pu1_t2'},
     {label:'June Monthly Test', pu:1, kind:'pu1_mt_june'},
     {label:'July Monthly Test', pu:1, kind:'pu1_mt_july'},
+    {label:'August Monthly Test', pu:1, kind:'pu1_mt_august'},
+    {label:'Slip Test 3', pu:1, kind:'pu1_t3'},
   ];
   ['march','april','may','june','july'].forEach(mk=> opts.push({label:PU2_MONTH_LABELS[mk]+' (PU-II)', pu:2, kind:'pu2_month', key:mk}));
   ELE_TESTWISE_OPTIONS = opts;
@@ -12550,8 +12579,8 @@ function populateEleTestWiseSelect(){
 }
 function getTestWiseEleData(sel){
   let rows = [], classAvgPct = null, outOf;
-  if(sel.kind==='pu1_t1' || sel.kind==='pu1_t2'){
-    const key = sel.kind==='pu1_t1' ? 't1' : 't2';
+  if(sel.kind==='pu1_t1' || sel.kind==='pu1_t2' || sel.kind==='pu1_t3'){
+    const key = sel.kind==='pu1_t1' ? 't1' : sel.kind==='pu1_t2' ? 't2' : 't3';
     outOf = 20;
     rows = computeElectronicsRoster().filter(s=>s[key] && s[key].ELE!==null && s[key].ELE!==undefined)
       .map(s=>({name:s.name, section:sectionLabel(s), score:s[key].ELE, outOf, pct:Math.round(s[key].ELE/outOf*1000)/10}));
@@ -12563,6 +12592,10 @@ function getTestWiseEleData(sel){
     outOf = 40;
     rows = computeElectronicsRoster().filter(s=>s.mt && s.mt.ELE!==null && s.mt.ELE!==undefined)
       .map(s=>({name:s.name, section:sectionLabel(s), score:s.mt.ELE, outOf, pct:Math.round(s.mt.ELE/outOf*1000)/10}));
+  } else if(sel.kind==='pu1_mt_august'){
+    outOf = 40;
+    rows = computeElectronicsRoster().filter(s=>s.august && s.august.ELE!==null && s.august.ELE!==undefined)
+      .map(s=>({name:s.name, section:sectionLabel(s), score:s.august.ELE, outOf, pct:Math.round(s.august.ELE/outOf*1000)/10}));
   } else if(sel.kind==='pu2_month'){
     outOf = 40;
     rows = computePU2ElectronicsRoster().filter(s=>s[sel.key] && s[sel.key].ELE!==null && s[sel.key].ELE!==undefined)
