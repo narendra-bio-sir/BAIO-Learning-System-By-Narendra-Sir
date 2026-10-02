@@ -4376,79 +4376,241 @@ const STUDYTIPS_CH6_TRANSLATIONS = {
    the exact names/years/cc figures already given in the Topics content)
    so nothing is invented or duplicated by hand. ---- */
 const TIP_EXAMPLE_INDEX = {0:'theories-timeline', 1:'miller-urey', 2:'master-tables', 4:'human-evolution'};
+const TIP_EXAMPLE_BTN_LABEL = {en:'View example', kn:'ಉದಾಹರಣೆ ನೋಡಿ', hi:'उदाहरण देखें'};
+/* Trilingual content below reuses the exact vetted Kannada/Hindi vocabulary
+   already established in GLOSSARY_TRANSLATIONS_CH6 and STUDYTIPS_CH6_TRANSLATIONS
+   (Abiogenesis/Biogenesis, Homologous/Analogous organs, Lamarckism/Darwinism,
+   human-evolution species names and brain-capacity figures, etc.) so
+   terminology stays consistent with the rest of the chapter. */
 const TIP_EXAMPLES = {
   'theories-timeline': {
-    title: '🕰️ Four Theories of Origin of Life — Who, When, Why Rejected',
-    render: function(){
-      const rows = [
-        {theory:'Abiogenesis', who:'Greek philosophers, 600 BC; supported by Aristotle', claim:"Life arises spontaneously and continuously from non-living matter via a 'vital force'.", outcome:"Challenged by Redi (1688) &rarr; Spallanzani (1765) &rarr; finally disproved by Pasteur's swan-necked flask experiment."},
-        {theory:'Special Creation', who:'Father Suarez (1548&ndash;1617)', claim:'Divine/supernatural creation of all life in six days, as in the Biblical book of Genesis.', outcome:"Not disproved by any rival experiment — rejected because it is purely religious, not substantiated by scientific evidence."},
-        {theory:'Biogenesis', who:'Francesco Redi (1688); confirmed by Pasteur', claim:'Life originates only from pre-existing life, by reproduction.', outcome:"Became the scientifically accepted mechanism — but left 'how did the very first life form arise?' unanswered."},
-        {theory:'Cosmozoic / Panspermia', who:'Hermann E. Richter (1865)', claim:'Life reached earth from a distant planet via spores (cosmozoa) riding inside a meteorite.', outcome:'Rejected — recent space research has found no trace of life on other planets.'}
-      ];
-      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">This is exactly the timeline the tip describes — proposer/year, core claim, and who challenged it or why it was rejected, for all four theories, built from this chapter's own Theories topic.</div>
-        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Theory</th><th>Proposed By (Year)</th><th>Core Claim</th><th>Challenged By / Outcome</th></tr></thead><tbody>
-        ${rows.map(r=>`<tr><td class="tipex-organ">${r.theory}</td><td>${r.who}</td><td>${r.claim}</td><td>${r.outcome}</td></tr>`).join('')}
+    title: {
+      en: '🕰️ Four Theories of Origin of Life — Who, When, Why Rejected',
+      kn: '🕰️ ಜೀವದ ಉಗಮದ ನಾಲ್ಕು ಸಿದ್ಧಾಂತಗಳು — ಯಾರು, ಯಾವಾಗ, ಏಕೆ ತಿರಸ್ಕರಿಸಲಾಯಿತು',
+      hi: '🕰️ जीवन की उत्पत्ति के चार सिद्धांत — किसने, कब, क्यों अस्वीकृत'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"This is exactly the timeline the tip describes — proposer/year, core claim, and who challenged it or why it was rejected, for all four theories, built from this chapter's own Theories topic.",
+          th:['Theory','Proposed By (Year)','Core Claim','Challenged By / Outcome'],
+          rows:[
+            {theory:'Abiogenesis', who:'Greek philosophers, 600 BC; supported by Aristotle', claim:"Life arises spontaneously and continuously from non-living matter via a 'vital force'.", outcome:"Challenged by Redi (1688) &rarr; Spallanzani (1765) &rarr; finally disproved by Pasteur's swan-necked flask experiment."},
+            {theory:'Special Creation', who:'Father Suarez (1548&ndash;1617)', claim:'Divine/supernatural creation of all life in six days, as in the Biblical book of Genesis.', outcome:"Not disproved by any rival experiment — rejected because it is purely religious, not substantiated by scientific evidence."},
+            {theory:'Biogenesis', who:'Francesco Redi (1688); confirmed by Pasteur', claim:'Life originates only from pre-existing life, by reproduction.', outcome:"Became the scientifically accepted mechanism — but left 'how did the very first life form arise?' unanswered."},
+            {theory:'Cosmozoic / Panspermia', who:'Hermann E. Richter (1865)', claim:'Life reached earth from a distant planet via spores (cosmozoa) riding inside a meteorite.', outcome:'Rejected — recent space research has found no trace of life on other planets.'}
+          ] },
+        kn: { intro:'ಇದು ಸಲಹೆ ವಿವರಿಸುವ ನಿಖರವಾದ ಕಾಲಾನುಕ್ರಮ — ಎಲ್ಲಾ ನಾಲ್ಕು ಸಿದ್ಧಾಂತಗಳಿಗೆ ಪ್ರತಿಪಾದಕ/ವರ್ಷ, ಮೂಲ ಪ್ರತಿಪಾದನೆ, ಮತ್ತು ಅದನ್ನು ಯಾರು ಪ್ರಶ್ನಿಸಿದರು ಅಥವಾ ಏಕೆ ತಿರಸ್ಕರಿಸಲಾಯಿತು, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Theories ವಿಷಯದಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ.',
+          th:['ಸಿದ್ಧಾಂತ','ಪ್ರತಿಪಾದಕ (ವರ್ಷ)','ಮೂಲ ಪ್ರತಿಪಾದನೆ','ಪ್ರಶ್ನಿಸಿದವರು / ಫಲಿತಾಂಶ'],
+          rows:[
+            {theory:'ಅಜೈವಜನನ', who:'ಗ್ರೀಕ್ ತತ್ವಜ್ಞಾನಿಗಳು, 600 BC; ಅರಿಸ್ಟಾಟಲ್‌ರಿಂದ ಬೆಂಬಲಿತ', claim:"ಜೀವ ನಿರ್ಜೀವ ವಸ್ತುವಿನಿಂದ 'ಜೀವ ಶಕ್ತಿ'ಯ ಮೂಲಕ ಸ್ವಯಂಪ್ರೇರಿತವಾಗಿ ಮತ್ತು ನಿರಂತರವಾಗಿ ಉಗಮಿಸುತ್ತದೆ.", outcome:"ರೆಡಿ (1688) &rarr; ಸ್ಪಲಾನ್ಜಾನಿ (1765) ಇವರಿಂದ ಪ್ರಶ್ನಿಸಲ್ಪಟ್ಟಿತು &rarr; ಅಂತಿಮವಾಗಿ ಪಾಶ್ಚರ್‌ರ ಸ್ವಾನ್-ನೆಕ್ ಫ್ಲಾಸ್ಕ್ ಪ್ರಯೋಗದಿಂದ ಖಂಡಿಸಲ್ಪಟ್ಟಿತು."},
+            {theory:'ವಿಶೇಷ ಸೃಷ್ಟಿ', who:'ಫಾದರ್ ಸುವಾರೆಜ್ (1548&ndash;1617)', claim:'ಬೈಬಲ್‌ನ ಜೆನೆಸಿಸ್ ಗ್ರಂಥದಲ್ಲಿರುವಂತೆ, ಎಲ್ಲಾ ಜೀವಿಗಳ ದೈವಿಕ/ಅಲೌಕಿಕ ಸೃಷ್ಟಿ ಆರು ದಿನಗಳಲ್ಲಿ.', outcome:"ಯಾವುದೇ ಪ್ರತಿಸ್ಪರ್ಧಿ ಪ್ರಯೋಗದಿಂದ ಖಂಡಿಸಲ್ಪಟ್ಟಿಲ್ಲ — ಇದು ಸಂಪೂರ್ಣವಾಗಿ ಧಾರ್ಮಿಕ, ವೈಜ್ಞಾನಿಕ ಪುರಾವೆಯಿಂದ ಸಮರ್ಥಿಸಲ್ಪಟ್ಟಿಲ್ಲ ಎಂಬ ಕಾರಣಕ್ಕೆ ತಿರಸ್ಕರಿಸಲಾಗಿದೆ."},
+            {theory:'ಜೈವಜನನ', who:'ಫ್ರಾನ್ಸೆಸ್ಕೊ ರೆಡಿ (1688); ಪಾಶ್ಚರ್‌ರಿಂದ ದೃಢೀಕರಿಸಲ್ಪಟ್ಟಿತು', claim:'ಜೀವ ಕೇವಲ ಪೂರ್ವ-ಅಸ್ತಿತ್ವದ ಜೀವದಿಂದ, ಸಂತಾನೋತ್ಪತ್ತಿಯ ಮೂಲಕ ಉಗಮಿಸುತ್ತದೆ.', outcome:"ವೈಜ್ಞಾನಿಕವಾಗಿ ಸ್ವೀಕೃತ ಕಾರ್ಯವಿಧಾನವಾಯಿತು — ಆದರೆ 'ಮೊದಲ ಜೀವರೂಪ ಹೇಗೆ ಉಗಮವಾಯಿತು?' ಎಂಬ ಪ್ರಶ್ನೆಗೆ ಉತ್ತರ ಇಲ್ಲದೆ ಬಿಟ್ಟಿತು."},
+            {theory:'ಕಾಸ್ಮೊಜೋಯಿಕ್ / ಪಾನ್‌ಸ್ಪರ್ಮಿಯಾ', who:'ಹರ್ಮನ್ ಇ. ರಿಕ್ಟರ್ (1865)', claim:'ಜೀವ ದೂರದ ಗ್ರಹದಿಂದ ಬೀಜಾಣುಗಳ (ಕಾಸ್ಮೊಜೋಆ) ಮೂಲಕ ಉಲ್ಕೆಯೊಳಗೆ ಸವಾರಿ ಮಾಡಿ ಭೂಮಿಗೆ ತಲುಪಿತು.', outcome:'ತಿರಸ್ಕರಿಸಲಾಗಿದೆ — ಇತ್ತೀಚಿನ ಬಾಹ್ಯಾಕಾಶ ಸಂಶೋಧನೆ ಇತರ ಗ್ರಹಗಳಲ್ಲಿ ಜೀವದ ಯಾವುದೇ ಕುರುಹು ಕಂಡುಹಿಡಿದಿಲ್ಲ.'}
+          ] },
+        hi: { intro:'यह ठीक वही कालरेखा है जिसका वर्णन यह सुझाव करता है — सभी चार सिद्धांतों के लिए प्रस्तावक/वर्ष, मूल दावा, और किसने उसे चुनौती दी या क्यों अस्वीकृत किया गया, इस अध्याय के अपने Theories विषय से बनाई गई।',
+          th:['सिद्धांत','प्रस्तावक (वर्ष)','मूल दावा','चुनौती देने वाला / परिणाम'],
+          rows:[
+            {theory:'अजीवजनन', who:'यूनानी दार्शनिक, 600 ईसा पूर्व; अरस्तू द्वारा समर्थित', claim:"जीवन निर्जीव पदार्थ से 'जीव शक्ति' के माध्यम से स्वतःस्फूर्त और निरंतर उत्पन्न होता है।", outcome:"रेडी (1688) &rarr; स्पालांज़ानी (1765) द्वारा चुनौती दी गई &rarr; अंततः पाश्चर के स्वान-नेक फ्लास्क प्रयोग द्वारा खंडित।"},
+            {theory:'विशेष सृष्टि', who:'फादर सुआरेज़ (1548&ndash;1617)', claim:'बाइबिल की जेनेसिस पुस्तक के अनुसार, सभी जीवन की दैवीय/अलौकिक सृष्टि छह दिनों में।', outcome:"किसी भी प्रतिस्पर्धी प्रयोग द्वारा खंडित नहीं — यह पूर्णतः धार्मिक है, वैज्ञानिक प्रमाण से प्रमाणित नहीं, इस कारण अस्वीकृत।"},
+            {theory:'जीवजनन', who:'फ्रांसेस्को रेडी (1688); पाश्चर द्वारा पुष्ट', claim:'जीवन केवल पूर्व-विद्यमान जीवन से, प्रजनन द्वारा ही उत्पन्न होता है।', outcome:"वैज्ञानिक रूप से स्वीकृत क्रियाविधि बन गया — पर 'सबसे पहला जीवन रूप कैसे उत्पन्न हुआ?' यह प्रश्न अनुत्तरित छोड़ गया।"},
+            {theory:'कॉस्मोज़ोइक / पैन्स्पर्मिया', who:'हर्मन ई. रिक्टर (1865)', claim:'जीवन एक दूर के ग्रह से बीजाणुओं (कॉस्मोज़ोआ) के रूप में उल्कापिंड के भीतर सवार होकर पृथ्वी पर पहुँचा।', outcome:'अस्वीकृत — हाल के अंतरिक्ष शोध में अन्य ग्रहों पर जीवन का कोई निशान नहीं मिला।'}
+          ] }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${l.th[1]}</th><th>${l.th[2]}</th><th>${l.th[3]}</th></tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r.theory}</td><td>${r.who}</td><td>${r.claim}</td><td>${r.outcome}</td></tr>`).join('')}
         </tbody></table></div>`;
     }
   },
   'miller-urey': {
-    title: '🧪 Miller-Urey Apparatus — Labelled Step by Step',
-    render: function(){
+    title: {
+      en: '🧪 Miller-Urey Apparatus — Labelled Step by Step',
+      kn: '🧪 ಮಿಲ್ಲರ್-ಯೂರೆ ಉಪಕರಣ — ಹಂತ ಹಂತವಾಗಿ ಲೇಬಲ್ ಮಾಡಲಾಗಿದೆ',
+      hi: '🧪 मिलर-यूरे उपकरण — चरण दर चरण नामांकित'
+    },
+    render: function(lang){
       function step(q, a){ return `<div class="tipex-step"><span class="tipex-q">${q}.</span><span>${a}</span></div>`; }
-      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">The exact apparatus the tip asks you to draw and label, broken into the five parts/stages worth naming, using only the figures given in this chapter.</div>
-        <div class="tipex-case"><div class="tipex-case-title">Spark-discharge simulation (Stanley Miller &amp; Harold Urey, 1953)</div>
-        ${step(1,"Gas mixture sealed inside the flask &mdash; CH<sub>4</sub> : NH<sub>3</sub> : H<sub>2</sub> in the ratio <b>2:1:2</b>, plus water vapour &mdash; simulating earth's primitive, oxygen-free (reducing) atmosphere.")}
-        ${step(2,"Continuous electric spark discharge maintained at about <b>800&deg;C</b> across the gas mixture &mdash; simulating <b>lightning</b>, the energy source.")}
-        ${step(3,"Water in the flask boiled continuously for about <b>one week</b>, keeping the simulated atmosphere circulating past the spark.")}
-        ${step(4,"Products passed through a <b>condenser</b> and collected in a <b>trap</b> at the base of the apparatus.")}
-        ${step(5,"Result: the trap contained <b>amino acids</b> and simple organic compounds (HCN, fatty acids, urea) &mdash; supporting the Oparin-Haldane theory of chemical evolution.")}
-        <div class="tipex-diagnosis">✓ Gas mixture → spark (lightning) → boil 1 week → condenser/trap → amino acids</div></div>`;
+      const L = {
+        en: { intro:"The exact apparatus the tip asks you to draw and label, broken into the five parts/stages worth naming, using only the figures given in this chapter.",
+          caseTitle:'Spark-discharge simulation (Stanley Miller &amp; Harold Urey, 1953)',
+          steps:[
+            "Gas mixture sealed inside the flask &mdash; CH<sub>4</sub> : NH<sub>3</sub> : H<sub>2</sub> in the ratio <b>2:1:2</b>, plus water vapour &mdash; simulating earth's primitive, oxygen-free (reducing) atmosphere.",
+            "Continuous electric spark discharge maintained at about <b>800&deg;C</b> across the gas mixture &mdash; simulating <b>lightning</b>, the energy source.",
+            "Water in the flask boiled continuously for about <b>one week</b>, keeping the simulated atmosphere circulating past the spark.",
+            "Products passed through a <b>condenser</b> and collected in a <b>trap</b> at the base of the apparatus.",
+            "Result: the trap contained <b>amino acids</b> and simple organic compounds (HCN, fatty acids, urea) &mdash; supporting the Oparin-Haldane theory of chemical evolution."
+          ],
+          diagnosis:'Gas mixture → spark (lightning) → boil 1 week → condenser/trap → amino acids' },
+        kn: { intro:'ಈ ಸಲಹೆ ನಿಮಗೆ ಬಿಡಿಸಿ ಲೇಬಲ್ ಮಾಡಲು ಹೇಳುವ ನಿಖರವಾದ ಉಪಕರಣ, ಈ ಅಧ್ಯಾಯದಲ್ಲಿ ನೀಡಲಾದ ಅಂಕಿಅಂಶಗಳನ್ನು ಮಾತ್ರ ಬಳಸಿ ಹೆಸರಿಸಲು ಯೋಗ್ಯವಾದ ಐದು ಭಾಗಗಳು/ಹಂತಗಳಾಗಿ ವಿಭಜಿಸಲಾಗಿದೆ.',
+          caseTitle:'ಸ್ಪಾರ್ಕ್-ಡಿಸ್ಚಾರ್ಜ್ ಅನುಕರಣೆ (ಸ್ಟಾನ್ಲಿ ಮಿಲ್ಲರ್ ಮತ್ತು ಹೆರಾಲ್ಡ್ ಯೂರೆ, 1953)',
+          steps:[
+            'ಫ್ಲಾಸ್ಕ್‌ನೊಳಗೆ ಮುಚ್ಚಲ್ಪಟ್ಟ ಅನಿಲ ಮಿಶ್ರಣ &mdash; CH<sub>4</sub> : NH<sub>3</sub> : H<sub>2</sub> ಅನುಪಾತ <b>2:1:2</b>, ಜೊತೆಗೆ ನೀರಿನ ಆವಿ &mdash; ಭೂಮಿಯ ಪ್ರಾಚೀನ, ಆಮ್ಲಜನಕ-ಮುಕ್ತ (ಕ್ಷೀಣೀಕರಣ) ವಾತಾವರಣದ ಅನುಕರಣೆ.',
+            'ಅನಿಲ ಮಿಶ್ರಣದ ಮೇಲೆ ಸುಮಾರು <b>800&deg;C</b>ನಲ್ಲಿ ನಿರಂತರ ವಿದ್ಯುತ್ ಸ್ಪಾರ್ಕ್ ಡಿಸ್ಚಾರ್ಜ್ ನಿರ್ವಹಿಸಲ್ಪಟ್ಟಿತು &mdash; ಶಕ್ತಿಯ ಮೂಲವಾದ <b>ಮಿಂಚಿನ</b> ಅನುಕರಣೆ.',
+            'ಫ್ಲಾಸ್ಕ್‌ನಲ್ಲಿ ನೀರು ಸುಮಾರು <b>ಒಂದು ವಾರ</b> ನಿರಂತರವಾಗಿ ಕುದಿಸಲ್ಪಟ್ಟಿತು, ಅನುಕರಿತ ವಾತಾವರಣ ಸ್ಪಾರ್ಕ್‌ನ ಮುಂದೆ ಪ್ರವಹಿಸುತ್ತಲೇ ಇರುವಂತೆ ಮಾಡಿತು.',
+            'ಉತ್ಪನ್ನಗಳು <b>ಕಂಡೆನ್ಸರ್</b> ಮೂಲಕ ಹಾದುಹೋಗಿ ಉಪಕರಣದ ಬುಡದಲ್ಲಿರುವ <b>ಟ್ರ್ಯಾಪ್</b>ನಲ್ಲಿ ಸಂಗ್ರಹವಾದವು.',
+            'ಫಲಿತಾಂಶ: ಟ್ರ್ಯಾಪ್‌ನಲ್ಲಿ <b>ಅಮೈನೊ ಆಮ್ಲಗಳು</b> ಮತ್ತು ಸರಳ ಸಾವಯವ ಸಂಯುಕ್ತಗಳು (HCN, ಫ್ಯಾಟಿ ಆಸಿಡ್, ಯೂರಿಯಾ) ಇದ್ದವು &mdash; ಇದು ಒಪಾರಿನ್-ಹಾಲ್ಡೇನ್ ರಾಸಾಯನಿಕ ವಿಕಾಸ ಸಿದ್ಧಾಂತವನ್ನು ಬೆಂಬಲಿಸಿತು.'
+          ],
+          diagnosis:'ಅನಿಲ ಮಿಶ್ರಣ → ಸ್ಪಾರ್ಕ್ (ಮಿಂಚು) → 1 ವಾರ ಕುದಿಸು → ಕಂಡೆನ್ಸರ್/ಟ್ರ್ಯಾಪ್ → ಅಮೈನೊ ಆಮ್ಲಗಳು' },
+        hi: { intro:'वह ठीक उपकरण जिसे यह सुझाव आपसे बनाने और नामांकित करने को कहता है, इस अध्याय में दिए गए आँकड़ों का ही उपयोग करते हुए नामांकित करने योग्य पाँच भागों/चरणों में विभाजित।',
+          caseTitle:'स्पार्क-डिस्चार्ज सिमुलेशन (स्टैनली मिलर व हेरोल्ड यूरे, 1953)',
+          steps:[
+            'फ्लास्क के भीतर बंद गैस मिश्रण &mdash; CH<sub>4</sub> : NH<sub>3</sub> : H<sub>2</sub> अनुपात <b>2:1:2</b>, साथ में जल वाष्प &mdash; पृथ्वी के आदिम, ऑक्सीजन-रहित (अपचायक) वातावरण का अनुकरण।',
+            'गैस मिश्रण पर लगभग <b>800&deg;C</b> पर निरंतर विद्युत स्पार्क डिस्चार्ज बनाए रखा गया &mdash; ऊर्जा स्रोत <b>बिजली (lightning)</b> का अनुकरण।',
+            'फ्लास्क में पानी लगभग <b>एक सप्ताह</b> तक निरंतर उबाला गया, जिससे अनुकरित वातावरण स्पार्क के पास से लगातार प्रवाहित होता रहा।',
+            'उत्पाद <b>कंडेंसर</b> से गुज़रे और उपकरण के आधार पर स्थित <b>ट्रैप</b> में एकत्र हुए।',
+            'परिणाम: ट्रैप में <b>अमीनो अम्ल</b> व सरल कार्बनिक यौगिक (HCN, वसा अम्ल, यूरिया) पाए गए &mdash; जो रासायनिक विकास के ओपेरिन-हाल्डेन सिद्धांत का समर्थन करते हैं।'
+          ],
+          diagnosis:'गैस मिश्रण → स्पार्क (बिजली) → 1 सप्ताह उबालें → कंडेंसर/ट्रैप → अमीनो अम्ल' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        <div class="tipex-case"><div class="tipex-case-title">${l.caseTitle}</div>
+        ${l.steps.map((s,i)=>step(i+1,s)).join('')}
+        <div class="tipex-diagnosis">✓ ${l.diagnosis}</div></div>`;
     }
   },
   'master-tables': {
-    title: '📊 Two Worked Comparison Tables',
-    render: function(){
-      const cell = (g,f) => g[f.key];
-      function cmpTable(nameA, nameB){
-        const a = COMPARE_DATA.find(g=>g.name===nameA);
-        const b = COMPARE_DATA.find(g=>g.name===nameB);
-        if(!a || !b) return '';
-        return `<div class="tipex-case"><div class="tipex-case-title">${a.name} vs ${b.name}</div>
-          <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Character</th><th>${a.name}</th><th>${b.name}</th></tr></thead><tbody>
-          ${CMP_FIELDS.map(f=>`<tr><td class="tipex-organ">${f.label}</td><td>${cell(a,f)}</td><td>${cell(b,f)}</td></tr>`).join('')}
+    title: {
+      en: '📊 Two Worked Comparison Tables',
+      kn: '📊 ಎರಡು ಉದಾಹರಣೆ ಹೋಲಿಕೆ ಕೋಷ್ಟಕಗಳು',
+      hi: '📊 दो हल किए गए तुलना तालिकाएँ'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"Exactly the two tables the tip describes, built from this chapter's own Compare tab data (COMPARE_DATA) &mdash; nothing re-typed by hand.",
+          th:['Character','',''],
+          note:'Full detail for every row is in the <b>Compare</b> tab &mdash; this is the condensed version worth memorising first.',
+          pairs:[
+            { nameA:'Homologous organs', nameB:'Analogous organs',
+              rows:[
+                {label:'Definition / What it Is', a:'Same basic structure, different functions', b:'Different structure, same function'},
+                {label:'Cause / Mechanism', a:'Divergence from a common ancestor over time', b:'Independent adaptation to similar environments'},
+                {label:'Proposed By / Category', a:'Evolutionary evidence - morphological/anatomical', b:'Evolutionary evidence - morphological/anatomical'},
+                {label:'Key Distinguishing Feature', a:'Indicates divergent evolution', b:'Indicates convergent evolution'},
+                {label:'NEET-frequent Example', a:'Forelimbs of all mammals; thorn of Bougainvillea and tendril of Cucurbita', b:'Wings of butterfly and bird; eyes of octopus and mammal'}
+              ] },
+            { nameA:'Lamarckism', nameB:'Darwinism',
+              rows:[
+                {label:'Definition / What it Is', a:'Theory of inheritance of acquired characters', b:'Theory of natural selection'},
+                {label:'Cause / Mechanism', a:"Use and disuse of organs during an individual's lifetime", b:'Overproduction, struggle, variation, differential survival'},
+                {label:'Proposed By / Category', a:'Proposed by Lamarck (1809)', b:'Proposed by Darwin (1859), influenced by Malthus'},
+                {label:'Key Distinguishing Feature', a:"Disproved by Weismann's decaudalisation experiment", b:'Explains gradual evolution by selection of existing variation'},
+                {label:'NEET-frequent Example', a:'Long neck of giraffe (use); limbless snake (disuse)', b:'Adaptive melanism in Biston betularia'}
+              ] }
+          ] },
+        kn: { intro:'ಸಲಹೆ ವಿವರಿಸುವ ನಿಖರವಾಗಿ ಎರಡು ಕೋಷ್ಟಕಗಳು, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Compare ಟ್ಯಾಬ್ ಡೇಟಾ (COMPARE_DATA) ನಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ &mdash; ಏನನ್ನೂ ಕೈಯಿಂದ ಮರುಟೈಪ್ ಮಾಡಿಲ್ಲ.',
+          th:['ಲಕ್ಷಣ','',''],
+          note:'ಪ್ರತಿ ಸಾಲಿನ ಪೂರ್ಣ ವಿವರ <b>Compare</b> ಟ್ಯಾಬ್‌ನಲ್ಲಿದೆ &mdash; ಇದು ಮೊದಲು ಕಂಠಪಾಠ ಮಾಡಲು ಯೋಗ್ಯವಾದ ಸಂಕ್ಷಿಪ್ತ ಆವೃತ್ತಿ.',
+          pairs:[
+            { nameA:'ಸಜಾತೀಯ ಅಂಗಗಳು', nameB:'ಸದೃಶ ಅಂಗಗಳು',
+              rows:[
+                {label:'ವ್ಯಾಖ್ಯಾನ / ಇದು ಏನು', a:'ಒಂದೇ ಮೂಲ ಅಂಗರಚನೆ, ಬೇರೆ ಬೇರೆ ಕಾರ್ಯಗಳು', b:'ಬೇರೆ ಬೇರೆ ಅಂಗರಚನೆ, ಒಂದೇ ಕಾರ್ಯ'},
+                {label:'ಕಾರಣ / ಕಾರ್ಯವಿಧಾನ', a:'ಕಾಲಾಂತರದಲ್ಲಿ ಸಾಮಾನ್ಯ ಪೂರ್ವಜನಿಂದ ಅಪಸರಣ', b:'ಸದೃಶ ಪರಿಸರಗಳಿಗೆ ಸ್ವತಂತ್ರ ಹೊಂದಾಣಿಕೆ'},
+                {label:'ಪ್ರತಿಪಾದಕ / ವಿಭಾಗ', a:'ವಿಕಾಸಾತ್ಮಕ ಪುರಾವೆ - ರೂಪಶಾಸ್ತ್ರೀಯ/ಅಂಗರಚನಾಶಾಸ್ತ್ರೀಯ', b:'ವಿಕಾಸಾತ್ಮಕ ಪುರಾವೆ - ರೂಪಶಾಸ್ತ್ರೀಯ/ಅಂಗರಚನಾಶಾಸ್ತ್ರೀಯ'},
+                {label:'ಪ್ರಮುಖ ವಿಭಿನ್ನ ಲಕ್ಷಣ', a:'ಅಪಸರಣ ವಿಕಾಸವನ್ನು ಸೂಚಿಸುತ್ತದೆ', b:'ಅಭಿಸರಣ ವಿಕಾಸವನ್ನು ಸೂಚಿಸುತ್ತದೆ'},
+                {label:'NEET-ಆಗಾಗ್ಗೆ ಬರುವ ಉದಾಹರಣೆ', a:'ಎಲ್ಲಾ ಸಸ್ತನಿಗಳ ಮುಂಗಾಲುಗಳು; ಬೋಗನ್‌ವಿಲ್ಲಾದ ಮುಳ್ಳು ಮತ್ತು ಕುಕುರ್ಬಿಟಾದ ಟೆಂಡ್ರಿಲ್', b:'ಚಿಟ್ಟೆ ಮತ್ತು ಪಕ್ಷಿಯ ರೆಕ್ಕೆಗಳು; ಆಕ್ಟೋಪಸ್ ಮತ್ತು ಸಸ್ತನಿಯ ಕಣ್ಣುಗಳು'}
+              ] },
+            { nameA:'ಲಾಮಾರ್ಕ್‌ವಾದ', nameB:'ಡಾರ್ವಿನ್‌ವಾದ',
+              rows:[
+                {label:'ವ್ಯಾಖ್ಯಾನ / ಇದು ಏನು', a:'ಸ್ವಾಧೀನಪಡಿಸಿಕೊಂಡ ಗುಣಗಳ ಅನುವಂಶೀಯತೆಯ ಸಿದ್ಧಾಂತ', b:'ನೈಸರ್ಗಿಕ ಆಯ್ಕೆಯ ಸಿದ್ಧಾಂತ'},
+                {label:'ಕಾರಣ / ಕಾರ್ಯವಿಧಾನ', a:'ವ್ಯಕ್ತಿಯ ಜೀವಿತಾವಧಿಯಲ್ಲಿ ಅಂಗಗಳ ಬಳಕೆ ಮತ್ತು ಅಬಳಕೆ', b:'ಅತಿ ಉತ್ಪಾದನೆ, ಸಂಘರ್ಷ, ವ್ಯತ್ಯಯ, ವಿಭಿನ್ನ ಬದುಕುಳಿಯುವಿಕೆ'},
+                {label:'ಪ್ರತಿಪಾದಕ / ವಿಭಾಗ', a:'ಲಾಮಾರ್ಕ್‌ರಿಂದ ಪ್ರತಿಪಾದಿತ (1809)', b:'ಡಾರ್ವಿನ್‌ರಿಂದ ಪ್ರತಿಪಾದಿತ (1859), ಮಾಲ್ತಸ್‌ರಿಂದ ಪ್ರಭಾವಿತ'},
+                {label:'ಪ್ರಮುಖ ವಿಭಿನ್ನ ಲಕ್ಷಣ', a:'ವೈಸ್‌ಮನ್‌ರ ಡೀಕಾಡಲೈಸೇಶನ್ ಪ್ರಯೋಗದಿಂದ ಖಂಡಿಸಲ್ಪಟ್ಟಿತು', b:'ಇರುವ ವ್ಯತ್ಯಯದ ಆಯ್ಕೆಯ ಮೂಲಕ ಕ್ರಮೇಣ ವಿಕಾಸವನ್ನು ವಿವರಿಸುತ್ತದೆ'},
+                {label:'NEET-ಆಗಾಗ್ಗೆ ಬರುವ ಉದಾಹರಣೆ', a:'ಜಿರಾಫೆಯ ಉದ್ದ ಕತ್ತು (ಬಳಕೆ); ಕಾಲಿಲ್ಲದ ಹಾವು (ಅಬಳಕೆ)', b:'Biston betularia ನಲ್ಲಿ ಅಡಾಪ್ಟಿವ್ ಮೆಲನಿಸಂ'}
+              ] }
+          ] },
+        hi: { intro:'वे ठीक दो तालिकाएँ जिनका वर्णन सुझाव करता है, इस अध्याय के अपने Compare टैब डेटा (COMPARE_DATA) से बनाई गई &mdash; कुछ भी हाथ से दोबारा नहीं टाइप किया गया।',
+          th:['लक्षण','',''],
+          note:'हर पंक्ति का पूरा विवरण <b>Compare</b> टैब में है &mdash; यह पहले याद करने योग्य संक्षिप्त संस्करण है।',
+          pairs:[
+            { nameA:'समजात अंग', nameB:'समवृत्ति अंग',
+              rows:[
+                {label:'परिभाषा / यह क्या है', a:'समान मूल संरचना, भिन्न कार्य', b:'भिन्न संरचना, समान कार्य'},
+                {label:'कारण / क्रियाविधि', a:'समय के साथ एक सामान्य पूर्वज से अपसरण', b:'समान पर्यावरणों के लिए स्वतंत्र अनुकूलन'},
+                {label:'प्रस्तावक / श्रेणी', a:'विकासात्मक प्रमाण - आकारिकी/शारीरिक', b:'विकासात्मक प्रमाण - आकारिकी/शारीरिक'},
+                {label:'प्रमुख विभेदक लक्षण', a:'अपसारी विकास का संकेत देता है', b:'अभिसारी विकास का संकेत देता है'},
+                {label:'NEET-सामान्य उदाहरण', a:'सभी स्तनधारियों के अग्रपाद; बोगनवेलिया का कंटक व कुकुर्बिटा का प्रतान', b:'तितली व पक्षी के पंख; ऑक्टोपस व स्तनधारी की आँखें'}
+              ] },
+            { nameA:'लैमार्कवाद', nameB:'डार्विनवाद',
+              rows:[
+                {label:'परिभाषा / यह क्या है', a:'उपार्जित लक्षणों की वंशागति का सिद्धांत', b:'प्राकृतिक चयन का सिद्धांत'},
+                {label:'कारण / क्रियाविधि', a:'व्यक्ति के जीवनकाल में अंगों का उपयोग व अनुपयोग', b:'अति-उत्पादन, संघर्ष, विचरण, विभेदी उत्तरजीविता'},
+                {label:'प्रस्तावक / श्रेणी', a:'लैमार्क द्वारा प्रस्तावित (1809)', b:'डार्विन द्वारा प्रस्तावित (1859), माल्थस से प्रभावित'},
+                {label:'प्रमुख विभेदक लक्षण', a:'वाइज़मन के डीकॉडलाइज़ेशन प्रयोग से खंडित', b:'विद्यमान विचरण के चयन द्वारा क्रमिक विकास को समझाता है'},
+                {label:'NEET-सामान्य उदाहरण', a:'जिराफ़ की लंबी गर्दन (उपयोग); अंगहीन साँप (अनुपयोग)', b:'Biston betularia में अनुकूली मेलेनिज़्म'}
+              ] }
+          ] }
+      };
+      const l = L[lang] || L.en;
+      function cmpTable(p){
+        return `<div class="tipex-case"><div class="tipex-case-title">${p.nameA} vs ${p.nameB}</div>
+          <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${p.nameA}</th><th>${p.nameB}</th></tr></thead><tbody>
+          ${p.rows.map(r=>`<tr><td class="tipex-organ">${r.label}</td><td>${r.a}</td><td>${r.b}</td></tr>`).join('')}
           </tbody></table></div></div>`;
       }
-      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">Exactly the two tables the tip describes, built from this chapter's own Compare tab data (COMPARE_DATA) &mdash; nothing re-typed by hand.</div>
-        ${cmpTable('Homologous organs','Analogous organs')}
-        ${cmpTable('Lamarckism','Darwinism')}
-        <div class="tipex-note">Full detail for every row is in the <b>Compare</b> tab &mdash; this is the condensed version worth memorising first.</div>`;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        ${l.pairs.map(cmpTable).join('')}
+        <div class="tipex-note">${l.note}</div>`;
     }
   },
   'human-evolution': {
-    title: '🧬 Human Evolution Chain — Name, Time, Brain Capacity',
-    render: function(){
-      const rows = [
-        {name:'Dryopithecus &amp; Ramapithecus', time:'~15 mya', cc:"Ape-like &mdash; no distinct cranial-capacity figure given at this stage"},
-        {name:'<i>Australopithecus</i> (e.g. &lsquo;Lucy&rsquo;)', time:'~3&ndash;4 mya (Lucy &asymp; 3.2 mya)', cc:'500&ndash;700 cc'},
-        {name:'<i>Homo habilis</i>', time:'Pleistocene rocks, Olduvai Gorge (Leakey, 1960)', cc:'650&ndash;800 cc'},
-        {name:'<i>Homo erectus</i> (Java man, Peking man)', time:'~1.5 mya', cc:'~900 cc'},
-        {name:'<i>Homo neanderthalensis</i>', time:'1,00,000&ndash;40,000 years ago', cc:'~1400 cc'},
-        {name:'<i>Homo sapiens</i> (incl. Cro-Magnon man)', time:'Cro-Magnon &asymp; 34,000 years ago', cc:'~1450 cc (modern)'}
-      ];
-      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">Exactly the three-numbers-per-stage chain the tip describes, using only the names, times and cranial capacities already given in this chapter's Origin and Evolution of Man topic.</div>
-        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Stage</th><th>Approx. Time</th><th>Brain Capacity</th></tr></thead><tbody>
-        ${rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td>${r.time}</td><td>${r.cc}</td></tr>`).join('')}
+    title: {
+      en: '🧬 Human Evolution Chain — Name, Time, Brain Capacity',
+      kn: '🧬 ಮಾನವ ವಿಕಾಸ ಸರಪಳಿ — ಹೆಸರು, ಸಮಯ, ಮಿದುಳಿನ ಸಾಮರ್ಥ್ಯ',
+      hi: '🧬 मानव विकास श्रृंखला — नाम, समय, मस्तिष्क क्षमता'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"Exactly the three-numbers-per-stage chain the tip describes, using only the names, times and cranial capacities already given in this chapter's Origin and Evolution of Man topic.",
+          th:['Stage','Approx. Time','Brain Capacity'],
+          note:"Where this chapter doesn't give a separate time figure for a stage (e.g. <i>Homo habilis</i>), that gap is shown honestly rather than guessed.",
+          rows:[
+            {name:'Dryopithecus &amp; Ramapithecus', time:'~15 mya', cc:"Ape-like &mdash; no distinct cranial-capacity figure given at this stage"},
+            {name:'<i>Australopithecus</i> (e.g. &lsquo;Lucy&rsquo;)', time:'~3&ndash;4 mya (Lucy &asymp; 3.2 mya)', cc:'500&ndash;700 cc'},
+            {name:'<i>Homo habilis</i>', time:'Pleistocene rocks, Olduvai Gorge (Leakey, 1960)', cc:'650&ndash;800 cc'},
+            {name:'<i>Homo erectus</i> (Java man, Peking man)', time:'~1.5 mya', cc:'~900 cc'},
+            {name:'<i>Homo neanderthalensis</i>', time:'1,00,000&ndash;40,000 years ago', cc:'~1400 cc'},
+            {name:'<i>Homo sapiens</i> (incl. Cro-Magnon man)', time:'Cro-Magnon &asymp; 34,000 years ago', cc:'~1450 cc (modern)'}
+          ] },
+        kn: { intro:'ಸಲಹೆ ವಿವರಿಸುವ ಪ್ರತಿ ಹಂತಕ್ಕೆ ಮೂರು ಸಂಖ್ಯೆಗಳ ಸರಪಳಿ ನಿಖರವಾಗಿ, ಈ ಅಧ್ಯಾಯದ Origin and Evolution of Man ವಿಷಯದಲ್ಲಿ ಈಗಾಗಲೇ ನೀಡಲಾದ ಹೆಸರುಗಳು, ಸಮಯಗಳು ಮತ್ತು ಮಿದುಳಿನ ಸಾಮರ್ಥ್ಯಗಳನ್ನು ಮಾತ್ರ ಬಳಸಿ.',
+          th:['ಹಂತ','ಅಂದಾಜು ಸಮಯ','ಮಿದುಳಿನ ಸಾಮರ್ಥ್ಯ'],
+          note:'ಈ ಅಧ್ಯಾಯ ಒಂದು ಹಂತಕ್ಕೆ (ಉದಾ. <i>Homo habilis</i>) ಪ್ರತ್ಯೇಕ ಸಮಯದ ಅಂಕಿ ನೀಡದಿದ್ದಲ್ಲಿ, ಆ ಕೊರತೆಯನ್ನು ಊಹಿಸುವ ಬದಲು ಪ್ರಾಮಾಣಿಕವಾಗಿ ತೋರಿಸಲಾಗಿದೆ.',
+          rows:[
+            {name:'ಡ್ರಯೋಪಿಥೆಕಸ್ &amp; ರಾಮಾಪಿಥೆಕಸ್', time:'~15 mya', cc:'ಕೋತಿ-ಸದೃಶ &mdash; ಈ ಹಂತಕ್ಕೆ ಪ್ರತ್ಯೇಕ ಮಿದುಳಿನ ಸಾಮರ್ಥ್ಯದ ಅಂಕಿ ನೀಡಲಾಗಿಲ್ಲ'},
+            {name:'<i>Australopithecus</i> (ಉದಾ. &lsquo;ಲೂಸಿ&rsquo;)', time:'~3&ndash;4 mya (ಲೂಸಿ &asymp; 3.2 mya)', cc:'500&ndash;700 cc'},
+            {name:'<i>Homo habilis</i>', time:'ಪ್ಲೈಸ್ಟೊಸೀನ್ ಬಂಡೆಗಳು, ಓಲ್ಡುವೈ ಕಂದಕ (ಲೀಕಿ, 1960)', cc:'650&ndash;800 cc'},
+            {name:'<i>Homo erectus</i> (ಜಾವಾ ಮಾನವ, ಪೀಕಿಂಗ್ ಮಾನವ)', time:'~1.5 mya', cc:'~900 cc'},
+            {name:'<i>Homo neanderthalensis</i>', time:'1,00,000&ndash;40,000 ವರ್ಷಗಳ ಹಿಂದೆ', cc:'~1400 cc'},
+            {name:'<i>Homo sapiens</i> (ಕ್ರೊ-ಮ್ಯಾಗ್ನಾನ್ ಮಾನವ ಸೇರಿ)', time:'ಕ್ರೊ-ಮ್ಯಾಗ್ನಾನ್ &asymp; 34,000 ವರ್ಷಗಳ ಹಿಂದೆ', cc:'~1450 cc (ಆಧುನಿಕ)'}
+          ] },
+        hi: { intro:'वह ठीक तीन-संख्याएँ-प्रति-चरण श्रृंखला जिसका वर्णन सुझाव करता है, इस अध्याय के Origin and Evolution of Man विषय में पहले से दिए गए नामों, समयों व कपाल क्षमताओं का ही उपयोग करते हुए।',
+          th:['चरण','अनुमानित समय','मस्तिष्क क्षमता'],
+          note:'जहाँ यह अध्याय किसी चरण (जैसे <i>Homo habilis</i>) के लिए अलग समय का आँकड़ा नहीं देता, वह कमी अनुमान लगाने के बजाय स्पष्ट रूप से दिखाई गई है।',
+          rows:[
+            {name:'ड्रायोपिथेकस &amp; रामापिथेकस', time:'~15 mya', cc:'वानर-सदृश &mdash; इस चरण के लिए कोई अलग मस्तिष्क-क्षमता आँकड़ा नहीं दिया गया'},
+            {name:'<i>Australopithecus</i> (जैसे &lsquo;ल्यूसी&rsquo;)', time:'~3&ndash;4 mya (ल्यूसी &asymp; 3.2 mya)', cc:'500&ndash;700 cc'},
+            {name:'<i>Homo habilis</i>', time:'प्लाइस्टोसीन शैल, ओल्दुवई गॉर्ज (लीकी, 1960)', cc:'650&ndash;800 cc'},
+            {name:'<i>Homo erectus</i> (जावा मानव, पेकिंग मानव)', time:'~1.5 mya', cc:'~900 cc'},
+            {name:'<i>Homo neanderthalensis</i>', time:'1,00,000&ndash;40,000 वर्ष पूर्व', cc:'~1400 cc'},
+            {name:'<i>Homo sapiens</i> (क्रो-मैग्नन मानव सहित)', time:'क्रो-मैग्नन &asymp; 34,000 वर्ष पूर्व', cc:'~1450 cc (आधुनिक)'}
+          ] }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${l.th[1]}</th><th>${l.th[2]}</th></tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td>${r.time}</td><td>${r.cc}</td></tr>`).join('')}
         </tbody></table></div>
-        <div class="tipex-note">Where this chapter doesn't give a separate time figure for a stage (e.g. <i>Homo habilis</i>), that gap is shown honestly rather than guessed.</div>`;
+        <div class="tipex-note">${l.note}</div>`;
     }
   }
 };
 function openTipExample(key){
   const ex = TIP_EXAMPLES[key];
   if(!ex) return;
-  document.getElementById('tipExampleTitle').textContent = ex.title;
-  document.getElementById('tipExampleBody').innerHTML = ex.render();
+  const lang = (typeof currentLang!=='undefined' && ex.title[currentLang]) ? currentLang : 'en';
+  document.getElementById('tipExampleTitle').textContent = ex.title[lang];
+  document.getElementById('tipExampleBody').innerHTML = ex.render(lang);
   document.getElementById('tipExampleOverlay').style.display = 'flex';
 }
 function closeTipExample(){
@@ -4472,7 +4634,7 @@ function renderStudyTipsCh2(){
     <h3 style="color:var(--gold-2); margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ View example</button>`:''}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ ${TIP_EXAMPLE_BTN_LABEL[currentLang]||TIP_EXAMPLE_BTN_LABEL.en}</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   `;

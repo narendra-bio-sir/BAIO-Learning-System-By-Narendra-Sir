@@ -2443,60 +2443,141 @@ const STUDYTIPS_CH12_TRANSLATIONS = {};
    artifact, built from this chapter's own Compare Matrix (COMPARE_DATA, defined
    further down this same script) and Concept-tab facts - nothing invented by hand. ---- */
 const TIP_EXAMPLE_INDEX = {2:'decomposition', 3:'pyramids-numbers', 4:'pyramids-table'};
+const TIP_EXAMPLE_BTN_LABEL = {en:'View example', kn:'ಉದಾಹರಣೆ ನೋಡಿ', hi:'उदाहरण देखें'};
+/* Trilingual content below reuses the exact vetted Kannada/Hindi ecology vocabulary
+   already established in STUDY_TRANSLATIONS_CH12 and CONCEPT_TRANSLATIONS_CH12
+   (vikhandane/nissarane/catabolism/humification/khanijikarana, utpadakaru/
+   prathamika-dvitiya-trutiya grahakaru, standing crop, phytoplankton/zooplankton,
+   nettagina/viloma, sapropytes, etc.) so terminology stays consistent with the
+   rest of the chapter rather than introducing new, unverified translations. */
 const TIP_EXAMPLES = {
   'decomposition': {
-    title: '♻️ Five Steps of Decomposition — Worked',
-    render: function(){
+    title: {
+      en: '♻️ Five Steps of Decomposition — Worked',
+      kn: '♻️ ವಿಘಟನೆಯ ಐದು ಹಂತಗಳು — ಪರಿಹರಿಸಲಾಗಿದೆ',
+      hi: '♻️ अपघटन के पाँच चरण — हल किए गए'
+    },
+    render: function(lang){
       function step(n, name, feature){ return `<div class="tipex-step"><span class="tipex-q">${n}.</span><span><b>${name}</b> &mdash; ${feature}</span></div>`; }
-      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">Strictly in order, each tagged with its one distinguishing feature — straight from this chapter's Concept tab.</div>
+      const L = {
+        en: { intro:"Strictly in order, each tagged with its one distinguishing feature — straight from this chapter's Concept tab.",
+              steps:[
+                ['Fragmentation','detritivores (e.g. earthworms) break detritus into smaller particles, greatly increasing surface area — purely physical, no minerals released yet.'],
+                ['Leaching','water-soluble inorganic nutrients percolate down into the soil — purely physical, no enzyme or organism directly involved.'],
+                ['Catabolism','bacterial &amp; fungal enzymes degrade detritus into simpler inorganic substances — the chief biochemical (enzymatic) step.'],
+                ['Humification','resistant humus accumulates in the soil, decomposing extremely slowly — acts as a nutrient reservoir and improves soil texture.'],
+                ['Mineralization','humus further degrades to release minerals, which plants reabsorb — an oxygen-consuming step, controlled by detritus composition and climate.']
+              ],
+              note:'Memory hook from this chapter: F&ndash;L&ndash;C&ndash;H&ndash;M &mdash; &ldquo;Fine Leaves Catch Heavy Minerals&rdquo;.' },
+        kn: { intro:'ಕಟ್ಟುನಿಟ್ಟಾಗಿ ಕ್ರಮದಲ್ಲಿ, ಪ್ರತಿಯೊಂದಕ್ಕೂ ಅದರ ಒಂದು ವಿಶಿಷ್ಟ ಲಕ್ಷಣದೊಂದಿಗೆ — ಇದು ಈ ಅಧ್ಯಾಯದ Concept ಟ್ಯಾಬ್‌ನಿಂದ ನೇರವಾಗಿ.',
+              steps:[
+                ['ವಿಖಂಡನೆ (Fragmentation)','ಡಿಟ್ರಿಟೈವೋರ್‌ಗಳು (ಉದಾ. ಎರೆಹುಳುಗಳು) ಡಿಟ್ರೈಟಸ್ ಅನ್ನು ಸಣ್ಣ ಕಣಗಳಾಗಿ ಒಡೆಯುತ್ತವೆ, ಮೇಲ್ಮೈ ವಿಸ್ತೀರ್ಣವನ್ನು ಬಹಳವಾಗಿ ಹೆಚ್ಚಿಸುತ್ತವೆ — ಸಂಪೂರ್ಣವಾಗಿ ಭೌತಿಕ, ಇನ್ನೂ ಯಾವುದೇ ಖನಿಜಗಳು ಬಿಡುಗಡೆಯಾಗಿಲ್ಲ.'],
+                ['ನಿಸ್ಸಾರಣೆ (Leaching)','ನೀರಿನಲ್ಲಿ ಕರಗುವ ಅಜೈವಿಕ ಪೋಷಕಾಂಶಗಳು ಮಣ್ಣಿನೊಳಗೆ ಇಳಿಯುತ್ತವೆ — ಸಂಪೂರ್ಣವಾಗಿ ಭೌತಿಕ, ಯಾವುದೇ ಕಿಣ್ವ ಅಥವಾ ಜೀವಿ ನೇರವಾಗಿ ಒಳಗೊಂಡಿಲ್ಲ.'],
+                ['ಕ್ಯಾಟಬಾಲಿಸಂ (Catabolism)','ಬ್ಯಾಕ್ಟೀರಿಯಾ ಮತ್ತು ಶಿಲೀಂಧ್ರ ಕಿಣ್ವಗಳು ಡಿಟ್ರೈಟಸ್ ಅನ್ನು ಸರಳ ಅಜೈವಿಕ ಪದಾರ್ಥಗಳಾಗಿ ಅವನತಿಗೊಳಿಸುತ್ತವೆ — ಪ್ರಮುಖ ಜೀವರಾಸಾಯನಿಕ (ಕಿಣ್ವೀಯ) ಹಂತ.'],
+                ['ಹ್ಯೂಮಿಫಿಕೇಷನ್ (Humification)','ನಿರೋಧಕ ಹ್ಯೂಮಸ್ ಮಣ್ಣಿನಲ್ಲಿ ಸಂಗ್ರಹಗೊಳ್ಳುತ್ತದೆ, ಅತ್ಯಂತ ನಿಧಾನವಾಗಿ ವಿಘಟನೆಗೊಳ್ಳುತ್ತದೆ — ಪೋಷಕಾಂಶಗಳ ಸಂಗ್ರಹಾಗಾರವಾಗಿ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ ಮತ್ತು ಮಣ್ಣಿನ ವಿನ್ಯಾಸವನ್ನು ಸುಧಾರಿಸುತ್ತದೆ.'],
+                ['ಖನಿಜೀಕರಣ (Mineralization)','ಹ್ಯೂಮಸ್ ಮತ್ತಷ್ಟು ಅವನತಿ ಹೊಂದಿ ಖನಿಜಗಳನ್ನು ಬಿಡುಗಡೆ ಮಾಡುತ್ತದೆ, ಅವುಗಳನ್ನು ಸಸ್ಯಗಳು ಮತ್ತೆ ಹೀರಿಕೊಳ್ಳುತ್ತವೆ — ಆಮ್ಲಜನಕ-ಬಳಸುವ ಹಂತ, ಡಿಟ್ರೈಟಸ್‌ನ ಸಂಯೋಜನೆ ಮತ್ತು ಹವಾಮಾನದಿಂದ ನಿಯಂತ್ರಿಸಲ್ಪಡುತ್ತದೆ.']
+              ],
+              note:'ಈ ಅಧ್ಯಾಯದ ನೆನಪಿನ ತಂತ್ರ: F&ndash;L&ndash;C&ndash;H&ndash;M &mdash; &ldquo;Fine Leaves Catch Heavy Minerals&rdquo; (ತಾಜಾ ಎಲೆಗಳು ಭಾರೀ ಖನಿಜಗಳನ್ನು ಹಿಡಿಯುತ್ತವೆ).' },
+        hi: { intro:'कड़े क्रम में, हर एक को उसकी एक विशिष्ट विशेषता के साथ चिह्नित किया गया है — यह सीधे इस अध्याय के Concept टैब से है।',
+              steps:[
+                ['विखंडन (Fragmentation)','अपरदाहारी (उदा. केंचुए) अपरद को छोटे कणों में तोड़ते हैं, जिससे सतही क्षेत्रफल बहुत बढ़ जाता है — पूर्णतः भौतिक, अभी तक कोई खनिज मुक्त नहीं हुआ।'],
+                ['निक्षालन (Leaching)','जल में घुलनशील अकार्बनिक पोषक तत्व मिट्टी में नीचे रिसते हैं — पूर्णतः भौतिक, कोई एंजाइम या जीव सीधे शामिल नहीं।'],
+                ['अपचय (Catabolism)','जीवाणु और कवक एंजाइम अपरद को सरल अकार्बनिक पदार्थों में अवघटित करते हैं — मुख्य जैव-रासायनिक (एंजाइमी) चरण।'],
+                ['ह्यूमीकरण (Humification)','प्रतिरोधी ह्यूमस मिट्टी में संचित होता है, अत्यंत धीमी गति से अपघटित होता है — पोषक तत्वों के भंडार के रूप में कार्य करता है और मिट्टी की बनावट सुधारता है।'],
+                ['खनिजीकरण (Mineralization)','ह्यूमस और अधिक अवघटित होकर खनिज मुक्त करता है, जिन्हें पौधे पुनः अवशोषित करते हैं — एक ऑक्सीजन-उपभोगी चरण, जो अपरद की संरचना और जलवायु द्वारा नियंत्रित होता है।']
+              ],
+              note:'इस अध्याय की याद रखने की तरकीब: F&ndash;L&ndash;C&ndash;H&ndash;M &mdash; &ldquo;Fine Leaves Catch Heavy Minerals&rdquo; (महीन पत्तियाँ भारी खनिज पकड़ती हैं).' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
         <div class="tipex-case">
-          ${step(1,'Fragmentation','detritivores (e.g. earthworms) break detritus into smaller particles, greatly increasing surface area — purely physical, no minerals released yet.')}
-          ${step(2,'Leaching','water-soluble inorganic nutrients percolate down into the soil — purely physical, no enzyme or organism directly involved.')}
-          ${step(3,'Catabolism','bacterial &amp; fungal enzymes degrade detritus into simpler inorganic substances — the chief biochemical (enzymatic) step.')}
-          ${step(4,'Humification','resistant humus accumulates in the soil, decomposing extremely slowly — acts as a nutrient reservoir and improves soil texture.')}
-          ${step(5,'Mineralization','humus further degrades to release minerals, which plants reabsorb — an oxygen-consuming step, controlled by detritus composition and climate.')}
+          ${l.steps.map((s,i)=>step(i+1, s[0], s[1])).join('')}
         </div>
-        <div class="tipex-note">Memory hook from this chapter: F&ndash;L&ndash;C&ndash;H&ndash;M &mdash; &ldquo;Fine Leaves Catch Heavy Minerals&rdquo;.</div>`;
+        <div class="tipex-note">${l.note}</div>`;
     }
   },
   'pyramids-numbers': {
-    title: '🔺 Three Ecological Pyramids — Real Numbers',
-    render: function(){
+    title: {
+      en: '🔺 Three Ecological Pyramids — Real Numbers',
+      kn: '🔺 ಮೂರು ಪಾರಿಸರಿಕ ಪಿರಮಿಡ್‌ಗಳು — ನಿಜವಾದ ಸಂಖ್ಯೆಗಳು',
+      hi: '🔺 तीन पारिस्थितिक पिरामिड — वास्तविक संख्याएँ'
+    },
+    render: function(lang){
       const bio = COMPARE_DATA[8], en = COMPARE_DATA[9];
       function step(label, val){ return `<div class="tipex-step"><span class="tipex-q">&rarr;</span><span>${label}: <b>${val}</b></span></div>`; }
-      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">The same three pyramids the tip asks you to sketch from memory, with their real worked numbers.</div>
-        <div class="tipex-case"><div class="tipex-case-title">Pyramid of Numbers (grassland)</div>
-          ${step('Producers','58,42,000')}${step('Primary consumers','7,08,000')}${step('Secondary consumers','3,54,000')}${step('Tertiary consumers','3')}
-          <div class="tipex-diagnosis">✓ Narrows sharply — about 60 lakh plants support only 3 top carnivores</div></div>
-        <div class="tipex-case"><div class="tipex-case-title">Pyramid of Biomass (terrestrial, kg m&#8315;&#178;)</div>
-          ${step('Producers','809')}${step('Herbivores','37')}${step('Carnivores','11')}${step('Top carnivores','1.5')}
-          <div class="tipex-diagnosis">✓ Upright here — biomass decreases steadily up the pyramid (would invert in a pond/ocean)</div></div>
-        <div class="tipex-case"><div class="tipex-case-title">Pyramid of Energy (ideal)</div>
-          ${step('Incident sunlight','10,00,000 J')}${step('Producers','10,000 J')}${step('Herbivores','1,000 J')}${step('Carnivores','100 J')}${step('Top carnivores','10 J')}
-          <div class="tipex-diagnosis">✓ Always upright — ${en.mechanism}</div></div>`;
+      const L = {
+        en: { intro:"The same three pyramids the tip asks you to sketch from memory, with their real worked numbers.",
+              cases:[
+                { title:'Pyramid of Numbers (grassland)', rows:[['Producers','58,42,000'],['Primary consumers','7,08,000'],['Secondary consumers','3,54,000'],['Tertiary consumers','3']], diagnosis:'Narrows sharply — about 60 lakh plants support only 3 top carnivores' },
+                { title:'Pyramid of Biomass (terrestrial, kg m&#8315;&#178;)', rows:[['Producers','809'],['Herbivores','37'],['Carnivores','11'],['Top carnivores','1.5']], diagnosis:'Upright here — biomass decreases steadily up the pyramid (would invert in a pond/ocean)' },
+                { title:'Pyramid of Energy (ideal)', rows:[['Incident sunlight','10,00,000 J'],['Producers','10,000 J'],['Herbivores','1,000 J'],['Carnivores','100 J'],['Top carnivores','10 J']], diagnosis:`Always upright — ${en.mechanism}` }
+              ] },
+        kn: { intro:'ಸಲಹೆ ನೆನಪಿನಿಂದ ಚಿತ್ರಿಸಲು ಕೇಳುವ ಅದೇ ಮೂರು ಪಿರಮಿಡ್‌ಗಳು, ಅವುಗಳ ನಿಜವಾದ ಪರಿಹರಿಸಿದ ಸಂಖ್ಯೆಗಳೊಂದಿಗೆ.',
+              cases:[
+                { title:'ಸಂಖ್ಯೆಯ ಪಿರಮಿಡ್ (ಹುಲ್ಲುಗಾವಲು)', rows:[['ಉತ್ಪಾದಕರು','58,42,000'],['ಪ್ರಾಥಮಿಕ ಗ್ರಾಹಕರು','7,08,000'],['ದ್ವಿತೀಯ ಗ್ರಾಹಕರು','3,54,000'],['ತೃತೀಯ ಗ್ರಾಹಕರು','3']], diagnosis:'ತೀವ್ರವಾಗಿ ಕಿರಿದಾಗುತ್ತದೆ — ಸುಮಾರು 60 ಲಕ್ಷ ಸಸ್ಯಗಳು ಕೇವಲ 3 ಉನ್ನತ ಮಾಂಸಾಹಾರಿಗಳನ್ನು ಮಾತ್ರ ಪೋಷಿಸುತ್ತವೆ' },
+                { title:'ಜೀವರಾಶಿಯ ಪಿರಮಿಡ್ (ಭೂ ಪರಿಸರ ವ್ಯವಸ್ಥೆ, kg m&#8315;&#178;)', rows:[['ಉತ್ಪಾದಕರು','809'],['ಸಸ್ಯಾಹಾರಿಗಳು','37'],['ಮಾಂಸಾಹಾರಿಗಳು','11'],['ಉನ್ನತ ಮಾಂಸಾಹಾರಿಗಳು','1.5']], diagnosis:'ಇಲ್ಲಿ ನೆಟ್ಟಗಿದೆ — ಜೀವರಾಶಿ ಪಿರಮಿಡ್‌ನ ಮೇಲ್ಭಾಗದವರೆಗೆ ಸ್ಥಿರವಾಗಿ ಕಡಿಮೆಯಾಗುತ್ತದೆ (ಕೊಳ/ಸಾಗರದಲ್ಲಿ ವಿಲೋಮಗೊಳ್ಳುತ್ತದೆ)' },
+                { title:'ಶಕ್ತಿಯ ಪಿರಮಿಡ್ (ಆದರ್ಶ)', rows:[['ಸೂರ್ಯನ ಬೆಳಕು','10,00,000 J'],['ಉತ್ಪಾದಕರು','10,000 J'],['ಸಸ್ಯಾಹಾರಿಗಳು','1,000 J'],['ಮಾಂಸಾಹಾರಿಗಳು','100 J'],['ಉನ್ನತ ಮಾಂಸಾಹಾರಿಗಳು','10 J']], diagnosis:'ಯಾವಾಗಲೂ ನೆಟ್ಟಗಿರುತ್ತದೆ — ಉತ್ಪಾದಕರು ಸ್ಥಿರಗೊಳಿಸಿದ ಶಕ್ತಿ ಮೇಲ್ಮುಖವಾಗಿ ಹರಿಯುತ್ತದೆ, ಪ್ರತಿ ವರ್ಗಾವಣೆಯಲ್ಲಿ ಸುಮಾರು 90% ಶಾಖ ಮತ್ತು ಜೀರ್ಣವಾಗದ ಪದಾರ್ಥವಾಗಿ ನಷ್ಟವಾಗುತ್ತದೆ' }
+              ] },
+        hi: { intro:'वही तीन पिरामिड जिन्हें यह सुझाव याद से बनाने के लिए कहता है, उनकी वास्तविक हल की गई संख्याओं के साथ।',
+              cases:[
+                { title:'संख्या का पिरामिड (घास का मैदान)', rows:[['उत्पादक','58,42,000'],['प्राथमिक उपभोक्ता','7,08,000'],['द्वितीयक उपभोक्ता','3,54,000'],['तृतीयक उपभोक्ता','3']], diagnosis:'तेज़ी से संकरा होता है — लगभग 60 लाख पौधे केवल 3 शीर्ष मांसाहारियों का भरण-पोषण करते हैं' },
+                { title:'जीवभार का पिरामिड (स्थलीय, kg m&#8315;&#178;)', rows:[['उत्पादक','809'],['शाकाहारी','37'],['मांसाहारी','11'],['शीर्ष मांसाहारी','1.5']], diagnosis:'यहाँ सीधा है — पिरामिड में ऊपर जाते हुए जीवभार लगातार घटता है (तालाब/महासागर में विलोम हो जाता)' },
+                { title:'ऊर्जा का पिरामिड (आदर्श)', rows:[['सूर्य का प्रकाश','10,00,000 J'],['उत्पादक','10,000 J'],['शाकाहारी','1,000 J'],['मांसाहारी','100 J'],['शीर्ष मांसाहारी','10 J']], diagnosis:'सदैव सीधा — उत्पादकों द्वारा स्थिरीकृत ऊर्जा ऊपर की ओर प्रवाहित होती है, प्रत्येक स्थानांतरण में लगभग 90% ऊष्मा और अनअवशोषित पदार्थ के रूप में नष्ट हो जाती है' }
+              ] }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        ${l.cases.map(c=>`<div class="tipex-case"><div class="tipex-case-title">${c.title}</div>${c.rows.map(r=>step(r[0],r[1])).join('')}<div class="tipex-diagnosis">✓ ${c.diagnosis}</div></div>`).join('')}`;
     }
   },
   'pyramids-table': {
-    title: '📊 Upright vs Inverted — All Three Pyramids',
-    render: function(){
-      const rows = [
-        {name:'Numbers', usual:'Upright (grassland: producers &gt; herbivores &gt; carnivores)', inverted:'A single large tree is eaten by a very large number of small insects', example:'Tree ecosystem — narrow base (1 tree), wider above (insects/birds)'},
-        {name:'Biomass', usual:'Upright (terrestrial: 809 &rarr; 37 &rarr; 11 &rarr; 1.5)', inverted:'A small producer biomass supports a larger consumer biomass', example:'Ocean/pond — phytoplankton biomass (4) supports zooplankton biomass (21)'},
-        {name:'Energy', usual:'Always upright, every single time', inverted:'Never — energy is lost at every transfer', example:'~90% of energy is lost as heat at each step (10% law)'}
-      ];
-      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">One table, all three pyramids, plus the reason and example for every inverted case.</div>
-        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Pyramid</th><th>Usually</th><th>Inverted when…</th><th>Example</th></tr></thead><tbody>
-        ${rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td>${r.usual}</td><td>${r.inverted}</td><td>${r.example}</td></tr>`).join('')}
+    title: {
+      en: '📊 Upright vs Inverted — All Three Pyramids',
+      kn: '📊 ನೆಟ್ಟಗಿನ vs ವಿಲೋಮ — ಎಲ್ಲಾ ಮೂರು ಪಿರಮಿಡ್‌ಗಳು',
+      hi: '📊 सीधा बनाम विलोम — सभी तीन पिरामिड'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"One table, all three pyramids, plus the reason and example for every inverted case.",
+              th:['Pyramid','Usually','Inverted when…','Example'],
+              rows:[
+                {name:'Numbers', usual:'Upright (grassland: producers &gt; herbivores &gt; carnivores)', inverted:'A single large tree is eaten by a very large number of small insects', example:'Tree ecosystem — narrow base (1 tree), wider above (insects/birds)'},
+                {name:'Biomass', usual:'Upright (terrestrial: 809 &rarr; 37 &rarr; 11 &rarr; 1.5)', inverted:'A small producer biomass supports a larger consumer biomass', example:'Ocean/pond — phytoplankton biomass (4) supports zooplankton biomass (21)'},
+                {name:'Energy', usual:'Always upright, every single time', inverted:'Never — energy is lost at every transfer', example:'~90% of energy is lost as heat at each step (10% law)'}
+              ],
+              note:"Three limitations of ecological pyramids (from this chapter's Concept tab): (i) they ignore a species belonging to more than one trophic level; (ii) they assume a simple food chain and cannot represent food webs; (iii) saprophytes (decomposers) are given no place in them." },
+        kn: { intro:'ಒಂದು ಟೇಬಲ್, ಎಲ್ಲಾ ಮೂರು ಪಿರಮಿಡ್‌ಗಳು, ಜೊತೆಗೆ ಪ್ರತಿ ವಿಲೋಮ ಪ್ರಕರಣಕ್ಕೂ ಕಾರಣ ಮತ್ತು ಉದಾಹರಣೆ.',
+              th:['ಪಿರಮಿಡ್','ಸಾಮಾನ್ಯವಾಗಿ','ಯಾವಾಗ ವಿಲೋಮ…','ಉದಾಹರಣೆ'],
+              rows:[
+                {name:'ಸಂಖ್ಯೆ', usual:'ನೆಟ್ಟಗಿನ (ಹುಲ್ಲುಗಾವಲು: ಉತ್ಪಾದಕರು &gt; ಸಸ್ಯಾಹಾರಿಗಳು &gt; ಮಾಂಸಾಹಾರಿಗಳು)', inverted:'ಒಂದು ದೊಡ್ಡ ಮರವನ್ನು ಅಪಾರ ಸಂಖ್ಯೆಯ ಸಣ್ಣ ಕೀಟಗಳು ತಿನ್ನುವಾಗ', example:'ಮರ ಪರಿಸರ ವ್ಯವಸ್ಥೆ — ಕಿರಿದಾದ ತಳಭಾಗ (1 ಮರ), ಮೇಲ್ಭಾಗದಲ್ಲಿ ವಿಸ್ತಾರ (ಕೀಟಗಳು/ಪಕ್ಷಿಗಳು)'},
+                {name:'ಜೀವರಾಶಿ', usual:'ನೆಟ್ಟಗಿನ (ಭೂ ಪರಿಸರ ವ್ಯವಸ್ಥೆ: 809 &rarr; 37 &rarr; 11 &rarr; 1.5)', inverted:'ಸಣ್ಣ ಉತ್ಪಾದಕ ಜೀವರಾಶಿ ಹೆಚ್ಚು ದೊಡ್ಡ ಗ್ರಾಹಕ ಜೀವರಾಶಿಯನ್ನು ಪೋಷಿಸುತ್ತದೆ', example:'ಸಾಗರ/ಕೊಳ — ಫೈಟೋಪ್ಲಾಂಕ್ಟನ್ ಜೀವರಾಶಿ (4) ಝೂಪ್ಲಾಂಕ್ಟನ್ ಜೀವರಾಶಿಯನ್ನು (21) ಪೋಷಿಸುತ್ತದೆ'},
+                {name:'ಶಕ್ತಿ', usual:'ಯಾವಾಗಲೂ ನೆಟ್ಟಗಿರುತ್ತದೆ, ಪ್ರತಿ ಬಾರಿಯೂ', inverted:'ಎಂದಿಗೂ ಇಲ್ಲ — ಪ್ರತಿ ವರ್ಗಾವಣೆಯಲ್ಲಿ ಶಕ್ತಿ ನಷ್ಟವಾಗುತ್ತದೆ', example:'ಪ್ರತಿ ಹಂತದಲ್ಲಿ ಸುಮಾರು 90% ಶಕ್ತಿ ಶಾಖವಾಗಿ ನಷ್ಟವಾಗುತ್ತದೆ (ಶೇ.10ರ ನಿಯಮ)'}
+              ],
+              note:'ಪಾರಿಸರಿಕ ಪಿರಮಿಡ್‌ಗಳ ಮೂರು ಮಿತಿಗಳು (ಈ ಅಧ್ಯಾಯದ Concept ಟ್ಯಾಬ್‌ನಿಂದ): (i) ಇವು ಒಂದೇ ಪ್ರಭೇದ ಒಂದಕ್ಕಿಂತ ಹೆಚ್ಚು ಪೋಷಣಾ ಮಟ್ಟಗಳಿಗೆ ಸೇರುವುದನ್ನು ಪರಿಗಣಿಸುವುದಿಲ್ಲ; (ii) ಇವು ಸರಳ ಆಹಾರ ಸರಪಳಿಯನ್ನು ಊಹಿಸುತ್ತವೆ ಮತ್ತು ಆಹಾರ ಜಾಲಗಳನ್ನು ಪ್ರತಿನಿಧಿಸಲಾರವು; (iii) ಮೃತಪೋಷಕರಿಗೆ (ವಿಘಟಕರಿಗೆ) ಇವುಗಳಲ್ಲಿ ಯಾವುದೇ ಸ್ಥಾನ ನೀಡಲಾಗುವುದಿಲ್ಲ.' },
+        hi: { intro:'एक तालिका, सभी तीन पिरामिड, साथ ही हर विलोम स्थिति का कारण और उदाहरण।',
+              th:['पिरामिड','सामान्यतः','कब विलोम…','उदाहरण'],
+              rows:[
+                {name:'संख्या', usual:'सीधा (घास का मैदान: उत्पादक &gt; शाकाहारी &gt; मांसाहारी)', inverted:'एक बड़े वृक्ष को बहुत बड़ी संख्या में छोटे कीट खा जाते हैं', example:'वृक्ष पारिस्थितिकी तंत्र — संकरा आधार (1 वृक्ष), ऊपर व्यापक (कीट/पक्षी)'},
+                {name:'जीवभार', usual:'सीधा (स्थलीय: 809 &rarr; 37 &rarr; 11 &rarr; 1.5)', inverted:'छोटा उत्पादक जीवभार बड़े उपभोक्ता जीवभार का पोषण करता है', example:'महासागर/तालाब — फाइटोप्लैंकटन जीवभार (4) ज़ूप्लैंकटन जीवभार (21) का पोषण करता है'},
+                {name:'ऊर्जा', usual:'सदैव सीधा, हर बार', inverted:'कभी नहीं — प्रत्येक स्थानांतरण में ऊर्जा नष्ट होती है', example:'प्रत्येक चरण में लगभग 90% ऊर्जा ऊष्मा के रूप में नष्ट हो जाती है (दस प्रतिशत का नियम)'}
+              ],
+              note:'पारिस्थितिक पिरामिडों की तीन सीमाएँ (इस अध्याय के Concept टैब से): (i) ये किसी एक प्रजाति के एक से अधिक पोषी स्तरों से संबंधित होने को ध्यान में नहीं रखते; (ii) ये एक सरल खाद्य श्रृंखला मानते हैं और खाद्य जालों को नहीं दर्शा सकते; (iii) मृतोपजीवियों (अपघटकों) को इनमें कोई स्थान नहीं दिया जाता।' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${l.th[1]}</th><th>${l.th[2]}</th><th>${l.th[3]}</th></tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td>${r.usual}</td><td>${r.inverted}</td><td>${r.example}</td></tr>`).join('')}
         </tbody></table></div>
-        <div class="tipex-note">Three limitations of ecological pyramids (from this chapter's Concept tab): (i) they ignore a species belonging to more than one trophic level; (ii) they assume a simple food chain and cannot represent food webs; (iii) saprophytes (decomposers) are given no place in them.</div>`;
+        <div class="tipex-note">${l.note}</div>`;
     }
   }
 };
 function openTipExample(key){
   const ex = TIP_EXAMPLES[key];
   if(!ex) return;
-  document.getElementById('tipExampleTitle').textContent = ex.title;
-  document.getElementById('tipExampleBody').innerHTML = ex.render();
+  const lang = (typeof currentLang!=='undefined' && ex.title[currentLang]) ? currentLang : 'en';
+  document.getElementById('tipExampleTitle').textContent = ex.title[lang];
+  document.getElementById('tipExampleBody').innerHTML = ex.render(lang);
   document.getElementById('tipExampleOverlay').style.display = 'flex';
 }
 function closeTipExample(){
@@ -2520,7 +2601,7 @@ function renderStudyTipsCh8(){
     <h3 style="color:var(--gold-2); margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ View example</button>`:''}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ ${TIP_EXAMPLE_BTN_LABEL[currentLang]||TIP_EXAMPLE_BTN_LABEL.en}</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   `;

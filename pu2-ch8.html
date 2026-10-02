@@ -2447,90 +2447,279 @@ const STUDYTIPS_CH8_TRANSLATIONS = {"kn":{"title":"ಅಧ್ಯಯನ ಸಲಹ�
    Biogas/Biocontrol/Biofertilizer topics) so nothing is invented or
    duplicated by hand. ---- */
 const TIP_EXAMPLE_INDEX = {0:'organism-master-table', 1:'sewage-flow', 2:'biogas-parts', 3:'biocontrol-vs-biofertilizer', 4:'antibiotic-source-use'};
+const TIP_EXAMPLE_BTN_LABEL = {en:'View example', kn:'ಉದಾಹರಣೆ ನೋಡಿ', hi:'उदाहरण देखें'};
+/* Trilingual content below reuses the exact vetted Kannada/Hindi vocabulary
+   already established in STUDYTIPS_CH8_TRANSLATIONS and STUDY_TRANSLATIONS_CH8
+   (household/industrial products, sewage-treatment and biogas-plant terms,
+   biocontrol/biofertilizer organisms) so terminology stays consistent with
+   the rest of the chapter. */
 const TIP_EXAMPLES = {
   'organism-master-table': {
-    title: '📊 Master Table — 13 Named Microbes',
-    render: function(){
-      const rows = [
-        {o:'<i>Lactobacillus</i>', p:'Produces lactic acid that coagulates milk into curd', c:'Household'},
-        {o:'<i>Saccharomyces cerevisiae</i>', p:'Ferments dough (bread) and malted cereals/fruit juices into ethanol (wine, beer)', c:'Household &amp; Industrial'},
-        {o:'<i>Propionibacterium sharmanii</i>', p:'Produces the CO&#8322; that creates the characteristic holes in Swiss cheese', c:'Household'},
-        {o:'<i>Aspergillus niger</i>', p:'Produces citric acid', c:'Industrial'},
-        {o:'<i>Acetobacter aceti</i>', p:'Produces acetic acid (vinegar)', c:'Industrial'},
-        {o:'<i>Clostridium butylicum</i>', p:'Produces butyric acid', c:'Industrial'},
-        {o:'<i>Trichoderma polysporum</i>', p:'Produces Cyclosporin A, an immunosuppressant used in organ transplants', c:'Industrial (bioactive molecule)'},
-        {o:'<i>Monascus purpureus</i>', p:'Produces statins, which lower blood cholesterol', c:'Industrial (bioactive molecule)'},
-        {o:'<i>Rhizobium</i>', p:'Fixes atmospheric nitrogen inside legume root nodules', c:'Biofertilizer'},
-        {o:'<i>Glomus</i>', p:'Forms mycorrhiza; absorbs soil phosphorus and passes it to the plant', c:'Biofertilizer'},
-        {o:'<i>Nostoc</i>', p:'Cyanobacterium that fixes atmospheric nitrogen, especially in paddy fields', c:'Biofertilizer'},
-        {o:'<i>Anabaena</i>', p:'Cyanobacterium that fixes atmospheric nitrogen; also lives inside the water fern <i>Azolla</i> in paddy fields', c:'Biofertilizer'},
-        {o:'<i>Bacillus thuringiensis</i> (Bt)', p:'Toxin crystal kills butterfly caterpillars; its <i>cry</i> genes are used in Bt-cotton', c:'Biocontrol'}
-      ];
-      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">Exactly the three-column table the tip describes, for all thirteen named microbes, built from this chapter's own Household/Industrial/Biofertilizer/Biocontrol topics.</div>
-        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Organism</th><th>Product / Role</th><th>Category</th></tr></thead><tbody>
-        ${rows.map(r=>`<tr><td class="tipex-organ">${r.o}</td><td>${r.p}</td><td>${r.c}</td></tr>`).join('')}
+    title: {
+      en: '📊 Master Table — 13 Named Microbes',
+      kn: '📊 ಮಾಸ್ಟರ್ ಟೇಬಲ್ — ಹೆಸರಿಸಲಾದ 13 ಸೂಕ್ಷ್ಮಜೀವಿಗಳು',
+      hi: '📊 मास्टर तालिका — 13 नामित सूक्ष्मजीव'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"Exactly the three-column table the tip describes, for all thirteen named microbes, built from this chapter's own Household/Industrial/Biofertilizer/Biocontrol topics.",
+          th:['Organism','Product / Role','Category'],
+          rows:[
+            {o:'<i>Lactobacillus</i>', p:'Produces lactic acid that coagulates milk into curd', c:'Household'},
+            {o:'<i>Saccharomyces cerevisiae</i>', p:'Ferments dough (bread) and malted cereals/fruit juices into ethanol (wine, beer)', c:'Household &amp; Industrial'},
+            {o:'<i>Propionibacterium sharmanii</i>', p:'Produces the CO&#8322; that creates the characteristic holes in Swiss cheese', c:'Household'},
+            {o:'<i>Aspergillus niger</i>', p:'Produces citric acid', c:'Industrial'},
+            {o:'<i>Acetobacter aceti</i>', p:'Produces acetic acid (vinegar)', c:'Industrial'},
+            {o:'<i>Clostridium butylicum</i>', p:'Produces butyric acid', c:'Industrial'},
+            {o:'<i>Trichoderma polysporum</i>', p:'Produces Cyclosporin A, an immunosuppressant used in organ transplants', c:'Industrial (bioactive molecule)'},
+            {o:'<i>Monascus purpureus</i>', p:'Produces statins, which lower blood cholesterol', c:'Industrial (bioactive molecule)'},
+            {o:'<i>Rhizobium</i>', p:'Fixes atmospheric nitrogen inside legume root nodules', c:'Biofertilizer'},
+            {o:'<i>Glomus</i>', p:'Forms mycorrhiza; absorbs soil phosphorus and passes it to the plant', c:'Biofertilizer'},
+            {o:'<i>Nostoc</i>', p:'Cyanobacterium that fixes atmospheric nitrogen, especially in paddy fields', c:'Biofertilizer'},
+            {o:'<i>Anabaena</i>', p:'Cyanobacterium that fixes atmospheric nitrogen; also lives inside the water fern <i>Azolla</i> in paddy fields', c:'Biofertilizer'},
+            {o:'<i>Bacillus thuringiensis</i> (Bt)', p:'Toxin crystal kills butterfly caterpillars; its <i>cry</i> genes are used in Bt-cotton', c:'Biocontrol'}
+          ] },
+        kn: { intro:'ಸಲಹೆ ವಿವರಿಸುವ ನಿಖರವಾದ ಮೂರು-ಕಾಲಂ ಟೇಬಲ್, ಹೆಸರಿಸಲಾದ ಎಲ್ಲಾ ಹದಿಮೂರು ಸೂಕ್ಷ್ಮಜೀವಿಗಳಿಗೆ, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ ಗೃಹಬಳಕೆ/ಕೈಗಾರಿಕಾ/ಜೈವಿಕ ಗೊಬ್ಬರ/ಜೈವಿಕ ನಿಯಂತ್ರಣ ವಿಷಯಗಳಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ.',
+          th:['ಜೀವಿ','ಉತ್ಪನ್ನ / ಪಾತ್ರ','ವರ್ಗ'],
+          rows:[
+            {o:'<i>Lactobacillus</i>', p:'ಹಾಲನ್ನು ಮೊಸರಾಗಿ ಹೆಪ್ಪುಗಟ್ಟಿಸುವ ಲ್ಯಾಕ್ಟಿಕ್ ಆಮ್ಲ ಉತ್ಪಾದಿಸುತ್ತದೆ', c:'ಗೃಹಬಳಕೆ'},
+            {o:'<i>Saccharomyces cerevisiae</i>', p:'ಹಿಟ್ಟನ್ನು (ಬ್ರೆಡ್) ಮತ್ತು ಮೊಳಕೆಯೊಡೆಸಿದ ಧಾನ್ಯಗಳು/ಹಣ್ಣಿನ ರಸಗಳನ್ನು ಹುದುಗಿಸಿ ಎಥನಾಲ್ (ವೈನ್, ಬಿಯರ್) ಮಾಡುತ್ತದೆ', c:'ಗೃಹಬಳಕೆ &amp; ಕೈಗಾರಿಕಾ'},
+            {o:'<i>Propionibacterium sharmanii</i>', p:'ಸ್ವಿಸ್ ಚೀಸ್‌ನ ವಿಶಿಷ್ಟ ದೊಡ್ಡ ರಂಧ್ರಗಳನ್ನು ಉಂಟುಮಾಡುವ CO&#8322; ಉತ್ಪಾದಿಸುತ್ತದೆ', c:'ಗೃಹಬಳಕೆ'},
+            {o:'<i>Aspergillus niger</i>', p:'ಸಿಟ್ರಿಕ್ ಆಮ್ಲ ಉತ್ಪಾದಿಸುತ್ತದೆ', c:'ಕೈಗಾರಿಕಾ'},
+            {o:'<i>Acetobacter aceti</i>', p:'ಅಸಿಟಿಕ್ ಆಮ್ಲ (ವಿನೆಗರ್) ಉತ್ಪಾದಿಸುತ್ತದೆ', c:'ಕೈಗಾರಿಕಾ'},
+            {o:'<i>Clostridium butylicum</i>', p:'ಬ್ಯುಟಿರಿಕ್ ಆಮ್ಲ ಉತ್ಪಾದಿಸುತ್ತದೆ', c:'ಕೈಗಾರಿಕಾ'},
+            {o:'<i>Trichoderma polysporum</i>', p:'ಅಂಗಾಂಗ ಕಸಿಗಳಲ್ಲಿ ಬಳಸುವ ರೋಗನಿರೋಧಕ ದಮನಕಾರಿ ಸೈಕ್ಲೊಸ್ಪೊರಿನ್ A ಉತ್ಪಾದಿಸುತ್ತದೆ', c:'ಕೈಗಾರಿಕಾ (ಬಯೋಆಕ್ಟಿವ್ ಅಣು)'},
+            {o:'<i>Monascus purpureus</i>', p:'ರಕ್ತದ ಕೊಲೆಸ್ಟರಾಲ್ ಇಳಿಸುವ ಸ್ಟ್ಯಾಟಿನ್‌ಗಳನ್ನು ಉತ್ಪಾದಿಸುತ್ತದೆ', c:'ಕೈಗಾರಿಕಾ (ಬಯೋಆಕ್ಟಿವ್ ಅಣು)'},
+            {o:'<i>Rhizobium</i>', p:'ದ್ವಿದಳ ಧಾನ್ಯಗಳ ಬೇರುಗಂಟುಗಳ ಒಳಗೆ ವಾಯುಮಂಡಲದ ಸಾರಜನಕವನ್ನು ಸ್ಥಿರೀಕರಿಸುತ್ತದೆ', c:'ಜೈವಿಕ ಗೊಬ್ಬರ'},
+            {o:'<i>Glomus</i>', p:'ಮೈಕೊರೈಜಾ ರೂಪಿಸುತ್ತದೆ; ಮಣ್ಣಿನ ರಂಜಕವನ್ನು ಹೀರಿ ಸಸ್ಯಕ್ಕೆ ವರ್ಗಾಯಿಸುತ್ತದೆ', c:'ಜೈವಿಕ ಗೊಬ್ಬರ'},
+            {o:'<i>Nostoc</i>', p:'ವಿಶೇಷವಾಗಿ ಭತ್ತದ ಗದ್ದೆಗಳಲ್ಲಿ ವಾಯುಮಂಡಲದ ಸಾರಜನಕವನ್ನು ಸ್ಥಿರೀಕರಿಸುವ ಸೈನೋಬ್ಯಾಕ್ಟೀರಿಯಂ', c:'ಜೈವಿಕ ಗೊಬ್ಬರ'},
+            {o:'<i>Anabaena</i>', p:'ವಾಯುಮಂಡಲದ ಸಾರಜನಕವನ್ನು ಸ್ಥಿರೀಕರಿಸುವ ಸೈನೋಬ್ಯಾಕ್ಟೀರಿಯಂ; ಭತ್ತದ ಗದ್ದೆಗಳಲ್ಲಿ ನೀರಿನ ಜರೀಗಿಡ <i>Azolla</i> ದ ಒಳಗೂ ವಾಸಿಸುತ್ತದೆ', c:'ಜೈವಿಕ ಗೊಬ್ಬರ'},
+            {o:'<i>Bacillus thuringiensis</i> (Bt)', p:'ವಿಷ ಸ್ಫಟಿಕ ಚಿಟ್ಟೆಗಳ ಕಂಬಳಿ ಹುಳುಗಳನ್ನು ಕೊಲ್ಲುತ್ತದೆ; ಇದರ <i>cry</i> ಜೀನ್‌ಗಳನ್ನು Bt-ಹತ್ತಿಯಲ್ಲಿ ಬಳಸಲಾಗುತ್ತದೆ', c:'ಜೈವಿಕ ನಿಯಂತ್ರಣ'}
+          ] },
+        hi: { intro:'वह ठीक तीन-स्तंभ वाली तालिका जिसका वर्णन सुझाव करता है, सभी तेरह नामित सूक्ष्मजीवों के लिए, इस अध्याय के अपने घरेलू/औद्योगिक/जैव उर्वरक/जैव नियंत्रण विषयों से बनाई गई।',
+          th:['जीव','उत्पाद / भूमिका','श्रेणी'],
+          rows:[
+            {o:'<i>Lactobacillus</i>', p:'लैक्टिक अम्ल बनाता है जो दूध को दही में स्कंदित करता है', c:'घरेलू'},
+            {o:'<i>Saccharomyces cerevisiae</i>', p:'लेई (ब्रेड) तथा माल्टीकृत अनाजों/फलों के रस का किण्वन करके एथेनॉल (वाइन, बीयर) बनाता है', c:'घरेलू &amp; औद्योगिक'},
+            {o:'<i>Propionibacterium sharmanii</i>', p:'स्विस चीज़ के विशिष्ट बड़े छिद्र बनाने वाला CO&#8322; उत्पन्न करता है', c:'घरेलू'},
+            {o:'<i>Aspergillus niger</i>', p:'सिट्रिक अम्ल उत्पन्न करता है', c:'औद्योगिक'},
+            {o:'<i>Acetobacter aceti</i>', p:'ऐसीटिक अम्ल (सिरका) उत्पन्न करता है', c:'औद्योगिक'},
+            {o:'<i>Clostridium butylicum</i>', p:'ब्यूटिरिक अम्ल उत्पन्न करता है', c:'औद्योगिक'},
+            {o:'<i>Trichoderma polysporum</i>', p:'अंग प्रत्यारोपण में प्रयुक्त प्रतिरक्षा-निरोधी साइक्लोस्पोरिन A उत्पन्न करता है', c:'औद्योगिक (जैव-सक्रिय अणु)'},
+            {o:'<i>Monascus purpureus</i>', p:'रक्त कोलेस्ट्रॉल कम करने वाले स्टैटिन उत्पन्न करता है', c:'औद्योगिक (जैव-सक्रिय अणु)'},
+            {o:'<i>Rhizobium</i>', p:'दलहनी पादपों की मूल ग्रंथिकाओं के भीतर वायुमंडलीय नाइट्रोजन का स्थिरीकरण करता है', c:'जैव उर्वरक'},
+            {o:'<i>Glomus</i>', p:'माइकोराइजा बनाता है; मृदा से फॉस्फोरस अवशोषित कर पादप तक पहुँचाता है', c:'जैव उर्वरक'},
+            {o:'<i>Nostoc</i>', p:'विशेष रूप से धान के खेतों में वायुमंडलीय नाइट्रोजन का स्थिरीकरण करने वाला सायनोबैक्टीरिया', c:'जैव उर्वरक'},
+            {o:'<i>Anabaena</i>', p:'वायुमंडलीय नाइट्रोजन का स्थिरीकरण करने वाला सायनोबैक्टीरिया; धान के खेतों में जलीय फर्न <i>Azolla</i> के भीतर भी रहता है', c:'जैव उर्वरक'},
+            {o:'<i>Bacillus thuringiensis</i> (Bt)', p:'विष क्रिस्टल तितली की इल्लियों को मार देता है; इसके <i>cry</i> जीन Bt-कपास में प्रयुक्त', c:'जैव नियंत्रण'}
+          ] }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${l.th[1]}</th><th>${l.th[2]}</th></tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r.o}</td><td>${r.p}</td><td>${r.c}</td></tr>`).join('')}
         </tbody></table></div>`;
     }
   },
   'sewage-flow': {
-    title: '🚰 Sewage Treatment Flow — Step by Step',
-    render: function(){
+    title: {
+      en: '🚰 Sewage Treatment Flow — Step by Step',
+      kn: '🚰 ಕೊಳಚೆ ನೀರಿನ ಸಂಸ್ಕರಣಾ ಹರಿವು — ಹಂತ ಹಂತವಾಗಿ',
+      hi: '🚰 वाहितमल उपचार प्रवाह — चरण दर चरण'
+    },
+    render: function(lang){
       function step(q, a){ return `<div class="tipex-step"><span class="tipex-q">${q}.</span><span>${a}</span></div>`; }
-      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">The exact labelled flowchart the tip asks you to draw from memory, using only this chapter's own Sewage Treatment facts.</div>
-        <div class="tipex-case"><div class="tipex-case-title">Sewage Treatment Plant (STP) — primary → secondary → biogas</div>
-        ${step(1,'<b>Sewage</b> (municipal waste water carrying organic matter &amp; pathogens) enters the STP.')}
-        ${step(2,'<b>Primary treatment</b> (physical): sequential <b>filtration</b> removes floating debris, then <b>sedimentation</b> removes grit &mdash; producing <b>primary sludge</b> + <b>primary effluent</b> (supernatant).')}
-        ${step(3,'Primary effluent passes to <b>secondary treatment</b>: large <b>aeration tanks</b>, constantly agitated with air pumped in.')}
-        ${step(4,'Aerobic microbes grow into <b>flocs</b> (bacteria + fungal filaments) that consume the organic matter, significantly <b>reducing BOD</b>.')}
-        ${step(5,'Flocs settle in a settling tank, forming <b>activated sludge</b>; a small part is pumped back into the aeration tank as <b>inoculum</b>.')}
-        ${step(6,'The remaining major part of the sludge goes to <b>anaerobic sludge digesters</b>, where other bacteria digest it anaerobically.')}
-        ${step(7,'This anaerobic digestion yields <b>biogas</b> (methane, H<sub>2</sub>S, CO<sub>2</sub>); the final treated effluent is released into rivers/streams.')}
-        <div class="tipex-diagnosis">✓ Sewage → Primary (sludge+effluent) → Secondary (flocs, BOD↓, activated sludge) → Digesters → Biogas</div></div>`;
+      const L = {
+        en: { intro:"The exact labelled flowchart the tip asks you to draw from memory, using only this chapter's own Sewage Treatment facts.",
+          caseTitle:'Sewage Treatment Plant (STP) — primary → secondary → biogas',
+          steps:[
+            '<b>Sewage</b> (municipal waste water carrying organic matter &amp; pathogens) enters the STP.',
+            '<b>Primary treatment</b> (physical): sequential <b>filtration</b> removes floating debris, then <b>sedimentation</b> removes grit &mdash; producing <b>primary sludge</b> + <b>primary effluent</b> (supernatant).',
+            'Primary effluent passes to <b>secondary treatment</b>: large <b>aeration tanks</b>, constantly agitated with air pumped in.',
+            'Aerobic microbes grow into <b>flocs</b> (bacteria + fungal filaments) that consume the organic matter, significantly <b>reducing BOD</b>.',
+            'Flocs settle in a settling tank, forming <b>activated sludge</b>; a small part is pumped back into the aeration tank as <b>inoculum</b>.',
+            'The remaining major part of the sludge goes to <b>anaerobic sludge digesters</b>, where other bacteria digest it anaerobically.',
+            'This anaerobic digestion yields <b>biogas</b> (methane, H<sub>2</sub>S, CO<sub>2</sub>); the final treated effluent is released into rivers/streams.'
+          ],
+          diagnosis:'Sewage → Primary (sludge+effluent) → Secondary (flocs, BOD↓, activated sludge) → Digesters → Biogas' },
+        kn: { intro:'ಸಲಹೆ ನೆನಪಿನಿಂದ ಬಿಡಿಸಲು ಹೇಳುವ ನಿಖರವಾದ ಲೇಬಲ್ ಮಾಡಿದ ಫ್ಲೋಚಾರ್ಟ್, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Sewage Treatment ಸಂಗತಿಗಳನ್ನು ಮಾತ್ರ ಬಳಸಿ.',
+          caseTitle:'ಕೊಳಚೆ ನೀರು ಸಂಸ್ಕರಣಾ ಘಟಕ (STP) — ಪ್ರಾಥಮಿಕ → ದ್ವಿತೀಯಕ → ಜೈವಿಕ ಅನಿಲ',
+          steps:[
+            '<b>ಕೊಳಚೆ ನೀರು</b> (ಸಾವಯವ ಪದಾರ್ಥ ಮತ್ತು ರೋಗಕಾರಕಗಳನ್ನು ಹೊತ್ತ ಪುರಸಭೆಯ ತ್ಯಾಜ್ಯ ನೀರು) STP ಗೆ ಪ್ರವೇಶಿಸುತ್ತದೆ.',
+            '<b>ಪ್ರಾಥಮಿಕ ಸಂಸ್ಕರಣೆ</b> (ಭೌತಿಕ): ಅನುಕ್ರಮ <b>ಶೋಧನೆ</b> ತೇಲುವ ಕಸವನ್ನು ತೆಗೆಯುತ್ತದೆ, ನಂತರ <b>ಅವಸಾದನೆ</b> ಗ್ರಿಟ್ ತೆಗೆಯುತ್ತದೆ &mdash; <b>ಪ್ರಾಥಮಿಕ ಕೆಸರು</b> + <b>ಪ್ರಾಥಮಿಕ ಎಫ್ಲುಯೆಂಟ್</b> (ಮೇಲ್ದ್ರವ) ಉತ್ಪಾದಿಸುತ್ತದೆ.',
+            'ಪ್ರಾಥಮಿಕ ಎಫ್ಲುಯೆಂಟ್ <b>ದ್ವಿತೀಯಕ ಸಂಸ್ಕರಣೆ</b>ಗೆ ಹಾದುಹೋಗುತ್ತದೆ: ದೊಡ್ಡ <b>ವಾಯುಪೂರಣ ತೊಟ್ಟಿಗಳು</b>, ನಿರಂತರವಾಗಿ ಗಾಳಿ ಪಂಪ್ ಮಾಡಿ ಕಲಕಲಾಗುತ್ತವೆ.',
+            'ಆಮ್ಲಜನಕಾಪೇಕ್ಷಿ ಸೂಕ್ಷ್ಮಜೀವಿಗಳು <b>ಫ್ಲಾಕ್ಸ್</b> ಆಗಿ (ಬ್ಯಾಕ್ಟೀರಿಯಾ + ಶಿಲೀಂಧ್ರ ತಂತುಗಳು) ಬೆಳೆದು ಸಾವಯವ ಪದಾರ್ಥವನ್ನು ಸೇವಿಸುತ್ತವೆ, <b>BOD ಗಣನೀಯವಾಗಿ ಕಡಿಮೆಯಾಗುತ್ತದೆ</b>.',
+            'ಫ್ಲಾಕ್ಸ್ ನೆಲೆಸುವ ತೊಟ್ಟಿಯಲ್ಲಿ ತಳ ಸೇರಿ <b>ಸಕ್ರಿಯ ಕೆಸರು</b> ರೂಪಿಸುತ್ತವೆ; ಒಂದು ಸಣ್ಣ ಭಾಗವನ್ನು <b>ಇನಾಕ್ಯುಲಮ್</b> ಆಗಿ ವಾಯುಪೂರಣ ತೊಟ್ಟಿಗೆ ಮರಳಿ ಪಂಪ್ ಮಾಡಲಾಗುತ್ತದೆ.',
+            'ಕೆಸರಿನ ಉಳಿದ ಪ್ರಮುಖ ಭಾಗ <b>ಅವಾಯುಜೀವಿ ಕೆಸರು ಜೀರ್ಣಕಗಳಿ</b>ಗೆ ಹೋಗುತ್ತದೆ, ಅಲ್ಲಿ ಬೇರೆ ಬ್ಯಾಕ್ಟೀರಿಯಾಗಳು ಆಮ್ಲಜನಕರಹಿತವಾಗಿ ಜೀರ್ಣಿಸುತ್ತವೆ.',
+            'ಈ ಆಮ್ಲಜನಕರಹಿತ ಜೀರ್ಣಕ್ರಿಯೆ <b>ಜೈವಿಕ ಅನಿಲ</b> (ಮೀಥೇನ್, H<sub>2</sub>S, CO<sub>2</sub>) ಉತ್ಪಾದಿಸುತ್ತದೆ; ಅಂತಿಮ ಸಂಸ್ಕರಿತ ಎಫ್ಲುಯೆಂಟ್ ಅನ್ನು ನದಿ/ತೊರೆಗಳಿಗೆ ಬಿಡಲಾಗುತ್ತದೆ.'
+          ],
+          diagnosis:'ಕೊಳಚೆ ನೀರು → ಪ್ರಾಥಮಿಕ (ಕೆಸರು+ಎಫ್ಲುಯೆಂಟ್) → ದ್ವಿತೀಯಕ (ಫ್ಲಾಕ್ಸ್, BOD↓, ಸಕ್ರಿಯ ಕೆಸರು) → ಜೀರ್ಣಕಗಳು → ಜೈವಿಕ ಅನಿಲ' },
+        hi: { intro:'वह ठीक नामांकित फ्लोचार्ट जिसे यह सुझाव स्मृति से बनाने को कहता है, इस अध्याय के अपने Sewage Treatment तथ्यों का ही उपयोग करते हुए।',
+          caseTitle:'वाहितमल उपचार संयंत्र (STP) — प्राथमिक → द्वितीयक → बायोगैस',
+          steps:[
+            '<b>वाहितमल</b> (कार्बनिक पदार्थ व रोगजनकों को ले जाने वाला नगरपालिका का अपशिष्ट जल) STP में प्रवेश करता है।',
+            '<b>प्राथमिक उपचार</b> (भौतिक): क्रमिक <b>निस्यंदन</b> तैरता कचरा हटाता है, फिर <b>अवसादन</b> ग्रिट हटाता है &mdash; <b>प्राथमिक आपंक</b> + <b>प्राथमिक बहिःस्राव</b> (अधिप्लव) बनता है।',
+            'प्राथमिक बहिःस्राव <b>द्वितीयक उपचार</b> की ओर बढ़ता है: बड़े <b>वायु-संचारण टैंक</b>, जिनमें हवा पंप करके निरंतर मथा जाता है।',
+            'वायवीय सूक्ष्मजीव <b>ऊर्णक (flocs)</b> बनकर (जीवाणु + कवक तंतु) बढ़ते हैं और कार्बनिक पदार्थ का उपभोग करते हैं, जिससे <b>BOD काफी घट जाती है</b>।',
+            'ऊर्णक निपात टैंक में नीचे बैठकर <b>सक्रियित आपंक</b> बनाते हैं; एक छोटा भाग <b>निवेशद्रव्य</b> के रूप में वायु-संचारण टैंक में पुनः पंप किया जाता है।',
+            'आपंक का शेष प्रमुख भाग <b>अवायवीय आपंक पाचित्रों</b> में जाता है, जहाँ अन्य जीवाणु उसे अवायवीय रूप से पचाते हैं।',
+            'यह अवायवीय पाचन <b>बायोगैस</b> (मीथेन, H<sub>2</sub>S, CO<sub>2</sub>) उत्पन्न करता है; अंतिम उपचारित बहिःस्राव नदियों/जलधाराओं में छोड़ा जाता है।'
+          ],
+          diagnosis:'वाहितमल → प्राथमिक (आपंक+बहिःस्राव) → द्वितीयक (ऊर्णक, BOD↓, सक्रियित आपंक) → पाचित्र → बायोगैस' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        <div class="tipex-case"><div class="tipex-case-title">${l.caseTitle}</div>
+        ${l.steps.map((s,i)=>step(i+1,s)).join('')}
+        <div class="tipex-diagnosis">✓ ${l.diagnosis}</div></div>`;
     }
   },
   'biogas-parts': {
-    title: '⚙️ Biogas Plant — Labelled Parts in Order',
-    render: function(){
+    title: {
+      en: '⚙️ Biogas Plant — Labelled Parts in Order',
+      kn: '⚙️ ಜೈವಿಕ ಅನಿಲ ಘಟಕ — ಕ್ರಮವಾಗಿ ಲೇಬಲ್ ಮಾಡಲಾದ ಭಾಗಗಳು',
+      hi: '⚙️ बायोगैस संयंत्र — क्रम में नामांकित भाग'
+    },
+    render: function(lang){
       function step(q, a){ return `<div class="tipex-step"><span class="tipex-q">${q}.</span><span>${a}</span></div>`; }
-      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">The exact physical parts, in order, that the tip asks you to label, using only this chapter's own Biogas Plant design facts.</div>
-        <div class="tipex-case"><div class="tipex-case-title">Design of a biogas (gobar gas) plant</div>
-        ${step(1,'<b>Dung/water slurry inlet</b> &mdash; bio-wastes and a dung-water slurry are fed in.')}
-        ${step(2,'<b>Concrete digester tank</b> (10&ndash;15 feet deep), sunk in the ground &mdash; stays anaerobic since it is deep, closed and filled with slurry.')}
-        ${step(3,'<b>Floating gas-holder cover</b> &mdash; sits over the slurry; rises as gas collects under it, both storing and showing the gas produced.')}
-        ${step(4,'<b>Gas outlet pipe</b> &mdash; connected to a pipe that supplies the biogas to nearby houses for cooking and lighting.')}
-        ${step(5,'<b>Sludge (spent slurry) outlet</b> &mdash; removes the nutrient-rich spent slurry separately; used as fertiliser in the field.')}
-        <div class="tipex-diagnosis">✓ Dung+water → digester tank → gas under floating cover → gas outlet pipe (and, separately, digester → sludge outlet → field)</div></div>`;
+      const L = {
+        en: { intro:"The exact physical parts, in order, that the tip asks you to label, using only this chapter's own Biogas Plant design facts.",
+          caseTitle:'Design of a biogas (gobar gas) plant',
+          steps:[
+            '<b>Dung/water slurry inlet</b> &mdash; bio-wastes and a dung-water slurry are fed in.',
+            '<b>Concrete digester tank</b> (10&ndash;15 feet deep), sunk in the ground &mdash; stays anaerobic since it is deep, closed and filled with slurry.',
+            '<b>Floating gas-holder cover</b> &mdash; sits over the slurry; rises as gas collects under it, both storing and showing the gas produced.',
+            '<b>Gas outlet pipe</b> &mdash; connected to a pipe that supplies the biogas to nearby houses for cooking and lighting.',
+            '<b>Sludge (spent slurry) outlet</b> &mdash; removes the nutrient-rich spent slurry separately; used as fertiliser in the field.'
+          ],
+          diagnosis:'Dung+water → digester tank → gas under floating cover → gas outlet pipe (and, separately, digester → sludge outlet → field)' },
+        kn: { intro:'ಸಲಹೆ ಲೇಬಲ್ ಮಾಡಲು ಹೇಳುವ ನಿಖರವಾದ ಭೌತಿಕ ಭಾಗಗಳು, ಕ್ರಮವಾಗಿ, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Biogas Plant ವಿನ್ಯಾಸ ಸಂಗತಿಗಳನ್ನು ಮಾತ್ರ ಬಳಸಿ.',
+          caseTitle:'ಜೈವಿಕ ಅನಿಲ (ಗೋಬರ್ ಗ್ಯಾಸ್) ಘಟಕದ ವಿನ್ಯಾಸ',
+          steps:[
+            '<b>ಸಗಣಿ/ನೀರಿನ ಸ್ಲರಿ ಒಳಹರಿವು</b> &mdash; ಜೈವಿಕ ತ್ಯಾಜ್ಯಗಳು ಮತ್ತು ಸಗಣಿ-ನೀರಿನ ಸ್ಲರಿಯನ್ನು ಒಳಗೆ ತುಂಬಲಾಗುತ್ತದೆ.',
+            '<b>ಕಾಂಕ್ರೀಟ್ ಜೀರ್ಣಕ ತೊಟ್ಟಿ</b> (10&ndash;15 ಅಡಿ ಆಳ), ನೆಲದೊಳಗೆ ಹೂತಿದೆ &mdash; ಆಳವಾಗಿದ್ದು, ಮುಚ್ಚಿದ್ದು, ಸ್ಲರಿಯಿಂದ ತುಂಬಿರುವುದರಿಂದ ಅವಾಯುವಿಕವಾಗಿ ಉಳಿಯುತ್ತದೆ.',
+            '<b>ತೇಲುವ ಮುಚ್ಚಳ (ಗ್ಯಾಸ್ ಹೋಲ್ಡರ್)</b> &mdash; ಸ್ಲರಿಯ ಮೇಲೆ ಕುಳಿತಿದೆ; ಅನಿಲ ಅದರ ಕೆಳಗೆ ಸಂಗ್ರಹವಾದಂತೆ ಮೇಲಕ್ಕೇರುತ್ತದೆ, ಉತ್ಪತ್ತಿಯಾದ ಅನಿಲವನ್ನು ಸಂಗ್ರಹಿಸುವುದರ ಜೊತೆಗೆ ತೋರಿಸುತ್ತದೆ.',
+            '<b>ಅನಿಲ ನಿರ್ಗಮ ದ್ವಾರ</b> &mdash; ಹತ್ತಿರದ ಮನೆಗಳಿಗೆ ಅಡುಗೆ ಮತ್ತು ಬೆಳಕಿಗೆ ಜೈವಿಕ ಅನಿಲ ಸರಬರಾಜು ಮಾಡುವ ಕೊಳವೆಗೆ ಜೋಡಿಸಲ್ಪಟ್ಟಿದೆ.',
+            '<b>ಸ್ಲಡ್ಜ್ (ಬಳಸಿದ ಸ್ಲರಿ) ನಿರ್ಗಮ ದ್ವಾರ</b> &mdash; ಪೋಷಕಾಂಶ-ಸಮೃದ್ಧ ಬಳಸಿದ ಸ್ಲರಿಯನ್ನು ಪ್ರತ್ಯೇಕವಾಗಿ ತೆಗೆಯುತ್ತದೆ; ಹೊಲದಲ್ಲಿ ಗೊಬ್ಬರವಾಗಿ ಬಳಸಲಾಗುತ್ತದೆ.'
+          ],
+          diagnosis:'ಸಗಣಿ+ನೀರು → ಜೀರ್ಣಕ ತೊಟ್ಟಿ → ತೇಲುವ ಮುಚ್ಚಳದ ಕೆಳಗೆ ಅನಿಲ → ಅನಿಲ ನಿರ್ಗಮ ಕೊಳವೆ (ಮತ್ತು, ಪ್ರತ್ಯೇಕವಾಗಿ, ಜೀರ್ಣಕ → ಸ್ಲಡ್ಜ್ ನಿರ್ಗಮ → ಹೊಲ)' },
+        hi: { intro:'वे ठीक भौतिक भाग, क्रम में, जिन्हें यह सुझाव नामांकित करने को कहता है, इस अध्याय के अपने बायोगैस संयंत्र डिज़ाइन तथ्यों का ही उपयोग करते हुए।',
+          caseTitle:'बायोगैस (गोबर गैस) संयंत्र की संरचना',
+          steps:[
+            '<b>गोबर/पानी घोल प्रवेश द्वार</b> &mdash; जैव-अपशिष्ट तथा गोबर-पानी का घोल (स्लरी) भीतर डाला जाता है।',
+            '<b>कंक्रीट पाचित्र टंकी</b> (10&ndash;15 फुट गहरी), भूमि में धँसी हुई &mdash; गहरी, बंद तथा घोल से भरी होने के कारण अवायवीय बनी रहती है।',
+            '<b>तैरता हुआ ढक्कन (गैस होल्डर)</b> &mdash; घोल के ऊपर बैठा है; नीचे गैस एकत्र होने के साथ ऊपर उठता है, उत्पन्न गैस का संग्रह व प्रदर्शन दोनों करता है।',
+            '<b>गैस निकास पाइप</b> &mdash; पास के घरों को खाना पकाने तथा प्रकाश के लिए बायोगैस पहुँचाने वाले पाइप से जुड़ा है।',
+            '<b>स्लज (प्रयुक्त घोल) निकास</b> &mdash; पोषक तत्वों से भरपूर प्रयुक्त घोल को अलग से बाहर निकालता है; खेत में उर्वरक के रूप में प्रयुक्त।'
+          ],
+          diagnosis:'गोबर+पानी → पाचित्र टंकी → तैरते ढक्कन के नीचे गैस → गैस निकास पाइप (और, अलग से, पाचित्र → स्लज निकास → खेत)' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        <div class="tipex-case"><div class="tipex-case-title">${l.caseTitle}</div>
+        ${l.steps.map((s,i)=>step(i+1,s)).join('')}
+        <div class="tipex-diagnosis">✓ ${l.diagnosis}</div></div>`;
     }
   },
   'biocontrol-vs-biofertilizer': {
-    title: '🌱 Biocontrol vs Biofertilizer — Kept Apart',
-    render: function(){
-      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">The exact split the tip asks you to keep straight, using only the named agents already given in this chapter's Biocontrol and Biofertilizer topics.</div>
-        <div class="tipex-case"><div class="tipex-case-title">Biocontrol agents — act AGAINST pests/pathogens</div>
-        <div class="tipex-step"><span class="tipex-q">•</span><span><i>Bacillus thuringiensis</i> (Bt) &mdash; bacterium; kills butterfly caterpillars; <i>cry</i> genes used in Bt-cotton.</span></div>
-        <div class="tipex-step"><span class="tipex-q">•</span><span><i>Trichoderma</i> &mdash; free-living fungus of root ecosystems; biocontrol of several plant pathogens.</span></div>
-        <div class="tipex-step"><span class="tipex-q">•</span><span>Baculovirus (<i>Nucleopolyhedrovirus</i>) &mdash; narrow-spectrum, species-specific insecticidal virus.</span></div>
+    title: {
+      en: '🌱 Biocontrol vs Biofertilizer — Kept Apart',
+      kn: '🌱 ಜೈವಿಕ ನಿಯಂತ್ರಣ vs ಜೈವಿಕ ಗೊಬ್ಬರ — ಪ್ರತ್ಯೇಕವಾಗಿ ಇರಿಸಲಾಗಿದೆ',
+      hi: '🌱 जैव नियंत्रण बनाम जैव उर्वरक — अलग रखे गए'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"The exact split the tip asks you to keep straight, using only the named agents already given in this chapter's Biocontrol and Biofertilizer topics.",
+          biocontrolTitle:'Biocontrol agents — act AGAINST pests/pathogens',
+          biocontrol:[
+            '<i>Bacillus thuringiensis</i> (Bt) &mdash; bacterium; kills butterfly caterpillars; <i>cry</i> genes used in Bt-cotton.',
+            '<i>Trichoderma</i> &mdash; free-living fungus of root ecosystems; biocontrol of several plant pathogens.',
+            'Baculovirus (<i>Nucleopolyhedrovirus</i>) &mdash; narrow-spectrum, species-specific insecticidal virus.'
+          ],
+          biofertilizerTitle:'Biofertilizers — enrich soil nutrients FOR the plant',
+          biofertilizer:[
+            '<i>Rhizobium</i> &mdash; bacterium; fixes atmospheric nitrogen inside legume root nodules.',
+            '<i>Glomus</i> (mycorrhiza) &mdash; fungus; absorbs soil phosphorus and passes it to the plant.',
+            '<i>Nostoc</i>, <i>Anabaena</i> &mdash; cyanobacteria; fix atmospheric nitrogen, especially in paddy fields.'
+          ],
+          diagnosis:'Biocontrol = against pests/pathogens · Biofertilizer = for soil nutrients' },
+        kn: { intro:'ಸಲಹೆ ಸ್ಪಷ್ಟವಾಗಿ ಇರಿಸಲು ಹೇಳುವ ನಿಖರವಾದ ವಿಭಜನೆ, ಈ ಅಧ್ಯಾಯದ Biocontrol ಮತ್ತು Biofertilizer ವಿಷಯಗಳಲ್ಲಿ ಈಗಾಗಲೇ ನೀಡಲಾದ ಹೆಸರಿಸಲಾದ ಕಾರಕಗಳನ್ನು ಮಾತ್ರ ಬಳಸಿ.',
+          biocontrolTitle:'ಜೈವಿಕ ನಿಯಂತ್ರಣ ಕಾರಕಗಳು — ಕೀಟಗಳು/ರೋಗಕಾರಕಗಳ ವಿರುದ್ಧ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತವೆ',
+          biocontrol:[
+            '<i>Bacillus thuringiensis</i> (Bt) &mdash; ಬ್ಯಾಕ್ಟೀರಿಯಂ; ಚಿಟ್ಟೆಗಳ ಕಂಬಳಿ ಹುಳುಗಳನ್ನು ಕೊಲ್ಲುತ್ತದೆ; ಇದರ <i>cry</i> ಜೀನ್‌ಗಳನ್ನು Bt-ಹತ್ತಿಯಲ್ಲಿ ಬಳಸಲಾಗುತ್ತದೆ.',
+            '<i>Trichoderma</i> &mdash; ಬೇರಿನ ಪರಿಸರ ವ್ಯವಸ್ಥೆಗಳ ಸ್ವತಂತ್ರ ಜೀವನ ನಡೆಸುವ ಶಿಲೀಂಧ್ರ; ಹಲವಾರು ಸಸ್ಯ ರೋಗಕಾರಕಗಳ ಜೈವಿಕ ನಿಯಂತ್ರಣ.',
+            'ಬ್ಯಾಕ್ಯುಲೋವೈರಸ್ (<i>Nucleopolyhedrovirus</i>) &mdash; ಸಂಕುಚಿತ ವರ್ಣಪಟಲದ, ಪ್ರಭೇದ-ನಿರ್ದಿಷ್ಟ ಕೀಟನಾಶಕ ವೈರಸ್.'
+          ],
+          biofertilizerTitle:'ಜೈವಿಕ ಗೊಬ್ಬರಗಳು — ಸಸ್ಯಕ್ಕಾಗಿ ಮಣ್ಣಿನ ಪೋಷಕಾಂಶಗಳನ್ನು ಸಮೃದ್ಧಗೊಳಿಸುತ್ತವೆ',
+          biofertilizer:[
+            '<i>Rhizobium</i> &mdash; ಬ್ಯಾಕ್ಟೀರಿಯಂ; ದ್ವಿದಳ ಧಾನ್ಯಗಳ ಬೇರುಗಂಟುಗಳ ಒಳಗೆ ವಾಯುಮಂಡಲದ ಸಾರಜನಕವನ್ನು ಸ್ಥಿರೀಕರಿಸುತ್ತದೆ.',
+            '<i>Glomus</i> (ಮೈಕೊರೈಜಾ) &mdash; ಶಿಲೀಂಧ್ರ; ಮಣ್ಣಿನ ರಂಜಕವನ್ನು ಹೀರಿ ಸಸ್ಯಕ್ಕೆ ವರ್ಗಾಯಿಸುತ್ತದೆ.',
+            '<i>Nostoc</i>, <i>Anabaena</i> &mdash; ಸೈನೋಬ್ಯಾಕ್ಟೀರಿಯಾ; ವಿಶೇಷವಾಗಿ ಭತ್ತದ ಗದ್ದೆಗಳಲ್ಲಿ ವಾಯುಮಂಡಲದ ಸಾರಜನಕವನ್ನು ಸ್ಥಿರೀಕರಿಸುತ್ತವೆ.'
+          ],
+          diagnosis:'ಜೈವಿಕ ನಿಯಂತ್ರಣ = ಕೀಟಗಳು/ರೋಗಕಾರಕಗಳ ವಿರುದ್ಧ · ಜೈವಿಕ ಗೊಬ್ಬರ = ಮಣ್ಣಿನ ಪೋಷಕಾಂಶಗಳಿಗಾಗಿ' },
+        hi: { intro:'वह ठीक विभाजन जिसे स्पष्ट रखने को यह सुझाव कहता है, इस अध्याय के Biocontrol तथा Biofertilizer विषयों में पहले से दिए गए नामित कारकों का ही उपयोग करते हुए।',
+          biocontrolTitle:'जैव नियंत्रण कारक — पीड़कों/रोगजनकों के विरुद्ध कार्य करते हैं',
+          biocontrol:[
+            '<i>Bacillus thuringiensis</i> (Bt) &mdash; जीवाणु; तितली की इल्लियों को मारता है; इसके <i>cry</i> जीन Bt-कपास में प्रयुक्त।',
+            '<i>Trichoderma</i> &mdash; मूल पारितंत्रों का स्वतंत्रजीवी कवक; कई पादप रोगजनकों का जैव नियंत्रण।',
+            'बैकुलोवायरस (<i>Nucleopolyhedrovirus</i>) &mdash; संकीर्ण स्पेक्ट्रम, जाति-विशिष्ट कीटनाशी विषाणु।'
+          ],
+          biofertilizerTitle:'जैव उर्वरक — पादप के लिए मृदा के पोषक तत्वों को समृद्ध करते हैं',
+          biofertilizer:[
+            '<i>Rhizobium</i> &mdash; जीवाणु; दलहनी पादपों की मूल ग्रंथिकाओं के भीतर वायुमंडलीय नाइट्रोजन का स्थिरीकरण करता है।',
+            '<i>Glomus</i> (माइकोराइजा) &mdash; कवक; मृदा से फॉस्फोरस अवशोषित कर पादप तक पहुँचाता है।',
+            '<i>Nostoc</i>, <i>Anabaena</i> &mdash; सायनोबैक्टीरिया; विशेष रूप से धान के खेतों में वायुमंडलीय नाइट्रोजन का स्थिरीकरण करते हैं।'
+          ],
+          diagnosis:'जैव नियंत्रण = पीड़कों/रोगजनकों के विरुद्ध · जैव उर्वरक = मृदा के पोषक तत्वों के लिए' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        <div class="tipex-case"><div class="tipex-case-title">${l.biocontrolTitle}</div>
+        ${l.biocontrol.map(s=>`<div class="tipex-step"><span class="tipex-q">•</span><span>${s}</span></div>`).join('')}
         </div>
-        <div class="tipex-case"><div class="tipex-case-title">Biofertilizers — enrich soil nutrients FOR the plant</div>
-        <div class="tipex-step"><span class="tipex-q">•</span><span><i>Rhizobium</i> &mdash; bacterium; fixes atmospheric nitrogen inside legume root nodules.</span></div>
-        <div class="tipex-step"><span class="tipex-q">•</span><span><i>Glomus</i> (mycorrhiza) &mdash; fungus; absorbs soil phosphorus and passes it to the plant.</span></div>
-        <div class="tipex-step"><span class="tipex-q">•</span><span><i>Nostoc</i>, <i>Anabaena</i> &mdash; cyanobacteria; fix atmospheric nitrogen, especially in paddy fields.</span></div>
+        <div class="tipex-case"><div class="tipex-case-title">${l.biofertilizerTitle}</div>
+        ${l.biofertilizer.map(s=>`<div class="tipex-step"><span class="tipex-q">•</span><span>${s}</span></div>`).join('')}
         </div>
-        <div class="tipex-diagnosis">✓ Biocontrol = against pests/pathogens · Biofertilizer = for soil nutrients</div>`;
+        <div class="tipex-diagnosis">✓ ${l.diagnosis}</div>`;
     }
   },
   'antibiotic-source-use': {
-    title: '💊 Bioactive Molecules — Source Organism & Use',
-    render: function(){
-      const rows = [
-        {m:'Penicillin', o:'<i>Penicillium notatum</i> (also <i>P. chrysogenum</i>)', u:'First antibiotic discovered; kills/retards <i>Staphylococci</i>'},
-        {m:'Streptokinase', o:'<i>Streptococcus</i> (bacterium)', u:"'Clot buster' &mdash; removes clots after myocardial infarction"},
-        {m:'Cyclosporin A', o:'<i>Trichoderma polysporum</i> (fungus)', u:'Immunosuppressant in organ-transplant patients'},
-        {m:'Statins', o:'<i>Monascus purpureus</i> (yeast)', u:'Lowers blood cholesterol by competitively inhibiting the cholesterol-synthesis enzyme'}
-      ];
-      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">Exactly the source-organism + practical-use pairing the tip asks you to learn, using only this chapter's own Industrial Products facts.</div>
-        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Bioactive Molecule</th><th>Source Organism</th><th>Practical Use</th></tr></thead><tbody>
-        ${rows.map(r=>`<tr><td class="tipex-organ">${r.m}</td><td>${r.o}</td><td>${r.u}</td></tr>`).join('')}
+    title: {
+      en: '💊 Bioactive Molecules — Source Organism & Use',
+      kn: '💊 ಬಯೋಆಕ್ಟಿವ್ ಅಣುಗಳು — ಮೂಲ ಜೀವಿ ಮತ್ತು ಬಳಕೆ',
+      hi: '💊 जैव-सक्रिय अणु — स्रोत जीव व उपयोग'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"Exactly the source-organism + practical-use pairing the tip asks you to learn, using only this chapter's own Industrial Products facts.",
+          th:['Bioactive Molecule','Source Organism','Practical Use'],
+          rows:[
+            {m:'Penicillin', o:'<i>Penicillium notatum</i> (also <i>P. chrysogenum</i>)', u:'First antibiotic discovered; kills/retards <i>Staphylococci</i>'},
+            {m:'Streptokinase', o:'<i>Streptococcus</i> (bacterium)', u:"'Clot buster' &mdash; removes clots after myocardial infarction"},
+            {m:'Cyclosporin A', o:'<i>Trichoderma polysporum</i> (fungus)', u:'Immunosuppressant in organ-transplant patients'},
+            {m:'Statins', o:'<i>Monascus purpureus</i> (yeast)', u:'Lowers blood cholesterol by competitively inhibiting the cholesterol-synthesis enzyme'}
+          ] },
+        kn: { intro:'ಸಲಹೆ ಕಲಿಯಲು ಹೇಳುವ ನಿಖರವಾದ ಮೂಲ-ಜೀವಿ + ಪ್ರಾಯೋಗಿಕ-ಬಳಕೆ ಜೋಡಣೆ, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Industrial Products ಸಂಗತಿಗಳನ್ನು ಮಾತ್ರ ಬಳಸಿ.',
+          th:['ಬಯೋಆಕ್ಟಿವ್ ಅಣು','ಮೂಲ ಜೀವಿ','ಪ್ರಾಯೋಗಿಕ ಬಳಕೆ'],
+          rows:[
+            {m:'Penicillin', o:'<i>Penicillium notatum</i> (ಮತ್ತು <i>P. chrysogenum</i>)', u:'ಆವಿಷ್ಕಾರಗೊಂಡ ಮೊದಲ ಪ್ರತಿಜೈವಿಕ; <i>Staphylococci</i> ಅನ್ನು ಕೊಲ್ಲುತ್ತದೆ/ತಡೆಯುತ್ತದೆ'},
+            {m:'ಸ್ಟ್ರೆಪ್ಟೊಕೈನೇಸ್', o:'<i>Streptococcus</i> (ಬ್ಯಾಕ್ಟೀರಿಯಂ)', u:"'ಕ್ಲಾಟ್ ಬಸ್ಟರ್' &mdash; ಹೃದಯಾಘಾತದ ನಂತರ ಹೆಪ್ಪುಗಳನ್ನು ತೆಗೆಯುತ್ತದೆ"},
+            {m:'ಸೈಕ್ಲೊಸ್ಪೊರಿನ್ A', o:'<i>Trichoderma polysporum</i> (ಶಿಲೀಂಧ್ರ)', u:'ಅಂಗಾಂಗ ಕಸಿ ರೋಗಿಗಳಲ್ಲಿ ರೋಗನಿರೋಧಕ ದಮನಕಾರಿ'},
+            {m:'ಸ್ಟ್ಯಾಟಿನ್‌ಗಳು', o:'<i>Monascus purpureus</i> (ಯೀಸ್ಟ್)', u:'ಕೊಲೆಸ್ಟರಾಲ್ ಸಂಶ್ಲೇಷಣೆಗೆ ಕಾರಣವಾದ ಕಿಣ್ವವನ್ನು ಸ್ಪರ್ಧಾತ್ಮಕವಾಗಿ ಪ್ರತಿಬಂಧಿಸಿ ರಕ್ತದ ಕೊಲೆಸ್ಟರಾಲ್ ಇಳಿಸುತ್ತದೆ'}
+          ] },
+        hi: { intro:'वह ठीक स्रोत-जीव + व्यावहारिक-उपयोग युग्मन जिसे यह सुझाव सीखने को कहता है, इस अध्याय के अपने Industrial Products तथ्यों का ही उपयोग करते हुए।',
+          th:['जैव-सक्रिय अणु','स्रोत जीव','व्यावहारिक उपयोग'],
+          rows:[
+            {m:'Penicillin', o:'<i>Penicillium notatum</i> (तथा <i>P. chrysogenum</i>)', u:'खोजा गया पहला प्रतिजैविक; <i>Staphylococci</i> को मारता/रोकता है'},
+            {m:'स्ट्रेप्टोकाइनेज़', o:'<i>Streptococcus</i> (जीवाणु)', u:"'क्लॉट बस्टर' &mdash; मायोकार्डियल इन्फार्क्शन (हृदयाघात) के बाद थक्के हटाता है"},
+            {m:'साइक्लोस्पोरिन A', o:'<i>Trichoderma polysporum</i> (कवक)', u:'अंग प्रत्यारोपण के रोगियों में प्रतिरक्षा-निरोधी'},
+            {m:'स्टैटिन', o:'<i>Monascus purpureus</i> (यीस्ट)', u:'कोलेस्ट्रॉल के संश्लेषण के लिए उत्तरदायी एंजाइम का प्रतिस्पर्धी संदमन करके रक्त कोलेस्ट्रॉल कम करता है'}
+          ] }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${l.th[1]}</th><th>${l.th[2]}</th></tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r.m}</td><td>${r.o}</td><td>${r.u}</td></tr>`).join('')}
         </tbody></table></div>`;
     }
   }
@@ -2538,8 +2727,9 @@ const TIP_EXAMPLES = {
 function openTipExample(key){
   const ex = TIP_EXAMPLES[key];
   if(!ex) return;
-  document.getElementById('tipExampleTitle').textContent = ex.title;
-  document.getElementById('tipExampleBody').innerHTML = ex.render();
+  const lang = (typeof currentLang!=='undefined' && ex.title[currentLang]) ? currentLang : 'en';
+  document.getElementById('tipExampleTitle').textContent = ex.title[lang];
+  document.getElementById('tipExampleBody').innerHTML = ex.render(lang);
   document.getElementById('tipExampleOverlay').style.display = 'flex';
 }
 function closeTipExample(){
@@ -2563,7 +2753,7 @@ function renderStudyTipsCh8(){
     <h3 style="color:var(--gold-2); margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ View example</button>`:''}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ ${TIP_EXAMPLE_BTN_LABEL[currentLang]||TIP_EXAMPLE_BTN_LABEL.en}</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   `;

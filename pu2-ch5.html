@@ -5210,49 +5210,119 @@ const STUDYTIPS_CH5_TRANSLATIONS = {
    chapter file (the Concept tab's DNA-as-genetic-material and genetic-code
    notes) — nothing is invented or duplicated by hand. ---- */
 const TIP_EXAMPLE_INDEX = {0:'experiments-story', 3:'genetic-code'};
+const TIP_EXAMPLE_BTN_LABEL = {en:'View example', kn:'ಉದಾಹರಣೆ ನೋಡಿ', hi:'उदाहरण देखें'};
+/* Trilingual content below reuses the exact vetted Kannada/Hindi vocabulary
+   already established in GLOSSARY_TRANSLATIONS_CH5 and the "Search for the
+   genetic material" / "Genetic code & tRNA structure" topic cards of
+   STUDY_TRANSLATIONS_CH5 (Griffith/Avery/Hershey-Chase terminology, and the
+   five genetic-code properties) so terminology stays consistent with the
+   rest of the chapter rather than introducing new, unverified translations. */
 const TIP_EXAMPLES = {
   'experiments-story': {
-    title: '🔍 Three Experiments — Proved vs Left Unanswered',
-    render: function(){
+    title: {
+      en: '🔍 Three Experiments — Proved vs Left Unanswered',
+      kn: '🔍 ಮೂರು ಪ್ರಯೋಗಗಳು — ಸಾಬೀತಾದುದು vs ಉತ್ತರಿಸದೆ ಬಿಟ್ಟದ್ದು',
+      hi: '🔍 तीन प्रयोग — सिद्ध बनाम अनुत्तरित'
+    },
+    render: function(lang){
       function step(label, text){ return `<div class="tipex-step"><span class="tipex-q">${label}</span><span>${text}</span></div>`; }
-      const cases = [
-        { title: '1. Griffith (1928) — Transforming Principle',
-          steps:[ step('✓','Proved: some &lsquo;transforming principle&rsquo; passes from heat-killed S strain to live R strain of <i>Streptococcus pneumoniae</i>, making it virulent (produce the mucous coat).'),
-                  step('?','Left unanswered: the biochemical nature of the transforming principle — Griffith could not say whether it was DNA, RNA or protein.') ] },
-        { title: '2. Avery, MacLeod &amp; McCarty (1933&ndash;44) — Biochemical Characterisation',
-          steps:[ step('✓','Proved: proteases &amp; RNases did NOT stop transformation, but DNase DID — so the transforming substance is DNA, not protein or RNA.'),
-                  step('?','Left unanswered enough doubt that &ldquo;not all biologists were convinced&rdquo; — a purely biochemical/in-vitro result, so a cleaner, more direct physical proof was still wanted.') ] },
-        { title: '3. Hershey &amp; Chase (1952) — The Capstone Proof',
-          steps:[ step('✓','Proved: using <sup>35</sup>S (labels protein) and <sup>32</sup>P (labels DNA) on bacteriophages, only <sup>32</sup>P (DNA) entered the bacterium — conclusively, DNA (not protein) is the genetic material that is inherited.'),
-                  step('●','This is the capstone of the story — unlike the first two, it leaves the core question (DNA vs protein) fully settled, which is exactly why it is always presented last.') ] }
-      ];
-      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">The same single story the tip describes — increasing proof across three experiments — each with what it proved and what it left open, built from this chapter's own Concept-tab notes.</div>
-        ${cases.map(c=>`<div class="tipex-case"><div class="tipex-case-title">${c.title}</div>${c.steps.join('')}</div>`).join('')}`;
+      const L = {
+        en: { intro:"The same single story the tip describes — increasing proof across three experiments — each with what it proved and what it left open, built from this chapter's own Concept-tab notes.",
+          cases:[
+            { title: '1. Griffith (1928) — Transforming Principle',
+              steps:[ ['✓','Proved: some &lsquo;transforming principle&rsquo; passes from heat-killed S strain to live R strain of <i>Streptococcus pneumoniae</i>, making it virulent (produce the mucous coat).'],
+                      ['?','Left unanswered: the biochemical nature of the transforming principle — Griffith could not say whether it was DNA, RNA or protein.'] ] },
+            { title: '2. Avery, MacLeod &amp; McCarty (1933&ndash;44) — Biochemical Characterisation',
+              steps:[ ['✓','Proved: proteases &amp; RNases did NOT stop transformation, but DNase DID — so the transforming substance is DNA, not protein or RNA.'],
+                      ['?','Left unanswered enough doubt that &ldquo;not all biologists were convinced&rdquo; — a purely biochemical/in-vitro result, so a cleaner, more direct physical proof was still wanted.'] ] },
+            { title: '3. Hershey &amp; Chase (1952) — The Capstone Proof',
+              steps:[ ['✓','Proved: using <sup>35</sup>S (labels protein) and <sup>32</sup>P (labels DNA) on bacteriophages, only <sup>32</sup>P (DNA) entered the bacterium — conclusively, DNA (not protein) is the genetic material that is inherited.'],
+                      ['●','This is the capstone of the story — unlike the first two, it leaves the core question (DNA vs protein) fully settled, which is exactly why it is always presented last.'] ] }
+          ] },
+        kn: { intro:'ಇದು ಸಲಹೆ ವಿವರಿಸುವ ಅದೇ ಒಂದು ಕಥೆ — ಮೂರು ಪ್ರಯೋಗಗಳಾದ್ಯಂತ ಹೆಚ್ಚುತ್ತಿರುವ ಪುರಾವೆ — ಪ್ರತಿಯೊಂದೂ ಅದು ಏನನ್ನು ಸಾಬೀತುಪಡಿಸಿತು ಮತ್ತು ಏನನ್ನು ಬಿಟ್ಟಿತು ಎಂಬುದರೊಂದಿಗೆ, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Concept ಟ್ಯಾಬ್ ಟಿಪ್ಪಣಿಗಳಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ.',
+          cases:[
+            { title: '1. ಗ್ರಿಫಿತ್ (1928) — ರೂಪಾಂತರ ತತ್ವ',
+              steps:[ ['✓',"ಸಾಬೀತುಪಡಿಸಿದ್ದು: ಶಾಖದಿಂದ ಸತ್ತ S ತಳಿಯಿಂದ ಜೀವಂತ R ತಳಿ <i>ಸ್ಟ್ರೆಪ್ಟೋಕಾಕಸ್ ನ್ಯುಮೋನಿಯೆ</i>ಗೆ ಯಾವುದೋ 'ರೂಪಾಂತರ ತತ್ವ' ವರ್ಗಾವಣೆಯಾಗಿ, ಅದನ್ನು ವಿಷಕಾರಿಯಾಗಿಸುತ್ತದೆ (ಲೋಳೆ ಹೊದಿಕೆ ಉತ್ಪಾದಿಸುತ್ತದೆ)."],
+                      ['?','ಉತ್ತರಿಸದೆ ಬಿಟ್ಟದ್ದು: ರೂಪಾಂತರ ತತ್ವದ ಜೈವಿಕ ರಾಸಾಯನಿಕ ಸ್ವರೂಪ — ಅದು DNA, RNA ಅಥವಾ ಪ್ರೋಟೀನ್ ಎಂಬುದನ್ನು ಗ್ರಿಫಿತ್ ಹೇಳಲಾಗಲಿಲ್ಲ.'] ] },
+            { title: '2. ಏವರಿ, ಮ್ಯಾಕ್ಲಿಯೋಡ್ ಮತ್ತು ಮೆಕಾರ್ಟಿ (1933&ndash;44) — ಜೈವಿಕ ರಾಸಾಯನಿಕ ಗುಣಲಕ್ಷಣ',
+              steps:[ ['✓','ಸಾಬೀತುಪಡಿಸಿದ್ದು: ಪ್ರೋಟಿಯೇಸ್ ಮತ್ತು RNase ರೂಪಾಂತರವನ್ನು ತಡೆಯಲಿಲ್ಲ, ಆದರೆ DNase ತಡೆಯಿತು — ಆದ್ದರಿಂದ ರೂಪಾಂತರ ವಸ್ತು DNA, ಪ್ರೋಟೀನ್ ಅಥವಾ RNA ಅಲ್ಲ.'],
+                      ['?',"ಸಾಕಷ್ಟು ಸಂದೇಹ ಉತ್ತರಿಸದೆ ಉಳಿದಿತ್ತು, 'ಎಲ್ಲಾ ಜೀವವಿಜ್ಞಾನಿಗಳು ಮನವರಿಕೆಯಾಗಲಿಲ್ಲ' — ಇದು ಕೇವಲ ಜೈವಿಕ ರಾಸಾಯನಿಕ/in-vitro ಫಲಿತಾಂಶವಾಗಿದ್ದು, ಇನ್ನೂ ಸ್ವಚ್ಛವಾದ, ಹೆಚ್ಚು ನೇರವಾದ ಭೌತಿಕ ಪುರಾವೆ ಬೇಕಾಗಿತ್ತು."] ] },
+            { title: '3. ಹರ್ಷೆ ಮತ್ತು ಚೇಸ್ ಪ್ರಯೋಗ (1952) — ಅಂತಿಮ ಪುರಾವೆ',
+              steps:[ ['✓','ಸಾಬೀತುಪಡಿಸಿದ್ದು: ಬ್ಯಾಕ್ಟೀರಿಯೊಫೇಜ್‌ಗಳ ಮೇಲೆ <sup>35</sup>S (ಪ್ರೋಟೀನ್ ಗುರುತಿಸುತ್ತದೆ) ಮತ್ತು <sup>32</sup>P (DNA ಗುರುತಿಸುತ್ತದೆ) ಬಳಸಿ, ಕೇವಲ <sup>32</sup>P (DNA) ಬ್ಯಾಕ್ಟೀರಿಯಾದೊಳಗೆ ಪ್ರವೇಶಿಸಿತು — ನಿಶ್ಚಿತವಾಗಿ, DNA (ಪ್ರೋಟೀನ್ ಅಲ್ಲ) ಆನುವಂಶಿಕವಾಗಿ ಹರಡುವ ಆನುವಂಶಿಕ ವಸ್ತು.'],
+                      ['●','ಇದು ಕಥೆಯ ಅಂತಿಮ ಘಟ್ಟ — ಮೊದಲ ಎರಡಕ್ಕಿಂತ ಭಿನ್ನವಾಗಿ, ಇದು ಮೂಲ ಪ್ರಶ್ನೆಯನ್ನು (DNA vs ಪ್ರೋಟೀನ್) ಸಂಪೂರ್ಣವಾಗಿ ಇತ್ಯರ್ಥಪಡಿಸುತ್ತದೆ, ಆದ್ದರಿಂದಲೇ ಇದನ್ನು ಯಾವಾಗಲೂ ಕೊನೆಯಲ್ಲಿ ಪ್ರಸ್ತುತಪಡಿಸಲಾಗುತ್ತದೆ.'] ] }
+          ] },
+        hi: { intro:'वही एक कहानी जिसका वर्णन यह सुझाव करता है — तीन प्रयोगों में बढ़ता हुआ प्रमाण — हर एक के साथ उसने क्या सिद्ध किया और क्या अनुत्तरित छोड़ा, इस अध्याय के अपने Concept टैब की टिप्पणियों से बनाई गई।',
+          cases:[
+            { title: '1. ग्रिफ़िथ (1928) — रूपांतरण सिद्धांत',
+              steps:[ ['✓',"सिद्ध किया: ऊष्मा-मृत S प्रभेद से जीवित R प्रभेद <i>स्ट्रेप्टोकोकस न्यूमोनी</i> में कोई 'रूपांतरण सिद्धांत' स्थानांतरित होता है, जिससे वह विषाणुक बन जाता है (श्लेष्म आवरण बनाता है)।"],
+                      ['?','अनुत्तरित छोड़ा: रूपांतरण सिद्धांत की जैवरासायनिक प्रकृति — ग्रिफ़िथ यह नहीं बता सके कि यह DNA, RNA या प्रोटीन था।'] ] },
+            { title: '2. एवरी, मैक्लॉयड और मैकार्टी (1933&ndash;44) — जैवरासायनिक अभिलक्षणन',
+              steps:[ ['✓','सिद्ध किया: प्रोटिएस और RNase ने रूपांतरण को नहीं रोका, परंतु DNase ने रोका — अतः रूपांतरक पदार्थ DNA है, प्रोटीन या RNA नहीं।'],
+                      ['?',"इतना संदेह अनुत्तरित रह गया कि 'सभी जीववैज्ञानिक संतुष्ट नहीं हुए' — यह एक मात्र जैवरासायनिक/in-vitro परिणाम था, इसलिए एक स्पष्ट, अधिक सीधा भौतिक प्रमाण अभी भी चाहिए था।"] ] },
+            { title: '3. हर्षे और चेज़ का प्रयोग (1952) — निर्णायक प्रमाण',
+              steps:[ ['✓','सिद्ध किया: बैक्टीरियोफेज पर <sup>35</sup>S (प्रोटीन चिह्नित करता है) और <sup>32</sup>P (DNA चिह्नित करता है) का उपयोग करके, केवल <sup>32</sup>P (DNA) जीवाणु में प्रवेश किया — निश्चित रूप से, DNA (प्रोटीन नहीं) वह आनुवंशिक पदार्थ है जो वंशागत होता है।'],
+                      ['●','यह कहानी का शिखर है — पहले दो के विपरीत, यह मूल प्रश्न (DNA बनाम प्रोटीन) को पूरी तरह तय कर देता है, इसीलिए इसे हमेशा अंत में प्रस्तुत किया जाता है।'] ] }
+          ] }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        ${l.cases.map(c=>`<div class="tipex-case"><div class="tipex-case-title">${c.title}</div>${c.steps.map(s=>step(s[0],s[1])).join('')}</div>`).join('')}`;
     }
   },
   'genetic-code': {
-    title: '📊 Five Properties of the Genetic Code — Filled In',
-    render: function(){
-      const rows = [
-        {p:'Triplet', m:'Three adjacent nitrogenous bases form one codon, specifying one amino acid (Gamow: 4&sup3; = 64, enough to code for 20 amino acids).'},
-        {p:'Unambiguous', m:'One codon codes for one specific amino acid only.'},
-        {p:'Degenerate', m:'Some amino acids are coded by more than one codon (e.g. leucine, serine and arginine each have six codons).'},
-        {p:'Universal', m:'One codon codes for the same amino acid in all species, from bacteria to humans — with the exceptions below.'},
-        {p:'Commaless', m:'Codons are read continuously in the mRNA, with no punctuation between them.'}
-      ];
-      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">The five properties the tip names, each defined, built from this chapter's own Concept-tab notes on the genetic code.</div>
-        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Property</th><th>Meaning</th></tr></thead><tbody>
-        ${rows.map(r=>`<tr><td class="tipex-organ">${r.p}</td><td>${r.m}</td></tr>`).join('')}
+    title: {
+      en: '📊 Five Properties of the Genetic Code — Filled In',
+      kn: '📊 ಆನುವಂಶಿಕ ಸಂಕೇತದ ಐದು ಗುಣಲಕ್ಷಣಗಳು — ಭರ್ತಿಮಾಡಲಾಗಿದೆ',
+      hi: '📊 आनुवंशिक कूट के पाँच गुण — भरे गए'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"The five properties the tip names, each defined, built from this chapter's own Concept-tab notes on the genetic code.",
+              th:['Property','Meaning'],
+              rows:[
+                {p:'Triplet', m:'Three adjacent nitrogenous bases form one codon, specifying one amino acid (Gamow: 4&sup3; = 64, enough to code for 20 amino acids).'},
+                {p:'Unambiguous', m:'One codon codes for one specific amino acid only.'},
+                {p:'Degenerate', m:'Some amino acids are coded by more than one codon (e.g. leucine, serine and arginine each have six codons).'},
+                {p:'Universal', m:'One codon codes for the same amino acid in all species, from bacteria to humans — with the exceptions below.'},
+                {p:'Commaless', m:'Codons are read continuously in the mRNA, with no punctuation between them.'}
+              ],
+              note:'<b>Start codon:</b> AUG (also codes for methionine — dual function). <b>Stop codons:</b> UAA (ochre), UAG (amber), UGA (opal) — 61 codons code for amino acids, 3 are stop codons.<br><br><b>Exceptions to universality:</b> in <i>Paramecium</i> and other ciliates, UAA and UGA code for glutamine (not stop); in human mitochondria, AGA/AGG act as stop signals (not arginine), UGA codes for tryptophan (not stop), and AUA codes for methionine (not isoleucine).' },
+        kn: { intro:'ಸಲಹೆ ಹೆಸರಿಸುವ ಐದು ಗುಣಲಕ್ಷಣಗಳು, ಪ್ರತಿಯೊಂದೂ ವ್ಯಾಖ್ಯಾನಿಸಲಾಗಿದೆ, ಆನುವಂಶಿಕ ಸಂಕೇತದ ಬಗ್ಗೆ ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Concept ಟ್ಯಾಬ್ ಟಿಪ್ಪಣಿಗಳಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ.',
+              th:['ಗುಣಲಕ್ಷಣ','ಅರ್ಥ'],
+              rows:[
+                {p:'ಟ್ರಿಪ್ಲೆಟ್ (ತ್ರಿವಳಿ)', m:'ಮೂರು ಪಕ್ಕದ ಸಾರಜನಕ ಪ್ರತ್ಯಾಮ್ಲಗಳು ಒಂದು ಕೋಡಾನ್ ಅನ್ನು ರಚಿಸುತ್ತವೆ, ಒಂದು ಅಮೈನೊ ಆಮ್ಲವನ್ನು ನಿರ್ದಿಷ್ಟಪಡಿಸುತ್ತವೆ (ಗ್ಯಾಮೊವ್: 4<sup>3</sup> = 64, 20 ಅಮೈನೊ ಆಮ್ಲಗಳನ್ನು ಸಂಕೇತಿಸಲು ಸಾಕಷ್ಟು).'},
+                {p:'ನಿಸ್ಸಂದಿಗ್ಧ', m:'ಒಂದು ಕೋಡಾನ್ ಕೇವಲ ಒಂದೇ ನಿರ್ದಿಷ್ಟ ಅಮೈನೊ ಆಮ್ಲವನ್ನು ಸಂಕೇತಿಸುತ್ತದೆ.'},
+                {p:'ಅವನತ (degenerate)', m:'ಕೆಲವು ಅಮೈನೊ ಆಮ್ಲಗಳನ್ನು ಒಂದಕ್ಕಿಂತ ಹೆಚ್ಚು ಕೋಡಾನ್‌ಗಳು ಸಂಕೇತಿಸುತ್ತವೆ (ಉದಾ. ಲ್ಯೂಸಿನ್, ಸೆರಿನ್ ಮತ್ತು ಆರ್ಜಿನಿನ್ ಪ್ರತಿಯೊಂದಕ್ಕೂ ಆರು ಕೋಡಾನ್).'},
+                {p:'ಸಾರ್ವತ್ರಿಕ', m:'ಬ್ಯಾಕ್ಟೀರಿಯಾದಿಂದ ಮಾನವನವರೆಗೆ ಎಲ್ಲಾ ಜಾತಿಗಳಲ್ಲೂ ಒಂದೇ ಕೋಡಾನ್ ಒಂದೇ ಅಮೈನೊ ಆಮ್ಲವನ್ನು ಸಂಕೇತಿಸುತ್ತದೆ — ಕೆಳಗಿನ ಅಪವಾದಗಳೊಂದಿಗೆ.'},
+                {p:'ವಿರಾಮರಹಿತ (commaless)', m:'mRNAಯಲ್ಲಿ ಕೋಡಾನ್‌ಗಳನ್ನು ನಿರಂತರವಾಗಿ ಓದಲಾಗುತ್ತದೆ, ನಡುವೆ ಯಾವುದೇ ವಿರಾಮ ಚಿಹ್ನೆ ಇಲ್ಲ.'}
+              ],
+              note:'<b>ಪ್ರಾರಂಭ ಕೋಡಾನ್:</b> AUG (ಮೀಥಿಯೊನಿನ್ ಅನ್ನೂ ಸಂಕೇತಿಸುತ್ತದೆ — ದ್ವಿಕಾರ್ಯ). <b>ನಿಲುಗಡೆ ಕೋಡಾನ್‌ಗಳು:</b> UAA (ಓಕರ್), UAG (ಆಂಬರ್), UGA (ಒಪಾಲ್) — 61 ಕೋಡಾನ್‌ಗಳು ಅಮೈನೊ ಆಮ್ಲಗಳನ್ನು ಸಂಕೇತಿಸುತ್ತವೆ, 3 ನಿಲುಗಡೆ ಕೋಡಾನ್‌ಗಳು.<br><br><b>ಸಾರ್ವತ್ರಿಕತೆಗೆ ಅಪವಾದಗಳು:</b> <i>ಪ್ಯಾರಾಮೀಸಿಯಂ</i> ಮತ್ತು ಕೆಲವು ಇತರ ಸಿಲಿಯೇಟ್‌ಗಳಲ್ಲಿ, UAA ಮತ್ತು UGA ಗ್ಲುಟಾಮಿನ್ ಅನ್ನು ಸಂಕೇತಿಸುತ್ತವೆ (ನಿಲುಗಡೆ ಅಲ್ಲ); ಮಾನವ ಮೈಟೊಕಾಂಡ್ರಿಯಾದಲ್ಲಿ, AGA/AGG ನಿಲುಗಡೆ ಸಂಕೇತಗಳಾಗಿ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತವೆ (ಆರ್ಜಿನಿನ್ ಅಲ್ಲ), UGA ಟ್ರಿಪ್ಟೊಫಾನ್ ಅನ್ನು ಸಂಕೇತಿಸುತ್ತದೆ (ನಿಲುಗಡೆ ಅಲ್ಲ), ಮತ್ತು AUA ಮೀಥಿಯೊನಿನ್ ಅನ್ನು ಸಂಕೇತಿಸುತ್ತದೆ (ಐಸೊಲ್ಯೂಸಿನ್ ಅಲ್ಲ).' },
+        hi: { intro:'सुझाव जिन पाँच गुणों के नाम बताता है, हर एक की परिभाषा, आनुवंशिक कूट पर इस अध्याय के अपने Concept टैब की टिप्पणियों से बनाई गई।',
+              th:['गुण','अर्थ'],
+              rows:[
+                {p:'त्रिक (triplet)', m:'तीन आसन्न नाइट्रोजनी क्षार मिलकर एक कोडॉन बनाते हैं, जो एक अमीनो अम्ल निर्दिष्ट करता है (गैमो: 4<sup>3</sup> = 64, 20 अमीनो अम्लों को कूटबद्ध करने हेतु पर्याप्त)।'},
+                {p:'असंदिग्ध', m:'एक कोडॉन केवल एक ही विशिष्ट अमीनो अम्ल को कूटबद्ध करता है।'},
+                {p:'अपह्रासित (degenerate)', m:'कुछ अमीनो अम्ल एक से अधिक कोडॉन द्वारा कूटबद्ध होते हैं (जैसे ल्यूसीन, सेरीन व आर्जिनीन में से प्रत्येक के छह कोडॉन)।'},
+                {p:'सार्वभौमिक', m:'जीवाणु से लेकर मनुष्य तक सभी जातियों में एक ही कोडॉन एक ही अमीनो अम्ल कूटबद्ध करता है — नीचे दिए अपवादों के साथ।'},
+                {p:'अल्पविराम-रहित (commaless)', m:'mRNA में कोडॉन को बिना किसी विराम-चिह्न के निरंतर पढ़ा जाता है।'}
+              ],
+              note:'<b>प्रारंभ कोडॉन:</b> AUG (मेथियोनीन को भी कूटबद्ध करता है — द्विकार्य)। <b>स्टॉप कोडॉन:</b> UAA (ओकर), UAG (ऐंबर), UGA (ओपल) — 61 कोडॉन अमीनो अम्लों को कूटबद्ध करते हैं, 3 स्टॉप कोडॉन हैं।<br><br><b>सार्वभौमिकता के अपवाद:</b> <i>पैरामीशियम</i> तथा कुछ अन्य सिलिएटों में, UAA व UGA ग्लूटामीन को कूटबद्ध करते हैं (स्टॉप नहीं); मानव माइटोकॉन्ड्रिया में, AGA/AGG स्टॉप संकेत का कार्य करते हैं (आर्जिनीन नहीं), UGA ट्रिप्टोफैन को कूटबद्ध करता है (स्टॉप नहीं), और AUA मेथियोनीन को कूटबद्ध करता है (आइसोल्यूसीन नहीं)।' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${l.th[1]}</th></tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r.p}</td><td>${r.m}</td></tr>`).join('')}
         </tbody></table></div>
-        <div class="tipex-note"><b>Start codon:</b> AUG (also codes for methionine — dual function). <b>Stop codons:</b> UAA (ochre), UAG (amber), UGA (opal) — 61 codons code for amino acids, 3 are stop codons.<br><br><b>Exceptions to universality:</b> in <i>Paramecium</i> and other ciliates, UAA and UGA code for glutamine (not stop); in human mitochondria, AGA/AGG act as stop signals (not arginine), UGA codes for tryptophan (not stop), and AUA codes for methionine (not isoleucine).</div>`;
+        <div class="tipex-note">${l.note}</div>`;
     }
   }
 };
 function openTipExample(key){
   const ex = TIP_EXAMPLES[key];
   if(!ex) return;
-  document.getElementById('tipExampleTitle').textContent = ex.title;
-  document.getElementById('tipExampleBody').innerHTML = ex.render();
+  const lang = (typeof currentLang!=='undefined' && ex.title[currentLang]) ? currentLang : 'en';
+  document.getElementById('tipExampleTitle').textContent = ex.title[lang];
+  document.getElementById('tipExampleBody').innerHTML = ex.render(lang);
   document.getElementById('tipExampleOverlay').style.display = 'flex';
 }
 function closeTipExample(){
@@ -5276,7 +5346,7 @@ function renderStudyTipsCh2(){
     <h3 style="color:var(--gold-2); margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ View example</button>`:''}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ ${TIP_EXAMPLE_BTN_LABEL[currentLang]||TIP_EXAMPLE_BTN_LABEL.en}</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   `;
