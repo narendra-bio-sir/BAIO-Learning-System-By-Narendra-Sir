@@ -191,6 +191,24 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .tip-list.neet li{border-left-color:var(--gold-2);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold-2);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel-2);color:var(--gold-2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--border);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--border);color:var(--text);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--text-dim);line-height:1.55;background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--text-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--text);min-width:20px;font-weight:700;color:var(--gold-2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .chip-row{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;}
 .chip{
   font-size:11px; padding:4px 9px; border-radius:99px; background:rgba(66,198,160,0.1);
@@ -1060,6 +1078,14 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="btn" id="streakModalCloseBtn" style="width:100%; margin-top:4px;">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="btn" id="tipExampleCloseBtn" style="width:100%; margin-top:4px;">Close</button>
     </div>
   </div>
 
@@ -2412,6 +2438,115 @@ try{ renderConceptTopicNav(); }catch(e){ console.error('renderConceptTopicNav fa
 /* ---------- Study Tips ---------- */
 const STUDYTIPS_CH10_EN = {"title":"Study Tips &ndash; Biotechnology and its Applications","intro":"How to study this chapter well, and what to focus on for NEET/KCET.","theoryHead":"📘 Theory &mdash; How to Study This Chapter","neetHead":"🎯 NEET/KCET Strategy for This Chapter","theory":["Study this chapter as five 'applications' &mdash; agriculture (Bt crops, RNAi), medicine (recombinant insulin, gene therapy), diagnosis (PCR, ELISA, probes), transgenic animals, and ethics/biopiracy. Making a one-page map with these five heads first makes every fact easier to place.","Learn every process as an ordered flow chart, not as a paragraph: protoxin &rarr; alkaline gut &rarr; active toxin &rarr; pores in midgut cells &rarr; lysis &rarr; death; and A/B chain genes &rarr; <i>E. coli</i> plasmids &rarr; separate chains &rarr; disulphide bonds &rarr; insulin. Flow charts are exactly what sequence and assertion-reason questions test.","Make a small table of numbers and names as you read &mdash; 1983 Eli Lilly insulin, 1990 first gene therapy (4-year-old girl, ADA), 1997 Rosie (2.4 g/litre alpha-lactalbumin) and the 1997 Basmati patent, 95% transgenic animals are mice, 3 chains in proinsulin vs 2 in insulin.","Write the cry-gene pairs separately in bold: cryIAc and cryIIAb &rarr; cotton bollworm; cryIAb &rarr; corn borer. Examiners very often swap just one Roman numeral or letter, so drill these until the pairing is automatic.","After finishing, close the book and explain aloud the difference between the four 'silencing/detecting' ideas &mdash; RNAi, PCR, ELISA and probe-plus-autoradiography. If you can state the principle and one use of each in a single sentence, the chapter is secure."],"neet":["The commonest trap is pH: the Bt protoxin is activated in the ALKALINE gut of the insect, never in an acidic medium. Any option saying 'acidic' is wrong, and this same fact explains why Bt crops are harmless to humans.","Watch the insulin chain-number trap: the PRO-hormone has three chains (A, B, C) and the MATURE hormone has two (A and B) joined by disulphide bonds. Questions often state 'insulin has three chains' without the word 'pro'.","In probe hybridisation questions, remember the negative logic &mdash; a mutated region does NOT bind the probe, so it does NOT appear on the autoradiograph. Absence of a band, not a stronger band, indicates the mutation.","Distinguish the products precisely: alpha-1-antitrypsin treats emphysema, alpha-lactalbumin was the protein in Rosie's milk, and adenosine deaminase is the gene-therapy enzyme. Names beginning with 'alpha' are deliberately mixed up in options.","For the ethics section, remember the exact bodies and years: GEAC (Genetic Engineering Approval Committee) regulates GM research in India; the 1997 Basmati patent was given by the US Patent and Trademark Office to an American company; Neem and turmeric are the other two dispute examples; and the second amendment to the Indian Patents Bill addresses biopiracy."]};
 const STUDYTIPS_CH10_TRANSLATIONS = {};
+/* ---- Study Tips "View example" popovers: five of the theory tips describe
+   something to build/draw/memorise (a five-application map, two process
+   flow charts, a numbers-and-names table, a cry-gene pairing table, a
+   method-comparison table) with nothing to look at. These buttons show the
+   actual filled-in artifact, built strictly from this chapter's own data
+   (COMPARE_DATA used by the Compare tab, and the exact mechanism/figure
+   facts already given in the Topics content) so nothing is invented or
+   duplicated by hand. ---- */
+const TIP_EXAMPLE_INDEX = {0:'applications-map', 1:'flowcharts', 2:'numbers-table', 3:'cry-gene-pairs', 4:'diagnostic-methods'};
+const TIP_EXAMPLES = {
+  'applications-map': {
+    title: '🗺️ Five Applications — One-Page Map',
+    render: function(){
+      const rows = [
+        {h:'Agriculture', c:'GM crops, RNAi', e:'Bt cotton (<i>cry</i> genes); engineered RNAi gives transgenic tobacco nematode resistance'},
+        {h:'Medicine', c:'Recombinant therapeutics, gene therapy', e:'Recombinant human insulin (Eli Lilly, 1983); ADA-deficiency gene therapy (1990)'},
+        {h:'Diagnosis', c:'PCR, ELISA, probes', e:'PCR detects HIV/cancer mutations; ELISA detects antigen or antibody; probe + autoradiography localises a mutation'},
+        {h:'Transgenic animals', c:'Disease models &amp; biological-product animals', e:'Transgenic mouse disease models; Rosie the cow (human alpha-lactalbumin in milk)'},
+        {h:'Ethics &amp; Biopiracy', c:'Regulation &amp; bio-resource exploitation', e:'GEAC approves/regulates GM research; 1997 Basmati patent dispute'}
+      ];
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">Exactly the one-page map the tip describes, built from this chapter's own Compare tab heads and topics.</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Application Head</th><th>Covers</th><th>Example(s)</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.h}</td><td>${r.c}</td><td>${r.e}</td></tr>`).join('')}
+        </tbody></table></div>`;
+    }
+  },
+  'flowcharts': {
+    title: '➡️ Two Ordered Flow Charts',
+    render: function(){
+      function step(q, a){ return `<div class="tipex-step"><span class="tipex-q">${q}.</span><span>${a}</span></div>`; }
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">The exact two flow charts the tip describes, using only this chapter's own Bt-toxin and insulin-production facts.</div>
+        <div class="tipex-case"><div class="tipex-case-title">Bt toxin mechanism</div>
+        ${step(1,'<i>B. thuringiensis</i> forms a protein crystal containing an inactive <b>protoxin</b>.')}
+        ${step(2,'Insect ingests the crystal; the <b>alkaline pH</b> of its gut converts the protoxin into the <b>active toxin</b>.')}
+        ${step(3,'Active toxin binds to <b>epithelial cells of the insect midgut</b>, creating pores.')}
+        ${step(4,'Cells <b>swell and lyse</b> (burst).')}
+        ${step(5,'Insect <b>dies</b>.')}
+        <div class="tipex-diagnosis">✓ Protoxin → alkaline gut → active toxin → pores in midgut cells → lysis → death</div></div>
+        <div class="tipex-case"><div class="tipex-case-title">Recombinant insulin production</div>
+        ${step(1,'A-chain gene and B-chain gene inserted <b>separately</b> into <i>E. coli</i> plasmids.')}
+        ${step(2,'Each plasmid produces its own <b>chain</b> (A or B) independently.')}
+        ${step(3,'The two chains are <b>extracted</b>.')}
+        ${step(4,'Chains are <b>combined via disulphide bonds</b>.')}
+        ${step(5,'Result: <b>mature human insulin</b> (Eli Lilly, 1983).')}
+        <div class="tipex-diagnosis">✓ A/B chain genes → <i>E. coli</i> plasmids → separate chains → disulphide bonds → insulin</div></div>`;
+    }
+  },
+  'numbers-table': {
+    title: '🔢 Numbers & Names Worth Memorising',
+    render: function(){
+      const rows = [
+        {f:'Eli Lilly&rsquo;s recombinant insulin', n:'1983'},
+        {f:'First human gene therapy (ADA deficiency, 4-year-old girl)', n:'1990'},
+        {f:'Rosie the transgenic cow &mdash; human alpha-lactalbumin in milk', n:'1997 &middot; 2.4 g/litre'},
+        {f:'Basmati rice patent dispute', n:'1997 &middot; US Patent and Trademark Office'},
+        {f:'Proportion of transgenic animals that are mice', n:'~95%'},
+        {f:'Chains in proinsulin vs mature insulin', n:'3 chains (A, B, C) vs 2 chains (A, B)'}
+      ];
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">Exactly the small table of numbers and names the tip asks you to build as you read, using only this chapter's own facts.</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Fact</th><th>Number / Name</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.f}</td><td>${r.n}</td></tr>`).join('')}
+        </tbody></table></div>`;
+    }
+  },
+  'cry-gene-pairs': {
+    title: '🧬 Cry-Gene Pairs — Kept Straight',
+    render: function(){
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">Exactly the pairing the tip asks you to drill, using only this chapter's own Cry Genes facts.</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th><i>cry</i> Gene(s)</th><th>Target Pest</th></tr></thead><tbody>
+        <tr><td class="tipex-organ"><i>cry</i>IAc and <i>cry</i>IIAb</td><td>Cotton bollworm</td></tr>
+        <tr><td class="tipex-organ"><i>cry</i>IAb</td><td>Corn borer</td></tr>
+        </tbody></table></div>
+        <div class="tipex-note">All three are Bt (<i>Bacillus thuringiensis</i>) toxin genes &mdash; examiners often swap just one Roman numeral or letter between these pairings.</div>`;
+    }
+  },
+  'diagnostic-methods': {
+    title: '🔬 Four Silencing/Detecting Ideas — Side by Side',
+    render: function(){
+      const rows = [
+        {m:'RNAi', p:'Double-stranded RNA triggers silencing of the matching mRNA', u:'Engineered RNAi gives transgenic tobacco resistance to the nematode <i>Meloidegyne incognitia</i>'},
+        {m:'PCR', p:'Amplifies (multiplies) a target DNA sequence several-fold', u:'Detecting HIV in suspected AIDS patients; detecting cancer-related gene mutations'},
+        {m:'ELISA', p:'Based on antigen&ndash;antibody interaction', u:"Detecting a pathogen's antigen, OR the antibody the patient's immune system made against it"},
+        {m:'Probe + Autoradiography', p:'A gene-specific probe hybridises (base-pairs) with the patient&rsquo;s DNA; a mutated region will not bind it', u:'A missing band on the autoradiograph reveals the location of a mutation'}
+      ];
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">Exactly the one-sentence principle + one use for each of the four ideas, using only this chapter's own RNAi/Diagnosis facts.</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Idea</th><th>Principle</th><th>One Use</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.m}</td><td>${r.p}</td><td>${r.u}</td></tr>`).join('')}
+        </tbody></table></div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  document.getElementById('tipExampleTitle').textContent = ex.title;
+  document.getElementById('tipExampleBody').innerHTML = ex.render();
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTipsCh8(){
   const el = document.getElementById('studyTipsContent');
   if(!el) return;
@@ -2422,7 +2557,7 @@ function renderStudyTipsCh8(){
     <h3 style="color:var(--gold-2); margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ View example</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   `;
