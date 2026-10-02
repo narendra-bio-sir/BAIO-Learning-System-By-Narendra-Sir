@@ -1499,21 +1499,22 @@ window.addEventListener('afterprint', function(){
     <div class="grid2">
       <div class="panel">
         <h2>SPARK &mdash; Average Score by Subject</h2>
-        <div class="desc">Test 1 vs Test 2</div>
+        <div class="desc">Test 1 vs Test 2 vs Test 3</div>
         <canvas id="sparkSecAvgChart" data-h="230"></canvas>
       </div>
       <div class="panel">
         <h2>SPARK &mdash; Pass Rate by Subject</h2>
-        <div class="desc">&ge;35% (7/20), Test 1 vs Test 2</div>
+        <div class="desc">&ge;35% (7/20), Test 1 vs Test 2 vs Test 3</div>
         <canvas id="sparkSecPassChart" data-h="230"></canvas>
       </div>
     </div>
     <div class="panel">
-      <h2>SPARK &mdash; Top 5 Performers <span class="chip gold">32 students</span></h2>
+      <h2>SPARK &mdash; Top 5 Performers <span class="chip gold" id="sparkRosterChip"></span></h2>
       <div class="subtabs">
         <button class="subtab-btn active" data-sec-top="spark-t1">Slip Test 1</button>
         <button class="subtab-btn" data-sec-top="spark-t2">Slip Test 2</button>
-        <button class="subtab-btn" data-sec-top="spark-combined">Both (Avg)</button>
+        <button class="subtab-btn" data-sec-top="spark-t3">Slip Test 3</button>
+        <button class="subtab-btn" data-sec-top="spark-combined">Test 1 &amp; 2 (Avg)</button>
       </div>
       <div id="sparkTopList"></div>
     </div>
@@ -1522,6 +1523,7 @@ window.addEventListener('afterprint', function(){
       <div class="subtabs">
         <button class="subtab-btn active" data-sec-fail="spark-t1">Slip Test 1</button>
         <button class="subtab-btn" data-sec-fail="spark-t2">Slip Test 2</button>
+        <button class="subtab-btn" data-sec-fail="spark-t3">Slip Test 3</button>
       </div>
       <div class="table-wrap"><table id="sparkFailSecTable"><thead><tr><th>Name</th><th>Enroll Code</th><th>Subjects Failed</th><th>Total /80</th></tr></thead><tbody></tbody></table></div>
     </div>
@@ -1533,21 +1535,22 @@ window.addEventListener('afterprint', function(){
     <div class="grid2">
       <div class="panel">
         <h2>PRIME &mdash; Average Score by Subject</h2>
-        <div class="desc">Test 1 vs Test 2</div>
+        <div class="desc">Test 1 vs Test 2 vs Test 3</div>
         <canvas id="primeSecAvgChart" data-h="230"></canvas>
       </div>
       <div class="panel">
         <h2>PRIME &mdash; Pass Rate by Subject</h2>
-        <div class="desc">&ge;35% (7/20), Test 1 vs Test 2</div>
+        <div class="desc">&ge;35% (7/20), Test 1 vs Test 2 vs Test 3</div>
         <canvas id="primeSecPassChart" data-h="230"></canvas>
       </div>
     </div>
     <div class="panel">
-      <h2>PRIME &mdash; Top 5 Performers <span class="chip gold">53 students</span></h2>
+      <h2>PRIME &mdash; Top 5 Performers <span class="chip gold" id="primeRosterChip"></span></h2>
       <div class="subtabs">
         <button class="subtab-btn active" data-sec-top="prime-t1">Slip Test 1</button>
         <button class="subtab-btn" data-sec-top="prime-t2">Slip Test 2</button>
-        <button class="subtab-btn" data-sec-top="prime-combined">Both (Avg)</button>
+        <button class="subtab-btn" data-sec-top="prime-t3">Slip Test 3</button>
+        <button class="subtab-btn" data-sec-top="prime-combined">Test 1 &amp; 2 (Avg)</button>
       </div>
       <div id="primeTopList"></div>
     </div>
@@ -1556,6 +1559,7 @@ window.addEventListener('afterprint', function(){
       <div class="subtabs">
         <button class="subtab-btn active" data-sec-fail="prime-t1">Slip Test 1</button>
         <button class="subtab-btn" data-sec-fail="prime-t2">Slip Test 2</button>
+        <button class="subtab-btn" data-sec-fail="prime-t3">Slip Test 3</button>
       </div>
       <div class="table-wrap"><table id="primeFailSecTable"><thead><tr><th>Name</th><th>Enroll Code</th><th>Subjects Failed</th><th>Total /80</th></tr></thead><tbody></tbody></table></div>
     </div>
@@ -1604,12 +1608,12 @@ window.addEventListener('afterprint', function(){
     <div class="grid2">
       <div class="panel">
         <h2>ELECTRONICS &mdash; Average Score by Subject</h2>
-        <div class="desc">Test 1 vs Test 2 &middot; Physics, Chemistry, Mathematics, Electronics</div>
+        <div class="desc">Test 1 vs Test 2 vs Test 3 &middot; Physics, Chemistry, Mathematics, Electronics</div>
         <canvas id="electronicsSecAvgChart" data-h="230"></canvas>
       </div>
       <div class="panel">
         <h2>ELECTRONICS &mdash; Pass Rate by Subject</h2>
-        <div class="desc">&ge;35% (7/20), Test 1 vs Test 2</div>
+        <div class="desc">&ge;35% (7/20), Test 1 vs Test 2 vs Test 3</div>
         <canvas id="electronicsSecPassChart" data-h="230"></canvas>
       </div>
     </div>
@@ -4903,155 +4907,72 @@ function buildKeyAnswers(){
 }
 
 /* ================= SECTION ANALYSIS (SPARK / PRIME / Combined) ================= */
-const SEC = {
-  subjects: {
-    SPARK: {
-      test1: {PHY:{appeared:31,avg_pct:48.55,pass_rate_pct:64.52,topper_pct:19.35,fail_pct:35.48},
-              CHE:{appeared:31,avg_pct:51.94,pass_rate_pct:74.19,topper_pct:19.35,fail_pct:25.81},
-              MAT:{appeared:30,avg_pct:69.0,pass_rate_pct:90.0,topper_pct:46.67,fail_pct:10.0},
-              BIO:{appeared:29,avg_pct:77.07,pass_rate_pct:86.21,topper_pct:55.17,fail_pct:13.79}},
-      test2: {PHY:{appeared:31,avg_pct:40.32,pass_rate_pct:70.97,topper_pct:0.0,fail_pct:29.03},
-              CHE:{appeared:31,avg_pct:33.23,pass_rate_pct:41.94,topper_pct:6.45,fail_pct:58.06},
-              MAT:{appeared:30,avg_pct:32.83,pass_rate_pct:43.33,topper_pct:3.33,fail_pct:56.67},
-              BIO:{appeared:30,avg_pct:54.17,pass_rate_pct:83.33,topper_pct:26.67,fail_pct:16.67}}
-    },
-    PRIME: {
-      test1: {PHY:{appeared:49,avg_pct:32.35,pass_rate_pct:38.78,topper_pct:0.0,fail_pct:61.22},
-              CHE:{appeared:50,avg_pct:35.2,pass_rate_pct:56.0,topper_pct:2.0,fail_pct:44.0},
-              MAT:{appeared:50,avg_pct:50.9,pass_rate_pct:88.0,topper_pct:10.0,fail_pct:12.0},
-              BIO:{appeared:50,avg_pct:65.75,pass_rate_pct:90.0,topper_pct:38.0,fail_pct:10.0}},
-      test2: {PHY:{appeared:48,avg_pct:30.31,pass_rate_pct:37.5,topper_pct:2.08,fail_pct:62.5},
-              CHE:{appeared:48,avg_pct:20.94,pass_rate_pct:16.67,topper_pct:2.08,fail_pct:83.33},
-              MAT:{appeared:51,avg_pct:34.22,pass_rate_pct:43.14,topper_pct:1.96,fail_pct:56.86},
-              BIO:{appeared:51,avg_pct:46.27,pass_rate_pct:70.59,topper_pct:15.69,fail_pct:29.41}}
-    }
-  },
-  rosterSize: {SPARK:33, PRIME:52},
-  top: {
-    SPARK: {
-      t1: [{EnrollCode:"26MPU0010",Name:"AAKANKSH",PHY:20,CHE:18,MAT:20,BIO:20,TOTAL:78},
-           {EnrollCode:"26MPU0044",Name:"Shanamma",PHY:16,CHE:18,MAT:20,BIO:20,TOTAL:74},
-           {EnrollCode:"26MPU0089",Name:"Jyoti",PHY:16,CHE:15,MAT:19,BIO:20,TOTAL:70},
-           {EnrollCode:"26MPU0041",Name:"SANCHITA R PRACHANDE",PHY:15,CHE:17,MAT:18,BIO:20,TOTAL:70},
-           {EnrollCode:"26MPU0033",Name:"Sneha",PHY:17,CHE:17,MAT:16,BIO:19,TOTAL:69}],
-      t2: [{EnrollCode:"26MPU0010",Name:"AAKANKSH",PHY:12,CHE:17,MAT:8,BIO:16,TOTAL:53},
-           {EnrollCode:"26MPU0012",Name:"VAIDEHI",PHY:14,CHE:5,MAT:10,BIO:17,TOTAL:46},
-           {EnrollCode:"26MPU0133",Name:"AMAN",PHY:6,CHE:7,MAT:14,BIO:17,TOTAL:44},
-           {EnrollCode:"26MPU0068",Name:"Bhavani Sheelvant",PHY:13,CHE:8,MAT:18,BIO:12,TOTAL:43},
-           {EnrollCode:"26MPU0084",Name:"RASHI",PHY:7,CHE:12,MAT:10,BIO:14,TOTAL:43}],
-      combined: [{EnrollCode:"26MPU0010",Name:"AAKANKSH",TOTAL_t1:78,TOTAL_t2:53,avg_total:65.5},
-                 {EnrollCode:"26MPU0044",Name:"Shanamma",TOTAL_t1:74,TOTAL_t2:43,avg_total:58.5},
-                 {EnrollCode:"26MPU0041",Name:"SANCHITA R PRACHANDE",TOTAL_t1:70,TOTAL_t2:38,avg_total:54.0},
-                 {EnrollCode:"26MPU0012",Name:"VAIDEHI",TOTAL_t1:62,TOTAL_t2:46,avg_total:54.0},
-                 {EnrollCode:"26MPU0008",Name:"ABDUL RAQIB",TOTAL_t1:65,TOTAL_t2:42,avg_total:53.5}]
-    },
-    PRIME: {
-      t1: [{EnrollCode:"26MPU0129",Name:"OMER ABDULLAH",PHY:14,CHE:12,MAT:12,BIO:20,TOTAL:58},
-           {EnrollCode:"26MPU0086",Name:"SANJANA",PHY:13,CHE:11,MAT:16,BIO:17,TOTAL:57},
-           {EnrollCode:"26MPU0021",Name:"Saikamal lakka",PHY:11,CHE:15,MAT:13,BIO:17,TOTAL:56},
-           {EnrollCode:"26MPU0105",Name:"MOHAMMAD FARHAN AKMAL",PHY:8,CHE:7,MAT:19,BIO:20,TOTAL:54},
-           {EnrollCode:"26MPU0085",Name:"NIRAJ MALKUD",PHY:14,CHE:13,MAT:10,BIO:17,TOTAL:54}],
-      t2: [{EnrollCode:"26MPU0129",Name:"OMER ABDULLAH",PHY:16,CHE:18,MAT:15,BIO:17,TOTAL:66},
-           {EnrollCode:"26MPU0061",Name:"KHATIJA TUL KUBRA",PHY:11,CHE:9,MAT:18,BIO:17,TOTAL:55},
-           {EnrollCode:"26MPU0086",Name:"SANJANA",PHY:14,CHE:7,MAT:11,BIO:14,TOTAL:46},
-           {EnrollCode:"26MPU0085",Name:"NIRAJ MALKUD",PHY:7,CHE:11,MAT:5,BIO:19,TOTAL:42},
-           {EnrollCode:"26MPU0121",Name:"NETRAVATI .",PHY:6,CHE:5,MAT:12,BIO:18,TOTAL:41}],
-      combined: [{EnrollCode:"26MPU0129",Name:"OMER ABDULLAH",TOTAL_t1:58,TOTAL_t2:66,avg_total:62.0},
-                 {EnrollCode:"26MPU0086",Name:"SANJANA",TOTAL_t1:57,TOTAL_t2:46,avg_total:51.5},
-                 {EnrollCode:"26MPU0061",Name:"KHATIJA TUL KUBRA",TOTAL_t1:48,TOTAL_t2:55,avg_total:51.5},
-                 {EnrollCode:"26MPU0085",Name:"NIRAJ MALKUD",TOTAL_t1:54,TOTAL_t2:42,avg_total:48.0},
-                 {EnrollCode:"26MPU0021",Name:"Saikamal lakka",TOTAL_t1:56,TOTAL_t2:34,avg_total:45.0}]
-    }
-  },
-  multiFail: {
-    SPARK: {
-      t1: [{Name:"GANGA",EnrollCode:"26MPU0076",fail_count:4,TOTAL:13},
-           {Name:"Samarth mahantayya Hiremath",EnrollCode:"26MPU0058",fail_count:3,TOTAL:26},
-           {Name:"DHANESHWARI",EnrollCode:"26MPU0059",fail_count:3,TOTAL:26},
-           {Name:"ADITYA",EnrollCode:"26MPU0117",fail_count:3,TOTAL:14},
-           {Name:"SAGAR",EnrollCode:"26MPU0075",fail_count:2,TOTAL:37},
-           {Name:"Hemanth Mundada",EnrollCode:"26MPU0095",fail_count:2,TOTAL:28},
-           {Name:"AMRUTA",EnrollCode:"26MPU0023",fail_count:2,TOTAL:32},
-           {Name:"MOHAMMED ARFAT",EnrollCode:"26MPU0079",fail_count:2,TOTAL:35},
-           {Name:"kanchana",EnrollCode:"26MPU0103",fail_count:2,TOTAL:4}],
-      t2: [{Name:"ADITYA",EnrollCode:"26MPU0117",fail_count:4,TOTAL:11},
-           {Name:"kanchana",EnrollCode:"26MPU0103",fail_count:3,TOTAL:24},
-           {Name:"GANGA",EnrollCode:"26MPU0076",fail_count:3,TOTAL:21},
-           {Name:"MOHAMMED ARFAT",EnrollCode:"26MPU0079",fail_count:3,TOTAL:16},
-           {Name:"RENUKA HOSMATH",EnrollCode:"26MPU0002",fail_count:3,TOTAL:19},
-           {Name:"SANCHITA R PRACHANDE",EnrollCode:"26MPU0041",fail_count:2,TOTAL:38},
-           {Name:"Sneha",EnrollCode:"26MPU0033",fail_count:2,TOTAL:32},
-           {Name:"SAMIKSHA DIVAKAR",EnrollCode:"26MPU0073",fail_count:2,TOTAL:32},
-           {Name:"Prateek",EnrollCode:"26MPU0065",fail_count:2,TOTAL:22},
-           {Name:"SAGAR",EnrollCode:"26MPU0075",fail_count:2,TOTAL:26},
-           {Name:"AKSHATA",EnrollCode:"26MPU0077",fail_count:2,TOTAL:27},
-           {Name:"DHANESHWARI",EnrollCode:"26MPU0059",fail_count:2,TOTAL:28},
-           {Name:"AMRUTA",EnrollCode:"26MPU0023",fail_count:2,TOTAL:17},
-           {Name:"Samarth mahantayya Hiremath",EnrollCode:"26MPU0058",fail_count:2,TOTAL:20},
-           {Name:"Ritesh",EnrollCode:"26MPU0106",fail_count:2,TOTAL:12},
-           {Name:"Hemanth Mundada",EnrollCode:"26MPU0095",fail_count:2,TOTAL:9}]
-    },
-    PRIME: {
-      t1: [{Name:"MOHAMMED ABDULLAH ZAYAN",EnrollCode:"26MPU0070",fail_count:4,TOTAL:17},
-           {Name:"DIVYA LAXMI",EnrollCode:"26MPU0034",fail_count:3,TOTAL:23},
-           {Name:"SHAIKH ABDUL RAHMAN",EnrollCode:"26MPU0111",fail_count:3,TOTAL:19},
-           {Name:"BHARAT KUMAR",EnrollCode:"26MPU0126",fail_count:3,TOTAL:20},
-           {Name:"MANOJ",EnrollCode:"26MPU0064",fail_count:3,TOTAL:16},
-           {Name:"PRIYANKA",EnrollCode:"26MPU0131",fail_count:3,TOTAL:16},
-           {Name:"Deepika",EnrollCode:"26MPU0125",fail_count:3,TOTAL:26},
-           {Name:"Abhishek",EnrollCode:"26MPU0055",fail_count:2,TOTAL:31},
-           {Name:"Kritikaa",EnrollCode:"26MPU0022",fail_count:2,TOTAL:33},
-           {Name:"Srushti",EnrollCode:"26MPU0101",fail_count:2,TOTAL:42},
-           {Name:"SHRADDHA",EnrollCode:"26MPU0027",fail_count:2,TOTAL:30},
-           {Name:"MOHAMMED ASAD",EnrollCode:"26MPU0080",fail_count:2,TOTAL:26},
-           {Name:"ANKITREDDY",EnrollCode:"26MPU0112",fail_count:2,TOTAL:26},
-           {Name:"Akshara R Pawar",EnrollCode:"26MPU0063",fail_count:2,TOTAL:27},
-           {Name:"SANCHET DIGAMBAR MANE",EnrollCode:"26MPU0116",fail_count:2,TOTAL:27},
-           {Name:"CHANDAN",EnrollCode:"26MPU0083",fail_count:2,TOTAL:28},
-           {Name:"MOHAMMED JUNAID",EnrollCode:"26MPU0078",fail_count:2,TOTAL:22},
-           {Name:"MD Atif Ali",EnrollCode:"26MPU0060",fail_count:2,TOTAL:22},
-           {Name:"MD IBRAHIM",EnrollCode:"26MPU0066",fail_count:2,TOTAL:17}],
-      t2: [{Name:"Deepika",EnrollCode:"26MPU0125",fail_count:4,TOTAL:15},
-           {Name:"MANOJ",EnrollCode:"26MPU0064",fail_count:4,TOTAL:10},
-           {Name:"SANCHET DIGAMBAR MANE",EnrollCode:"26MPU0116",fail_count:4,TOTAL:11},
-           {Name:"MD IBRAHIM",EnrollCode:"26MPU0066",fail_count:4,TOTAL:12},
-           {Name:"MD Atif Ali",EnrollCode:"26MPU0060",fail_count:4,TOTAL:12},
-           {Name:"SHARANABASAPPA P K",EnrollCode:"26MPU0087",fail_count:4,TOTAL:14},
-           {Name:"Abhishek",EnrollCode:"26MPU0055",fail_count:4,TOTAL:14},
-           {Name:"Aashritha",EnrollCode:"26MPU0013",fail_count:4,TOTAL:14},
-           {Name:"SHRADDHA",EnrollCode:"26MPU0027",fail_count:3,TOTAL:18},
-           {Name:"CHANDAN",EnrollCode:"26MPU0083",fail_count:3,TOTAL:17},
-           {Name:"SHAIKH ABDUL RAHMAN",EnrollCode:"26MPU0111",fail_count:3,TOTAL:14},
-           {Name:"PRAJWAL",EnrollCode:"26MPU0123",fail_count:3,TOTAL:20},
-           {Name:"MOHAMMED ABDULLAH ZAYAN",EnrollCode:"26MPU0070",fail_count:3,TOTAL:17},
-           {Name:"PRIYANKA",EnrollCode:"26MPU0131",fail_count:3,TOTAL:16},
-           {Name:"MOHAMMED JUNAID",EnrollCode:"26MPU0078",fail_count:3,TOTAL:28},
-           {Name:"MOHAMMED ABUBAKAR SIDDIQ",EnrollCode:"26MPU0035",fail_count:3,TOTAL:26},
-           {Name:"J PAVAN",EnrollCode:"26MPU0120",fail_count:3,TOTAL:22},
-           {Name:"Vishwapal",EnrollCode:"26MPU0017",fail_count:3,TOTAL:19},
-           {Name:"RENUKA",EnrollCode:"26MPU0038",fail_count:3,TOTAL:22},
-           {Name:"SAHANA SHIRSAND",EnrollCode:"26MPU0037",fail_count:3,TOTAL:15},
-           {Name:"MAYURI",EnrollCode:"26MPU0108",fail_count:3,TOTAL:25},
-           {Name:"NETRAVATI .",EnrollCode:"26MPU0121",fail_count:2,TOTAL:41},
-           {Name:"ANKITREDDY",EnrollCode:"26MPU0112",fail_count:2,TOTAL:29},
-           {Name:"Aditya",EnrollCode:"26MPU0028",fail_count:2,TOTAL:29},
-           {Name:"MOHAMMED ASAD",EnrollCode:"26MPU0080",fail_count:2,TOTAL:30},
-           {Name:"ANUSHKA DEOKAR",EnrollCode:"26MPU0072",fail_count:2,TOTAL:33},
-           {Name:"Saikamal lakka",EnrollCode:"26MPU0021",fail_count:2,TOTAL:34},
-           {Name:"HABIB UR RAHMAN",EnrollCode:"26MPU0113",fail_count:2,TOTAL:19},
-           {Name:"RITISHA",EnrollCode:"26MPU0032",fail_count:2,TOTAL:26},
-           {Name:"Shivaleela",EnrollCode:"26MPU0057",fail_count:2,TOTAL:26},
-           {Name:"Syed Nabi",EnrollCode:"26MPU0019",fail_count:2,TOTAL:29},
-           {Name:"Srushti",EnrollCode:"26MPU0101",fail_count:2,TOTAL:25},
-           {Name:"Shrusti",EnrollCode:"26MPU0099",fail_count:2,TOTAL:26},
-           {Name:"Kritikaa",EnrollCode:"26MPU0022",fail_count:2,TOTAL:29},
-           {Name:"BHARAT KUMAR",EnrollCode:"26MPU0126",fail_count:2,TOTAL:27},
-           {Name:"SHWETA M GIRI",EnrollCode:"26MPU0053",fail_count:2,TOTAL:27},
-           {Name:"KHAJA MOINUDDIN",EnrollCode:"26MPU0098",fail_count:2,TOTAL:9},
-           {Name:"Mohammed Atif Ahmed Ahmed",EnrollCode:"26MPU0049",fail_count:2,TOTAL:9}]
-    }
+/* ---------- Section-level (SPARK/PRIME) Slip Test data (live-computed from STUDENTS) ----------
+   Same treatment as buildSlipD() above: this was a one-time hand-computed snapshot (Test 1 & 2
+   only, Biology-track roster only - matches isElectronicsOnly()) with no Slip Test 3 slot.
+   Rebuilt here to compute live, extended to Test 3, verified the same way: PHY/CHE/MAT/BIO
+   stats for Test1/Test2 reproduce the old snapshot almost exactly (the few differing students
+   trace to roster corrections made since, not a formula change). */
+function buildSEC(){
+  const SECTIONS = ['SPARK','PRIME'];
+  const SEC_SUBJECTS = ['PHY','CHE','MAT','BIO'];
+  function round(v,d){ if(v===null||v===undefined) return null; const m=Math.pow(10,d); return Math.round(v*m)/m; }
+  function sectionRoster(section){
+    return STUDENTS.filter(s=>s.section===section && !isElectronicsOnly(s,1));
   }
-};
+  function subjStats(roster, testKey){
+    const out = {};
+    SEC_SUBJECTS.forEach(subj=>{
+      const vals = roster.map(s=>s[testKey] && s[testKey][subj]).filter(v=>v!==null && v!==undefined);
+      const appeared = vals.length;
+      const average = appeared ? vals.reduce((a,b)=>a+b,0)/appeared : 0;
+      const pass = vals.filter(v=>v>=7).length;
+      const toppers = vals.filter(v=>v>15).length;
+      const failed = vals.filter(v=>v<7).length;
+      out[subj] = {
+        appeared, avg_pct: round(average/20*100,2),
+        pass_rate_pct: appeared ? round(pass/appeared*100,2) : 0,
+        topper_pct: appeared ? round(toppers/appeared*100,2) : 0,
+        fail_pct: appeared ? round(failed/appeared*100,2) : 0
+      };
+    });
+    return out;
+  }
+  function top5(roster, testKey){
+    return roster.filter(s=>s[testKey] && s[testKey].TOTAL!==null && s[testKey].TOTAL!==undefined)
+      .map(s=>({EnrollCode:s.code, Name:s.name, PHY:s[testKey].PHY, CHE:s[testKey].CHE, MAT:s[testKey].MAT, BIO:s[testKey].BIO, TOTAL:s[testKey].TOTAL}))
+      .sort((a,b)=>b.TOTAL-a.TOTAL).slice(0,5);
+  }
+  function top5Combined(roster, testKeys){
+    return roster.map(s=>{
+      const vals = testKeys.map(tk=> (s[tk] && s[tk].TOTAL!==null && s[tk].TOTAL!==undefined) ? s[tk].TOTAL : null);
+      const present = vals.filter(v=>v!==null);
+      if(!present.length) return null;
+      const o = {EnrollCode:s.code, Name:s.name, avg_total: round(present.reduce((a,b)=>a+b,0)/present.length,1)};
+      testKeys.forEach((tk,i)=>{ o['TOTAL_'+tk] = vals[i]; });
+      return o;
+    }).filter(Boolean).sort((a,b)=>b.avg_total-a.avg_total).slice(0,5);
+  }
+  function multiFail(roster, testKey){
+    return roster.map(s=>{
+      const rec = s[testKey];
+      if(!rec) return null;
+      const failed = SEC_SUBJECTS.filter(subj=> rec[subj]!==null && rec[subj]!==undefined && rec[subj]<7);
+      if(failed.length<2) return null;
+      return {Name:s.name, EnrollCode:s.code, fail_count:failed.length, TOTAL: rec.TOTAL!==null&&rec.TOTAL!==undefined?rec.TOTAL:0};
+    }).filter(Boolean).sort((a,b)=>b.fail_count-a.fail_count);
+  }
+
+  const subjects = {}, rosterSize = {}, top = {}, multiFailOut = {};
+  SECTIONS.forEach(sec=>{
+    const roster = sectionRoster(sec);
+    rosterSize[sec] = roster.length;
+    subjects[sec] = { test1: subjStats(roster,'t1'), test2: subjStats(roster,'t2'), test3: subjStats(roster,'t3') };
+    top[sec] = { t1: top5(roster,'t1'), t2: top5(roster,'t2'), t3: top5(roster,'t3'), combined: top5Combined(roster,['t1','t2']) };
+    multiFailOut[sec] = { t1: multiFail(roster,'t1'), t2: multiFail(roster,'t2'), t3: multiFail(roster,'t3') };
+  });
+  return { subjects, rosterSize, top, multiFail: multiFailOut };
+}
 
 let sectionsBuilt = false;
 
@@ -5080,20 +5001,21 @@ function renderSectionFailTable(tableId, list){
 
 function buildSections(){
   // ---- SPARK ----
-  const sparkBioSD2 = Math.round((computeSlipSectionSubjectSD('SPARK','t2','BIO').sd/20*100)*10)/10;
+  const sparkBioSD3 = Math.round((computeSlipSectionSubjectSD('SPARK','t3','BIO').sd/20*100)*10)/10;
   document.getElementById('sparkSecKpis').innerHTML = `
-    <div class="kpi hero"><div class="kpi-label">SPARK Biology Avg (T1&rarr;T2)</div><div class="kpi-value">${SEC.subjects.SPARK.test1.BIO.avg_pct}% &rarr; ${SEC.subjects.SPARK.test2.BIO.avg_pct}%</div><div class="kpi-note up">Highest subject in section, both tests</div></div>
+    <div class="kpi hero"><div class="kpi-label">SPARK Biology Avg (T1&rarr;T2&rarr;T3)</div><div class="kpi-value" style="font-size:18px;">${SEC.subjects.SPARK.test1.BIO.avg_pct}% &rarr; ${SEC.subjects.SPARK.test2.BIO.avg_pct}% &rarr; ${SEC.subjects.SPARK.test3.BIO.avg_pct}%</div><div class="kpi-note up">Highest subject in section, every test</div></div>
     <div class="kpi gold"><div class="kpi-label">SPARK Topper Density (Bio)</div><div class="kpi-value">${SEC.subjects.SPARK.test1.BIO.topper_pct}%</div><div class="kpi-note">&gt;15/20 in Test 1</div></div>
     <div class="kpi"><div class="kpi-label">Section Size</div><div class="kpi-value">${SEC.rosterSize.SPARK}</div><div class="kpi-note">Students matched to roster</div></div>
-    <div class="kpi warn"><div class="kpi-label">Chemistry Fail Rate (T2)</div><div class="kpi-value">${SEC.subjects.SPARK.test2.CHE.fail_pct}%</div><div class="kpi-note down">Weakest subject, Test 2</div></div>
-    ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">SPARK Biology Spread (SD, T2)</div><div class="kpi-value">${isNaN(sparkBioSD2)?'—':sparkBioSD2+'%'}</div><div class="kpi-note">${isNaN(sparkBioSD2)?'':sdLabel(sparkBioSD2,100)}</div></div>`:''}
+    <div class="kpi warn"><div class="kpi-label">Chemistry Fail Rate (T3, latest)</div><div class="kpi-value">${SEC.subjects.SPARK.test3.CHE.fail_pct}%</div><div class="kpi-note down">Weakest subject, Test 3</div></div>
+    ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">SPARK Biology Spread (SD, T3)</div><div class="kpi-value">${isNaN(sparkBioSD3)?'—':sparkBioSD3+'%'}</div><div class="kpi-note">${isNaN(sparkBioSD3)?'':sdLabel(sparkBioSD3,100)}</div></div>`:''}
   `;
   if(sparkSecAvgChart) sparkSecAvgChart.destroy();
   sparkSecAvgChart = new Chart(document.getElementById('sparkSecAvgChart'), {
     type:'bar',
     data:{ labels:SUBJECTS.map(s=>NAMES[s]), datasets:[
       {label:'Test 1', data:SUBJECTS.map(s=>SEC.subjects.SPARK.test1[s].avg_pct), backgroundColor:'#8ecae6', borderRadius:6},
-      {label:'Test 2', data:SUBJECTS.map(s=>SEC.subjects.SPARK.test2[s].avg_pct), backgroundColor:'#2bb3a3', borderRadius:6}
+      {label:'Test 2', data:SUBJECTS.map(s=>SEC.subjects.SPARK.test2[s].avg_pct), backgroundColor:'#2bb3a3', borderRadius:6},
+      {label:'Test 3', data:SUBJECTS.map(s=>SEC.subjects.SPARK.test3[s].avg_pct), backgroundColor:'#d4af37', borderRadius:6}
     ]},
     options:{ plugins:{legend:{labels:{color:chartText()}}}, scales:{
       x:{ticks:{color:chartMuted()}, grid:{color:chartGridSoft()}},
@@ -5105,7 +5027,8 @@ function buildSections(){
     type:'bar',
     data:{ labels:SUBJECTS.map(s=>NAMES[s]), datasets:[
       {label:'Test 1', data:SUBJECTS.map(s=>SEC.subjects.SPARK.test1[s].pass_rate_pct), backgroundColor:'#8ecae6', borderRadius:6},
-      {label:'Test 2', data:SUBJECTS.map(s=>SEC.subjects.SPARK.test2[s].pass_rate_pct), backgroundColor:'#d4af37', borderRadius:6}
+      {label:'Test 2', data:SUBJECTS.map(s=>SEC.subjects.SPARK.test2[s].pass_rate_pct), backgroundColor:'#d4af37', borderRadius:6},
+      {label:'Test 3', data:SUBJECTS.map(s=>SEC.subjects.SPARK.test3[s].pass_rate_pct), backgroundColor:'#2bb3a3', borderRadius:6}
     ]},
     options:{ plugins:{legend:{labels:{color:chartText()}}}, scales:{
       x:{ticks:{color:chartMuted()}, grid:{color:chartGridSoft()}},
@@ -5114,20 +5037,21 @@ function buildSections(){
   });
 
   // ---- PRIME ----
-  const primeBioSD2 = Math.round((computeSlipSectionSubjectSD('PRIME','t2','BIO').sd/20*100)*10)/10;
+  const primeBioSD3 = Math.round((computeSlipSectionSubjectSD('PRIME','t3','BIO').sd/20*100)*10)/10;
   document.getElementById('primeSecKpis').innerHTML = `
-    <div class="kpi hero"><div class="kpi-label">PRIME Biology Avg (T1&rarr;T2)</div><div class="kpi-value">${SEC.subjects.PRIME.test1.BIO.avg_pct}% &rarr; ${SEC.subjects.PRIME.test2.BIO.avg_pct}%</div><div class="kpi-note up">Highest subject in section, both tests</div></div>
+    <div class="kpi hero"><div class="kpi-label">PRIME Biology Avg (T1&rarr;T2&rarr;T3)</div><div class="kpi-value" style="font-size:18px;">${SEC.subjects.PRIME.test1.BIO.avg_pct}% &rarr; ${SEC.subjects.PRIME.test2.BIO.avg_pct}% &rarr; ${SEC.subjects.PRIME.test3.BIO.avg_pct}%</div><div class="kpi-note up">Highest subject in section, every test</div></div>
     <div class="kpi gold"><div class="kpi-label">PRIME Topper Density (Bio)</div><div class="kpi-value">${SEC.subjects.PRIME.test1.BIO.topper_pct}%</div><div class="kpi-note">&gt;15/20 in Test 1</div></div>
     <div class="kpi"><div class="kpi-label">Section Size</div><div class="kpi-value">${SEC.rosterSize.PRIME}</div><div class="kpi-note">Students matched to roster</div></div>
-    <div class="kpi warn"><div class="kpi-label">Chemistry Fail Rate (T2)</div><div class="kpi-value">${SEC.subjects.PRIME.test2.CHE.fail_pct}%</div><div class="kpi-note down">Weakest subject, Test 2</div></div>
-    ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">PRIME Biology Spread (SD, T2)</div><div class="kpi-value">${isNaN(primeBioSD2)?'—':primeBioSD2+'%'}</div><div class="kpi-note">${isNaN(primeBioSD2)?'':sdLabel(primeBioSD2,100)}</div></div>`:''}
+    <div class="kpi warn"><div class="kpi-label">Chemistry Fail Rate (T3, latest)</div><div class="kpi-value">${SEC.subjects.PRIME.test3.CHE.fail_pct}%</div><div class="kpi-note down">Weakest subject, Test 3</div></div>
+    ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">PRIME Biology Spread (SD, T3)</div><div class="kpi-value">${isNaN(primeBioSD3)?'—':primeBioSD3+'%'}</div><div class="kpi-note">${isNaN(primeBioSD3)?'':sdLabel(primeBioSD3,100)}</div></div>`:''}
   `;
   if(primeSecAvgChart) primeSecAvgChart.destroy();
   primeSecAvgChart = new Chart(document.getElementById('primeSecAvgChart'), {
     type:'bar',
     data:{ labels:SUBJECTS.map(s=>NAMES[s]), datasets:[
       {label:'Test 1', data:SUBJECTS.map(s=>SEC.subjects.PRIME.test1[s].avg_pct), backgroundColor:'#8ecae6', borderRadius:6},
-      {label:'Test 2', data:SUBJECTS.map(s=>SEC.subjects.PRIME.test2[s].avg_pct), backgroundColor:'#e0685f', borderRadius:6}
+      {label:'Test 2', data:SUBJECTS.map(s=>SEC.subjects.PRIME.test2[s].avg_pct), backgroundColor:'#e0685f', borderRadius:6},
+      {label:'Test 3', data:SUBJECTS.map(s=>SEC.subjects.PRIME.test3[s].avg_pct), backgroundColor:'#d4af37', borderRadius:6}
     ]},
     options:{ plugins:{legend:{labels:{color:chartText()}}}, scales:{
       x:{ticks:{color:chartMuted()}, grid:{color:chartGridSoft()}},
@@ -5139,7 +5063,8 @@ function buildSections(){
     type:'bar',
     data:{ labels:SUBJECTS.map(s=>NAMES[s]), datasets:[
       {label:'Test 1', data:SUBJECTS.map(s=>SEC.subjects.PRIME.test1[s].pass_rate_pct), backgroundColor:'#8ecae6', borderRadius:6},
-      {label:'Test 2', data:SUBJECTS.map(s=>SEC.subjects.PRIME.test2[s].pass_rate_pct), backgroundColor:'#d4af37', borderRadius:6}
+      {label:'Test 2', data:SUBJECTS.map(s=>SEC.subjects.PRIME.test2[s].pass_rate_pct), backgroundColor:'#d4af37', borderRadius:6},
+      {label:'Test 3', data:SUBJECTS.map(s=>SEC.subjects.PRIME.test3[s].pass_rate_pct), backgroundColor:'#2bb3a3', borderRadius:6}
     ]},
     options:{ plugins:{legend:{labels:{color:chartText()}}}, scales:{
       x:{ticks:{color:chartMuted()}, grid:{color:chartGridSoft()}},
@@ -5156,6 +5081,10 @@ function buildSections(){
     <div class="kpi gold"><div class="kpi-label">SPARK Roster</div><div class="kpi-value">${SEC.rosterSize.SPARK}</div><div class="kpi-note">students</div></div>
     <div class="kpi gold"><div class="kpi-label">PRIME Roster</div><div class="kpi-value">${SEC.rosterSize.PRIME}</div><div class="kpi-note">students</div></div>
   `;
+  const sparkRosterChipEl = document.getElementById('sparkRosterChip');
+  if(sparkRosterChipEl) sparkRosterChipEl.textContent = SEC.rosterSize.SPARK+' students';
+  const primeRosterChipEl = document.getElementById('primeRosterChip');
+  if(primeRosterChipEl) primeRosterChipEl.textContent = SEC.rosterSize.PRIME+' students';
   renderClassExamInterest('examInterestKpisPU1', 'examInterestTablePU1', 1);
   if(secCompareAvgChart) secCompareAvgChart.destroy();
   secCompareAvgChart = new Chart(document.getElementById('secCompareAvgChart'), {
@@ -5172,9 +5101,9 @@ function buildSections(){
   if(secCompareTopperChart) secCompareTopperChart.destroy();
   secCompareTopperChart = new Chart(document.getElementById('secCompareTopperChart'), {
     type:'bar',
-    data:{ labels:['Slip Test 1','Slip Test 2'], datasets:[
-      {label:'SPARK', data:[SEC.subjects.SPARK.test1.BIO.topper_pct, SEC.subjects.SPARK.test2.BIO.topper_pct], backgroundColor:'#2bb3a3', borderRadius:8},
-      {label:'PRIME', data:[SEC.subjects.PRIME.test1.BIO.topper_pct, SEC.subjects.PRIME.test2.BIO.topper_pct], backgroundColor:'#e0685f', borderRadius:8}
+    data:{ labels:['Slip Test 1','Slip Test 2','Slip Test 3'], datasets:[
+      {label:'SPARK', data:[SEC.subjects.SPARK.test1.BIO.topper_pct, SEC.subjects.SPARK.test2.BIO.topper_pct, SEC.subjects.SPARK.test3.BIO.topper_pct], backgroundColor:'#2bb3a3', borderRadius:8},
+      {label:'PRIME', data:[SEC.subjects.PRIME.test1.BIO.topper_pct, SEC.subjects.PRIME.test2.BIO.topper_pct, SEC.subjects.PRIME.test3.BIO.topper_pct], backgroundColor:'#e0685f', borderRadius:8}
     ]},
     options:{ plugins:{legend:{labels:{color:chartText()}}}, scales:{
       x:{ticks:{color:chartMuted()}, grid:{display:false}},
@@ -5185,8 +5114,8 @@ function buildSections(){
   if(!sectionsBuilt){
     const compTbody = document.querySelector('#secCompareTable tbody');
     compTbody.innerHTML = `
-      <tr class="bio-row"><td>SPARK</td><td>${SEC.rosterSize.SPARK}</td><td>${bioAvgSpark.toFixed(1)}%</td><td>${((SEC.subjects.SPARK.test1.BIO.pass_rate_pct+SEC.subjects.SPARK.test2.BIO.pass_rate_pct)/2).toFixed(1)}%</td><td>${((SEC.subjects.SPARK.test1.BIO.topper_pct+SEC.subjects.SPARK.test2.BIO.topper_pct)/2).toFixed(1)}%</td><td>${SEC.multiFail.SPARK.t2.length} students</td></tr>
-      <tr><td>PRIME</td><td>${SEC.rosterSize.PRIME}</td><td>${bioAvgPrime.toFixed(1)}%</td><td>${((SEC.subjects.PRIME.test1.BIO.pass_rate_pct+SEC.subjects.PRIME.test2.BIO.pass_rate_pct)/2).toFixed(1)}%</td><td>${((SEC.subjects.PRIME.test1.BIO.topper_pct+SEC.subjects.PRIME.test2.BIO.topper_pct)/2).toFixed(1)}%</td><td>${SEC.multiFail.PRIME.t2.length} students</td></tr>
+      <tr class="bio-row"><td>SPARK</td><td>${SEC.rosterSize.SPARK}</td><td>${bioAvgSpark.toFixed(1)}%</td><td>${((SEC.subjects.SPARK.test1.BIO.pass_rate_pct+SEC.subjects.SPARK.test2.BIO.pass_rate_pct)/2).toFixed(1)}%</td><td>${((SEC.subjects.SPARK.test1.BIO.topper_pct+SEC.subjects.SPARK.test2.BIO.topper_pct)/2).toFixed(1)}%</td><td>${SEC.multiFail.SPARK.t3.length} students (latest)</td></tr>
+      <tr><td>PRIME</td><td>${SEC.rosterSize.PRIME}</td><td>${bioAvgPrime.toFixed(1)}%</td><td>${((SEC.subjects.PRIME.test1.BIO.pass_rate_pct+SEC.subjects.PRIME.test2.BIO.pass_rate_pct)/2).toFixed(1)}%</td><td>${((SEC.subjects.PRIME.test1.BIO.topper_pct+SEC.subjects.PRIME.test2.BIO.topper_pct)/2).toFixed(1)}%</td><td>${SEC.multiFail.PRIME.t3.length} students (latest)</td></tr>
     `;
 
     // Top performer lists (default: test1) + fail tables (default: test1)
@@ -5916,6 +5845,7 @@ const STUDENTS = [{"code":"26MPU0001","name":"PRASHANT MATHPATI","section":"SPAR
 /* Built after STUDENTS is defined above, so these can read live data - see buildSlipD()/buildGradeDist() definitions near the top of this script. */
 const D = buildSlipD();
 const GRADE_DIST = buildGradeDist();
+const SEC = buildSEC();
 const REPORT_CARD_PASSWORDS = {"26MPU0002": "sto5oa", "26MPU0008": "9t5i1j", "26MPU0009": "er2ada", "26MPU0010": "i91owx", "26MPU0012": "nnd4nx", "26MPU0013": "x1z9v8", "26MPU0017": "hrw4bg", "26MPU0018": "dy27pm", "26MPU0019": "zcnpv5", "26MPU0020": "2crlht", "26MPU0021": "zgyrxs", "26MPU0022": "joofe1", "26MPU0023": "wh4kjt", "26MPU0024": "wukfbq", "26MPU0026": "e23c3p", "26MPU0027": "zcov4i", "26MPU0028": "nmyw59", "26MPU0030": "b4crww", "26MPU0032": "jak3mi", "26MPU0033": "jfs8eu", "26MPU0034": "17pyb4", "26MPU0035": "f3ya5f", "26MPU0037": "8pfce0", "26MPU0038": "3vxxxm", "26MPU0041": "db0e4e", "26MPU0044": "xg48hl", "26MPU0047": "cntuz8", "26MPU0048": "qqqun9", "26MPU0049": "otmvt4", "26MPU0050": "7kghnf", "26MPU0053": "gk1a94", "26MPU0055": "3717ns", "26MPU0057": "4261t4", "26MPU0058": "kgbr2g", "26MPU0059": "d9t9ts", "26MPU0060": "qia13a", "26MPU0061": "uq00a3", "26MPU0063": "ift9ep", "26MPU0064": "f6w2ry", "26MPU0065": "nn1frk", "26MPU0066": "am90zo", "26MPU0067": "k605r6", "26MPU0068": "eiw7aj", "26MPU0069": "i3koin", "26MPU0070": "wu5lhz", "26MPU0072": "ozc7kk", "26MPU0073": "5o0j7y", "26MPU0075": "a6bzln", "26MPU0076": "04c02t", "26MPU0077": "xvv37m", "26MPU0078": "6f2hqq", "26MPU0079": "zo7oz3", "26MPU0080": "j12mbg", "26MPU0082": "kay6mx", "26MPU0083": "x9bphc", "26MPU0084": "0xnr20", "26MPU0085": "pivup4", "26MPU0086": "51emme", "26MPU0087": "j9kc51", "26MPU0089": "2r0l5e", "26MPU0090": "paxvoa", "26MPU0093": "lmw3sp", "26MPU0095": "5x0867", "26MPU0098": "2wbzjp", "26MPU0099": "16skdg", "26MPU0101": "3vi9c5", "26MPU0103": "83n76h", "26MPU0105": "lrk3xy", "26MPU0106": "he8d9n", "26MPU0108": "719z8i", "26MPU0109": "ytmrzi", "26MPU0111": "7ccslh", "26MPU0112": "z24cwk", "26MPU0113": "scxxep", "26MPU0114": "68o6gn", "26MPU0116": "zq5p4n", "26MPU0117": "sle0ku", "26MPU0120": "b29swt", "26MPU0121": "84hcl0", "26MPU0123": "o4er6z", "26MPU0125": "dcirme", "26MPU0126": "kaoaao", "26MPU0129": "fe3uon", "26MPU0131": "92k3tg", "26MPU0133": "j3xsv7", "26MPU0005": "6dupwd", "26MPU0015": "730qyf", "26MPU0003": "rvatfx", "26MPU0092": "j484yx", "26MPU0136": "6q8ate", "26MPU0001": "8NWI-CQ6S", "26MPU0006": "S501-GCG4", "26MPU0007": "1SBQ-9BXT", "26MPU0011": "AZFJ-DUWQ", "26MPU0014": "CAG4-7F85", "26MPU0016": "CV7J-ZWT2", "26MPU0029": "43VT-5RRX", "26MPU0036": "7K47-NV22", "26MPU0039": "1FHM-3UVZ", "26MPU0040": "32L7-SIOY", "26MPU0052": "AYOK-3W23", "26MPU0054": "U8KP-SBVW", "26MPU0056": "QKXU-DZ7L", "26MPU0074": "7IC2-WBRC", "26MPU0096": "DH68-4AWP", "26MPU0100": "JM20-OZDP", "26MPU0102": "YB7K-L2G3", "26MPU0104": "VUL7-W50N", "26MPU0119": "T37H-CAOX", "26MPU0122": "M0U3-ASM9", "26MPU0124": "NLCY-ZT3W", "26MPU0128": "3SW9-52FO", "26MPU0135": "SCL4-0NEN"};
 // PU-II (CHAMPION & ELITE) report-card passwords — ready for when PU-II results are added
 const PU2_REPORT_CARD_PASSWORDS = {"25MPU0087": "xaji0y", "25MPU0075": "6dpbhs", "25MPU0081": "ahxthv", "25MPU0052": "3a3zmf", "25MPU0094": "8mdd4v", "25MPU0056": "30t9nt", "25MPU0007": "3w5uzb", "25MPU0003": "ikcidk", "25MPU0006": "wnnhj7", "25MPU0045": "xvg0fn", "25MPU0064": "9xuy41", "25MPU0004": "ibljh7", "25MPU0089": "5lxo6q", "25MPU0028": "jiujv6", "25MPU0041": "oh9sdb", "25MPU0002": "dw2pcn", "25MPU0024": "9t84az", "25MPU0011": "ytjxep", "25MPU0034": "q85jsg", "25MPU0072": "65kxvf", "25MPU0008": "1t2tal", "25MPU0040": "a753lc", "25MPU0021": "58drc1", "25MPU0026": "1ertj5", "25MPU0022": "pht0hl", "25MPU0047": "9xpsei", "25MPU0059": "mvihcw", "25MPU0029": "i64ciy", "25MPU0078": "he7ur2", "25MPU0038": "3gdppq", "25MPU0051": "0y9dom", "25MPU0027": "5igqpk", "25MPU0012": "i7p5tb", "25MPU0062": "94874f", "25MPU0079": "rhocn9", "25MPU0067": "j2qp89", "25MPU0048": "uzfk8u", "25MPU0013": "t0cvs4", "25MPU0080": "f8cgvy", "25MPU0077": "ie6ivw", "25MPU0071": "pvs7hz", "25MPU0082": "ioykl1", "25MPU0035": "cq99ch", "25MPU0095": "j755nf", "25MPU0073": "4zw9xa", "25MPU0076": "3kx7ee", "25MPU0046": "dtjvzh", "25MPU0063": "wjr64d", "25MPU0014": "pja1wj", "25MPU0030": "0tpac5", "25MPU0020": "6t4ufe", "25MPU0023": "l6246h", "25MPU0044": "id25ow", "25MPU0088": "f75935", "25MPU0050": "a0l725", "25MPU0070": "3j2d54", "25MPU0036": "i3qk2i", "25MPU0057": "agl58k", "25MPU0069": "xo9t7e", "25MPU0098": "8g8jdp", "25MPU0049": "0lvsnu", "25MPU0101": "jza7tz", "25MPU0053": "0yncxl", "25MPU0039": "l4zklo", "25MPU0068": "okep7y", "25MPU0093": "6wktak", "25MPU0099": "puxqph", "25MPU0017": "r62gds"};
