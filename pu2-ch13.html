@@ -191,6 +191,24 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .tip-list.neet li{border-left-color:var(--gold-2);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold-2);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel-2);color:var(--gold-2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--border);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--border);color:var(--text);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--text-dim);line-height:1.55;background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--text-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--text);min-width:20px;font-weight:700;color:var(--gold-2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .chip-row{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;}
 .chip{
   font-size:11px; padding:4px 9px; border-radius:99px; background:rgba(66,198,160,0.1);
@@ -1060,6 +1078,14 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="btn" id="streakModalCloseBtn" style="width:100%; margin-top:4px;">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="btn" id="tipExampleCloseBtn" style="width:100%; margin-top:4px;">Close</button>
     </div>
   </div>
 
@@ -2400,6 +2426,90 @@ try{ renderConceptTopicNav(); }catch(e){ console.error('renderConceptTopicNav fa
 /* ---------- Study Tips ---------- */
 const STUDYTIPS_CH13_EN = {"title":"Study Tips &ndash; Biodiversity and Conservation","intro":"How to study this chapter well, and what to focus on for NEET/KCET.","theoryHead":"📘 Theory &mdash; How to Study This Chapter","neetHead":"🎯 NEET/KCET Strategy for This Chapter","theory":["Fix the three levels of biodiversity first &mdash; <b>genetic, species, ecological</b> &mdash; and attach one example to each: reserpine variation in <i>Rauwolfia vomitoria</i> and 50,000 rice strains (genetic), Western Ghats vs Eastern Ghats amphibians (species), India vs Norway habitats (ecological). Almost every question in this chapter hangs off one of these three pegs.","This is a numbers-heavy chapter, so make one single 'figures table' and revise only that: 1.5 million recorded / ~7 million estimated (Robert May), 70% insects, 2.4% land and 8.1% species for India, 12 mega diversity countries, 45,000 plants and ~90,000 animals in India, 784 extinctions in 500 years (338 + 359 + 87), 27 in the last 20 years, 34 hotspots with 3 in India, &lt;2% land, 30% extinction reduction.","Learn the species&ndash;area relationship as a picture, not a formula: arithmetic plot = rectangular hyperbola, log plot = straight line log S = log C + Z log A. Then simply remember what each letter is (S richness, A area, Z slope, C intercept) and the two Z ranges &mdash; 0.1&ndash;0.2 for small areas/countries, 0.6&ndash;1.2 for continents, 1.15 for frugivorous birds and mammals.","Group the causes of biodiversity loss as the 'evil quartet' &mdash; habitat loss and fragmentation, over-exploitation, alien species invasion, co-extinction &mdash; and tag exactly one example to each. Keep the extinct animals with their countries in a single line: Dodo (Mauritius), Quagga (Africa), Thylacine (Australia), Steller's sea cow (Russia), plus the Bali, Caspian and Javan tigers.","Draw a two-column chart of <b>in situ</b> (hotspots, biosphere reserves, national parks, wildlife sanctuaries, sacred groves) against <b>ex situ</b> (zoos, botanical gardens, safari parks, cryopreservation, IVF, tissue culture, seed banks, gene banks). Sorting every conservation term into one of these two columns is the single most examined skill in the chapter."],"neet":["The commonest trap is swapping India's two percentages: India has <b>2.4% of the land</b> and <b>8.1% of the species</b>. Read the sentence twice before answering &mdash; examiners routinely reverse them.","Distinguish <b>recorded</b> from <b>estimated</b> species numbers: IUCN (2004) has recorded slightly more than 1.5 million, whereas Robert May <i>estimates</i> the global total at about 7 million, leaving roughly 6 million still undescribed. Questions phrase this very carefully.","Narrow vs broad utilitarian is a guaranteed question type. Ask yourself: is it a <b>product I can sell</b> (food, firewood, fibre, timber, dyes, resins, 25,000 medicinal plants) &rarr; narrow; or a <b>free service nature performs</b> (Amazon's 20% oxygen, pollination, flood and erosion control, nutrient replenishment, waste recycling, aesthetic pleasure) &rarr; broad. Intrinsic value and duty to future generations &rarr; ethical.","Keep the two summits separate: <b>Rio de Janeiro, 1992</b> = Convention on Biological Diversity / Earth Summit; <b>Johannesburg, 2002</b> = World Summit on Sustainable Development, where 190 countries pledged to reduce the rate of biodiversity loss by 2010. Assertion&ndash;Reason items love to mix these two.","For assertion&ndash;reason and statement-based questions on the rivet popper hypothesis, remember two things only: species = rivets, and <b>wing rivets (key species) matter more than seat or window rivets</b>. Any option claiming all species are equally important, or that wing rivets are minor, is false."]};
 const STUDYTIPS_CH13_TRANSLATIONS = {};
+/* ---- Study Tips "View example" popovers: these three tips describe something to
+   build/memorise (a figures table, the evil quartet, an in-situ/ex-situ chart) but
+   give nothing to look at. The popovers below show the actual filled-in artifact,
+   built from this chapter's own Concept tab and Compare Matrix (COMPARE_DATA,
+   defined further down this same script) - nothing invented or duplicated by hand. ---- */
+const TIP_EXAMPLE_INDEX = {1:'figures', 3:'evil-quartet', 4:'in-situ-ex-situ'};
+const TIP_EXAMPLES = {
+  'figures': {
+    title: '🔢 The Core Figures Table',
+    render: function(){
+      const rows = [
+        {fig:'1.5 million (IUCN, 2004)', what:'Species recorded so far on Earth'},
+        {fig:'&asymp;7 million (Robert May)', what:'Estimated total number of species on Earth'},
+        {fig:'70%', what:'Share of recorded animal species that are insects'},
+        {fig:'2.4% / 8.1%', what:"India's share of the world's land area / the world's species"},
+        {fig:'12', what:'Mega diversity countries in the world (India is one)'},
+        {fig:'45,000 / &asymp;90,000', what:'Plant species / animal species recorded in India'},
+        {fig:'784 (338+359+87)', what:'Species (vertebrates+invertebrates+plants) extinct in the last 500 years'},
+        {fig:'27', what:'Species lost in just the last 20 years'},
+        {fig:'34 (3 in India)', what:'Biodiversity hotspots worldwide (India has three)'},
+        {fig:'&lt;2%', what:'Share of Earth\'s land area covered by all hotspots combined'},
+        {fig:'&asymp;30%', what:'Possible cut in mass extinctions if hotspots are strictly protected'}
+      ];
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">Exactly the single 'figures table' the tip tells you to build and revise — every number pulled from this chapter's own Concept tab.</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Figure</th><th>What it measures</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.fig}</td><td>${r.what}</td></tr>`).join('')}
+        </tbody></table></div>`;
+    }
+  },
+  'evil-quartet': {
+    title: '🦖 The Evil Quartet — Cause, Mechanism & Example',
+    render: function(){
+      const habitat = COMPARE_DATA[4], alien = COMPARE_DATA[5];
+      const rows = [
+        {name:'Habitat loss &amp; fragmentation', what:habitat.keyFeature, ex:habitat.example},
+        {name:'Over-exploitation', what:'Human greed over-harvests commercially important species of plants and animals.', ex:"Steller's sea cow and the passenger pigeon driven extinct in the last 500 years."},
+        {name:'Alien species invasion', what:alien.mechanism, ex:alien.example},
+        {name:'Co-extinction', what:'When a species becomes extinct, another species obligately dependent on it also becomes extinct.', ex:'Loss of one partner in a plant&ndash;pollinator mutualism dooms the other.'}
+      ];
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">The four causes grouped as the tip describes, one example tagged to each — straight from this chapter's Concept tab and Compare Matrix.</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Cause</th><th>What happens</th><th>Example</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td>${r.what}</td><td>${r.ex}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">Recent extinctions with their countries (this chapter's own list): Dodo (Mauritius), Quagga (Africa), Thylacine (Australia), Steller's sea cow (Russia), plus the Bali, Caspian and Javan tiger subspecies.</div>`;
+    }
+  },
+  'in-situ-ex-situ': {
+    title: '🏞️ In-Situ vs Ex-Situ — Sorted',
+    render: function(){
+      const hotspot = COMPARE_DATA[8], grove = COMPARE_DATA[9], cryo = COMPARE_DATA[10], seed = COMPARE_DATA[11];
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">Sorting every conservation term into one of these two columns, as the tip describes — every item from this chapter's Concept tab and Compare Matrix.</div>
+        <div class="tipex-case"><div class="tipex-case-title">In-Situ (on-site)</div>
+          <div class="tipex-step"><span class="tipex-q">•</span><span><b>Biodiversity hotspots</b> &mdash; ${hotspot.keyFeature}</span></div>
+          <div class="tipex-step"><span class="tipex-q">•</span><span><b>Protected areas</b> &mdash; biosphere reserves, national parks, wildlife sanctuaries (the whole ecosystem is protected together).</span></div>
+          <div class="tipex-step"><span class="tipex-q">•</span><span><b>Sacred groves</b> &mdash; ${grove.example}</span></div>
+        </div>
+        <div class="tipex-case"><div class="tipex-case-title">Ex-Situ (off-site)</div>
+          <div class="tipex-step"><span class="tipex-q">•</span><span><b>Zoos, botanical gardens, safari parks</b> &mdash; threatened species taken out of their natural habitat and given special care.</span></div>
+          <div class="tipex-step"><span class="tipex-q">•</span><span><b>Cryopreservation</b> &mdash; ${cryo.definition}</span></div>
+          <div class="tipex-step"><span class="tipex-q">•</span><span><b>IVF &amp; tissue culture</b> &mdash; propagate endangered animals and plants rapidly from preserved gametes or tissue.</span></div>
+          <div class="tipex-step"><span class="tipex-q">•</span><span><b>Seed banks</b> &mdash; ${seed.definition}</span></div>
+          <div class="tipex-step"><span class="tipex-q">•</span><span><b>Gene banks</b> &mdash; a comprehensive public database that stores DNA and RNA sequences along with their protein translations.</span></div>
+        </div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  document.getElementById('tipExampleTitle').textContent = ex.title;
+  document.getElementById('tipExampleBody').innerHTML = ex.render();
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTipsCh8(){
   const el = document.getElementById('studyTipsContent');
   if(!el) return;
@@ -2410,7 +2520,7 @@ function renderStudyTipsCh8(){
     <h3 style="color:var(--gold-2); margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ View example</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   `;

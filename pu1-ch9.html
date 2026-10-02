@@ -328,6 +328,24 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .tip-list.neet li{border-left-color:var(--gold);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel2);color:var(--gold2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--line);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--line);color:var(--ink);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--ink-dim);line-height:1.55;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--ink-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--ink);min-width:20px;font-weight:700;color:var(--gold2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .marks-info{background:#0F6653;border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:12.5px;color:#EFFFFA;line-height:1.6;}
 .marks-info b{color:var(--gold);}
 .whatsnew-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;font-size:12px;color:#EFFFFA;background:linear-gradient(135deg,var(--teal2),#0a4239);border-bottom:1px solid var(--line);line-height:1.5;}
@@ -740,6 +758,14 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="sm-save-btn" id="streakModalCloseBtn">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="sm-save-btn" id="tipExampleCloseBtn">Close</button>
     </div>
   </div>
 
@@ -1999,6 +2025,89 @@ function renderDiagrams(){
 window.renderDiagrams = renderDiagrams;
 const STUDYTIPS_CH9_EN = {"title":"Study Tips &ndash; Biomolecules","intro":"How to study this chapter well, and what to focus on for NEET.","theoryHead":"📘 Theory &mdash; How to Study This Chapter","neetHead":"🎯 NEET Strategy for This Chapter","theory":["This chapter is essentially a vocabulary-building chapter &mdash; build one master ladder per concept: base &rarr; nucleoside &rarr; nucleotide &rarr; polynucleotide, and amino acid &rarr; peptide bond &rarr; primary &rarr; secondary &rarr; tertiary &rarr; quaternary structure, rather than memorising isolated facts.","Group biomolecules by the acid-soluble vs acid-insoluble fractionation split first &mdash; it directly explains why lipids behave like macromolecules despite being small (~800 Da) and non-polymeric.","Be precise with numbers examiners love to swap: 1000 Da (micro- vs macromolecule cut-off), alpha-1,4 (starch) vs beta-1,4 (cellulose), thymine (DNA) vs uracil (RNA), 2 alpha + 2 beta (haemoglobin subunits), and the 6 enzyme classes.","Don't confuse the three cofactor types &mdash; prosthetic group (tight/permanent, e.g. haem) vs coenzyme (transient, e.g. NAD) vs metal ion (inorganic, e.g. Zn&#8322;&#8314;) &mdash; a very common matching-type question.","Connect enzyme kinetics as one flowing story: substrate binds &rarr; ES complex &rarr; transition state (needs activation energy) &rarr; catalytic cycle &rarr; product released &rarr; Vmax/Km describe how this scales with substrate concentration &mdash; rather than four separate facts."],"neet":["Direct recall questions (nucleotide/nucleoside naming, essential vs non-essential amino acids, enzyme class names) are extremely common and are the fastest, safest marks in this chapter &mdash; the Concepts and Flashcards tabs target exactly these.","Assertion-Reason and Statement-based questions on DNA vs RNA, and on the four levels of protein structure, appear almost every year in NEET/KCET-style papers.","Don't neglect the enzyme kinetics section (Km, Vmax, competitive inhibition) &mdash; these numeric/graph-based concepts are quick, guaranteed marks that many students skip while chasing structural detail.","This chapter pairs naturally with later chapters on cell cycle, respiration and molecular basis of inheritance &mdash; a solid grip on nucleotide and protein structure here makes those chapters much easier."]};
 const STUDYTIPS_CH9_TRANSLATIONS = {};
+/* ---- Study Tips "View example" popovers: the two master ladders, the
+   cofactor types and the enzyme-kinetics story are all just instructions in
+   the tip text ("build a ladder...", "don't confuse...", "connect as one
+   story...") with nothing to look at. These three buttons show the actual
+   filled-in artifact each tip is describing, built from this chapter's own
+   Glossary (GLOSSARY_DATA), Compare Matrix (COMPARE_DATA) and Tree Explorer
+   (TREE_DATA) data - all defined further down this same script - so the
+   facts always match the other tabs; nothing is duplicated or re-typed by
+   hand. ---- */
+const TIP_EXAMPLE_INDEX = {0:'ladders', 3:'cofactors', 4:'enzyme-kinetics'};
+const TIP_EXAMPLES = {
+  'ladders': {
+    title: '🪜 Two Master Ladders — Nucleotides & Proteins',
+    render: function(){
+      function gloss(term){ const g = GLOSSARY_DATA.find(x=>x.term===term); return g ? g.def : ''; }
+      function step(q, label, note){ return `<div class="tipex-step"><span class="tipex-q">${q}</span><span><b>${label}:</b> ${note}</span></div>`; }
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">The two ladders the tip describes, each rung defined from this chapter's own Glossary.</div>
+        <div class="tipex-case">
+          <div class="tipex-case-title">Nucleotide Ladder</div>
+          ${step('1', 'Base', gloss('Purine') + ' / ' + gloss('Pyrimidine'))}
+          ${step('2', 'Nucleoside', gloss('Nucleoside'))}
+          ${step('3', 'Nucleotide', gloss('Nucleotide'))}
+          ${step('4', 'Polynucleotide', gloss('Polynucleotide'))}
+          <div class="tipex-diagnosis">✓ Base &rarr; Nucleoside &rarr; Nucleotide &rarr; Polynucleotide</div>
+        </div>
+        <div class="tipex-case">
+          <div class="tipex-case-title">Protein Ladder</div>
+          ${step('1', 'Amino acid', gloss('Amino acid'))}
+          ${step('2', 'Peptide bond', gloss('Peptide bond') + ' links successive amino acids into a polypeptide.')}
+          ${step('3', 'Primary structure', gloss('Primary structure (protein)'))}
+          ${step('4', 'Secondary structure', gloss('Secondary structure (protein)'))}
+          ${step('5', 'Tertiary structure', gloss('Tertiary structure (protein)'))}
+          ${step('6', 'Quaternary structure', gloss('Quaternary structure (protein)') + ' e.g. adult haemoglobin&rsquo;s 2 alpha + 2 beta subunits.')}
+          <div class="tipex-diagnosis">✓ Amino acid &rarr; Peptide bond &rarr; Primary &rarr; Secondary &rarr; Tertiary &rarr; Quaternary</div>
+        </div>`;
+    }
+  },
+  'cofactors': {
+    title: '📊 Sample Comparison Table — Three Cofactor Types',
+    render: function(){
+      const rows = COMPARE_DATA.filter(c=>['Prosthetic group','Coenzyme','Metal ion cofactor'].indexOf(c.name) !== -1);
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">This is exactly the three-way comparison the tip describes — built from this chapter's own Compare Matrix.</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Cofactor Type</th><th>Structural Nature</th><th>Key Feature</th><th>Example</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td>${r.structuralChange}</td><td>${r.keyFeature}</td><td>${r.example}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">Full detail (purpose) for every row is in the <b>Summary</b> tab's Compare Matrix — this is the condensed version worth memorising first.</div>`;
+    }
+  },
+  'enzyme-kinetics': {
+    title: '🔍 Enzyme Kinetics — One Flowing Story',
+    render: function(){
+      function step(q, a){ return `<div class="tipex-step"><span class="tipex-q">${q}.</span><span>${a}</span></div>`; }
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">The same reaction, followed start to finish as one story — built from this chapter's own Board Important answers and Tree Explorer.</div>
+        <div class="tipex-case">
+          <div class="tipex-case-title">Substrate &rarr; Product, step by step</div>
+          ${step(1, 'Substrate binds the enzyme\'s active site &mdash; the crevice/pocket in its tertiary structure &mdash; forming the <b>ES complex</b> (E + S &#8596; ES).')}
+          ${step(2, 'The ES complex passes through a high-energy <b>transition state</b>, which needs <b>activation energy</b> to reach.')}
+          ${step(3, 'The 4-step catalytic cycle runs: bind &rarr; shape adjusts &rarr; bond breaks / EP forms &rarr; product released.')}
+          ${step(4, 'Product is released and the free enzyme (E) is ready to bind another substrate molecule (E + P).')}
+          <div class="tipex-step"><span class="tipex-q">→</span><span>As substrate concentration rises, reaction velocity rises toward <b>Vmax</b> (enzyme fully saturated); <b>Km</b> = the substrate concentration at half of Vmax. A competitive inhibitor (e.g. malonate on succinic dehydrogenase) resembles the substrate and blocks the active site reversibly.</span></div>
+          <div class="tipex-diagnosis">✓ One flowing story, not four separate facts</div>
+        </div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  document.getElementById('tipExampleTitle').textContent = ex.title;
+  document.getElementById('tipExampleBody').innerHTML = ex.render();
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTips(){
   const en = STUDYTIPS_CH9_EN;
   const tr = (currentLang !== 'en') && STUDYTIPS_CH9_TRANSLATIONS[currentLang];
@@ -2007,7 +2116,7 @@ function renderStudyTips(){
     <h3 style="color:var(--gold);margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--ink-dim);font-size:12px;margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ View example</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   </div>`;

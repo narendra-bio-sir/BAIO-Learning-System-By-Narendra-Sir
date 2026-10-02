@@ -185,6 +185,24 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .tip-list.neet li{border-left-color:var(--gold-2);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold-2);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel-2);color:var(--gold-2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--border);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--border);color:var(--text);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--text-dim);line-height:1.55;background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--text-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--text);min-width:20px;font-weight:700;color:var(--gold-2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .chip-row{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;}
 .chip{
   font-size:11px; padding:4px 9px; border-radius:99px; background:rgba(66,198,160,0.1);
@@ -1113,6 +1131,14 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="btn" id="streakModalCloseBtn" style="width:100%; margin-top:4px;">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="btn" id="tipExampleCloseBtn" style="width:100%; margin-top:4px;">Close</button>
     </div>
   </div>
 
@@ -5176,6 +5202,70 @@ const STUDYTIPS_CH5_TRANSLATIONS = {
     ]
   }
 };
+/* ---- Study Tips "View example" popovers: the three-experiments story and
+   the genetic-code properties are both just instructions in the tip text
+   ("learn them as a single story...", "memorise the five properties...")
+   with nothing to look at. These two buttons show the actual filled-in
+   artifact, built strictly from facts already stated elsewhere in this same
+   chapter file (the Concept tab's DNA-as-genetic-material and genetic-code
+   notes) — nothing is invented or duplicated by hand. ---- */
+const TIP_EXAMPLE_INDEX = {0:'experiments-story', 3:'genetic-code'};
+const TIP_EXAMPLES = {
+  'experiments-story': {
+    title: '🔍 Three Experiments — Proved vs Left Unanswered',
+    render: function(){
+      function step(label, text){ return `<div class="tipex-step"><span class="tipex-q">${label}</span><span>${text}</span></div>`; }
+      const cases = [
+        { title: '1. Griffith (1928) — Transforming Principle',
+          steps:[ step('✓','Proved: some &lsquo;transforming principle&rsquo; passes from heat-killed S strain to live R strain of <i>Streptococcus pneumoniae</i>, making it virulent (produce the mucous coat).'),
+                  step('?','Left unanswered: the biochemical nature of the transforming principle — Griffith could not say whether it was DNA, RNA or protein.') ] },
+        { title: '2. Avery, MacLeod &amp; McCarty (1933&ndash;44) — Biochemical Characterisation',
+          steps:[ step('✓','Proved: proteases &amp; RNases did NOT stop transformation, but DNase DID — so the transforming substance is DNA, not protein or RNA.'),
+                  step('?','Left unanswered enough doubt that &ldquo;not all biologists were convinced&rdquo; — a purely biochemical/in-vitro result, so a cleaner, more direct physical proof was still wanted.') ] },
+        { title: '3. Hershey &amp; Chase (1952) — The Capstone Proof',
+          steps:[ step('✓','Proved: using <sup>35</sup>S (labels protein) and <sup>32</sup>P (labels DNA) on bacteriophages, only <sup>32</sup>P (DNA) entered the bacterium — conclusively, DNA (not protein) is the genetic material that is inherited.'),
+                  step('●','This is the capstone of the story — unlike the first two, it leaves the core question (DNA vs protein) fully settled, which is exactly why it is always presented last.') ] }
+      ];
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">The same single story the tip describes — increasing proof across three experiments — each with what it proved and what it left open, built from this chapter's own Concept-tab notes.</div>
+        ${cases.map(c=>`<div class="tipex-case"><div class="tipex-case-title">${c.title}</div>${c.steps.join('')}</div>`).join('')}`;
+    }
+  },
+  'genetic-code': {
+    title: '📊 Five Properties of the Genetic Code — Filled In',
+    render: function(){
+      const rows = [
+        {p:'Triplet', m:'Three adjacent nitrogenous bases form one codon, specifying one amino acid (Gamow: 4&sup3; = 64, enough to code for 20 amino acids).'},
+        {p:'Unambiguous', m:'One codon codes for one specific amino acid only.'},
+        {p:'Degenerate', m:'Some amino acids are coded by more than one codon (e.g. leucine, serine and arginine each have six codons).'},
+        {p:'Universal', m:'One codon codes for the same amino acid in all species, from bacteria to humans — with the exceptions below.'},
+        {p:'Commaless', m:'Codons are read continuously in the mRNA, with no punctuation between them.'}
+      ];
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">The five properties the tip names, each defined, built from this chapter's own Concept-tab notes on the genetic code.</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Property</th><th>Meaning</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.p}</td><td>${r.m}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note"><b>Start codon:</b> AUG (also codes for methionine — dual function). <b>Stop codons:</b> UAA (ochre), UAG (amber), UGA (opal) — 61 codons code for amino acids, 3 are stop codons.<br><br><b>Exceptions to universality:</b> in <i>Paramecium</i> and other ciliates, UAA and UGA code for glutamine (not stop); in human mitochondria, AGA/AGG act as stop signals (not arginine), UGA codes for tryptophan (not stop), and AUA codes for methionine (not isoleucine).</div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  document.getElementById('tipExampleTitle').textContent = ex.title;
+  document.getElementById('tipExampleBody').innerHTML = ex.render();
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTipsCh2(){
   const el = document.getElementById('studyTipsContent');
   if(!el) return;
@@ -5186,7 +5276,7 @@ function renderStudyTipsCh2(){
     <h3 style="color:var(--gold-2); margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ View example</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   `;

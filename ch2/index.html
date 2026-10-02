@@ -185,6 +185,24 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .tip-list.neet li{border-left-color:var(--gold-2);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold-2);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel-2);color:var(--gold-2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--border);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--border);color:var(--text);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--text-dim);line-height:1.55;background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--text-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--text);min-width:20px;font-weight:700;color:var(--gold-2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .chip-row{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;}
 .chip{
   font-size:11px; padding:4px 9px; border-radius:99px; background:rgba(66,198,160,0.1);
@@ -1070,6 +1088,14 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="btn" id="streakModalCloseBtn" style="width:100%; margin-top:4px;">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="btn" id="tipExampleCloseBtn" style="width:100%; margin-top:4px;">Close</button>
     </div>
   </div>
 
@@ -4151,6 +4177,78 @@ const STUDYTIPS_CH2_TRANSLATIONS = {
     ]
   }
 };
+/* ---- Study Tips "View example" popovers: three tips describe a concrete
+   artifact ("build a comparison table...", "memorize one example per fungal
+   class...", "draw and label a virus/bacteriophage...") with nothing to look
+   at. These buttons show the actual filled-in artifact, built from this
+   chapter's own data (the Five Kingdom table already in the Last-Minute
+   Revision tab, the fungal-class COMPARE_DATA used by the Compare & Contrast
+   tab, and the TMV/bacteriophage label lists already in the Important
+   Diagrams tab) so the facts always match the rest of the chapter - nothing
+   is duplicated or re-typed by hand. ---- */
+const TIP_EXAMPLE_INDEX = {0:'five-kingdom', 2:'fungal-classes', 3:'virus-labels'};
+const TIP_EXAMPLES = {
+  'five-kingdom': {
+    title: '📊 Sample Comparison Table — Five Kingdoms',
+    render: function(){
+      const rows = [
+        {ch:'Cell type', vals:['Prokaryotic','Eukaryotic','Eukaryotic','Eukaryotic','Eukaryotic']},
+        {ch:'Cell wall', vals:['Non-cellulosic (peptidoglycan)','Present in some','Chitin (no cellulose)','Cellulose','Absent']},
+        {ch:'Nuclear membrane', vals:['Absent','Present','Present','Present','Present']},
+        {ch:'Body organisation', vals:['Cellular','Cellular','Multicellular/loose tissue','Tissue/organ','Tissue/organ/organ system']},
+        {ch:'Nutrition', vals:['Auto + Hetero','Auto + Hetero','Heterotrophic (saprophytic/parasitic)','Autotrophic (photosynthetic)','Heterotrophic']}
+      ];
+      const kingdoms = ['Monera','Protista','Fungi','Plantae','Animalia'];
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">This is exactly the table the tip describes — one row per character, all five kingdoms side by side, matching the table already in the Last-Minute Revision tab.</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Character</th>${kingdoms.map(k=>`<th>${k}</th>`).join('')}</tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.ch}</td>${r.vals.map(v=>`<td>${v}</td>`).join('')}</tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">Full detail (merits, examples) is in the <b>Last-Minute Revision</b> tab (Five Kingdoms section) — this is the condensed version worth memorising first.</div>`;
+    }
+  },
+  'fungal-classes': {
+    title: '🍄 Sample Table — One Example + Reproductive Structure per Fungal Class',
+    render: function(){
+      const order = ['Phycomycetes','Ascomycetes','Basidiomycetes','Deuteromycetes'];
+      const rows = order.map(name => COMPARE_DATA.find(g=>g.name===name)).filter(Boolean);
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">The exact one-example-per-class table the tip describes, pulled straight from this chapter's own Compare &amp; Contrast data.</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Class</th><th>Distinguishing Reproductive Structure</th><th>Classic Example</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td>${r.reproduction}</td><td>${r.example}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">Full detail (cell wall, mycelium, nutrition) for each class is in the <b>Compare &amp; Contrast Matrix</b> on the Rapid Fire / Compare tab.</div>`;
+    }
+  },
+  'virus-labels': {
+    title: '🦠 Label Checklist — TMV vs Bacteriophage',
+    render: function(){
+      const items = [
+        {name:'Tobacco Mosaic Virus (TMV) — Fig 2.6(a)', labels:'Helical Capsid (Capsomeres), Single-stranded RNA (ssRNA) core'},
+        {name:'Bacteriophage — Fig 2.6(b)', labels:'Hexagonal Head (dsDNA), Collar, Helical Sheath, Tail fibres, Base plate'}
+      ];
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">These are the exact labels this chapter's Important Diagrams tab flags as board-exam-priority for each figure — practice drawing both from memory and labelling every part below.</div>
+        ${items.map(it=>`<div class="tipex-case"><div class="tipex-case-title">${it.name}</div><div class="tipex-step"><span class="tipex-q">✓</span><span>${it.labels}</span></div></div>`).join('')}
+        <div class="tipex-note">Both figures are ★★★ Top Priority, 2–3 marks — see the <b>Important Diagrams</b> tab for the linked NCERT page.</div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  document.getElementById('tipExampleTitle').textContent = ex.title;
+  document.getElementById('tipExampleBody').innerHTML = ex.render();
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTipsCh2(){
   const el = document.getElementById('studyTipsContent');
   if(!el) return;
@@ -4161,7 +4259,7 @@ function renderStudyTipsCh2(){
     <h3 style="color:var(--gold-2); margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ View example</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   `;

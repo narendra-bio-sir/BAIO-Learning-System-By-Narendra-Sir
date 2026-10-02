@@ -191,6 +191,24 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .tip-list.neet li{border-left-color:var(--gold-2);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold-2);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel-2);color:var(--gold-2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--border);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--border);color:var(--text);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--text-dim);line-height:1.55;background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--text-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--text);min-width:20px;font-weight:700;color:var(--gold-2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .chip-row{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;}
 .chip{
   font-size:11px; padding:4px 9px; border-radius:99px; background:rgba(66,198,160,0.1);
@@ -1060,6 +1078,14 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="btn" id="streakModalCloseBtn" style="width:100%; margin-top:4px;">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="btn" id="tipExampleCloseBtn" style="width:100%; margin-top:4px;">Close</button>
     </div>
   </div>
 
@@ -2428,6 +2454,67 @@ try{ renderConceptTopicNav(); }catch(e){ console.error('renderConceptTopicNav fa
 /* ---------- Study Tips ---------- */
 const STUDYTIPS_CH3_EN = {"title":"Study Tips &ndash; Reproductive Health","intro":"How to study this chapter well, and what to focus on for NEET/KCET.","theoryHead":"📘 Theory &mdash; How to Study This Chapter","neetHead":"🎯 NEET/KCET Strategy for This Chapter","theory":["Build one master table of contraceptives with four columns &mdash; method, example/brand, mode of action, reversible or terminal. Natural (rhythm, coitus interruptus, LAM), barrier (condom/Nirodh, diaphragm, cervical cap, vault, spermicide), IUD (Lippes loop, CuT/Cu7/Multiload 375, Progestasert/LNG-20), pills and injectables/implants (Depo Provera, Implanon, Norplant, Saheli) and surgical (vasectomy, tubectomy) all become one page you can revise in five minutes.","Fix every number in the chapter on a single &lsquo;number strip&rsquo;: 1951 (family planning), 1971 (MTP legalised), days 10&ndash;17 (fertile period), 21+7 days (pill regimen), 72 hours (emergency contraception), 6 months (LAM), 12 weeks (safe first trimester), 2 years (infertility), 20 million/mL (oligospermia cut-off), 50&ndash;150 million/mL (normal count), 15&ndash;24 years (peak STD incidence), 8 blastomeres (ZIFT vs IUT).","Study the ART techniques by asking only two questions of each &mdash; WHAT is transferred and WHERE is it transferred. ZIFT: zygote/up to 8 blastomeres &rarr; fallopian tube. IUT: more than 8 blastomeres &rarr; uterus. GIFT: donor ovum (a gamete) &rarr; fallopian tube. ICSI: a sperm &rarr; cytoplasm of the ovum. AI: semen &rarr; vagina or uterus.","Do not memorise the RCH aims as a list of ten sentences; group them into four heads &mdash; awareness and sex education, birth control and small family norm, maternal and child care (pre-natal, post-natal, breast feeding), and medical facilities for STDs, MTP and infertility. You can then rebuild the full list in an exam from four cues.","Keep the pairs that examiners deliberately mix up on facing flashcards: vasectomy vs tubectomy, oligospermia vs azoospermia vs asthenospermia, rhythm method vs coitus interruptus, non-medicated vs copper vs hormonal IUDs, ZIFT vs GIFT, curable vs incurable STDs, and healthy vs unhealthy trends of MTP."],"neet":["The single most repeated trap is reversal of a fact &mdash; copper ions are said to INCREASE sperm motility (they suppress it), marriageable age is quoted as 21 for females and 18 for males (it is the opposite), and hepatitis-B/herpes/HIV are called curable (they are the three incurable ones). Read every option for such reversals before choosing.","Year-based questions are almost guaranteed: 1951 is family planning, 1971 is MTP legalisation, 1900 and 2000 carry the 2-billion and 6-billion world population figures, and India crossed 1 billion by May 2000. Mixing 1951 with 1971 is the commonest silly mistake in this chapter.","Expect a case-based MCQ on which ART to choose. Learn the elimination logic: blocked fallopian tubes rule out ZIFT and GIFT; inability of the female to produce ova points to GIFT; failure of the sperm to fertilise points to ICSI; inability to ejaculate or a very low sperm count points to AI.","Assertion&ndash;Reason questions here usually keep the assertion true and quietly falsify the reason (or vice versa). Verify each of A and R independently as a standalone fact FIRST, and only then ask whether R actually explains A &mdash; do not judge them as a pair straight away.","Remember the chapter's cause-and-effect chains, since they are favourite statement-type questions: untreated STD &rarr; PID, ectopic pregnancy, still birth, infertility, cancer; amniocentesis misuse &rarr; female foeticide &rarr; statutory ban; better healthcare &rarr; lower MMR/IMR &rarr; population explosion &rarr; need for contraception."]};
 const STUDYTIPS_CH3_TRANSLATIONS = {};
+/* ---- Study Tips "View example" popovers: the master contraceptive table and
+   the facing-flashcard pairs are both just instructions in the tip text
+   ("build one table...", "keep pairs on facing flashcards...") with nothing
+   to look at. These two buttons show the actual filled-in artifact, built
+   strictly from facts already stated elsewhere in this same chapter file
+   (the Concept tab's method/ART/MTP/STD notes) — nothing is invented or
+   duplicated by hand. ---- */
+const TIP_EXAMPLE_INDEX = {0:'contraceptive-table', 4:'facing-pairs'};
+const TIP_EXAMPLES = {
+  'contraceptive-table': {
+    title: '📊 Master Contraceptive Table — Filled In',
+    render: function(){
+      const rows = [
+        {method:'Natural', example:'Periodic abstinence/rhythm method; coitus interruptus (withdrawal); lactational amenorrhea (LAM)', action:'Avoid coitus on the fertile days (10&ndash;17); withdraw before ejaculation; LAM relies on absence of ovulation during intense lactation (up to 6 months)', type:'Reversible'},
+        {method:'Barrier', example:'Male/female condom, diaphragm, cervical cap', action:'Physically prevent sperm and ovum from meeting; condoms also protect against STIs (diaphragm/cap do not)', type:'Reversible'},
+        {method:'IUD', example:'Non-medicated (Lippes Loop); copper-releasing (CuT, Cu7); hormone-releasing (Progestasert, LNG-20)', action:'Copper ions increase phagocytosis of sperm &amp; suppress motility; hormonal IUDs make the uterine environment unfavourable for sperm and the endometrium unfavourable for implantation', type:'Reversible'},
+        {method:'Hormonal (pills, injectables &amp; implants)', example:'Oral pills (progesterone alone or progesterone&ndash;oestrogen); Depo Provera, Implanon, Norplant, Saheli as injectable/implant forms', action:'Inhibits ovulation, inhibits implantation, alters cervical mucus. Pills: daily for 21 days starting within the first 5 days of the cycle, then a 7-day gap', type:'Reversible'},
+        {method:'Surgical', example:'Vasectomy (vas deferens tied/cut via scrotal incision); Tubectomy (fallopian tube tied/cut via abdominal/vaginal incision)', action:'Blocks the duct/tube so gametes cannot meet, while hormone secretion/ovulation continues unaffected', type:'Terminal (irreversible)'}
+      ];
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">This is exactly the table the tip describes — one row per method category, built from this chapter's own Concept-tab notes on contraception.</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Method</th><th>Example / Brand</th><th>Mode of Action</th><th>Reversible / Terminal</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.method}</td><td>${r.example}</td><td>${r.action}</td><td>${r.type}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">This is the five-minute revision page the tip describes — if you can rebuild this table from memory, you can answer almost any contraceptive-method question.</div>`;
+    }
+  },
+  'facing-pairs': {
+    title: '🗂️ Facing Flashcard Pairs — Filled In',
+    render: function(){
+      function pair(a,b){ return `<div class="tipex-step"><span class="tipex-q">◀</span><span>${a}</span></div><div class="tipex-step"><span class="tipex-q">▶</span><span>${b}</span></div>`; }
+      const cases = [
+        { title:'Vasectomy vs Tubectomy', body:pair('<b>Vasectomy</b> (male) — part of the vas deferens tied/removed via a scrotal incision; testosterone secretion continues unaffected.', '<b>Tubectomy</b> (female) — part of the fallopian tube tied/removed via an abdominal/vaginal incision; ovulation continues unaffected.') },
+        { title:'Rhythm Method vs Coitus Interruptus', body:pair('<b>Rhythm/periodic abstinence</b> — avoid coitus during the fertile period, day 10&ndash;17 of the cycle.', '<b>Coitus interruptus</b> — withdrawal of the penis before ejaculation.') },
+        { title:'Non-medicated vs Copper vs Hormonal IUDs', body:pair('<b>Non-medicated</b> (Lippes Loop) — a simple inert device.', '<b>Copper-releasing</b> (CuT, Cu7) — Cu ions increase phagocytosis of sperm &amp; suppress sperm motility; <b>Hormone-releasing</b> (Progestasert, LNG-20) — make the uterine environment unfavourable for sperm and the endometrium unfavourable for implantation.') },
+        { title:'ZIFT vs GIFT', body:pair('<b>ZIFT</b> — a zygote or embryo up to 8 blastomeres is transferred into the fallopian tube.', '<b>GIFT</b> — a donor ovum (a gamete, not an embryo) is transferred into the fallopian tube of a recipient who cannot produce her own ova.') },
+        { title:'Curable vs Incurable STDs', body:pair('<b>Curable</b> — every STD except the three below, if detected and treated early.', '<b>Incurable</b> — hepatitis-B, genital herpes and HIV.') },
+        { title:'Healthy vs Unhealthy Trends of MTP', body:pair('<b>Healthy</b> — safe termination of unwanted/risky pregnancies, safest in the first trimester.', '<b>Unhealthy</b> — illegal MTPs by unqualified quacks, and misuse of amniocentesis to detect and abort female foetuses.') }
+      ];
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">The six pairs examiners most often mix up, each filled in from this chapter's own Concept-tab notes — exactly what you'd write on facing flashcards.</div>
+        ${cases.map(c=>`<div class="tipex-case"><div class="tipex-case-title">${c.title}</div>${c.body}</div>`).join('')}`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  document.getElementById('tipExampleTitle').textContent = ex.title;
+  document.getElementById('tipExampleBody').innerHTML = ex.render();
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTipsCh8(){
   const el = document.getElementById('studyTipsContent');
   if(!el) return;
@@ -2438,7 +2525,7 @@ function renderStudyTipsCh8(){
     <h3 style="color:var(--gold-2); margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ View example</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   `;

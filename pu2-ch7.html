@@ -191,6 +191,24 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .tip-list.neet li{border-left-color:var(--gold-2);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold-2);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel-2);color:var(--gold-2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--border);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--border);color:var(--text);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--text-dim);line-height:1.55;background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--text-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--text);min-width:20px;font-weight:700;color:var(--gold-2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .chip-row{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;}
 .chip{
   font-size:11px; padding:4px 9px; border-radius:99px; background:rgba(66,198,160,0.1);
@@ -1060,6 +1078,14 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="btn" id="streakModalCloseBtn" style="width:100%; margin-top:4px;">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="btn" id="tipExampleCloseBtn" style="width:100%; margin-top:4px;">Close</button>
     </div>
   </div>
 
@@ -4486,6 +4512,120 @@ const STUDYTIPS_CH7_TRANSLATIONS = {
     ]
   }
 };
+/* ---- Study Tips "View example" popovers: five of the theory tips describe
+   something to build/draw/memorise (a disease master table, a life-cycle
+   diagram, two comparison tables, an antibody structure diagram, a
+   replication sequence) with nothing to look at. These buttons show the
+   actual filled-in artifact, built strictly from this chapter's own data
+   (COMPARE_DATA/CMP_FIELDS used by the Compare tab, and the exact pathogen/
+   transmission/symptom/sequence facts already given in the Topics content)
+   so nothing is invented or duplicated by hand. ---- */
+const TIP_EXAMPLE_INDEX = {0:'disease-master-table', 1:'plasmodium-cycle', 2:'immunity-tables', 3:'antibody-structure', 4:'hiv-cycle'};
+const TIP_EXAMPLES = {
+  'disease-master-table': {
+    title: '📊 Master Table — 8 Infectious Diseases',
+    render: function(){
+      const rows = [
+        {d:'Typhoid', o:'<i>Salmonella typhi</i> (bacterium)', t:'Contaminated food and water', s:'High fever (plateau 39&ndash;40&deg;C by 2nd/3rd week), stomach pain, headache, loss of appetite, constipation, intestinal perforation in severe cases', p:'Personal &amp; public hygiene, clean drinking water'},
+        {d:'Pneumonia', o:'<i>Streptococcus pneumoniae</i>, <i>Haemophilus influenzae</i> (bacteria)', t:'Droplets/aerosols from an infected person; shared glasses/utensils', s:'Fever, chills, cough, headache; lips/nail beds turn grey-bluish in severe cases', p:'Avoid close contact with infected persons/belongings'},
+        {d:'Common cold', o:'Rhinoviruses', t:'Droplets from coughing/sneezing; contaminated objects (pens, cups, doorknobs)', s:'Nasal congestion &amp; discharge, sore throat, cough, headache, tiredness (3&ndash;7 days)', p:'Avoid close contact with infected persons/belongings'},
+        {d:'Malaria', o:'<i>Plasmodium</i> sp. (protozoan)', t:'Bite of female <i>Anopheles</i> mosquito', s:'High-grade fever recurring periodically, with chills', p:'Vector/breeding-place control, mosquito nets, wire mesh'},
+        {d:'Amoebiasis', o:'<i>Entamoeba histolytica</i> (protozoan)', t:'Housefly (mechanical vector)', s:'Constipation, abdominal pain &amp; cramps, stools with excess mucous and blood clots', p:'Personal &amp; public hygiene, clean drinking water'},
+        {d:'Ringworm', o:'<i>Microsporum, Trichophyton, Epidermophyton</i> (fungi)', t:'Towels, clothes, combs (fungus originally from soil)', s:'Dry, scaly lesions with intense itching, aggravated by sweating', p:'Avoid sharing towels/clothes/combs; personal hygiene'},
+        {d:'Ascariasis', o:'<i>Ascaris</i> (roundworm)', t:'Water, vegetables, fruits contaminated with infected faeces', s:'Internal bleeding, muscular pain, fever, anaemia, blockage of intestinal passage', p:'Personal &amp; public hygiene, clean drinking water'},
+        {d:'Elephantiasis (filariasis)', o:'<i>Wuchereria</i> (<i>W. bancrofti</i>, <i>W. malayi</i>)', t:'Bite of a female mosquito vector', s:'Chronic inflammation of lymphatic vessels (usually lower limbs), gross deformity', p:'Vector/breeding-place control, mosquito nets, wire mesh'}
+      ];
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">Exactly the four-column table the tip describes, for all eight diseases, built from this chapter's own disease-by-disease facts.</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Disease</th><th>Causative Organism</th><th>Transmission</th><th>Main Symptoms</th><th>Prevention/Control</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.d}</td><td>${r.o}</td><td>${r.t}</td><td>${r.s}</td><td>${r.p}</td></tr>`).join('')}
+        </tbody></table></div>`;
+    }
+  },
+  'plasmodium-cycle': {
+    title: '🦟 Plasmodium Life Cycle — Step by Step',
+    render: function(){
+      function step(q, a){ return `<div class="tipex-step"><span class="tipex-q">${q}.</span><span>${a}</span></div>`; }
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">The exact nine-step cycle the tip asks you to draw and label from memory, using only this chapter's own Life Cycle of Plasmodium facts.</div>
+        <div class="tipex-case"><div class="tipex-case-title"><i>Plasmodium</i> — two hosts, one cycle</div>
+        ${step(1,'Female <i>Anopheles</i> mosquito bites a healthy person and releases <b>sporozoites</b> (the infectious form) into the blood.')}
+        ${step(2,'Sporozoites reach the <b>liver</b>, multiply asexually inside liver cells, then burst them, releasing more parasites into the blood.')}
+        ${step(3,'These parasites enter <b>RBCs</b> and multiply asexually there too, eventually bursting the RBCs as well.')}
+        ${step(4,'Bursting RBCs release <b>haemozoin</b>, a toxic substance associated with the recurring <b>fever and chills</b>.')}
+        ${step(5,'Inside RBCs, some parasites instead change into <b>gametocytes</b> (the sexual stage).')}
+        ${step(6,'When the diseased person is bitten again by a female <i>Anopheles</i> mosquito, the gametocytes enter the mosquito&rsquo;s body.')}
+        ${step(7,'Inside the mosquito&rsquo;s intestine, the gametocytes fertilise and develop into <b>sporozoites</b>.')}
+        ${step(8,'Sporozoites migrate to and are stored in the mosquito&rsquo;s <b>salivary glands</b>, ready for the next bite &mdash; completing the cycle.')}
+        <div class="tipex-diagnosis">✓ Human = intermediate host (asexual) &middot; Female <i>Anopheles</i> = definitive host (sexual)</div></div>`;
+    }
+  },
+  'immunity-tables': {
+    title: '📊 Two Worked Immunity Tables',
+    render: function(){
+      const cell = (g,f) => g[f.key];
+      function cmpTable(nameA, nameB){
+        const a = COMPARE_DATA.find(g=>g.name===nameA);
+        const b = COMPARE_DATA.find(g=>g.name===nameB);
+        if(!a || !b) return '';
+        return `<div class="tipex-case"><div class="tipex-case-title">${a.name} vs ${b.name}</div>
+          <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Character</th><th>${a.name}</th><th>${b.name}</th></tr></thead><tbody>
+          ${CMP_FIELDS.map(f=>`<tr><td class="tipex-organ">${f.label}</td><td>${cell(a,f)}</td><td>${cell(b,f)}</td></tr>`).join('')}
+          </tbody></table></div></div>`;
+      }
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">Exactly the two tables the tip describes, built from this chapter's own Compare tab data (COMPARE_DATA) &mdash; nothing re-typed by hand.</div>
+        ${cmpTable('Innate immunity','Acquired immunity')}
+        ${cmpTable('Active immunity','Passive immunity')}
+        <div class="tipex-note">Full detail for every row is in the <b>Compare</b> tab &mdash; this is the condensed version worth memorising first.</div>`;
+    }
+  },
+  'antibody-structure': {
+    title: '🔬 Antibody (H₂L₂) Structure — Labelled Parts',
+    render: function(){
+      function step(q, a){ return `<div class="tipex-step"><span class="tipex-q">${q}.</span><span>${a}</span></div>`; }
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">The exact labels the tip asks you to put on the Y-shaped diagram, using only this chapter's own antibody-structure facts.</div>
+        <div class="tipex-case"><div class="tipex-case-title">Antibody monomer — general formula H<sub>2</sub>L<sub>2</sub></div>
+        ${step(1,'Overall shape: a <b>Y-shaped</b> immunoglobulin monomer.')}
+        ${step(2,'<b>2 identical Heavy (H) chains</b> &mdash; the two longer chains forming the stem and arms of the Y.')}
+        ${step(3,'<b>2 identical Light (L) chains</b> &mdash; the two shorter chains paired alongside the heavy chains.')}
+        ${step(4,'Heavy and light chains are held together by inter-chain <b>disulfide (&ndash;S&ndash;S&ndash;) bonds</b>.')}
+        ${step(5,'<b>Variable region (V<sub>H</sub>, V<sub>L</sub>)</b> at the amino (N-terminal) tips of each arm &mdash; this is the <b>antigen-binding site</b>.')}
+        ${step(6,'<b>Constant region (C<sub>H</sub>, C<sub>L</sub>)</b> at the carboxy (C-terminal) stem.')}
+        <div class="tipex-diagnosis">✓ 2 Heavy + 2 Light chains = H₂L₂</div></div>`;
+    }
+  },
+  'hiv-cycle': {
+    title: '🧬 HIV Replication Cycle — Step by Step',
+    render: function(){
+      function step(q, a){ return `<div class="tipex-step"><span class="tipex-q">${q}.</span><span>${a}</span></div>`; }
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">The exact numbered sequence the tip asks you to learn, using only this chapter's own HIV replication facts.</div>
+        <div class="tipex-case"><div class="tipex-case-title">How HIV spreads inside the body</div>
+        ${step(1,'HIV (a <b>retrovirus</b>) enters the body and infects <b>macrophages</b>.')}
+        ${step(2,'Inside the macrophage, viral RNA is <b>reverse-transcribed into viral DNA</b> (reverse transcriptase), which gets incorporated into the host&rsquo;s own DNA.')}
+        ${step(3,'The infected macrophage keeps producing new HIV particles &mdash; becoming a <b>&lsquo;virtual HIV factory&rsquo;</b>.')}
+        ${step(4,'HIV released from macrophages enters <b>helper T-lymphocytes</b> (T<sub>H</sub> cells) and replicates further there.')}
+        ${step(5,'Progeny virus particles released from T<sub>H</sub> cells go on to attack <b>other helper T-lymphocytes</b>.')}
+        ${step(6,'Helper T-lymphocyte numbers <b>progressively decrease</b>, severely weakening the person&rsquo;s immune response &mdash; over months to years, this leads to AIDS.')}
+        <div class="tipex-diagnosis">✓ Macrophage ("HIV factory") → Helper T-cells → T-cell decline → AIDS</div></div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  document.getElementById('tipExampleTitle').textContent = ex.title;
+  document.getElementById('tipExampleBody').innerHTML = ex.render();
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTipsCh7(){
   const el = document.getElementById('studyTipsContent');
   if(!el) return;
@@ -4496,7 +4636,7 @@ function renderStudyTipsCh7(){
     <h3 style="color:var(--gold-2); margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ View example</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   `;

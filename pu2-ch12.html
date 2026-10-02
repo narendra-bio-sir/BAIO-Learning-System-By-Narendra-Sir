@@ -191,6 +191,24 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .tip-list.neet li{border-left-color:var(--gold-2);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold-2);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel-2);color:var(--gold-2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--border);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--border);color:var(--text);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--text-dim);line-height:1.55;background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--text-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--text);min-width:20px;font-weight:700;color:var(--gold-2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .chip-row{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;}
 .chip{
   font-size:11px; padding:4px 9px; border-radius:99px; background:rgba(66,198,160,0.1);
@@ -1060,6 +1078,14 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="btn" id="streakModalCloseBtn" style="width:100%; margin-top:4px;">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="btn" id="tipExampleCloseBtn" style="width:100%; margin-top:4px;">Close</button>
     </div>
   </div>
 
@@ -2411,6 +2437,79 @@ try{ renderConceptTopicNav(); }catch(e){ console.error('renderConceptTopicNav fa
 /* ---------- Study Tips ---------- */
 const STUDYTIPS_CH12_EN = {"title":"Study Tips &ndash; Ecosystem","intro":"How to study this chapter well, and what to focus on for NEET/KCET.","theoryHead":"📘 Theory &mdash; How to Study This Chapter","neetHead":"🎯 NEET/KCET Strategy for This Chapter","theory":["Fix the skeleton first: an ecosystem has a STRUCTURE (biotic + abiotic components, stratification) and a FUNCTION studied under four heads &mdash; productivity, decomposition, energy flow and nutrient cycling. Almost every question in the chapter belongs to one of these four boxes, so slot each new fact into the right box as you read.","Learn the definitions word-perfect, because this chapter is definition-heavy: primary productivity, GPP, NPP, secondary productivity, fragmentation, leaching, catabolism, humification, mineralization, PAR, food chain, food web, trophic level, standing crop. Write each in one line with its unit or example next to it.","Memorise the five steps of decomposition strictly in order (fragmentation &rarr; leaching &rarr; catabolism &rarr; humification &rarr; mineralization) and tag each with its one distinguishing feature &mdash; detritivores, entry into soil, bacterial/fungal enzymes, resistant nutrient reservoir, oxygen-consuming.","Practise the numbers by drawing them, not by reading them. Sketch the grassland number pyramid (58,42,000 &rarr; 7,08,000 &rarr; 3,54,000 &rarr; 3), the biomass pyramid (809 &rarr; 37 &rarr; 11 &rarr; 1.5 kg m&#8315;&#178;) and the ideal energy pyramid (10,00,000 J sunlight &rarr; 10,000 &rarr; 1000 &rarr; 100 &rarr; 10 J) from memory each day until the sequence is automatic.","Build a two-column 'upright vs inverted' table for the three pyramids, with the reason and example for every inverted case, and end it with the three limitations of ecological pyramids. This single table answers most 3-mark and 5-mark board questions from the last section of the chapter."],"neet":["The single most tested formula is NPP = GPP &minus; R. Expect a numerical where GPP and respiratory loss are given; the classic trap is an option that ADDS respiration instead of subtracting it, so read the sign carefully before choosing.","10 percent law numericals are guaranteed. Count the ARROWS, not the organisms &mdash; energy divides by 10 at each arrow. If producers have 10,000 J, the fourth trophic level has 10 J. Also remember producers fix only about 1% of the sunlight available to them; do not confuse that 1% with the 10% transfer figure.","Remember the three 'always/never' statements, which are favourite one-liners: the pyramid of energy is ALWAYS upright; the pyramid of biomass is inverted in the OCEAN (small phytoplankton crop supports large zooplankton crop); and the pyramid of number is inverted for a LARGE TREE with many insects.","Watch out for the 'less than 50%' figure for PAR and the '170 billion tons' figure for the annual net productivity of the biosphere &mdash; both are asked directly, and wrong options are usually near-miss numbers such as 'more than 50%' or '17 billion tons'.","Assertion-Reason and statement-based questions in this chapter cluster around three ideas: a trophic level is a FUNCTIONAL level (one species can occupy several levels at once); energy flow is UNIDIRECTIONAL while nutrients cycle; and saprophytes are given NO place in ecological pyramids. Learn the reasoning behind each, not just the statement."]};
 const STUDYTIPS_CH12_TRANSLATIONS = {};
+/* ---- Study Tips "View example" popovers: these three tips describe something to
+   build/memorise (decomposition's 5 steps, three number-pyramids, an upright/inverted
+   table) but give nothing to look at. The popovers below show the actual filled-in
+   artifact, built from this chapter's own Compare Matrix (COMPARE_DATA, defined
+   further down this same script) and Concept-tab facts - nothing invented by hand. ---- */
+const TIP_EXAMPLE_INDEX = {2:'decomposition', 3:'pyramids-numbers', 4:'pyramids-table'};
+const TIP_EXAMPLES = {
+  'decomposition': {
+    title: '♻️ Five Steps of Decomposition — Worked',
+    render: function(){
+      function step(n, name, feature){ return `<div class="tipex-step"><span class="tipex-q">${n}.</span><span><b>${name}</b> &mdash; ${feature}</span></div>`; }
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">Strictly in order, each tagged with its one distinguishing feature — straight from this chapter's Concept tab.</div>
+        <div class="tipex-case">
+          ${step(1,'Fragmentation','detritivores (e.g. earthworms) break detritus into smaller particles, greatly increasing surface area — purely physical, no minerals released yet.')}
+          ${step(2,'Leaching','water-soluble inorganic nutrients percolate down into the soil — purely physical, no enzyme or organism directly involved.')}
+          ${step(3,'Catabolism','bacterial &amp; fungal enzymes degrade detritus into simpler inorganic substances — the chief biochemical (enzymatic) step.')}
+          ${step(4,'Humification','resistant humus accumulates in the soil, decomposing extremely slowly — acts as a nutrient reservoir and improves soil texture.')}
+          ${step(5,'Mineralization','humus further degrades to release minerals, which plants reabsorb — an oxygen-consuming step, controlled by detritus composition and climate.')}
+        </div>
+        <div class="tipex-note">Memory hook from this chapter: F&ndash;L&ndash;C&ndash;H&ndash;M &mdash; &ldquo;Fine Leaves Catch Heavy Minerals&rdquo;.</div>`;
+    }
+  },
+  'pyramids-numbers': {
+    title: '🔺 Three Ecological Pyramids — Real Numbers',
+    render: function(){
+      const bio = COMPARE_DATA[8], en = COMPARE_DATA[9];
+      function step(label, val){ return `<div class="tipex-step"><span class="tipex-q">&rarr;</span><span>${label}: <b>${val}</b></span></div>`; }
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">The same three pyramids the tip asks you to sketch from memory, with their real worked numbers.</div>
+        <div class="tipex-case"><div class="tipex-case-title">Pyramid of Numbers (grassland)</div>
+          ${step('Producers','58,42,000')}${step('Primary consumers','7,08,000')}${step('Secondary consumers','3,54,000')}${step('Tertiary consumers','3')}
+          <div class="tipex-diagnosis">✓ Narrows sharply — about 60 lakh plants support only 3 top carnivores</div></div>
+        <div class="tipex-case"><div class="tipex-case-title">Pyramid of Biomass (terrestrial, kg m&#8315;&#178;)</div>
+          ${step('Producers','809')}${step('Herbivores','37')}${step('Carnivores','11')}${step('Top carnivores','1.5')}
+          <div class="tipex-diagnosis">✓ Upright here — biomass decreases steadily up the pyramid (would invert in a pond/ocean)</div></div>
+        <div class="tipex-case"><div class="tipex-case-title">Pyramid of Energy (ideal)</div>
+          ${step('Incident sunlight','10,00,000 J')}${step('Producers','10,000 J')}${step('Herbivores','1,000 J')}${step('Carnivores','100 J')}${step('Top carnivores','10 J')}
+          <div class="tipex-diagnosis">✓ Always upright — ${en.mechanism}</div></div>`;
+    }
+  },
+  'pyramids-table': {
+    title: '📊 Upright vs Inverted — All Three Pyramids',
+    render: function(){
+      const rows = [
+        {name:'Numbers', usual:'Upright (grassland: producers &gt; herbivores &gt; carnivores)', inverted:'A single large tree is eaten by a very large number of small insects', example:'Tree ecosystem — narrow base (1 tree), wider above (insects/birds)'},
+        {name:'Biomass', usual:'Upright (terrestrial: 809 &rarr; 37 &rarr; 11 &rarr; 1.5)', inverted:'A small producer biomass supports a larger consumer biomass', example:'Ocean/pond — phytoplankton biomass (4) supports zooplankton biomass (21)'},
+        {name:'Energy', usual:'Always upright, every single time', inverted:'Never — energy is lost at every transfer', example:'~90% of energy is lost as heat at each step (10% law)'}
+      ];
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">One table, all three pyramids, plus the reason and example for every inverted case.</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Pyramid</th><th>Usually</th><th>Inverted when…</th><th>Example</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td>${r.usual}</td><td>${r.inverted}</td><td>${r.example}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">Three limitations of ecological pyramids (from this chapter's Concept tab): (i) they ignore a species belonging to more than one trophic level; (ii) they assume a simple food chain and cannot represent food webs; (iii) saprophytes (decomposers) are given no place in them.</div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  document.getElementById('tipExampleTitle').textContent = ex.title;
+  document.getElementById('tipExampleBody').innerHTML = ex.render();
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTipsCh8(){
   const el = document.getElementById('studyTipsContent');
   if(!el) return;
@@ -2421,7 +2520,7 @@ function renderStudyTipsCh8(){
     <h3 style="color:var(--gold-2); margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ View example</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   `;

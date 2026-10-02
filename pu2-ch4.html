@@ -185,6 +185,24 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .tip-list.neet li{border-left-color:var(--gold-2);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold-2);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel-2);color:var(--gold-2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--border);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--border);color:var(--text);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--text-dim);line-height:1.55;background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--text-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--text);min-width:20px;font-weight:700;color:var(--gold-2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .chip-row{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;}
 .chip{
   font-size:11px; padding:4px 9px; border-radius:99px; background:rgba(66,198,160,0.1);
@@ -1113,6 +1131,14 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="btn" id="streakModalCloseBtn" style="width:100%; margin-top:4px;">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="btn" id="tipExampleCloseBtn" style="width:100%; margin-top:4px;">Close</button>
     </div>
   </div>
 
@@ -4863,6 +4889,64 @@ const STUDYTIPS_CH4_TRANSLATIONS = {
     ]
   }
 };
+/* ---- Study Tips "View example" popovers: the deviations-from-Mendelism
+   table and the genetic-disorders 4-part-fact table are both just
+   instructions in the tip text ("build one comparison table...", "learn it
+   as a 4-part fact...") with nothing to look at. These two buttons show the
+   actual filled-in artifact, built strictly from facts already stated
+   elsewhere in this same chapter file (the Concept tab's deviations list,
+   and this chapter's own Compare Matrix, COMPARE_DATA, defined further down
+   this same script) — nothing is invented or duplicated by hand. ---- */
+const TIP_EXAMPLE_INDEX = {1:'deviations-table', 2:'disorders-table'};
+const TIP_EXAMPLES = {
+  'deviations-table': {
+    title: '📊 Deviations from Mendelism — Filled In',
+    render: function(){
+      const rows = [
+        {dev:'Incomplete dominance', who:'Carl Correns, 1903', ex:'Mirabilis jalapa: RR (red) &times; rr (white) &rarr; Rr pink F1; F2 = 1:2:1 (Red:Pink:White)', key:'Phenotypic ratio = genotypic ratio; heterozygote is a blended, intermediate phenotype'},
+        {dev:'Co-dominance', who:'&mdash;', ex:'AB blood group (I<sup>A</sup>I<sup>B</sup>); sickle-cell carriers (Hb<sup>A</sup>Hb<sup>S</sup>)', key:'Both alleles express fully &amp; independently; F1 resembles BOTH parents, no blending'},
+        {dev:'Multiple alleles', who:'Landsteiner 1901; Bernstein 1924', ex:'ABO blood group: gene I with alleles I<sup>A</sup>, I<sup>B</sup>, i', key:'&gt;2 allelic forms in the population; 6 genotypes but only 4 phenotypes'},
+        {dev:'Pleiotropy', who:'&mdash;', ex:'Sickle-cell gene alters both Hb type AND RBC shape; starch synthesis in pea (BB/Bb/bb); PKU', key:'ONE gene &rarr; MANY traits'},
+        {dev:'Polygenic inheritance', who:'F. Galton (coined &ldquo;eugenics&rdquo;); Nilsson-Ehle (first experimental proof)', ex:'Human skin colour: AABBCC darkest, aabbcc lightest; wheat kernel colour', key:'Trait controlled by 3+ genes with an additive/cumulative effect'}
+      ];
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">This is exactly the table the tip describes — one row per deviation with its worked example, built from this chapter's own Concept-tab notes.</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Deviation</th><th>Discoverer</th><th>Worked Example</th><th>Key Point</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.dev}</td><td>${r.who}</td><td>${r.ex}</td><td>${r.key}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">Remember the mnemonic from the Concept tab: &ldquo;I Can't Make People Perfect&rdquo; &rarr; Incomplete dominance, Co-dominance, Multiple alleles, Pleiotropy, Polygenic inheritance.</div>`;
+    }
+  },
+  'disorders-table': {
+    title: '📊 Genetic Disorders — Filled In 4-Part Facts',
+    render: function(){
+      const names = ['Sickle cell anaemia','Thalassemia','Phenylketonuria (PKU)','Haemophilia A','Colour blindness (Daltonism)','Hypertrichosis',"Down's syndrome","Klinefelter's syndrome","Turner's syndrome",'Cri du chat syndrome'];
+      const rows = COMPARE_DATA.filter(d=>names.includes(d.name));
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">The same 4-part shape the tip describes — mode of inheritance, chromosome/gene, molecular cause, key symptom — for every disorder in this chapter, pulled straight from this chapter's own Compare Matrix.</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Disorder</th><th>Mode of Inheritance</th><th>Chromosome / Gene</th><th>Molecular Cause</th><th>Key Symptom(s)</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td>${r.inheritance}</td><td>${r.chromosome}</td><td>${r.cause}</td><td>${r.keyFeature}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">Full detail (plus a side-by-side comparison picker) is in the <b>Compare Matrix</b> tool further down this chapter — this table is the condensed 4-part shape worth memorising first.</div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  document.getElementById('tipExampleTitle').textContent = ex.title;
+  document.getElementById('tipExampleBody').innerHTML = ex.render();
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTipsCh2(){
   const el = document.getElementById('studyTipsContent');
   if(!el) return;
@@ -4873,7 +4957,7 @@ function renderStudyTipsCh2(){
     <h3 style="color:var(--gold-2); margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ View example</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   `;

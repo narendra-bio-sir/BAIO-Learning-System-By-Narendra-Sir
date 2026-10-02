@@ -185,6 +185,24 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .tip-list.neet li{border-left-color:var(--gold-2);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold-2);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel-2);color:var(--gold-2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--border);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--border);color:var(--text);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--text-dim);line-height:1.55;background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--text-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--text);min-width:20px;font-weight:700;color:var(--gold-2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .chip-row{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;}
 .chip{
   font-size:11px; padding:4px 9px; border-radius:99px; background:rgba(66,198,160,0.1);
@@ -1130,6 +1148,14 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="btn" id="streakModalCloseBtn" style="width:100%; margin-top:4px;">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="btn" id="tipExampleCloseBtn" style="width:100%; margin-top:4px;">Close</button>
     </div>
   </div>
 
@@ -4342,6 +4368,100 @@ const STUDYTIPS_CH6_TRANSLATIONS = {
     ]
   }
 };
+/* ---- Study Tips "View example" popovers: four of the theory tips describe
+   something to build/draw/memorise (a timeline table, an apparatus diagram,
+   two comparison tables, a human-evolution chain) with nothing to look at.
+   These buttons show the actual filled-in artifact, built from this
+   chapter's own data (COMPARE_DATA/CMP_FIELDS used by the Compare tab, and
+   the exact names/years/cc figures already given in the Topics content)
+   so nothing is invented or duplicated by hand. ---- */
+const TIP_EXAMPLE_INDEX = {0:'theories-timeline', 1:'miller-urey', 2:'master-tables', 4:'human-evolution'};
+const TIP_EXAMPLES = {
+  'theories-timeline': {
+    title: '🕰️ Four Theories of Origin of Life — Who, When, Why Rejected',
+    render: function(){
+      const rows = [
+        {theory:'Abiogenesis', who:'Greek philosophers, 600 BC; supported by Aristotle', claim:"Life arises spontaneously and continuously from non-living matter via a 'vital force'.", outcome:"Challenged by Redi (1688) &rarr; Spallanzani (1765) &rarr; finally disproved by Pasteur's swan-necked flask experiment."},
+        {theory:'Special Creation', who:'Father Suarez (1548&ndash;1617)', claim:'Divine/supernatural creation of all life in six days, as in the Biblical book of Genesis.', outcome:"Not disproved by any rival experiment — rejected because it is purely religious, not substantiated by scientific evidence."},
+        {theory:'Biogenesis', who:'Francesco Redi (1688); confirmed by Pasteur', claim:'Life originates only from pre-existing life, by reproduction.', outcome:"Became the scientifically accepted mechanism — but left 'how did the very first life form arise?' unanswered."},
+        {theory:'Cosmozoic / Panspermia', who:'Hermann E. Richter (1865)', claim:'Life reached earth from a distant planet via spores (cosmozoa) riding inside a meteorite.', outcome:'Rejected — recent space research has found no trace of life on other planets.'}
+      ];
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">This is exactly the timeline the tip describes — proposer/year, core claim, and who challenged it or why it was rejected, for all four theories, built from this chapter's own Theories topic.</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Theory</th><th>Proposed By (Year)</th><th>Core Claim</th><th>Challenged By / Outcome</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.theory}</td><td>${r.who}</td><td>${r.claim}</td><td>${r.outcome}</td></tr>`).join('')}
+        </tbody></table></div>`;
+    }
+  },
+  'miller-urey': {
+    title: '🧪 Miller-Urey Apparatus — Labelled Step by Step',
+    render: function(){
+      function step(q, a){ return `<div class="tipex-step"><span class="tipex-q">${q}.</span><span>${a}</span></div>`; }
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">The exact apparatus the tip asks you to draw and label, broken into the five parts/stages worth naming, using only the figures given in this chapter.</div>
+        <div class="tipex-case"><div class="tipex-case-title">Spark-discharge simulation (Stanley Miller &amp; Harold Urey, 1953)</div>
+        ${step(1,"Gas mixture sealed inside the flask &mdash; CH<sub>4</sub> : NH<sub>3</sub> : H<sub>2</sub> in the ratio <b>2:1:2</b>, plus water vapour &mdash; simulating earth's primitive, oxygen-free (reducing) atmosphere.")}
+        ${step(2,"Continuous electric spark discharge maintained at about <b>800&deg;C</b> across the gas mixture &mdash; simulating <b>lightning</b>, the energy source.")}
+        ${step(3,"Water in the flask boiled continuously for about <b>one week</b>, keeping the simulated atmosphere circulating past the spark.")}
+        ${step(4,"Products passed through a <b>condenser</b> and collected in a <b>trap</b> at the base of the apparatus.")}
+        ${step(5,"Result: the trap contained <b>amino acids</b> and simple organic compounds (HCN, fatty acids, urea) &mdash; supporting the Oparin-Haldane theory of chemical evolution.")}
+        <div class="tipex-diagnosis">✓ Gas mixture → spark (lightning) → boil 1 week → condenser/trap → amino acids</div></div>`;
+    }
+  },
+  'master-tables': {
+    title: '📊 Two Worked Comparison Tables',
+    render: function(){
+      const cell = (g,f) => g[f.key];
+      function cmpTable(nameA, nameB){
+        const a = COMPARE_DATA.find(g=>g.name===nameA);
+        const b = COMPARE_DATA.find(g=>g.name===nameB);
+        if(!a || !b) return '';
+        return `<div class="tipex-case"><div class="tipex-case-title">${a.name} vs ${b.name}</div>
+          <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Character</th><th>${a.name}</th><th>${b.name}</th></tr></thead><tbody>
+          ${CMP_FIELDS.map(f=>`<tr><td class="tipex-organ">${f.label}</td><td>${cell(a,f)}</td><td>${cell(b,f)}</td></tr>`).join('')}
+          </tbody></table></div></div>`;
+      }
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">Exactly the two tables the tip describes, built from this chapter's own Compare tab data (COMPARE_DATA) &mdash; nothing re-typed by hand.</div>
+        ${cmpTable('Homologous organs','Analogous organs')}
+        ${cmpTable('Lamarckism','Darwinism')}
+        <div class="tipex-note">Full detail for every row is in the <b>Compare</b> tab &mdash; this is the condensed version worth memorising first.</div>`;
+    }
+  },
+  'human-evolution': {
+    title: '🧬 Human Evolution Chain — Name, Time, Brain Capacity',
+    render: function(){
+      const rows = [
+        {name:'Dryopithecus &amp; Ramapithecus', time:'~15 mya', cc:"Ape-like &mdash; no distinct cranial-capacity figure given at this stage"},
+        {name:'<i>Australopithecus</i> (e.g. &lsquo;Lucy&rsquo;)', time:'~3&ndash;4 mya (Lucy &asymp; 3.2 mya)', cc:'500&ndash;700 cc'},
+        {name:'<i>Homo habilis</i>', time:'Pleistocene rocks, Olduvai Gorge (Leakey, 1960)', cc:'650&ndash;800 cc'},
+        {name:'<i>Homo erectus</i> (Java man, Peking man)', time:'~1.5 mya', cc:'~900 cc'},
+        {name:'<i>Homo neanderthalensis</i>', time:'1,00,000&ndash;40,000 years ago', cc:'~1400 cc'},
+        {name:'<i>Homo sapiens</i> (incl. Cro-Magnon man)', time:'Cro-Magnon &asymp; 34,000 years ago', cc:'~1450 cc (modern)'}
+      ];
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">Exactly the three-numbers-per-stage chain the tip describes, using only the names, times and cranial capacities already given in this chapter's Origin and Evolution of Man topic.</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Stage</th><th>Approx. Time</th><th>Brain Capacity</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td>${r.time}</td><td>${r.cc}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">Where this chapter doesn't give a separate time figure for a stage (e.g. <i>Homo habilis</i>), that gap is shown honestly rather than guessed.</div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  document.getElementById('tipExampleTitle').textContent = ex.title;
+  document.getElementById('tipExampleBody').innerHTML = ex.render();
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTipsCh2(){
   const el = document.getElementById('studyTipsContent');
   if(!el) return;
@@ -4352,7 +4472,7 @@ function renderStudyTipsCh2(){
     <h3 style="color:var(--gold-2); margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ View example</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   `;

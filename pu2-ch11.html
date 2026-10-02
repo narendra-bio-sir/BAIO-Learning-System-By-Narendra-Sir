@@ -191,6 +191,24 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .tip-list.neet li{border-left-color:var(--gold-2);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold-2);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel-2);color:var(--gold-2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--border);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--border);color:var(--text);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--text-dim);line-height:1.55;background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--text-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--text);min-width:20px;font-weight:700;color:var(--gold-2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .chip-row{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;}
 .chip{
   font-size:11px; padding:4px 9px; border-radius:99px; background:rgba(66,198,160,0.1);
@@ -1060,6 +1078,14 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="btn" id="streakModalCloseBtn" style="width:100%; margin-top:4px;">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="btn" id="tipExampleCloseBtn" style="width:100%; margin-top:4px;">Close</button>
     </div>
   </div>
 
@@ -2375,6 +2401,84 @@ try{ renderConceptTopicNav(); }catch(e){ console.error('renderConceptTopicNav fa
 /* ---------- Study Tips ---------- */
 const STUDYTIPS_CH11_EN = {"title":"Study Tips &ndash; Organisms and Populations","intro":"How to study this chapter well, and what to focus on for NEET/KCET.","theoryHead":"📘 Theory &mdash; How to Study This Chapter","neetHead":"🎯 NEET/KCET Strategy for This Chapter","theory":["Split the chapter into two clean halves before you start: the <b>organism half</b> (abiotic factors, homeostasis strategies, adaptations) and the <b>population half</b> (attributes, growth models, interactions). Almost every question in the board and entrance papers comes from one of these two blocks, and mixing them up while revising is the commonest cause of confusion.","Build one master table of the four homeostasis strategies &mdash; <b>Regulate, Conform, Migrate, Suspend</b> &mdash; with a defining line and at least one example each (mammals at 37&deg;C; most animals and nearly all plants; birds flying to warmer regions in winter; bacterial spores, hibernation, aestivation, diapause). Tables like this are far easier to recall in an exam than paragraphs.","Learn the four equations of the chapter by <b>writing out what every symbol means</b>, not by rote: N<sub>(t+1)</sub> = N<sub>t</sub> + [(B + I) &minus; (D + E)], dN/dt = rN, N<sub>t</sub> = N<sub>0</sub>e<sup>rt</sup>, and dN/dt = rN(K &minus; N)/K. If you can say what B, I, D, E, r, K, N<sub>0</sub> and e stand for, you can answer any numerical or graph-based question on growth.","Draw the two growth curves side by side on one page &mdash; the J-shaped exponential curve (unlimited resources) and the S-shaped Verhulst&ndash;Pearl logistic curve with its dashed K line &mdash; and label the lag, acceleration, deceleration and asymptote phases directly on the sigmoid. Diagram-labelling questions from this figure are extremely frequent.","For population interactions, memorise the <b>sign table</b> (+/+, &minus;/&minus;, +/&minus;, +/0, &minus;/0) first and only then attach examples to each row. Keep a running list of the standard examples from Narendra Sir's notes &mdash; lichen, mycorrhiza, fig&ndash;wasp, <i>Ophrys</i>&ndash;bee, orchid&ndash;mango, barnacle&ndash;whale, egret&ndash;cattle, clownfish&ndash;anemone, <i>Cuscuta</i>, Koel&ndash;crow &mdash; because examiners test the example far more often than the definition."],"neet":["The <b>steno-/eury-</b> pair is a guaranteed trap. Remember <i>steno</i> = narrow and <i>eury</i> = wide, and that <i>-thermal</i> refers to temperature while <i>-haline</i> refers to salinity. Also fix the unit: salinity is measured in <b>parts per thousand</b>, not parts per million.","Age-pyramid shape questions are almost always asked as an application: <b>triangular = expanding, bell = stable, urn = declining</b>. Do not memorise the shape alone &mdash; be able to reason from the width of the pre-reproductive base to the prediction about future growth.","Expect at least one numerical from N<sub>(t+1)</sub> = N<sub>t</sub> + [(B + I) &minus; (D + E)]. The trap is a sign error: <b>natality and immigration add, mortality and emigration subtract</b>. Write the four values under the correct sign before you compute anything.","Life-history examples are pure memory marks: <b>breed once</b> &mdash; salmon fish and bamboo; <b>breed many times</b> &mdash; most birds and mammals; <b>many small offspring</b> &mdash; oysters and pelagic fishes; <b>few large offspring</b> &mdash; birds and mammals. Note that birds and mammals appear twice, which is exactly where students get caught.","Two interaction traps recur every year. First, <b>commensalism versus mutualism</b> &mdash; the orchid on a mango tree, the barnacle on a whale and the clownfish in the anemone are all commensalism (one benefits, the other unaffected), whereas lichen, mycorrhiza, fig&ndash;wasp and <i>Ophrys</i>&ndash;bee are mutualism. Second, <b>competition need not involve scarce resources and need not be intraspecific</b>, and the Competitive Exclusion Principle is a presumption that co-existence mechanisms often override."]};
 const STUDYTIPS_CH11_TRANSLATIONS = {};
+/* ---- Study Tips "View example" popovers: these three tips describe something to
+   build/memorise (a strategies table, two growth curves, a sign table) but give
+   nothing to look at. The popovers below show the actual filled-in artifact, built
+   from this chapter's own Compare Matrix (COMPARE_DATA, defined further down this
+   same script) and Board Important notes - nothing invented or duplicated by hand. ---- */
+const TIP_EXAMPLE_INDEX = {1:'homeostasis', 3:'growth-curves', 4:'interactions'};
+const TIP_EXAMPLES = {
+  'homeostasis': {
+    title: '🧬 Four Homeostasis Strategies — Filled In',
+    render: function(){
+      const reg = COMPARE_DATA[2], con = COMPARE_DATA[3];
+      const rows = [
+        {name:'Regulate', def:'Maintains a constant internal temperature/osmotic concentration regardless of external change — energetically the most expensive strategy.', ex:'Birds & mammals thermoregulating, e.g. human body stays at 37&deg;C in both Kargil winter and Kalaburagi summer.'},
+        {name:'Conform', def:'Internal body temperature/osmotic concentration simply tracks the external environment — saves energy but offers no protection from extremes.', ex:'Most invertebrates and reptiles; a lizard whose body temperature rises and falls with the surroundings.'},
+        {name:'Migrate', def:'Temporarily moves away to a more favourable habitat instead of tolerating the stress.', ex:'Siberian cranes migrating to Keoladeo National Park for the winter.'},
+        {name:'Suspend', def:'Enters a dormant state until conditions improve again.', ex:'Hibernation in winter (bear), aestivation in summer (snails, fish), diapause in insects, spores in bacteria.'}
+      ];
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">This is exactly the table the tip describes — one row per strategy with a defining line and a named example, built from this chapter's Compare Matrix (Regulators/Conformers) and Board Important notes.</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Strategy</th><th>Defining line</th><th>Example</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td>${r.def}</td><td>${r.ex}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">Regulate &amp; Conform detail is from this chapter's Compare Matrix (Regulators: ${reg.example}; Conformers: ${con.example}).</div>`;
+    }
+  },
+  'growth-curves': {
+    title: '📈 Exponential vs Logistic — Side by Side',
+    render: function(){
+      const exp = COMPARE_DATA[6], log = COMPARE_DATA[7];
+      const rows = [
+        {label:'Equation', a:'dN/dt = rN, integrating to N<sub>t</sub> = N<sub>0</sub>e<sup>rt</sup>', b:'dN/dt = rN(K &minus; N)/K'},
+        {label:'When it happens', a:exp.agent, b:log.agent},
+        {label:'Curve shape', a:exp.keyFeature, b:log.keyFeature},
+        {label:'Worked example', a:exp.example, b:log.example}
+      ];
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">The two curves the tip asks you to draw side by side, with the exact mechanism, shape and example from this chapter's Compare Matrix.</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th></th><th>Exponential (J-shaped)</th><th>Logistic (S-shaped)</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.label}</td><td>${r.a}</td><td>${r.b}</td></tr>`).join('')}
+        </tbody></table></div>`;
+    }
+  },
+  'interactions': {
+    title: '🔗 Population Interactions — Sign Table',
+    render: function(){
+      const pred = COMPARE_DATA[8], comp = COMPARE_DATA[9], para = COMPARE_DATA[10], mut = COMPARE_DATA[11];
+      const rows = [
+        {name:'Mutualism', sign:'+ / +', ex:mut.example},
+        {name:'Competition', sign:'&minus; / &minus;', ex:'Flamingo &amp; fish competing for the same zooplankton.'},
+        {name:'Predation', sign:'+ / &minus;', ex:'Lion &amp; deer.'},
+        {name:'Parasitism', sign:'+ / &minus;', ex:para.example},
+        {name:'Commensalism', sign:'+ / 0', ex:'Orchid growing on a mango branch; cattle egret &amp; grazing cattle.'},
+        {name:'Amensalism', sign:'&minus; / 0', ex:'<i>Penicillium</i> inhibiting bacterial growth.'}
+      ];
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">Memorise the (+/&minus;/0) notation first, then attach the standard example to each row — straight from this chapter's Board Important notes and Compare Matrix.</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Interaction</th><th>Notation</th><th>Example</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td><b>${r.sign}</b></td><td>${r.ex}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">Competition's keyFeature in the Compare Matrix: ${comp.keyFeature}</div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  document.getElementById('tipExampleTitle').textContent = ex.title;
+  document.getElementById('tipExampleBody').innerHTML = ex.render();
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTipsCh8(){
   const el = document.getElementById('studyTipsContent');
   if(!el) return;
@@ -2385,7 +2489,7 @@ function renderStudyTipsCh8(){
     <h3 style="color:var(--gold-2); margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ View example</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   `;

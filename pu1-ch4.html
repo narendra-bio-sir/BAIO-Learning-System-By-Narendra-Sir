@@ -339,6 +339,24 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .tip-list.neet li{border-left-color:var(--gold);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel2);color:var(--gold2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--line);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--line);color:var(--ink);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--ink-dim);line-height:1.55;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--ink-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--ink);min-width:20px;font-weight:700;color:var(--gold2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .marks-info{background:#0F6653;border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:12.5px;color:#EFFFFA;line-height:1.6;}
 .marks-info b{color:var(--gold);}
 .whatsnew-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;font-size:12px;color:#EFFFFA;background:linear-gradient(135deg,var(--teal2),#0a4239);border-bottom:1px solid var(--line);line-height:1.5;}
@@ -706,6 +724,14 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="sm-save-btn" id="streakModalCloseBtn">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="sm-save-btn" id="tipExampleCloseBtn">Close</button>
     </div>
   </div>
 
@@ -1865,6 +1891,56 @@ function pdfRow(key){
 }
 const STUDYTIPS_CH4_EN = {"title":"Study Tips – Animal Kingdom","intro":"A practical plan for mastering Animal Kingdom and scoring accurately in NEET/KCET.","theoryHead":"📘 Theory — How to Study This Chapter","neetHead":"🎯 NEET Strategy for This Chapter","theory":["Learn classification as a sequence of diagnostic features: level of organisation → symmetry → germ layers → coelom → segmentation → notochord. Do not memorise phyla as an unconnected list.","Make one comparison grid for every phylum: organisation, symmetry, coelom, segmentation, circulation, excretion, reproduction and examples. Revise the grid daily.","Draw and label the water canal system of a sponge, polyp and medusa forms, comb plates, flame cells, nephridia, a starfish water vascular system and the chordate body plan.","For vertebrates, compare endoskeleton, scales/skin, gills or lungs, heart chambers, fertilisation, development and examples; these columns solve most mixed questions.","Say scientific examples aloud with their group, such as Sycon–Porifera, Physalia–Cnidaria, Pleurobrachia–Ctenophora, Ascaris–Aschelminthes and Balanoglossus–Hemichordata."],"neet":["Read every NCERT exception carefully: adult echinoderms are radial but larvae bilateral; Ctenophora has colloblasts, not cnidoblasts; Hemichordata lacks a true notochord.","Expect matching questions on phylum–example, excretory structure–phylum, respiratory organ–class and symmetry–group. Revise both directions, not only the forward pair.","In assertion or statement questions, test each word: “all”, “only”, “always”, and “true coelom” often decide the answer.","For diagram questions, identify one decisive label before considering the whole figure: ostia, cnidoblast, comb plate, parapodium, jointed appendage, tube foot, operculum or mammary gland.","Use a 60-question timed KCET round after each revision. KCET has no negative marking, so practise selecting the best answer quickly and attempt every item."]};
 const STUDYTIPS_CH4_TRANSLATIONS = {"kn":{"title":"ಅಧ್ಯಯನ ಸಲಹೆಗಳು – ಪ್ರಾಣಿ ಸಾಮ್ರಾಜ್ಯ","intro":"ಪ್ರಾಣಿ ಸಾಮ್ರಾಜ್ಯವನ್ನು ದೃಢವಾಗಿ ಕಲಿತು NEET/KCET ನಲ್ಲಿ ನಿಖರವಾಗಿ ಉತ್ತರಿಸಲು ಪ್ರಾಯೋಗಿಕ ಯೋಜನೆ.","theoryHead":"📘 ಸಿದ್ಧಾಂತ — ಈ ಅಧ್ಯಾಯವನ್ನು ಹೇಗೆ ಓದುವುದು","neetHead":"🎯 ಈ ಅಧ್ಯಾಯಕ್ಕೆ NEET ತಂತ್ರ","theory":["ವರ್ಗೀಕರಣವನ್ನು ಲಕ್ಷಣಗಳ ಕ್ರಮವಾಗಿ ಕಲಿಯಿರಿ: ಸಂಘಟನೆಯ ಮಟ್ಟ → ಸಮಮಿತಿ → ಜನನಪದರಗಳು → ಸಿಲೋಮ್ → ಖಂಡೀಕರಣ → ನೋಟೋಕೋರ್ಡ್. ಫೈಲಮ್‌ಗಳನ್ನು ಸಂಬಂಧವಿಲ್ಲದ ಪಟ್ಟಿಯಾಗಿ ಕಂಠಪಾಠ ಮಾಡಬೇಡಿ.","ಪ್ರತಿ ಫೈಲಮ್‌ಗೆ ಸಂಘಟನೆಯ ಮಟ್ಟ, ಸಮಮಿತಿ, ಸಿಲೋಮ್, ಖಂಡೀಕರಣ, ರಕ್ತಪರಿಚಲನೆ, ವಿಸರ್ಜನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಹೋಲಿಕೆ ಕೋಷ್ಟಕವನ್ನು ತಯಾರಿಸಿ; ಪ್ರತಿದಿನ ಮರುಅಭ್ಯಾಸ ಮಾಡಿ.","ಸ್ಪಾಂಜಿನ ಜಲ ಕಾಲುವೆ ವ್ಯವಸ್ಥೆ, ಪಾಲಿಪ್–ಮೆಡುಸಾ ರೂಪಗಳು, ಕಾಂಬ್ ಪ್ಲೇಟ್‌ಗಳು, ಜ್ವಾಲಾ ಕೋಶಗಳು, ನೆಫ್ರಿಡಿಯಾ, ಸ್ಟಾರ್‌ಫಿಶ್‌ನ ಜಲವಾಹಿನಿ ವ್ಯವಸ್ಥೆ ಮತ್ತು ಕಾರ್ಡೇಟ್ ದೇಹಯೋಜನೆಯನ್ನು ಲೇಬಲ್‌ನೊಂದಿಗೆ ಬಿಡಿಸಿ.","ಕಶೇರುಕಿಗಳಲ್ಲಿ ಅಂತಃಕಂಕಾಲ, ಚಿಪ್ಪು/ಚರ್ಮ, ಕಿವಿರು ಅಥವಾ ಶ್ವಾಸಕೋಶ, ಹೃದಯದ ಕೊಠಡಿಗಳು, ಫಲವತ್ತೀಕರಣ, ಬೆಳವಣಿಗೆ ಮತ್ತು ಉದಾಹರಣೆಗಳನ್ನು ಹೋಲಿಸಿ; ಬಹುತೇಕ ಮಿಶ್ರ ಪ್ರಶ್ನೆಗಳಿಗೆ ಇದೇ ಉತ್ತರ.","ವೈಜ್ಞಾನಿಕ ಉದಾಹರಣೆಗಳನ್ನು ಗುಂಪಿನೊಂದಿಗೆ ಜೋರಾಗಿ ಹೇಳುವ ಅಭ್ಯಾಸ ಮಾಡಿ: Sycon–Porifera, Physalia–Cnidaria, Pleurobrachia–Ctenophora, Ascaris–Aschelminthes, Balanoglossus–Hemichordata."],"neet":["NCERT ಅಪವಾದಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ಓದಿ: ವಯಸ್ಕ ಎಕೈನೋಡರ್ಮ್‌ಗಳಲ್ಲಿ ರೇಡಿಯಲ್ ಸಮಮಿತಿ ಆದರೆ ಲಾರ್ವಾಗಳಲ್ಲಿ ದ್ವಿಪಾರ್ಶ್ವ ಸಮಮಿತಿ; Ctenophora ಯಲ್ಲಿ ಕೊಲೋಬ್ಲಾಸ್ಟ್‌ಗಳಿವೆ, ನಿಡೋಬ್ಲಾಸ್ಟ್‌ಗಳಲ್ಲ; Hemichordata ಯಲ್ಲಿ ನಿಜ ನೋಟೋಕೋರ್ಡ್ ಇಲ್ಲ.","ಫೈಲಮ್–ಉದಾಹರಣೆ, ವಿಸರ್ಜಕ ರಚನೆ–ಫೈಲಮ್, ಶ್ವಸನಾಂಗ–ವರ್ಗ ಮತ್ತು ಸಮಮಿತಿ–ಗುಂಪಿನ ಹೊಂದಾಣಿಕೆ ಪ್ರಶ್ನೆಗಳನ್ನು ನಿರೀಕ್ಷಿಸಿ. ಜೋಡಿಗಳನ್ನು ಎರಡೂ ದಿಕ್ಕಿನಲ್ಲಿ ಮರುಅಭ್ಯಾಸ ಮಾಡಿ.","ಅಭಿಪ್ರಾಯ ಅಥವಾ ಹೇಳಿಕೆ ಪ್ರಶ್ನೆಗಳಲ್ಲಿ ಪ್ರತಿಯೊಂದು ಪದವನ್ನು ಪರಿಶೀಲಿಸಿ: “ಎಲ್ಲಾ”, “ಮಾತ್ರ”, “ಯಾವಾಗಲೂ” ಮತ್ತು “ನಿಜ ಸಿಲೋಮ್” ಉತ್ತರವನ್ನು ನಿರ್ಧರಿಸುತ್ತವೆ.","ಚಿತ್ರ ಪ್ರಶ್ನೆಗಳಲ್ಲಿ ಪೂರ್ಣ ಆಕೃತಿಗಿಂತ ಮೊದಲು ಒಂದು ನಿರ್ಣಾಯಕ ಲೇಬಲ್ ಗುರುತಿಸಿ: ostia, cnidoblast, comb plate, parapodium, jointed appendage, tube foot, operculum ಅಥವಾ mammary gland.","ಪ್ರತಿ ಮರುಅಭ್ಯಾಸದ ನಂತರ ಸಮಯಬದ್ಧ 60 KCET ಪ್ರಶ್ನೆಗಳನ್ನು ಮಾಡಿ. KCET ನಲ್ಲಿ ನಕಾರಾತ್ಮಕ ಅಂಕಗಳಿಲ್ಲ; ಆದ್ದರಿಂದ ಎಲ್ಲ ಪ್ರಶ್ನೆಗಳನ್ನು ಪ್ರಯತ್ನಿಸುವ ಅಭ್ಯಾಸ ಮಾಡಿ."]},"hi":{"title":"अध्ययन सुझाव – प्राणी जगत","intro":"प्राणी जगत को मजबूत बनाने और NEET/KCET में सटीक उत्तर देने की व्यावहारिक योजना।","theoryHead":"📘 सिद्धांत — इस अध्याय को कैसे पढ़ें","neetHead":"🎯 इस अध्याय के लिए NEET रणनीति","theory":["वर्गीकरण को लक्षणों के क्रम के रूप में सीखें: संगठन स्तर → सममिति → जनन परतें → सीलोम → खंडीकरण → नोटोकॉर्ड। संघों को असंबद्ध सूची की तरह याद न करें।","हर संघ के लिए संगठन, सममिति, सीलोम, खंडीकरण, परिसंचरण, उत्सर्जन, जनन और उदाहरणों की एक तुलना सारणी बनाकर प्रतिदिन दोहराएँ।","स्पंज की जल-नलिका प्रणाली, पॉलिप और मेडूसा, कॉम्ब प्लेट, ज्वाला कोशिका, नेफ्रिडिया, स्टारफिश की जल संवहनी प्रणाली और कॉर्डेट शरीर-योजना के चित्र बनाकर लेबल करें।","कशेरुकियों में अंतःकंकाल, त्वचा/शल्क, गलफड़े या फेफड़े, हृदय कक्ष, निषेचन, विकास और उदाहरणों की तुलना करें; अधिकांश मिश्रित प्रश्न इन्हीं स्तंभों से हल होते हैं।","वैज्ञानिक उदाहरणों को उनके समूह के साथ बोलकर याद करें: Sycon–Porifera, Physalia–Cnidaria, Pleurobrachia–Ctenophora, Ascaris–Aschelminthes, Balanoglossus–Hemichordata।"],"neet":["NCERT के अपवाद ध्यान से पढ़ें: वयस्क इकाइनोडर्म रेडियल होते हैं पर लार्वा द्विपार्श्वीय; Ctenophora में colloblast होते हैं, cnidoblast नहीं; Hemichordata में वास्तविक नोटोकॉर्ड नहीं होता।","संघ–उदाहरण, उत्सर्जी संरचना–संघ, श्वसन अंग–वर्ग और सममिति–समूह के मिलान वाले प्रश्नों की तैयारी करें। जोड़ियों को दोनों दिशाओं में दोहराएँ।","कथन प्रश्नों में हर शब्द जाँचें: “सभी”, “केवल”, “सदैव” और “वास्तविक सीलोम” अक्सर उत्तर तय करते हैं।","चित्र आधारित प्रश्न में पूरे चित्र से पहले एक निर्णायक लेबल पहचानें: ostia, cnidoblast, comb plate, parapodium, jointed appendage, tube foot, operculum या mammary gland।","हर पुनरावृत्ति के बाद समयबद्ध 60 प्रश्नों का KCET अभ्यास करें। KCET में ऋणात्मक अंकन नहीं है, इसलिए प्रत्येक प्रश्न का प्रयास करें।"]}};
+/* ---- Study Tips "View example" popovers: the phylum grid and the vertebrate
+   grid are both just instructions in the tip text ("make a comparison
+   grid...") with nothing to look at. These two buttons show the actual
+   filled-in artifact the tip is describing, built from this chapter's own
+   Compare Matrix (COMPARE_DATA, defined further down this same script) so
+   the facts always match the Summary tab - nothing is duplicated or
+   re-typed by hand. ---- */
+const TIP_EXAMPLE_INDEX = {1:'phylum-grid', 3:'vertebrate-grid'};
+const TIP_EXAMPLES = {
+  'phylum-grid': {
+    title: '📊 Sample Comparison Grid — Invertebrate Phyla',
+    render: function(){
+      const rows = COMPARE_DATA.slice(0, 10);
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">This is exactly the grid the tip describes — one row per phylum, built from this chapter's own Compare Matrix.</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Phylum</th><th>Defining Feature &amp; Body Plan</th><th>Example</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td><b>${r.organ}</b><br>${r.structuralChange}<br><i>${r.keyFeature}</i></td><td>${r.example}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">Full detail (purpose, every feature) for every row is in the <b>Summary</b> tab's Compare Matrix — this is the condensed version worth memorising first.</div>`;
+    }
+  },
+  'vertebrate-grid': {
+    title: '📊 Sample Comparison Grid — Vertebrate Classes',
+    render: function(){
+      const rows = COMPARE_DATA.slice(10, 17);
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">The same kind of grid, applied to the seven vertebrate classes — built from this chapter's own Compare Matrix.</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Class</th><th>Defining Feature &amp; Key Trait</th><th>Example</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td><b>${r.organ}</b><br>${r.structuralChange}<br><i>${r.keyFeature}</i></td><td>${r.example}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">Full detail (purpose, every feature) for every row is in the <b>Summary</b> tab's Compare Matrix — this is the condensed version worth memorising first.</div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  document.getElementById('tipExampleTitle').textContent = ex.title;
+  document.getElementById('tipExampleBody').innerHTML = ex.render();
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTips(){
   const en = STUDYTIPS_CH4_EN;
   const tr = (currentLang !== 'en') && STUDYTIPS_CH4_TRANSLATIONS[currentLang];
@@ -1873,7 +1949,7 @@ function renderStudyTips(){
     <h3 style="color:var(--gold);margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--ink-dim);font-size:12px;margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ View example</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   </div>`;
