@@ -2476,52 +2476,130 @@ const STUDYTIPS_CH2_TRANSLATIONS = {};
    file (the Gametogenesis Flowcharts card and the NEET strategy tips just
    above/below) — nothing is invented or duplicated by hand. ---- */
 const TIP_EXAMPLE_INDEX = {2:'gamete-table', 3:'hormone-chart'};
+const TIP_EXAMPLE_BTN_LABEL = {en:'View example', kn:'ಉದಾಹರಣೆ ನೋಡಿ', hi:'उदाहरण देखें'};
+/* Trilingual content reuses the exact vetted Kannada/Hindi vocabulary already
+   established in this chapter's own CONCEPT_TRANSLATIONS_CH2 (quiz option
+   and explanation text) rather than introducing new, unverified
+   terminology. Note: STUDYTIPS_CH2_TRANSLATIONS itself is empty, so the tip
+   text above these buttons stays English-only regardless of currentLang -
+   but the example content is translated so it's ready either way. */
 const TIP_EXAMPLES = {
   'gamete-table': {
-    title: '📊 Spermatogenesis vs Oogenesis — Filled-in Table',
-    render: function(){
-      const rows = [
-        {feature:'Site', sperm:'Seminiferous tubules of testis (Sertoli cells nurse the developing cells; Leydig cells lie outside, in the interstitium)', ovum:'Ovary — primary, secondary, tertiary and Graafian follicles'},
-        {feature:'Starting cell', sperm:'Spermatogonium (2n)', ovum:'Oogonium (2n) — formed only during foetal life'},
-        {feature:'Meiotic arrest', sperm:'None — primary spermatocyte proceeds straight through meiosis I and meiosis II', ovum:'Primary oocyte is arrested at <b>prophase&ndash;I</b>; meiosis&ndash;I completes only at the tertiary follicle stage, meiosis&ndash;II only after a sperm enters'},
-        {feature:'Functional gamete(s)', sperm:'4 spermatozoa per primary spermatocyte', ovum:'1 functional ovum per primary oocyte'},
-        {feature:'Polar bodies', sperm:'None produced', ovum:'First polar body at the tertiary-follicle stage (meiosis&ndash;I); second polar body after fertilisation (meiosis&ndash;II)'}
-      ];
-      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">This is exactly the table the tip describes — one row per comparison point, built from this chapter's own Gametogenesis Flowcharts card and NEET strategy notes.</div>
-        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Feature</th><th>Spermatogenesis</th><th>Oogenesis</th></tr></thead><tbody>
-        ${rows.map(r=>`<tr><td class="tipex-organ">${r.feature}</td><td>${r.sperm}</td><td>${r.ovum}</td></tr>`).join('')}
+    title: {
+      en: '📊 Spermatogenesis vs Oogenesis — Filled-in Table',
+      kn: '📊 ಶುಕ್ರಾಣುಜನನ vs ಅಂಡಾಣುಜನನ — ಭರ್ತಿ ಮಾಡಿದ ಟೇಬಲ್',
+      hi: '📊 शुक्राणुजनन बनाम अंडाणुजनन — भरी हुई तालिका'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"This is exactly the table the tip describes — one row per comparison point, built from this chapter's own Gametogenesis Flowcharts card and NEET strategy notes.",
+              th:['Feature','Spermatogenesis','Oogenesis'],
+              rows:[
+                {feature:'Site', sperm:'Seminiferous tubules of testis (Sertoli cells nurse the developing cells; Leydig cells lie outside, in the interstitium)', ovum:'Ovary — primary, secondary, tertiary and Graafian follicles'},
+                {feature:'Starting cell', sperm:'Spermatogonium (2n)', ovum:'Oogonium (2n) — formed only during foetal life'},
+                {feature:'Meiotic arrest', sperm:'None — primary spermatocyte proceeds straight through meiosis I and meiosis II', ovum:'Primary oocyte is arrested at <b>prophase&ndash;I</b>; meiosis&ndash;I completes only at the tertiary follicle stage, meiosis&ndash;II only after a sperm enters'},
+                {feature:'Functional gamete(s)', sperm:'4 spermatozoa per primary spermatocyte', ovum:'1 functional ovum per primary oocyte'},
+                {feature:'Polar bodies', sperm:'None produced', ovum:'First polar body at the tertiary-follicle stage (meiosis&ndash;I); second polar body after fertilisation (meiosis&ndash;II)'}
+              ],
+              note:'Full flowcharts (with every intermediate stage) are in the <b>Concept</b> tab\'s "Gametogenesis Flowcharts" card — this table is the condensed comparison worth memorising first.' },
+        kn: { intro:'ಇದು ಸಲಹೆ ವಿವರಿಸುವ ನಿಖರ ಟೇಬಲ್ — ಪ್ರತಿ ಹೋಲಿಕೆ ಬಿಂದುವಿಗೂ ಒಂದು ಸಾಲು, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Gametogenesis Flowcharts ಕಾರ್ಡ್ ಮತ್ತು NEET ಕಾರ್ಯತಂತ್ರ ಟಿಪ್ಪಣಿಗಳಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ.',
+              th:['ಲಕ್ಷಣ','ಶುಕ್ರಾಣುಜನನ','ಅಂಡಾಣುಜನನ'],
+              rows:[
+                {feature:'ಇರುವ ಸ್ಥಳ', sperm:'ವೃಷಣದ ಶುಕ್ರಜನಕ ನಾಳಗಳು (ಸರ್ಟೋಲಿ ಕೋಶಗಳು ಬೆಳೆಯುತ್ತಿರುವ ಕೋಶಗಳಿಗೆ ಆಹಾರ ನೀಡುತ್ತವೆ; ಲೇಡಿಗ್ ಕೋಶಗಳು ಹೊರಗೆ, ಅಂತರಕೋಶೀಯ ಸ್ಥಳಗಳಲ್ಲಿ ಇರುತ್ತವೆ)', ovum:'ಅಂಡಾಶಯ — ಪ್ರಾಥಮಿಕ, ದ್ವಿತೀಯ, ತೃತೀಯ ಮತ್ತು ಗ್ರಾಫಿಯನ್ ಫಾಲಿಕಲ್‌ಗಳು'},
+                {feature:'ಆರಂಭಿಕ ಕೋಶ', sperm:'ಸ್ಪರ್ಮಟೊಗೋನಿಯಂ (2n)', ovum:'ಊಗೋನಿಯಂ (2n) — ಭ್ರೂಣಾವಸ್ಥೆಯಲ್ಲಿ ಮಾತ್ರ ರೂಪುಗೊಳ್ಳುತ್ತದೆ'},
+                {feature:'ಅರ್ಧಾಣುಭಜನೆ ಸ್ಥಗಿತ', sperm:'ಇಲ್ಲ — ಪ್ರಾಥಮಿಕ ಸ್ಪರ್ಮಟೊಸೈಟ್ ನೇರವಾಗಿ ಅರ್ಧಾಣುಭಜನೆ I ಮತ್ತು II ಮೂಲಕ ಹಾದುಹೋಗುತ್ತದೆ', ovum:'ಪ್ರಾಥಮಿಕ ಊಸೈಟ್ <b>ಪ್ರೊಫೇಸ್–I</b> ನಲ್ಲಿ ಸ್ಥಗಿತಗೊಂಡಿದೆ; ಅರ್ಧಾಣುಭಜನೆ–I ತೃತೀಯ ಫಾಲಿಕಲ್ ಹಂತದಲ್ಲಿ ಮಾತ್ರ ಪೂರ್ಣಗೊಳ್ಳುತ್ತದೆ, ಅರ್ಧಾಣುಭಜನೆ–II ಶುಕ್ರಾಣು ಪ್ರವೇಶಿಸಿದ ನಂತರ ಮಾತ್ರ'},
+                {feature:'ಕ್ರಿಯಾಶೀಲ ಸಂತಾನಜ(ಗಳು)', sperm:'ಪ್ರತಿ ಪ್ರಾಥಮಿಕ ಸ್ಪರ್ಮಟೊಸೈಟ್‌ಗೆ 4 ಶುಕ್ರಾಣುಗಳು', ovum:'ಪ್ರತಿ ಪ್ರಾಥಮಿಕ ಊಸೈಟ್‌ಗೆ 1 ಕ್ರಿಯಾಶೀಲ ಅಂಡಾಣು'},
+                {feature:'ಧ್ರುವ ಕಾಯಗಳು', sperm:'ಯಾವುದೂ ಉತ್ಪತ್ತಿಯಾಗುವುದಿಲ್ಲ', ovum:'ತೃತೀಯ-ಫಾಲಿಕಲ್ ಹಂತದಲ್ಲಿ (ಅರ್ಧಾಣುಭಜನೆ–I) ಮೊದಲ ಧ್ರುವ ಕಾಯ; ಫಲೀಕರಣದ ನಂತರ (ಅರ್ಧಾಣುಭಜನೆ–II) ಎರಡನೇ ಧ್ರುವ ಕಾಯ'}
+              ],
+              note:"ಪ್ರತಿ ಮಧ್ಯಂತರ ಹಂತದೊಂದಿಗೆ ಪೂರ್ಣ ಫ್ಲೋಚಾರ್ಟ್‌ಗಳು Concept ಟ್ಯಾಬ್‌ನ 'Gametogenesis Flowcharts' ಕಾರ್ಡ್‌ನಲ್ಲಿವೆ — ಇದು ಮೊದಲು ಕಂಠಪಾಠ ಮಾಡಲು ಯೋಗ್ಯವಾದ ಸಂಕ್ಷಿಪ್ತ ಹೋಲಿಕೆ." },
+        hi: { intro:'यह ठीक वही तालिका है जिसका वर्णन सुझाव करता है — प्रत्येक तुलना बिंदु के लिए एक पंक्ति, इस अध्याय के अपने Gametogenesis Flowcharts कार्ड और NEET रणनीति नोट्स से बनाई गई।',
+              th:['विशेषता','शुक्राणुजनन','अंडाणुजनन'],
+              rows:[
+                {feature:'स्थित', sperm:'वृषण की शुक्रजनक नलिकाएँ (सर्टोली कोशिकाएँ विकसित हो रही कोशिकाओं को पोषण देती हैं; लेडिग कोशिकाएँ बाहर, अंतराली स्थानों में स्थित होती हैं)', ovum:'अंडाशय — प्राथमिक, द्वितीयक, तृतीयक और ग्राफियन पुटक'},
+                {feature:'आरंभिक कोशिका', sperm:'स्पर्मेटोगोनियम (2n)', ovum:'ऊगोनिया (2n) — केवल भ्रूण अवस्था में बनते हैं'},
+                {feature:'अर्धसूत्रण अवरोध', sperm:'कोई नहीं — प्राथमिक शुक्राणुकोशिका सीधे अर्धसूत्रण–I और अर्धसूत्रण–II से होकर गुजरती है', ovum:'प्राथमिक अंडाणुकोशिका <b>प्रोफेज़–I</b> पर रुकी रहती है; अर्धसूत्रण–I केवल तृतीयक पुटक अवस्था में पूर्ण होता है, अर्धसूत्रण–II केवल शुक्राणु प्रवेश के बाद'},
+                {feature:'क्रियाशील युग्मक', sperm:'प्रति प्राथमिक शुक्राणुकोशिका 4 शुक्राणु', ovum:'प्रति प्राथमिक अंडाणुकोशिका 1 क्रियाशील अंडाणु'},
+                {feature:'ध्रुवीय पिंड', sperm:'कोई उत्पन्न नहीं होता', ovum:'तृतीयक-पुटक अवस्था में (अर्धसूत्रण–I) पहला ध्रुवीय पिंड; निषेचन के बाद (अर्धसूत्रण–II) दूसरा ध्रुवीय पिंड'}
+              ],
+              note:"हर मध्यवर्ती चरण के साथ पूरे फ्लोचार्ट Concept टैब के 'Gametogenesis Flowcharts' कार्ड में हैं — यह पहले याद करने योग्य संक्षिप्त तुलना है।" }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${l.th[1]}</th><th>${l.th[2]}</th></tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r.feature}</td><td>${r.sperm}</td><td>${r.ovum}</td></tr>`).join('')}
         </tbody></table></div>
-        <div class="tipex-note">Full flowcharts (with every intermediate stage) are in the <b>Concept</b> tab's "Gametogenesis Flowcharts" card — this table is the condensed comparison worth memorising first.</div>`;
+        <div class="tipex-note">${l.note}</div>`;
     }
   },
   'hormone-chart': {
-    title: '🧪 Whole-Chapter Hormone Chart',
-    render: function(){
-      const rows = [
-        {h:'GnRH', src:'Hypothalamus', tgt:'Anterior pituitary', fn:'Triggers release of LH &amp; FSH'},
-        {h:'FSH', src:'Anterior pituitary', tgt:'Sertoli cells (male) / growing follicle (female)', fn:'Supports spermiogenesis in males; drives follicle growth in females'},
-        {h:'LH / ICSH', src:'Anterior pituitary', tgt:'Leydig cells (male) / Graafian follicle (female)', fn:'Stimulates testosterone synthesis in males; the mid-cycle LH surge ruptures the Graafian follicle (ovulation) in females'},
-        {h:'Testosterone', src:'Leydig cells (testis)', tgt:'Seminiferous tubules', fn:'Stimulates spermatogenesis'},
-        {h:'Oestrogen', src:'Growing ovarian follicle', tgt:'Endometrium', fn:'Regenerates/proliferates the endometrium (follicular phase)'},
-        {h:'Progesterone', src:'Corpus luteum', tgt:'Endometrium', fn:'Maintains the endometrium through the luteal phase (and pregnancy)'},
-        {h:'hCG', src:'Placenta (trophoblast/chorionic villi)', tgt:'Maternal system', fn:'One of the placenta\'s endocrine secretions that supports pregnancy'},
-        {h:'hPL', src:'Placenta (trophoblast/chorionic villi)', tgt:'Maternal system', fn:'Secreted by the placenta alongside hCG, oestrogens &amp; progestogens'},
-        {h:'Prolactin', src:'Anterior pituitary', tgt:'Mammary gland (alveoli)', fn:'Controls milk secretion'},
-        {h:'Oxytocin', src:'Posterior pituitary', tgt:'Mammary gland + myometrium', fn:'Controls milk ejection (let-down) AND strengthens uterine contractions during parturition (positive feedback)'}
-      ];
-      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">The same ten hormones the tip lists, each with source gland, target and one-line function — built from this chapter's own hormonal-regulation, menstrual-cycle, placenta and parturition notes.</div>
-        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Hormone</th><th>Source</th><th>Target</th><th>Function</th></tr></thead><tbody>
-        ${rows.map(r=>`<tr><td class="tipex-organ">${r.h}</td><td>${r.src}</td><td>${r.tgt}</td><td>${r.fn}</td></tr>`).join('')}
+    title: {
+      en: '🧪 Whole-Chapter Hormone Chart',
+      kn: '🧪 ಪೂರ್ಣ ಅಧ್ಯಾಯದ ಹಾರ್ಮೋನ್ ಚಾರ್ಟ್',
+      hi: '🧪 पूरे अध्याय का हार्मोन चार्ट'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"The same ten hormones the tip lists, each with source gland, target and one-line function — built from this chapter's own hormonal-regulation, menstrual-cycle, placenta and parturition notes.",
+              th:['Hormone','Source','Target','Function'],
+              rows:[
+                {h:'GnRH', src:'Hypothalamus', tgt:'Anterior pituitary', fn:'Triggers release of LH &amp; FSH'},
+                {h:'FSH', src:'Anterior pituitary', tgt:'Sertoli cells (male) / growing follicle (female)', fn:'Supports spermiogenesis in males; drives follicle growth in females'},
+                {h:'LH / ICSH', src:'Anterior pituitary', tgt:'Leydig cells (male) / Graafian follicle (female)', fn:'Stimulates testosterone synthesis in males; the mid-cycle LH surge ruptures the Graafian follicle (ovulation) in females'},
+                {h:'Testosterone', src:'Leydig cells (testis)', tgt:'Seminiferous tubules', fn:'Stimulates spermatogenesis'},
+                {h:'Oestrogen', src:'Growing ovarian follicle', tgt:'Endometrium', fn:'Regenerates/proliferates the endometrium (follicular phase)'},
+                {h:'Progesterone', src:'Corpus luteum', tgt:'Endometrium', fn:'Maintains the endometrium through the luteal phase (and pregnancy)'},
+                {h:'hCG', src:'Placenta (trophoblast/chorionic villi)', tgt:'Maternal system', fn:'One of the placenta\'s endocrine secretions that supports pregnancy'},
+                {h:'hPL', src:'Placenta (trophoblast/chorionic villi)', tgt:'Maternal system', fn:'Secreted by the placenta alongside hCG, oestrogens &amp; progestogens'},
+                {h:'Prolactin', src:'Anterior pituitary', tgt:'Mammary gland (alveoli)', fn:'Controls milk secretion'},
+                {h:'Oxytocin', src:'Posterior pituitary', tgt:'Mammary gland + myometrium', fn:'Controls milk ejection (let-down) AND strengthens uterine contractions during parturition (positive feedback)'}
+              ],
+              note:'Confusing prolactin vs oxytocin, or FSH-on-Sertoli vs LH-on-Leydig, is the single most common mistake — this chart keeps all ten side by side.' },
+        kn: { intro:'ಸಲಹೆ ಪಟ್ಟಿ ಮಾಡುವ ಅದೇ ಹತ್ತು ಹಾರ್ಮೋನ್‌ಗಳು, ಪ್ರತಿಯೊಂದಕ್ಕೂ ಮೂಲ ಗ್ರಂಥಿ, ಗುರಿ ಮತ್ತು ಒಂದು ಸಾಲಿನ ಕಾರ್ಯ — ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ ಹಾರ್ಮೋನ್ ನಿಯಂತ್ರಣ, ಋತುಚಕ್ರ, ಜರಾಯು ಮತ್ತು ಹೆರಿಗೆ ಟಿಪ್ಪಣಿಗಳಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ.',
+              th:['ಹಾರ್ಮೋನ್','ಮೂಲ','ಗುರಿ','ಕಾರ್ಯ'],
+              rows:[
+                {h:'GnRH', src:'ಹೈಪೋಥಲಾಮಸ್', tgt:'ಮುಂಭಾಗದ ಪಿಟ್ಯುಟರಿ', fn:'LH ಮತ್ತು FSH ಬಿಡುಗಡೆಯನ್ನು ಪ್ರಚೋದಿಸುತ್ತದೆ'},
+                {h:'FSH', src:'ಮುಂಭಾಗದ ಪಿಟ್ಯುಟರಿ', tgt:'ಸರ್ಟೋಲಿ ಕೋಶಗಳು (ಗಂಡು) / ಬೆಳೆಯುತ್ತಿರುವ ಫಾಲಿಕಲ್ (ಹೆಣ್ಣು)', fn:'ಗಂಡಿನಲ್ಲಿ ಸ್ಪರ್ಮಿಯೋಜೆನೆಸಿಸ್‌ಗೆ ಬೆಂಬಲ ನೀಡುತ್ತದೆ; ಹೆಣ್ಣಿನಲ್ಲಿ ಫಾಲಿಕಲ್ ಬೆಳವಣಿಗೆಯನ್ನು ಪ್ರೇರೇಪಿಸುತ್ತದೆ'},
+                {h:'LH / ICSH', src:'ಮುಂಭಾಗದ ಪಿಟ್ಯುಟರಿ', tgt:'ಲೇಡಿಗ್ ಕೋಶಗಳು (ಗಂಡು) / ಗ್ರಾಫಿಯನ್ ಫಾಲಿಕಲ್ (ಹೆಣ್ಣು)', fn:'ಗಂಡಿನಲ್ಲಿ ಟೆಸ್ಟೋಸ್ಟಿರೋನ್ ಸಂಶ್ಲೇಷಣೆಯನ್ನು ಪ್ರೇರೇಪಿಸುತ್ತದೆ; ಹೆಣ್ಣಿನಲ್ಲಿ ಮಧ್ಯ-ಚಕ್ರದ LH ಉಲ್ಬಣವು ಗ್ರಾಫಿಯನ್ ಫಾಲಿಕಲ್ ಅನ್ನು ಒಡೆಯುತ್ತದೆ (ಅಂಡೋತ್ಪತ್ತಿ)'},
+                {h:'ಟೆಸ್ಟೋಸ್ಟಿರೋನ್', src:'ಲೇಡಿಗ್ ಕೋಶಗಳು (ವೃಷಣ)', tgt:'ಶುಕ್ರಜನಕ ನಾಳಗಳು', fn:'ಶುಕ್ರಾಣುಜನನವನ್ನು ಪ್ರೇರೇಪಿಸುತ್ತದೆ'},
+                {h:'ಈಸ್ಟ್ರೋಜೆನ್', src:'ಬೆಳೆಯುತ್ತಿರುವ ಅಂಡಾಶಯ ಫಾಲಿಕಲ್', tgt:'ಎಂಡೋಮೆಟ್ರಿಯಂ', fn:'ಎಂಡೋಮೆಟ್ರಿಯಂ ಅನ್ನು ಪುನರುತ್ಪಾದಿಸುತ್ತದೆ/ಪ್ರಸರಿಸುತ್ತದೆ (ಫಾಲಿಕ್ಯುಲರ್ ಹಂತ)'},
+                {h:'ಪ್ರೊಜೆಸ್ಟಿರೋನ್', src:'ಕಾರ್ಪಸ್ ಲುಟಿಯಂ', tgt:'ಎಂಡೋಮೆಟ್ರಿಯಂ', fn:'ಲೂಟಿಯಲ್ ಹಂತದ (ಮತ್ತು ಗರ್ಭಧಾರಣೆಯ) ಉದ್ದಕ್ಕೂ ಎಂಡೋಮೆಟ್ರಿಯಂ ಅನ್ನು ಕಾಪಾಡುತ್ತದೆ'},
+                {h:'hCG', src:'ಜರಾಯು (ಟ್ರೋಫೋಬ್ಲಾಸ್ಟ್/ಕೋರಿಯಾನಿಕ್ ವಿಲ್ಲೈ)', tgt:'ತಾಯಿಯ ವ್ಯವಸ್ಥೆ', fn:'ಗರ್ಭಧಾರಣೆಯನ್ನು ಬೆಂಬಲಿಸುವ ಜರಾಯುವಿನ ಅಂತಃಸ್ರಾವಕ ಸ್ರಾವಗಳಲ್ಲಿ ಒಂದು'},
+                {h:'hPL', src:'ಜರಾಯು (ಟ್ರೋಫೋಬ್ಲಾಸ್ಟ್/ಕೋರಿಯಾನಿಕ್ ವಿಲ್ಲೈ)', tgt:'ತಾಯಿಯ ವ್ಯವಸ್ಥೆ', fn:'hCG, ಈಸ್ಟ್ರೋಜೆನ್‌ಗಳು ಮತ್ತು ಪ್ರೊಜೆಸ್ಟೋಜೆನ್‌ಗಳ ಜೊತೆಗೆ ಜರಾಯುವಿನಿಂದ ಸ್ರವಿಸಲ್ಪಡುತ್ತದೆ'},
+                {h:'ಪ್ರೊಲ್ಯಾಕ್ಟಿನ್', src:'ಮುಂಭಾಗದ ಪಿಟ್ಯುಟರಿ', tgt:'ಸ್ತನ ಗ್ರಂಥಿ (ಅಲ್ವಿಯೋಲೈ)', fn:'ಹಾಲಿನ ಸ್ರವಿಕೆಯನ್ನು ನಿಯಂತ್ರಿಸುತ್ತದೆ'},
+                {h:'ಆಕ್ಸಿಟೋಸಿನ್', src:'ಹಿಂಭಾಗದ ಪಿಟ್ಯುಟರಿ', tgt:'ಸ್ತನ ಗ್ರಂಥಿ + ಮಯೋಮೆಟ್ರಿಯಂ', fn:'ಹಾಲಿನ ಬಿಡುಗಡೆಯನ್ನು (let-down) ನಿಯಂತ್ರಿಸುತ್ತದೆ ಮತ್ತು ಹೆರಿಗೆಯ ಸಮಯದಲ್ಲಿ ಗರ್ಭಾಶಯದ ಸಂಕೋಚನಗಳನ್ನು ಬಲಪಡಿಸುತ್ತದೆ (ಧನಾತ್ಮಕ ಪ್ರತಿಕ್ರಿಯೆ)'}
+              ],
+              note:'ಪ್ರೊಲ್ಯಾಕ್ಟಿನ್ vs ಆಕ್ಸಿಟೋಸಿನ್, ಅಥವಾ ಸರ್ಟೋಲಿಯ ಮೇಲೆ FSH vs ಲೇಡಿಗ್‌ನ ಮೇಲೆ LH ಅನ್ನು ಗೊಂದಲಗೊಳಿಸುವುದು ಅತ್ಯಂತ ಸಾಮಾನ್ಯ ತಪ್ಪು — ಈ ಚಾರ್ಟ್ ಎಲ್ಲಾ ಹತ್ತನ್ನೂ ಒಟ್ಟಿಗೆ ಇರಿಸುತ್ತದೆ.' },
+        hi: { intro:'सुझाव में सूचीबद्ध वही दस हार्मोन, प्रत्येक के साथ स्रोत ग्रंथि, लक्ष्य और एक-पंक्ति कार्य — इस अध्याय के अपने हार्मोन-नियमन, मासिक-चक्र, जरायु और प्रसव नोट्स से बनाया गया।',
+              th:['हार्मोन','स्रोत','लक्ष्य','कार्य'],
+              rows:[
+                {h:'GnRH', src:'हाइपोथैलेमस', tgt:'अग्र पीयूष ग्रंथि', fn:'LH और FSH के स्राव को प्रेरित करता है'},
+                {h:'FSH', src:'अग्र पीयूष ग्रंथि', tgt:'सर्टोली कोशिकाएँ (पुरुष) / बढ़ता हुआ पुटक (महिला)', fn:'पुरुषों में शुक्राणुजनन में सहायता करता है; महिलाओं में पुटक वृद्धि को प्रेरित करता है'},
+                {h:'LH / ICSH', src:'अग्र पीयूष ग्रंथि', tgt:'लेडिग कोशिकाएँ (पुरुष) / ग्राफियन पुटक (महिला)', fn:'पुरुषों में टेस्टोस्टेरोन संश्लेषण को प्रेरित करता है; महिलाओं में मध्य-चक्र का LH उभार ग्राफियन पुटक को फोड़ता है (अंडोत्सर्ग)'},
+                {h:'टेस्टोस्टेरोन', src:'लेडिग कोशिकाएँ (वृषण)', tgt:'शुक्रजनक नलिकाएँ', fn:'शुक्राणुजनन को प्रेरित करता है'},
+                {h:'एस्ट्रोजन', src:'बढ़ता हुआ अंडाशय पुटक', tgt:'एंडोमेट्रियम', fn:'एंडोमेट्रियम को पुनर्जीवित/प्रसारित करता है (पुटकीय चरण)'},
+                {h:'प्रोजेस्टेरोन', src:'कॉर्पस ल्यूटियम', tgt:'एंडोमेट्रियम', fn:'ल्यूटियल चरण (और गर्भावस्था) के दौरान एंडोमेट्रियम को बनाए रखता है'},
+                {h:'hCG', src:'जरायु (ट्रोफोब्लास्ट/कोरियोनिक विली)', tgt:'मातृ तंत्र', fn:'गर्भावस्था का समर्थन करने वाला जरायु का एक अंत:स्रावी स्राव'},
+                {h:'hPL', src:'जरायु (ट्रोफोब्लास्ट/कोरियोनिक विली)', tgt:'मातृ तंत्र', fn:'hCG, एस्ट्रोजन और प्रोजेस्टोजन के साथ जरायु से स्रावित होता है'},
+                {h:'प्रोलैक्टिन', src:'अग्र पीयूष ग्रंथि', tgt:'स्तन ग्रंथि (कूपिकाएँ)', fn:'दूध के स्राव को नियंत्रित करता है'},
+                {h:'ऑक्सीटोसिन', src:'पश्च पीयूष ग्रंथि', tgt:'स्तन ग्रंथि + मायोमेट्रियम', fn:'दूध के उत्सर्जन (लेट-डाउन) को नियंत्रित करता है और प्रसव के दौरान गर्भाशय संकुचन को मजबूत करता है (सकारात्मक प्रतिपुष्टि)'}
+              ],
+              note:'प्रोलैक्टिन बनाम ऑक्सीटोसिन, या सर्टोली पर FSH बनाम लेडिग पर LH को लेकर भ्रमित होना सबसे आम गलती है — यह चार्ट सभी दस को साथ-साथ रखता है।' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${l.th[1]}</th><th>${l.th[2]}</th><th>${l.th[3]}</th></tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r.h}</td><td>${r.src}</td><td>${r.tgt}</td><td>${r.fn}</td></tr>`).join('')}
         </tbody></table></div>
-        <div class="tipex-note">Confusing prolactin vs oxytocin, or FSH-on-Sertoli vs LH-on-Leydig, is the single most common mistake — this chart keeps all ten side by side.</div>`;
+        <div class="tipex-note">${l.note}</div>`;
     }
   }
 };
 function openTipExample(key){
   const ex = TIP_EXAMPLES[key];
   if(!ex) return;
-  document.getElementById('tipExampleTitle').textContent = ex.title;
-  document.getElementById('tipExampleBody').innerHTML = ex.render();
+  const lang = (typeof currentLang!=='undefined' && ex.title[currentLang]) ? currentLang : 'en';
+  document.getElementById('tipExampleTitle').textContent = ex.title[lang];
+  document.getElementById('tipExampleBody').innerHTML = ex.render(lang);
   document.getElementById('tipExampleOverlay').style.display = 'flex';
 }
 function closeTipExample(){
@@ -2545,7 +2623,7 @@ function renderStudyTipsCh8(){
     <h3 style="color:var(--gold-2); margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ View example</button>`:''}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ ${TIP_EXAMPLE_BTN_LABEL[currentLang]||TIP_EXAMPLE_BTN_LABEL.en}</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   `;
