@@ -1064,11 +1064,11 @@ window.addEventListener('afterprint', function(){
       <button class="subtab-btn active" data-t="t1">Slip Test 1</button>
       <button class="subtab-btn" data-t="t2">Slip Test 2</button>
       <button class="subtab-btn" data-t="t3">Slip Test 3</button>
-      <button class="subtab-btn" data-t="combined">Test 1 &amp; 2 (Avg)</button>
+      <button class="subtab-btn" data-t="combined">Test 1-3 (Avg)</button>
       <button class="subtab-btn" data-t="bio_t1" style="border-color:var(--teal);">🧬 Biology &mdash; Slip Test 1</button>
       <button class="subtab-btn" data-t="bio_t2" style="border-color:var(--teal);">🧬 Biology &mdash; Slip Test 2</button>
       <button class="subtab-btn" data-t="bio_t3" style="border-color:var(--teal);">🧬 Biology &mdash; Slip Test 3</button>
-      <button class="subtab-btn" data-t="bio" style="border-color:var(--teal);">🧬 Biology &mdash; Test 1 &amp; 2 Avg</button>
+      <button class="subtab-btn" data-t="bio" style="border-color:var(--teal);">🧬 Biology &mdash; Test 1-3 Avg</button>
     </div>
     <div class="panel">
       <h2 id="topperTitle">Top 5 &mdash; Slip Test 1</h2>
@@ -1447,7 +1447,7 @@ window.addEventListener('afterprint', function(){
   <div class="grid2">
     <div class="panel">
       <h2>Slip Tests &mdash; Biology vs Core Subjects <span class="chip up">Combined avg</span></h2>
-      <div class="desc">Unique-student average % across Slip Test 1 &amp; 2</div>
+      <div class="desc">Unique-student average % across Slip Test 1, 2 &amp; 3</div>
       <canvas id="bvoSlipCanvas" data-h="250"></canvas>
     </div>
     <div class="panel">
@@ -1514,7 +1514,7 @@ window.addEventListener('afterprint', function(){
         <button class="subtab-btn active" data-sec-top="spark-t1">Slip Test 1</button>
         <button class="subtab-btn" data-sec-top="spark-t2">Slip Test 2</button>
         <button class="subtab-btn" data-sec-top="spark-t3">Slip Test 3</button>
-        <button class="subtab-btn" data-sec-top="spark-combined">Test 1 &amp; 2 (Avg)</button>
+        <button class="subtab-btn" data-sec-top="spark-combined">Test 1-3 (Avg)</button>
       </div>
       <div id="sparkTopList"></div>
     </div>
@@ -1550,7 +1550,7 @@ window.addEventListener('afterprint', function(){
         <button class="subtab-btn active" data-sec-top="prime-t1">Slip Test 1</button>
         <button class="subtab-btn" data-sec-top="prime-t2">Slip Test 2</button>
         <button class="subtab-btn" data-sec-top="prime-t3">Slip Test 3</button>
-        <button class="subtab-btn" data-sec-top="prime-combined">Test 1 &amp; 2 (Avg)</button>
+        <button class="subtab-btn" data-sec-top="prime-combined">Test 1-3 (Avg)</button>
       </div>
       <div id="primeTopList"></div>
     </div>
@@ -1571,7 +1571,7 @@ window.addEventListener('afterprint', function(){
     <div class="grid2">
       <div class="panel">
         <h2>SPARK vs PRIME &mdash; Average Score by Subject</h2>
-        <div class="desc">Combined average across both tests</div>
+        <div class="desc">Combined average across all Slip Tests taken</div>
         <canvas id="secCompareAvgChart" data-h="240"></canvas>
       </div>
       <div class="panel">
@@ -1624,7 +1624,7 @@ window.addEventListener('afterprint', function(){
         <button class="subtab-btn active" data-ele-top="t1">Slip Test 1</button>
         <button class="subtab-btn" data-ele-top="t2">Slip Test 2</button>
         <button class="subtab-btn" data-ele-top="t3">Slip Test 3</button>
-        <button class="subtab-btn" data-ele-top="combined">Test 1 &amp; 2 (Avg)</button>
+        <button class="subtab-btn" data-ele-top="combined">Test 1-3 (Avg)</button>
       </div>
       <div id="electronicsTopList"></div>
       <div class="topper-share-bar" id="electronicsTopShareBar"></div>
@@ -2675,7 +2675,7 @@ window.addEventListener('afterprint', function(){
     <div class="coming-soon">
       <div class="icon">🔑</div>
       <h3>Slip Test Key Answers</h3>
-      <p>Answer keys for Slip Test 1 &amp; 2 will appear here once uploaded.</p>
+      <p>Answer keys for Slip Test 1, 2 &amp; 3 will appear here once uploaded.</p>
       <span class="chip gold">Coming Soon</span>
     </div>
   </section>
@@ -3234,11 +3234,11 @@ const COLORS = {BIO:"#2bb3a3", PHY:"#8ecae6", CHE:"#e0685f", MAT:"#d4af37", ELE:
    single-student differences that remain (e.g. one extra Biology score in Test 1,
    Sneha's corrected Test 2 Biology mark) trace to individual roster corrections
    made since that PDF snapshot was taken, not a formula change - this version
-   is simply more current. "Combined" keeps its original meaning throughout
-   (Slip Test 1 + Slip Test 2 only, per-student average of whichever of the two
-   a student attempted) rather than being redefined to include Test 3, so every
-   previously-published "combined"/"both tests" number keeps the same meaning
-   it always had. */
+   is simply more current. "Combined" is the per-student average across
+   whichever of Slip Test 1/2/3 a student attempted (originally Test 1+2 only,
+   from before Test 3 existed; extended here now that it does, so "combined"
+   keeps meaning "every Slip Test on file" rather than silently going stale
+   each time a new one is added). */
 function buildSlipD(){
   const SUBJS = ['BIO','PHY','CHE','MAT','ELE'];
   const CORE = ['BIO','PHY','CHE','MAT'];
@@ -3392,7 +3392,7 @@ function buildSlipD(){
     }).filter(Boolean).sort((a,b)=>a.drop-b.drop);
   }
 
-  const subjectsByTest = { test1: subjStats('t1'), test2: subjStats('t2'), test3: subjStats('t3'), combined: subjStatsCombined(['t1','t2']) };
+  const subjectsByTest = { test1: subjStats('t1'), test2: subjStats('t2'), test3: subjStats('t3'), combined: subjStatsCombined(['t1','t2','t3']) };
   function failBlock(testKey){
     const out = {};
     CORE.forEach(subj=>{ out[subj] = { fail_rate_pct: subjectsByTest[testKey][subj].fail_pct }; });
@@ -3403,7 +3403,7 @@ function buildSlipD(){
     subjects: subjectsByTest,
     fail: { test1: failBlock('test1'), test2: failBlock('test2'), test3: failBlock('test3') },
     top5_t1: top5('t1'), top5_t2: top5('t2'), top5_t3: top5('t3'),
-    top5_combined: top5Combined(['t1','t2']),
+    top5_combined: top5Combined(['t1','t2','t3']),
     most_declined: mostDeclined,
     most_improved: mostImproved,
     multi_fail_t1: multiFail('t1'), multi_fail_t2: multiFail('t2'), multi_fail_t3: multiFail('t3'),
@@ -3721,7 +3721,7 @@ function buildOverview(){
   const classSDPct = classTotalStats.sd!==null ? Math.round((classTotalStats.sd/80*100)*10)/10 : null;
   document.getElementById('overviewKpis').innerHTML = `
     <div class="kpi hero"><div class="kpi-label">Biology Avg % (T1 &rarr; T2 &rarr; T3)</div><div class="kpi-value" style="font-size:19px;">${bio1}% &rarr; ${bio2}% &rarr; ${bio3}%</div><div class="kpi-note up">Highest of all core subjects, every test</div></div>
-    <div class="kpi gold"><div class="kpi-label">Biology Topper Density (&gt;15/20)</div><div class="kpi-value">${D.subjects.combined.BIO.topper_pct}%</div><div class="kpi-note">Test 1 &amp; 2 combined, vs. &lt;4% in Physics &amp; Chemistry</div></div>
+    <div class="kpi gold"><div class="kpi-label">Biology Topper Density (&gt;15/20)</div><div class="kpi-value">${D.subjects.combined.BIO.topper_pct}%</div><div class="kpi-note">Test 1-3 combined, vs. &lt;4% in Physics &amp; Chemistry</div></div>
     <div class="kpi"><div class="kpi-label">Biology's Lead Widened</div><div class="kpi-value" style="font-size:19px;">+${lead1} &rarr; +${lead2} &rarr; +${lead3} pts</div><div class="kpi-note">Gap over next-best core subject</div></div>
     <div class="kpi warn"><div class="kpi-label">Chemistry Fail Rate (T3, latest)</div><div class="kpi-value">${D.fail.test3.CHE.fail_rate_pct}%</div><div class="kpi-note down">Highest fail rate of any subject, Test 3</div></div>
     ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">Biology Spread (SD, T3)</div><div class="kpi-value">${bioSD3Pct}%</div><div class="kpi-note">${sdLabel(bioSD3Pct,100)}</div></div>`:''}
@@ -3786,8 +3786,11 @@ function bioTopperList(test){
       .slice(0,5);
   }
   return STUDENTS
-    .filter(s => s.t1.BIO!==null && s.t2.BIO!==null)
-    .map(s => ({Name:s.name, EnrollCode:s.code, BIO_t1:s.t1.BIO, BIO_t2:s.t2.BIO, avg_bio:Math.round(((s.t1.BIO+s.t2.BIO)/2)*10)/10}))
+    .filter(s => (s.t1 && s.t1.BIO!==null && s.t1.BIO!==undefined) || (s.t2 && s.t2.BIO!==null && s.t2.BIO!==undefined) || (s.t3 && s.t3.BIO!==null && s.t3.BIO!==undefined))
+    .map(s => {
+      const vals = [s.t1 && s.t1.BIO, s.t2 && s.t2.BIO, s.t3 && s.t3.BIO].filter(v=>v!==null && v!==undefined);
+      return {Name:s.name, EnrollCode:s.code, BIO_t1:s.t1 && s.t1.BIO!==undefined ? s.t1.BIO : null, BIO_t2:s.t2 && s.t2.BIO!==undefined ? s.t2.BIO : null, BIO_t3:s.t3 && s.t3.BIO!==undefined ? s.t3.BIO : null, avg_bio:Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)*10)/10};
+    })
     .sort((a,b)=>b.avg_bio-a.avg_bio)
     .slice(0,5);
 }
@@ -3807,12 +3810,17 @@ function renderToppers(mode){
   else if(mode==='bio_t1'){ list=bioTopperList('t1'); scoreKey='avg_bio'; title.textContent='Top 5 — Biology, Slip Test 1'; desc.textContent='Ranked by Biology score in Slip Test 1, out of 20'; }
   else if(mode==='bio_t2'){ list=bioTopperList('t2'); scoreKey='avg_bio'; title.textContent='Top 5 — Biology, Slip Test 2'; desc.textContent='Ranked by Biology score in Slip Test 2, out of 20'; }
   else if(mode==='bio_t3'){ list=bioTopperList('t3'); scoreKey='avg_bio'; title.textContent='Top 5 — Biology, Slip Test 3'; desc.textContent='Ranked by Biology score in Slip Test 3, out of 20'; }
-  else if(mode==='bio'){ list=bioTopperList('combined'); scoreKey='avg_bio'; title.textContent='Top 5 — Biology (Test 1 & 2 Avg)'; desc.textContent='Ranked by average Biology score across Slip Test 1 & 2, out of 20 (students who appeared for Biology in both tests)'; }
-  else { list=D.top5_combined; scoreKey='avg_total'; title.textContent='Top 5 — Combined Average (Test 1 & 2)'; desc.textContent='Ranked by average total score across Test 1 and Test 2 (out of 80)'; }
+  else if(mode==='bio'){ list=bioTopperList('combined'); scoreKey='avg_bio'; title.textContent='Top 5 — Biology (Test 1-3 Avg)'; desc.textContent='Ranked by average Biology score across Slip Test 1, 2 & 3, out of 20 (students who appeared for Biology in at least one)'; }
+  else { list=D.top5_combined; scoreKey='avg_total'; title.textContent='Top 5 — Combined Average (Test 1-3)'; desc.textContent='Ranked by average total score across Slip Test 1, 2 & 3 (out of 80)'; }
 
   function subLineFor(s){
     if(isSingleBio) return `Slip Test ${mode==='bio_t1'?'1':mode==='bio_t2'?'2':'3'}: ${s.avg_bio}/20`;
-    if(mode==='combined'||mode==='bio') return `T1: ${isBio?(s.BIO_t1??'—'):s.TOTAL_t1} &middot; T2: ${isBio?(s.BIO_t2??'—'):s.TOTAL_t2}`;
+    if(mode==='combined'||mode==='bio'){
+      const t1 = isBio?(s.BIO_t1??null):(s.TOTAL_t1??null);
+      const t2 = isBio?(s.BIO_t2??null):(s.TOTAL_t2??null);
+      const t3 = isBio?(s.BIO_t3??null):(s.TOTAL_t3??null);
+      return `T1: ${t1??'—'} &middot; T2: ${t2??'—'}` + (t3!==null ? ` &middot; T3: ${t3}` : '');
+    }
     return subjectLine(s);
   }
 
@@ -4039,7 +4047,7 @@ function renderDropTable(){
 }
 function buildBiology(){
   document.getElementById('bioKpis').innerHTML = `
-    <div class="kpi gold"><div class="kpi-label">Combined Topper Density (T1 &amp; 2)</div><div class="kpi-value">${D.subjects.combined.BIO.topper_pct}%</div><div class="kpi-note">Scoring &gt;15/20 across Test 1 &amp; 2</div></div>
+    <div class="kpi gold"><div class="kpi-label">Combined Topper Density (T1-3)</div><div class="kpi-value">${D.subjects.combined.BIO.topper_pct}%</div><div class="kpi-note">Scoring &gt;15/20 across Test 1-3</div></div>
     <div class="kpi gold"><div class="kpi-label">Test 3 Topper Density</div><div class="kpi-value">${D.subjects.test3.BIO.topper_pct}%</div><div class="kpi-note">Scoring &gt;15/20 in Slip Test 3</div></div>
     <div class="kpi"><div class="kpi-label">Consistent Toppers</div><div class="kpi-value">${D.bio_consistent_toppers.length}</div><div class="kpi-note">&gt;15/20 in every Slip Test attempted (2+ tests)</div></div>
     <div class="kpi warn"><div class="kpi-label">Critical Support Needed</div><div class="kpi-value">${D.bio_critical_support.length}</div><div class="kpi-note down">Average &lt; 7/20 across Slip Tests attempted</div></div>
@@ -4970,7 +4978,7 @@ function buildSEC(){
     const roster = sectionRoster(sec);
     rosterSize[sec] = roster.length;
     subjects[sec] = { test1: subjStats(roster,'t1'), test2: subjStats(roster,'t2'), test3: subjStats(roster,'t3') };
-    top[sec] = { t1: top5(roster,'t1'), t2: top5(roster,'t2'), t3: top5(roster,'t3'), combined: top5Combined(roster,['t1','t2']) };
+    top[sec] = { t1: top5(roster,'t1'), t2: top5(roster,'t2'), t3: top5(roster,'t3'), combined: top5Combined(roster,['t1','t2','t3']) };
     multiFailOut[sec] = { t1: multiFail(roster,'t1'), t2: multiFail(roster,'t2'), t3: multiFail(roster,'t3') };
   });
   return { subjects, rosterSize, top, multiFail: multiFailOut };
@@ -5075,8 +5083,8 @@ function buildSections(){
   });
 
   // ---- COMBINED ----
-  const bioAvgSpark = (SEC.subjects.SPARK.test1.BIO.avg_pct+SEC.subjects.SPARK.test2.BIO.avg_pct)/2;
-  const bioAvgPrime = (SEC.subjects.PRIME.test1.BIO.avg_pct+SEC.subjects.PRIME.test2.BIO.avg_pct)/2;
+  const bioAvgSpark = (SEC.subjects.SPARK.test1.BIO.avg_pct+SEC.subjects.SPARK.test2.BIO.avg_pct+SEC.subjects.SPARK.test3.BIO.avg_pct)/3;
+  const bioAvgPrime = (SEC.subjects.PRIME.test1.BIO.avg_pct+SEC.subjects.PRIME.test2.BIO.avg_pct+SEC.subjects.PRIME.test3.BIO.avg_pct)/3;
   document.getElementById('combinedSecKpis').innerHTML = `
     <div class="kpi hero"><div class="kpi-label">SPARK Bio Avg (Combined)</div><div class="kpi-value">${bioAvgSpark.toFixed(1)}%</div><div class="kpi-note up">Higher than PRIME</div></div>
     <div class="kpi"><div class="kpi-label">PRIME Bio Avg (Combined)</div><div class="kpi-value">${bioAvgPrime.toFixed(1)}%</div><div class="kpi-note">${(bioAvgSpark-bioAvgPrime).toFixed(1)} pts behind SPARK</div></div>
@@ -5092,8 +5100,8 @@ function buildSections(){
   secCompareAvgChart = new Chart(document.getElementById('secCompareAvgChart'), {
     type:'bar',
     data:{ labels:SUBJECTS.map(s=>NAMES[s]), datasets:[
-      {label:'SPARK', data:SUBJECTS.map(s=>Math.round(((SEC.subjects.SPARK.test1[s].avg_pct+SEC.subjects.SPARK.test2[s].avg_pct)/2)*10)/10), backgroundColor:'#2bb3a3', borderRadius:6},
-      {label:'PRIME', data:SUBJECTS.map(s=>Math.round(((SEC.subjects.PRIME.test1[s].avg_pct+SEC.subjects.PRIME.test2[s].avg_pct)/2)*10)/10), backgroundColor:'#e0685f', borderRadius:6}
+      {label:'SPARK', data:SUBJECTS.map(s=>Math.round(((SEC.subjects.SPARK.test1[s].avg_pct+SEC.subjects.SPARK.test2[s].avg_pct+SEC.subjects.SPARK.test3[s].avg_pct)/3)*10)/10), backgroundColor:'#2bb3a3', borderRadius:6},
+      {label:'PRIME', data:SUBJECTS.map(s=>Math.round(((SEC.subjects.PRIME.test1[s].avg_pct+SEC.subjects.PRIME.test2[s].avg_pct+SEC.subjects.PRIME.test3[s].avg_pct)/3)*10)/10), backgroundColor:'#e0685f', borderRadius:6}
     ]},
     options:{ plugins:{legend:{labels:{color:chartText()}}}, scales:{
       x:{ticks:{color:chartMuted()}, grid:{color:chartGridSoft()}},
@@ -5116,8 +5124,8 @@ function buildSections(){
   if(!sectionsBuilt){
     const compTbody = document.querySelector('#secCompareTable tbody');
     compTbody.innerHTML = `
-      <tr class="bio-row"><td>SPARK</td><td>${SEC.rosterSize.SPARK}</td><td>${bioAvgSpark.toFixed(1)}%</td><td>${((SEC.subjects.SPARK.test1.BIO.pass_rate_pct+SEC.subjects.SPARK.test2.BIO.pass_rate_pct)/2).toFixed(1)}%</td><td>${((SEC.subjects.SPARK.test1.BIO.topper_pct+SEC.subjects.SPARK.test2.BIO.topper_pct)/2).toFixed(1)}%</td><td>${SEC.multiFail.SPARK.t3.length} students (latest)</td></tr>
-      <tr><td>PRIME</td><td>${SEC.rosterSize.PRIME}</td><td>${bioAvgPrime.toFixed(1)}%</td><td>${((SEC.subjects.PRIME.test1.BIO.pass_rate_pct+SEC.subjects.PRIME.test2.BIO.pass_rate_pct)/2).toFixed(1)}%</td><td>${((SEC.subjects.PRIME.test1.BIO.topper_pct+SEC.subjects.PRIME.test2.BIO.topper_pct)/2).toFixed(1)}%</td><td>${SEC.multiFail.PRIME.t3.length} students (latest)</td></tr>
+      <tr class="bio-row"><td>SPARK</td><td>${SEC.rosterSize.SPARK}</td><td>${bioAvgSpark.toFixed(1)}%</td><td>${((SEC.subjects.SPARK.test1.BIO.pass_rate_pct+SEC.subjects.SPARK.test2.BIO.pass_rate_pct+SEC.subjects.SPARK.test3.BIO.pass_rate_pct)/3).toFixed(1)}%</td><td>${((SEC.subjects.SPARK.test1.BIO.topper_pct+SEC.subjects.SPARK.test2.BIO.topper_pct+SEC.subjects.SPARK.test3.BIO.topper_pct)/3).toFixed(1)}%</td><td>${SEC.multiFail.SPARK.t3.length} students (latest)</td></tr>
+      <tr><td>PRIME</td><td>${SEC.rosterSize.PRIME}</td><td>${bioAvgPrime.toFixed(1)}%</td><td>${((SEC.subjects.PRIME.test1.BIO.pass_rate_pct+SEC.subjects.PRIME.test2.BIO.pass_rate_pct+SEC.subjects.PRIME.test3.BIO.pass_rate_pct)/3).toFixed(1)}%</td><td>${((SEC.subjects.PRIME.test1.BIO.topper_pct+SEC.subjects.PRIME.test2.BIO.topper_pct+SEC.subjects.PRIME.test3.BIO.topper_pct)/3).toFixed(1)}%</td><td>${SEC.multiFail.PRIME.t3.length} students (latest)</td></tr>
     `;
 
     // Top performer lists (default: test1) + fail tables (default: test1)
@@ -5190,8 +5198,11 @@ function computeElectronicsTop(roster, testKey){
 
 function computeElectronicsCombinedTop(roster){
   return roster
-    .filter(s=> s.t1 && s.t2 && s.t1.TOTAL!==null && s.t2.TOTAL!==null && s.t1.TOTAL!==undefined && s.t2.TOTAL!==undefined)
-    .map(s=>({Name:s.name, EnrollCode:s.code, Section:s.section||'\u2014', avg_total: Math.round(((s.t1.TOTAL+s.t2.TOTAL)/2)*10)/10, TOTAL_t1:s.t1.TOTAL, TOTAL_t2:s.t2.TOTAL}))
+    .filter(s=> (s.t1 && s.t1.TOTAL!==null && s.t1.TOTAL!==undefined) || (s.t2 && s.t2.TOTAL!==null && s.t2.TOTAL!==undefined) || (s.t3 && s.t3.TOTAL!==null && s.t3.TOTAL!==undefined))
+    .map(s=>{
+      const vals = [s.t1 && s.t1.TOTAL, s.t2 && s.t2.TOTAL, s.t3 && s.t3.TOTAL].filter(v=>v!==null && v!==undefined);
+      return {Name:s.name, EnrollCode:s.code, Section:s.section||'\u2014', avg_total: Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)*10)/10, TOTAL_t1:s.t1 && s.t1.TOTAL!==undefined ? s.t1.TOTAL : null, TOTAL_t2:s.t2 && s.t2.TOTAL!==undefined ? s.t2.TOTAL : null, TOTAL_t3:s.t3 && s.t3.TOTAL!==undefined ? s.t3.TOTAL : null};
+    })
     .sort((a,b)=>b.avg_total-a.avg_total)
     .slice(0,5);
 }
@@ -5215,7 +5226,7 @@ function renderElectronicsTopList(list, scoreKey){
   list.forEach((s,i)=>{
     const row = document.createElement('div');
     row.className='rest-row';
-    const subLine = scoreKey==='avg_total' ? `T1: ${s.TOTAL_t1} · T2: ${s.TOTAL_t2}` : `PHY ${s.PHY!=null?s.PHY:'—'} · CHE ${s.CHE!=null?s.CHE:'—'} · MAT ${s.MAT!=null?s.MAT:'—'} · ELE ${s.ELE!=null?s.ELE:'—'}`;
+    const subLine = scoreKey==='avg_total' ? `T1: ${s.TOTAL_t1??'—'} · T2: ${s.TOTAL_t2??'—'}` + (s.TOTAL_t3!=null ? ` · T3: ${s.TOTAL_t3}` : '') : `PHY ${s.PHY!=null?s.PHY:'—'} · CHE ${s.CHE!=null?s.CHE:'—'} · MAT ${s.MAT!=null?s.MAT:'—'} · ELE ${s.ELE!=null?s.ELE:'—'}`;
     row.innerHTML = `<div><span class="name">#${i+1} ${s.Name}</span><span class="code">${s.EnrollCode} · ${s.Section}</span><div style="font-size:11px;color:var(--muted);margin-top:2px;">${subLine}</div></div>
                       <div><span class="score">${s[scoreKey]}</span></div>`;
     el.appendChild(row);
@@ -9600,6 +9611,7 @@ function generatePU1Report(){
     '<div class="rp-badges">'+
       '<span class="rp-badge">\u{1F4CD} Slip Test 1: 13\u201315 Jun 2026</span>'+
       '<span class="rp-badge">\u{1F4CD} Slip Test 2: 17\u201320 Jul 2026</span>'+
+      '<span class="rp-badge">\u{1F4CD} Slip Test 3: 21 Sep 2026</span>'+
       '<span class="rp-badge">\u{1F4CD} NEET OBT 01: 22 Jun 2026</span>'+
       '<span class="rp-badge">\u{1F393} Cohort: 108 Students</span>'+
     '</div>'+
@@ -9612,14 +9624,15 @@ function generatePU1Report(){
   html += '<div class="rp-kpi-grid">'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Slip Test 1 Class Average <span style="font-weight:400;text-transform:none;letter-spacing:0;">(all sections, all subjects)</span></div><div class="rp-kpi-value">'+o.avg1+'/80</div><div class="rp-kpi-sub">'+o.pct1+'% mean score</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Slip Test 2 Class Average <span style="font-weight:400;text-transform:none;letter-spacing:0;">(all sections, all subjects)</span></div><div class="rp-kpi-value" class="rp-red">'+o.avg2+'/80</div><div class="rp-kpi-sub">'+o.pct2+'% mean score</div></div>'+
+    '<div class="rp-kpi"><div class="rp-kpi-label">Slip Test 3 Class Average <span style="font-weight:400;text-transform:none;letter-spacing:0;">(all sections, all subjects)</span></div><div class="rp-kpi-value">'+o.avg3+'/80</div><div class="rp-kpi-sub">'+o.pct3+'% mean score</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Biology Combined Average</div><div class="rp-kpi-value" class="rp-green">'+D.subjects.combined.BIO.avg_pct+'%</div><div class="rp-kpi-sub">Highest of all core subjects</div></div>'+
     '<div class="rp-kpi"><div class="rp-kpi-label">Overall Score Delta</div><div class="rp-kpi-value" class="rp-red">'+o.delta+'</div><div class="rp-kpi-sub">&#9660; '+Math.abs(o.deltaPct)+'% decline in ST2</div></div>'+
   '</div>';
 
   if(inc.slip){
-    const rows = SUBJECTS.map(s=>[NAMES[s], D.subjects.test1[s].avg_pct+'%', D.subjects.test2[s].avg_pct+'%', D.subjects.combined[s].avg_pct+'%', D.subjects.combined[s].fail_pct+'%']);
-    html += rpSection('Slip Test Overview <span style="font-weight:400;font-size:12px;color:var(--muted);">(subject-wise averages, all students)</span>', rpTable(['Subject','Test 1 Avg','Test 2 Avg','Combined Avg','Combined Fail %'], rows, 0) +
-      '<div class="rp-callout warn"><b>Key Insight:</b> Biology leads every subject in average score across both tests, while Chemistry and Mathematics show the steepest declines from Test 1 to Test 2.</div>');
+    const rows = SUBJECTS.map(s=>[NAMES[s], D.subjects.test1[s].avg_pct+'%', D.subjects.test2[s].avg_pct+'%', D.subjects.test3[s].avg_pct+'%', D.subjects.combined[s].avg_pct+'%', D.subjects.combined[s].fail_pct+'%']);
+    html += rpSection('Slip Test Overview <span style="font-weight:400;font-size:12px;color:var(--muted);">(subject-wise averages, all students)</span>', rpTable(['Subject','Test 1 Avg','Test 2 Avg','Test 3 Avg','Combined Avg','Combined Fail %'], rows, 0) +
+      '<div class="rp-callout warn"><b>Key Insight:</b> Biology leads every subject in average score across all three Slip Tests, while Chemistry and Mathematics show the steepest declines across the series.</div>');
   }
   if(inc.monthly){
     if(rpShowMonthsSeparately){
@@ -9798,19 +9811,19 @@ function generatePU1Report(){
     });
   }
   if(inc.risk){
-    const rows = D.multi_fail_t2.slice(0,20).map(s=>[s.Name, s.EnrollCode, s.fail_count, s.TOTAL]);
-    html += rpSection('At-Risk Students <span style="font-weight:400;font-size:12px;color:var(--muted);">(Failing 2+ Subjects, Slip Test 2)</span>', rpTable(['Name','Enrollment','Subjects Failed','Total /80'], rows));
+    const rows = D.multi_fail_t3.slice(0,20).map(s=>[s.Name, s.EnrollCode, s.fail_count, s.TOTAL]);
+    html += rpSection('At-Risk Students <span style="font-weight:400;font-size:12px;color:var(--muted);">(Failing 2+ Subjects, Slip Test 3, latest)</span>', rpTable(['Name','Enrollment','Subjects Failed','Total /80'], rows));
   }
 
   if(inc.conclusion){
-    const rpTheoryPct = (o.pct1 + o.pct2) / 2;
+    const rpTheoryPct = (o.pct1 + o.pct2 + o.pct3) / 3;
     const rpNeetPct = rpOverallPct(NEET_TESTS, 'total', ()=>720);
     const rpKcetPct = rpOverallPct(KCET_TESTS, 'total', ()=>135);
     const rpJeePct = rpOverallPct(JEE_TESTS, 'total', ()=>300);
     const rpTheorySectionPct = sec => {
       const subs = ['PHY','CHE','MAT','BIO'];
       const vals = [];
-      subs.forEach(s=>{ vals.push(SEC.subjects[sec].test1[s].avg_pct); vals.push(SEC.subjects[sec].test2[s].avg_pct); });
+      subs.forEach(s=>{ vals.push(SEC.subjects[sec].test1[s].avg_pct); vals.push(SEC.subjects[sec].test2[s].avg_pct); vals.push(SEC.subjects[sec].test3[s].avg_pct); });
       return vals.reduce((a,b)=>a+b,0)/vals.length;
     };
     const rpSections = ['SPARK','PRIME'].map(sec => ({
