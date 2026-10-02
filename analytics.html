@@ -9010,7 +9010,14 @@ function studentPerformanceCategories(student, pu){
       }
     }
   }
-  [['neet','NEET'],['kcet','KCET'],['jee','JEE']].forEach(([key,label])=>{
+  // Track-relevant competitive exams only: a Biology student is never going to sit
+  // JEE (no Biology paper), so it's not something to "bring the same focus to";
+  // KCET (PCB stream) is used for Biology students instead of the PCM stream, since
+  // that's the one that actually carries their Biology marks. Electronics-track
+  // students get the reverse (PCM-stream KCET + JEE, no NEET).
+  const isEle = isElectronicsOnly(student, pu);
+  const examCats = isEle ? [['jee','JEE'],['kcet','KCET']] : [['neet','NEET'],['kcetpcb','KCET']];
+  examCats.forEach(([key,label])=>{
     const r = computeStudentExamReadiness(key, student, pu, null);
     if(r && r.latestPct!==null && r.latestPct!==undefined) cats.push({label:label, pct:r.latestPct, band:r.band});
   });
