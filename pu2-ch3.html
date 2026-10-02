@@ -2462,46 +2462,110 @@ const STUDYTIPS_CH3_TRANSLATIONS = {};
    (the Concept tab's method/ART/MTP/STD notes) — nothing is invented or
    duplicated by hand. ---- */
 const TIP_EXAMPLE_INDEX = {0:'contraceptive-table', 4:'facing-pairs'};
+const TIP_EXAMPLE_BTN_LABEL = {en:'View example', kn:'ಉದಾಹರಣೆ ನೋಡಿ', hi:'उदाहरण देखें'};
+/* Trilingual content reuses the exact vetted Kannada/Hindi vocabulary already
+   established in this chapter's own CONCEPT_TRANSLATIONS_CH3 (quiz option
+   and explanation text) rather than introducing new, unverified
+   terminology. Note: STUDYTIPS_CH3_TRANSLATIONS itself is empty, so the tip
+   text above these buttons stays English-only regardless of currentLang -
+   but the example content is translated so it's ready either way. */
 const TIP_EXAMPLES = {
   'contraceptive-table': {
-    title: '📊 Master Contraceptive Table — Filled In',
-    render: function(){
-      const rows = [
-        {method:'Natural', example:'Periodic abstinence/rhythm method; coitus interruptus (withdrawal); lactational amenorrhea (LAM)', action:'Avoid coitus on the fertile days (10&ndash;17); withdraw before ejaculation; LAM relies on absence of ovulation during intense lactation (up to 6 months)', type:'Reversible'},
-        {method:'Barrier', example:'Male/female condom, diaphragm, cervical cap', action:'Physically prevent sperm and ovum from meeting; condoms also protect against STIs (diaphragm/cap do not)', type:'Reversible'},
-        {method:'IUD', example:'Non-medicated (Lippes Loop); copper-releasing (CuT, Cu7); hormone-releasing (Progestasert, LNG-20)', action:'Copper ions increase phagocytosis of sperm &amp; suppress motility; hormonal IUDs make the uterine environment unfavourable for sperm and the endometrium unfavourable for implantation', type:'Reversible'},
-        {method:'Hormonal (pills, injectables &amp; implants)', example:'Oral pills (progesterone alone or progesterone&ndash;oestrogen); Depo Provera, Implanon, Norplant, Saheli as injectable/implant forms', action:'Inhibits ovulation, inhibits implantation, alters cervical mucus. Pills: daily for 21 days starting within the first 5 days of the cycle, then a 7-day gap', type:'Reversible'},
-        {method:'Surgical', example:'Vasectomy (vas deferens tied/cut via scrotal incision); Tubectomy (fallopian tube tied/cut via abdominal/vaginal incision)', action:'Blocks the duct/tube so gametes cannot meet, while hormone secretion/ovulation continues unaffected', type:'Terminal (irreversible)'}
-      ];
-      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">This is exactly the table the tip describes — one row per method category, built from this chapter's own Concept-tab notes on contraception.</div>
-        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>Method</th><th>Example / Brand</th><th>Mode of Action</th><th>Reversible / Terminal</th></tr></thead><tbody>
-        ${rows.map(r=>`<tr><td class="tipex-organ">${r.method}</td><td>${r.example}</td><td>${r.action}</td><td>${r.type}</td></tr>`).join('')}
+    title: {
+      en: '📊 Master Contraceptive Table — Filled In',
+      kn: '📊 ಮಾಸ್ಟರ್ ಗರ್ಭನಿರೋಧಕ ಟೇಬಲ್ — ಭರ್ತಿ ಮಾಡಲಾಗಿದೆ',
+      hi: '📊 मास्टर गर्भनिरोधक तालिका — भरी हुई'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"This is exactly the table the tip describes — one row per method category, built from this chapter's own Concept-tab notes on contraception.",
+              th:['Method','Example / Brand','Mode of Action','Reversible / Terminal'],
+              rows:[
+                {method:'Natural', example:'Periodic abstinence/rhythm method; coitus interruptus (withdrawal); lactational amenorrhea (LAM)', action:'Avoid coitus on the fertile days (10&ndash;17); withdraw before ejaculation; LAM relies on absence of ovulation during intense lactation (up to 6 months)', type:'Reversible'},
+                {method:'Barrier', example:'Male/female condom, diaphragm, cervical cap', action:'Physically prevent sperm and ovum from meeting; condoms also protect against STIs (diaphragm/cap do not)', type:'Reversible'},
+                {method:'IUD', example:'Non-medicated (Lippes Loop); copper-releasing (CuT, Cu7); hormone-releasing (Progestasert, LNG-20)', action:'Copper ions increase phagocytosis of sperm &amp; suppress motility; hormonal IUDs make the uterine environment unfavourable for sperm and the endometrium unfavourable for implantation', type:'Reversible'},
+                {method:'Hormonal (pills, injectables &amp; implants)', example:'Oral pills (progesterone alone or progesterone&ndash;oestrogen); Depo Provera, Implanon, Norplant, Saheli as injectable/implant forms', action:'Inhibits ovulation, inhibits implantation, alters cervical mucus. Pills: daily for 21 days starting within the first 5 days of the cycle, then a 7-day gap', type:'Reversible'},
+                {method:'Surgical', example:'Vasectomy (vas deferens tied/cut via scrotal incision); Tubectomy (fallopian tube tied/cut via abdominal/vaginal incision)', action:'Blocks the duct/tube so gametes cannot meet, while hormone secretion/ovulation continues unaffected', type:'Terminal (irreversible)'}
+              ],
+              note:'This is the five-minute revision page the tip describes — if you can rebuild this table from memory, you can answer almost any contraceptive-method question.' },
+        kn: { intro:'ಇದು ಸಲಹೆ ವಿವರಿಸುವ ನಿಖರ ಟೇಬಲ್ — ಪ್ರತಿ ವಿಧಾನ ವರ್ಗಕ್ಕೂ ಒಂದು ಸಾಲು, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Concept ಟ್ಯಾಬ್ ಟಿಪ್ಪಣಿಗಳಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ.',
+              th:['ವಿಧಾನ','ಉದಾಹರಣೆ / ಬ್ರಾಂಡ್','ಕ್ರಿಯಾ ವಿಧಾನ','ಪ್ರತಿವರ್ತನೀಯ / ಅಂತಿಮ'],
+              rows:[
+                {method:'ನೈಸರ್ಗಿಕ', example:'ಆವರ್ತಕ ಸಂಯಮ/ರಿದಂ ವಿಧಾನ; ಸಂಭೋಗ ವಿಚ್ಛೇದನ (ಹಿಂತೆಗೆತ); ಸ್ತನ್ಯಪಾನ ಅಮೆನೋರಿಯಾ (LAM)', action:'ಫಲವತ್ತಾದ ದಿನಗಳಲ್ಲಿ (10–17) ಸಂಭೋಗ ತಪ್ಪಿಸುವುದು; ಸ್ಖಲನದ ಮೊದಲು ಹಿಂತೆಗೆದುಕೊಳ್ಳುವುದು; LAM ತೀವ್ರ ಸ್ತನ್ಯಪಾನದ ಸಮಯದಲ್ಲಿ (6 ತಿಂಗಳವರೆಗೆ) ಅಂಡೋತ್ಪತ್ತಿ ಇಲ್ಲದಿರುವಿಕೆಯನ್ನು ಅವಲಂಬಿಸಿದೆ', type:'ಪ್ರತಿವರ್ತನೀಯ'},
+                {method:'ಬ್ಯಾರಿಯರ್', example:'ಪುರುಷ/ಸ್ತ್ರೀ ಕಾಂಡೋಮ್, ಡಯಾಫ್ರಾಮ್, ಗರ್ಭಕಂಠ ಕ್ಯಾಪ್', action:'ವೀರ್ಯಾಣು ಮತ್ತು ಅಂಡಾಣು ಭೇಟಿಯಾಗುವುದನ್ನು ಭೌತಿಕವಾಗಿ ತಡೆಯುತ್ತವೆ; ಕಾಂಡೋಮ್‌ಗಳು STIಗಳ ವಿರುದ್ಧವೂ ರಕ್ಷಣೆ ನೀಡುತ್ತವೆ (ಡಯಾಫ್ರಾಮ್/ಕ್ಯಾಪ್ ನೀಡುವುದಿಲ್ಲ)', type:'ಪ್ರತಿವರ್ತನೀಯ'},
+                {method:'IUD', example:'ಔಷಧರಹಿತ (ಲಿಪ್ಪೆಸ್ ಲೂಪ್); ತಾಮ್ರ-ಬಿಡುಗಡೆ (CuT, Cu7); ಹಾರ್ಮೋನ್-ಬಿಡುಗಡೆ (Progestasert, LNG-20)', action:'ತಾಮ್ರ ಅಯಾನುಗಳು ವೀರ್ಯಾಣುಗಳ ಫಾಗೊಸೈಟೋಸಿಸ್ ಅನ್ನು ಹೆಚ್ಚಿಸುತ್ತವೆ ಮತ್ತು ಚಲನಶೀಲತೆಯನ್ನು ನಿಗ್ರಹಿಸುತ್ತವೆ; ಹಾರ್ಮೋನಲ್ IUDಗಳು ಗರ್ಭಕೋಶದ ಪರಿಸರವನ್ನು ವೀರ್ಯಾಣುಗಳಿಗೆ ಪ್ರತಿಕೂಲವಾಗಿಸುತ್ತವೆ ಮತ್ತು ಎಂಡೋಮೆಟ್ರಿಯಂ ಅನ್ನು ಅಳವಡಿಕೆಗೆ ಪ್ರತಿಕೂಲವಾಗಿಸುತ್ತವೆ', type:'ಪ್ರತಿವರ್ತನೀಯ'},
+                {method:'ಹಾರ್ಮೋನಲ್ (ಮಾತ್ರೆಗಳು, ಇಂಜೆಕ್ಟಬಲ್‌ಗಳು ಮತ್ತು ಇಂಪ್ಲಾಂಟ್‌ಗಳು)', example:'ಮೌಖಿಕ ಮಾತ್ರೆಗಳು (ಕೇವಲ ಪ್ರೊಜೆಸ್ಟಿರೋನ್ ಅಥವಾ ಪ್ರೊಜೆಸ್ಟಿರೋನ್–ಈಸ್ಟ್ರೋಜೆನ್); Depo Provera, Implanon, Norplant, Saheli ಇಂಜೆಕ್ಟಬಲ್/ಇಂಪ್ಲಾಂಟ್ ರೂಪಗಳಾಗಿ', action:'ಅಂಡೋತ್ಪತ್ತಿಯನ್ನು ತಡೆಯುತ್ತದೆ, ಅಳವಡಿಕೆಯನ್ನು ತಡೆಯುತ್ತದೆ, ಗರ್ಭಕಂಠ ಲೋಳೆಯನ್ನು ಬದಲಾಯಿಸುತ್ತದೆ. ಮಾತ್ರೆಗಳು: ಚಕ್ರದ ಮೊದಲ 5 ದಿನಗಳೊಳಗೆ ಆರಂಭಿಸಿ 21 ದಿನಗಳ ಕಾಲ ದಿನನಿತ್ಯ, ನಂತರ 7 ದಿನಗಳ ಅಂತರ', type:'ಪ್ರತಿವರ್ತನೀಯ'},
+                {method:'ಶಸ್ತ್ರಚಿಕಿತ್ಸಾ', example:'ವ್ಯಾಸೆಕ್ಟಮಿ (ಸ್ಕ್ರೋಟಲ್ ಛೇದನದ ಮೂಲಕ ವ್ಯಾಸ್ ಡಿಫರೆನ್ಸ್ ಕಟ್ಟುವುದು/ಕತ್ತರಿಸುವುದು); ಟ್ಯೂಬೆಕ್ಟಮಿ (ಹೊಟ್ಟೆ/ಯೋನಿ ಛೇದನದ ಮೂಲಕ ಫಾಲೋಪಿಯನ್ ನಾಳ ಕಟ್ಟುವುದು/ಕತ್ತರಿಸುವುದು)', action:'ಸಂತಾನಜಗಳು ಭೇಟಿಯಾಗದಂತೆ ನಾಳ/ಟ್ಯೂಬ್ ಅನ್ನು ತಡೆಯುತ್ತದೆ, ಆದರೆ ಹಾರ್ಮೋನ್ ಸ್ರವಿಕೆ/ಅಂಡೋತ್ಪತ್ತಿ ಪರಿಣಾಮ ಬೀರದೆ ಮುಂದುವರಿಯುತ್ತದೆ', type:'ಅಂತಿಮ (ಅಪ್ರತಿವರ್ತನೀಯ)'}
+              ],
+              note:'ಇದು ಸಲಹೆ ವಿವರಿಸುವ ಐದು-ನಿಮಿಷದ ಪುನರ್ಮನನ ಪುಟ — ನೀವು ಈ ಟೇಬಲ್ ಅನ್ನು ನೆನಪಿನಿಂದ ಪುನರ್ನಿರ್ಮಿಸಬಲ್ಲಿರಾದರೆ, ನೀವು ಬಹುತೇಕ ಯಾವುದೇ ಗರ್ಭನಿರೋಧಕ-ವಿಧಾನ ಪ್ರಶ್ನೆಗೆ ಉತ್ತರಿಸಬಹುದು.' },
+        hi: { intro:'यह ठीक वही तालिका है जिसका वर्णन सुझाव करता है — प्रत्येक विधि श्रेणी के लिए एक पंक्ति, इस अध्याय के अपने Concept टैब नोट्स से बनाई गई।',
+              th:['विधि','उदाहरण / ब्रांड','क्रियाविधि','प्रतिवर्तनीय / अंतिम'],
+              rows:[
+                {method:'प्राकृतिक', example:'आवधिक संयम/रिदम विधि; सहवास विच्छेद (निष्कासन); स्तनपान अनार्तव (LAM)', action:'फलदायी दिनों (10–17) में सहवास से बचना; स्खलन से पहले निष्कासन; LAM तीव्र स्तनपान के दौरान (6 महीने तक) अंडोत्सर्ग की अनुपस्थिति पर निर्भर करता है', type:'प्रतिवर्तनीय'},
+                {method:'अवरोधक', example:'पुरुष/महिला कॉन्डोम, डायाफ्राम, सर्विकल कैप', action:'शुक्राणु और अंडाणु को मिलने से भौतिक रूप से रोकते हैं; कॉन्डोम STI से भी रक्षा करते हैं (डायाफ्राम/कैप नहीं करते)', type:'प्रतिवर्तनीय'},
+                {method:'IUD', example:'औषधरहित (लिप्पेस लूप); तांबा-स्रावी (CuT, Cu7); हार्मोन-स्रावी (Progestasert, LNG-20)', action:'तांबे के आयन शुक्राणुओं के भक्षकाणुकरण को बढ़ाते हैं और गतिशीलता को दबाते हैं; हार्मोनल IUD गर्भाशय के वातावरण को शुक्राणुओं के लिए प्रतिकूल बनाते हैं और एंडोमेट्रियम को प्रत्यारोपण के लिए प्रतिकूल बनाते हैं', type:'प्रतिवर्तनीय'},
+                {method:'हार्मोनल (गोलियाँ, इंजेक्शन और इम्प्लांट)', example:'मौखिक गोलियाँ (केवल प्रोजेस्टेरोन या प्रोजेस्टेरोन–एस्ट्रोजन); Depo Provera, Implanon, Norplant, Saheli इंजेक्शन/इम्प्लांट रूपों में', action:'अंडोत्सर्ग को रोकता है, प्रत्यारोपण को रोकता है, गर्भाशय ग्रीवा के म्यूकस को बदलता है। गोलियाँ: चक्र के पहले 5 दिनों के भीतर शुरू करके 21 दिनों तक प्रतिदिन, फिर 7 दिनों का अंतराल', type:'प्रतिवर्तनीय'},
+                {method:'शल्य चिकित्सा', example:'वैसेक्टॉमी (स्क्रोटल चीरे द्वारा वास डिफरेंस बाँधना/काटना); ट्यूबेक्टॉमी (उदर/योनि चीरे द्वारा फैलोपियन ट्यूब बाँधना/काटना)', action:'युग्मक मिल न सकें इसलिए नलिका/ट्यूब को अवरुद्ध करता है, जबकि हार्मोन स्राव/अंडोत्सर्ग अप्रभावित जारी रहता है', type:'अंतिम (अप्रतिवर्तनीय)'}
+              ],
+              note:'यह सुझाव में वर्णित पाँच-मिनट की रिवीजन पेज है — यदि आप इस तालिका को याद से फिर से बना सकते हैं, तो आप लगभग किसी भी गर्भनिरोधक-विधि प्रश्न का उत्तर दे सकते हैं।' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${l.th[1]}</th><th>${l.th[2]}</th><th>${l.th[3]}</th></tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r.method}</td><td>${r.example}</td><td>${r.action}</td><td>${r.type}</td></tr>`).join('')}
         </tbody></table></div>
-        <div class="tipex-note">This is the five-minute revision page the tip describes — if you can rebuild this table from memory, you can answer almost any contraceptive-method question.</div>`;
+        <div class="tipex-note">${l.note}</div>`;
     }
   },
   'facing-pairs': {
-    title: '🗂️ Facing Flashcard Pairs — Filled In',
-    render: function(){
+    title: {
+      en: '🗂️ Facing Flashcard Pairs — Filled In',
+      kn: '🗂️ ಎದುರುಬದುರು ಫ್ಲ್ಯಾಶ್‌ಕಾರ್ಡ್ ಜೋಡಿಗಳು — ಭರ್ತಿ ಮಾಡಲಾಗಿದೆ',
+      hi: '🗂️ आमने-सामने फ्लैशकार्ड जोड़े — भरे हुए'
+    },
+    render: function(lang){
       function pair(a,b){ return `<div class="tipex-step"><span class="tipex-q">◀</span><span>${a}</span></div><div class="tipex-step"><span class="tipex-q">▶</span><span>${b}</span></div>`; }
-      const cases = [
-        { title:'Vasectomy vs Tubectomy', body:pair('<b>Vasectomy</b> (male) — part of the vas deferens tied/removed via a scrotal incision; testosterone secretion continues unaffected.', '<b>Tubectomy</b> (female) — part of the fallopian tube tied/removed via an abdominal/vaginal incision; ovulation continues unaffected.') },
-        { title:'Rhythm Method vs Coitus Interruptus', body:pair('<b>Rhythm/periodic abstinence</b> — avoid coitus during the fertile period, day 10&ndash;17 of the cycle.', '<b>Coitus interruptus</b> — withdrawal of the penis before ejaculation.') },
-        { title:'Non-medicated vs Copper vs Hormonal IUDs', body:pair('<b>Non-medicated</b> (Lippes Loop) — a simple inert device.', '<b>Copper-releasing</b> (CuT, Cu7) — Cu ions increase phagocytosis of sperm &amp; suppress sperm motility; <b>Hormone-releasing</b> (Progestasert, LNG-20) — make the uterine environment unfavourable for sperm and the endometrium unfavourable for implantation.') },
-        { title:'ZIFT vs GIFT', body:pair('<b>ZIFT</b> — a zygote or embryo up to 8 blastomeres is transferred into the fallopian tube.', '<b>GIFT</b> — a donor ovum (a gamete, not an embryo) is transferred into the fallopian tube of a recipient who cannot produce her own ova.') },
-        { title:'Curable vs Incurable STDs', body:pair('<b>Curable</b> — every STD except the three below, if detected and treated early.', '<b>Incurable</b> — hepatitis-B, genital herpes and HIV.') },
-        { title:'Healthy vs Unhealthy Trends of MTP', body:pair('<b>Healthy</b> — safe termination of unwanted/risky pregnancies, safest in the first trimester.', '<b>Unhealthy</b> — illegal MTPs by unqualified quacks, and misuse of amniocentesis to detect and abort female foetuses.') }
-      ];
-      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">The six pairs examiners most often mix up, each filled in from this chapter's own Concept-tab notes — exactly what you'd write on facing flashcards.</div>
-        ${cases.map(c=>`<div class="tipex-case"><div class="tipex-case-title">${c.title}</div>${c.body}</div>`).join('')}`;
+      const L = {
+        en: { intro:"The six pairs examiners most often mix up, each filled in from this chapter's own Concept-tab notes — exactly what you'd write on facing flashcards.",
+              cases:[
+                { title:'Vasectomy vs Tubectomy', a:'<b>Vasectomy</b> (male) — part of the vas deferens tied/removed via a scrotal incision; testosterone secretion continues unaffected.', b:'<b>Tubectomy</b> (female) — part of the fallopian tube tied/removed via an abdominal/vaginal incision; ovulation continues unaffected.' },
+                { title:'Rhythm Method vs Coitus Interruptus', a:'<b>Rhythm/periodic abstinence</b> — avoid coitus during the fertile period, day 10&ndash;17 of the cycle.', b:'<b>Coitus interruptus</b> — withdrawal of the penis before ejaculation.' },
+                { title:'Non-medicated vs Copper vs Hormonal IUDs', a:'<b>Non-medicated</b> (Lippes Loop) — a simple inert device.', b:'<b>Copper-releasing</b> (CuT, Cu7) — Cu ions increase phagocytosis of sperm &amp; suppress sperm motility; <b>Hormone-releasing</b> (Progestasert, LNG-20) — make the uterine environment unfavourable for sperm and the endometrium unfavourable for implantation.' },
+                { title:'ZIFT vs GIFT', a:'<b>ZIFT</b> — a zygote or embryo up to 8 blastomeres is transferred into the fallopian tube.', b:'<b>GIFT</b> — a donor ovum (a gamete, not an embryo) is transferred into the fallopian tube of a recipient who cannot produce her own ova.' },
+                { title:'Curable vs Incurable STDs', a:'<b>Curable</b> — every STD except the three below, if detected and treated early.', b:'<b>Incurable</b> — hepatitis-B, genital herpes and HIV.' },
+                { title:'Healthy vs Unhealthy Trends of MTP', a:'<b>Healthy</b> — safe termination of unwanted/risky pregnancies, safest in the first trimester.', b:'<b>Unhealthy</b> — illegal MTPs by unqualified quacks, and misuse of amniocentesis to detect and abort female foetuses.' }
+              ] },
+        kn: { intro:'ಪರೀಕ್ಷಕರು ಹೆಚ್ಚಾಗಿ ಗೊಂದಲಗೊಳಿಸುವ ಆರು ಜೋಡಿಗಳು, ಪ್ರತಿಯೊಂದೂ ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Concept ಟ್ಯಾಬ್ ಟಿಪ್ಪಣಿಗಳಿಂದ ಭರ್ತಿ ಮಾಡಲಾಗಿದೆ — ನೀವು ಎದುರುಬದುರು ಫ್ಲ್ಯಾಶ್‌ಕಾರ್ಡ್‌ಗಳಲ್ಲಿ ಬರೆಯುವ ನಿಖರ ವಿಷಯ.',
+              cases:[
+                { title:'ವ್ಯಾಸೆಕ್ಟಮಿ vs ಟ್ಯೂಬೆಕ್ಟಮಿ', a:'<b>ವ್ಯಾಸೆಕ್ಟಮಿ</b> (ಪುರುಷ) — ಸ್ಕ್ರೋಟಲ್ ಛೇದನದ ಮೂಲಕ ವ್ಯಾಸ್ ಡಿಫರೆನ್ಸ್‌ನ ಒಂದು ಭಾಗವನ್ನು ಕಟ್ಟಲಾಗುತ್ತದೆ/ತೆಗೆಯಲಾಗುತ್ತದೆ; ಟೆಸ್ಟೋಸ್ಟಿರೋನ್ ಸ್ರವಿಕೆ ಪರಿಣಾಮ ಬೀರದೆ ಮುಂದುವರಿಯುತ್ತದೆ.', b:'<b>ಟ್ಯೂಬೆಕ್ಟಮಿ</b> (ಸ್ತ್ರೀ) — ಹೊಟ್ಟೆ/ಯೋನಿ ಛೇದನದ ಮೂಲಕ ಫಾಲೋಪಿಯನ್ ನಾಳದ ಒಂದು ಭಾಗವನ್ನು ಕಟ್ಟಲಾಗುತ್ತದೆ/ತೆಗೆಯಲಾಗುತ್ತದೆ; ಅಂಡೋತ್ಪತ್ತಿ ಪರಿಣಾಮ ಬೀರದೆ ಮುಂದುವರಿಯುತ್ತದೆ.' },
+                { title:'ರಿದಂ ವಿಧಾನ vs ಸಂಭೋಗ ವಿಚ್ಛೇದನ', a:'<b>ರಿದಂ/ಆವರ್ತಕ ಸಂಯಮ</b> — ಚಕ್ರದ 10–17ನೇ ದಿನದ ಫಲವತ್ತಾದ ಅವಧಿಯಲ್ಲಿ ಸಂಭೋಗ ತಪ್ಪಿಸುವುದು.', b:'<b>ಸಂಭೋಗ ವಿಚ್ಛೇದನ</b> — ಸ್ಖಲನದ ಮೊದಲು ಶಿಶ್ನವನ್ನು ಹಿಂತೆಗೆದುಕೊಳ್ಳುವುದು.' },
+                { title:'ಔಷಧರಹಿತ vs ತಾಮ್ರ vs ಹಾರ್ಮೋನಲ್ IUDಗಳು', a:'<b>ಔಷಧರಹಿತ</b> (ಲಿಪ್ಪೆಸ್ ಲೂಪ್) — ಸರಳ ಜಡ ಸಾಧನ.', b:'<b>ತಾಮ್ರ-ಬಿಡುಗಡೆ</b> (CuT, Cu7) — Cu ಅಯಾನುಗಳು ವೀರ್ಯಾಣುಗಳ ಫಾಗೊಸೈಟೋಸಿಸ್ ಹೆಚ್ಚಿಸುತ್ತವೆ ಮತ್ತು ಚಲನಶೀಲತೆ ನಿಗ್ರಹಿಸುತ್ತವೆ; <b>ಹಾರ್ಮೋನ್-ಬಿಡುಗಡೆ</b> (Progestasert, LNG-20) — ಗರ್ಭಕೋಶದ ಪರಿಸರವನ್ನು ವೀರ್ಯಾಣುಗಳಿಗೆ ಮತ್ತು ಎಂಡೋಮೆಟ್ರಿಯಂ ಅನ್ನು ಅಳವಡಿಕೆಗೆ ಪ್ರತಿಕೂಲವಾಗಿಸುತ್ತವೆ.' },
+                { title:'ZIFT vs GIFT', a:'<b>ZIFT</b> — 8 ಬ್ಲಾಸ್ಟೊಮಿಯರ್‌ಗಳವರೆಗಿನ ಯುಗ್ಮನಜ ಅಥವಾ ಭ್ರೂಣವನ್ನು ಫಾಲೋಪಿಯನ್ ನಾಳಕ್ಕೆ ವರ್ಗಾಯಿಸಲಾಗುತ್ತದೆ.', b:'<b>GIFT</b> — ಸ್ವಂತ ಅಂಡಾಣುಗಳನ್ನು ಉತ್ಪಾದಿಸಲಾಗದ ಸ್ವೀಕೃತದಾರಳ ಫಾಲೋಪಿಯನ್ ನಾಳಕ್ಕೆ ದಾನಿ ಅಂಡಾಣುವನ್ನು (ಭ್ರೂಣವಲ್ಲ, ಒಂದು ಸಂತಾನಜ) ವರ್ಗಾಯಿಸಲಾಗುತ್ತದೆ.' },
+                { title:'ಗುಣಪಡಿಸಬಹುದಾದ vs ಗುಣಪಡಿಸಲಾಗದ STDಗಳು', a:'<b>ಗುಣಪಡಿಸಬಹುದಾದ</b> — ಕೆಳಗಿನ ಮೂರನ್ನು ಹೊರತುಪಡಿಸಿ ಎಲ್ಲಾ STD, ಬೇಗ ಪತ್ತೆಹಚ್ಚಿ ಚಿಕಿತ್ಸೆ ನೀಡಿದರೆ.', b:'<b>ಗುಣಪಡಿಸಲಾಗದ</b> — ಹೆಪಟೈಟಿಸ್-B, ಜನನಾಂಗ ಹರ್ಪಿಸ್ ಮತ್ತು HIV.' },
+                { title:'MTP ಯ ಆರೋಗ್ಯಕರ vs ಅನಾರೋಗ್ಯಕರ ಪ್ರವೃತ್ತಿಗಳು', a:'<b>ಆರೋಗ್ಯಕರ</b> — ಅನಪೇಕ್ಷಿತ/ಅಪಾಯಕಾರಿ ಗರ್ಭಧಾರಣೆಗಳ ಸುರಕ್ಷಿತ ಅಂತ್ಯ, ಮೊದಲ ತ್ರೈಮಾಸಿಕದಲ್ಲಿ ಅತ್ಯಂತ ಸುರಕ್ಷಿತ.', b:'<b>ಅನಾರೋಗ್ಯಕರ</b> — ಅನರ್ಹ ವೈದ್ಯರಿಂದ ಕಾನೂನುಬಾಹಿರ MTPಗಳು, ಮತ್ತು ಹೆಣ್ಣು ಭ್ರೂಣಗಳನ್ನು ಪತ್ತೆಹಚ್ಚಿ ಗರ್ಭಪಾತ ಮಾಡಲು ಅಮ್ನಿಯೋಸೆಂಟೆಸಿಸ್‌ನ ದುರ್ಬಳಕೆ.' }
+              ] },
+        hi: { intro:'वे छह जोड़े जिन्हें परीक्षक सबसे अधिक मिलाते हैं, प्रत्येक इस अध्याय के अपने Concept टैब नोट्स से भरा गया — ठीक वही जो आप आमने-सामने के फ्लैशकार्ड पर लिखेंगे।',
+              cases:[
+                { title:'वैसेक्टॉमी बनाम ट्यूबेक्टॉमी', a:'<b>वैसेक्टॉमी</b> (पुरुष) — स्क्रोटल चीरे द्वारा वास डिफरेंस का एक भाग बाँधा/हटाया जाता है; टेस्टोस्टेरोन स्राव अप्रभावित जारी रहता है।', b:'<b>ट्यूबेक्टॉमी</b> (महिला) — उदर/योनि चीरे द्वारा फैलोपियन ट्यूब का एक भाग बाँधा/हटाया जाता है; अंडोत्सर्ग अप्रभावित जारी रहता है।' },
+                { title:'रिदम विधि बनाम सहवास विच्छेद', a:'<b>रिदम/आवधिक संयम</b> — चक्र के 10–17वें दिन के फलदायी काल में सहवास से बचना।', b:'<b>सहवास विच्छेद</b> — स्खलन से पहले लिंग को बाहर निकालना।' },
+                { title:'औषधरहित बनाम तांबा बनाम हार्मोनल IUD', a:'<b>औषधरहित</b> (लिप्पेस लूप) — एक सरल निष्क्रिय उपकरण।', b:'<b>तांबा-स्रावी</b> (CuT, Cu7) — Cu आयन शुक्राणुओं के भक्षकाणुकरण को बढ़ाते हैं और शुक्राणु गतिशीलता को दबाते हैं; <b>हार्मोन-स्रावी</b> (Progestasert, LNG-20) — गर्भाशय के वातावरण को शुक्राणुओं के लिए और एंडोमेट्रियम को प्रत्यारोपण के लिए प्रतिकूल बनाते हैं।' },
+                { title:'ZIFT बनाम GIFT', a:'<b>ZIFT</b> — 8 ब्लास्टोमियर तक के युग्मनज या भ्रूण को फैलोपियन ट्यूब में स्थानांतरित किया जाता है।', b:'<b>GIFT</b> — स्वयं के अंडाणु उत्पन्न न कर पाने वाली प्राप्तकर्ता महिला के फैलोपियन ट्यूब में दाता अंडाणु (भ्रूण नहीं, एक युग्मक) स्थानांतरित किया जाता है।' },
+                { title:'उपचार योग्य बनाम असाध्य STD', a:'<b>उपचार योग्य</b> — नीचे दिए तीन को छोड़कर हर STD, यदि जल्दी पता चले और इलाज हो।', b:'<b>असाध्य</b> — हेपेटाइटिस-B, जननांग हर्पीज़ और HIV।' },
+                { title:'MTP के स्वस्थ बनाम अस्वस्थ रुझान', a:'<b>स्वस्थ</b> — अवांछित/जोखिमपूर्ण गर्भावस्थाओं की सुरक्षित समाप्ति, पहली तिमाही में सबसे सुरक्षित।', b:'<b>अस्वस्थ</b> — अयोग्य नीम-हकीमों द्वारा अवैध MTP, और मादा भ्रूण का पता लगाकर गर्भपात कराने के लिए एम्नियोसेंटेसिस का दुरुपयोग।' }
+              ] }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        ${l.cases.map(c=>`<div class="tipex-case"><div class="tipex-case-title">${c.title}</div>${pair(c.a,c.b)}</div>`).join('')}`;
     }
   }
 };
 function openTipExample(key){
   const ex = TIP_EXAMPLES[key];
   if(!ex) return;
-  document.getElementById('tipExampleTitle').textContent = ex.title;
-  document.getElementById('tipExampleBody').innerHTML = ex.render();
+  const lang = (typeof currentLang!=='undefined' && ex.title[currentLang]) ? currentLang : 'en';
+  document.getElementById('tipExampleTitle').textContent = ex.title[lang];
+  document.getElementById('tipExampleBody').innerHTML = ex.render(lang);
   document.getElementById('tipExampleOverlay').style.display = 'flex';
 }
 function closeTipExample(){
@@ -2525,7 +2589,7 @@ function renderStudyTipsCh8(){
     <h3 style="color:var(--gold-2); margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ View example</button>`:''}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ ${TIP_EXAMPLE_BTN_LABEL[currentLang]||TIP_EXAMPLE_BTN_LABEL.en}</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   `;
