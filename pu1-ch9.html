@@ -177,6 +177,17 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .pill{flex:0 0 auto;padding:7px 13px;border-radius:16px;font-size:12px;font-weight:600;background:var(--panel);color:var(--ink-dim);border:1px solid var(--line);cursor:pointer;white-space:nowrap;}
 .pill.active{background:var(--teal2);color:#EFFFFA;border-color:var(--teal);}
 
+/* Study Mode topic dropdown (replaces the pill row just for Study Mode,
+   since its topic names run long) */
+.study-dd{position:relative; margin-bottom:10px;}
+.study-dd-btn{width:100%; display:flex; align-items:center; justify-content:space-between; gap:8px; background:var(--panel2); border:1px solid var(--line); border-radius:10px; padding:11px 14px; font-size:13.5px; font-weight:600; color:var(--ink); cursor:pointer;}
+.study-dd-btn .study-dd-chevron{color:var(--ink-dim); font-size:11px; transition:transform .15s ease; flex:none;}
+.study-dd-btn.open .study-dd-chevron{transform:rotate(180deg);}
+.study-dd-menu{position:absolute; top:calc(100% + 6px); left:0; right:0; z-index:15; background:var(--panel); border:1px solid var(--line); border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,0.3); padding:6px; max-height:60vh; overflow-y:auto;}
+.study-dd-item{padding:10px 12px; border-radius:8px; font-size:13px; color:var(--ink); cursor:pointer;}
+.study-dd-item:hover{background:var(--panel2);}
+.study-dd-item.active{color:var(--teal); font-weight:700; background:var(--panel2);}
+
 .content{flex:1;padding:14px 16px 30px;}
 
 /* CHIPS */
@@ -1055,6 +1066,60 @@ function topicPills(activeId, onClickName){
 /* ---------------- STUDY MODE ---------------- */
 function selectStudyTopic(id){ currentTopic = id; renderContent(); }
 window.selectStudyTopic = selectStudyTopic;
+/* Study Mode topic picker: a dropdown (not the pill row used elsewhere)
+   since Study Mode topic names run long. */
+function studyTopicDropdownHtml(){
+  const current = DATA.topics.find(t=>t.id===currentTopic);
+  const label = current ? current.name : 'Choose a topic';
+  const items = DATA.topics.map(t=>`<div class="study-dd-item ${t.id===currentTopic?'active':''}" data-id="${t.id}">${t.name}</div>`).join('');
+  return `<div class="study-dd">
+    <button class="study-dd-btn" id="studyDropdownBtn" onclick="toggleStudyDropdown(event)">
+      <span id="studyDropdownLabel">&#128218; ${label}</span>
+      <span class="study-dd-chevron">&#9662;</span>
+    </button>
+    <div class="study-dd-menu" id="studyDropdownMenu" style="display:none;">${items}</div>
+  </div>`;
+}
+function toggleStudyDropdown(e){
+  if(e) e.stopPropagation();
+  const menu = document.getElementById('studyDropdownMenu');
+  const btn = document.getElementById('studyDropdownBtn');
+  if(!menu) return;
+  const isOpen = menu.style.display === 'block';
+  menu.style.display = isOpen ? 'none' : 'block';
+  if(btn) btn.classList.toggle('open', !isOpen);
+}
+window.toggleStudyDropdown = toggleStudyDropdown;
+function closeStudyDropdown(){
+  const menu = document.getElementById('studyDropdownMenu');
+  const btn = document.getElementById('studyDropdownBtn');
+  if(menu) menu.style.display = 'none';
+  if(btn) btn.classList.remove('open');
+}
+window.closeStudyDropdown = closeStudyDropdown;
+let studyDdGlobalInited = false;
+function initStudyDropdownGlobalHandlers(){
+  if(studyDdGlobalInited) return;
+  studyDdGlobalInited = true;
+  document.addEventListener('click', function(e){
+    const menu = document.getElementById('studyDropdownMenu');
+    if(menu && menu.style.display === 'block' && !e.target.closest('.study-dd')){
+      closeStudyDropdown();
+    }
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') closeStudyDropdown();
+  });
+}
+function wireStudyDropdownItems(){
+  document.querySelectorAll('#studyDropdownMenu .study-dd-item[data-id]').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      closeStudyDropdown();
+      selectStudyTopic(p.dataset.id);
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
+}
 
 const STUDY_TRANSLATIONS_CH9 = {};
 let currentLang = 'en';
@@ -1138,7 +1203,7 @@ function renderStudy(){
   const en = DATA.study[currentTopic];
   const trans = (currentLang!=='en') && STUDY_TRANSLATIONS_CH9[currentTopic] && STUDY_TRANSLATIONS_CH9[currentTopic][currentLang];
   const d = trans || en;
-  let html = topicPills(currentTopic, 'selectStudyTopic');
+  let html = studyTopicDropdownHtml();
   html += `<button class="study-fs-btn" onclick="toggleContentFullscreen(true)">&#10688; Full Screen Mode</button>`;
   html += `<div class="chiprow">${d.recap.map(c=>`<span class="chip">${c}</span>`).join('')}</div>`;
   d.sections.forEach(sec=>{
@@ -1152,6 +1217,8 @@ function renderStudy(){
   }
   html += nextStepNudge('study');
   document.getElementById('content').innerHTML = html;
+  initStudyDropdownGlobalHandlers();
+  wireStudyDropdownItems();
 }
 
 const CONCEPT_TRANSLATIONS_CH9 = {};
