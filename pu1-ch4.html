@@ -490,9 +490,11 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14px;padding-top:14px;border-top:1px solid var(--line);}
 .footer-tagline{white-space:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;font-size:11px;}
 .footer-copy{margin-top:4px;font-size:11px;}
-.footer-social{margin-top:8px;display:flex;justify-content:center;gap:14px;flex-wrap:wrap;}
+.footer-social{margin-top:8px;display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap;}
 .footer-social a{color:var(--teal2);text-decoration:none;font-weight:600;font-size:11.5px;cursor:pointer;}
 .footer-social a:hover{text-decoration:underline;}
+.footer-share-btn{background:var(--gold);color:#1A1406;border:none;padding:7px 15px;border-radius:99px;font-weight:700;font-size:11.5px;font-family:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:5px;}
+.footer-share-btn:active{transform:scale(0.97);}
 @media(max-width:380px){ .footer-tagline{font-size:9.5px;} }
 
 /* STUDENT MODAL & GREET BAR */
@@ -807,6 +809,7 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
     <div class="footer-tagline">Empowering future doctors. Crafted for PU BIOLOGY &amp; NEET Aspirants.</div>
     <div class="footer-copy">&copy; Narendra Sir - Lecturer in Biology</div>
     <div class="footer-social">
+      <button type="button" class="footer-share-btn" id="shareAllBtn" onclick="shareAllSocial()">&#128228; Share All Links</button>
       <a href="https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X" rel="noopener noreferrer">WhatsApp Channel</a>
       <a href="https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw" rel="noopener noreferrer">Instagram Channel</a>
       <a href="https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0" rel="noopener noreferrer">YouTube Channel</a>
@@ -4383,6 +4386,26 @@ window.chapterHardRefresh = chapterHardRefresh;
   if(document.readyState === 'complete' || document.readyState === 'interactive'){ checkConnectivity(); }
   else { document.addEventListener('DOMContentLoaded', checkConnectivity); }
 })();
+</script>
+<script>
+async function shareAllSocial(){
+  const text = '\u{1F4DA} BAIO Learning System \u2014 by Narendra Sir\nBiology All In One, for PU-I/PU-II & NEET/KCET aspirants.\n\n'
+    + '\u{1F310} App: https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/\n'
+    + '\u{1F4AC} WhatsApp Channel: https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X\n'
+    + '\u{1F4F8} Instagram: https://www.instagram.com/new_gen_bioguru\n'
+    + '\u25B6\uFE0F YouTube: https://youtube.com/@biogurunarendrasir\n'
+    + '\u{1F4E2} Telegram: https://t.me/BAIO_Learning_System';
+  if(navigator.share){
+    try{ await navigator.share({ title:'BAIO Learning System \u2014 by Narendra Sir', text }); return; }catch(e){ if(e && e.name === 'AbortError') return; }
+  }
+  try{
+    await navigator.clipboard.writeText(text);
+    alert('All links copied! Paste anywhere to share.');
+  }catch(e){
+    window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank', 'noopener,noreferrer');
+  }
+}
+window.shareAllSocial = shareAllSocial;
 </script>
 </body>
 </html>
