@@ -333,6 +333,17 @@ table.factbl td{padding:7px 8px;border:1px solid var(--line);color:var(--ink);}
 table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .tbl-title{font-size:12.5px;color:var(--gold);font-weight:700;margin:14px 0 4px;}
 
+/* COMPARE MATRIX */
+.cmp-select-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.cmp-select-row select{flex:1;min-width:0;max-width:100%;padding:9px 10px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);color:var(--ink);font-size:13px;text-overflow:ellipsis;}
+.cmp-vs{color:var(--gold);font-weight:700;font-family:'Fraunces',Georgia,serif;flex:0 0 auto;}
+
+/* PRONUNCIATION / GLOSSARY */
+.glossary-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 12px;border-bottom:1px solid var(--line);background:var(--panel);border-radius:10px;margin-bottom:6px;}
+.glossary-term{color:var(--gold);font-weight:700;font-family:'Fraunces',Georgia,serif;font-size:13.5px;}
+.glossary-def{color:var(--ink-dim);font-size:12px;margin-top:3px;}
+.glossary-speak-btn{background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);border-radius:50%;width:36px;height:36px;min-width:36px;cursor:pointer;font-size:16px;flex-shrink:0;}
+
 /* CONCEPTS TAB */
 .hook{background:linear-gradient(135deg,var(--teal2),#0d5347);border-radius:12px;padding:14px 16px;margin-bottom:12px;font-size:14px;font-weight:600;color:#EFFFFA;}
 .hook span{display:block;font-size:10.5px;color:#9be8d8;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700;}
@@ -1171,6 +1182,8 @@ const TABS = [
   {id:'mindmap', label:'Mind Map'},
   {id:'tree', label:'Tree Explorer'},
   {id:'classppt', label:'Class Presentation'},
+  {id:'compare', label:'Compare Matrix'},
+  {id:'glossary', label:'Pronunciation'},
   {id:'papergen', label:'Paper Generator'},
   {id:'boardimp', label:'Board Important'},
   {id:'diagrams', label:'Important Diagrams'},
@@ -1199,7 +1212,7 @@ const TAB_CATEGORIES = [
   {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','concepts','podcast','studytips','boardimp','diagrams']},
   {id:'practice', label:'Practice', icon:'\u270D\uFE0F', tabs:['flashcards','mcq','writeit','revision']},
   {id:'test', label:'Test Prep', icon:'\u{1F3AF}', tabs:['neet','kcet','papergen']},
-  {id:'explore', label:'Explore', icon:'\u{1F50D}', tabs:['tree','mindmap','classppt']},
+  {id:'explore', label:'Explore', icon:'\u{1F50D}', tabs:['tree','mindmap','classppt','compare','glossary']},
   {id:'space', label:'My Space', icon:'\u{1F4CC}', tabs:['badges','progress','pacing','mynotes','feedback','downloads']}
 ];
 const TAB_CLUSTER_OF = {};
@@ -4706,6 +4719,76 @@ function renderClassPresentation(){
   }
 }
 
+/* ---- Compare & Contrast Matrix ---- */
+const COMPARE_DATA = [{"name":"Endonuclease","organ":"Nuclease type","purpose":"Cuts DNA at specific internal recognition sequences","structuralChange":"Recognises a palindromic sequence and cuts near its centre, generating sticky or blunt ends","keyFeature":"Used to cut DNA at precise internal sites for cloning","example":"EcoRI (from E. coli, strain R)"},{"name":"Exonuclease","organ":"Nuclease type","purpose":"Removes nucleotides from the ends of a DNA strand","structuralChange":"Degrades DNA progressively from a free end","keyFeature":"Cannot cut at internal sites — acts only from the ends","example":"General exonuclease activity (no internal recognition site)"},{"name":"Plasmid","organ":"Cloning vector type","purpose":"Carries and replicates foreign DNA independent of chromosomal DNA","structuralChange":"Extra-chromosomal, self-replicating circular DNA","keyFeature":"Typically 1–2 up to 15–100 copies per cell","example":"pBR322"},{"name":"Bacteriophage","organ":"Cloning vector type","purpose":"Carries and replicates foreign DNA independent of chromosomal DNA","structuralChange":"Virus that infects bacteria and replicates its genome inside the host","keyFeature":"High copy number of genome per cell","example":"Bacteriophage cloning vectors"},{"name":"Antibiotic resistance marker","organ":"Selectable marker strategy","purpose":"Distinguishes recombinants from non-recombinants","structuralChange":"Foreign DNA inserted within the ampR or tetR gene inactivates that resistance","keyFeature":"Recombinants grow on ampicillin but die on tetracycline; non-recombinants grow on both","example":"ampR / tetR genes in pBR322"},{"name":"Insertional inactivation","organ":"Selectable marker strategy","purpose":"Distinguishes recombinants from non-recombinants without antibiotics","structuralChange":"Foreign DNA inserted within the β-galactosidase gene inactivates the enzyme","keyFeature":"Non-recombinants form blue colonies; recombinants form colourless colonies on a chromogenic substrate","example":"lacZ / β-galactosidase (blue-white) screening"},{"name":"Ti plasmid","organ":"Vector for plants","purpose":"Transfers foreign DNA into plant cells","structuralChange":"Disarmed by removing the genes responsible for pathogenicity","keyFeature":"Naturally from Agrobacterium tumefaciens, a plant pathogen that causes tumours","example":"Agrobacterium tumefaciens Ti plasmid"},{"name":"Retrovirus","organ":"Vector for animals","purpose":"Transfers foreign DNA into animal cells","structuralChange":"Disarmed by removing its cancer-causing ability","keyFeature":"Naturally infects animals and can produce cancers before being disarmed","example":"Disarmed retroviral gene-delivery vectors"},{"name":"CaCl2 + heat shock","organ":"Competent host method","purpose":"Introduces recombinant DNA into a bacterial host cell","structuralChange":"Cells incubated with DNA and divalent cations (Ca2+) on ice, then a brief 42°C heat shock, then back on ice","keyFeature":"Makes bacterial cells 'competent' to take up DNA","example":"Standard bacterial transformation protocol"},{"name":"Biolistics","organ":"Competent host method","purpose":"Introduces recombinant DNA into plant or animal cells","structuralChange":"Bombardment with high-velocity micro-particles of gold or tungsten coated with DNA","keyFeature":"A physical/mechanical delivery method, not a biological vector","example":"Gene gun delivery into plant cells"},{"name":"Batch culture","organ":"Microbial culture method","purpose":"Grows cells to produce a bioproduct in a bioreactor","structuralChange":"A fixed volume of media is used, with no addition or removal during the run","keyFeature":"Cells eventually exhaust nutrients and slow down, lowering yield","example":"A standard single-run bioreactor batch"},{"name":"Continuous culture","organ":"Microbial culture method","purpose":"Grows cells to produce a bioproduct in a bioreactor","structuralChange":"Used media is drained from one side while fresh media is added from the other","keyFeature":"Keeps cells in log/exponential phase for longer, giving larger biomass and higher yield","example":"Continuous-feed bioreactor operation"},{"name":"Upstream processing","organ":"Bioprocessing stage","purpose":"Produces the recombinant protein/product inside the bioreactor","structuralChange":"Insertion of recombinant DNA into a competent host, then culture under optimum conditions","keyFeature":"Precedes downstream processing; its output is a crude product","example":"Transformation followed by culture in a bioreactor"},{"name":"Downstream processing","organ":"Bioprocessing stage","purpose":"Converts the crude bioreactor product into a market-ready product","structuralChange":"Separation, purification and finishing of the crude product, with preservatives added","keyFeature":"Must undergo clinical trials and quality checks before reaching market","example":"Purification of an enzyme, alcohol or antibiotic"}];
+const CMP_FIELDS = [
+  { key:"organ", label:"Category" },
+  { key:"purpose", label:"Primary Role" },
+  { key:"structuralChange", label:"How It Works" },
+  { key:"keyFeature", label:"Key Distinguishing Point" },
+  { key:"example", label:"Example" }
+];
+function populateCompareSelects(){
+  const opts = COMPARE_DATA.map((g,i)=>`<option value="${i}">${g.name}</option>`).join('');
+  document.getElementById('cmpSelectA').innerHTML = opts;
+  document.getElementById('cmpSelectB').innerHTML = opts;
+  document.getElementById('cmpSelectA').value = 0;
+  document.getElementById('cmpSelectB').value = 1;
+}
+function renderCompareResult(){
+  const a = COMPARE_DATA[parseInt(document.getElementById('cmpSelectA').value)];
+  const b = COMPARE_DATA[parseInt(document.getElementById('cmpSelectB').value)];
+  const rows = CMP_FIELDS.map(f=>`<tr><td style="color:var(--teal);font-weight:600;">${f.label}</td><td>${a[f.key]}</td><td>${b[f.key]}</td></tr>`).join('');
+  document.getElementById('cmpResult').innerHTML = `<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;"><table class="factbl"><tr><th>Characters</th><th>${a.name}</th><th>${b.name}</th></tr>${rows}</table></div>`;
+}
+function renderCompareMatrix(){
+  document.getElementById('content').innerHTML = `<div class="setup-card">
+    <h3 style="color:var(--gold);margin-bottom:4px;">Compare &amp; Contrast Matrix Generator</h3>
+    <div style="color:var(--ink-dim);font-size:12px;margin-bottom:12px;">Pick any two concepts from this chapter to generate a side-by-side comparison</div>
+    <div class="cmp-select-row"><select id="cmpSelectA"></select><span class="cmp-vs">vs</span><select id="cmpSelectB"></select></div>
+    <div id="cmpResult"></div>
+  </div>`;
+  populateCompareSelects();
+  renderCompareResult();
+  document.getElementById('cmpSelectA').addEventListener('change', renderCompareResult);
+  document.getElementById('cmpSelectB').addEventListener('change', renderCompareResult);
+}
+
+/* ---- Pronunciation / Glossary ---- */
+const GLOSSARY_DATA = [{"term":"Biotechnology","def":"Technology using biology, with applications in agriculture, food processing, medicine diagnostics, bioremediation, waste treatment and energy production (EFB definition)."},{"term":"Genetic engineering","def":"Introduction of foreign genetic material (DNA/RNA) into a host's genome, altering its phenotype."},{"term":"Aseptic technique","def":"Maintaining contamination-free, sterile conditions in a chemical engineering process so only the desired microbe grows."},{"term":"Recombinant DNA (rDNA)","def":"DNA formed by combining genetic material from more than one source."},{"term":"Restriction enzyme","def":"An enzyme that recognises and cuts DNA at a particular recognition sequence."},{"term":"Endonuclease","def":"A nuclease that cuts DNA at specific internal positions."},{"term":"Exonuclease","def":"A nuclease that removes nucleotides from the ends of a DNA strand."},{"term":"Recognition sequence","def":"The particular palindromic DNA sequence that a restriction enzyme recognises and cuts."},{"term":"Palindromic sequence","def":"A DNA sequence that reads the same in the 5' to 3' direction on both strands."},{"term":"Sticky ends","def":"Single-stranded overhangs generated when a restriction enzyme cuts a little away from the centre of its recognition site."},{"term":"DNA ligase","def":"The enzyme that joins sticky (or blunt) ends of DNA fragments, sealing the backbone."},{"term":"EcoRI","def":"A restriction enzyme derived from E. coli, strain R — named by genus, species, strain, and order of isolation."},{"term":"Gel electrophoresis","def":"A technique that separates DNA fragments by size, using an electric field to move negatively charged DNA through a gel toward the anode."},{"term":"Agarose gel","def":"The gel matrix used in gel electrophoresis; its sieving action lets smaller DNA fragments travel farther."},{"term":"Ethidium bromide","def":"The stain used to visualise separated DNA fragments in a gel as bright orange bands under UV light."},{"term":"Elution","def":"The process of cutting out and purifying a DNA band from a gel."},{"term":"Cloning vector","def":"A self-replicating DNA molecule (e.g. plasmid or bacteriophage) used to carry and multiply foreign DNA."},{"term":"Plasmid","def":"An extra-chromosomal, self-replicating circular DNA molecule used as a cloning vector."},{"term":"Origin of replication (ori)","def":"The sequence from which vector DNA replication starts; determines the copy number of the recombinant DNA."},{"term":"Copy number","def":"The number of copies of a plasmid/vector, and its linked foreign DNA, present per host cell."},{"term":"Selectable marker","def":"A gene, such as an antibiotic resistance gene, used to distinguish recombinants from non-recombinants."},{"term":"ampR / tetR","def":"The ampicillin-resistance and tetracycline-resistance genes — the selectable markers carried by the plasmid pBR322."},{"term":"Insertional inactivation","def":"Loss of a gene's function, such as β-galactosidase, because foreign DNA has been inserted within it."},{"term":"Chromogenic substrate","def":"A substrate that produces a colour change, used to visually screen recombinant (colourless) from non-recombinant (blue) colonies."},{"term":"pBR322","def":"A widely used plasmid cloning vector carrying the ampR and tetR selectable marker genes."},{"term":"Ti plasmid","def":"The tumour-inducing plasmid of Agrobacterium tumefaciens, disarmed and used as a cloning vector for plants."},{"term":"Retrovirus","def":"A cancer-causing animal virus that, once disarmed, can be used as a gene-delivery vector for animal cells."},{"term":"Competent host","def":"A bacterial cell made capable of taking up vector DNA bearing recombinant DNA."},{"term":"Heat shock","def":"A brief increase to 42°C, used after Ca2+ treatment and ice incubation, to make bacterial cells take up DNA."},{"term":"Microinjection","def":"Direct injection of recombinant DNA into the nucleus of an animal cell."},{"term":"Biolistics","def":"Bombardment of cells with high-velocity micro-particles of gold or tungsten coated with DNA; also called the gene gun method."},{"term":"Lysozyme","def":"The enzyme used to break open bacterial cell walls when isolating DNA."},{"term":"Cellulase","def":"The enzyme used to break open plant cell walls when isolating DNA."},{"term":"Chitinase","def":"The enzyme used to break open fungal cell walls when isolating DNA."},{"term":"Primer","def":"A chemically synthesised oligonucleotide complementary to a DNA region, needed to start DNA synthesis in PCR."},{"term":"Taq polymerase","def":"A thermostable DNA polymerase isolated from the thermophilic bacterium Thermus aquaticus, used in PCR."},{"term":"Denaturation (PCR)","def":"The PCR step where high temperature separates double-helical DNA into single strands."},{"term":"Annealing (PCR)","def":"The PCR step where primers bind to their complementary single-stranded DNA templates at 50–65°C."},{"term":"Extension (PCR)","def":"The PCR step where DNA polymerase extends the primer in the 5' to 3' direction to synthesise new DNA."},{"term":"Bioreactor","def":"A large vessel, typically 100–1000 litres, in which large volumes of cells/product are cultured under optimal growth conditions."},{"term":"Sparger","def":"The air-bubbling system in a bioreactor that increases the surface area for oxygen transfer."},{"term":"Continuous culture","def":"A culturing method where used media is drained and fresh media is added, keeping cells in log/exponential phase for a higher yield."},{"term":"Downstream processing","def":"Separation, purification and finishing of a crude bioreactor product before it reaches the market."}];
+const GLOSSARY_TRANSLATIONS_CH9 = {};
+const GLOSSARY_SPEECH_LANG = {en:'en-US', kn:'kn-IN', hi:'hi-IN'};
+function speakTerm(text){
+  if(!('speechSynthesis' in window)){ alert('Sorry, your browser does not support text-to-speech.'); return; }
+  const clean = text.replace(/\(.*?\)/g,'').trim();
+  const utter = new SpeechSynthesisUtterance(clean);
+  utter.rate = 0.85; utter.lang = GLOSSARY_SPEECH_LANG[currentLang] || 'en-US';
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utter);
+}
+window.speakTerm = speakTerm;
+function glossaryDef(g){
+  const tr = (currentLang!=='en') && GLOSSARY_TRANSLATIONS_CH9[g.term] && GLOSSARY_TRANSLATIONS_CH9[g.term][currentLang];
+  return tr || g.def;
+}
+function renderGlossaryList(filter){
+  const q = (filter||'').toLowerCase();
+  const list = GLOSSARY_DATA.filter(g=>g.term.toLowerCase().includes(q));
+  const el = document.getElementById('glossaryList');
+  if(!el) return;
+  if(list.length===0){ el.innerHTML = '<div style="color:var(--ink-dim);padding:10px;">No matching terms.</div>'; return; }
+  el.innerHTML = list.map(g=>`<div class="glossary-item"><div><div class="glossary-term">${g.term}</div><div class="glossary-def">${glossaryDef(g)}</div></div><button class="glossary-speak-btn" onclick="speakTerm('${g.term.replace(/'/g,"\\'")}')" title="Speak">🔊</button></div>`).join('');
+}
+function renderPronunciation(){
+  document.getElementById('content').innerHTML = `<div class="setup-card">
+    <h3 style="color:var(--gold);margin-bottom:10px;">Pronunciation &amp; Glossary</h3>
+    <input type="text" id="glossarySearch" placeholder="Search terms..." style="width:100%;padding:9px 10px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);color:var(--ink);font-size:13px;margin-bottom:12px;box-sizing:border-box;">
+    <div id="glossaryList"></div>
+  </div>`;
+  renderGlossaryList('');
+  document.getElementById('glossarySearch').addEventListener('input', (e)=>renderGlossaryList(e.target.value));
+}
+
 const STUDYTIPS_CH9_EN = {
   title: "Study Tips &ndash; Biotechnology: Principles and Processes",
   intro: "How to study this chapter well, and what to focus on for NEET.",
@@ -5271,6 +5354,8 @@ function renderContent(){
   else if(currentTab==='mindmap') renderMindMap();
   else if(currentTab==='tree') renderTreeExplorer();
   else if(currentTab==='classppt') renderClassPresentation();
+  else if(currentTab==='compare') renderCompareMatrix();
+  else if(currentTab==='glossary') renderPronunciation();
   else if(currentTab==='boardimp') renderBoardImportant();
   else if(currentTab==='diagrams') renderDiagrams();
   else if(currentTab==='kcet') renderKcetSetup();
