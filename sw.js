@@ -1,4 +1,4 @@
-const CACHE_NAME = 'baio-shell-v2';
+const CACHE_NAME = 'baio-shell-v3';
 const APP_SHELL = [
   'index.html',
   'manifest.json',
@@ -75,7 +75,10 @@ self.addEventListener('fetch', event => {
 async function networkFirst(req) {
   const cache = await caches.open(CACHE_NAME);
   try {
-    const fresh = await fetch(req);
+    // cache:'no-cache' makes the browser revalidate with the server every time (a cheap 304 when
+    // nothing changed) instead of reusing GitHub Pages' 10-minute HTTP cache, so a newly
+    // published update shows up on the very next open rather than up to 10 minutes later.
+    const fresh = await fetch(req, { cache: 'no-cache' });
     if (fresh && fresh.ok) cache.put(req, fresh.clone());
     return fresh;
   } catch (err) {
