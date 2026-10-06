@@ -3245,7 +3245,7 @@ function renderGlossary(){
 const CLASS_SLIDES = ["assets/slide-01.jpg", "assets/slide-02.jpg", "assets/slide-03.jpg", "assets/slide-04.jpg", "assets/slide-05.jpg", "assets/slide-06.jpg", "assets/slide-07.jpg", "assets/slide-08.jpg", "assets/slide-09.jpg", "assets/slide-10.jpg", "assets/slide-11.jpg", "assets/slide-12.jpg", "assets/slide-13.jpg", "assets/slide-14.jpg", "assets/slide-15.jpg", "assets/slide-16.jpg", "assets/slide-17.jpg", "assets/slide-18.jpg", "assets/slide-19.jpg", "assets/slide-20.jpg", "assets/slide-21.jpg", "assets/slide-22.jpg", "assets/slide-23.jpg", "assets/slide-24.jpg", "assets/slide-25.jpg", "assets/slide-26.jpg", "assets/slide-27.jpg", "assets/slide-28.jpg", "assets/slide-29.jpg", "assets/slide-30.jpg", "assets/slide-31.jpg", "assets/slide-32.jpg"];
 const BOARD_IMPORTANT_IMAGES = ["assets/board-01.jpg", "assets/board-02.jpg", "assets/board-03.jpg"];
 
-const MINDMAP_IMAGES = ["assets/mindmap-01.jpg", "assets/mindmap-02.jpg"];
+const MINDMAP_IMAGES = ["assets/mindmap-quick.jpg", "assets/mindmap-01.jpg", "assets/mindmap-02.jpg"];
 let mmZoom = 1;
 let mmIdx = 0;
 /* Shared pinch-to-zoom for fullscreen viewers (mind map + presentation).
@@ -3360,8 +3360,9 @@ function renderMindmap(){
     <h3 style="color:var(--gold);margin-bottom:4px;">Plant Kingdom &ndash; Mind Map</h3>
     <div style="color:var(--ink-dim);font-size:12px;margin-bottom:10px;">Tap the tabs to switch mind maps &middot; use buttons to zoom, view fullscreen, or pinch to zoom while fullscreen</div>
     <div class="opt-row" style="margin-bottom:10px;">
-      <div class="opt-btn${mmIdx===0?' sel':''}" onclick="mmSelect(0)">Complete Mind Map</div>
-      <div class="opt-btn${mmIdx===1?' sel':''}" onclick="mmSelect(1)">Detailed Mind Map</div>
+      <div class="opt-btn${mmIdx===0?' sel':''}" onclick="mmSelect(0)">Quick Mind Map</div>
+      <div class="opt-btn${mmIdx===1?' sel':''}" onclick="mmSelect(1)">Complete Mind Map</div>
+      <div class="opt-btn${mmIdx===2?' sel':''}" onclick="mmSelect(2)">Detailed Mind Map</div>
     </div>
     <div class="mm-toolbar">
       <button class="opt-btn" onclick="mmZoomOut()">&minus; Zoom Out</button>
