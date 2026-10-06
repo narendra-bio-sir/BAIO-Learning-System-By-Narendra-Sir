@@ -2081,13 +2081,17 @@ document.addEventListener('DOMContentLoaded', function(){
     <div class="card">
       <h3 style="color:var(--gold-2); margin-bottom:4px;">Chapter 2 &ndash; Mind Map</h3>
       <div style="color:var(--text-dim); font-size:12px; margin-bottom:10px;">One-page visual overview of the whole chapter &middot; pinch or use buttons to zoom</div>
+      <div class="mm-toolbar" id="mmPicker" style="margin-bottom:8px;">
+        <button class="btn" id="mmPickQuick" data-src="assets/mindmap-quick.jpg" data-name="Ch2_Biological_Classification_Quick_Mind_Map.jpg">Quick Mind Map</button>
+        <button class="btn secondary" id="mmPickFull" data-src="assets/mindmap.jpg" data-name="Ch2_Biological_Classification_Mind_Map.jpg">Detailed Mind Map</button>
+      </div>
       <div class="mm-toolbar">
         <button class="btn secondary" id="mmZoomOut">&minus; Zoom Out</button>
         <button class="btn secondary" id="mmZoomReset">Reset</button>
         <button class="btn secondary" id="mmZoomIn">+ Zoom In</button>
       </div>
       <div class="mindmap-wrap" id="mmWrap">
-        <img id="mmImg" src="assets/mindmap.jpg" alt="Chapter 2 Biological Classification Mind Map" onload="this.classList.add('loaded')">
+        <img id="mmImg" src="assets/mindmap-quick.jpg" alt="Chapter 2 Biological Classification Mind Map" onload="this.classList.add('loaded')">
       </div>
       <div class="mindmap-hint">Tip: on mobile, pinch-to-zoom inside the frame; on desktop, use the zoom buttons or scroll.</div>
       <div class="dl-row" data-pdf="" style="margin-top:12px;" id="mmDlRow">
@@ -6261,9 +6265,18 @@ document.getElementById('mmZoomReset').addEventListener('click', ()=>{
   mmScale = 1;
   mmApplyZoom();
 });
+['mmPickQuick','mmPickFull'].forEach(id=>{
+  const btn=document.getElementById(id);
+  if(!btn) return;
+  btn.addEventListener('click',()=>{
+    mmImg.classList.remove('loaded');
+    mmImg.src=btn.dataset.src; mmImg.dataset.dlname=btn.dataset.name;
+    ['mmPickQuick','mmPickFull'].forEach(o=>document.getElementById(o).classList.toggle('secondary', o!==id));
+  });
+});
 document.getElementById('mmDownloadBtn').addEventListener('click', (e)=>{
   const a = document.createElement('a');
-  a.href = mmImg.src; a.download = 'Ch2_Biological_Classification_Mind_Map.jpg';
+  a.href = mmImg.src; a.download = mmImg.dataset.dlname || 'Ch2_Biological_Classification_Quick_Mind_Map.jpg';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   const btn = e.target;
   const orig = btn.textContent; btn.textContent='Downloaded ✓'; btn.classList.add('done');
