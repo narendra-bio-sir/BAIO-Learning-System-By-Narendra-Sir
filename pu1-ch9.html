@@ -559,6 +559,10 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
 .ppt-deck-switch button{flex:1;min-width:140px;padding:9px 10px;border-radius:10px;border:1px solid var(--gold);background:transparent;color:var(--ink);font-weight:700;font-size:13px;cursor:pointer;}
 .ppt-deck-switch button span{display:block;font-weight:500;font-size:11px;opacity:.75;margin-top:2px;}
 .ppt-deck-switch button.active{background:var(--gold);color:#111;}
+.ppt-lang-switch{display:flex;gap:6px;margin-bottom:10px;}
+.ppt-lang-switch button{flex:1;padding:8px 6px;border-radius:10px;border:1px solid var(--teal);background:transparent;color:var(--ink);font-weight:700;font-size:14px;cursor:pointer;}
+.ppt-lang-switch button.active{background:var(--teal);color:#fff;}
+.fs-lang{right:14px;bottom:14px;font-size:16px;font-weight:800;}
 .ppt-nav button{flex:1;}
 .ppt-tap-zone{position:absolute;top:0;bottom:0;width:32%;cursor:pointer;}
 .ppt-tap-left{left:0;}
@@ -2481,7 +2485,29 @@ function renderMindmap(){
 const CLASS_SLIDES = ["pu1-ch9-assets/slide-01.jpg", "pu1-ch9-assets/slide-02.jpg", "pu1-ch9-assets/slide-03.jpg", "pu1-ch9-assets/slide-04.jpg", "pu1-ch9-assets/slide-05.jpg", "pu1-ch9-assets/slide-06.jpg", "pu1-ch9-assets/slide-07.jpg", "pu1-ch9-assets/slide-08.jpg", "pu1-ch9-assets/slide-09.jpg", "pu1-ch9-assets/slide-10.jpg", "pu1-ch9-assets/slide-11.jpg", "pu1-ch9-assets/slide-12.jpg", "pu1-ch9-assets/slide-13.jpg", "pu1-ch9-assets/slide-14.jpg", "pu1-ch9-assets/slide-15.jpg", "pu1-ch9-assets/slide-16.jpg", "pu1-ch9-assets/slide-17.jpg", "pu1-ch9-assets/slide-18.jpg", "pu1-ch9-assets/slide-19.jpg", "pu1-ch9-assets/slide-20.jpg", "pu1-ch9-assets/slide-21.jpg", "pu1-ch9-assets/slide-22.jpg", "pu1-ch9-assets/slide-23.jpg", "pu1-ch9-assets/slide-24.jpg", "pu1-ch9-assets/slide-25.jpg", "pu1-ch9-assets/slide-26.jpg", "pu1-ch9-assets/slide-27.jpg", "pu1-ch9-assets/slide-28.jpg", "pu1-ch9-assets/slide-29.jpg", "pu1-ch9-assets/slide-30.jpg", "pu1-ch9-assets/slide-31.jpg", "pu1-ch9-assets/slide-32.jpg", "pu1-ch9-assets/slide-33.jpg", "pu1-ch9-assets/slide-34.jpg", "pu1-ch9-assets/slide-35.jpg", "pu1-ch9-assets/slide-36.jpg", "pu1-ch9-assets/slide-37.jpg", "pu1-ch9-assets/slide-38.jpg", "pu1-ch9-assets/slide-39.jpg", "pu1-ch9-assets/slide-40.jpg", "pu1-ch9-assets/slide-41.jpg"];
 const CLASS_SLIDES_LARGE = ["pu1-ch9-assets/proj/slide-01.jpg", "pu1-ch9-assets/proj/slide-02.jpg", "pu1-ch9-assets/proj/slide-03.jpg", "pu1-ch9-assets/proj/slide-04.jpg", "pu1-ch9-assets/proj/slide-05.jpg", "pu1-ch9-assets/proj/slide-06.jpg", "pu1-ch9-assets/proj/slide-07.jpg", "pu1-ch9-assets/proj/slide-08.jpg", "pu1-ch9-assets/proj/slide-09.jpg", "pu1-ch9-assets/proj/slide-10.jpg", "pu1-ch9-assets/proj/slide-11.jpg", "pu1-ch9-assets/proj/slide-12.jpg", "pu1-ch9-assets/proj/slide-13.jpg", "pu1-ch9-assets/proj/slide-14.jpg", "pu1-ch9-assets/proj/slide-15.jpg", "pu1-ch9-assets/proj/slide-16.jpg", "pu1-ch9-assets/proj/slide-17.jpg", "pu1-ch9-assets/proj/slide-18.jpg", "pu1-ch9-assets/proj/slide-19.jpg", "pu1-ch9-assets/proj/slide-20.jpg", "pu1-ch9-assets/proj/slide-21.jpg", "pu1-ch9-assets/proj/slide-22.jpg", "pu1-ch9-assets/proj/slide-23.jpg", "pu1-ch9-assets/proj/slide-24.jpg", "pu1-ch9-assets/proj/slide-25.jpg", "pu1-ch9-assets/proj/slide-26.jpg", "pu1-ch9-assets/proj/slide-27.jpg", "pu1-ch9-assets/proj/slide-28.jpg", "pu1-ch9-assets/proj/slide-29.jpg", "pu1-ch9-assets/proj/slide-30.jpg", "pu1-ch9-assets/proj/slide-31.jpg", "pu1-ch9-assets/proj/slide-32.jpg", "pu1-ch9-assets/proj/slide-33.jpg", "pu1-ch9-assets/proj/slide-34.jpg", "pu1-ch9-assets/proj/slide-35.jpg", "pu1-ch9-assets/proj/slide-36.jpg", "pu1-ch9-assets/proj/slide-37.jpg", "pu1-ch9-assets/proj/slide-38.jpg", "pu1-ch9-assets/proj/slide-39.jpg", "pu1-ch9-assets/proj/slide-40.jpg", "pu1-ch9-assets/proj/slide-41.jpg", "pu1-ch9-assets/proj/slide-42.jpg", "pu1-ch9-assets/proj/slide-43.jpg", "pu1-ch9-assets/proj/slide-44.jpg", "pu1-ch9-assets/proj/slide-45.jpg", "pu1-ch9-assets/proj/slide-46.jpg", "pu1-ch9-assets/proj/slide-47.jpg", "pu1-ch9-assets/proj/slide-48.jpg", "pu1-ch9-assets/proj/slide-49.jpg", "pu1-ch9-assets/proj/slide-50.jpg", "pu1-ch9-assets/proj/slide-51.jpg", "pu1-ch9-assets/proj/slide-52.jpg", "pu1-ch9-assets/proj/slide-53.jpg", "pu1-ch9-assets/proj/slide-54.jpg", "pu1-ch9-assets/proj/slide-55.jpg", "pu1-ch9-assets/proj/slide-56.jpg", "pu1-ch9-assets/proj/slide-57.jpg", "pu1-ch9-assets/proj/slide-58.jpg", "pu1-ch9-assets/proj/slide-59.jpg", "pu1-ch9-assets/proj/slide-60.jpg", "pu1-ch9-assets/proj/slide-61.jpg", "pu1-ch9-assets/proj/slide-62.jpg", "pu1-ch9-assets/proj/slide-63.jpg"];
 let pptDeck = (function(){ try{ return localStorage.getItem('pu1ch9_ppt_deck')==='large' ? 'large' : 'std'; }catch(e){ return 'std'; } })();
-function pptSlides(){ return pptDeck==='large' ? CLASS_SLIDES_LARGE : CLASS_SLIDES; }
+const PPT_LANGS = [{id:'en',label:'English',short:'EN'},{id:'kn',label:'ಕನ್ನಡ',short:'ಕ'},{id:'hi',label:'हिंदी',short:'हि'}];
+function pptDeckList(base, n){ const a=[]; for(let i=1;i<=n;i++) a.push(base+'slide-'+String(i).padStart(2,'0')+'.jpg'); return a; }
+const PPT_DECKS = {
+  std:   {en: CLASS_SLIDES, kn: pptDeckList('pu1-ch9-assets/kn/', CLASS_SLIDES.length), hi: pptDeckList('pu1-ch9-assets/hi/', CLASS_SLIDES.length)},
+  large: {en: CLASS_SLIDES_LARGE, kn: pptDeckList('pu1-ch9-assets/proj/kn/', CLASS_SLIDES_LARGE.length), hi: pptDeckList('pu1-ch9-assets/proj/hi/', CLASS_SLIDES_LARGE.length)}
+};
+let pptLang = (function(){ try{ const v = localStorage.getItem('pu1ch9_ppt_lang'); if(v==='en'||v==='kn'||v==='hi') return v; }catch(e){} return (typeof currentLang!=='undefined' && (currentLang==='kn'||currentLang==='hi')) ? currentLang : 'en'; })();
+function pptSlides(){ return PPT_DECKS[pptDeck][pptLang] || PPT_DECKS[pptDeck].en; }
+function pptLangButtons(){ return PPT_LANGS.map(l=>`<button type="button" class="${pptLang===l.id?'active':''}" onclick="pptSetLang('${l.id}')">${l.label}</button>`).join(''); }
+function pptSetLang(l){
+  pptLang = l; try{ localStorage.setItem('pu1ch9_ppt_lang', l); }catch(e){}
+  const bar = document.getElementById('pptLangBar'); if(bar) bar.innerHTML = pptLangButtons();
+  const fsl = document.getElementById('pptFsLang'); if(fsl) fsl.textContent = (PPT_LANGS.find(x=>x.id===pptLang)||PPT_LANGS[0]).short;
+  pptBuildThumbs(); pptRender();
+}
+function pptCycleLang(){ const i = PPT_LANGS.findIndex(x=>x.id===pptLang); pptSetLang(PPT_LANGS[(i+1)%PPT_LANGS.length].id); }
+function pptPreload(){
+  const keep = [];
+  PPT_LANGS.forEach(l=>{ const d = PPT_DECKS[pptDeck][l.id]; if(d && d[pptIdx]) keep.push(d[pptIdx]); });
+  const cur = pptSlides(); if(cur[pptIdx+1]) keep.push(cur[pptIdx+1]);
+  keep.forEach(src=>{ const im = new Image(); im.src = src; });
+}
+window.pptSetLang = pptSetLang; window.pptCycleLang = pptCycleLang;
 function pptSetDeck(d){
   pptDeck = d; try{ localStorage.setItem('pu1ch9_ppt_deck', d); }catch(e){}
   renderClassPpt();
@@ -2613,6 +2639,7 @@ function renderClassPpt(){
       <button type="button" class="${pptDeck==='std'?'active':''}" onclick="pptSetDeck('std')">🖼️ Standard <span>${CLASS_SLIDES.length} slides</span></button>
       <button type="button" class="${pptDeck==='large'?'active':''}" onclick="pptSetDeck('large')">🔠 Large Text · Projector <span>${CLASS_SLIDES_LARGE.length} slides</span></button>
     </div>
+    <div class="ppt-lang-switch" id="pptLangBar" role="group" aria-label="Slide language">${pptLangButtons()}</div>
     <div class="ppt-progress-track"><div class="ppt-progress-fill" id="pptProgressFill"></div></div>
     <div class="ppt-thumbs" id="pptThumbs"></div>
     <div class="ppt-slide-wrap" id="pptWrap">
@@ -2623,6 +2650,7 @@ function renderClassPpt(){
         <button class="fs-btn fs-prev" onclick="pptPrev()">&#10094;</button>
         <button class="fs-btn fs-next" onclick="pptNext()">&#10095;</button>
         <button class="fs-btn fs-exit" onclick="pptExitFullscreen()">&#10005;</button>
+        <button class="fs-btn fs-lang" id="pptFsLang" onclick="pptCycleLang()" title="Switch language">${(PPT_LANGS.find(x=>x.id===pptLang)||PPT_LANGS[0]).short}</button>
       </div>
     </div>
     <div class="ppt-nav">
@@ -2657,6 +2685,7 @@ function pptRender(){
   document.querySelectorAll('.ppt-thumb').forEach((t,i)=>t.classList.toggle('active', i===pptIdx));
   const activeThumb = document.getElementById('pptThumb'+pptIdx);
   if(activeThumb) activeThumb.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+  pptPreload();
 }
 function pptGoTo(i){ const L = pptSlides().length; if(!L) return; pptIdx = ((i % L) + L) % L; pptRender(); }
 function pptNext(){ pptGoTo(pptIdx+1); }
@@ -2690,6 +2719,10 @@ document.addEventListener('keydown', (e)=>{
   if(e.key === 'ArrowRight') pptNext();
   if(e.key === 'ArrowLeft') pptPrev();
   if(e.key === 'Escape') pptExitFullscreen();
+  const tag = (e.target && e.target.tagName) || '';
+  if(tag==='INPUT' || tag==='TEXTAREA' || e.ctrlKey || e.metaKey || e.altKey) return;
+  const k = (e.key||'').toLowerCase();
+  if(k==='e') pptSetLang('en'); else if(k==='k') pptSetLang('kn'); else if(k==='h') pptSetLang('hi');
 });
 
 /* ---- Chapter 9 Handwritten Notes: teacher-code or paid unlock ---- */
