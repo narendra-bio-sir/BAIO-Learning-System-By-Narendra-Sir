@@ -600,6 +600,12 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
 .ppt-slide-wrap.ppt-rotated img{rotate:90deg;max-width:100vh !important;max-height:100vw !important;}
 .ppt-slide-wrap.ppt-rotated .fs-controls{right:auto !important;bottom:auto !important;top:50% !important;left:50% !important;width:100vh;height:100vw;translate:-50% -50%;rotate:90deg;}
 .ppt-slide-wrap.ppt-rotated .ppt-tap-zone{display:none;}
+.ppt-spot-layer{position:absolute;left:0;top:0;width:0;height:0;pointer-events:none;z-index:2;transition:scale .8s cubic-bezier(.2,.7,.2,1);}
+.ppt-spot{position:absolute;left:0;top:0;width:0;height:0;border-radius:8px;opacity:0;box-shadow:0 0 0 3px #D4AF37,0 0 0 4000px rgba(10,16,30,.34);transition:left .55s ease,top .55s ease,width .55s ease,height .55s ease,opacity .35s ease;}
+.ppt-spot.on{opacity:1;}
+#pptImg.ppt-zoomed{transition:scale .8s cubic-bezier(.2,.7,.2,1),opacity .25s ease;}
+.ppt-slide-wrap.ppt-rotated .ppt-spot-layer{rotate:90deg;}
+@media (prefers-reduced-motion: reduce){ .ppt-spot,.ppt-spot-layer,#pptImg.ppt-zoomed{transition:none;} }
 .fs-btn{position:absolute;pointer-events:auto;background:rgba(20,20,20,.6);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:50%;width:46px;height:46px;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .fs-btn:active{background:rgba(20,20,20,.85);}
 .fs-prev{left:14px;top:50%;transform:translateY(-50%);}
@@ -2648,12 +2654,13 @@ function pptTalkButtons(){
 function pptStopTalk(){
   pptRun++; pptTalking = false;
   if(PPT_TTS) PPT_TTS.cancel();
-  pptTalkButtons(); pptSetCaption('');
+  pptTalkButtons(); pptSetCaption(''); if(typeof pptClearSpot==='function') pptClearSpot();
 }
 function pptSpeakNext(id){
   if(id !== pptRun) return;
   if(pptQi >= pptQueue.length){
     pptTalking = false; pptTalkButtons();
+    setTimeout(()=>{ if(id===pptRun) pptClearSpot(); }, 1200);
     if(pptAuto && pptIdx < pptSlides().length-1){
       setTimeout(()=>{ if(id===pptRun){ pptIdx++; pptRender(); pptStartTalk(); } }, 900);
     } else { setTimeout(()=>{ if(id===pptRun) pptSetCaption(''); }, 1500); }
@@ -2661,6 +2668,7 @@ function pptSpeakNext(id){
   }
   const text = pptQueue[pptQi];
   pptSetCaption(text);
+  pptSpotlight(pptQi, pptQueue.length);
   if(!PPT_TTS){ pptQi++; setTimeout(()=>pptSpeakNext(id), Math.max(2500, text.length*70)); return; }
   const u = new SpeechSynthesisUtterance(text);
   u.lang = PPT_TTS_TAG[pptLang]; let v = pptVoice(pptLang); if(v){ try{ u.voice = v; }catch(e){ v = null; } }
@@ -2676,6 +2684,7 @@ function pptSpeakNext(id){
 function pptStartTalk(){
   const id = ++pptRun; if(PPT_TTS) PPT_TTS.cancel();
   pptTalking = true; pptTalkButtons();
+  pptLoadCues().catch(()=>{});
   pptLoadNarr().then(N=>{
     if(id!==pptRun) return;
     const list = N[pptDeck] && N[pptDeck][pptLang];
@@ -2691,7 +2700,61 @@ function pptSetRate(r){
   pptRate = parseFloat(r)||1; try{ localStorage.setItem('pu1ch9_ppt_rate', String(pptRate)); }catch(e){}
   if(pptTalking){ const keep = pptQi; const id = ++pptRun; if(PPT_TTS) PPT_TTS.cancel(); pptQi = keep; pptTalking = true; pptTalkButtons(); pptSpeakNext(id); }
 }
-window.pptToggleTalk = pptToggleTalk; window.pptSetAuto = pptSetAuto; window.pptSetRate = pptSetRate;
+window.pptToggleTalk = pptToggleTalk;
+/* ---- Spotlight that follows the explanation: highlight + gentle zoom on the part being explained ---- */
+let PPT_CUES = null, pptCuesLoading = null, pptSpotLast = null;
+let pptAnim = (function(){ try{ return localStorage.getItem('pu1ch9_ppt_anim')!=='0'; }catch(e){ return true; } })();
+function pptLoadCues(){
+  if(PPT_CUES) return Promise.resolve(PPT_CUES);
+  if(!pptCuesLoading) pptCuesLoading = fetch('pu1-ch9-assets/spot-cues.json?v=1').then(r=>{ if(!r.ok) throw new Error('cues'); return r.json(); }).then(j=>(PPT_CUES=j)).catch(e=>{ pptCuesLoading=null; throw e; });
+  return pptCuesLoading;
+}
+function pptSetAnim(on){ pptAnim = !!on; try{ localStorage.setItem('pu1ch9_ppt_anim', pptAnim?'1':'0'); }catch(e){} if(!pptAnim) pptClearSpot(); else if(pptTalking && pptSpotLast) pptSpotlight(pptSpotLast[0], pptSpotLast[1]); }
+window.pptSetAnim = pptSetAnim;
+function pptUnzoom(){
+  const img = document.getElementById('pptImg'), layer = document.getElementById('pptSpotLayer');
+  if(img){ img.style.scale = ''; img.style.transformOrigin = ''; }
+  if(layer){ layer.style.scale = ''; layer.style.transformOrigin = ''; }
+}
+function pptClearSpot(){
+  pptSpotLast = null;
+  const sp = document.getElementById('pptSpot'); if(sp) sp.classList.remove('on');
+  pptUnzoom();
+}
+function pptPlaceLayer(){
+  const img = document.getElementById('pptImg'), layer = document.getElementById('pptSpotLayer');
+  if(!img || !layer || !img.offsetWidth) return null;
+  layer.style.left = img.offsetLeft+'px'; layer.style.top = img.offsetTop+'px';
+  layer.style.width = img.offsetWidth+'px'; layer.style.height = img.offsetHeight+'px';
+  return {w: img.offsetWidth, h: img.offsetHeight, img, layer};
+}
+function pptSpotlight(i, total){
+  pptSpotLast = [i, total];
+  if(!pptAnim){ pptClearSpot(); return; }
+  if(pptFsState && pptFsState.scale && pptFsState.scale !== 1){ pptClearSpot(); return; }  /* teacher is pinch-zooming */
+  const cues = PPT_CUES && PPT_CUES[pptDeck] && PPT_CUES[pptDeck][pptLang] && PPT_CUES[pptDeck][pptLang][pptIdx];
+  const sp = document.getElementById('pptSpot');
+  if(!cues || !cues.length || !sp){ pptClearSpot(); pptSpotLast = [i, total]; return; }
+  const box = cues[Math.min(cues.length-1, Math.floor(i*cues.length/Math.max(1,total)))];
+  const g = pptPlaceLayer(); if(!g || !box){ return; }
+  const k = g.w/1920, pad = 10;
+  let x1 = box[0]*k - pad, y1 = box[1]*k - pad, x2 = (box[0]+box[2])*k + pad, y2 = (box[1]+box[3])*k + pad;
+  Object.assign(sp.style, {left: x1+'px', top: y1+'px', width: (x2-x1)+'px', height: (y2-y1)+'px'});
+  sp.classList.add('on');
+  /* gentle zoom toward small parts; never in the sideways (rotated) view; keep the whole box on screen */
+  const wrap = document.getElementById('pptWrap');
+  if(wrap && wrap.classList.contains('ppt-rotated')){ pptUnzoom(); return; }
+  const area = ((x2-x1)*(y2-y1))/(g.w*g.h);
+  let z = area < 0.12 ? 1.18 : area < 0.3 ? 1.09 : 1;
+  z = Math.min(z, (g.w-8)/(x2-x1), (g.h-8)/(y2-y1));
+  if(z <= 1.02){ pptUnzoom(); return; }
+  const org = (a,b,W)=>{ const lo = (z*b - W)/(z-1), hi = z*a/(z-1); return Math.max(lo, Math.min(hi, (a+b)/2)); };
+  const ox = org(Math.max(0,x1), Math.min(g.w,x2), g.w), oy = org(Math.max(0,y1), Math.min(g.h,y2), g.h);
+  g.img.classList.add('ppt-zoomed');
+  [g.img, g.layer].forEach(el=>{ el.style.transformOrigin = ox+'px '+oy+'px'; el.style.scale = z.toFixed(3); });
+}
+window.addEventListener('resize', ()=>{ if(pptSpotLast && pptTalking) pptSpotlight(pptSpotLast[0], pptSpotLast[1]); });
+ window.pptSetAuto = pptSetAuto; window.pptSetRate = pptSetRate;
 
 function pptSetDeck(d){
   pptStopTalk();
@@ -2830,6 +2893,7 @@ function renderClassPpt(){
     <div class="ppt-thumbs" id="pptThumbs"></div>
     <div class="ppt-slide-wrap" id="pptWrap">
       <img id="pptImg" src="" onload="this.classList.add('loaded')">
+      <div class="ppt-spot-layer" id="pptSpotLayer" aria-hidden="true"><div class="ppt-spot" id="pptSpot"></div></div>
       <div class="ppt-tap-zone ppt-tap-left" onclick="pptPrev()" title="Previous slide"></div>
       <div class="ppt-tap-zone ppt-tap-right" onclick="pptNext()" title="Next slide"></div>
       <div class="fs-controls">
@@ -2849,6 +2913,7 @@ function renderClassPpt(){
     <div class="ppt-talk">
       <button type="button" id="pptExplainBtn" class="ppt-explain" onclick="pptToggleTalk()">&#9654; Explain this slide</button>
       <label class="ppt-talk-opt"><input type="checkbox" id="pptAutoChk" ${pptAuto?'checked':''} onchange="pptSetAuto(this.checked)"> Auto-play all slides</label>
+      <label class="ppt-talk-opt"><input type="checkbox" id="pptAnimChk" ${pptAnim?'checked':''} onchange="pptSetAnim(this.checked)"> Animate with explanation</label>
       <label class="ppt-talk-opt">Speed <select id="pptRateSel" onchange="pptSetRate(this.value)">${[['0.85','Slow'],['1','Normal'],['1.15','Fast']].map(o=>`<option value="${o[0]}" ${String(pptRate)===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select></label>
       <label class="ppt-talk-opt">Voice <select id="pptVoiceSel" onchange="pptSetVoice(this.value)"><option>Loading…</option></select></label>
     </div>
@@ -2876,6 +2941,7 @@ function pptRender(){
   img.style.transform = '';
   pptFsState.scale = 1; pptFsState.tx = 0; pptFsState.ty = 0;
   img.classList.remove('loaded');
+  if(typeof pptClearSpot==='function' && !pptTalking) pptClearSpot();
   img.src = pptSlideSrc(pptIdx);
   const fill = document.getElementById('pptProgressFill');
   if(fill) fill.style.width = (((pptIdx+1)/pptSlides().length)*100)+'%';
