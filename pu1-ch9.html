@@ -570,7 +570,7 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
 .ppt-explain{padding:10px 16px;border-radius:10px;border:none;background:var(--gold);color:#111;font-weight:800;font-size:14px;cursor:pointer;}
 .ppt-explain.on{background:var(--teal);color:#fff;}
 .ppt-talk-opt{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink);}
-.ppt-talk-opt select{padding:4px 6px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);}
+.ppt-talk-opt select{max-width:210px;padding:4px 6px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);}
 .ppt-caption{margin-top:10px;min-height:48px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);border-left:4px solid var(--teal);background:var(--panel2);font-size:15px;font-weight:600;line-height:1.5;color:var(--ink);}
 .ppt-caption.hint{color:var(--ink-dim);font-weight:500;font-size:13px;}
 .ppt-voice-warn{margin-top:8px;padding:8px 12px;border-radius:10px;border:1px dashed var(--gold);font-size:12.5px;line-height:1.5;color:var(--ink);}
@@ -2558,7 +2558,7 @@ function pptSetLang(l){
   pptLang = l; try{ localStorage.setItem('pu1ch9_ppt_lang', l); }catch(e){}
   const bar = document.getElementById('pptLangBar'); if(bar) bar.innerHTML = pptLangButtons();
   const fsl = document.getElementById('pptFsLang'); if(fsl) fsl.textContent = (PPT_LANGS.find(x=>x.id===pptLang)||PPT_LANGS[0]).short;
-  pptBuildThumbs(); pptRender(); pptCheckVoice(); if(wasTalking) pptStartTalk();
+  pptBuildThumbs(); pptRender(); pptCheckVoice(); if(wasTalking) pptStartTalk(); else pptSetCaption('');
 }
 function pptCycleLang(){ const i = PPT_LANGS.findIndex(x=>x.id===pptLang); pptSetLang(PPT_LANGS[(i+1)%PPT_LANGS.length].id); }
 function pptPreload(){
@@ -2581,12 +2581,43 @@ function pptLoadNarr(){
   if(!pptNarrLoading) pptNarrLoading = fetch('pu1-ch9-assets/narration.json?v=1').then(r=>{ if(!r.ok) throw new Error('narration '+r.status); return r.json(); }).then(j=>(PPT_NARR=j)).catch(e=>{ pptNarrLoading=null; throw e; });
   return pptNarrLoading;
 }
-function pptVoice(l){
-  if(!PPT_TTS) return null;
-  const vs = PPT_TTS.getVoices(); const tag = PPT_TTS_TAG[l];
-  return vs.find(v=>v.lang===tag) || vs.find(v=>(v.lang||'').replace('_','-').toLowerCase().startsWith(l)) || null;
+function pptVoicesFor(l){
+  if(!PPT_TTS) return [];
+  const tag = PPT_TTS_TAG[l];
+  const all = PPT_TTS.getVoices().filter(v=>(v.lang||'').replace('_','-').toLowerCase().startsWith(l));
+  return all.sort((a,b)=>(b.lang===tag)-(a.lang===tag) || (b.localService===false)-(a.localService===false) || a.name.localeCompare(b.name));
 }
+function pptSavedVoice(l){ try{ return localStorage.getItem('pu1ch9_ppt_voice_'+l) || ''; }catch(e){ return ''; } }
+function pptVoice(l){
+  const list = pptVoicesFor(l); if(!list.length) return null;
+  const saved = pptSavedVoice(l);
+  return (saved && list.find(v=>v.voiceURI===saved || v.name===saved)) || list[0];
+}
+function pptVoiceLabel(v){
+  let n = (v.name||'Voice').replace(/^Microsoft\s+/,'').replace(/\s+Online\s*\(Natural\)/i,' (natural)').replace(/\s*-\s*[A-Za-z ()]+$/,'');
+  return n + ' · ' + v.lang;
+}
+function pptFillVoices(){
+  const sel = document.getElementById('pptVoiceSel'); if(!sel) return;
+  const list = pptVoicesFor(pptLang);
+  if(!list.length){ sel.innerHTML = `<option value="">No ${PPT_TTS_NAME[pptLang]} voice</option>`; sel.disabled = true; return; }
+  const cur = pptVoice(pptLang);
+  sel.disabled = false;
+  sel.innerHTML = list.map(v=>`<option value="${(v.voiceURI||v.name).replace(/"/g,'&quot;')}" ${v===cur?'selected':''}>${pptVoiceLabel(v).replace(/</g,'&lt;')}</option>`).join('');
+}
+const PPT_VOICE_SAMPLE = {en:'This is how this voice sounds.', kn:'ಈ ಧ್ವನಿ ಹೀಗೆ ಕೇಳಿಸುತ್ತದೆ.', hi:'यह आवाज़ ऐसी सुनाई देती है।'};
+function pptSetVoice(uri){
+  try{ localStorage.setItem('pu1ch9_ppt_voice_'+pptLang, uri); }catch(e){}
+  if(pptTalking){ const keep = pptQi; const id = ++pptRun; if(PPT_TTS) PPT_TTS.cancel(); pptQi = keep; pptTalking = true; pptTalkButtons(); pptSpeakNext(id); return; }
+  if(!PPT_TTS) return;
+  PPT_TTS.cancel();
+  const u = new SpeechSynthesisUtterance(PPT_VOICE_SAMPLE[pptLang]||PPT_VOICE_SAMPLE.en);
+  u.lang = PPT_TTS_TAG[pptLang]; const v = pptVoice(pptLang); if(v){ try{ u.voice = v; }catch(e){} }
+  u.rate = pptRate; PPT_TTS.speak(u);
+}
+window.pptSetVoice = pptSetVoice;
 function pptCheckVoice(){
+  pptFillVoices();
   const w = document.getElementById('pptVoiceWarn'); if(!w) return;
   if(!PPT_TTS){ w.hidden=false; w.textContent='This browser cannot read aloud. Please open the app in Chrome or Edge.'; return; }
   if(!PPT_TTS.getVoices().length || pptVoice(pptLang)){ w.hidden=true; return; }
@@ -2814,6 +2845,7 @@ function renderClassPpt(){
       <button type="button" id="pptExplainBtn" class="ppt-explain" onclick="pptToggleTalk()">&#9654; Explain this slide</button>
       <label class="ppt-talk-opt"><input type="checkbox" id="pptAutoChk" ${pptAuto?'checked':''} onchange="pptSetAuto(this.checked)"> Auto-play all slides</label>
       <label class="ppt-talk-opt">Speed <select id="pptRateSel" onchange="pptSetRate(this.value)">${[['0.85','Slow'],['1','Normal'],['1.15','Fast']].map(o=>`<option value="${o[0]}" ${String(pptRate)===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select></label>
+      <label class="ppt-talk-opt">Voice <select id="pptVoiceSel" onchange="pptSetVoice(this.value)"><option>Loading…</option></select></label>
     </div>
     <div class="ppt-caption hint" id="pptCaption" aria-live="polite"></div>
     <div class="ppt-voice-warn" id="pptVoiceWarn" hidden></div>
