@@ -563,6 +563,17 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
 .ppt-lang-switch button{flex:1;padding:8px 6px;border-radius:10px;border:1px solid var(--teal);background:transparent;color:var(--ink);font-weight:700;font-size:14px;cursor:pointer;}
 .ppt-lang-switch button.active{background:var(--teal);color:#fff;}
 .fs-lang{right:14px;bottom:14px;font-size:16px;font-weight:800;}
+.fs-talk{left:14px;bottom:14px;font-size:16px;}
+.fs-talk.on{background:rgba(11,127,114,.9);}
+.fs-caption{position:absolute;left:70px;right:70px;bottom:14px;display:none;pointer-events:none;background:rgba(10,14,20,.78);color:#fff;font-size:clamp(14px,2.2vw,30px);font-weight:600;line-height:1.4;padding:8px 14px;border-radius:10px;text-align:center;}
+.ppt-talk{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-top:10px;}
+.ppt-explain{padding:10px 16px;border-radius:10px;border:none;background:var(--gold);color:#111;font-weight:800;font-size:14px;cursor:pointer;}
+.ppt-explain.on{background:var(--teal);color:#fff;}
+.ppt-talk-opt{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink);}
+.ppt-talk-opt select{padding:4px 6px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);}
+.ppt-caption{margin-top:10px;min-height:48px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);border-left:4px solid var(--teal);background:var(--panel2);font-size:15px;font-weight:600;line-height:1.5;color:var(--ink);}
+.ppt-caption.hint{color:var(--ink-dim);font-weight:500;font-size:13px;}
+.ppt-voice-warn{margin-top:8px;padding:8px 12px;border-radius:10px;border:1px dashed var(--gold);font-size:12.5px;line-height:1.5;color:var(--ink);}
 .ppt-nav button{flex:1;}
 .ppt-tap-zone{position:absolute;top:0;bottom:0;width:32%;cursor:pointer;}
 .ppt-tap-left{left:0;}
@@ -2543,10 +2554,11 @@ let pptLang = (function(){ try{ const v = localStorage.getItem('pu1ch9_ppt_lang'
 function pptSlides(){ return PPT_DECKS[pptDeck][pptLang] || PPT_DECKS[pptDeck].en; }
 function pptLangButtons(){ return PPT_LANGS.map(l=>`<button type="button" class="${pptLang===l.id?'active':''}" onclick="pptSetLang('${l.id}')">${l.label}</button>`).join(''); }
 function pptSetLang(l){
+  const wasTalking = pptTalking; pptStopTalk();
   pptLang = l; try{ localStorage.setItem('pu1ch9_ppt_lang', l); }catch(e){}
   const bar = document.getElementById('pptLangBar'); if(bar) bar.innerHTML = pptLangButtons();
   const fsl = document.getElementById('pptFsLang'); if(fsl) fsl.textContent = (PPT_LANGS.find(x=>x.id===pptLang)||PPT_LANGS[0]).short;
-  pptBuildThumbs(); pptRender();
+  pptBuildThumbs(); pptRender(); pptCheckVoice(); if(wasTalking) pptStartTalk();
 }
 function pptCycleLang(){ const i = PPT_LANGS.findIndex(x=>x.id===pptLang); pptSetLang(PPT_LANGS[(i+1)%PPT_LANGS.length].id); }
 function pptPreload(){
@@ -2556,7 +2568,97 @@ function pptPreload(){
   keep.forEach(src=>{ const im = new Image(); im.src = src; });
 }
 window.pptSetLang = pptSetLang; window.pptCycleLang = pptCycleLang;
+/* ---- Read & explain: device text-to-speech narration with captions ---- */
+const PPT_TTS = ('speechSynthesis' in window) ? window.speechSynthesis : null;
+const PPT_TTS_TAG = {en:'en-IN', kn:'kn-IN', hi:'hi-IN'};
+const PPT_TTS_NAME = {en:'English', kn:'Kannada', hi:'Hindi'};
+let PPT_NARR = null, pptNarrLoading = null;
+let pptTalking = false, pptQueue = [], pptQi = 0, pptRun = 0;
+let pptAuto = (function(){ try{ return localStorage.getItem('pu1ch9_ppt_auto')==='1'; }catch(e){ return false; } })();
+let pptRate = (function(){ try{ const v = parseFloat(localStorage.getItem('pu1ch9_ppt_rate')); return v>0 ? v : 1; }catch(e){ return 1; } })();
+function pptLoadNarr(){
+  if(PPT_NARR) return Promise.resolve(PPT_NARR);
+  if(!pptNarrLoading) pptNarrLoading = fetch('pu1-ch9-assets/narration.json?v=1').then(r=>{ if(!r.ok) throw new Error('narration '+r.status); return r.json(); }).then(j=>(PPT_NARR=j)).catch(e=>{ pptNarrLoading=null; throw e; });
+  return pptNarrLoading;
+}
+function pptVoice(l){
+  if(!PPT_TTS) return null;
+  const vs = PPT_TTS.getVoices(); const tag = PPT_TTS_TAG[l];
+  return vs.find(v=>v.lang===tag) || vs.find(v=>(v.lang||'').replace('_','-').toLowerCase().startsWith(l)) || null;
+}
+function pptCheckVoice(){
+  const w = document.getElementById('pptVoiceWarn'); if(!w) return;
+  if(!PPT_TTS){ w.hidden=false; w.textContent='This browser cannot read aloud. Please open the app in Chrome or Edge.'; return; }
+  if(!PPT_TTS.getVoices().length || pptVoice(pptLang)){ w.hidden=true; return; }
+  const nm = PPT_TTS_NAME[pptLang];
+  w.hidden=false;
+  w.innerHTML = `No ${nm} voice on this device, so captions will show but the reading may be silent. On Android: Settings → Text-to-speech → Google → install ${nm}. On a laptop, Microsoft Edge has ${nm} voices.`;
+}
+if(PPT_TTS){ try{ PPT_TTS.addEventListener('voiceschanged', pptCheckVoice); }catch(e){ PPT_TTS.onvoiceschanged = pptCheckVoice; } }
+function pptSentences(t){ return (t||'').split(/(?<=[.!?।])\s+/).map(x=>x.trim()).filter(Boolean); }
+function pptSetCaption(text){
+  const hint = {en:'Tap <b>Explain</b> to hear this slide read and explained in English.', kn:'<b>Explain</b> ಒತ್ತಿ — ಈ ಸ್ಲೈಡ್ ಅನ್ನು ಕನ್ನಡದಲ್ಲಿ ಓದಿ ವಿವರಿಸಲಾಗುತ್ತದೆ.', hi:'<b>Explain</b> दबाएँ — यह स्लाइड हिंदी में पढ़कर समझाई जाएगी।'};
+  const c = document.getElementById('pptCaption');
+  if(c){ if(text){ c.textContent = text; c.classList.remove('hint'); } else { c.innerHTML = hint[pptLang]||hint.en; c.classList.add('hint'); } }
+  const f = document.getElementById('pptFsCaption');
+  if(f){ f.textContent = text||''; f.style.display = text ? 'block' : 'none'; }
+}
+function pptTalkButtons(){
+  const b = document.getElementById('pptExplainBtn');
+  if(b){ b.classList.toggle('on', pptTalking); b.innerHTML = pptTalking ? '&#10074;&#10074; Stop' : '&#9654; Explain this slide'; }
+  const fb = document.getElementById('pptFsTalk');
+  if(fb){ fb.innerHTML = pptTalking ? '&#10074;&#10074;' : '&#9654;'; fb.classList.toggle('on', pptTalking); }
+}
+function pptStopTalk(){
+  pptRun++; pptTalking = false;
+  if(PPT_TTS) PPT_TTS.cancel();
+  pptTalkButtons(); pptSetCaption('');
+}
+function pptSpeakNext(id){
+  if(id !== pptRun) return;
+  if(pptQi >= pptQueue.length){
+    pptTalking = false; pptTalkButtons();
+    if(pptAuto && pptIdx < pptSlides().length-1){
+      setTimeout(()=>{ if(id===pptRun){ pptIdx++; pptRender(); pptStartTalk(); } }, 900);
+    } else { setTimeout(()=>{ if(id===pptRun) pptSetCaption(''); }, 1500); }
+    return;
+  }
+  const text = pptQueue[pptQi];
+  pptSetCaption(text);
+  if(!PPT_TTS){ pptQi++; setTimeout(()=>pptSpeakNext(id), Math.max(2500, text.length*70)); return; }
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = PPT_TTS_TAG[pptLang]; let v = pptVoice(pptLang); if(v){ try{ u.voice = v; }catch(e){ v = null; } }
+  u.rate = pptRate;
+  const t0 = Date.now();
+  u.onend = ()=>{ if(id!==pptRun) return; pptQi++;
+    /* if no voice exists the engine may "finish" instantly: keep captions readable */
+    const wait = Math.max(0, Math.min(6000, text.length*55) - (Date.now()-t0));
+    setTimeout(()=>pptSpeakNext(id), v ? 150 : wait); };
+  u.onerror = ()=>{ if(id!==pptRun) return; pptQi++; setTimeout(()=>pptSpeakNext(id), Math.min(6000, text.length*55)); };
+  PPT_TTS.speak(u);
+}
+function pptStartTalk(){
+  const id = ++pptRun; if(PPT_TTS) PPT_TTS.cancel();
+  pptTalking = true; pptTalkButtons();
+  pptLoadNarr().then(N=>{
+    if(id!==pptRun) return;
+    const list = N[pptDeck] && N[pptDeck][pptLang];
+    const text = list && list[pptIdx];
+    if(!text){ pptStopTalk(); return; }
+    pptQueue = pptSentences(text); pptQi = 0;
+    pptSpeakNext(id);
+  }).catch(()=>{ if(id!==pptRun) return; pptTalking=false; pptTalkButtons(); const c=document.getElementById('pptCaption'); if(c) c.textContent='Could not load the explanations. Check the internet connection and try again.'; });
+}
+function pptToggleTalk(){ pptTalking ? pptStopTalk() : pptStartTalk(); }
+function pptSetAuto(on){ pptAuto = !!on; try{ localStorage.setItem('pu1ch9_ppt_auto', pptAuto?'1':'0'); }catch(e){} }
+function pptSetRate(r){
+  pptRate = parseFloat(r)||1; try{ localStorage.setItem('pu1ch9_ppt_rate', String(pptRate)); }catch(e){}
+  if(pptTalking){ const keep = pptQi; const id = ++pptRun; if(PPT_TTS) PPT_TTS.cancel(); pptQi = keep; pptTalking = true; pptTalkButtons(); pptSpeakNext(id); }
+}
+window.pptToggleTalk = pptToggleTalk; window.pptSetAuto = pptSetAuto; window.pptSetRate = pptSetRate;
+
 function pptSetDeck(d){
+  pptStopTalk();
   pptDeck = d; try{ localStorage.setItem('pu1ch9_ppt_deck', d); }catch(e){}
   renderClassPpt();
 }
@@ -2698,6 +2800,8 @@ function renderClassPpt(){
         <button class="fs-btn fs-prev" onclick="pptPrev()">&#10094;</button>
         <button class="fs-btn fs-next" onclick="pptNext()">&#10095;</button>
         <button class="fs-btn fs-exit" onclick="pptExitFullscreen()">&#10005;</button>
+        <button class="fs-btn fs-talk" id="pptFsTalk" onclick="pptToggleTalk()" title="Explain this slide">&#9654;</button>
+        <div class="fs-caption" id="pptFsCaption"></div>
         <button class="fs-btn fs-lang" id="pptFsLang" onclick="pptCycleLang()" title="Switch language">${(PPT_LANGS.find(x=>x.id===pptLang)||PPT_LANGS[0]).short}</button>
       </div>
     </div>
@@ -2706,6 +2810,13 @@ function renderClassPpt(){
       <button class="opt-btn" onclick="pptFullscreen()">&#9974; Fullscreen</button>
       <button class="opt-btn" onclick="pptNext()">Next &rarr;</button>
     </div>
+    <div class="ppt-talk">
+      <button type="button" id="pptExplainBtn" class="ppt-explain" onclick="pptToggleTalk()">&#9654; Explain this slide</button>
+      <label class="ppt-talk-opt"><input type="checkbox" id="pptAutoChk" ${pptAuto?'checked':''} onchange="pptSetAuto(this.checked)"> Auto-play all slides</label>
+      <label class="ppt-talk-opt">Speed <select id="pptRateSel" onchange="pptSetRate(this.value)">${[['0.85','Slow'],['1','Normal'],['1.15','Fast']].map(o=>`<option value="${o[0]}" ${String(pptRate)===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select></label>
+    </div>
+    <div class="ppt-caption hint" id="pptCaption" aria-live="polite"></div>
+    <div class="ppt-voice-warn" id="pptVoiceWarn" hidden></div>
   </div>`;
   pptIdx = 0;
   pptFsState.scale = 1;
@@ -2714,6 +2825,7 @@ function renderClassPpt(){
   const wrap = document.getElementById('pptWrap'), img = document.getElementById('pptImg');
   if(wrap && img) attachPinchZoom(wrap, img, pptFsState);
   pptRender();
+  pptTalkButtons(); pptSetCaption(''); pptCheckVoice();
 }
 function pptSlideSrc(i){ return pptSlides()[i]; }
 function pptBuildThumbs(){
@@ -2735,7 +2847,7 @@ function pptRender(){
   if(activeThumb) activeThumb.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
   pptPreload();
 }
-function pptGoTo(i){ const L = pptSlides().length; if(!L) return; pptIdx = ((i % L) + L) % L; pptRender(); }
+function pptGoTo(i){ const L = pptSlides().length; if(!L) return; const was = pptTalking; pptStopTalk(); pptIdx = ((i % L) + L) % L; pptRender(); if(was && pptAuto) pptStartTalk(); }
 function pptNext(){ pptGoTo(pptIdx+1); }
 function pptPrev(){ pptGoTo(pptIdx-1); }
 function pptFullscreen(){
@@ -2770,7 +2882,7 @@ document.addEventListener('keydown', (e)=>{
   const tag = (e.target && e.target.tagName) || '';
   if(tag==='INPUT' || tag==='TEXTAREA' || e.ctrlKey || e.metaKey || e.altKey) return;
   const k = (e.key||'').toLowerCase();
-  if(k==='e') pptSetLang('en'); else if(k==='k') pptSetLang('kn'); else if(k==='h') pptSetLang('hi');
+  if(k==='e') pptSetLang('en'); else if(k==='k') pptSetLang('kn'); else if(k==='h') pptSetLang('hi'); else if(k==='p') pptToggleTalk();
 });
 
 /* ---- Chapter 9 Handwritten Notes: teacher-code or paid unlock ---- */
@@ -3820,6 +3932,7 @@ function injectDemoAccessBanner(){
   demoBannerInterval = setInterval(tick, 1000);
 }
 function renderContent(){
+  if(currentTab !== 'classppt' && typeof pptTalking !== 'undefined' && pptTalking) pptStopTalk();
   if(PREMIUM_LOCKED_TABS.indexOf(currentTab) !== -1 && !premiumQualifies()){
     renderPremiumLock(currentTab);
     return;
