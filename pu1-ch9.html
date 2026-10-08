@@ -595,6 +595,11 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
 .ppt-slide-wrap:fullscreen img,.ppt-slide-wrap:-webkit-full-screen img,.ppt-slide-wrap.js-fullscreen img{
   width:auto;height:auto;max-width:100vw;max-height:100vh;object-fit:contain;transform-origin:center center;will-change:transform;touch-action:none;
 }
+/* Portrait phone in fullscreen without orientation lock: turn the slide and its controls sideways.
+   (The fullscreen element itself cannot be transformed, so rotate its children.) */
+.ppt-slide-wrap.ppt-rotated img{rotate:90deg;max-width:100vh !important;max-height:100vw !important;}
+.ppt-slide-wrap.ppt-rotated .fs-controls{right:auto !important;bottom:auto !important;top:50% !important;left:50% !important;width:100vh;height:100vw;translate:-50% -50%;rotate:90deg;}
+.ppt-slide-wrap.ppt-rotated .ppt-tap-zone{display:none;}
 .fs-btn{position:absolute;pointer-events:auto;background:rgba(20,20,20,.6);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:50%;width:46px;height:46px;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .fs-btn:active{background:rgba(20,20,20,.85);}
 .fs-prev{left:14px;top:50%;transform:translateY(-50%);}
@@ -2882,12 +2887,40 @@ function pptRender(){
 function pptGoTo(i){ const L = pptSlides().length; if(!L) return; const was = pptTalking; pptStopTalk(); pptIdx = ((i % L) + L) % L; pptRender(); if(was && pptAuto) pptStartTalk(); }
 function pptNext(){ pptGoTo(pptIdx+1); }
 function pptPrev(){ pptGoTo(pptIdx-1); }
+/* Landscape in fullscreen: lock screen orientation where the browser allows it;
+   otherwise (iPhone, some in-app browsers) rotate the slide 90deg so it fills a portrait screen sideways. */
+let pptLandscapeLocked = false;
+function pptIsFs(){ const w = document.getElementById('pptWrap'); return !!(w && (w.classList.contains('js-fullscreen') || document.fullscreenElement===w || document.webkitFullscreenElement===w)); }
+function pptUpdateRotate(){
+  const w = document.getElementById('pptWrap'); if(!w) return;
+  const portrait = window.innerHeight > window.innerWidth;
+  w.classList.toggle('ppt-rotated', pptIsFs() && !pptLandscapeLocked && portrait);
+}
+function pptLockLandscape(){
+  pptLandscapeLocked = false;
+  const o = screen.orientation;
+  if(o && o.lock){
+    o.lock('landscape').then(()=>{ pptLandscapeLocked = true; pptUpdateRotate(); setTimeout(()=>{ if(pptIsFs() && window.innerHeight > window.innerWidth){ pptLandscapeLocked = false; pptUpdateRotate(); } }, 800); }).catch(()=>{ pptLandscapeLocked = false; pptUpdateRotate(); });
+  }
+  pptUpdateRotate();
+}
+function pptUnlockLandscape(){
+  pptLandscapeLocked = false;
+  try{ if(screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); }catch(e){}
+  const w = document.getElementById('pptWrap'); if(w) w.classList.remove('ppt-rotated');
+}
+window.addEventListener('resize', ()=>{ if(pptIsFs()) pptUpdateRotate(); });
+window.addEventListener('orientationchange', ()=>{ setTimeout(()=>{ if(pptIsFs()) pptUpdateRotate(); }, 250); });
+document.addEventListener('fullscreenchange', ()=>{ if(document.fullscreenElement && document.fullscreenElement.id==='pptWrap') pptLockLandscape(); else if(!pptIsFs()) pptUnlockLandscape(); });
+document.addEventListener('webkitfullscreenchange', ()=>{ if(!pptIsFs()) pptUnlockLandscape(); });
 function pptFullscreen(){
   const wrap = document.getElementById('pptWrap');
   if(!wrap) return;
   enterCustomFullscreen(wrap);
+  pptLockLandscape();
 }
 function pptExitFullscreen(){
+  pptUnlockLandscape();
   exitCustomFullscreen();
   pptFsState.scale = 1; pptFsState.tx = 0; pptFsState.ty = 0;
   const img = document.getElementById('pptImg');
@@ -2897,10 +2930,10 @@ function pptAttachSwipe(){
   const wrap = document.getElementById('pptWrap');
   if(!wrap) return;
   let startX = null;
-  wrap.addEventListener('touchstart', (e)=>{ if(e.touches.length===1) startX = e.touches[0].clientX; else startX = null; }, {passive:true});
+  wrap.addEventListener('touchstart', (e)=>{ if(e.touches.length===1){ const r = wrap.classList.contains('ppt-rotated'); startX = r ? e.touches[0].clientY : e.touches[0].clientX; } else startX = null; }, {passive:true});
   wrap.addEventListener('touchend', (e)=>{
     if(startX === null) return;
-    const dx = e.changedTouches[0].clientX - startX;
+    const dx = (wrap.classList.contains('ppt-rotated') ? e.changedTouches[0].clientY : e.changedTouches[0].clientX) - startX;
     if(Math.abs(dx) > 40){ dx < 0 ? pptNext() : pptPrev(); }
     startX = null;
   }, {passive:true});
