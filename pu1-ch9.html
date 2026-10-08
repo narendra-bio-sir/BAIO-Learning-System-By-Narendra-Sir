@@ -2896,13 +2896,16 @@ function pptUpdateRotate(){
   const portrait = window.innerHeight > window.innerWidth;
   w.classList.toggle('ppt-rotated', pptIsFs() && !pptLandscapeLocked && portrait);
 }
+function pptNativeFs(){ const w = document.getElementById('pptWrap'); return !!(w && (document.fullscreenElement===w || document.webkitFullscreenElement===w)); }
+/* Same order as the other chapters: lock to landscape only once real fullscreen has started. */
 function pptLockLandscape(){
-  pptLandscapeLocked = false;
   const o = screen.orientation;
-  if(o && o.lock){
-    o.lock('landscape').then(()=>{ pptLandscapeLocked = true; pptUpdateRotate(); setTimeout(()=>{ if(pptIsFs() && window.innerHeight > window.innerWidth){ pptLandscapeLocked = false; pptUpdateRotate(); } }, 800); }).catch(()=>{ pptLandscapeLocked = false; pptUpdateRotate(); });
-  }
-  pptUpdateRotate();
+  if(!(o && o.lock)){ pptLandscapeLocked = false; pptUpdateRotate(); return; }
+  o.lock('landscape').then(()=>{
+    pptLandscapeLocked = true; pptUpdateRotate();
+    /* some browsers accept the lock but never turn the screen: fall back to rotating the slide */
+    setTimeout(()=>{ if(pptIsFs() && window.innerHeight > window.innerWidth){ pptLandscapeLocked = false; pptUpdateRotate(); } }, 900);
+  }).catch(()=>{ pptLandscapeLocked = false; pptUpdateRotate(); });
 }
 function pptUnlockLandscape(){
   pptLandscapeLocked = false;
@@ -2912,12 +2915,14 @@ function pptUnlockLandscape(){
 window.addEventListener('resize', ()=>{ if(pptIsFs()) pptUpdateRotate(); });
 window.addEventListener('orientationchange', ()=>{ setTimeout(()=>{ if(pptIsFs()) pptUpdateRotate(); }, 250); });
 document.addEventListener('fullscreenchange', ()=>{ if(document.fullscreenElement && document.fullscreenElement.id==='pptWrap') pptLockLandscape(); else if(!pptIsFs()) pptUnlockLandscape(); });
-document.addEventListener('webkitfullscreenchange', ()=>{ if(!pptIsFs()) pptUnlockLandscape(); });
+document.addEventListener('webkitfullscreenchange', ()=>{ if(document.webkitFullscreenElement && document.webkitFullscreenElement.id==='pptWrap') pptLockLandscape(); else if(!pptIsFs()) pptUnlockLandscape(); });
 function pptFullscreen(){
   const wrap = document.getElementById('pptWrap');
   if(!wrap) return;
+  pptLandscapeLocked = true; /* assume the lock will work; no sideways flash while fullscreen starts */
   enterCustomFullscreen(wrap);
-  pptLockLandscape();
+  /* native fullscreen not available (some in-app browsers): no orientation lock possible, so rotate the slide */
+  setTimeout(()=>{ if(pptIsFs() && !pptNativeFs()){ pptLandscapeLocked = false; pptUpdateRotate(); } }, 700);
 }
 function pptExitFullscreen(){
   pptUnlockLandscape();
