@@ -564,6 +564,8 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
 .ppt-lang-switch button.active{background:var(--teal);color:#fff;}
 .fs-lang{right:14px;bottom:14px;font-size:16px;font-weight:800;}
 .fs-talk{left:14px;bottom:14px;font-size:16px;}
+.fs-cc{left:14px;top:14px;font-size:14px;font-weight:800;letter-spacing:.02em;}
+.fs-cc.off{opacity:.55;text-decoration:line-through;}
 .fs-talk.on{background:rgba(11,127,114,.9);}
 .fs-caption{position:absolute;left:70px;right:70px;bottom:14px;display:none;pointer-events:none;background:rgba(10,14,20,.78);color:#fff;font-size:clamp(14px,2.2vw,30px);font-weight:600;line-height:1.4;padding:8px 14px;border-radius:10px;text-align:center;}
 .ppt-talk{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-top:10px;}
@@ -2638,7 +2640,26 @@ function pptCheckVoice(){
 }
 if(PPT_TTS){ try{ PPT_TTS.addEventListener('voiceschanged', pptCheckVoice); }catch(e){ PPT_TTS.onvoiceschanged = pptCheckVoice; } }
 function pptSentences(t){ return (t||'').split(/(?<=[.!?।])\s+/).map(x=>x.trim()).filter(Boolean); }
+let pptCaps = (function(){ try{ return localStorage.getItem('pu1ch9_ppt_caps')!=='0'; }catch(e){ return true; } })();
+let pptCapLast = '';
+function pptCapButtons(){
+  const chk = document.getElementById('pptCapsChk'); if(chk) chk.checked = pptCaps;
+  const b = document.getElementById('pptFsCc'); if(b){ b.classList.toggle('off', !pptCaps); b.title = pptCaps ? 'Captions on (tap to hide)' : 'Captions off (tap to show)'; }
+}
+function pptSetCaps(on){
+  pptCaps = !!on; try{ localStorage.setItem('pu1ch9_ppt_caps', pptCaps?'1':'0'); }catch(e){}
+  pptCapButtons(); pptSetCaption(pptTalking ? pptCapLast : '');
+}
+function pptToggleCaps(){ pptSetCaps(!pptCaps); }
+window.pptSetCaps = pptSetCaps; window.pptToggleCaps = pptToggleCaps;
 function pptSetCaption(text){
+  pptCapLast = text || '';
+  if(text && !pptCaps){
+    const c0 = document.getElementById('pptCaption');
+    if(c0){ c0.innerHTML = '🔇 Captions are off — tick <b>Captions</b> to show them.'; c0.classList.add('hint'); }
+    const f0 = document.getElementById('pptFsCaption'); if(f0){ f0.textContent=''; f0.style.display='none'; }
+    return;
+  }
   const hint = {en:'Tap <b>Explain</b> to hear this slide read and explained in English.', kn:'<b>Explain</b> ಒತ್ತಿ — ಈ ಸ್ಲೈಡ್ ಅನ್ನು ಕನ್ನಡದಲ್ಲಿ ಓದಿ ವಿವರಿಸಲಾಗುತ್ತದೆ.', hi:'<b>Explain</b> दबाएँ — यह स्लाइड हिंदी में पढ़कर समझाई जाएगी।'};
   const c = document.getElementById('pptCaption');
   if(c){ if(text){ c.textContent = text; c.classList.remove('hint'); } else { c.innerHTML = hint[pptLang]||hint.en; c.classList.add('hint'); } }
@@ -2900,6 +2921,7 @@ function renderClassPpt(){
         <button class="fs-btn fs-prev" onclick="pptPrev()">&#10094;</button>
         <button class="fs-btn fs-next" onclick="pptNext()">&#10095;</button>
         <button class="fs-btn fs-exit" onclick="pptExitFullscreen()">&#10005;</button>
+        <button class="fs-btn fs-cc${pptCaps?'':' off'}" id="pptFsCc" onclick="pptToggleCaps()" title="Captions on/off">CC</button>
         <button class="fs-btn fs-talk" id="pptFsTalk" onclick="pptToggleTalk()" title="Explain this slide">&#9654;</button>
         <div class="fs-caption" id="pptFsCaption"></div>
         <button class="fs-btn fs-lang" id="pptFsLang" onclick="pptCycleLang()" title="Switch language">${(PPT_LANGS.find(x=>x.id===pptLang)||PPT_LANGS[0]).short}</button>
@@ -2913,6 +2935,7 @@ function renderClassPpt(){
     <div class="ppt-talk">
       <button type="button" id="pptExplainBtn" class="ppt-explain" onclick="pptToggleTalk()">&#9654; Explain this slide</button>
       <label class="ppt-talk-opt"><input type="checkbox" id="pptAutoChk" ${pptAuto?'checked':''} onchange="pptSetAuto(this.checked)"> Auto-play all slides</label>
+      <label class="ppt-talk-opt"><input type="checkbox" id="pptCapsChk" ${pptCaps?'checked':''} onchange="pptSetCaps(this.checked)"> Captions</label>
       <label class="ppt-talk-opt"><input type="checkbox" id="pptAnimChk" ${pptAnim?'checked':''} onchange="pptSetAnim(this.checked)"> Animate with explanation</label>
       <label class="ppt-talk-opt">Speed <select id="pptRateSel" onchange="pptSetRate(this.value)">${[['0.85','Slow'],['1','Normal'],['1.15','Fast']].map(o=>`<option value="${o[0]}" ${String(pptRate)===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select></label>
       <label class="ppt-talk-opt">Voice <select id="pptVoiceSel" onchange="pptSetVoice(this.value)"><option>Loading…</option></select></label>
@@ -3018,7 +3041,7 @@ document.addEventListener('keydown', (e)=>{
   const tag = (e.target && e.target.tagName) || '';
   if(tag==='INPUT' || tag==='TEXTAREA' || e.ctrlKey || e.metaKey || e.altKey) return;
   const k = (e.key||'').toLowerCase();
-  if(k==='e') pptSetLang('en'); else if(k==='k') pptSetLang('kn'); else if(k==='h') pptSetLang('hi'); else if(k==='p') pptToggleTalk();
+  if(k==='e') pptSetLang('en'); else if(k==='k') pptSetLang('kn'); else if(k==='h') pptSetLang('hi'); else if(k==='p') pptToggleTalk(); else if(k==='c') pptToggleCaps();
 });
 
 /* ---- Chapter 9 Handwritten Notes: teacher-code or paid unlock ---- */
