@@ -99,7 +99,7 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-
   </div>
 </div>
 <script>const T = (en, kn, hi) => ({en, kn, hi});</script>
-<script src="anim-slides.js?v=4"></script>
+<script src="anim-slides.js?v=5"></script>
 <script>
 const SLIDES = window.ANIM_SLIDES;
 const KICK = T('PU-I BIOLOGY · CHAPTER 9 · BIOMOLECULES','ಪಿಯು-I ಜೀವಶಾಸ್ತ್ರ · ಅಧ್ಯಾಯ 9 · ಜೈವಿಕ ಅಣುಗಳು','PU-I जीवविज्ञान · अध्याय 9 · जैव-अणु');
@@ -166,7 +166,9 @@ function goStep(k, speak) {
   const n = SLIDES[si].steps.length;
   if (k < 0) { if (si > 0) { si--; step = SLIDES[si].steps.length - 1; build(); if (speak) say(); } return; }
   if (k >= n) { if (playing && si < SLIDES.length - 1) { si++; step = 0; build(); if (speak) say(); } else if (!playing && si < SLIDES.length - 1) { si++; step = 0; build(); } else stop(); return; }
-  const back = k < step; step = k; applyStep(back); if (speak) say();
+  const back = k < step; step = k;
+  /* with voice on, the animation waits for the voice to actually start, so picture and words begin together */
+  if (speak) say(() => applyStep(back)); else applyStep(back);
 }
 
 /* ---------- voice: device text-to-speech, using the voice & speed picked in the app ---------- */
@@ -177,24 +179,41 @@ function voiceFor(l) {
   const saved = store.get('pu1ch9_ppt_voice_' + l);
   return (saved && vs.find(v => v.voiceURI === saved || v.name === saved)) || vs.find(v => v.lang === TAG[l]) || vs[0] || null;
 }
-function say() {
+const keepAlive = []; /* holds spoken lines so the browser can't drop them before they finish */
+function say(onStart) {
   const id = ++runId; const text = SLIDES[si].steps[step][lang];
-  showCaption(text);
-  const next = () => { if (id === runId && playing) setTimeout(() => { if (id === runId && playing) goStep(step + 1, true); }, 800); };
-  if (!voiceEl.checked || !TTS) { if (playing) setTimeout(next, Math.max(3000, text.length * 60)); return; }
-  TTS.cancel();
-  const u = new SpeechSynthesisUtterance(text); u.lang = TAG[lang];
-  let v = voiceFor(lang); if (v) { try { u.voice = v; } catch (e) { v = null; } }
-  u.rate = parseFloat(store.get('pu1ch9_ppt_rate')) || 1;
-  const t0 = Date.now();
-  u.onend = () => { if (id !== runId) return; const minT = v ? 0 : Math.max(0, text.length * 55 - (Date.now() - t0)); setTimeout(next, minT); };
-  u.onerror = () => { if (id === runId) setTimeout(next, text.length * 55); };
-  TTS.speak(u);
+  let begun = false; const begin = () => { if (begun || id !== runId) return; begun = true; if (onStart) onStart(); else showCaption(text); };
+  const next = () => { if (id === runId && playing) setTimeout(() => { if (id === runId && playing) goStep(step + 1, true); }, 700); };
+  if (!voiceEl.checked || !TTS) { begin(); if (playing) setTimeout(next, Math.max(3000, text.length * 60)); return; }
+  if (TTS.speaking || TTS.pending) TTS.cancel();
+  const parts = text.split(/(?<=[.!?।])\s+/).filter(s => s.trim());
+  const v = voiceFor(lang), rate = parseFloat(store.get('pu1ch9_ppt_rate')) || 1;
+  setTimeout(begin, 1300); /* if the device never reports the voice starting, start the animation anyway */
+  let i = 0;
+  const sayPart = () => {
+    if (id !== runId) return;
+    if (i >= parts.length) { next(); return; }
+    const t = parts[i++], est = t.length * 70 / rate, t0 = Date.now();
+    const u = new SpeechSynthesisUtterance(t); u.lang = TAG[lang]; u.rate = rate;
+    if (v) { try { u.voice = v; } catch (e) {} }
+    let done = false, spoke = false, wd = 0;
+    const fin = () => { if (done || id !== runId) return; done = true; clearTimeout(wd);
+      /* voice ended without really speaking: hold the line on screen for about as long as reading it takes */
+      setTimeout(sayPart, spoke ? 120 : Math.max(0, est - (Date.now() - t0))); };
+    u.onstart = () => { spoke = true; begin(); };
+    u.onend = fin; u.onerror = fin;
+    wd = setTimeout(fin, est * 2 + 4000); /* some phones never send "finished" — don't get stuck */
+    let quiet = 0; const poll = setInterval(() => { if (done || id !== runId) { clearInterval(poll); return; }
+      if (Date.now() - t0 > 1500 && !TTS.speaking && !TTS.pending) { if (++quiet >= 2) { clearInterval(poll); fin(); } } else quiet = 0; }, 300);
+    keepAlive.push(u); if (keepAlive.length > 30) keepAlive.shift();
+    TTS.speak(u);
+  };
+  setTimeout(sayPart, 80);
 }
 function setPlay(on) { playing = on; const b = document.getElementById('play'); b.setAttribute('aria-pressed', String(on)); b.textContent = on ? '❚❚ Pause' : '▶ Play'; document.getElementById('fsPlay').textContent = on ? '❚❚' : '▶'; }
 function stop() { runId++; setPlay(false); if (TTS) TTS.cancel(); }
 function play() { setPlay(true); say(); }
-function stepFwd() { const was = playing; stop(); goStep(step + 1, false); if (was) play(); else if (voiceEl.checked) say(); }
+function stepFwd() { const was = playing; stop(); if (was) { setPlay(true); goStep(step + 1, true); } else goStep(step + 1, voiceEl.checked); }
 function stepBack() { stop(); goStep(step - 1, false); }
 function setLang(l) { if (!['en','kn','hi'].includes(l) || l === lang) return; const was = playing; stop(); lang = l; build(); if (was) play(); }
 
