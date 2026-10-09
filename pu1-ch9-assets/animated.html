@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ch 9 Animated Slides · BAIO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Noto+Sans+Kannada:wght@500;600;700;800&family=Noto+Sans+Devanagari:wght@500;600;700;800&family=Noto+Color+Emoji&display=swap">
+<style>
+:root{--bg:#f4f1e8;--panel:#ffffff;--ink:#14213a;--muted:#5b6578;--line:#d8d2c0;--teal:#0b7f72;--gold:#c99a1c;
+  --ui:'Inter','Noto Sans Kannada','Noto Sans Devanagari',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html.embed{background:transparent}
+html,body{background:var(--bg);color:var(--ink);font-family:var(--ui)}
+body.embed{background:transparent}
+.shell{display:flex;flex-direction:column;gap:10px;padding:2px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.grp{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+button,select{font:700 14px var(--ui);padding:8px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+select{max-width:100%;min-width:0;flex:1 1 220px}
+#play{background:var(--gold);border-color:var(--gold);color:#1b1404;min-width:110px}
+#play[aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:#fff}
+.lang button[aria-pressed="true"]{background:var(--teal);border-color:var(--teal);color:#fff}
+.count{font:700 13px var(--ui);color:var(--muted);min-width:78px;text-align:center;font-variant-numeric:tabular-nums}
+button:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.stage{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#fbf8f1;border:1px solid var(--line)}
+#slide{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
+.stage.fs{position:fixed;inset:0;width:100vw;height:100vh;aspect-ratio:auto;z-index:50;border:0;border-radius:0;background:#000}
+.stage:fullscreen{width:100vw;height:100vh;aspect-ratio:auto;border:0;border-radius:0;background:#000}
+.fsc{position:absolute;inset:0;display:none;pointer-events:none}
+.stage.fs .fsc,.stage:fullscreen .fsc{display:block}
+.fsb{position:absolute;pointer-events:auto;width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(20,20,20,.6);color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;padding:0}
+.fsb.off{opacity:.55;text-decoration:line-through}
+#fsExit{top:12px;right:12px}#fsCc{top:12px;left:12px;font-size:13px}#fsPlay{left:12px;bottom:12px}
+#fsPrev{left:12px;top:50%;transform:translateY(-50%)}#fsNext{right:12px;top:50%;transform:translateY(-50%)}
+#fsCap{position:absolute;left:70px;right:70px;bottom:12px;background:rgba(10,14,20,.78);color:#fff;font:600 clamp(14px,2.1vw,28px)/1.4 var(--ui);padding:8px 14px;border-radius:10px;text-align:center;display:none}
+.dots{display:flex;gap:6px;justify-content:center}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--line);display:block}
+.dots i.on{background:var(--teal)}
+.caption{min-height:52px;background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:10px;padding:10px 14px;font:600 15px/1.5 var(--ui)}
+.caption[hidden]{display:none}
+.opt{font:600 13px var(--ui);display:inline-flex;align-items:center;gap:6px}
+.opt input{width:17px;height:17px;accent-color:var(--teal)}
+.note{color:var(--muted);font-size:12px}
+/* ---------- slide canvas: fixed 1920x1080 projector design ---------- */
+.sl{width:1920px;height:1080px;background:#fbf8f1;color:#0c1830;position:relative;overflow:hidden;font-family:'Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif}
+.sl.kn{font-family:'Noto Sans Kannada','Inter',sans-serif}.sl.hi{font-family:'Noto Sans Devanagari','Inter',sans-serif}
+.sl .top{position:absolute;inset:0 0 auto 0;height:14px;background:linear-gradient(90deg,#0b7f72 66%,#D4AF37 66%)}
+.sl .kick{position:absolute;left:84px;top:44px;font-weight:700;font-size:34px;letter-spacing:.06em;color:#8a6508}
+.sl h2{position:absolute;left:84px;right:84px;top:92px;font-weight:800;font-size:72px;line-height:1.1}
+.sl h2 em{font-style:normal;color:#0b7f72}
+.sl .foot{position:absolute;left:84px;right:84px;bottom:26px;display:flex;justify-content:space-between;font-weight:700;font-size:28px;color:#5a6378}
+.sl .foot b{color:#0b7f72}
+.sl svg.art{position:absolute;left:0;top:200px;width:1920px;height:820px;overflow:visible}
+.sl svg text{font-family:inherit;font-weight:800}
+.sl .emo{font-family:'Noto Color Emoji',sans-serif}
+.sl [class*="in"]{transition:opacity .6s ease, transform 1s cubic-bezier(.3,.7,.2,1)}
+.sl .g{transition:transform 1.1s cubic-bezier(.3,.7,.2,1), opacity .6s ease, fill .6s ease; transform-box:view-box}
+.sl .draw{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.6s ease}
+@media (prefers-reduced-motion: reduce){ .sl *{transition:none!important;animation:none!important} }
+</style>
+<style id="stepcss"></style>
+</head>
+<body>
+<div class="shell">
+  <div class="bar">
+    <select id="pick" aria-label="Choose topic"></select>
+    <div class="grp lang" id="langBtns" role="group" aria-label="Language">
+      <button data-lang="en" aria-pressed="true">English</button><button data-lang="kn" aria-pressed="false">ಕನ್ನಡ</button><button data-lang="hi" aria-pressed="false">हिंदी</button>
+    </div>
+  </div>
+  <div class="bar">
+    <div class="grp">
+      <button id="play" aria-pressed="false">▶ Play</button>
+      <button id="back" aria-label="Previous step">◀</button>
+      <span class="count" id="count"></span>
+      <button id="fwd" aria-label="Next step">▶</button>
+    </div>
+    <div class="grp"><button id="prevT" aria-label="Previous topic">⏮</button><button id="nextT" aria-label="Next topic">⏭</button><button id="fs" aria-label="Full screen">⛶ Fullscreen</button></div>
+  </div>
+  <div class="stage" id="stage">
+    <div id="slide"></div>
+    <div class="fsc">
+      <button class="fsb" id="fsCc" title="Captions">CC</button>
+      <button class="fsb" id="fsExit" title="Exit full screen">✕</button>
+      <button class="fsb" id="fsPrev" title="Previous step">❮</button>
+      <button class="fsb" id="fsNext" title="Next step">❯</button>
+      <button class="fsb" id="fsPlay" title="Play / pause">▶</button>
+      <div id="fsCap"></div>
+    </div>
+  </div>
+  <div class="dots" id="dots"></div>
+  <div class="caption" id="caption" aria-live="polite"></div>
+  <div class="bar">
+    <div class="grp"><label class="opt"><input type="checkbox" id="voice" checked> Voice</label><label class="opt"><input type="checkbox" id="caps" checked> Captions</label></div>
+    <span class="note">Tap the slide or ▶ for the next step · Play runs the whole topic</span>
+  </div>
+</div>
+<script>const T = (en, kn, hi) => ({en, kn, hi});</script>
+<script src="anim-slides.js?v=1"></script>
+<script>
+const SLIDES = window.ANIM_SLIDES;
+const KICK = T('PU-I BIOLOGY · CHAPTER 9 · BIOMOLECULES','ಪಿಯು-I ಜೀವಶಾಸ್ತ್ರ · ಅಧ್ಯಾಯ 9 · ಜೈವಿಕ ಅಣುಗಳು','PU-I जीवविज्ञान · अध्याय 9 · जैव-अणु');
+const EMBED = window.parent !== window;
+const store = { get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }, set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} } };
+if (EMBED) { document.body.classList.add('embed'); document.documentElement.classList.add('embed'); document.getElementById('langBtns').hidden = true; }
+
+(function(){ let c = ''; for (let n = 0; n <= 6; n++) c += `.sl .in${n}{opacity:0} .sl.s${n} .in${n}{opacity:1}\n.sl.s${n} .out${n}{opacity:0}\n.sl.s${n} .draw${n}{stroke-dashoffset:0}\n`; document.getElementById('stepcss').textContent = c; })();
+
+const qs = new URLSearchParams(location.search);
+let lang = ['en','kn','hi'].includes(qs.get('lang')) ? qs.get('lang') : (store.get('pu1ch9_ppt_lang') || 'en');
+if (!['en','kn','hi'].includes(lang)) lang = 'en';
+let si = Math.min(SLIDES.length - 1, Math.max(0, parseInt(store.get('pu1ch9_anim_slide') || '0', 10) || 0));
+let step = 0, playing = false, runId = 0;
+const slideEl = document.getElementById('slide'), stage = document.getElementById('stage');
+const capEl = document.getElementById('caption'), voiceEl = document.getElementById('voice'), capsEl = document.getElementById('caps');
+capsEl.checked = store.get('pu1ch9_ppt_caps') !== '0';
+const strip = h => h.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&');
+
+function fit() { slideEl.style.transform = `scale(${Math.min(stage.clientWidth / 1920, stage.clientHeight / 1080)})`;
+  const sc = Math.min(stage.clientWidth / 1920, stage.clientHeight / 1080);
+  slideEl.style.left = ((stage.clientWidth - 1920 * sc) / 2) + 'px'; slideEl.style.top = ((stage.clientHeight - 1080 * sc) / 2) + 'px'; postHeight(); }
+function root() { return slideEl.querySelector('.sl'); }
+function fillPick() {
+  document.getElementById('pick').innerHTML = SLIDES.map((s, i) => `<option value="${i}" ${i === si ? 'selected' : ''}>${i + 1}. ${strip(s.title[lang])}</option>`).join('');
+}
+function build() {
+  const S = SLIDES[si];
+  slideEl.innerHTML = `<style>${S.css.replace(/(^|[,{}\s])\.s(\d)\b/g, '$1.sl.s$2')}</style>
+   <div class="sl ${lang}" lang="${lang}"><div class="top"></div><div class="kick">${KICK[lang]}</div><h2>${S.title[lang]}</h2>
+   <svg class="art" viewBox="0 90 1920 820">${S.art(lang)}</svg>
+   <div class="foot"><span><b>BAIO Learning System</b> · Narendra Sir</span><span>${si + 1} / ${SLIDES.length}</span></div></div>`;
+  fit(); applyStep(true); fillPick();
+  document.querySelectorAll('#langBtns button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+  store.set('pu1ch9_anim_slide', String(si));
+}
+function applyStep(instant) {
+  const r = root(); if (!r) return;
+  const cls = ['sl', lang]; for (let n = 0; n <= step; n++) cls.push('s' + n);
+  if (instant) r.querySelectorAll('*').forEach(e => { e.style.transitionDuration = '0s'; e.style.animationDuration = '0s'; });
+  r.className = cls.join(' ');
+  if (instant) { void r.offsetWidth; r.querySelectorAll('*').forEach(e => { e.style.transitionDuration = ''; e.style.animationDuration = ''; }); }
+  const n = SLIDES[si].steps.length;
+  document.getElementById('count').textContent = `${step + 1} / ${n}`;
+  document.getElementById('dots').innerHTML = Array.from({ length: n }, (_, i) => `<i class="${i <= step ? 'on' : ''}"></i>`).join('');
+  showCaption(SLIDES[si].steps[step][lang]);
+}
+function showCaption(t) {
+  capEl.hidden = !capsEl.checked; capEl.textContent = t;
+  const f = document.getElementById('fsCap'); f.textContent = t; f.style.display = capsEl.checked ? 'block' : 'none';
+  document.getElementById('fsCc').classList.toggle('off', !capsEl.checked);
+}
+function goStep(k, speak) {
+  const n = SLIDES[si].steps.length;
+  if (k < 0) { if (si > 0) { si--; step = SLIDES[si].steps.length - 1; build(); if (speak) say(); } return; }
+  if (k >= n) { if (playing && si < SLIDES.length - 1) { si++; step = 0; build(); if (speak) say(); } else if (!playing && si < SLIDES.length - 1) { si++; step = 0; build(); } else stop(); return; }
+  const back = k < step; step = k; applyStep(back); if (speak) say();
+}
+
+/* ---------- voice: device text-to-speech, using the voice & speed picked in the app ---------- */
+const TTS = 'speechSynthesis' in window ? window.speechSynthesis : null;
+const TAG = { en: 'en-IN', kn: 'kn-IN', hi: 'hi-IN' };
+function voiceFor(l) {
+  if (!TTS) return null; const vs = TTS.getVoices().filter(v => (v.lang || '').replace('_', '-').toLowerCase().startsWith(l));
+  const saved = store.get('pu1ch9_ppt_voice_' + l);
+  return (saved && vs.find(v => v.voiceURI === saved || v.name === saved)) || vs.find(v => v.lang === TAG[l]) || vs[0] || null;
+}
+function say() {
+  const id = ++runId; const text = SLIDES[si].steps[step][lang];
+  showCaption(text);
+  const next = () => { if (id === runId && playing) setTimeout(() => { if (id === runId && playing) goStep(step + 1, true); }, 800); };
+  if (!voiceEl.checked || !TTS) { if (playing) setTimeout(next, Math.max(3000, text.length * 60)); return; }
+  TTS.cancel();
+  const u = new SpeechSynthesisUtterance(text); u.lang = TAG[lang];
+  let v = voiceFor(lang); if (v) { try { u.voice = v; } catch (e) { v = null; } }
+  u.rate = parseFloat(store.get('pu1ch9_ppt_rate')) || 1;
+  const t0 = Date.now();
+  u.onend = () => { if (id !== runId) return; const minT = v ? 0 : Math.max(0, text.length * 55 - (Date.now() - t0)); setTimeout(next, minT); };
+  u.onerror = () => { if (id === runId) setTimeout(next, text.length * 55); };
+  TTS.speak(u);
+}
+function setPlay(on) { playing = on; const b = document.getElementById('play'); b.setAttribute('aria-pressed', String(on)); b.textContent = on ? '❚❚ Pause' : '▶ Play'; document.getElementById('fsPlay').textContent = on ? '❚❚' : '▶'; }
+function stop() { runId++; setPlay(false); if (TTS) TTS.cancel(); }
+function play() { setPlay(true); say(); }
+function stepFwd() { const was = playing; stop(); goStep(step + 1, false); if (was) play(); else if (voiceEl.checked) say(); }
+function stepBack() { stop(); goStep(step - 1, false); }
+function setLang(l) { if (!['en','kn','hi'].includes(l) || l === lang) return; const was = playing; stop(); lang = l; build(); if (was) play(); }
+
+/* ---------- fullscreen + landscape ---------- */
+function isFs() { return stage.classList.contains('fs') || document.fullscreenElement === stage || document.webkitFullscreenElement === stage; }
+function enterFs() {
+  stage.classList.add('fs'); document.body.style.overflow = 'hidden';
+  const p = stage.requestFullscreen ? stage.requestFullscreen() : (stage.webkitRequestFullscreen ? stage.webkitRequestFullscreen() : null);
+  if (p && p.then) p.then(() => { try { screen.orientation.lock('landscape').catch(() => {}); } catch (e) {} }).catch(() => {});
+  setTimeout(fit, 300);
+}
+function exitFs() {
+  stage.classList.remove('fs'); document.body.style.overflow = '';
+  try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch (e) {}
+  try { if (document.fullscreenElement) document.exitFullscreen(); else if (document.webkitFullscreenElement) document.webkitExitFullscreen(); } catch (e) {}
+  setTimeout(fit, 300);
+}
+document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && stage.classList.contains('fs')) exitFs(); setTimeout(fit, 200); });
+
+/* ---------- wiring ---------- */
+document.getElementById('pick').addEventListener('change', e => { stop(); si = +e.target.value; step = 0; build(); });
+document.querySelectorAll('#langBtns button').forEach(b => b.addEventListener('click', () => { store.set('pu1ch9_ppt_lang', b.dataset.lang); setLang(b.dataset.lang); }));
+document.getElementById('play').addEventListener('click', () => playing ? stop() : play());
+document.getElementById('fwd').addEventListener('click', stepFwd);
+document.getElementById('back').addEventListener('click', stepBack);
+document.getElementById('prevT').addEventListener('click', () => { stop(); if (si > 0) { si--; step = 0; build(); } });
+document.getElementById('nextT').addEventListener('click', () => { stop(); if (si < SLIDES.length - 1) { si++; step = 0; build(); } });
+document.getElementById('fs').addEventListener('click', enterFs);
+document.getElementById('fsExit').addEventListener('click', e => { e.stopPropagation(); exitFs(); });
+document.getElementById('fsPlay').addEventListener('click', e => { e.stopPropagation(); playing ? stop() : play(); });
+document.getElementById('fsPrev').addEventListener('click', e => { e.stopPropagation(); stepBack(); });
+document.getElementById('fsNext').addEventListener('click', e => { e.stopPropagation(); stepFwd(); });
+document.getElementById('fsCc').addEventListener('click', e => { e.stopPropagation(); capsEl.checked = !capsEl.checked; capsEl.dispatchEvent(new Event('change')); });
+capsEl.addEventListener('change', () => { store.set('pu1ch9_ppt_caps', capsEl.checked ? '1' : '0'); showCaption(SLIDES[si].steps[step][lang]); postHeight(); });
+voiceEl.addEventListener('change', () => { if (!voiceEl.checked && TTS) TTS.cancel(); });
+stage.addEventListener('click', e => { if (e.target.closest('.fsb')) return; stepFwd(); });
+let sx = null;
+stage.addEventListener('touchstart', e => { sx = e.touches.length === 1 ? e.touches[0].clientX : null; }, { passive: true });
+stage.addEventListener('touchend', e => { if (sx === null) return; const dx = e.changedTouches[0].clientX - sx; sx = null; if (Math.abs(dx) > 50) { e.preventDefault(); dx < 0 ? stepFwd() : stepBack(); } });
+document.addEventListener('keydown', e => {
+  const k = (e.key || '').toLowerCase();
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); stepFwd(); }
+  else if (e.key === 'ArrowLeft') { e.preventDefault(); stepBack(); }
+  else if (k === 'p') playing ? stop() : play();
+  else if (k === 'c') document.getElementById('fsCc').click();
+  else if (e.key === 'Escape' && isFs()) exitFs();
+});
+/* messages from the app: language changes, stop when the tab is left */
+window.addEventListener('message', e => {
+  if (e.origin !== location.origin) return;
+  const d = e.data || {};
+  if (d.type === 'baio-anim-lang') setLang(d.lang);
+  if (d.type === 'baio-anim-stop') stop();
+});
+let lastH = 0;
+function postHeight() {
+  if (!EMBED) return;
+  const h = Math.ceil(document.querySelector('.shell').getBoundingClientRect().height) + 6;
+  if (Math.abs(h - lastH) < 3) return; lastH = h;
+  try { parent.postMessage({ type: 'baio-anim-height', h }, location.origin); } catch (e) {}
+}
+new ResizeObserver(fit).observe(stage);
+window.addEventListener('resize', fit);
+build();
+</script>
+</body>
+</html>
