@@ -40,7 +40,7 @@ const PREV = [
 { title: T('The <em>TCA method</em> — step by step','<em>TCA ವಿಧಾನ</em> — ಹಂತ ಹಂತವಾಗಿ','<em>TCA विधि</em> — चरण दर चरण'),
   css: `
    #fill{transform-origin:1150px 754px;transform-box:view-box;transform:scaleY(0);transition:transform 4s ease}
-   .s1 #leaf{transform:translate(294px,90px) scale(.6)} .s1 #flask{transform:translate(116px,90px) scale(.6)}
+   .s1 #leaf{transform:translate(294px,90px) scale(.6)} .s1 #flask{transform:translate(8px,90px) scale(.6)}
    .s1 #leaf,.s1 #flask{opacity:0}
    .s1 #pestle{animation:grind .5s ease-in-out 4 alternate}
    @keyframes grind{from{transform:rotate(-14deg)}to{transform:rotate(14deg)}}
@@ -51,9 +51,9 @@ const PREV = [
   art: L => `
    <g id="leaf" class="g emo"><text x="260" y="420" font-size="150">🌿</text></g>
    <text class="out1" x="335" y="500" text-anchor="middle" font-size="40" fill="#0b7f72">${T('Living tissue','ಜೀವಂತ ಅಂಗಾಂಶ','जीवित ऊतक')[L]}</text>
-   <text class="out1" x="490" y="380" text-anchor="middle" font-size="80" fill="#8a6508">+</text>
-   <g id="flask" class="g emo"><text x="560" y="420" font-size="150">🧪</text></g>
-   <text class="out1" x="650" y="560" text-anchor="middle" font-size="40" fill="#0b7f72">TCA (Cl₃CCOOH)</text>
+   <text class="out1" x="590" y="380" text-anchor="middle" font-size="80" fill="#8a6508">+</text>
+   <g id="flask" class="g emo"><text x="740" y="420" font-size="150">🧪</text></g>
+   <text class="out1" x="830" y="500" text-anchor="middle" font-size="40" fill="#0b7f72">TCA (Cl₃CCOOH)</text>
    <g class="in1">
      <path d="M590,400 Q700,560 810,400 Z" fill="#e7dcc4" stroke="#6b5a3c" stroke-width="7"/>
      <g id="pestle" style="transform-origin:760px 420px;transform-box:view-box"><rect x="742" y="250" width="34" height="180" rx="16" fill="#8b7355"/></g>
