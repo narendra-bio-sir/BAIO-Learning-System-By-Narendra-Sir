@@ -48,8 +48,8 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-
 .sl{width:1920px;height:1080px;background:#fbf8f1;color:#0c1830;position:relative;overflow:hidden;font-family:'Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif}
 .sl.kn{font-family:'Noto Sans Kannada','Inter',sans-serif}.sl.hi{font-family:'Noto Sans Devanagari','Inter',sans-serif}
 .sl .top{position:absolute;inset:0 0 auto 0;height:14px;background:linear-gradient(90deg,#0b7f72 66%,#D4AF37 66%)}
-.sl .kick{position:absolute;left:84px;top:44px;font-weight:700;font-size:34px;letter-spacing:.06em;color:#8a6508}
-.sl h2{position:absolute;left:84px;right:84px;top:92px;font-weight:800;font-size:72px;line-height:1.1}
+.sl .kick{position:absolute;left:84px;top:34px;font-weight:700;font-size:34px;letter-spacing:.06em;color:#8a6508}
+.sl h2{position:absolute;left:84px;right:84px;top:116px;font-weight:800;font-size:72px;line-height:1.1}
 .sl h2 em{font-style:normal;color:#0b7f72}
 .sl .foot{position:absolute;left:84px;right:84px;bottom:26px;display:flex;justify-content:space-between;font-weight:700;font-size:28px;color:#5a6378}
 .sl .foot b{color:#0b7f72}
@@ -99,7 +99,7 @@ button:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-
   </div>
 </div>
 <script>const T = (en, kn, hi) => ({en, kn, hi});</script>
-<script src="anim-slides.js?v=1"></script>
+<script src="anim-slides.js?v=4"></script>
 <script>
 const SLIDES = window.ANIM_SLIDES;
 const KICK = T('PU-I BIOLOGY · CHAPTER 9 · BIOMOLECULES','ಪಿಯು-I ಜೀವಶಾಸ್ತ್ರ · ಅಧ್ಯಾಯ 9 · ಜೈವಿಕ ಅಣುಗಳು','PU-I जीवविज्ञान · अध्याय 9 · जैव-अणु');
@@ -119,9 +119,19 @@ const capEl = document.getElementById('caption'), voiceEl = document.getElementB
 capsEl.checked = store.get('pu1ch9_ppt_caps') !== '0';
 const strip = h => h.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&');
 
-function fit() { slideEl.style.transform = `scale(${Math.min(stage.clientWidth / 1920, stage.clientHeight / 1080)})`;
-  const sc = Math.min(stage.clientWidth / 1920, stage.clientHeight / 1080);
-  slideEl.style.left = ((stage.clientWidth - 1920 * sc) / 2) + 'px'; slideEl.style.top = ((stage.clientHeight - 1080 * sc) / 2) + 'px'; postHeight(); }
+/* In fullscreen on an upright phone (landscape lock not allowed inside the app), turn the slide sideways so it fills the screen. */
+function rotated() { return isFs() && stage.clientHeight > stage.clientWidth; }
+function fit() {
+  const cw = stage.clientWidth, ch = stage.clientHeight, rot = rotated();
+  const sc = rot ? Math.min(ch / 1920, cw / 1080) : Math.min(cw / 1920, ch / 1080);
+  slideEl.style.left = '0px'; slideEl.style.top = '0px';
+  slideEl.style.transform = `translate(${cw / 2}px,${ch / 2}px) ${rot ? 'rotate(90deg) ' : ''}scale(${sc}) translate(-960px,-540px)`;
+  const f = document.querySelector('.fsc');
+  if (rot) Object.assign(f.style, { inset: 'auto', width: ch + 'px', height: cw + 'px', left: ((cw - ch) / 2) + 'px', top: ((ch - cw) / 2) + 'px', transform: 'rotate(90deg)' });
+  else Object.assign(f.style, { inset: '0', width: '', height: '', left: '', top: '', transform: '' });
+  stage.classList.toggle('rot', rot);
+  postHeight();
+}
 function root() { return slideEl.querySelector('.sl'); }
 function fillPick() {
   document.getElementById('pick').innerHTML = SLIDES.map((s, i) => `<option value="${i}" ${i === si ? 'selected' : ''}>${i + 1}. ${strip(s.title[lang])}</option>`).join('');
@@ -222,8 +232,8 @@ capsEl.addEventListener('change', () => { store.set('pu1ch9_ppt_caps', capsEl.ch
 voiceEl.addEventListener('change', () => { if (!voiceEl.checked && TTS) TTS.cancel(); });
 stage.addEventListener('click', e => { if (e.target.closest('.fsb')) return; stepFwd(); });
 let sx = null;
-stage.addEventListener('touchstart', e => { sx = e.touches.length === 1 ? e.touches[0].clientX : null; }, { passive: true });
-stage.addEventListener('touchend', e => { if (sx === null) return; const dx = e.changedTouches[0].clientX - sx; sx = null; if (Math.abs(dx) > 50) { e.preventDefault(); dx < 0 ? stepFwd() : stepBack(); } });
+stage.addEventListener('touchstart', e => { sx = e.touches.length === 1 ? (rotated() ? e.touches[0].clientY : e.touches[0].clientX) : null; }, { passive: true });
+stage.addEventListener('touchend', e => { if (sx === null) return; const dx = (rotated() ? e.changedTouches[0].clientY : e.changedTouches[0].clientX) - sx; sx = null; if (Math.abs(dx) > 50) { e.preventDefault(); dx < 0 ? stepFwd() : stepBack(); } });
 document.addEventListener('keydown', e => {
   const k = (e.key || '').toLowerCase();
   if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); stepFwd(); }

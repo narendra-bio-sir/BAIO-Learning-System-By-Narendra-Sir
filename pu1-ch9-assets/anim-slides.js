@@ -40,7 +40,7 @@ const PREV = [
 { title: T('The <em>TCA method</em> — step by step','<em>TCA ವಿಧಾನ</em> — ಹಂತ ಹಂತವಾಗಿ','<em>TCA विधि</em> — चरण दर चरण'),
   css: `
    #fill{transform-origin:1150px 754px;transform-box:view-box;transform:scaleY(0);transition:transform 4s ease}
-   .s1 #leaf{transform:translate(330px,90px) scale(.6)} .s1 #flask{transform:translate(170px,90px) scale(.6)}
+   .s1 #leaf{transform:translate(294px,90px) scale(.6)} .s1 #flask{transform:translate(8px,90px) scale(.6)}
    .s1 #leaf,.s1 #flask{opacity:0}
    .s1 #pestle{animation:grind .5s ease-in-out 4 alternate}
    @keyframes grind{from{transform:rotate(-14deg)}to{transform:rotate(14deg)}}
@@ -49,11 +49,11 @@ const PREV = [
    @keyframes drip{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(190px);opacity:0}}
    .s2 #fill{transform:scaleY(1)}`,
   art: L => `
-   <g id="leaf" class="g emo"><text x="200" y="420" font-size="150">🌿</text></g>
-   <text class="out1" x="300" y="500" text-anchor="middle" font-size="40" fill="#0b7f72">${T('Living tissue','ಜೀವಂತ ಅಂಗಾಂಶ','जीवित ऊतक')[L]}</text>
-   <text class="out1" x="420" y="380" text-anchor="middle" font-size="80" fill="#8a6508">+</text>
-   <g id="flask" class="g emo"><text x="470" y="420" font-size="150">🧪</text></g>
-   <text class="out1" x="560" y="500" text-anchor="middle" font-size="40" fill="#0b7f72">TCA (Cl₃CCOOH)</text>
+   <g id="leaf" class="g emo"><text x="260" y="420" font-size="150">🌿</text></g>
+   <text class="out1" x="335" y="500" text-anchor="middle" font-size="40" fill="#0b7f72">${T('Living tissue','ಜೀವಂತ ಅಂಗಾಂಶ','जीवित ऊतक')[L]}</text>
+   <text class="out1" x="590" y="380" text-anchor="middle" font-size="80" fill="#8a6508">+</text>
+   <g id="flask" class="g emo"><text x="740" y="420" font-size="150">🧪</text></g>
+   <text class="out1" x="830" y="500" text-anchor="middle" font-size="40" fill="#0b7f72">TCA (Cl₃CCOOH)</text>
    <g class="in1">
      <path d="M590,400 Q700,560 810,400 Z" fill="#e7dcc4" stroke="#6b5a3c" stroke-width="7"/>
      <g id="pestle" style="transform-origin:760px 420px;transform-box:view-box"><rect x="742" y="250" width="34" height="180" rx="16" fill="#8b7355"/></g>
@@ -161,11 +161,11 @@ const SL_ASH = { title: T('The <em>ashing method</em>','<em>ಭಸ್ಮೀಕ�
    @keyframes flick{from{transform:scaleY(.85)}to{transform:scaleY(1.12)}}
    .puff{opacity:0}
    .s3 .puff{animation:rise 2.4s ease-out infinite}
-   @keyframes rise{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-230px);opacity:0}}
+   @keyframes rise{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-180px);opacity:0}}
    .s4 #tissue{opacity:0} .s4 .flame,.s4 .puff{animation:none;opacity:0}`,
   art: L => `
    <g id="tissue" class="g"><text x="300" y="520" font-size="190" class="emo">🌿</text></g>
-   ${[[300,330],[420,300],[500,380],[260,420]].map(([x,y],i)=>`<text class="drop emo" x="${x}" y="${y}" font-size="64" style="transition-delay:${i*0.15}s">💧</text>`).join('')}
+   ${[[200,400],[545,380],[215,520],[560,510]].map(([x,y],i)=>`<text class="drop emo" x="${x}" y="${y}" font-size="64" style="transition-delay:${i*0.15}s">💧</text>`).join('')}
    <text class="out1" x="400" y="640" text-anchor="middle" font-size="44" fill="#0b7f72">${T('Living tissue','ಜೀವಂತ ಅಂಗಾಂಶ','जीवित ऊतक')[L]}</text>
    <g class="in1 out2"><text x="400" y="640" text-anchor="middle" font-size="44" fill="#8a6508">${T('Water evaporates → dry weight','ನೀರು ಆವಿಯಾಗುತ್ತದೆ → ಒಣ ತೂಕ','जल वाष्पित → शुष्क भार')[L]}</text></g>
    <g class="in2">
@@ -174,10 +174,10 @@ const SL_ASH = { title: T('The <em>ashing method</em>','<em>ಭಸ್ಮೀಕ�
      <text x="1100" y="760" font-size="44" fill="#b3261e">${T('Burn (combustion)','ದಹನ','दहन')[L]}</text>
    </g>
    <g class="in3">
-     <text class="puff" x="840" y="520" font-size="46" fill="#5a6378">CO₂</text>
-     <text class="puff" x="930" y="520" font-size="46" fill="#5a6378" style="animation-delay:.8s">H₂O</text>
-     <text class="puff" x="880" y="520" font-size="46" fill="#5a6378" style="animation-delay:1.6s">N₂</text>
-     <g class="out4"><text x="1080" y="400" font-size="40" fill="#5a6378">${T('Organic compounds','ಸಾವಯವ ಸಂಯುಕ್ತಗಳು','कार्बनिक यौगिक')[L]}</text><text x="1080" y="455" font-size="40" fill="#5a6378">${T('escape as gases','ಅನಿಲಗಳಾಗಿ ಹೊರಹೋಗುತ್ತವೆ','गैस बनकर निकल जाते हैं')[L]}</text></g>
+     <text class="puff" x="895" y="370" font-size="46" fill="#5a6378">CO₂</text>
+     <text class="puff" x="985" y="370" font-size="46" fill="#5a6378" style="animation-delay:.8s">H₂O</text>
+     <text class="puff" x="940" y="330" font-size="46" fill="#5a6378" style="animation-delay:1.6s">N₂</text>
+     <g class="out4"><text x="1110" y="400" font-size="40" fill="#5a6378">${T('Organic compounds','ಸಾವಯವ ಸಂಯುಕ್ತಗಳು','कार्बनिक यौगिक')[L]}</text><text x="1110" y="455" font-size="40" fill="#5a6378">${T('escape as gases','ಅನಿಲಗಳಾಗಿ ಹೊರಹೋಗುತ್ತವೆ','गैस बनकर निकल जाते हैं')[L]}</text></g>
    </g>
    <g class="in4">
      <ellipse cx="900" cy="565" rx="110" ry="26" fill="#9b9b9b"/>
@@ -376,7 +376,7 @@ const SL_NUC = { title: T('Building a <em>polynucleotide</em>','<em>ಪಾಲಿ
       </g>`;
     return `
      ${ys.map((y, i) => nuc(i, y)).join('')}
-     <text class="out1" x="1000" y="${ys[0] + 14}" font-size="44" fill="#5b3fa8">← ${T('Nitrogenous base','ಸಾರಜನಕ ಪ್ರತ್ಯಾಮ್ಲ','नाइट्रोजनी क्षारक')[L]}</text>
+     <text class="out1" x="1255" y="${ys[0] + 100}" text-anchor="middle" font-size="44" fill="#5b3fa8">↑ ${T('Nitrogenous base','ಸಾರಜನಕ ಪ್ರತ್ಯಾಮ್ಲ','नाइट्रोजनी क्षारक')[L]}</text>
      <text class="out1" x="700" y="${ys[0] + 110}" text-anchor="middle" font-size="40" fill="#0b7f72">${T('Pentose sugar','ಪೆಂಟೋಸ್ ಸಕ್ಕರೆ','पेंटोज़ शर्करा')[L]}</text>
      <g class="in1 out2"><text x="1000" y="${ys[0] + 14}" font-size="46" fill="#5b3fa8">${T('Base + sugar = nucleoside','ಪ್ರತ್ಯಾಮ್ಲ + ಸಕ್ಕರೆ = ನ್ಯೂಕ್ಲಿಯೋಸೈಡ್','क्षारक + शर्करा = न्यूक्लियोसाइड')[L]}</text>
        <text x="1000" y="${ys[0] + 74}" font-size="38" fill="#5a6378">${T('N-glycosidic bond','N-ಗ್ಲೈಕೋಸಿಡಿಕ್ ಬಂಧ','N-ग्लाइकोसिडिक बंध')[L]}</text></g>
