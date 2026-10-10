@@ -202,7 +202,7 @@ body.fsmode{overflow:hidden}
     <span class="count" id="count">1 / 17</span>
     <button class="btn" id="next" aria-label="Next slide">Next ▶</button>
     <span class="sp"></span>
-    <label class="opt"><input type="checkbox" id="caps" checked> Captions</label>
+    <label class="opt"><input type="checkbox" id="caps"> Captions</label>
     <label class="opt"><input type="checkbox" id="auto" checked> Auto next</label>
     <label class="opt">Speed <select id="rate"><option value="0.8">0.8×</option><option value="0.9">0.9×</option><option value="1" selected>1×</option><option value="1.1">1.1×</option><option value="1.25">1.25×</option></select></label>
     <label class="opt">Voice <select id="voice"></select></label>
@@ -315,7 +315,7 @@ const secs=[...slideEl.querySelectorAll('section.s')];
 const store={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
 let cur=0, lang=['en','kn','hi'].includes(store.get('baio_mt_lang'))?store.get('baio_mt_lang'):'en', playing=false, runId=0;
 const capEl=document.getElementById('cap'), capsEl=document.getElementById('caps'), autoEl=document.getElementById('auto'), rateEl=document.getElementById('rate'), voiceSel=document.getElementById('voice');
-rateEl.value=store.get('baio_mt_rate')||'1'; capsEl.checked=store.get('baio_mt_caps')!=='0';
+rateEl.value=store.get('baio_mt_rate')||'1'; capsEl.checked=store.get('baio_mt_caps')==='1';
 
 function insets(){ const cs=getComputedStyle(document.documentElement); const v=k=>parseFloat(cs.getPropertyValue(k))||0; return {t:v('--sat'),l:v('--sal'),r:v('--sar'),b:v('--sab')}; }
 function fit(){
