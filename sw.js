@@ -64,6 +64,8 @@ self.addEventListener('notificationclick', event => {
 self.addEventListener('fetch', event => {
   const req = event.request;
   if (req.method !== 'GET') return;
+  // Audio/video stream in byte ranges (206 responses can't be cached) — let the browser handle them.
+  if (req.headers.has('range') || req.destination === 'audio' || req.destination === 'video') return;
 
   const sameOrigin = new URL(req.url).origin === self.location.origin;
   event.respondWith(sameOrigin ? networkFirst(req) : staleWhileRevalidate(req));
