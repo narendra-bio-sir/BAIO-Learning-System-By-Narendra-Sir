@@ -89,6 +89,49 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
 .share-opt:hover{border-color:#0b8f80}
 .share-url{width:100%;padding:9px 10px;border-radius:10px;border:1px solid #e6e0d2;font:500 12px Inter;color:#5f6b80;background:#fff}
 .share-x{position:absolute;right:10px;top:10px;width:34px;height:34px;border-radius:50%;border:none;background:#f1ede2;cursor:pointer;font-size:14px}
+/* ---- Animated "How to play" guide ---- */
+.act.howto{cursor:pointer}
+.g-shade{position:fixed;inset:0;z-index:9990;background:transparent}
+.g-spot{position:fixed;z-index:9991;border-radius:14px;pointer-events:none;box-shadow:0 0 0 9999px rgba(4,12,9,.72);outline:3px solid #2EE6C5;outline-offset:3px;
+  transition:top .45s cubic-bezier(.2,.8,.2,1),left .45s cubic-bezier(.2,.8,.2,1),width .45s cubic-bezier(.2,.8,.2,1),height .45s cubic-bezier(.2,.8,.2,1),opacity .3s}
+.g-spot.none{width:0!important;height:0!important;left:50%!important;top:50%!important;outline:none}
+.g-spot:not(.none)::after{content:"";position:absolute;inset:-3px;border-radius:16px;border:3px solid #2EE6C5;animation:gPulse 1.6s ease-out infinite}
+@keyframes gPulse{from{opacity:.9;transform:scale(1)}to{opacity:0;transform:scale(1.12)}}
+.g-finger{position:fixed;z-index:9993;font-size:40px;line-height:1;pointer-events:none;filter:drop-shadow(0 4px 6px rgba(0,0,0,.45));transition:top .45s cubic-bezier(.2,.8,.2,1),left .45s cubic-bezier(.2,.8,.2,1),opacity .3s}
+.g-finger span{display:inline-block;animation:gTap 1.4s ease-in-out infinite;transform-origin:30% 0}
+.g-finger i{position:absolute;left:4px;top:-6px;width:22px;height:22px;border-radius:50%;border:3px solid #fff;opacity:0;animation:gRipple 1.4s ease-out infinite}
+@keyframes gTap{0%,100%{transform:translate(0,10px)}40%{transform:translate(0,0) scale(.92)}55%{transform:translate(0,0) scale(.92)}}
+@keyframes gRipple{0%,35%{opacity:0;transform:scale(.3)}45%{opacity:.95;transform:scale(.6)}100%{opacity:0;transform:scale(1.8)}}
+.g-card{position:fixed;z-index:9994;width:min(360px,calc(100vw - 24px));background:#fff;color:#0c1830;border-radius:18px;padding:16px 16px 14px;box-shadow:0 18px 50px rgba(0,0,0,.35);
+  font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;transition:top .45s cubic-bezier(.2,.8,.2,1),left .45s cubic-bezier(.2,.8,.2,1);animation:gIn .35s ease-out}
+@keyframes gIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.g-top{display:flex;align-items:center;gap:8px}
+.g-step{font:800 11px Inter;letter-spacing:.12em;text-transform:uppercase;color:#0b8f80}
+.g-langs{margin-left:auto;display:flex;gap:4px}
+.g-langs button{border:1px solid #e6e0d2;background:#fbf8f1;color:#0c1830;border-radius:999px;padding:3px 9px;font:700 12px Inter,'Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer}
+.g-langs button.on{background:#0c1830;color:#fff;border-color:#0c1830}
+.g-card h3{font:700 19px/1.3 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;margin:8px 0 0;color:#0c1830}
+.g-card p{font:500 14.5px/1.55 Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;color:#3d4a5f;margin:6px 0 0}
+.g-card ol{margin:8px 0 0;padding-left:20px;font:500 13.5px/1.55 Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;color:#3d4a5f}
+.g-card ol li{margin:3px 0}
+.g-card b{color:#0c1830}
+.g-tabs{display:flex;gap:6px;margin-top:10px}
+.g-tabs button{flex:1;border:1.5px solid #e6e0d2;background:#fbf8f1;border-radius:10px;padding:7px;font:700 13px Inter;cursor:pointer;color:#0c1830}
+.g-tabs button.on{border-color:#0b8f80;background:#e3f5f2;color:#0b6f5e}
+.g-nav{display:flex;align-items:center;gap:8px;margin-top:14px}
+.g-dots{display:flex;gap:5px;flex:1}
+.g-dots i{width:7px;height:7px;border-radius:50%;background:#dfe3ea;transition:all .3s}
+.g-dots i.on{width:20px;border-radius:4px;background:#0b8f80}
+.g-btn{border:1.5px solid #e6e0d2;background:#fff;color:#0c1830;border-radius:999px;padding:9px 15px;font:700 14px Inter,'Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer;min-height:40px}
+.g-btn.pri{background:#0b8f80;border-color:#0b8f80;color:#fff}
+.g-skip{border:none;background:none;color:#5f6b80;font:600 13px Inter,'Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer;padding:6px}
+.g-phone{display:flex;justify-content:center;margin:12px 0 2px}
+.g-phone div{width:44px;height:78px;border:4px solid #0c1830;border-radius:10px;position:relative;animation:gRot 2.6s ease-in-out infinite;background:linear-gradient(#0b8f80,#2EE6C5)}
+.g-phone div::after{content:"";position:absolute;left:50%;bottom:4px;width:10px;height:3px;margin-left:-5px;border-radius:2px;background:#fff}
+@keyframes gRot{0%,25%{transform:rotate(0)}50%,85%{transform:rotate(-90deg)}100%{transform:rotate(0)}}
+.g-wave{display:inline-block;animation:gWave 1.2s ease-in-out infinite;transform-origin:70% 70%}
+@keyframes gWave{0%,100%{transform:rotate(0)}30%{transform:rotate(18deg)}60%{transform:rotate(-8deg)}}
+@media (prefers-reduced-motion:reduce){.g-finger span,.g-finger i,.g-spot::after,.g-phone div,.g-wave{animation:none}.g-spot,.g-card,.g-finger{transition:none}}
 </style>
 </head>
 <body>
@@ -118,6 +161,7 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
     <div class="actions">
       <a class="act primary" href="exam-corner/pu1-midterm-2026-presentation.html" data-i18n="open_full">⛶ Open full page</a>
       <button class="act share" type="button" data-share data-i18n="share">📤 Share with friends</button>
+      <button class="act howto" type="button" data-howto data-i18n="howto">❓ How to play</button>
       <a class="act" href="exam-corner/pu1-midterm-2026-topics-and-tips.pptx" download data-i18n="dl_ppt">⬇ PowerPoint (with notes)</a>
       <a class="act" href="exam-corner/pu1-midterm-2026-topics.jpg" download data-i18n="dl_topics">⬇ Topics list (image)</a>
     </div>
@@ -157,7 +201,7 @@ const I18N = {
     pill:'ಪ್ರಥಮ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ · ಮಧ್ಯಾವಧಿ 2026', new:'ಹೊಸದು',
     title:'ಮಧ್ಯಾವಧಿ ಪರೀಕ್ಷೆಗೆ <em>ಹೇಗೆ ಸಿದ್ಧರಾಗಬೇಕು</em> ಎಂದು ವಿವರಿಸುವ ನರೇಂದ್ರ ಸರ್ ಅವರ ಪ್ರೆಸೆಂಟೇಶನ್',
     desc:'17 ಸ್ಲೈಡ್‌ಗಳು, ಇಂಗ್ಲಿಷ್, ಕನ್ನಡ ಅಥವಾ ಹಿಂದಿಯಲ್ಲಿ ಶೀರ್ಷಿಕೆ ಮತ್ತು ಹೈಲೈಟ್‌ಗಳೊಂದಿಗೆ ಓದಿ ವಿವರಿಸುತ್ತದೆ. ಪ್ಲೇಯರ್‌ನಲ್ಲಿ ▶ Explain ಒತ್ತಿ ಕೇಳಿ — ತರಗತಿಯಲ್ಲಿ ⛶ ಪೂರ್ಣ ಪರದೆ ಬಳಸಿ.',
-    open_full:'⛶ ಪೂರ್ಣ ಪುಟದಲ್ಲಿ ತೆರೆಯಿರಿ', share:'📤 ಸ್ನೇಹಿತರೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಿ', dl_ppt:'⬇ ಪವರ್‌ಪಾಯಿಂಟ್ (ಟಿಪ್ಪಣಿಗಳೊಂದಿಗೆ)', dl_topics:'⬇ ವಿಷಯ ಪಟ್ಟಿ (ಚಿತ್ರ)',
+    open_full:'⛶ ಪೂರ್ಣ ಪುಟದಲ್ಲಿ ತೆರೆಯಿರಿ', share:'📤 ಸ್ನೇಹಿತರೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಿ', howto:'❓ ಹೇಗೆ ಪ್ಲೇ ಮಾಡುವುದು', dl_ppt:'⬇ ಪವರ್‌ಪಾಯಿಂಟ್ (ಟಿಪ್ಪಣಿಗಳೊಂದಿಗೆ)', dl_topics:'⬇ ವಿಷಯ ಪಟ್ಟಿ (ಚಿತ್ರ)',
     t1h:'🎧 ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲಿ ಕೇಳಿ', t1:'ಪ್ಲೇಯರ್‌ನ ಮೇಲ್ಭಾಗದಲ್ಲಿ English · ಕನ್ನಡ · हिंदी ಯಾವಾಗ ಬೇಕಾದರೂ ಬದಲಿಸಿ.',
     t2h:'🔊 ಧ್ವನಿ ಇಲ್ಲವೇ?', t2:'ಫೋನ್‌ನ text-to-speech ಸೆಟ್ಟಿಂಗ್‌ನಲ್ಲಿ ಕನ್ನಡ/ಹಿಂದಿ ಧ್ವನಿ ಸ್ಥಾಪಿಸಿ. ಧ್ವನಿ ಇಲ್ಲದಿದ್ದರೂ ಶೀರ್ಷಿಕೆಗಳು ಮುಂದುವರಿಯುತ್ತವೆ.',
     t3h:'✏️ ನೋಡುತ್ತಾ ಅಭ್ಯಾಸ ಮಾಡಿ', t3:'ನೋಟ್‌ಬುಕ್ ತೆರೆದಿಟ್ಟು ಸ್ಲೈಡ್ 11ರ ಐದು ಚಿತ್ರಗಳನ್ನು ಮತ್ತೆ ಬರೆಯಿರಿ.',
@@ -171,7 +215,7 @@ const I18N = {
     pill:'प्रथम पीयूसी जीव विज्ञान · मध्यावधि 2026', new:'नया',
     title:'मध्यावधि परीक्षा की <em>तैयारी कैसे करें</em> यह समझाने वाली नरेंद्र सर की प्रेज़ेंटेशन',
     desc:'17 स्लाइड, अंग्रेज़ी, कन्नड़ या हिंदी में कैप्शन और हाइलाइट के साथ पढ़कर समझाई जाती हैं। प्लेयर में ▶ Explain दबाकर सुनिए — कक्षा में ⛶ फुल स्क्रीन इस्तेमाल कीजिए।',
-    open_full:'⛶ पूरे पेज में खोलें', share:'📤 दोस्तों के साथ शेयर करें', dl_ppt:'⬇ पावरपॉइंट (नोट्स सहित)', dl_topics:'⬇ विषय सूची (चित्र)',
+    open_full:'⛶ पूरे पेज में खोलें', share:'📤 दोस्तों के साथ शेयर करें', howto:'❓ कैसे चलाएँ', dl_ppt:'⬇ पावरपॉइंट (नोट्स सहित)', dl_topics:'⬇ विषय सूची (चित्र)',
     t1h:'🎧 अपनी भाषा में सुनिए', t1:'प्लेयर के ऊपर English · ಕನ್ನಡ · हिंदी कभी भी बदलिए।',
     t2h:'🔊 आवाज़ नहीं आ रही?', t2:'फ़ोन की text-to-speech सेटिंग में कन्नड़/हिंदी आवाज़ इंस्टॉल कीजिए। आवाज़ के बिना भी कैप्शन चलते रहते हैं।',
     t3h:'✏️ देखते हुए अभ्यास कीजिए', t3:'नोटबुक खुली रखिए और स्लाइड 11 के पाँचों चित्र फिर से बनाइए।',
@@ -231,6 +275,159 @@ setLang(['en','kn','hi'].includes(startLang)?startLang:'en', false);
     sheet.hidden=false; sheet.querySelector('.wa').focus();
   };
   document.querySelectorAll('[data-share]').forEach(function(b){ b.addEventListener('click',window.sharePresentation); });
+})();
+
+/* ---- Animated "How to play" guide (auto on first visit; ❓ How to play replays it) ---- */
+(function(){
+  var OS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints>1) ? 'ios' : (/Android/i.test(navigator.userAgent) ? 'android' : 'android');
+  var T = {
+    en:{ step:'Step', of:'of', next:'Next', back:'Back', skip:'Skip', done:'Start learning ▶', android:'🤖 Android', ios:'📱 iPhone',
+      s:[
+        ['<span class="g-wave">👋</span> Welcome!','Let me show you how to play <b>Narendra Sir\'s presentation</b>. It takes 30 seconds.'],
+        ['Choose your language','Tap <b>English</b>, <b>ಕನ್ನಡ</b> or <b>हिंदी</b>. Sir explains every slide in the language you pick.'],
+        ['Tap ▶ Explain','Sir reads each slide aloud, highlights the points, and moves to the next slide on his own. Tap again to pause.'],
+        ['Move between slides','Tap <b>Prev / Next</b> — or just <b>swipe</b> the slide left or right.'],
+        ['Read along & slow down','Turn on <b>Captions</b> to read while you listen. Use <b>Speed 0.8×</b> if it feels fast.'],
+        ['Watch in full screen','Tap <b>⛶ Full screen</b> and turn your phone sideways. The buttons move to the left side of the screen.'],
+        ['No sound? Fix it here',''],
+        ['Share with your friends','Send this presentation to your classmates on WhatsApp or Telegram. All the best for your exam! 🎯']
+      ],
+      fix:{
+        android:['Opened from WhatsApp/Telegram? Tap <b>⋮ → Open in Chrome</b>.','Turn up the <b>media volume</b>.','For Kannada/Hindi voice: <b>Settings → search "Text-to-speech" → Google → Install voice data → ಕನ್ನಡ / हिंदी</b>.','Still no voice? Turn on <b>Captions</b> — the slides play without sound too.'],
+        ios:['Opened from WhatsApp/Telegram? Tap <b>Open in Safari</b> (the compass icon).','Turn <b>off Silent mode</b> (side switch or Control Centre) and turn up the volume.','For Hindi/Kannada voice: <b>Settings → Accessibility → Spoken Content → Voices</b> → add the language.','Still no voice? Turn on <b>Captions</b> — the slides play without sound too.']
+      }},
+    kn:{ step:'ಹಂತ', of:'/', next:'ಮುಂದೆ', back:'ಹಿಂದೆ', skip:'ಬಿಟ್ಟುಬಿಡಿ', done:'ಕಲಿಯಲು ಆರಂಭಿಸಿ ▶', android:'🤖 Android', ios:'📱 iPhone',
+      s:[
+        ['<span class="g-wave">👋</span> ಸ್ವಾಗತ!','<b>ನರೇಂದ್ರ ಸರ್ ಅವರ ಪ್ರೆಸೆಂಟೇಶನ್</b> ಹೇಗೆ ಪ್ಲೇ ಮಾಡುವುದು ಎಂದು ತೋರಿಸುತ್ತೇನೆ. ಕೇವಲ 30 ಸೆಕೆಂಡುಗಳು.'],
+        ['ನಿಮ್ಮ ಭಾಷೆ ಆಯ್ಕೆಮಾಡಿ','<b>English</b>, <b>ಕನ್ನಡ</b> ಅಥವಾ <b>हिंदी</b> ಒತ್ತಿ. ನೀವು ಆಯ್ಕೆ ಮಾಡಿದ ಭಾಷೆಯಲ್ಲಿ ಸರ್ ಪ್ರತಿ ಸ್ಲೈಡ್ ವಿವರಿಸುತ್ತಾರೆ.'],
+        ['▶ Explain ಒತ್ತಿ','ಸರ್ ಪ್ರತಿ ಸ್ಲೈಡ್ ಓದಿ, ಮುಖ್ಯ ಅಂಶಗಳನ್ನು ಹೈಲೈಟ್ ಮಾಡಿ, ತಾವಾಗಿಯೇ ಮುಂದಿನ ಸ್ಲೈಡ್‌ಗೆ ಹೋಗುತ್ತಾರೆ. ನಿಲ್ಲಿಸಲು ಮತ್ತೆ ಒತ್ತಿ.'],
+        ['ಸ್ಲೈಡ್‌ಗಳ ನಡುವೆ ಚಲಿಸಿ','<b>Prev / Next</b> ಒತ್ತಿ — ಅಥವಾ ಸ್ಲೈಡ್ ಅನ್ನು ಎಡ/ಬಲಕ್ಕೆ <b>ಸ್ವೈಪ್</b> ಮಾಡಿ.'],
+        ['ಓದುತ್ತಾ ಕೇಳಿ, ನಿಧಾನಗೊಳಿಸಿ','ಕೇಳುತ್ತಾ ಓದಲು <b>Captions</b> ಆನ್ ಮಾಡಿ. ವೇಗ ಹೆಚ್ಚೆನಿಸಿದರೆ <b>Speed 0.8×</b> ಬಳಸಿ.'],
+        ['ಪೂರ್ಣ ಪರದೆಯಲ್ಲಿ ನೋಡಿ','<b>⛶ Full screen</b> ಒತ್ತಿ ಫೋನ್ ಅನ್ನು ಅಡ್ಡಲಾಗಿ ತಿರುಗಿಸಿ. ಬಟನ್‌ಗಳು ಪರದೆಯ ಎಡಭಾಗಕ್ಕೆ ಬರುತ್ತವೆ.'],
+        ['ಧ್ವನಿ ಬರುತ್ತಿಲ್ಲವೇ? ಇಲ್ಲಿ ಸರಿಪಡಿಸಿ',''],
+        ['ಸ್ನೇಹಿತರೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಿ','ಈ ಪ್ರೆಸೆಂಟೇಶನ್ ಅನ್ನು ಸಹಪಾಠಿಗಳಿಗೆ WhatsApp ಅಥವಾ Telegram ನಲ್ಲಿ ಕಳುಹಿಸಿ. ಪರೀಕ್ಷೆಗೆ ಶುಭಾಶಯಗಳು! 🎯']
+      ],
+      fix:{
+        android:['WhatsApp/Telegram ನಿಂದ ತೆರೆದಿದ್ದೀರಾ? <b>⋮ → Open in Chrome</b> ಒತ್ತಿ.','<b>ಮೀಡಿಯಾ ವಾಲ್ಯೂಮ್</b> ಹೆಚ್ಚಿಸಿ.','ಕನ್ನಡ/ಹಿಂದಿ ಧ್ವನಿಗೆ: <b>Settings → "Text-to-speech" ಹುಡುಕಿ → Google → Install voice data → ಕನ್ನಡ / हिंदी</b>.','ಇನ್ನೂ ಧ್ವನಿ ಇಲ್ಲವೇ? <b>Captions</b> ಆನ್ ಮಾಡಿ — ಧ್ವನಿ ಇಲ್ಲದೆಯೂ ಸ್ಲೈಡ್‌ಗಳು ಮುಂದುವರಿಯುತ್ತವೆ.'],
+        ios:['WhatsApp/Telegram ನಿಂದ ತೆರೆದಿದ್ದೀರಾ? <b>Open in Safari</b> (ದಿಕ್ಸೂಚಿ ಐಕಾನ್) ಒತ್ತಿ.','<b>Silent mode ಆಫ್</b> ಮಾಡಿ (ಬದಿಯ ಸ್ವಿಚ್ ಅಥವಾ Control Centre) ಮತ್ತು ವಾಲ್ಯೂಮ್ ಹೆಚ್ಚಿಸಿ.','ಹಿಂದಿ/ಕನ್ನಡ ಧ್ವನಿಗೆ: <b>Settings → Accessibility → Spoken Content → Voices</b> → ಭಾಷೆ ಸೇರಿಸಿ.','ಇನ್ನೂ ಧ್ವನಿ ಇಲ್ಲವೇ? <b>Captions</b> ಆನ್ ಮಾಡಿ — ಧ್ವನಿ ಇಲ್ಲದೆಯೂ ಸ್ಲೈಡ್‌ಗಳು ಮುಂದುವರಿಯುತ್ತವೆ.']
+      }},
+    hi:{ step:'चरण', of:'/', next:'आगे', back:'पीछे', skip:'छोड़ें', done:'पढ़ाई शुरू करें ▶', android:'🤖 Android', ios:'📱 iPhone',
+      s:[
+        ['<span class="g-wave">👋</span> स्वागत है!','मैं आपको दिखाता हूँ कि <b>नरेंद्र सर की प्रेज़ेंटेशन</b> कैसे चलाएँ। बस 30 सेकंड।'],
+        ['अपनी भाषा चुनिए','<b>English</b>, <b>ಕನ್ನಡ</b> या <b>हिंदी</b> दबाइए। आप जो भाषा चुनेंगे, सर उसी में हर स्लाइड समझाएँगे।'],
+        ['▶ Explain दबाइए','सर हर स्लाइड पढ़कर सुनाते हैं, मुख्य बातें हाइलाइट करते हैं और खुद अगली स्लाइड पर जाते हैं। रोकने के लिए फिर दबाइए।'],
+        ['स्लाइड बदलिए','<b>Prev / Next</b> दबाइए — या स्लाइड को बाएँ/दाएँ <b>स्वाइप</b> कीजिए।'],
+        ['पढ़ते हुए सुनिए, धीमा कीजिए','सुनते हुए पढ़ने के लिए <b>Captions</b> चालू कीजिए। तेज़ लगे तो <b>Speed 0.8×</b> चुनिए।'],
+        ['फुल स्क्रीन में देखिए','<b>⛶ Full screen</b> दबाइए और फ़ोन को आड़ा घुमाइए। बटन स्क्रीन के बाईं ओर आ जाएँगे।'],
+        ['आवाज़ नहीं आ रही? यहाँ ठीक कीजिए',''],
+        ['दोस्तों के साथ शेयर कीजिए','यह प्रेज़ेंटेशन अपने सहपाठियों को WhatsApp या Telegram पर भेजिए। परीक्षा के लिए शुभकामनाएँ! 🎯']
+      ],
+      fix:{
+        android:['WhatsApp/Telegram से खोला है? <b>⋮ → Open in Chrome</b> दबाइए।','<b>मीडिया वॉल्यूम</b> बढ़ाइए।','कन्नड़/हिंदी आवाज़ के लिए: <b>Settings → "Text-to-speech" खोजिए → Google → Install voice data → ಕನ್ನಡ / हिंदी</b>।','फिर भी आवाज़ नहीं? <b>Captions</b> चालू कीजिए — बिना आवाज़ के भी स्लाइड चलती रहेंगी।'],
+        ios:['WhatsApp/Telegram से खोला है? <b>Open in Safari</b> (कंपास आइकन) दबाइए।','<b>Silent mode बंद</b> कीजिए (साइड स्विच या Control Centre) और वॉल्यूम बढ़ाइए।','हिंदी/कन्नड़ आवाज़ के लिए: <b>Settings → Accessibility → Spoken Content → Voices</b> → भाषा जोड़िए।','फिर भी आवाज़ नहीं? <b>Captions</b> चालू कीजिए — बिना आवाज़ के भी स्लाइड चलती रहेंगी।']
+      }}
+  };
+  var pres=document.getElementById('pres');
+  function inner(sel){ return function(){ try{ return pres.contentDocument.querySelectorAll(sel); }catch(e){ return []; } }; }
+  function outer(sel){ return function(){ return document.querySelectorAll(sel); }; }
+  // target per step: function returning element list (union rect), and whether elements live inside the player iframe
+  var STEPS=[
+    {t:null},
+    {t:outer('#langSwitcher')},
+    {t:inner('#play'), f:true},
+    {t:inner('#prev, #count, #next'), f:true},
+    {t:inner('#caps, #rate'), f:true, labels:true},
+    {t:inner('#fs'), f:true, phone:true},
+    {t:null, fix:true},
+    {t:outer('.actions [data-share]')}
+  ];
+  function lang(){ var l='en'; try{ l=localStorage.getItem('baio_mt_lang')||document.documentElement.lang||'en'; }catch(e){} return T[l]?l:'en'; }
+  var shade,spot,finger,card,idx=0,os=OS,open=false;
+  function rectOf(st){
+    if(!st.t) return null;
+    var els=[].slice.call(st.t()); if(!els.length) return null;
+    var off={x:0,y:0}; if(st.f){ var r0=pres.getBoundingClientRect(); off={x:r0.left,y:r0.top}; }
+    var L=1e9,Tp=1e9,R=-1e9,B=-1e9;
+    els.forEach(function(e){ if(st.labels && e.closest('label')) e=e.closest('label'); var r=e.getBoundingClientRect(); if(!r.width&&!r.height) return;
+      L=Math.min(L,r.left);Tp=Math.min(Tp,r.top);R=Math.max(R,r.right);B=Math.max(B,r.bottom); });
+    if(L>R) return null;
+    return {left:L+off.x,top:Tp+off.y,width:R-L,height:B-Tp};
+  }
+  function build(){
+    shade=document.createElement('div'); shade.className='g-shade';
+    spot=document.createElement('div'); spot.className='g-spot none';
+    finger=document.createElement('div'); finger.className='g-finger'; finger.innerHTML='<i></i><span>👆</span>'; finger.setAttribute('aria-hidden','true');
+    card=document.createElement('div'); card.className='g-card'; card.setAttribute('role','dialog'); card.setAttribute('aria-modal','true'); card.setAttribute('aria-live','polite');
+    [shade,spot,finger,card].forEach(function(e){ document.body.appendChild(e); });
+    shade.addEventListener('click',function(e){ e.preventDefault(); });
+    card.addEventListener('click',function(e){
+      var b=e.target.closest('button'); if(!b) return;
+      if(b.dataset.go==='next'){ idx<STEPS.length-1?go(idx+1):close(true); }
+      else if(b.dataset.go==='back'){ go(idx-1); }
+      else if(b.dataset.go==='skip'){ close(true); }
+      else if(b.dataset.os){ os=b.dataset.os; render(); place(); }
+      else if(b.dataset.l){ if(window.setLang) window.setLang(b.dataset.l,true); render(); place(); }
+    });
+  }
+  function render(){
+    var L=T[lang()], st=STEPS[idx], s=L.s[idx], body='';
+    if(st.fix){
+      body='<div class="g-tabs"><button data-os="android" class="'+(os==='android'?'on':'')+'">'+L.android+'</button><button data-os="ios" class="'+(os==='ios'?'on':'')+'">'+L.ios+'</button></div><ol>'+L.fix[os].map(function(x){return '<li>'+x+'</li>';}).join('')+'</ol>';
+    } else body='<p>'+s[1]+'</p>';
+    if(st.phone) body+='<div class="g-phone" aria-hidden="true"><div></div></div>';
+    var last=idx===STEPS.length-1;
+    card.innerHTML='<div class="g-top"><span class="g-step">'+(idx? L.step+' '+idx+' '+L.of+' '+(STEPS.length-1) : 'BAIO')+'</span>'+
+      '<span class="g-langs">'+[['en','EN'],['kn','ಕ'],['hi','हि']].map(function(x){return '<button data-l="'+x[0]+'" class="'+(lang()===x[0]?'on':'')+'" aria-label="'+x[0]+'">'+x[1]+'</button>';}).join('')+'</span></div>'+
+      '<h3>'+s[0]+'</h3>'+body+
+      '<div class="g-nav"><div class="g-dots">'+STEPS.map(function(_,i){return '<i class="'+(i===idx?'on':'')+'"></i>';}).join('')+'</div>'+
+      (last?'':'<button class="g-skip" data-go="skip">'+L.skip+'</button>')+
+      (idx?'<button class="g-btn" data-go="back">'+L.back+'</button>':'')+
+      '<button class="g-btn pri" data-go="next">'+(last?L.done:L.next)+'</button></div>';
+  }
+  function place(){
+    if(!open) return;
+    var r=rectOf(STEPS[idx]), vw=innerWidth, vh=innerHeight, cw=card.offsetWidth, ch=card.offsetHeight, pad=8;
+    if(!r){ spot.classList.add('none'); finger.style.opacity=0;
+      card.style.left=Math.max(12,(vw-cw)/2)+'px'; card.style.top=Math.max(12,(vh-ch)/2)+'px'; return; }
+    spot.classList.remove('none');
+    spot.style.left=(r.left-pad)+'px'; spot.style.top=(r.top-pad)+'px'; spot.style.width=(r.width+pad*2)+'px'; spot.style.height=(r.height+pad*2)+'px';
+    finger.style.opacity=1; finger.style.left=(r.left+Math.min(r.width/2,60)-10)+'px'; finger.style.top=(r.top+r.height/2+2)+'px';
+    var below=r.top+r.height+pad+16, above=r.top-pad-16-ch, top;
+    if(below+ch<=vh-12) top=below+30; else if(above>=12) top=above; else top=Math.max(12,vh-ch-12);
+    card.style.top=Math.min(top,vh-ch-12)+'px';
+    card.style.left=Math.min(Math.max(12,r.left+r.width/2-cw/2),vw-cw-12)+'px';
+  }
+  function go(i){
+    idx=Math.max(0,Math.min(STEPS.length-1,i)); render();
+    var r=rectOf(STEPS[idx]);
+    if(r){ // bring the target into the middle of the screen first
+      var want=r.top+r.height/2-innerHeight*0.38;
+      if(Math.abs(want)>40){ window.scrollBy({top:want,behavior:'smooth'}); setTimeout(place,420); }
+    }
+    place(); setTimeout(place,60);
+    var n=card.querySelector('[data-go="next"]'); if(n) n.focus({preventScroll:true});
+  }
+  function start(){
+    if(!shade) build();
+    [shade,spot,finger,card].forEach(function(e){ e.hidden=false; });
+    open=true; os=OS; go(0);
+  }
+  function close(seen){
+    open=false; [shade,spot,finger,card].forEach(function(e){ if(e) e.hidden=true; });
+    if(seen){ try{ localStorage.setItem('baio_mt_guide_seen','1'); }catch(e){} }
+    var h=document.querySelector('[data-howto]'); if(h) h.focus({preventScroll:true});
+  }
+  window.addEventListener('resize',place); window.addEventListener('scroll',function(){ if(open) requestAnimationFrame(place); },{passive:true});
+  document.addEventListener('keydown',function(e){ if(!open) return;
+    if(e.key==='Escape') close(true); if(e.key==='ArrowRight') idx<STEPS.length-1?go(idx+1):close(true); if(e.key==='ArrowLeft') go(idx-1); });
+  document.querySelectorAll('[data-howto]').forEach(function(b){ b.addEventListener('click',start); });
+  window.startPlayGuide=start;
+  // First visit: show automatically once the player has loaded
+  var seen=false; try{ seen=localStorage.getItem('baio_mt_guide_seen')==='1'; }catch(e){}
+  if(!seen && !/[?&]noguide/.test(location.search)){
+    var go1=function(){ setTimeout(function(){ if(!open) start(); },900); };
+    if(pres.contentDocument && pres.contentDocument.readyState==='complete' && pres.contentDocument.getElementById('play')) go1(); else pres.addEventListener('load',go1,{once:true});
+  }
 })();
 
 /* Size the player frame to its content so there is no inner scrollbar */
