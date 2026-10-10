@@ -202,6 +202,20 @@ header{padding:34px 0 22px; text-align:center;}
 .ts-eq i:nth-child(2){animation-delay:.25s!important} .ts-eq i:nth-child(3){animation-delay:.5s!important}
 @keyframes tsEq{from{height:20%}to{height:100%}}
 @media(prefers-reduced-motion:reduce){.theme-song.playing .ts-eq i{animation:none;height:70%}}
+.ts-list{margin-top:8px; border:1px solid var(--line); border-radius:14px; background:var(--panel); overflow:hidden;}
+.ts-list summary{list-style:none; cursor:pointer; padding:11px 16px; font:700 13px 'Space Grotesk',sans-serif; color:var(--gold); display:flex; align-items:center; gap:8px;}
+.ts-list summary::-webkit-details-marker{display:none;}
+.ts-list summary::after{content:"▾"; margin-left:auto; transition:transform .2s;}
+.ts-list[open] summary::after{transform:rotate(180deg);}
+.ts-track{display:flex; align-items:center; gap:12px; width:100%; padding:10px 16px; border:none; border-top:1px solid var(--line); background:transparent; color:var(--ink); cursor:pointer; text-align:left; font:inherit;}
+.ts-track:hover{background:rgba(212,175,55,0.06);}
+.ts-track .n{flex:none; width:28px; height:28px; border-radius:50%; display:grid; place-items:center; font:700 12px 'Space Grotesk',sans-serif; background:var(--panel2); color:var(--ink-dim);}
+.ts-track .t{flex:1; min-width:0;}
+.ts-track .t b{display:block; font:700 14px 'Noto Sans Devanagari','Space Grotesk',sans-serif; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.ts-track .t span{font:500 11.5px Inter,sans-serif; color:var(--ink-dim);}
+.ts-track .d{flex:none; font:600 11.5px 'Space Grotesk',sans-serif; color:var(--ink-dim); font-variant-numeric:tabular-nums;}
+.ts-track.on .n{background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#1a1406;}
+.ts-track.on .t b{color:var(--gold);}
 .qa-new{display:inline-block; margin-left:6px; padding:2px 7px; border-radius:10px; background:#E7695B; color:#fff; font-size:10px; letter-spacing:1px; vertical-align:2px;}
 .qb-dropdown{flex:1 1 calc(50% - 6px); min-width:140px;}
 .qb-dropdown summary{
@@ -498,14 +512,18 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
   <div class="theme-song" id="themeSong">
     <button class="ts-play" id="tsPlay" aria-label="Play the BAIO theme song">▶</button>
     <div class="ts-body">
-      <div class="ts-kick">🎵 BAIO Theme Song</div>
-      <div class="ts-title">सीखो, समझो, सुधारो, पाओ</div>
+      <div class="ts-kick" id="tsKick">🎵 BAIO Theme Song</div>
+      <div class="ts-title" id="tsTitle">सीखो, समझो, सुधारो, पाओ</div>
       <div class="ts-bar" id="tsBar" role="slider" aria-label="Song position" tabindex="0"><div class="ts-fill" id="tsFill"></div></div>
       <div class="ts-time"><span id="tsCur">0:00</span><span id="tsDur">2:22</span></div>
     </div>
     <div class="ts-eq" aria-hidden="true"><i></i><i></i><i></i></div>
     <audio id="tsAudio" src="audio/baio-theme-song.mp3" preload="none"></audio>
   </div>
+  <details class="ts-list" id="tsList">
+    <summary>🎶 BAIO Songs · 5 tracks</summary>
+    <div id="tsTracks"></div>
+  </details>
 
   <div class="quick-actions-row">
     <a href="exam-corner.html" class="quick-action-btn exam-corner-btn">📝 Exam Corner <span class="qa-new">NEW</span></a>
@@ -2641,17 +2659,33 @@ window.indexHardRefresh = indexHardRefresh;
 </script>
 
 <script>
-/* BAIO theme song player (tap to play; never autoplays) */
+/* BAIO songs player: theme song + playlist (tap to play; never autoplays; plays the next song when one ends) */
 (function(){
   var box=document.getElementById('themeSong'); if(!box) return;
+  var TRACKS=[
+    {src:'audio/baio-theme-song.mp3',   kick:'BAIO Theme Song', title:'सीखो, समझो, सुधारो, पाओ', en:'Seekho, Samjho, Sudhaaro, Paao', dur:'2:22'},
+    {src:'audio/cell-ki-kahani.mp3',     kick:'BAIO Song',       title:'सेल की कहानी',            en:'Cell Ki Kahani',                dur:'2:50'},
+    {src:'audio/zindagi-ka-system.mp3',  kick:'BAIO Song',       title:'ज़िंदगी का सिस्टम',        en:'Zindagi Ka System',             dur:'2:46'},
+    {src:'audio/life-ka-logic.mp3',      kick:'BAIO Song',       title:'लाइफ़ का लॉजिक',           en:'Life Ka Logic',                 dur:'2:45'},
+    {src:'audio/sapno-ki-udaan.mp3',     kick:'BAIO Song',       title:'सपनों की उड़ान',           en:'Sapno Ki Udaan',                dur:'2:27'}
+  ];
   var a=document.getElementById('tsAudio'), btn=document.getElementById('tsPlay'), bar=document.getElementById('tsBar'),
-      fill=document.getElementById('tsFill'), cur=document.getElementById('tsCur'), dur=document.getElementById('tsDur');
+      fill=document.getElementById('tsFill'), cur=document.getElementById('tsCur'), dur=document.getElementById('tsDur'),
+      kick=document.getElementById('tsKick'), ttl=document.getElementById('tsTitle'), list=document.getElementById('tsTracks');
+  var idx=0;
+  list.innerHTML=TRACKS.map(function(t,i){ return '<button class="ts-track" type="button" data-i="'+i+'"><span class="n">'+(i+1)+'</span><span class="t"><b>'+t.title+'</b><span>'+t.en+'</span></span><span class="d">'+t.dur+'</span></button>'; }).join('');
   function fmt(t){ t=Math.max(0,Math.floor(t||0)); return Math.floor(t/60)+':'+String(t%60).padStart(2,'0'); }
   function ui(){ var p=!a.paused; box.classList.toggle('playing',p); btn.textContent=p?'❚❚':'▶';
-    btn.setAttribute('aria-label',(p?'Pause':'Play')+' the BAIO theme song'); }
+    btn.setAttribute('aria-label',(p?'Pause':'Play')+' '+TRACKS[idx].en);
+    [].forEach.call(list.children,function(el,i){ el.classList.toggle('on',i===idx); el.setAttribute('aria-current',i===idx?'true':'false'); }); }
+  function load(i,play){ idx=(i+TRACKS.length)%TRACKS.length; var t=TRACKS[idx];
+    a.src=t.src; kick.textContent='🎵 '+t.kick; ttl.textContent=t.title; dur.textContent=t.dur; cur.textContent='0:00'; fill.style.width='0%';
+    if(play) a.play().catch(function(){}); ui(); }
   btn.addEventListener('click',function(){ if(a.paused){ a.play().catch(function(){}); } else a.pause(); });
+  list.addEventListener('click',function(e){ var b=e.target.closest('.ts-track'); if(!b) return; var i=+b.dataset.i;
+    if(i===idx && a.currentSrc){ a.paused?a.play().catch(function(){}):a.pause(); } else load(i,true); });
   a.addEventListener('play',ui); a.addEventListener('pause',ui);
-  a.addEventListener('ended',function(){ a.currentTime=0; ui(); });
+  a.addEventListener('ended',function(){ if(idx<TRACKS.length-1) load(idx+1,true); else { load(0,false); } });
   a.addEventListener('loadedmetadata',function(){ if(isFinite(a.duration)) dur.textContent=fmt(a.duration); });
   a.addEventListener('timeupdate',function(){ cur.textContent=fmt(a.currentTime);
     if(a.duration) fill.style.width=(a.currentTime/a.duration*100)+'%'; bar.setAttribute('aria-valuenow',Math.round(a.currentTime)); });
@@ -2662,6 +2696,7 @@ window.indexHardRefresh = indexHardRefresh;
   bar.addEventListener('keydown',function(e){ if(!a.duration) return;
     if(e.key==='ArrowRight') a.currentTime=Math.min(a.duration,a.currentTime+5);
     if(e.key==='ArrowLeft') a.currentTime=Math.max(0,a.currentTime-5); });
+  ui();
 })();
 </script>
 </body>
