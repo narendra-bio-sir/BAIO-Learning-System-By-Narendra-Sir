@@ -4,6 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>I PUC Biology Mid-Term — Topics &amp; Tips</title>
+<meta name="description" content="17 narrated slides in English, Kannada and Hindi: chapter-wise topics to practise, must-draw diagrams and tips to score high.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BAIO Learning System">
+<meta property="og:title" content="How to prepare for the I PUC Biology mid-term — Narendra Sir">
+<meta property="og:description" content="17 narrated slides in English, Kannada and Hindi: chapter-wise topics to practise, must-draw diagrams and tips to score high.">
+<meta property="og:url" content="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/exam-corner/pu1-midterm-2026-presentation.html">
+<meta property="og:image" content="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/exam-corner/pu1-midterm-2026-share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Narendra Sir's mid-term preparation presentation — I PUC Biology">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How to prepare for the I PUC Biology mid-term — Narendra Sir">
+<meta name="twitter:description" content="17 narrated slides in English, Kannada and Hindi: chapter-wise topics to practise, must-draw diagrams and tips to score high.">
+<meta name="twitter:image" content="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/exam-corner/pu1-midterm-2026-share.jpg">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
@@ -173,6 +188,15 @@ body.fsmode{overflow:hidden}
 .fsbar .btn.primary{background:var(--teal);color:#fff}
 .stage.rot .fsbar{flex-direction:row-reverse;left:50%;top:var(--fsoff,12px);transform:translateX(-50%)}
 .stage.rot .fsbar .btn{transform:rotate(90deg)}
+
+.share-sheet{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;padding:16px}
+.share-sheet[hidden]{display:none}
+.share-box{position:relative;width:100%;max-width:380px;background:#fff;color:#0c1830;border-radius:18px;padding:18px;display:grid;gap:10px;font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.share-box b{font:700 17px 'Space Grotesk',Inter,sans-serif}
+.share-opt{display:block;text-align:left;padding:13px 14px;border-radius:12px;border:1.5px solid #e6e0d2;background:#fbf8f1;color:#0c1830;text-decoration:none;font:600 15px Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;cursor:pointer}
+.share-opt:hover{border-color:#0b8f80}
+.share-url{width:100%;padding:9px 10px;border-radius:10px;border:1px solid #e6e0d2;font:500 12px Inter;color:#5f6b80;background:#fff}
+.share-x{position:absolute;right:10px;top:10px;width:34px;height:34px;border-radius:50%;border:none;background:#f1ede2;cursor:pointer;font-size:14px}
 </style>
 </head>
 <body>
@@ -183,6 +207,7 @@ body.fsmode{overflow:hidden}
       <button class="btn" data-lang="en">English</button>
       <button class="btn" data-lang="kn">ಕನ್ನಡ</button>
       <button class="btn" data-lang="hi">हिंदी</button>
+      <button class="btn" id="shareBtn" data-share title="Share" aria-label="Share this presentation">📤</button>
     </div>
   </div>
 
@@ -429,8 +454,45 @@ document.addEventListener('visibilitychange',()=>{ if(document.hidden&&playing) 
 setLang(lang);
 const saved=parseInt(store.get('baio_mt_slide'),10); show(isNaN(saved)?0:saved); fit();
 if(location.hash==='#fs'){ stage.classList.add('fs'); document.body.classList.add('fsmode'); setTimeout(fit,100); }
-if(window.top!==window){ document.getElementById('backBtn').style.display='none'; document.body.style.background='transparent'; }
+if(window.top!==window){ document.getElementById('backBtn').style.display='none'; document.getElementById('shareBtn').style.display='none'; document.body.style.background='transparent'; }
 if(!TTS) document.getElementById('hint').textContent='This browser has no speech voice — captions will play by themselves when you tap Explain.';
+
+/* Share — native share sheet on phones; WhatsApp / Telegram / copy link otherwise */
+(function(){
+  var URL_='https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/exam-corner.html#midterm';
+  var MSG={
+    en:"📝 How to prepare for the I PUC Biology mid-term — Narendra Sir explains, slide by slide (English · ಕನ್ನಡ · हिंदी).",
+    kn:"📝 ಪ್ರಥಮ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ ಮಧ್ಯಾವಧಿ ಪರೀಕ್ಷೆಗೆ ಹೇಗೆ ಸಿದ್ಧರಾಗಬೇಕು — ನರೇಂದ್ರ ಸರ್ ಸ್ಲೈಡ್‌ವಾರು ವಿವರಿಸುತ್ತಾರೆ (English · ಕನ್ನಡ · हिंदी).",
+    hi:"📝 प्रथम पीयूसी जीव विज्ञान मध्यावधि परीक्षा की तैयारी कैसे करें — नरेंद्र सर स्लाइड दर स्लाइड समझाते हैं (English · ಕನ್ನಡ · हिंदी)."
+  };
+  var LBL={en:['Share','Copy link','Link copied ✓'],kn:['ಹಂಚಿಕೊಳ್ಳಿ','ಲಿಂಕ್ ನಕಲಿಸಿ','ಲಿಂಕ್ ನಕಲಾಯಿತು ✓'],hi:['शेयर करें','लिंक कॉपी करें','लिंक कॉपी हो गया ✓']};
+  function lang(){ var l='en'; try{ l=localStorage.getItem('baio_mt_lang')||document.documentElement.lang||'en'; }catch(e){} return MSG[l]?l:'en'; }
+  var sheet=document.createElement('div'); sheet.className='share-sheet'; sheet.hidden=true;
+  sheet.innerHTML='<div class="share-box" role="dialog" aria-modal="true" aria-labelledby="shareTtl"><b id="shareTtl"></b>'+
+    '<a class="share-opt wa" target="_blank" rel="noopener">🟢 WhatsApp</a><a class="share-opt tg" target="_blank" rel="noopener">✈️ Telegram</a>'+
+    '<button class="share-opt cp" type="button"></button><input class="share-url" readonly aria-label="Link"><button class="share-x" type="button" aria-label="Close">✕</button></div>';
+  document.body.appendChild(sheet);
+  function close(){ sheet.hidden=true; }
+  sheet.addEventListener('click',function(e){ if(e.target===sheet||e.target.closest('.share-x')) close(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
+  sheet.querySelector('.cp').addEventListener('click',function(){
+    var b=this, inp=sheet.querySelector('.share-url'), l=lang();
+    function done(){ b.textContent=LBL[l][2]; setTimeout(function(){ b.textContent='🔗 '+LBL[l][1]; },1800); }
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(URL_).then(done,function(){ inp.select(); document.execCommand('copy'); done(); });
+    else { inp.select(); document.execCommand('copy'); done(); }
+  });
+  window.sharePresentation=function(){
+    var l=lang(), text=MSG[l];
+    if(navigator.share){ navigator.share({title:'BAIO · Mid-Term 2026',text:text,url:URL_}).catch(function(){}); return; }
+    sheet.querySelector('#shareTtl').textContent=LBL[l][0];
+    sheet.querySelector('.wa').href='https://wa.me/?text='+encodeURIComponent(text+'\n'+URL_);
+    sheet.querySelector('.tg').href='https://t.me/share/url?url='+encodeURIComponent(URL_)+'&text='+encodeURIComponent(text);
+    sheet.querySelector('.cp').textContent='🔗 '+LBL[l][1];
+    sheet.querySelector('.share-url').value=URL_;
+    sheet.hidden=false; sheet.querySelector('.wa').focus();
+  };
+  document.querySelectorAll('[data-share]').forEach(function(b){ b.addEventListener('click',window.sharePresentation); });
+})();
 </script>
 </body>
 </html>
