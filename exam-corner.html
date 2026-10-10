@@ -335,7 +335,7 @@ setLang(['en','kn','hi'].includes(startLang)?startLang:'en', false);
   // target per step: function returning element list (union rect), and whether elements live inside the player iframe
   var STEPS=[
     {t:null},
-    {t:outer('#langSwitcher')},
+    {t:inner('.langs [data-lang]'), f:true},
     {t:inner('#play'), f:true},
     {t:inner('#next, #prev'), f:true},
     {t:inner('#caps'), f:true, labels:true},
@@ -386,7 +386,7 @@ setLang(['en','kn','hi'].includes(startLang)?startLang:'en', false);
   }
   function place(){
     if(!open) return;
-    var rs=rectsOf(STEPS[idx]), vw=innerWidth, vh=innerHeight, cw=card.offsetWidth, ch=card.offsetHeight, pad=6;
+    var rs=rectsOf(STEPS[idx]), vw=innerWidth, vh=innerHeight, cw=card.offsetWidth, ch=card.offsetHeight, pad=rs.length>1?3:6;
     var holes=rs.map(function(r){ var x=r.left-pad,y=r.top-pad,w=r.width+pad*2,h=r.height+pad*2,k=12;
       return 'M'+(x+k)+','+y+'h'+(w-2*k)+'a'+k+','+k+' 0 0 1 '+k+','+k+'v'+(h-2*k)+'a'+k+','+k+' 0 0 1 -'+k+','+k+'h-'+(w-2*k)+'a'+k+','+k+' 0 0 1 -'+k+',-'+k+'v-'+(h-2*k)+'a'+k+','+k+' 0 0 1 '+k+',-'+k+'z'; });
     spot.setAttribute('viewBox','0 0 '+vw+' '+vh);
