@@ -191,6 +191,11 @@ header{padding:34px 0 22px; text-align:center;}
   box-shadow:0 4px 14px rgba(212,175,55,0.35);}
 .ts-play:focus-visible{outline:2px solid var(--teal); outline-offset:3px;}
 .ts-body{flex:1; min-width:0;}
+.ts-art{flex:none; width:56px; height:56px; border-radius:12px; object-fit:cover; box-shadow:0 4px 14px rgba(0,0,0,.35); border:1px solid var(--line);}
+.ts-art[hidden]{display:none;}
+.theme-song.has-art{gap:11px;}
+.theme-song.has-art .ts-kick{letter-spacing:.06em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+@media(max-width:380px){ .theme-song.has-art{padding:12px; gap:9px;} .theme-song.has-art .ts-eq{display:none;} .theme-song.has-art .ts-play{width:44px;height:44px;font-size:17px;} .theme-song.has-art .ts-art{width:52px;height:52px;} .theme-song.has-art .ts-kick{letter-spacing:.02em;font-size:10px;} }
 .ts-kick{font:700 10.5px 'Space Grotesk',sans-serif; letter-spacing:.12em; text-transform:uppercase; color:var(--teal);}
 .ts-title{font:700 16px 'Noto Sans Devanagari','Noto Sans Kannada','Space Grotesk',sans-serif; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;}
 .ts-bar{position:relative; height:6px; border-radius:6px; background:var(--panel2); margin-top:9px; cursor:pointer; touch-action:none;}
@@ -510,6 +515,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
   </div>
 
   <div class="theme-song" id="themeSong">
+    <img class="ts-art" id="tsArt" alt="Song cover" hidden>
     <button class="ts-play" id="tsPlay" aria-label="Play the BAIO theme song">▶</button>
     <div class="ts-body">
       <div class="ts-kick" id="tsKick">🎵 BAIO Theme Song</div>
@@ -2664,8 +2670,8 @@ window.indexHardRefresh = indexHardRefresh;
   var box=document.getElementById('themeSong'); if(!box) return;
   var TRACKS=[
     {src:'audio/baio-theme-song.mp3',   kick:'BAIO Theme Song', title:'सीखो, समझो, सुधारो, पाओ', en:'Seekho, Samjho, Sudhaaro, Paao', dur:'2:22'},
-    {src:'audio/har-student-ki-jeet.mp3', kick:'Dedicated to Narendra Sir', title:'हर स्टूडेंट की जीत', en:'Har Student Ki Jeet · Male vocals', dur:'3:00'},
-    {src:'audio/har-student-ki-jeet-female.mp3', kick:'Dedicated to Narendra Sir', title:'हर स्टूडेंट की जीत', en:'Har Student Ki Jeet · Female vocals', dur:'2:59'},
+    {src:'audio/har-student-ki-jeet.mp3', kick:'Dedicated to Narendra Sir', title:'स्टूडेंट्स की जीत', en:'Students Ki Jeeth · Male vocals', dur:'3:00', cover:'audio/covers/students-ki-jeeth.jpg'},
+    {src:'audio/har-student-ki-jeet-female.mp3', kick:'Dedicated to Narendra Sir', title:'स्टूडेंट्स की जीत', en:'Students Ki Jeeth · Female vocals', dur:'2:59', cover:'audio/covers/students-ki-jeeth.jpg'},
     {src:'audio/har-jeet-narendra-sir-ke-naam-duet.mp3', kick:'Dedicated to Narendra Sir', title:'हर जीत नरेंद्र सर के नाम', en:'Har Jeet Narendra Sir Ke Naam · Duet', dur:'2:58'},
     {src:'audio/kanasina-harikara.mp3', kick:'Dedicated to Narendra Sir · ಕನ್ನಡ', title:'ಕನಸಿನ ಹರಿಕಾರ', en:'Kanasina Harikara · Kannada', dur:'3:03'},
     {src:'audio/geluvina-sarathi.mp3', kick:'Dedicated to Narendra Sir · ಕನ್ನಡ', title:'ಗೆಲುವಿನ ಸಾರಥಿ', en:'Geluvina Sarathi · Kannada', dur:'3:02'},
@@ -2676,7 +2682,7 @@ window.indexHardRefresh = indexHardRefresh;
   ];
   var a=document.getElementById('tsAudio'), btn=document.getElementById('tsPlay'), bar=document.getElementById('tsBar'),
       fill=document.getElementById('tsFill'), cur=document.getElementById('tsCur'), dur=document.getElementById('tsDur'),
-      kick=document.getElementById('tsKick'), ttl=document.getElementById('tsTitle'), list=document.getElementById('tsTracks');
+      kick=document.getElementById('tsKick'), ttl=document.getElementById('tsTitle'), list=document.getElementById('tsTracks'), art=document.getElementById('tsArt');
   var idx=0;
   list.innerHTML=TRACKS.map(function(t,i){ return '<button class="ts-track" type="button" data-i="'+i+'"><span class="n">'+(i+1)+'</span><span class="t"><b>'+t.title+'</b><span>'+t.en+'</span></span><span class="d">'+t.dur+'</span></button>'; }).join('');
   function fmt(t){ t=Math.max(0,Math.floor(t||0)); return Math.floor(t/60)+':'+String(t%60).padStart(2,'0'); }
@@ -2685,6 +2691,10 @@ window.indexHardRefresh = indexHardRefresh;
     [].forEach.call(list.children,function(el,i){ el.classList.toggle('on',i===idx); el.setAttribute('aria-current',i===idx?'true':'false'); }); }
   function load(i,play){ idx=(i+TRACKS.length)%TRACKS.length; var t=TRACKS[idx];
     a.src=t.src; kick.textContent='🎵 '+t.kick; ttl.textContent=t.title; dur.textContent=t.dur; cur.textContent='0:00'; fill.style.width='0%';
+    if(t.cover){ art.src=t.cover; art.hidden=false; } else { art.hidden=true; art.removeAttribute('src'); }
+    box.classList.toggle('has-art',!!t.cover);
+    if('mediaSession' in navigator){ try{ navigator.mediaSession.metadata=new MediaMetadata({title:t.title+' · '+t.en.split(' · ')[0],artist:'BAIO Learning System',album:t.kick,
+      artwork:t.cover?[{src:t.cover,sizes:'512x512',type:'image/jpeg'}]:[{src:'apple-touch-icon.png',sizes:'180x180',type:'image/png'}]}); }catch(e){} }
     if(play) a.play().catch(function(){}); ui(); }
   btn.addEventListener('click',function(){ if(a.paused){ a.play().catch(function(){}); } else a.pause(); });
   list.addEventListener('click',function(e){ var b=e.target.closest('.ts-track'); if(!b) return; var i=+b.dataset.i;
