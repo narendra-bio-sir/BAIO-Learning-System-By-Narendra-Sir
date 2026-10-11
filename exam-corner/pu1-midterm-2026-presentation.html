@@ -167,6 +167,8 @@ body{background:var(--page);color:var(--ink);font-family:Inter,'Noto Sans Kannad
 .cap[hidden]{display:none}
 .controls{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px}
 .controls .sp{flex:1}
+@media (max-width:289px){ .controls{gap:6px} #fs{padding:9px 8px;font-size:13px} .controls .opt{font-size:13px;gap:4px} #rate{padding-left:6px;padding-right:2px} }
+.controls .opt{max-width:100%;min-width:0} #voice{max-width:calc(100% - 56px);min-width:0;text-overflow:ellipsis}
 .prog{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
 .prog button{width:28px;height:8px;border-radius:4px;border:0;background:#cdd6dc;cursor:pointer}
 .prog button.on{background:var(--teal)}
@@ -229,9 +231,9 @@ body.fsmode{overflow:hidden}
     <span class="sp"></span>
     <label class="opt"><input type="checkbox" id="caps"> Captions</label>
     <label class="opt"><input type="checkbox" id="auto" checked> Auto next</label>
+    <button class="btn" id="fs" aria-label="Full screen">⛶<span class="fsl"> Full screen</span></button>
     <label class="opt">Speed <select id="rate"><option value="0.8">0.8×</option><option value="0.9">0.9×</option><option value="1" selected>1×</option><option value="1.1">1.1×</option><option value="1.25">1.25×</option></select></label>
     <label class="opt">Voice <select id="voice"></select></label>
-    <button class="btn" id="fs">⛶ Full screen</button>
   </div>
   <div class="prog" id="prog"></div>
   <div class="hint" id="hint">Tap <b>Explain</b> to hear each slide explained. Use ← → keys or swipe to move between slides.</div>
