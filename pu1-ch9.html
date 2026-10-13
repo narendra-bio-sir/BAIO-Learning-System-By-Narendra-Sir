@@ -2678,6 +2678,13 @@ function pptStopTalk(){
   if(PPT_TTS) PPT_TTS.cancel();
   pptTalkButtons(); pptSetCaption(''); if(typeof pptClearSpot==='function') pptClearSpot();
 }
+/* how class names are read aloud: "PU-I" -> "P U First year", "PU-II" -> "P U Second year" */
+function pptSayable(t){
+  const W = {en:['P U First year','P U Second year'], hi:['पी यू प्रथम वर्ष','पी यू द्वितीय वर्ष'], kn:['ಪಿಯು ಮೊದಲ ವರ್ಷ','ಪಿಯು ಎರಡನೇ ವರ್ಷ']}[pptLang] || ['P U First year','P U Second year'];
+  return String(t||'')
+    .replace(/\bPU[\s-]?(II|2)\b/g, W[1]).replace(/\bPU[\s-]?(I|1)\b/g, W[0])
+    .replace(/\bII\s?PUC?\b/g, W[1]).replace(/\bI\s?PUC?\b/g, W[0]);
+}
 function pptSpeakNext(id){
   if(id !== pptRun) return;
   if(pptQi >= pptQueue.length){
@@ -2694,7 +2701,7 @@ function pptSpeakNext(id){
   let shown = false;
   const show = ()=>{ if(shown || id!==pptRun) return; shown = true; pptSetCaption(text); pptSpotlight(qi, qn); };
   if(!PPT_TTS){ show(); pptQi++; setTimeout(()=>pptSpeakNext(id), Math.max(2500, text.length*70)); return; }
-  const u = new SpeechSynthesisUtterance(text);
+  const u = new SpeechSynthesisUtterance(pptSayable(text));
   u.lang = PPT_TTS_TAG[pptLang]; let v = pptVoice(pptLang); if(v){ try{ u.voice = v; }catch(e){ v = null; } }
   u.rate = pptRate;
   const t0 = Date.now();
@@ -2731,7 +2738,7 @@ let PPT_CUES = null, pptCuesLoading = null, pptSpotLast = null;
 let pptAnim = (function(){ try{ return localStorage.getItem('pu1ch9_ppt_anim')!=='0'; }catch(e){ return true; } })();
 function pptLoadCues(){
   if(PPT_CUES) return Promise.resolve(PPT_CUES);
-  if(!pptCuesLoading) pptCuesLoading = fetch('pu1-ch9-assets/spot-cues.json?v=2').then(r=>{ if(!r.ok) throw new Error('cues'); return r.json(); }).then(j=>(PPT_CUES=j)).catch(e=>{ pptCuesLoading=null; throw e; });
+  if(!pptCuesLoading) pptCuesLoading = fetch('pu1-ch9-assets/spot-cues.json?v=3').then(r=>{ if(!r.ok) throw new Error('cues'); return r.json(); }).then(j=>(PPT_CUES=j)).catch(e=>{ pptCuesLoading=null; throw e; });
   return pptCuesLoading;
 }
 function pptSetAnim(on){ pptAnim = !!on; try{ localStorage.setItem('pu1ch9_ppt_anim', pptAnim?'1':'0'); }catch(e){} if(!pptAnim) pptClearSpot(); else if(pptTalking && pptSpotLast) pptSpotlight(pptSpotLast[0], pptSpotLast[1]); }
@@ -2755,7 +2762,7 @@ function pptPlaceLayer(){
 }
 function pptSpotlight(i, total){
   pptSpotLast = [i, total];
-  if(!pptAnim){ pptClearSpot(); return; }
+  if(!pptAnim || pptIdx === 0){ pptClearSpot(); if(pptAnim) pptSpotLast = [i, total]; return; }  /* intro slide: no animation */
   if(pptFsState && pptFsState.scale && pptFsState.scale !== 1){ pptClearSpot(); return; }  /* teacher is pinch-zooming */
   const cues = PPT_CUES && PPT_CUES[pptDeck] && PPT_CUES[pptDeck][pptLang] && PPT_CUES[pptDeck][pptLang][pptIdx];
   const sp = document.getElementById('pptSpot');
@@ -2763,11 +2770,13 @@ function pptSpotlight(i, total){
   /* one cue per narration sentence; older/other-length lists fall back to proportional mapping */
   const box = cues.length === total ? cues[i] : cues[Math.min(cues.length-1, Math.floor(i*cues.length/Math.max(1,total)))];
   const g = pptPlaceLayer(); if(!g || !box){ return; }
-  const k = g.w/1920, pad = 10;
+  const k = g.w/1920, pad = 6;
   let x1 = box[0]*k - pad, y1 = box[1]*k - pad, x2 = (box[0]+box[2])*k + pad, y2 = (box[1]+box[3])*k + pad;
   Object.assign(sp.style, {left: x1+'px', top: y1+'px', width: (x2-x1)+'px', height: (y2-y1)+'px'});
   sp.classList.add('on');
   /* gentle zoom toward small parts; never in the sideways (rotated) view; keep the whole box on screen */
+  /* no zoom: zooming pushed the slide edges (title, side cards) off screen */
+  pptUnzoom(); return;
   const wrap = document.getElementById('pptWrap');
   if(wrap && wrap.classList.contains('ppt-rotated')){ pptUnzoom(); return; }
   const area = ((x2-x1)*(y2-y1))/(g.w*g.h);
