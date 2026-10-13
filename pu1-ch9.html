@@ -2688,26 +2688,29 @@ function pptSpeakNext(id){
     } else { setTimeout(()=>{ if(id===pptRun) pptSetCaption(''); }, 1500); }
     return;
   }
-  const text = pptQueue[pptQi];
-  pptSetCaption(text);
-  pptSpotlight(pptQi, pptQueue.length);
-  if(!PPT_TTS){ pptQi++; setTimeout(()=>pptSpeakNext(id), Math.max(2500, text.length*70)); return; }
+  const text = pptQueue[pptQi], qi = pptQi, qn = pptQueue.length;
+  /* caption + highlight change the moment this sentence is actually voiced (not when it is queued),
+     with a short fallback for engines that never fire onstart */
+  let shown = false;
+  const show = ()=>{ if(shown || id!==pptRun) return; shown = true; pptSetCaption(text); pptSpotlight(qi, qn); };
+  if(!PPT_TTS){ show(); pptQi++; setTimeout(()=>pptSpeakNext(id), Math.max(2500, text.length*70)); return; }
   const u = new SpeechSynthesisUtterance(text);
   u.lang = PPT_TTS_TAG[pptLang]; let v = pptVoice(pptLang); if(v){ try{ u.voice = v; }catch(e){ v = null; } }
   u.rate = pptRate;
   const t0 = Date.now();
-  u.onend = ()=>{ if(id!==pptRun) return; pptQi++;
+  u.onstart = show; setTimeout(show, 1200);
+  u.onend = ()=>{ if(id!==pptRun) return; show(); pptQi++;
     /* if no voice exists the engine may "finish" instantly: keep captions readable */
     const wait = Math.max(0, Math.min(6000, text.length*55) - (Date.now()-t0));
     setTimeout(()=>pptSpeakNext(id), v ? 150 : wait); };
-  u.onerror = ()=>{ if(id!==pptRun) return; pptQi++; setTimeout(()=>pptSpeakNext(id), Math.min(6000, text.length*55)); };
+  u.onerror = ()=>{ if(id!==pptRun) return; show(); pptQi++; setTimeout(()=>pptSpeakNext(id), Math.min(6000, text.length*55)); };
   PPT_TTS.speak(u);
 }
 function pptStartTalk(){
   const id = ++pptRun; if(PPT_TTS) PPT_TTS.cancel();
   pptTalking = true; pptTalkButtons();
-  pptLoadCues().catch(()=>{});
-  pptLoadNarr().then(N=>{
+  /* wait for the highlight cues too, so the very first sentence is already highlighted */
+  Promise.all([pptLoadNarr(), pptLoadCues().catch(()=>null)]).then(([N])=>{
     if(id!==pptRun) return;
     const list = N[pptDeck] && N[pptDeck][pptLang];
     const text = list && list[pptIdx];
@@ -2728,7 +2731,7 @@ let PPT_CUES = null, pptCuesLoading = null, pptSpotLast = null;
 let pptAnim = (function(){ try{ return localStorage.getItem('pu1ch9_ppt_anim')!=='0'; }catch(e){ return true; } })();
 function pptLoadCues(){
   if(PPT_CUES) return Promise.resolve(PPT_CUES);
-  if(!pptCuesLoading) pptCuesLoading = fetch('pu1-ch9-assets/spot-cues.json?v=1').then(r=>{ if(!r.ok) throw new Error('cues'); return r.json(); }).then(j=>(PPT_CUES=j)).catch(e=>{ pptCuesLoading=null; throw e; });
+  if(!pptCuesLoading) pptCuesLoading = fetch('pu1-ch9-assets/spot-cues.json?v=2').then(r=>{ if(!r.ok) throw new Error('cues'); return r.json(); }).then(j=>(PPT_CUES=j)).catch(e=>{ pptCuesLoading=null; throw e; });
   return pptCuesLoading;
 }
 function pptSetAnim(on){ pptAnim = !!on; try{ localStorage.setItem('pu1ch9_ppt_anim', pptAnim?'1':'0'); }catch(e){} if(!pptAnim) pptClearSpot(); else if(pptTalking && pptSpotLast) pptSpotlight(pptSpotLast[0], pptSpotLast[1]); }
@@ -2757,7 +2760,8 @@ function pptSpotlight(i, total){
   const cues = PPT_CUES && PPT_CUES[pptDeck] && PPT_CUES[pptDeck][pptLang] && PPT_CUES[pptDeck][pptLang][pptIdx];
   const sp = document.getElementById('pptSpot');
   if(!cues || !cues.length || !sp){ pptClearSpot(); pptSpotLast = [i, total]; return; }
-  const box = cues[Math.min(cues.length-1, Math.floor(i*cues.length/Math.max(1,total)))];
+  /* one cue per narration sentence; older/other-length lists fall back to proportional mapping */
+  const box = cues.length === total ? cues[i] : cues[Math.min(cues.length-1, Math.floor(i*cues.length/Math.max(1,total)))];
   const g = pptPlaceLayer(); if(!g || !box){ return; }
   const k = g.w/1920, pad = 10;
   let x1 = box[0]*k - pad, y1 = box[1]*k - pad, x2 = (box[0]+box[2])*k + pad, y2 = (box[1]+box[3])*k + pad;
