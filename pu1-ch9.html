@@ -696,9 +696,10 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
 .ppt-scene .act .ec-x{animation:ecX 3.6s ease-in-out infinite;}
 .ppt-scene .act .ec-y{animation:ecY 3.6s ease-in-out infinite;}
 .ppt-scene .act .ec-xb,.ppt-scene .act .ec-yb{animation:ecOut 3.6s ease-in-out infinite;}
-.ppt-scene .act .ec-dbl,.ppt-scene .act .ec-dl{animation:ecIn 3.6s ease-in-out infinite;}
-@keyframes ecX{0%,20%{transform:translate(0,0)}55%,90%{transform:translate(110px,-66px)}100%{transform:translate(0,0)}}
-@keyframes ecY{0%,20%{transform:translate(0,0)}55%,90%{transform:translate(-170px,-66px)}100%{transform:translate(0,0)}}
+.ppt-scene .act .ec-dbl,.ppt-scene .act .ec-dl,.ppt-scene .act .ec-xyb{animation:ecIn 3.6s ease-in-out infinite;}
+.ppt-scene .ec-xyb{opacity:0;}
+@keyframes ecX{0%,20%{transform:translate(0,0)}55%,90%{transform:translate(60px,-72px)}100%{transform:translate(0,0)}}
+@keyframes ecY{0%,20%{transform:translate(0,0)}35%{transform:translate(-60px,-72px)}55%,90%{transform:translate(-260px,-72px)}100%{transform:translate(0,0)}}
 /* 5 Isomerase: same atoms, the group shifts to a new position */
 .ppt-scene .act .ec-grp{animation:ecIso 3.6s ease-in-out infinite;}
 .ppt-scene .act .ec-il{animation:ecIn 3.6s ease-in-out infinite;}
@@ -707,8 +708,156 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
 .ppt-scene .act .ec-la{animation:ecLA 3.4s ease-in-out infinite;}
 .ppt-scene .act .ec-lb{animation:ecLB 3.4s ease-in-out infinite;}
 .ppt-scene .act .ec-lbond,.ppt-scene .act .ec-ll{animation:ecIn 3.4s ease-in-out infinite;}
-@keyframes ecLA{0%,15%{transform:translate(0,0)}50%,90%{transform:translate(55px,0)}100%{transform:translate(0,0)}}
-@keyframes ecLB{0%,15%{transform:translate(0,0)}50%,90%{transform:translate(-60px,0)}100%{transform:translate(0,0)}}
+@keyframes ecLA{0%,15%{transform:translate(0,0)}50%,90%{transform:translate(38px,0)}100%{transform:translate(0,0)}}
+@keyframes ecLB{0%,15%{transform:translate(0,0)}50%,90%{transform:translate(-48px,0)}100%{transform:translate(0,0)}}
+.ppt-scene .s3-t{font-family:Inter,"Noto Sans Kannada","Noto Sans Devanagari",system-ui,sans-serif;font-weight:800;}
+.ppt-scene.full{left:0!important;top:0!important;width:100%!important;height:100%!important;}
+/* ---------- slide 57 ---------- */
+.ppt-scene .s57-s{transform:translate(470px,290px);}
+.ppt-scene .s57-p1{transform:translate(749px,278px);}
+.ppt-scene .s57-p2{transform:translate(771px,278px);}
+.ppt-scene .s57-g,.ppt-scene .s57-ts,.ppt-scene .s57-p1,.ppt-scene .s57-p2,.ppt-scene .s57-hill,.ppt-scene .s57-grn,.ppt-scene .s57-eag{opacity:0;}
+.ppt-scene .s57-s,.ppt-scene .s57-p1,.ppt-scene .s57-p2,.ppt-scene .s57-hill{transition:transform 1.5s cubic-bezier(.3,.7,.25,1),opacity .6s ease;}
+.ppt-scene[data-step="rest"] .s57-stage,.ppt-scene[data-step="rest"] .s57-hill{opacity:0;}
+.ppt-scene .s57-stage{transition:opacity .5s ease;}
+.ppt-scene[data-step="0"] .s57-g0{opacity:1;}
+.ppt-scene[data-step="0"] .s57-s{animation:s57Bob 1.6s ease-in-out infinite;}
+@keyframes s57Bob{0%,100%{transform:translate(470px,290px)}50%{transform:translate(480px,276px)}}
+/* 1: substrate docks -> ES complex */
+.ppt-scene[data-step="1"] .s57-s,.ppt-scene[data-step="2"] .s57-s,.ppt-scene[data-step="5"] .s57-s,.ppt-scene[data-step="6"] .s57-s,.ppt-scene[data-step="7"] .s57-s,.ppt-scene[data-step="8"] .s57-s{transform:translate(760px,278px);}
+.ppt-scene[data-step="1"] .s57-g0{animation:s57Out 1.6s ease forwards;}
+.ppt-scene[data-step="1"] .s57-g1{animation:s57In .8s ease .9s both;}
+@keyframes s57Out{0%{opacity:1}100%{opacity:0}}
+@keyframes s57In{from{opacity:0}to{opacity:1}}
+/* 2: short-lived complex flickers */
+.ppt-scene[data-step="2"] .s57-g1{opacity:1;}
+.ppt-scene[data-step="2"] .s57-e,.ppt-scene[data-step="2"] .s57-s{animation:s57Flick .5s ease-in-out infinite;}
+@keyframes s57Flick{0%,100%{opacity:1}50%{opacity:.45}}
+/* 3: substrate becomes products inside (EP); 4 / 3r: products released, enzyme free */
+.ppt-scene[data-step="3"] .s57-s,.ppt-scene[data-step="3r"] .s57-s,.ppt-scene[data-step="4"] .s57-s{transform:translate(760px,278px);opacity:0;}
+.ppt-scene[data-step="3"] .s57-p1,.ppt-scene[data-step="3"] .s57-p2,.ppt-scene[data-step="3r"] .s57-p1,.ppt-scene[data-step="3r"] .s57-p2{opacity:1;}
+.ppt-scene[data-step="3"] .s57-g2,.ppt-scene[data-step="3r"] .s57-g2{animation:s57In .6s ease both;}
+.ppt-scene[data-step="3r"] .s57-g2{animation:s57In .6s ease both,s57Out .6s ease 2s forwards;}
+.ppt-scene[data-step="3r"] .s57-g3{animation:s57In .6s ease 2s both;}
+.ppt-scene[data-step="3r"] .s57-p1{animation:s57RelL 1.4s ease-in-out 2s forwards;}
+.ppt-scene[data-step="3r"] .s57-p2{animation:s57RelR 1.4s ease-in-out 2s forwards;}
+.ppt-scene[data-step="4"] .s57-g3{opacity:1;}
+.ppt-scene[data-step="4"] .s57-p1{opacity:1;animation:s57RelL 1.4s ease-in-out forwards;}
+.ppt-scene[data-step="4"] .s57-p2{opacity:1;animation:s57RelR 1.4s ease-in-out forwards;}
+@keyframes s57RelL{from{transform:translate(749px,278px)}to{transform:translate(950px,210px)}}
+@keyframes s57RelR{from{transform:translate(771px,278px)}to{transform:translate(1030px,250px)}}
+/* 5-6: transition state: substrate strained and unstable */
+.ppt-scene[data-step="5"] .s57-sub,.ppt-scene[data-step="6"] .s57-sub,.ppt-scene[data-step="7"] .s57-sub,.ppt-scene[data-step="8"] .s57-sub{opacity:0;}
+.ppt-scene[data-step="5"] .s57-ts,.ppt-scene[data-step="6"] .s57-ts,.ppt-scene[data-step="7"] .s57-ts,.ppt-scene[data-step="8"] .s57-ts{opacity:1;}
+.ppt-scene[data-step="5"] .s57-ts{animation:s57Stretch 1.2s ease-in-out infinite;}
+.ppt-scene[data-step="6"] .s57-ts{animation:s57Shake .18s linear infinite;}
+@keyframes s57Stretch{0%,100%{transform:scale(1,1)}50%{transform:scale(1.25,.85)}}
+@keyframes s57Shake{0%{transform:translate(-4px,0) rotate(-4deg)}50%{transform:translate(4px,0) rotate(4deg)}100%{transform:translate(-4px,0) rotate(-4deg)}}
+/* 7: the energy hill to reach it = activation energy; 8: enzyme lowers it */
+.ppt-scene[data-step="7"] .s57-hill,.ppt-scene[data-step="8"] .s57-hill{opacity:1;}
+.ppt-scene[data-step="7"] .s57-ear{animation:s57Pulse 1s ease-in-out infinite;}
+.ppt-scene[data-step="8"] .s57-red,.ppt-scene[data-step="8"] .s57-ear{opacity:.35;}
+.ppt-scene[data-step="8"] .s57-grn,.ppt-scene[data-step="8"] .s57-eag{animation:s57In .9s ease both;}
+@keyframes s57Pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.ppt-scene .s57-ts{transform-box:fill-box;transform-origin:center;}
+/* ---------- slide 58 ---------- */
+.ppt-scene .s58-axes,.ppt-scene .s58-ear,.ppt-scene .s58-eag,.ppt-scene .s58-fast{opacity:0;transition:opacity .6s ease;}
+.ppt-scene[data-step="0"] .s58-axes{opacity:1;}
+.ppt-scene[data-step="0"] .s58-ay{stroke-dasharray:540;animation:s58Draw 1.2s ease both;}
+.ppt-scene[data-step="0"] .s58-ax{stroke-dasharray:980;animation:s58Draw 1.2s ease 1.3s both;}
+.ppt-scene[data-step="0"] path.s58-ay,.ppt-scene[data-step="0"] path.s58-ax{animation:s57In .4s ease both;}
+.ppt-scene[data-step="0"] path.s58-ax{animation-delay:2.4s;}
+@keyframes s58Draw{from{stroke-dashoffset:980}to{stroke-dashoffset:0}}
+.ppt-scene[data-step="2"] .s58-ear,.ppt-scene[data-step="4"] .s58-ear,.ppt-scene[data-step="5"] .s58-ear,.ppt-scene[data-step="6"] .s58-ear{opacity:1;}
+.ppt-scene[data-step="4"] .s58-eag,.ppt-scene[data-step="5"] .s58-eag,.ppt-scene[data-step="6"] .s58-eag{opacity:1;}
+.ppt-scene[data-step="2"] .s58-ear,.ppt-scene[data-step="4"] .s58-eag{animation:s57Pulse 1s ease-in-out 3;}
+.ppt-scene[data-step="6"] .s58-fast{opacity:1;animation:s57Pulse .7s ease-in-out infinite;}
+/* ---------- slide 59 ---------- */
+.ppt-scene .s59-n{opacity:.35;transition:opacity .4s ease;}
+.ppt-scene .s59-jl,.ppt-scene .s59-jr{transition:transform .8s ease;transform-box:view-box;}
+.ppt-scene .s59-s{transform:translate(0px,-170px);opacity:0;transition:transform 1.3s cubic-bezier(.3,.7,.25,1),opacity .5s ease;}
+.ppt-scene .s59-p1,.ppt-scene .s59-p2{opacity:0;}
+.ppt-scene .s59-p1{transform:translate(-11px,-44px);}.ppt-scene .s59-p2{transform:translate(11px,-44px);}
+.ppt-scene[data-step="0"] .s59-ring{stroke-dasharray:1060;animation:s58Draw 1.6s ease both;}
+.ppt-scene[data-step="rest"] .s59-n{opacity:1;}
+.ppt-scene[data-step="1"] .s59-n1,.ppt-scene[data-step="2"] .s59-n2,.ppt-scene[data-step="3"] .s59-n2,.ppt-scene[data-step="4"] .s59-n3,.ppt-scene[data-step="5"] .s59-n4{opacity:1;}
+.ppt-scene[data-step="1"] .s59-s,.ppt-scene[data-step="2"] .s59-s,.ppt-scene[data-step="3"] .s59-s{transform:translate(0px,-44px);opacity:1;}
+/* induced fit: the enzyme closes in around the substrate */
+.ppt-scene[data-step="2"] .s59-jl,.ppt-scene[data-step="3"] .s59-jl{transform:rotate(9deg);transform-origin:0px 78px;}
+.ppt-scene[data-step="2"] .s59-jr,.ppt-scene[data-step="3"] .s59-jr{transform:rotate(-9deg);transform-origin:0px 78px;}
+.ppt-scene[data-step="3"] .s59-s{animation:s57Flick .9s ease-in-out infinite;}
+/* bonds break -> EP */
+.ppt-scene[data-step="4"] .s59-s{transform:translate(0px,-44px);opacity:0;}
+.ppt-scene[data-step="4"] .s59-p1,.ppt-scene[data-step="4"] .s59-p2{opacity:1;}
+.ppt-scene[data-step="4"] .s59-p1{animation:s59Crack .6s ease both;}
+.ppt-scene[data-step="4"] .s59-p2{animation:s59Crack2 .6s ease both;}
+@keyframes s59Crack{from{transform:translate(0px,-44px)}to{transform:translate(-14px,-44px) rotate(-8deg)}}
+@keyframes s59Crack2{from{transform:translate(0px,-44px)}to{transform:translate(14px,-44px) rotate(8deg)}}
+/* product released */
+.ppt-scene[data-step="5"] .s59-p1{opacity:1;animation:s59OutL 1.4s ease-in-out forwards;}
+.ppt-scene[data-step="5"] .s59-p2{opacity:1;animation:s59OutR 1.4s ease-in-out forwards;}
+@keyframes s59OutL{from{transform:translate(-14px,-44px)}to{transform:translate(-120px,-200px);opacity:0}}
+@keyframes s59OutR{from{transform:translate(14px,-44px)}to{transform:translate(120px,-200px);opacity:0}}
+/* 6-7: free enzyme takes the next substrate: the whole cycle keeps running, enzyme unchanged */
+.ppt-scene[data-step="6"] .s59-s,.ppt-scene[data-step="7"] .s59-s{animation:s59LoopS 4s ease-in-out infinite;}
+.ppt-scene[data-step="6"] .s59-jl,.ppt-scene[data-step="7"] .s59-jl{transform-origin:0px 78px;animation:s59LoopL 4s ease-in-out infinite;}
+.ppt-scene[data-step="6"] .s59-jr,.ppt-scene[data-step="7"] .s59-jr{transform-origin:0px 78px;animation:s59LoopR 4s ease-in-out infinite;}
+.ppt-scene[data-step="6"] .s59-p1,.ppt-scene[data-step="7"] .s59-p1{animation:s59LoopP1 4s ease-in-out infinite;}
+.ppt-scene[data-step="6"] .s59-p2,.ppt-scene[data-step="7"] .s59-p2{animation:s59LoopP2 4s ease-in-out infinite;}
+.ppt-scene[data-step="6"] .s59-n1,.ppt-scene[data-step="7"] .s59-n1{animation:s59N1 4s linear infinite;}
+.ppt-scene[data-step="6"] .s59-n2,.ppt-scene[data-step="7"] .s59-n2{animation:s59N2 4s linear infinite;}
+.ppt-scene[data-step="6"] .s59-n3,.ppt-scene[data-step="7"] .s59-n3{animation:s59N3 4s linear infinite;}
+.ppt-scene[data-step="6"] .s59-n4,.ppt-scene[data-step="7"] .s59-n4{animation:s59N4 4s linear infinite;}
+.ppt-scene[data-step="7"] .s59-ring{animation:s57Pulse 1.2s ease-in-out infinite;}
+@keyframes s59LoopS{0%{transform:translate(0px,-170px);opacity:0}8%{opacity:1}25%,55%{transform:translate(0px,-44px);opacity:1}57%,100%{transform:translate(0px,-44px);opacity:0}}
+@keyframes s59LoopL{0%,25%{transform:none}35%,62%{transform:rotate(9deg)}72%,100%{transform:none}}
+@keyframes s59LoopR{0%,25%{transform:none}35%,62%{transform:rotate(-9deg)}72%,100%{transform:none}}
+@keyframes s59LoopP1{0%,55%{opacity:0;transform:translate(-11px,-44px)}57%{opacity:1;transform:translate(-14px,-44px)}72%{opacity:1;transform:translate(-14px,-44px)}95%{opacity:0;transform:translate(-120px,-200px)}100%{opacity:0}}
+@keyframes s59LoopP2{0%,55%{opacity:0;transform:translate(11px,-44px)}57%{opacity:1;transform:translate(14px,-44px)}72%{opacity:1;transform:translate(14px,-44px)}95%{opacity:0;transform:translate(120px,-200px)}100%{opacity:0}}
+@keyframes s59N1{0%,30%{opacity:1}31%,100%{opacity:.35}}
+@keyframes s59N2{0%,30%{opacity:.35}31%,55%{opacity:1}56%,100%{opacity:.35}}
+@keyframes s59N3{0%,55%{opacity:.35}56%,72%{opacity:1}73%,100%{opacity:.35}}
+@keyframes s59N4{0%,72%{opacity:.35}73%,98%{opacity:1}99%,100%{opacity:.35}}
+/* ---------- slide 60 ---------- */
+.ppt-scene .f60-trace{opacity:0;}
+.ppt-scene[data-step="0"] .f60-trace{opacity:.8;stroke-dasharray:1100;animation:f60Draw 3s ease both;}
+@keyframes f60Draw{from{stroke-dashoffset:1100}to{stroke-dashoffset:0}}
+.ppt-scene .f60-unf,.ppt-scene .f60-snow,.ppt-scene .f60-rev{opacity:0;transition:opacity .6s ease;}
+.ppt-scene .f60-fold{transition:opacity .6s ease,fill .6s ease;}
+.ppt-scene [data-m="hot"] .f60-fold{opacity:0;}
+.ppt-scene [data-m="hot"] .f60-unf{opacity:1;animation:f60Wig .5s ease-in-out infinite;}
+.ppt-scene [data-m="cold"] .f60-fold{fill:#cfe3f7;}
+.ppt-scene [data-m="cold"] .f60-snow{opacity:1;}
+.ppt-scene[data-step="4"] .f60-rev{opacity:1;}
+.ppt-scene[data-step="rest"] .f60-e1,.ppt-scene[data-step="rest"] .f60-e2{opacity:0;}
+@keyframes f60Wig{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+/* ---------- slide 61 ---------- */
+.ppt-scene .f61-trace,.ppt-scene .f61-vmax,.ppt-scene .f61-km,.ppt-scene .f61-w{opacity:0;transition:opacity .5s ease;}
+.ppt-scene .f61-s{transition:opacity .3s ease;}
+.ppt-scene[data-step="rest"] .f61-panel{opacity:0;}
+.ppt-scene[data-step="0"] .f61-trace{opacity:.8;stroke-dasharray:900;animation:f60Draw 2.6s ease both;}
+.ppt-scene[data-step="3"] .f61-vmax,.ppt-scene[data-step="4"] .f61-vmax,.ppt-scene[data-step="5"] .f61-vmax{opacity:1;animation:s57Pulse 1s ease-in-out infinite;}
+.ppt-scene[data-step="5"] .f61-w{opacity:1;animation:f61Jig .6s ease-in-out infinite;}
+.ppt-scene[data-step="6"] .f61-km{opacity:1;animation:s57Pulse 1s ease-in-out infinite;}
+@keyframes f61Jig{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+/* ---------- slide 62 ---------- */
+.ppt-scene .f62-s{transform:translate(1320px,710px);}
+.ppt-scene .f62-i{transform:translate(1720px,710px);}
+.ppt-scene .f62-s,.ppt-scene .f62-i{transition:transform 1.4s cubic-bezier(.3,.7,.25,1);}
+.ppt-scene .f62-x,.ppt-scene .f62-same{opacity:0;transition:opacity .5s ease;}
+.ppt-scene[data-step="rest"] .f62-s,.ppt-scene[data-step="rest"] .f62-i{opacity:0;}
+.ppt-scene[data-step="1"] .f62-same{opacity:1;}
+.ppt-scene[data-step="1"] .f62-s{transform:translate(1440px,710px);}
+.ppt-scene[data-step="1"] .f62-i{transform:translate(1600px,710px);}
+.ppt-scene[data-step="2"] .f62-s{animation:f62RaceS 2.6s ease-in-out infinite;}
+.ppt-scene[data-step="2"] .f62-i{animation:f62RaceI 2.6s ease-in-out infinite;}
+@keyframes f62RaceS{0%,100%{transform:translate(1320px,710px)}50%{transform:translate(1480px,750px)}}
+@keyframes f62RaceI{0%,100%{transform:translate(1720px,710px)}50%{transform:translate(1560px,750px)}}
+.ppt-scene[data-step="3"] .f62-i,.ppt-scene[data-step="4"] .f62-i,.ppt-scene[data-step="5"] .f62-i{transform:translate(1520px,788px);}
+.ppt-scene[data-step="3"] .f62-s,.ppt-scene[data-step="4"] .f62-s,.ppt-scene[data-step="5"] .f62-s{animation:f62Bounce 2s ease-in-out infinite;}
+@keyframes f62Bounce{0%{transform:translate(1320px,650px)}45%{transform:translate(1490px,720px)}60%{transform:translate(1450px,690px) rotate(-20deg)}100%{transform:translate(1320px,650px)}}
+.ppt-scene[data-step="3"] .f62-x,.ppt-scene[data-step="4"] .f62-x,.ppt-scene[data-step="5"] .f62-x{opacity:1;}
+.ppt-scene[data-step="4"] .f62-i{animation:s57Pulse 1s ease-in-out infinite;}
 @media (prefers-reduced-motion: reduce){ .ppt-scene *{animation:none!important;transition:none!important;} }
 .fs-btn{position:absolute;pointer-events:auto;background:rgba(20,20,20,.6);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:50%;width:46px;height:46px;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .fs-btn:active{background:rgba(20,20,20,.85);}
@@ -2908,7 +3057,8 @@ function pptEcPanel(kind, L, EQY){
     <line class="ec-dbl" x1="260" y1="120" x2="320" y2="120" stroke="#c0392b" stroke-width="5"/>
     <line class="ec-yb" x1="380" y1="110" x2="460" y2="110" stroke="#1d2a26" stroke-width="5"/>
     <g class="ec-y">${pptEcAtom(490,110,30,'#c9b8f0','Y','',24)}</g>
-    <g class="ec-dl">${T(290,152,L.dbl,'',24,'#c0392b')}</g>
+    <line class="ec-xyb" x1="180" y1="38" x2="200" y2="38" stroke="#1d2a26" stroke-width="5"/>
+    <g class="ec-dl">${T(500,58,L.dbl,'',26,'#c0392b')}</g>
     ${T(290,EQY,'X–C–C–Y → X–Y + C=C','ec-eq',40)}`;
   if(kind === 'is') return `
     <polyline points="150,138 210,98 270,138 330,98 390,138" fill="none" stroke="#1d2a26" stroke-width="6" stroke-linejoin="round"/>
@@ -2920,7 +3070,7 @@ function pptEcPanel(kind, L, EQY){
     <g class="ec-la"><rect x="110" y="62" width="110" height="64" rx="12" fill="#bfe6dc" stroke="#1d2a26" stroke-width="3"/>${T(165,106,'A','',30)}</g>
     <g class="ec-lb"><rect x="350" y="62" width="110" height="64" rx="12" fill="#f6d9a8" stroke="#1d2a26" stroke-width="3"/>${T(405,106,'B','',30)}</g>
     <line class="ec-lbond" x1="262" y1="94" x2="296" y2="94" stroke="#0f7a68" stroke-width="8"/>
-    <g class="ec-ll">${T(285,40,L.join+': C–O · C–S · C–N','',25,'#0f7a68')}</g>
+    <g class="ec-ll">${T(283,40,'C–O · C–S · C–N','',27,'#0f7a68')}</g>
     ${T(290,EQY,'A + B → A–B','ec-eq',40)}`;
   return '';
 }
@@ -2938,17 +3088,227 @@ function pptSceneEcStep(el, s){
   el.querySelectorAll('.ec-p').forEach(p=>p.classList.toggle('act', String(p.dataset.p) === String(s)));
   el.classList.toggle('focus', s !== 'rest');
 }
+/* ---- More live diagrams (full-slide overlays drawn in slide coordinates 1920x1080) ---- */
+let pptSceneRafs = [];
+function pptSceneStopRaf(){ pptSceneRafs.forEach(cancelAnimationFrame); pptSceneRafs = []; }
+function pptSceneRaf(fn){ const t0 = performance.now(); const tick = now => { if(fn(now - t0) !== false){ pptSceneRafs.push(requestAnimationFrame(tick)); } }; pptSceneRafs.push(requestAnimationFrame(tick)); }
+const PPT_SC_ENZ = (x, y, s, cls)=>`<g class="${cls||''}" transform="translate(${x},${y}) scale(${s||1})">
+  <path d="M-95,-10 C-120,-75 -50,-92 -22,-62 L-22,-22 L22,-22 L22,-62 C50,-92 120,-75 95,-10 C80,60 40,78 0,78 C-40,78 -80,60 -95,-10 Z" fill="#cfeee7" stroke="#0f7a68" stroke-width="6" stroke-linejoin="round"/>
+  <text x="0" y="40" text-anchor="middle" class="s3-t" style="font-size:30px" fill="#0f6e5e">E</text></g>`;
+const PPT_SC_SUB = (cls, lab, fill)=>`<g class="${cls}"><rect x="-22" y="-22" width="44" height="44" rx="8" fill="${fill||'#f6a98a'}" stroke="#1d2a26" stroke-width="4"/><text x="0" y="11" text-anchor="middle" class="s3-t" style="font-size:28px">${lab}</text></g>`;
+
+/* Slide 57: E + S ⇌ ES → EP → E + P, transition state and activation energy */
+const PPT_S57_BOX = { en:[[401,414,184,108],[673,414,342,108],[1106,414,132,108],[1335,414,184,108]],
+                      kn:[[431,414,187,109],[702,414,283,109],[1079,415,130,108],[1304,414,184,114]],
+                      hi:[[446,415,187,115],[718,414,251,116],[1063,415,131,114],[1291,415,183,108]] };
+function pptSceneEnzAction(){
+  const B = PPT_S57_BOX[pptLang] || PPT_S57_BOX.en;
+  const glow = B.map((b,i)=>`<rect class="s57-g s57-g${i}" x="${b[0]-6}" y="${b[1]-6}" width="${b[2]+12}" height="${b[3]+12}" rx="16" fill="none" stroke="#e0a800" stroke-width="7"/>`).join('');
+  return `<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  ${glow}
+  <g class="s57-stage">
+    ${PPT_SC_ENZ(760, 300, 1, 's57-e')}
+    <g class="s57-s">${PPT_SC_SUB('s57-sub','S')}
+      <g class="s57-ts"><rect x="-30" y="-26" width="60" height="52" rx="10" fill="#ff7a59" stroke="#b03a2e" stroke-width="4"/><text x="0" y="11" text-anchor="middle" class="s3-t" style="font-size:28px">S‡</text></g>
+    </g>
+    <g class="s57-p1">${PPT_SC_SUB('','P','#ffd27a')}</g>
+    <g class="s57-p2">${PPT_SC_SUB('','P','#ffd27a')}</g>
+  </g>
+  <g class="s57-hill">
+    <line x1="1130" y1="390" x2="1540" y2="390" stroke="#1d2a26" stroke-width="3"/>
+    <path class="s57-red" d="M1140,350 C1230,350 1250,215 1300,215 C1350,215 1380,370 1520,370" fill="none" stroke="#c0392b" stroke-width="7"/>
+    <path class="s57-grn" d="M1140,350 C1230,350 1250,290 1300,290 C1350,290 1380,370 1520,370" fill="none" stroke="#0f7a68" stroke-width="7"/>
+    <g class="s57-ear"><line x1="1270" y1="350" x2="1270" y2="222" stroke="#c0392b" stroke-width="4"/><path d="M1260,234 L1270,214 L1280,234 Z" fill="#c0392b"/><text x="1225" y="300" class="s3-t" style="font-size:28px" fill="#c0392b">Ea</text></g>
+    <g class="s57-eag"><line x1="1330" y1="350" x2="1330" y2="296" stroke="#0f7a68" stroke-width="4"/><path d="M1320,306 L1330,288 L1340,306 Z" fill="#0f7a68"/><text x="1342" y="334" class="s3-t" style="font-size:28px" fill="#0f7a68">Ea</text></g>
+  </g></svg>`;
+}
+
+/* Slide 58: molecules climbing the energy hill, with and without the enzyme */
+const PPT_S58_RED = 'M225,678 L392,678 C520,678 560,358 643,358 C726,358 780,750 900,750 L1143,750';
+const PPT_S58_GRN = 'M225,678 L392,678 C520,678 560,528 643,528 C726,528 780,750 900,750 L1143,750';
+function pptSceneEnergy(){
+  return `<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <path id="s58r" d="${PPT_S58_RED}" fill="none" stroke="none"/><path id="s58g" d="${PPT_S58_GRN}" fill="none" stroke="none"/>
+  <g class="s58-axes"><line class="s58-ay" x1="203" y1="838" x2="203" y2="330" stroke="#e0a800" stroke-width="10" stroke-linecap="round"/><path class="s58-ay" d="M188,346 L203,316 L218,346 Z" fill="#e0a800"/>
+    <line class="s58-ax" x1="203" y1="838" x2="1160" y2="838" stroke="#e0a800" stroke-width="10" stroke-linecap="round"/><path class="s58-ax" d="M1146,823 L1176,838 L1146,853 Z" fill="#e0a800"/></g>
+  <g class="s58-ear"><line x1="610" y1="678" x2="610" y2="372" stroke="#c0392b" stroke-width="5" stroke-dasharray="10 7"/><path d="M598,388 L610,362 L622,388 Z" fill="#c0392b"/><line x1="580" y1="678" x2="640" y2="678" stroke="#c0392b" stroke-width="4"/><text x="520" y="530" class="s3-t" style="font-size:34px" fill="#c0392b">Ea</text></g>
+  <g class="s58-eag"><line x1="676" y1="678" x2="676" y2="542" stroke="#0f7a68" stroke-width="5" stroke-dasharray="10 7"/><path d="M664,558 L676,532 L688,558 Z" fill="#0f7a68"/><text x="690" y="626" class="s3-t" style="font-size:34px" fill="#0f7a68">Ea</text></g>
+  <g class="s58-dots"></g>
+  <text class="s58-fast s3-t" x="930" y="715" style="font-size:36px" fill="#b8860b">⚡ ⚡ ⚡</text></svg>`;
+}
+function pptSceneEnergyStep(el, s){
+  pptSceneStopRaf();
+  el.setAttribute('data-step', String(s));
+  const dots = el.querySelector('.s58-dots'); if(!dots) return;
+  dots.innerHTML = '';
+  const red = el.querySelector('#s58r'), grn = el.querySelector('#s58g');
+  const runs = [];   /* [path, period ms, phase, colour, fails?] */
+  if(s === 1 || s === 2) runs.push([red, 6000, 0, '#e67e22', true]);
+  if(s === 3 || s === 4) runs.push([grn, 3200, 0, '#e67e22', false]);
+  if(s === 5 || s === 6){ const p = s === 6 ? 1500 : 2200; for(let k=0;k<6;k++) runs.push([grn, p, k/6, '#e67e22', false]); runs.push([red, 6000, 0.3, '#e67e22', true]); }
+  if(!runs.length) return;
+  const els = runs.map(r=>{ const c = document.createElementNS('http://www.w3.org/2000/svg','circle'); c.setAttribute('r','17'); c.setAttribute('fill', r[3]); c.setAttribute('stroke','#1d2a26'); c.setAttribute('stroke-width','4'); dots.appendChild(c); return c; });
+  const lens = runs.map(r=>r[0].getTotalLength());
+  pptSceneRaf(t=>{
+    runs.forEach((r,i)=>{
+      let f = ((t / r[1]) + r[2]) % 1, L = lens[i], d;
+      if(r[4]){ /* without enzyme most molecules can't make it over: climb to near the top, roll back */
+        const up = 0.62; d = f < 0.6 ? (f/0.6)*up*L : (up - ((f-0.6)/0.4)*(up - 0.12))*L; }
+      else d = f * L;
+      const pt = r[0].getPointAtLength(d); els[i].setAttribute('cx', pt.x); els[i].setAttribute('cy', pt.y - 20);
+      els[i].setAttribute('opacity', f > 0.96 ? String((1-f)/0.04) : f < 0.03 ? String(f/0.03) : '1');
+    });
+  });
+}
+
+/* Slide 59: catalytic cycle acted out by one enzyme, step numbers lighting round the cycle */
+function pptSceneCycle(){
+  const cx = 1700, cy = 500, R = 168;
+  const nums = [[-90,'1'],[0,'2'],[90,'3'],[180,'4']].map(([a,n],i)=>{ const x = cx + R*Math.cos(a*Math.PI/180), y = cy + R*Math.sin(a*Math.PI/180);
+    return `<g class="s59-n s59-n${i+1}"><circle cx="${x}" cy="${y}" r="24" fill="#0f7a68"/><text x="${x}" y="${y+10}" text-anchor="middle" class="s3-t" style="font-size:28px" fill="#fff">${n}</text></g>`; }).join('');
+  return `<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="s59a" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#b8860b"/></marker></defs>
+  <circle class="s59-ring" cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="#d4a017" stroke-width="5" stroke-dasharray="40 18"/>
+  ${nums}
+  <g transform="translate(${cx},${cy+40}) scale(.92)">
+    <g class="s59-jl"><path d="M-95,-10 C-120,-75 -50,-92 -22,-62 L-22,-22 L0,-22 L0,78 C-40,78 -80,60 -95,-10 Z" fill="#cfeee7" stroke="#0f7a68" stroke-width="6" stroke-linejoin="round"/></g>
+    <g class="s59-jr"><path d="M95,-10 C120,-75 50,-92 22,-62 L22,-22 L0,-22 L0,78 C40,78 80,60 95,-10 Z" fill="#cfeee7" stroke="#0f7a68" stroke-width="6" stroke-linejoin="round"/></g>
+    <line x1="0" y1="-20" x2="0" y2="76" stroke="#cfeee7" stroke-width="8"/>
+    <text x="0" y="45" text-anchor="middle" class="s3-t" style="font-size:30px" fill="#0f6e5e">E</text>
+    <g class="s59-s">${PPT_SC_SUB('','S')}</g>
+    <g class="s59-p1">${PPT_SC_SUB('','P','#ffd27a')}</g><g class="s59-p2">${PPT_SC_SUB('','P','#ffd27a')}</g>
+  </g></svg>`;
+}
+/* ---- Enzyme factors: temperature & pH, substrate concentration, competitive inhibition ---- */
+const PPT_F_LBL = {
+  en:{opt:'Optimum', den:'Denatured', ina:'Inactive', rev:'Reversible', busy:'All busy = saturated', more:'Extra substrate waits', half:'Half busy', blocked:'Blocked!', act:'Activity ↓', hot:'Hot', cold:'Cold'},
+  kn:{opt:'ಅನುಕೂಲತಮ', den:'ಸ್ವಭಾವಗೆಟ್ಟಿದೆ', ina:'ನಿಷ್ಕ್ರಿಯ', rev:'ಹಿಂತಿರುಗಬಲ್ಲದು', busy:'ಎಲ್ಲವೂ ನಿರತ = ಸಂತೃಪ್ತ', more:'ಹೆಚ್ಚುವರಿ ಸಬ್‌ಸ್ಟ್ರೇಟ್ ಕಾಯುತ್ತದೆ', half:'ಅರ್ಧ ನಿರತ', blocked:'ತಡೆಯಲಾಗಿದೆ!', act:'ಚಟುವಟಿಕೆ ↓', hot:'ಬಿಸಿ', cold:'ಶೀತ'},
+  hi:{opt:'इष्टतम', den:'विकृत', ina:'निष्क्रिय', rev:'उत्क्रमणीय', busy:'सब व्यस्त = संतृप्त', more:'अतिरिक्त क्रियाधार प्रतीक्षा में', half:'आधे व्यस्त', blocked:'अवरुद्ध!', act:'सक्रियता ↓', hot:'गर्म', cold:'ठंडा'}
+};
+const pptFL = ()=>PPT_F_LBL[pptLang] || PPT_F_LBL.en;
+const PPT_ENZ_PATH = 'M-95,-10 C-120,-75 -50,-92 -22,-62 L-22,-22 L22,-22 L22,-62 C50,-92 120,-75 95,-10 C80,60 40,78 0,78 C-40,78 -80,60 -95,-10 Z';
+
+/* Slide 60: a dot rides the bell curve; a small enzyme shows what happens to its shape */
+const pptBell = (x, cx)=>760 - 340*Math.exp(-Math.pow((x-cx)/110, 2));
+function pptSceneTempPH(){
+  const L = pptFL();
+  const enz = (x, y, cls)=>`<g class="${cls}" transform="translate(${x},${y}) scale(.5)">
+    <path class="f60-fold" d="${PPT_ENZ_PATH}" fill="#cfeee7" stroke="#0f7a68" stroke-width="7" stroke-linejoin="round"/>
+    <path class="f60-unf" d="M-110,10 C-80,-40 -60,50 -30,0 C0,-50 20,50 50,0 C80,-50 100,40 120,0" fill="none" stroke="#c0392b" stroke-width="10" stroke-linecap="round"/>
+    <text class="f60-snow s3-t" x="0" y="20" text-anchor="middle" style="font-size:60px" fill="#1f6f9c">❄</text></g>`;
+  return `<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+    <path class="f60-trace f60-tr1" d="${pptBellPath(522)}" fill="none" stroke="#f5b400" stroke-width="12" stroke-linecap="round"/>
+    <path class="f60-trace f60-tr2" d="${pptBellPath(1416)}" fill="none" stroke="#f5b400" stroke-width="12" stroke-linecap="round"/>
+    ${enz(868, 620, 'f60-e1')}${enz(1764, 620, 'f60-e2')}
+    <text class="f60-lab f60-lab1 s3-t" x="868" y="700" text-anchor="middle" style="font-size:28px"></text>
+    <text class="f60-lab f60-lab2 s3-t" x="1764" y="700" text-anchor="middle" style="font-size:28px"></text>
+    <g class="f60-rev"><path d="M330,700 C330,560 430,470 500,440" fill="none" stroke="#1f6f9c" stroke-width="6" stroke-dasharray="12 8" marker-end="url(#f60a)"/></g>
+    <defs><marker id="f60a" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#1f6f9c"/></marker></defs>
+    <text class="f60-th s3-t" x="0" y="0" text-anchor="middle" style="font-size:44px">🌡️</text>
+    <circle class="f60-d1" r="20" fill="#e67e22" stroke="#1d2a26" stroke-width="5" cx="-50" cy="-50"/>
+    <circle class="f60-d2" r="20" fill="#e67e22" stroke="#1d2a26" stroke-width="5" cx="-50" cy="-50"/>
+  </svg>`;
+}
+function pptBellPath(cx){ let d=''; for(let x=cx-232; x<=cx+238; x+=6) d += (d?'L':'M')+x+','+pptBell(x,cx).toFixed(1); return d; }
+function pptSceneTempPHStep(el, s){
+  pptSceneStopRaf(); el.setAttribute('data-step', String(s));
+  const L = pptFL(), d1 = el.querySelector('.f60-d1'), d2 = el.querySelector('.f60-d2'), th = el.querySelector('.f60-th');
+  const l1 = el.querySelector('.f60-lab1'), l2 = el.querySelector('.f60-lab2');
+  const e1 = el.querySelector('.f60-e1');
+  const mode = (m)=>{ e1.setAttribute('data-m', m); };
+  const place = (d, x, cx)=>{ d.setAttribute('cx', x); d.setAttribute('cy', pptBell(x,cx) - 4); };
+  const hide = d=>{ d.setAttribute('cx', -50); d.setAttribute('cy', -50); };
+  hide(d1); hide(d2); th.setAttribute('x', -100); l1.textContent = ''; l2.textContent = ''; mode('ok');
+  if(s === 'rest') return;
+  let path = null;   /* [dot, cx, fn(t)->x] */
+  if(s === 0) path = [d1, 522, t=>290 + Math.min(1, t/3000)*470];
+  if(s === 1){ path = [d1, 522, t=>522 + 4*Math.sin(t/180)]; l1.textContent = L.opt; l1.setAttribute('fill','#0f6e5e'); }
+  if(s === 2){ path = [d1, 522, t=>522 + Math.min(1, t/1600)*210]; l1.textContent = L.den; l1.setAttribute('fill','#c0392b'); mode('hot'); }
+  if(s === 3){ path = [d1, 522, t=>522 - Math.min(1, t/1600)*210]; l1.textContent = L.ina; l1.setAttribute('fill','#1f6f9c'); mode('cold'); }
+  if(s === 4){ path = [d1, 522, t=>{ const f = (t % 3200)/3200; return f < .35 ? 312 : f < .8 ? 312 + ((f-.35)/.45)*210 : 522; }]; l1.textContent = L.rev; l1.setAttribute('fill','#1f6f9c'); }
+  if(s === 5){ path = [d2, 1416, t=>1416 + 4*Math.sin(t/180)]; l2.textContent = L.opt; l2.setAttribute('fill','#0f6e5e'); }
+  if(s === 6){ path = [d2, 1416, t=>1416 + 170*Math.sin(t/650)]; l2.textContent = L.act; l2.setAttribute('fill','#c0392b'); }
+  if(!path) return;
+  pptSceneRaf(t=>{
+    const x = path[2](t); place(path[0], x, path[1]);
+    if(s === 2 || s === 3){ th.setAttribute('x', x); th.setAttribute('y', pptBell(x, 522) - 40); th.textContent = s === 2 ? '🔥' : '❄️'; }
+    if(s === 4 && x <= 330){ e1.setAttribute('data-m','cold'); } else if(s === 4){ e1.setAttribute('data-m','ok'); }
+    if(s === 2 && t > 900) e1.setAttribute('data-m','hot');
+  });
+}
+
+/* Slide 61: Michaelis-Menten curve + a row of enzymes filling up with substrate */
+const pptMM = x=>844 - 394*(x-400)/(96 + (x-400));
+function pptSceneSubConc(){
+  const L = pptFL();
+  let d = ''; for(let x=400; x<=975; x+=5) d += (d?'L':'M')+x+','+pptMM(x).toFixed(1);
+  const enz = [0,1,2,3,4].map(k=>{ const x = 1250 + k*120, y = 320;
+    return `<g transform="translate(${x},${y}) scale(.42)"><path d="${PPT_ENZ_PATH}" fill="#cfeee7" stroke="#0f7a68" stroke-width="8" stroke-linejoin="round"/></g>
+      <rect class="f61-s f61-s${k}" x="${x-10}" y="${y-37}" width="20" height="20" rx="4" fill="#f6a98a" stroke="#1d2a26" stroke-width="3"/>`; }).join('');
+  const wait = [0,1,2,3,4,5].map(k=>`<rect class="f61-w" x="${1240 + k*40}" y="${222 - (k%2)*16}" width="20" height="20" rx="4" fill="#f6a98a" stroke="#1d2a26" stroke-width="3"/>`).join('');
+  return `<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+    <path class="f61-trace" d="${d}" fill="none" stroke="#f5b400" stroke-width="12" stroke-linecap="round"/>
+    <line class="f61-vmax" x1="400" y1="450" x2="975" y2="450" stroke="#e0a800" stroke-width="8" stroke-dasharray="16 10"/>
+    <g class="f61-km"><line x1="400" y1="647" x2="496" y2="647" stroke="#6a45c2" stroke-width="7" stroke-dasharray="12 8"/><line x1="496" y1="647" x2="496" y2="844" stroke="#6a45c2" stroke-width="7" stroke-dasharray="12 8"/></g>
+    <g class="f61-panel">${enz}${wait}<text class="f61-cap s3-t" x="1490" y="410" text-anchor="middle" style="font-size:28px" fill="#0f6e5e"></text></g>
+    <circle class="f61-dot" r="20" fill="#e67e22" stroke="#1d2a26" stroke-width="5" cx="-50" cy="-50"/>
+  </svg>`;
+}
+function pptSceneSubConcStep(el, s){
+  pptSceneStopRaf(); el.setAttribute('data-step', String(s));
+  const L = pptFL(), dot = el.querySelector('.f61-dot'), cap = el.querySelector('.f61-cap');
+  const busy = n=>el.querySelectorAll('.f61-s').forEach((r,k)=>r.style.opacity = k < n ? 1 : 0);
+  cap.textContent = ''; busy(0);
+  if(s === 'rest'){ dot.setAttribute('cx',-50); return; }
+  const go = (from, to, ms, loop)=>pptSceneRaf(t=>{
+    let f = loop ? (t % ms)/ms : Math.min(1, t/ms); const x = from + (to-from)*f;
+    dot.setAttribute('cx', x); dot.setAttribute('cy', pptMM(x));
+    busy(Math.round(5 * (844 - pptMM(x)) / 394));
+  });
+  if(s === 0) go(400, 400, 1);
+  if(s === 1) go(400, 640, 2600, true);
+  if(s === 2) go(640, 975, 2400);
+  if(s === 3){ go(975, 975, 1); }
+  if(s === 4){ go(975, 975, 1); cap.textContent = L.busy; }
+  if(s === 5){ go(975, 975, 1); cap.textContent = L.more; }
+  if(s === 6){ go(496, 496, 1); cap.textContent = L.half; cap.setAttribute('fill','#6a45c2'); } else cap.setAttribute('fill','#0f6e5e');
+}
+
+/* Slide 62: substrate vs look-alike inhibitor racing for the active site */
+function pptSceneInhib(){
+  const L = pptFL();
+  const shape = (cls, fill, lab)=>`<g class="${cls}"><path d="M-30,-26 L30,-26 L30,26 L8,26 L8,10 L-8,10 L-8,26 L-30,26 Z" fill="${fill}" stroke="#1d2a26" stroke-width="5" stroke-linejoin="round"/><text x="0" y="2" text-anchor="middle" class="s3-t" style="font-size:22px">${lab}</text></g>`;
+  return `<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(1520,860) scale(1.25)"><path d="${PPT_ENZ_PATH}" fill="#cfeee7" stroke="#0f7a68" stroke-width="6" stroke-linejoin="round"/>
+      <text x="0" y="40" text-anchor="middle" class="s3-t" style="font-size:26px" fill="#0f6e5e">SDH</text></g>
+    ${shape('f62-s','#bfe6dc','S')}${shape('f62-i','#f4a3a3','I')}
+    <g class="f62-x"><text x="1690" y="740" class="s3-t" style="font-size:34px" fill="#c0392b">✕ ${L.blocked}</text><text x="1690" y="784" class="s3-t" style="font-size:30px" fill="#c0392b">${L.act}</text></g>
+    <g class="f62-same"><path d="M1420,705 C1470,675 1570,675 1620,705" fill="none" stroke="#6a45c2" stroke-width="5" stroke-dasharray="10 7"/><text x="1520" y="670" text-anchor="middle" class="s3-t" style="font-size:30px" fill="#6a45c2">≈</text></g>
+  </svg>`;
+}
 const PPT_SCENES = { large: {
   49: {box:[56, 318, 800, 530], steps:6, build:pptSceneActiveSite},
   /* six enzyme classes: which card's reaction plays during each sentence */
   52: {box:[72, 184, 1776, 232], build:pptSceneEnzClasses(['ox','tr','hy'], 232, 0.76), onStep:pptSceneEcStep,
        map:{all:['rest','rest',0,1,1,2,2,2]}},
   53: {box:[72, 180, 1776, 190], build:pptSceneEnzClasses(['ly','is','li'], 190, 0.68), onStep:pptSceneEcStep,
-       map:{en:['rest',0,0,1,1,2,2,'rest','rest'], kn:['rest',0,0,1,1,2,2,2,'rest','rest'], hi:['rest',0,0,1,1,2,2,2,'rest','rest']}}
+       map:{en:['rest',0,0,1,1,2,2,'rest','rest'], kn:['rest',0,0,1,1,2,2,2,'rest','rest'], hi:['rest',0,0,1,1,2,2,2,'rest','rest']}},
+  /* enzyme action: E + S -> ES -> EP -> E + P, transition state, activation energy */
+  56: {full:true, build:pptSceneEnzAction, onStep:()=>{}, map:{en:[0,1,2,'3r',5,6,7,8], kn:[0,1,2,3,4,5,6,7,8], hi:[0,1,2,3,4,5,6,7,8]}},
+  /* energy graph: molecules climbing the hill with / without enzyme */
+  57: {full:true, build:pptSceneEnergy, onStep:pptSceneEnergyStep, map:{en:[0,1,2,3,4,5,6], kn:[0,0,1,2,3,4,5,6], hi:[0,0,1,2,3,4,5,6]}},
+  /* catalytic cycle */
+  58: {full:true, build:pptSceneCycle, onStep:()=>{}, map:{all:[0,1,2,3,4,5,6,7]}},
+  /* temperature & pH: dot rides the bell curve; enzyme denatures / freezes */
+  59: {full:true, build:pptSceneTempPH, onStep:pptSceneTempPHStep, map:{en:[0,1,2,3,4,5,6], hi:[0,1,2,3,4,5,6], kn:[0,1,2,2,3,4,5,6]}},
+  /* substrate concentration: velocity curve + enzymes filling up */
+  60: {full:true, build:pptSceneSubConc, onStep:pptSceneSubConcStep, map:{en:[0,1,2,3,4,5,6], hi:[0,1,2,3,4,5,6], kn:[0,1,2,3,4,4,5,6]}},
+  /* competitive inhibition */
+  61: {full:true, build:pptSceneInhib, onStep:()=>{}, map:{en:[0,1,2,3,4,5], kn:[0,1,2,3,3,4,5,5], hi:[0,1,2,3,3,4,5,5]}}
 } };
 let pptSceneCur = null, pptSceneTimers = [];
 function pptSceneFor(){ const d = PPT_SCENES[pptDeck]; return d ? d[pptIdx] || null : null; }
-function pptSceneClearTimers(){ pptSceneTimers.forEach(clearTimeout); pptSceneTimers.forEach(clearInterval); pptSceneTimers = []; }
+function pptSceneClearTimers(){ pptSceneTimers.forEach(clearTimeout); pptSceneTimers.forEach(clearInterval); pptSceneTimers = []; if(typeof pptSceneStopRaf==='function') pptSceneStopRaf(); }
 function pptSceneMount(){
   const layer = document.getElementById('pptSpotLayer'), sp = document.getElementById('pptSpot');
   pptSceneClearTimers();
@@ -2956,8 +3316,9 @@ function pptSceneMount(){
   pptSceneCur = null; if(sp) sp.classList.remove('soft');
   const sc = pptSceneFor(); if(!sc || !layer || !pptAnim) return;
   const el = document.createElement('div'); el.id = 'pptScene'; el.className = 'ppt-scene';
-  const [x,y,w,h] = sc.box;
-  Object.assign(el.style, {left:(x/19.2)+'%', top:(y/10.8)+'%', width:(w/19.2)+'%', height:(h/10.8)+'%'});
+  if(sc.full) el.classList.add('full');
+  else { const [x,y,w,h] = sc.box;
+    Object.assign(el.style, {left:(x/19.2)+'%', top:(y/10.8)+'%', width:(w/19.2)+'%', height:(h/10.8)+'%'}); }
   el.innerHTML = sc.build(PPT_SCENE_LBL[pptLang] || PPT_SCENE_LBL.en);
   layer.appendChild(el);   /* above the dimming, so the diagram stays bright */
   pptSceneCur = {sc, el, step:-1};
@@ -3021,7 +3382,7 @@ function pptSceneOnLoad(){ if(pptSceneCur) pptPlaceLayer(); }
 function pptSpotlight(i, total){
   pptSpotLast = [i, total];
   pptSceneStep(i, total);   /* live diagram acts out this sentence */
-  if(!pptAnim || pptIdx === 0){ pptClearSpot(); if(pptAnim) pptSpotLast = [i, total]; return; }  /* intro slide: no animation */
+  if(!pptAnim || pptIdx === 0 || pptIdx === pptSlides().length-1){ pptClearSpot(); if(pptAnim) pptSpotLast = [i, total]; return; }  /* intro slide: no animation */
   if(pptFsState && pptFsState.scale && pptFsState.scale !== 1){ pptClearSpot(); return; }  /* teacher is pinch-zooming */
   const cues = PPT_CUES && PPT_CUES[pptDeck] && PPT_CUES[pptDeck][pptLang] && PPT_CUES[pptDeck][pptLang][pptIdx];
   const sp = document.getElementById('pptSpot');
