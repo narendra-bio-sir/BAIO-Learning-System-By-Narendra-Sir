@@ -621,6 +621,12 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
 #content tr.ex-row td{background:rgba(255,213,74,.16)!important;}
 .ex-cc{padding:7px 12px;border-radius:999px;border:1.5px solid var(--gold,#D4AF37);background:rgba(212,175,55,.2);color:inherit;font-weight:800;font-size:13px;cursor:pointer;letter-spacing:.04em;}
 .ex-cc.off{background:transparent;opacity:.55;text-decoration:line-through;}
+.ex-vis{margin:0 0 12px;scroll-margin-top:150px;}
+.ex-vis-stage{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;border:1px solid var(--line,#c9d6d2);background:#FBF8F1;}
+.ex-vis-stage img{display:block;width:100%;height:100%;object-fit:contain;}
+.ex-vis-box{position:absolute;border:3px solid #E0A800;border-radius:8px;opacity:0;transition:left .5s ease,top .5s ease,width .5s ease,height .5s ease,opacity .3s ease;box-shadow:0 0 0 2000px rgba(10,16,30,.14);pointer-events:none;z-index:3;}
+.ex-vis-box.on{opacity:1;}
+html:not([data-theme="light"]) .ex-vis-stage img:not(.ppt-photo){filter:invert(.93) hue-rotate(180deg) saturate(1.15);}
 #content .ex-on{outline:3px solid #D4AF37;outline-offset:4px;border-radius:10px;background-color:rgba(212,175,55,.12);transition:background-color .3s ease,outline-color .3s ease;}
 .ex-cap{position:fixed;left:50%;bottom:16px;transform:translate(-50%,20px);width:min(760px,calc(100% - 24px));padding:12px 16px;border-radius:14px;background:rgba(17,24,32,.93);color:#fff;font-size:16px;line-height:1.45;text-align:center;z-index:9999;opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease;box-shadow:0 10px 30px rgba(0,0,0,.35);}
 .ex-cap.show{opacity:1;transform:translate(-50%,0);}
@@ -1594,7 +1600,7 @@ const EX_LBL = {
 const exL = ()=>EX_LBL[currentLang] || EX_LBL.en;
 function exLoad(){
   if(EX_DATA) return Promise.resolve(EX_DATA);
-  if(!exLoading) exLoading = fetch('pu1-ch9-assets/explain.json?v=1').then(r=>{ if(!r.ok) throw new Error('explain'); return r.json(); }).then(j=>(EX_DATA=j)).catch(e=>{ exLoading=null; throw e; });
+  if(!exLoading) exLoading = fetch('pu1-ch9-assets/explain.json?v=2').then(r=>{ if(!r.ok) throw new Error('explain'); return r.json(); }).then(j=>(EX_DATA=j)).catch(e=>{ exLoading=null; throw e; });
   return exLoading;
 }
 function exBarHtml(kind){
@@ -1727,11 +1733,12 @@ function exSpeak(id){
     exQueue = pptSentences(exSegs[exSi][1]);
   }
   const target = exSegs[exSi][0], text = exQueue[exQi];
-  if(exQi === 0) exMark(target);
+  if(exQi === 0){ exMark(target); exVisShow(target); }
   /* analytical questions: show the reasoning when Sir starts giving the answer */
   if(/^aq\d+$/.test(target) && (/^(The answer|Answer|ಉತ್ತರ|उत्तर)/i.test(text) || (exQi > 0 && /\?\s*$/.test(exQueue[exQi-1])))){ const a = document.querySelector('#content [data-ex="'+target+'"] .aq-a'); if(a) a.classList.add('show'); }
   exCaption(text);
   exHighlight(target, text);
+  exVisSentence(text);
   const lang = (EX_DATA && ((exKind==='tips' ? EX_DATA.tips[currentLang] : EX_DATA[exKind][currentTopic] && EX_DATA[exKind][currentTopic][currentLang]))) ? currentLang : 'en';
   const u = new SpeechSynthesisUtterance(text);
   u.lang = PPT_TTS_TAG[lang] || 'en-IN'; const v = pptVoice(lang); if(v){ try{ u.voice = v; }catch(e){} }
@@ -1741,10 +1748,69 @@ function exSpeak(id){
   u.onerror = ()=>{ if(id!==exRun) return; exQi++; setTimeout(()=>exSpeak(id), Math.min(6000, text.length*55)); };
   PPT_TTS.speak(u);
 }
+
+/* ---- Visual panel for "Narendra Sir explains": the matching class slide (with a gold box on the line being
+   explained) or, where one exists, the live animation, shown just above the block being explained ---- */
+let exVis = null;   /* {slide, scene:{sc,el,step}} */
+function exVisSlideFor(target){
+  const V = EX_DATA && EX_DATA.vis; if(!V) return null;
+  const m = exKind==='tips' ? V.tips : (V[exKind] && V[exKind][currentTopic]);
+  const v = m ? m[target] : null; return (v===null || v===undefined) ? null : v;
+}
+function exVisClear(){
+  if(exVis && exVis.scene){ pptSceneClearTimers(); }
+  const p = document.getElementById('exVis'); if(p) p.remove();
+  exVis = null;
+}
+function exWithScene(fn){ const sc = pptSceneCur, sl = pptLang; pptSceneCur = exVis.scene; pptLang = currentLang; try{ fn(); } finally { pptSceneCur = sc; pptLang = sl; } }
+function exVisShow(target){
+  const idx = exVisSlideFor(target);
+  const block = document.querySelector('#content [data-ex="'+target+'"]');
+  if(idx === null || !block || typeof PPT_DECKS==='undefined'){ exVisClear(); return; }
+  let panel = document.getElementById('exVis');
+  if(exVis && exVis.slide === idx && panel){ block.parentNode.insertBefore(panel, block); return; }
+  exVisClear();
+  const lang = PPT_DECKS.large[currentLang] ? currentLang : 'en';
+  const src = PPT_DECKS.large[lang][idx];
+  panel = document.createElement('div'); panel.id = 'exVis'; panel.className = 'ex-vis';
+  panel.innerHTML = `<div class="ex-vis-stage" id="exVisStage"><img alt="" src="${src}"${(idx===0 || idx===PPT_DECKS.large[lang].length-1)?' class="ppt-photo"':''}><div class="ex-vis-box" id="exVisBox"></div></div>`;
+  block.parentNode.insertBefore(panel, block);
+  exVis = {slide: idx, scene: null};
+  const sc = PPT_SCENES.large && PPT_SCENES.large[idx];
+  if(sc){
+    const el = document.createElement('div'); el.className = 'ppt-scene';
+    if(sc.full) el.classList.add('full');
+    else { const [x,y,w,h] = sc.box; Object.assign(el.style, {left:(x/19.2)+'%', top:(y/10.8)+'%', width:(w/19.2)+'%', height:(h/10.8)+'%'}); }
+    const sl = pptLang; pptLang = currentLang;
+    try{ el.innerHTML = sc.build(PPT_SCENE_LBL[currentLang] || PPT_SCENE_LBL.en); } finally { pptLang = sl; }
+    document.getElementById('exVisStage').appendChild(el);
+    exVis.scene = {sc, el, step:-1};
+    exWithScene(()=>pptSceneSet('rest'));
+  }
+  try{ panel.scrollIntoView({behavior:'smooth', block:'start'}); }catch(e){}
+}
+/* which sentence of that slide's own narration is closest to what Sir is saying now */
+function exVisToks(t){ return (String(t).toLowerCase().match(/[\p{L}\p{M}\d]+/gu)||[]).filter(w=>w.length>=3).map(w=>w.slice(0,5)); }
+function exVisSentence(text){
+  if(!exVis) return;
+  const lang = currentLang, idx = exVis.slide;
+  Promise.all([pptLoadNarr(), pptLoadCues().catch(()=>null)]).then(([N, C])=>{
+    if(!exVis || exVis.slide !== idx) return;
+    const ss = pptSentences((N.large[lang] || N.large.en)[idx] || '');
+    if(!ss.length) return;
+    const a = new Set(exVisToks(text)); let best = -1, bi = 0;
+    ss.forEach((s,i)=>{ const b = exVisToks(s); const sc = b.filter(w=>a.has(w)).length / Math.sqrt(1 + b.length); if(sc > best){ best = sc; bi = i; } });
+    if(best <= 0) return;
+    const box = C && C.large && C.large[lang] && C.large[lang][idx] && C.large[lang][idx][bi];
+    const bx = document.getElementById('exVisBox');
+    if(bx && box && idx !== 0){ Object.assign(bx.style, {left:(box[0]/19.2)+'%', top:(box[1]/10.8)+'%', width:(box[2]/19.2)+'%', height:(box[3]/10.8)+'%'}); bx.classList.add('on'); }
+    if(exVis.scene) exWithScene(()=>pptSceneStep(bi, ss.length));
+  }).catch(()=>{});
+}
 function exStop(finished){
   ++exRun; exOn = false; exPaused = false;
   if(PPT_TTS) PPT_TTS.cancel();
-  exButtons(); exCaption(''); exMark(null);
+  exButtons(); exCaption(''); exMark(null); exVisClear();
 }
 window.exStop = exStop;
 
