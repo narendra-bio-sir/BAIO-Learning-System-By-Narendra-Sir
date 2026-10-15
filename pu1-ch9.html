@@ -617,8 +617,10 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
 .ex-stop{padding:8px 14px;border-radius:999px;border:1px solid var(--line,#c9d6d2);background:transparent;color:inherit;font-weight:600;font-size:13px;cursor:pointer;}
 .ex-rate{font-size:13px;opacity:.85;display:inline-flex;align-items:center;gap:4px;}
 .ex-rate select{border-radius:8px;padding:4px 6px;background:transparent;color:inherit;border:1px solid var(--line,#c9d6d2);}
-#content mark.ex-hl{background:#ffd54a;color:#1b1b1b;border-radius:4px;padding:0 2px;box-shadow:0 0 0 2px rgba(255,213,74,.35);transition:background .2s ease;}
-#content tr.ex-row td{background:rgba(255,213,74,.28)!important;}
+#content mark.ex-hl{background:linear-gradient(transparent 58%,rgba(255,205,60,.75) 58%);color:inherit;padding:0 1px;border-radius:0;animation:exPen .45s ease-out;}
+@keyframes exPen{from{background-size:0% 100%}to{background-size:100% 100%}}
+#content mark.ex-hl{background-repeat:no-repeat;}
+#content tr.ex-row td{background:rgba(255,213,74,.16)!important;}
 .ex-cc{padding:7px 12px;border-radius:999px;border:1.5px solid var(--gold,#D4AF37);background:rgba(212,175,55,.2);color:inherit;font-weight:800;font-size:13px;cursor:pointer;letter-spacing:.04em;}
 .ex-cc.off{background:transparent;opacity:.55;text-decoration:line-through;}
 #content .ex-on{outline:3px solid #D4AF37;outline-offset:4px;border-radius:10px;background-color:rgba(212,175,55,.12);transition:background-color .3s ease,outline-color .3s ease;}
@@ -1584,7 +1586,7 @@ const CONCEPT_TRANSLATIONS_CH9 = {"composition": {"kn": {"hook": "ಭೂಮಿ�
 /* ---------------- NARENDRA SIR EXPLAINS: spoken teacher explanation for Study Mode / Concepts / Study Tips ----------------
    Script per topic & language lives in pu1-ch9-assets/explain.json as [target, text] segments. While a segment is spoken,
    the matching block on screen ([data-ex=target]) is highlighted and scrolled into view; captions show the sentence. */
-let exCaps = (function(){ try{ return localStorage.getItem('pu1ch9_ex_caps')!=='0'; }catch(e){ return true; } })();
+let exCaps = (function(){ try{ return localStorage.getItem('pu1ch9_ex_caps')==='1'; }catch(e){ return false; } })();   /* captions off by default */
 let EX_DATA = null, exLoading = null, exRun = 0, exOn = false, exPaused = false, exSegs = [], exSi = 0, exQi = 0, exQueue = [], exKind = '';
 const EX_LBL = {
   en:{play:'Narendra Sir explains', pause:'Pause', resume:'Resume', stop:'Stop', noVoice:'No voice for this language on this device — install it in phone Settings › Text-to-speech.', loadErr:'Could not load the explanation. Check the internet connection.'},
@@ -1670,10 +1672,17 @@ function exHighlight(target, text){
     return n.nodeValue.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT; }});
   const nodes = []; while(walker.nextNode()) nodes.push(walker.currentNode);
   let hits = 0;
+  const seen = new Set(), MAX = 4;
+  const keyCtx = el=>!!el.closest('b,strong,em,h4,td,th,.chip,.chain-num,[style*="color"],span[class]');
   nodes.forEach(node=>{
     const t = node.nodeValue; re.lastIndex = 0; if(!re.test(t)) return; re.lastIndex = 0;
+    const isKey = keyCtx(node.parentNode);
     const frag = document.createDocumentFragment(); let last = 0, m;
     while((m = re.exec(t))){ if(!m[0]){ re.lastIndex++; continue; }
+      const tok = m[0].toLowerCase(), isNum = /^\d/.test(tok);
+      const ok = hits < MAX && !seen.has(tok) && (isNum || isKey || tok.length >= 9 || /[α-ω]/.test(tok));
+      if(!ok) continue;
+      seen.add(tok);
       frag.appendChild(document.createTextNode(t.slice(last, m.index)));
       const mk = document.createElement('mark'); mk.className = 'ex-hl'; mk.textContent = m[0]; frag.appendChild(mk); last = m.index + m[0].length; hits++; }
     frag.appendChild(document.createTextNode(t.slice(last)));
