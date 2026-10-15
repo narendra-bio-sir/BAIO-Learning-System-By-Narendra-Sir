@@ -3104,7 +3104,7 @@ let PPT_CUES = null, pptCuesLoading = null, pptSpotLast = null;
 let pptAnim = (function(){ try{ return localStorage.getItem('pu1ch9_ppt_anim')!=='0'; }catch(e){ return true; } })();
 function pptLoadCues(){
   if(PPT_CUES) return Promise.resolve(PPT_CUES);
-  if(!pptCuesLoading) pptCuesLoading = fetch('pu1-ch9-assets/spot-cues.json?v=9').then(r=>{ if(!r.ok) throw new Error('cues'); return r.json(); }).then(j=>(PPT_CUES=j)).catch(e=>{ pptCuesLoading=null; throw e; });
+  if(!pptCuesLoading) pptCuesLoading = fetch('pu1-ch9-assets/spot-cues.json?v=10').then(r=>{ if(!r.ok) throw new Error('cues'); return r.json(); }).then(j=>(PPT_CUES=j)).catch(e=>{ pptCuesLoading=null; throw e; });
   return pptCuesLoading;
 }
 function pptSetAnim(on){ pptAnim = !!on; try{ localStorage.setItem('pu1ch9_ppt_anim', pptAnim?'1':'0'); }catch(e){} pptSceneMount(); if(!pptAnim) pptClearSpot(); else if(pptTalking && pptSpotLast) pptSpotlight(pptSpotLast[0], pptSpotLast[1]); }
@@ -3332,7 +3332,7 @@ function pptSceneTempPHStep(el, s){
   const mode = (m)=>{ e1.setAttribute('data-m', m); };
   const place = (d, x, cx)=>{ d.setAttribute('cx', x); d.setAttribute('cy', pptBell(x,cx) - 4); };
   const hide = d=>{ d.setAttribute('cx', -50); d.setAttribute('cy', -50); };
-  hide(d1); hide(d2); th.setAttribute('x', -100); l1.textContent = ''; l2.textContent = ''; mode('ok');
+  hide(d1); hide(d2); th.setAttribute('x', -100); th.textContent = ''; l1.textContent = ''; l2.textContent = ''; mode('ok');
   if(s === 'rest') return;
   let path = null;   /* [dot, cx, fn(t)->x] */
   if(s === 0) path = [d1, 522, t=>290 + Math.min(1, t/3000)*470];
