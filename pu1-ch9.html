@@ -2841,7 +2841,7 @@ let PPT_CUES = null, pptCuesLoading = null, pptSpotLast = null;
 let pptAnim = (function(){ try{ return localStorage.getItem('pu1ch9_ppt_anim')!=='0'; }catch(e){ return true; } })();
 function pptLoadCues(){
   if(PPT_CUES) return Promise.resolve(PPT_CUES);
-  if(!pptCuesLoading) pptCuesLoading = fetch('pu1-ch9-assets/spot-cues.json?v=6').then(r=>{ if(!r.ok) throw new Error('cues'); return r.json(); }).then(j=>(PPT_CUES=j)).catch(e=>{ pptCuesLoading=null; throw e; });
+  if(!pptCuesLoading) pptCuesLoading = fetch('pu1-ch9-assets/spot-cues.json?v=7').then(r=>{ if(!r.ok) throw new Error('cues'); return r.json(); }).then(j=>(PPT_CUES=j)).catch(e=>{ pptCuesLoading=null; throw e; });
   return pptCuesLoading;
 }
 function pptSetAnim(on){ pptAnim = !!on; try{ localStorage.setItem('pu1ch9_ppt_anim', pptAnim?'1':'0'); }catch(e){} pptSceneMount(); if(!pptAnim) pptClearSpot(); else if(pptTalking && pptSpotLast) pptSpotlight(pptSpotLast[0], pptSpotLast[1]); }
@@ -2886,12 +2886,12 @@ function pptEcPanel(kind, L, EQY){
     <g class="ec-hop">${pptEcAtom(202,58,17,'#fff','H','',20)}${pptEcAtom(206,126,17,'#fff','H','',20)}</g>
     <g class="ec-l1">${T(150,170,L.red,'',25,'#1f6f9c')}${T(430,170,L.ox,'',25,'#b5532a')}</g>
     <g class="ec-l2">${T(150,170,L.ox,'',25,'#b5532a')}${T(430,170,L.red,'',25,'#1f6f9c')}</g>
-    ${T(290,EQY,'S<tspan baseline-shift="sub" font-size="21">red</tspan> + S′<tspan baseline-shift="sub" font-size="21">ox</tspan> → S<tspan baseline-shift="sub" font-size="21">ox</tspan> + S′<tspan baseline-shift="sub" font-size="21">red</tspan>','ec-eq',33)}`;
+    ${T(290,EQY,'S<tspan baseline-shift="sub" font-size="25">red</tspan> + S′<tspan baseline-shift="sub" font-size="25">ox</tspan> → S<tspan baseline-shift="sub" font-size="25">ox</tspan> + S′<tspan baseline-shift="sub" font-size="25">red</tspan>','ec-eq',40)}`;
   if(kind === 'tr') return `
     <rect x="80" y="58" width="120" height="68" rx="12" fill="#bfe6dc" stroke="#1d2a26" stroke-width="3"/>${T(140,104,'S','',30)}
     <rect x="370" y="58" width="120" height="68" rx="12" fill="#f6d9a8" stroke="#1d2a26" stroke-width="3"/>${T(430,104,'S′','',30)}
     <g class="ec-g"><line x1="200" y1="92" x2="222" y2="92" stroke="#1d2a26" stroke-width="4"/><polygon points="222,62 278,92 222,122" fill="#f4b6c2" stroke="#1d2a26" stroke-width="3"/>${T(240,101,'G','',24)}</g>
-    ${T(290,EQY,'S–G + S′ → S + S′–G','ec-eq',33)}`;
+    ${T(290,EQY,'S–G + S′ → S + S′–G','ec-eq',40)}`;
   if(kind === 'hy') return `
     <g class="ec-a"><rect x="110" y="62" width="110" height="64" rx="12" fill="#bfe6dc" stroke="#1d2a26" stroke-width="3"/>${T(165,106,'A','',30)}
       <g class="ec-oh">${pptEcAtom(244,94,19,'#ff9d8a','OH','',15)}</g></g>
@@ -2899,7 +2899,7 @@ function pptEcPanel(kind, L, EQY){
       <g class="ec-h">${pptEcAtom(326,94,15,'#fff','H','',16)}</g></g>
     <line class="ec-bond" x1="220" y1="94" x2="350" y2="94" stroke="#1d2a26" stroke-width="6"/>
     <g class="ec-w">${pptEcAtom(285,26,20,'#ff9d8a','O','',18)}${pptEcAtom(257,8,11,'#fff','','',1)}${pptEcAtom(313,8,11,'#fff','','',1)}${T(350,34,'H₂O','',20,'#b5532a')}</g>
-    ${T(290,EQY,'A–B + H₂O → A–OH + H–B','ec-eq',33)}`;
+    ${T(290,EQY,'A–B + H₂O → A–OH + H–B','ec-eq',40)}`;
   if(kind === 'ly') return `
     <g class="ec-x">${pptEcAtom(90,110,30,'#f4b6c2','X','',24)}</g>
     <line class="ec-xb" x1="120" y1="110" x2="200" y2="110" stroke="#1d2a26" stroke-width="5"/>
@@ -2909,26 +2909,27 @@ function pptEcPanel(kind, L, EQY){
     <line class="ec-yb" x1="380" y1="110" x2="460" y2="110" stroke="#1d2a26" stroke-width="5"/>
     <g class="ec-y">${pptEcAtom(490,110,30,'#c9b8f0','Y','',24)}</g>
     <g class="ec-dl">${T(290,152,L.dbl,'',24,'#c0392b')}</g>
-    ${T(290,EQY,'X–C–C–Y → X–Y + C=C','ec-eq',33)}`;
+    ${T(290,EQY,'X–C–C–Y → X–Y + C=C','ec-eq',40)}`;
   if(kind === 'is') return `
     <polyline points="150,138 210,98 270,138 330,98 390,138" fill="none" stroke="#1d2a26" stroke-width="6" stroke-linejoin="round"/>
     ${[150,210,270,330,390].map((x,k)=>`<circle cx="${x}" cy="${k%2?98:138}" r="9" fill="#1d2a26"/>`).join('')}
     <g class="ec-grp"><line x1="210" y1="98" x2="210" y2="62" stroke="#1d2a26" stroke-width="5"/>${pptEcAtom(210,50,22,'#ff9d8a','OH','',15)}</g>
     <g class="ec-il">${T(480,92,L.iso,'',26,'#6a45c2')}</g>
-    ${T(290,EQY,'A ⇌ A′','ec-eq',33)}`;
+    ${T(290,EQY,'A ⇌ A′','ec-eq',40)}`;
   if(kind === 'li') return `
     <g class="ec-la"><rect x="110" y="62" width="110" height="64" rx="12" fill="#bfe6dc" stroke="#1d2a26" stroke-width="3"/>${T(165,106,'A','',30)}</g>
     <g class="ec-lb"><rect x="350" y="62" width="110" height="64" rx="12" fill="#f6d9a8" stroke="#1d2a26" stroke-width="3"/>${T(405,106,'B','',30)}</g>
     <line class="ec-lbond" x1="262" y1="94" x2="296" y2="94" stroke="#0f7a68" stroke-width="8"/>
     <g class="ec-ll">${T(285,40,L.join+': C–O · C–S · C–N','',25,'#0f7a68')}</g>
-    ${T(290,EQY,'A + B → A–B','ec-eq',33)}`;
+    ${T(290,EQY,'A + B → A–B','ec-eq',40)}`;
   return '';
 }
-function pptSceneEnzClasses(kinds, H){
-  /* H = height of the free strip (slide px); shorter strips lift the drawing and the equation */
+function pptSceneEnzClasses(kinds, H, f){
+  /* H = height of the free strip (slide px); f shrinks each reaction about its own centre so it keeps
+     clear space from the title above and the cards below (and stays lined up with its card) */
   return function(){
-    const L = PPT_EC_LBL[pptLang] || PPT_EC_LBL.en, lift = H < 230 ? -18 : 0, EQY = H - 12;
-    const panels = kinds.map((k,i)=>`<g class="ec-p ec-${k}" data-p="${i}" transform="translate(${i*596},0)"><g transform="translate(0,${lift})">${pptEcPanel(k, L, EQY - lift)}</g></g>`).join('');
+    const L = PPT_EC_LBL[pptLang] || PPT_EC_LBL.en, lift = H < 230 ? -18 : 0, EQY = H - 12, c = H/2;
+    const panels = kinds.map((k,i)=>`<g class="ec-p ec-${k}" data-p="${i}" transform="translate(${i*596},0)"><g transform="translate(290,${c}) scale(${f||1}) translate(-290,${-c + lift})">${pptEcPanel(k, L, EQY - lift)}</g></g>`).join('');
     return `<svg viewBox="0 0 1776 ${H}" xmlns="http://www.w3.org/2000/svg">${panels}</svg>`;
   };
 }
@@ -2940,9 +2941,9 @@ function pptSceneEcStep(el, s){
 const PPT_SCENES = { large: {
   49: {box:[56, 318, 800, 530], steps:6, build:pptSceneActiveSite},
   /* six enzyme classes: which card's reaction plays during each sentence */
-  52: {box:[72, 184, 1776, 232], build:pptSceneEnzClasses(['ox','tr','hy'], 232), onStep:pptSceneEcStep,
+  52: {box:[72, 184, 1776, 232], build:pptSceneEnzClasses(['ox','tr','hy'], 232, 0.76), onStep:pptSceneEcStep,
        map:{all:['rest','rest',0,1,1,2,2,2]}},
-  53: {box:[72, 180, 1776, 190], build:pptSceneEnzClasses(['ly','is','li'], 190), onStep:pptSceneEcStep,
+  53: {box:[72, 180, 1776, 190], build:pptSceneEnzClasses(['ly','is','li'], 190, 0.68), onStep:pptSceneEcStep,
        map:{en:['rest',0,0,1,1,2,2,'rest','rest'], kn:['rest',0,0,1,1,2,2,2,'rest','rest'], hi:['rest',0,0,1,1,2,2,2,'rest','rest']}}
 } };
 let pptSceneCur = null, pptSceneTimers = [];
