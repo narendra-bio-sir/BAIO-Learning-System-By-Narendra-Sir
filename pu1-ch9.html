@@ -2738,7 +2738,7 @@ let PPT_CUES = null, pptCuesLoading = null, pptSpotLast = null;
 let pptAnim = (function(){ try{ return localStorage.getItem('pu1ch9_ppt_anim')!=='0'; }catch(e){ return true; } })();
 function pptLoadCues(){
   if(PPT_CUES) return Promise.resolve(PPT_CUES);
-  if(!pptCuesLoading) pptCuesLoading = fetch('pu1-ch9-assets/spot-cues.json?v=5').then(r=>{ if(!r.ok) throw new Error('cues'); return r.json(); }).then(j=>(PPT_CUES=j)).catch(e=>{ pptCuesLoading=null; throw e; });
+  if(!pptCuesLoading) pptCuesLoading = fetch('pu1-ch9-assets/spot-cues.json?v=6').then(r=>{ if(!r.ok) throw new Error('cues'); return r.json(); }).then(j=>(PPT_CUES=j)).catch(e=>{ pptCuesLoading=null; throw e; });
   return pptCuesLoading;
 }
 function pptSetAnim(on){ pptAnim = !!on; try{ localStorage.setItem('pu1ch9_ppt_anim', pptAnim?'1':'0'); }catch(e){} if(!pptAnim) pptClearSpot(); else if(pptTalking && pptSpotLast) pptSpotlight(pptSpotLast[0], pptSpotLast[1]); }
