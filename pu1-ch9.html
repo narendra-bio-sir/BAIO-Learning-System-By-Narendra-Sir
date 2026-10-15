@@ -1733,12 +1733,10 @@ function exSpeak(id){
     exQueue = pptSentences(exSegs[exSi][1]);
   }
   const target = exSegs[exSi][0], text = exQueue[exQi];
-  if(exQi === 0){ exMark(target); exVisShow(target); }
+  if(exQi === 0) exMark(target);
   /* analytical questions: show the reasoning when Sir starts giving the answer */
   if(/^aq\d+$/.test(target) && (/^(The answer|Answer|ಉತ್ತರ|उत्तर)/i.test(text) || (exQi > 0 && /\?\s*$/.test(exQueue[exQi-1])))){ const a = document.querySelector('#content [data-ex="'+target+'"] .aq-a'); if(a) a.classList.add('show'); }
   exCaption(text);
-  exHighlight(target, text);
-  exVisSentence(text);
   const lang = (EX_DATA && ((exKind==='tips' ? EX_DATA.tips[currentLang] : EX_DATA[exKind][currentTopic] && EX_DATA[exKind][currentTopic][currentLang]))) ? currentLang : 'en';
   const u = new SpeechSynthesisUtterance(text);
   u.lang = PPT_TTS_TAG[lang] || 'en-IN'; const v = pptVoice(lang); if(v){ try{ u.voice = v; }catch(e){} }
