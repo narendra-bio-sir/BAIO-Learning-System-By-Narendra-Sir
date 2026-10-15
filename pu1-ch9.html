@@ -3183,7 +3183,7 @@ let PPT_CUES = null, pptCuesLoading = null, pptSpotLast = null;
 let pptAnim = (function(){ try{ return localStorage.getItem('pu1ch9_ppt_anim')!=='0'; }catch(e){ return true; } })();
 function pptLoadCues(){
   if(PPT_CUES) return Promise.resolve(PPT_CUES);
-  if(!pptCuesLoading) pptCuesLoading = fetch('pu1-ch9-assets/spot-cues.json?v=9').then(r=>{ if(!r.ok) throw new Error('cues'); return r.json(); }).then(j=>(PPT_CUES=j)).catch(e=>{ pptCuesLoading=null; throw e; });
+  if(!pptCuesLoading) pptCuesLoading = fetch('pu1-ch9-assets/spot-cues.json?v=10').then(r=>{ if(!r.ok) throw new Error('cues'); return r.json(); }).then(j=>(PPT_CUES=j)).catch(e=>{ pptCuesLoading=null; throw e; });
   return pptCuesLoading;
 }
 function pptSetAnim(on){ pptAnim = !!on; try{ localStorage.setItem('pu1ch9_ppt_anim', pptAnim?'1':'0'); }catch(e){} pptSceneMount(); if(!pptAnim) pptClearSpot(); else if(pptTalking && pptSpotLast) pptSpotlight(pptSpotLast[0], pptSpotLast[1]); }
@@ -3411,7 +3411,7 @@ function pptSceneTempPHStep(el, s){
   const mode = (m)=>{ e1.setAttribute('data-m', m); };
   const place = (d, x, cx)=>{ d.setAttribute('cx', x); d.setAttribute('cy', pptBell(x,cx) - 4); };
   const hide = d=>{ d.setAttribute('cx', -50); d.setAttribute('cy', -50); };
-  hide(d1); hide(d2); th.setAttribute('x', -100); l1.textContent = ''; l2.textContent = ''; mode('ok');
+  hide(d1); hide(d2); th.setAttribute('x', -100); th.textContent = ''; l1.textContent = ''; l2.textContent = ''; mode('ok');
   if(s === 'rest') return;
   let path = null;   /* [dot, cx, fn(t)->x] */
   if(s === 0) path = [d1, 522, t=>290 + Math.min(1, t/3000)*470];
@@ -3431,13 +3431,15 @@ function pptSceneTempPHStep(el, s){
 }
 
 /* Slide 61: Michaelis-Menten curve + a row of enzymes filling up with substrate */
-const pptMM = x=>844 - 394*(x-400)/(96 + (x-400));
+/* the green curve as drawn on the slide (traced from the slide image), so the dot rides exactly on it */
+const PPT_MM_PTS = [[400,844],[410,821],[425,788],[440,758],[455,730],[470,705],[485,682],[500,662],[515,643],[530,626],[545,611],[560,597],[575,584],[590,573],[605,562],[620,553],[635,544],[650,536],[665,529],[680,522],[695,516],[710,511],[725,506],[740,501],[755,496],[770,493],[785,489],[800,486],[815,482],[830,480],[845,477],[860,475],[875,473],[890,471],[905,469],[920,467],[935,466],[950,464],[965,463],[975,462]];
+const pptMM = x=>{ const P = PPT_MM_PTS; if(x<=P[0][0]) return P[0][1]; for(let i=1;i<P.length;i++){ if(x<=P[i][0]){ const t=(x-P[i-1][0])/(P[i][0]-P[i-1][0]); return P[i-1][1]+t*(P[i][1]-P[i-1][1]); } } return P[P.length-1][1]; };
 function pptSceneSubConc(){
   const L = pptFL();
-  let d = ''; for(let x=400; x<=975; x+=5) d += (d?'L':'M')+x+','+pptMM(x).toFixed(1);
+  let d = PPT_MM_PTS.map((p,i)=>(i?'L':'M')+p[0]+','+p[1]).join('');
   const enz = [0,1,2,3,4].map(k=>{ const x = 1250 + k*120, y = 320;
     return `<g transform="translate(${x},${y}) scale(.42)"><path d="${PPT_ENZ_PATH}" fill="#cfeee7" stroke="#0f7a68" stroke-width="8" stroke-linejoin="round"/></g>
-      <rect class="f61-s f61-s${k}" x="${x-10}" y="${y-37}" width="20" height="20" rx="4" fill="#f6a98a" stroke="#1d2a26" stroke-width="3"/>`; }).join('');
+      <rect class="f61-s f61-s${k}" x="${x-8}" y="${y-29}" width="16" height="19" rx="3" fill="#f6a98a" stroke="#1d2a26" stroke-width="3"/>`; }).join('');
   const wait = [0,1,2,3,4,5].map(k=>`<rect class="f61-w" x="${1240 + k*40}" y="${222 - (k%2)*16}" width="20" height="20" rx="4" fill="#f6a98a" stroke="#1d2a26" stroke-width="3"/>`).join('');
   return `<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
     <path class="f61-trace" d="${d}" fill="none" stroke="#f5b400" stroke-width="12" stroke-linecap="round"/>
@@ -3453,10 +3455,11 @@ function pptSceneSubConcStep(el, s){
   const busy = n=>el.querySelectorAll('.f61-s').forEach((r,k)=>r.style.opacity = k < n ? 1 : 0);
   cap.textContent = ''; busy(0);
   if(s === 'rest'){ dot.setAttribute('cx',-50); return; }
+  const full = (s === 3 || s === 4 || s === 5);   /* at Vmax every enzyme holds a substrate */
   const go = (from, to, ms, loop)=>pptSceneRaf(t=>{
     let f = loop ? (t % ms)/ms : Math.min(1, t/ms); const x = from + (to-from)*f;
     dot.setAttribute('cx', x); dot.setAttribute('cy', pptMM(x));
-    busy(Math.round(5 * (844 - pptMM(x)) / 394));
+    busy(full ? 5 : Math.min(5, Math.round(5 * (844 - pptMM(x)) / 382)));
   });
   if(s === 0) go(400, 400, 1);
   if(s === 1) go(400, 640, 2600, true);
@@ -3464,7 +3467,7 @@ function pptSceneSubConcStep(el, s){
   if(s === 3){ go(975, 975, 1); }
   if(s === 4){ go(975, 975, 1); cap.textContent = L.busy; }
   if(s === 5){ go(975, 975, 1); cap.textContent = L.more; }
-  if(s === 6){ go(496, 496, 1); cap.textContent = L.half; cap.setAttribute('fill','#6a45c2'); } else cap.setAttribute('fill','#0f6e5e');
+  if(s === 6){ go(503, 503, 1); cap.textContent = L.half; cap.setAttribute('fill','#6a45c2'); } else cap.setAttribute('fill','#0f6e5e');
 }
 
 /* Slide 62: substrate vs look-alike inhibitor racing for the active site */
