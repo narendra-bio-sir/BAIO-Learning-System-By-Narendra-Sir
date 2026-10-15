@@ -858,6 +858,10 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
 @keyframes f62Bounce{0%{transform:translate(1320px,650px)}45%{transform:translate(1490px,720px)}60%{transform:translate(1450px,690px) rotate(-20deg)}100%{transform:translate(1320px,650px)}}
 .ppt-scene[data-step="3"] .f62-x,.ppt-scene[data-step="4"] .f62-x,.ppt-scene[data-step="5"] .f62-x{opacity:1;}
 .ppt-scene[data-step="4"] .f62-i{animation:s57Pulse 1s ease-in-out infinite;}
+/* Dark theme: show the slides in dark colours (lightness flipped, colours kept); photo slides stay as they are */
+html:not([data-theme="light"]) #pptImg:not(.ppt-photo),
+html:not([data-theme="light"]) .ppt-thumb img:not(.ppt-photo),
+html:not([data-theme="light"]) .ppt-scene{filter:invert(.93) hue-rotate(180deg) saturate(1.15);}
 @media (prefers-reduced-motion: reduce){ .ppt-scene *{animation:none!important;transition:none!important;} }
 .fs-btn{position:absolute;pointer-events:auto;background:rgba(20,20,20,.6);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:50%;width:46px;height:46px;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .fs-btn:active{background:rgba(20,20,20,.85);}
@@ -3612,7 +3616,7 @@ function pptSlideSrc(i){ return pptSlides()[i]; }
 function pptBuildThumbs(){
   const thumbs = document.getElementById('pptThumbs');
   if(!thumbs) return;
-  thumbs.innerHTML = pptSlides().map((s,i)=>`<div class="ppt-thumb" id="pptThumb${i}" onclick="pptGoTo(${i})"><img loading="lazy" src="${pptSlideSrc(i)}" alt="Slide ${i+1}"></div>`).join('');
+  thumbs.innerHTML = pptSlides().map((s,i)=>`<div class="ppt-thumb" id="pptThumb${i}" onclick="pptGoTo(${i})"><img loading="lazy" src="${pptSlideSrc(i)}" alt="Slide ${i+1}"${(i===0||i===pptSlides().length-1)?' class="ppt-photo"':''}></div>`).join('');
 }
 function pptRender(){
   const img = document.getElementById('pptImg');
@@ -3622,6 +3626,7 @@ function pptRender(){
   img.classList.remove('loaded');
   if(typeof pptClearSpot==='function' && !pptTalking) pptClearSpot();
   img.src = pptSlideSrc(pptIdx);
+  img.classList.toggle('ppt-photo', pptIdx === 0 || pptIdx === pptSlides().length-1);   /* cover / closing photos keep their real colours */
   if(typeof pptSceneMount==='function') pptSceneMount();
   const fill = document.getElementById('pptProgressFill');
   if(fill) fill.style.width = (((pptIdx+1)/pptSlides().length)*100)+'%';
