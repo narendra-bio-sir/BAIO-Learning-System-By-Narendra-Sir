@@ -617,6 +617,10 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
 .ex-stop{padding:8px 14px;border-radius:999px;border:1px solid var(--line,#c9d6d2);background:transparent;color:inherit;font-weight:600;font-size:13px;cursor:pointer;}
 .ex-rate{font-size:13px;opacity:.85;display:inline-flex;align-items:center;gap:4px;}
 .ex-rate select{border-radius:8px;padding:4px 6px;background:transparent;color:inherit;border:1px solid var(--line,#c9d6d2);}
+#content mark.ex-hl{background:#ffd54a;color:#1b1b1b;border-radius:4px;padding:0 2px;box-shadow:0 0 0 2px rgba(255,213,74,.35);transition:background .2s ease;}
+#content tr.ex-row td{background:rgba(255,213,74,.28)!important;}
+.ex-cc{padding:7px 12px;border-radius:999px;border:1.5px solid var(--gold,#D4AF37);background:rgba(212,175,55,.2);color:inherit;font-weight:800;font-size:13px;cursor:pointer;letter-spacing:.04em;}
+.ex-cc.off{background:transparent;opacity:.55;text-decoration:line-through;}
 #content .ex-on{outline:3px solid #D4AF37;outline-offset:4px;border-radius:10px;background-color:rgba(212,175,55,.12);transition:background-color .3s ease,outline-color .3s ease;}
 .ex-cap{position:fixed;left:50%;bottom:16px;transform:translate(-50%,20px);width:min(760px,calc(100% - 24px));padding:12px 16px;border-radius:14px;background:rgba(17,24,32,.93);color:#fff;font-size:16px;line-height:1.45;text-align:center;z-index:9999;opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease;box-shadow:0 10px 30px rgba(0,0,0,.35);}
 .ex-cap.show{opacity:1;transform:translate(-50%,0);}
@@ -1580,6 +1584,7 @@ const CONCEPT_TRANSLATIONS_CH9 = {"composition": {"kn": {"hook": "ಭೂಮಿ�
 /* ---------------- NARENDRA SIR EXPLAINS: spoken teacher explanation for Study Mode / Concepts / Study Tips ----------------
    Script per topic & language lives in pu1-ch9-assets/explain.json as [target, text] segments. While a segment is spoken,
    the matching block on screen ([data-ex=target]) is highlighted and scrolled into view; captions show the sentence. */
+let exCaps = (function(){ try{ return localStorage.getItem('pu1ch9_ex_caps')!=='0'; }catch(e){ return true; } })();
 let EX_DATA = null, exLoading = null, exRun = 0, exOn = false, exPaused = false, exSegs = [], exSi = 0, exQi = 0, exQueue = [], exKind = '';
 const EX_LBL = {
   en:{play:'Narendra Sir explains', pause:'Pause', resume:'Resume', stop:'Stop', noVoice:'No voice for this language on this device — install it in phone Settings › Text-to-speech.', loadErr:'Could not load the explanation. Check the internet connection.'},
@@ -1598,6 +1603,7 @@ function exBarHtml(kind){
   return `<div class="ex-bar" data-kind="${kind}">
     <button type="button" class="ex-play" id="exPlay" onclick="exToggle('${kind}')"><span class="ex-ava">NS</span><span id="exPlayLbl">▶ ${L.play}</span></button>
     <button type="button" class="ex-stop" id="exStop" onclick="exStop()" hidden>■ ${L.stop}</button>
+    <button type="button" class="ex-cc${exCaps?'':' off'}" id="exCc" onclick="exToggleCaps()" title="Captions on/off" aria-pressed="${exCaps}">CC</button>
     <label class="ex-rate">⏱ <select onchange="exSetRate(this.value)">${[['0.85','0.85×'],['1','1×'],['1.15','1.15×']].map(o=>`<option value="${o[0]}" ${String(pptRate)===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select></label>
   </div>`;
 }
@@ -1609,12 +1615,77 @@ function exButtons(){
   if(s) s.hidden = !exOn;
   const p = document.getElementById('exPlay'); if(p) p.classList.toggle('on', exOn && !exPaused);
 }
+function exToggleCaps(){
+  exCaps = !exCaps; try{ localStorage.setItem('pu1ch9_ex_caps', exCaps?'1':'0'); }catch(e){}
+  const b = document.getElementById('exCc'); if(b){ b.classList.toggle('off', !exCaps); b.setAttribute('aria-pressed', exCaps); }
+  if(!exCaps) exCaption('');
+}
+window.exToggleCaps = exToggleCaps;
 function exCaption(t){
+  if(t && !exCaps && t !== exL().loadErr) t = '';
   let c = document.getElementById('exCap');
   if(!c){ c = document.createElement('div'); c.id = 'exCap'; c.className = 'ex-cap'; c.setAttribute('aria-live','polite'); document.body.appendChild(c); }
   c.textContent = t || ''; c.classList.toggle('show', !!t);
 }
+/* Inside the block being explained, light up the exact numbers / terms / table rows Sir is saying right now */
+const EX_NUMW = {one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12,thirteen:13,fourteen:14,fifteen:15,sixteen:16,seventeen:17,eighteen:18,nineteen:19,twenty:20,thirty:30,forty:40,fifty:50,sixty:60,seventy:70,eighty:80,ninety:90,hundred:100,thousand:1000};
+const EX_STOP = new Set('about above after again also always among another because become becomes before being below between both called cannot comes could does doing during each every first from have here into just like look made make makes many more most much must next only other over remember same says second simple since some still students such than that their them then there these they thing think this those three through today under until very want were what when where which while will with within without would your yours sir narendra please learn easy simply important exams exam'.split(' '));
+const EX_GREEK = {alpha:'α', beta:'β'};
+/* Kannada / Hindi number words (matched as word beginnings, so ಎಪ್ಪತ್ತರಿಂದ counts as 70) — longest first */
+const EX_NUMI = [['ಎಂಟುನೂರು',800],['ಹದಿನೆಂಟು',18],['ಹದಿನೈದು',15],['ಇಪ್ಪತ್ತೇಳು',27],['ಇಪ್ಪತ್ತು',20],['ಎಪ್ಪತ್ತು',70],['ಎಪ್ಪತ್ತ',70],['ತೊಂಬತ್ತು',90],['ಇನ್ನೂರು',200],['ಸಾವಿರ',1000],['ನಲವತ್ತು',40],['ಎಂಬತ್ತು',80],['ಹತ್ತು',10],
+  ['आठ सौ',800],['अठारह',18],['पंद्रह',15],['सत्ताईस',27],['बीस',20],['सत्तर',70],['नब्बे',90],['हज़ार',1000],['चालीस',40],['अस्सी',80],['दो सौ',200],['दस',10]];
+const EX_STOPI = new Set('ಮತ್ತು ಇದು ಅದು ಎಂದು ಆದರೆ ಹೆಚ್ಚು ಇದೆ ಇವೆ ಅತಿ ಒಂದು ಎರಡು ಮೂರು ಇಲ್ಲಿ ನೋಡಿ ನೆನಪಿಡಿ ವಿದ್ಯಾರ್ಥಿಗಳೇ ಆದ್ದರಿಂದ ಏಕೆಂದರೆ और में हैं की का के से को यह वह भी लिए होता होते होती इसलिए याद रखिए देखिए विद्यार्थियो सबसे लगभग'.split(' '));
+function exClearHl(){
+  document.querySelectorAll('#content mark.ex-hl').forEach(m=>{ const p = m.parentNode; p.replaceChild(document.createTextNode(m.textContent), m); p.normalize(); });
+  document.querySelectorAll('#content .ex-row').forEach(e=>e.classList.remove('ex-row'));
+}
+function exEsc(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+function exTerms(text){
+  const nums = new Set(), words = new Set();
+  (text.match(/\d+(?:\.\d+)?/g)||[]).forEach(n=>nums.add(n.replace(/\.0+$/,'')));
+  const low = text.toLowerCase();
+  low.replace(/\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)(?:\s+(hundred|thousand))?\b/g,(m,a,b)=>{ let v = EX_NUMW[a]; if(b) v *= EX_NUMW[b]; nums.add(String(v)); return m; });
+  (text.match(/[\p{L}\p{M}][\p{L}\p{M}'\-]*/gu)||[]).forEach(w=>{
+    const lw = w.toLowerCase();
+    const latin = /^[a-z'\-]+$/.test(lw);
+    const kv = !latin && EX_NUMI.find(([k])=>lw.startsWith(k));
+    if(kv){ nums.add(String(kv[1])); return; }
+    if(latin && EX_GREEK[lw]){ words.add(EX_GREEK[lw]); return; }
+    if(latin ? (lw.length >= 4 && !EX_STOP.has(lw) && !EX_NUMW[lw]) : (lw.length >= 4 && !EX_STOPI.has(lw))) words.add(lw);
+  });
+  return {nums:[...nums], words:[...words]};
+}
+function exHighlight(target, text){
+  exClearHl();
+  const root = document.querySelector('#content [data-ex="'+target+'"]'); if(!root) return;
+  const {nums, words} = exTerms(text);
+  const pats = [];
+  nums.forEach(n=>pats.push('(?<![\\d.])'+exEsc(n)+(n.indexOf('.')>=0 ? '0*' : '(?:\\.0+)?')+'(?![\\d])'));
+  words.forEach(w=>{ const stem = /^[a-z]/.test(w) ? exEsc(w.length > 6 ? w.slice(0, w.length-2) : w) + '[a-z]*' : exEsc(w);
+    pats.push(/^[a-z]/.test(w) ? '\\b'+stem : stem); });
+  if(!pats.length) return;
+  const re = new RegExp('('+pats.join('|')+')', 'giu');
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {acceptNode:n=>{
+    const p = n.parentNode; if(!p || /^(SCRIPT|STYLE|BUTTON|MARK)$/.test(p.nodeName) || p.closest('button,.aq-a:not(.show)')) return NodeFilter.FILTER_REJECT;
+    return n.nodeValue.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT; }});
+  const nodes = []; while(walker.nextNode()) nodes.push(walker.currentNode);
+  let hits = 0;
+  nodes.forEach(node=>{
+    const t = node.nodeValue; re.lastIndex = 0; if(!re.test(t)) return; re.lastIndex = 0;
+    const frag = document.createDocumentFragment(); let last = 0, m;
+    while((m = re.exec(t))){ if(!m[0]){ re.lastIndex++; continue; }
+      frag.appendChild(document.createTextNode(t.slice(last, m.index)));
+      const mk = document.createElement('mark'); mk.className = 'ex-hl'; mk.textContent = m[0]; frag.appendChild(mk); last = m.index + m[0].length; hits++; }
+    frag.appendChild(document.createTextNode(t.slice(last)));
+    node.parentNode.replaceChild(frag, node);
+  });
+  /* table: light the whole row(s) that hold what Sir is reading */
+  root.querySelectorAll('tr').forEach(tr=>{ if(tr.querySelector('mark.ex-hl') && !tr.querySelector('th')) tr.classList.add('ex-row'); });
+  const first = root.querySelector('tr.ex-row, mark.ex-hl');
+  if(first && root.offsetHeight > window.innerHeight*0.55){ try{ first.scrollIntoView({behavior:'smooth', block:'center'}); }catch(e){} }
+}
 function exMark(target){
+  exClearHl();
   document.querySelectorAll('#content .ex-on').forEach(e=>e.classList.remove('ex-on'));
   if(!target) return;
   const el = document.querySelector('#content [data-ex="'+target+'"]');
@@ -1653,6 +1724,7 @@ function exSpeak(id){
   /* analytical questions: show the reasoning when Sir starts giving the answer */
   if(/^aq\d+$/.test(target) && (/^(The answer|Answer|ಉತ್ತರ|उत्तर)/i.test(text) || (exQi > 0 && /\?\s*$/.test(exQueue[exQi-1])))){ const a = document.querySelector('#content [data-ex="'+target+'"] .aq-a'); if(a) a.classList.add('show'); }
   exCaption(text);
+  exHighlight(target, text);
   const lang = (EX_DATA && ((exKind==='tips' ? EX_DATA.tips[currentLang] : EX_DATA[exKind][currentTopic] && EX_DATA[exKind][currentTopic][currentLang]))) ? currentLang : 'en';
   const u = new SpeechSynthesisUtterance(text);
   u.lang = PPT_TTS_TAG[lang] || 'en-IN'; const v = pptVoice(lang); if(v){ try{ u.voice = v; }catch(e){} }
