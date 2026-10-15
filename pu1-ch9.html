@@ -573,6 +573,33 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
 .ppt-explain.on{background:var(--teal);color:#fff;}
 .ppt-talk-opt{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink);}
 .ppt-talk-opt select{max-width:210px;padding:4px 6px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);}
+/* One-Shot Revision */
+.os-sub{color:var(--ink-dim);font-size:13px;margin:0 0 12px;}
+.os-wrap{position:relative;}
+.os-wrap .fs-controls{z-index:6;}
+.os-cardover{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:6%;text-align:center;background:linear-gradient(140deg,rgba(11,40,34,.94),rgba(15,122,104,.9));color:#fff;border-radius:inherit;animation:osCardIn .45s ease;}
+.os-cardover[hidden]{display:none;}
+.os-co-k{font-size:clamp(12px,2.2vw,22px);letter-spacing:.16em;text-transform:uppercase;color:#f3d77a;font-weight:800;}
+.os-co-t{font-size:clamp(20px,4.6vw,56px);font-weight:800;line-height:1.15;max-width:90%;}
+@keyframes osCardIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
+.os-bigplay{position:absolute;left:50%;top:50%;translate:-50% -50%;z-index:5;width:76px;height:76px;border-radius:50%;border:3px solid #fff;background:rgba(15,122,104,.88);color:#fff;font-size:30px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;padding-left:6px;}
+.os-bigplay[hidden]{display:none;}
+.os-fs-bar{position:absolute;left:0;right:0;bottom:0;height:5px;background:rgba(255,255,255,.18);}
+.os-fs-fill{height:100%;width:0;background:#D4AF37;transition:width .4s ease;}
+.os-timeline{display:flex;gap:4px;margin:12px 0 6px;}
+.os-seg{flex:1 1 0;min-width:10px;height:12px;border-radius:6px;border:1px solid var(--line);background:var(--panel2);padding:0;cursor:pointer;overflow:hidden;position:relative;}
+.os-seg.cur{border-color:var(--gold);box-shadow:0 0 0 2px rgba(212,175,55,.35);}
+.os-seg-fill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--teal,#0f7a68);transition:width .4s ease;}
+.os-meta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--ink-dim);margin-bottom:12px;}
+.os-meta #osNow{font-weight:700;color:var(--ink);}
+.os-ctrl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;margin:4px 0 12px;}
+.os-ctrl .os-main{min-width:190px;}
+.os-opts{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;margin-bottom:10px;}
+.os-link{background:none;border:0;color:var(--teal,#0f7a68);font-weight:700;cursor:pointer;font-size:13px;}
+.os-caption.empty{display:none;}
+.os-parts{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;}
+.os-parts button{width:100%;text-align:left;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);cursor:pointer;font-size:13px;}
+.os-parts button b{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--gold,#D4AF37);color:#0b1b14;margin-right:6px;font-size:12px;}
 .ppt-caption{margin-top:10px;min-height:48px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);border-left:4px solid var(--teal);background:var(--panel2);font-size:15px;font-weight:600;line-height:1.5;color:var(--ink);}
 .ppt-caption.hint{color:var(--ink-dim);font-weight:500;font-size:13px;}
 .ppt-voice-warn{margin-top:8px;padding:8px 12px;border-radius:10px;border:1px dashed var(--gold);font-size:12.5px;line-height:1.5;color:var(--ink);}
@@ -1254,6 +1281,7 @@ const TABS = [
   {id:'badges', label:'Milestones'},
   {id:'progress', label:'Progress'},
   {id:'study', label:'Study Mode'},
+  {id:'oneshot', label:'One-Shot Revision'},
   {id:'podcast', label:'Audio Podcast'},
   {id:'studytips', label:'Study Tips'},
   {id:'pacing', label:'Pacing'},
@@ -1286,7 +1314,7 @@ function esc(s){ return (s===undefined||s===null)?'':String(s); }
 /* ---- Chapter tab bar: group the tabs into categories behind a dropdown,
    so the long tab list no longer needs one long scrolling row. ---- */
 const TAB_CATEGORIES = [
-  {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','concepts','podcast','studytips','boardimp','diagrams']},
+  {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','oneshot','concepts','podcast','studytips','boardimp','diagrams']},
   {id:'practice', label:'Practice', icon:'✍️', tabs:['flashcards','mcq','writeit','revision']},
   {id:'test', label:'Test Prep', icon:'\u{1F3AF}', tabs:['neet','kcet','papergen']},
   {id:'explore', label:'Explore', icon:'\u{1F50D}', tabs:['tree','compare','mindmap','classppt','glossary']},
@@ -3678,6 +3706,256 @@ function pptSetDeck(d){
 }
 window.pptSetDeck = pptSetDeck;
 
+/* ---------------- ONE-SHOT REVISION: the whole chapter as one continuous, narrated "video" ----------------
+   Plays the Large Text slides in order with Narendra Sir's narration, the live diagrams and the highlight boxes.
+   Revision cut: a few overview slides are skipped and lead-in sentences are left out. Every kept sentence keeps its
+   original position on the slide, so the highlight box and the diagram step stay exactly in sync with the voice. */
+const OS_SKIP = [5, 12, 13, 21, 41];   /* 0-based slide indices left out of the revision (overviews / repeats) */
+const OS_DROP = {"en":{"1":[0,1,4,6],"2":[0,5],"3":[0,3,5],"4":[0,5,7],"6":[0],"7":[0,4],"8":[0,2],"9":[0,5],"10":[2,4],"11":[0,6],"14":[0],"15":[2],"18":[0,4,5],"20":[0,4,5],"22":[5],"24":[0],"26":[6],"27":[5],"28":[0,3],"29":[0],"31":[0,1,7],"32":[0],"34":[0],"35":[0,5],"36":[0,2,3,4,7],"37":[0,7,8],"38":[0],"39":[5],"40":[0],"42":[0,6],"43":[0,4,5,6],"44":[7],"47":[9],"48":[0,2],"54":[0],"55":[1,5]},"kn":{"1":[0,1,5,7],"2":[0,6],"3":[0,3,5],"4":[0,7,9],"6":[0],"7":[0,4],"8":[0,2],"9":[0,5],"10":[4,6],"11":[0,8],"14":[0],"15":[2],"18":[0,5,6],"20":[0,4,5],"22":[5],"24":[0],"26":[8],"27":[5],"28":[0,4],"29":[0],"31":[0,1,7],"32":[0],"34":[0],"35":[0,7],"36":[0,3,4,5,8],"37":[0,7,8],"38":[0],"39":[6],"40":[0],"42":[0,9],"43":[0,5,6,7,8],"44":[7],"47":[9],"48":[0,2],"54":[0],"55":[1,5]},"hi":{"1":[0,1,5,7],"2":[0,6],"3":[0,3,5],"4":[0,5,7],"6":[0],"7":[0,4],"8":[0,2],"9":[0,5],"10":[2,4],"11":[0,6],"14":[0],"15":[2],"18":[0,5,6],"20":[0,4,5,6],"22":[5],"24":[0],"26":[6],"27":[5],"28":[0,4],"29":[0],"31":[0,1,7],"32":[0],"34":[0],"35":[0,5],"36":[0,2,3,4,7],"37":[0,7,8],"38":[0],"39":[5],"40":[0],"42":[0,6],"43":[0,4,5,6],"44":[7],"47":[9],"48":[0,2],"54":[0],"55":[1,5]}};           /* per language: slide index -> sentence numbers left out */
+const OS_PARTS = [
+  {from:1,  en:'Chemical composition of living tissue', kn:'ಜೀವಂತ ಅಂಗಾಂಶದ ರಾಸಾಯನಿಕ ಸಂಯೋಜನೆ', hi:'सजीव ऊतक का रासायनिक संघटन'},
+  {from:14, en:'Amino acids', kn:'ಅಮೈನೋ ಆಮ್ಲಗಳು', hi:'अमीनो अम्ल'},
+  {from:22, en:'Lipids', kn:'ಲಿಪಿಡ್‌ಗಳು', hi:'लिपिड'},
+  {from:28, en:'Nucleotides and nucleic acids', kn:'ನ್ಯೂಕ್ಲಿಯೋಟೈಡ್‌ಗಳು ಮತ್ತು ನ್ಯೂಕ್ಲಿಯಿಕ್ ಆಮ್ಲಗಳು', hi:'न्यूक्लियोटाइड और न्यूक्लिक अम्ल'},
+  {from:36, en:'Biomacromolecules and polysaccharides', kn:'ಜೈವಿಕ ಬೃಹದಣುಗಳು ಮತ್ತು ಪಾಲಿಸ್ಯಾಕರೈಡ್‌ಗಳು', hi:'जैव-वृहत् अणु और पॉलीसैकेराइड'},
+  {from:42, en:'Proteins and metabolites', kn:'ಪ್ರೋಟೀನ್‌ಗಳು ಮತ್ತು ಚಯಾಪಚಯಕಗಳು', hi:'प्रोटीन और उपापचयज'},
+  {from:48, en:'Enzymes: nature, cofactors and classes', kn:'ಕಿಣ್ವಗಳು: ಸ್ವರೂಪ, ಸಹಕಾರಕಗಳು ಮತ್ತು ವರ್ಗಗಳು', hi:'एंज़ाइम: प्रकृति, सहकारक और वर्ग'},
+  {from:54, en:'How enzymes work', kn:'ಕಿಣ್ವಗಳು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತವೆ', hi:'एंज़ाइम कैसे काम करते हैं'}
+];
+const OS_NUM = {en:['one','two','three','four','five','six','seven','eight'], kn:['ಒಂದು','ಎರಡು','ಮೂರು','ನಾಲ್ಕು','ಐದು','ಆರು','ಏಳು','ಎಂಟು'], hi:['एक','दो','तीन','चार','पाँच','छह','सात','आठ']};
+const OS_TXT = {
+  en:{part:'Part', of:'of', intro:'Hello students. I am Narendra Sir, and this is the one-shot revision of Chapter 9, Biomolecules, for PU-I Biology. We will revise the whole chapter in one go, in eight parts. Keep your notes ready, and pause whenever you want to write something down. Let us begin.',
+      outro:'That completes the one-shot revision of Biomolecules. Quickly recall the big ideas. Living matter is rich in carbon. Micromolecules are below one thousand daltons, and macromolecules are above. Proteins, nucleic acids and polysaccharides are polymers, but lipids are not. Enzymes are mostly proteins. They lower the activation energy, and they work best at an optimum temperature and pH. Now test yourself with the MCQ, NEET and KCET practice in this app. All the best, students.',
+      title:'One-Shot Revision', sub:'The full chapter in one go · Narendra Sir explains every slide', play:'Play', pause:'Pause', resume:'Resume', start:'Start revision', again:'Start again', resumeAt:'Resume from', left:'min left', total:'min in total', speed:'Speed', caps:'Captions', fs:'Full Screen', prev:'Previous part', next:'Next part', done:'Revision complete! 🎉', noVoice:'No voice for this language on this device. Captions will play instead — add the voice in phone Settings › Text-to-speech.', loadErr:'Could not load the narration. Check the internet connection and try again.'},
+  kn:{part:'ಭಾಗ', of:'/', intro:'ನಮಸ್ಕಾರ ವಿದ್ಯಾರ್ಥಿಗಳೇ. ನಾನು ನರೇಂದ್ರ ಸರ್. ಇದು PU-I ಜೀವಶಾಸ್ತ್ರದ ಅಧ್ಯಾಯ ಒಂಬತ್ತು, ಜೈವಿಕ ಅಣುಗಳ ಒನ್-ಶಾಟ್ ಪುನರಾವರ್ತನೆ. ಇಡೀ ಅಧ್ಯಾಯವನ್ನು ಒಂದೇ ಬಾರಿಗೆ, ಎಂಟು ಭಾಗಗಳಲ್ಲಿ ಪುನರಾವರ್ತಿಸೋಣ. ನಿಮ್ಮ ನೋಟ್ಸ್ ಸಿದ್ಧವಾಗಿಟ್ಟುಕೊಳ್ಳಿ, ಬರೆದುಕೊಳ್ಳಬೇಕಾದಾಗ ವಿರಾಮ ಒತ್ತಿ. ಬನ್ನಿ, ಆರಂಭಿಸೋಣ.',
+      outro:'ಇದರೊಂದಿಗೆ ಜೈವಿಕ ಅಣುಗಳ ಒನ್-ಶಾಟ್ ಪುನರಾವರ್ತನೆ ಮುಗಿಯಿತು. ಮುಖ್ಯ ಅಂಶಗಳನ್ನು ಬೇಗ ನೆನಪಿಸಿಕೊಳ್ಳಿ. ಜೀವಂತ ವಸ್ತುವಿನಲ್ಲಿ ಕಾರ್ಬನ್ ಹೇರಳವಾಗಿದೆ. ಸೂಕ್ಷ್ಮಅಣುಗಳು ಒಂದು ಸಾವಿರ ಡಾಲ್ಟನ್‌ಗಿಂತ ಕಡಿಮೆ, ಬೃಹದಣುಗಳು ಅದಕ್ಕಿಂತ ಹೆಚ್ಚು. ಪ್ರೋಟೀನ್‌ಗಳು, ನ್ಯೂಕ್ಲಿಯಿಕ್ ಆಮ್ಲಗಳು ಮತ್ತು ಪಾಲಿಸ್ಯಾಕರೈಡ್‌ಗಳು ಪಾಲಿಮರ್‌ಗಳು, ಆದರೆ ಲಿಪಿಡ್‌ಗಳು ಪಾಲಿಮರ್‌ಗಳಲ್ಲ. ಕಿಣ್ವಗಳು ಹೆಚ್ಚಾಗಿ ಪ್ರೋಟೀನ್‌ಗಳು. ಅವು ಸಕ್ರಿಯಗೊಳಿಸುವ ಶಕ್ತಿಯನ್ನು ಕಡಿಮೆ ಮಾಡುತ್ತವೆ, ಮತ್ತು ಸೂಕ್ತ ತಾಪಮಾನ ಹಾಗೂ pH ನಲ್ಲಿ ಚೆನ್ನಾಗಿ ಕೆಲಸ ಮಾಡುತ್ತವೆ. ಈಗ ಈ ಆ್ಯಪ್‌ನ MCQ, NEET ಮತ್ತು KCET ಅಭ್ಯಾಸದಿಂದ ನಿಮ್ಮನ್ನು ಪರೀಕ್ಷಿಸಿಕೊಳ್ಳಿ. ಎಲ್ಲರಿಗೂ ಶುಭವಾಗಲಿ.',
+      title:'ಒನ್-ಶಾಟ್ ಪುನರಾವರ್ತನೆ', sub:'ಇಡೀ ಅಧ್ಯಾಯ ಒಂದೇ ಬಾರಿಗೆ · ಪ್ರತಿ ಸ್ಲೈಡ್ ಅನ್ನು ನರೇಂದ್ರ ಸರ್ ವಿವರಿಸುತ್ತಾರೆ', play:'ಪ್ಲೇ', pause:'ವಿರಾಮ', resume:'ಮುಂದುವರಿಸಿ', start:'ಪುನರಾವರ್ತನೆ ಆರಂಭಿಸಿ', again:'ಮತ್ತೆ ಆರಂಭಿಸಿ', resumeAt:'ಇಲ್ಲಿಂದ ಮುಂದುವರಿಸಿ', left:'ನಿಮಿಷ ಬಾಕಿ', total:'ನಿಮಿಷ ಒಟ್ಟು', speed:'ವೇಗ', caps:'ಶೀರ್ಷಿಕೆಗಳು', fs:'ಪೂರ್ಣ ಪರದೆ', prev:'ಹಿಂದಿನ ಭಾಗ', next:'ಮುಂದಿನ ಭಾಗ', done:'ಪುನರಾವರ್ತನೆ ಮುಗಿಯಿತು! 🎉', noVoice:'ಈ ಸಾಧನದಲ್ಲಿ ಕನ್ನಡ ಧ್ವನಿ ಇಲ್ಲ. ಶೀರ್ಷಿಕೆಗಳು ಮಾತ್ರ ಬರುತ್ತವೆ — ಫೋನ್ Settings › Text-to-speech ನಲ್ಲಿ ಧ್ವನಿ ಸೇರಿಸಿ.', loadErr:'ವಿವರಣೆ ಲೋಡ್ ಆಗಲಿಲ್ಲ. ಇಂಟರ್ನೆಟ್ ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.'},
+  hi:{part:'भाग', of:'/', intro:'नमस्ते विद्यार्थियों। मैं नरेंद्र सर हूँ। यह PU-I जीवविज्ञान के अध्याय नौ, जैव अणु, का वन-शॉट रिवीज़न है। हम पूरे अध्याय को एक ही बार में, आठ भागों में दोहराएँगे। अपने नोट्स तैयार रखिए, और कुछ लिखना हो तो रोक दीजिए। चलिए, शुरू करते हैं।',
+      outro:'इसके साथ जैव अणु का वन-शॉट रिवीज़न पूरा हुआ। मुख्य बातें जल्दी से याद कीजिए। सजीव पदार्थ में कार्बन प्रचुर है। सूक्ष्म अणु एक हज़ार डाल्टन से कम होते हैं, और वृहत् अणु उससे अधिक। प्रोटीन, न्यूक्लिक अम्ल और पॉलीसैकेराइड बहुलक हैं, लेकिन लिपिड बहुलक नहीं हैं। एंज़ाइम अधिकतर प्रोटीन होते हैं। ये सक्रियण ऊर्जा कम करते हैं, और इष्टतम ताप तथा pH पर सबसे अच्छा काम करते हैं। अब इस ऐप में MCQ, NEET और KCET अभ्यास से खुद को परखिए। सभी को शुभकामनाएँ।',
+      title:'वन-शॉट रिवीज़न', sub:'पूरा अध्याय एक बार में · हर स्लाइड नरेंद्र सर समझाते हैं', play:'चलाएँ', pause:'रोकें', resume:'जारी रखें', start:'रिवीज़न शुरू करें', again:'फिर से शुरू करें', resumeAt:'यहाँ से जारी रखें', left:'मिनट बाकी', total:'मिनट कुल', speed:'गति', caps:'कैप्शन', fs:'फुल स्क्रीन', prev:'पिछला भाग', next:'अगला भाग', done:'रिवीज़न पूरा! 🎉', noVoice:'इस डिवाइस पर हिंदी आवाज़ नहीं है। केवल कैप्शन चलेंगे — फ़ोन Settings › Text-to-speech में आवाज़ जोड़ें।', loadErr:'व्याख्या लोड नहीं हुई। इंटरनेट जाँचकर फिर कोशिश करें।'}
+};
+const osT = ()=>OS_TXT[pptLang] || OS_TXT.en;
+let osSeq = [], osPos = 0, osSent = 0, osRun = 0, osPlaying = false, osShown = -1, osSavedDeck = null, osWake = null, osDoneMs = 0, osCps = 14;
+let osRate = (function(){ try{ const v = parseFloat(localStorage.getItem('pu1ch9_os_rate')); return v>0 ? v : 1.1; }catch(e){ return 1.1; } })();
+/* the running order: intro, then a title card before each part, the slides of that part, and the closing slide */
+function osBuildSeq(){
+  const last = (PPT_DECKS.large.en || []).length - 1, seq = [{k:'intro', slide:0}];
+  OS_PARTS.forEach((p, pi)=>{
+    const end = pi < OS_PARTS.length-1 ? OS_PARTS[pi+1].from : last;
+    seq.push({k:'part', part:pi, slide:p.from});
+    for(let s = p.from; s < end; s++) if(OS_SKIP.indexOf(s) === -1) seq.push({k:'slide', part:pi, slide:s});
+  });
+  seq.push({k:'outro', part:OS_PARTS.length-1, slide:last});
+  osSeq = seq;
+}
+/* sentences of one step: [{t, oi, on}] - oi/on = position among the slide's full narration (keeps highlight + diagram sync) */
+function osSentencesOf(item, N){
+  const L = pptLang, T = osT();
+  if(item.k === 'intro') return pptSentences(T.intro).map(t=>({t, oi:-1}));
+  if(item.k === 'outro') return pptSentences(T.outro).map(t=>({t, oi:-1}));
+  if(item.k === 'part'){ const p = OS_PARTS[item.part]; return [{t: T.part+' '+(OS_NUM[L]||OS_NUM.en)[item.part]+'. '+(p[L]||p.en)+'.', oi:-1, card:true}]; }
+  const list = N && N.large && (N.large[L] || N.large.en), all = pptSentences(list ? list[item.slide] : '');
+  const drop = ((OS_DROP[L] || OS_DROP.en)[item.slide]) || [];
+  return all.map((t, i)=>({t, oi:i, on:all.length})).filter(x=>drop.indexOf(x.oi) === -1);
+}
+let osCharsCache = null;
+function osChars(N){
+  /* characters per step for the timeline and the time estimate */
+  osCharsCache = osSeq.map(it=>osSentencesOf(it, N).reduce((a, s)=>a + s.t.length, 0) + (it.k==='part' ? 40 : 18));
+  return osCharsCache;
+}
+function osMinutesLeft(){
+  if(!osCharsCache) return null;
+  let c = 0; for(let i = osPos; i < osCharsCache.length; i++) c += osCharsCache[i];
+  return Math.max(1, Math.round(c / (osCps * osRate) / 60 + (osCharsCache.length - osPos) * 1.6 / 60));
+}
+function osSave(){ try{ localStorage.setItem('pu1ch9_os_pos', JSON.stringify({pos:osPos})); }catch(e){} }
+function osSavedPos(){ try{ const o = JSON.parse(localStorage.getItem('pu1ch9_os_pos')||'null'); return o && o.pos > 0 && o.pos < osSeq.length-1 ? o.pos : 0; }catch(e){ return 0; } }
+
+function renderOneShot(){
+  if(!osSeq.length) osBuildSeq();
+  if(osSavedDeck === null){ osSavedDeck = pptDeck; }
+  pptDeck = 'large';
+  const T = osT(), saved = osSavedPos();
+  document.getElementById('content').innerHTML = `<div class="setup-card os-card">
+    <h3 style="color:var(--gold);margin-bottom:4px;">🎬 ${T.title}</h3>
+    <div class="os-sub">${T.sub}</div>
+    <div class="ppt-lang-switch" id="osLangBar" role="group" aria-label="Language">${PPT_LANGS.map(l=>`<button type="button" class="${pptLang===l.id?'active':''}" onclick="osSetLang('${l.id}')">${l.label}</button>`).join('')}</div>
+    <div class="ppt-slide-wrap os-wrap" id="pptWrap">
+      <img id="pptImg" src="" alt="" onload="this.classList.add('loaded'); if(window.pptSceneOnLoad) pptSceneOnLoad();">
+      <div class="ppt-spot-layer" id="pptSpotLayer" aria-hidden="true"><div class="ppt-spot" id="pptSpot"></div></div>
+      <div class="os-cardover" id="osCardOver" hidden><div class="os-co-k" id="osCoK"></div><div class="os-co-t" id="osCoT"></div></div>
+      <button type="button" class="os-bigplay" id="osBigPlay" onclick="osToggle()" aria-label="${T.play}">▶</button>
+      <div class="fs-controls">
+        <button class="fs-btn fs-prev" onclick="osPart(-1)" title="${T.prev}">&#10094;</button>
+        <button class="fs-btn fs-next" onclick="osPart(1)" title="${T.next}">&#10095;</button>
+        <button class="fs-btn fs-exit" onclick="pptExitFullscreen()">&#10005;</button>
+        <button class="fs-btn fs-cc${pptCaps?'':' off'}" id="osFsCc" onclick="osToggleCaps()" title="${T.caps}">CC</button>
+        <button class="fs-btn fs-talk" id="osFsPlay" onclick="osToggle()" title="${T.play}">&#9654;</button>
+        <div class="fs-caption" id="osFsCaption"></div>
+        <button class="fs-btn fs-lang" onclick="osCycleLang()" title="Language">${(PPT_LANGS.find(x=>x.id===pptLang)||PPT_LANGS[0]).short}</button>
+        <div class="os-fs-bar"><div class="os-fs-fill" id="osFsFill"></div></div>
+      </div>
+    </div>
+    <div class="os-timeline" id="osTimeline" role="group" aria-label="Parts">${OS_PARTS.map((p,i)=>`<button type="button" class="os-seg" data-part="${i}" onclick="osJumpPart(${i})" title="${T.part} ${i+1}: ${p[pptLang]||p.en}"><span class="os-seg-fill"></span></button>`).join('')}</div>
+    <div class="os-meta"><span id="osNow"></span><span id="osTime"></span></div>
+    <div class="os-ctrl">
+      <button type="button" class="opt-btn" onclick="osPart(-1)" title="${T.prev}">⏮</button>
+      <button type="button" class="ppt-explain os-main" id="osMainBtn" onclick="osToggle()">▶ ${saved ? T.resume : T.start}</button>
+      <button type="button" class="opt-btn" onclick="osPart(1)" title="${T.next}">⏭</button>
+      <button type="button" class="opt-btn" onclick="pptFullscreen()">&#9974; ${T.fs}</button>
+    </div>
+    <div class="os-opts">
+      <label class="ppt-talk-opt">${T.speed} <select onchange="osSetRate(this.value)">${['1','1.1','1.25'].map(v=>`<option value="${v}" ${String(osRate)===v?'selected':''}>${v}×</option>`).join('')}</select></label>
+      <label class="ppt-talk-opt"><input type="checkbox" id="osCapsChk" ${pptCaps?'checked':''} onchange="osToggleCaps(this.checked)"> ${T.caps}</label>
+      ${saved ? `<button type="button" class="os-link" onclick="osRestart()">↺ ${T.again}</button>` : ''}
+    </div>
+    <div class="ppt-caption os-caption" id="osCaption" aria-live="polite"></div>
+    <div class="ppt-voice-warn" id="osVoiceWarn" hidden></div>
+    <ol class="os-parts">${OS_PARTS.map((p,i)=>`<li><button type="button" onclick="osJumpPart(${i})"><b>${i+1}</b> ${p[pptLang]||p.en}</button></li>`).join('')}</ol>
+  </div>`;
+  osPos = saved; osSent = 0; osShown = -1;
+  osShow(true);
+  pptLoadNarr().then(N=>{ osChars(N); osUi(); }).catch(()=>{});
+  pptLoadCues().catch(()=>null);
+  osUi();
+}
+function osCaption(text){
+  const c = document.getElementById('osCaption'), f = document.getElementById('osFsCaption');
+  const on = !!text && pptCaps;
+  if(c){ c.textContent = on ? text : ''; c.classList.toggle('empty', !on); }
+  if(f){ f.textContent = on ? text : ''; f.style.display = on ? 'block' : 'none'; }
+}
+/* put the right picture on screen for the current step */
+function osShow(force){
+  const it = osSeq[osPos]; if(!it) return;
+  if(!force && osShown === osPos) return;
+  osShown = osPos;
+  const card = document.getElementById('osCardOver');
+  if(pptIdx !== it.slide || force){ pptIdx = it.slide; pptRender(); }
+  if(typeof pptClearSpot === 'function') pptClearSpot();
+  if(card){
+    if(it.k === 'part'){
+      const p = OS_PARTS[it.part], T = osT();
+      document.getElementById('osCoK').textContent = T.part+' '+(it.part+1)+' '+T.of+' '+OS_PARTS.length;
+      document.getElementById('osCoT').textContent = p[pptLang] || p.en;
+      card.hidden = false;
+    } else card.hidden = true;
+  }
+}
+function osUi(){
+  const T = osT(), it = osSeq[osPos] || osSeq[0];
+  const b = document.getElementById('osMainBtn');
+  if(b) b.textContent = osPlaying ? '⏸ '+T.pause : '▶ '+(osPos>0 ? T.resume : T.start);
+  const fb = document.getElementById('osFsPlay'); if(fb){ fb.innerHTML = osPlaying ? '&#10074;&#10074;' : '&#9654;'; fb.classList.toggle('on', osPlaying); }
+  const big = document.getElementById('osBigPlay'); if(big) big.hidden = osPlaying;
+  const now = document.getElementById('osNow');
+  if(now && it){ const p = OS_PARTS[it.part||0]; now.textContent = it.k==='intro' ? '★ '+T.title : T.part+' '+((it.part||0)+1)+' '+T.of+' '+OS_PARTS.length+' · '+(p[pptLang]||p.en); }
+  /* timeline: each part's bar fills as it is revised */
+  const cc = osCharsCache;
+  document.querySelectorAll('#osTimeline .os-seg').forEach(seg=>{
+    const pi = +seg.dataset.part; let tot = 0, done = 0;
+    osSeq.forEach((x, i)=>{ if((x.part===pi && x.k!=='intro') ){ const c = cc ? cc[i] : 1; tot += c; if(i < osPos) done += c; } });
+    seg.style.flexGrow = String(Math.max(1, tot));
+    seg.querySelector('.os-seg-fill').style.width = (tot ? Math.round(100*done/tot) : 0)+'%';
+    seg.classList.toggle('cur', it && it.part===pi && it.k!=='intro');
+  });
+  const fill = document.getElementById('osFsFill'); if(fill) fill.style.width = (100*osPos/Math.max(1, osSeq.length-1))+'%';
+  const tm = document.getElementById('osTime');
+  if(tm){ const m = osMinutesLeft(); tm.textContent = m ? (osPos===0 && !osPlaying ? '≈ '+m+' '+T.total : '≈ '+m+' '+T.left) : ''; }
+}
+function osToggle(){ osPlaying ? osPause() : osPlay(); }
+function osPlay(){
+  if(typeof exOn!=='undefined' && exOn) exStop();
+  if(typeof pptTalking!=='undefined' && pptTalking) pptStopTalk();
+  if(osPos >= osSeq.length) { osPos = 0; osSent = 0; }
+  osPlaying = true; const id = ++osRun; osUi();
+  try{ if(navigator.wakeLock && !osWake) navigator.wakeLock.request('screen').then(w=>{ osWake = w; w.addEventListener && w.addEventListener('release', ()=>{ osWake = null; }); }).catch(()=>{}); }catch(e){}
+  const w = document.getElementById('osVoiceWarn');
+  if(w){ const miss = PPT_TTS && !pptVoice(pptLang) && pptLang!=='en'; w.hidden = !miss; if(miss) w.textContent = osT().noVoice; }
+  Promise.all([pptLoadNarr(), pptLoadCues().catch(()=>null)]).then(([N])=>{
+    if(id !== osRun) return;
+    if(!osCharsCache) osChars(N);
+    osStep(id, N);
+  }).catch(()=>{ if(id!==osRun) return; osPlaying = false; osUi(); osCaption(osT().loadErr); });
+}
+function osPause(){
+  osPlaying = false; ++osRun; if(PPT_TTS) PPT_TTS.cancel();
+  if(osWake){ try{ osWake.release(); }catch(e){} osWake = null; }
+  osUi(); osSave();
+}
+function osStop(){
+  if(osPlaying) osPause();
+  osCaption(''); if(typeof pptClearSpot==='function') pptClearSpot();
+  if(osSavedDeck !== null){ pptDeck = osSavedDeck; osSavedDeck = null; }
+}
+function osStep(id, N){
+  if(id !== osRun || !osPlaying) return;
+  const it = osSeq[osPos];
+  if(!it){ osPlaying = false; osPos = 0; osSent = 0; osSave(); osUi(); osCaption(osT().done); if(osWake){ try{ osWake.release(); }catch(e){} osWake = null; } return; }
+  osShow(false);
+  const list = osSentencesOf(it, N);
+  if(osSent >= list.length){
+    osPos++; osSent = 0; osSave(); osUi();
+    setTimeout(()=>osStep(id, N), it.k==='part' ? 500 : 900);
+    return;
+  }
+  const s = list[osSent];
+  let shown = false;
+  const show = ()=>{ if(shown || id!==osRun) return; shown = true; osCaption(s.t);
+    if(s.oi >= 0) pptSpotlight(s.oi, s.on); };
+  const next = (wait)=>setTimeout(()=>{ if(id!==osRun) return; osSent++; osStep(id, N); }, wait);
+  if(!PPT_TTS){ show(); next(Math.max(2500, s.t.length*70)); return; }
+  const u = new SpeechSynthesisUtterance(pptSayable(s.t));
+  u.lang = PPT_TTS_TAG[pptLang] || 'en-IN'; let v = pptVoice(pptLang); if(v){ try{ u.voice = v; }catch(e){ v = null; } }
+  u.rate = osRate;
+  const t0 = Date.now();
+  u.onstart = show; setTimeout(show, 1200);
+  u.onend = ()=>{ if(id!==osRun) return; show();
+    const ms = Date.now() - t0;
+    if(v && ms > 800){ const cps = s.t.length / (ms/1000) / osRate; osCps = osCps*0.85 + Math.min(30, Math.max(6, cps))*0.15; }
+    next(v ? (s.card ? 700 : 150) : Math.max(0, Math.min(6000, s.t.length*55) - ms)); };
+  u.onerror = ()=>{ if(id!==osRun) return; show(); next(Math.min(6000, s.t.length*55)); };
+  PPT_TTS.speak(u);
+}
+/* jump to the start of a part (or the next / previous part) */
+function osJumpPart(pi){
+  const at = osSeq.findIndex(x=>x.k==='part' && x.part===pi); if(at < 0) return;
+  const was = osPlaying; if(was){ ++osRun; if(PPT_TTS) PPT_TTS.cancel(); }
+  osPos = at; osSent = 0; osShow(true); osCaption(''); osSave(); osUi();
+  if(was){ osPlaying = false; osPlay(); }
+}
+function osPart(d){
+  const it = osSeq[osPos] || {}; const cur = it.k==='intro' ? -1 : (it.part||0);
+  const pi = Math.max(0, Math.min(OS_PARTS.length-1, cur + d));
+  osJumpPart(pi);
+}
+function osRestart(){ const was = osPlaying; if(was){ ++osRun; if(PPT_TTS) PPT_TTS.cancel(); } osPos = 0; osSent = 0; osShow(true); osCaption(''); osSave(); osUi(); if(was){ osPlaying=false; osPlay(); } }
+function osSetRate(r){ osRate = parseFloat(r) || 1.1; try{ localStorage.setItem('pu1ch9_os_rate', String(osRate)); }catch(e){} osUi(); }
+function osToggleCaps(on){
+  pptCaps = (typeof on === 'boolean') ? on : !pptCaps; try{ localStorage.setItem('pu1ch9_ppt_caps', pptCaps?'1':'0'); }catch(e){}
+  const c = document.getElementById('osCapsChk'); if(c) c.checked = pptCaps;
+  const f = document.getElementById('osFsCc'); if(f) f.classList.toggle('off', !pptCaps);
+  if(!pptCaps) osCaption('');
+}
+function osSetLang(l){
+  const was = osPlaying; if(was){ ++osRun; if(PPT_TTS) PPT_TTS.cancel(); osPlaying = false; }
+  pptLang = l; try{ localStorage.setItem('pu1ch9_ppt_lang', l); }catch(e){}
+  osCharsCache = null; const keep = osPos;
+  if(typeof pptIsFs==='function' && pptIsFs()){
+    /* in full screen: change only the language, never rebuild the screen (that would leave full screen) */
+    const fl = document.querySelector('#pptWrap .fs-lang'); if(fl) fl.textContent = (PPT_LANGS.find(x=>x.id===pptLang)||PPT_LANGS[0]).short;
+    const bar = document.getElementById('osLangBar'); if(bar) bar.querySelectorAll('button').forEach((b,i)=>b.classList.toggle('active', PPT_LANGS[i].id===pptLang));
+  } else renderOneShot();
+  osPos = keep; osSent = 0; osShow(true); osCaption('');
+  pptLoadNarr().then(N=>{ osChars(N); osUi(); }).catch(()=>{});
+  osUi();
+  if(was) osPlay();
+}
+function osCycleLang(){ const i = PPT_LANGS.findIndex(x=>x.id===pptLang); osSetLang(PPT_LANGS[(i+1)%PPT_LANGS.length].id); }
+window.addEventListener('resize', ()=>{ if(osPlaying && typeof pptSpotLast!=='undefined' && pptSpotLast) setTimeout(()=>{ if(osPlaying && pptSpotLast) pptSpotlight(pptSpotLast[0], pptSpotLast[1]); }, 300); });
+Object.assign(window, {renderOneShot, osToggle, osPlay, osPause, osPart, osJumpPart, osRestart, osSetRate, osToggleCaps, osSetLang, osCycleLang, osStop});
+
 
 /* Custom fullscreen system: some in-app browsers/WebViews implement the
    native Fullscreen API unreliably (silently failing, or leaving the page
@@ -4838,8 +5116,8 @@ const PREMIUM_UNLOCK_LOOKUP = {};
 const PREMIUM_PRICE_RUPEES = 1999;
 const PREMIUM_PRICE_ORIGINAL = 3000;
 const RAZORPAY_PREMIUM_LINK = 'YOUR_CHAPTER9_PREMIUM_LINK_HERE';
-const PREMIUM_LOCKED_TABS = ['mindmap','classppt','mcq','neet','kcet','papergen','boardimp','podcast'];
-const PREMIUM_TAB_LABELS = {mindmap:'Mind Map', classppt:'Class Presentation', mcq:'MCQ Quiz', neet:'NEET Practice', kcet:'KCET Practice', papergen:'Paper Generator', boardimp:'Board Important', podcast:'Audio Podcast'};
+const PREMIUM_LOCKED_TABS = ['mindmap','classppt','oneshot','mcq','neet','kcet','papergen','boardimp','podcast'];
+const PREMIUM_TAB_LABELS = {mindmap:'Mind Map', classppt:'Class Presentation', oneshot:'One-Shot Revision', mcq:'MCQ Quiz', neet:'NEET Practice', kcet:'KCET Practice', papergen:'Paper Generator', boardimp:'Board Important', podcast:'Audio Podcast'};
 
 function getPremiumUnlock(){ try{ return JSON.parse(localStorage.getItem(PREMIUM_KEY) || 'null'); }catch(e){ return null; } }
 function setPremiumUnlock(method, extra){
@@ -5011,6 +5289,7 @@ function injectDemoAccessBanner(){
 }
 function renderContent(){
   if(typeof exOn !== 'undefined' && exOn) exStop();
+  if(currentTab !== 'oneshot' && typeof osStop === 'function') osStop();
   if(currentTab !== 'classppt' && typeof pptTalking !== 'undefined' && pptTalking) pptStopTalk();
   if(currentTab !== 'classppt' && typeof pptAnimPost === 'function') pptAnimPost({type:'baio-anim-stop'});
   if(PREMIUM_LOCKED_TABS.indexOf(currentTab) !== -1 && !premiumQualifies()){
@@ -5032,6 +5311,7 @@ function renderContent(){
   else if(currentTab==='revision') renderRevision();
   else if(currentTab==='mindmap') renderMindmap();
   else if(currentTab==='classppt') renderClassPpt();
+  else if(currentTab==='oneshot') renderOneShot();
   else if(currentTab==='tree') renderTree();
   else if(currentTab==='compare') renderCompare();
   else if(currentTab==='glossary') renderGlossary();
