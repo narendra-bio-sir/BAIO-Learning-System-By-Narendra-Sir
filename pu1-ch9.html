@@ -608,6 +608,62 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
 #pptImg.ppt-zoomed{transition:scale .8s cubic-bezier(.2,.7,.2,1),opacity .25s ease;}
 .ppt-slide-wrap.ppt-rotated .ppt-spot-layer{rotate:90deg;}
 @media (prefers-reduced-motion: reduce){ .ppt-spot,.ppt-spot-layer,#pptImg.ppt-zoomed{transition:none;} }
+.ppt-spot.soft{box-shadow:0 0 0 3px #D4AF37,0 0 0 4000px rgba(10,16,30,.12);}
+.ppt-scene{position:absolute;pointer-events:none;}
+.ppt-scene svg{display:block;width:100%;height:100%;overflow:visible;}
+.ppt-scene .sc-t{font-family:Inter,"Noto Sans Kannada","Noto Sans Devanagari",system-ui,sans-serif;font-weight:700;font-size:34px;}
+.ppt-scene .sc-big{font-size:46px;}
+.ppt-scene .sc-s{font-size:40px;fill:#1d2a26;}
+.ppt-scene .sc-s2{font-size:30px;fill:#1d2a26;}
+.ppt-scene g,.ppt-scene circle,.ppt-scene text,.ppt-scene rect{transition:opacity .6s ease,transform 1.6s cubic-bezier(.3,.7,.25,1);}
+/* defaults = resting picture (same as the printed slide) */
+.ppt-scene .sc-chain{opacity:0;}
+.ppt-scene .sc-enz{transform-origin:405px 320px;}
+.ppt-scene .sc-sub{transform:translate(332px,170px);}
+.ppt-scene .sc-prod,.ppt-scene .sc-burst,.ppt-scene .sc-fast{opacity:0;}
+.ppt-scene .sc-p1,.ppt-scene .sc-p2{transform:translate(332px,170px);}
+.ppt-scene .sc-p2{transform:translate(376px,170px);}
+/* 0: a polypeptide chain draws itself, then folds into the enzyme */
+.ppt-scene[data-step="0"] .sc-chain{opacity:1;}
+.ppt-scene[data-step="0"] .sc-chain path{stroke-dasharray:1200;stroke-dashoffset:1200;animation:scDraw 1.4s ease forwards;}
+.ppt-scene[data-step="0"] .sc-enz{opacity:0;transform:scale(.55) rotate(-8deg);}
+.ppt-scene[data-step="0"].folded .sc-chain{opacity:0;transform:scale(.5);transform-origin:400px 160px;}
+.ppt-scene[data-step="0"].folded .sc-enz{opacity:1;transform:none;}
+.ppt-scene[data-step="0"] .sc-site,.ppt-scene[data-step="0"] .sc-sub,.ppt-scene[data-step="0"] .sc-sublbl{opacity:0;}
+/* 1: the fold leaves a pocket */
+.ppt-scene[data-step="1"] .sc-pocket{animation:scPulse 1.1s ease-in-out infinite;}
+.ppt-scene[data-step="1"] .sc-site,.ppt-scene[data-step="1"] .sc-sub,.ppt-scene[data-step="1"] .sc-sublbl{opacity:0;}
+/* 2: the pocket is the active site */
+.ppt-scene[data-step="2"] .sc-pocket{animation:scPulse 1.1s ease-in-out infinite;}
+.ppt-scene[data-step="2"] .sc-site text{animation:scPop .6s ease;}
+.ppt-scene[data-step="2"] .sc-sub,.ppt-scene[data-step="2"] .sc-sublbl{opacity:0;}
+.ppt-scene[data-step="2"] .sc-sub{transform:translate(640px,-10px) rotate(25deg);}
+/* 3: substrate glides in and fits like a key in a lock */
+.ppt-scene[data-step="3"] .sc-sub{animation:scDock 1.8s cubic-bezier(.3,.7,.25,1) both;}
+.ppt-scene[data-step="3"] .sc-sublbl{animation:scFadeIn .8s ease 1.2s both;}
+/* 4: reaction at a very high rate: substrate becomes products, again and again */
+.ppt-scene[data-step="4"] .sc-fast{opacity:1;animation:scPop .6s ease;}
+.ppt-scene[data-step="4"] .sc-sublbl{opacity:0;}
+.ppt-scene.react .sc-sub{animation:scCycleS 1.5s linear;}
+.ppt-scene.react .sc-prod{opacity:1;}
+.ppt-scene.react .sc-p1{animation:scFlyL 1.5s ease-out;}
+.ppt-scene.react .sc-p2{animation:scFlyR 1.5s ease-out;}
+.ppt-scene.react .sc-burst{animation:scBurst 1.5s ease-out;}
+/* 5: the active site is the key part */
+.ppt-scene[data-step="5"] .sc-pocket{stroke:#d4a017;animation:scPulse 1s ease-in-out infinite;}
+.ppt-scene[data-step="5"] .sc-site text{animation:scPop .6s ease;}
+@keyframes scDraw{to{stroke-dashoffset:0;}}
+@keyframes scPulse{0%,100%{stroke-width:7px;opacity:1}50%{stroke-width:14px;opacity:.55}}
+@keyframes scPop{0%{opacity:0;transform:scale(.6)}70%{transform:scale(1.08)}100%{opacity:1;transform:none}}
+@keyframes scFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes scDock{0%{transform:translate(640px,-10px) rotate(25deg);opacity:0}15%{opacity:1}70%{transform:translate(332px,110px) rotate(0)}100%{transform:translate(332px,170px)}}
+@keyframes scCycleS{0%{transform:translate(332px,170px);opacity:1}25%{transform:translate(332px,170px) scale(1.06);opacity:1}32%{opacity:0;transform:translate(332px,170px)}55%{opacity:0;transform:translate(640px,-10px)}62%{opacity:1;transform:translate(640px,-10px)}100%{transform:translate(332px,170px);opacity:1}}
+@keyframes scFlyL{0%,28%{opacity:0;transform:translate(332px,170px)}34%{opacity:1;transform:translate(332px,170px)}85%{opacity:1;transform:translate(170px,10px) rotate(-30deg)}100%{opacity:0;transform:translate(140px,-10px) rotate(-40deg)}}
+@keyframes scFlyR{0%,28%{opacity:0;transform:translate(376px,170px)}34%{opacity:1;transform:translate(376px,170px)}85%{opacity:1;transform:translate(560px,20px) rotate(30deg)}100%{opacity:0;transform:translate(600px,0) rotate(40deg)}}
+@keyframes scBurst{0%,22%{opacity:0;transform:scale(.4)}32%{opacity:1;transform:scale(1)}60%{opacity:0;transform:scale(1.3)}100%{opacity:0}}
+.ppt-scene .sc-burst{transform-origin:374px 200px;}
+.ppt-scene .sc-site text,.ppt-scene .sc-fast{transform-box:fill-box;transform-origin:center;}
+@media (prefers-reduced-motion: reduce){ .ppt-scene *{animation:none!important;transition:none!important;} }
 .fs-btn{position:absolute;pointer-events:auto;background:rgba(20,20,20,.6);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:50%;width:46px;height:46px;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .fs-btn:active{background:rgba(20,20,20,.85);}
 .fs-prev{left:14px;top:50%;transform:translateY(-50%);}
@@ -2677,6 +2733,7 @@ function pptStopTalk(){
   pptRun++; pptTalking = false;
   if(PPT_TTS) PPT_TTS.cancel();
   pptTalkButtons(); pptSetCaption(''); if(typeof pptClearSpot==='function') pptClearSpot();
+  if(typeof pptSceneCur!=='undefined' && pptSceneCur) pptSceneSet('rest');
 }
 /* how class names are read aloud: "PU-I" -> "P U First year", "PU-II" -> "P U Second year" */
 function pptSayable(t){
@@ -2741,7 +2798,7 @@ function pptLoadCues(){
   if(!pptCuesLoading) pptCuesLoading = fetch('pu1-ch9-assets/spot-cues.json?v=6').then(r=>{ if(!r.ok) throw new Error('cues'); return r.json(); }).then(j=>(PPT_CUES=j)).catch(e=>{ pptCuesLoading=null; throw e; });
   return pptCuesLoading;
 }
-function pptSetAnim(on){ pptAnim = !!on; try{ localStorage.setItem('pu1ch9_ppt_anim', pptAnim?'1':'0'); }catch(e){} if(!pptAnim) pptClearSpot(); else if(pptTalking && pptSpotLast) pptSpotlight(pptSpotLast[0], pptSpotLast[1]); }
+function pptSetAnim(on){ pptAnim = !!on; try{ localStorage.setItem('pu1ch9_ppt_anim', pptAnim?'1':'0'); }catch(e){} pptSceneMount(); if(!pptAnim) pptClearSpot(); else if(pptTalking && pptSpotLast) pptSpotlight(pptSpotLast[0], pptSpotLast[1]); }
 window.pptSetAnim = pptSetAnim;
 function pptUnzoom(){
   const img = document.getElementById('pptImg'), layer = document.getElementById('pptSpotLayer');
@@ -2760,8 +2817,87 @@ function pptPlaceLayer(){
   layer.style.width = img.offsetWidth+'px'; layer.style.height = img.offsetHeight+'px';
   return {w: img.offsetWidth, h: img.offsetHeight, img, layer};
 }
+/* ---- Live structural scenes: an animated diagram replaces the static one on chosen slides and acts out the narration ---- */
+const PPT_SCENE_LBL = {
+  en:{site:'Active site', sub:'Substrate', enz:'Enzyme', prod:'Products', chain:'Polypeptide chain', fast:'Very fast!'},
+  kn:{site:'ಸಕ್ರಿಯ ತಾಣ', sub:'ಸಬ್‌ಸ್ಟ್ರೇಟ್', enz:'ಕಿಣ್ವ', prod:'ಉತ್ಪನ್ನಗಳು', chain:'ಪಾಲಿಪೆಪ್ಟೈಡ್ ಸರಪಳಿ', fast:'ಅತಿ ವೇಗ!'},
+  hi:{site:'सक्रिय स्थल', sub:'क्रियाधार', enz:'एंज़ाइम', prod:'उत्पाद', chain:'पॉलीपेप्टाइड शृंखला', fast:'बहुत तेज़!'}
+};
+/* box = area of the slide (1920x1080 coords) the live diagram covers; steps = how many narration stages it acts out */
+const PPT_SCENES = { large: { 49: {box:[56, 318, 800, 530], steps:6, build:pptSceneActiveSite} } };
+let pptSceneCur = null, pptSceneTimers = [];
+function pptSceneFor(){ const d = PPT_SCENES[pptDeck]; return d ? d[pptIdx] || null : null; }
+function pptSceneClearTimers(){ pptSceneTimers.forEach(clearTimeout); pptSceneTimers.forEach(clearInterval); pptSceneTimers = []; }
+function pptSceneMount(){
+  const layer = document.getElementById('pptSpotLayer'), sp = document.getElementById('pptSpot');
+  pptSceneClearTimers();
+  const old = document.getElementById('pptScene'); if(old) old.remove();
+  pptSceneCur = null; if(sp) sp.classList.remove('soft');
+  const sc = pptSceneFor(); if(!sc || !layer || !pptAnim) return;
+  const el = document.createElement('div'); el.id = 'pptScene'; el.className = 'ppt-scene';
+  const [x,y,w,h] = sc.box;
+  Object.assign(el.style, {left:(x/19.2)+'%', top:(y/10.8)+'%', width:(w/19.2)+'%', height:(h/10.8)+'%'});
+  el.innerHTML = sc.build(PPT_SCENE_LBL[pptLang] || PPT_SCENE_LBL.en);
+  layer.appendChild(el);   /* above the dimming, so the diagram stays bright */
+  pptSceneCur = {sc, el, step:-1};
+  if(sp) sp.classList.add('soft');
+  pptPlaceLayer();
+  pptSceneSet('rest');
+}
+/* called when each sentence starts: map sentence i of n onto the scene's stages */
+function pptSceneStep(i, n){
+  if(!pptSceneCur) return;
+  const steps = pptSceneCur.sc.steps;
+  const s = n === steps ? i : Math.min(steps-1, Math.floor(i*steps/Math.max(1,n)));
+  if(s !== pptSceneCur.step) pptSceneSet(s);
+}
+function pptSceneSet(s){
+  if(!pptSceneCur) return;
+  pptSceneClearTimers(); pptSceneCur.step = s;
+  const el = pptSceneCur.el; el.setAttribute('data-step', String(s));
+  const later = (fn, ms)=>pptSceneTimers.push(setTimeout(fn, ms));
+  el.classList.remove('folded','react');
+  if(s === 0){ later(()=>el.classList.add('folded'), 1700); }       /* chain folds into the enzyme */
+  else el.classList.add('folded');
+  if(s === 4){                                                       /* reaction runs again and again, fast */
+    const cyc = ()=>{ el.classList.remove('react'); void el.offsetWidth; el.classList.add('react'); };
+    later(cyc, 250); pptSceneTimers.push(setInterval(cyc, 1500));
+  }
+}
+function pptSceneActiveSite(L){
+  /* viewBox matches the covered area (800 x 530). Pocket = notch at the top of the enzyme. */
+  const beads = []; for(let k=0;k<17;k++){ const t=k/16, x=120+t*560, y=150+Math.sin(t*Math.PI*3)*55; beads.push(`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="11"/>`); }
+  return `<svg viewBox="0 0 800 530" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${L.enz}">
+  <defs>
+    <radialGradient id="scGlow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#f5c542" stop-opacity=".9"/><stop offset="1" stop-color="#f5c542" stop-opacity="0"/></radialGradient>
+    <linearGradient id="scEnz" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e4f6f2"/><stop offset="1" stop-color="#c9ebe4"/></linearGradient>
+  </defs>
+  <rect x="0" y="0" width="800" height="530" fill="#FBF8F1"/>
+  <g class="sc-chain">
+    <path d="${(()=>{let d='';for(let k=0;k<=64;k++){const t=k/64,x=120+t*560,y=150+Math.sin(t*Math.PI*3)*55;d+=(k?'L':'M')+x.toFixed(1)+','+y.toFixed(1);}return d;})()}" fill="none" stroke="#0f7a68" stroke-width="6" stroke-linecap="round"/>
+    <g fill="#5cc3ad" stroke="#0f7a68" stroke-width="3">${beads.join('')}</g>
+    <text x="400" y="290" text-anchor="middle" class="sc-t" fill="#0f6e5e">${L.chain}</text>
+  </g>
+  <g class="sc-enz">
+    <path class="sc-body" d="M150,300 C110,190 230,128 328,168 L328,236 L420,236 L420,168 C540,120 700,186 660,320 C628,430 500,470 400,470 C262,470 172,410 150,300 Z" fill="url(#scEnz)" stroke="#0f7a68" stroke-width="7" stroke-linejoin="round"/>
+    <rect class="sc-pocket" x="328" y="168" width="92" height="68" rx="4" fill="none" stroke="#7b4fd1" stroke-width="7"/>
+    <text x="405" y="372" text-anchor="middle" class="sc-t sc-big" fill="#0f6e5e">${L.enz}</text>
+  </g>
+  <g class="sc-site"><path d="M214,92 L338,206" stroke="#6a45c2" stroke-width="3"/><text x="40" y="84" class="sc-t" fill="#6a45c2">${L.site}</text></g>
+  <circle class="sc-burst" cx="374" cy="200" r="120" fill="url(#scGlow)"/>
+  <g class="sc-sub"><rect x="0" y="0" width="84" height="64" rx="12" fill="#f6a98a" stroke="#1d2a26" stroke-width="4"/><text x="42" y="44" text-anchor="middle" class="sc-t sc-s">S</text></g>
+  <g class="sc-sublbl"><path d="M470,178 L560,140" stroke="#b03a2e" stroke-width="3"/><text x="568" y="140" class="sc-t" fill="#b03a2e">${L.sub}</text></g>
+  <g class="sc-prod">
+    <g class="sc-p1"><path d="M0,0 h40 v64 h-28 a12,12 0 0 1 -12,-12 z" fill="#ffd27a" stroke="#1d2a26" stroke-width="4"/><text x="20" y="44" text-anchor="middle" class="sc-t sc-s2">P</text></g>
+    <g class="sc-p2"><path d="M0,0 h32 a12,12 0 0 1 12,12 v52 h-44 z" fill="#ffd27a" stroke="#1d2a26" stroke-width="4"/><text x="22" y="44" text-anchor="middle" class="sc-t sc-s2">P</text></g>
+  </g>
+  <text class="sc-t sc-fast" x="560" y="300" fill="#b8860b">${L.fast}</text>
+  </svg>`;
+}
+function pptSceneOnLoad(){ if(pptSceneCur) pptPlaceLayer(); }
 function pptSpotlight(i, total){
   pptSpotLast = [i, total];
+  pptSceneStep(i, total);   /* live diagram acts out this sentence */
   if(!pptAnim || pptIdx === 0){ pptClearSpot(); if(pptAnim) pptSpotLast = [i, total]; return; }  /* intro slide: no animation */
   if(pptFsState && pptFsState.scale && pptFsState.scale !== 1){ pptClearSpot(); return; }  /* teacher is pinch-zooming */
   const cues = PPT_CUES && PPT_CUES[pptDeck] && PPT_CUES[pptDeck][pptLang] && PPT_CUES[pptDeck][pptLang][pptIdx];
@@ -2949,7 +3085,7 @@ function renderClassPpt(){
     <div class="ppt-progress-track"><div class="ppt-progress-fill" id="pptProgressFill"></div></div>
     <div class="ppt-thumbs" id="pptThumbs"></div>
     <div class="ppt-slide-wrap" id="pptWrap">
-      <img id="pptImg" src="" onload="this.classList.add('loaded')">
+      <img id="pptImg" src="" onload="this.classList.add('loaded'); if(window.pptSceneOnLoad) pptSceneOnLoad();">
       <div class="ppt-spot-layer" id="pptSpotLayer" aria-hidden="true"><div class="ppt-spot" id="pptSpot"></div></div>
       <div class="ppt-tap-zone ppt-tap-left" onclick="pptPrev()" title="Previous slide"></div>
       <div class="ppt-tap-zone ppt-tap-right" onclick="pptNext()" title="Next slide"></div>
@@ -3002,6 +3138,7 @@ function pptRender(){
   img.classList.remove('loaded');
   if(typeof pptClearSpot==='function' && !pptTalking) pptClearSpot();
   img.src = pptSlideSrc(pptIdx);
+  if(typeof pptSceneMount==='function') pptSceneMount();
   const fill = document.getElementById('pptProgressFill');
   if(fill) fill.style.width = (((pptIdx+1)/pptSlides().length)*100)+'%';
   document.querySelectorAll('.ppt-thumb').forEach((t,i)=>t.classList.toggle('active', i===pptIdx));
