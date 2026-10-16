@@ -69,6 +69,8 @@ a{color:var(--teal)}
 .frame{margin-top:14px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#eef2f4}
 .frame iframe{display:block;width:100%;height:640px;border:0}
 .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.vframe{margin:14px 0 4px;border-radius:14px;overflow:hidden;background:#000;border:1px solid var(--line)}
+.vframe video{display:block;width:100%;aspect-ratio:16/9;background:#000}
 .act{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);text-decoration:none;font:600 13px 'Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;min-height:42px}
 .act.share{cursor:pointer;border-color:var(--teal);color:var(--teal)}
 .act.primary{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;border-color:var(--gold)}
@@ -171,6 +173,17 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
     </div>
   </section>
 
+  <section class="card" id="practice-video">
+    <div class="card-head"><span class="pill" data-i18n="v_pill">Chapter-wise practice · Video &amp; slides</span><span class="new" data-i18n="new">NEW</span></div>
+    <h2 data-i18n-html="v_title">Mid-term <em>chapter-wise practice</em> — key answers, diagrams and exam tips</h2>
+    <p data-i18n="v_desc">A 10-minute video covering all 9 chapters of the paper. Pause on each topic, write the answer in your notebook, then check it with the slide.</p>
+    <div class="vframe"><video controls preload="metadata" playsinline poster="exam-corner/pu1-midterm-2026-video-poster.jpg" src="exam-corner/pu1-midterm-2026-chapterwise-practice.mp4"></video></div>
+    <div class="actions">
+      <a class="act primary" href="exam-corner/pu1-midterm-2026-chapterwise-practice.mp4" download data-i18n="dl_mp4">⬇ Download video (MP4)</a>
+      <a class="act" href="exam-corner/pu1-midterm-2026-chapterwise-slides.pdf" target="_blank" rel="noopener" data-i18n="dl_pdf">📄 Slides (PDF)</a>
+    </div>
+  </section>
+
   <section class="card">
     <div class="card-head"><span class="pill" data-i18n="pill2">Topics to practise</span></div>
     <p data-i18n="topics_desc">Chapter-wise list from the mid-term paper — save it to your phone and tick off each topic as you revise.</p>
@@ -205,6 +218,9 @@ const I18N = {
     t2h:'🔊 ಧ್ವನಿ ಇಲ್ಲವೇ?', t2:'ಫೋನ್‌ನ text-to-speech ಸೆಟ್ಟಿಂಗ್‌ನಲ್ಲಿ ಕನ್ನಡ/ಹಿಂದಿ ಧ್ವನಿ ಸ್ಥಾಪಿಸಿ. ಧ್ವನಿ ಇಲ್ಲದಿದ್ದರೂ ಶೀರ್ಷಿಕೆಗಳು ಮುಂದುವರಿಯುತ್ತವೆ.',
     t3h:'✏️ ನೋಡುತ್ತಾ ಅಭ್ಯಾಸ ಮಾಡಿ', t3:'ನೋಟ್‌ಬುಕ್ ತೆರೆದಿಟ್ಟು ಸ್ಲೈಡ್ 11ರ ಐದು ಚಿತ್ರಗಳನ್ನು ಮತ್ತೆ ಬರೆಯಿರಿ.',
     pill2:'ಅಭ್ಯಾಸ ಮಾಡಬೇಕಾದ ವಿಷಯಗಳು', topics_desc:'ಮಧ್ಯಾವಧಿ ಪ್ರಶ್ನೆಪತ್ರಿಕೆಯಿಂದ ಅಧ್ಯಾಯವಾರು ಪಟ್ಟಿ — ಫೋನ್‌ನಲ್ಲಿ ಉಳಿಸಿ, ಪುನರಾವರ್ತಿಸಿದಂತೆ ಪ್ರತಿ ವಿಷಯಕ್ಕೆ ಗುರುತು ಹಾಕಿ.',
+    v_pill:'ಅಧ್ಯಾಯವಾರು ಅಭ್ಯಾಸ · ವಿಡಿಯೋ ಮತ್ತು ಸ್ಲೈಡ್‌ಗಳು', v_title:'ಮಧ್ಯಾವಧಿ <em>ಅಧ್ಯಾಯವಾರು ಅಭ್ಯಾಸ</em> — ಮುಖ್ಯ ಉತ್ತರಗಳು, ಚಿತ್ರಗಳು ಮತ್ತು ಪರೀಕ್ಷಾ ಸಲಹೆಗಳು',
+    v_desc:'ಪ್ರಶ್ನೆಪತ್ರಿಕೆಯ ಎಲ್ಲಾ 9 ಅಧ್ಯಾಯಗಳ 10 ನಿಮಿಷದ ವಿಡಿಯೋ. ಪ್ರತಿ ವಿಷಯದಲ್ಲಿ ನಿಲ್ಲಿಸಿ, ನೋಟ್‌ಬುಕ್‌ನಲ್ಲಿ ಉತ್ತರ ಬರೆಯಿರಿ, ನಂತರ ಸ್ಲೈಡ್‌ನೊಂದಿಗೆ ಹೋಲಿಸಿ.',
+    dl_mp4:'⬇ ವಿಡಿಯೋ ಡೌನ್‌ಲೋಡ್ (MP4)', dl_pdf:'📄 ಸ್ಲೈಡ್‌ಗಳು (PDF)',
     soon:'ಪ್ರತಿ ಪರೀಕ್ಷೆಗೆ ಮುನ್ನ ಇನ್ನಷ್ಟು ಸಾಮಗ್ರಿಗಳು ಇಲ್ಲಿ ಬರುತ್ತವೆ. 🔔 ಪ್ರಕಟಣೆಗಳ ಗಂಟೆಯನ್ನು ಗಮನಿಸಿ.'
   },
   hi: {
@@ -219,6 +235,9 @@ const I18N = {
     t2h:'🔊 आवाज़ नहीं आ रही?', t2:'फ़ोन की text-to-speech सेटिंग में कन्नड़/हिंदी आवाज़ इंस्टॉल कीजिए। आवाज़ के बिना भी कैप्शन चलते रहते हैं।',
     t3h:'✏️ देखते हुए अभ्यास कीजिए', t3:'नोटबुक खुली रखिए और स्लाइड 11 के पाँचों चित्र फिर से बनाइए।',
     pill2:'अभ्यास के विषय', topics_desc:'मध्यावधि प्रश्नपत्र से अध्यायवार सूची — फ़ोन में सेव कीजिए और दोहराते हुए हर विषय पर निशान लगाइए।',
+    v_pill:'अध्यायवार अभ्यास · वीडियो और स्लाइड', v_title:'मध्यावधि <em>अध्यायवार अभ्यास</em> — मुख्य उत्तर, चित्र और परीक्षा टिप्स',
+    v_desc:'प्रश्नपत्र के सभी 9 अध्यायों का 10 मिनट का वीडियो। हर विषय पर रोकिए, नोटबुक में उत्तर लिखिए, फिर स्लाइड से मिलाइए।',
+    dl_mp4:'⬇ वीडियो डाउनलोड (MP4)', dl_pdf:'📄 स्लाइड (PDF)',
     soon:'हर परीक्षा से पहले और सामग्री यहाँ आएगी। 🔔 घोषणाओं की घंटी पर नज़र रखिए।'
   }
 };
