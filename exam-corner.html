@@ -188,6 +188,7 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
     <div class="actions">
       <a class="act primary" id="practiceMp4" href="exam-corner/pu1-midterm-2026-chapterwise-practice.mp4?v=2" download data-i18n="dl_mp4">⬇ Download video (MP4)</a>
       <a class="act" id="practicePdf" href="exam-corner/pu1-midterm-2026-chapterwise-slides.pdf?v=2" target="_blank" rel="noopener" data-i18n="dl_pdf">📄 Slides (PDF)</a>
+      <button class="act share" type="button" data-share="video" data-i18n="share">📤 Share with friends</button>
     </div>
   </section>
 
@@ -198,6 +199,7 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
     <div class="actions">
       <a class="act primary" href="exam-corner/pu1-midterm-2026-blueprint.png" download data-i18n="dl_bp_img">⬇ Blueprint (image)</a>
       <a class="act" href="exam-corner/pu1-midterm-2026-blueprint.pdf" target="_blank" rel="noopener" data-i18n="dl_bp_pdf">📄 Blueprint (PDF)</a>
+      <button class="act share" type="button" data-share="blueprint" data-i18n="share">📤 Share with friends</button>
     </div>
   </section>
 
@@ -279,7 +281,19 @@ setLang(['en','kn','hi'].includes(startLang)?startLang:'en', false);
 
 /* Share — native share sheet on phones; WhatsApp / Telegram / copy link otherwise */
 (function(){
-  var URL_='https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/exam-corner.html#midterm';
+  var BASE='https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/exam-corner.html';
+  var URL_=BASE+'#midterm';
+  var ITEMS={
+    video:{url:BASE+'#practice-video', title:'BAIO · Mid-Term practice video', msg:{
+      en:"🎬 I PUC Biology Mid-Term — 11-minute chapter-wise practice video by Narendra Sir: key answers, diagrams to practise and exam tips for all 10 chapters. Light and dark versions, with slides PDF.",
+      kn:"🎬 ಪ್ರಥಮ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ ಮಧ್ಯಾವಧಿ — ನರೇಂದ್ರ ಸರ್ ಅವರ 11 ನಿಮಿಷದ ಅಧ್ಯಾಯವಾರು ಅಭ್ಯಾಸ ವಿಡಿಯೋ: ಎಲ್ಲಾ 10 ಅಧ್ಯಾಯಗಳ ಮುಖ್ಯ ಉತ್ತರಗಳು, ಚಿತ್ರಗಳು ಮತ್ತು ಪರೀಕ್ಷಾ ಸಲಹೆಗಳು.",
+      hi:"🎬 प्रथम पीयूसी जीव विज्ञान मध्यावधि — नरेंद्र सर का 11 मिनट का अध्यायवार अभ्यास वीडियो: सभी 10 अध्यायों के मुख्य उत्तर, चित्र और परीक्षा टिप्स।"}},
+    blueprint:{url:BASE+'#blueprint', title:'BAIO · Mid-Term blueprint', msg:{
+      en:"📊 I PUC Biology Mid-Term 2026-27 blueprint — how many questions and marks come from each chapter. Plan your revision with it!",
+      kn:"📊 ಪ್ರಥಮ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ ಮಧ್ಯಾವಧಿ 2026-27 ಬ್ಲೂಪ್ರಿಂಟ್ — ಪ್ರತಿ ಅಧ್ಯಾಯದಿಂದ ಎಷ್ಟು ಪ್ರಶ್ನೆಗಳು ಮತ್ತು ಅಂಕಗಳು. ಇದರ ಪ್ರಕಾರ ಪುನರಾವರ್ತನೆ ಯೋಜಿಸಿ!",
+      hi:"📊 प्रथम पीयूसी जीव विज्ञान मध्यावधि 2026-27 ब्लूप्रिंट — हर अध्याय से कितने प्रश्न और अंक। इसी से अपनी दोहराई की योजना बनाइए!"}}
+  };
+  var curURL=URL_;
   var MSG={
     en:"📝 How to prepare for the I PUC Biology mid-term — Narendra Sir explains, slide by slide (English · ಕನ್ನಡ · हिंदी).",
     kn:"📝 ಪ್ರಥಮ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ ಮಧ್ಯಾವಧಿ ಪರೀಕ್ಷೆಗೆ ಹೇಗೆ ಸಿದ್ಧರಾಗಬೇಕು — ನರೇಂದ್ರ ಸರ್ ಸ್ಲೈಡ್‌ವಾರು ವಿವರಿಸುತ್ತಾರೆ (English · ಕನ್ನಡ · हिंदी).",
@@ -298,20 +312,22 @@ setLang(['en','kn','hi'].includes(startLang)?startLang:'en', false);
   sheet.querySelector('.cp').addEventListener('click',function(){
     var b=this, inp=sheet.querySelector('.share-url'), l=lang();
     function done(){ b.textContent=LBL[l][2]; setTimeout(function(){ b.textContent='🔗 '+LBL[l][1]; },1800); }
-    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(URL_).then(done,function(){ inp.select(); document.execCommand('copy'); done(); });
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(curURL).then(done,function(){ inp.select(); document.execCommand('copy'); done(); });
     else { inp.select(); document.execCommand('copy'); done(); }
   });
-  window.sharePresentation=function(){
-    var l=lang(), text=MSG[l];
-    if(navigator.share){ navigator.share({title:'BAIO · Mid-Term 2026',text:text,url:URL_}).catch(function(){}); return; }
+  function shareItem(key){
+    var l=lang(), it=ITEMS[key], text=it?it.msg[l]:MSG[l], url=it?it.url:URL_, title=it?it.title:'BAIO · Mid-Term 2026';
+    curURL=url;
+    if(navigator.share){ navigator.share({title:title,text:text,url:url}).catch(function(){}); return; }
     sheet.querySelector('#shareTtl').textContent=LBL[l][0];
-    sheet.querySelector('.wa').href='https://wa.me/?text='+encodeURIComponent(text+'\n'+URL_);
-    sheet.querySelector('.tg').href='https://t.me/share/url?url='+encodeURIComponent(URL_)+'&text='+encodeURIComponent(text);
+    sheet.querySelector('.wa').href='https://wa.me/?text='+encodeURIComponent(text+'\n'+url);
+    sheet.querySelector('.tg').href='https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(text);
     sheet.querySelector('.cp').textContent='🔗 '+LBL[l][1];
-    sheet.querySelector('.share-url').value=URL_;
+    sheet.querySelector('.share-url').value=url;
     sheet.hidden=false; sheet.querySelector('.wa').focus();
-  };
-  document.querySelectorAll('[data-share]').forEach(function(b){ b.addEventListener('click',window.sharePresentation); });
+  }
+  window.sharePresentation=function(){ shareItem(null); };
+  document.querySelectorAll('[data-share]').forEach(function(b){ b.addEventListener('click',function(){ shareItem(b.getAttribute('data-share')||null); }); });
 })();
 
 /* ---- Animated "How to play" guide (auto on first visit; ❓ How to play replays it) ---- */
@@ -468,7 +484,7 @@ setLang(['en','kn','hi'].includes(startLang)?startLang:'en', false);
   window.startPlayGuide=start;
   // First visit: show automatically once the player has loaded
   var seen=false; try{ seen=localStorage.getItem('baio_mt_guide_seen')==='1'; }catch(e){}
-  if(!seen && !/[?&]noguide/.test(location.search)){
+  if(!seen && !/[?&]noguide/.test(location.search) && !/^#(practice-video|blueprint)$/.test(location.hash)){
     var go1=function(){ setTimeout(function(){ if(!open) start(); },900); };
     if(pres.contentDocument && pres.contentDocument.readyState==='complete' && pres.contentDocument.getElementById('play')) go1(); else pres.addEventListener('load',go1,{once:true});
   }
