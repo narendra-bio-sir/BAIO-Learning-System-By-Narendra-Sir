@@ -161,9 +161,9 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
     <div class="card-head"><span class="pill" data-i18n="pill">I PUC Biology · Mid-Term 2026</span><span class="new" data-i18n="new">NEW</span></div>
     <h2 data-i18n-html="title">Narendra Sir's presentation that <em>explains how to prepare</em> for the <span style="white-space:nowrap">mid-term</span> examination</h2>
     <p data-i18n="desc">17 slides, read aloud in English, Kannada or Hindi with captions and highlights. Tap ▶ Explain inside the player and listen — use ⛶ Full screen in class.</p>
-    <div class="frame"><iframe id="pres" src="exam-corner/pu1-midterm-2026-presentation.html?v=2" title="Mid-term preparation presentation" allow="fullscreen; autoplay" allowfullscreen loading="eager"></iframe></div>
+    <div class="frame"><iframe id="pres" src="exam-corner/pu1-midterm-2026-presentation.html?v=3" title="Mid-term preparation presentation" allow="fullscreen; autoplay" allowfullscreen loading="eager"></iframe></div>
     <div class="actions">
-      <a class="act primary" href="exam-corner/pu1-midterm-2026-presentation.html?v=2" data-i18n="open_full">⛶ Open full page</a>
+      <a class="act primary" href="exam-corner/pu1-midterm-2026-presentation.html?v=3" data-i18n="open_full">⛶ Open full page</a>
       <button class="act share" type="button" data-share data-i18n="share">📤 Share with friends</button>
       <button class="act howto" type="button" data-howto data-i18n="howto">❓ How to play</button>
       <a class="act" href="exam-corner/pu1-midterm-2026-topics-and-tips.pptx" download data-i18n="dl_ppt">⬇ PowerPoint (with notes)</a>
@@ -221,6 +221,8 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
   var saved=null; try{ saved=localStorage.getItem(KEY); }catch(e){}
   apply(saved||'light');
   btn.addEventListener('click',function(){ var next=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light'; apply(next); try{ localStorage.setItem(KEY,next); }catch(e){} });
+  window.addEventListener('message',function(e){ if(e.origin===location.origin && e.data && (e.data.baioTheme==='light'||e.data.baioTheme==='dark')) apply(e.data.baioTheme); });
+  window.addEventListener('storage',function(e){ if(e.key===KEY) apply(e.newValue||'light'); });
 })();
 
 /* Language — English / ಕನ್ನಡ / ಹಿಂದಿ; also switches the presentation's narration */

@@ -22,6 +22,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<script>(function(){try{if((localStorage.getItem("baio_theme")||"light")==="dark")document.documentElement.classList.add("dk");}catch(e){}})();</script>
 <style>
 :root{--navy:#0c1830;--ink:#1f2a40;--muted:#556074;--teal:#0b8f80;--tealSoft:#e8f3f1;--gold:#c99a1e;--goldSoft:#fbf1d5;--line:#d9e2e1;--page:#eef2f4;--card:#fff}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -199,6 +200,33 @@ body.fsmode{overflow:hidden}
 .share-opt:hover{border-color:#0b8f80}
 .share-url{width:100%;padding:9px 10px;border-radius:10px;border:1px solid #e6e0d2;font:500 12px Inter;color:#5f6b80;background:#fff}
 .share-x{position:absolute;right:10px;top:10px;width:34px;height:34px;border-radius:50%;border:none;background:#f1ede2;cursor:pointer;font-size:14px}
+/* ---------- dark theme (follows the shared BAIO theme: localStorage baio_theme) ---------- */
+html.dk body{background:#0b1220;color:#dbe4f0}
+html.dk .brand b{color:#eef3fa}
+html.dk .btn{background:#16233b;color:#eef3fa;border-color:#2a3a55}
+html.dk .btn[aria-pressed="true"]{background:#e8c25a;color:#0c1830;border-color:#e8c25a}
+html.dk .btn.primary{background:var(--teal);border-color:var(--teal);color:#fff}
+html.dk .stage{background:#0f1a2e;box-shadow:0 6px 30px rgba(0,0,0,.5)}
+html.dk .s{background:#0f1a2e}
+html.dk .s.dark{background:#0a1326}
+html.dk .s h2,html.dk .big{color:#f1f5fb}
+html.dk .foot{color:#8a98ad}
+html.dk .card{background:#14283a}
+html.dk .card.gold{background:#2b2513}
+html.dk .ic{background:#0f1a2e}
+html.dk .label{color:#3cc3b0}
+html.dk .gold .label,html.dk .label.g{color:#e0b54a}
+html.dk .part .d,html.dk .row span,html.dk .focus p,html.dk .tipc,html.dk .diag b,html.dk .rule b,html.dk .ti b,html.dk .step b,html.dk .day b{color:#eef3fa}
+html.dk .part .u,html.dk .part .d2,html.dk .chart .ccap,html.dk .chp .ml,html.dk .chp .mn,html.dk .rule span,html.dk .tp p,html.dk .ti span,html.dk .step span,html.dk .hallnote,html.dk .day span,html.dk .count,html.dk .opt,html.dk .hint{color:#9fb0c6}
+html.dk .chp .tag,html.dk .diag small{color:#3cc3b0}
+html.dk .chp.gold .tag{color:#e0b54a}
+html.dk .chip{color:#eef3fa;background:#16233b;border-color:#2a3a55}
+html.dk .gold .chip,html.dk .chips.gold .chip{background:#2b2513;border-color:#6b5a24}
+html.dk .tip,html.dk .band,html.dk .day.dk{background:#1c2b47}
+html.dk .prog button{background:#2a3a55}
+html.dk .prog button.on{background:var(--teal)}
+html.dk select{background:#16233b;color:#eef3fa;border-color:#2a3a55}
+html.dk .hint b{color:#eef3fa}
 </style>
 </head>
 <body>
@@ -210,6 +238,7 @@ body.fsmode{overflow:hidden}
       <button class="btn" data-lang="kn">ಕನ್ನಡ</button>
       <button class="btn" data-lang="hi">हिंदी</button>
       <button class="btn" id="shareBtn" data-share title="Share" aria-label="Share this presentation">📤</button>
+      <button class="btn" id="themeBtn" title="Light / dark" aria-label="Switch light or dark theme">🌙</button>
     </div>
   </div>
 
@@ -494,6 +523,16 @@ if(!TTS) document.getElementById('hint').textContent='This browser has no speech
     sheet.hidden=false; sheet.querySelector('.wa').focus();
   };
   document.querySelectorAll('[data-share]').forEach(function(b){ b.addEventListener('click',window.sharePresentation); });
+})();
+
+/* light / dark theme — shared with the Exam Corner page through localStorage "baio_theme" */
+(function(){
+  var KEY='baio_theme', btn=document.getElementById('themeBtn');
+  function apply(t){ var dark=t==='dark'; document.documentElement.classList.toggle('dk',dark); if(btn){ btn.textContent=dark?'☀️':'🌙'; btn.title=dark?'Light theme':'Dark theme'; } }
+  var cur='light'; try{ cur=localStorage.getItem(KEY)||'light'; }catch(e){}
+  apply(cur);
+  if(btn) btn.addEventListener('click',function(){ var next=document.documentElement.classList.contains('dk')?'light':'dark'; apply(next); try{ localStorage.setItem(KEY,next); }catch(e){} try{ if(window.parent!==window) window.parent.postMessage({baioTheme:next},'*'); }catch(e){} });
+  window.addEventListener('storage',function(e){ if(e.key===KEY) apply(e.newValue||'light'); });
 })();
 </script>
 </body>
