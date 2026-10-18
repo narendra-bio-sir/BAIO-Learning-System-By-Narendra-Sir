@@ -641,6 +641,7 @@ html:not([data-theme="light"]) #pptImg,html:not([data-theme="light"]) .ppt-thumb
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="oneshot-study.js?v=1"></script>
 </head>
 <body>
 <div class="app">
@@ -952,6 +953,7 @@ const TABS = [
   {id:'badges', label:'Milestones'},
   {id:'progress', label:'Progress'},
   {id:'study', label:'Study Mode'},
+  {id:'oneshot', label:'One-Shot Revision'},
   {id:'podcast', label:'Audio Podcast'},
   {id:'studytips', label:'Study Tips'},
   {id:'pacing', label:'Pacing'},
@@ -983,7 +985,7 @@ function esc(s){ return (s===undefined||s===null)?'':String(s); }
 /* ---- Chapter tab bar: group the tabs into categories behind a dropdown,
    so the long tab list no longer needs one long scrolling row. ---- */
 const TAB_CATEGORIES = [
-  {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','concepts','podcast','studytips','boardimp','diagrams']},
+  {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','oneshot','concepts','podcast','studytips','boardimp','diagrams']},
   {id:'practice', label:'Practice', icon:'✍️', tabs:['flashcards','mcq','writeit','revision']},
   {id:'test', label:'Test Prep', icon:'\u{1F3AF}', tabs:['neet','kcet','papergen']},
   {id:'explore', label:'Explore', icon:'\u{1F50D}', tabs:['tree','compare','mindmap','classppt','glossary']},
@@ -3160,8 +3162,8 @@ const PREMIUM_UNLOCK_LOOKUP = {};
 const PREMIUM_PRICE_RUPEES = 1999;
 const PREMIUM_PRICE_ORIGINAL = 3000;
 const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/uRI9JGg';
-const PREMIUM_LOCKED_TABS = ['mindmap','classppt','mcq','neet','kcet','papergen','boardimp','podcast'];
-const PREMIUM_TAB_LABELS = {mindmap:'Mind Map', classppt:'Class Presentation', mcq:'MCQ Quiz', neet:'NEET Practice', kcet:'KCET Practice', papergen:'Paper Generator', boardimp:'Board Important', podcast:'Audio Podcast'};
+const PREMIUM_LOCKED_TABS = ['oneshot','mindmap','classppt','mcq','neet','kcet','papergen','boardimp','podcast'];
+const PREMIUM_TAB_LABELS = {oneshot:'One-Shot Revision', mindmap:'Mind Map', classppt:'Class Presentation', mcq:'MCQ Quiz', neet:'NEET Practice', kcet:'KCET Practice', papergen:'Paper Generator', boardimp:'Board Important', podcast:'Audio Podcast'};
 
 function getPremiumUnlock(){ try{ return JSON.parse(localStorage.getItem(PREMIUM_KEY) || 'null'); }catch(e){ return null; } }
 function setPremiumUnlock(method, extra){
@@ -3330,7 +3332,22 @@ function injectDemoAccessBanner(){
   tick();
   demoBannerInterval = setInterval(tick, 1000);
 }
+
+/* ---------------- ONE-SHOT REVISION (Study Mode notes, narrated: oneshot-study.js) ---------------- */
+const ONESHOT_TOPIC_NAMES = {"basis_classification": {"kn": "ವರ್ಗೀಕರಣದ ಆಧಾರ", "hi": "वर्गीकरण का आधार"}, "body_symmetry_germ": {"kn": "ದೇಹ ಸಮಮಿತಿ, ಭ್ರೂಣ ಪದರಗಳು ಮತ್ತು ದೇಹಕುಹರ", "hi": "शारीरिक सममिति, जनन स्तर और देहगुहा"}, "segmentation_notochord": {"kn": "ಖಂಡೀಕರಣ ಮತ್ತು ನೋಟೋಕಾರ್ಡ್", "hi": "खंडीभवन और पृष्ठरज्जु"}, "phylum_porifera": {"kn": "ವಂಶ ಪೊರಿಫೆರಾ", "hi": "संघ पोरीफेरा"}, "phylum_coelenterata": {"kn": "ವಂಶ ಸೀಲೆಂಟರೇಟಾ (ನಿಡೇರಿಯಾ)", "hi": "संघ सीलेंटरेटा (निडेरिया)"}, "phylum_ctenophora": {"kn": "ವಂಶ ಟೀನೋಫೋರಾ", "hi": "संघ टीनोफोरा"}, "phylum_platyhelminthes": {"kn": "ವಂಶ ಪ್ಲಾಟಿಹೆಲ್ಮಿಂಥಿಸ್", "hi": "संघ प्लेटिहेल्मिंथीज़"}, "phylum_aschelminthes": {"kn": "ವಂಶ ಆಸ್ಕೆಲ್ಮಿಂಥಿಸ್", "hi": "संघ एस्केल्मिंथीज़"}, "phylum_annelida": {"kn": "ವಂಶ ಆನೆಲಿಡಾ", "hi": "संघ एनेलिडा"}, "phylum_arthropoda": {"kn": "ವಂಶ ಆರ್ತ್ರೋಪೋಡಾ", "hi": "संघ आर्थ्रोपोडा"}, "phylum_mollusca": {"kn": "ವಂಶ ಮೊಲಸ್ಕಾ", "hi": "संघ मोलस्का"}, "phylum_echinodermata": {"kn": "ವಂಶ ಎಕೈನೋಡರ್ಮೇಟಾ", "hi": "संघ इकाइनोडर्मेटा"}, "phylum_hemichordata": {"kn": "ವಂಶ ಹೆಮಿಕಾರ್ಡೇಟಾ", "hi": "संघ हेमीकॉर्डेटा"}, "phylum_chordata": {"kn": "ವಂಶ ಕಾರ್ಡೇಟಾ — ಸಾಮಾನ್ಯ ಲಕ್ಷಣಗಳು ಮತ್ತು ಉಪವಂಶಗಳು", "hi": "संघ कॉर्डेटा — सामान्य लक्षण और उपसंघ"}, "class_cyclostomata": {"kn": "ವರ್ಗ ಸೈಕ್ಲೋಸ್ಟೋಮೇಟಾ", "hi": "वर्ग साइक्लोस्टोमेटा"}, "class_chondrichthyes": {"kn": "ವರ್ಗ ಕಾಂಡ್ರಿಕ್ತಿಸ್", "hi": "वर्ग कॉन्ड्रिक्थीज़"}, "class_osteichthyes": {"kn": "ವರ್ಗ ಆಸ್ಟಿಕ್ತಿಸ್", "hi": "वर्ग ऑस्टिक्थीज़"}, "class_amphibia": {"kn": "ವರ್ಗ ಆಂಫಿಬಿಯಾ", "hi": "वर्ग एम्फ़ीबिया"}, "class_reptilia": {"kn": "ವರ್ಗ ರೆಪ್ಟೀಲಿಯಾ", "hi": "वर्ग रेप्टीलिया"}, "class_aves": {"kn": "ವರ್ಗ ಏವ್ಸ್", "hi": "वर्ग एवीज़"}, "class_mammalia": {"kn": "ವರ್ಗ ಮ್ಯಾಮೇಲಿಯಾ", "hi": "वर्ग मैमेलिया"}, "summary": {"kn": "ಸಾರಾಂಶ — ವಂಶಗಳ ಪ್ರಮುಖ ಲಕ್ಷಣಗಳು", "hi": "सारांश — संघों के मुख्य लक्षण"}};
+function renderOneShotStudy(){
+  if(!window.OneShotStudy){ document.getElementById('content').innerHTML = '<div class="setup-card">Loading One-Shot Revision…</div>'; setTimeout(()=>{ if(currentTab==='oneshot') renderOneShotStudy(); }, 400); return; }
+  OneShotStudy.render({
+    key:'pu1ch4', chapterNo:4, cls:'PU-I',
+    chapterName:{"en": "Animal Kingdom", "kn": "ಪ್ರಾಣಿ ಸಾಮ್ರಾಜ್ಯ", "hi": "प्राणी जगत"},
+    topics: DATA.topics.map(t=>({id:t.id, name:Object.assign({en:t.name}, ONESHOT_TOPIC_NAMES[t.id]||{})})),
+    getStudy:(id, l)=> l==='en' ? DATA.study[id] : ((typeof STUDY_TRANSLATIONS_CH4!=='undefined' && STUDY_TRANSLATIONS_CH4[id] && STUDY_TRANSLATIONS_CH4[id][l]) || null),
+    container:()=>document.getElementById('content'),
+    lang:()=>(typeof currentLang!=='undefined' ? currentLang : 'en')
+  });
+}
 function renderContent(){
+  if(currentTab !== 'oneshot' && window.OneShotStudy) OneShotStudy.stop();
   if(PREMIUM_LOCKED_TABS.indexOf(currentTab) !== -1 && !premiumQualifies()){
     renderPremiumLock(currentTab);
     return;
@@ -3338,6 +3355,7 @@ function renderContent(){
   if(currentTab==='badges') renderBadgesCard();
   else if(currentTab==='progress') renderProgress();
   else if(currentTab==='study') renderStudy();
+  else if(currentTab==='oneshot') renderOneShotStudy();
   else if(currentTab==='podcast') renderPodcast();
   else if(currentTab==='studytips') renderStudyTips();
   else if(currentTab==='pacing') renderPacing();
