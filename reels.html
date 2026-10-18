@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#0B1B14">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -28,148 +28,129 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#000; --sheet:#ffffff; --sheet2:#f4f1e8; --ink:#14201a; --dim:#5f6e66; --line:#e3ddcd;
-  --gold:#D4AF37; --teal:#12a38c; --heart:#ff3b5c;
+  --navy:#0B1B14; --navy2:#0F2419; --panel:#13281E; --panel2:#0E211A;
+  --gold:#D4AF37; --gold2:#B8912A; --teal:#2EE6C5; --teal2:#127566;
+  --ink:#EAF3EE; --ink-dim:#9FC4B6; --line:rgba(212,175,55,0.22); --new:#E7695B;
 }
-html:not([data-theme="light"]){ --sheet:#13221b; --sheet2:#0d1a14; --ink:#eaf3ee; --dim:#9fb8ad; --line:#2a3d33; }
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%;background:#000;color:#fff;font-family:'Inter','Noto Sans Kannada','Noto Sans Devanagari',system-ui,sans-serif;overscroll-behavior:none}
-button{font-family:inherit}
-/* ---------- feed ---------- */
-.feed{position:fixed;inset:0;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;background:#000}
-.feed::-webkit-scrollbar{display:none}
-.ritem{position:relative;height:100dvh;height:100vh;height:100dvh;scroll-snap-align:start;scroll-snap-stop:always;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#000}
-.stage{position:relative;height:100%;width:100%;max-width:calc(100dvh * 9 / 16);margin:0 auto;background:#000}
-.stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
-.stage .tap{position:absolute;inset:0;z-index:2}
-.shade{position:absolute;left:0;right:0;bottom:0;height:52%;background:linear-gradient(180deg,transparent,rgba(0,0,0,.55) 35%,rgba(0,0,0,.88));z-index:3;pointer-events:none}
-.shade.top{top:0;bottom:auto;height:18%;background:linear-gradient(0deg,transparent,rgba(0,0,0,.55))}
-.cap{position:absolute;left:14px;right:78px;bottom:calc(22px + env(safe-area-inset-bottom));z-index:4;text-shadow:0 1px 3px rgba(0,0,0,.6)}
-.who{display:flex;align-items:center;gap:8px;font:700 14px 'Space Grotesk','Inter',sans-serif}
-.who .av{width:34px;height:34px;border-radius:50%;background:#0c1830;color:#D4AF37;display:grid;place-items:center;font:800 16px 'Space Grotesk',sans-serif;border:2px solid #fff;flex:none}
-.who .tag{font:700 10.5px Inter,sans-serif;letter-spacing:.06em;padding:3px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.7)}
-.cap h2{margin:8px 0 4px;font:800 19px/1.25 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari',sans-serif}
-.cap p{margin:0;font-size:13.5px;line-height:1.45;color:#f1f4f2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.cap p.open{-webkit-line-clamp:unset;display:block}
-.cap .more{background:none;border:0;color:#fff;font-weight:700;font-size:13px;padding:2px 0;cursor:pointer;opacity:.85}
-.cap .open-ch{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.16);backdrop-filter:blur(6px);color:#fff;text-decoration:none;font:700 12.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;border:1px solid rgba(255,255,255,.25)}
-.rail{position:absolute;right:8px;bottom:calc(26px + env(safe-area-inset-bottom));z-index:5;display:flex;flex-direction:column;align-items:center;gap:16px}
-.rb{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;color:#fff;text-decoration:none;cursor:pointer;padding:0;min-width:56px;text-shadow:0 1px 3px rgba(0,0,0,.6)}
-.rb .ic{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:25px;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);transition:transform .15s}
-.rb:active .ic{transform:scale(.88)}
-.rb .n{font:700 12.5px Inter,sans-serif;padding:1px 6px;border-radius:8px;background:rgba(0,0,0,.45)}
-.rb.liked .ic{color:var(--heart)}
-.rb.liked .ic svg{fill:var(--heart);stroke:var(--heart)}
-.rb svg{width:28px;height:28px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.rb.pop .ic{animation:pop .35s ease}
-@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.32)}100%{transform:scale(1)}}
-.prog{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.22);z-index:6}
-.prog i{display:block;height:100%;width:0;background:#fff}
-.burst{position:absolute;z-index:6;pointer-events:none;width:110px;height:110px;margin:-55px 0 0 -55px;animation:burst .8s ease forwards}
-.burst svg{width:100%;height:100%;fill:var(--heart);filter:drop-shadow(0 4px 12px rgba(0,0,0,.35))}
-@keyframes burst{0%{transform:scale(.2) rotate(-12deg);opacity:0}25%{transform:scale(1.15) rotate(-12deg);opacity:1}60%{transform:scale(1) rotate(-12deg);opacity:1}100%{transform:scale(1.1) translateY(-60px) rotate(-12deg);opacity:0}}
-.pind{position:absolute;left:50%;top:50%;z-index:5;width:76px;height:76px;margin:-38px 0 0 -38px;border-radius:50%;background:rgba(0,0,0,.45);display:grid;place-items:center;font-size:32px;pointer-events:none;opacity:0;transition:opacity .2s}
-.pind.on{opacity:1}
-.mute{position:absolute;left:12px;bottom:calc(210px + env(safe-area-inset-bottom));z-index:6;border:0;border-radius:999px;background:rgba(0,0,0,.45);color:#fff;font:700 12.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;padding:8px 12px;cursor:pointer}
-.endcard{height:100dvh;scroll-snap-align:start;display:grid;place-items:center;text-align:center;padding:24px;background:radial-gradient(circle at 50% 30%,#123a2f,#000 70%)}
-.endcard h2{font:800 24px 'Space Grotesk',sans-serif;margin:10px 0 6px}
-.endcard p{color:#cfe0d8;font-size:14px;line-height:1.6;max-width:320px;margin:0 auto}
-.endcard a,.endcard button{display:inline-block;margin:14px 6px 0;padding:11px 18px;border-radius:999px;border:0;background:#D4AF37;color:#1a1406;font:800 14px Inter,sans-serif;text-decoration:none;cursor:pointer}
-.endcard button{background:rgba(255,255,255,.14);color:#fff}
-/* ---------- top bar ---------- */
-.bar{position:fixed;left:0;right:0;top:0;z-index:20;padding:calc(10px + env(safe-area-inset-top)) 10px 8px;display:flex;align-items:center;gap:8px;justify-content:space-between;pointer-events:none}
-.bar > *{pointer-events:auto}
-.bar .ib{width:38px;height:38px;border-radius:50%;border:0;background:rgba(0,0,0,.4);color:#fff;font-size:17px;display:grid;place-items:center;text-decoration:none;cursor:pointer;backdrop-filter:blur(6px)}
-.tabs{display:flex;gap:4px;padding:4px;border-radius:999px;background:rgba(0,0,0,.4);backdrop-filter:blur(6px)}
-.tabs button{border:0;background:none;color:rgba(255,255,255,.75);font:700 13px Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;padding:7px 12px;border-radius:999px;cursor:pointer;white-space:nowrap}
-.tabs button.on{background:#fff;color:#000}
-.bar .rt{display:flex;gap:6px}
-.bar .lang{width:auto;padding:0 12px;border-radius:999px;font:800 13px Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif}
-/* ---------- sheets ---------- */
-.veil{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .2s}
-.veil.on{opacity:1;pointer-events:auto}
-.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;margin:0 auto;max-width:560px;height:72dvh;background:var(--sheet);color:var(--ink);border-radius:20px 20px 0 0;transform:translateY(105%);transition:transform .25s ease;display:flex;flex-direction:column;box-shadow:0 -10px 40px rgba(0,0,0,.35)}
-.sheet.on{transform:none}
-.sheet .grab{width:42px;height:5px;border-radius:5px;background:var(--line);margin:8px auto 2px}
-.sheet .hd{display:flex;align-items:center;justify-content:center;position:relative;padding:6px 44px 10px;border-bottom:1px solid var(--line);font:800 15px 'Space Grotesk','Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif}
-.sheet .x{position:absolute;right:8px;top:0;width:36px;height:36px;border-radius:50%;border:0;background:var(--sheet2);color:var(--ink);cursor:pointer;font-size:15px}
-.clist{flex:1;overflow-y:auto;padding:6px 14px 10px;overscroll-behavior:contain}
-.cm{display:flex;gap:10px;padding:10px 0}
-.cm .av{width:34px;height:34px;border-radius:50%;flex:none;display:grid;place-items:center;font:800 14px 'Space Grotesk',sans-serif;color:#fff}
-.cm .nm{font:700 12.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;color:var(--dim)}
-.cm .nm .you{color:var(--teal)}
-.cm .nm .tm{font-weight:500;margin-left:6px}
-.cm .tx{font-size:14px;line-height:1.45;margin-top:2px;white-space:pre-wrap;word-break:break-word}
-.cm.pending{opacity:.6}
-.empty{text-align:center;color:var(--dim);padding:40px 10px;font-size:14px;line-height:1.6}
-.cform{border-top:1px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom));display:grid;gap:8px;background:var(--sheet)}
-.cform .row{display:flex;gap:8px;align-items:flex-end}
-.cform input,.cform textarea{width:100%;border:1px solid var(--line);background:var(--sheet2);color:var(--ink);border-radius:14px;padding:10px 12px;font:500 14px Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;outline:none}
-.cform textarea{resize:none;height:44px;max-height:110px}
-.cform input:focus,.cform textarea:focus{border-color:var(--teal)}
-.cform .send{flex:none;height:44px;padding:0 16px;border-radius:14px;border:0;background:var(--teal);color:#fff;font:800 14px Inter,sans-serif;cursor:pointer}
-.cform .send:disabled{opacity:.45}
-.cform .note{font-size:11.5px;color:var(--dim);line-height:1.4}
-.share-opts{padding:14px;display:grid;gap:10px}
-.share-opt{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:14px;border:1px solid var(--line);background:var(--sheet2);color:var(--ink);text-decoration:none;font:700 15px Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;cursor:pointer;text-align:left;width:100%}
-.share-opt span{font-size:22px}
-#shareSheet{height:auto}
-.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));z-index:60;transform:translateX(-50%) translateY(20px);background:rgba(20,32,26,.94);color:#fff;padding:10px 16px;border-radius:999px;font:600 13px Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;opacity:0;transition:all .25s;pointer-events:none;max-width:90vw;text-align:center}
-.toast.on{opacity:1;transform:translateX(-50%)}
-.hint{position:fixed;left:50%;top:46%;z-index:15;transform:translateX(-50%);color:#fff;font:700 13px Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;background:rgba(0,0,0,.5);padding:10px 16px;border-radius:999px;white-space:nowrap;pointer-events:none;animation:hint 2.4s ease 1.2s 2 both}
-@keyframes hint{0%{opacity:0;transform:translate(-50%,10px)}20%,70%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-30px)}}
-@media (min-width:700px){ .rail{right:calc(50% - min(50vw, 100dvh * 9 / 32) - 70px)} .stage{border-left:1px solid #222;border-right:1px solid #222} }
-@media (prefers-reduced-motion:reduce){ .burst,.rb.pop .ic,.hint{animation:none} }
+[data-theme="light"]{
+  --navy:#F7F5EE; --navy2:#EFEBDD; --panel:#FFFFFF; --panel2:#F3F0E6;
+  --gold:#B8912A; --gold2:#8A6A1A; --teal:#0F8F7A; --teal2:#0B6F5E;
+  --ink:#1E2A22; --ink-dim:#5C6E63; --line:rgba(184,145,42,0.25); --new:#C33A2C;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--navy);color:var(--ink);font-family:'Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;-webkit-font-smoothing:antialiased;transition:background .25s,color .25s}
+h1,h2,h3{font-family:'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;margin:0}
+a{color:var(--teal)}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px 70px}
+.topnav{position:sticky;top:0;z-index:30;background:rgba(11,27,20,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+[data-theme="light"] .topnav{background:rgba(244,241,232,.94)}
+.topnav-inner{max-width:980px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:8px;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:8px;font:700 14px 'Space Grotesk',sans-serif;color:var(--ink)}
+.brand .b{width:30px;height:30px;border-radius:8px;background:#0c1830;color:#D4AF37;display:grid;place-items:center;font-size:16px}
+.tools{display:flex;align-items:center;gap:6px}
+.lang-switcher{display:flex;gap:4px}
+.lang-btn{padding:6px 10px;border-radius:12px;font:700 11px 'Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;background:var(--panel2);color:var(--ink-dim);border:1px solid var(--line);cursor:pointer;white-space:nowrap;min-height:32px}
+.lang-btn.active{background:var(--gold);color:#1a1406;border-color:var(--gold)}
+.icon-btn{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none}
+.hero{padding:30px 0 18px;text-align:center}
+.eyebrow{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--teal);font-weight:700}
+.hero h1{font-size:32px;line-height:1.15;margin-top:10px}
+.hero h1 .accent{color:var(--gold)}
+.hero p{font-size:14px;color:var(--ink-dim);line-height:1.7;margin:10px auto 0;max-width:600px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:16px}
+.card-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.pill{font:700 11px Inter;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold);border-radius:20px;padding:3px 10px}
+.new{font:800 11px Inter;letter-spacing:1.5px;color:#fff;background:var(--new);border-radius:20px;padding:4px 10px}
+.card h2{font-size:21px;line-height:1.3;margin-top:10px}
+.card h2 em{font-style:normal;color:var(--teal)}
+.card p{font-size:13.5px;line-height:1.65;color:var(--ink-dim);margin:8px 0 0}
+.frame{margin-top:14px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#0b1220}
+[data-theme="light"] .frame{background:#eef2f4}
+.frame iframe{display:block;width:100%;height:640px;border:0}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.vframe{margin:14px 0 4px;border-radius:14px;overflow:hidden;background:#000;border:1px solid var(--line)}
+.vframe video{display:block;width:100%;aspect-ratio:16/9;background:#000}
+.vtheme{display:inline-flex;gap:4px;margin:12px 0 0;padding:4px;border-radius:12px;border:1px solid var(--line);background:var(--panel2)}
+.vt-btn{border:0;background:transparent;color:var(--ink);font:600 13px 'Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;padding:8px 12px;border-radius:9px;cursor:pointer;min-height:38px}
+.vt-btn.on{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406}
+.act{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);text-decoration:none;font:600 13px 'Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;min-height:42px}
+.act.share{cursor:pointer;border-color:var(--teal);color:var(--teal)}
+.act.primary{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;border-color:var(--gold)}
+.tips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.tip{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:12.5px;line-height:1.5;color:var(--ink-dim)}
+.tip b{display:block;color:var(--ink);font-size:13px;margin-bottom:3px}
+.poster{margin-top:12px;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+.poster img{display:block;width:100%;height:auto}
+.soon{text-align:center;color:var(--ink-dim);font-size:13px;margin-top:26px}
+footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
+@media (max-width:640px){ .hero h1{font-size:26px} .tips{grid-template-columns:1fr} .brand span{display:none} .card{padding:14px} .card h2{font-size:18px} }
+
+.share-sheet{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;padding:16px}
+.share-sheet[hidden]{display:none}
+.share-box{position:relative;width:100%;max-width:380px;background:#fff;color:#0c1830;border-radius:18px;padding:18px;display:grid;gap:10px;font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.share-box b{font:700 17px 'Space Grotesk',Inter,sans-serif}
+.share-opt{display:block;text-align:left;padding:13px 14px;border-radius:12px;border:1.5px solid #e6e0d2;background:#fbf8f1;color:#0c1830;text-decoration:none;font:600 15px Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;cursor:pointer}
+.share-opt:hover{border-color:#0b8f80}
+.share-url{width:100%;padding:9px 10px;border-radius:10px;border:1px solid #e6e0d2;font:500 12px Inter;color:#5f6b80;background:#fff}
+.share-x{position:absolute;right:10px;top:10px;width:34px;height:34px;border-radius:50%;border:none;background:#f1ede2;cursor:pointer;font-size:14px}
+/* ---- Reels ---- */
+.filters{display:flex;justify-content:center;gap:6px;margin-top:4px;flex-wrap:wrap}
+.f-btn{padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:700 13px 'Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;cursor:pointer;min-height:38px}
+.f-btn.on{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;border-color:var(--gold)}
+.reels{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-top:16px}
+.reel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;display:flex;flex-direction:column;transition:box-shadow .4s}
+.reel.flash{box-shadow:0 0 0 3px var(--gold)}
+.reel .rv{border-radius:14px;overflow:hidden;background:#000;border:1px solid var(--line);max-width:340px;width:100%;margin:12px auto 0}
+.reel video{display:block;width:100%;aspect-ratio:9/16;background:#000;object-fit:cover}
+.reel h2{font-size:19px;line-height:1.3;margin-top:10px}
+.reel p{font-size:13px;line-height:1.6;color:var(--ink-dim);margin:6px 0 0}
+.meta{font:600 12px Inter;color:var(--ink-dim)}
+.reel .actions{margin-top:auto;padding-top:12px}
 </style>
 </head>
 <body>
-<div class="bar">
-  <a class="ib" href="index.html" title="Home" aria-label="Back to BAIO home">🏠</a>
-  <div class="tabs" role="tablist" aria-label="Filter by class">
-    <button data-f="all" class="on"></button><button data-f="1"></button><button data-f="2"></button>
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="brand"><div class="b">B</div><span>BAIO Learning System</span></div>
+    <div class="tools">
+      <div id="langSwitcher" class="lang-switcher" role="group" aria-label="Language"></div>
+      <a href="index.html" class="icon-btn" title="Back to BAIO home" aria-label="Back to BAIO home">🏠</a>
+      <button class="icon-btn" id="themeToggle" title="Toggle dark/light theme" aria-label="Toggle dark/light theme">🌙</button>
+    </div>
   </div>
-  <div class="rt">
-    <button class="ib lang" id="langBtn" aria-label="Language">EN</button>
-    <button class="ib" id="themeBtn" aria-label="Toggle dark/light theme">🌙</button>
-  </div>
-</div>
-<main class="feed" id="feed" aria-label="Revision reels"></main>
-<div class="hint" id="swipeHint"></div>
+</nav>
 
-<div class="veil" id="veil"></div>
-<section class="sheet" id="cSheet" role="dialog" aria-modal="true" aria-labelledby="cTitle">
-  <div class="grab"></div>
-  <div class="hd"><span id="cTitle"></span><button class="x" data-close aria-label="Close">✕</button></div>
-  <div class="clist" id="cList"></div>
-  <form class="cform" id="cForm" autocomplete="off">
-    <input id="cName" maxlength="40" aria-label="Your name">
-    <div class="row"><textarea id="cText" maxlength="300" rows="1" aria-label="Comment"></textarea><button class="send" id="cSend" type="submit">➤</button></div>
-    <div class="note" id="cNote"></div>
-  </form>
-</section>
-<section class="sheet" id="shareSheet" role="dialog" aria-modal="true" aria-labelledby="sTitle">
-  <div class="grab"></div>
-  <div class="hd"><span id="sTitle"></span><button class="x" data-close aria-label="Close">✕</button></div>
-  <div class="share-opts">
-    <a class="share-opt" id="sWa" target="_blank" rel="noopener"><span>🟢</span>WhatsApp</a>
-    <a class="share-opt" id="sTg" target="_blank" rel="noopener"><span>✈️</span>Telegram</a>
-    <button class="share-opt" id="sCp" type="button"><span>🔗</span><b id="sCpL"></b></button>
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow" data-i18n="eyebrow">BAIO Learning System · Revision Reels</div>
+    <h1 data-i18n-html="h1">🎬 Revision <span class="accent">Reels</span></h1>
+    <p data-i18n="intro">One-minute videos of board-important topics, chapter by chapter. Watch before class, save for exams and share with friends.</p>
+  </section>
+  <div style="text-align:center;margin:0 0 12px"><a class="act primary" href="reels-feed.html" data-i18n="feed">📱 Try the Reels feed · swipe, like &amp; comment</a></div>
+  <div class="filters" role="group" aria-label="Filter by class">
+    <button class="f-btn on" data-f="all" data-i18n="f_all">All</button>
+    <button class="f-btn" data-f="1" data-i18n="f_1">I PUC</button>
+    <button class="f-btn" data-f="2" data-i18n="f_2">II PUC</button>
   </div>
-</section>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="reels" id="reels"></div>
+  <p class="soon" data-i18n="soon">New reels are added chapter by chapter. 🔔 Watch the Announcements bell.</p>
+  <footer>BAIO Learning System · Narendra Sir · Revision Reels</footer>
+</div>
 
 <script>
-/* ---------- theme (shared with every BAIO page) ---------- */
+/* Theme — shared with every BAIO page through the same key */
 (function(){
-  var KEY='baio_theme', btn=document.getElementById('themeBtn');
+  var KEY='baio_theme', btn=document.getElementById('themeToggle');
   function apply(t){ if(t==='light'){ document.documentElement.setAttribute('data-theme','light'); btn.textContent='☀️'; } else { document.documentElement.removeAttribute('data-theme'); btn.textContent='🌙'; } }
   var saved=null; try{ saved=localStorage.getItem(KEY); }catch(e){}
   apply(saved||'light');
   btn.addEventListener('click',function(){ var next=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light'; apply(next); try{ localStorage.setItem(KEY,next); }catch(e){} });
+  window.addEventListener('message',function(e){ if(e.origin===location.origin && e.data && (e.data.baioTheme==='light'||e.data.baioTheme==='dark')) apply(e.data.baioTheme); });
   window.addEventListener('storage',function(e){ if(e.key===KEY) apply(e.newValue||'light'); });
 })();
 
-/* ---------- Reels data: add a new reel here (newest first) ---------- */
+
+/* ---- Reels data: add a new reel here (newest first) ---- */
 const REELS = [
   { id:'pu2-ch5-mbi', pu:2, ch:5, dur:'1:09', video:'reels/pu2-ch5-molecular-basis-of-inheritance-reel.mp4', cover:'reels/pu2-ch5-molecular-basis-of-inheritance-cover.jpg', chapter:'pu2-ch5.html',
     title:{en:'Molecular Basis of Inheritance', kn:'ಆನುವಂಶೀಯತೆಯ ಅಣ್ವಿಕ ಆಧಾರ', hi:'वंशागति का आणविक आधार'},
@@ -182,278 +163,95 @@ const REELS = [
           kn:'8 ಬೋರ್ಡ್ ಮುಖ್ಯ ವಿಷಯಗಳು: ಮೆಟಬೋಲೈಟ್‌ಗಳು, ಅಮೈನೋ ಆಮ್ಲ, ಪ್ರೋಟೀನ್ ರಚನೆ, ನ್ಯೂಕ್ಲಿಯೋಟೈಡ್, DNA ಸಂಖ್ಯೆಗಳು, ಕಿಣ್ವಗಳ ವರ್ಗಗಳು, ಕಿಣ್ವ ಚಟುವಟಿಕೆಯ ಅಂಶಗಳು ಮತ್ತು ಸಹಕಾರಕಗಳು.',
           hi:'8 बोर्ड-महत्वपूर्ण विषय: उपापचयज, अमीनो अम्ल, प्रोटीन संरचना, न्यूक्लियोटाइड, DNA संख्याएँ, एंजाइम वर्ग, एंजाइम क्रिया के कारक और सहकारक।'} }
 ];
-const T = {
-  en:{all:'All', pu1:'I PUC', pu2:'II PUC', ch:'Ch', open:'Open chapter', more:'more', less:'less', comments:'Comments', share:'Share', save:'Save', like:'Like',
-      name:'Your name', say:'Add a comment…', post:'Post', noC:'No comments yet. Be the first to ask a doubt or say thanks! 💬', you:'You',
-      note:'Be kind and on-topic. Comments are public. Doubts welcome!', copy:'Copy link', copied:'Link copied ✓', tap:'🔇 Tap for sound', soundOn:'🔊 Sound on',
-      swipe:'⬆ Swipe up for the next reel', endT:"You're all caught up 🎉", endP:'New revision reels are added chapter by chapter. Watch the 🔔 Announcements bell.', home:'BAIO home', again:'Watch again',
-      offline:'Saved on this phone. Likes and comments will sync when the reels server is on.', tooFast:'Please wait a few seconds before posting again.', blocked:'Please keep comments respectful.', needName:'Please type your name first.', now:'now', saved:'Saved ⬇ downloading…'},
-  kn:{all:'ಎಲ್ಲಾ', pu1:'ಪ್ರಥಮ ಪಿಯುಸಿ', pu2:'ದ್ವಿತೀಯ ಪಿಯುಸಿ', ch:'ಅಧ್ಯಾಯ', open:'ಅಧ್ಯಾಯ ತೆರೆಯಿರಿ', more:'ಇನ್ನಷ್ಟು', less:'ಕಡಿಮೆ', comments:'ಕಾಮೆಂಟ್‌ಗಳು', share:'ಹಂಚಿ', save:'ಉಳಿಸಿ', like:'ಇಷ್ಟ',
-      name:'ನಿಮ್ಮ ಹೆಸರು', say:'ಕಾಮೆಂಟ್ ಬರೆಯಿರಿ…', post:'ಪೋಸ್ಟ್', noC:'ಇನ್ನೂ ಕಾಮೆಂಟ್‌ಗಳಿಲ್ಲ. ಸಂದೇಹ ಕೇಳುವ ಅಥವಾ ಧನ್ಯವಾದ ಹೇಳುವ ಮೊದಲಿಗರಾಗಿ! 💬', you:'ನೀವು',
-      note:'ಸೌಜನ್ಯದಿಂದ, ವಿಷಯಕ್ಕೆ ಸಂಬಂಧಿಸಿ ಬರೆಯಿರಿ. ಕಾಮೆಂಟ್‌ಗಳು ಎಲ್ಲರಿಗೂ ಕಾಣುತ್ತವೆ. ಸಂದೇಹಗಳಿಗೆ ಸ್ವಾಗತ!', copy:'ಲಿಂಕ್ ನಕಲಿಸಿ', copied:'ಲಿಂಕ್ ನಕಲಾಯಿತು ✓', tap:'🔇 ಧ್ವನಿಗೆ ಟ್ಯಾಪ್ ಮಾಡಿ', soundOn:'🔊 ಧ್ವನಿ ಆನ್',
-      swipe:'⬆ ಮುಂದಿನ ರೀಲ್‌ಗೆ ಮೇಲಕ್ಕೆ ಸ್ವೈಪ್ ಮಾಡಿ', endT:'ಎಲ್ಲಾ ರೀಲ್‌ಗಳನ್ನು ನೋಡಿದ್ದೀರಿ 🎉', endP:'ಹೊಸ ಪುನರಾವರ್ತನೆ ರೀಲ್‌ಗಳು ಅಧ್ಯಾಯವಾರು ಸೇರುತ್ತವೆ. 🔔 ಪ್ರಕಟಣೆಗಳನ್ನು ನೋಡುತ್ತಿರಿ.', home:'BAIO ಮುಖಪುಟ', again:'ಮತ್ತೆ ನೋಡಿ',
-      offline:'ಈ ಫೋನ್‌ನಲ್ಲಿ ಉಳಿಸಲಾಗಿದೆ. ರೀಲ್ಸ್ ಸರ್ವರ್ ಆನ್ ಆದಾಗ ಸಿಂಕ್ ಆಗುತ್ತದೆ.', tooFast:'ಮತ್ತೆ ಪೋಸ್ಟ್ ಮಾಡುವ ಮೊದಲು ಕೆಲವು ಸೆಕೆಂಡು ಕಾಯಿರಿ.', blocked:'ದಯವಿಟ್ಟು ಗೌರವದಿಂದ ಬರೆಯಿರಿ.', needName:'ಮೊದಲು ನಿಮ್ಮ ಹೆಸರು ಬರೆಯಿರಿ.', now:'ಈಗ', saved:'ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ…'},
-  hi:{all:'सभी', pu1:'प्रथम पीयूसी', pu2:'द्वितीय पीयूसी', ch:'अध्याय', open:'अध्याय खोलें', more:'और', less:'कम', comments:'टिप्पणियाँ', share:'शेयर', save:'सेव', like:'पसंद',
-      name:'आपका नाम', say:'टिप्पणी लिखें…', post:'पोस्ट', noC:'अभी कोई टिप्पणी नहीं। सबसे पहले अपना सवाल पूछें या धन्यवाद कहें! 💬', you:'आप',
-      note:'विनम्र रहें और विषय पर लिखें। टिप्पणियाँ सबको दिखती हैं। सवालों का स्वागत है!', copy:'लिंक कॉपी करें', copied:'लिंक कॉपी हुआ ✓', tap:'🔇 आवाज़ के लिए टैप करें', soundOn:'🔊 आवाज़ चालू',
-      swipe:'⬆ अगली रील के लिए ऊपर स्वाइप करें', endT:'आपने सभी रील्स देख लीं 🎉', endP:'नई रिवीज़न रील्स अध्याय दर अध्याय जुड़ती रहेंगी। 🔔 घोषणाएँ देखते रहें।', home:'BAIO होम', again:'फिर से देखें',
-      offline:'इस फ़ोन पर सेव हुआ। रील्स सर्वर चालू होने पर सिंक होगा।', tooFast:'दोबारा पोस्ट करने से पहले कुछ सेकंड रुकें।', blocked:'कृपया सम्मानजनक टिप्पणी करें।', needName:'पहले अपना नाम लिखें।', now:'अभी', saved:'डाउनलोड हो रहा है…'}
+const UI = {
+  en:{pu1:'I PUC', pu2:'II PUC', ch:'Ch', dl:'⬇ Download (MP4)', share:'📤 Share', open:'📘 Open chapter', min:'min', board:'Board important'},
+  kn:{pu1:'ಪ್ರಥಮ ಪಿಯುಸಿ', pu2:'ದ್ವಿತೀಯ ಪಿಯುಸಿ', ch:'ಅಧ್ಯಾಯ', dl:'⬇ ಡೌನ್‌ಲೋಡ್ (MP4)', share:'📤 ಹಂಚಿಕೊಳ್ಳಿ', open:'📘 ಅಧ್ಯಾಯ ತೆರೆಯಿರಿ', min:'ನಿಮಿಷ', board:'ಬೋರ್ಡ್ ಮುಖ್ಯ'},
+  hi:{pu1:'प्रथम पीयूसी', pu2:'द्वितीय पीयूसी', ch:'अध्याय', dl:'⬇ डाउनलोड (MP4)', share:'📤 शेयर करें', open:'📘 अध्याय खोलें', min:'मिनट', board:'बोर्ड महत्वपूर्ण'}
 };
+const I18N = {
+  kn:{ feed:'📱 ರೀಲ್ಸ್ ಫೀಡ್ ನೋಡಿ · ಸ್ವೈಪ್, ಲೈಕ್ ಮತ್ತು ಕಾಮೆಂಟ್', eyebrow:'BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್ · ಪುನರಾವರ್ತನೆ ರೀಲ್ಸ್', h1:'🎬 ಪುನರಾವರ್ತನೆ <span class="accent">ರೀಲ್ಸ್</span>',
+       intro:'ಅಧ್ಯಾಯವಾರು ಬೋರ್ಡ್ ಪರೀಕ್ಷೆಯ ಮುಖ್ಯ ವಿಷಯಗಳ ಒಂದು ನಿಮಿಷದ ವಿಡಿಯೋಗಳು. ತರಗತಿಗೆ ಮುನ್ನ ನೋಡಿ, ಪರೀಕ್ಷೆಗೆ ಉಳಿಸಿ, ಸ್ನೇಹಿತರೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಿ.',
+       f_all:'ಎಲ್ಲಾ', f_1:'ಪ್ರಥಮ ಪಿಯುಸಿ', f_2:'ದ್ವಿತೀಯ ಪಿಯುಸಿ', soon:'ಹೊಸ ರೀಲ್‌ಗಳು ಅಧ್ಯಾಯವಾರು ಸೇರುತ್ತವೆ. 🔔 ಪ್ರಕಟಣೆಗಳ ಘಂಟೆಯನ್ನು ಗಮನಿಸಿ.' },
+  hi:{ feed:'📱 रील्स फ़ीड आज़माएँ · स्वाइप, लाइक और कमेंट', eyebrow:'BAIO लर्निंग सिस्टम · रिवीज़न रील्स', h1:'🎬 रिवीज़न <span class="accent">रील्स</span>',
+       intro:'अध्यायवार बोर्ड-महत्वपूर्ण विषयों के एक मिनट के वीडियो। क्लास से पहले देखिए, परीक्षा के लिए सेव कीजिए और दोस्तों से शेयर कीजिए।',
+       f_all:'सभी', f_1:'प्रथम पीयूसी', f_2:'द्वितीय पीयूसी', soon:'नई रील्स अध्याय दर अध्याय जुड़ती रहेंगी। 🔔 घोषणाओं की घंटी पर नज़र रखिए।' }
+};
+const BASE='https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/reels.html';
+let lang='en', filter='all';
+const box=document.getElementById('reels');
+function render(){
+  const u=UI[lang];
+  const playing=[...box.querySelectorAll('video')].filter(v=>!v.paused).map(v=>v.closest('.reel').id);
+  box.innerHTML=REELS.filter(r=>filter==='all'||String(r.pu)===filter).map(r=>`
+    <article class="reel" id="${r.id}">
+      <div class="card-head"><span class="pill">${r.pu===1?u.pu1:u.pu2} · ${u.ch} ${r.ch}</span><span class="new">${u.board}</span></div>
+      <h2>${r.title[lang]||r.title.en}</h2>
+      <div class="meta">⏱ ${r.dur} ${u.min}</div>
+      <p>${r.desc[lang]||r.desc.en}</p>
+      <div class="rv"><video controls preload="none" playsinline poster="${r.cover}" src="${r.video}"></video></div>
+      <div class="actions">
+        <a class="act primary" href="${r.video}" download>${u.dl}</a>
+        <button class="act share" type="button" data-reel="${r.id}">${u.share}</button>
+        <a class="act" href="${r.chapter}">${u.open}</a>
+      </div>
+    </article>`).join('');
+  // only one reel plays at a time
+  box.querySelectorAll('video').forEach(v=>v.addEventListener('play',()=>box.querySelectorAll('video').forEach(o=>{ if(o!==v) o.pause(); })));
+}
+const EN = {}; document.querySelectorAll('[data-i18n]').forEach(e=>EN[e.dataset.i18n]=e.textContent); document.querySelectorAll('[data-i18n-html]').forEach(e=>EN[e.dataset.i18nHtml]=e.innerHTML);
+const LANGS=[['en','English'],['kn','ಕನ್ನಡ'],['hi','हिंदी']];
+const sw=document.getElementById('langSwitcher');
+sw.innerHTML=LANGS.map(([k,l])=>`<button class="lang-btn" data-l="${k}">${l}</button>`).join('');
+function setLang(l){
+  lang=l; const T = l==='en' ? EN : Object.assign({}, EN, I18N[l]);
+  document.querySelectorAll('[data-i18n]').forEach(e=>{ e.textContent=T[e.dataset.i18n]; });
+  document.querySelectorAll('[data-i18n-html]').forEach(e=>{ e.innerHTML=T[e.dataset.i18nHtml]; });
+  document.documentElement.lang=l;
+  sw.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.l===l));
+  try{ localStorage.setItem('baio_lang',l); localStorage.setItem('baio_mt_lang',l); }catch(e){}
+  render();
+}
+sw.addEventListener('click',e=>{ const b=e.target.closest('button'); if(b) setLang(b.dataset.l); });
+document.querySelectorAll('.f-btn').forEach(b=>b.addEventListener('click',()=>{ filter=b.dataset.f; document.querySelectorAll('.f-btn').forEach(x=>x.classList.toggle('on',x===b)); render(); }));
+let startLang='en'; try{ startLang=localStorage.getItem('baio_lang')||localStorage.getItem('baio_mt_lang')||'en'; }catch(e){}
+setLang(['en','kn','hi'].includes(startLang)?startLang:'en');
+// opened from a shared link (#reel-id): scroll to that reel and highlight it
+(function(){ const id=location.hash.slice(1); const el=id&&document.getElementById(id); if(el){ setTimeout(()=>{ el.scrollIntoView({behavior:'smooth',block:'start'}); el.classList.add('flash'); setTimeout(()=>el.classList.remove('flash'),2500); },300); } })();
+
+/* Share — native share sheet on phones; WhatsApp / Telegram / copy link otherwise */
+(function(){
+  var LBL={en:['Share','Copy link','Link copied ✓'],kn:['ಹಂಚಿಕೊಳ್ಳಿ','ಲಿಂಕ್ ನಕಲಿಸಿ','ಲಿಂಕ್ ನಕಲಾಯಿತು ✓'],hi:['शेयर करें','लिंक कॉपी करें','लिंक कॉपी हो गया ✓']};
   var MSG={en:function(t){return '🎬 '+t+' — board-important topics in about a minute, by Narendra Sir (BAIO Learning System). Save it for revision!';},
            kn:function(t){return '🎬 '+t+' — ಸುಮಾರು ಒಂದು ನಿಮಿಷದಲ್ಲಿ ಬೋರ್ಡ್ ಮುಖ್ಯ ವಿಷಯಗಳು, ನರೇಂದ್ರ ಸರ್ (BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್). ಪುನರಾವರ್ತನೆಗೆ ಉಳಿಸಿ!';},
            hi:function(t){return '🎬 '+t+' — लगभग एक मिनट में बोर्ड-महत्वपूर्ण विषय, नरेंद्र सर (BAIO लर्निंग सिस्टम)। रिवीज़न के लिए सेव कीजिए!';}};
-const BASE='https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/reels.html';
-const LANGS=['en','kn','hi'], LSHORT={en:'EN',kn:'ಕ',hi:'हि'};
-const store={get(k){try{return localStorage.getItem(k);}catch(e){return null;}}, set(k,v){try{localStorage.setItem(k,v);}catch(e){}}};
-let lang = (function(){ const l=store.get('baio_lang')||store.get('baio_mt_lang')||'en'; return LANGS.includes(l)?l:'en'; })();
-let filter='all', muted=true, cur=null;
-const t=()=>T[lang]||T.en;
-const $=s=>document.querySelector(s);
-const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const fmt=n=>{ n=Math.max(0,n|0); return n>=1e6?(n/1e6).toFixed(n<1e7?1:0).replace(/\.0$/,'')+'M':n>=1e3?(n/1e3).toFixed(n<1e4?1:0).replace(/\.0$/,'')+'K':String(n); };
-const DEV = (function(){ let d=store.get('baio_device_id'); if(!d){ d='d'+Date.now().toString(36)+Math.random().toString(36).slice(2,10); store.set('baio_device_id',d); } return d; })();
-const ICON={
-  heart:'<svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.8 4.5c2.1 0 3.6 1.1 4.4 2.5.8-1.4 2.3-2.5 4.4-2.5 3.8 0 5.9 3.9 4.4 7.3C19.5 16.4 12 21 12 21z"/></svg>',
-  comment:'<svg viewBox="0 0 24 24"><path d="M21 12a8.5 8.5 0 0 1-12.6 7.4L3 21l1.6-5A8.5 8.5 0 1 1 21 12z"/></svg>',
-  share:'<svg viewBox="0 0 24 24"><path d="M22 3 11 14"/><path d="M22 3 15 21l-4-7-7-4 18-7z"/></svg>',
-  save:'<svg viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>'
-};
-
-/* ---------- live counters (Firestore) with an on-phone fallback ---------- */
-const FB_CFG={ apiKey:"AIzaSyBfbVcutUkubiq8w6eHkd4FE8xX9-IyEbU", authDomain:"baio-learning-system.firebaseapp.com", projectId:"baio-learning-system",
-  storageBucket:"baio-learning-system.firebasestorage.app", messagingSenderId:"564399701604", appId:"1:564399701604:web:5d3aefd97e626201ce6971" };
-let db=null, FV=null, live=false;
-const stats={};            // reelId -> {likes, comments, shares, views}
-const local=JSON.parse(store.get('baio_reels_local')||'{}');   // reelId -> {liked:bool, saved:bool}
-const saveLocal=()=>store.set('baio_reels_local', JSON.stringify(local));
-const L=id=>(local[id]=local[id]||{});
-function st(id){ return stats[id]||(stats[id]={likes:0,comments:0,shares:0,views:0}); }
-function loadScript(src){ return new Promise((res,rej)=>{ const s=document.createElement('script'); s.src=src; s.onload=res; s.onerror=rej; document.head.appendChild(s); }); }
-async function fbInit(){
-  try{
-    if(!window.firebase){ await loadScript('https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js'); await loadScript('https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js'); }
-    if(!firebase.apps.length) firebase.initializeApp(FB_CFG);
-    db=firebase.firestore(); FV=firebase.firestore.FieldValue;
-    db.collection('reels').onSnapshot(snap=>{
-      live=true;
-      snap.forEach(d=>{ const x=d.data()||{}; stats[d.id]={likes:x.likes|0, comments:x.comments|0, shares:x.shares|0, views:x.views|0}; });
-      paintAll();
-    }, ()=>{ live=false; });
-  }catch(e){ db=null; live=false; }
-}
-function warnOffline(){ if(!live) toast(t().offline); }
-
-/* ---------- build the feed ---------- */
-const feed=$('#feed');
-function list(){ return REELS.filter(r=>filter==='all'||String(r.pu)===filter); }
-function render(){
-  const u=t();
-  feed.innerHTML = list().map(r=>`
-  <section class="ritem" id="${r.id}" data-id="${r.id}">
-    <div class="stage">
-      <video playsinline loop muted preload="metadata" poster="${r.cover}" src="${r.video}"></video>
-      <div class="shade top"></div><div class="shade"></div>
-      <div class="tap"></div>
-      <div class="pind">▶</div>
-      <button class="mute" type="button">${muted?u.tap:u.soundOn}</button>
-      <div class="cap">
-        <div class="who"><span class="av">B</span>Narendra Sir <span class="tag">${r.pu===1?u.pu1:u.pu2} · ${u.ch} ${r.ch}</span></div>
-        <h2>${esc(r.title[lang]||r.title.en)}</h2>
-        <p>${esc(r.desc[lang]||r.desc.en)}</p>
-        <button class="more" type="button">${u.more}</button><br>
-        <a class="open-ch" href="${r.chapter}">📘 ${u.open}</a>
-      </div>
-      <div class="rail">
-        <button class="rb like" type="button" aria-label="${u.like}"><span class="ic">${ICON.heart}</span><span class="n" data-k="likes">0</span></button>
-        <button class="rb cmt" type="button" aria-label="${u.comments}"><span class="ic">${ICON.comment}</span><span class="n" data-k="comments">0</span></button>
-        <button class="rb shr" type="button" aria-label="${u.share}"><span class="ic">${ICON.share}</span><span class="n" data-k="shares">${u.share}</span></button>
-        <a class="rb sv" href="${r.video}" download aria-label="${u.save}"><span class="ic">${ICON.save}</span><span class="n">${u.save}</span></a>
-      </div>
-      <div class="prog"><i></i></div>
-    </div>
-  </section>`).join('') + `
-  <section class="endcard"><div><div style="font-size:46px">🎬</div><h2>${u.endT}</h2><p>${u.endP}</p>
-    <button type="button" id="againBtn">↺ ${u.again}</button><a href="index.html">🏠 ${u.home}</a></div></section>`;
-  paintAll(); observe();
-  $('#againBtn').onclick=()=>feed.scrollTo({top:0,behavior:'smooth'});
-}
-function paint(id){
-  const el=document.getElementById(id); if(!el) return; const s=st(id), me=L(id);
-  const lk=el.querySelector('.like'); lk.classList.toggle('liked', !!me.liked);
-  lk.querySelector('.n').textContent=fmt(s.likes);
-  el.querySelector('.cmt .n').textContent=fmt(s.comments);
-  el.querySelector('.shr .n').textContent = s.shares ? fmt(s.shares) : t().share;
-}
-function paintAll(){ REELS.forEach(r=>paint(r.id)); }
-function setChrome(){
-  const u=t();
-  document.querySelectorAll('.tabs button').forEach(b=>{ b.textContent = b.dataset.f==='all'?u.all:b.dataset.f==='1'?u.pu1:u.pu2; b.classList.toggle('on', b.dataset.f===filter); });
-  $('#langBtn').textContent=LSHORT[lang]; document.documentElement.lang=lang;
-  $('#swipeHint').textContent=u.swipe;
-  $('#cName').placeholder=u.name; $('#cText').placeholder=u.say; $('#cNote').textContent=u.note; $('#cTitle').textContent=u.comments;
-  $('#sTitle').textContent=u.share; $('#sCpL').textContent=u.copy;
-}
-
-/* ---------- playback: only the reel on screen plays ---------- */
-let io=null; const viewed=new Set();
-function observe(){
-  if(io) io.disconnect();
-  io=new IntersectionObserver(es=>{ es.forEach(e=>{ const v=e.target.querySelector('video'); if(!v) return;
-    if(e.isIntersecting && e.intersectionRatio>=0.6){ activate(e.target); } else { v.pause(); } }); }, {root:feed, threshold:[0,0.6,1]});
-  feed.querySelectorAll('.ritem').forEach(x=>io.observe(x));
-}
-function activate(item){
-  cur=item; const v=item.querySelector('video'); v.muted=muted;
-  const p=v.play(); if(p&&p.catch) p.catch(()=>{ v.muted=true; muted=true; v.play().catch(()=>{}); syncMute(); });
-  history.replaceState(null,'','#'+item.id);
-  // a view counts after 3 seconds on screen (once per reel per visit)
-  const id=item.id; clearTimeout(item._vt);
-  item._vt=setTimeout(()=>{ if(cur===item && !viewed.has(id)){ viewed.add(id); bump(id,'views'); } }, 3000);
-  // preload the next one
-  const nx=item.nextElementSibling && item.nextElementSibling.querySelector('video'); if(nx) nx.preload='auto';
-}
-function syncMute(){ feed.querySelectorAll('.mute').forEach(b=>b.textContent = muted ? t().tap : t().soundOn); }
-feed.addEventListener('timeupdate', e=>{ const v=e.target; if(v.tagName!=='VIDEO'||!v.duration) return; const bar=v.closest('.stage').querySelector('.prog i'); bar.style.width=(v.currentTime/v.duration*100)+'%'; }, true);
-
-/* ---------- gestures: tap = pause/play, double-tap = like ---------- */
-let lastTap=0, tapTimer=null;
-feed.addEventListener('click', e=>{
-  const item=e.target.closest('.ritem'); if(!item) return; const id=item.id;
-  if(e.target.closest('.mute')){ muted=!muted; item.querySelector('video').muted=muted; syncMute(); if(!muted) item.querySelector('video').play().catch(()=>{}); return; }
-  if(e.target.closest('.more')){ const p=item.querySelector('.cap p'); const o=p.classList.toggle('open'); e.target.textContent=o?t().less:t().more; return; }
-  if(e.target.closest('.like')){ toggleLike(id, true); return; }
-  if(e.target.closest('.cmt')){ openComments(id); return; }
-  if(e.target.closest('.shr')){ share(id); return; }
-  if(e.target.closest('.sv')){ toast(t().saved); return; }
-  if(!e.target.closest('.tap')) return;
-  const now=Date.now();
-  if(now-lastTap<300){ clearTimeout(tapTimer); lastTap=0; burst(item, e.clientX, e.clientY); if(!L(id).liked) toggleLike(id, false); return; }
-  lastTap=now;
-  tapTimer=setTimeout(()=>{ const v=item.querySelector('video'); const ind=item.querySelector('.pind');
-    if(muted){ muted=false; v.muted=false; syncMute(); if(v.paused) v.play().catch(()=>{}); return; }
-    if(v.paused){ v.play().catch(()=>{}); ind.textContent='▶'; } else { v.pause(); ind.textContent='❚❚'; }
-    ind.classList.add('on'); setTimeout(()=>ind.classList.remove('on'), 600); }, 280);
-});
-function burst(item,x,y){ const st=item.querySelector('.stage'), r=st.getBoundingClientRect(); const b=document.createElement('div'); b.className='burst'; b.innerHTML=ICON.heart; b.style.left=(x-r.left)+'px'; b.style.top=(y-r.top)+'px'; st.appendChild(b); setTimeout(()=>b.remove(),850); }
-
-/* ---------- like ---------- */
-async function toggleLike(id, anim){
-  const me=L(id), on=!me.liked; me.liked=on; saveLocal();
-  st(id).likes=Math.max(0, st(id).likes + (on?1:-1)); paint(id);
-  const btn=document.querySelector(`#${CSS.escape(id)} .like`); if(btn&&on&&anim!==false){ btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop'); }
-  if(!db){ warnOffline(); return; }
-  const rref=db.collection('reels').doc(id), lref=rref.collection('likes').doc(DEV), b=db.batch();
-  if(on){ b.set(lref,{at:FV.serverTimestamp()}); b.set(rref,{likes:FV.increment(1), lastLiker:DEV},{merge:true}); }
-  else  { b.delete(lref); b.set(rref,{likes:FV.increment(-1), lastLiker:DEV},{merge:true}); }
-  try{ await b.commit(); }
-  catch(e){ // out of step with the server (e.g. phone storage was cleared): trust the server
-    try{ const d=await lref.get(); me.liked=d.exists; saveLocal(); }catch(_){ warnOffline(); }
-    paint(id);
-  }
-}
-/* simple counters: shares and views */
-function bump(id, k){
-  if(!db) return;
-  db.collection('reels').doc(id).set({[k]:FV.increment(1)},{merge:true}).catch(()=>{});
-  if(!live){ st(id)[k]++; paint(id); }
-}
-
-/* ---------- comments ---------- */
-const veil=$('#veil'), cSheet=$('#cSheet'), sSheet=$('#shareSheet'), cList=$('#cList');
-let cUnsub=null, cReel=null, lastPost=0;
-const COLORS=['#0f7b6c','#b8860b','#7c3aed','#db2777','#2563eb','#ea580c','#0891b2','#65a30d'];
-const colorOf=s=>{ let h=0; for(const c of String(s)) h=(h*31+c.charCodeAt(0))|0; return COLORS[Math.abs(h)%COLORS.length]; };
-function ago(d){ if(!d) return t().now; const s=(Date.now()-d.getTime())/1000; if(s<60) return t().now; if(s<3600) return Math.floor(s/60)+'m'; if(s<86400) return Math.floor(s/3600)+'h'; if(s<604800) return Math.floor(s/86400)+'d'; return d.toLocaleDateString(); }
-function profileName(){
-  const own=store.get('baio_reel_name'); if(own) return own;
-  try{ const p=JSON.parse(store.get('baio_student')||'null'); if(p&&p.name) return p.name; }catch(e){}
-  try{ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(/_student_profile$/.test(k)){ const p=JSON.parse(localStorage.getItem(k)||'null'); if(p&&p.name) return p.name; } } }catch(e){}
-  return '';
-}
-function localComments(id){ try{ return JSON.parse(store.get('baio_reel_c_'+id)||'[]'); }catch(e){ return []; } }
-function drawComments(items){
-  if(!items.length){ cList.innerHTML=`<div class="empty">${t().noC}</div>`; return; }
-  cList.innerHTML=items.map(c=>`<div class="cm${c.pending?' pending':''}"><div class="av" style="background:${colorOf(c.name)}">${esc((c.name||'?').trim().charAt(0).toUpperCase())}</div>
-    <div><div class="nm">${c.device===DEV?`<span class="you">${esc(c.name)} · ${t().you}</span>`:esc(c.name)}<span class="tm">${ago(c.at)}</span></div><div class="tx">${esc(c.text)}</div></div></div>`).join('');
-}
-function openSheet(el){ veil.classList.add('on'); el.classList.add('on'); }
-function closeSheets(){ veil.classList.remove('on'); cSheet.classList.remove('on'); sSheet.classList.remove('on'); if(cUnsub){ cUnsub(); cUnsub=null; } cReel=null; }
-veil.addEventListener('click', closeSheets);
-document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click', closeSheets));
-document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeSheets(); });
-function openComments(id){
-  cReel=id; $('#cName').value=profileName(); $('#cName').style.display=$('#cName').value?'none':'';
-  $('#cTitle').textContent=`${t().comments} · ${fmt(st(id).comments)}`;
-  drawComments(localComments(id).map(c=>Object.assign(c,{at:c.at?new Date(c.at):null})));
-  openSheet(cSheet);
-  if(db){
-    cUnsub=db.collection('reels').doc(id).collection('comments').orderBy('at','desc').limit(200).onSnapshot(snap=>{
-      const items=[]; snap.forEach(d=>{ const x=d.data(); items.push({name:x.name, text:x.text, device:x.device, at:x.at&&x.at.toDate?x.at.toDate():null, pending:d.metadata.hasPendingWrites}); });
-      drawComments(items); $('#cTitle').textContent=`${t().comments} · ${fmt(Math.max(items.length, st(id).comments))}`;
-    }, ()=>{});
-  }
-}
-const BAD=/\b(f+u+c+k+|sh[i1]t|b[i1]tch|bastard|asshole|dick|slut|whore|chutiya|madarchod|bhenchod|behenchod|bc|mc|gandu|randi|harami|kamina|saala|sala)\b/i;
-$('#cText').addEventListener('input', e=>{ e.target.style.height='44px'; e.target.style.height=Math.min(110,e.target.scrollHeight)+'px'; });
-$('#cText').addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); $('#cForm').requestSubmit(); } });
-$('#cForm').addEventListener('submit', async e=>{
-  e.preventDefault(); const id=cReel; if(!id) return;
-  const name=$('#cName').value.trim().slice(0,40), text=$('#cText').value.trim().slice(0,300);
-  if(!text) return;
-  if(!name){ toast(t().needName); $('#cName').style.display=''; $('#cName').focus(); return; }
-  if(BAD.test(text)||BAD.test(name)){ toast(t().blocked); return; }
-  if(Date.now()-lastPost<15000){ toast(t().tooFast); return; }
-  lastPost=Date.now(); store.set('baio_reel_name', name); $('#cName').style.display='none';
-  $('#cText').value=''; $('#cText').style.height='44px';
-  st(id).comments++; paint(id);
-  if(!db){ const arr=localComments(id); arr.unshift({name,text,device:DEV,at:Date.now()}); store.set('baio_reel_c_'+id, JSON.stringify(arr.slice(0,50))); drawComments(arr.map(c=>Object.assign({},c,{at:new Date(c.at)}))); warnOffline(); return; }
-  const rref=db.collection('reels').doc(id), cref=rref.collection('comments').doc(), b=db.batch();
-  b.set(cref,{name,text,device:DEV,at:FV.serverTimestamp()});
-  b.set(rref,{comments:FV.increment(1), lastComment:cref.id},{merge:true});
-  try{ await b.commit(); }catch(err){ const arr=localComments(id); arr.unshift({name,text,device:DEV,at:Date.now()}); store.set('baio_reel_c_'+id, JSON.stringify(arr.slice(0,50))); drawComments(arr.map(c=>Object.assign({},c,{at:new Date(c.at)}))); warnOffline(); }
-});
-
-/* ---------- share ---------- */
-let shareURL='';
-async function share(id){
-  const r=REELS.find(x=>x.id===id); if(!r) return;
-  const title=(r.pu===1?'I PUC':'II PUC')+' Biology · '+(r.title[lang]||r.title.en), text=MSG[lang](title), url=BASE+'#'+r.id; shareURL=url;
-  const done=()=>{ bump(id,'shares'); };
-  if(navigator.share){ try{ await navigator.share({title:'BAIO · '+r.title.en, text, url}); done(); }catch(e){} return; }
-  $('#sWa').href='https://wa.me/?text='+encodeURIComponent(text+'\n'+url);
-  $('#sTg').href='https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(text);
-  $('#sWa').onclick=$('#sTg').onclick=()=>{ done(); setTimeout(closeSheets,300); };
-  openSheet(sSheet);
-}
-$('#sCp').addEventListener('click', ()=>{
-  const ok=()=>{ toast(t().copied); const id=(shareURL.split('#')[1]||''); if(id) bump(id,'shares'); closeSheets(); };
-  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(shareURL).then(ok, ok); else ok();
-});
-
-/* ---------- toast ---------- */
-let toastT=null;
-function toast(m){ const el=$('#toast'); el.textContent=m; el.classList.add('on'); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('on'), 2600); }
-
-/* ---------- top bar ---------- */
-document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click', ()=>{ filter=b.dataset.f; setChrome(); render(); feed.scrollTo({top:0}); }));
-$('#langBtn').addEventListener('click', ()=>{ lang=LANGS[(LANGS.indexOf(lang)+1)%LANGS.length]; store.set('baio_lang',lang); store.set('baio_mt_lang',lang); const at=cur&&cur.id; setChrome(); render(); if(at){ const el=document.getElementById(at); if(el) feed.scrollTo({top:el.offsetTop}); } });
-/* keyboard (laptop / projector) */
-document.addEventListener('keydown', e=>{
-  if(/^(INPUT|TEXTAREA)$/.test(document.activeElement && document.activeElement.tagName)) return;
-  if(cSheet.classList.contains('on')||sSheet.classList.contains('on')) return;
-  const items=[...feed.children]; const i=cur?items.indexOf(cur):0;
-  if(e.key==='ArrowDown'||e.key==='PageDown'||e.key==='j'){ e.preventDefault(); const n=items[Math.min(items.length-1,i+1)]; if(n) feed.scrollTo({top:n.offsetTop,behavior:'smooth'}); }
-  else if(e.key==='ArrowUp'||e.key==='PageUp'||e.key==='k'){ e.preventDefault(); const n=items[Math.max(0,i-1)]; if(n) feed.scrollTo({top:n.offsetTop,behavior:'smooth'}); }
-  else if(e.key===' '&&cur){ e.preventDefault(); const v=cur.querySelector('video'); if(v) v.paused?v.play().catch(()=>{}):v.pause(); }
-  else if((e.key==='l'||e.key==='L')&&cur){ toggleLike(cur.id,true); }
-  else if((e.key==='m'||e.key==='M')&&cur){ muted=!muted; const v=cur.querySelector('video'); if(v){ v.muted=muted; if(!muted) v.play().catch(()=>{}); } syncMute(); }
-});
-
-/* ---------- start ---------- */
-setChrome(); render();
-(function(){ const id=location.hash.slice(1); const el=id&&document.getElementById(id); if(el) feed.scrollTo({top:el.offsetTop}); })();
-if(store.get('baio_reels_hint')) $('#swipeHint').remove(); else store.set('baio_reels_hint','1');
-fbInit();
+  var sheet=document.createElement('div'); sheet.className='share-sheet'; sheet.hidden=true;
+  sheet.innerHTML='<div class="share-box" role="dialog" aria-modal="true" aria-labelledby="shareTtl"><b id="shareTtl"></b>'+
+    '<a class="share-opt wa" target="_blank" rel="noopener">🟢 WhatsApp</a><a class="share-opt tg" target="_blank" rel="noopener">✈️ Telegram</a>'+
+    '<button class="share-opt cp" type="button"></button><input class="share-url" readonly aria-label="Link"><button class="share-x" type="button" aria-label="Close">✕</button></div>';
+  document.body.appendChild(sheet);
+  var curURL='';
+  function close(){ sheet.hidden=true; }
+  sheet.addEventListener('click',function(e){ if(e.target===sheet||e.target.closest('.share-x')) close(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
+  sheet.querySelector('.cp').addEventListener('click',function(){
+    var b=this, inp=sheet.querySelector('.share-url');
+    function done(){ b.textContent=LBL[lang][2]; setTimeout(function(){ b.textContent='🔗 '+LBL[lang][1]; },1800); }
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(curURL).then(done,function(){ inp.select(); document.execCommand('copy'); done(); });
+    else { inp.select(); document.execCommand('copy'); done(); }
+  });
+  box.addEventListener('click',function(e){
+    var btn=e.target.closest('[data-reel]'); if(!btn) return;
+    var r=REELS.find(function(x){return x.id===btn.dataset.reel;}); if(!r) return;
+    var title=(r.pu===1?'I PUC':'II PUC')+' Biology · '+(r.title[lang]||r.title.en), text=MSG[lang](title), url=BASE+'#'+r.id; curURL=url;
+    if(navigator.share){ navigator.share({title:'BAIO · '+r.title.en,text:text,url:url}).catch(function(){}); return; }
+    sheet.querySelector('#shareTtl').textContent=LBL[lang][0];
+    sheet.querySelector('.wa').href='https://wa.me/?text='+encodeURIComponent(text+'\n'+url);
+    sheet.querySelector('.tg').href='https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(text);
+    sheet.querySelector('.cp').textContent='🔗 '+LBL[lang][1];
+    sheet.querySelector('.share-url').value=url;
+    sheet.hidden=false; sheet.querySelector('.wa').focus();
+  });
+})();
 if('serviceWorker' in navigator){ window.addEventListener('load',function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); }); }
 </script>
 </body>
