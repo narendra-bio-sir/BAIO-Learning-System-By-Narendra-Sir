@@ -208,6 +208,19 @@ header{padding:34px 0 22px; text-align:center;}
 .ts-eq i:nth-child(2){animation-delay:.25s!important} .ts-eq i:nth-child(3){animation-delay:.5s!important}
 @keyframes tsEq{from{height:20%}to{height:100%}}
 @media(prefers-reduced-motion:reduce){.theme-song.playing .ts-eq i{animation:none;height:70%}}
+/* Students Ki Jeeth video song (YouTube, loads only when tapped) */
+.vsong{margin-top:10px; border:1px solid var(--line); border-radius:16px; overflow:hidden; background:var(--panel);}
+.vsong-head{display:flex; align-items:center; gap:10px; padding:11px 14px;}
+.vsong-head .vk{font:700 10.5px 'Space Grotesk',sans-serif; letter-spacing:.12em; text-transform:uppercase; color:var(--teal);}
+.vsong-head .vt{font:700 15px 'Noto Sans Devanagari','Space Grotesk',sans-serif; color:var(--ink); margin-top:1px;}
+.vsong-head .vnew{margin-left:auto; flex:none; font:800 10px 'Space Grotesk',sans-serif; letter-spacing:.08em; color:#fff; background:#e5484d; border-radius:20px; padding:3px 8px;}
+.vsong-frame{position:relative; aspect-ratio:16/9; background:#000; cursor:pointer;}
+.vsong-frame img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+.vsong-frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+.vsong-frame .vplay{position:absolute; left:50%; top:50%; width:68px; height:48px; margin:-24px 0 0 -34px; border:0; border-radius:14px; background:#ff0033; color:#fff; font-size:22px; display:grid; place-items:center; box-shadow:0 6px 20px rgba(0,0,0,.4); cursor:pointer;}
+.vsong-frame .vplay:focus-visible{outline:3px solid #fff; outline-offset:3px;}
+.vsong-acts{display:flex; gap:8px; padding:10px 14px 12px; flex-wrap:wrap;}
+.vsong-acts a,.vsong-acts button{flex:1 1 140px; text-align:center; padding:9px 12px; border-radius:12px; border:1px solid var(--line); background:var(--panel2); color:var(--ink); text-decoration:none; font:600 13px 'Inter',sans-serif; cursor:pointer;}
 .ts-list{margin-top:8px; border:1px solid var(--line); border-radius:14px; background:var(--panel); overflow:hidden;}
 .ts-list summary{list-style:none; cursor:pointer; padding:11px 16px; font:700 13px 'Space Grotesk',sans-serif; color:var(--gold); display:flex; align-items:center; gap:8px;}
 .ts-list summary::-webkit-details-marker{display:none;}
@@ -531,6 +544,21 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     <summary>🎶 BAIO Songs · 10 tracks</summary>
     <div id="tsTracks"></div>
   </details>
+
+  <div class="vsong" id="vsong">
+    <div class="vsong-head">
+      <div><div class="vk">🎬 Video Song · Dedicated to Narendra Sir</div><div class="vt">स्टूडेंट्स की जीत · Students Ki Jeeth</div></div>
+      <span class="vnew">NEW</span>
+    </div>
+    <div class="vsong-frame" id="vsongFrame" role="button" tabindex="0" aria-label="Play the Students Ki Jeeth video song">
+      <img src="https://i.ytimg.com/vi/TblguxqWbfw/hqdefault.jpg" alt="Students Ki Jeeth video song" loading="lazy" onerror="this.onerror=null;this.src='audio/covers/students-ki-jeeth.jpg'">
+      <button class="vplay" type="button" tabindex="-1" aria-hidden="true">▶</button>
+    </div>
+    <div class="vsong-acts">
+      <a href="https://youtu.be/TblguxqWbfw" target="_blank" rel="noopener">▶️ Open in YouTube</a>
+      <button type="button" id="vsongShare">📤 Share with friends</button>
+    </div>
+  </div>
 
   <div class="quick-actions-row">
     <a href="exam-corner.html" class="quick-action-btn exam-corner-btn">📝 Exam Corner <span class="qa-new">NEW</span></a>
@@ -2667,6 +2695,30 @@ window.indexHardRefresh = indexHardRefresh;
 </script>
 
 <script>
+/* Students Ki Jeeth video song: the YouTube player loads only when tapped (keeps the home screen fast) */
+(function(){
+  var ID='TblguxqWbfw', fr=document.getElementById('vsongFrame'); if(!fr) return;
+  function play(){
+    if(fr.querySelector('iframe')) return;
+    var au=document.getElementById('tsAudio'); if(au && !au.paused) au.pause();
+    var f=document.createElement('iframe');
+    f.src='https://www.youtube-nocookie.com/embed/'+ID+'?autoplay=1&rel=0&playsinline=1&modestbranding=1&enablejsapi=1';
+    f.title='Students Ki Jeeth video song';
+    f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen';
+    f.allowFullscreen=true; f.referrerPolicy='strict-origin-when-cross-origin';
+    fr.innerHTML=''; fr.appendChild(f); fr.style.cursor='default'; fr.removeAttribute('role'); fr.removeAttribute('tabindex');
+  }
+  fr.addEventListener('click', play);
+  fr.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); play(); } });
+  // the song player and the video never play together
+  var au=document.getElementById('tsAudio');
+  if(au) au.addEventListener('play', function(){ var f=fr.querySelector('iframe'); if(f){ try{ f.contentWindow.postMessage(JSON.stringify({event:'command',func:'pauseVideo',args:[]}),'*'); }catch(e){} } });
+  document.getElementById('vsongShare').addEventListener('click', function(){
+    var url='https://youtu.be/'+ID, text='🎵 Students Ki Jeeth — a song dedicated to Narendra Sir (BAIO Learning System). Watch it!';
+    if(navigator.share){ navigator.share({title:'Students Ki Jeeth', text:text, url:url}).catch(function(){}); return; }
+    window.open('https://wa.me/?text='+encodeURIComponent(text+'\n'+url), '_blank', 'noopener');
+  });
+})();
 /* BAIO songs player: theme song + playlist (tap to play; never autoplays; plays the next song when one ends) */
 (function(){
   var box=document.getElementById('themeSong'); if(!box) return;
