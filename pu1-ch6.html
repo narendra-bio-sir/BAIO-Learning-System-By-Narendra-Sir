@@ -633,6 +633,13 @@ html:not([data-theme="light"]) #pptImg,html:not([data-theme="light"]) .ppt-thumb
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="oneshot-study.js?v=1"></script>
+<style id="clgSwitchCss">
+.clg-deck-switch{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 10px}
+.clg-deck-switch button{flex:1 1 180px;font:700 14px Inter,sans-serif;border-radius:12px;padding:10px 12px;border:1px solid var(--line,#d9d2c3);background:var(--panel2,transparent);color:var(--ink,var(--text,#13202e));cursor:pointer;text-align:center}
+.clg-deck-switch button span{display:block;font-weight:500;font-size:12px;opacity:.75;margin-top:2px}
+.clg-deck-switch button.active{background:#0f7b6c;border-color:#0f7b6c;color:#fff}
+</style>
+<script src="class-large.js?v=1"></script>
 </head>
 <body>
 <div class="app">
@@ -3911,7 +3918,36 @@ function renderOneShotStudy(){
     lang:()=>(typeof currentLang!=='undefined' ? currentLang : 'en')
   });
 }
+
+/* ---------------- CLASS PRESENTATION · Large Text (projector) deck (class-large.js) ---------------- */
+let clgDeck = (function(){ try{ return localStorage.getItem('pu1ch6_ppt_deck') || ''; }catch(e){ return ''; } })();
+function clgSetDeck(d){ clgDeck = d; try{ localStorage.setItem('pu1ch6_ppt_deck', d); }catch(e){} renderClassPpt(); }
+function clgSwitchHtml(active){
+  return `<div class="clg-deck-switch"><button type="button" class="${active==='std'?'active':''}" onclick="clgSetDeck('std')">🖼️ Standard <span>${CLASS_SLIDES.length} slides</span></button><button type="button" class="${active==='large'?'active':''}" onclick="clgSetDeck('large')">🔠 Large Text · Projector <span>light &amp; dark · EN / ಕ / हि</span></button></div>`;
+}
+const _clgStdRenderClassPpt = renderClassPpt;
+renderClassPpt = function(){
+  if(window.ClassLarge) ClassLarge.unmount();
+  const deck = CLASS_SLIDES.length ? (clgDeck==='large' ? 'large' : 'std') : 'large';
+  if(deck==='std'){
+    _clgStdRenderClassPpt();
+    const h = document.querySelector('#content .setup-card h3');
+    if(h) h.insertAdjacentHTML('afterend', clgSwitchHtml('std'));
+    return;
+  }
+  document.getElementById('content').innerHTML = `<div class="setup-card"><h3 style="color:var(--gold);margin-bottom:8px;">Class Presentation</h3>${CLASS_SLIDES.length ? clgSwitchHtml('large') : ''}<div id="clgHost"></div></div>`;
+  if(!window.ClassLarge){ document.getElementById('clgHost').innerHTML = '<div style="padding:20px;text-align:center">Loading slides…</div>'; setTimeout(()=>{ if(currentTab==='classppt') renderClassPpt(); }, 400); return; }
+  ClassLarge.mount(document.getElementById('clgHost'), {
+    key:'pu1ch6', chapterNo:6, cls:'PU-I',
+    chapterName:{"en": "Anatomy of Flowering Plants", "kn": "ಹೂಬಿಡುವ ಸಸ್ಯಗಳ ಅಂಗರಚನೆ", "hi": "पुष्पी पादपों का शारीर"},
+    topics: DATA.topics.map(t=>({id:t.id, name:Object.assign({en:t.name}, (typeof ONESHOT_TOPIC_NAMES!=='undefined' && ONESHOT_TOPIC_NAMES[t.id])||{})})),
+    getStudy:(id, l)=> l==='en' ? DATA.study[id] : ((typeof STUDY_TRANSLATIONS_CH6!=='undefined' && STUDY_TRANSLATIONS_CH6[id] && STUDY_TRANSLATIONS_CH6[id][l]) || null),
+    lang:()=>(typeof currentLang!=='undefined' ? currentLang : 'en')
+  });
+};
+
 function renderContent(){
+  if(currentTab !== 'classppt' && window.ClassLarge) ClassLarge.unmount();
   if(currentTab !== 'oneshot' && window.OneShotStudy) OneShotStudy.stop();
   if(PREMIUM_LOCKED_TABS.indexOf(currentTab) !== -1 && !premiumQualifies()){
     renderPremiumLock(currentTab);
