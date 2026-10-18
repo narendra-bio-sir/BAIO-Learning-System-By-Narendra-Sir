@@ -915,6 +915,13 @@ html:not([data-theme="light"]) #pptImg,html:not([data-theme="light"]) .ppt-thumb
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN_HERE"}'></script>
+<style id="clgSwitchCss">
+.clg-deck-switch{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 10px}
+.clg-deck-switch button{flex:1 1 180px;font:700 14px Inter,sans-serif;border-radius:12px;padding:10px 12px;border:1px solid var(--line,#d9d2c3);background:var(--panel2,transparent);color:var(--ink,var(--text,#13202e));cursor:pointer;text-align:center}
+.clg-deck-switch button span{display:block;font-weight:500;font-size:12px;opacity:.75;margin-top:2px}
+.clg-deck-switch button.active{background:#0f7b6c;border-color:#0f7b6c;color:#fff}
+</style>
+<script src="class-large.js?v=1"></script>
 </head>
 <body>
 <div id="pageLoadOverlay" style="position:fixed; inset:0; z-index:99999; background:#0B1B14;"></div>
@@ -6205,6 +6212,51 @@ window.chapterHardRefresh = chapterHardRefresh;
   window.addEventListener('offline', showOfflineBanner);
   if(document.readyState === 'complete' || document.readyState === 'interactive'){ checkConnectivity(); }
   else { document.addEventListener('DOMContentLoaded', checkConnectivity); }
+})();
+</script>
+<script>
+/* ---------------- CLASS PRESENTATION · Large Text (projector) deck (class-large.js) ----------------
+   Adds a Standard / Large Text switch above the slide viewer. The Large Text deck is built live
+   from this chapter's Study Mode notes and follows the app's light/dark theme. */
+(function(){
+  const panel = document.getElementById('panel-classppt'); if(!panel) return;
+  const card = panel.querySelector(':scope > .card'); const lock = document.getElementById('premLock_classppt');
+  const hasStd = (typeof CLASS_SLIDES!=='undefined' && CLASS_SLIDES.length > 0);
+  const KEY = 'pu2ch8_ppt_deck';
+  let deck = (function(){ try{ return localStorage.getItem(KEY) || ''; }catch(e){ return ''; } })();
+  const box = document.createElement('div'); box.className = 'card'; box.id = 'clgCard';
+  box.innerHTML = '<h3 style="color:var(--gold-2); margin-bottom:4px;">Narendra Sir &ndash; Class Presentation</h3>' +
+    (hasStd ? '<div class="clg-deck-switch"><button type="button" data-d="std">🖼️ Standard <span>' + CLASS_SLIDES.length + ' slides</span></button><button type="button" data-d="large">🔠 Large Text · Projector <span>light &amp; dark · EN / ಕ / हि</span></button></div>' : '') +
+    '<div id="clgHost"></div>';
+  panel.insertBefore(box, card || lock);
+  const stdSwitch = document.createElement('div');
+  if(card && hasStd){ stdSwitch.innerHTML = box.querySelector('.clg-deck-switch').outerHTML; const h = card.querySelector('h3'); if(h) h.after(stdSwitch.firstChild); }
+  const cur = ()=> hasStd ? (deck==='large' ? 'large' : 'std') : 'large';
+  const locked = ()=> lock && lock.classList.contains('show');
+  function topicName(t, l){ const o = l==='en' ? t : (STUDY_TRANSLATIONS_CH8[t.id] && STUDY_TRANSLATIONS_CH8[t.id][l]); return String((o && o.title) || t.title || '').replace(/^\s*\d+\.\s*/, '').replace(/&amp;/g,'&'); }
+  function mountLarge(){
+    if(!window.ClassLarge){ setTimeout(apply, 400); return; }
+    ClassLarge.mount(document.getElementById('clgHost'), {
+      key:'pu2ch8', chapterNo:8, cls:'PU-II',
+      chapterName:{"en": "Microbes in Human Welfare", "kn": "ಮಾನವ ಕಲ್ಯಾಣದಲ್ಲಿ ಸೂಕ್ಷ್ಮಜೀವಿಗಳು", "hi": "मानव कल्याण में सूक्ष्मजीव"},
+      topics: STUDY_DATA.map(t=>({id:t.id, name:{en:topicName(t,'en'), kn:topicName(t,'kn'), hi:topicName(t,'hi')}})),
+      getStudy:(id, l)=>{ const t = l==='en' ? STUDY_DATA.find(x=>x.id===id) : (STUDY_TRANSLATIONS_CH8[id] && STUDY_TRANSLATIONS_CH8[id][l]); return t ? ClassLarge.fromHtml(t) : null; },
+      lang:()=>(typeof currentLang!=='undefined' ? currentLang : 'en')
+    });
+  }
+  function apply(){
+    const active = panel.classList.contains('active');
+    document.querySelectorAll('#panel-classppt .clg-deck-switch button').forEach(b=>b.classList.toggle('active', b.getAttribute('data-d')===cur()));
+    if(locked()){ if(window.ClassLarge) ClassLarge.unmount(); return; }
+    if(card) card.style.display = cur()==='std' ? '' : 'none';
+    box.style.display = cur()==='large' ? '' : 'none';
+    if(active && cur()==='large'){ if(!document.querySelector('#clgHost .clg')) mountLarge(); }
+    else if(window.ClassLarge && document.querySelector('#clgHost .clg')){ ClassLarge.unmount(); document.getElementById('clgHost').innerHTML = ''; }
+  }
+  panel.addEventListener('click', e=>{ const b = e.target.closest && e.target.closest('.clg-deck-switch button'); if(!b) return; deck = b.getAttribute('data-d'); try{ localStorage.setItem(KEY, deck); }catch(err){} apply(); });
+  new MutationObserver(apply).observe(panel, {attributes:true, attributeFilter:['class']});
+  if(lock) new MutationObserver(apply).observe(lock, {attributes:true, attributeFilter:['class']});
+  apply();
 })();
 </script>
 </body>
