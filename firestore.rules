@@ -38,6 +38,75 @@ service cloud.firestore {
         allow write: if false;
       }
     }
+
+    // ---------------- Revision Reels: likes, comments, shares, views ----------------
+    // reels/{reelId} holds the public counters. Every counter can only move by
+    // exactly one step, and likes / comments only move together with the matching
+    // like / comment document in the same batch (checked with exists/existsAfter),
+    // so one device cannot pump the numbers. Comments are public, can't be edited
+    // or deleted from the app; Narendra Sir removes unwanted ones in the Firebase
+    // console (Firestore > reels > {reel} > comments).
+    match /reels/{reelId} {
+      allow get, list: if true;
+      allow create: if reelId.size() < 80 && isValidReelCreate(database, reelId, request.resource.data);
+      allow update: if isValidReelUpdate(database, reelId);
+      allow delete: if false;
+
+      match /likes/{deviceId} {
+        allow get: if true;
+        allow list: if false;
+        allow create: if deviceId.size() < 64
+                      && request.resource.data.keys().hasOnly(['at'])
+                      && request.resource.data.at == request.time;
+        allow update: if false;
+        allow delete: if true;
+      }
+
+      match /comments/{commentId} {
+        allow get, list: if true;
+        allow create: if request.resource.data.keys().hasOnly(['name', 'text', 'device', 'at'])
+                      && request.resource.data.name is string
+                      && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 40
+                      && request.resource.data.text is string
+                      && request.resource.data.text.size() > 0 && request.resource.data.text.size() <= 300
+                      && request.resource.data.device is string && request.resource.data.device.size() < 64
+                      && request.resource.data.at == request.time;
+        allow update, delete: if false;
+      }
+    }
+  }
+
+
+  function likePath(db, reelId, dev) {
+    return /databases/$(db)/documents/reels/$(reelId)/likes/$(dev);
+  }
+  function commentPath(db, reelId, cid) {
+    return /databases/$(db)/documents/reels/$(reelId)/comments/$(cid);
+  }
+  function step(field) {
+    return request.resource.data.get(field, 0) - resource.data.get(field, 0);
+  }
+  function isValidReelCreate(db, reelId, d) {
+    return d.keys().hasOnly(['likes', 'lastLiker', 'comments', 'lastComment', 'shares', 'views'])
+      && (
+        (d.keys().hasOnly(['likes', 'lastLiker']) && d.likes == 1 && d.lastLiker is string
+           && existsAfter(likePath(db, reelId, d.lastLiker)) && !exists(likePath(db, reelId, d.lastLiker)))
+        || (d.keys().hasOnly(['comments', 'lastComment']) && d.comments == 1 && d.lastComment is string
+           && existsAfter(commentPath(db, reelId, d.lastComment)) && !exists(commentPath(db, reelId, d.lastComment)))
+        || (d.keys().hasOnly(['shares']) && d.shares == 1)
+        || (d.keys().hasOnly(['views']) && d.views == 1)
+      );
+  }
+  function isValidReelUpdate(db, reelId) {
+    let d = request.resource.data;
+    let changed = d.diff(resource.data).affectedKeys();
+    return (changed.hasOnly(['likes', 'lastLiker']) && d.lastLiker is string && (
+              (step('likes') == 1 && existsAfter(likePath(db, reelId, d.lastLiker)) && !exists(likePath(db, reelId, d.lastLiker)))
+              || (step('likes') == -1 && d.likes >= 0 && !existsAfter(likePath(db, reelId, d.lastLiker)) && exists(likePath(db, reelId, d.lastLiker)))))
+      || (changed.hasOnly(['comments', 'lastComment']) && d.lastComment is string && step('comments') == 1
+          && existsAfter(commentPath(db, reelId, d.lastComment)) && !exists(commentPath(db, reelId, d.lastComment)))
+      || (changed.hasOnly(['shares']) && step('shares') == 1)
+      || (changed.hasOnly(['views']) && step('views') == 1);
   }
 
   function isValidStudent(data) {
