@@ -651,6 +651,7 @@ html .clg-deck-switch button.active{background:#0f7b6c;border-color:#0f7b6c;colo
 .clg-deck-switch button.active{background:#0f7b6c;border-color:#0f7b6c;color:#fff}
 </style>
 <script src="class-large.js?v=2"></script>
+<script src="quick-card.js?v=1"></script>
 </head>
 <body>
 <div class="app">
@@ -4468,6 +4469,11 @@ async function shareAllSocial(){
   }
 }
 window.shareAllSocial = shareAllSocial;
+</script>
+<script>
+/* Chapter Quick Card at the top of the Board Important tab (quick-card.js) */
+(function(){ if(typeof renderBoardImportant!=='function') return; const _rbi=renderBoardImportant;
+  renderBoardImportant=function(){ const r=_rbi.apply(this,arguments); if(window.QuickCard) QuickCard.mount(document.getElementById('content'), {id:'pu1-ch4', base:'', title:'Animal Kingdom', cls:'I PUC', ch:4}); return r; }; })();
 </script>
 </body>
 </html>
