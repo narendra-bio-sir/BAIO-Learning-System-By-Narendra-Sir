@@ -968,6 +968,7 @@ html:not([data-theme="light"]) .ppt-scene{filter:invert(.93) hue-rotate(180deg) 
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="quick-card.js?v=1"></script>
 </head>
 <body>
 <div class="app">
@@ -6092,6 +6093,11 @@ async function shareAllSocial(){
   }
 }
 window.shareAllSocial = shareAllSocial;
+</script>
+<script>
+/* Chapter Quick Card at the top of the Board Important tab (quick-card.js) */
+(function(){ if(typeof renderBoardImportant!=='function') return; const _rbi=renderBoardImportant;
+  renderBoardImportant=function(){ const r=_rbi.apply(this,arguments); if(window.QuickCard) QuickCard.mount(document.getElementById('content'), {id:'pu1-ch9', base:'', title:'Biomolecules', cls:'I PUC', ch:9}); return r; }; })();
 </script>
 </body>
 </html>
