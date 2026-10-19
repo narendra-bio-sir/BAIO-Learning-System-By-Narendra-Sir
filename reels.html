@@ -96,6 +96,10 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
 /* ---- Reels ---- */
 .filters{display:flex;justify-content:center;gap:6px;margin-top:4px;flex-wrap:wrap}
 .f-btn{padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:700 13px 'Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;cursor:pointer;min-height:38px}
+.sec-tabs{display:flex;gap:6px;justify-content:center;margin:0 auto 12px;max-width:520px;padding:5px;border-radius:16px;background:var(--panel2);border:1px solid var(--line)}
+.sec-tab{flex:1;padding:11px 10px;border-radius:12px;border:0;background:transparent;color:var(--ink-dim);font:800 13.5px 'Space Grotesk','Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;cursor:pointer;line-height:1.25}
+.sec-tab.on{background:var(--panel);color:var(--ink);box-shadow:0 2px 10px rgba(0,0,0,.18);outline:2px solid var(--gold)}
+.sec-tab small{display:block;font:600 11px 'Inter',sans-serif;color:var(--ink-dim);margin-top:2px}
 .f-btn.on{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;border-color:var(--gold)}
 .reels{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-top:16px}
 .reel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;display:flex;flex-direction:column;transition:box-shadow .4s}
@@ -127,6 +131,10 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
     <p data-i18n="intro">One-minute videos of board-important topics, chapter by chapter. Watch before class, save for exams and share with friends.</p>
   </section>
   <div style="text-align:center;margin:0 0 12px"><a class="act primary" href="reels-feed.html" data-i18n="feed">📱 Try the Reels feed · swipe, like &amp; comment</a></div>
+  <div class="sec-tabs" role="tablist" aria-label="Reel type">
+    <button class="sec-tab on" data-sec="revision" role="tab"><span data-i18n="t_rev">🎬 Revision Reels</span><small data-i18n="t_rev_s">Board-important topics</small></button>
+    <button class="sec-tab" data-sec="mehfil" role="tab"><span data-i18n="t_meh">🎤 BAIO – Biology Ki Mehfil</span><small data-i18n="t_meh_s">Biology in shayari</small></button>
+  </div>
   <div class="filters" role="group" aria-label="Filter by class">
     <button class="f-btn on" data-f="all" data-i18n="f_all">All</button>
     <button class="f-btn" data-f="1" data-i18n="f_1">I PUC</button>
@@ -152,17 +160,17 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
 
 /* ---- Reels data: add a new reel here (newest first) ---- */
 const REELS = [
-  { id:'pu1-ch9-shayari-kn', pu:1, ch:9, dur:'1:02', video:'reels/pu1-ch9-biomolecules-shayari-kannada.mp4', cover:'reels/pu1-ch9-biomolecules-shayari-kannada-cover.jpg', chapter:'pu1-ch9.html',
+  { id:'pu1-ch9-shayari-kn', cat:'mehfil', pu:1, ch:9, dur:'1:02', video:'reels/pu1-ch9-biomolecules-shayari-kannada.mp4', cover:'reels/pu1-ch9-biomolecules-shayari-kannada-cover.jpg', chapter:'pu1-ch9.html',
     title:{en:'Biomolecules · Shayari (Kannada)', kn:'ಜೈವಿಕ ಅಣುಗಳು · ಕನ್ನಡ ಶಾಯರಿ', hi:'जैव अणु · शायरी (कन्नड़)'},
     desc:{en:'The Biomolecules shayari in Kannada: six couplets on carbohydrates, proteins, lipids, enzymes and DNA, each with a fact to remember.',
           kn:'ಕನ್ನಡದಲ್ಲಿ ಜೈವಿಕ ಅಣುಗಳ ಶಾಯರಿ: ಕಾರ್ಬೋಹೈಡ್ರೇಟ್, ಪ್ರೋಟೀನ್, ಲಿಪಿಡ್, ಕಿಣ್ವಗಳು ಮತ್ತು DNA ಕುರಿತು ಆರು ಸಾಲುಗಳು, ನೆನಪಿಡಬೇಕಾದ ಅಂಶಗಳೊಂದಿಗೆ.',
           hi:'कन्नड़ में जैव अणु शायरी: कार्बोहाइड्रेट, प्रोटीन, लिपिड, एंज़ाइम और DNA पर छह शेर, याद रखने लायक तथ्यों के साथ।'} },
-  { id:'pu1-ch9-shayari-en', pu:1, ch:9, dur:'1:02', video:'reels/pu1-ch9-biomolecules-shayari-english.mp4', cover:'reels/pu1-ch9-biomolecules-shayari-english-cover.jpg', chapter:'pu1-ch9.html',
+  { id:'pu1-ch9-shayari-en', cat:'mehfil', pu:1, ch:9, dur:'1:02', video:'reels/pu1-ch9-biomolecules-shayari-english.mp4', cover:'reels/pu1-ch9-biomolecules-shayari-english-cover.jpg', chapter:'pu1-ch9.html',
     title:{en:'Biomolecules · Shayari (English letters)', kn:'ಜೈವಿಕ ಅಣುಗಳು · ಶಾಯರಿ (ಇಂಗ್ಲಿಷ್ ಅಕ್ಷರಗಳಲ್ಲಿ)', hi:'जैव अणु · शायरी (इंग्लिश अक्षरों में)'},
     desc:{en:'The Hindi Biomolecules shayari written in English letters, for students who read Hindi more easily in Roman script.',
           kn:'ಹಿಂದಿ ಜೈವಿಕ ಅಣುಗಳ ಶಾಯರಿ ಇಂಗ್ಲಿಷ್ ಅಕ್ಷರಗಳಲ್ಲಿ — ದೇವನಾಗರಿ ಓದಲು ಕಷ್ಟವಾಗುವವರಿಗೆ.',
           hi:'वही हिंदी शायरी इंग्लिश अक्षरों में — जिन्हें देवनागरी पढ़ने में दिक्कत होती है उनके लिए।'} },
-  { id:'pu1-ch9-shayari', pu:1, ch:9, dur:'1:02', video:'reels/pu1-ch9-biomolecules-shayari.mp4?v=2', cover:'reels/pu1-ch9-biomolecules-shayari-cover.jpg?v=2', chapter:'pu1-ch9.html',
+  { id:'pu1-ch9-shayari', cat:'mehfil', pu:1, ch:9, dur:'1:02', video:'reels/pu1-ch9-biomolecules-shayari.mp4?v=2', cover:'reels/pu1-ch9-biomolecules-shayari-cover.jpg?v=2', chapter:'pu1-ch9.html',
     title:{en:'Biomolecules · Shayari', kn:'ಜೈವಿಕ ಅಣುಗಳು · ಶಾಯರಿ', hi:'जैव अणु · शायरी'},
     desc:{en:'Six Hindi shers on carbohydrates, proteins, lipids, enzymes and DNA, each with a one-line fact to remember.',
           kn:'ಕಾರ್ಬೋಹೈಡ್ರೇಟ್, ಪ್ರೋಟೀನ್, ಲಿಪಿಡ್, ಕಿಣ್ವಗಳು ಮತ್ತು DNA ಕುರಿತು ಆರು ಹಿಂದಿ ಶೇರ್‌ಗಳು, ಪ್ರತಿಯೊಂದರ ಜೊತೆ ನೆನಪಿಡಬೇಕಾದ ಒಂದು ಸಾಲಿನ ಅಂಶ.',
@@ -184,22 +192,22 @@ const UI = {
   hi:{pu1:'प्रथम पीयूसी', pu2:'द्वितीय पीयूसी', ch:'अध्याय', dl:'⬇ डाउनलोड (MP4)', share:'📤 शेयर करें', open:'📘 अध्याय खोलें', min:'मिनट', board:'बोर्ड महत्वपूर्ण'}
 };
 const I18N = {
-  kn:{ feed:'📱 ರೀಲ್ಸ್ ಫೀಡ್ ನೋಡಿ · ಸ್ವೈಪ್, ಲೈಕ್ ಮತ್ತು ಕಾಮೆಂಟ್', eyebrow:'BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್ · ಪುನರಾವರ್ತನೆ ರೀಲ್ಸ್', h1:'🎬 ಪುನರಾವರ್ತನೆ <span class="accent">ರೀಲ್ಸ್</span>',
+  kn:{ t_rev:'🎬 ಪುನರಾವರ್ತನೆ ರೀಲ್ಸ್', t_rev_s:'ಬೋರ್ಡ್ ಮುಖ್ಯ ವಿಷಯಗಳು', t_meh:'🎤 BAIO – ಬಯಾಲಜಿ ಕಿ ಮೆಹ್ಫಿಲ್', t_meh_s:'ಶಾಯರಿಯಲ್ಲಿ ಜೀವಶಾಸ್ತ್ರ', feed:'📱 ರೀಲ್ಸ್ ಫೀಡ್ ನೋಡಿ · ಸ್ವೈಪ್, ಲೈಕ್ ಮತ್ತು ಕಾಮೆಂಟ್', eyebrow:'BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್ · ಪುನರಾವರ್ತನೆ ರೀಲ್ಸ್', h1:'🎬 ಪುನರಾವರ್ತನೆ <span class="accent">ರೀಲ್ಸ್</span>',
        intro:'ಅಧ್ಯಾಯವಾರು ಬೋರ್ಡ್ ಪರೀಕ್ಷೆಯ ಮುಖ್ಯ ವಿಷಯಗಳ ಒಂದು ನಿಮಿಷದ ವಿಡಿಯೋಗಳು. ತರಗತಿಗೆ ಮುನ್ನ ನೋಡಿ, ಪರೀಕ್ಷೆಗೆ ಉಳಿಸಿ, ಸ್ನೇಹಿತರೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಿ.',
        f_all:'ಎಲ್ಲಾ', f_1:'ಪ್ರಥಮ ಪಿಯುಸಿ', f_2:'ದ್ವಿತೀಯ ಪಿಯುಸಿ', soon:'ಹೊಸ ರೀಲ್‌ಗಳು ಅಧ್ಯಾಯವಾರು ಸೇರುತ್ತವೆ. 🔔 ಪ್ರಕಟಣೆಗಳ ಘಂಟೆಯನ್ನು ಗಮನಿಸಿ.' },
-  hi:{ feed:'📱 रील्स फ़ीड आज़माएँ · स्वाइप, लाइक और कमेंट', eyebrow:'BAIO लर्निंग सिस्टम · रिवीज़न रील्स', h1:'🎬 रिवीज़न <span class="accent">रील्स</span>',
+  hi:{ t_rev:'🎬 रिवीज़न रील्स', t_rev_s:'बोर्ड-महत्वपूर्ण विषय', t_meh:'🎤 BAIO – बायोलॉजी की महफ़िल', t_meh_s:'शायरी में जीवविज्ञान', feed:'📱 रील्स फ़ीड आज़माएँ · स्वाइप, लाइक और कमेंट', eyebrow:'BAIO लर्निंग सिस्टम · रिवीज़न रील्स', h1:'🎬 रिवीज़न <span class="accent">रील्स</span>',
        intro:'अध्यायवार बोर्ड-महत्वपूर्ण विषयों के एक मिनट के वीडियो। क्लास से पहले देखिए, परीक्षा के लिए सेव कीजिए और दोस्तों से शेयर कीजिए।',
        f_all:'सभी', f_1:'प्रथम पीयूसी', f_2:'द्वितीय पीयूसी', soon:'नई रील्स अध्याय दर अध्याय जुड़ती रहेंगी। 🔔 घोषणाओं की घंटी पर नज़र रखिए।' }
 };
 const BASE='https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/reels.html';
-let lang='en', filter='all';
+let lang='en', filter='all', section='revision';
 const box=document.getElementById('reels');
 function render(){
   const u=UI[lang];
   const playing=[...box.querySelectorAll('video')].filter(v=>!v.paused).map(v=>v.closest('.reel').id);
-  box.innerHTML=REELS.filter(r=>filter==='all'||String(r.pu)===filter).map(r=>`
+  box.innerHTML=REELS.filter(r=>((r.cat||'revision')===section) && (filter==='all'||String(r.pu)===filter)).map(r=>`
     <article class="reel" id="${r.id}">
-      <div class="card-head"><span class="pill">${r.pu===1?u.pu1:u.pu2} · ${u.ch} ${r.ch}</span><span class="new">${u.board}</span></div>
+      <div class="card-head"><span class="pill">${r.pu===1?u.pu1:u.pu2} · ${u.ch} ${r.ch}</span><span class="new">${r.cat==='mehfil' ? '🎤 Mehfil' : u.board}</span></div>
       <h2>${r.title[lang]||r.title.en}</h2>
       <div class="meta">⏱ ${r.dur} ${u.min}</div>
       <p>${r.desc[lang]||r.desc.en}</p>
@@ -227,10 +235,13 @@ function setLang(l){
   render();
 }
 sw.addEventListener('click',e=>{ const b=e.target.closest('button'); if(b) setLang(b.dataset.l); });
+function setSection(sec){ section=sec; document.querySelectorAll('.sec-tab').forEach(x=>x.classList.toggle('on',x.dataset.sec===sec)); render(); }
+document.querySelectorAll('.sec-tab').forEach(b=>b.addEventListener('click',()=>setSection(b.dataset.sec)));
 document.querySelectorAll('.f-btn').forEach(b=>b.addEventListener('click',()=>{ filter=b.dataset.f; document.querySelectorAll('.f-btn').forEach(x=>x.classList.toggle('on',x===b)); render(); }));
 let startLang='en'; try{ startLang=localStorage.getItem('baio_lang')||localStorage.getItem('baio_mt_lang')||'en'; }catch(e){}
 setLang(['en','kn','hi'].includes(startLang)?startLang:'en');
 // opened from a shared link (#reel-id): scroll to that reel and highlight it
+(function(){ const id=location.hash.slice(1); const r=REELS.find(x=>x.id===id); if(r && r.cat==='mehfil') setSection('mehfil'); })();
 (function(){ const id=location.hash.slice(1); const el=id&&document.getElementById(id); if(el){ setTimeout(()=>{ el.scrollIntoView({behavior:'smooth',block:'start'}); el.classList.add('flash'); setTimeout(()=>el.classList.remove('flash'),2500); },300); } })();
 
 /* Share — native share sheet on phones; WhatsApp / Telegram / copy link otherwise */
