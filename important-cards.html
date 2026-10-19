@@ -168,11 +168,11 @@ let lang='en', filter='all', cur=-1;
 const grid=document.getElementById('grid'), viewer=document.getElementById('viewer');
 const shown=()=>CARDS.filter(c=>filter==='all'||String(c.pu)===filter);
 function render(){
-  grid.innerHTML=shown().map(c=>`<button class="qc" type="button" data-id="${c.id}"><img src="important-cards/${c.id}.jpg" alt="${c.title} quick card" loading="lazy"><div><small>${c.pu===1?'I PUC':'II PUC'} · Ch ${c.ch}</small>${c.title}</div></button>`).join('');
+  grid.innerHTML=shown().map(c=>`<button class="qc" type="button" data-id="${c.id}"><img src="important-cards/${c.id}.jpg?v=2" alt="${c.title} quick card" loading="lazy"><div><small>${c.pu===1?'I PUC':'II PUC'} · Ch ${c.ch}</small>${c.title}</div></button>`).join('');
 }
 function open(id){
   const list=shown(); cur=list.findIndex(c=>c.id===id); if(cur<0){ filter='all'; setFilter('all'); return open(id); }
-  const c=list[cur]; const src='important-cards/'+c.id+'.jpg';
+  const c=list[cur]; const src="important-cards/"+c.id+".jpg?v=2";
   document.getElementById('vimg').src=src; document.getElementById('vimg').alt=c.title+' quick card';
   const dl=document.getElementById('vdl'); dl.href=src; dl.setAttribute('download','BAIO_'+c.title.replace(/[^A-Za-z0-9]+/g,'_')+'_Quick_Card.jpg');
   document.getElementById('vch').href=c.page;
