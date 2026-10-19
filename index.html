@@ -184,6 +184,26 @@ header{padding:34px 0 22px; text-align:center;}
 .quick-action-btn.exam-corner-btn{flex:1 1 100%; background:linear-gradient(135deg,var(--gold),#B8912A); color:#1a1406; border-color:var(--gold);}
 .quick-action-btn.exam-corner-btn:hover{filter:brightness(1.05); background:linear-gradient(135deg,var(--gold),#B8912A);}
 .quick-action-btn.reels-btn{flex:1 1 100%; border-color:var(--gold); border-width:2px;}
+/* Daily Bio Zone cards on the home screen */
+.hz{margin-top:18px;display:grid;gap:10px}
+.hz-card{border-radius:18px;padding:14px 16px;border:1px solid var(--line);background:var(--panel);position:relative;overflow:hidden}
+.hz-daily{background:linear-gradient(135deg,#ff8a00,#ff3d77 60%,#7b2ff7);color:#fff;border:0;text-decoration:none;display:flex;align-items:center;gap:14px}
+.hz-daily .fl{font-size:40px;animation:hzf 1s ease-in-out infinite alternate}
+@keyframes hzf{from{transform:scale(1) rotate(-5deg)}to{transform:scale(1.12) rotate(5deg)}}
+.hz-daily b{display:block;font:800 17px 'Space Grotesk',sans-serif}
+.hz-daily small{display:block;font:600 12.5px 'Inter',sans-serif;opacity:.95;margin-top:2px}
+.hz-daily .go{margin-left:auto;flex:none;background:#fff;color:#ff3d77;font:800 13px 'Inter';padding:8px 12px;border-radius:999px}
+.hz-k{font:800 10.5px 'Space Grotesk',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);display:flex;align-items:center;gap:8px}
+.hz-k button{margin-left:auto;background:none;border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:4px 10px;font:700 11.5px 'Inter';cursor:pointer}
+.hz-fact{font:600 15px/1.5 'Inter','Noto Sans Devanagari',sans-serif;color:var(--ink);margin-top:6px}
+.hz-cd{display:flex;align-items:center;gap:14px;margin-top:6px}
+.hz-cd .n{flex:none;min-width:84px;text-align:center;padding:8px 10px;border-radius:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406}
+.hz-cd .n b{display:block;font:800 30px 'Space Grotesk',sans-serif;line-height:1}
+.hz-cd .n small{font:700 10.5px 'Inter'}
+.hz-plan{font:600 13px/1.5 'Inter';color:var(--ink)}
+.hz-plan a{color:var(--teal);font-weight:800}
+.hz-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.hz-row button,.hz-row a{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:700 12px 'Inter';cursor:pointer;text-decoration:none}
 /* BAIO theme song player */
 .theme-song{margin-top:18px; display:flex; align-items:center; gap:14px; padding:14px 16px; border-radius:16px;
   border:1px solid var(--line); background:linear-gradient(135deg,rgba(212,175,55,0.10),rgba(46,230,197,0.06)), var(--panel);}
@@ -530,6 +550,15 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     <div class="sp-head"><span>📈 Mastery Across Live Chapters</span><span id="spPct">0%</span></div>
     <div class="sp-track"><div class="sp-fill" id="spFill" style="width:0%;"></div></div>
     <div class="sp-sub" id="spSub"></div>
+  </div>
+
+  <div class="hz" id="hz">
+    <a class="hz-card hz-daily" href="zone.html#daily" id="hzDaily"><span class="fl">🔥</span><span><b id="hzDT">Daily Bio Challenge</b><small id="hzDS">5 questions · 3 minutes · build your streak</small></span><span class="go">Play ▶</span></a>
+    <div class="hz-card"><div class="hz-k">💡 Fact of the day <button type="button" id="hzFShare">📤 Share</button></div><div class="hz-fact" id="hzFact"></div></div>
+    <div class="hz-card"><div class="hz-k">📅 Exam countdown <button type="button" id="hzEdit">✏️ Change</button></div>
+      <div class="hz-cd"><div class="n" id="hzN"><b>–</b><small>days left</small></div><div class="hz-plan" id="hzPlan"></div></div>
+      <div class="hz-row"><button type="button" id="hzRemind">🔔 Remind me at 7 pm</button><a href="zone.html#test">📝 Chapter tests</a><a href="zone.html#guess">🧩 Guess It</a><a href="zone.html#memes">😂 Memes</a><a href="zone.html#invite">🎁 Invite &amp; earn</a></div>
+    </div>
   </div>
 
   <div class="theme-song" id="themeSong">
@@ -2791,6 +2820,74 @@ window.indexHardRefresh = indexHardRefresh;
     if(e.key==='ArrowRight') a.currentTime=Math.min(a.duration,a.currentTime+5);
     if(e.key==='ArrowLeft') a.currentTime=Math.max(0,a.currentTime-5); });
   ui();
+})();
+</script>
+<script src="zone/content.js?v=1"></script>
+<script>
+/* Daily Bio Zone on the home screen: streak, Fact of the Day, exam countdown + today's plan,
+   7 pm reminder opt-in, and invite links (?ref=CODE). */
+(function(){
+  var store={get:function(k){try{return localStorage.getItem(k);}catch(e){return null;}},set:function(k,v){try{localStorage.setItem(k,v);}catch(e){}}};
+  var Z={}; try{ Z=JSON.parse(store.get('baio_zone')||'{}'); }catch(e){}
+  function dk(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  var today=dk(new Date()), yday=dk(new Date(Date.now()-864e5));
+  var streak=(Z.last===today||Z.last===yday)?(Z.streak||0):0, done=Z.hist&&Z.hist[today]!=null;
+  var t=document.getElementById('hzDT'), s=document.getElementById('hzDS');
+  if(done){ t.textContent='🔥 '+streak+'-day streak!'; s.textContent='Today\'s challenge done ('+Z.hist[today]+'/5) · come back tomorrow'; }
+  else if(streak){ t.textContent='🔥 '+streak+'-day streak: keep it alive!'; s.textContent='Today\'s 5 questions are waiting'; }
+  /* fact of the day (changes at midnight IST) */
+  if(window.ZONE){ var F=ZONE.FACTS, f=F[Math.floor((Date.now()+330*60000)/864e5)%F.length];
+    document.getElementById('hzFact').innerHTML=f.t;
+    document.getElementById('hzFShare').onclick=function(){ var txt='💡 Biology fact of the day: '+f.t.replace(/<[^>]+>/g,'')+'\n— BAIO Learning System (Narendra Sir)'; var url='https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/zone.html';
+      if(navigator.share) navigator.share({text:txt,url:url}).catch(function(){}); else window.open('https://wa.me/?text='+encodeURIComponent(txt+'\n'+url),'_blank','noopener'); }; }
+  /* exam countdown + today's plan */
+  var cls=Z.cls||0, DEF={2:'2027-03-15'};
+  function chs(){ return cls===1?[['pu1-ch2','ch2/index.html','Biological Classification'],['pu1-ch3','ch3/index.html','Plant Kingdom'],['pu1-ch4','pu1-ch4.html','Animal Kingdom'],['pu1-ch5','pu1-ch5.html','Morphology of Flowering Plants'],['pu1-ch6','pu1-ch6.html','Anatomy of Flowering Plants'],['pu1-ch8','pu1-ch8.html','Cell: The Unit of Life'],['pu1-ch9','pu1-ch9.html','Biomolecules']]
+    : [['pu2-ch1','pu2-ch1.html','Sexual Reproduction in Flowering Plants'],['pu2-ch2','pu2-ch2.html','Human Reproduction'],['pu2-ch3','pu2-ch3.html','Reproductive Health'],['pu2-ch4','pu2-ch4.html','Principles of Inheritance and Variation'],['pu2-ch5','pu2-ch5.html','Molecular Basis of Inheritance'],['pu2-ch6','pu2-ch6.html','Evolution'],['pu2-ch7','pu2-ch7.html','Human Health and Disease'],['pu2-ch8','pu2-ch8.html','Microbes in Human Welfare'],['pu2-ch10','pu2-ch10.html','Biotechnology and its Applications'],['pu2-ch11','pu2-ch11.html','Organisms and Populations'],['pu2-ch12','pu2-ch12.html','Ecosystem'],['pu2-ch13','pu2-ch13.html','Biodiversity and Conservation']]; }
+  function paint(){
+    var date=store.get('baio_exam_date')||DEF[cls]||'', n=document.getElementById('hzN'), plan=document.getElementById('hzPlan');
+    if(!cls){ n.innerHTML='<b>🎓</b><small>pick class</small>'; plan.innerHTML='Tell us your class to see your exam countdown and today\'s plan. <div class="hz-row"><button type="button" data-c="1">I PUC</button><button type="button" data-c="2">II PUC</button></div>';
+      plan.querySelectorAll('[data-c]').forEach(function(b){ b.onclick=function(){ cls=+b.dataset.c; Z.cls=cls; store.set('baio_zone',JSON.stringify(Z)); paint(); }; }); return; }
+    if(date){ var d=Math.ceil((new Date(date+'T09:00:00+05:30')-Date.now())/864e5); n.innerHTML='<b>'+Math.max(0,d)+'</b><small>days left</small>'; }
+    else n.innerHTML='<b>✏️</b><small>set date</small>';
+    // focus chapter: weakest (≥3 attempts), else rotate one chapter per day
+    var list=chs(), st=Z.chap||{}, weak=null;
+    list.forEach(function(c){ var v=st[c[0]]; if(v&&v.t>=3){ var a=v.c/v.t; if(!weak||a<weak.a) weak={c:c,a:a}; } });
+    var focus=weak&&weak.a<0.7?weak.c:list[Math.floor(Date.now()/864e5)%list.length];
+    plan.innerHTML=(date?'<b>'+(cls===1?'I PUC':'II PUC')+' Biology exam</b>'+(cls===2&&!store.get('baio_exam_date')?' (15 Mar 2027, provisional)':'')+'<br>':'<b>Set your exam date</b> with ✏️<br>')+
+      'Today: '+(weak&&weak.a<0.7?'revise your weak chapter ':'revise ')+'<a href="'+focus[1]+'">'+focus[2]+'</a> → <a href="zone.html#daily">Daily 5</a> → <a href="important-cards.html#'+focus[0]+'">Quick card</a>';
+  }
+  document.getElementById('hzEdit').onclick=function(){ var cur=store.get('baio_exam_date')||DEF[cls]||''; var v=prompt('Your Biology exam date (YYYY-MM-DD):', cur); if(v===null) return; v=v.trim();
+    if(/^\d{4}-\d{2}-\d{2}$/.test(v)) store.set('baio_exam_date',v); else if(!v) { try{ localStorage.removeItem('baio_exam_date'); }catch(e){} } paint(); };
+  paint();
+
+  /* invite links: remember ?ref=CODE once, then report it to the BAIO server */
+  var FB={ apiKey:"AIzaSyBfbVcutUkubiq8w6eHkd4FE8xX9-IyEbU", authDomain:"baio-learning-system.firebaseapp.com", projectId:"baio-learning-system", storageBucket:"baio-learning-system.firebasestorage.app", messagingSenderId:"564399701604", appId:"1:564399701604:web:5d3aefd97e626201ce6971" };
+  function dev(){ var d=store.get('baio_device_id'); if(!d){ d='d'+Date.now().toString(36)+Math.random().toString(36).slice(2,10); store.set('baio_device_id',d); } return d; }
+  function load(src){ return new Promise(function(res,rej){ var x=document.createElement('script'); x.src=src; x.onload=res; x.onerror=rej; document.head.appendChild(x); }); }
+  function fb(extra){ var p=window.firebase?Promise.resolve():load('https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js').then(function(){ return load('https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js'); });
+    return p.then(function(){ return extra&&!(firebase.messaging)?load('https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js'):null; }).then(function(){ if(!firebase.apps.length) firebase.initializeApp(FB); return firebase; }); }
+  try{ var ref=(new URLSearchParams(location.search).get('ref')||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,10);
+    if(ref && !store.get('baio_ref_by') && !store.get('baio_zone')) store.set('baio_ref_pending', ref);
+  }catch(e){}
+  var pend=store.get('baio_ref_pending');
+  if(pend){ fb().then(function(f){ return f.firestore().collection('referrals').doc(dev()).set({ref:pend, at:f.firestore.FieldValue.serverTimestamp()}); })
+    .then(function(){ store.set('baio_ref_by',pend); try{ localStorage.removeItem('baio_ref_pending'); }catch(e){} }).catch(function(){}); }
+
+  /* 7 pm reminder: browser push via Firebase Cloud Messaging (functions/index.js sends it) */
+  var rb=document.getElementById('hzRemind');
+  if(store.get('baio_reminder')==='on') rb.textContent='🔔 Reminder on (7 pm)';
+  if(!('Notification' in window) || !('serviceWorker' in navigator)) rb.style.display='none';
+  rb.onclick=function(){
+    if(store.get('baio_reminder')==='on'){ alert('Your daily 7 pm reminder is on. To turn it off, block notifications for this site in your browser settings.'); return; }
+    Notification.requestPermission().then(function(perm){
+      if(perm!=='granted'){ alert('Please allow notifications to get the 7 pm reminder.'); return; }
+      return navigator.serviceWorker.register('sw.js').then(function(){ return navigator.serviceWorker.ready; }).then(function(reg){
+        return fb(true).then(function(f){ return f.messaging().getToken({vapidKey:'BO8AyYXvtRLj7iRD5u8Aiet_qKvOOPhR9idmvBLwHj4mKYKDhyz_1mD1eFCqbIsEKyqM412fT_v1G7ZPCXRZlCI', serviceWorkerRegistration:reg})
+          .then(function(tok){ return f.firestore().collection('reminderTokens').doc(tok).set({token:tok, cls:cls||0, at:f.firestore.FieldValue.serverTimestamp()}); }); });
+      }).then(function(){ store.set('baio_reminder','on'); rb.textContent='🔔 Reminder on (7 pm)'; alert('Done! We\'ll remind you at 7 pm every day 🔥'); });
+    }).catch(function(){ alert('Could not turn on reminders right now. Please try again later.'); });
+  };
 })();
 </script>
 </body>

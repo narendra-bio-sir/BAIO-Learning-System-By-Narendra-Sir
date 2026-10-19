@@ -46,6 +46,30 @@ service cloud.firestore {
     // so one device cannot pump the numbers. Comments are public, can't be edited
     // or deleted from the app; Narendra Sir removes unwanted ones in the Firebase
     // console (Firestore > reels > {reel} > comments).
+    // ---------------- Daily Bio Zone ----------------
+    // 7 pm reminder subscriptions: a device can add its own push token; only the
+    // Cloud Function (Admin SDK) reads them.
+    match /reminderTokens/{token} {
+      allow read: if false;
+      allow create, update: if token.size() < 400
+                            && request.resource.data.keys().hasOnly(['token', 'cls', 'at'])
+                            && request.resource.data.token == token
+                            && request.resource.data.cls is int && request.resource.data.cls >= 0 && request.resource.data.cls <= 2
+                            && request.resource.data.at == request.time;
+      allow delete: if true;
+    }
+    // Invite & Earn: referrals/{deviceId} = {ref: inviter's code}. One record per
+    // device, never changed; anyone can count how many friends used a code.
+    match /referrals/{deviceId} {
+      allow get, list: if true;
+      allow create: if deviceId.size() < 64
+                    && request.resource.data.keys().hasOnly(['ref', 'at'])
+                    && request.resource.data.ref is string
+                    && request.resource.data.ref.size() >= 4 && request.resource.data.ref.size() <= 10
+                    && request.resource.data.at == request.time;
+      allow update, delete: if false;
+    }
+
     match /reels/{reelId} {
       allow get, list: if true;
       allow create: if reelId.size() < 80 && isValidReelCreate(database, reelId, request.resource.data);
