@@ -924,6 +924,7 @@ html .clg-deck-switch button.active{background:#0f7b6c;border-color:#0f7b6c;colo
 .clg-deck-switch button.active{background:#0f7b6c;border-color:#0f7b6c;color:#fff}
 </style>
 <script src="class-large.js?v=2"></script>
+<script src="quick-card.js?v=1"></script>
 </head>
 <body>
 <div id="pageLoadOverlay" style="position:fixed; inset:0; z-index:99999; background:#0B1B14;"></div>
@@ -6107,6 +6108,11 @@ window.chapterHardRefresh = chapterHardRefresh;
   if(lock) new MutationObserver(apply).observe(lock, {attributes:true, attributeFilter:['class']});
   apply();
 })();
+</script>
+<script>
+/* Chapter Quick Card at the top of the Board Important tab (quick-card.js) */
+(function(){ function go(){ const c=document.querySelector('#panel-boardimp > .card'); if(c && window.QuickCard) QuickCard.mount(c, {id:'pu2-ch12', base:'', title:'Ecosystem', cls:'II PUC', ch:12}); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go(); })();
 </script>
 </body>
 </html>
