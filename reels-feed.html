@@ -127,7 +127,7 @@ button{font-family:inherit}
 <div class="bar">
   <div class="rt"><a class="ib" href="index.html" title="Home" aria-label="Back to BAIO home">🏠</a><a class="ib" href="reels.html" title="Classic view" aria-label="Classic reels view">▦</a></div>
   <div class="tabs" role="tablist" aria-label="Filter by class">
-    <button data-f="all" class="on"></button><button data-f="1"></button><button data-f="2"></button><button data-f="mehfil"></button>
+    <button data-f="all" class="on"></button><button data-f="1"></button><button data-f="2"></button><button data-f="mehfil" aria-label="Biology Ki Mehfil"></button><button data-f="comedy" aria-label="Comedy"></button>
   </div>
   <div class="rt">
     <button class="ib lang" id="langBtn" aria-label="Language">EN</button>
@@ -172,6 +172,18 @@ button{font-family:inherit}
 
 /* ---------- Reels data: add a new reel here (newest first) ---------- */
 const REELS = [
+  { id:'comedy-plant', cat:'comedy', pu:1, ch:8, dur:'0:50', video:'reels/comedy-plant-chat.mp4', cover:'reels/comedy-plant-chat-cover.jpg', chapter:'pu1-ch8.html',
+    title:{en:'Plant Cell vs Animal Cell · Group Chat', kn:'ಸಸ್ಯ ಕೋಶ vs ಪ್ರಾಣಿ ಕೋಶ · ಗ್ರೂಪ್ ಚಾಟ್', hi:'पादप कोशिका vs जंतु कोशिका · ग्रुप चैट'},
+    desc:{en:'Two cousins argue about cell wall, chloroplasts, vacuole, centrioles and starch vs glycogen. Ends with a Remember card.', kn:'ಕೋಶ ಭಿತ್ತಿ, ಹರಿತ್ತಿಲವಕ, ರಸದಾನಿ, ಸೆಂಟ್ರಿಯೋಲ್ ಮತ್ತು ಪಿಷ್ಟ vs ಗ್ಲೈಕೋಜನ್ ಕುರಿತು ಇಬ್ಬರು ಕಸಿನ್‌ಗಳ ಜಗಳ.', hi:'कोशिका भित्ति, हरितलवक, रसधानी, सेंट्रिओल और स्टार्च vs ग्लाइकोजन पर दो कज़िन्स की बहस।'} },
+  { id:'comedy-enzyme', cat:'comedy', pu:1, ch:9, dur:'0:50', video:'reels/comedy-enzyme-chat.mp4', cover:'reels/comedy-enzyme-chat-cover.jpg', chapter:'pu1-ch9.html',
+    title:{en:'Enzyme the Bouncer · Group Chat', kn:'ಕಿಣ್ವ ಬೌನ್ಸರ್ · ಗ್ರೂಪ್ ಚಾಟ್', hi:'एंज़ाइम बाउंसर · ग्रुप चैट'},
+    desc:{en:'The Active Site Club: substrate fit, competitive inhibitor, cofactor, denaturation by heat, and the enzyme that stays unchanged.', kn:'ಆಕ್ಟಿವ್ ಸೈಟ್ ಕ್ಲಬ್: ಸಬ್‌ಸ್ಟ್ರೇಟ್, ಸ್ಪರ್ಧಾತ್ಮಕ ನಿರೋಧಕ, ಸಹಕಾರಕ, ಉಷ್ಣದಿಂದ ಡಿನೇಚರೇಷನ್.', hi:'एक्टिव साइट क्लब: सब्सट्रेट, प्रतिस्पर्धी अवरोधक, सहकारक, गर्मी से विकृतीकरण।'} },
+  { id:'comedy-dna', cat:'comedy', pu:2, ch:5, dur:'0:52', video:'reels/comedy-dna-chat.mp4', cover:'reels/comedy-dna-chat-cover.jpg', chapter:'pu2-ch5.html',
+    title:{en:'DNA vs RNA · Group Chat', kn:'DNA vs RNA · ಗ್ರೂಪ್ ಚಾಟ್', hi:'DNA vs RNA · ग्रुप चैट'},
+    desc:{en:'Ego clash in the Central Dogma Gang: deoxyribose vs ribose, thymine vs uracil, stability, RNA world and transcription to translation.', kn:'ಸೆಂಟ್ರಲ್ ಡಾಗ್ಮಾ ಗ್ಯಾಂಗ್‌ನಲ್ಲಿ ಜಗಳ: ಡಿಆಕ್ಸಿರೈಬೋಸ್ vs ರೈಬೋಸ್, ಥೈಮಿನ್ vs ಯುರಾಸಿಲ್, RNA ಜಗತ್ತು.', hi:'सेंट्रल डॉग्मा गैंग में ईगो क्लैश: डीऑक्सीराइबोज़ vs राइबोज़, थाइमिन vs यूरेसिल, RNA वर्ल्ड।'} },
+  { id:'comedy-cell', cat:'comedy', pu:1, ch:8, dur:'0:52', video:'reels/comedy-cell-chat.mp4', cover:'reels/comedy-cell-chat-cover.jpg', chapter:'pu1-ch8.html',
+    title:{en:'Cell Family · Group Chat', kn:'ಕೋಶ ಕುಟುಂಬ · ಗ್ರೂಪ್ ಚಾಟ್', hi:'सेल फ़ैमिली · ग्रुप चैट'},
+    desc:{en:'Nucleus says he is the boss, Mitochondria stops ATP. Semi-autonomous mitochondria, 70S ribosomes and the lysosome suicide bag.', kn:'ನ್ಯೂಕ್ಲಿಯಸ್ ತಾನೇ ಬಾಸ್ ಎಂದಾಗ ಮೈಟೊಕಾಂಡ್ರಿಯಾ ATP ನಿಲ್ಲಿಸುತ್ತದೆ! ಅರೆ-ಸ್ವಾಯತ್ತ ಮೈಟೊಕಾಂಡ್ರಿಯಾ, 70S ರೈಬೋಸೋಮ್.', hi:'न्यूक्लियस खुद को बॉस कहता है, माइटोकॉन्ड्रिया ATP बंद कर देता है! अर्ध-स्वायत्त माइटोकॉन्ड्रिया, 70S राइबोसोम।'} },
   { id:'pu1-ch9-shayari-kn', cat:'mehfil', pu:1, ch:9, dur:'1:02', video:'reels/pu1-ch9-biomolecules-shayari-kannada.mp4', cover:'reels/pu1-ch9-biomolecules-shayari-kannada-cover.jpg', chapter:'pu1-ch9.html',
     title:{en:'Biomolecules · Shayari (Kannada)', kn:'ಜೈವಿಕ ಅಣುಗಳು · ಕನ್ನಡ ಶಾಯರಿ', hi:'जैव अणु · शायरी (कन्नड़)'},
     desc:{en:'The Biomolecules shayari in Kannada: six couplets on carbohydrates, proteins, lipids, enzymes and DNA, each with a fact to remember.',
@@ -261,7 +273,7 @@ function warnOffline(){ if(!live) toast(t().offline); }
 
 /* ---------- build the feed ---------- */
 const feed=$('#feed');
-function list(){ if(filter==='mehfil') return REELS.filter(r=>r.cat==='mehfil'); return REELS.filter(r=>r.cat!=='mehfil' && (filter==='all'||String(r.pu)===filter)); }
+function list(){ if(filter==='mehfil'||filter==='comedy') return REELS.filter(r=>r.cat===filter); return REELS.filter(r=>!r.cat && (filter==='all'||String(r.pu)===filter)); }
 function render(){
   const u=t();
   feed.innerHTML = list().map(r=>`
@@ -303,7 +315,7 @@ function paint(id){
 function paintAll(){ REELS.forEach(r=>paint(r.id)); }
 function setChrome(){
   const u=t();
-  document.querySelectorAll('.tabs button').forEach(b=>{ b.textContent = b.dataset.f==='all'?u.all:b.dataset.f==='1'?u.pu1:b.dataset.f==='2'?u.pu2:u.mehfil; b.classList.toggle('on', b.dataset.f===filter); });
+  document.querySelectorAll('.tabs button').forEach(b=>{ b.textContent = b.dataset.f==='all'?u.all:b.dataset.f==='1'?u.pu1:b.dataset.f==='2'?u.pu2:b.dataset.f==='mehfil'?'🎤':'😂'; b.classList.toggle('on', b.dataset.f===filter); });
   $('#langBtn').textContent=LSHORT[lang]; document.documentElement.lang=lang;
   $('#swipeHint').textContent=u.swipe;
   $('#cName').placeholder=u.name; $('#cText').placeholder=u.say; $('#cNote').textContent=u.note; $('#cTitle').textContent=u.comments;
@@ -467,7 +479,7 @@ document.addEventListener('keydown', e=>{
 
 /* ---------- start ---------- */
 setChrome(); render();
-(function(){ const id=location.hash.slice(1); const r=REELS.find(x=>x.id===id); if(r && r.cat==='mehfil'){ filter='mehfil'; setChrome(); render(); } const el=id&&document.getElementById(id); if(el) feed.scrollTo({top:el.offsetTop}); })();
+(function(){ const id=location.hash.slice(1); const r=REELS.find(x=>x.id===id); if(r && (r.cat==='mehfil'||r.cat==='comedy')){ filter=r.cat; setChrome(); render(); } const el=id&&document.getElementById(id); if(el) feed.scrollTo({top:el.offsetTop}); })();
 if(store.get('baio_reels_hint')) $('#swipeHint').remove(); else store.set('baio_reels_hint','1');
 fbInit();
 if('serviceWorker' in navigator){ window.addEventListener('load',function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); }); }

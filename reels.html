@@ -96,8 +96,8 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
 /* ---- Reels ---- */
 .filters{display:flex;justify-content:center;gap:6px;margin-top:4px;flex-wrap:wrap}
 .f-btn{padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:700 13px 'Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;cursor:pointer;min-height:38px}
-.sec-tabs{display:flex;gap:6px;justify-content:center;margin:0 auto 12px;max-width:520px;padding:5px;border-radius:16px;background:var(--panel2);border:1px solid var(--line)}
-.sec-tab{flex:1;padding:11px 10px;border-radius:12px;border:0;background:transparent;color:var(--ink-dim);font:800 13.5px 'Space Grotesk','Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;cursor:pointer;line-height:1.25}
+.sec-tabs{display:flex;gap:4px;justify-content:center;margin:0 auto 12px;max-width:620px;padding:5px;border-radius:16px;background:var(--panel2);border:1px solid var(--line)}
+.sec-tab{flex:1;min-width:0;padding:10px 6px;border-radius:12px;border:0;background:transparent;color:var(--ink-dim);font:800 13.5px 'Space Grotesk','Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;cursor:pointer;line-height:1.25}
 .sec-tab.on{background:var(--panel);color:var(--ink);box-shadow:0 2px 10px rgba(0,0,0,.18);outline:2px solid var(--gold)}
 .sec-tab small{display:block;font:600 11px 'Inter',sans-serif;color:var(--ink-dim);margin-top:2px}
 .f-btn.on{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;border-color:var(--gold)}
@@ -134,6 +134,7 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
   <div class="sec-tabs" role="tablist" aria-label="Reel type">
     <button class="sec-tab on" data-sec="revision" role="tab"><span data-i18n="t_rev">🎬 Revision Reels</span><small data-i18n="t_rev_s">Board-important topics</small></button>
     <button class="sec-tab" data-sec="mehfil" role="tab"><span data-i18n="t_meh">🎤 BAIO – Biology Ki Mehfil</span><small data-i18n="t_meh_s">Biology in shayari</small></button>
+    <button class="sec-tab" data-sec="comedy" role="tab"><span data-i18n="t_com">😂 Comedy</span><small data-i18n="t_com_s">Laugh &amp; learn</small></button>
   </div>
   <div class="filters" role="group" aria-label="Filter by class">
     <button class="f-btn on" data-f="all" data-i18n="f_all">All</button>
@@ -160,6 +161,18 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
 
 /* ---- Reels data: add a new reel here (newest first) ---- */
 const REELS = [
+  { id:'comedy-plant', cat:'comedy', pu:1, ch:8, dur:'0:50', video:'reels/comedy-plant-chat.mp4', cover:'reels/comedy-plant-chat-cover.jpg', chapter:'pu1-ch8.html',
+    title:{en:'Plant Cell vs Animal Cell · Group Chat', kn:'ಸಸ್ಯ ಕೋಶ vs ಪ್ರಾಣಿ ಕೋಶ · ಗ್ರೂಪ್ ಚಾಟ್', hi:'पादप कोशिका vs जंतु कोशिका · ग्रुप चैट'},
+    desc:{en:'Two cousins argue about cell wall, chloroplasts, vacuole, centrioles and starch vs glycogen. Ends with a Remember card.', kn:'ಕೋಶ ಭಿತ್ತಿ, ಹರಿತ್ತಿಲವಕ, ರಸದಾನಿ, ಸೆಂಟ್ರಿಯೋಲ್ ಮತ್ತು ಪಿಷ್ಟ vs ಗ್ಲೈಕೋಜನ್ ಕುರಿತು ಇಬ್ಬರು ಕಸಿನ್‌ಗಳ ಜಗಳ.', hi:'कोशिका भित्ति, हरितलवक, रसधानी, सेंट्रिओल और स्टार्च vs ग्लाइकोजन पर दो कज़िन्स की बहस।'} },
+  { id:'comedy-enzyme', cat:'comedy', pu:1, ch:9, dur:'0:50', video:'reels/comedy-enzyme-chat.mp4', cover:'reels/comedy-enzyme-chat-cover.jpg', chapter:'pu1-ch9.html',
+    title:{en:'Enzyme the Bouncer · Group Chat', kn:'ಕಿಣ್ವ ಬೌನ್ಸರ್ · ಗ್ರೂಪ್ ಚಾಟ್', hi:'एंज़ाइम बाउंसर · ग्रुप चैट'},
+    desc:{en:'The Active Site Club: substrate fit, competitive inhibitor, cofactor, denaturation by heat, and the enzyme that stays unchanged.', kn:'ಆಕ್ಟಿವ್ ಸೈಟ್ ಕ್ಲಬ್: ಸಬ್‌ಸ್ಟ್ರೇಟ್, ಸ್ಪರ್ಧಾತ್ಮಕ ನಿರೋಧಕ, ಸಹಕಾರಕ, ಉಷ್ಣದಿಂದ ಡಿನೇಚರೇಷನ್.', hi:'एक्टिव साइट क्लब: सब्सट्रेट, प्रतिस्पर्धी अवरोधक, सहकारक, गर्मी से विकृतीकरण।'} },
+  { id:'comedy-dna', cat:'comedy', pu:2, ch:5, dur:'0:52', video:'reels/comedy-dna-chat.mp4', cover:'reels/comedy-dna-chat-cover.jpg', chapter:'pu2-ch5.html',
+    title:{en:'DNA vs RNA · Group Chat', kn:'DNA vs RNA · ಗ್ರೂಪ್ ಚಾಟ್', hi:'DNA vs RNA · ग्रुप चैट'},
+    desc:{en:'Ego clash in the Central Dogma Gang: deoxyribose vs ribose, thymine vs uracil, stability, RNA world and transcription to translation.', kn:'ಸೆಂಟ್ರಲ್ ಡಾಗ್ಮಾ ಗ್ಯಾಂಗ್‌ನಲ್ಲಿ ಜಗಳ: ಡಿಆಕ್ಸಿರೈಬೋಸ್ vs ರೈಬೋಸ್, ಥೈಮಿನ್ vs ಯುರಾಸಿಲ್, RNA ಜಗತ್ತು.', hi:'सेंट्रल डॉग्मा गैंग में ईगो क्लैश: डीऑक्सीराइबोज़ vs राइबोज़, थाइमिन vs यूरेसिल, RNA वर्ल्ड।'} },
+  { id:'comedy-cell', cat:'comedy', pu:1, ch:8, dur:'0:52', video:'reels/comedy-cell-chat.mp4', cover:'reels/comedy-cell-chat-cover.jpg', chapter:'pu1-ch8.html',
+    title:{en:'Cell Family · Group Chat', kn:'ಕೋಶ ಕುಟುಂಬ · ಗ್ರೂಪ್ ಚಾಟ್', hi:'सेल फ़ैमिली · ग्रुप चैट'},
+    desc:{en:'Nucleus says he is the boss, Mitochondria stops ATP. Semi-autonomous mitochondria, 70S ribosomes and the lysosome suicide bag.', kn:'ನ್ಯೂಕ್ಲಿಯಸ್ ತಾನೇ ಬಾಸ್ ಎಂದಾಗ ಮೈಟೊಕಾಂಡ್ರಿಯಾ ATP ನಿಲ್ಲಿಸುತ್ತದೆ! ಅರೆ-ಸ್ವಾಯತ್ತ ಮೈಟೊಕಾಂಡ್ರಿಯಾ, 70S ರೈಬೋಸೋಮ್.', hi:'न्यूक्लियस खुद को बॉस कहता है, माइटोकॉन्ड्रिया ATP बंद कर देता है! अर्ध-स्वायत्त माइटोकॉन्ड्रिया, 70S राइबोसोम।'} },
   { id:'pu1-ch9-shayari-kn', cat:'mehfil', pu:1, ch:9, dur:'1:02', video:'reels/pu1-ch9-biomolecules-shayari-kannada.mp4', cover:'reels/pu1-ch9-biomolecules-shayari-kannada-cover.jpg', chapter:'pu1-ch9.html',
     title:{en:'Biomolecules · Shayari (Kannada)', kn:'ಜೈವಿಕ ಅಣುಗಳು · ಕನ್ನಡ ಶಾಯರಿ', hi:'जैव अणु · शायरी (कन्नड़)'},
     desc:{en:'The Biomolecules shayari in Kannada: six couplets on carbohydrates, proteins, lipids, enzymes and DNA, each with a fact to remember.',
@@ -192,10 +205,10 @@ const UI = {
   hi:{pu1:'प्रथम पीयूसी', pu2:'द्वितीय पीयूसी', ch:'अध्याय', dl:'⬇ डाउनलोड (MP4)', share:'📤 शेयर करें', open:'📘 अध्याय खोलें', min:'मिनट', board:'बोर्ड महत्वपूर्ण'}
 };
 const I18N = {
-  kn:{ t_rev:'🎬 ಪುನರಾವರ್ತನೆ ರೀಲ್ಸ್', t_rev_s:'ಬೋರ್ಡ್ ಮುಖ್ಯ ವಿಷಯಗಳು', t_meh:'🎤 BAIO – ಬಯಾಲಜಿ ಕಿ ಮೆಹ್ಫಿಲ್', t_meh_s:'ಶಾಯರಿಯಲ್ಲಿ ಜೀವಶಾಸ್ತ್ರ', feed:'📱 ರೀಲ್ಸ್ ಫೀಡ್ ನೋಡಿ · ಸ್ವೈಪ್, ಲೈಕ್ ಮತ್ತು ಕಾಮೆಂಟ್', eyebrow:'BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್ · ಪುನರಾವರ್ತನೆ ರೀಲ್ಸ್', h1:'🎬 ಪುನರಾವರ್ತನೆ <span class="accent">ರೀಲ್ಸ್</span>',
+  kn:{ t_com:'😂 ಹಾಸ್ಯ', t_com_s:'ನಗುತ್ತಾ ಕಲಿಯಿರಿ', t_rev:'🎬 ಪುನರಾವರ್ತನೆ ರೀಲ್ಸ್', t_rev_s:'ಬೋರ್ಡ್ ಮುಖ್ಯ ವಿಷಯಗಳು', t_meh:'🎤 BAIO – ಬಯಾಲಜಿ ಕಿ ಮೆಹ್ಫಿಲ್', t_meh_s:'ಶಾಯರಿಯಲ್ಲಿ ಜೀವಶಾಸ್ತ್ರ', feed:'📱 ರೀಲ್ಸ್ ಫೀಡ್ ನೋಡಿ · ಸ್ವೈಪ್, ಲೈಕ್ ಮತ್ತು ಕಾಮೆಂಟ್', eyebrow:'BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್ · ಪುನರಾವರ್ತನೆ ರೀಲ್ಸ್', h1:'🎬 ಪುನರಾವರ್ತನೆ <span class="accent">ರೀಲ್ಸ್</span>',
        intro:'ಅಧ್ಯಾಯವಾರು ಬೋರ್ಡ್ ಪರೀಕ್ಷೆಯ ಮುಖ್ಯ ವಿಷಯಗಳ ಒಂದು ನಿಮಿಷದ ವಿಡಿಯೋಗಳು. ತರಗತಿಗೆ ಮುನ್ನ ನೋಡಿ, ಪರೀಕ್ಷೆಗೆ ಉಳಿಸಿ, ಸ್ನೇಹಿತರೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಿ.',
        f_all:'ಎಲ್ಲಾ', f_1:'ಪ್ರಥಮ ಪಿಯುಸಿ', f_2:'ದ್ವಿತೀಯ ಪಿಯುಸಿ', soon:'ಹೊಸ ರೀಲ್‌ಗಳು ಅಧ್ಯಾಯವಾರು ಸೇರುತ್ತವೆ. 🔔 ಪ್ರಕಟಣೆಗಳ ಘಂಟೆಯನ್ನು ಗಮನಿಸಿ.' },
-  hi:{ t_rev:'🎬 रिवीज़न रील्स', t_rev_s:'बोर्ड-महत्वपूर्ण विषय', t_meh:'🎤 BAIO – बायोलॉजी की महफ़िल', t_meh_s:'शायरी में जीवविज्ञान', feed:'📱 रील्स फ़ीड आज़माएँ · स्वाइप, लाइक और कमेंट', eyebrow:'BAIO लर्निंग सिस्टम · रिवीज़न रील्स', h1:'🎬 रिवीज़न <span class="accent">रील्स</span>',
+  hi:{ t_com:'😂 कॉमेडी', t_com_s:'हँसो और सीखो', t_rev:'🎬 रिवीज़न रील्स', t_rev_s:'बोर्ड-महत्वपूर्ण विषय', t_meh:'🎤 BAIO – बायोलॉजी की महफ़िल', t_meh_s:'शायरी में जीवविज्ञान', feed:'📱 रील्स फ़ीड आज़माएँ · स्वाइप, लाइक और कमेंट', eyebrow:'BAIO लर्निंग सिस्टम · रिवीज़न रील्स', h1:'🎬 रिवीज़न <span class="accent">रील्स</span>',
        intro:'अध्यायवार बोर्ड-महत्वपूर्ण विषयों के एक मिनट के वीडियो। क्लास से पहले देखिए, परीक्षा के लिए सेव कीजिए और दोस्तों से शेयर कीजिए।',
        f_all:'सभी', f_1:'प्रथम पीयूसी', f_2:'द्वितीय पीयूसी', soon:'नई रील्स अध्याय दर अध्याय जुड़ती रहेंगी। 🔔 घोषणाओं की घंटी पर नज़र रखिए।' }
 };
@@ -207,7 +220,7 @@ function render(){
   const playing=[...box.querySelectorAll('video')].filter(v=>!v.paused).map(v=>v.closest('.reel').id);
   box.innerHTML=REELS.filter(r=>((r.cat||'revision')===section) && (filter==='all'||String(r.pu)===filter)).map(r=>`
     <article class="reel" id="${r.id}">
-      <div class="card-head"><span class="pill">${r.pu===1?u.pu1:u.pu2} · ${u.ch} ${r.ch}</span><span class="new">${r.cat==='mehfil' ? '🎤 Mehfil' : u.board}</span></div>
+      <div class="card-head"><span class="pill">${r.pu===1?u.pu1:u.pu2} · ${u.ch} ${r.ch}</span><span class="new">${r.cat==='mehfil' ? '🎤 Mehfil' : r.cat==='comedy' ? '😂 Comedy' : u.board}</span></div>
       <h2>${r.title[lang]||r.title.en}</h2>
       <div class="meta">⏱ ${r.dur} ${u.min}</div>
       <p>${r.desc[lang]||r.desc.en}</p>
@@ -241,7 +254,7 @@ document.querySelectorAll('.f-btn').forEach(b=>b.addEventListener('click',()=>{ 
 let startLang='en'; try{ startLang=localStorage.getItem('baio_lang')||localStorage.getItem('baio_mt_lang')||'en'; }catch(e){}
 setLang(['en','kn','hi'].includes(startLang)?startLang:'en');
 // opened from a shared link (#reel-id): scroll to that reel and highlight it
-(function(){ const id=location.hash.slice(1); const r=REELS.find(x=>x.id===id); if(r && r.cat==='mehfil') setSection('mehfil'); })();
+(function(){ const id=location.hash.slice(1); const r=REELS.find(x=>x.id===id); if(r && (r.cat==='mehfil'||r.cat==='comedy')) setSection(r.cat); })();
 (function(){ const id=location.hash.slice(1); const el=id&&document.getElementById(id); if(el){ setTimeout(()=>{ el.scrollIntoView({behavior:'smooth',block:'start'}); el.classList.add('flash'); setTimeout(()=>el.classList.remove('flash'),2500); },300); } })();
 
 /* Share — native share sheet on phones; WhatsApp / Telegram / copy link otherwise */
