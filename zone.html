@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BAIO">
+<title>Daily Bio Zone | BAIO Learning System</title>
+<meta name="description" content="Daily Biology challenge with streaks, chapter tests with certificates, Guess-It puzzles and memes — by Narendra Sir, BAIO Learning System.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BAIO Learning System">
+<meta property="og:title" content="🔥 Daily Bio Zone — Narendra Sir · BAIO">
+<meta property="og:description" content="5 Biology questions a day, streaks, chapter certificates, puzzles and memes. Join me on BAIO!">
+<meta property="og:url" content="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/zone.html">
+<meta property="og:image" content="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/zone/memes/meme-02.jpg">
+<meta property="og:image:alt" content="BAIO Daily Bio Zone">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="🔥 Daily Bio Zone — Narendra Sir">
+<meta name="twitter:description" content="5 Biology questions a day, streaks, chapter certificates, puzzles and memes. Join me on BAIO!">
+<meta name="twitter:image" content="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/zone/memes/meme-02.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B1B14; --navy2:#0F2419; --panel:#13281E; --panel2:#0E211A;
+  --gold:#D4AF37; --gold2:#B8912A; --teal:#2EE6C5; --teal2:#127566;
+  --ink:#EAF3EE; --ink-dim:#9FC4B6; --line:rgba(212,175,55,0.22); --new:#E7695B;
+}
+[data-theme="light"]{
+  --navy:#F7F5EE; --navy2:#EFEBDD; --panel:#FFFFFF; --panel2:#F3F0E6;
+  --gold:#B8912A; --gold2:#8A6A1A; --teal:#0F8F7A; --teal2:#0B6F5E;
+  --ink:#1E2A22; --ink-dim:#5C6E63; --line:rgba(184,145,42,0.25); --new:#C33A2C;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--navy);color:var(--ink);font-family:'Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;-webkit-font-smoothing:antialiased;transition:background .25s,color .25s}
+h1,h2,h3{font-family:'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;margin:0}
+a{color:var(--teal)}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px 70px}
+.topnav{position:sticky;top:0;z-index:30;background:rgba(11,27,20,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+[data-theme="light"] .topnav{background:rgba(244,241,232,.94)}
+.topnav-inner{max-width:980px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:8px;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:8px;font:700 14px 'Space Grotesk',sans-serif;color:var(--ink)}
+.brand .b{width:30px;height:30px;border-radius:8px;background:#0c1830;color:#D4AF37;display:grid;place-items:center;font-size:16px}
+.tools{display:flex;align-items:center;gap:6px}
+.lang-switcher{display:flex;gap:4px}
+.lang-btn{padding:6px 10px;border-radius:12px;font:700 11px 'Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;background:var(--panel2);color:var(--ink-dim);border:1px solid var(--line);cursor:pointer;white-space:nowrap;min-height:32px}
+.lang-btn.active{background:var(--gold);color:#1a1406;border-color:var(--gold)}
+.icon-btn{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none}
+.hero{padding:30px 0 18px;text-align:center}
+.eyebrow{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--teal);font-weight:700}
+.hero h1{font-size:32px;line-height:1.15;margin-top:10px}
+.hero h1 .accent{color:var(--gold)}
+.hero p{font-size:14px;color:var(--ink-dim);line-height:1.7;margin:10px auto 0;max-width:600px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:16px}
+.card-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.pill{font:700 11px Inter;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold);border-radius:20px;padding:3px 10px}
+.new{font:800 11px Inter;letter-spacing:1.5px;color:#fff;background:var(--new);border-radius:20px;padding:4px 10px}
+.card h2{font-size:21px;line-height:1.3;margin-top:10px}
+.card h2 em{font-style:normal;color:var(--teal)}
+.card p{font-size:13.5px;line-height:1.65;color:var(--ink-dim);margin:8px 0 0}
+.frame{margin-top:14px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#0b1220}
+[data-theme="light"] .frame{background:#eef2f4}
+.frame iframe{display:block;width:100%;height:640px;border:0}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.vframe{margin:14px 0 4px;border-radius:14px;overflow:hidden;background:#000;border:1px solid var(--line)}
+.vframe video{display:block;width:100%;aspect-ratio:16/9;background:#000}
+.vtheme{display:inline-flex;gap:4px;margin:12px 0 0;padding:4px;border-radius:12px;border:1px solid var(--line);background:var(--panel2)}
+.vt-btn{border:0;background:transparent;color:var(--ink);font:600 13px 'Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;padding:8px 12px;border-radius:9px;cursor:pointer;min-height:38px}
+.vt-btn.on{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406}
+.act{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);text-decoration:none;font:600 13px 'Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;min-height:42px}
+.act.share{cursor:pointer;border-color:var(--teal);color:var(--teal)}
+.act.primary{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;border-color:var(--gold)}
+.tips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.tip{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:12.5px;line-height:1.5;color:var(--ink-dim)}
+.tip b{display:block;color:var(--ink);font-size:13px;margin-bottom:3px}
+.poster{margin-top:12px;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+.poster img{display:block;width:100%;height:auto}
+.soon{text-align:center;color:var(--ink-dim);font-size:13px;margin-top:26px}
+footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
+@media (max-width:640px){ .hero h1{font-size:26px} .tips{grid-template-columns:1fr} .brand span{display:none} .card{padding:14px} .card h2{font-size:18px} }
+
+.share-sheet{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;padding:16px}
+.share-sheet[hidden]{display:none}
+.share-box{position:relative;width:100%;max-width:380px;background:#fff;color:#0c1830;border-radius:18px;padding:18px;display:grid;gap:10px;font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.share-box b{font:700 17px 'Space Grotesk',Inter,sans-serif}
+.share-opt{display:block;text-align:left;padding:13px 14px;border-radius:12px;border:1.5px solid #e6e0d2;background:#fbf8f1;color:#0c1830;text-decoration:none;font:600 15px Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;cursor:pointer}
+.share-opt:hover{border-color:#0b8f80}
+.share-url{width:100%;padding:9px 10px;border-radius:10px;border:1px solid #e6e0d2;font:500 12px Inter;color:#5f6b80;background:#fff}
+.share-x{position:absolute;right:10px;top:10px;width:34px;height:34px;border-radius:50%;border:none;background:#f1ede2;cursor:pointer;font-size:14px}
+/* ---- Daily Bio Zone ---- */
+.zhero{padding:22px 0 8px;text-align:center}
+.zhero h1{font-size:30px;line-height:1.15;margin-top:8px}
+.zhero h1 .accent{color:var(--gold)}
+.zstats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:12px auto 0;max-width:520px}
+.zstat{min-width:0;padding:8px 4px;border-radius:14px;background:var(--panel);border:1px solid var(--line);text-align:center}
+.zstat b{display:block;font:800 22px 'Space Grotesk',sans-serif}
+.zstat small{display:block;font:600 10.5px/1.25 'Inter';color:var(--ink-dim)}
+.zstat.fire b{color:#ff6b2c}
+.clsrow{display:flex;justify-content:center;gap:6px;margin-top:12px}
+.clsrow button,.ztabs button{padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:700 13px 'Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;cursor:pointer;min-height:38px}
+.clsrow button.on,.ztabs button.on{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;border-color:var(--gold)}
+.ztabs{display:flex;gap:6px;overflow-x:auto;padding:14px 2px 4px;scrollbar-width:none;position:sticky;top:50px;z-index:5;background:var(--navy)}
+.ztabs::-webkit-scrollbar{display:none}
+.ztabs button{flex:none}
+.zcard{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:14px}
+.zcard h2{font-size:20px;line-height:1.3}
+.zcard p{font-size:13.5px;line-height:1.6;color:var(--ink-dim);margin:6px 0 0}
+.zbtn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 18px;border-radius:14px;border:0;background:linear-gradient(135deg,#ff8a00,#ff3d77);color:#fff;font:800 15px 'Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;cursor:pointer;text-decoration:none;min-height:46px}
+.zbtn.alt{background:var(--panel2);color:var(--ink);border:1px solid var(--line)}
+.zbtn.teal{background:linear-gradient(135deg,#00b4d8,#7b2ff7)}
+.zbtn:disabled{opacity:.5;cursor:default}
+.zrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.qhead{display:flex;justify-content:space-between;align-items:center;font:700 12px 'Inter';color:var(--ink-dim)}
+.qhead .tag{padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--teal)}
+.qbar{height:6px;border-radius:6px;background:var(--panel2);margin:10px 0 14px;overflow:hidden}
+.qbar i{display:block;height:100%;background:linear-gradient(90deg,#ff8a00,#ff3d77);transition:width .3s}
+.qtext{font:700 17px/1.45 'Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;white-space:pre-line}
+.opts{display:grid;gap:9px;margin-top:14px}
+.opt{text-align:left;padding:12px 14px;border-radius:14px;border:1.5px solid var(--line);background:var(--panel2);color:var(--ink);font:600 15px/1.4 'Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;cursor:pointer;display:flex;gap:10px;align-items:flex-start}
+.opt b{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--panel);border:1px solid var(--line);font:800 12px 'Inter'}
+.opt.ok{border-color:#2bb673;background:rgba(43,182,115,.14)}
+.opt.ok b{background:#2bb673;color:#fff;border-color:#2bb673}
+.opt.no{border-color:#e5484d;background:rgba(229,72,77,.12)}
+.opt.no b{background:#e5484d;color:#fff;border-color:#e5484d}
+.opt:disabled{cursor:default}
+.exp{margin-top:12px;padding:12px 14px;border-radius:14px;background:rgba(46,230,197,.08);border:1px dashed var(--teal);font-size:13.5px;line-height:1.55}
+.exp b{color:var(--teal)}
+.big{font:800 46px 'Space Grotesk',sans-serif;text-align:center;margin:6px 0}
+.center{text-align:center}
+.flame{font-size:54px;text-align:center;animation:flame 1s ease-in-out infinite alternate}
+@keyframes flame{from{transform:scale(1) rotate(-4deg)}to{transform:scale(1.12) rotate(4deg)}}
+.week{display:flex;justify-content:center;gap:6px;margin-top:12px}
+.week span{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font:700 11px 'Inter';background:var(--panel2);border:1px solid var(--line);color:var(--ink-dim)}
+.week span.done{background:linear-gradient(135deg,#ff8a00,#ff3d77);color:#fff;border-color:transparent}
+.week span.today{outline:2px solid var(--gold)}
+.chgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:9px;margin-top:12px}
+.chbtn{text-align:left;padding:11px 12px;border-radius:14px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);cursor:pointer;font:700 13px/1.3 'Space Grotesk','Inter',sans-serif}
+.chbtn small{display:block;font:600 11px 'Inter';color:var(--ink-dim);margin-bottom:3px}
+.chbtn .acc{display:block;margin-top:6px;font:700 11px 'Inter';color:var(--teal)}
+.clue{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);margin-top:8px;font:600 14.5px/1.4 'Inter';animation:pop .35s ease}
+.clue b{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#00b4d8,#7b2ff7);color:#fff;font:800 12px 'Inter'}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.pts{font:800 13px 'Inter';color:var(--gold)}
+.meme-main{display:block;width:100%;max-width:520px;margin:12px auto 0;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:14px}
+.mgrid img{width:100%;border-radius:12px;cursor:pointer;border:1px solid var(--line)}
+.code{font:800 26px 'Space Grotesk',sans-serif;letter-spacing:.14em;text-align:center;padding:12px;border-radius:14px;border:2px dashed var(--gold);margin-top:12px;color:var(--gold)}
+.prog3{display:flex;gap:8px;justify-content:center;margin-top:14px}
+.prog3 span{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-size:24px;background:var(--panel2);border:2px solid var(--line)}
+.prog3 span.on{border-color:#2bb673;background:rgba(43,182,115,.15)}
+.certs{display:grid;gap:10px;margin-top:12px}
+.cert{display:flex;gap:12px;align-items:center;padding:12px;border-radius:14px;background:var(--panel2);border:1px solid var(--line)}
+.cert .ic{flex:none;width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-size:24px;background:linear-gradient(135deg,#d4af37,#f3d27a)}
+.cert div{flex:1;min-width:0;font:700 14px/1.3 'Space Grotesk','Inter',sans-serif}
+.cert small{display:block;font:600 11.5px 'Inter';color:var(--ink-dim);margin-top:2px}
+.cert button{flex:none;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:700 12px 'Inter';cursor:pointer}
+.locked{opacity:.55}
+.modal{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.82);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px}
+.modal[hidden]{display:none}
+.modal img,.modal canvas{max-width:100%;max-height:calc(100dvh - 170px);border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.5);background:#fff}
+.modal .zrow{justify-content:center}
+.modal .x{position:absolute;top:12px;right:12px;width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.15);color:#fff;font-size:18px;cursor:pointer}
+.namebox{display:flex;gap:8px;margin-top:10px}
+.namebox input{flex:1;min-width:0;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:600 14px 'Inter'}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);z-index:80;background:#14201a;color:#fff;padding:10px 16px;border-radius:999px;font:600 13px Inter;opacity:0;transition:opacity .25s;pointer-events:none;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
+.confetti{position:fixed;top:-20px;z-index:70;font-size:20px;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="brand"><div class="b">B</div><span>BAIO Learning System</span></div>
+    <div class="tools">
+      <div id="langSwitcher" class="lang-switcher" role="group" aria-label="Language"></div>
+      <a href="index.html" class="icon-btn" title="Back to BAIO home" aria-label="Back to BAIO home">🏠</a>
+      <button class="icon-btn" id="themeToggle" title="Toggle dark/light theme" aria-label="Toggle dark/light theme">🌙</button>
+    </div>
+  </div>
+</nav>
+<div class="wrap">
+  <section class="zhero">
+    <div class="eyebrow">BAIO Learning System · Narendra Sir</div>
+    <h1>🔥 Daily Bio <span class="accent">Zone</span></h1>
+    <div class="zstats">
+      <div class="zstat fire"><b id="stStreak">0</b><small>🔥 day streak</small></div>
+      <div class="zstat"><b id="stBest">0</b><small>🏆 best streak</small></div>
+      <div class="zstat"><b id="stAcc">–</b><small>🎯 accuracy</small></div>
+      <div class="zstat"><b id="stCerts">0</b><small>🏅 certificates</small></div>
+    </div>
+    <div class="clsrow" id="clsRow"><button data-c="1">I PUC</button><button data-c="2">II PUC</button></div>
+  </section>
+  <nav class="ztabs" id="ztabs">
+    <button data-t="daily" class="on">🔥 Daily Challenge</button>
+    <button data-t="test">📝 Chapter Test</button>
+    <button data-t="guess">🧩 Guess It</button>
+    <button data-t="memes">😂 Meme of the Week</button>
+    <button data-t="invite">🎁 Invite &amp; Earn</button>
+    <button data-t="certs">🏅 My Certificates</button>
+  </nav>
+  <div id="view"></div>
+  <footer>BAIO Learning System · Narendra Sir · Daily Bio Zone</footer>
+</div>
+<div class="modal" id="modal" hidden><button class="x" id="mx" aria-label="Close">✕</button><div id="mbody" style="display:contents"></div></div>
+<div class="toast" id="toast"></div>
+<script src="zone/content.js?v=1"></script>
+<script>
+(function(){
+  var KEY='baio_theme', btn=document.getElementById('themeToggle');
+  function apply(t){ if(t==='light'){ document.documentElement.setAttribute('data-theme','light'); btn.textContent='☀️'; } else { document.documentElement.removeAttribute('data-theme'); btn.textContent='🌙'; } }
+  var saved=null; try{ saved=localStorage.getItem(KEY); }catch(e){}
+  apply(saved||'light');
+  btn.addEventListener('click',function(){ var next=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light'; apply(next); try{ localStorage.setItem(KEY,next); }catch(e){} });
+})();
+document.getElementById('langSwitcher').style.display='none';
+
+/* ---------------- state ---------------- */
+const SITE='https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/';
+const store={get(k){try{return localStorage.getItem(k);}catch(e){return null;}}, set(k,v){try{localStorage.setItem(k,v);}catch(e){}}};
+const S=Object.assign({cls:0, streak:0, best:0, last:'', hist:{}, chap:{}, certs:[], name:'', guess:{solved:0, pts:0, seen:[]}, bonusDone:false}, JSON.parse(store.get('baio_zone')||'{}'));
+const save=()=>store.set('baio_zone', JSON.stringify(S));
+const DEV=(function(){ let d=store.get('baio_device_id'); if(!d){ d='d'+Date.now().toString(36)+Math.random().toString(36).slice(2,10); store.set('baio_device_id',d); } return d; })();
+const MYCODE=(function(){ let h=0; for(const ch of DEV) h=(h*33+ch.charCodeAt(0))>>>0; return 'B'+h.toString(36).toUpperCase().slice(0,6).padStart(6,'7'); })();
+const dkey=(d)=>{ d=d||new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
+const TODAY=dkey(), YDAY=dkey(new Date(Date.now()-864e5));
+if(S.last && S.last!==TODAY && S.last!==YDAY && S.streak){ S.streak=0; save(); }   // streak broken
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const $=s=>document.querySelector(s);
+function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('on'); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('on'),2600); }
+function profileName(){ if(S.name) return S.name; try{ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(/_student_profile$/.test(k)){ const p=JSON.parse(localStorage.getItem(k)||'null'); if(p&&p.name) return p.name; } } }catch(e){} return ''; }
+function rng(seed){ let x=0; for(const c of seed) x=(x*31+c.charCodeAt(0))>>>0; return ()=>{ x^=x<<13; x>>>=0; x^=x>>17; x^=x<<5; x>>>=0; return x/4294967296; }; }
+function confetti(){ const E=['🎉','✨','🔥','⭐','🧬','🎊']; for(let i=0;i<28;i++){ const d=document.createElement('div'); d.className='confetti'; d.textContent=E[i%E.length]; d.style.left=Math.random()*100+'vw'; d.style.animationDuration=(1.8+Math.random()*1.6)+'s'; d.style.animationDelay=(Math.random()*.5)+'s'; document.body.appendChild(d); setTimeout(()=>d.remove(),4200); } }
+
+/* ---------------- question bank (per class) ---------------- */
+const BANK={};
+async function bank(){ if(!S.cls) return null; if(!BANK[S.cls]){ BANK[S.cls]=await (await fetch('zone/bank-pu'+S.cls+'.json?v=1')).json(); } return BANK[S.cls]; }
+const chTitle=(B,id)=>{ const c=B.chapters.find(x=>x.id===id); return c? ('Ch '+c.ch+' · '+c.title) : id; };
+function pick(B, n, seed, filter){
+  const R=rng(seed); const pool=B.q.filter(filter||(()=>true));
+  // spread across chapters: shuffle chapters, take round-robin
+  const by={}; pool.forEach(q=>{ (by[q.c]=by[q.c]||[]).push(q); });
+  const keys=Object.keys(by).sort(()=>R()-.5); const out=[];
+  let i=0; while(out.length<n && keys.length){ const k=keys[i%keys.length]; const arr=by[k]; if(arr.length){ out.push(arr.splice(Math.floor(R()*arr.length),1)[0]); i++; } else { keys.splice(i%keys.length,1); } }
+  return out;
+}
+
+/* ---------------- header stats ---------------- */
+function stats(){
+  $('#stStreak').textContent=S.streak; $('#stBest').textContent=S.best;
+  let c=0,t=0; Object.values(S.chap).forEach(v=>{ c+=v.c; t+=v.t; }); $('#stAcc').textContent=t?Math.round(c/t*100)+'%':'–';
+  $('#stCerts').textContent=S.certs.length;
+  document.querySelectorAll('#clsRow button').forEach(b=>b.classList.toggle('on', +b.dataset.c===S.cls));
+}
+document.querySelectorAll('#clsRow button').forEach(b=>b.addEventListener('click',()=>{ S.cls=+b.dataset.c; save(); stats(); show(tab); }));
+
+/* ---------------- quiz runner (daily / chapter test / bonus) ---------------- */
+function runQuiz(B, qs, opts){
+  let i=0, score=0; const view=$('#view');
+  function q(){
+    const x=qs[i];
+    view.innerHTML=`<div class="zcard"><div class="qhead"><span>${opts.label} · Q ${i+1} of ${qs.length}</span><span class="tag">${esc(chTitle(B,x.c))}</span></div>
+      <div class="qbar"><i style="width:${i/qs.length*100}%"></i></div>
+      <div class="qtext">${x.q}</div>
+      <div class="opts">${x.o.map((o,k)=>`<button class="opt" data-k="${k}"><b>${'ABCD'[k]}</b><span>${o}</span></button>`).join('')}</div><div id="after"></div></div>`;
+    view.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>{
+      const k=+b.dataset.k, ok=k===x.a; if(ok) score++;
+      const st=S.chap[x.c]=S.chap[x.c]||{c:0,t:0}; st.t++; if(ok) st.c++; save();
+      view.querySelectorAll('.opt').forEach(o=>{ o.disabled=true; const kk=+o.dataset.k; if(kk===x.a) o.classList.add('ok'); else if(kk===k) o.classList.add('no'); });
+      $('#after').innerHTML=(x.e?`<div class="exp"><b>${ok?'✅ Correct!':'❌ Not quite.'}</b> ${x.e}</div>`:`<div class="exp"><b>${ok?'✅ Correct!':'❌ Not quite.'}</b></div>`)+
+        `<div class="zrow"><button class="zbtn" id="nx">${i+1<qs.length?'Next →':'See result 🎯'}</button></div>`;
+      $('#nx').onclick=()=>{ i++; if(i<qs.length) q(); else opts.done(score); };
+    }));
+    const tb=document.querySelector('.ztabs'), nv=document.querySelector('.topnav'); window.scrollTo({top:Math.max(0, view.getBoundingClientRect().top+window.scrollY-(tb?tb.offsetHeight:0)-(nv?nv.offsetHeight:0)-6),behavior:'smooth'});
+  }
+  q();
+}
+
+/* ---------------- certificates (canvas) ---------------- */
+const CERT_ICONS={streak:'🔥', chapter:'📘', referral:'🎁', bonus:'🏆'};
+function addCert(c){ if(S.certs.some(x=>x.key===c.key)) return false; S.certs.unshift(Object.assign({date:TODAY},c)); save(); stats(); return true; }
+async function certCanvas(c){
+  await document.fonts.ready;
+  const W=1600,H=1130, cv=document.createElement('canvas'); cv.width=W; cv.height=H; const g=cv.getContext('2d');
+  const bg=g.createLinearGradient(0,0,W,H); bg.addColorStop(0,'#fffaf0'); bg.addColorStop(1,'#fdf1dc'); g.fillStyle=bg; g.fillRect(0,0,W,H);
+  // corner colour washes
+  [['#ff3d77',0,0],['#00b4d8',W,H],['#7b2ff7',W,0],['#ff8a00',0,H]].forEach(([col,x,y])=>{ const r=g.createRadialGradient(x,y,0,x,y,420); r.addColorStop(0,col+'40'); r.addColorStop(1,col+'00'); g.fillStyle=r; g.fillRect(0,0,W,H); });
+  g.strokeStyle='#b8912a'; g.lineWidth=14; g.strokeRect(40,40,W-80,H-80); g.lineWidth=3; g.strokeRect(70,70,W-140,H-140);
+  g.textAlign='center'; g.fillStyle='#0c1830';
+  // logo
+  g.fillStyle='#0c1830'; roundRect(g,W/2-48,110,96,96,24); g.fill(); g.fillStyle='#d4af37'; g.font='800 60px "Space Grotesk", Inter, sans-serif'; g.fillText('B',W/2,180);
+  g.fillStyle='#0f7b6c'; g.font='800 26px Inter, sans-serif'; g.fillText('BAIO LEARNING SYSTEM', W/2, 252);
+  g.fillStyle='#0c1830'; g.font='800 70px "Space Grotesk", Inter, sans-serif'; g.fillText(c.head||'CERTIFICATE OF ACHIEVEMENT', W/2, 340);
+  g.fillStyle='#5b6676'; g.font='500 30px Inter, sans-serif'; g.fillText('This is proudly presented to', W/2, 410);
+  const nm=(c.name||profileName()||'BAIO Student');
+  g.fillStyle='#b8312f'; g.font='800 78px "Space Grotesk", Inter, sans-serif'; g.fillText(nm, W/2, 510);
+  g.strokeStyle='#d4af37'; g.lineWidth=3; g.beginPath(); g.moveTo(W/2-360,540); g.lineTo(W/2+360,540); g.stroke();
+  g.fillStyle='#14203a'; g.font='600 34px Inter, sans-serif'; wrap(g, c.text, W/2, 610, 1180, 46);
+  g.fillStyle='#0f7b6c'; g.font='800 40px "Space Grotesk", Inter, sans-serif'; g.fillText(c.badge||'', W/2, 760);
+  // footer
+  g.fillStyle='#5b6676'; g.font='500 26px Inter, sans-serif'; g.fillText('Date', 380, 960); g.fillText('Signature', W-380, 960);
+  g.fillStyle='#14203a'; g.font='700 30px Inter, sans-serif'; g.fillText(fmtDate(c.date||TODAY), 380, 915);
+  g.font='italic 700 40px "Space Grotesk", Inter, sans-serif'; g.fillText('Narendra Sir', W-380, 912);
+  g.strokeStyle='#14203a'; g.lineWidth=2; [[380],[W-380]].forEach(([x])=>{ g.beginPath(); g.moveTo(x-180,930); g.lineTo(x+180,930); g.stroke(); });
+  g.fillStyle='#5b6676'; g.font='500 22px Inter, sans-serif'; g.fillText('Biology Lecturer · Founder, BAIO Learning System', W-380, 1000);
+  // seal
+  g.save(); g.translate(W/2,950); g.fillStyle='#d4af37'; g.beginPath(); for(let k=0;k<24;k++){ const a=k*Math.PI/12, r=k%2?70:84; g.lineTo(Math.cos(a)*r, Math.sin(a)*r); } g.closePath(); g.fill();
+  g.fillStyle='#b8912a'; g.beginPath(); g.arc(0,0,58,0,Math.PI*2); g.fill(); g.font='48px serif'; g.fillStyle='#fff'; g.textBaseline='middle'; g.fillText(CERT_ICONS[c.type]||'🏅',0,2); g.restore();
+  return cv;
+  function roundRect(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
+  function wrap(g,t,x,y,max,lh){ const words=String(t).split(' '); let line=''; for(const w of words){ const tt=line?line+' '+w:w; if(g.measureText(tt).width>max && line){ g.fillText(line,x,y); line=w; y+=lh; } else line=tt; } if(line) g.fillText(line,x,y); }
+}
+function fmtDate(k){ const [y,m,d]=k.split('-').map(Number); return new Date(y,m-1,d).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}); }
+async function openCert(c){
+  if(!profileName()){ const n=prompt('Your name for the certificate:'); if(n && n.trim()){ S.name=n.trim().slice(0,40); save(); } }
+  const cv=await certCanvas(c); const url=cv.toDataURL('image/jpeg',0.92);
+  modal(`<img src="${url}" alt="Certificate"><div class="zrow"><button class="zbtn" id="cShare">📤 Share</button><a class="zbtn alt" href="${url}" download="BAIO_Certificate_${(c.badge||'').replace(/[^A-Za-z0-9]+/g,'_')}.jpg">⬇ Download</a><button class="zbtn alt" id="cName">✏️ Change name</button></div>`);
+  $('#cShare').onclick=()=>shareCanvas(cv,'BAIO_certificate.jpg',`🏅 I earned "${c.badge}" on BAIO Learning System (Narendra Sir)! Join me:`, SITE+'zone.html');
+  $('#cName').onclick=()=>{ const n=prompt('Name on the certificate:', profileName()); if(n && n.trim()){ S.name=n.trim().slice(0,40); save(); openCert(c); } };
+}
+async function shareCanvas(cv, fname, text, url){
+  try{ const blob=await new Promise(r=>cv.toBlob(r,'image/jpeg',0.92)); const file=new File([blob],fname,{type:'image/jpeg'});
+    if(navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file], text:text+'\n'+url}); return; } }catch(e){ if(e&&e.name==='AbortError') return; }
+  if(navigator.share){ try{ await navigator.share({text, url}); }catch(e){} return; }
+  window.open('https://wa.me/?text='+encodeURIComponent(text+'\n'+url),'_blank','noopener');
+}
+function modal(html){ $('#mbody').innerHTML=html; $('#modal').hidden=false; }
+$('#mx').onclick=()=>{ $('#modal').hidden=true; $('#mbody').innerHTML=''; };
+$('#modal').addEventListener('click',e=>{ if(e.target.id==='modal') $('#mx').click(); });
+
+/* result card for the daily challenge */
+async function resultCanvas(score,total){
+  await document.fonts.ready; const W=1080,H=1080, cv=document.createElement('canvas'); cv.width=W; cv.height=H; const g=cv.getContext('2d');
+  const bg=g.createLinearGradient(0,0,W,H); bg.addColorStop(0,'#ff8a00'); bg.addColorStop(.55,'#ff3d77'); bg.addColorStop(1,'#7b2ff7'); g.fillStyle=bg; g.fillRect(0,0,W,H);
+  g.fillStyle='rgba(255,255,255,.12)'; g.beginPath(); g.arc(900,160,260,0,7); g.fill(); g.beginPath(); g.arc(120,980,220,0,7); g.fill();
+  g.textAlign='center'; g.fillStyle='#fff';
+  g.font='800 34px Inter, sans-serif'; g.fillText('BAIO · DAILY BIO CHALLENGE', W/2, 120);
+  g.font='150px serif'; g.fillText('🔥', W/2, 320);
+  g.font='800 120px "Space Grotesk", Inter, sans-serif'; g.fillText(S.streak+'-day streak', W/2, 480);
+  g.font='700 54px Inter, sans-serif'; g.fillText('Today: '+score+' / '+total+' correct '+(score===total?'💯':''), W/2, 590);
+  g.font='600 40px Inter, sans-serif'; g.fillText((S.cls===1?'I PUC':'II PUC')+' Biology · '+fmtDate(TODAY), W/2, 660);
+  g.fillStyle='rgba(12,24,48,.85)'; g.fillRect(0,H-210,W,210); g.fillStyle='#f3d27a'; g.font='800 46px "Space Grotesk", Inter, sans-serif'; g.fillText('Can you beat my streak? 😎', W/2, H-130);
+  g.fillStyle='#fff'; g.font='600 30px Inter, sans-serif'; g.fillText('Narendra Sir · BAIO Learning System', W/2, H-70);
+  return cv;
+}
+
+/* ---------------- tabs ---------------- */
+let tab=(location.hash||'#daily').slice(1);
+document.querySelectorAll('#ztabs button').forEach(b=>b.addEventListener('click',()=>show(b.dataset.t)));
+function needClass(){ $('#view').innerHTML=`<div class="zcard center"><div style="font-size:42px">🎓</div><h2>Which class are you in?</h2><p>Pick once. Your questions will come from your syllabus.</p><div class="zrow" style="justify-content:center"><button class="zbtn" data-c="1">I PUC</button><button class="zbtn teal" data-c="2">II PUC</button></div></div>`;
+  $('#view').querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{ S.cls=+b.dataset.c; save(); stats(); show(tab); }); }
+async function show(t){
+  tab=t; history.replaceState(null,'','#'+t);
+  document.querySelectorAll('#ztabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  const v=$('#view');
+  if(t==='memes') return memes();
+  if(t==='invite') return invite();
+  if(t==='certs') return certs();
+  if(t==='guess') return guess();
+  if(!S.cls) return needClass();
+  v.innerHTML='<div class="zcard center">Loading questions…</div>';
+  const B=await bank();
+  if(t==='test') return chapterTest(B);
+  return daily(B);
+}
+
+/* ---- 🔥 daily ---- */
+function weekStrip(){ let h=''; for(let k=6;k>=0;k--){ const d=new Date(Date.now()-k*864e5), key=dkey(d); h+=`<span class="${S.hist[key]!=null?'done':''} ${key===TODAY?'today':''}" title="${key}">${'SMTWTFS'[d.getDay()]}</span>`; } return `<div class="week">${h}</div>`; }
+function daily(B){
+  const done=S.hist[TODAY]!=null;
+  if(done){
+    $('#view').innerHTML=`<div class="zcard center"><div class="flame">🔥</div><div class="big">${S.streak}-day streak</div><p>Today's challenge done: <b>${S.hist[TODAY]} / 5</b>. Come back tomorrow to keep the fire burning!</p>${weekStrip()}
+      <div class="zrow" style="justify-content:center"><button class="zbtn" id="shareRes">📤 Share my streak</button><button class="zbtn alt" id="goTest">📝 Try a Chapter Test</button></div></div>${factCard()}`;
+    $('#shareRes').onclick=async()=>{ const cv=await resultCanvas(S.hist[TODAY],5); shareCanvas(cv,'BAIO_daily_streak.jpg',`🔥 ${S.streak}-day streak on the BAIO Daily Bio Challenge! Can you beat me?`, SITE+'zone.html'); };
+    $('#goTest').onclick=()=>show('test'); return;
+  }
+  const atRisk=S.last===YDAY && S.streak>0;
+  $('#view').innerHTML=`<div class="zcard center"><div class="flame">🔥</div><h2>${atRisk?`Don't lose your ${S.streak}-day streak!`:'Today\'s Daily Bio Challenge'}</h2>
+    <p>5 questions from your ${S.cls===1?'I PUC':'II PUC'} chapters · about 3 minutes · the same questions for everyone in your class today.</p>${weekStrip()}
+    <div class="zrow" style="justify-content:center"><button class="zbtn" id="start">▶ Start today's 5</button></div></div>${factCard()}`;
+  $('#start').onclick=()=>{
+    const qs=pick(B,5,'daily-'+TODAY+'-'+S.cls);
+    runQuiz(B,qs,{label:'🔥 Daily', done:(score)=>{
+      S.hist[TODAY]=score; S.streak = (S.last===YDAY ? S.streak+1 : (S.last===TODAY ? S.streak : 1)); S.last=TODAY; S.best=Math.max(S.best,S.streak); save(); stats();
+      confetti();
+      const ms=[3,7,15,30,50,100].filter(m=>S.streak>=m).pop();
+      let newCert=false; if(ms) newCert=addCert({key:'streak'+ms, type:'streak', head:'CERTIFICATE OF CONSISTENCY', badge:ms+'-Day Streak Champion', text:`for completing the BAIO Daily Bio Challenge ${ms} days in a row`});
+      daily(B); if(newCert){ toast('🏅 New certificate unlocked: '+ms+'-Day Streak Champion!'); }
+    }});
+  };
+}
+function factCard(){
+  const F=ZONE.FACTS, d=Math.floor((Date.now()+330*60000)/864e5), f=F[d%F.length];
+  return `<div class="zcard"><div class="qhead"><span>💡 FACT OF THE DAY</span></div><p style="font:600 16px/1.5 Inter;color:var(--ink);margin-top:8px">${f.t}</p></div>`;
+}
+
+/* ---- 📝 chapter test ---- */
+function chapterTest(B){
+  $('#view').innerHTML=`<div class="zcard"><h2>📝 Chapter Test</h2><p>10 questions from one chapter. Score <b>7 or more</b> to earn a <b>Chapter Champion certificate</b> 🏅</p>
+    <div class="chgrid">${B.chapters.map(c=>{ const st=S.chap[c.id]; const won=S.certs.some(x=>x.key==='ch-'+c.id); return `<button class="chbtn" data-id="${c.id}"><small>${S.cls===1?'I PUC':'II PUC'} · Ch ${c.ch}${won?' · 🏅':''}</small>${esc(c.title)}<span class="acc">${st&&st.t?Math.round(st.c/st.t*100)+'% accuracy':'Not tried yet'}</span></button>`; }).join('')}</div></div>
+    ${S.bonusUnlocked?`<div class="zcard center"><h2>🏆 Bonus Super Test unlocked</h2><p>20 tough questions from all your chapters. Score 14+ for the Super Scholar certificate.</p><div class="zrow" style="justify-content:center"><button class="zbtn teal" id="bonus">▶ Start Super Test</button></div></div>`:''}`;
+  $('#view').querySelectorAll('.chbtn').forEach(b=>b.onclick=()=>{
+    const id=b.dataset.id, c=B.chapters.find(x=>x.id===id);
+    const qs=pick(B,10,'test-'+id+'-'+Date.now(), q=>q.c===id);
+    runQuiz(B,qs,{label:'📝 '+c.title.split(' ').slice(0,3).join(' '), done:(score)=>{
+      let won=false; if(score>=7) won=addCert({key:'ch-'+id, type:'chapter', head:'CERTIFICATE OF EXCELLENCE', badge:'Chapter Champion: '+c.title, text:`for scoring ${score}/10 in the ${S.cls===1?'I PUC':'II PUC'} Biology Chapter ${c.ch} test`});
+      if(score>=7) confetti();
+      $('#view').innerHTML=`<div class="zcard center"><div style="font-size:48px">${score>=7?'🏅':'💪'}</div><div class="big">${score} / 10</div><p>${score>=7?(won?'New certificate unlocked! 🎉':'Great score! You already have this certificate.'):'Score 7 or more to earn the certificate. Revise and try again!'}</p>
+        <div class="zrow" style="justify-content:center">${score>=7?'<button class="zbtn" id="seeCert">🏅 See certificate</button>':''}<button class="zbtn alt" id="again">↺ Another chapter</button><a class="zbtn alt" href="${c.page}">📘 Revise chapter</a></div></div>`;
+      if($('#seeCert')) $('#seeCert').onclick=()=>openCert(S.certs.find(x=>x.key==='ch-'+id));
+      $('#again').onclick=()=>chapterTest(B);
+    }});
+  });
+  if($('#bonus')) $('#bonus').onclick=()=>{
+    const qs=pick(B,20,'bonus-'+Date.now(), q=>/hard|medium/i.test(q.d||''));
+    runQuiz(B,qs,{label:'🏆 Super Test', done:(score)=>{
+      let won=false; if(score>=14){ won=addCert({key:'bonus', type:'bonus', head:'CERTIFICATE OF EXCELLENCE', badge:'Super Scholar', text:`for scoring ${score}/20 in the BAIO Bonus Super Test`}); confetti(); }
+      $('#view').innerHTML=`<div class="zcard center"><div class="big">${score} / 20</div><p>${score>=14?(won?'🏅 Super Scholar certificate unlocked!':'Brilliant again!'):'Score 14+ for the Super Scholar certificate. Try again!'}</p><div class="zrow" style="justify-content:center"><button class="zbtn alt" id="back">← Back</button></div></div>`;
+      $('#back').onclick=()=>chapterTest(B);
+    }});
+  };
+}
+
+/* ---- 🧩 guess it ---- */
+function guess(){
+  const C=ZONE.CLUES; let left=C.map((_,i)=>i).filter(i=>!S.guess.seen.includes(i)); if(!left.length){ S.guess.seen=[]; left=C.map((_,i)=>i); }
+  const idx=left[Math.floor(Math.random()*left.length)], it=C[idx]; let shown=1, over=false;
+  const order=it.o.slice().sort(()=>Math.random()-.5);
+  const render=()=>{
+    $('#view').innerHTML=`<div class="zcard"><div class="qhead"><span>🧩 GUESS IT · ${S.guess.solved} solved · ⭐ ${S.guess.pts} pts</span><span class="pts">+${[0,40,30,20,10][shown]} pts</span></div>
+      <h2 style="margin-top:8px">Who am I? 🤔</h2>
+      ${it.c.slice(0,shown).map((c,k)=>`<div class="clue"><b>${k+1}</b><span>${c}</span></div>`).join('')}
+      <div class="opts">${order.map(o=>`<button class="opt" data-o="${esc(o)}"><b>?</b><span>${o}</span></button>`).join('')}</div>
+      <div id="after"></div>
+      <div class="zrow">${shown<it.c.length?'<button class="zbtn alt" id="more">💡 Next clue (−10 pts)</button>':''}</div></div>`;
+    if($('#more')) $('#more').onclick=()=>{ if(!over){ shown++; render(); } };
+    $('#view').querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+      if(over) return; over=true; const ok=b.dataset.o===it.a; const pts=ok?[0,40,30,20,10][shown]:0;
+      S.guess.seen.push(idx); if(ok){ S.guess.solved++; S.guess.pts+=pts; } save();
+      $('#view').querySelectorAll('.opt').forEach(o=>{ o.disabled=true; if(o.dataset.o===it.a) o.classList.add('ok'); else if(o===b) o.classList.add('no'); });
+      if($('#more')) $('#more').remove();
+      $('#after').innerHTML=`<div class="exp"><b>${ok?`✅ Yes! I'm ${esc(it.a)} ${it.e} · +${pts} pts`:`❌ I'm ${esc(it.a)} ${it.e}`}</b><br>${it.c.map((c,k)=>`${k+1}. ${c}`).join('<br>')}</div><div class="zrow"><button class="zbtn" id="nxt">Next puzzle →</button><button class="zbtn alt" id="shareG">📤 Challenge a friend</button></div>`;
+      if(ok && shown===1) confetti();
+      $('#nxt').onclick=guess;
+      $('#shareG').onclick=()=>{ const text=`🧩 Guess who I am!\n1. ${it.c[0].replace(/<[^>]+>/g,'')}\n2. ${it.c[1].replace(/<[^>]+>/g,'')}\n…play more on BAIO's Daily Bio Zone`; if(navigator.share) navigator.share({text, url:SITE+'zone.html#guess'}).catch(()=>{}); else window.open('https://wa.me/?text='+encodeURIComponent(text+'\n'+SITE+'zone.html#guess'),'_blank','noopener'); };
+    });
+  };
+  render();
+}
+
+/* ---- 😂 memes ---- */
+function memes(){
+  const M=ZONE.MEMES;
+  $('#view').innerHTML=`<div class="zcard center"><h2>😂 Meme of the Week</h2><p>${esc(M[0].title)}</p><img class="meme-main" src="${M[0].img}" alt="${esc(M[0].title)}">
+    <div class="zrow" style="justify-content:center"><button class="zbtn" data-share="0">📤 Share meme</button><a class="zbtn alt" href="${M[0].img}" download>⬇ Download</a></div></div>
+    <div class="zcard"><h2>Older memes</h2><div class="mgrid">${M.slice(1).map((m,i)=>`<img src="${m.img}" alt="${esc(m.title)}" data-i="${i+1}" loading="lazy">`).join('')}</div></div>`;
+  const shareM=async(i)=>{ const m=M[i]; try{ const blob=await (await fetch(m.img)).blob(); const file=new File([blob],'BAIO_meme.jpg',{type:'image/jpeg'}); if(navigator.canShare&&navigator.canShare({files:[file]})){ await navigator.share({files:[file], text:'😂 Biology meme from BAIO — '+SITE+'zone.html#memes'}); return; } }catch(e){ if(e&&e.name==='AbortError') return; } window.open('https://wa.me/?text='+encodeURIComponent('😂 Biology meme from BAIO: '+SITE+m.img),'_blank','noopener'); };
+  $('#view').querySelector('[data-share="0"]').onclick=()=>shareM(0);
+  $('#view').querySelectorAll('.mgrid img').forEach(im=>im.onclick=()=>{ const i=+im.dataset.i; modal(`<img src="${M[i].img}" alt=""><div class="zrow"><button class="zbtn" id="ms">📤 Share</button><a class="zbtn alt" href="${M[i].img}" download>⬇ Download</a></div>`); $('#ms').onclick=()=>shareM(i); });
+}
+
+/* ---- 🎁 invite & earn (Firestore: referrals/{device} = {ref}) ---- */
+const FB_CFG={ apiKey:"AIzaSyBfbVcutUkubiq8w6eHkd4FE8xX9-IyEbU", authDomain:"baio-learning-system.firebaseapp.com", projectId:"baio-learning-system", storageBucket:"baio-learning-system.firebasestorage.app", messagingSenderId:"564399701604", appId:"1:564399701604:web:5d3aefd97e626201ce6971" };
+function loadScript(src){ return new Promise((res,rej)=>{ const s=document.createElement('script'); s.src=src; s.onload=res; s.onerror=rej; document.head.appendChild(s); }); }
+async function fdb(){ if(!window.firebase){ await loadScript('https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js'); await loadScript('https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js'); } if(!firebase.apps.length) firebase.initializeApp(FB_CFG); return firebase.firestore(); }
+async function invite(){
+  const link=SITE+'index.html?ref='+MYCODE;
+  $('#view').innerHTML=`<div class="zcard center"><div style="font-size:46px">🎁</div><h2>Invite 3 friends → unlock the Bonus Super Test</h2>
+    <p>Share your link. When 3 friends open BAIO with it, you unlock a <b>20-question Super Test</b> and the <b>Super Referrer certificate</b> 🏅</p>
+    <div class="code">${MYCODE}</div>
+    <div class="prog3" id="p3"><span>👤</span><span>👤</span><span>👤</span></div><p id="pmsg">Checking how many friends joined…</p>
+    <div class="zrow" style="justify-content:center"><button class="zbtn" id="inv">📤 Share my invite link</button><button class="zbtn alt" id="cpy">🔗 Copy link</button></div></div>`;
+  $('#inv').onclick=()=>{ const text='📚 I\'m revising Biology on the BAIO app by Narendra Sir: notes, MCQs, reels and a daily challenge 🔥 Join with my link:'; if(navigator.share) navigator.share({text, url:link}).catch(()=>{}); else window.open('https://wa.me/?text='+encodeURIComponent(text+'\n'+link),'_blank','noopener'); };
+  $('#cpy').onclick=()=>{ (navigator.clipboard?navigator.clipboard.writeText(link):Promise.reject()).then(()=>toast('Link copied ✓'),()=>prompt('Copy your link:',link)); };
+  let n=null; try{ const db=await fdb(); const snap=await db.collection('referrals').where('ref','==',MYCODE).limit(20).get(); n=snap.size; }catch(e){ n=null; }
+  const p=$('#p3'); if(!p) return;
+  if(n===null){ $('#pmsg').textContent='Friend count will show here once the BAIO server is connected. Keep sharing!'; return; }
+  p.querySelectorAll('span').forEach((s,i)=>{ if(i<n){ s.classList.add('on'); s.textContent='✅'; } });
+  if(n>=3){ $('#pmsg').innerHTML='<b>🎉 Unlocked!</b> The Bonus Super Test is in the 📝 Chapter Test tab.'; if(!S.bonusUnlocked){ S.bonusUnlocked=true; save(); confetti(); } addCert({key:'referral', type:'referral', head:'CERTIFICATE OF APPRECIATION', badge:'Super Referrer', text:'for bringing friends to learn Biology on the BAIO Learning System'}); stats(); }
+  else $('#pmsg').textContent=`${n} of 3 friends joined so far.`;
+}
+
+/* ---- 🏅 certificates ---- */
+function certs(){
+  const all=[
+    {key:'streak3',  t:'3-Day Streak Champion', how:'Do the Daily Challenge 3 days in a row'},
+    {key:'streak7',  t:'7-Day Streak Champion', how:'7 days in a row'},
+    {key:'streak15', t:'15-Day Streak Champion', how:'15 days in a row'},
+    {key:'streak30', t:'30-Day Streak Champion', how:'30 days in a row'},
+    {key:'ch-*',     t:'Chapter Champion', how:'Score 7+ in any Chapter Test'},
+    {key:'referral', t:'Super Referrer', how:'Invite 3 friends'},
+    {key:'bonus',    t:'Super Scholar', how:'Score 14+ in the Bonus Super Test'}];
+  const mine=S.certs;
+  $('#view').innerHTML=`<div class="zcard"><h2>🏅 My Certificates</h2><p>Tap a certificate to view, download or share it. ${profileName()?'Name: <b>'+esc(profileName())+'</b>':''}</p>
+    <div class="certs">${mine.length?mine.map((c,i)=>`<div class="cert"><span class="ic">${CERT_ICONS[c.type]||'🏅'}</span><div>${esc(c.badge)}<small>Earned ${fmtDate(c.date)}</small></div><button data-i="${i}">View</button></div>`).join(''):'<p>No certificates yet. Start with today\'s 🔥 Daily Challenge!</p>'}</div></div>
+    <div class="zcard"><h2>How to earn</h2><div class="certs">${all.filter(a=>!mine.some(m=>a.key.endsWith('*')?m.key.startsWith(a.key.slice(0,-1)):m.key===a.key)).map(a=>`<div class="cert locked"><span class="ic">🔒</span><div>${a.t}<small>${a.how}</small></div></div>`).join('')}</div></div>`;
+  $('#view').querySelectorAll('.cert button').forEach(b=>b.onclick=()=>openCert(mine[+b.dataset.i]));
+}
+
+stats(); show(['daily','test','guess','memes','invite','certs'].includes(tab)?tab:'daily');
+if('serviceWorker' in navigator){ window.addEventListener('load',function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); }); }
+</script>
+</body>
+</html>

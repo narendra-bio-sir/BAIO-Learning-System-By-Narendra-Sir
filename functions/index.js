@@ -109,3 +109,40 @@ exports.dailyWeakTopicNudge = onSchedule(
     logger.info(`Weak-topic nudge run complete: ${notifiedCount} student(s) notified out of ${weakestByStudent.size} with a weak topic.`);
   }
 );
+
+// Daily Bio Challenge reminder: every day at 7 pm IST, a push to every device that
+// tapped "Remind me at 7 pm" on the home screen (stored in reminderTokens/{token}).
+const REMINDER_MESSAGES = [
+  'Your 5 Biology questions for today are ready. Keep your streak alive! 🔥',
+  "3 minutes, 5 questions. Don't break your streak today! 🧬",
+  "Today's Daily Bio Challenge is live. Can you score 5/5? 🎯",
+  'A little Biology every day = big marks in the board exam. Play today\'s 5! 📚'
+];
+exports.dailyChallengeReminder = onSchedule(
+  { schedule: '0 19 * * *', timeZone: 'Asia/Kolkata', region: 'asia-south1' },
+  async () => {
+    const snap = await db.collection('reminderTokens').get();
+    if (snap.empty) { logger.info('Daily reminder: no subscribers.'); return; }
+    const tokens = snap.docs.map(d => d.id);
+    const body = REMINDER_MESSAGES[new Date().getDate() % REMINDER_MESSAGES.length];
+    let sent = 0, removed = 0;
+    for (let i = 0; i < tokens.length; i += 500) {
+      const batch = tokens.slice(i, i + 500);
+      const res = await admin.messaging().sendEachForMulticast({
+        notification: { title: '🔥 BAIO Daily Bio Challenge', body },
+        data: { url: 'zone.html#daily', tag: 'baio-daily' },
+        webpush: { fcmOptions: { link: 'zone.html#daily' }, notification: { icon: 'icon-192.png', badge: 'icon-192.png', tag: 'baio-daily' } },
+        tokens: batch
+      });
+      sent += res.successCount;
+      const dels = [];
+      res.responses.forEach((r, k) => {
+        if (!r.success && ['messaging/registration-token-not-registered', 'messaging/invalid-registration-token'].includes(r.error && r.error.code)) {
+          dels.push(db.collection('reminderTokens').doc(batch[k]).delete()); removed++;
+        }
+      });
+      await Promise.all(dels);
+    }
+    logger.info(`Daily reminder sent to ${sent} device(s); removed ${removed} expired token(s).`);
+  }
+);
