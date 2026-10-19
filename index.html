@@ -219,6 +219,10 @@ header{padding:34px 0 22px; text-align:center;}
 .vsong-frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
 .vsong-frame .vplay{position:absolute; left:50%; top:50%; width:68px; height:48px; margin:-24px 0 0 -34px; border:0; border-radius:14px; background:#ff0033; color:#fff; font-size:22px; display:grid; place-items:center; box-shadow:0 6px 20px rgba(0,0,0,.4); cursor:pointer;}
 .vsong-frame .vplay:focus-visible{outline:3px solid #fff; outline-offset:3px;}
+.vsong-pick{display:flex; gap:6px; padding:0 14px 10px; overflow-x:auto; scrollbar-width:none;}
+.vsong-pick::-webkit-scrollbar{display:none;}
+.vsong-pick button{flex:none; padding:7px 12px; border-radius:999px; border:1px solid var(--line); background:var(--panel2); color:var(--ink); font:700 12.5px 'Noto Sans Kannada','Noto Sans Devanagari','Inter',sans-serif; cursor:pointer;}
+.vsong-pick button.on{background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#1a1406; border-color:var(--gold);}
 .vsong-acts{display:flex; gap:8px; padding:10px 14px 12px; flex-wrap:wrap;}
 .vsong-acts a,.vsong-acts button{flex:1 1 140px; text-align:center; padding:9px 12px; border-radius:12px; border:1px solid var(--line); background:var(--panel2); color:var(--ink); text-decoration:none; font:600 13px 'Inter',sans-serif; cursor:pointer;}
 .ts-list{margin-top:8px; border:1px solid var(--line); border-radius:14px; background:var(--panel); overflow:hidden;}
@@ -547,15 +551,16 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
 
   <div class="vsong" id="vsong">
     <div class="vsong-head">
-      <div><div class="vk">🎬 Video Song · Dedicated to Narendra Sir</div><div class="vt">स्टूडेंट्स की जीत · Students Ki Jeeth</div></div>
+      <div><div class="vk">🎬 Video Songs · Dedicated to Narendra Sir</div><div class="vt" id="vsongTitle">स्टूडेंट्स की जीत · Students Ki Jeeth</div></div>
       <span class="vnew">NEW</span>
     </div>
-    <div class="vsong-frame" id="vsongFrame" role="button" tabindex="0" aria-label="Play the Students Ki Jeeth video song">
-      <img src="https://i.ytimg.com/vi/TblguxqWbfw/hqdefault.jpg" alt="Students Ki Jeeth video song" loading="lazy" onerror="this.onerror=null;this.src='audio/covers/students-ki-jeeth.jpg'">
+    <div class="vsong-pick" id="vsongPick" role="tablist" aria-label="Choose a video song"></div>
+    <div class="vsong-frame" id="vsongFrame" role="button" tabindex="0" aria-label="Play the video song">
+      <img id="vsongImg" src="https://i.ytimg.com/vi/TblguxqWbfw/hqdefault.jpg" alt="Video song" loading="lazy">
       <button class="vplay" type="button" tabindex="-1" aria-hidden="true">▶</button>
     </div>
     <div class="vsong-acts">
-      <a href="https://youtu.be/TblguxqWbfw" target="_blank" rel="noopener">▶️ Open in YouTube</a>
+      <a id="vsongYt" href="https://youtu.be/TblguxqWbfw" target="_blank" rel="noopener">▶️ Open in YouTube</a>
       <button type="button" id="vsongShare">📤 Share with friends</button>
     </div>
   </div>
@@ -2695,29 +2700,48 @@ window.indexHardRefresh = indexHardRefresh;
 </script>
 
 <script>
-/* Students Ki Jeeth video song: the YouTube player loads only when tapped (keeps the home screen fast) */
+/* Video songs (YouTube): pick a song, the player loads only when tapped (keeps the home screen fast) */
 (function(){
-  var ID='TblguxqWbfw', fr=document.getElementById('vsongFrame'); if(!fr) return;
+  var VIDEOS=[
+    {id:'TblguxqWbfw', label:'स्टूडेंट्स की जीत', title:'स्टूडेंट्स की जीत · Students Ki Jeeth', cover:'audio/covers/students-ki-jeeth.jpg',
+     share:'🎵 Students Ki Jeeth — a song dedicated to Narendra Sir (BAIO Learning System). Watch it!'},
+    {id:'iwng_9nNvH0', label:'ಕನಸಿನ ಹರಿಕಾರ', title:'ಕನಸಿನ ಹರಿಕಾರ · Kanasina Harikara', cover:'audio/covers/kanasina-harikara.jpg',
+     share:'🎵 ಕನಸಿನ ಹರಿಕಾರ (Kanasina Harikara) — a Kannada song dedicated to Narendra Sir (BAIO Learning System). Watch it!'}
+  ];
+  var fr=document.getElementById('vsongFrame'); if(!fr) return;
+  var pick=document.getElementById('vsongPick'), cur=0;
+  pick.innerHTML=VIDEOS.map(function(v,i){ return '<button type="button" role="tab" data-i="'+i+'">'+v.label+'</button>'; }).join('');
+  function show(i){
+    cur=i; var v=VIDEOS[i];
+    pick.querySelectorAll('button').forEach(function(b){ var on=+b.dataset.i===i; b.classList.toggle('on',on); b.setAttribute('aria-selected',on); });
+    document.getElementById('vsongTitle').textContent=v.title;
+    document.getElementById('vsongYt').href='https://youtu.be/'+v.id;
+    fr.innerHTML='<img src="https://i.ytimg.com/vi/'+v.id+'/hqdefault.jpg" alt="'+v.title+'" loading="lazy"><button class="vplay" type="button" tabindex="-1" aria-hidden="true">▶</button>';
+    var img=fr.querySelector('img'); img.onerror=function(){ img.onerror=null; img.src=v.cover; };
+    fr.style.cursor='pointer'; fr.setAttribute('role','button'); fr.setAttribute('tabindex','0'); fr.setAttribute('aria-label','Play '+v.title);
+  }
   function play(){
     if(fr.querySelector('iframe')) return;
     var au=document.getElementById('tsAudio'); if(au && !au.paused) au.pause();
     var f=document.createElement('iframe');
-    f.src='https://www.youtube-nocookie.com/embed/'+ID+'?autoplay=1&rel=0&playsinline=1&modestbranding=1&enablejsapi=1';
-    f.title='Students Ki Jeeth video song';
+    f.src='https://www.youtube-nocookie.com/embed/'+VIDEOS[cur].id+'?autoplay=1&rel=0&playsinline=1&modestbranding=1&enablejsapi=1';
+    f.title=VIDEOS[cur].title;
     f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen';
     f.allowFullscreen=true; f.referrerPolicy='strict-origin-when-cross-origin';
     fr.innerHTML=''; fr.appendChild(f); fr.style.cursor='default'; fr.removeAttribute('role'); fr.removeAttribute('tabindex');
   }
+  pick.addEventListener('click', function(e){ var b=e.target.closest('button'); if(b && +b.dataset.i!==cur) show(+b.dataset.i); });
   fr.addEventListener('click', play);
   fr.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); play(); } });
   // the song player and the video never play together
   var au=document.getElementById('tsAudio');
   if(au) au.addEventListener('play', function(){ var f=fr.querySelector('iframe'); if(f){ try{ f.contentWindow.postMessage(JSON.stringify({event:'command',func:'pauseVideo',args:[]}),'*'); }catch(e){} } });
   document.getElementById('vsongShare').addEventListener('click', function(){
-    var url='https://youtu.be/'+ID, text='🎵 Students Ki Jeeth — a song dedicated to Narendra Sir (BAIO Learning System). Watch it!';
-    if(navigator.share){ navigator.share({title:'Students Ki Jeeth', text:text, url:url}).catch(function(){}); return; }
-    window.open('https://wa.me/?text='+encodeURIComponent(text+'\n'+url), '_blank', 'noopener');
+    var v=VIDEOS[cur], url='https://youtu.be/'+v.id;
+    if(navigator.share){ navigator.share({title:v.title, text:v.share, url:url}).catch(function(){}); return; }
+    window.open('https://wa.me/?text='+encodeURIComponent(v.share+'\n'+url), '_blank', 'noopener');
   });
+  show(0);
 })();
 /* BAIO songs player: theme song + playlist (tap to play; never autoplays; plays the next song when one ends) */
 (function(){
