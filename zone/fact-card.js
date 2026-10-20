@@ -6,7 +6,7 @@
    fact = {t: 'text (may contain simple HTML)', c: 'pu2-ch3'} */
 (function(){
   var APP_URL = 'https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/';
-  var LOGO_SRC = 'zone/baio-logo.png?v=1', SIR_SRC = 'zone/narendra-sir.jpg?v=1', QR_SRC = 'zone/baio-qr.png?v=1'; /* QR opens APP_URL */
+  var LOGO_SRC = 'zone/baio-logo.png?v=1', SIR_SRC = 'zone/narendra-sir.jpg?v=1', QR_SRC = 'zone/baio-qr.png?v=2'; /* QR opens APP_URL */
   var CH = {
     'pu1-ch2':'Biological Classification','pu1-ch3':'Plant Kingdom','pu1-ch4':'Animal Kingdom',
     'pu1-ch5':'Morphology of Flowering Plants','pu1-ch6':'Anatomy of Flowering Plants','pu1-ch7':'Structural Organisation in Animals',
@@ -93,10 +93,10 @@
     x.font='700 29px '+FONT; x.fillStyle='#fff6d6'; x.fillText('Learn Biology the smart way',L+34,ay+108);
     x.font='500 21px '+FONT; x.fillStyle='#e6fff7'; x.fillText('Daily challenges · NEET/KCET practice',L+34,ay+146); x.fillText('notes · reels – free to start  👉 scan the QR',L+34,ay+174);
     var qx=R-qw; rr(x,qx,ay,qw,ah,24); x.fillStyle='#ffffff'; x.fill(); x.lineWidth=3; x.strokeStyle='#f2c14e'; x.stroke();
-    if(im&&im.qr){ x.imageSmoothingEnabled=false; x.drawImage(im.qr,qx+24,ay+14,146,146); x.imageSmoothingEnabled=true; }
-    x.font='800 19px '+FONT; x.fillStyle='#0d2b23'; x.textAlign='center'; x.fillText('SCAN TO JOIN',qx+qw/2,ay+182); x.textAlign='left';
+    if(im&&im.qr){ x.save(); rr(x,qx+4,ay+4,qw-8,qw-30,20); x.clip(); x.drawImage(im.qr,qx+12,ay+2,qw-24,qw-24); x.restore(); }
+    x.font='800 19px '+FONT; x.fillStyle='#0d2b23'; x.textAlign='center'; x.fillText('SCAN TO JOIN',qx+qw/2,ay+186); x.textAlign='left';
     /* socials */
-    var so=[['ig','IG','@new_gen_bioguru'],['yt','▶','@biogurunarendrasir'],['tg','✈','t.me/BAIO_Learning_System'],['wa','✆','BAIO WhatsApp Channel']];
+    var so=[['ig','IG','@new_gen_bioguru'],['yt','▶','@biogurunarendrasir'],['tg','✈','t.me/BAIO_Learning_System'],['wa','✆','BioGuru Narendra Sir']];
     var col={ig:null,yt:'#e53935',tg:'#29a9eb',wa:'#25d366'};
     so.forEach(function(s,i){
       var sx=L+(i%2)*483, syy=ay+ah+18+Math.floor(i/2)*54;
