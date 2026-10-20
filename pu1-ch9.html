@@ -578,10 +578,28 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
 .cn-bar-l{font-size:12px;color:var(--ink-dim);margin-right:2px;}
 .cn-jump{min-width:30px;height:30px;border-radius:8px;border:1px solid var(--line,rgba(127,127,127,.35));background:transparent;color:inherit;font:inherit;font-size:12px;cursor:pointer;}
 .cn-jump:hover{border-color:var(--gold);color:var(--gold);}
-.cn-pages{display:flex;flex-direction:column;gap:14px;}
+.cn-pages{display:flex;flex-direction:column;gap:14px;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
 .cn-page{margin:0;scroll-margin-top:120px;}
-.cn-page img{display:block;width:100%;max-width:820px;height:auto;margin:0 auto;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,.25);background:#0b1530;}
+.cn-imgwrap{position:relative;max-width:820px;margin:0 auto;border-radius:10px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.25);background:#0b1530;}
+.cn-imgwrap img{display:block;width:100%;height:auto;pointer-events:none;-webkit-user-drag:none;-webkit-touch-callout:none;}
+.cn-wm{position:absolute;inset:-20%;display:flex;flex-direction:column;justify-content:space-around;align-items:center;transform:rotate(-28deg);pointer-events:none;}
+.cn-wm span{white-space:nowrap;font:700 clamp(11px,2.6vw,20px)/1 sans-serif;color:rgba(140,140,140,.32);text-shadow:0 0 1px rgba(0,0,0,.15);letter-spacing:.5px;}
 .cn-page figcaption{text-align:center;font-size:11px;color:var(--ink-dim);margin-top:5px;}
+.cn-buy{border:1.5px dashed var(--gold);border-radius:12px;padding:12px;margin-bottom:12px;}
+.cn-buy.ok{border-style:solid;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;}
+.cn-buy-h{font-weight:700;color:var(--gold);margin-bottom:4px;}
+.cn-small{font-size:12px;color:var(--ink-dim);line-height:1.45;}
+.cn-buy-btns{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;}
+.cn-buy-btns a{text-decoration:none;}
+.cn-form{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.cn-form input{padding:9px 10px;border-radius:8px;border:1px solid var(--line,rgba(127,127,127,.35));background:transparent;color:inherit;font:inherit;font-size:13px;min-width:0;}
+.cn-form #cnName,.cn-form #cnCode,.cn-form .cn-msg{grid-column:1/-1;}
+.cn-msg{font-size:12px;color:#e05252;min-height:1em;}
+.cn-shield{display:none;flex-direction:column;position:fixed;inset:0;z-index:99999;background:#0b1530;color:#fff;font:700 20px/1.6 sans-serif;text-align:center;align-items:center;justify-content:center;cursor:pointer;}
+.cn-shield span{font-weight:400;font-size:14px;opacity:.8;}
+body.cn-hidden .cn-pages{visibility:hidden;}
+body.cn-hidden .cn-shield{display:flex;}
+@media print{ .cn-pages,.cn-wrap{display:none !important;} }
 /* One-Shot Revision */
 .os-sub{color:var(--ink-dim);font-size:13px;margin:0 0 12px;}
 .os-wrap{position:relative;}
@@ -4300,7 +4318,7 @@ function hwRow(){
 }
 function renderDownloads(){
   let html = `<div class="dl-topic-block"><div class="dl-section-title">Premium Content</div>${premiumStatusRow()}</div>`;
-  html += `<div class="dl-topic-block"><div class="dl-section-title">Study Material</div>${pdfRow('colour_notes')}${pdfRow('typed_notes')}</div>`;
+  html += `<div class="dl-topic-block"><div class="dl-section-title">Study Material</div><div class="dl-row"><div class="dl-info"><div class="t">🎨 Colour Notes – Biomolecules</div><div class="d">12 full-colour pages · free to read in the app · download ₹100</div></div><div class="dl-btns"><button class="dl-btn view" onclick="switchTab('colournotes')">Open</button></div></div>${pdfRow('typed_notes')}</div>`;
   html += `<div class="dl-topic-block"><div class="dl-section-title">Narendra Sir's Handwritten Notes</div>${hwRow()}</div>`;
   const worksheetRows = DATA.topics.filter(t => TOPIC_WORKSHEET_FILES[t.id]).map(t => pdfRow(TOPIC_WORKSHEET_FILES[t.id])).join('');
   if(worksheetRows){
@@ -4309,25 +4327,124 @@ function renderDownloads(){
   document.getElementById('content').innerHTML = html;
 }
 
-/* ---------------- COLOUR NOTES (12-page NEET short notes, shown as scrollable page images) ---------------- */
-DATA.pdfs.colour_notes = {title:"Narendra Sir's Colour Notes – Biomolecules", desc:'12 full-colour pages · NEET short notes · tables, structures &amp; key takeaways', section:'study', data:'pu1-ch9-assets/pdf-colour_notes.pdf?v=1'};
+/* ---------------- COLOUR NOTES (12-page NEET short notes) ----------------
+   Reading is free for everyone. The download costs ₹100 and unlocks with a
+   name/section/roll code (content key CH9-PU1-COLOURNOTES in ns-gen.html).
+   The PDF is built on the student's device and stamped with the buyer's name.
+   Screen protection: the student's name as a watermark on every page; long-press
+   and right-click saving blocked; pages hidden whenever the app loses focus,
+   PrintScreen is pressed or the page is printed.
+   NOTE: no website can fully block phone screenshots or screen recording. The
+   watermark makes any leaked copy traceable to the student who shared it. */
 const COLOUR_NOTES_PAGES = 12;
+const CN_UNLOCK_KEY = 'pu1ch9_colour_notes_unlock';
+const CN_CONTENT_KEY = 'CH9-PU1-COLOURNOTES';
+const CN_PRICE_RUPEES = 100;
+const CN_RAZORPAY_LINK = 'YOUR_CHAPTER9_COLOUR_NOTES_LINK_HERE';
+function cnPageSrc(i){ return `pu1-ch9-assets/colour-notes/page-${String(i).padStart(2,'0')}.jpg?v=1`; }
+function cnStudent(){ try{ return JSON.parse(localStorage.getItem(STUDENT_KEY)||'null')||{}; }catch(e){ return {}; } }
+function cnGetUnlock(){ try{ return JSON.parse(localStorage.getItem(CN_UNLOCK_KEY)||'null'); }catch(e){ return null; } }
+function cnQualifies(){ const u=cnGetUnlock(); return !!(u && u.unlocked); }
+function cnWatermarkText(){
+  const st=cnStudent(), u=cnGetUnlock()||{};
+  const name=String(u.name||st.name||'').trim(), roll=String(u.roll||st.roll||'').trim();
+  return (name ? name + (roll?' · '+roll:'') : 'BAIO Learning System') + ' · Narendra Sir';
+}
+function cnEscape(t){ return String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function cnPayWaLink(){
+  const st=cnStudent();
+  const msg='Hi Narendra Sir, I paid ₹'+CN_PRICE_RUPEES+' for the Biomolecules Colour Notes download (Chapter 9).\n\nName: '+(st.name||'')+'\nSection: '+(st.section||'')+'\nRoll No: '+(st.roll||'')+'\n\n(Attaching my payment screenshot below)';
+  return 'https://wa.me/919008968389?text='+encodeURIComponent(msg);
+}
+function cnDownloadBox(){
+  if(cnQualifies()) return `<div class="cn-buy ok"><div><b>🔓 Download unlocked</b><div class="cn-small">Your PDF carries your name on every page.</div></div><button type="button" class="dl-btn dl" id="cnDlBtn" onclick="cnDownload()">⬇ Download PDF</button></div>`;
+  const st=cnStudent(), payReady = CN_RAZORPAY_LINK.indexOf('YOUR_')!==0;
+  return `<div class="cn-buy"><div class="cn-buy-h">🔒 Download PDF – ₹${CN_PRICE_RUPEES}</div>
+    <div class="cn-small">Reading here is free. To keep the notes offline, pay ₹${CN_PRICE_RUPEES} and send Narendra Sir the payment screenshot on WhatsApp. He'll send you an unlock code.</div>
+    <div class="cn-buy-btns">${payReady?`<a class="dl-btn dl" href="${CN_RAZORPAY_LINK}" target="_blank" rel="noopener">Pay ₹${CN_PRICE_RUPEES}</a>`:''}<a class="dl-btn view" href="${cnPayWaLink()}" target="_blank" rel="noopener">💬 Send payment on WhatsApp</a></div>
+    <div class="cn-form"><input id="cnName" placeholder="Full name" value="${cnEscape(st.name||'')}"><input id="cnSection" placeholder="Section" value="${cnEscape(st.section||'')}"><input id="cnRoll" placeholder="Roll number" value="${cnEscape(st.roll||'')}"><input id="cnCode" placeholder="Unlock code (e.g. ABCD-EFGH)" autocomplete="off"><button type="button" class="dl-btn dl" onclick="cnSubmit()">Unlock</button><div class="cn-msg" id="cnMsg"></div></div></div>`;
+}
+function cnSave(o){ try{ localStorage.setItem(CN_UNLOCK_KEY, JSON.stringify(Object.assign({unlocked:true,ts:Date.now()},o))); }catch(e){} }
+function cnSubmit(){
+  const v=id=>((document.getElementById(id)||{}).value||'').trim();
+  const name=v('cnName'), section=v('cnSection'), roll=v('cnRoll'), code=v('cnCode').toUpperCase();
+  const m=document.getElementById('cnMsg');
+  if(!code){ m.textContent='Please enter your unlock code.'; return; }
+  if(code===HW_MASTER_CODE){ cnSave({method:'master',name:name||'Narendra Sir',roll}); renderColourNotes(); return; }
+  if(!name||!section||!roll){ m.textContent='Fill in name, section and roll number exactly as you gave them to Narendra Sir.'; return; }
+  if(computeStudentCode(name,roll,section,CN_CONTENT_KEY)===code){ cnSave({method:'code',name,roll,section}); renderColourNotes(); return; }
+  m.textContent='That code does not match this name, section and roll number. Check the spelling, or ask Narendra Sir.';
+}
+window.cnSubmit=cnSubmit;
+function cnLoadImg(src){ return new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=src; }); }
+async function cnDownload(){
+  if(!cnQualifies()) return;
+  if(typeof window.jspdf==='undefined'){ alert('The PDF tool did not load. Check your internet and try again.'); return; }
+  const btn=document.getElementById('cnDlBtn'); const orig=btn?btn.textContent:'';
+  const wm=cnWatermarkText();
+  try{
+    const { jsPDF } = window.jspdf; const pdf=new jsPDF({unit:'pt',format:'a4',compress:true});
+    const W=pdf.internal.pageSize.getWidth(), H=pdf.internal.pageSize.getHeight();
+    for(let i=1;i<=COLOUR_NOTES_PAGES;i++){
+      if(btn) btn.textContent='Preparing '+i+'/'+COLOUR_NOTES_PAGES+'…';
+      const im=await cnLoadImg(cnPageSrc(i));
+      const c=document.createElement('canvas'); c.width=im.naturalWidth; c.height=im.naturalHeight;
+      const x=c.getContext('2d'); x.drawImage(im,0,0);
+      x.save(); x.globalAlpha=0.12; x.fillStyle='#000'; x.font='bold '+Math.round(c.width/26)+'px sans-serif'; x.textAlign='center';
+      x.translate(c.width/2,c.height/2); x.rotate(-Math.PI/6);
+      for(let k=-4;k<=4;k++) x.fillText(wm, 0, k*c.height/6);
+      x.restore();
+      x.fillStyle='rgba(0,0,0,.6)'; x.fillRect(0,c.height-34,c.width,34); x.fillStyle='#fff'; x.font='15px sans-serif'; x.textAlign='center';
+      x.fillText('Licensed to '+wm+' · Not for sharing', c.width/2, c.height-12);
+      if(i>1) pdf.addPage();
+      const r=Math.min(W/c.width,H/c.height), w=c.width*r, h=c.height*r;
+      pdf.addImage(c.toDataURL('image/jpeg',0.85),'JPEG',(W-w)/2,(H-h)/2,w,h);
+    }
+    pdf.save('Biomolecules_Colour_Notes_Narendra_Sir.pdf');
+    if(btn){ btn.textContent='Downloaded ✓'; setTimeout(()=>btn.textContent=orig,2000); }
+  }catch(e){ if(btn) btn.textContent=orig; alert('Download failed. Please check your internet and try again.'); }
+}
+window.cnDownload=cnDownload;
 function renderColourNotes(){
-  let pages = '';
+  const wm=cnEscape(cnWatermarkText());
+  const wmRows=Array.from({length:9},()=>`<span>${wm} &nbsp;&nbsp; ${wm}</span>`).join('');
+  let pages='';
   for(let i=1;i<=COLOUR_NOTES_PAGES;i++){
-    const n = String(i).padStart(2,'0'), src = `pu1-ch9-assets/colour-notes/page-${n}.jpg?v=1`;
-    pages += `<figure class="cn-page" id="cnp${i}"><a href="${src}" target="_blank" rel="noopener" title="Open full size to zoom"><img src="${src}" alt="Biomolecules colour notes, page ${i} of ${COLOUR_NOTES_PAGES}" loading="${i<=2?'eager':'lazy'}" decoding="async" width="1100" height="1450"></a><figcaption>Page ${i} / ${COLOUR_NOTES_PAGES}</figcaption></figure>`;
+    pages += `<figure class="cn-page" id="cnp${i}"><div class="cn-imgwrap"><img src="${cnPageSrc(i)}" alt="Biomolecules colour notes, page ${i} of ${COLOUR_NOTES_PAGES}" loading="${i<=2?'eager':'lazy'}" decoding="async" draggable="false" width="1100" height="1450"><div class="cn-wm" aria-hidden="true">${wmRows}</div></div><figcaption>Page ${i} / ${COLOUR_NOTES_PAGES}</figcaption></figure>`;
   }
-  const jump = Array.from({length:COLOUR_NOTES_PAGES},(_,k)=>`<button type="button" class="cn-jump" onclick="document.getElementById('cnp${k+1}').scrollIntoView({behavior:'smooth',block:'start'})">${k+1}</button>`).join('');
-  document.getElementById('content').innerHTML = `<div class="setup-card cn-wrap">
-    <h3 style="color:var(--gold);margin-bottom:4px;">\u{1F3A8} Colour Notes – Biomolecules</h3>
-    <div style="color:var(--ink-dim);font-size:12px;margin-bottom:10px;">NEET short notes by Narendra Sir · ${COLOUR_NOTES_PAGES} pages · scroll down to read, tap a page to open it full size and zoom.</div>
-    <div class="cn-bar"><span class="cn-bar-l">Go to page:</span>${jump}<button type="button" class="dl-btn dl" id="dlbtn_colour_notes_top" onclick="downloadPdf('colour_notes','dlbtn_colour_notes_top')">⬇ PDF</button></div>
-    <div class="cn-pages">${pages}</div>
+  const jump=Array.from({length:COLOUR_NOTES_PAGES},(_,k)=>`<button type="button" class="cn-jump" onclick="document.getElementById('cnp${k+1}').scrollIntoView({behavior:'smooth',block:'start'})">${k+1}</button>`).join('');
+  document.getElementById('content').innerHTML = `<div class="setup-card cn-wrap" id="cnWrap">
+    <h3 style="color:var(--gold);margin-bottom:4px;">🎨 Colour Notes – Biomolecules</h3>
+    <div style="color:var(--ink-dim);font-size:12px;margin-bottom:10px;">NEET short notes by Narendra Sir · ${COLOUR_NOTES_PAGES} pages · free to read here, just scroll down.</div>
+    ${cnDownloadBox()}
+    <div class="cn-bar"><span class="cn-bar-l">Go to page:</span>${jump}</div>
+    <div class="cn-pages" oncontextmenu="return false">${pages}</div>
+    <div class="cn-shield" id="cnShield">🔒 Notes hidden<br><span>Tap here to continue reading</span></div>
     <div style="text-align:center;margin-top:14px;"><button type="button" class="dl-btn view" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</button></div>
   </div>`;
+  cnArmProtection();
 }
 window.renderColourNotes = renderColourNotes;
+let cnArmed=false;
+function cnHide(){ document.body.classList.add('cn-hidden'); }
+function cnShow(){ document.body.classList.remove('cn-hidden'); }
+function cnArmProtection(){
+  if(cnArmed) return; cnArmed=true;
+  const active=()=>currentTab==='colournotes';
+  document.addEventListener('visibilitychange',()=>{ if(active() && document.hidden) cnHide(); });
+  window.addEventListener('blur',()=>{ if(active()) cnHide(); });
+  window.addEventListener('pagehide',()=>{ if(active()) cnHide(); });
+  document.addEventListener('click',e=>{ if(e.target.closest && e.target.closest('#cnShield')) cnShow(); });
+  document.addEventListener('keydown',e=>{
+    if(!active()) return;
+    const k=(e.key||'').toLowerCase();
+    if(k==='printscreen' || ((e.ctrlKey||e.metaKey) && (k==='p'||k==='s')) || (e.metaKey && e.shiftKey && ['3','4','5','s'].includes(k))){
+      cnHide(); e.preventDefault();
+    }
+  });
+  document.addEventListener('keyup',e=>{ if(active() && (e.key||'').toLowerCase()==='printscreen'){ cnHide(); try{ navigator.clipboard && navigator.clipboard.writeText(''); }catch(_){} } });
+  document.addEventListener('dragstart',e=>{ if(active() && e.target.closest && e.target.closest('.cn-pages')) e.preventDefault(); });
+}
 
 /* ---------------- ROUTER ---------------- */
 /* ---------------- KCET PRACTICE ---------------- */
