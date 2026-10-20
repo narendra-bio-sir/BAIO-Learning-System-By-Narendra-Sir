@@ -573,6 +573,15 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
 .ppt-explain.on{background:var(--teal);color:#fff;}
 .ppt-talk-opt{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink);}
 .ppt-talk-opt select{max-width:210px;padding:4px 6px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);}
+/* Colour Notes */
+.cn-bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:12px;}
+.cn-bar-l{font-size:12px;color:var(--ink-dim);margin-right:2px;}
+.cn-jump{min-width:30px;height:30px;border-radius:8px;border:1px solid var(--line,rgba(127,127,127,.35));background:transparent;color:inherit;font:inherit;font-size:12px;cursor:pointer;}
+.cn-jump:hover{border-color:var(--gold);color:var(--gold);}
+.cn-pages{display:flex;flex-direction:column;gap:14px;}
+.cn-page{margin:0;scroll-margin-top:120px;}
+.cn-page img{display:block;width:100%;max-width:820px;height:auto;margin:0 auto;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,.25);background:#0b1530;}
+.cn-page figcaption{text-align:center;font-size:11px;color:var(--ink-dim);margin-top:5px;}
 /* One-Shot Revision */
 .os-sub{color:var(--ink-dim);font-size:13px;margin:0 0 12px;}
 .os-wrap{position:relative;}
@@ -1282,6 +1291,7 @@ const TABS = [
   {id:'badges', label:'Milestones'},
   {id:'progress', label:'Progress'},
   {id:'study', label:'Study Mode'},
+  {id:'colournotes', label:'🎨 Colour Notes'},
   {id:'oneshot', label:'One-Shot Revision'},
   {id:'podcast', label:'Audio Podcast'},
   {id:'studytips', label:'Study Tips'},
@@ -1315,7 +1325,7 @@ function esc(s){ return (s===undefined||s===null)?'':String(s); }
 /* ---- Chapter tab bar: group the tabs into categories behind a dropdown,
    so the long tab list no longer needs one long scrolling row. ---- */
 const TAB_CATEGORIES = [
-  {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','oneshot','concepts','podcast','studytips','boardimp','diagrams']},
+  {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','colournotes','oneshot','concepts','podcast','studytips','boardimp','diagrams']},
   {id:'practice', label:'Practice', icon:'✍️', tabs:['flashcards','mcq','writeit','revision']},
   {id:'test', label:'Test Prep', icon:'\u{1F3AF}', tabs:['neet','kcet','papergen']},
   {id:'explore', label:'Explore', icon:'\u{1F50D}', tabs:['tree','compare','mindmap','classppt','glossary']},
@@ -4290,7 +4300,7 @@ function hwRow(){
 }
 function renderDownloads(){
   let html = `<div class="dl-topic-block"><div class="dl-section-title">Premium Content</div>${premiumStatusRow()}</div>`;
-  html += `<div class="dl-topic-block"><div class="dl-section-title">Study Material</div>${pdfRow('typed_notes')}</div>`;
+  html += `<div class="dl-topic-block"><div class="dl-section-title">Study Material</div>${pdfRow('colour_notes')}${pdfRow('typed_notes')}</div>`;
   html += `<div class="dl-topic-block"><div class="dl-section-title">Narendra Sir's Handwritten Notes</div>${hwRow()}</div>`;
   const worksheetRows = DATA.topics.filter(t => TOPIC_WORKSHEET_FILES[t.id]).map(t => pdfRow(TOPIC_WORKSHEET_FILES[t.id])).join('');
   if(worksheetRows){
@@ -4298,6 +4308,26 @@ function renderDownloads(){
   }
   document.getElementById('content').innerHTML = html;
 }
+
+/* ---------------- COLOUR NOTES (12-page NEET short notes, shown as scrollable page images) ---------------- */
+DATA.pdfs.colour_notes = {title:"Narendra Sir's Colour Notes – Biomolecules", desc:'12 full-colour pages · NEET short notes · tables, structures &amp; key takeaways', section:'study', data:'pu1-ch9-assets/pdf-colour_notes.pdf?v=1'};
+const COLOUR_NOTES_PAGES = 12;
+function renderColourNotes(){
+  let pages = '';
+  for(let i=1;i<=COLOUR_NOTES_PAGES;i++){
+    const n = String(i).padStart(2,'0'), src = `pu1-ch9-assets/colour-notes/page-${n}.jpg?v=1`;
+    pages += `<figure class="cn-page" id="cnp${i}"><a href="${src}" target="_blank" rel="noopener" title="Open full size to zoom"><img src="${src}" alt="Biomolecules colour notes, page ${i} of ${COLOUR_NOTES_PAGES}" loading="${i<=2?'eager':'lazy'}" decoding="async" width="1100" height="1450"></a><figcaption>Page ${i} / ${COLOUR_NOTES_PAGES}</figcaption></figure>`;
+  }
+  const jump = Array.from({length:COLOUR_NOTES_PAGES},(_,k)=>`<button type="button" class="cn-jump" onclick="document.getElementById('cnp${k+1}').scrollIntoView({behavior:'smooth',block:'start'})">${k+1}</button>`).join('');
+  document.getElementById('content').innerHTML = `<div class="setup-card cn-wrap">
+    <h3 style="color:var(--gold);margin-bottom:4px;">\u{1F3A8} Colour Notes – Biomolecules</h3>
+    <div style="color:var(--ink-dim);font-size:12px;margin-bottom:10px;">NEET short notes by Narendra Sir · ${COLOUR_NOTES_PAGES} pages · scroll down to read, tap a page to open it full size and zoom.</div>
+    <div class="cn-bar"><span class="cn-bar-l">Go to page:</span>${jump}<button type="button" class="dl-btn dl" id="dlbtn_colour_notes_top" onclick="downloadPdf('colour_notes','dlbtn_colour_notes_top')">⬇ PDF</button></div>
+    <div class="cn-pages">${pages}</div>
+    <div style="text-align:center;margin-top:14px;"><button type="button" class="dl-btn view" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</button></div>
+  </div>`;
+}
+window.renderColourNotes = renderColourNotes;
 
 /* ---------------- ROUTER ---------------- */
 /* ---------------- KCET PRACTICE ---------------- */
@@ -5300,6 +5330,7 @@ function renderContent(){
   if(currentTab==='badges') renderBadgesCard();
   else if(currentTab==='progress') renderProgress();
   else if(currentTab==='study') renderStudy();
+  else if(currentTab==='colournotes') renderColourNotes();
   else if(currentTab==='podcast') renderPodcast();
   else if(currentTab==='studytips') renderStudyTips();
   else if(currentTab==='pacing') renderPacing();
