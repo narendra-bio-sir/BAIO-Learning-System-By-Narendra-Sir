@@ -144,7 +144,7 @@
       pick.querySelectorAll('.fc-opt').forEach(function(b){ b.onclick=function(){ sel=b.getAttribute('data-t'); try{ localStorage.setItem('baio_fact_card_theme',sel); }catch(e){} pick.querySelectorAll('.fc-opt').forEach(function(o){ o.classList.toggle('on',o===b); }); }; });
       ov.querySelector('.fc-go').disabled=false; ov.querySelector('.fc-dl').disabled=false;
     });
-    var txt='💡 Bio Fact of the Day: '+plain(fact.t)+'\n\nLearn Biology the smart way with Narendra Sir – join BAIO Learning System 👇\n'+APP_URL;
+    var txt='Learn Biology the smart way with Narendra Sir – join BAIO Learning System 👇\n'+APP_URL;
     ov.querySelector('.fc-go').onclick=function(){
       toBlob(canv[sel]).then(function(b){
         var file=new File([b],'BAIO_Fact_of_the_Day.png',{type:'image/png'});
