@@ -6,7 +6,7 @@
    fact = {t: 'text (may contain simple HTML)', c: 'pu2-ch3'} */
 (function(){
   var APP_URL = 'https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/';
-  var LOGO_SRC = 'zone/baio-logo.png?v=1', SIR_SRC = 'zone/narendra-sir.jpg?v=1', QR_SRC = 'zone/baio-qr.png?v=2'; /* QR opens APP_URL */
+  var LOGO_SRC = 'zone/baio-logo.png?v=2', SIR_SRC = 'zone/narendra-sir.jpg?v=1', QR_SRC = 'zone/baio-qr.png?v=2'; /* QR opens APP_URL */
   var CH = {
     'pu1-ch2':'Biological Classification','pu1-ch3':'Plant Kingdom','pu1-ch4':'Animal Kingdom',
     'pu1-ch5':'Morphology of Flowering Plants','pu1-ch6':'Anatomy of Flowering Plants','pu1-ch7':'Structural Organisation in Animals',
@@ -53,9 +53,9 @@
     x.fillStyle=T.dots; for(var dy=18;dy<H;dy+=36) for(var dx=18;dx<W;dx+=36){ x.beginPath(); x.arc(dx,dy,2,0,7); x.fill(); }
     var L=70, R=W-70;
     /* header: logo + brand */
-    x.save(); x.shadowColor='rgba(0,0,0,0.35)'; x.shadowBlur=24; x.shadowOffsetY=8; x.beginPath(); x.arc(L+75,127,81,0,7); x.fillStyle=T.ring; x.fill(); x.restore();
-    if(logo){ x.save(); x.beginPath(); x.arc(L+75,127,75,0,7); x.clip(); x.drawImage(logo,L,52,150,150); x.restore(); }
-    else { x.beginPath(); x.arc(L+75,127,75,0,7); x.fillStyle='#fff'; x.fill(); x.fillStyle='#14324a'; x.font='800 54px '+FONT; x.textAlign='center'; x.fillText('BAIO',L+75,145); x.textAlign='left'; }
+    x.save(); x.shadowColor='rgba(0,0,0,0.30)'; x.shadowBlur=22; x.shadowOffsetY=8; rr(x,L+2,54,146,146,36); x.fillStyle='#ffffff'; x.fill(); x.restore();
+    if(logo){ x.save(); rr(x,L+8,60,134,134,30); x.clip(); x.drawImage(logo,L+8,60,134,134); x.restore(); }
+    else { rr(x,L+8,60,134,134,30); x.fillStyle='#118c75'; x.fill(); x.fillStyle='#fff'; x.font='800 84px Georgia, serif'; x.textAlign='center'; x.fillText('B',L+75,157); x.textAlign='left'; }
     x.textBaseline='alphabetic';
     x.font='800 50px '+FONT; x.fillStyle=T.ink; x.fillText('BAIO',L+176,124); var bw=x.measureText('BAIO ').width; x.fillStyle=T.gold; x.fillText('Learning System',L+176+bw,124);
     x.font='500 23px '+FONT; x.fillStyle=T.sub; x.fillText('Biology All In One · Maximum Results. Zero Wasted Effort.',L+176,165);
