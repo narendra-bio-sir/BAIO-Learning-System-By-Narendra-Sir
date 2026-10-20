@@ -88,9 +88,12 @@
     /* call to action + QR */
     var ay=sy+sh+20, ah=194, qw=194, cw=R-L-qw-18, ag=x.createLinearGradient(L,0,L+cw,0); ag.addColorStop(0,'#20be96'); ag.addColorStop(1,'#13a37f');
     rr(x,L,ay,cw,ah,28); x.fillStyle=ag; x.fill();
-    x.font='800 42px '+FONT; x.fillStyle='#ffffff'; x.fillText('🚀 Join BAIO today!',L+34,ay+62);
-    x.font='700 29px '+FONT; x.fillStyle='#fff6d6'; x.fillText('Learn Biology the smart way',L+34,ay+108);
-    x.font='500 21px '+FONT; x.fillStyle='#e6fff7'; x.fillText('Daily challenges · NEET/KCET practice',L+34,ay+146); x.fillText('notes · reels – free to start  👉 scan the QR',L+34,ay+174);
+    /* fill the whole green box: each line is sized to the box width */
+    function fit(t,w,max,min){ var z=max; for(;z>min;z--){ x.font=w+' '+z+'px '+FONT; if(x.measureText(t).width<=cw-60) break; } return z; }
+    fit('🚀 Join BAIO today!','800',52,36); x.fillStyle='#ffffff'; x.fillText('🚀 Join BAIO today!',L+30,ay+60);
+    fit('Learn Biology the smart way','700',38,26); x.fillStyle='#fff6d6'; x.fillText('Learn Biology the smart way',L+30,ay+110);
+    fit('Daily challenges · NEET/KCET practice · notes','500',26,18); x.fillStyle='#e6fff7'; x.fillText('Daily challenges · NEET/KCET practice · notes',L+30,ay+148);
+    fit('reels – free to start  👉 scan the QR','700',26,18); x.fillStyle='#ffffff'; x.fillText('reels – free to start  👉 scan the QR',L+30,ay+180);
     var qx=R-qw; rr(x,qx,ay,qw,ah,24); x.fillStyle='#ffffff'; x.fill(); x.lineWidth=3; x.strokeStyle='#f2c14e'; x.stroke();
     if(im&&im.qr){ x.save(); rr(x,qx+4,ay+4,qw-8,qw-30,20); x.clip(); x.drawImage(im.qr,qx+12,ay+2,qw-24,qw-24); x.restore(); }
     x.font='800 19px '+FONT; x.fillStyle='#0d2b23'; x.textAlign='center'; x.fillText('SCAN TO JOIN',qx+qw/2,ay+186); x.textAlign='left';
