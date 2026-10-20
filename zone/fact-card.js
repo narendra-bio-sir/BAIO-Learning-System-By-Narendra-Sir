@@ -58,7 +58,7 @@
     else { rr(x,L+8,60,134,134,30); x.fillStyle='#118c75'; x.fill(); x.fillStyle='#fff'; x.font='800 84px Georgia, serif'; x.textAlign='center'; x.fillText('B',L+75,157); x.textAlign='left'; }
     x.textBaseline='alphabetic';
     x.font='800 50px '+FONT; x.fillStyle=T.ink; x.fillText('BAIO',L+176,124); var bw=x.measureText('BAIO ').width; x.fillStyle=T.gold; x.fillText('Learning System',L+176+bw,124);
-    x.font='500 23px '+FONT; x.fillStyle=T.sub; x.fillText('Biology All In One · Maximum Results. Zero Wasted Effort.',L+176,165);
+    x.font='500 23px '+FONT; x.fillStyle=T.sub; x.fillText('Biology All In One · Learn. Analyse. Improve. Achieve.',L+176,165);
     /* tag + date */
     var tg=x.createLinearGradient(L,0,L+480,0); tg.addColorStop(0,'#f2c14e'); tg.addColorStop(1,'#ff9f43');
     rr(x,L,242,482,74,37); x.fillStyle=tg; x.fill();
@@ -67,7 +67,6 @@
     /* fact card */
     var cy=344, ch=440;
     rr(x,L,cy,R-L,ch,40); x.fillStyle=T.cardFill; x.fill(); x.lineWidth=2; x.strokeStyle=T.cardLine; x.stroke();
-    x.save(); x.globalAlpha=0.85; x.font='700 200px Georgia, serif'; x.fillStyle=T.gold; x.textAlign='right'; x.fillText('”',R-40,cy+165); x.restore();
     x.font='700 30px '+FONT; x.fillStyle=T.accent; x.fillText('DID YOU KNOW?',L+66,cy+92);
     var text=plain(fact.t), chap=CH[fact.c]||'', maxW=R-L-132, top=cy+118, bottom=cy+ch-(chap?100:44), size=56, lines, lh;
     for(;size>=28;size-=2){ x.font='700 '+size+'px '+FONT; lines=wrap(x,text,maxW); lh=Math.round(size*1.26); if(lines.length*lh<=bottom-top) break; }
