@@ -211,6 +211,7 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
 <div class="modal" id="modal" hidden><button class="x" id="mx" aria-label="Close">✕</button><div id="mbody" style="display:contents"></div></div>
 <div class="toast" id="toast"></div>
 <script src="zone/content.js?v=1"></script>
+<script src="zone/fact-card.js?v=1"></script>
 <script>
 (function(){
   var KEY='baio_theme', btn=document.getElementById('themeToggle');
@@ -397,7 +398,7 @@ function daily(B){
 }
 function factCard(){
   const F=ZONE.FACTS, d=Math.floor((Date.now()+330*60000)/864e5), f=F[d%F.length];
-  return `<div class="zcard"><div class="qhead"><span>💡 FACT OF THE DAY</span></div><p style="font:600 16px/1.5 Inter;color:var(--ink);margin-top:8px">${f.t}</p></div>`;
+  return `<div class="zcard"><div class="qhead"><span>💡 FACT OF THE DAY</span><button class="zbtn alt" style="padding:6px 12px;font-size:13px" onclick="baioFactShare(ZONE.FACTS[${d%F.length}])">📤 Share</button></div><p style="font:600 16px/1.5 Inter;color:var(--ink);margin-top:8px">${f.t}</p></div>`;
 }
 
 /* ---- 📝 chapter test ---- */
