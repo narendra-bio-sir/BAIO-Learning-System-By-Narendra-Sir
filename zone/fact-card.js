@@ -6,7 +6,7 @@
    fact = {t: 'text (may contain simple HTML)', c: 'pu2-ch3'} */
 (function(){
   var APP_URL = 'https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/';
-  var LOGO_SRC = 'zone/baio-logo.png?v=1';
+  var LOGO_SRC = 'zone/baio-logo.png?v=1', SIR_SRC = 'zone/narendra-sir.jpg?v=1', QR_SRC = 'zone/baio-qr.png?v=1'; /* QR opens APP_URL */
   var CH = {
     'pu1-ch2':'Biological Classification','pu1-ch3':'Plant Kingdom','pu1-ch4':'Animal Kingdom',
     'pu1-ch5':'Morphology of Flowering Plants','pu1-ch6':'Anatomy of Flowering Plants','pu1-ch7':'Structural Organisation in Animals',
@@ -26,7 +26,8 @@
   };
   var FONT = "Poppins, 'Segoe UI', Roboto, system-ui, sans-serif";
   var logoP = null, fontP = null;
-  function loadLogo(){ if(!logoP) logoP = new Promise(function(res){ var i=new Image(); i.onload=function(){res(i);}; i.onerror=function(){res(null);}; i.src=LOGO_SRC; }); return logoP; }
+  function img(src){ return new Promise(function(res){ var i=new Image(); i.onload=function(){res(i);}; i.onerror=function(){res(null);}; i.src=src; }); }
+  function loadLogo(){ if(!logoP) logoP = Promise.all([img(LOGO_SRC),img(SIR_SRC),img(QR_SRC)]).then(function(a){ return {logo:a[0],sir:a[1],qr:a[2]}; }); return logoP; }
   function loadFont(){
     if(fontP) return fontP;
     fontP = new Promise(function(res){
@@ -43,8 +44,8 @@
   function wrap(x,text,maxW){ var words=text.split(' '), lines=[], cur=''; words.forEach(function(w){ var t=cur?cur+' '+w:w; if(x.measureText(t).width>maxW && cur){ lines.push(cur); cur=w; } else cur=t; }); if(cur) lines.push(cur); return lines; }
   function dateStr(){ try{ return new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric',timeZone:'Asia/Kolkata'}); }catch(e){ return new Date().toDateString(); } }
 
-  function draw(fact, theme, logo){
-    var T=THEMES[theme], W=1080, H=1350, c=document.createElement('canvas'); c.width=W; c.height=H;
+  function draw(fact, theme, im){
+    var logo=im&&im.logo, T=THEMES[theme], W=1080, H=1350, c=document.createElement('canvas'); c.width=W; c.height=H;
     var x=c.getContext('2d');
     var g=x.createLinearGradient(0,0,W*0.55,H); g.addColorStop(0,T.bg[0]); g.addColorStop(0.55,T.bg[1]); g.addColorStop(1,T.bg[2]); x.fillStyle=g; x.fillRect(0,0,W,H);
     var r1=x.createRadialGradient(W*0.85,-H*0.08,0,W*0.85,-H*0.08,820); r1.addColorStop(0,T.glowA); r1.addColorStop(1,'rgba(0,0,0,0)'); x.fillStyle=r1; x.fillRect(0,0,W,H);
@@ -64,39 +65,45 @@
     x.font='800 30px '+FONT; x.fillStyle='#1b1300'; if('letterSpacing' in x) x.letterSpacing='3px'; x.fillText('💡 BIO FACT OF THE DAY',L+30,290); if('letterSpacing' in x) x.letterSpacing='0px';
     x.font='500 24px '+FONT; x.fillStyle=T.dim; x.textAlign='right'; x.fillText(dateStr(),R,288); x.textAlign='left';
     /* fact card */
-    var cy=344, ch=480;
+    var cy=344, ch=440;
     rr(x,L,cy,R-L,ch,40); x.fillStyle=T.cardFill; x.fill(); x.lineWidth=2; x.strokeStyle=T.cardLine; x.stroke();
     x.save(); x.globalAlpha=0.85; x.font='700 200px Georgia, serif'; x.fillStyle=T.gold; x.textAlign='right'; x.fillText('”',R-40,cy+165); x.restore();
-    x.font='700 30px '+FONT; x.fillStyle=T.accent; x.fillText('DID YOU KNOW?',L+66,cy+96);
-    var text=plain(fact.t), chap=CH[fact.c]||'', maxW=R-L-132, top=cy+130, bottom=cy+ch-(chap?110:50), size=58, lines, lh;
-    for(;size>=30;size-=2){ x.font='700 '+size+'px '+FONT; lines=wrap(x,text,maxW); lh=Math.round(size*1.28); if(lines.length*lh<=bottom-top) break; }
+    x.font='700 30px '+FONT; x.fillStyle=T.accent; x.fillText('DID YOU KNOW?',L+66,cy+92);
+    var text=plain(fact.t), chap=CH[fact.c]||'', maxW=R-L-132, top=cy+118, bottom=cy+ch-(chap?100:44), size=56, lines, lh;
+    for(;size>=28;size-=2){ x.font='700 '+size+'px '+FONT; lines=wrap(x,text,maxW); lh=Math.round(size*1.26); if(lines.length*lh<=bottom-top) break; }
     x.fillStyle=T.ink; var ty=top+size; lines.forEach(function(ln,i){ x.fillText(ln,L+66,ty+i*lh); });
     if(chap){
       var label=(fact.c.indexOf('pu1')===0?'I PUC':'II PUC')+' · '+chap; x.font='600 24px '+FONT; var lw=x.measureText(label).width+44;
-      rr(x,L+66,cy+ch-90,Math.min(lw,R-L-132),50,25); x.fillStyle=T.chipBg; x.fill(); x.fillStyle=T.chipInk; x.fillText(label,L+88,cy+ch-56);
+      rr(x,L+66,cy+ch-84,Math.min(lw,R-L-132),50,25); x.fillStyle=T.chipBg; x.fill(); x.fillStyle=T.chipInk; x.fillText(label,L+88,cy+ch-50);
     }
-    /* Narendra Sir */
-    var sy=cy+ch+24;
-    rr(x,L,sy,R-L,164,28); x.fillStyle=T.sirFill; x.fill(); x.lineWidth=1.5; x.strokeStyle=T.sirLine; x.stroke();
-    var av=x.createLinearGradient(L+28,sy+40,L+112,sy+124); av.addColorStop(0,'#f2c14e'); av.addColorStop(1,'#ff9f43');
-    x.beginPath(); x.arc(L+70,sy+82,42,0,7); x.fillStyle=av; x.fill();
-    x.font='44px '+FONT; x.textAlign='center'; x.fillText('🧬',L+70,sy+98); x.textAlign='left';
-    x.font='800 36px '+FONT; x.fillStyle=T.ink; x.fillText('Narendra Sir',L+136,sy+58);
-    x.font='500 23px '+FONT; x.fillStyle=T.dim; x.fillText('M.Sc Biochemistry · B.Ed · KSET (Life Science)',L+136,sy+98); x.fillText('Biology Lecturer · Founder/CEO, BAIO Learning System',L+136,sy+132);
-    /* call to action */
-    var ay=sy+184, ag=x.createLinearGradient(L,0,R,0); ag.addColorStop(0,'#20be96'); ag.addColorStop(1,'#13a37f');
-    rr(x,L,ay,R-L,144,28); x.fillStyle=ag; x.fill();
-    x.textAlign='center'; x.font='800 38px '+FONT; x.fillStyle='#ffffff'; x.fillText('🚀 Join BAIO – learn Biology the smart way!',W/2,ay+64);
-    x.font='500 24px '+FONT; x.fillStyle='#e6fff7'; x.fillText('Daily challenges · NEET/KCET practice · notes · reels – free to start',W/2,ay+108); x.textAlign='left';
+    /* Narendra Sir with photo */
+    var sy=cy+ch+22, sh=176, pr=66, pcx=L+24+pr, pcy=sy+sh/2;
+    rr(x,L,sy,R-L,sh,28); x.fillStyle=T.sirFill; x.fill(); x.lineWidth=1.5; x.strokeStyle=T.sirLine; x.stroke();
+    var av=x.createLinearGradient(pcx-pr,pcy-pr,pcx+pr,pcy+pr); av.addColorStop(0,'#f2c14e'); av.addColorStop(1,'#ff9f43');
+    x.beginPath(); x.arc(pcx,pcy,pr+5,0,7); x.fillStyle=av; x.fill();
+    if(im&&im.sir){ x.save(); x.beginPath(); x.arc(pcx,pcy,pr,0,7); x.clip(); x.drawImage(im.sir,pcx-pr,pcy-pr,pr*2,pr*2); x.restore(); }
+    else { x.font='60px '+FONT; x.textAlign='center'; x.fillText('🧬',pcx,pcy+20); x.textAlign='left'; }
+    var tx=pcx+pr+28;
+    x.font='800 38px '+FONT; x.fillStyle=T.ink; x.fillText('Narendra Sir',tx,sy+62);
+    x.font='500 23px '+FONT; x.fillStyle=T.dim; x.fillText('M.Sc Biochemistry · B.Ed · KSET (Life Science)',tx,sy+104); x.fillText('Biology Lecturer · Founder/CEO, BAIO Learning System',tx,sy+138);
+    /* call to action + QR */
+    var ay=sy+sh+20, ah=194, qw=194, cw=R-L-qw-18, ag=x.createLinearGradient(L,0,L+cw,0); ag.addColorStop(0,'#20be96'); ag.addColorStop(1,'#13a37f');
+    rr(x,L,ay,cw,ah,28); x.fillStyle=ag; x.fill();
+    x.font='800 42px '+FONT; x.fillStyle='#ffffff'; x.fillText('🚀 Join BAIO today!',L+34,ay+62);
+    x.font='700 29px '+FONT; x.fillStyle='#fff6d6'; x.fillText('Learn Biology the smart way',L+34,ay+108);
+    x.font='500 21px '+FONT; x.fillStyle='#e6fff7'; x.fillText('Daily challenges · NEET/KCET practice',L+34,ay+146); x.fillText('notes · reels – free to start  👉 scan the QR',L+34,ay+174);
+    var qx=R-qw; rr(x,qx,ay,qw,ah,24); x.fillStyle='#ffffff'; x.fill(); x.lineWidth=3; x.strokeStyle='#f2c14e'; x.stroke();
+    if(im&&im.qr){ x.imageSmoothingEnabled=false; x.drawImage(im.qr,qx+24,ay+14,146,146); x.imageSmoothingEnabled=true; }
+    x.font='800 19px '+FONT; x.fillStyle='#0d2b23'; x.textAlign='center'; x.fillText('SCAN TO JOIN',qx+qw/2,ay+182); x.textAlign='left';
     /* socials */
     var so=[['ig','IG','@new_gen_bioguru'],['yt','▶','@biogurunarendrasir'],['tg','✈','t.me/BAIO_Learning_System'],['wa','✆','BAIO WhatsApp Channel']];
     var col={ig:null,yt:'#e53935',tg:'#29a9eb',wa:'#25d366'};
     so.forEach(function(s,i){
-      var sx=L+(i%2)*483, syy=ay+166+Math.floor(i/2)*58;
-      rr(x,sx,syy,46,46,12);
-      if(s[0]==='ig'){ var ig=x.createLinearGradient(sx,syy+46,sx+46,syy); ig.addColorStop(0,'#f9a825'); ig.addColorStop(0.5,'#e91e63'); ig.addColorStop(1,'#8e24aa'); x.fillStyle=ig; } else x.fillStyle=col[s[0]];
-      x.fill(); x.fillStyle='#fff'; x.font='800 21px '+FONT; x.textAlign='center'; x.fillText(s[1],sx+23,syy+31); x.textAlign='left';
-      x.font='600 24px '+FONT; x.fillStyle=T.ink; x.fillText(s[2],sx+60,syy+32);
+      var sx=L+(i%2)*483, syy=ay+ah+18+Math.floor(i/2)*54;
+      rr(x,sx,syy,44,44,12);
+      if(s[0]==='ig'){ var ig=x.createLinearGradient(sx,syy+44,sx+44,syy); ig.addColorStop(0,'#f9a825'); ig.addColorStop(0.5,'#e91e63'); ig.addColorStop(1,'#8e24aa'); x.fillStyle=ig; } else x.fillStyle=col[s[0]];
+      x.fill(); x.fillStyle='#fff'; x.font='800 20px '+FONT; x.textAlign='center'; x.fillText(s[1],sx+22,syy+30); x.textAlign='left';
+      x.font='600 24px '+FONT; x.fillStyle=T.ink; x.fillText(s[2],sx+58,syy+31);
     });
     return c;
   }
