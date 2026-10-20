@@ -4330,26 +4330,25 @@ function renderDownloads(){
 /* ---------------- COLOUR NOTES (12-page NEET short notes) ----------------
    Reading is free for everyone. The download costs ₹100 and unlocks with a
    name/section/roll code (content key CH9-PU1-COLOURNOTES in ns-gen.html).
-   The PDF is built on the student's device and stamped with the buyer's name.
-   Screen protection: the student's name as a watermark on every page; long-press
+   The PDF is built on the student's device with the BAIO brand + Narendra Sir's
+   credentials stamped on every page.
+   Screen protection: brand/credentials watermark on every page; long-press
    and right-click saving blocked; pages hidden whenever the app loses focus,
    PrintScreen is pressed or the page is printed.
    NOTE: no website can fully block phone screenshots or screen recording. The
-   watermark makes any leaked copy traceable to the student who shared it. */
+   watermark keeps the brand on any copy that leaks. */
 const COLOUR_NOTES_PAGES = 12;
 const CN_UNLOCK_KEY = 'pu1ch9_colour_notes_unlock';
 const CN_CONTENT_KEY = 'CH9-PU1-COLOURNOTES';
 const CN_PRICE_RUPEES = 100;
-const CN_RAZORPAY_LINK = 'YOUR_CHAPTER9_COLOUR_NOTES_LINK_HERE';
+const CN_RAZORPAY_LINK = 'https://rzp.io/rzp/ZFZzLN9e'; /* same ₹100 link as the other I PUC notes */
 function cnPageSrc(i){ return `pu1-ch9-assets/colour-notes/page-${String(i).padStart(2,'0')}.jpg?v=1`; }
 function cnStudent(){ try{ return JSON.parse(localStorage.getItem(STUDENT_KEY)||'null')||{}; }catch(e){ return {}; } }
 function cnGetUnlock(){ try{ return JSON.parse(localStorage.getItem(CN_UNLOCK_KEY)||'null'); }catch(e){ return null; } }
 function cnQualifies(){ const u=cnGetUnlock(); return !!(u && u.unlocked); }
-function cnWatermarkText(){
-  const st=cnStudent(), u=cnGetUnlock()||{};
-  const name=String(u.name||st.name||'').trim(), roll=String(u.roll||st.roll||'').trim();
-  return (name ? name + (roll?' · '+roll:'') : 'BAIO Learning System') + ' · Narendra Sir';
-}
+const CN_BRAND_LINE = 'BAIO Learning System · Narendra Sir';
+const CN_CRED_LINE = 'M.Sc Biochemistry, B.Ed, KSET · Biology Lecturer · Founder/CEO';
+function cnWatermarkText(){ return CN_BRAND_LINE + ' · ' + CN_CRED_LINE; }
 function cnEscape(t){ return String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function cnPayWaLink(){
   const st=cnStudent();
@@ -4357,10 +4356,10 @@ function cnPayWaLink(){
   return 'https://wa.me/919008968389?text='+encodeURIComponent(msg);
 }
 function cnDownloadBox(){
-  if(cnQualifies()) return `<div class="cn-buy ok"><div><b>🔓 Download unlocked</b><div class="cn-small">Your PDF carries your name on every page.</div></div><button type="button" class="dl-btn dl" id="cnDlBtn" onclick="cnDownload()">⬇ Download PDF</button></div>`;
+  if(cnQualifies()) return `<div class="cn-buy ok"><div><b>🔓 Download unlocked</b><div class="cn-small">Thank you! The PDF is yours to study offline.</div></div><button type="button" class="dl-btn dl" id="cnDlBtn" onclick="cnDownload()">⬇ Download PDF</button></div>`;
   const st=cnStudent(), payReady = CN_RAZORPAY_LINK.indexOf('YOUR_')!==0;
   return `<div class="cn-buy"><div class="cn-buy-h">🔒 Download PDF – ₹${CN_PRICE_RUPEES}</div>
-    <div class="cn-small">Reading here is free. To keep the notes offline, pay ₹${CN_PRICE_RUPEES} and send Narendra Sir the payment screenshot on WhatsApp. He'll send you an unlock code.</div>
+    <div class="cn-small">Reading here is free. To keep the notes offline, pay ₹${CN_PRICE_RUPEES}, then send Narendra Sir the payment screenshot on WhatsApp. He'll send your personal unlock code.</div>
     <div class="cn-buy-btns">${payReady?`<a class="dl-btn dl" href="${CN_RAZORPAY_LINK}" target="_blank" rel="noopener">Pay ₹${CN_PRICE_RUPEES}</a>`:''}<a class="dl-btn view" href="${cnPayWaLink()}" target="_blank" rel="noopener">💬 Send payment on WhatsApp</a></div>
     <div class="cn-form"><input id="cnName" placeholder="Full name" value="${cnEscape(st.name||'')}"><input id="cnSection" placeholder="Section" value="${cnEscape(st.section||'')}"><input id="cnRoll" placeholder="Roll number" value="${cnEscape(st.roll||'')}"><input id="cnCode" placeholder="Unlock code (e.g. ABCD-EFGH)" autocomplete="off"><button type="button" class="dl-btn dl" onclick="cnSubmit()">Unlock</button><div class="cn-msg" id="cnMsg"></div></div></div>`;
 }
@@ -4390,12 +4389,12 @@ async function cnDownload(){
       const im=await cnLoadImg(cnPageSrc(i));
       const c=document.createElement('canvas'); c.width=im.naturalWidth; c.height=im.naturalHeight;
       const x=c.getContext('2d'); x.drawImage(im,0,0);
-      x.save(); x.globalAlpha=0.12; x.fillStyle='#000'; x.font='bold '+Math.round(c.width/26)+'px sans-serif'; x.textAlign='center';
+      x.save(); x.globalAlpha=0.11; x.fillStyle='#000'; x.font='bold '+Math.round(c.width/26)+'px sans-serif'; x.textAlign='center';
       x.translate(c.width/2,c.height/2); x.rotate(-Math.PI/6);
-      for(let k=-4;k<=4;k++) x.fillText(wm, 0, k*c.height/6);
+      for(let k=-4;k<=4;k++){ x.fillText(CN_BRAND_LINE, 0, k*c.height/6); x.font=Math.round(c.width/42)+'px sans-serif'; x.fillText(CN_CRED_LINE, 0, k*c.height/6+c.width/30); x.font='bold '+Math.round(c.width/26)+'px sans-serif'; }
       x.restore();
       x.fillStyle='rgba(0,0,0,.6)'; x.fillRect(0,c.height-34,c.width,34); x.fillStyle='#fff'; x.font='15px sans-serif'; x.textAlign='center';
-      x.fillText('Licensed to '+wm+' · Not for sharing', c.width/2, c.height-12);
+      x.fillText('© '+wm+' · Not for sharing', c.width/2, c.height-12);
       if(i>1) pdf.addPage();
       const r=Math.min(W/c.width,H/c.height), w=c.width*r, h=c.height*r;
       pdf.addImage(c.toDataURL('image/jpeg',0.85),'JPEG',(W-w)/2,(H-h)/2,w,h);
