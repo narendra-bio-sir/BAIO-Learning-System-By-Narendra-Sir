@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<title>Word Puzzles | BAIO Game Zone</title>
+<meta name="description" content="Chapter-wise Biology crosswords, word search and match-the-pairs for I PUC and II PUC — BAIO by Narendra Sir.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="game.css?v=1">
+<style>
+.xw{display:grid;gap:2px;margin:12px auto 0;width:max-content;max-width:100%;touch-action:manipulation}
+.xc{position:relative;display:grid;place-items:center;background:var(--panel2);border-radius:4px;font:800 15px 'Space Grotesk',sans-serif;color:var(--ink);cursor:pointer;border:1.5px solid var(--line);user-select:none}
+.xc.blk{background:transparent;border-color:transparent;cursor:default}
+.xc i{position:absolute;left:2px;top:0;font:700 8px Inter;font-style:normal;color:var(--ink-dim)}
+.xc.word{background:var(--sel)}
+.xc.cur{border-color:var(--gold);box-shadow:inset 0 0 0 2px var(--gold)}
+.xc.bad{background:rgba(231,105,91,.25);border-color:var(--bad)}
+.xc.good{background:rgba(47,191,113,.22);border-color:var(--ok)}
+.clue-now{margin-top:10px;padding:10px 12px;border-radius:12px;background:rgba(212,175,55,.10);border:1px solid var(--gold);font:600 14px/1.45 Inter;min-height:44px}
+.kb{display:grid;gap:5px;margin-top:10px;user-select:none}
+.kb div{display:flex;gap:4px;justify-content:center}
+.kb button{flex:1;max-width:38px;min-height:44px;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:800 15px Inter;cursor:pointer;padding:0}
+.kb button.wide{max-width:64px;font-size:13px}
+.clist{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;font-size:12.5px;line-height:1.5}
+.clist h3{font-size:13px;color:var(--gold);margin-bottom:4px}
+.clist div div{cursor:pointer;padding:2px 0;color:var(--ink-dim)}
+.clist div div.solved{color:var(--ok);text-decoration:line-through}
+.ws{display:grid;gap:2px;margin:12px auto 0;width:max-content;max-width:100%;user-select:none;touch-action:manipulation}
+.wc{display:grid;place-items:center;border-radius:6px;font:800 14px 'Space Grotesk',sans-serif;cursor:pointer;background:var(--panel2);color:var(--ink)}
+.wc.start{background:var(--gold);color:#1a1406}
+.wc.found{background:rgba(47,191,113,.35)}
+.wc.flash{background:rgba(231,105,91,.35)}
+.wlist{display:grid;grid-template-columns:1fr;gap:4px;margin-top:12px}
+.wlist div{font-size:13px;padding:7px 10px;border-radius:10px;background:var(--panel2);border:1px solid var(--line)}
+.wlist div.found{border-color:var(--ok)}
+.wlist b{font-family:'Space Grotesk',sans-serif;letter-spacing:1px}
+.mp{display:grid;grid-template-columns:1fr 1.4fr;gap:8px;margin-top:12px}
+.mp .col{display:grid;gap:8px;align-content:start}
+.mp .opt{font-size:13px;text-align:left;min-height:56px}
+.mp .opt.term{font-family:'Space Grotesk',sans-serif;font-size:13.5px;text-align:center;letter-spacing:.5px}
+.mp .opt.done{background:rgba(47,191,113,.15);border-color:var(--ok);color:var(--ink);cursor:default}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow" data-i18n="eyebrow">BAIO Game Zone · every chapter</div>
+    <h1 data-i18n-html="h1">🔠 Word <span class="accent">Puzzles</span></h1>
+    <p data-i18n="intro">Crossword, word search and match-the-pairs built from the key terms of each chapter.</p>
+  </section>
+  <select class="pick" id="chap" aria-label="Chapter"></select>
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-g="xw">✏️ Crossword</button>
+    <button class="tab" data-g="ws">🔍 Word Search</button>
+    <button class="tab" data-g="mp">🔗 Match the Pairs</button>
+  </div>
+  <div id="stage"></div>
+  <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
+</div>
+<script src="common.js?v=1"></script>
+<script src="riddles.js?v=1"></script>
+<script src="words.js?v=1"></script>
+<script>
+GZ.nav();
+GZ.i18n({
+ en:{eyebrow:'BAIO Game Zone · every chapter', h1:'🔠 Word <span class="accent">Puzzles</span>', intro:'Crossword, word search and match-the-pairs built from the key terms of each chapter.'},
+ kn:{eyebrow:'BAIO ಗೇಮ್ ಝೋನ್ · ಎಲ್ಲ ಅಧ್ಯಾಯಗಳು', h1:'🔠 ಪದ <span class="accent">ಒಗಟುಗಳು</span>', intro:'ಪ್ರತಿ ಅಧ್ಯಾಯದ ಮುಖ್ಯ ಪದಗಳಿಂದ ಪದಬಂಧ, ಪದ ಹುಡುಕಾಟ ಮತ್ತು ಜೋಡಿಸಿ ಬರೆಯಿರಿ.'},
+ hi:{eyebrow:'BAIO गेम ज़ोन · हर अध्याय', h1:'🔠 शब्द <span class="accent">पहेलियाँ</span>', intro:'हर अध्याय के मुख्य शब्दों से क्रॉसवर्ड, शब्द खोज और मिलान करो।'}});
+const $=s=>document.querySelector(s), stage=$('#stage');
+let game='xw', chap=null;
+const sel=$('#chap');
+sel.innerHTML=['I PUC','II PUC'].map((p,k)=>`<optgroup label="${p}">${RIDDLES.filter(c=>c.pu===k+1).map(c=>`<option value="${c.id}">Ch ${c.ch} · ${c.t}</option>`).join('')}</optgroup>`).join('');
+const chapName=()=>{ const c=RIDDLES.find(x=>x.id===chap); return `${c.pu===1?'I PUC':'II PUC'} Ch ${c.ch} · ${c.t}`; };
+function resultCard(id,score,max,label){
+  const best=GZ.saveBest(id,score);
+  stage.innerHTML=`<div class="card result"><div class="eyebrow">${label}</div><div class="big">${score} / ${max}</div><div class="stars">${GZ.stars(score,max)}</div>
+   <p class="muted">${chapName()}<br>${GZ.rating(score,max)} · ${GZ.c('best')}: ${best}</p>
+   <div class="btns"><button class="btn primary" id="again">${GZ.c('again')}</button><button class="btn teal" id="shr">${GZ.c('share')}</button><a class="btn" href="${GZ.HUB}">${GZ.c('hub')}</a></div></div>`;
+  $('#again').onclick=()=>start(game);
+  $('#shr').onclick=()=>GZ.share(`🔠 I scored ${score}/${max} in the ${label} (${chapName()}) on BAIO Game Zone. Can you beat me?`,`games/words.html#${game}-${chap}`);
+}
+
+/* ---------- crossword ---------- */
+function buildCrossword(words){
+  const N=17; let bestGrid=null;
+  for(let attempt=0;attempt<40;attempt++){
+    const list=attempt===0?words.slice().sort((a,b)=>b[0].length-a[0].length):[...words.slice().sort((a,b)=>b[0].length-a[0].length).slice(0,1),...GZ.shuffle(words.slice().sort((a,b)=>b[0].length-a[0].length).slice(1))];
+    const g=Array.from({length:N},()=>Array(N).fill(null)), placed=[];
+    const can=(w,r,c,d)=>{ const dr=d?1:0, dc=d?0:1; let cross=0;
+      if(r<0||c<0||r+dr*(w.length-1)>=N||c+dc*(w.length-1)>=N) return -1;
+      const br=r-dr, bc=c-dc, ar=r+dr*w.length, ac=c+dc*w.length;
+      if(br>=0&&bc>=0&&g[br][bc]) return -1; if(ar<N&&ac<N&&g[ar][ac]) return -1;
+      for(let i=0;i<w.length;i++){ const rr=r+dr*i, cc=c+dc*i, ch=g[rr][cc];
+        if(ch){ if(ch!==w[i]) return -1; cross++; }
+        else { const n1r=rr+dc, n1c=cc+dr, n2r=rr-dc, n2c=cc-dr;
+          if((n1r<N&&n1c<N&&g[n1r][n1c])||(n2r>=0&&n2c>=0&&g[n2r][n2c])) return -1; } }
+      return cross; };
+    const put=(w,clue,r,c,d)=>{ for(let i=0;i<w.length;i++) g[r+(d?i:0)][c+(d?0:i)]=w[i]; placed.push({w,clue,r,c,d}); };
+    put(list[0][0],list[0][1],Math.floor(N/2),Math.floor((N-list[0][0].length)/2),0);
+    for(const [w,clue] of list.slice(1)){
+      let best=null;
+      for(let r=0;r<N;r++) for(let c=0;c<N;c++) for(const d of [0,1]){ const x=can(w,r,c,d); if(x>0 && (!best||x>best.x)) best={r,c,d,x}; }
+      if(best) put(w,clue,best.r,best.c,best.d);
+    }
+    if(!bestGrid||placed.length>bestGrid.placed.length) bestGrid={g,placed};
+    if(placed.length===words.length) break;
+  }
+  // crop
+  const {g,placed}=bestGrid; let r0=99,c0=99,r1=0,c1=0;
+  g.forEach((row,r)=>row.forEach((ch,c)=>{ if(ch){ r0=Math.min(r0,r); c0=Math.min(c0,c); r1=Math.max(r1,r); c1=Math.max(c1,c); } }));
+  placed.forEach(p=>{ p.r-=r0; p.c-=c0; });
+  placed.sort((a,b)=>a.r-b.r||a.c-b.c);
+  let n=0; const nums={}; placed.forEach(p=>{ const k=p.r+','+p.c; if(!nums[k]) nums[k]=++n; p.n=nums[k]; });
+  return {rows:r1-r0+1, cols:c1-c0+1, placed, sol:g.slice(r0,r1+1).map(row=>row.slice(c0,c1+1))};
+}
+const XW={};
+function xwStart(){
+  const P=buildCrossword(WORDS[chap]); Object.assign(XW,P,{fill:P.sol.map(r=>r.map(ch=>ch?'':null)),cur:P.placed[0],pos:0,marks:null});
+  xwDraw();
+}
+function cellsOf(p){ return Array.from({length:p.w.length},(_,i)=>[p.r+(p.d?i:0),p.c+(p.d?0:i)]); }
+function xwDraw(){
+  const cs=Math.max(20,Math.min(32,Math.floor((Math.min(window.innerWidth,760)-70)/XW.cols)));
+  const curCells=cellsOf(XW.cur).map(x=>x.join(','));
+  const numAt={}; XW.placed.forEach(p=>numAt[p.r+','+p.c]=p.n);
+  const solved=p=>cellsOf(p).every(([r,c])=>XW.fill[r][c]===XW.sol[r][c]);
+  let html='';
+  for(let r=0;r<XW.rows;r++) for(let c=0;c<XW.cols;c++){
+    const k=r+','+c;
+    if(XW.sol[r][c]===null){ html+=`<div class="xc blk"></div>`; continue; }
+    const ci=curCells.indexOf(k); const m=XW.marks?(XW.fill[r][c]===XW.sol[r][c]?'good':XW.fill[r][c]?'bad':''):'';
+    html+=`<div class="xc ${ci>-1?'word':''} ${ci===XW.pos?'cur':''} ${m}" data-k="${k}">${numAt[k]?`<i>${numAt[k]}</i>`:''}${XW.fill[r][c]||''}</div>`;
+  }
+  const across=XW.placed.filter(p=>!p.d), down=XW.placed.filter(p=>p.d);
+  const li=p=>`<div class="${solved(p)?'solved':''}" data-n="${p.n}" data-d="${p.d}">${p.n}. ${p.clue} (${p.w.length})</div>`;
+  const rows=['QWERTYUIOP','ASDFGHJKL','ZXCVBNM'];
+  stage.innerHTML=`<div class="card"><div class="bar"><b>✏️ Crossword</b><span class="muted">${XW.placed.length} words</span></div>
+   <div class="xw" style="grid-template-columns:repeat(${XW.cols},${cs}px);grid-auto-rows:${cs}px">${html}</div>
+   <div class="clue-now"><b>${XW.cur.n} ${XW.cur.d?'Down':'Across'}:</b> ${XW.cur.clue} (${XW.cur.w.length})</div>
+   <div class="kb">${rows.map((row,i)=>`<div>${i===2?'<button class="wide" data-k="⌫">⌫</button>':''}${row.split('').map(ch=>`<button data-k="${ch}">${ch}</button>`).join('')}${i===2?'<button class="wide" data-k="↻">↻</button>':''}</div>`).join('')}</div>
+   <div class="btns"><button class="btn" id="chk">${GZ.c('check')}</button><button class="btn primary" id="fin">${GZ.c('done')}</button></div>
+   <div class="clist"><div><h3>Across</h3>${across.map(li).join('')}</div><div><h3>Down</h3>${down.map(li).join('')}</div></div></div>`;
+  stage.querySelectorAll('.xc[data-k]').forEach(el=>el.onclick=()=>{
+    const [r,c]=el.dataset.k.split(',').map(Number);
+    const here=XW.placed.filter(p=>cellsOf(p).some(([a,b])=>a===r&&b===c));
+    let p;
+    if(here.includes(XW.cur)) p = XW.cellIs(r,c) ? (here.find(x=>x!==XW.cur)||XW.cur) : XW.cur; // tap again = switch direction
+    else p = here.find(x=>x.d===XW.cur.d) || here[0];
+    XW.cur=p; XW.pos=cellsOf(p).findIndex(([a,b])=>a===r&&b===c); XW.marks=null; xwDraw(); });
+  stage.querySelectorAll('.clist [data-n]').forEach(el=>el.onclick=()=>{ XW.cur=XW.placed.find(p=>p.n==el.dataset.n&&p.d==el.dataset.d); XW.pos=0; xwDraw(); window.scrollTo({top:0,behavior:'smooth'}); });
+  stage.querySelectorAll('.kb button').forEach(b=>b.onclick=()=>xwKey(b.dataset.k));
+  $('#chk').onclick=()=>{ XW.marks=true; xwDraw(); };
+  $('#fin').onclick=()=>{ const ok=XW.placed.filter(solved).length; resultCard('xw-'+chap,ok*10,XW.placed.length*10,'Crossword'); };
+}
+XW.cellIs=(r,c)=>{ const [a,b]=cellsOf(XW.cur)[XW.pos]||[]; return a===r&&b===c; };
+function xwKey(k){
+  const cells=cellsOf(XW.cur); XW.marks=null;
+  if(k==='↻'){ const [r,c]=cells[XW.pos]; const other=XW.placed.find(p=>p!==XW.cur&&cellsOf(p).some(([a,b])=>a===r&&b===c)); if(other){ XW.cur=other; XW.pos=cellsOf(other).findIndex(([a,b])=>a===r&&b===c); } return xwDraw(); }
+  if(k==='⌫'){ const [r,c]=cells[XW.pos]; if(XW.fill[r][c]) XW.fill[r][c]=''; else if(XW.pos>0){ XW.pos--; const [r2,c2]=cells[XW.pos]; XW.fill[r2][c2]=''; } return xwDraw(); }
+  const [r,c]=cells[XW.pos]; XW.fill[r][c]=k;
+  if(XW.pos<cells.length-1) XW.pos++;
+  else { // word complete → jump to the next unfinished word
+    const i=XW.placed.indexOf(XW.cur); for(let j=1;j<=XW.placed.length;j++){ const p=XW.placed[(i+j)%XW.placed.length]; if(cellsOf(p).some(([a,b])=>!XW.fill[a][b])){ XW.cur=p; XW.pos=cellsOf(p).findIndex(([a,b])=>!XW.fill[a][b]); break; } } }
+  const all=XW.placed.every(p=>cellsOf(p).every(([a,b])=>XW.fill[a][b]===XW.sol[a][b]));
+  xwDraw(); if(all) setTimeout(()=>resultCard('xw-'+chap,XW.placed.length*10,XW.placed.length*10,'Crossword'),500);
+}
+
+/* ---------- word search ---------- */
+const WS={};
+function wsStart(){
+  const N=12, DIRS=[[0,1],[1,0],[1,1],[-1,1]];
+  let grid, placed;
+  for(let t=0;t<60;t++){
+    grid=Array.from({length:N},()=>Array(N).fill('')); placed=[]; let ok=true;
+    for(const [w,clue] of WORDS[chap].slice().sort((a,b)=>b[0].length-a[0].length)){
+      let done=false;
+      for(let k=0;k<300&&!done;k++){ const [dr,dc]=GZ.pick(DIRS), r=Math.floor(Math.random()*N), c=Math.floor(Math.random()*N);
+        const er=r+dr*(w.length-1), ec=c+dc*(w.length-1); if(er<0||er>=N||ec<0||ec>=N) continue;
+        let fit=true; for(let i=0;i<w.length;i++){ const ch=grid[r+dr*i][c+dc*i]; if(ch&&ch!==w[i]){ fit=false; break; } }
+        if(!fit) continue; for(let i=0;i<w.length;i++) grid[r+dr*i][c+dc*i]=w[i];
+        placed.push({w,clue,r,c,dr,dc,found:false}); done=true; }
+      if(!done){ ok=false; break; }
+    }
+    if(ok) break;
+  }
+  const AZ='ABCDEFGHIJKLMNOPRSTUVWY'; grid=grid.map(row=>row.map(ch=>ch||AZ[Math.floor(Math.random()*AZ.length)]));
+  Object.assign(WS,{N,grid,placed,start:null,showWords:false,t0:Date.now(),miss:0}); wsDraw();
+}
+function wsDraw(msg){
+  const cs=Math.max(22,Math.min(34,Math.floor((Math.min(window.innerWidth,760)-70)/WS.N)));
+  const foundSet=new Set(); WS.placed.filter(p=>p.found).forEach(p=>{ for(let i=0;i<p.w.length;i++) foundSet.add((p.r+p.dr*i)+','+(p.c+p.dc*i)); });
+  const nf=WS.placed.filter(p=>p.found).length;
+  stage.innerHTML=`<div class="card"><div class="bar"><b>🔍 Word Search</b><span class="score">${nf} / ${WS.placed.length}</span></div>
+   <div class="muted">Tap the first letter, then the last letter of a word. Words run → ↓ ↘ ↗.</div>
+   <div class="ws" style="grid-template-columns:repeat(${WS.N},${cs}px);grid-auto-rows:${cs}px">${WS.grid.map((row,r)=>row.map((ch,c)=>`<div class="wc ${foundSet.has(r+','+c)?'found':''} ${WS.start&&WS.start[0]===r&&WS.start[1]===c?'start':''}" data-r="${r}" data-c="${c}">${ch}</div>`).join('')).join('')}</div>
+   <div id="v">${msg||''}</div>
+   <div class="btns"><button class="btn" id="sw">${WS.showWords?'🙈 Hide words':'👀 Show words (easier)'}</button><button class="btn primary" id="fin">${GZ.c('done')}</button></div>
+   <div class="wlist">${WS.placed.map(p=>`<div class="${p.found?'found':''}">${p.found||WS.showWords?`<b>${p.w}</b> — `:`<b>${p.w[0]}${'_'.repeat(p.w.length-1).split('').join(' ')}</b> — `}${p.clue}</div>`).join('')}</div></div>`;
+  $('#sw').onclick=()=>{ WS.showWords=!WS.showWords; wsDraw(); };
+  $('#fin').onclick=wsFinish;
+  stage.querySelectorAll('.wc').forEach(el=>el.onclick=()=>{
+    const r=+el.dataset.r, c=+el.dataset.c;
+    if(!WS.start){ WS.start=[r,c]; return wsDraw(); }
+    const [r0,c0]=WS.start; WS.start=null;
+    const hit=WS.placed.find(p=>!p.found&&((p.r===r0&&p.c===c0&&p.r+p.dr*(p.w.length-1)===r&&p.c+p.dc*(p.w.length-1)===c)||(p.r===r&&p.c===c&&p.r+p.dr*(p.w.length-1)===r0&&p.c+p.dc*(p.w.length-1)===c0)));
+    if(hit){ hit.found=true; if(WS.placed.every(p=>p.found)) return wsFinish(); return wsDraw(`<div class="verdict good">${GZ.c('correct')} <b>${hit.w}</b> — ${hit.clue}</div>`); }
+    WS.miss++; wsDraw(`<div class="verdict badv">No word there — try again.</div>`);
+  });
+}
+function wsFinish(){ const nf=WS.placed.filter(p=>p.found).length; const bonus=WS.showWords?0:0; resultCard('ws-'+chap,nf*10+bonus,WS.placed.length*10,'Word Search'); }
+
+/* ---------- match the pairs ---------- */
+const MP={};
+function mpStart(){ MP.rounds=[...Array(2)].map((_,i)=>GZ.shuffle(WORDS[chap]).slice(0,5)); const all=GZ.shuffle(WORDS[chap]); MP.rounds=[all.slice(0,5),all.slice(5,10)]; MP.r=0; MP.score=0; mpRound(); }
+function mpRound(){
+  if(MP.r>=MP.rounds.length) return resultCard('mp-'+chap,MP.score,100,'Match the Pairs');
+  const set=MP.rounds[MP.r]; const terms=GZ.shuffle(set), clues=GZ.shuffle(set); const st={t:null,done:new Set(),miss:{}};
+  const draw=(msg)=>{
+    stage.innerHTML=`<div class="card"><div class="bar"><b>🔗 Match the Pairs</b><span class="score">${MP.score} pts</span></div><div class="muted">Set ${MP.r+1} / 2 · tap a term, then its meaning</div>
+     <div class="mp"><div class="col">${terms.map(([w])=>`<button class="opt term ${st.done.has(w)?'done':''} ${st.t===w?'sel':''}" data-t="${w}" ${st.done.has(w)?'disabled':''}>${w}</button>`).join('')}</div>
+     <div class="col">${clues.map(([w,c])=>`<button class="opt ${st.done.has(w)?'done':''}" data-c="${w}" ${st.done.has(w)?'disabled':''}>${c}</button>`).join('')}</div></div><div id="v">${msg||''}</div></div>`;
+    stage.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{ st.t=b.dataset.t; draw(); });
+    stage.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{
+      if(!st.t){ $('#v').innerHTML='<div class="verdict info">First tap a term on the left.</div>'; return; }
+      if(b.dataset.c===st.t){ MP.score+=st.miss[st.t]?5:10; st.done.add(st.t); st.t=null;
+        if(st.done.size===set.length){ MP.r++; draw(`<div class="verdict good">${GZ.c('correct')} Set complete!</div><div class="btns"><button class="btn primary" id="nx">${MP.r<2?GZ.c('next'):GZ.c('done')}</button></div>`); $('#nx').onclick=mpRound; return; }
+        draw(); }
+      else { st.miss[st.t]=1; b.classList.add('bad'); setTimeout(()=>b.classList.remove('bad'),400); }
+    });
+  };
+  draw();
+}
+
+/* ---------- wiring ---------- */
+const STARTS={xw:xwStart,ws:wsStart,mp:mpStart};
+function start(g){ game=g; document.querySelectorAll('#tabs .tab').forEach(t=>t.classList.toggle('on',t.dataset.g===g)); try{ history.replaceState(null,'','#'+g+'-'+chap); }catch(e){} STARTS[g](); }
+document.getElementById('tabs').addEventListener('click',e=>{ const t=e.target.closest('.tab'); if(t) start(t.dataset.g); });
+sel.onchange=()=>{ chap=sel.value; try{ localStorage.setItem('baio_words_ch',chap); }catch(e){} start(game); };
+GZ.startLang();
+(function(){
+  const h=location.hash.slice(1), m=h.match(/^(xw|ws|mp)-(.+)$/);
+  let saved=null; try{ saved=localStorage.getItem('baio_words_ch'); }catch(e){}
+  chap = m && WORDS[m[2]] ? m[2] : (saved && WORDS[saved] ? saved : RIDDLES[0].id);
+  sel.value=chap; start(m?m[1]:'xw');
+})();
+</script>
+</body>
+</html>
