@@ -1,0 +1,25 @@
+/* BAIO Game Zone — "Put it in order" sets (NCERT). Steps are listed in the correct order. */
+window.SEQS = [
+ {id:'root-zones', ch:'pu1-ch5', t:'Regions of the root (from the tip)', s:['Root cap','Region of meristematic activity','Region of elongation','Region of maturation (root hairs)']},
+ {id:'cell-theory', ch:'pu1-ch8', t:'Story of the cell theory', s:['Leeuwenhoek first sees and describes a live cell','Robert Brown discovers the nucleus','Schleiden: plants are made of cells (1838)','Schwann: animals are made of cells too (1839)','Virchow: every cell comes from a pre-existing cell (1855)']},
+ {id:'body-org', ch:'pu1-ch4', t:'Levels of body organisation (simple → complex)', s:['Cellular level — sponges','Tissue level — coelenterates','Organ level — flatworms','Organ-system level — annelids, arthropods, chordates']},
+ {id:'plant-groups', ch:'pu1-ch3', t:'Plant groups (simple → complex)', s:['Algae','Bryophytes','Pteridophytes','Gymnosperms','Angiosperms']},
+ {id:'protein-levels', ch:'pu1-ch9', t:'Levels of protein structure', s:['Primary — sequence of amino acids','Secondary — helix or sheet','Tertiary — the chain folds on itself','Quaternary — two or more chains together']},
+ {id:'embryo-sac', ch:'pu2-ch1', t:'Formation of the embryo sac', s:['Megaspore mother cell forms in the nucellus','Meiosis gives four megaspores','Three degenerate; one functional megaspore remains','Three rounds of free-nuclear mitosis give 8 nuclei','Cell walls form — a 7-celled, 8-nucleate embryo sac']},
+ {id:'pollen-tube', ch:'pu2-ch1', t:'From pollination to fertilisation', s:['Pollen grain lands on the stigma','Pollen tube grows down through the style','Pollen tube enters the ovule through the micropyle','It enters a synergid through the filiform apparatus','Two male gametes are released','Syngamy and triple fusion take place']},
+ {id:'spermatogenesis', ch:'pu2-ch2', t:'Spermatogenesis', s:['Spermatogonia (2n)','Primary spermatocytes (2n)','Secondary spermatocytes (n)','Spermatids (n)','Spermatozoa (spermiogenesis)','Sperms released from the tubules (spermiation)']},
+ {id:'embryo', ch:'pu2-ch2', t:'Early development of the embryo', s:['Zygote','Cleavage','Morula (8–16 cells)','Blastocyst','Implantation in the endometrium','Inner cell mass forms the germ layers']},
+ {id:'menstrual', ch:'pu2-ch2', t:'Phases of the menstrual cycle', s:['Menstrual phase','Follicular phase','Ovulation (LH surge)','Luteal phase']},
+ {id:'hershey-chase', ch:'pu2-ch5', t:'Hershey–Chase experiment', s:['Grow phages with radioactive ³²P or ³⁵S','Let them infect E. coli','Blend to remove the viral coats','Centrifuge to separate bacteria','Radioactive ³²P is found inside the bacteria','Conclusion: DNA is the genetic material']},
+ {id:'protein-synthesis', ch:'pu2-ch5', t:'From gene to protein', s:['DNA is transcribed into hnRNA','Splicing, capping and tailing make mRNA','mRNA moves to the cytoplasm','Ribosome binds and starts at AUG','tRNAs bring amino acids; peptide bonds form','A stop codon ends translation']},
+ {id:'human-evolution', ch:'pu2-ch6', t:'Human evolution', s:['Dryopithecus and Ramapithecus (~15 mya)','Australopithecines','Homo habilis','Homo erectus','Neanderthal man','Homo sapiens']},
+ {id:'plasmodium', ch:'pu2-ch7', t:'Life cycle of Plasmodium', s:['Infected female Anopheles bites a person','Sporozoites reach the liver','Parasites multiply in liver cells','They attack red blood cells','RBCs burst: haemozoin causes chill and fever','A mosquito takes up gametocytes','Fertilisation in the mosquito\'s gut','Sporozoites gather in its salivary glands']},
+ {id:'sewage', ch:'pu2-ch8', t:'Sewage treatment', s:['Floating debris removed by filtration','Sedimentation forms primary sludge','Primary effluent goes to aeration tanks','Microbes form flocs and BOD falls','Settling tank gives activated sludge','Sludge goes to anaerobic digesters → biogas']},
+ {id:'insulin', ch:'pu2-ch10', t:'Making human insulin (Eli Lilly, 1983)', s:['Prepare DNA for chains A and B','Insert them into E. coli plasmids','E. coli makes chain A and chain B separately','Extract and purify the chains','Join them with disulphide bonds','Human insulin is ready']},
+ {id:'logistic', ch:'pu2-ch11', t:'Phases of logistic growth', s:['Lag phase','Acceleration','Deceleration','Asymptote — the carrying capacity K']},
+ {id:'decomposition', ch:'pu2-ch12', t:'Steps of decomposition', s:['Fragmentation by detritivores','Leaching of soluble nutrients','Catabolism by bacterial and fungal enzymes','Humification','Mineralisation']},
+ {id:'hydrarch', ch:'pu2-ch12', t:'Succession in water (hydrarch)', s:['Phytoplankton','Submerged plants','Submerged free-floating plants','Reed-swamp','Marsh-meadow','Scrub','Forest (climax)']},
+ {id:'food-chain', ch:'pu2-ch12', t:'A grazing food chain', s:['Grass','Grasshopper','Frog','Snake','Eagle']},
+];
+/* chromosome numbers (2n) for the Higher-or-Lower daily puzzle */
+window.CHROMO = [['Fruit fly',8],['House fly',12],['Rice',24],['Apple',34],['Cat',38],['Rat',42],['Human',46],['Potato',48],['Dog',78],['Butterfly',380],['Ophioglossum (a fern)',1260]];

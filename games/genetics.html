@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<title>Genetics Lab | BAIO Game Zone</title>
+<meta name="description" content="DNA base pairing, codon decoding, mutation detective and Punnett square games for II PUC Biology — BAIO by Narendra Sir.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="game.css?v=1">
+<style>
+.strand{display:flex;flex-wrap:wrap;justify-content:center;gap:0;margin-top:6px}
+.lbl{font:700 11px Inter;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-dim);text-align:center;margin-top:12px}
+.bonds{display:flex;justify-content:center;flex-wrap:wrap;gap:0;height:14px}
+.bonds span{width:34px;text-align:center;font:800 10px Inter;color:var(--ink-dim)}
+.codons{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:8px}
+.codon{padding:6px 8px;border-radius:10px;background:var(--panel2);border:1.5px solid var(--line);font:800 16px ui-monospace,Menlo,Consolas,monospace;letter-spacing:1px}
+.codon.cur{border-color:var(--gold);box-shadow:0 0 0 2px rgba(212,175,55,.3)}
+.codon.done{border-color:var(--ok)}
+.codon small{display:block;font:700 10.5px Inter;letter-spacing:0;color:var(--teal);text-align:center;margin-top:2px}
+.mut{background:var(--bad);color:#fff;border-radius:4px;padding:0 2px}
+.ins{background:var(--ok);color:#fff;border-radius:4px;padding:0 2px}
+.table-toggle{display:block;margin:12px auto 0;border:1px dashed var(--teal);background:transparent;color:var(--teal);border-radius:12px;padding:8px 14px;font:700 12.5px Inter;cursor:pointer}
+.ctable{display:grid;grid-template-columns:repeat(2,1fr);gap:4px 10px;margin-top:10px;font:600 11.5px ui-monospace,Menlo,Consolas,monospace;color:var(--ink-dim)}
+.ctable b{color:var(--ink)}
+.psq{display:grid;gap:6px;justify-content:center;margin:14px auto 0}
+.psq .h{display:grid;place-items:center;font:800 18px 'Space Grotesk',sans-serif;color:var(--gold);min-height:40px}
+.psq .cell{width:74px;height:62px;border-radius:12px;border:1.5px solid var(--line);background:var(--panel2);display:grid;place-items:center;font:800 18px 'Space Grotesk',sans-serif;color:var(--ink);cursor:pointer}
+.psq .cell.sel{border-color:var(--gold);box-shadow:0 0 0 2px rgba(212,175,55,.35)}
+.psq .cell.ok{border-color:var(--ok);background:rgba(47,191,113,.15)}
+.psq .cell.bad{border-color:var(--bad);background:rgba(231,105,91,.12)}
+.psq.small .cell{width:58px;height:42px;font-size:13px;cursor:default}
+.gkeys{display:flex;justify-content:center;gap:8px;margin-top:12px}
+.gkeys .btn{min-width:72px;font-size:17px}
+.q{font:700 16px/1.5 'Space Grotesk',Inter,sans-serif;margin-top:12px;text-align:center}
+.parents{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;font:800 20px 'Space Grotesk',sans-serif;margin-top:6px}
+.parents small{display:block;font:600 11.5px Inter;color:var(--ink-dim);text-align:center}
+.parents .x{color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow" data-i18n="eyebrow">BAIO Game Zone · II PUC Ch 4 &amp; 5</div>
+    <h1 data-i18n-html="h1">🧬 Genetics <span class="accent">Lab</span></h1>
+    <p data-i18n="intro">Four genetics games: pair the bases, decode the codons, catch the mutation and solve Punnett squares.</p>
+  </section>
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-g="dna">🧬 DNA Pairs</button>
+    <button class="tab" data-g="codon">🔤 Codon Decoder</button>
+    <button class="tab" data-g="mut">🕵️ Mutation Detective</button>
+    <button class="tab" data-g="punnett">🔲 Punnett Squares</button>
+  </div>
+  <div id="stage"></div>
+  <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
+</div>
+<script src="common.js?v=1"></script>
+<script>
+GZ.nav();
+GZ.i18n({
+ en:{eyebrow:'BAIO Game Zone · II PUC Ch 4 & 5', h1:'🧬 Genetics <span class="accent">Lab</span>', intro:'Four genetics games: pair the bases, decode the codons, catch the mutation and solve Punnett squares.'},
+ kn:{eyebrow:'BAIO ಗೇಮ್ ಝೋನ್ · ದ್ವಿತೀಯ ಪಿಯುಸಿ ಅಧ್ಯಾಯ 4 & 5', h1:'🧬 ಜೆನೆಟಿಕ್ಸ್ <span class="accent">ಲ್ಯಾಬ್</span>', intro:'ನಾಲ್ಕು ಆಟಗಳು: ಬೇಸ್ ಜೋಡಿಸಿ, ಕೋಡಾನ್ ಓದಿ, ಉತ್ಪರಿವರ್ತನೆ ಹಿಡಿಯಿರಿ ಮತ್ತು ಪನೆಟ್ ಚೌಕ ಬಿಡಿಸಿ.'},
+ hi:{eyebrow:'BAIO गेम ज़ोन · द्वितीय पीयूसी अध्याय 4 व 5', h1:'🧬 जेनेटिक्स <span class="accent">लैब</span>', intro:'चार खेल: बेस जोड़ो, कोडॉन पढ़ो, म्यूटेशन पकड़ो और पनेट स्क्वेयर हल करो।'}});
+
+/* ---------- genetic code ---------- */
+const AA={UUU:'Phe',UUC:'Phe',UUA:'Leu',UUG:'Leu',CUU:'Leu',CUC:'Leu',CUA:'Leu',CUG:'Leu',AUU:'Ile',AUC:'Ile',AUA:'Ile',AUG:'Met',
+GUU:'Val',GUC:'Val',GUA:'Val',GUG:'Val',UCU:'Ser',UCC:'Ser',UCA:'Ser',UCG:'Ser',CCU:'Pro',CCC:'Pro',CCA:'Pro',CCG:'Pro',
+ACU:'Thr',ACC:'Thr',ACA:'Thr',ACG:'Thr',GCU:'Ala',GCC:'Ala',GCA:'Ala',GCG:'Ala',UAU:'Tyr',UAC:'Tyr',UAA:'STOP',UAG:'STOP',
+CAU:'His',CAC:'His',CAA:'Gln',CAG:'Gln',AAU:'Asn',AAC:'Asn',AAA:'Lys',AAG:'Lys',GAU:'Asp',GAC:'Asp',GAA:'Glu',GAG:'Glu',
+UGU:'Cys',UGC:'Cys',UGA:'STOP',UGG:'Trp',CGU:'Arg',CGC:'Arg',CGA:'Arg',CGG:'Arg',AGU:'Ser',AGC:'Ser',AGA:'Arg',AGG:'Arg',
+GGU:'Gly',GGC:'Gly',GGA:'Gly',GGG:'Gly'};
+const SENSE=Object.keys(AA).filter(c=>AA[c]!=='STOP'&&c!=='AUG');
+const AAS=[...new Set(Object.values(AA).filter(a=>a!=='STOP'))];
+const translate=s=>{ const out=[]; for(let i=0;i+3<=s.length;i+=3){ const a=AA[s.slice(i,i+3)]; out.push(a); if(a==='STOP') break; } return out; };
+const codonTable=()=>{ const g={}; Object.entries(AA).forEach(([c,a])=>(g[a]=g[a]||[]).push(c)); return '<div class="ctable">'+Object.entries(g).map(([a,cs])=>`<div><b>${a}</b> ${cs.join(' ')}</div>`).join('')+'</div>'; };
+const B=(x,cls='')=>`<span class="base b-${x==='_'?'_':x} ${cls}">${x==='_'?'?':x}</span>`;
+const $=s=>document.querySelector(s);
+const stage=$('#stage');
+let game='dna';
+
+function resultCard(id,score,max,label){
+  const best=GZ.saveBest(id,score);
+  stage.innerHTML=`<div class="card result"><div class="eyebrow">${label}</div><div class="big">${score} / ${max}</div><div class="stars">${GZ.stars(score,max)}</div>
+   <p class="muted">${GZ.rating(score,max)} · ${GZ.c('best')}: ${best}</p>
+   <div class="btns"><button class="btn primary" id="again">${GZ.c('again')}</button><button class="btn teal" id="shr">${GZ.c('share')}</button><a class="btn" href="${GZ.HUB}">${GZ.c('hub')}</a></div></div>`;
+  $('#again').onclick=()=>start(game);
+  $('#shr').onclick=()=>GZ.share(`🧬 I scored ${score}/${max} in ${label} on BAIO Game Zone. Can you beat me?`,'games/genetics.html#'+game);
+}
+const head=(title,round,total,score)=>`<div class="bar"><b>${title}</b><span class="score">${score} pts</span></div><div class="muted">${GZ.t('round')} ${round} / ${total}</div><div class="prog"><i style="width:${(round-1)/total*100}%"></i></div>`;
+GZ.T.en.round='Round'; GZ.T.kn.round='ಸುತ್ತು'; GZ.T.hi.round='राउंड';
+
+/* ---------- 1. DNA base-pair puzzle ---------- */
+const PAIR={A:'T',T:'A',G:'C',C:'G'}, RPAIR={A:'U',T:'A',G:'C',C:'G'};
+const DNA={rounds:8, r:0, score:0};
+function dnaStart(){ DNA.r=0; DNA.score=0; dnaRound(); }
+function dnaRound(){
+  DNA.r++; if(DNA.r>DNA.rounds) return resultCard('gen-dna',DNA.score,DNA.rounds*10,'DNA Base-Pair Puzzle');
+  const rna = DNA.r%2===0; const len=8;
+  const top=Array.from({length:len},()=>GZ.pick('ATGC'));
+  const want=top.map(b=>(rna?RPAIR:PAIR)[b]);
+  const st={top,want,rna,got:[],miss:0};
+  const draw=()=>{
+    const bonds=top.map((b,i)=>i<st.got.length? (b==='G'||b==='C'?'≡':'=') : '').map(x=>`<span>${x}</span>`).join('');
+    stage.innerHTML=`<div class="card">${head('🧬 DNA Base-Pair Puzzle',DNA.r,DNA.rounds,DNA.score)}
+     <div class="q">${rna?'Transcribe! Build the <b>mRNA</b> made from this template strand.':'Build the <b>complementary DNA strand</b>.'}</div>
+     <div class="lbl">${rna?'Template DNA (3′ → 5′)':'DNA strand (5′ → 3′)'}</div><div class="strand">${top.map(b=>B(b)).join('')}</div>
+     <div class="bonds">${bonds}</div>
+     <div class="strand">${want.map((b,i)=>i<st.got.length?B(st.got[i]):B('_',i===st.got.length?'b-cur':'')).join('')}</div>
+     <div class="lbl">${rna?'mRNA (5′ → 3′)':'Complementary strand (3′ → 5′)'}</div>
+     <div class="keys">${(rna?'AUGC':'ATGC').split('').map(k=>`<button class="key b-${k}" data-k="${k}">${k}</button>`).join('')}</div>
+     <div id="v"></div></div>`;
+    stage.querySelectorAll('.key').forEach(k=>k.onclick=()=>press(k));
+  };
+  const press=k=>{
+    if(st.got.length>=want.length) return;
+    if(k.dataset.k===want[st.got.length]){ st.got.push(k.dataset.k); draw();
+      if(st.got.length===want.length){ const pts=Math.max(0,10-2*st.miss); DNA.score+=pts;
+        const hb=top.reduce((a,b)=>a+(b==='G'||b==='C'?3:2),0);
+        $('#v').innerHTML=`<div class="verdict good"><b>${GZ.c('correct')} +${pts}</b><br>${rna?'In RNA, <b>U</b> pairs with A (there is no T).':`This stretch has <b>${hb} hydrogen bonds</b> — A=T has 2, G≡C has 3.`}</div><div class="btns"><button class="btn primary" id="nx">${GZ.c('next')}</button></div>`;
+        stage.querySelectorAll('.key').forEach(x=>x.disabled=true); $('#nx').onclick=dnaRound; } }
+    else { st.miss++; k.classList.add('opt','bad'); setTimeout(()=>k.classList.remove('opt','bad'),400);
+      $('#v').innerHTML=`<div class="verdict badv">${top[st.got.length]} pairs with <b>${want[st.got.length]}</b>${rna?' in RNA':''}. Try again!</div>`; }
+  };
+  draw();
+}
+
+/* ---------- 2. Codon decoder ---------- */
+const COD={rounds:6, r:0, score:0};
+function codStart(){ COD.r=0; COD.score=0; codRound(); }
+function codRound(){
+  COD.r++; if(COD.r>COD.rounds) return resultCard('gen-codon',COD.score,COD.rounds*25,'Codon Decoder');
+  const cs=['AUG',GZ.pick(SENSE),GZ.pick(SENSE),GZ.pick(SENSE),GZ.pick(['UAA','UAG','UGA'])];
+  const st={cs,i:0,miss:0,showT:false};
+  const draw=(msg)=>{
+    const a=AA[cs[st.i]]||''; const opts= st.i<cs.length ? GZ.shuffle([a,...GZ.shuffle([...AAS,'STOP'].filter(x=>x!==a)).slice(0,3)]) : [];
+    stage.innerHTML=`<div class="card">${head('🔤 Codon Decoder',COD.r,COD.rounds,COD.score)}
+     <div class="q">Translate the mRNA, one codon at a time.</div>
+     <div class="lbl">mRNA 5′ → 3′</div>
+     <div class="codons">${cs.map((c,j)=>`<span class="codon ${j<st.i?'done':j===st.i?'cur':''}">${c}${j<st.i?`<small>${AA[c]}</small>`:''}</span>`).join('')}</div>
+     ${st.i<cs.length?`<div class="q">Codon <b>${cs[st.i]}</b> → ?</div><div class="opts">${opts.map(o=>`<button class="opt" data-a="${o}">${o}</button>`).join('')}</div>`:''}
+     <div id="v">${msg||''}</div>
+     <button class="table-toggle" id="tt">${st.showT?'Hide':'Show'} codon table</button>${st.showT?codonTable():''}</div>`;
+    $('#tt').onclick=()=>{ st.showT=!st.showT; draw(msg); };
+    stage.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+      if(b.dataset.a===AA[cs[st.i]]){ if(!b.dataset.w) COD.score+=5; st.i++;
+        if(st.i===cs.length){ draw(`<div class="verdict good"><b>Protein: ${translate(cs.join('')).filter(x=>x!=='STOP').join(' – ')}</b><br>AUG starts every protein (Met); ${cs[4]} is a stop codon — no tRNA reads it.</div><div class="btns"><button class="btn primary" id="nx">${GZ.c('next')}</button></div>`); $('#nx').onclick=codRound; }
+        else draw(); }
+      else { b.classList.add('bad'); b.disabled=true; stage.querySelectorAll('.opt').forEach(x=>x.dataset.w=1); }
+    });
+  };
+  draw();
+}
+
+/* ---------- 3. Mutation detective ---------- */
+const MUT={rounds:8, r:0, score:0};
+const TYPES=['Substitution (point mutation)','Insertion → frameshift','Deletion → frameshift'];
+const EFFECTS=['No change in protein','One amino acid changed','Protein stops early','All amino acids after it change'];
+function mutStart(){ MUT.r=0; MUT.score=0; mutRound(); }
+function mutRound(){
+  MUT.r++; if(MUT.r>MUT.rounds) return resultCard('gen-mut',MUT.score,MUT.rounds*20,'Mutation Detective');
+  let orig, mutd, type, pos, note='';
+  if(MUT.r===3){ // the classic: sickle-cell anaemia
+    orig=['AUG','GUG','CAC','CUG','ACU','CCU','GAG','GAG','UAA']; mutd=orig.slice(); mutd[6]='GUG'; type=0; pos=6*3+1;
+    note='This is <b>sickle-cell anaemia</b>: GAG → GUG makes valine instead of glutamic acid at the 6th position of β-globin.';
+    orig=orig.join(''); mutd=mutd.join('');
+  } else {
+    const cs=['AUG',...Array.from({length:5},()=>GZ.pick(SENSE)),'UAA']; orig=cs.join('');
+    type=GZ.pick([0,0,1,2]); pos=3+Math.floor(Math.random()*12);
+    if(type===0){ const old=orig[pos]; const nb=GZ.pick('AUGC'.split('').filter(x=>x!==old)); mutd=orig.slice(0,pos)+nb+orig.slice(pos+1); }
+    else if(type===1){ mutd=orig.slice(0,pos)+GZ.pick('AUGC')+orig.slice(pos); }
+    else mutd=orig.slice(0,pos)+orig.slice(pos+1);
+  }
+  const p1=translate(orig), p2=translate(mutd);
+  const stopEarly = p2.indexOf('STOP')>-1 && p2.indexOf('STOP')<p1.indexOf('STOP');
+  let eff = type===0 ? (stopEarly?2: p1.join()===p2.join()?0:1) : (stopEarly?2:3);
+  const chunk=(s,mark)=>{ let out=''; for(let i=0;i<s.length;i+=3){ out+='<span class="codon">'+s.slice(i,i+3).split('').map((ch,k)=>mark&&mark(i+k)?`<span class="${type===1?'ins':'mut'}">${ch}</span>`:ch).join('')+'</span>'; } return out; };
+  const st={step:0};
+  const draw=(reveal,msg)=>{
+    const mk = reveal ? (j=> type===2?false: j===pos) : null;
+    stage.innerHTML=`<div class="card">${head('🕵️ Mutation Detective',MUT.r,MUT.rounds,MUT.score)}
+     <div class="lbl">Normal mRNA</div><div class="codons">${chunk(orig)}</div><div class="muted" style="text-align:center;margin-top:4px">${p1.join(' – ')}</div>
+     <div class="lbl">Mutated mRNA</div><div class="codons">${chunk(mutd,mk)}</div>${reveal?`<div class="muted" style="text-align:center;margin-top:4px">${p2.join(' – ')}</div>`:''}
+     <div class="q">${st.step===0?'What kind of mutation is this?':'What happens to the protein?'}</div>
+     <div class="opts">${(st.step===0?TYPES:EFFECTS).map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join('')}</div><div id="v">${msg||''}</div></div>`;
+    stage.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+      const i=+b.dataset.i, right = st.step===0 ? type : eff;
+      stage.querySelectorAll('.opt').forEach(x=>x.disabled=true);
+      if(i===right){ b.classList.add('ok'); MUT.score+=10; } else { b.classList.add('bad'); stage.querySelectorAll('.opt')[right].classList.add('ok'); }
+      if(st.step===0){ st.step=1; setTimeout(()=>draw(true,`<div class="verdict ${i===right?'good':'badv'}">${i===right?GZ.c('correct'):GZ.c('wrong')} It is a <b>${TYPES[type]}</b>.${type?' One base added or lost shifts the reading frame.':' One base swapped for another.'}</div>`),700); }
+      else { $('#v').innerHTML=`<div class="verdict ${i===right?'good':'badv'}">${i===right?GZ.c('correct'):GZ.c('wrong')} ${EFFECTS[eff]}. ${note}</div><div class="btns"><button class="btn primary" id="nx">${GZ.c('next')}</button></div>`; $('#nx').onclick=mutRound; }
+    });
+  };
+  draw(false);
+}
+
+/* ---------- 4. Punnett squares ---------- */
+const TRAITS=[['T','t','tall','dwarf','plant height'],['R','r','round','wrinkled','seed shape'],['Y','y','yellow','green','seed colour'],['V','v','violet','white','flower colour']];
+const PUN={rounds:6, r:0, score:0};
+const norm=g=>g.split('').sort((a,b)=>(a===a.toLowerCase())-(b===b.toLowerCase())||a.localeCompare(b)).join('');
+const frac=(n,d)=>{ const g=(a,b)=>b?g(b,a%b):a; if(n===0) return '0'; if(n===d) return '1'; const k=g(n,d); return (n/k)+'/'+(d/k); };
+function punStart(){ PUN.r=0; PUN.score=0; punRound(); }
+function punRound(){
+  PUN.r++; if(PUN.r>PUN.rounds) return resultCard('gen-punnett',PUN.score,PUN.rounds*20,'Punnett Square Challenge');
+  const kind = PUN.r<=3 ? 'mono' : PUN.r===4 ? 'abo' : PUN.r===5 ? 'xlink' : 'di';
+  if(kind==='mono') return monoRound();
+  return quizRound(kind);
+}
+function monoRound(){
+  const [D,r,dn,rn,trait]=GZ.pick(TRAITS);
+  const pair=GZ.pick([[D+r,D+r],[D+r,r+r],[D+D,r+r],[D+D,D+r]]);
+  const g1=pair[0].split(''), g2=pair[1].split('');
+  const cells=[[g1[0],g2[0]],[g1[0],g2[1]],[g1[1],g2[0]],[g1[1],g2[1]]].map(x=>norm(x.join('')));
+  const opts=[D+D,D+r,r+r]; const st={fill:[null,null,null,null],sel:0,checked:false,miss:0};
+  const domCount=cells.filter(c=>c.includes(D)).length;
+  const draw=(msg)=>{
+    stage.innerHTML=`<div class="card">${head('🔲 Punnett Square Challenge',PUN.r,PUN.rounds,PUN.score)}
+     <div class="muted" style="text-align:center;margin-top:8px">${trait}: <b>${D}</b> = ${dn} (dominant), <b>${r}</b> = ${rn}</div>
+     <div class="parents"><span>${pair[0]}<small>${pair[0].includes(D)?dn:rn}</small></span><span class="x">×</span><span>${pair[1]}<small>${pair[1].includes(D)?dn:rn}</small></span></div>
+     <div class="q">Fill the Punnett square: tap a box, then a genotype.</div>
+     <div class="psq" style="grid-template-columns:40px 74px 74px"><div></div><div class="h">${g2[0]}</div><div class="h">${g2[1]}</div>
+       <div class="h">${g1[0]}</div>${[0,1].map(i=>cellHtml(i)).join('')}<div class="h">${g1[1]}</div>${[2,3].map(i=>cellHtml(i)).join('')}</div>
+     ${st.checked?'':`<div class="gkeys">${opts.map(o=>`<button class="btn" data-g="${o}">${o}</button>`).join('')}</div><div class="btns"><button class="btn primary" id="chk" ${st.fill.includes(null)?'disabled':''}>${GZ.c('check')}</button></div>`}
+     <div id="v">${msg||''}</div></div>`;
+    stage.querySelectorAll('.cell').forEach(c=>c.onclick=()=>{ if(st.checked) return; st.sel=+c.dataset.i; draw(); });
+    stage.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{ st.fill[st.sel]=b.dataset.g; const nx=st.fill.indexOf(null); if(nx>-1) st.sel=nx; draw(); });
+    const ck=$('#chk'); if(ck) ck.onclick=check;
+  };
+  const cellHtml=i=>`<div class="cell ${st.checked?(st.fill[i]===cells[i]?'ok':'bad'):(st.sel===i?'sel':'')}" data-i="${i}">${st.checked&&st.fill[i]!==cells[i]?cells[i]:(st.fill[i]||'')}</div>`;
+  const check=()=>{
+    st.checked=true; const right=st.fill.filter((f,i)=>f===cells[i]).length; const pts=right*2; PUN.score+=pts;
+    const ans=frac(domCount,4); const fr=GZ.shuffle([...new Set([ans,'1/4','1/2','3/4','1','0'])].filter(x=>x!==ans)).slice(0,3);
+    draw(`<div class="verdict ${right===4?'good':'info'}">${right}/4 boxes correct · +${pts}</div>
+      <div class="q">What fraction of the offspring will be <b>${dn}</b>?</div><div class="opts">${GZ.shuffle([ans,...fr]).map(o=>`<button class="opt" data-f="${o}">${o}</button>`).join('')}</div><div id="v2"></div>`);
+    stage.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{
+      stage.querySelectorAll('[data-f]').forEach(x=>x.disabled=true);
+      const ok=b.dataset.f===ans; if(ok){ b.classList.add('ok'); PUN.score+=12; } else { b.classList.add('bad'); stage.querySelector(`[data-f="${ans}"]`).classList.add('ok'); }
+      $('#v2').innerHTML=`<div class="verdict ${ok?'good':'badv'}">${ok?GZ.c('correct'):GZ.c('wrong')} ${domCount} of 4 boxes have <b>${D}</b>, so ${ans} are ${dn}.</div><div class="btns"><button class="btn primary" id="nx">${GZ.c('next')}</button></div>`;
+      $('#nx').onclick=punRound; });
+  };
+  draw();
+}
+function cross(p1,p2){ const out=[]; p1.forEach(a=>p2.forEach(b=>out.push([a,b]))); return out; }
+function quizRound(kind){
+  let title, parents, sq, q, ans, wrongs, why;
+  if(kind==='abo'){
+    const P=GZ.pick([[['Iᴬ','i'],['Iᴮ','i'],'Iᴬi (A)','Iᴮi (B)'],[['Iᴬ','Iᴮ'],['i','i'],'IᴬIᴮ (AB)','ii (O)'],[['Iᴬ','Iᴮ'],['Iᴬ','Iᴮ'],'IᴬIᴮ (AB)','IᴬIᴮ (AB)']]);
+    const kids=cross(P[0],P[1]).map(([a,b])=>{ const s=[a,b]; const hasA=s.includes('Iᴬ'), hasB=s.includes('Iᴮ'); return hasA&&hasB?'AB':hasA?'A':hasB?'B':'O'; });
+    const ORD=['A','B','AB','O']; const set=[...new Set(kids)].sort((a,b)=>ORD.indexOf(a)-ORD.indexOf(b)); ans=set.join(', ');
+    const all=['A, B, AB, O','A, B','AB, O','A, B, AB','AB','O'].filter(x=>x!==ans);
+    title='ABO blood groups'; parents=`${P[2]} × ${P[3]}`; q='Which blood groups can their children have?'; wrongs=GZ.shuffle(all).slice(0,3);
+    sq={r:P[0],c:P[1],cells:cross(P[0],P[1]).map(x=>x.join(''))}; why='Iᴬ and Iᴮ are co-dominant; i is recessive.';
+  } else if(kind==='xlink'){
+    const P=GZ.pick([[['Xᶜ','X'],['X','Y'],'Carrier mother XᶜX','Normal father XY','son','1/2'],[['X','X'],['Xᶜ','Y'],'Normal mother XX','Colour-blind father XᶜY','son','0'],[['Xᶜ','X'],['Xᶜ','Y'],'Carrier mother XᶜX','Colour-blind father XᶜY','daughter','1/2']]);
+    title='Colour blindness (X-linked recessive)'; parents=`${P[2]} × ${P[3]}`; q=`What is the chance that a <b>${P[4]}</b> is colour-blind?`; ans=P[5];
+    wrongs=['0','1/4','1/2','1','3/4'].filter(x=>x!==ans).slice(0,3);
+    sq={r:P[0],c:P[1],cells:cross(P[0],P[1]).map(x=>x.join(''))}; why=P[4]==='son'?'A son gets his only X from his mother.':'A daughter needs Xᶜ from both parents to be colour-blind.';
+  } else {
+    const opts=GZ.pick([['round and yellow','9/16'],['round and green','3/16'],['wrinkled and yellow','3/16'],['wrinkled and green','1/16']]);
+    title='Dihybrid cross'; parents='RrYy × RrYy'; q=`What fraction of the F₂ will be <b>${opts[0]}</b>?`; ans=opts[1];
+    wrongs=['9/16','3/16','1/16','1/4','3/4'].filter(x=>x!==ans).slice(0,3);
+    const gam=['RY','Ry','rY','ry']; sq={r:gam,c:gam,cells:cross(gam,gam).map(([a,b])=>norm(a[0]+b[0])+norm(a[1]+b[1]))}; why='Mendel\'s dihybrid ratio is 9 : 3 : 3 : 1.';
+  }
+  const n=sq.c.length, w=n>2?58:74;
+  stage.innerHTML=`<div class="card">${head('🔲 Punnett Square Challenge',PUN.r,PUN.rounds,PUN.score)}
+   <div class="muted" style="text-align:center;margin-top:8px">${title}</div><div class="parents">${parents}</div>
+   <div class="q">${q}</div><div class="opts">${GZ.shuffle([ans,...wrongs]).map(o=>`<button class="opt" data-f="${o}">${o}</button>`).join('')}</div><div id="v"></div></div>`;
+  stage.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{
+    stage.querySelectorAll('[data-f]').forEach(x=>x.disabled=true);
+    const ok=b.dataset.f===ans; if(ok){ b.classList.add('ok'); PUN.score+=20; } else { b.classList.add('bad'); stage.querySelector(`[data-f="${ans}"]`).classList.add('ok'); }
+    $('#v').innerHTML=`<div class="verdict ${ok?'good':'badv'}">${ok?GZ.c('correct'):GZ.c('wrong')} ${why}</div>
+     <div class="psq small" style="grid-template-columns:40px repeat(${n},${w}px)"><div></div>${sq.c.map(c=>`<div class="h" style="font-size:13px">${c}</div>`).join('')}
+     ${sq.r.map((rr,i)=>`<div class="h" style="font-size:13px">${rr}</div>`+sq.c.map((_,j)=>`<div class="cell">${sq.cells[i*n+j]}</div>`).join('')).join('')}</div>
+     <div class="btns"><button class="btn primary" id="nx">${GZ.c('next')}</button></div>`;
+    $('#nx').onclick=punRound; });
+}
+
+/* ---------- tabs ---------- */
+const STARTS={dna:dnaStart,codon:codStart,mut:mutStart,punnett:punStart};
+function start(g){ game=g; document.querySelectorAll('#tabs .tab').forEach(t=>t.classList.toggle('on',t.dataset.g===g)); try{ history.replaceState(null,'','#'+g); }catch(e){} STARTS[g](); }
+document.getElementById('tabs').addEventListener('click',e=>{ const t=e.target.closest('.tab'); if(t) start(t.dataset.g); });
+GZ.startLang();
+start(STARTS[location.hash.slice(1)]?location.hash.slice(1):'dna');
+</script>
+</body>
+</html>

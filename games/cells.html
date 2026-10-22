@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<title>Cells &amp; Trees | BAIO Game Zone</title>
+<meta name="description" content="Cell Builder, Plant vs Animal cell, Classification Tree and Food-Web Builder games — BAIO by Narendra Sir.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="game.css?v=1">
+<style>
+.cellsvg{display:block;width:100%;max-width:420px;margin:12px auto 0;background:var(--panel2);border-radius:16px;border:1px solid var(--line)}
+.cellsvg .part{opacity:0;transition:opacity .6s}
+.cellsvg .part.on{opacity:1}
+.cellsvg text{font:700 10px Inter,sans-serif;fill:var(--ink)}
+.fn{font:700 16px/1.5 'Space Grotesk',Inter,sans-serif;text-align:center;margin-top:12px;padding:12px;border-radius:14px;background:rgba(212,175,55,.10);border:1px solid var(--gold)}
+.tray{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:12px}
+.chip{padding:9px 12px;border-radius:999px;border:1.5px solid var(--line);background:var(--panel);color:var(--ink);font:700 13px Inter,sans-serif;cursor:pointer;min-height:40px}
+.chip.used{opacity:.35;cursor:default;text-decoration:line-through}
+.chip.bad{border-color:var(--bad);color:var(--bad);animation:shake .35s}
+.item{font:800 22px 'Space Grotesk',sans-serif;text-align:center;margin-top:14px}
+.item small{display:block;font:600 12.5px Inter;color:var(--ink-dim);margin-top:4px}
+.sort3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.sort3 .opt{font-size:13px;padding:12px 6px}
+.root{display:block;width:max-content;margin:14px auto 0;padding:7px 14px;border-radius:999px;background:var(--gold);color:#1a1406;font:800 13px Inter}
+.stem{width:2px;height:14px;background:var(--gold);margin:0 auto}
+.groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px;border-top:2px solid var(--gold);padding-top:10px}
+.grp{border:1.5px solid var(--line);background:var(--panel);border-radius:14px;padding:9px 6px;text-align:center;cursor:pointer;color:var(--ink);min-height:62px}
+.grp b{display:block;font:800 12.5px 'Space Grotesk',Inter,sans-serif}
+.grp .kids{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;margin-top:5px}
+.grp .kids span{font:600 10px Inter;padding:2px 6px;border-radius:8px;background:var(--sel);color:var(--ink)}
+.grp.bad{border-color:var(--bad);animation:shake .35s}
+.grp.ok{border-color:var(--ok)}
+.org{display:block;width:max-content;max-width:100%;margin:12px auto 0;padding:10px 18px;border-radius:14px;background:var(--panel2);border:2px dashed var(--gold);font:800 20px 'Space Grotesk',sans-serif}
+.web{display:block;width:100%;max-width:420px;margin:10px auto 0}
+.web .node{cursor:pointer}
+.web .node circle{fill:var(--panel);stroke:var(--line);stroke-width:2}
+.web .node.sel circle{stroke:var(--gold);stroke-width:3}
+.web .node text{font:600 10px Inter,sans-serif;fill:var(--ink);text-anchor:middle}
+.web .node .emo{font-size:20px}
+.web .arrow{stroke:var(--teal);stroke-width:2.5;fill:none}
+.chain{font:700 14px Inter;text-align:center;min-height:22px;margin-top:8px;color:var(--gold)}
+.chains{display:grid;gap:4px;margin-top:8px}
+.chains div{font:600 12.5px Inter;padding:6px 10px;border-radius:10px;background:var(--panel2);border:1px solid var(--ok)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow" data-i18n="eyebrow">BAIO Game Zone · I PUC Ch 2, 3, 4, 8 · II PUC Ch 12</div>
+    <h1 data-i18n-html="h1">🔬 Cells &amp; <span class="accent">Trees</span></h1>
+    <p data-i18n="intro">Build a cell, spot plant vs animal features, place organisms on the classification tree and build a food web.</p>
+  </section>
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-g="build">🧫 Cell Builder</button>
+    <button class="tab" data-g="pva">🌿🐾 Plant vs Animal</button>
+    <button class="tab" data-g="tree">🌳 Classification Tree</button>
+    <button class="tab" data-g="web">🕸️ Food-Web Builder</button>
+  </div>
+  <div id="stage"></div>
+  <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
+</div>
+<script src="common.js?v=1"></script>
+<script>
+GZ.nav();
+GZ.i18n({
+ en:{eyebrow:'BAIO Game Zone · I PUC Ch 2, 3, 4, 8 · II PUC Ch 12', h1:'🔬 Cells &amp; <span class="accent">Trees</span>', intro:'Build a cell, spot plant vs animal features, place organisms on the classification tree and build a food web.', round:'Item'},
+ kn:{eyebrow:'BAIO ಗೇಮ್ ಝೋನ್', h1:'🔬 ಕೋಶಗಳು &amp; <span class="accent">ವೃಕ್ಷಗಳು</span>', intro:'ಕೋಶ ಕಟ್ಟಿ, ಸಸ್ಯ–ಪ್ರಾಣಿ ಕೋಶ ವ್ಯತ್ಯಾಸ ಗುರುತಿಸಿ, ವರ್ಗೀಕರಣ ವೃಕ್ಷದಲ್ಲಿ ಜೀವಿಗಳನ್ನು ಇಡಿ ಮತ್ತು ಆಹಾರ ಜಾಲ ಕಟ್ಟಿ.', round:'ಪ್ರಶ್ನೆ'},
+ hi:{eyebrow:'BAIO गेम ज़ोन', h1:'🔬 कोशिका &amp; <span class="accent">वृक्ष</span>', intro:'कोशिका बनाओ, पादप–जंतु कोशिका का अंतर पहचानो, वर्गीकरण वृक्ष पर जीव रखो और खाद्य जाल बनाओ।', round:'प्रश्न'}});
+const $=s=>document.querySelector(s), stage=$('#stage');
+let game='build';
+function resultCard(id,score,max,label){
+  const best=GZ.saveBest(id,score);
+  stage.innerHTML=`<div class="card result"><div class="eyebrow">${label}</div><div class="big">${score} / ${max}</div><div class="stars">${GZ.stars(score,max)}</div>
+   <p class="muted">${GZ.rating(score,max)} · ${GZ.c('best')}: ${best}</p>
+   <div class="btns"><button class="btn primary" id="again">${GZ.c('again')}</button><button class="btn teal" id="shr">${GZ.c('share')}</button><a class="btn" href="${GZ.HUB}">${GZ.c('hub')}</a></div></div>`;
+  $('#again').onclick=()=>start(game);
+  $('#shr').onclick=()=>GZ.share(`🔬 I scored ${score}/${max} in ${label} on BAIO Game Zone. Can you beat me?`,'games/cells.html#'+game);
+}
+const head=(title,i,n,score)=>`<div class="bar"><b>${title}</b><span class="score">${score} pts</span></div><div class="muted">${GZ.t('round')} ${i} / ${n}</div><div class="prog"><i style="width:${(i-1)/n*100}%"></i></div>`;
+
+/* ---------- 1. Cell builder ---------- */
+const ORG={
+ wall:['Cell wall','I give the plant cell its shape and protection. I am made of cellulose.'],
+ nucleus:['Nucleus','I hold the chromatin (DNA) and control the whole cell.'],
+ chloro:['Chloroplast','I trap sunlight and make food by photosynthesis.'],
+ mito:['Mitochondrion','I make ATP by aerobic respiration — the powerhouse.'],
+ vac:['Central vacuole','I fill up to 90% of a plant cell and store sap. My membrane is the tonoplast.'],
+ golgi:['Golgi apparatus','I package and send out materials, and form glycoproteins.'],
+ er:['Endoplasmic reticulum','My rough part helps make proteins; my smooth part makes lipids.'],
+ ribo:['Ribosomes','I have no membrane and I am the site of protein synthesis.'],
+ centro:['Centrosome','My two centrioles organise the spindle during cell division.'],
+ lyso:['Lysosome','I am full of hydrolytic enzymes — the suicide bag.']
+};
+const SVGP={
+ plant:{outline:'<rect x="14" y="14" width="292" height="192" rx="14" fill="none" stroke="#9FC4B6" stroke-width="2"/>',
+  wall:'<rect x="6" y="6" width="308" height="208" rx="18" fill="none" stroke="#3fae6a" stroke-width="7"/><text x="24" y="34">cell wall</text>',
+  vac:'<ellipse cx="140" cy="112" rx="72" ry="54" fill="rgba(74,143,224,.25)" stroke="#4a8fe0" stroke-width="2"/><text x="112" y="116">vacuole</text>',
+  nucleus:'<circle cx="262" cy="64" r="26" fill="rgba(160,110,220,.35)" stroke="#a06edc" stroke-width="2"/><circle cx="266" cy="60" r="7" fill="#a06edc"/><text x="244" y="102">nucleus</text>',
+  chloro:'<g fill="rgba(63,174,106,.55)" stroke="#3fae6a" stroke-width="1.5"><ellipse cx="48" cy="60" rx="20" ry="10"/><ellipse cx="54" cy="168" rx="20" ry="10"/><ellipse cx="236" cy="176" rx="20" ry="10"/></g><g stroke="#1e6b3c" stroke-width="2"><path d="M38 60h4M46 60h4M54 60h4M44 168h4M52 168h4M60 168h4M226 176h4M234 176h4M242 176h4"/></g><text x="24" y="190">chloroplast</text>',
+  mito:'<g fill="rgba(224,140,60,.45)" stroke="#e08c3c" stroke-width="1.5"><rect x="206" y="118" width="38" height="18" rx="9"/><rect x="40" y="96" width="34" height="16" rx="8"/></g><path d="M210 127 q4 -6 8 0 t8 0 t8 0 t8 0" stroke="#e08c3c" fill="none"/><text x="206" y="150">mitochondrion</text>',
+  golgi:'<g fill="none" stroke="#e0a93a" stroke-width="3"><path d="M270 126 q16 10 32 0"/><path d="M270 134 q16 10 32 0"/><path d="M270 142 q16 10 32 0"/></g><text x="262" y="164">Golgi</text>',
+  er:'<path d="M226 40 q10 8 0 16 t0 16 t0 16" fill="none" stroke="#2EE6C5" stroke-width="2.5"/><path d="M216 44 q10 8 0 16 t0 16" fill="none" stroke="#2EE6C5" stroke-width="2.5"/><text x="180" y="40">ER</text>',
+  ribo:'<g fill="#e05d5d"><circle cx="214" cy="52" r="2.5"/><circle cx="232" cy="66" r="2.5"/><circle cx="230" cy="86" r="2.5"/><circle cx="96" cy="186" r="2.5"/><circle cx="160" cy="190" r="2.5"/><circle cx="190" cy="40" r="2.5"/></g><text x="150" y="204">ribosomes</text>'},
+ animal:{outline:'<ellipse cx="160" cy="110" rx="150" ry="100" fill="none" stroke="#9FC4B6" stroke-width="2.5"/>',
+  nucleus:'<circle cx="160" cy="110" r="32" fill="rgba(160,110,220,.35)" stroke="#a06edc" stroke-width="2"/><circle cx="164" cy="104" r="8" fill="#a06edc"/><text x="140" y="154">nucleus</text>',
+  mito:'<g fill="rgba(224,140,60,.45)" stroke="#e08c3c" stroke-width="1.5"><rect x="56" y="70" width="38" height="18" rx="9"/><rect x="230" y="150" width="36" height="17" rx="8"/></g><path d="M60 79 q4 -6 8 0 t8 0 t8 0 t8 0" stroke="#e08c3c" fill="none"/><text x="48" y="64">mitochondrion</text>',
+  centro:'<g fill="#2EE6C5"><rect x="236" y="76" width="16" height="6" rx="2"/><rect x="246" y="66" width="6" height="16" rx="2"/></g><text x="224" y="98">centrosome</text>',
+  lyso:'<g fill="rgba(231,105,91,.35)" stroke="#e05d5d"><circle cx="90" cy="150" r="9"/><circle cx="112" cy="168" r="7"/></g><text x="64" y="186">lysosome</text>',
+  golgi:'<g fill="none" stroke="#e0a93a" stroke-width="3"><path d="M206 44 q16 10 32 0"/><path d="M206 52 q16 10 32 0"/><path d="M206 60 q16 10 32 0"/></g><text x="200" y="34">Golgi</text>',
+  er:'<path d="M118 92 q-10 8 0 16 t0 16 t0 16" fill="none" stroke="#2EE6C5" stroke-width="2.5"/><path d="M106 96 q-10 8 0 16 t0 16" fill="none" stroke="#2EE6C5" stroke-width="2.5"/><text x="70" y="118">ER</text>',
+  ribo:'<g fill="#e05d5d"><circle cx="124" cy="96" r="2.5"/><circle cx="122" cy="118" r="2.5"/><circle cx="196" cy="150" r="2.5"/><circle cx="210" cy="120" r="2.5"/><circle cx="150" cy="40" r="2.5"/><circle cx="180" cy="176" r="2.5"/></g><text x="168" y="194">ribosomes</text>'}
+};
+const BLD={score:0, kind:'plant'};
+function buildStart(){
+  BLD.score=0;
+  const go=k=>{ BLD.kind=k; const parts=Object.keys(SVGP[k]).filter(x=>x!=='outline'); BLD.order=GZ.shuffle(parts); BLD.i=0; BLD.placed=[]; BLD.miss=0; buildDraw(); };
+  stage.innerHTML=`<div class="card"><h2>🧫 Cell Builder</h2><p class="sub">Read what each organelle does, then pick the right one. Every right answer adds that part to the cell until it is complete.</p>
+   <div class="btns"><button class="btn primary" id="pl">🌿 Build a plant cell</button><button class="btn primary" id="an">🐾 Build an animal cell</button></div></div>`;
+  $('#pl').onclick=()=>go('plant'); $('#an').onclick=()=>go('animal');
+}
+function buildDraw(msg){
+  const P=SVGP[BLD.kind], parts=Object.keys(P).filter(x=>x!=='outline'), n=parts.length, max=n*10;
+  if(BLD.i>=n && !msg) return resultCard('cell-build-'+BLD.kind,BLD.score,max,(BLD.kind==='plant'?'Plant':'Animal')+' Cell Builder');
+  const cur=BLD.order[BLD.i];
+  const pool=GZ.shuffle(parts.concat(BLD.kind==='plant'?['centro','lyso']:['wall','chloro','vac']));
+  stage.innerHTML=`<div class="card">${head('🧫 '+(BLD.kind==='plant'?'Plant':'Animal')+' Cell Builder',Math.min(BLD.i+1,n),n,BLD.score)}
+   <svg class="cellsvg" viewBox="0 0 320 220">${P.outline}${parts.map(p=>`<g class="part ${BLD.placed.includes(p)?'on':''}">${P[p]}</g>`).join('')}</svg>
+   ${BLD.i<n?`<div class="fn">“${ORG[cur][1]}”</div><div class="tray">${pool.map(p=>`<button class="chip ${BLD.placed.includes(p)?'used':''}" data-p="${p}" ${BLD.placed.includes(p)?'disabled':''}>${ORG[p][0]}</button>`).join('')}</div>`:''}
+   <div id="v">${msg||''}</div></div>`;
+  stage.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
+    if(c.dataset.p===cur){ const pts=BLD.miss?5:10; BLD.score+=pts; BLD.placed.push(cur); BLD.i++; BLD.miss=0;
+      const extra = BLD.i>=n ? `<div class="btns"><button class="btn primary" id="fin">${GZ.c('done')}</button></div>`:'';
+      buildDraw(`<div class="verdict good">${GZ.c('correct')} <b>${ORG[cur][0]}</b> added. +${pts}</div>${extra}`);
+      const f=$('#fin'); if(f) f.onclick=()=>resultCard('cell-build-'+BLD.kind,BLD.score,max,(BLD.kind==='plant'?'Plant':'Animal')+' Cell Builder'); }
+    else { BLD.miss++; c.classList.add('bad'); c.disabled=true;
+      const wrongWhy = (BLD.kind==='animal'&&['wall','chloro','vac'].includes(c.dataset.p)) ? ' (animal cells do not have this!)' : (BLD.kind==='plant'&&c.dataset.p==='centro') ? ' (centrioles are absent in almost all plant cells)' : '';
+      $('#v').innerHTML=`<div class="verdict badv">${GZ.c('wrong')} That is not the ${ORG[c.dataset.p][0]}${wrongWhy}.</div>`; }
+  });
+}
+
+/* ---------- 2. Plant vs animal ---------- */
+const PVA=[['Cell wall','plant','Cellulose cell wall is present only in plant cells.'],['Chloroplasts','plant','Plastids like chloroplasts are found in plant cells.'],['Large central vacuole','plant','Plant cells have one big vacuole; animal cells have small ones.'],
+ ['Plasmodesmata','plant','Cytoplasmic bridges through the cell walls of neighbouring plant cells.'],['Starch as stored food','plant','Plants store food as starch.'],['Glycogen as stored food','animal','Animals store food as glycogen.'],
+ ['Centrioles','animal','Centrioles are absent in almost all plant cells.'],['Mitochondria','both','Both plant and animal cells respire.'],['Nucleus','both','Every eukaryotic cell has a nucleus (except a few like mature RBCs).'],
+ ['Ribosomes','both','Ribosomes make proteins in every cell.'],['Golgi apparatus','both','Both cells package materials with Golgi bodies.'],['Plasma membrane','both','Every cell is bound by a plasma membrane.']];
+const PV={};
+function pvaStart(){ PV.list=GZ.shuffle(PVA); PV.i=0; PV.score=0; pvaDraw(); }
+function pvaDraw(msg){
+  if(PV.i>=PV.list.length && !msg) return resultCard('cell-pva',PV.score,PV.list.length*5,'Plant vs Animal Cell');
+  const it=PV.list[Math.min(PV.i,PV.list.length-1)];
+  stage.innerHTML=`<div class="card">${head('🌿🐾 Plant vs Animal Cell',Math.min(PV.i+1,PV.list.length),PV.list.length,PV.score)}
+   <div class="item">${it[0]}<small>Where is it found?</small></div>
+   <div class="sort3"><button class="opt" data-a="plant">🌿 Plant only</button><button class="opt" data-a="animal">🐾 Animal only</button><button class="opt" data-a="both">🔁 Both</button></div><div id="v">${msg||''}</div></div>`;
+  if(msg){ stage.querySelectorAll('.sort3 .opt').forEach(b=>{ b.disabled=true; if(b.dataset.a===it[1]) b.classList.add('ok'); }); return; }
+  stage.querySelectorAll('.sort3 .opt').forEach(b=>b.onclick=()=>{
+    const ok=b.dataset.a===it[1]; if(ok) PV.score+=5; PV.i++;
+    pvaDraw(`<div class="verdict ${ok?'good':'badv'}">${ok?GZ.c('correct'):GZ.c('wrong')} ${it[2]}</div><div class="btns"><button class="btn primary" id="nx">${PV.i<PV.list.length?GZ.c('next'):GZ.c('done')}</button></div>`);
+    if(!ok) stage.querySelector(`.sort3 .opt[data-a="${b.dataset.a}"]`).classList.add('bad');
+    $('#nx').onclick=()=>pvaDraw(); });
+}
+
+/* ---------- 3. Classification tree ---------- */
+const TREES={
+ kingdoms:{t:'Five kingdoms (I PUC Ch 2)', root:'Living organisms', groups:['Monera','Protista','Fungi','Plantae','Animalia'],
+  items:[['Nostoc','Monera','A cyanobacterium — a prokaryote.'],['Mycoplasma','Monera','A bacterium with no cell wall.'],['Euglena','Protista','A unicellular eukaryote with a pellicle.'],['Paramecium','Protista','A ciliated protozoan.'],['Plasmodium','Protista','A sporozoan protozoan.'],['Agaricus (mushroom)','Fungi','A basidiomycete fungus.'],['Yeast','Fungi','A unicellular ascomycete fungus.'],['Fern','Plantae','A pteridophyte — a plant.'],['Hydra','Animalia','A cnidarian — an animal.'],['Earthworm','Animalia','An annelid — an animal.']]},
+ plants:{t:'Plant groups (I PUC Ch 3)', root:'Plant kingdom', groups:['Algae','Bryophytes','Pteridophytes','Gymnosperms','Angiosperms'],
+  items:[['Spirogyra','Algae','A green alga (Chlorophyceae).'],['Laminaria','Algae','A brown alga (Phaeophyceae).'],['Polysiphonia','Algae','A red alga (Rhodophyceae).'],['Marchantia','Bryophytes','A liverwort.'],['Funaria','Bryophytes','A moss.'],['Selaginella','Pteridophytes','A heterosporous pteridophyte.'],['Equisetum','Pteridophytes','Horsetail — a pteridophyte.'],['Pinus','Gymnosperms','Naked seeds; needle-like leaves.'],['Cycas','Gymnosperms','Coralloid roots; unbranched stem.'],['Wolffia','Angiosperms','The smallest flowering plant.']]},
+ animals:{t:'Animal phyla (I PUC Ch 4)', root:'Animal kingdom', groups:['Porifera','Cnidaria','Platyhelminthes','Aschelminthes','Annelida','Arthropoda','Mollusca','Echinodermata','Chordata'],
+  items:[['Sycon','Porifera','A sponge with a canal system.'],['Physalia','Cnidaria','Portuguese man-of-war — has cnidoblasts.'],['Taenia (tapeworm)','Platyhelminthes','A flatworm with flame cells.'],['Ascaris','Aschelminthes','A roundworm — pseudocoelomate.'],['Nereis','Annelida','A segmented worm.'],['Limulus','Arthropoda','King crab — a living fossil with jointed legs.'],['Pila','Mollusca','Apple snail with a radula.'],['Asterias','Echinodermata','Starfish with a water vascular system.'],['Pigeon','Chordata','Has a notochord in the embryo — a bird.'],['Locusta','Arthropoda','A gregarious pest — jointed legs.'],['Octopus','Mollusca','Devil fish — a mollusc.'],['Hirudinaria','Annelida','The blood-sucking leech.']]}
+};
+const TR={};
+function treeStart(){
+  stage.innerHTML=`<div class="card"><h2>🌳 Classification Tree</h2><p class="sub">An organism appears in the middle. Tap the group it belongs to and watch the tree fill up.</p>
+   <div class="btns">${Object.entries(TREES).map(([k,v])=>`<button class="btn primary" data-t="${k}">${v.t}</button>`).join('')}</div></div>`;
+  stage.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{ TR.k=b.dataset.t; TR.list=GZ.shuffle(TREES[TR.k].items); TR.i=0; TR.score=0; TR.miss=0; TR.placed={}; treeDraw(); });
+}
+function treeDraw(msg){
+  const T=TREES[TR.k], n=TR.list.length;
+  if(TR.i>=n && !msg) return resultCard('tree-'+TR.k,TR.score,n*10,T.t);
+  const it=TR.list[Math.min(TR.i,n-1)];
+  stage.innerHTML=`<div class="card">${head('🌳 '+T.t,Math.min(TR.i+1,n),n,TR.score)}
+   ${TR.i<n?`<div class="org">${it[0]}</div>`:''}
+   <span class="root">${T.root}</span><div class="stem"></div>
+   <div class="groups">${T.groups.map(g=>`<div class="grp" data-g="${g}"><b>${g}</b><div class="kids">${(TR.placed[g]||[]).map(x=>`<span>${x}</span>`).join('')}</div></div>`).join('')}</div>
+   <div id="v">${msg||''}</div></div>`;
+  if(TR.i>=n) return;
+  stage.querySelectorAll('.grp').forEach(g=>g.onclick=()=>{
+    if(g.dataset.g===it[1]){ const pts=TR.miss?5:10; TR.score+=pts; (TR.placed[it[1]]=TR.placed[it[1]]||[]).push(it[0].split(' (')[0]); TR.i++; TR.miss=0;
+      treeDraw(`<div class="verdict good">${GZ.c('correct')} <b>${it[0]}</b> → ${it[1]}. ${it[2]} +${pts}</div><div class="btns"><button class="btn primary" id="nx">${TR.i<n?GZ.c('next'):GZ.c('done')}</button></div>`);
+      $('#nx').onclick=()=>treeDraw(); }
+    else { TR.miss++; g.classList.add('bad'); setTimeout(()=>g.classList.remove('bad'),400); $('#v').innerHTML=`<div class="verdict badv">${GZ.c('wrong')} ${it[0]} is not in ${g.dataset.g}. Try again!</div>`; }
+  });
+}
+
+/* ---------- 4. Food-web builder ---------- */
+const NODES={grass:['🌾','Grass',160,262,'Producer'],gh:['🦗','Grasshopper',70,196,'Herbivore'],rab:['🐇','Rabbit',250,196,'Herbivore'],frog:['🐸','Frog',70,122,'Carnivore'],
+ snake:['🐍','Snake',210,110,'Carnivore'],hawk:['🦅','Hawk',150,36,'Carnivore'],mush:['🍄','Mushroom',290,268,'Decomposer / detritivore'],worm:['🪱','Earthworm',30,268,'Decomposer / detritivore']};
+const EATS={gh:['grass'],rab:['grass'],frog:['gh'],snake:['frog','rab'],hawk:['snake','rab']};
+const ROLES=['Producer','Herbivore','Carnivore','Decomposer / detritivore'];
+const FW={};
+function webStart(){ FW.score=0; FW.stage=1; FW.list=GZ.shuffle(Object.keys(NODES)); FW.i=0; FW.chain=[]; FW.chains=[]; webDraw(); }
+function webSvg(){
+  const arr=[]; FW.chains.forEach(ch=>{ for(let i=0;i<ch.length-1;i++){ const a=NODES[ch[i]], b=NODES[ch[i+1]]; const k=ch[i]+'>'+ch[i+1]; if(!arr.includes(k)) arr.push(k); } });
+  FW.chain.forEach((c,i)=>{ if(i){ const k=FW.chain[i-1]+'>'+c; if(!arr.includes(k)) arr.push(k); } });
+  const line=k=>{ const [p,q]=k.split('>'), a=NODES[p], b=NODES[q]; const dx=b[2]-a[2], dy=b[3]-a[3], L=Math.hypot(dx,dy), ux=dx/L, uy=dy/L;
+    return `<line class="arrow" x1="${a[2]+ux*22}" y1="${a[3]+uy*22}" x2="${b[2]-ux*24}" y2="${b[3]-uy*24}" marker-end="url(#ah)"/>`; };
+  return `<svg class="web" viewBox="0 0 320 300"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2EE6C5"/></marker></defs>
+   ${arr.map(line).join('')}${Object.entries(NODES).map(([k,v])=>`<g class="node ${FW.chain.includes(k)?'sel':''}" data-n="${k}"><circle cx="${v[2]}" cy="${v[3]}" r="21"/><text class="emo" x="${v[2]}" y="${v[3]+7}">${v[0]}</text><text x="${v[2]}" y="${v[3]+34}">${v[1]}</text></g>`).join('')}</svg>`;
+}
+function webDraw(msg){
+  if(FW.stage===1){
+    if(FW.i>=FW.list.length){ FW.stage=2; return webDraw(`<div class="verdict info">Roles done! Now build <b>3 food chains</b> from 🌾 Grass up to 🦅 Hawk. Tap the organisms in order — energy flows from food to feeder.</div>`); }
+    const k=FW.list[FW.i], v=NODES[k];
+    stage.innerHTML=`<div class="card">${head('🕸️ Food-Web Builder · step 1: roles',FW.i+1,FW.list.length,FW.score)}${webSvg()}
+     <div class="item">${v[0]} ${v[1]}<small>What is its role in this grassland?</small></div>
+     <div class="opts">${ROLES.map(r=>`<button class="opt" data-r="${r}">${r}</button>`).join('')}</div><div id="v">${msg||''}</div></div>`;
+    stage.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{
+      if(b.dataset.r===v[4]){ FW.score+=5; FW.i++; webDraw(`<div class="verdict good">${GZ.c('correct')} ${v[1]} is a ${v[4].toLowerCase()}.</div>`); }
+      else { b.classList.add('bad'); b.disabled=true; FW.score-=0; $('#v').innerHTML=`<div class="verdict badv">${GZ.c('wrong')} Think about what ${v[1].toLowerCase()} eats.</div>`; }
+    });
+    return;
+  }
+  if(FW.chains.length>=3 && !msg) return resultCard('foodweb',FW.score,100,'Food-Web Builder');
+  stage.innerHTML=`<div class="card"><div class="bar"><b>🕸️ Food-Web Builder · step 2: chains</b><span class="score">${FW.score} pts</span></div>
+   <div class="muted">${GZ.t('round')} ${Math.min(FW.chains.length+1,3)} / 3</div>${webSvg()}
+   <div class="chain">${FW.chain.map(c=>NODES[c][1]).join(' → ')||'Tap 🌾 Grass to start a chain'}</div>
+   <div class="btns"><button class="btn" id="clr">↺ Clear chain</button></div>
+   <div class="chains">${FW.chains.map(c=>`<div>✅ ${c.map(x=>NODES[x][1]).join(' → ')}</div>`).join('')}</div><div id="v">${msg||''}</div>
+   ${FW.chains.length>=3?`<div class="btns"><button class="btn primary" id="fin">${GZ.c('done')}</button></div>`:''}</div>`;
+  $('#clr').onclick=()=>{ FW.chain=[]; webDraw(); };
+  const f=$('#fin'); if(f) f.onclick=()=>resultCard('foodweb',FW.score,100,'Food-Web Builder');
+  stage.querySelectorAll('.node').forEach(nd=>nd.onclick=()=>{
+    if(FW.chains.length>=3) return;
+    const k=nd.dataset.n;
+    if(!FW.chain.length){ if(k!=='grass'){ $('#v').innerHTML=`<div class="verdict badv">Every food chain here starts with the producer — 🌾 Grass.</div>`; return; } FW.chain=[k]; return webDraw(); }
+    const last=FW.chain[FW.chain.length-1];
+    if(!(EATS[k]||[]).includes(last)){ $('#v').innerHTML=`<div class="verdict badv">${NODES[k][1]} does not eat ${NODES[last][1].toLowerCase()} in this web. Try another!</div>`; return; }
+    FW.chain.push(k);
+    if(k==='hawk'){ const key=FW.chain.join('>');
+      if(FW.chains.some(c=>c.join('>')===key)){ FW.chain=[]; return webDraw(`<div class="verdict info">You already built that chain — find a different path!</div>`); }
+      FW.chains.push(FW.chain); FW.score+=20; FW.chain=[];
+      return webDraw(`<div class="verdict good">${GZ.c('correct')} Food chain added. +20 ${FW.chains.length>=3?'— you found all three!':''}</div>`); }
+    webDraw();
+  });
+}
+
+/* ---------- tabs ---------- */
+const STARTS={build:buildStart,pva:pvaStart,tree:treeStart,web:webStart};
+function start(g){ game=g; document.querySelectorAll('#tabs .tab').forEach(t=>t.classList.toggle('on',t.dataset.g===g)); try{ history.replaceState(null,'','#'+g); }catch(e){} STARTS[g](); }
+document.getElementById('tabs').addEventListener('click',e=>{ const t=e.target.closest('.tab'); if(t) start(t.dataset.g); });
+GZ.startLang();
+start(STARTS[location.hash.slice(1)]?location.hash.slice(1):'build');
+</script>
+</body>
+</html>

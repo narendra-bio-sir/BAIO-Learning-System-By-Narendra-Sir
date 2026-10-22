@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<title>Put It in Order | BAIO Game Zone</title>
+<meta name="description" content="Arrange the steps of Biology processes in the right order — sewage treatment, embryo sac, protein synthesis, succession and more. BAIO by Narendra Sir.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="game.css?v=1">
+<style>
+.sets{display:grid;gap:8px;margin-top:12px}
+.set{display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;min-height:56px;font:700 14px 'Space Grotesk',Inter,sans-serif}
+.set small{display:block;font:600 11.5px Inter;color:var(--ink-dim);margin-top:2px}
+.set .b{font:700 12px Inter;color:var(--teal);white-space:nowrap}
+.done-list{display:grid;gap:6px;margin-top:12px;counter-reset:s}
+.done-list div{padding:10px 12px 10px 40px;border-radius:12px;background:rgba(47,191,113,.12);border:1px solid var(--ok);font:600 14px/1.4 Inter;position:relative;animation:pop .3s}
+.done-list div::before{counter-increment:s;content:counter(s);position:absolute;left:10px;top:9px;width:22px;height:22px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font:800 12px Inter}
+.slot{padding:10px 12px;border-radius:12px;border:1.5px dashed var(--ink-dim);color:var(--ink-dim);font:600 13px Inter;text-align:center;margin-top:6px}
+.pool{display:grid;gap:8px;margin-top:12px}
+.pool .opt{text-align:left;font-weight:600;font-size:14px}
+h3.grp{font-size:13px;color:var(--gold);margin-top:16px;letter-spacing:.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow" data-i18n="eyebrow">BAIO Game Zone · sequencing</div>
+    <h1 data-i18n-html="h1">🔢 Put It in <span class="accent">Order</span></h1>
+    <p data-i18n="intro">Tap the steps of each process in the right order. Fewer mistakes, more points!</p>
+  </section>
+  <div id="stage"></div>
+  <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
+</div>
+<script src="common.js?v=1"></script>
+<script src="riddles.js?v=1"></script>
+<script src="sequences.js?v=1"></script>
+<script>
+GZ.nav();
+GZ.i18n({
+ en:{eyebrow:'BAIO Game Zone · sequencing', h1:'🔢 Put It in <span class="accent">Order</span>', intro:'Tap the steps of each process in the right order. Fewer mistakes, more points!'},
+ kn:{eyebrow:'BAIO ಗೇಮ್ ಝೋನ್', h1:'🔢 ಕ್ರಮದಲ್ಲಿ <span class="accent">ಜೋಡಿಸಿ</span>', intro:'ಪ್ರತಿ ಪ್ರಕ್ರಿಯೆಯ ಹಂತಗಳನ್ನು ಸರಿಯಾದ ಕ್ರಮದಲ್ಲಿ ಒತ್ತಿ. ಕಡಿಮೆ ತಪ್ಪು, ಹೆಚ್ಚು ಅಂಕ!'},
+ hi:{eyebrow:'BAIO गेम ज़ोन', h1:'🔢 सही <span class="accent">क्रम</span> में लगाओ', intro:'हर प्रक्रिया के चरण सही क्रम में दबाओ। कम गलतियाँ, ज़्यादा अंक!'}});
+const $=s=>document.querySelector(s), stage=$('#stage');
+const chName=id=>{ const c=RIDDLES.find(x=>x.id===id); return c?`${c.pu===1?'I PUC':'II PUC'} Ch ${c.ch} · ${c.t}`:''; };
+let queue=[], qi=0, total=0, mixed=false;
+function menu(){
+  try{ history.replaceState(null,'',location.pathname); }catch(e){}
+  const groups={}; SEQS.forEach(s=>(groups[s.ch]=groups[s.ch]||[]).push(s));
+  stage.innerHTML=`<div class="btns"><button class="btn primary" id="mix">🎲 Mixed challenge · 6 random sets</button></div>`+
+   Object.entries(groups).map(([ch,list])=>`<h3 class="grp">${chName(ch)}</h3><div class="sets">${list.map(s=>{ const b=GZ.best('seq-'+s.id); return `<button class="set" data-s="${s.id}"><span>${s.t}<small>${s.s.length} steps</small></span><span class="b">${b!=null?'★ '+b+'/10':''}</span></button>`; }).join('')}</div>`).join('');
+  $('#mix').onclick=()=>{ mixed=true; queue=GZ.shuffle(SEQS).slice(0,6); qi=0; total=0; play(); };
+  stage.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{ mixed=false; queue=[SEQS.find(s=>s.id===b.dataset.s)]; qi=0; total=0; play(); });
+}
+function play(){
+  const S=queue[qi]; const st={done:[],miss:0,pool:GZ.shuffle(S.s)};
+  try{ history.replaceState(null,'','#'+(mixed?'mix':S.id)); }catch(e){}
+  const draw=(msg)=>{
+    const left=S.s.length-st.done.length;
+    stage.innerHTML=`<div class="card"><div class="bar"><b>🔢 ${S.t}</b><span class="score">${total} pts</span></div>
+     <div class="muted">${chName(S.ch)}${mixed?` · set ${qi+1} / ${queue.length}`:''}</div>
+     <div class="done-list">${st.done.map(x=>`<div>${x}</div>`).join('')}</div>
+     ${left?`<div class="slot">Tap step ${st.done.length+1}</div>`:''}
+     <div class="pool">${st.pool.filter(x=>!st.done.includes(x)).map(x=>`<button class="opt" data-x="${GZ.esc(x)}">${x}</button>`).join('')}</div>
+     <div id="v">${msg||''}</div>
+     <div class="btns"><button class="btn" id="back">← All sets</button></div></div>`;
+    $('#back').onclick=menu;
+    stage.querySelectorAll('.pool .opt').forEach(b=>b.onclick=()=>{
+      const x=b.dataset.x;
+      if(x===S.s[st.done.length]){ st.done.push(x);
+        if(st.done.length===S.s.length){ const pts=Math.max(2,10-2*st.miss); total+=pts; const best=GZ.saveBest('seq-'+S.id,pts); qi++;
+          const last=qi>=queue.length;
+          draw(`<div class="verdict good">${GZ.c('correct')} +${pts} ${st.miss?`(${st.miss} mistake${st.miss>1?'s':''})`:'— perfect order!'}</div><div class="btns"><button class="btn primary" id="nx">${last?GZ.c('done'):GZ.c('next')}</button></div>`);
+          $('#nx').onclick=()=>last?finish():play(); return; }
+        draw(); }
+      else { st.miss++; b.classList.add('bad'); setTimeout(()=>b.classList.remove('bad'),450); $('#v').innerHTML=`<div class="verdict badv">Not yet — that comes later. Think about what happens first.</div>`; }
+    });
+  };
+  draw();
+}
+function finish(){
+  const max=queue.length*10, label=mixed?'Mixed sequencing challenge':queue[0].t;
+  if(mixed) GZ.saveBest('seq-mixed',total);
+  stage.innerHTML=`<div class="card result"><div class="eyebrow">${label}</div><div class="big">${total} / ${max}</div><div class="stars">${GZ.stars(total,max)}</div>
+   <p class="muted">${GZ.rating(total,max)}</p>
+   <div class="btns"><button class="btn primary" id="again">${GZ.c('again')}</button><button class="btn teal" id="shr">${GZ.c('share')}</button><button class="btn" id="m">← All sets</button><a class="btn" href="${GZ.HUB}">${GZ.c('hub')}</a></div></div>`;
+  $('#again').onclick=()=>{ if(mixed) queue=GZ.shuffle(SEQS).slice(0,6); qi=0; total=0; play(); };
+  $('#m').onclick=menu;
+  $('#shr').onclick=()=>GZ.share(`🔢 I scored ${total}/${max} in "${label}" on BAIO Game Zone. Can you beat me?`,'games/sequence.html#'+(mixed?'mix':queue[0].id));
+}
+GZ.startLang();
+(function(){ const h=location.hash.slice(1); const s=SEQS.find(x=>x.id===h);
+  if(h==='mix'){ mixed=true; queue=GZ.shuffle(SEQS).slice(0,6); qi=0; total=0; play(); }
+  else if(s){ mixed=false; queue=[s]; qi=0; total=0; play(); } else menu(); })();
+</script>
+</body>
+</html>
