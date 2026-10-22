@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="BAIO">
+<title>Game Zone · Who Am I? | BAIO Learning System</title>
+<meta name="description" content="Chapter-wise Biology riddles by Narendra Sir — guess the organism, organelle or scientist from clues. I PUC and II PUC.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BAIO Learning System">
+<meta property="og:title" content="BAIO Game Zone — Who Am I? Biology riddles">
+<meta property="og:description" content="Chapter-wise Biology riddles for I PUC and II PUC. Fewer clues, more points!">
+<meta property="og:url" content="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/games.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B1B14; --panel:#13281E; --panel2:#0E211A;
+  --gold:#D4AF37; --gold2:#B8912A; --teal:#2EE6C5;
+  --ink:#EAF3EE; --ink-dim:#9FC4B6; --line:rgba(212,175,55,0.22);
+  --ok:#2FBF71; --bad:#E7695B;
+}
+[data-theme="light"]{
+  --navy:#F7F5EE; --panel:#FFFFFF; --panel2:#F3F0E6;
+  --gold:#B8912A; --gold2:#8A6A1A; --teal:#0F8F7A;
+  --ink:#1E2A22; --ink-dim:#5C6E63; --line:rgba(184,145,42,0.25);
+  --ok:#1E8E52; --bad:#C33A2C;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--navy);color:var(--ink);font-family:'Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;margin:0}
+button{font-family:inherit}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 60px}
+.topnav{position:sticky;top:0;z-index:30;background:rgba(11,27,20,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+[data-theme="light"] .topnav{background:rgba(244,241,232,.94)}
+.topnav-inner{max-width:760px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:8px;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:8px;font:700 14px 'Space Grotesk',sans-serif}
+.brand .b{width:30px;height:30px;border-radius:8px;background:#0c1830;color:#D4AF37;display:grid;place-items:center;font-size:16px}
+.tools{display:flex;align-items:center;gap:6px}
+.lang-switcher{display:flex;gap:4px}
+.lang-btn{padding:6px 10px;border-radius:12px;font:700 11px 'Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;background:var(--panel2);color:var(--ink-dim);border:1px solid var(--line);cursor:pointer}
+.lang-btn.active{background:var(--gold);color:#1a1406;border-color:var(--gold)}
+.icon-btn{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none}
+.hero{padding:26px 0 10px;text-align:center}
+.eyebrow{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--teal);font-weight:700}
+.hero h1{font-size:30px;line-height:1.15;margin-top:10px}
+.hero h1 .accent{color:var(--gold)}
+.hero p{font-size:14px;color:var(--ink-dim);line-height:1.65;margin:10px auto 0;max-width:560px}
+.rules{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:14px}
+.rules span{font:600 12px Inter;padding:6px 10px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);color:var(--ink-dim)}
+.tabs{display:flex;gap:6px;justify-content:center;margin:18px 0 6px}
+.tab{padding:9px 18px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:700 13.5px 'Inter','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;cursor:pointer;min-height:40px}
+.tab.on{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;border-color:var(--gold)}
+.total{text-align:center;font:600 13px Inter;color:var(--ink-dim);margin:6px 0 4px}
+.total b{color:var(--gold)}
+.chapters{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:10px}
+.chap{display:flex;align-items:center;gap:12px;text-align:left;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;min-height:72px}
+.chap:hover{border-color:var(--gold)}
+.chap .no{flex:none;width:42px;height:42px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);display:grid;place-items:center;font:800 15px 'Space Grotesk',sans-serif;color:var(--gold)}
+.chap .nm{font:700 14.5px 'Space Grotesk','Inter',sans-serif;line-height:1.25}
+.chap .best{display:block;font:600 11.5px Inter;color:var(--ink-dim);margin-top:4px}
+.chap .best.done{color:var(--teal)}
+/* play */
+.play{margin-top:18px}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.back{border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:12px;padding:8px 12px;font:600 13px Inter;cursor:pointer;min-height:38px}
+.score{font:800 15px 'Space Grotesk',sans-serif;color:var(--gold)}
+.ctitle{font:600 12.5px Inter;color:var(--ink-dim);margin-top:12px}
+.prog{height:6px;border-radius:6px;background:var(--panel2);margin-top:8px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--gold));transition:width .4s}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px;margin-top:14px}
+.who{font:800 24px 'Space Grotesk',sans-serif;text-align:center}
+.who small{display:block;font:600 12px Inter;color:var(--ink-dim);margin-top:4px}
+.clues{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:8px}
+.clue{display:flex;gap:10px;align-items:flex-start;padding:11px 12px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);font-size:15px;line-height:1.5;animation:pop .35s ease}
+.clue b{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:#1a1406;font:800 12px Inter;margin-top:1px}
+.clue.locked{color:var(--ink-dim);font-style:italic;animation:none}
+.clue.locked b{background:var(--line);color:var(--ink-dim)}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.more{display:block;margin:12px auto 0;border:1px dashed var(--gold);background:transparent;color:var(--gold);border-radius:12px;padding:9px 14px;font:700 13px Inter;cursor:pointer;min-height:40px}
+.more[disabled]{opacity:.4;cursor:default}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.opt{padding:13px 10px;border-radius:14px;border:1.5px solid var(--line);background:var(--panel);color:var(--ink);font:700 14px 'Inter',sans-serif;cursor:pointer;min-height:52px;line-height:1.3;transition:transform .1s}
+.opt:active{transform:scale(.97)}
+.opt.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.bad{background:transparent;border-color:var(--bad);color:var(--bad);text-decoration:line-through;cursor:default;animation:shake .35s}
+.opt[disabled]{cursor:default}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.verdict{margin-top:14px;padding:12px 14px;border-radius:14px;font:600 14px/1.5 Inter;display:none}
+.verdict.show{display:block}
+.verdict.good{background:rgba(47,191,113,.12);border:1px solid var(--ok)}
+.verdict.meh{background:rgba(212,175,55,.12);border:1px solid var(--gold)}
+.verdict b{font-size:15.5px}
+.next{display:none;width:100%;margin-top:12px;padding:13px;border-radius:14px;border:0;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;font:800 15px 'Space Grotesk',Inter,sans-serif;cursor:pointer;min-height:48px}
+.next.show{display:block}
+/* result */
+.result{text-align:center}
+.big{font:800 46px 'Space Grotesk',sans-serif;color:var(--gold);margin-top:6px}
+.stars{font-size:32px;letter-spacing:4px;margin-top:4px}
+.result p{color:var(--ink-dim);font-size:14px;line-height:1.6}
+.btns{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}
+.act{display:inline-flex;align-items:center;gap:6px;padding:11px 16px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);text-decoration:none;font:700 13.5px Inter;cursor:pointer;min-height:44px}
+.act.primary{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;border-color:var(--gold)}
+.act.wa{border-color:var(--teal);color:var(--teal)}
+.review{text-align:left;margin-top:14px;display:grid;gap:6px}
+.review div{font-size:13px;padding:8px 10px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);display:flex;justify-content:space-between;gap:8px}
+.review span{color:var(--ink-dim);white-space:nowrap}
+footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
+[hidden]{display:none!important}
+@media (max-width:640px){ .hero h1{font-size:25px} .brand span{display:none} .opts{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="brand"><div class="b">B</div><span>BAIO Learning System</span></div>
+    <div class="tools">
+      <div id="langSwitcher" class="lang-switcher" role="group" aria-label="Language"></div>
+      <a href="index.html" class="icon-btn" title="Back to BAIO home" aria-label="Back to BAIO home">🏠</a>
+      <button class="icon-btn" id="themeToggle" title="Toggle dark/light theme" aria-label="Toggle dark/light theme">🌙</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <section id="home">
+    <div class="hero">
+      <div class="eyebrow" data-i18n="eyebrow">BAIO Game Zone</div>
+      <h1 data-i18n-html="h1">🧩 Who <span class="accent">Am I?</span></h1>
+      <p data-i18n="intro">Biology riddles, chapter by chapter. Read the clue, guess the organism, organelle or scientist. The fewer clues you need, the more points you score!</p>
+      <div class="rules"><span data-i18n="r1">1 clue = 30 pts</span><span data-i18n="r2">2 clues = 20 pts</span><span data-i18n="r3">3 clues = 10 pts</span><span data-i18n="r4">Wrong guess −5</span></div>
+    </div>
+    <div class="tabs" role="tablist"><button class="tab on" data-pu="1" data-i18n="pu1">I PUC</button><button class="tab" data-pu="2" data-i18n="pu2">II PUC</button></div>
+    <div class="total" id="total"></div>
+    <div class="chapters" id="chapters"></div>
+  </section>
+
+  <section id="play" class="play" hidden>
+    <div class="bar"><button class="back" id="quit" data-i18n="quit">← Chapters</button><div class="score" id="score">0</div></div>
+    <div class="ctitle" id="ctitle"></div>
+    <div class="prog"><i id="prog"></i></div>
+    <div class="card">
+      <div class="who"><span data-i18n="who">Who am I?</span><small id="qno"></small></div>
+      <ul class="clues" id="clues"></ul>
+      <button class="more" id="more"></button>
+      <div class="opts" id="opts"></div>
+      <div class="verdict" id="verdict"></div>
+      <button class="next" id="next"></button>
+    </div>
+  </section>
+
+  <section id="result" class="result" hidden>
+    <div class="card">
+      <div class="eyebrow" id="rch"></div>
+      <div class="big" id="rscore"></div>
+      <div class="stars" id="rstars"></div>
+      <p id="rmsg"></p>
+      <div class="btns">
+        <button class="act primary" id="again" data-i18n="again">🔁 Play again</button>
+        <button class="act wa" id="share" data-i18n="share">📤 Challenge friends</button>
+        <a class="act" id="open" data-i18n="open">📘 Open chapter</a>
+        <button class="act" id="home2" data-i18n="home">🧩 All chapters</button>
+      </div>
+      <div class="review" id="review"></div>
+    </div>
+  </section>
+  <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
+</div>
+
+<script src="games/riddles.js?v=1"></script>
+<script>
+/* Theme — shared with every BAIO page through the same key */
+(function(){
+  var KEY='baio_theme', btn=document.getElementById('themeToggle');
+  function apply(t){ if(t==='light'){ document.documentElement.setAttribute('data-theme','light'); btn.textContent='☀️'; } else { document.documentElement.removeAttribute('data-theme'); btn.textContent='🌙'; } }
+  var saved=null; try{ saved=localStorage.getItem(KEY); }catch(e){}
+  apply(saved==='light'?'light':'dark');
+  btn.addEventListener('click',function(){ var next=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light'; apply(next); try{ localStorage.setItem(KEY,next); }catch(e){} });
+})();
+
+const EN={eyebrow:'BAIO Game Zone', h1:'🧩 Who <span class="accent">Am I?</span>',
+  intro:'Biology riddles, chapter by chapter. Read the clue, guess the organism, organelle or scientist. The fewer clues you need, the more points you score!',
+  r1:'1 clue = 30 pts', r2:'2 clues = 20 pts', r3:'3 clues = 10 pts', r4:'Wrong guess −5', pu1:'I PUC', pu2:'II PUC', quit:'← Chapters', who:'Who am I?',
+  again:'🔁 Play again', share:'📤 Challenge friends', open:'📘 Open chapter', home:'🧩 All chapters'};
+const I18N={
+ kn:{eyebrow:'BAIO ಗೇಮ್ ಝೋನ್', h1:'🧩 ನಾನು <span class="accent">ಯಾರು?</span>',
+  intro:'ಅಧ್ಯಾಯವಾರು ಜೀವಶಾಸ್ತ್ರ ಒಗಟುಗಳು. ಸುಳಿವು ಓದಿ, ಜೀವಿ, ಕೋಶಾಂಗ ಅಥವಾ ವಿಜ್ಞಾನಿಯನ್ನು ಊಹಿಸಿ. ಕಡಿಮೆ ಸುಳಿವಿನಲ್ಲಿ ಉತ್ತರಿಸಿದರೆ ಹೆಚ್ಚು ಅಂಕ! (ಒಗಟುಗಳು ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿವೆ)',
+  r1:'1 ಸುಳಿವು = 30 ಅಂಕ', r2:'2 ಸುಳಿವು = 20 ಅಂಕ', r3:'3 ಸುಳಿವು = 10 ಅಂಕ', r4:'ತಪ್ಪು ಉತ್ತರ −5', pu1:'ಪ್ರಥಮ ಪಿಯುಸಿ', pu2:'ದ್ವಿತೀಯ ಪಿಯುಸಿ', quit:'← ಅಧ್ಯಾಯಗಳು', who:'ನಾನು ಯಾರು?',
+  again:'🔁 ಮತ್ತೆ ಆಡಿ', share:'📤 ಗೆಳೆಯರಿಗೆ ಸವಾಲು', open:'📘 ಅಧ್ಯಾಯ ತೆರೆಯಿರಿ', home:'🧩 ಎಲ್ಲ ಅಧ್ಯಾಯಗಳು'},
+ hi:{eyebrow:'BAIO गेम ज़ोन', h1:'🧩 मैं <span class="accent">कौन हूँ?</span>',
+  intro:'अध्याय-वार जीव विज्ञान पहेलियाँ। सुराग पढ़ो, जीव, कोशिकांग या वैज्ञानिक पहचानो। जितने कम सुराग, उतने ज़्यादा अंक! (पहेलियाँ अंग्रेज़ी में हैं)',
+  r1:'1 सुराग = 30 अंक', r2:'2 सुराग = 20 अंक', r3:'3 सुराग = 10 अंक', r4:'गलत जवाब −5', pu1:'प्रथम पीयूसी', pu2:'द्वितीय पीयूसी', quit:'← अध्याय', who:'मैं कौन हूँ?',
+  again:'🔁 फिर से खेलो', share:'📤 दोस्तों को चुनौती', open:'📘 अध्याय खोलो', home:'🧩 सभी अध्याय'}};
+const UI={
+ en:{ch:'Ch', of:'of', riddle:'Riddle', more:n=>`🔍 Show next clue (${n} left)`, noMore:'All clues shown', next:'Next riddle →', finish:'See my score 🏁',
+   right:p=>`✅ Correct! +${p} points`, wrongAll:'The answer was', best:b=>`Best: ${b}`, notYet:'Not played yet', total:(a,b)=>`Your total best score: <b>${a}</b> / ${b}`,
+   msg:s=>s>=200?'Outstanding! You know this chapter inside out. 🏆':s>=140?'Great work! A quick revision and you will top it. 💪':s>=80?'Good try! Read the chapter once more and play again. 📘':'Keep going — open the chapter, revise and try again. 🌱',
+   shareTxt:(c,s)=>`🧩 I scored ${s}/240 in "Who Am I?" Biology riddles — ${c}. Can you beat me? Play on BAIO by Narendra Sir:`},
+ kn:{ch:'ಅಧ್ಯಾಯ', of:'/', riddle:'ಒಗಟು', more:n=>`🔍 ಮುಂದಿನ ಸುಳಿವು (${n} ಉಳಿದಿದೆ)`, noMore:'ಎಲ್ಲ ಸುಳಿವು ತೋರಿಸಲಾಗಿದೆ', next:'ಮುಂದಿನ ಒಗಟು →', finish:'ನನ್ನ ಅಂಕ ನೋಡಿ 🏁',
+   right:p=>`✅ ಸರಿ! +${p} ಅಂಕ`, wrongAll:'ಉತ್ತರ', best:b=>`ಅತ್ಯುತ್ತಮ: ${b}`, notYet:'ಇನ್ನೂ ಆಡಿಲ್ಲ', total:(a,b)=>`ನಿಮ್ಮ ಒಟ್ಟು ಅತ್ಯುತ್ತಮ ಅಂಕ: <b>${a}</b> / ${b}`,
+   msg:s=>s>=200?'ಅದ್ಭುತ! ಈ ಅಧ್ಯಾಯ ನಿಮಗೆ ಚೆನ್ನಾಗಿ ಗೊತ್ತು. 🏆':s>=140?'ಉತ್ತಮ! ಸ್ವಲ್ಪ ಪುನರಾವರ್ತನೆ ಮಾಡಿ, ಟಾಪ್ ಮಾಡುತ್ತೀರಿ. 💪':s>=80?'ಒಳ್ಳೆಯ ಪ್ರಯತ್ನ! ಅಧ್ಯಾಯ ಮತ್ತೊಮ್ಮೆ ಓದಿ ಆಡಿ. 📘':'ಮುಂದುವರಿಯಿರಿ — ಅಧ್ಯಾಯ ಓದಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ. 🌱',
+   shareTxt:(c,s)=>`🧩 "ನಾನು ಯಾರು?" ಜೀವಶಾಸ್ತ್ರ ಒಗಟಿನಲ್ಲಿ ${c} — ನನ್ನ ಅಂಕ ${s}/240. ನನ್ನನ್ನು ಮೀರಿಸಬಲ್ಲಿರಾ? Narendra Sir ಅವರ BAIO ನಲ್ಲಿ ಆಡಿ:`},
+ hi:{ch:'अध्याय', of:'/', riddle:'पहेली', more:n=>`🔍 अगला सुराग (${n} बाकी)`, noMore:'सारे सुराग दिख गए', next:'अगली पहेली →', finish:'मेरा स्कोर देखो 🏁',
+   right:p=>`✅ सही! +${p} अंक`, wrongAll:'जवाब था', best:b=>`बेस्ट: ${b}`, notYet:'अभी नहीं खेला', total:(a,b)=>`आपका कुल बेस्ट स्कोर: <b>${a}</b> / ${b}`,
+   msg:s=>s>=200?'शानदार! ये अध्याय आपको पूरा आता है। 🏆':s>=140?'बहुत बढ़िया! थोड़ा रिवीज़न और आप टॉप करोगे। 💪':s>=80?'अच्छी कोशिश! अध्याय एक बार और पढ़ो, फिर खेलो। 📘':'लगे रहो — अध्याय पढ़ो और फिर कोशिश करो। 🌱',
+   shareTxt:(c,s)=>`🧩 मैंने "मैं कौन हूँ?" बायोलॉजी पहेली (${c}) में ${s}/240 स्कोर किया। क्या तुम मुझे हरा सकते हो? Narendra Sir के BAIO पर खेलो:`}};
+const LANGS=[['en','English'],['kn','ಕನ್ನಡ'],['hi','हिंदी']];
+const BASE='https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/games.html';
+const BEST_KEY='baio_riddle_best';
+let lang='en', pu=1, cur=null, order=[], qi=0, shown=1, wrong=0, total=0, answered=false, log=[];
+const $=id=>document.getElementById(id);
+const shuffle=a=>{ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+function getBest(){ try{ return JSON.parse(localStorage.getItem(BEST_KEY)||'{}'); }catch(e){ return {}; } }
+function setBest(id,s){ const b=getBest(); if(!(b[id]>=s)){ b[id]=s; try{ localStorage.setItem(BEST_KEY,JSON.stringify(b)); }catch(e){} } }
+const maxPts=c=>c.r.length*30;
+
+function renderHome(){
+  const u=UI[lang], best=getBest();
+  const list=RIDDLES.filter(c=>c.pu===pu);
+  $('chapters').innerHTML=list.map(c=>{ const b=best[c.id];
+    return `<button class="chap" data-id="${c.id}"><span class="no">${c.ch}</span><span><span class="nm">${c.t}</span>
+      <span class="best${b!=null?' done':''}">${b!=null?u.best(b+' / '+maxPts(c)):u.notYet} · ${c.r.length} ${lang==='en'?'riddles':'🧩'}</span></span></button>`; }).join('');
+  const sum=RIDDLES.reduce((a,c)=>a+(best[c.id]||0),0), mx=RIDDLES.reduce((a,c)=>a+maxPts(c),0);
+  $('total').innerHTML=u.total(sum,mx);
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',+t.dataset.pu===pu));
+}
+function show(sec){ ['home','play','result'].forEach(s=>$(s).hidden=s!==sec); window.scrollTo(0,0); }
+
+function start(id){
+  cur=RIDDLES.find(c=>c.id===id); if(!cur) return;
+  order=shuffle(cur.r.map((_,i)=>i)); qi=0; total=0; log=[];
+  try{ history.replaceState(null,'','#'+id); }catch(e){}
+  show('play'); ask();
+}
+function ask(){
+  const u=UI[lang], r=cur.r[order[qi]];
+  shown=1; wrong=0; answered=false;
+  $('ctitle').textContent=`${cur.pu===1?'I PUC':'II PUC'} · ${u.ch} ${cur.ch} · ${cur.t}`;
+  $('qno').textContent=`${u.riddle} ${qi+1} ${u.of} ${order.length}`;
+  $('prog').style.width=(qi/order.length*100)+'%';
+  $('score').textContent=total+' pts';
+  $('opts').innerHTML=shuffle([r[0],...r[2]]).map(o=>`<button class="opt">${o}</button>`).join('');
+  $('verdict').className='verdict'; $('next').className='next';
+  drawClues();
+}
+function drawClues(){
+  const u=UI[lang], r=cur.r[order[qi]];
+  $('clues').innerHTML=r[1].map((c,i)=> i<shown||answered ? `<li class="clue"><b>${i+1}</b><span>${c}</span></li>` : `<li class="clue locked"><b>${i+1}</b><span>🔒</span></li>`).join('');
+  const left=r[1].length-shown; const m=$('more');
+  m.disabled=answered||left<=0; m.textContent=left>0&&!answered?u.more(left):u.noMore; m.hidden=answered;
+}
+function points(){ return Math.max(0, 40-10*shown-5*wrong); }
+function pick(btn){
+  if(answered||btn.disabled) return;
+  const u=UI[lang], r=cur.r[order[qi]];
+  if(btn.textContent===r[0]){
+    answered=true; btn.classList.add('ok'); const p=points(); total+=p; log.push([r[0],p]);
+    document.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+    $('verdict').innerHTML=`<b>${u.right(p)}</b><br>I am <b>${r[0]}</b>.`; $('verdict').className='verdict show '+(p>=20?'good':'meh');
+    $('score').textContent=total+' pts'; drawClues();
+    $('next').textContent=qi+1<order.length?u.next:u.finish; $('next').className='next show';
+  } else {
+    wrong++; btn.classList.add('bad'); btn.disabled=true;
+    if(shown<r[1].length){ shown++; drawClues(); }
+  }
+}
+function finish(){
+  const u=UI[lang]; setBest(cur.id,total);
+  $('prog').style.width='100%';
+  const mx=maxPts(cur), st=total>=mx*0.8?3:total>=mx*0.55?2:total>=mx*0.3?1:0;
+  $('rch').textContent=`${cur.pu===1?'I PUC':'II PUC'} · ${u.ch} ${cur.ch} · ${cur.t}`;
+  $('rscore').textContent=`${total} / ${mx}`;
+  $('rstars').textContent='★'.repeat(st)+'☆'.repeat(3-st);
+  $('rmsg').textContent=u.msg(total*240/mx);
+  $('open').href=cur.page;
+  $('review').innerHTML=log.map(([a,p])=>`<div><b>${a}</b><span>+${p}</span></div>`).join('');
+  show('result');
+}
+function share(){
+  const u=UI[lang], txt=u.shareTxt(cur.t,total), url=BASE+'#'+cur.id;
+  if(navigator.share){ navigator.share({title:'BAIO · Who Am I?',text:txt,url:url}).catch(()=>{}); return; }
+  window.open('https://wa.me/?text='+encodeURIComponent(txt+' '+url),'_blank','noopener');
+}
+
+$('chapters').addEventListener('click',e=>{ const b=e.target.closest('.chap'); if(b) start(b.dataset.id); });
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{ pu=+t.dataset.pu; renderHome(); }));
+$('opts').addEventListener('click',e=>{ const b=e.target.closest('.opt'); if(b) pick(b); });
+$('more').addEventListener('click',()=>{ const r=cur.r[order[qi]]; if(shown<r[1].length){ shown++; drawClues(); } });
+$('next').addEventListener('click',()=>{ qi++; if(qi<order.length) ask(); else finish(); });
+$('quit').addEventListener('click',()=>{ try{ history.replaceState(null,'',location.pathname); }catch(e){} renderHome(); show('home'); });
+$('home2').addEventListener('click',()=>{ try{ history.replaceState(null,'',location.pathname); }catch(e){} renderHome(); show('home'); });
+$('again').addEventListener('click',()=>start(cur.id));
+$('share').addEventListener('click',share);
+
+const sw=$('langSwitcher');
+sw.innerHTML=LANGS.map(([k,l])=>`<button class="lang-btn" data-l="${k}">${l}</button>`).join('');
+function setLang(l){
+  lang=l; const T = l==='en' ? EN : Object.assign({}, EN, I18N[l]);
+  document.querySelectorAll('[data-i18n]').forEach(e=>{ const k=e.dataset.i18n; if(T[k]!=null) e.textContent=T[k]; });
+  document.querySelectorAll('[data-i18n-html]').forEach(e=>{ const k=e.dataset.i18nHtml; if(T[k]!=null) e.innerHTML=T[k]; });
+  document.documentElement.lang=l;
+  sw.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.l===l));
+  try{ localStorage.setItem('baio_lang',l); }catch(e){}
+  renderHome();
+  if(!$('play').hidden && cur){ const u=UI[lang]; $('ctitle').textContent=`${cur.pu===1?'I PUC':'II PUC'} · ${u.ch} ${cur.ch} · ${cur.t}`; $('qno').textContent=`${u.riddle} ${qi+1} ${u.of} ${order.length}`; drawClues(); if(answered) $('next').textContent=qi+1<order.length?u.next:u.finish; }
+}
+sw.addEventListener('click',e=>{ const b=e.target.closest('.lang-btn'); if(b) setLang(b.dataset.l); });
+let startLang='en'; try{ startLang=localStorage.getItem('baio_lang')||'en'; }catch(e){}
+setLang(UI[startLang]?startLang:'en');
+// opened from a shared link (#chapter-id): jump straight into that chapter
+(function(){ const id=location.hash.slice(1); const c=RIDDLES.find(x=>x.id===id); if(c){ pu=c.pu; renderHome(); start(id); } })();
+</script>
+</body>
+</html>
