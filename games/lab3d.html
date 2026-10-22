@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<title>3D Biology Lab | BAIO Game Zone</title>
+<meta name="description" content="Interactive 3D models of the cell, DNA, flower, embryo sac, sperm, bacteria, viruses and antibodies — rotate, slice open, tap to learn, then play. BAIO by Narendra Sir.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="game.css?v=1">
+<style>
+.pack{margin-top:18px}
+.pack h3{font-size:15px;color:var(--gold)}
+.pack h3 small{font:600 11.5px Inter;color:var(--ink-dim);margin-left:6px}
+.models{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:8px}
+.mcard{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;text-align:left;min-height:96px}
+.mcard:hover{border-color:var(--gold)}
+.mcard .e{font-size:26px}
+.mcard b{font:800 14.5px 'Space Grotesk',sans-serif;line-height:1.25}
+.mcard em{font-style:normal;font:600 11px Inter;color:var(--teal);margin-top:auto}
+.vhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:14px}
+.vhead h2{font-size:19px}
+.vhead .muted{font-size:12px}
+.stage3d{position:relative;margin-top:10px;height:min(62vh,520px);min-height:340px;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:radial-gradient(120% 90% at 50% 20%,#1b3a2c 0%,#0b1712 70%);touch-action:none}
+[data-theme="light"] .stage3d{background:radial-gradient(120% 90% at 50% 20%,#ffffff 0%,#e7efe9 75%)}
+.stage3d canvas{display:block;width:100%;height:100%}
+.labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.labels svg{position:absolute;inset:0;width:100%;height:100%}
+.labels svg line{stroke:rgba(243,210,122,.85);stroke-width:1.2}
+.labels svg circle{fill:#f3d27a}
+.lbl3d{position:absolute;transform:translate(-50%,-50%);padding:3px 8px;border-radius:999px;background:rgba(10,20,16,.82);color:#fff;font:700 11px Inter,sans-serif;white-space:nowrap;border:1px solid rgba(212,175,55,.6);transition:opacity .2s}
+.lbl3d.sel{background:var(--gold);color:#1a1406;border-color:var(--gold);z-index:2}
+.lbl3d.tag{background:transparent;border:0;color:#f3d27a;font:800 13px 'Space Grotesk',sans-serif}
+[data-theme="light"] .lbl3d.tag{color:#8A6A1A}
+.hint{position:absolute;left:10px;bottom:10px;font:600 11px Inter;color:rgba(255,255,255,.75);background:rgba(0,0,0,.35);padding:4px 8px;border-radius:8px;pointer-events:none}
+.tools3d{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;justify-content:center}
+.tbtn{padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:700 12.5px Inter,sans-serif;cursor:pointer;min-height:38px}
+.tbtn.on{border-color:var(--teal);color:var(--teal)}
+.panel{margin-top:10px;padding:14px;border-radius:16px;background:var(--panel);border:1px solid var(--line);min-height:84px}
+.panel h3{font-size:17px}
+.panel p{margin:6px 0 0;font-size:14px;line-height:1.6;color:var(--ink-dim)}
+.prompt{font:800 17px/1.4 'Space Grotesk',Inter,sans-serif}
+.parts{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.parts button{padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:600 12px Inter;cursor:pointer}
+.loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--ink-dim);font:600 13px Inter}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero" id="hero">
+    <div class="eyebrow" data-i18n="eyebrow">BAIO Game Zone · 3D Biology Lab</div>
+    <h1 data-i18n-html="h1">🧊 3D Biology <span class="accent">Lab</span></h1>
+    <p data-i18n="intro">Rotate, zoom and slice open real-looking 3D models. Tap any part to learn it, then play Find-the-part and the function quiz.</p>
+  </section>
+  <section id="picker"></section>
+  <section id="viewer" hidden>
+    <div class="vhead"><button class="tbtn" id="back">← <span data-i18n="all">All models</span></button><span class="score" id="vscore"></span></div>
+    <div style="margin-top:10px"><h2 id="vtitle"></h2><div class="muted" id="vch"></div></div>
+    <div class="tabs" id="modes" style="margin-top:10px">
+      <button class="tab on" data-m="explore" data-i18n="explore">🔍 Explore</button>
+      <button class="tab" data-m="find" data-i18n="find">🎯 Find the part</button>
+      <button class="tab" data-m="quiz" data-i18n="quiz">❓ Function quiz</button>
+    </div>
+    <div class="stage3d" id="stage3d"><div class="loading" id="loading">Loading 3D…</div><div class="labels" id="labels"></div><div class="hint" data-i18n="hint">Drag to rotate · pinch to zoom · tap a part</div></div>
+    <div class="tools3d">
+      <button class="tbtn on" id="tLabels" data-i18n="labels">🏷️ Labels</button>
+      <button class="tbtn" id="tSlice" data-i18n="slice">🔪 Slice open</button>
+      <button class="tbtn" id="tSpin" data-i18n="spin">🔄 Auto-rotate</button>
+      <button class="tbtn" id="tReset" data-i18n="reset">🎯 Reset view</button>
+    </div>
+    <div class="panel" id="panel"></div>
+  </section>
+  <footer>Narendra Sir · Biology Lecturer · BAIO Learning System · 3D engine: three.js (MIT)</footer>
+</div>
+<script src="common.js?v=1"></script>
+<script src="lib/three.min.js"></script>
+<script src="lib/OrbitControls.js"></script>
+<script src="models3d.js?v=1"></script>
+<script>
+GZ.nav();
+GZ.i18n({
+ en:{eyebrow:'BAIO Game Zone · 3D Biology Lab', h1:'🧊 3D Biology <span class="accent">Lab</span>', intro:'Rotate, zoom and slice open real-looking 3D models. Tap any part to learn it, then play Find-the-part and the function quiz.',
+  all:'All models', explore:'🔍 Explore', find:'🎯 Find the part', quiz:'❓ Function quiz', hint:'Drag to rotate · pinch to zoom · tap a part', labels:'🏷️ Labels', slice:'🔪 Slice open', spin:'🔄 Auto-rotate', reset:'🎯 Reset view',
+  tapPart:'Tap any part of the model to learn about it.', tapThe:'Tap the', parts:'Parts in this model'},
+ kn:{eyebrow:'BAIO ಗೇಮ್ ಝೋನ್ · 3D ಜೀವಶಾಸ್ತ್ರ ಲ್ಯಾಬ್', h1:'🧊 3D ಜೀವಶಾಸ್ತ್ರ <span class="accent">ಲ್ಯಾಬ್</span>', intro:'3D ಮಾದರಿಗಳನ್ನು ತಿರುಗಿಸಿ, ದೊಡ್ಡದು ಮಾಡಿ, ಕತ್ತರಿಸಿ ಒಳಗೆ ನೋಡಿ. ಯಾವುದೇ ಭಾಗ ಒತ್ತಿ ಕಲಿಯಿರಿ, ನಂತರ ಆಟ ಆಡಿ.',
+  all:'ಎಲ್ಲ ಮಾದರಿಗಳು', explore:'🔍 ಅನ್ವೇಷಿಸಿ', find:'🎯 ಭಾಗ ಹುಡುಕಿ', quiz:'❓ ಕಾರ್ಯ ರಸಪ್ರಶ್ನೆ', hint:'ತಿರುಗಿಸಲು ಎಳೆಯಿರಿ · ಜೂಮ್ ಮಾಡಲು ಪಿಂಚ್ · ಭಾಗ ಒತ್ತಿ', labels:'🏷️ ಹೆಸರುಗಳು', slice:'🔪 ಕತ್ತರಿಸಿ ನೋಡಿ', spin:'🔄 ತಿರುಗಲಿ', reset:'🎯 ಮರುಹೊಂದಿಸಿ',
+  tapPart:'ಮಾದರಿಯ ಯಾವುದೇ ಭಾಗ ಒತ್ತಿ ಅದರ ಬಗ್ಗೆ ತಿಳಿಯಿರಿ.', tapThe:'ಒತ್ತಿ:', parts:'ಈ ಮಾದರಿಯ ಭಾಗಗಳು'},
+ hi:{eyebrow:'BAIO गेम ज़ोन · 3D बायोलॉजी लैब', h1:'🧊 3D बायोलॉजी <span class="accent">लैब</span>', intro:'3D मॉडल घुमाओ, ज़ूम करो, काटकर अंदर देखो। किसी भी भाग को दबाकर सीखो, फिर खेल खेलो।',
+  all:'सभी मॉडल', explore:'🔍 देखो', find:'🎯 भाग खोजो', quiz:'❓ कार्य क्विज़', hint:'घुमाने के लिए खींचो · ज़ूम के लिए पिंच · भाग दबाओ', labels:'🏷️ नाम', slice:'🔪 काटकर देखो', spin:'🔄 घूमने दो', reset:'🎯 रीसेट',
+  tapPart:'मॉडल का कोई भी भाग दबाकर उसके बारे में जानो।', tapThe:'दबाओ:', parts:'इस मॉडल के भाग'}});
+const $=s=>document.querySelector(s);
+
+/* ---------- picker ---------- */
+function drawPicker(){
+  $('#picker').innerHTML=PACKS.map(([k,t,ch])=>`<div class="pack"><h3>${t}<small>${ch}</small></h3><div class="models">${Object.entries(MODELS).filter(([,m])=>m.pack===k).map(([id,m])=>{ const b=GZ.best('3d-find-'+id); return `<button class="mcard" data-id="${id}"><span class="e">${m.emoji}</span><b>${m.t}</b><em>${b!=null?'🎯 best '+b:'Tap to open →'}</em></button>`; }).join('')}</div></div>`).join('');
+  $('#picker').querySelectorAll('.mcard').forEach(b=>b.onclick=()=>open(b.dataset.id,'explore'));
+}
+
+/* ---------- three.js setup ---------- */
+let linesEl=null, renderer, scene, camera, controls, plane, group, cur=null, running=false, anims=[], clock=new THREE.Clock();
+const box=$('#stage3d'), labelsEl=$('#labels');
+function initGL(){
+  renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2)); renderer.localClippingEnabled=true;
+  box.insertBefore(renderer.domElement,labelsEl);
+  scene=new THREE.Scene();
+  camera=new THREE.PerspectiveCamera(40,1,.1,200);
+  scene.add(new THREE.HemisphereLight(0xffffff,0x334433,.75));
+  const d1=new THREE.DirectionalLight(0xffffff,.85); d1.position.set(5,8,6); scene.add(d1);
+  const d2=new THREE.DirectionalLight(0xbfe8ff,.35); d2.position.set(-6,-3,-5); scene.add(d2);
+  controls=new THREE.OrbitControls(camera,renderer.domElement); controls.enableDamping=true; controls.dampingFactor=.08; controls.enablePan=false; controls.autoRotateSpeed=1.4;
+  plane=new THREE.Plane(new THREE.Vector3(0,0,-1),0);
+  new ResizeObserver(resize).observe(box); resize();
+  // tap detection
+  let down=null;
+  renderer.domElement.addEventListener('pointerdown',e=>{ down=[e.clientX,e.clientY,Date.now()]; });
+  renderer.domElement.addEventListener('pointerup',e=>{ if(!down) return; const moved=Math.hypot(e.clientX-down[0],e.clientY-down[1]); if(moved<8&&Date.now()-down[2]<600) tap(e); down=null; });
+}
+function resize(){ if(!renderer) return; const w=box.clientWidth, h=box.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+function loop(){ if(!running) return; requestAnimationFrame(loop); const t=clock.getElapsedTime(); anims.forEach(f=>f(t)); controls.update(); renderer.render(scene,camera); placeLabels(); }
+
+/* ---------- build a model ---------- */
+const S={};   // state of the open model
+function buildModel(id){
+  if(group){ scene.remove(group); group.traverse(o=>{ if(o.geometry) o.geometry.dispose(); }); S.mats&&S.mats.forEach(m=>m.dispose()); }
+  group=new THREE.Group(); scene.add(group); anims=[];
+  const M=MODELS[id]; Object.assign(S,{id,M,parts:{},order:[],mats:[],tags:[],note:''});
+  const matsByKey={};
+  const A={
+    part:(k,name,info,q,o={})=>{ S.parts[k]={k,name,info,q,shell:!!o.shell,meshes:[],mats:new Set(),anchor:null}; S.order.push(k); },
+    mat:(k,col,o={})=>{ const op=o.opacity==null?1:o.opacity; const m=new THREE.MeshStandardMaterial({color:new THREE.Color(col),roughness:.5,metalness:.05,transparent:op<1,opacity:op,depthWrite:op>=.6,side:THREE.DoubleSide,flatShading:!!o.flat}); m.userData.base=new THREE.Color(col); S.mats.push(m); return m; },
+    add:(k,mesh)=>{ mesh.userData.part=k; mesh.traverse(o=>{ o.userData.part=k; if(o.material) S.parts[k].mats.add(o.material); }); S.parts[k].meshes.push(mesh); group.add(mesh); },
+    proxy:(k,p,r)=>{ const m=new THREE.Mesh(new THREE.SphereGeometry(r,8,6),new THREE.MeshBasicMaterial({visible:false})); m.position.set(...p); m.userData.part=k; m.userData.proxy=true; group.add(m); },
+    anchor:(k,p)=>{ S.parts[k].anchor=new THREE.Vector3(...p); },
+    tag:(t,p)=>S.tags.push([t,new THREE.Vector3(...p)]),
+    note:t=>{ S.note=t; }, anim:f=>anims.push(f)
+  };
+  M.build(A);
+  group.updateMatrixWorld(true);
+  S.order.forEach(k=>{ const P=S.parts[k]; if(P.anchor) return; const m=P.meshes[0];
+    if(!m||!m.geometry){ P.anchor=new THREE.Vector3(); return; } m.geometry.computeBoundingSphere(); P.anchor=m.geometry.boundingSphere.center.clone().applyMatrix4(m.matrixWorld); });
+  // fit the camera to the whole model for this screen shape
+  const bb=new THREE.Box3(); group.children.forEach(o=>{ if(!o.userData.proxy) bb.expandByObject(o); }); const bs=bb.getBoundingSphere(new THREE.Sphere()); S.fit=bs;
+  // slicing
+  S.canSlice=!!M.slice; S.slice=!!(M.slice&&M.slice.on);
+  if(M.slice) plane.normal.set(...M.slice.n);
+  applySlice();
+  $('#tSlice').hidden=!S.canSlice;
+  // camera
+  resetView();
+  controls.autoRotate=!!M.spin; $('#tSpin').classList.toggle('on',controls.autoRotate);
+  // labels
+  labelsEl.innerHTML='<svg id="lines"></svg>'+S.order.map(k=>`<div class="lbl3d" data-k="${k}">${S.parts[k].name}</div>`).join('')+S.tags.map((t,i)=>`<div class="lbl3d tag" data-t="${i}">${t[0]}</div>`).join('');
+  linesEl=labelsEl.querySelector('#lines');
+  $('#loading').hidden=true;
+}
+function fitDist(){ const vf=camera.fov*Math.PI/180, hf=2*Math.atan(Math.tan(vf/2)*camera.aspect); return S.fit.radius*(S.M.zoom||.78)/Math.sin(Math.min(vf,hf)/2); }
+function resetView(){ const d=fitDist(), c=S.fit.center; const dir=new THREE.Vector3(.55,.35,.78).normalize(); camera.position.copy(c).add(dir.multiplyScalar(d)); controls.target.copy(c); controls.minDistance=d*.3; controls.maxDistance=d*2.2; controls.update(); }
+function applySlice(){ S.mats.forEach(m=>{ m.clippingPlanes=S.slice?[plane]:[]; m.needsUpdate=true; }); $('#tSlice').classList.toggle('on',S.slice); }
+let showLabels=true, selected=null;
+function placeLabels(){
+  if(!S.parts) return; const w=box.clientWidth, h=box.clientHeight, v=new THREE.Vector3(), vis=[];
+  labelsEl.querySelectorAll('.lbl3d').forEach(el=>{
+    const isTag=el.dataset.t!=null; const k=el.dataset.k; const p=isTag?S.tags[+el.dataset.t][1]:S.parts[k].anchor;
+    const on = mode==='explore' && (isTag || showLabels || k===selected);
+    if(!on){ el.style.opacity=0; return; }
+    v.copy(p).project(camera); if(v.z>1){ el.style.opacity=0; return; }
+    el.style.opacity=1; el.classList.toggle('sel',k===selected); vis.push({el,x:(v.x+1)/2*w,y:(1-v.y)/2*h,w:el.offsetWidth,h:el.offsetHeight,sel:k===selected});
+  });
+  // nudge overlapping labels apart (selected label stays put)
+  vis.sort((a,b)=>(b.sel-a.sel)||(a.y-b.y)); const placed=[];
+  let svg='';
+  vis.forEach(L=>{ let y=L.y-14; for(let t=0;t<8;t++){ const hit=placed.find(P=>Math.abs(P.x-L.x)<(P.w+L.w)/2+2&&Math.abs(P.y-y)<(P.h+L.h)/2+1); if(!hit) break; y=hit.y+(y>=hit.y?1:-1)*((hit.h+L.h)/2+2); }
+    placed.push({x:L.x,y,w:L.w,h:L.h}); L.el.style.left=L.x+'px'; L.el.style.top=y+'px';
+    if(!L.el.classList.contains('tag')){ const ey=y+(y<L.y?L.h/2:-L.h/2); svg+=`<line x1="${L.x}" y1="${L.y}" x2="${L.x}" y2="${ey}"/><circle cx="${L.x}" cy="${L.y}" r="2.6"/>`; } });
+  linesEl.innerHTML=svg;
+}
+function highlight(k){ S.mats.forEach(m=>{ m.emissive&&m.emissive.setRGB(0,0,0); }); if(k) S.parts[k].mats.forEach(m=>m.emissive.setRGB(.35,.25,0)); }
+function flash(k,col){ const ms=[...S.parts[k].mats]; ms.forEach(m=>m.emissive.set(col)); setTimeout(()=>ms.forEach(m=>m.emissive.setRGB(0,0,0)),650); }
+
+/* ---------- picking ---------- */
+const ray=new THREE.Raycaster(), ndc=new THREE.Vector2();
+function tap(e){
+  const r=renderer.domElement.getBoundingClientRect(); ndc.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);
+  ray.setFromCamera(ndc,camera);
+  let hits=ray.intersectObjects(group.children,true).filter(h=>h.object.userData.part);
+  if(S.slice) hits=hits.filter(h=>plane.distanceToPoint(h.point)>=-0.02);
+  if(!hits.length) return;
+  const solid=hits.find(h=>!S.parts[h.object.userData.part].shell); const k=(solid||hits[0]).object.userData.part;
+  onPick(k);
+}
+
+/* ---------- modes ---------- */
+let mode='explore', G={};
+function panel(html){ $('#panel').innerHTML=html; }
+function exploreInfo(k){
+  selected=k; highlight(k);
+  const P=k?S.parts[k]:null;
+  panel((P?`<h3>${P.name}</h3><p>${P.info}</p>`:`<p>${GZ.t('tapPart')}</p>${S.note?`<p>💡 ${S.note}</p>`:''}`)+
+    `<div class="parts">${S.order.map(x=>`<button data-k="${x}" ${x===k?'style="border-color:var(--gold)"':''}>${S.parts[x].name}</button>`).join('')}</div>`);
+  $('#panel').querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>exploreInfo(b.dataset.k));
+}
+function startGame(m){
+  const ks=S.order.filter(k=>m==='find'||S.parts[k].q);
+  G={m,q:GZ.shuffle(ks),i:0,score:0,miss:0}; selected=null; highlight(null); ask();
+}
+function ask(){
+  if(G.i>=G.q.length) return finish();
+  const P=S.parts[G.q[G.i]];
+  $('#vscore').textContent=G.score+' pts';
+  panel(`<div class="muted">${G.i+1} / ${G.q.length}</div><div class="prompt">${G.m==='find'?`${GZ.t('tapThe')} <span style="color:var(--gold)">${P.name}</span>`:P.q}</div><div id="gv"></div>`);
+}
+function onPick(k){
+  if(mode==='explore') return exploreInfo(k);
+  if(!G.q||G.i>=G.q.length) return;
+  const want=G.q[G.i];
+  if(k===want){ const pts=G.miss?5:10; G.score+=pts; flash(k,'#2fbf71'); G.i++; G.miss=0;
+    $('#gv').innerHTML=`<div class="verdict good">${GZ.c('correct')} ${S.parts[k].name} · +${pts}</div>`; setTimeout(ask,900); }
+  else { G.miss++; flash(k,'#e7695b'); $('#gv').innerHTML=`<div class="verdict badv">${GZ.c('wrong')} That is the <b>${S.parts[k].name}</b>. Try again!${G.miss>=2?` <button class="tbtn" id="show">👀 Show me</button>`:''}</div>`;
+    const sb=$('#show'); if(sb) sb.onclick=()=>{ flash(want,'#d4af37'); selected=want; setTimeout(()=>{ selected=null; },1500); G.score-=0; G.miss=2; }; }
+}
+function finish(){
+  const max=G.q.length*10, key='3d-'+G.m+'-'+S.id, best=GZ.saveBest(key,G.score);
+  $('#vscore').textContent='';
+  panel(`<div class="result"><div class="eyebrow">${S.M.t} · ${G.m==='find'?'Find the part':'Function quiz'}</div><div class="big">${G.score} / ${max}</div><div class="stars">${GZ.stars(G.score,max)}</div><p class="muted">${GZ.rating(G.score,max)} · ${GZ.c('best')}: ${best}</p>
+   <div class="btns"><button class="btn primary" id="again">${GZ.c('again')}</button><button class="btn teal" id="shr">${GZ.c('share')}</button><button class="btn" id="ex">${GZ.t('explore')}</button></div></div>`);
+  $('#again').onclick=()=>startGame(G.m); $('#ex').onclick=()=>setMode('explore');
+  $('#shr').onclick=()=>GZ.share(`🧊 I scored ${G.score}/${max} in the 3D ${S.M.t} game on BAIO Game Zone. Can you beat me?`,`games/lab3d.html#${S.id}/${G.m}`);
+}
+function setMode(m){
+  mode=m; document.querySelectorAll('#modes .tab').forEach(t=>t.classList.toggle('on',t.dataset.m===m));
+  try{ history.replaceState(null,'','#'+S.id+'/'+m); }catch(e){}
+  $('#vscore').textContent=''; selected=null; highlight(null);
+  $('#tLabels').hidden=m!=='explore';
+  if(m==='explore') exploreInfo(null); else startGame(m);
+}
+
+/* ---------- open / close ---------- */
+function open(id,m){
+  if(!MODELS[id]) return;
+  $('#picker').hidden=true; $('#hero').hidden=true; $('#viewer').hidden=false; window.scrollTo(0,0);
+  if(!renderer) initGL();
+  $('#loading').hidden=false;
+  $('#vtitle').textContent=MODELS[id].emoji+' '+MODELS[id].t; $('#vch').textContent=MODELS[id].ch;
+  setTimeout(()=>{ resize(); buildModel(id); resetView(); if(!running){ running=true; loop(); } setMode(m||'explore'); },30);
+}
+function close(){ running=false; $('#viewer').hidden=true; $('#picker').hidden=false; $('#hero').hidden=false; drawPicker(); try{ history.replaceState(null,'',location.pathname); }catch(e){} }
+$('#back').onclick=close;
+$('#modes').addEventListener('click',e=>{ const t=e.target.closest('.tab'); if(t) setMode(t.dataset.m); });
+$('#tLabels').onclick=()=>{ showLabels=!showLabels; $('#tLabels').classList.toggle('on',showLabels); };
+$('#tSlice').onclick=()=>{ S.slice=!S.slice; applySlice(); };
+$('#tSpin').onclick=()=>{ controls.autoRotate=!controls.autoRotate; $('#tSpin').classList.toggle('on',controls.autoRotate); };
+$('#tReset').onclick=resetView;
+GZ.onLang(()=>{ if($('#viewer').hidden) drawPicker(); else if(mode==='explore') exploreInfo(selected); });
+GZ.startLang();
+(function(){ const [id,m]=location.hash.slice(1).split('/'); if(MODELS[id]) open(id,['explore','find','quiz'].includes(m)?m:'explore'); else drawPicker(); })();
+</script>
+</body>
+</html>
