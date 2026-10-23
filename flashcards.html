@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Biology Flash Cards | BAIO Learning System</title>
+<meta name="description" content="114 Biology flash cards for I PUC and II PUC — key definitions, terms, formulas and tables, ready to share as social-media images. English, Kannada and Hindi.">
+<meta property="og:title" content="BAIO Biology Flash Cards">
+<meta property="og:description" content="Chapter-wise flash cards for quick revision — share them on WhatsApp, Instagram and Facebook.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=Lora:wght@500;600;700&family=Roboto+Mono:wght@500;600&family=Noto+Sans+Kannada:wght@500;700&family=Noto+Sans+Devanagari:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="games/game.css?v=1">
+<style>
+body{font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif}
+.shelf h3{font-size:15px;color:var(--gold);margin-top:18px}
+.chs{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:10px}
+.chc{display:flex;gap:12px;align-items:center;text-align:left;padding:12px;border-radius:16px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;font:inherit}
+.chc .ic{flex:0 0 52px;height:52px;border-radius:14px;display:grid;place-items:center;font:800 13px Inter;color:#fff;text-align:center;line-height:1.1}
+.chc b{display:block;font:700 15px/1.25 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari',sans-serif}
+.chc small{display:block;color:var(--ink-dim);font-size:11.5px;margin-top:2px}
+.rhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;flex-wrap:wrap}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:12px}
+.thumbs button{padding:0;border:0;background:none;cursor:pointer;border-radius:12px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.25);aspect-ratio:4/5;background:var(--panel2)}
+.thumbs img{display:block;width:100%;height:100%;object-fit:cover}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center}
+.viewer{position:fixed;inset:0;z-index:9000;background:rgba(5,12,9,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px}
+.viewer[hidden]{display:none}
+.viewer img{max-width:100%;max-height:calc(100dvh - 150px);border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+.vbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.vx{position:absolute;right:12px;top:12px;width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.15);color:#fff;font-size:18px;cursor:pointer}
+.vcount{color:#cfe;font:700 13px Inter;margin-top:8px}
+.muted2{color:var(--ink-dim);font-size:12.5px;text-align:center;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero" id="hero">
+    <div class="eyebrow" data-i18n="eyebrow">BAIO Learning System · Revise & share</div>
+    <h1 data-i18n-html="h1">🧠 Biology <span class="accent">Flash Cards</span></h1>
+    <p data-i18n="intro">Six flash cards for every chapter — definitions, key terms, formulas and tables. Tap a card to view it, share it on WhatsApp, Instagram or Facebook with the BAIO link, or download it.</p>
+  </section>
+  <section id="library"></section>
+  <section id="chapter" hidden>
+    <div class="rhead"><button class="tbtn" id="back"></button><span class="muted" id="cch"></span></div>
+    <div class="thumbs" id="thumbs"></div>
+    <div class="acts"><button class="btn primary" id="zipAll"></button><a class="btn" id="openCh"></a></div>
+    <p class="muted2" id="tip"></p>
+  </section>
+  <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
+</div>
+<div class="viewer" id="viewer" hidden>
+  <button class="vx" id="vx" aria-label="Close">✕</button>
+  <img id="vimg" alt="">
+  <div class="vcount" id="vcount"></div>
+  <div class="vbar"><button class="btn" id="vprev" aria-label="Previous">◀</button><button class="btn teal" id="vshare"></button><a class="btn" id="vdl" download></a><button class="btn" id="vnext" aria-label="Next">▶</button></div>
+</div>
+<script src="games/common.js?v=4"></script>
+<script src="flashcards/fc-pu1.js?v=1"></script>
+<script src="flashcards/fc-pu2.js?v=1"></script>
+<script>
+GZ.nav();
+GZ.i18n({
+ en:{eyebrow:'BAIO Learning System · Revise & share', h1:'🧠 Biology <span class="accent">Flash Cards</span>', intro:'Six flash cards for every chapter — definitions, key terms, formulas and tables. Tap a card to view it, share it on WhatsApp, Instagram or Facebook with the BAIO link, or download it.',
+  all:'← All chapters', cards:'cards', zip:'⬇ Download all cards (ZIP)', zipping:'Preparing…', chapter:'📘 Open chapter', share:'📤 Share card', dl:'⬇ Download', tip:'Tip: tap a card, then 📤 Share card — it goes out as an image with the BAIO link.', tag:'FLASH CARD', card:'Card', shareMsg:'🧠 Flash card: {t} ({c}). Revise every chapter with BAIO by Narendra Sir:', role:'Biology Lecturer · Founder & CEO, BAIO', app:'📲 BAIO app', free:'Free notes & MCQs'},
+ kn:{eyebrow:'BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್ · ಪುನರಾವರ್ತಿಸಿ ಮತ್ತು ಹಂಚಿ', h1:'🧠 ಜೀವಶಾಸ್ತ್ರ <span class="accent">ಫ್ಲ್ಯಾಶ್ ಕಾರ್ಡ್‌ಗಳು</span>', intro:'ಪ್ರತಿ ಅಧ್ಯಾಯಕ್ಕೆ ಆರು ಫ್ಲ್ಯಾಶ್ ಕಾರ್ಡ್‌ಗಳು — ವ್ಯಾಖ್ಯೆಗಳು, ಮುಖ್ಯ ಪದಗಳು, ಸೂತ್ರಗಳು ಮತ್ತು ಕೋಷ್ಟಕಗಳು. ಕಾರ್ಡ್ ಒತ್ತಿ ನೋಡಿ, BAIO ಲಿಂಕ್ ಜೊತೆ WhatsApp, Instagram ಅಥವಾ Facebook ನಲ್ಲಿ ಹಂಚಿ, ಅಥವಾ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ.',
+  all:'← ಎಲ್ಲ ಅಧ್ಯಾಯಗಳು', cards:'ಕಾರ್ಡ್‌ಗಳು', zip:'⬇ ಎಲ್ಲ ಕಾರ್ಡ್ ಡೌನ್‌ಲೋಡ್ (ZIP)', zipping:'ಸಿದ್ಧಪಡಿಸಲಾಗುತ್ತಿದೆ…', chapter:'📘 ಅಧ್ಯಾಯ ತೆರೆಯಿರಿ', share:'📤 ಕಾರ್ಡ್ ಹಂಚಿ', dl:'⬇ ಡೌನ್‌ಲೋಡ್', tip:'ಸಲಹೆ: ಕಾರ್ಡ್ ಒತ್ತಿ, ನಂತರ 📤 ಕಾರ್ಡ್ ಹಂಚಿ — ಅದು BAIO ಲಿಂಕ್ ಜೊತೆ ಚಿತ್ರವಾಗಿ ಹೋಗುತ್ತದೆ.', tag:'ಫ್ಲ್ಯಾಶ್ ಕಾರ್ಡ್', card:'ಕಾರ್ಡ್', shareMsg:'🧠 ಫ್ಲ್ಯಾಶ್ ಕಾರ್ಡ್: {t} ({c}). ನರೇಂದ್ರ ಸರ್ ಅವರ BAIO ಜೊತೆ ಪ್ರತಿ ಅಧ್ಯಾಯ ಪುನರಾವರ್ತಿಸಿ:', role:'ಜೀವಶಾಸ್ತ್ರ ಉಪನ್ಯಾಸಕರು · Founder & CEO, BAIO', app:'📲 BAIO ಆ್ಯಪ್', free:'ಉಚಿತ ನೋಟ್ಸ್ ಮತ್ತು MCQ'},
+ hi:{eyebrow:'BAIO लर्निंग सिस्टम · दोहराओ और शेयर करो', h1:'🧠 बायोलॉजी <span class="accent">फ़्लैश कार्ड</span>', intro:'हर अध्याय के लिए छह फ़्लैश कार्ड — परिभाषाएँ, मुख्य शब्द, सूत्र और तालिकाएँ। कार्ड छूकर देखो, BAIO लिंक के साथ WhatsApp, Instagram या Facebook पर शेयर करो, या डाउनलोड करो।',
+  all:'← सभी अध्याय', cards:'कार्ड', zip:'⬇ सभी कार्ड डाउनलोड (ZIP)', zipping:'तैयार हो रहा है…', chapter:'📘 अध्याय खोलो', share:'📤 कार्ड शेयर करो', dl:'⬇ डाउनलोड', tip:'टिप: कार्ड छुओ, फिर 📤 कार्ड शेयर करो — यह BAIO लिंक के साथ चित्र के रूप में जाता है।', tag:'फ़्लैश कार्ड', card:'कार्ड', shareMsg:'🧠 फ़्लैश कार्ड: {t} ({c})। नरेंद्र सर के BAIO के साथ हर अध्याय दोहराओ:', role:'बायोलॉजी लेक्चरर · Founder & CEO, BAIO', app:'📲 BAIO ऐप', free:'मुफ़्त नोट्स और MCQ'}});
+const $=s=>document.querySelector(s), esc=GZ.esc;
+const T=(k,o)=>{ let v=GZ.t(k); if(o) Object.keys(o).forEach(x=>v=v.split('{'+x+'}').join(o[x])); return v; };
+const ids=Object.keys(FC);
+
+/* ---------- translations: flashcards/fc-pu1-<lang>.js → FC_I18N[lang][id] = {title, ch, cards:[{t, p:[[label,text]], f:{h?, r?, s?}}]} ---------- */
+window.FC_I18N=window.FC_I18N||{};
+const loaded={en:true};
+function needLang(l,cb){ if(loaded[l]) return cb(); let n=2; const done=()=>{ if(--n===0){ loaded[l]=true; cb(); } };
+  ['pu1','pu2'].forEach(f=>{ const s=document.createElement('script'); s.src=`flashcards/fc-${f}-${l}.js?v=1`; s.onload=done; s.onerror=done; document.head.appendChild(s); }); }
+function loc(id){ const E=FC[id], L=(FC_I18N[GZ.lang]||{})[id]; if(!L) return E;
+  return {...E, title:L.title, ch:L.ch, cards:E.cards.map((c,i)=>{ const x=L.cards[i]||{}; const f=c.f&&x.f?{...c.f,...x.f}:c.f; return {...c, t:x.t||c.t, p:x.p||c.p, f}; })}; }
+
+/* ---------- card renderer (1080 × 1350) ---------- */
+const W=1080, H=1350, HL=['#ffb3c7','#9fd3ff','#ffc89a','#d9c2ff','#b6f0d0','#ffe58a'], DOT=['#e0457b','#1f7ae0','#e07a2c','#7c4dd6','#1f9e64','#c99a07'];
+const SERIF="Lora,'Noto Sans Kannada','Noto Sans Devanagari',Georgia,serif", SANS="Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif", HEAD="'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari',sans-serif", MONO="'Roboto Mono','DejaVu Sans Mono',monospace";
+function rr(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
+function hexA(h,a){ const n=parseInt(h.slice(1),16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; }
+// wrap a run of styled words: segs=[{t,b}] → lines of [{t,b,w}]
+function wrapRich(g,segs,maxW,fs){
+  const lines=[[]]; let w=0; const fnt=b=>`${b?700:500} ${fs}px ${SERIF}`;
+  segs.forEach(s=>s.t.split(/(\s+)/).filter(x=>x!=='').forEach(tok=>{ g.font=fnt(s.b); const tw=g.measureText(tok).width;
+    if(/^\s+$/.test(tok)){ if(lines[lines.length-1].length){ lines[lines.length-1].push({t:' ',b:s.b,w:tw}); w+=tw; } return; }
+    if(w+tw>maxW&&lines[lines.length-1].length){ const L=lines[lines.length-1]; while(L.length&&L[L.length-1].t===' '){ w-=L.pop().w; } lines.push([]); w=0; }
+    lines[lines.length-1].push({t:tok,b:s.b,w:tw}); w+=tw; }));
+  return lines; }
+function figHeight(g,f,fs,maxW){ if(!f) return 0; const k=f.k;
+  if(k==='emoji') return fs*2.6;
+  if(k==='mono'){ const ms=Math.min(fs*1.02,34); return f.l.length*ms*1.45+40; }
+  if(k==='table'){ const rh=fs*1.25+18; return (f.r.length+1)*rh+16; }
+  if(k==='flow'){ return flowLayout(g,f.s,fs,maxW).h+16; }
+  return 0; }
+function flowLayout(g,steps,fs,maxW){ const cs=fs*0.86; g.font=`700 ${cs}px ${SANS}`; const pad=22, gap=46, items=steps.map(s=>({s,w:g.measureText(s).width+pad*2})); let rows=[[]], x=0;
+  items.forEach(it=>{ const need=(rows[rows.length-1].length?gap:0)+it.w; if(x+need>maxW&&rows[rows.length-1].length){ rows.push([]); x=0; } rows[rows.length-1].push(it); x+=(rows[rows.length-1].length>1?gap:0)+it.w; });
+  const rh=cs+30; return {rows,rh,cs,gap,h:rows.length*rh+(rows.length-1)*14}; }
+function drawFig(g,f,fs,x,y,w,col,hl){ const k=f.k;
+  if(k==='emoji'){ g.textAlign='center'; g.textBaseline='middle'; g.fillStyle='#000'; g.font=`${fs*2}px 'Noto Color Emoji','Apple Color Emoji','Segoe UI Emoji',sans-serif`; g.fillText(f.e,x+w/2,y+fs*1.3); g.textAlign='left'; g.textBaseline='alphabetic'; return; }
+  if(k==='mono'){ const ms=Math.min(fs*1.02,34); g.font=`600 ${ms}px ${MONO}`; const bw=Math.max(...f.l.map(l=>g.measureText(l).width)); const bx=x+(w-Math.min(bw,w-40))/2;
+    g.fillStyle=hexA(col,.08); rr(g,x+10,y,w-20,f.l.length*ms*1.45+28,18); g.fill(); g.fillStyle='#1d2433';
+    f.l.forEach((l,i)=>{ let s=ms; g.font=`600 ${s}px ${MONO}`; while(g.measureText(l).width>w-60&&s>16){ s-=1; g.font=`600 ${s}px ${MONO}`; } g.fillText(l,Math.max(x+30,bx),y+22+ms*(i+1)*1.45-ms*.35); }); return; }
+  if(k==='table'){ const n=f.h.length, rh=fs*1.25+18, cw=(w-20)/n, tx=x+10; let s=fs*.86;
+    rr(g,tx,y,w-20,(f.r.length+1)*rh,16); g.save(); g.clip(); g.fillStyle='#fffdf7'; g.fillRect(tx,y,w-20,(f.r.length+1)*rh); g.fillStyle=hl; g.fillRect(tx,y,w-20,rh);
+    f.r.forEach((r,i)=>{ if(i%2===0){ g.fillStyle='rgba(0,0,0,.035)'; g.fillRect(tx,y+rh*(i+1),w-20,rh); } }); g.restore();
+    g.strokeStyle='rgba(0,0,0,.12)'; g.lineWidth=2; rr(g,tx,y,w-20,(f.r.length+1)*rh,16); g.stroke();
+    for(let c=1;c<n;c++){ g.beginPath(); g.moveTo(tx+cw*c,y); g.lineTo(tx+cw*c,y+(f.r.length+1)*rh); g.stroke(); }
+    const cell=(t,c,row,b)=>{ let z=s; g.font=`${b?800:500} ${z}px ${b?SANS:SERIF}`; while(g.measureText(t).width>cw-28&&z>15){ z-=1; g.font=`${b?800:500} ${z}px ${b?SANS:SERIF}`; } g.fillStyle=b?'#1d2433':'#2a2f3a'; g.fillText(t,tx+cw*c+14,y+rh*row+rh/2+z*.36); };
+    f.h.forEach((h,c)=>cell(h,c,0,true)); f.r.forEach((r,ri)=>r.forEach((t,c)=>cell(t,c,ri+1,false))); return; }
+  if(k==='flow'){ const L=flowLayout(g,f.s,fs,w-20); g.font=`700 ${L.cs}px ${SANS}`;
+    L.rows.forEach((row,ri)=>{ const tw=row.reduce((a,it,i)=>a+it.w+(i?L.gap:0),0); let cx=x+(w-tw)/2; const cy=y+ri*(L.rh+14);
+      row.forEach((it,i)=>{ if(i){ g.fillStyle=col; g.font=`800 ${L.cs}px ${SANS}`; g.fillText('→',cx-L.gap+10,cy+L.rh/2+L.cs*.36); g.font=`700 ${L.cs}px ${SANS}`; }
+        g.fillStyle=hl; rr(g,cx,cy,it.w,L.rh,L.rh/2); g.fill(); g.fillStyle='#1d2433'; g.fillText(it.s,cx+22,cy+L.rh/2+L.cs*.36); cx+=it.w+L.gap; }); }); } }
+function drawCard(A,i){
+  const c=A.cards[i], n=A.cards.length, cv=document.createElement('canvas'); cv.width=W; cv.height=H; const g=cv.getContext('2d');
+  const col=A.color||'#2e9e4f', hl=HL[i%HL.length], dot=DOT[i%DOT.length];
+  // backdrop: soft blurred "desk" scene
+  let gr=g.createLinearGradient(0,0,W,H); gr.addColorStop(0,hexA(col,.55)); gr.addColorStop(.55,'#f4efe3'); gr.addColorStop(1,hexA(col,.35)); g.fillStyle=gr; g.fillRect(0,0,W,H);
+  [[140,180,210,.22],[960,240,170,.18],[880,1180,240,.2],[120,1150,160,.16],[560,40,120,.14]].forEach(([x,y,r,a])=>{ const rg=g.createRadialGradient(x,y,0,x,y,r); rg.addColorStop(0,`rgba(255,255,255,${a+.2})`); rg.addColorStop(1,'rgba(255,255,255,0)'); g.fillStyle=rg; g.beginPath(); g.arc(x,y,r,0,7); g.fill(); });
+  // card (slight tilt like a real flash card)
+  const cx0=72, cy0=96, cw=W-144, ch=H-160, tilt=(i%2?1:-1)*0.012;
+  g.save(); g.translate(W/2,H/2); g.rotate(tilt); g.translate(-W/2,-H/2);
+  g.save(); g.shadowColor='rgba(20,25,40,.28)'; g.shadowBlur=46; g.shadowOffsetY=18; g.fillStyle='#fff'; rr(g,cx0,cy0,cw,ch,38); g.fill(); g.restore();
+  g.strokeStyle='rgba(0,0,0,.06)'; g.lineWidth=2; rr(g,cx0,cy0,cw,ch,38); g.stroke();
+  // FLASH CARD tag (highlighter stroke)
+  const tag=T('tag'); g.font=`800 34px ${SANS}`; const tw=g.measureText(tag).width+70, tx=W/2-tw/2, ty=cy0+38;
+  g.save(); g.translate(W/2,ty+30); g.rotate(-0.025); g.fillStyle='#ffe14d'; g.beginPath(); g.moveTo(-tw/2+6,-26); g.lineTo(tw/2,-30); g.lineTo(tw/2-8,28); g.lineTo(-tw/2,30); g.closePath(); g.fill(); g.fillStyle='#1d2433'; g.textAlign='center'; g.fillText(tag,0,12); g.restore();
+  // title highlight
+  let ts=66; g.font=`700 ${ts}px ${SERIF}`; while(g.measureText(c.t).width>cw-120&&ts>40){ ts-=2; g.font=`700 ${ts}px ${SERIF}`; }
+  const tl=wrapRich(g,[{t:c.t,b:true}],cw-120,ts).slice(0,2), tlw=Math.max(...tl.map(L=>L.reduce((a,s)=>a+s.w,0))), th=tl.length*ts*1.18+34, ty0=ty+92;
+  g.save(); g.translate(W/2,ty0+th/2); g.rotate(-0.012); g.fillStyle=hl; rr(g,-tlw/2-36,-th/2,tlw+72,th,22); g.fill(); g.restore();
+  g.fillStyle='#14203a'; g.textAlign='center'; g.font=`700 ${ts}px ${SERIF}`; tl.forEach((L,k)=>g.fillText(L.map(s=>s.t).join(''),W/2,ty0+17+ts*1.18*(k+1)-ts*.28)); g.textAlign='left';
+  // chapter line
+  const sub=`${A.ch} · ${T('card')} ${i+1}/${n}`; g.font=`700 24px ${SANS}`; g.fillStyle='#7a6a3a'; g.textAlign='center'; let ss=24; while(g.measureText(sub).width>cw-80&&ss>16){ ss--; g.font=`700 ${ss}px ${SANS}`; } g.fillText(sub,W/2,ty0+th+44); g.textAlign='left';
+  // body: bullets + figure, shrink to fit
+  const bx=cx0+70, bw=cw-130, top=ty0+th+78, footH=118, bottom=cy0+ch-footH-22;
+  let fs=40, layout;
+  for(;fs>=22;fs-=1){ let y=0; const items=c.p.map(([lab,txt])=>{ const segs=lab?[{t:lab+': ',b:true},{t:txt,b:false}]:[{t:txt,b:false}]; const ls=wrapRich(g,segs,bw-44,fs); const h=ls.length*fs*1.36; const it={ls,y,h}; y+=h+fs*.52; return it; });
+    const fh=figHeight(g,c.f,fs,bw); const total=y+(fh?fh+fs*.4:0); if(total<=bottom-top||fs===22){ layout={items,fh,total}; break; } }
+  const free=bottom-top-layout.total, y0=top+Math.max(0,Math.min(free*.35,40));
+  layout.items.forEach(it=>{ const yy=y0+it.y; g.fillStyle=dot; g.beginPath(); g.arc(bx+12,yy+fs*.95-fs*.32,fs*.2,0,7); g.fill();
+    it.ls.forEach((L,k)=>{ let x=bx+44; L.forEach(s=>{ g.font=`${s.b?700:500} ${fs}px ${SERIF}`; g.fillStyle=s.b?'#14203a':'#2a2f3a'; g.fillText(s.t,x,yy+fs*.95+k*fs*1.36); x+=s.w; }); }); });
+  if(c.f){ const fy=y0+layout.total-layout.fh; drawFig(g,c.f,fs,bx-10,fy,bw+20,col,hl); }
+  // branding footer (inside the card)
+  const fy=cy0+ch-footH; g.strokeStyle='rgba(0,0,0,.08)'; g.beginPath(); g.moveTo(cx0+50,fy); g.lineTo(cx0+cw-50,fy); g.stroke();
+  gr=g.createLinearGradient(cx0+50,fy+22,cx0+122,fy+94); gr.addColorStop(0,'#e9c45a'); gr.addColorStop(1,'#c99a2e'); g.fillStyle=gr; g.beginPath(); g.arc(cx0+86,fy+58,36,0,7); g.fill();
+  g.fillStyle='#14203a'; g.font=`800 40px ${HEAD}`; g.textAlign='center'; g.fillText('B',cx0+86,fy+72); g.textAlign='left';
+  g.fillStyle='#14203a'; g.font=`800 32px ${SANS}`; g.fillText('Narendra Sir',cx0+138,fy+52); g.fillStyle='#1f9e64'; g.font=`700 22px ${SANS}`; let rs=22; while(g.measureText(T('role')).width>470&&rs>15){ rs--; g.font=`700 ${rs}px ${SANS}`; } g.fillText(T('role'),cx0+138,fy+86);
+  g.textAlign='right'; g.fillStyle='#b8912a'; g.font=`800 26px ${SANS}`; g.fillText(T('app'),cx0+cw-50,fy+52); g.fillStyle='#5f6b80'; g.font=`600 20px ${SANS}`; g.fillText(T('free'),cx0+cw-50,fy+84); g.textAlign='left';
+  g.restore();
+  return cv; }
+
+/* ---------- fonts ---------- */
+let fontsOk=false;
+async function fontsReady(){ if(fontsOk) return; try{ await Promise.all(['500 20px Lora','700 20px Lora','600 20px "Roboto Mono"','800 20px Inter','500 20px Inter','700 20px "Space Grotesk"','500 20px "Noto Sans Kannada"','700 20px "Noto Sans Kannada"','500 20px "Noto Sans Devanagari"','700 20px "Noto Sans Devanagari"'].map(f=>document.fonts.load(f,'Aಕक'))); await document.fonts.ready; }catch(e){} fontsOk=true; }
+
+/* ---------- library ---------- */
+function drawLibrary(){
+  $('#library').innerHTML=[[1,'I PUC'],[2,'II PUC']].map(([n,lbl])=>`<div class="shelf"><h3>${lbl}</h3><div class="chs">${ids.filter(id=>id.startsWith('pu'+n)).map(id=>{ const A=loc(id);
+    return `<button class="chc" data-id="${id}"><span class="ic" style="background:linear-gradient(150deg,${A.color},#0b1b14)">🧠<br>${A.cards.length}</span><span><b>${esc(A.title)}</b><small>${esc(A.ch.replace(/^I+ PUC · /,''))} · ${A.cards.length} ${T('cards')}</small></span></button>`; }).join('')}</div></div>`).join('');
+  $('#library').querySelectorAll('.chc').forEach(c=>c.onclick=()=>openCh(c.dataset.id));
+}
+
+/* ---------- chapter + viewer ---------- */
+let cid=null, A=null, urls=[], cur=0, canv=[];
+async function openCh(id,show){ cid=id; A=loc(id); $('#library').hidden=true; $('#hero').hidden=true; $('#chapter').hidden=false;
+  $('#back').textContent=T('all'); $('#cch').textContent=A.ch; $('#zipAll').textContent=T('zip'); $('#openCh').textContent=T('chapter'); $('#openCh').href=A.page; $('#tip').textContent=T('tip');
+  $('#thumbs').innerHTML=A.cards.map((c,i)=>`<button data-i="${i}" aria-label="${esc(c.t)}"></button>`).join(''); window.scrollTo(0,0);
+  await fontsReady(); urls.forEach(u=>URL.revokeObjectURL(u)); urls=[]; canv=[];
+  for(let i=0;i<A.cards.length;i++){ const cv=drawCard(A,i); canv[i]=cv; const blob=await new Promise(r=>cv.toBlob(r,'image/jpeg',.9)); urls[i]=URL.createObjectURL(blob);
+    const b=$('#thumbs').querySelector(`[data-i="${i}"]`); if(b){ b.innerHTML=`<img src="${urls[i]}" alt="${esc(A.cards[i].t)}">`; b.onclick=()=>view(i); } }
+  if(show!=null) view(show);
+  try{ history.replaceState(null,'','#'+cid); }catch(e){} }
+function fname(i){ return `BAIO_FlashCard_${cid}_${String(i+1).padStart(2,'0')}_${A.cards[i].t.replace(/[^A-Za-z0-9]+/g,'_').slice(0,30)}.jpg`; }
+function view(i){ cur=(i+A.cards.length)%A.cards.length; $('#viewer').hidden=false; $('#vimg').src=urls[cur]; $('#vimg').alt=A.cards[cur].t; $('#vcount').textContent=`${T('card')} ${cur+1} / ${A.cards.length}`;
+  $('#vshare').textContent=T('share'); $('#vdl').textContent=T('dl'); $('#vdl').href=urls[cur]; $('#vdl').setAttribute('download',fname(cur));
+  try{ history.replaceState(null,'','#'+cid+'/'+(cur+1)); }catch(e){} }
+$('#vprev').onclick=()=>view(cur-1); $('#vnext').onclick=()=>view(cur+1);
+$('#vx').onclick=()=>{ $('#viewer').hidden=true; try{ history.replaceState(null,'','#'+cid); }catch(e){} };
+$('#viewer').addEventListener('click',e=>{ if(e.target.id==='viewer') $('#vx').click(); });
+document.addEventListener('keydown',e=>{ if($('#viewer').hidden) return; if(e.key==='ArrowRight') view(cur+1); if(e.key==='ArrowLeft') view(cur-1); if(e.key==='Escape') $('#vx').click(); });
+(function(){ let x0=null; const el=$('#vimg'); el.addEventListener('touchstart',e=>{ x0=e.touches[0].clientX; },{passive:true}); el.addEventListener('touchend',e=>{ if(x0==null) return; const dx=e.changedTouches[0].clientX-x0; if(Math.abs(dx)>50) view(cur+(dx<0?1:-1)); x0=null; },{passive:true}); })();
+$('#vshare').onclick=()=>GZ.shareImage(canv[cur],fname(cur),T('shareMsg',{t:A.cards[cur].t,c:A.ch}),'flashcards.html#'+cid+'/'+(cur+1));
+$('#back').onclick=()=>{ $('#chapter').hidden=true; $('#library').hidden=false; $('#hero').hidden=false; drawLibrary(); try{ history.replaceState(null,'',location.pathname); }catch(e){} };
+$('#zipAll').onclick=async()=>{ const b=$('#zipAll'); b.textContent=T('zipping'); b.disabled=true;
+  try{ if(!window.JSZip) await new Promise((ok,no)=>{ const s=document.createElement('script'); s.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'; s.onload=ok; s.onerror=no; document.head.appendChild(s); });
+    const z=new JSZip(); for(let i=0;i<canv.length;i++){ const bl=await new Promise(r=>canv[i].toBlob(r,'image/jpeg',.92)); z.file(fname(i),bl); }
+    const out=await z.generateAsync({type:'blob'}); const a=document.createElement('a'); a.href=URL.createObjectURL(out); a.download=`BAIO_FlashCards_${cid}_${GZ.lang}.zip`; document.body.appendChild(a); a.click(); a.remove(); }
+  catch(e){ // no ZIP library (offline): download one by one
+    for(let i=0;i<urls.length;i++){ const a=document.createElement('a'); a.href=urls[i]; a.download=fname(i); document.body.appendChild(a); a.click(); a.remove(); await new Promise(r=>setTimeout(r,350)); } }
+  b.textContent=T('zip'); b.disabled=false; };
+
+/* ---------- start ---------- */
+GZ.startLang();
+GZ.onLang(l=>needLang(l,()=>{ if(!$('#chapter').hidden&&cid){ const v=!$('#viewer').hidden?cur:null; openCh(cid,v); } else drawLibrary(); }));
+needLang(GZ.lang,()=>{ const [id,n]=location.hash.slice(1).split('/'); drawLibrary(); if(FC[id]) openCh(id,n?Math.max(0,+n-1):null); });
+</script>
+</body>
+</html>
