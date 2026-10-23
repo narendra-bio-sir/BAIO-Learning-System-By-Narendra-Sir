@@ -62,9 +62,10 @@
   <div id="stage"></div>
   <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
 </div>
-<script src="common.js?v=1"></script>
-<script src="riddles.js?v=1"></script>
-<script src="words.js?v=1"></script>
+<script src="common.js?v=2"></script>
+<script src="riddles.js?v=2"></script>
+<script src="words.js?v=2"></script>
+<script src="words-more.js?v=1"></script>
 <script>
 GZ.nav();
 GZ.i18n({
@@ -85,9 +86,12 @@ function resultCard(id,score,max,label){
   $('#shr').onclick=()=>GZ.share(`🔠 I scored ${score}/${max} in the ${label} (${chapName()}) on BAIO Game Zone. Can you beat me?`,`games/words.html#${game}-${chap}`);
 }
 
+/* cell size that fits the card exactly: card inner width minus the 2px gaps */
+function fitCell(cols,max){ const inner=Math.min(stage.clientWidth||window.innerWidth-32,760)-38; return Math.max(14,Math.min(max,Math.floor((inner-2*(cols-1))/cols))); }
+
 /* ---------- crossword ---------- */
 function buildCrossword(words){
-  const N=17; let bestGrid=null;
+  const N=15; let bestGrid=null;
   for(let attempt=0;attempt<40;attempt++){
     const list=attempt===0?words.slice().sort((a,b)=>b[0].length-a[0].length):[...words.slice().sort((a,b)=>b[0].length-a[0].length).slice(0,1),...GZ.shuffle(words.slice().sort((a,b)=>b[0].length-a[0].length).slice(1))];
     const g=Array.from({length:N},()=>Array(N).fill(null)), placed=[];
@@ -120,12 +124,12 @@ function buildCrossword(words){
 }
 const XW={};
 function xwStart(){
-  const P=buildCrossword(WORDS[chap]); Object.assign(XW,P,{fill:P.sol.map(r=>r.map(ch=>ch?'':null)),cur:P.placed[0],pos:0,marks:null});
+  const P=buildCrossword(GZ.fresh('xw-'+chap, WORDS[chap], 10, w=>w[0])); Object.assign(XW,P,{fill:P.sol.map(r=>r.map(ch=>ch?'':null)),cur:P.placed[0],pos:0,marks:null});
   xwDraw();
 }
 function cellsOf(p){ return Array.from({length:p.w.length},(_,i)=>[p.r+(p.d?i:0),p.c+(p.d?0:i)]); }
 function xwDraw(){
-  const cs=Math.max(20,Math.min(32,Math.floor((Math.min(window.innerWidth,760)-70)/XW.cols)));
+  const cs=fitCell(XW.cols,32);
   const curCells=cellsOf(XW.cur).map(x=>x.join(','));
   const numAt={}; XW.placed.forEach(p=>numAt[p.r+','+p.c]=p.n);
   const solved=p=>cellsOf(p).every(([r,c])=>XW.fill[r][c]===XW.sol[r][c]);
@@ -174,10 +178,10 @@ function xwKey(k){
 const WS={};
 function wsStart(){
   const N=12, DIRS=[[0,1],[1,0],[1,1],[-1,1]];
-  let grid, placed;
+  let grid, placed; WS.pick=GZ.fresh('ws-'+chap, WORDS[chap], 10, w=>w[0]);
   for(let t=0;t<60;t++){
     grid=Array.from({length:N},()=>Array(N).fill('')); placed=[]; let ok=true;
-    for(const [w,clue] of WORDS[chap].slice().sort((a,b)=>b[0].length-a[0].length)){
+    for(const [w,clue] of WS.pick.slice().sort((a,b)=>b[0].length-a[0].length)){
       let done=false;
       for(let k=0;k<300&&!done;k++){ const [dr,dc]=GZ.pick(DIRS), r=Math.floor(Math.random()*N), c=Math.floor(Math.random()*N);
         const er=r+dr*(w.length-1), ec=c+dc*(w.length-1); if(er<0||er>=N||ec<0||ec>=N) continue;
@@ -192,7 +196,7 @@ function wsStart(){
   Object.assign(WS,{N,grid,placed,start:null,showWords:false,t0:Date.now(),miss:0}); wsDraw();
 }
 function wsDraw(msg){
-  const cs=Math.max(22,Math.min(34,Math.floor((Math.min(window.innerWidth,760)-70)/WS.N)));
+  const cs=fitCell(WS.N,34);
   const foundSet=new Set(); WS.placed.filter(p=>p.found).forEach(p=>{ for(let i=0;i<p.w.length;i++) foundSet.add((p.r+p.dr*i)+','+(p.c+p.dc*i)); });
   const nf=WS.placed.filter(p=>p.found).length;
   stage.innerHTML=`<div class="card"><div class="bar"><b>🔍 Word Search</b><span class="score">${nf} / ${WS.placed.length}</span></div>
@@ -216,7 +220,7 @@ function wsFinish(){ const nf=WS.placed.filter(p=>p.found).length; const bonus=W
 
 /* ---------- match the pairs ---------- */
 const MP={};
-function mpStart(){ MP.rounds=[...Array(2)].map((_,i)=>GZ.shuffle(WORDS[chap]).slice(0,5)); const all=GZ.shuffle(WORDS[chap]); MP.rounds=[all.slice(0,5),all.slice(5,10)]; MP.r=0; MP.score=0; mpRound(); }
+function mpStart(){ MP.rounds=[...Array(2)].map((_,i)=>GZ.shuffle(WORDS[chap]).slice(0,5)); const all=GZ.fresh('mp-'+chap, WORDS[chap], 10, w=>w[0]); MP.rounds=[all.slice(0,5),all.slice(5,10)]; MP.r=0; MP.score=0; mpRound(); }
 function mpRound(){
   if(MP.r>=MP.rounds.length) return resultCard('mp-'+chap,MP.score,100,'Match the Pairs');
   const set=MP.rounds[MP.r]; const terms=GZ.shuffle(set), clues=GZ.shuffle(set); const st={t:null,done:new Set(),miss:{}};

@@ -65,6 +65,21 @@
   };
   GZ.shuffle = function(a){ a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   GZ.pick = a => a[Math.floor(Math.random() * a.length)];
+  // Pick n items, preferring ones this student has not seen yet; remembers what was shown.
+  // When everything has been seen, the oldest-seen items come back first.
+  GZ.fresh = function(key, items, n, idOf){
+    idOf = idOf || (x => typeof x === 'string' ? x : JSON.stringify(x).slice(0, 80));
+    const K = 'baio_seen_' + key; let seen = [];
+    try { seen = JSON.parse(localStorage.getItem(K) || '[]'); } catch (e) {}
+    const rank = x => { const i = seen.indexOf(idOf(x)); return i < 0 ? -1 : i; }; // -1 = never seen; lower index = seen longer ago
+    const unseen = GZ.shuffle(items.filter(x => rank(x) < 0));
+    const old = items.filter(x => rank(x) >= 0).sort((a, b) => rank(a) - rank(b));
+    const out = unseen.concat(old).slice(0, Math.min(n, items.length));
+    const ids = out.map(idOf);
+    seen = seen.filter(s => !ids.includes(s)).concat(ids).slice(-400);
+    try { localStorage.setItem(K, JSON.stringify(seen)); } catch (e) {}
+    return GZ.shuffle(out);
+  };
   GZ.stars = (s, max) => { const n = s >= max * .8 ? 3 : s >= max * .55 ? 2 : s >= max * .3 ? 1 : 0; return '★'.repeat(n) + '☆'.repeat(3 - n); };
   GZ.share = function(text, path){
     const url = GZ.BASE + path;
