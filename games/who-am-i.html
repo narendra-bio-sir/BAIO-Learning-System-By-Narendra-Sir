@@ -108,7 +108,7 @@
   <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
 </div>
 
-<script src="common.js?v=2"></script>
+<script src="common.js?v=3"></script>
 <script src="riddles.js?v=2"></script>
 <script src="riddles-more.js?v=1"></script>
 <script>
@@ -213,9 +213,8 @@ function finish(){
   show('result');
 }
 function share(){
-  const u=UI[lang], txt=u.shareTxt(cur.t,total), url=BASE+'#'+cur.id;
-  if(navigator.share){ navigator.share({title:'BAIO · Who Am I?',text:txt,url:url}).catch(()=>{}); return; }
-  window.open('https://wa.me/?text='+encodeURIComponent(txt+' '+url),'_blank','noopener');
+  const u=UI[lang], txt=u.shareTxt(cur.t,total);
+  GZ.share(txt,'games/who-am-i.html#'+cur.id,{icon:'🧩',game:{kn:'ನಾನು ಯಾರು?',hi:'मैं कौन हूँ?'}[lang]||'Who Am I?',sub:`${cur.pu===1?'I PUC':'II PUC'} · ${cur.t}`,score:total,max:maxPts(cur),unit:'pts',color:['#8f63d8','#1f6fe0']});
 }
 
 $('chapters').addEventListener('click',e=>{ const b=e.target.closest('.chap'); if(b) start(b.dataset.id); });

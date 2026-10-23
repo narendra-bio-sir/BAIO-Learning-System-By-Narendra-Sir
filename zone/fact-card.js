@@ -101,7 +101,7 @@
     else { x.font='60px '+FONT; x.textAlign='center'; x.fillText('🧬',pcx,pcy+20); x.textAlign='left'; }
     var tx=pcx+pr+28;
     x.font='800 38px '+FONT; x.fillStyle=T.ink; x.fillText('Narendra Sir',tx,sy+62);
-    x.font='500 23px '+FONT; x.fillStyle=T.dim; x.fillText('M.Sc Biochemistry · B.Ed · KSET (Life Science)',tx,sy+104); x.fillText('Biology Lecturer · Founder/CEO, BAIO Learning System',tx,sy+138);
+    x.font='500 23px '+FONT; x.fillStyle=T.dim; x.fillText('M.Sc Biochemistry · B.Ed · KSET (Life Science)',tx,sy+104); x.fillText('Biology Lecturer · Founder & CEO, BAIO Learning System',tx,sy+138);
     /* call to action + QR */
     var ay=sy+sh+20, ah=194, qw=194, cw=R-L-qw-18, ag=x.createLinearGradient(L,0,L+cw,0); ag.addColorStop(0,'#20be96'); ag.addColorStop(1,'#13a37f');
     rr(x,L,ay,cw,ah,28); x.fillStyle=ag; x.fill();

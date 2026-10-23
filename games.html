@@ -57,7 +57,7 @@
   <div class="games" id="games"></div>
   <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
 </div>
-<script src="games/common.js?v=2"></script>
+<script src="games/common.js?v=3"></script>
 <script src="games/riddles.js?v=2"></script>
 <script src="games/riddles-more.js?v=1"></script>
 <script src="games/sequences.js?v=2"></script>
@@ -107,7 +107,7 @@ function dailyHead(kind){ return `<div class="top"><div><div class="eyebrow">${d
 function dailyDone(){
   $('#daily').innerHTML=dailyHead('')+`<div class="verdict good"><b>${D.score} / ${D.max}</b> — ${D.line||''}</div><p class="muted" style="margin:10px 0 0">${GZ.t('back')}</p>
    <div class="btns"><button class="btn teal" id="dshare">${GZ.c('share')}</button></div>`;
-  $('#dshare').onclick=()=>GZ.share(`🗓️ I solved today's BAIO Biology Puzzle of the Day (${D.score}/${D.max}) — 🔥 ${D.streak} day streak! Try it:`,'games.html');
+  $('#dshare').onclick=()=>GZ.share(`🗓️ I solved today's BAIO Biology Puzzle of the Day (${D.score}/${D.max}) — 🔥 ${D.streak} day streak! Try it:`,'games.html',{icon:'🗓️',game:'Puzzle of the Day',sub:`🔥 ${D.streak} day streak`,score:D.score,max:D.max,color:['#e0a93a','#e05d5d']});
 }
 function dailyRiddle(){
   const all=[]; RIDDLES.forEach(c=>c.r.forEach(r=>all.push([r,c])));

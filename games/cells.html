@@ -64,7 +64,7 @@
   <div id="stage"></div>
   <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
 </div>
-<script src="common.js?v=2"></script>
+<script src="common.js?v=3"></script>
 <script>
 GZ.nav();
 GZ.i18n({
@@ -79,7 +79,7 @@ function resultCard(id,score,max,label){
    <p class="muted">${GZ.rating(score,max)} · ${GZ.c('best')}: ${best}</p>
    <div class="btns"><button class="btn primary" id="again">${GZ.c('again')}</button><button class="btn teal" id="shr">${GZ.c('share')}</button><a class="btn" href="${GZ.HUB}">${GZ.c('hub')}</a></div></div>`;
   $('#again').onclick=()=>start(game);
-  $('#shr').onclick=()=>GZ.share(`🔬 I scored ${score}/${max} in ${label} on BAIO Game Zone. Can you beat me?`,'games/cells.html#'+game);
+  $('#shr').onclick=()=>GZ.share(`🔬 I scored ${score}/${max} in ${label} on BAIO Game Zone. Can you beat me?`,'games/cells.html#'+game,{icon:'🔬',game:label,sub:'Cells & Trees',score,max,color:['#0fa38a','#1f6fe0']});
 }
 const head=(title,i,n,score)=>`<div class="bar"><b>${title}</b><span class="score">${score} pts</span></div><div class="muted">${GZ.t('round')} ${i} / ${n}</div><div class="prog"><i style="width:${(i-1)/n*100}%"></i></div>`;
 

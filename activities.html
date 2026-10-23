@@ -162,7 +162,7 @@ html[lang=kn] .ws h3,html[lang=hi] .ws h3{letter-spacing:0;text-transform:none}
   <div id="printArea"></div>
   <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
 </div>
-<script src="games/common.js?v=2"></script>
+<script src="games/common.js?v=3"></script>
 <script src="activities/acts-pu1.js?v=1"></script>
 <script src="activities/acts-pu2.js?v=1"></script>
 <script>
@@ -267,8 +267,9 @@ function drawDigital(){
   if(D.type==='sort') sortGame(g,D); else if(D.type==='order') orderGame(g,D); else if(SIMS[D.sim]) SIMS[D.sim](g);
 }
 function finish(g,score,max){ GZ.saveBest('act-'+cid,score); setDone(cid,'d',1);
-  g.insertAdjacentHTML('beforeend',`<div class="gscore">${T('allSorted')} ${score} / ${max} ${GZ.stars(score,max)}<br><span class="muted">${GZ.rating(score,max)}</span></div><div class="acts" style="justify-content:center"><button class="btn" id="again">${T('restart')}</button></div>`);
-  $('#again').onclick=()=>drawDigital(); }
+  g.insertAdjacentHTML('beforeend',`<div class="gscore">${T('allSorted')} ${score} / ${max} ${GZ.stars(score,max)}<br><span class="muted">${GZ.rating(score,max)}</span></div><div class="acts" style="justify-content:center"><button class="btn" id="again">${T('restart')}</button><button class="btn teal" id="gshr">${GZ.c('share')}</button></div>`);
+  $('#again').onclick=()=>drawDigital();
+  $('#gshr').onclick=()=>GZ.share(`🧪 I scored ${score}/${max} in "${A.digital.t}" (${A.ch}) on BAIO Projects & Activities. Can you beat me?`,'activities.html#'+cid+'/2',{icon:'🧪',game:A.digital.t,sub:A.ch,score,max,color:[A.color,'#1f6fe0']}); }
 function sortGame(g,D){
   const items=GZ.shuffle(D.items.map((it,i)=>({t:it[0],b:it[1],i})));
   let sel=null, miss=0, wrong=new Set(), placed=0;
