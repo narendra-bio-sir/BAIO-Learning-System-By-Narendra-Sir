@@ -207,7 +207,10 @@ let voice=null;
 const VLANG={en:'en-IN',kn:'kn-IN',hi:'hi-IN'};
 function pickVoice(){ const v=speechSynthesis.getVoices(), l=GZ.lang||'en', re=new RegExp('^'+l+'[-_]IN','i'), re2=new RegExp('^'+l,'i'); voice=v.find(x=>re.test(x.lang))||v.find(x=>re2.test(x.lang))||null; }
 if('speechSynthesis' in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
-function say(text,onend){ if(!('speechSynthesis' in window)) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); if(voice) u.voice=voice; u.lang=voice?voice.lang:VLANG[GZ.lang]||'en-IN'; u.rate=.95; u.onend=onend||null; speechSynthesis.speak(u); }
+// read "I PUC" / "II PUC" as words (otherwise the voice says "I" like the pronoun)
+const PUC_SAY={en:['first year P U C','second year P U C','Chapter'],kn:['ಪ್ರಥಮ ಪಿ ಯು ಸಿ','ದ್ವಿತೀಯ ಪಿ ಯು ಸಿ',''],hi:['प्रथम वर्ष पी यू सी','द्वितीय वर्ष पी यू सी','']};
+const spoken=t=>{ const w=PUC_SAY[GZ.lang]||PUC_SAY.en; t=t.replace(/\bII PUC\b/g,w[1]).replace(/\bI PUC\b/g,w[0]); if(w[2]) t=t.replace(/\bCh (\d+)/g,w[2]+' $1'); return t; };
+function say(text,onend){ if(!('speechSynthesis' in window)) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(spoken(text)); if(voice) u.voice=voice; u.lang=voice?voice.lang:VLANG[GZ.lang]||'en-IN'; u.rate=.95; u.onend=onend||null; speechSynthesis.speak(u); }
 function stopSpeak(){ if('speechSynthesis' in window) speechSynthesis.cancel(); speaking=false; $('#tRead').classList.remove('on'); }
 function pageText(){ if(pi===0) return `${B.title}. ${B.ch.replace(/·/g,',')}. ${T('starringSay')}`; if(pi<=B.pages.length){ const p=B.pages[pi-1]; return `${p.t}. ${plain(p.x)} ${T('rememberSay')}: ${p.r}`; } if(pi===B.pages.length+1) return T('wordsMet')+': '+termsOf(B).map(t=>t[0]).join(', ')+'.'; return T('quickQuiz')+'. '+T('doYou'); }
 function readPage(){ speaking=true; $('#tRead').classList.add('on'); say(pageText().replace(/Prof\. BAIO/g,'Professor BAIO'),()=>{ speaking=false; $('#tRead').classList.remove('on'); if(auto&&pi<B.pages.length+1) setTimeout(()=>go(pi+1,1),700); else if(auto){ auto=false; $('#tAuto').classList.remove('on'); } }); }
