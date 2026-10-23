@@ -144,11 +144,14 @@
     return cv;
   };
   GZ.shareBanner = async function(text, path, card){
-    const url = GZ.BASE + path;
     try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch (e) {}
-    const cv = GZ.resultBanner(card, url);
+    const cv = GZ.resultBanner(card, GZ.BASE + path);
+    return GZ.shareImage(cv, 'BAIO_result_' + String(card.game).replace(/[^A-Za-z0-9]+/g, '_').slice(0, 30) + '.jpg', text, path);
+  };
+  // share any canvas as an image + text + link (falls back to a preview with download / WhatsApp / copy)
+  GZ.shareImage = async function(cv, fname, text, path){
+    const url = GZ.BASE + path;
     const blob = await new Promise(r => cv.toBlob(r, 'image/jpeg', .92));
-    const fname = 'BAIO_result_' + String(card.game).replace(/[^A-Za-z0-9]+/g, '_').slice(0, 30) + '.jpg';
     const file = blob && new File([blob], fname, { type: 'image/jpeg' });
     if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
       try { await navigator.share({ files: [file], title: 'BAIO Game Zone', text: text + '\n' + url }); return; }
