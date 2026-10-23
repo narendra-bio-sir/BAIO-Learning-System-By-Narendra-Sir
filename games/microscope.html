@@ -88,7 +88,7 @@ details summary{cursor:pointer;font:700 13px Inter;color:var(--teal);margin-top:
     </div>
     <button class="shoot" id="shoot" aria-label="Capture" hidden></button>
     <div class="ctrls" id="ctrls" hidden>
-      <div class="row"><label data-i18n="zoom">🔍 Zoom</label><input type="range" id="zoom" min="1" max="6" step="0.1" value="1"><output id="zoomOut">1.0×</output></div>
+      <div class="row"><label data-i18n="zoom">🔍 Zoom</label><input type="range" id="zoom" min="0" max="1000" step="1" value="0"><output id="zoomOut">1.0×</output></div>
       <div class="row" id="focusRow" hidden><label data-i18n="focus">🎯 Focus</label><input type="range" id="focus" min="0" max="1" step="0.01" value="0"><output id="focusOut"></output></div>
       <div class="row"><label data-i18n="bright">☀️ Brightness</label><input type="range" id="bright" min="50" max="250" value="100"><output id="brightOut">100%</output></div>
       <div class="row"><label data-i18n="contrast">◐ Contrast</label><input type="range" id="contrast" min="50" max="300" value="100"><output id="contrastOut">100%</output></div>
@@ -232,7 +232,9 @@ $('#lensGuide').innerHTML=`
  <ul><li>Focus by moving the slide, not by zooming.</li><li>Use a thin specimen — one cell layer thick is ideal.</li><li>Use ✨ Enhance or more contrast for unstained specimens.</li><li>Use 📏 Set scale once with a ruler so you can measure cells.</li></ul>`;
 
 /* ---------------- camera ---------------- */
-const vid=$('#vid'); let stream=null, track=null, facing='environment', caps={}, hwZoom=1, torchOn=false;
+const vid=$('#vid'); let stream=null, track=null, facing='environment', caps={}, hwZoom=1, torchOn=false, maxZoom=10;
+// zoom slider is logarithmic so low zoom stays easy to control even when the phone allows 30×–100×
+const z2s=z=>Math.round(Math.log(z)/Math.log(maxZoom)*1000), s2z=v=>Math.exp(v/1000*Math.log(maxZoom));
 const st={zoom:1,bright:100,contrast:100,sat:100,enh:false,bw:false};
 function filterCss(){ const c=st.contrast*(st.enh?1.5:1), s=st.bw?0:st.sat*(st.enh?1.3:1); return `brightness(${st.bright}%) contrast(${c}%) saturate(${s}%)`+(st.enh?' url(#sharpen)':''); }
 function applyView(){ const dz=st.zoom/hwZoom; vid.style.transform=`scale(${Math.max(1,dz)})`; vid.style.filter=filterCss(); $('#zoomTag').textContent=st.zoom.toFixed(1)+'×'; $('#zoomOut').textContent=st.zoom.toFixed(1)+'×'; drawScaleBar(); }
@@ -245,6 +247,8 @@ async function startCam(){
     track=stream.getVideoTracks()[0]; caps=track.getCapabilities?track.getCapabilities():{};
     $('#camMsg').hidden=true; $('#ctrls').hidden=false; $('#shoot').hidden=false;
     $('#tTorch').disabled=!caps.torch; hwZoom=1;
+    // go up to the phone's own maximum zoom (at least 10×; above the camera's limit the picture is enlarged digitally)
+    maxZoom=Math.max(10, caps.zoom&&caps.zoom.max?Math.round(caps.zoom.max*10)/10:0); st.zoom=Math.min(st.zoom,maxZoom); $('#zoom').value=z2s(st.zoom);
     if(caps.focusDistance&&caps.focusMode&&caps.focusMode.includes('manual')){ $('#focusRow').hidden=false; const f=$('#focus'); f.min=caps.focusDistance.min; f.max=caps.focusDistance.max; f.step=caps.focusDistance.step||0.01; f.value=caps.focusDistance.min; }
     else $('#focusRow').hidden=true;
     setZoom(st.zoom); calInfo();
@@ -260,7 +264,7 @@ async function setZoom(z){
   applyView();
 }
 $('#startCam').onclick=startCam;
-$('#zoom').oninput=e=>setZoom(+e.target.value);
+$('#zoom').oninput=e=>setZoom(Math.round(s2z(+e.target.value)*10)/10);
 ['bright','contrast','sat'].forEach(k=>{ $('#'+k).oninput=e=>{ st[k]=+e.target.value; $('#'+k+'Out').textContent=st[k]+'%'; applyView(); }; });
 $('#focus').oninput=async e=>{ try{ await track.applyConstraints({advanced:[{focusMode:'manual',focusDistance:+e.target.value}]}); }catch(_){} };
 $('#tTorch').onclick=async()=>{ if(!track) return; torchOn=!torchOn; try{ await track.applyConstraints({advanced:[{torch:torchOn}]}); }catch(e){ torchOn=false; } $('#tTorch').classList.toggle('on',torchOn); };
