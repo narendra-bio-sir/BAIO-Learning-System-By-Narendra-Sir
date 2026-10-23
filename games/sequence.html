@@ -36,7 +36,7 @@ h3.grp{font-size:13px;color:var(--gold);margin-top:16px;letter-spacing:.5px}
   <div id="stage"></div>
   <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
 </div>
-<script src="common.js?v=2"></script>
+<script src="common.js?v=3"></script>
 <script src="riddles.js?v=2"></script>
 <script src="sequences.js?v=2"></script>
 <script>
@@ -90,7 +90,7 @@ function finish(){
    <div class="btns"><button class="btn primary" id="again">${GZ.c('again')}</button><button class="btn teal" id="shr">${GZ.c('share')}</button><button class="btn" id="m">← All sets</button><a class="btn" href="${GZ.HUB}">${GZ.c('hub')}</a></div></div>`;
   $('#again').onclick=()=>{ if(mixed) queue=GZ.fresh('seqmix',SEQS,6,s=>s.id); qi=0; total=0; play(); };
   $('#m').onclick=menu;
-  $('#shr').onclick=()=>GZ.share(`🔢 I scored ${total}/${max} in "${label}" on BAIO Game Zone. Can you beat me?`,'games/sequence.html#'+(mixed?'mix':queue[0].id));
+  $('#shr').onclick=()=>GZ.share(`🔢 I scored ${total}/${max} in "${label}" on BAIO Game Zone. Can you beat me?`,'games/sequence.html#'+(mixed?'mix':queue[0].id),{icon:'🔢',game:label,sub:'Put It in Order',score:total,max,color:['#e0a93a','#e0603c']});
 }
 GZ.startLang();
 (function(){ const h=location.hash.slice(1); const s=SEQS.find(x=>x.id===h);

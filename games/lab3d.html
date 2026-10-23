@@ -76,7 +76,7 @@
   </section>
   <footer>Narendra Sir · Biology Lecturer · BAIO Learning System · 3D engine: three.js (MIT)</footer>
 </div>
-<script src="common.js?v=2"></script>
+<script src="common.js?v=3"></script>
 <script src="lib/three.min.js"></script>
 <script src="lib/OrbitControls.js"></script>
 <script src="models3d.js?v=1"></script>
@@ -233,7 +233,7 @@ function finish(){
   panel(`<div class="result"><div class="eyebrow">${S.M.t} · ${G.m==='find'?'Find the part':'Function quiz'}</div><div class="big">${G.score} / ${max}</div><div class="stars">${GZ.stars(G.score,max)}</div><p class="muted">${GZ.rating(G.score,max)} · ${GZ.c('best')}: ${best}</p>
    <div class="btns"><button class="btn primary" id="again">${GZ.c('again')}</button><button class="btn teal" id="shr">${GZ.c('share')}</button><button class="btn" id="ex">${GZ.t('explore')}</button></div></div>`);
   $('#again').onclick=()=>startGame(G.m); $('#ex').onclick=()=>setMode('explore');
-  $('#shr').onclick=()=>GZ.share(`🧊 I scored ${G.score}/${max} in the 3D ${S.M.t} game on BAIO Game Zone. Can you beat me?`,`games/lab3d.html#${S.id}/${G.m}`);
+  $('#shr').onclick=()=>GZ.share(`🧊 I scored ${G.score}/${max} in the 3D ${S.M.t} game on BAIO Game Zone. Can you beat me?`,`games/lab3d.html#${S.id}/${G.m}`,{icon:'🧊',game:'3D '+S.M.t,sub:'3D Biology Lab',score:G.score,max,color:['#13b5a0','#4a8fe0']});
 }
 function setMode(m){
   mode=m; document.querySelectorAll('#modes .tab').forEach(t=>t.classList.toggle('on',t.dataset.m===m));

@@ -62,7 +62,7 @@
   <div id="stage"></div>
   <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
 </div>
-<script src="common.js?v=2"></script>
+<script src="common.js?v=3"></script>
 <script src="riddles.js?v=2"></script>
 <script src="words.js?v=2"></script>
 <script src="words-more.js?v=1"></script>
@@ -83,7 +83,7 @@ function resultCard(id,score,max,label){
    <p class="muted">${chapName()}<br>${GZ.rating(score,max)} · ${GZ.c('best')}: ${best}</p>
    <div class="btns"><button class="btn primary" id="again">${GZ.c('again')}</button><button class="btn teal" id="shr">${GZ.c('share')}</button><a class="btn" href="${GZ.HUB}">${GZ.c('hub')}</a></div></div>`;
   $('#again').onclick=()=>start(game);
-  $('#shr').onclick=()=>GZ.share(`🔠 I scored ${score}/${max} in the ${label} (${chapName()}) on BAIO Game Zone. Can you beat me?`,`games/words.html#${game}-${chap}`);
+  $('#shr').onclick=()=>GZ.share(`🔠 I scored ${score}/${max} in the ${label} (${chapName()}) on BAIO Game Zone. Can you beat me?`,`games/words.html#${game}-${chap}`,{icon:'🔠',game:label,sub:chapName(),score,max,color:['#8f63d8','#ec6fa4']});
 }
 
 /* cell size that fits the card exactly: card inner width minus the 2px gaps */

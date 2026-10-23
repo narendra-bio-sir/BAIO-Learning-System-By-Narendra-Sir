@@ -58,7 +58,7 @@
   <div id="stage"></div>
   <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
 </div>
-<script src="common.js?v=2"></script>
+<script src="common.js?v=3"></script>
 <script>
 GZ.nav();
 GZ.i18n({
@@ -88,7 +88,7 @@ function resultCard(id,score,max,label){
    <p class="muted">${GZ.rating(score,max)} · ${GZ.c('best')}: ${best}</p>
    <div class="btns"><button class="btn primary" id="again">${GZ.c('again')}</button><button class="btn teal" id="shr">${GZ.c('share')}</button><a class="btn" href="${GZ.HUB}">${GZ.c('hub')}</a></div></div>`;
   $('#again').onclick=()=>start(game);
-  $('#shr').onclick=()=>GZ.share(`🧬 I scored ${score}/${max} in ${label} on BAIO Game Zone. Can you beat me?`,'games/genetics.html#'+game);
+  $('#shr').onclick=()=>GZ.share(`🧬 I scored ${score}/${max} in ${label} on BAIO Game Zone. Can you beat me?`,'games/genetics.html#'+game,{icon:'🧬',game:label,sub:'Genetics Lab',score,max,color:['#2e9e4f','#0fa38a']});
 }
 const head=(title,round,total,score)=>`<div class="bar"><b>${title}</b><span class="score">${score} pts</span></div><div class="muted">${GZ.t('round')} ${round} / ${total}</div><div class="prog"><i style="width:${(round-1)/total*100}%"></i></div>`;
 GZ.T.en.round='Round'; GZ.T.kn.round='ಸುತ್ತು'; GZ.T.hi.round='राउंड';
