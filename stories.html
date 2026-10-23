@@ -43,7 +43,8 @@
 .pno{font:800 11px Inter;letter-spacing:2px;text-transform:uppercase;color:#a0803a}
 .page h2{font:700 23px/1.25 'Space Grotesk',sans-serif;color:#2a2418;margin-top:4px}
 .story{font-size:17px;line-height:1.75;margin-top:10px}
-.story mark{background:linear-gradient(transparent 55%,#ffe08a 55%);color:#1f1a10;font-weight:600;padding:0 1px;cursor:pointer;border-radius:2px}
+.story mark{background:#ffe9a8;color:#1f1a10;font-weight:700;padding:.06em .3em;margin:0 .04em;cursor:pointer;border-radius:.35em;box-shadow:inset 0 -.14em 0 #f0b92e;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.story mark.nw{white-space:nowrap}
 .story mark.say{background:#ffd34d}
 .remember{margin-top:14px;padding:12px 14px;border-radius:12px;background:#eaf7ef;border:1.5px dashed #2e9e4f;font:600 14px/1.6 Inter,sans-serif;color:#17402a}
 .remember b{display:block;font:800 11.5px Inter;letter-spacing:1.5px;color:#2e9e4f;margin-bottom:2px}
@@ -129,7 +130,7 @@ const BG={lab:['#1f3b4d','#3f7f8f'],forest:['#1d4d2b','#4f9a52'],sea:['#0b3d66',
 const ids=Object.keys(BOOKS);
 const seg=s=>{ try{ return [...new Intl.Segmenter('en',{granularity:'grapheme'}).segment(s)].map(x=>x.segment).filter(x=>x.trim()); }catch(e){ return Array.from(s); } };
 const plain=s=>s.replace(/\[\[|\]\]/g,'');
-const fmt=s=>GZ.esc(s).replace(/\[\[(.+?)\]\]/g,'<mark>$1</mark>');
+const fmt=s=>GZ.esc(s).replace(/\[\[(.+?)\]\]/g,(_,t)=>`<mark${t.length<=24?' class="nw"':''}>${t}</mark>`);
 const termsOf=b=>{ const seen=new Map(); b.pages.forEach((p,i)=>{ (p.x.match(/\[\[(.+?)\]\]/g)||[]).forEach(m=>{ const t=m.slice(2,-2); if(!seen.has(t.toLowerCase())) seen.set(t.toLowerCase(),[t,i+1]); }); }); return [...seen.values()]; };
 const progKey='baio_story_prog';
 const getProg=()=>{ try{ return JSON.parse(localStorage.getItem(progKey)||'{}'); }catch(e){ return {}; } };
