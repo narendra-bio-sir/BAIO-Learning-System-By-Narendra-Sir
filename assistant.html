@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>BAIO AI Assistant | BAIO Learning System</title>
+<meta name="description" content="Ask the BAIO AI Assistant how to use any part of the BAIO app — it explains every feature with narrated slides in English, Kannada and Hindi.">
+<meta property="og:title" content="BAIO AI Assistant">
+<meta property="og:description" content="Your guide to the BAIO Learning System — narrated slides for every feature.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Kannada:wght@500;700&family=Noto+Sans+Devanagari:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="games/game.css?v=1">
+<style>
+body{font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif}
+.owl{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-size:36px;margin:0 auto 6px;background:radial-gradient(circle at 35% 30%,#fff6d6,#e9c45a 60%,#b8912a);box-shadow:0 6px 18px rgba(0,0,0,.25);animation:bob 3s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-5px)}}
+.ask{display:flex;gap:8px;margin-top:14px;background:var(--panel);border:1.5px solid var(--gold);border-radius:16px;padding:6px}
+.ask input{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);font:500 15px Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;padding:8px 10px;outline:none}
+.ask button{border:0;border-radius:12px;padding:0 14px;font:700 14px Inter,sans-serif;cursor:pointer}
+.ask .mic{background:var(--panel2);color:var(--ink);font-size:18px;padding:0 12px}
+.ask .mic.on{background:#e0457b;color:#fff;animation:pulse 1s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 6px rgba(224,69,123,.25)}}
+.ask .go{background:linear-gradient(135deg,var(--gold),#B8912A);color:#1a1406}
+.quick{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:14px}
+.chip{display:flex;gap:8px;align-items:center;padding:10px;border-radius:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;text-align:left;font:600 13px/1.25 Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif}
+.chip span{font-size:20px}
+.chip.on{border-color:var(--gold);background:linear-gradient(135deg,rgba(212,175,55,.2),rgba(212,175,55,.05))}
+.bubble{display:flex;gap:10px;align-items:flex-start;margin-top:16px}
+.bubble .av{flex:0 0 38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:22px;background:radial-gradient(circle at 35% 30%,#fff6d6,#e9c45a 60%,#b8912a)}
+.bubble .tx{background:var(--panel);border:1px solid var(--line);border-radius:4px 16px 16px 16px;padding:10px 12px;font-size:14px;line-height:1.5;color:var(--ink)}
+.bubble.me{flex-direction:row-reverse}.bubble.me .tx{background:var(--gold);color:#1a1406;border-radius:16px 4px 16px 16px;font-weight:600}
+/* ---------- slide ---------- */
+.stage{margin-top:12px}
+.sl{container-type:inline-size;position:relative;border-radius:18px;overflow:hidden;background:#fbfaf6;color:#13203a;box-shadow:0 10px 30px rgba(0,0,0,.25);display:flex;flex-direction:column}
+.sl .hd{display:flex;align-items:center;gap:2.4cqw;padding:2.8cqw 3.6cqw 2cqw;background:linear-gradient(120deg,#0e2a3d,#143d33);color:#fff}
+.sl .hd .i{font-size:6.4cqw;line-height:1;filter:drop-shadow(0 .4cqw .6cqw rgba(0,0,0,.3))}
+.sl .hd .k{font:800 1.9cqw Inter,sans-serif;letter-spacing:.35cqw;color:#7fe0c6;text-transform:uppercase}
+.sl .hd h2{margin:0;font:700 4.6cqw/1.12 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari',sans-serif}
+.sl .hd .no{margin-left:auto;font:700 2cqw Inter;color:#e9c45a;white-space:nowrap}
+.sl .sub{margin:2cqw 3.6cqw 0;padding:1.4cqw 2.2cqw;border-radius:1.6cqw;background:#e9f4fc;border:.25cqw solid #bad6f0;font-size:2.55cqw;line-height:1.35;color:#1f3554}
+.sl .bd{flex:1;display:grid;grid-template-columns:1.32fr 1fr;gap:3cqw;padding:2.2cqw 3.6cqw 5cqw;min-height:0}
+.sl ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;justify-content:space-evenly;gap:1.2cqw}
+.sl li{display:flex;gap:1.8cqw;align-items:flex-start;font-size:2.55cqw;line-height:1.36;padding:1cqw 1.4cqw;border-radius:1.6cqw;transition:background .25s,box-shadow .25s,transform .25s}
+.sl li b{flex:0 0 4.2cqw;height:4.2cqw;border-radius:50%;display:grid;place-items:center;color:#fff;font:800 2.3cqw Inter;box-shadow:0 .4cqw .8cqw rgba(0,0,0,.2)}
+.sl li.on{background:#fff6d1;box-shadow:0 0 0 .35cqw #e9c45a;transform:translateX(.6cqw)}
+.sl li.dim{opacity:.55}
+.phone{align-self:center;justify-self:center;width:100%;max-width:30cqw;aspect-ratio:9/16;border-radius:3.4cqw;background:#0f1a14;padding:1.2cqw;box-shadow:0 1.2cqw 2.4cqw rgba(0,0,0,.3)}
+.scr{container-type:inline-size;height:100%;border-radius:2.4cqw;background:linear-gradient(180deg,#f6f3ea,#ece6d6);overflow:hidden;display:flex;flex-direction:column;gap:3.4cqw;padding:5cqw 4.2cqw}
+.m{position:relative;border-radius:4.4cqw;font:700 5.4cqw/1.2 Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;color:#1d2a22;transition:box-shadow .25s,transform .25s}
+.m.top{background:#0e2a3d;color:#fff;padding:4cqw 4.6cqw;font-size:5.4cqw}
+.m.btn{background:#fff;border:.7cqw solid #d8c98f;padding:4.4cqw 4cqw;text-align:center}
+.m.btn.acc{background:linear-gradient(135deg,#e9c45a,#b8912a);border-color:#b8912a}
+.m.card{background:#fff;border:.7cqw solid #e2dccb;padding:3.6cqw 4cqw;display:flex;gap:3.4cqw;align-items:center}
+.m.card .e{font-size:10.5cqw}
+.m.card small{display:block;font-weight:600;font-size:4.3cqw;color:#5f6b80;margin-top:.6cqw}
+.m.grid{display:grid;grid-template-columns:1fr 1fr;gap:2.4cqw}
+.m.grid i{font-style:normal;background:#fff;border:.7cqw solid #e2dccb;border-radius:3.4cqw;padding:3.4cqw 2cqw;text-align:center;font-size:4.6cqw}
+.m.tabs{display:flex;gap:1.8cqw;flex-wrap:wrap}
+.m.tabs i{font-style:normal;background:#fff;border:.7cqw solid #cfe3d8;border-radius:16cqw;padding:2cqw 2.8cqw;font-size:4.3cqw}
+.m.bar{background:#fff;border:.7cqw solid #e2dccb;padding:3.4cqw 4cqw}
+.m.bar s{display:block;height:3.4cqw;border-radius:3.4cqw;background:#e2dccb;margin-top:2.4cqw;text-decoration:none;overflow:hidden}
+.m.bar s u{display:block;height:100%;background:linear-gradient(90deg,#2ec4a6,#1f9e64)}
+.m.pic{flex:1;min-height:30cqw;background:linear-gradient(160deg,#1f3b4d,#3f7f8f);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2cqw;text-align:center;padding:3.4cqw}
+.m.pic .e{font-size:18cqw}
+.m .n{position:absolute;right:-3.4cqw;top:-3.4cqw;width:10cqw;height:10cqw;border-radius:50%;display:grid;place-items:center;color:#fff;font:800 5.4cqw Inter;box-shadow:0 1cqw 2cqw rgba(0,0,0,.3)}
+.m.on{box-shadow:0 0 0 1.7cqw #e9c45a,0 0 8cqw rgba(233,196,90,.9);transform:scale(1.04);z-index:2}
+.sl .ft{position:absolute;left:3.6cqw;bottom:1.1cqw;font:700 1.45cqw Inter;color:#8a8f99}
+@container (max-width:560px){
+  .sl .hd{padding:4cqw 4.4cqw 3cqw;gap:3cqw} .sl .hd .i{font-size:10cqw} .sl .hd .k{font-size:3cqw} .sl .hd h2{font-size:6.6cqw} .sl .hd .no{font-size:3.2cqw}
+  .sl .sub{margin:3.4cqw 4.4cqw 0;padding:2.4cqw 3.4cqw;font-size:4.1cqw;border-radius:3cqw}
+  .sl .bd{grid-template-columns:1fr;padding:3cqw 4.4cqw 8cqw;gap:4cqw}
+  .sl ol{gap:1.6cqw} .sl li{font-size:4.2cqw;gap:3cqw;padding:2cqw 2.4cqw;border-radius:3cqw} .sl li b{flex-basis:7.4cqw;height:7.4cqw;font-size:4cqw}
+  .phone{max-width:62cqw;aspect-ratio:9/15;border-radius:7cqw;padding:2.4cqw} .scr{border-radius:5cqw}
+  .sl .ft{font-size:3cqw;left:4.4cqw;bottom:2.4cqw}
+}
+.sl.tall{aspect-ratio:auto}
+/* ---------- controls ---------- */
+.ctl{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.ctl .cnt{font:700 14px Inter;color:var(--ink-dim);min-width:52px;text-align:center}
+.opts{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;align-items:center;margin-top:10px;font-size:13px;color:var(--ink-dim)}
+.opts label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.opts select{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:6px 8px;font:600 13px Inter}
+.cap{margin-top:10px;min-height:48px;padding:10px 14px;border-radius:14px;background:rgba(0,0,0,.55);color:#fff;font:600 15px/1.45 Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;text-align:center}
+.cap[hidden]{display:none}
+.vnote{font-size:12px;color:var(--ink-dim);text-align:center;margin-top:6px}
+.dotsx{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.dotsx i{width:22px;height:6px;border-radius:6px;background:var(--line);cursor:pointer}
+.dotsx i.on{background:var(--teal)}
+.miss{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero" id="hero">
+    <div class="owl">🦉</div>
+    <div class="eyebrow" data-i18n="eyebrow">BAIO Learning System · Your app guide</div>
+    <h1 data-i18n-html="h1">BAIO <span class="accent">AI Assistant</span></h1>
+    <p data-i18n="intro">Ask me how to use anything in BAIO. I explain each feature with narrated slides — just like Exam Corner.</p>
+    <div class="ask"><input id="q" type="text" autocomplete="off" data-i18n-ph="ph"><button class="mic" id="mic" aria-label="Speak your question" hidden>🎤</button><button class="go" id="askBtn" data-i18n="ask">Ask</button></div>
+    <div class="quick"><button class="btn primary" id="allBtn" data-i18n="all">▶ Explain the whole app</button><a class="btn" id="tourBtn" href="index.html#baio-tour" data-i18n="tour">🧭 Tour the home page</a></div>
+  </section>
+  <div id="chat"></div>
+  <section id="player" hidden>
+    <div class="stage"><div class="sl" id="slide"></div></div>
+    <div class="ctl"><button class="btn teal" id="play"></button><button class="btn" id="prev" aria-label="Previous">◀</button><span class="cnt" id="cnt"></span><button class="btn" id="next" aria-label="Next">▶</button><a class="btn primary" id="open"></a></div>
+    <div class="opts"><label><input type="checkbox" id="capOn" checked> <span data-i18n="captions">Captions</span></label><label><input type="checkbox" id="autoOn" checked> <span data-i18n="autonext">Auto next</span></label>
+      <label><span data-i18n="speed">Speed</span> <select id="rate"><option value=".85">0.85×</option><option value="1" selected>1×</option><option value="1.15">1.15×</option><option value="1.3">1.3×</option></select></label></div>
+    <div class="cap" id="cap"></div>
+    <div class="vnote" id="vnote"></div>
+    <div class="dotsx" id="dots"></div>
+  </section>
+  <h3 style="margin-top:22px;font-size:15px;color:var(--gold)" data-i18n="topics">What can I explain?</h3>
+  <div class="chips" id="chips"></div>
+  <footer>Narendra Sir · Biology Lecturer · Founder &amp; CEO, BAIO Learning System</footer>
+</div>
+<script src="games/common.js?v=4"></script>
+<script src="assistant/topics.js?v=1"></script>
+<script>
+GZ.nav();
+GZ.i18n({
+ en:{eyebrow:'BAIO Learning System · Your app guide', h1:'BAIO <span class="accent">AI Assistant</span>', intro:'Ask me how to use anything in BAIO. I explain each feature with narrated slides — just like Exam Corner.',
+  ph:'Ask: how do I unlock a chapter?', ask:'Ask', all:'▶ Explain the whole app', tour:'🧭 Tour the home page', captions:'Captions', autonext:'Auto next', speed:'Speed', topics:'What can I explain?',
+  explain:'▶ Explain', pause:'⏸ Pause', open:'Open this →', slide:'Slide', guide:'BAIO GUIDE',
+  hello:'Hi! I’m Prof. BAIO 🦉. Type or speak a question, or tap a topic below — I’ll explain it slide by slide.',
+  found:'Here’s how {t} works. Tap ▶ Explain and I’ll walk you through it.', foundAll:'Let’s go through the whole BAIO app, one feature at a time. Tap ▶ Explain.',
+  miss:'I couldn’t find that in BAIO yet. Try one of these topics, or ask Narendra Sir directly:', wa:'💬 WhatsApp Narendra Sir', novoice:'No voice for this language on your phone — read the captions, or install the voice in your phone’s Text-to-speech settings.',
+  listen:'Listening… speak now', points:'Point'},
+ kn:{eyebrow:'BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್ · ನಿಮ್ಮ ಆ್ಯಪ್ ಮಾರ್ಗದರ್ಶಿ', h1:'BAIO <span class="accent">AI ಸಹಾಯಕ</span>', intro:'BAIO ನಲ್ಲಿ ಯಾವುದನ್ನು ಹೇಗೆ ಬಳಸಬೇಕು ಎಂದು ಕೇಳಿ. ಪ್ರತಿ ವೈಶಿಷ್ಟ್ಯವನ್ನು ನಿರೂಪಿತ ಸ್ಲೈಡ್‌ಗಳಿಂದ ವಿವರಿಸುತ್ತೇನೆ — Exam Corner ನಂತೆಯೇ.',
+  ph:'ಕೇಳಿ: ಅಧ್ಯಾಯ ಅನ್‌ಲಾಕ್ ಮಾಡುವುದು ಹೇಗೆ?', ask:'ಕೇಳಿ', all:'▶ ಇಡೀ ಆ್ಯಪ್ ವಿವರಿಸು', tour:'🧭 ಮುಖಪುಟದ ಪ್ರವಾಸ', captions:'ಶೀರ್ಷಿಕೆಗಳು', autonext:'ಆಟೋ ಮುಂದೆ', speed:'ವೇಗ', topics:'ನಾನು ಏನನ್ನು ವಿವರಿಸಬಲ್ಲೆ?',
+  explain:'▶ ವಿವರಿಸು', pause:'⏸ ನಿಲ್ಲಿಸು', open:'ಇದನ್ನು ತೆರೆಯಿರಿ →', slide:'ಸ್ಲೈಡ್', guide:'BAIO ಮಾರ್ಗದರ್ಶಿ',
+  hello:'ನಮಸ್ಕಾರ! ನಾನು ಪ್ರೊ. BAIO 🦉. ಪ್ರಶ್ನೆಯನ್ನು ಟೈಪ್ ಮಾಡಿ ಅಥವಾ ಹೇಳಿ, ಇಲ್ಲವೇ ಕೆಳಗಿನ ವಿಷಯ ಒತ್ತಿ — ಸ್ಲೈಡ್‌ಗಳ ಮೂಲಕ ವಿವರಿಸುತ್ತೇನೆ.',
+  found:'{t} ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ ನೋಡಿ. ▶ ವಿವರಿಸು ಒತ್ತಿ, ಹಂತ ಹಂತವಾಗಿ ತಿಳಿಸುತ್ತೇನೆ.', foundAll:'ಇಡೀ BAIO ಆ್ಯಪ್ ಅನ್ನು ಒಂದೊಂದೇ ವೈಶಿಷ್ಟ್ಯವಾಗಿ ನೋಡೋಣ. ▶ ವಿವರಿಸು ಒತ್ತಿ.',
+  miss:'ಅದು BAIO ನಲ್ಲಿ ಇನ್ನೂ ಸಿಗಲಿಲ್ಲ. ಈ ವಿಷಯಗಳಲ್ಲಿ ಒಂದನ್ನು ಪ್ರಯತ್ನಿಸಿ, ಅಥವಾ ನರೇಂದ್ರ ಸರ್ ಅವರನ್ನು ನೇರವಾಗಿ ಕೇಳಿ:', wa:'💬 ನರೇಂದ್ರ ಸರ್‌ಗೆ WhatsApp', novoice:'ನಿಮ್ಮ ಫೋನ್‌ನಲ್ಲಿ ಈ ಭಾಷೆಯ ಧ್ವನಿ ಇಲ್ಲ — ಶೀರ್ಷಿಕೆ ಓದಿ, ಅಥವಾ ಫೋನ್‌ನ Text-to-speech ಸೆಟ್ಟಿಂಗ್‌ನಲ್ಲಿ ಕನ್ನಡ ಧ್ವನಿ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ.',
+  listen:'ಕೇಳುತ್ತಿದ್ದೇನೆ… ಈಗ ಮಾತಾಡಿ', points:'ಅಂಶ'},
+ hi:{eyebrow:'BAIO लर्निंग सिस्टम · आपका ऐप गाइड', h1:'BAIO <span class="accent">AI असिस्टेंट</span>', intro:'BAIO में कुछ भी कैसे इस्तेमाल करें, मुझसे पूछो। मैं हर फ़ीचर को बोलती स्लाइड से समझाता हूँ — बिल्कुल Exam Corner की तरह।',
+  ph:'पूछो: अध्याय अनलॉक कैसे करें?', ask:'पूछो', all:'▶ पूरा ऐप समझाओ', tour:'🧭 होम पेज का टूर', captions:'कैप्शन', autonext:'ऑटो आगे', speed:'गति', topics:'मैं क्या समझा सकता हूँ?',
+  explain:'▶ समझाओ', pause:'⏸ रोको', open:'इसे खोलो →', slide:'स्लाइड', guide:'BAIO गाइड',
+  hello:'नमस्ते! मैं प्रो. BAIO 🦉 हूँ। सवाल लिखो या बोलो, या नीचे कोई विषय छुओ — मैं स्लाइड दर स्लाइड समझाऊँगा।',
+  found:'देखो {t} कैसे काम करता है। ▶ समझाओ दबाओ, मैं क़दम-दर-क़दम बताऊँगा।', foundAll:'चलो पूरा BAIO ऐप एक-एक फ़ीचर करके देखें। ▶ समझाओ दबाओ।',
+  miss:'यह अभी BAIO में नहीं मिला। इनमें से कोई विषय आज़माओ, या सीधे नरेंद्र सर से पूछो:', wa:'💬 नरेंद्र सर को WhatsApp', novoice:'आपके फ़ोन में इस भाषा की आवाज़ नहीं है — कैप्शन पढ़ो, या फ़ोन की Text-to-speech सेटिंग में हिंदी आवाज़ इंस्टॉल करो।',
+  listen:'सुन रहा हूँ… अब बोलो', points:'बिंदु'}});
+const $=s=>document.querySelector(s), esc=GZ.esc, T=(k,o)=>{ let v=GZ.t(k); if(o) Object.keys(o).forEach(x=>v=v.split('{'+x+'}').join(o[x])); return v; };
+const TP=window.BAIO_TOPICS, byId=Object.fromEntries(TP.map(t=>[t.id,t]));
+const NUM=['#e91e63','#1f6fe0','#2c9a3a','#f57c00','#8e44ad'];
+const L=t=>t.t[GZ.lang]||t.t.en;
+
+/* ---------- slide rendering ---------- */
+function mockHtml(items){
+  const nb=n=>n?`<span class="n" style="background:${NUM[(n-1)%5]}">${n}</span>`:'';
+  return items.map(it=>{ const [k]=it; let n, h;
+    if(k==='top'){ n=it[3]; h=`<div class="m top" data-n="${n||''}">${esc(it[1])}${nb(n)}</div>`; }
+    else if(k==='btn'){ n=it[2]; h=`<div class="m btn${it[3]?' acc':''}" data-n="${n||''}">${esc(it[1])}${nb(n)}</div>`; }
+    else if(k==='card'){ n=it[4]; h=`<div class="m card" data-n="${n||''}"><span class="e">${it[1]}</span><span>${esc(it[2])}<small>${esc(it[3]||'')}</small></span>${nb(n)}</div>`; }
+    else if(k==='grid'){ n=it[2]; h=`<div class="m grid" data-n="${n||''}">${it[1].map(x=>`<i>${esc(x)}</i>`).join('')}${nb(n)}</div>`; }
+    else if(k==='tabs'){ n=it[2]; h=`<div class="m tabs" data-n="${n||''}">${it[1].map(x=>`<i>${esc(x)}</i>`).join('')}${nb(n)}</div>`; }
+    else if(k==='bar'){ n=it[3]; h=`<div class="m bar" data-n="${n||''}">${esc(it[1])}<s><u style="width:${it[2]}%"></u></s>${nb(n)}</div>`; }
+    else if(k==='pic'){ n=it[3]; h=`<div class="m pic" data-n="${n||''}"><span class="e">${it[1]}</span>${esc(it[2])}${nb(n)}</div>`; }
+    return h||''; }).join(''); }
+function slideHtml(t,i,n){ const c=L(t);
+  return `<div class="hd"><span class="i">${t.ic}</span><div><div class="k">${T('guide')}</div><h2>${esc(c.h)}</h2></div><span class="no">${i+1} / ${n}</span></div>
+    <div class="sub">${esc(c.s)}</div>
+    <div class="bd"><ol>${c.p.map((p,j)=>`<li data-i="${j}"><b style="background:${NUM[j%5]}">${j+1}</b><span>${esc(p)}</span></li>`).join('')}</ol>
+    <div class="phone"><div class="scr">${mockHtml(t.mock)}</div></div></div>
+    <div class="ft">BAIO Learning System · Narendra Sir</div>`; }
+
+/* ---------- player ---------- */
+let deck=[], cur=0, playing=false, seq=0;
+function load(ids,i){ deck=ids.map(id=>byId[id]).filter(Boolean); cur=Math.max(0,Math.min(i||0,deck.length-1)); $('#player').hidden=false; show(); }
+function show(){ stop(); const t=deck[cur]; const el=$('#slide'); el.innerHTML=slideHtml(t,cur,deck.length);
+  $('#cnt').textContent=`${cur+1} / ${deck.length}`; $('#open').textContent=T('open'); $('#open').href=t.url;
+  $('#dots').innerHTML=deck.map((d,j)=>`<i class="${j===cur?'on':''}" data-j="${j}" title="${esc(L(d).h)}"></i>`).join('');
+  $('#dots').querySelectorAll('i').forEach(d=>d.onclick=()=>{ const was=playing; cur=+d.dataset.j; show(); if(was) play(); });
+  document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',deck.length===1&&c.dataset.id===t.id));
+  $('#cap').textContent=L(t).s; paintPlay();
+  try{ history.replaceState(null,'','#'+(deck.length>1?'all/'+(cur+1):t.id)); }catch(e){} }
+function hl(j){ const el=$('#slide'); el.querySelectorAll('li').forEach(li=>{ const k=+li.dataset.i; li.classList.toggle('on',k===j); li.classList.toggle('dim',j>=0&&k!==j); });
+  el.querySelectorAll('.m').forEach(m=>m.classList.toggle('on',j>=0&&+m.dataset.n===j+1)); }
+function paintPlay(){ $('#play').textContent=playing?T('pause'):T('explain'); }
+
+/* speech */
+const VL={en:'en-IN',kn:'kn-IN',hi:'hi-IN'}; let voice=null;
+function pickVoice(){ if(!('speechSynthesis' in window)) return; const v=speechSynthesis.getVoices(), l=GZ.lang; voice=v.find(x=>new RegExp('^'+l+'[-_]IN','i').test(x.lang))||v.find(x=>new RegExp('^'+l,'i').test(x.lang))||null;
+  $('#vnote').textContent=(!voice&&v.length&&l!=='en')?T('novoice'):''; if(!voice&&l!=='en') $('#capOn').checked=true; $('#cap').hidden=!$('#capOn').checked; }
+if('speechSynthesis' in window){ speechSynthesis.onvoiceschanged=pickVoice; }
+const sayable=s=>s.replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{200D}]/gu,'').replace(/→/g,',').replace(/\s+/g,' ').replace(/BAIO/g,'BAIO').trim();
+function speak(text,onend){ const my=seq; $('#cap').textContent=text;
+  if(!('speechSynthesis' in window)){ setTimeout(()=>{ if(my===seq) onend(); },Math.max(2200,text.length*55)); return; }
+  const u=new SpeechSynthesisUtterance(sayable(text)); if(voice) u.voice=voice; u.lang=voice?voice.lang:VL[GZ.lang]; u.rate=+$('#rate').value;
+  let done=false; const fin=()=>{ if(done||my!==seq) return; done=true; onend(); };
+  u.onend=fin; u.onerror=()=>setTimeout(fin,Math.max(1500,text.length*50)); setTimeout(fin,Math.max(6000,text.length*150/u.rate)); speechSynthesis.speak(u); }
+function play(){ stop(); playing=true; paintPlay(); const my=++seq; const c=L(deck[cur]); const parts=[[-1,c.h+'. '+c.s]].concat(c.p.map((p,j)=>[j,p]));
+  let k=0; const step=()=>{ if(my!==seq) return; if(k>=parts.length){ hl(-1); if($('#autoOn').checked&&cur<deck.length-1){ cur++; show(); play(); } else { playing=false; paintPlay(); } return; }
+    const [j,txt]=parts[k++]; hl(j); speak(txt,()=>setTimeout(step,350)); };
+  step(); }
+function stop(){ seq++; playing=false; try{ speechSynthesis.cancel(); }catch(e){} hl(-1); paintPlay(); }
+$('#play').onclick=()=>{ playing?stop():play(); };
+$('#prev').onclick=()=>{ if(cur>0){ const was=playing; cur--; show(); if(was) play(); } };
+$('#next').onclick=()=>{ if(cur<deck.length-1){ const was=playing; cur++; show(); if(was) play(); } };
+$('#capOn').onchange=()=>{ $('#cap').hidden=!$('#capOn').checked; };
+(function(){ let x0=null; const el=$('#slide'); el.addEventListener('touchstart',e=>{ x0=e.touches[0].clientX; },{passive:true}); el.addEventListener('touchend',e=>{ if(x0==null) return; const dx=e.changedTouches[0].clientX-x0; if(Math.abs(dx)>50) (dx<0?$('#next'):$('#prev')).click(); x0=null; },{passive:true}); })();
+document.addEventListener('keydown',e=>{ if(e.target.tagName==='INPUT'||$('#player').hidden) return; if(e.key==='ArrowRight') $('#next').click(); if(e.key==='ArrowLeft') $('#prev').click(); if(e.key===' '){ e.preventDefault(); $('#play').click(); } });
+
+/* ---------- chat + understanding the question ---------- */
+function say(html,me){ const d=document.createElement('div'); d.className='bubble'+(me?' me':''); d.innerHTML=(me?'':'<div class="av">🦉</div>')+`<div class="tx">${html}</div>`; const c=$('#chat'); c.innerHTML=''; if(me) c.appendChild(d); return d; }
+const norm=s=>s.toLowerCase().normalize('NFC').replace(/[?!.,;:'"()¿¡।|]/g,' ').replace(/\s+/g,' ').trim();
+const STOP=new Set('how what where when which who why can could does do did the and for you your are is was with from into this that about want need use using get open find show tell me my to of in on a an it its i we our there here please app baio ಹೇಗೆ ಏನು ಎಲ್ಲಿ ಯಾವುದು ಮಾಡುವುದು ಮಾಡಬೇಕು ನನ್ನ ಇದೆ ಹೇಳಿ ತೋರಿಸಿ ಬಳಸುವುದು कैसे क्या कहाँ कहां कौन है हैं में का की के को से और मेरा मेरी मुझे करें करूँ करना बताओ दिखाओ इस यह'.split(' '));
+function score(q,t){ const words=norm(q).split(' ').filter(w=>w.length>2&&!STOP.has(w)); let s=0; const hay=norm(t.kw+' '+Object.values(t.t).map(x=>x.h).join(' '));
+  const keys=hay.split(' ');
+  words.forEach(w=>{ if(keys.includes(w)) s+=3; else if(w.length>=4&&keys.some(k=>k.length>=4&&(k.startsWith(w)||w.startsWith(k)))) s+=2; });
+  Object.values(t.t).forEach(x=>{ if(norm(q).includes(norm(x.h))) s+=6; }); return s; }
+function ask(q){ q=(q||'').trim(); if(!q) return; const c=$('#chat'); c.innerHTML=''; const me=document.createElement('div'); me.className='bubble me'; me.innerHTML=`<div class="tx">${esc(q)}</div>`; c.appendChild(me);
+  if(/whole app|everything|all features|full guide|explain the app|ಇಡೀ ಆ್ಯಪ್|ಎಲ್ಲ ವೈಶಿಷ್ಟ್ಯ|ಎಲ್ಲಾ ವೈಶಿಷ್ಟ್ಯ|पूरा ऐप|सारे फ़ीचर|सभी फ़ीचर/i.test(q)) return startAll();
+  const r=TP.map(t=>[t,score(q,t)]).sort((a,b)=>b[1]-a[1]);
+  const bot=document.createElement('div'); bot.className='bubble'; c.appendChild(bot);
+  if(r[0][1]>=2){ const t=r[0][0]; bot.innerHTML=`<div class="av">🦉</div><div class="tx">${esc(T('found',{t:L(t).h}))}</div>`; load([t.id],0); $('#player').scrollIntoView({behavior:'smooth',block:'start'}); }
+  else { bot.innerHTML=`<div class="av">🦉</div><div class="tx">${esc(T('miss'))}<div class="miss">${r.slice(0,3).map(([t])=>`<button class="tbtn" data-id="${t.id}">${t.ic} ${esc(L(t).h)}</button>`).join('')}<a class="tbtn" href="https://wa.me/919008968389?text=${encodeURIComponent('BAIO: '+q)}" target="_blank" rel="noopener">${T('wa')}</a></div></div>`;
+    bot.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>pick(b.dataset.id)); } }
+function pick(id){ const t=byId[id]; $('#chat').innerHTML=''; const b=document.createElement('div'); b.className='bubble'; b.innerHTML=`<div class="av">🦉</div><div class="tx">${esc(T('found',{t:L(t).h}))}</div>`; $('#chat').appendChild(b); load([id],0); $('#player').scrollIntoView({behavior:'smooth',block:'start'}); }
+function startAll(){ const b=document.createElement('div'); b.className='bubble'; b.innerHTML=`<div class="av">🦉</div><div class="tx">${esc(T('foundAll'))}</div>`; $('#chat').appendChild(b); load(TP.map(t=>t.id),0); $('#player').scrollIntoView({behavior:'smooth',block:'start'}); }
+$('#askBtn').onclick=()=>ask($('#q').value); $('#q').addEventListener('keydown',e=>{ if(e.key==='Enter') ask($('#q').value); });
+$('#allBtn').onclick=()=>{ $('#chat').innerHTML=''; startAll(); };
+function drawChips(){ $('#chips').innerHTML=TP.map(t=>`<button class="chip" data-id="${t.id}"><span>${t.ic}</span>${esc(L(t).h)}</button>`).join(''); $('#chips').querySelectorAll('.chip').forEach(c=>c.onclick=()=>pick(c.dataset.id)); }
+
+/* voice question */
+(function(){ const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR) return; const m=$('#mic'); m.hidden=false; let r=null;
+  m.onclick=()=>{ if(r){ r.stop(); return; } r=new SR(); r.lang=VL[GZ.lang]; r.interimResults=true; r.maxAlternatives=1; m.classList.add('on'); const ph=$('#q').placeholder; $('#q').placeholder=T('listen');
+    r.onresult=e=>{ const s=[...e.results].map(x=>x[0].transcript).join(''); $('#q').value=s; if(e.results[e.results.length-1].isFinal) ask(s); };
+    r.onend=()=>{ m.classList.remove('on'); $('#q').placeholder=ph; r=null; }; r.onerror=()=>{}; try{ r.start(); }catch(e){ m.classList.remove('on'); r=null; } }; })();
+
+/* ---------- start ---------- */
+GZ.startLang();
+function lang(){ $('#q').placeholder=T('ph'); drawChips(); pickVoice(); if(!$('#player').hidden&&deck.length){ const was=playing; show(); if(was) play(); } if(!$('#chat').children.length) say(esc(T('hello'))); }
+GZ.onLang(lang); lang();
+(function(){ const h=location.hash.slice(1); if(!h) return; const [a,b]=h.split('/'); if(a==='all'){ startAll(); if(b){ cur=Math.max(0,Math.min(deck.length-1,+b-1)); show(); } } else if(byId[a]) pick(a); })();
+window.addEventListener('pagehide',stop);
+</script>
+</body>
+</html>
