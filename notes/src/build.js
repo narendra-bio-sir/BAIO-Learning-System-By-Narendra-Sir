@@ -12,7 +12,10 @@ const path = require('path'), fs = require('fs');
     await p.goto(base + '&s=' + s); await p.waitForFunction(() => window.__ready);
     await p.locator('.slide').screenshot({ path: path.join(root, 'img', `${ch}-${String(s).padStart(2, '0')}.jpg`), type: 'jpeg', quality: 84 });
   }
-  await p.goto(base + '&all=1'); await p.waitForFunction(() => window.__ready);
+  // PDF = the slide JPEGs, one per page (keeps it small; diagrams use SVG filters that would rasterise heavily)
+  const imgs = Array.from({ length: n }, (_, i) => `<img src="../img/${ch}-${String(i + 1).padStart(2, '0')}.jpg?t=${Date.now()}">`).join('');
+  await p.goto('http://localhost:8785/notes/src/render.html?blank=1');
+  await p.setContent(`<html><head><base href="http://localhost:8785/notes/src/"><style>@page{size:1080px 1080px;margin:0}body{margin:0}img{display:block;width:1080px;height:1080px;page-break-after:always}</style></head><body>${imgs}</body></html>`, { waitUntil: 'load' });
   await p.pdf({ path: path.join(root, 'pdf', ch + '.pdf'), width: '1080px', height: '1080px', printBackground: true, margin: { top: 0, right: 0, bottom: 0, left: 0 } });
   await b.close(); console.log(ch, n, 'slides');
 })();

@@ -12,16 +12,19 @@ const B = {
     for (let i = 0; i < n; i++){ const cx = x + r + i * r * 2; s += this.pl(cx, y, r, 1); s += this.pl(cx, y + t * 2 + (gap || 2), r, -1); } return s; },
   capsule(x, y, w, h, c){ return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${w / 2}" fill="${D.lg(c, 1)}" stroke="${D.dk(c, .35)}" stroke-width="2"/>` + `<rect x="${x + w * .18}" y="${y + 10}" width="${w * .18}" height="${h - 20}" rx="${w * .09}" fill="#fff" opacity=".35"/>`; },
   water(x, y, s){ s = s || 1; return D.ball(x - 15 * s, y + 13 * s, 11 * s, '#f2f2f2') + D.ball(x + 15 * s, y + 13 * s, 11 * s, '#f2f2f2') + D.ball(x, y, 17 * s, '#e53935'); },
-  plantCell(x, y, w, h, o){ o = o || {}; const r = 14; let s = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" fill="${D.lg('#7cc243')}" stroke="#3f7d1f" stroke-width="2.5"/>`;
-    s += `<rect x="${x + w * .07}" y="${y + h * .07}" width="${w * .86}" height="${h * .86}" rx="${r * .7}" fill="#eef8c9" stroke="#e3b62c" stroke-width="2"/>`;
-    if (o.vac !== false) s += `<ellipse cx="${x + w * .56}" cy="${y + h * .5}" rx="${w * .25}" ry="${h * .3}" fill="${D.rg('#bfe3fb')}" stroke="#7fb6dc" stroke-width="1.6"/>`;
-    s += D.ball(x + w * .24, y + h * .36, Math.min(w, h) * .12, '#9b59d0');
-    if (o.chl !== false) [[.25, .74], [.82, .24], [.84, .76]].forEach(([a, b]) => s += `<ellipse cx="${x + w * a}" cy="${y + h * b}" rx="${w * .07}" ry="${h * .045}" fill="${D.rg('#43a832')}" stroke="#2c6e1f"/>`);
+  plantCell(x, y, w, h, o){ o = o || {}; const r = 16, k = Math.min(w, h); let s = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" fill="${D.lg('#6fbf3a')}" stroke="#2f6a17" stroke-width="2.5"/>`;
+    s += `<rect x="${x + k * .025}" y="${y + k * .025}" width="${w - k * .05}" height="${h - k * .05}" rx="${r * .85}" fill="none" stroke="#b6e38a" stroke-width="${k * .012}" opacity=".8"/>`;
+    s += `<rect x="${x + w * .07}" y="${y + h * .07}" width="${w * .86}" height="${h * .86}" rx="${r * .7}" fill="${D.rg('#f3f9c4')}" stroke="#e0b42a" stroke-width="2.5"/>`;
+    s += D.dots(Math.round(k / 9), x + w * .1, y + h * .1, w * .8, h * .8, Math.max(1.5, k * .008), '#8fc6e8', 9) + D.dots(Math.round(k / 14), x + w * .1, y + h * .1, w * .8, h * .8, Math.max(1.5, k * .007), '#f28cb1', 4);
+    if (o.vac !== false) s += `<ellipse cx="${x + w * .56}" cy="${y + h * .5}" rx="${w * .25}" ry="${h * .3}" fill="${D.rg('#cdeafc')}" stroke="#6fa9d2" stroke-width="2"/><ellipse cx="${x + w * .5}" cy="${y + h * .36}" rx="${w * .09}" ry="${h * .05}" fill="#fff" opacity=".6"/>`;
+    s += D.ball(x + w * .24, y + h * .36, k * .12, '#9b59d0') + D.ball(x + w * .26, y + h * .37, k * .045, '#5e2a8a');
+    if (o.chl !== false) [[.25, .74, -15], [.82, .24, 20], [.84, .76, -25]].forEach(([a, b, rt]) => s += this.chloro(x + w * a, y + h * b, w * .15, h * .1, rt));
+    if (o.chl !== false) s += this.mito(x + w * .2, y + h * .58, w * .1, h * .06, 30);
     return s; },
-  animalCell(x, y, r, o){ o = o || {}; let s = `<path d="M${x - r},${y} C${x - r},${y - r * .9} ${x - r * .3},${y - r * 1.05} ${x + r * .2},${y - r * .95} C${x + r * .95},${y - r * .85} ${x + r * 1.05},${y - r * .1} ${x + r * .95},${y + r * .35} C${x + r * .85},${y + r * .95} ${x + r * .1},${y + r * 1.02} ${x - r * .45},${y + r * .88} C${x - r * .95},${y + r * .75} ${x - r},${y + r * .4} ${x - r},${y} Z" fill="#ffe3ec" stroke="#e48aa5" stroke-width="3"/>`;
+  animalCell(x, y, r, o){ o = o || {}; let s = `<path d="M${x - r},${y} C${x - r},${y - r * .9} ${x - r * .3},${y - r * 1.05} ${x + r * .2},${y - r * .95} C${x + r * .95},${y - r * .85} ${x + r * 1.05},${y - r * .1} ${x + r * .95},${y + r * .35} C${x + r * .85},${y + r * .95} ${x + r * .1},${y + r * 1.02} ${x - r * .45},${y + r * .88} C${x - r * .95},${y + r * .75} ${x - r},${y + r * .4} ${x - r},${y} Z" fill="${D.rg('#ffe3ec')}" stroke="#d9789a" stroke-width="3"/>`;
     s += D.ball(x - r * .1, y - r * .05, r * .3, '#9b59d0') + D.ball(x - r * .05, y - r * .08, r * .1, '#5e2a8a');
-    if (o.org !== false){ s += `<ellipse cx="${x + r * .55}" cy="${y + r * .35}" rx="${r * .2}" ry="${r * .1}" fill="${D.rg('#f39c3d')}" stroke="#b5651d" transform="rotate(-25 ${x + r * .55} ${y + r * .35})"/>`;
-      s += `<ellipse cx="${x - r * .5}" cy="${y + r * .5}" rx="${r * .18}" ry="${r * .09}" fill="${D.rg('#f39c3d')}" stroke="#b5651d" transform="rotate(30 ${x - r * .5} ${y + r * .5})"/>`;
+    if (o.org !== false){ s += this.mito(x + r * .55, y + r * .35, r * .4, r * .2, -25) + this.mito(x - r * .5, y + r * .5, r * .36, r * .18, 30);
+      s += D.tube(`M${x + r * .3},${y - r * .55} q${r * .15},-${r * .1} ${r * .3},0 M${x + r * .28},${y - r * .45} q${r * .17},-${r * .1} ${r * .34},0`, '#f48fb1', r * .06);
       s += D.dots(9, x - r * .7, y - r * .7, r * 1.4, r * 1.4, r * .03, '#3b6fd1', 5); }
     return s; },
   bacterium(x, y, w, h, o){ o = o || {}; let s = '';
@@ -44,25 +47,24 @@ const B = {
     return s + D.ball(x, cen, w * .42, '#f2c230'); },
   golgi(x, y, w, n, c){ let s = ''; c = c || '#f48fb1';
     for (let i = 0; i < n; i++){ const yy = y + i * w * .13, ww = w * (1 - Math.abs(i - (n - 1) / 2) * .12);
-      const d = `M${x - ww / 2},${yy} Q${x},${yy - w * .2} ${x + ww / 2},${yy}`;
-      s += `<path d="${d}" stroke="${D.dk(c, .35)}" stroke-width="${w * .095}" fill="none" stroke-linecap="round"/><path d="${d}" stroke="${c}" stroke-width="${w * .07}" fill="none" stroke-linecap="round"/><path d="${d}" stroke="#fff" stroke-width="${w * .015}" fill="none" opacity=".5" stroke-linecap="round"/>`; }
+      s += D.tube(`M${x - ww / 2},${yy} Q${x},${yy - w * .2} ${x + ww / 2},${yy}`, c, w * .095); }
     return s; },
   lyso(x, y, r){ let s = D.ball(x, y, r, '#f6b26b') + `<circle cx="${x}" cy="${y}" r="${r * .82}" fill="#fff4e0" opacity=".75"/>`; const R = D.rnd(4);
-    for (let i = 0; i < 9; i++){ const a = R() * 6.28, d = R() * r * .6; s += `<path d="M${x + Math.cos(a) * d - r * .08},${y + Math.sin(a) * d} l${r * .08},-${r * .1} l${r * .08},${r * .1} l-${r * .08},${r * .1}z" fill="${['#e53935', '#8e44ad', '#1f6fe0'][i % 3]}"/>`; }
+    for (let i = 0; i < 12; i++){ const a = R() * 6.28, d = R() * r * .6; s += D.ball(x + Math.cos(a) * d, y + Math.sin(a) * d, r * .085, ['#e53935', '#8e44ad', '#1f6fe0'][i % 3]); }
     return s; },
-  er(x, y, w, rough){ let s = ''; for (let i = 0; i < 3; i++){ const yy = y + i * w * .22; const d = `M${x},${yy} c${w * .15},-${w * .12} ${w * .3},${w * .12} ${w * .5},0 s${w * .35},${w * .12} ${w * .5},0`;
-      s += `<path d="${d}" stroke="#c2185b" stroke-width="${w * .12}" fill="none" stroke-linecap="round"/><path d="${d}" stroke="#f8bbd0" stroke-width="${w * .08}" fill="none" stroke-linecap="round"/>`;
-      if (rough) for (let k = 0; k < 7; k++) s += D.ball(x + w * .07 + k * w * .14, yy - w * .07 + (k % 2) * w * .02, w * .025, '#1f4fbf'); }
+  er(x, y, w, rough){ let s = ''; for (let i = 0; i < 3; i++){ const yy = y + i * w * .22;
+      s += D.tube(`M${x},${yy} c${w * .15},-${w * .12} ${w * .3},${w * .12} ${w * .5},0 s${w * .35},${w * .12} ${w * .5},0`, '#f48fb1', w * .12);
+      if (rough) for (let k = 0; k < 7; k++) s += D.ball(x + w * .07 + k * w * .14, yy - w * .07 + (k % 2) * w * .02, w * .025, '#2f5fd0'); }
     return s; },
-  mito(x, y, w, h, rot){ let s = `<g transform="rotate(${rot || 0} ${x} ${y})"><ellipse cx="${x}" cy="${y}" rx="${w / 2}" ry="${h / 2}" fill="${D.rg('#f39c3d')}" stroke="#b5651d" stroke-width="2"/><ellipse cx="${x}" cy="${y}" rx="${w / 2 - 5}" ry="${h / 2 - 5}" fill="#fde3b5"/>`;
-    for (let i = -2; i <= 2; i++) s += `<path d="M${x + i * w * .16},${y - h / 2 + 5} q${w * .05},${h * .3} 0,${h * .55}" stroke="#e07b1a" stroke-width="2.4" fill="none"/>`;
+  mito(x, y, w, h, rot){ let s = `<g transform="rotate(${rot || 0} ${x} ${y})"><ellipse cx="${x}" cy="${y}" rx="${w / 2}" ry="${h / 2}" fill="${D.rg('#f39c3d')}" stroke="#a85512" stroke-width="${Math.max(1, h * .04)}"/><ellipse cx="${x}" cy="${y + h * .04}" rx="${w / 2 - h * .14}" ry="${h / 2 - h * .14}" fill="${D.rg('#ffd79a')}"/>`;
+    for (let i = -2; i <= 2; i++) s += D.tube(`M${x + i * w * .16},${y - h * .3 + (i % 2 ? h * .25 : 0)} l0,${h * .32}`, '#f08a24', Math.max(1.5, h * .1));
     return s + '</g>'; },
-  chloro(x, y, w, h, rot){ let s = `<g transform="rotate(${rot || 0} ${x} ${y})"><ellipse cx="${x}" cy="${y}" rx="${w / 2}" ry="${h / 2}" fill="${D.rg('#56b947')}" stroke="#2c6e1f" stroke-width="2"/>`;
-    for (let i = -1; i <= 1; i++) for (let k = 0; k < 3; k++) s += `<rect x="${x + i * w * .26 - w * .09}" y="${y - h * .22 + k * h * .15}" width="${w * .18}" height="${h * .12}" rx="${h * .05}" fill="#2e8a24" stroke="#1d5a16" stroke-width=".8"/>`;
+  chloro(x, y, w, h, rot){ let s = `<g transform="rotate(${rot || 0} ${x} ${y})"><ellipse cx="${x}" cy="${y}" rx="${w / 2}" ry="${h / 2}" fill="${D.rg('#4caf3e')}" stroke="#215a16" stroke-width="${Math.max(1, h * .035)}"/><ellipse cx="${x}" cy="${y}" rx="${w / 2 - h * .08}" ry="${h / 2 - h * .08}" fill="${D.rg('#a8dc84')}"/>`;
+    for (let i = -1; i <= 1; i++) for (let k = 2; k >= 0; k--) s += D.coin(x + i * w * .26, y - h * .12 + k * h * .12, w * .1, h * .045, h * .07, '#2e8a24');
     return s + '</g>'; },
   tangle(cx, cy, r, n, seed, c, sw){ const R = D.rnd(seed); const P = []; for (let i = 0; i < n; i++){ const a = R() * 6.283, d = Math.sqrt(R()) * r; P.push([cx + Math.cos(a) * d, cy + Math.sin(a) * d]); }
     let d = `M${P[0][0].toFixed(1)},${P[0][1].toFixed(1)}`; for (let i = 1; i < P.length - 1; i++){ const mx = (P[i][0] + P[i + 1][0]) / 2, my = (P[i][1] + P[i + 1][1]) / 2; d += ` Q${P[i][0].toFixed(1)},${P[i][1].toFixed(1)} ${mx.toFixed(1)},${my.toFixed(1)}`; }
-    return `<path d="${d}" stroke="${c || '#7a3fc0'}" stroke-width="${sw || 3}" fill="none" stroke-linecap="round"/>`; },
+    return D.tube(d, c || '#7a3fc0', (sw || 3) * 1.8); },
   arrowR(x, y, w, c){ return D.arrow(x, y, x + w, y, c || '#2c9a3a', 4); },
 };
 const L = D.label.bind(D), T = D.text.bind(D);
@@ -160,8 +162,7 @@ slides: [
       { w: 1.2, th: 'pink', h: 'Bacterial Flagellum', sub: '(3 parts)', svg: () => D.svg(560, 400, () => {
         let s = `<rect x="20" y="300" width="520" height="34" fill="${D.lg('#8fd06a')}" stroke="#3e7e22" stroke-width="2.5"/><rect x="20" y="334" width="520" height="18" fill="#f9c6d6" stroke="#e48aa5" stroke-width="2"/><rect x="20" y="352" width="520" height="44" fill="#eaf7d6"/>`;
         s += `<rect x="262" y="290" width="16" height="78" fill="#7a4a2a"/>` + [296, 320, 344, 362].map(y => `<rect x="244" y="${y}" width="52" height="9" rx="3" fill="${D.lg('#c98a4b')}" stroke="#7a4a2a"/>`).join('');
-        s += `<path d="M270,292 q-4,-30 26,-44" stroke="#5d3a1e" stroke-width="12" fill="none" stroke-linecap="round"/>`;
-        s += `<path d="M296,248 c40,-30 10,-70 50,-96 s20,-70 70,-90 s40,-30 70,-40" stroke="#a0673a" stroke-width="7" fill="none" stroke-linecap="round"/>`;
+        s += D.tube('M270,292 q-4,-30 26,-44', '#7a4a2a', 14) + D.tube('M296,248 c40,-30 10,-70 50,-96 s20,-70 70,-90 s40,-30 70,-40', '#b9824e', 10);
         s += L(470, 140, 'Filament\n(longest part)', 420, 70, { fs: 20 }) + L(150, 220, 'Hook', 280, 262, { fs: 20 }) + L(130, 300, 'Basal body', 244, 334, { fs: 20 }) + L(470, 270, 'Cell wall', 440, 314, { fs: 20 }) + L(460, 380, 'Plasma membrane', 420, 344, { fs: 20 });
         return s; }) },
       { w: 1, th: 'lav', h: 'Surface Structures', icw: 90, list: [
@@ -278,9 +279,9 @@ slides: [
       { w: 1.3, th: 'pink', h: 'Rough & Smooth ER', sub: '(diagrammatic view)', svg: () => D.svg(600, 400, () => {
         let s = D.ball(30, 200, 120, '#9b59d0') + `<circle cx="30" cy="200" r="126" fill="none" stroke="#5e2a8a" stroke-width="3" stroke-dasharray="14 6"/>`;
         [160, 196, 232].forEach((r, k) => { const a0 = -1.05, a1 = 1.05, P = a => [30 + r * Math.cos(a), 200 + r * Math.sin(a)];
-          const d = `M${P(a0).join(',')} A${r},${r} 0 0 1 ${P(a1).join(',')}`; s += `<path d="${d}" stroke="#c2185b" stroke-width="22" fill="none" stroke-linecap="round"/><path d="${d}" stroke="#f8bbd0" stroke-width="15" fill="none" stroke-linecap="round"/>`;
+          const d = `M${P(a0).join(',')} A${r},${r} 0 0 1 ${P(a1).join(',')}`; s += D.tube(d, '#f48fb1', 22);
           for (let a = a0; a <= a1; a += .11){ [r - 12, r + 12].forEach(rr => s += D.ball(30 + rr * Math.cos(a), 200 + rr * Math.sin(a), 4.2, '#1f4fbf')); } });
-        ['M360,90 c40,-30 60,30 100,10 s50,-40 100,-10', 'M350,170 c30,30 70,-20 110,10 s60,30 110,-10', 'M370,250 c40,-20 50,40 100,20 s40,-30 90,0', 'M360,320 c40,20 80,-30 120,0 s40,20 80,0', 'M420,100 c10,40 -20,50 0,80', 'M500,180 c-10,30 20,40 0,80'].forEach(d => s += `<path d="${d}" stroke="#c2185b" stroke-width="20" fill="none" stroke-linecap="round"/><path d="${d}" stroke="#fbd3e2" stroke-width="13" fill="none" stroke-linecap="round"/>`);
+        ['M360,90 c40,-30 60,30 100,10 s50,-40 100,-10', 'M350,170 c30,30 70,-20 110,10 s60,30 110,-10', 'M370,250 c40,-20 50,40 100,20 s40,-30 90,0', 'M360,320 c40,20 80,-30 120,0 s40,20 80,0', 'M420,100 c10,40 -20,50 0,80', 'M500,180 c-10,30 20,40 0,80'].forEach(d => s += D.tube(d, '#f8a8c6', 20));
         s += L(70, 370, 'Nucleus', 40, 270, { fs: 20 }) + L(240, 30, 'Rough ER\n(ribosomes on surface)', 216, 84, { fs: 20 }) + L(250, 380, 'Ribosomes', 200, 316, { fs: 20 }) + L(500, 30, 'Smooth ER\n(no ribosomes)', 470, 94, { fs: 20 }) + L(500, 380, 'Tubular network', 470, 322, { fs: 20 });
         return s; }) },
       { w: 1, th: 'lav', h: 'Key Features', list: [
@@ -360,9 +361,9 @@ slides: [
     { f: 1.5, cols: [
       { w: 1.35, th: 'pink', h: 'Structure of Mitochondrion', sub: '(longitudinal section)', svg: () => D.svg(600, 400, () => {
         const cx = 300, cy = 210, rx = 250, ry = 135, ix = 232, iy = 117; let s = `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${D.rg('#f6a54a')}" stroke="#a85512" stroke-width="3"/>`;
-        s += `<ellipse cx="${cx}" cy="${cy}" rx="${rx - 9}" ry="${ry - 9}" fill="#fff1d6"/><ellipse cx="${cx}" cy="${cy}" rx="${ix}" ry="${iy}" fill="#ffd590" stroke="#e07b1a" stroke-width="4"/>`;
+        s += `<ellipse cx="${cx}" cy="${cy}" rx="${rx - 9}" ry="${ry - 9}" fill="#fff1d6"/><ellipse cx="${cx}" cy="${cy}" rx="${ix}" ry="${iy}" fill="${D.rg('#ffcf7a')}" stroke="#e07b1a" stroke-width="4"/>`;
         for (let k = -4; k <= 4; k++){ const x = cx + k * 46, t = Math.sqrt(1 - Math.pow((x - cx) / ix, 2)); [Math.abs(k) % 2 ? -1 : 1].forEach(sd => { const y0 = cy - sd * iy * t, d = iy * t * 1.25;
-          s += `<path d="M${x - 10},${y0 - sd * 4} L${x - 10},${y0 + sd * (d - 10)} Q${x - 10},${y0 + sd * d} ${x},${y0 + sd * d} Q${x + 10},${y0 + sd * d} ${x + 10},${y0 + sd * (d - 10)} L${x + 10},${y0 - sd * 4}" fill="#fff1d6" stroke="#e07b1a" stroke-width="4"/>`; }); }
+          s += `<path d="M${x - 10},${y0 - sd * 4} L${x - 10},${y0 + sd * (d - 10)} Q${x - 10},${y0 + sd * d} ${x},${y0 + sd * d} Q${x + 10},${y0 + sd * d} ${x + 10},${y0 + sd * (d - 10)} L${x + 10},${y0 - sd * 4}" fill="${D.lg('#ffe2b0', 1)}" stroke="#e07b1a" stroke-width="4"/>`; }); }
         s += `<ellipse cx="${cx + 20}" cy="${cy + 6}" rx="22" ry="15" fill="none" stroke="#d6175f" stroke-width="3"/>` + D.dots(10, 140, 170, 320, 80, 4, '#1f4fbf', 6);
         s += L(80, 34, 'Outer membrane', 120, 98, { fs: 20 }) + L(300, 30, 'Inter-membrane\nspace', 300, 84, { fs: 20 }) + L(520, 34, 'Inner membrane', 470, 120, { fs: 20 });
         s += L(70, 380, 'Cristae', 140, 260, { fs: 20 }) + L(240, 382, 'Matrix', 250, 226, { fs: 20 }) + L(400, 382, 'Circular DNA', 322, 220, { fs: 20 }) + L(545, 340, 'Ribosomes\n(70S)', 440, 236, { fs: 20 });
@@ -389,10 +390,10 @@ slides: [
   rows: [
     { f: 1.45, cols: [
       { w: 1.35, th: 'pink', h: 'Structure of Chloroplast', sub: '(diagrammatic view)', svg: () => D.svg(600, 400, () => {
-        const cx = 300, cy = 210; let s = `<ellipse cx="${cx}" cy="${cy}" rx="255" ry="140" fill="${D.rg('#5bb84a')}" stroke="#235e18" stroke-width="3"/><ellipse cx="${cx}" cy="${cy}" rx="244" ry="129" fill="#d8efb5" stroke="#3f8a2c" stroke-width="3"/>`;
+        const cx = 300, cy = 210; let s = `<ellipse cx="${cx}" cy="${cy}" rx="255" ry="140" fill="${D.rg('#5bb84a')}" stroke="#235e18" stroke-width="3"/><ellipse cx="${cx}" cy="${cy}" rx="244" ry="129" fill="${D.rg('#d2efab')}" stroke="#3f8a2c" stroke-width="3"/>`;
         const G = [[150, 175], [235, 245], [320, 165], [400, 240], [470, 190]];
-        for (let i = 0; i < G.length - 1; i++) s += `<path d="M${G[i][0]},${G[i][1]} L${G[i + 1][0]},${G[i + 1][1]}" stroke="#2e8a24" stroke-width="7" opacity=".8"/>`;
-        G.forEach(([x, y]) => { for (let k = 0; k < 6; k++) s += `<ellipse cx="${x}" cy="${y - 34 + k * 13}" rx="32" ry="8" fill="${D.lg('#3fa032')}" stroke="#1d5a16" stroke-width="1.4"/>`; });
+        for (let i = 0; i < G.length - 1; i++) s += D.tube(`M${G[i][0]},${G[i][1]} L${G[i + 1][0]},${G[i + 1][1]}`, '#3fa032', 8);
+        G.forEach(([x, y]) => { for (let k = 5; k >= 0; k--) s += D.coin(x, y - 38 + k * 13, 32, 8, 7, '#34992a'); });
         s += `<ellipse cx="200" cy="290" rx="20" ry="13" fill="none" stroke="#d6175f" stroke-width="3"/>` + D.dots(9, 120, 250, 360, 40, 4, '#1f4fbf', 8);
         s += L(80, 36, 'Outer membrane', 110, 110, { fs: 20 }) + L(260, 30, 'Inner membrane', 250, 86, { fs: 20 }) + L(500, 34, 'Granum\n(stack of thylakoids)', 470, 160, { fs: 20 });
         s += L(70, 370, 'Stroma', 120, 250, { fs: 20 }) + L(300, 384, 'DNA & ribosomes', 210, 300, { fs: 20 }) + L(520, 370, 'Stroma lamella', 438, 218, { fs: 20 });
@@ -435,7 +436,7 @@ slides: [
       { th: 'grn', h: 'Cytoskeleton – the Cell’s Skeleton', sub: 'network of filamentous proteins in the cytoplasm', cards: [
         { t: 'Microtubules', c: '#1f6fe0', d: 'Hollow tubes of tubulin.', ic: () => D.svg(160, 70, () => { let s = ''; for (let i = 0; i < 9; i++) s += D.ball(20 + i * 15, 24, 8, '#5cb0f0') + D.ball(26 + i * 15, 44, 8, '#3b8fd8'); return s; }) },
         { t: 'Microfilaments', c: '#e91e63', d: 'Thin filaments of actin.', ic: () => D.svg(160, 70, () => { let s = ''; for (let i = 0; i < 12; i++) s += D.ball(14 + i * 12, 35 + Math.sin(i * .9) * 7, 6.5, '#f06292') + D.ball(14 + i * 12, 35 - Math.sin(i * .9) * 7, 6.5, '#f8a5c2'); return s; }) },
-        { t: 'Intermediate filaments', c: '#f57c00', d: 'Rope-like protein fibres.', ic: () => D.svg(160, 70, () => [0, 1, 2].map(k => `<path d="M10,${30 + k * 5} c25,-14 45,14 70,0 s45,-14 70,0" stroke="${['#f39c3d', '#f6b26b', '#e07b1a'][k]}" stroke-width="7" fill="none" stroke-linecap="round"/>`).join('')) },
+        { t: 'Intermediate filaments', c: '#f57c00', d: 'Rope-like protein fibres.', ic: () => D.svg(160, 70, () => [0, 1, 2].map(k => D.tube(`M10,${30 + k * 6} c25,-14 45,14 70,0 s45,-14 70,0`, ['#f39c3d', '#f6b26b', '#e07b1a'][k], 9)).join('')) },
         { t: 'Functions', c: '#2c9a3a', d: 'Mechanical support, [[motility]] & maintaining cell shape.', ic: () => D.svg(160, 70, () => B.animalCell(80, 36, 32, { org: false }) + [[52, 20, 108, 52], [56, 52, 104, 18], [80, 6, 80, 66]].map(([a, b, c, d]) => D.line(a, b, c, d, '#2c9a3a', 2)).join('')) }
       ] }
     ] }
@@ -466,7 +467,9 @@ slides: [
     ] },
     { f: 1, cols: [
       { w: 1, th: 'yel', h: 'Centrosome', sub: '(two centrioles)', svg: () => D.svg(420, 200, () => {
-        let s = `<rect x="40" y="70" width="130" height="60" rx="14" fill="${D.lg('#9b6fe0')}" stroke="#5a3a9a" stroke-width="2"/>` + `<rect x="110" y="24" width="60" height="130" rx="14" fill="${D.lg('#c39cf2', 1)}" stroke="#5a3a9a" stroke-width="2"/>`;
+        let s = `<rect x="40" y="70" width="120" height="60" fill="${D.lg('#9b6fe0')}" stroke="#5a3a9a" stroke-width="2"/><ellipse cx="160" cy="100" rx="14" ry="30" fill="${D.rg('#c9a8f5')}" stroke="#5a3a9a" stroke-width="2"/><ellipse cx="40" cy="100" rx="14" ry="30" fill="#7d55c0" stroke="#5a3a9a" stroke-width="2"/>`;
+        s += `<rect x="110" y="34" width="60" height="120" fill="${D.lg('#b48ae8', 1)}" stroke="#5a3a9a" stroke-width="2"/><ellipse cx="140" cy="154" rx="30" ry="11" fill="${D.lg('#b48ae8', 1)}" stroke="#5a3a9a" stroke-width="2"/><ellipse cx="140" cy="34" rx="30" ry="11" fill="${D.rg('#dcc6fa')}" stroke="#5a3a9a" stroke-width="2"/>`;
+        for (let i = 0; i < 9; i++){ const a = i / 9 * 6.283; s += D.ball(140 + 21 * Math.cos(a), 34 + 7.5 * Math.sin(a), 3.2, '#5cb0f0'); }
         const cx = 320, cy = 96; s += `<circle cx="${cx}" cy="${cy}" r="12" fill="${D.rg('#f2c230')}" stroke="#a5852e"/>`;
         for (let i = 0; i < 9; i++){ const a = i / 9 * 6.283, x = cx + 62 * Math.cos(a), y = cy + 62 * Math.sin(a); s += D.line(cx + 12 * Math.cos(a), cy + 12 * Math.sin(a), x, y, '#a5852e', 2);
           for (let k = -1; k <= 1; k++) s += D.ball(x + k * 10 * Math.cos(a + 1.2), y + k * 10 * Math.sin(a + 1.2), 6, '#5cb0f0'); }
@@ -486,13 +489,13 @@ slides: [
   rows: [
     { f: 1.5, cols: [
       { w: 1.3, th: 'pink', h: 'Structure of Nucleus', sub: '(diagrammatic view)', svg: () => D.svg(600, 400, () => {
-        const cx = 300, cy = 205; let s = `<circle cx="${cx}" cy="${cy}" r="170" fill="${D.rg('#b07ae6')}" stroke="#5e2a8a" stroke-width="3"/>`;
-        s += `<circle cx="${cx}" cy="${cy}" r="158" fill="none" stroke="#e6d3fa" stroke-width="4"/><circle cx="${cx + 16}" cy="${cy + 6}" r="128" fill="#d9c0f3" stroke="#7d4bb8" stroke-width="3"/>`;
-        s += B.tangle(cx - 40, cy + 40, 70, 40, 21, '#7a3fc0', 3);
-        s += D.ball(cx + 60, cy - 20, 40, '#6b2fa8');
-        for (let i = 0; i < 14; i++){ const a = i / 14 * 6.283; s += `<rect x="-8" y="-6" width="16" height="12" rx="3" fill="${D.lg('#f6c431')}" stroke="#a5852e" transform="translate(${cx + 164 * Math.cos(a)} ${cy + 164 * Math.sin(a)}) rotate(${a * 57.3})"/>`; }
-        s += L(80, 40, 'Nuclear envelope\n(double membrane)', 172, 92, { fs: 20 }) + L(60, 200, 'Nuclear pore', 136, 196, { fs: 20 }) + L(520, 80, 'Nucleolus', 362, 170, { fs: 20 });
-        s += L(90, 360, 'Chromatin\n(DNA + proteins)', 230, 240, { fs: 20 }) + L(520, 340, 'Nucleoplasm\n(fluid inside)', 380, 280, { fs: 20 }) + L(520, 210, 'Perinuclear\nspace', 462, 186, { fs: 20 });
+        const cx = 300, cy = 205, ix = cx + 18, iy = cy + 8, ir = 126; let s = `<circle cx="${cx}" cy="${cy}" r="170" fill="${D.rg('#b07ae6')}" stroke="#4e2280" stroke-width="3"/>`;
+        const R = D.rnd(13); for (let n = 0; n < 160; n++){ const a = R() * 6.283, d = Math.sqrt(R()) * 165, x = cx + Math.cos(a) * d, y = cy + Math.sin(a) * d; if (Math.hypot(x - ix, y - iy) < ir + 12) continue; s += `<circle cx="${x}" cy="${y}" r="${3 + R() * 2.5}" fill="#6b35a8" stroke="#c9a6f0" stroke-width="1.2" opacity=".8"/>`; }
+        s += `<circle cx="${ix}" cy="${iy}" r="${ir + 8}" fill="#f1e4ff" stroke="#5e2a8a" stroke-width="3"/><circle cx="${ix}" cy="${iy}" r="${ir}" fill="${D.rg('#cfb2f0')}" stroke="#7d4bb8" stroke-width="3"/>`;
+        s += B.tangle(ix - 40, iy + 30, 78, 46, 21, '#8a4fd0', 2.6) + D.ball(ix + 48, iy - 26, 38, '#6b2fa8') + D.dots(10, ix + 22, iy - 52, 50, 50, 2.2, '#4a1a80', 17);
+        for (let n = 0; n < 16; n++){ const a = n / 16 * 6.283; s += `<rect x="-9" y="-6" width="18" height="12" rx="3" fill="${D.lg('#f6c431')}" stroke="#8a6a1e" transform="translate(${ix + (ir + 4) * Math.cos(a)} ${iy + (ir + 4) * Math.sin(a)}) rotate(${a * 57.3 + 90})"/>`; }
+        s += L(80, 40, 'Nuclear envelope\n(double membrane)', 210, 96, { fs: 20 }) + L(60, 214, 'Nuclear pore', 188, 214, { fs: 20 }) + L(520, 80, 'Nucleolus', 380, 180, { fs: 20 });
+        s += L(90, 360, 'Chromatin\n(DNA + proteins)', 230, 240, { fs: 20 }) + L(520, 340, 'Nucleoplasm\n(fluid inside)', 380, 280, { fs: 20 }) + L(530, 214, 'Nuclear surface\nwith pores', 452, 150, { fs: 20 });
         return s; }) },
       { w: 1, th: 'grn', h: 'Key Features', list: [
         { t: 'Nuclear envelope', d: 'Two membranes with a [[perinuclear space]] (10–50 nm) between them.' },
