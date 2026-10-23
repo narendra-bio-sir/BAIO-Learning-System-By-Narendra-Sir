@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<title>Phone Microscope | BAIO Learning System</title>
+<meta name="description" content="Turn your Android phone into a microscope — camera view with zoom, light, contrast, measuring in micrometres, guided practicals and a saved practical record. BAIO by Narendra Sir.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="game.css?v=1">
+<style>
+.scope{position:relative;margin-top:12px;aspect-ratio:1/1;max-height:70vh;width:100%;border-radius:18px;overflow:hidden;background:#000;border:1px solid var(--line);touch-action:none}
+.scope video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:50% 50%}
+.scope .circle{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 50%,transparent 47%,rgba(0,0,0,.92) 48.5%)}
+.scope .grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.28) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.28) 1px,transparent 1px);background-size:10% 10%}
+.scope .cross{position:absolute;left:50%;top:50%;width:36px;height:36px;margin:-18px 0 0 -18px;pointer-events:none;border:1.5px solid rgba(243,210,122,.9);border-radius:50%}
+.scope .msg{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px;color:#cfe;font:600 14px/1.6 Inter,sans-serif}
+.scope .zoomtag{position:absolute;right:10px;top:10px;padding:4px 9px;border-radius:999px;background:rgba(0,0,0,.6);color:#f3d27a;font:800 12px Inter}
+.scope .scalebar{position:absolute;left:12px;bottom:12px;color:#fff;font:700 11px Inter;text-shadow:0 1px 2px #000}
+.scope .scalebar i{display:block;height:4px;background:#fff;border-radius:2px;margin-bottom:3px;box-shadow:0 1px 2px #000}
+.ctrls{display:grid;gap:10px;margin-top:12px}
+.row{display:flex;align-items:center;gap:10px}
+.row label{flex:none;width:92px;font:700 12.5px Inter;color:var(--ink-dim)}
+.row input[type=range]{flex:1;accent-color:#D4AF37}
+.row output{flex:none;width:44px;text-align:right;font:700 12px Inter;color:var(--gold)}
+.toggles{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.tbtn{padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:700 12.5px Inter,sans-serif;cursor:pointer;min-height:40px}
+.tbtn.on{border-color:var(--teal);color:var(--teal)}
+.tbtn[disabled]{opacity:.4}
+.shoot{display:block;width:84px;height:84px;margin:14px auto 0;border-radius:50%;border:5px solid var(--gold);background:radial-gradient(circle,#fff 55%,#e9e2c9 56%);cursor:pointer;box-shadow:0 4px 18px rgba(0,0,0,.35)}
+.shoot:active{transform:scale(.95)}
+.spec{display:flex;gap:8px;align-items:center;margin-top:12px}
+.spec select{flex:1;margin:0}
+.ed{position:relative;margin-top:12px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#000;touch-action:none}
+.ed canvas{display:block;width:100%;height:auto}
+.edbar{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:10px}
+.inbar{display:flex;gap:6px;margin-top:10px}
+.inbar input{flex:1;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:600 14px Inter}
+.hintline{font:600 12.5px/1.5 Inter;color:var(--ink-dim);text-align:center;margin-top:8px}
+.prac{display:grid;gap:10px;margin-top:12px}
+.pcard{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px}
+.pcard h3{font-size:16px}
+.pcard .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.pill2{font:700 11px Inter;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--ink-dim)}
+.pill2.need{border-color:var(--gold);color:var(--gold)}
+.pcard ol,.pcard ul{margin:8px 0 0;padding-left:20px;font-size:13.5px;line-height:1.6;color:var(--ink-dim)}
+.pcard b{color:var(--ink)}
+details summary{cursor:pointer;font:700 13px Inter;color:var(--teal);margin-top:8px}
+.guide{font-size:14px;line-height:1.7;color:var(--ink-dim)}
+.guide h3{font-size:16px;color:var(--ink);margin-top:16px}
+.guide .warn{padding:10px 12px;border-radius:12px;border:1px solid var(--bad);background:rgba(231,105,91,.08);color:var(--ink);margin-top:10px}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:12px}
+.gi{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.gi img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;background:#000}
+.gi div{padding:8px;font:600 11.5px/1.4 Inter;color:var(--ink-dim)}
+.gi b{display:block;color:var(--ink);font-size:12.5px}
+.gi .gb{display:flex;gap:4px;padding:0 8px 8px}
+.gi .gb button,.gi .gb a{flex:1;padding:6px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:700 11px Inter;text-align:center;text-decoration:none;cursor:pointer}
+.empty{text-align:center;color:var(--ink-dim);font-size:14px;margin-top:24px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow" data-i18n="eyebrow">BAIO Learning System · Lab at home</div>
+    <h1 data-i18n-html="h1">🔬 Phone <span class="accent">Microscope</span></h1>
+    <p data-i18n="intro">Attach a small lens to your phone camera and turn it into a microscope. Zoom, light up, measure, label and save your observations as a practical record.</p>
+  </section>
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-t="scope" data-i18n="t1">🔬 Microscope</button>
+    <button class="tab" data-t="prac" data-i18n="t2">🧪 Practicals</button>
+    <button class="tab" data-t="lens" data-i18n="t3">🛠️ Make your lens</button>
+    <button class="tab" data-t="gal" data-i18n="t4">🖼️ My observations</button>
+  </div>
+
+  <!-- MICROSCOPE -->
+  <section id="p-scope">
+    <div class="spec"><span class="muted" data-i18n="spec">Specimen</span><select class="pick" id="specSel"></select></div>
+    <div class="scope" id="scope">
+      <video id="vid" playsinline muted autoplay></video>
+      <div class="grid" id="gridOv" hidden></div><div class="circle" id="circleOv"></div><div class="cross" id="crossOv" hidden></div>
+      <div class="zoomtag" id="zoomTag">1.0×</div><div class="scalebar" id="scaleBar" hidden><i></i><span></span></div>
+      <div class="msg" id="camMsg"><div><div style="font-size:42px">🔬</div><p data-i18n="camHelp">Fix your lens over the back camera, put the slide almost touching the lens and shine a torch from below.</p><button class="btn primary" id="startCam" data-i18n="start">▶ Start microscope</button></div></div>
+    </div>
+    <button class="shoot" id="shoot" aria-label="Capture" hidden></button>
+    <div class="ctrls" id="ctrls" hidden>
+      <div class="row"><label data-i18n="zoom">🔍 Zoom</label><input type="range" id="zoom" min="1" max="6" step="0.1" value="1"><output id="zoomOut">1.0×</output></div>
+      <div class="row" id="focusRow" hidden><label data-i18n="focus">🎯 Focus</label><input type="range" id="focus" min="0" max="1" step="0.01" value="0"><output id="focusOut"></output></div>
+      <div class="row"><label data-i18n="bright">☀️ Brightness</label><input type="range" id="bright" min="50" max="250" value="100"><output id="brightOut">100%</output></div>
+      <div class="row"><label data-i18n="contrast">◐ Contrast</label><input type="range" id="contrast" min="50" max="300" value="100"><output id="contrastOut">100%</output></div>
+      <div class="row"><label data-i18n="sat">🎨 Colour</label><input type="range" id="sat" min="0" max="300" value="100"><output id="satOut">100%</output></div>
+      <div class="toggles">
+        <button class="tbtn" id="tTorch" data-i18n="torch">🔦 Light</button>
+        <button class="tbtn" id="tEnh" data-i18n="enh">✨ Enhance</button>
+        <button class="tbtn" id="tBW" data-i18n="bw">⚫ B&amp;W</button>
+        <button class="tbtn on" id="tCircle" data-i18n="circle">⭕ Round view</button>
+        <button class="tbtn" id="tGrid" data-i18n="grid">#️⃣ Grid</button>
+        <button class="tbtn" id="tFlip" data-i18n="flip">🔄 Switch camera</button>
+        <button class="tbtn" id="tCal" data-i18n="cal">📏 Set scale</button>
+      </div>
+      <div class="hintline" id="calInfo"></div>
+    </div>
+    <!-- capture editor -->
+    <div id="editor" hidden>
+      <div class="ed"><canvas id="edc"></canvas></div>
+      <div class="hintline" id="edHint"></div>
+      <div class="inbar" id="labelBar" hidden><input id="labelIn" maxlength="40" placeholder="Type a label, e.g. nucleus"><button class="btn primary" id="labelOk">OK</button></div>
+      <div class="inbar" id="calBar" hidden><input id="calIn" type="number" min="0.1" step="0.1" value="1"><span class="muted" style="align-self:center">mm</span><button class="btn primary" id="calOk">Save scale</button></div>
+      <div class="edbar">
+        <button class="tbtn on" id="mLabel" data-i18n="mlabel">🏷️ Add label</button>
+        <button class="tbtn" id="mMeasure" data-i18n="mmeasure">📏 Measure</button>
+        <button class="tbtn" id="mUndo" data-i18n="undo">↩ Undo</button>
+      </div>
+      <div class="btns"><button class="btn primary" id="save" data-i18n="save">💾 Save to my observations</button><button class="btn" id="discard" data-i18n="discard">✕ Back to microscope</button></div>
+    </div>
+  </section>
+
+  <!-- PRACTICALS -->
+  <section id="p-prac" hidden><div class="prac" id="pracList"></div></section>
+
+  <!-- LENS GUIDE -->
+  <section id="p-lens" hidden><div class="card guide" id="lensGuide"></div></section>
+
+  <!-- GALLERY -->
+  <section id="p-gal" hidden>
+    <div class="row" style="margin-top:12px"><label data-i18n="name">👤 Your name</label><input id="stuName" class="pick" style="margin:0" maxlength="40" placeholder="Shown on saved images"></div>
+    <div class="gal" id="gal"></div>
+  </section>
+  <footer>Narendra Sir · Biology Lecturer · BAIO Learning System · Your photos stay on your phone.</footer>
+</div>
+<script src="common.js?v=2"></script>
+<script>
+GZ.nav();
+GZ.i18n({
+ en:{eyebrow:'BAIO Learning System · Lab at home', h1:'🔬 Phone <span class="accent">Microscope</span>', intro:'Attach a small lens to your phone camera and turn it into a microscope. Zoom, light up, measure, label and save your observations as a practical record.',
+  t1:'🔬 Microscope', t2:'🧪 Practicals', t3:'🛠️ Make your lens', t4:'🖼️ My observations', spec:'Specimen', start:'▶ Start microscope', camHelp:'Fix your lens over the back camera, put the slide almost touching the lens and shine a torch from below.',
+  zoom:'🔍 Zoom', focus:'🎯 Focus', bright:'☀️ Brightness', contrast:'◐ Contrast', sat:'🎨 Colour', torch:'🔦 Light', enh:'✨ Enhance', bw:'⚫ B&W', circle:'⭕ Round view', grid:'#️⃣ Grid', flip:'🔄 Switch camera', cal:'📏 Set scale',
+  mlabel:'🏷️ Add label', mmeasure:'📏 Measure', undo:'↩ Undo', save:'💾 Save to my observations', discard:'✕ Back to microscope', name:'👤 Your name'},
+ kn:{eyebrow:'BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್ · ಮನೆಯಲ್ಲೇ ಪ್ರಯೋಗಾಲಯ', h1:'🔬 ಫೋನ್ <span class="accent">ಸೂಕ್ಷ್ಮದರ್ಶಕ</span>', intro:'ಫೋನ್ ಕ್ಯಾಮೆರಾಗೆ ಸಣ್ಣ ಲೆನ್ಸ್ ಜೋಡಿಸಿ ಸೂಕ್ಷ್ಮದರ್ಶಕ ಮಾಡಿ. ಜೂಮ್ ಮಾಡಿ, ಬೆಳಕು ಹಾಕಿ, ಅಳೆಯಿರಿ, ಹೆಸರು ಬರೆಯಿರಿ ಮತ್ತು ಪ್ರಾಯೋಗಿಕ ದಾಖಲೆಯಾಗಿ ಉಳಿಸಿ.',
+  t1:'🔬 ಸೂಕ್ಷ್ಮದರ್ಶಕ', t2:'🧪 ಪ್ರಯೋಗಗಳು', t3:'🛠️ ಲೆನ್ಸ್ ಮಾಡಿ', t4:'🖼️ ನನ್ನ ವೀಕ್ಷಣೆಗಳು', spec:'ಮಾದರಿ', start:'▶ ಸೂಕ್ಷ್ಮದರ್ಶಕ ಆರಂಭಿಸಿ', camHelp:'ಹಿಂದಿನ ಕ್ಯಾಮೆರಾ ಮೇಲೆ ಲೆನ್ಸ್ ಇಡಿ, ಸ್ಲೈಡ್ ಅನ್ನು ಲೆನ್ಸ್‌ಗೆ ತುಂಬಾ ಹತ್ತಿರ ಇಡಿ ಮತ್ತು ಕೆಳಗಿನಿಂದ ಟಾರ್ಚ್ ಬೆಳಕು ಹಾಕಿ.',
+  zoom:'🔍 ಜೂಮ್', focus:'🎯 ಫೋಕಸ್', bright:'☀️ ಪ್ರಕಾಶ', contrast:'◐ ಕಾಂಟ್ರಾಸ್ಟ್', sat:'🎨 ಬಣ್ಣ', torch:'🔦 ಬೆಳಕು', enh:'✨ ಸ್ಪಷ್ಟಗೊಳಿಸಿ', bw:'⚫ ಕಪ್ಪು-ಬಿಳುಪು', circle:'⭕ ವೃತ್ತ ನೋಟ', grid:'#️⃣ ಗ್ರಿಡ್', flip:'🔄 ಕ್ಯಾಮೆರಾ ಬದಲಿಸಿ', cal:'📏 ಸ್ಕೇಲ್ ಹೊಂದಿಸಿ',
+  mlabel:'🏷️ ಹೆಸರು ಸೇರಿಸಿ', mmeasure:'📏 ಅಳೆಯಿರಿ', undo:'↩ ರದ್ದು', save:'💾 ಉಳಿಸಿ', discard:'✕ ಹಿಂದೆ', name:'👤 ನಿಮ್ಮ ಹೆಸರು'},
+ hi:{eyebrow:'BAIO लर्निंग सिस्टम · घर पर प्रयोगशाला', h1:'🔬 फ़ोन <span class="accent">माइक्रोस्कोप</span>', intro:'फ़ोन कैमरे पर छोटा लेंस लगाकर उसे माइक्रोस्कोप बनाओ। ज़ूम करो, रोशनी डालो, नापो, लेबल लगाओ और प्रैक्टिकल रिकॉर्ड के रूप में सहेजो।',
+  t1:'🔬 माइक्रोस्कोप', t2:'🧪 प्रैक्टिकल', t3:'🛠️ लेंस बनाओ', t4:'🖼️ मेरे अवलोकन', spec:'नमूना', start:'▶ माइक्रोस्कोप शुरू करो', camHelp:'पीछे के कैमरे पर लेंस लगाओ, स्लाइड को लेंस के बिल्कुल पास रखो और नीचे से टॉर्च की रोशनी डालो।',
+  zoom:'🔍 ज़ूम', focus:'🎯 फ़ोकस', bright:'☀️ चमक', contrast:'◐ कंट्रास्ट', sat:'🎨 रंग', torch:'🔦 लाइट', enh:'✨ साफ़ करो', bw:'⚫ श्वेत-श्याम', circle:'⭕ गोल व्यू', grid:'#️⃣ ग्रिड', flip:'🔄 कैमरा बदलो', cal:'📏 स्केल सेट करो',
+  mlabel:'🏷️ लेबल लगाओ', mmeasure:'📏 नापो', undo:'↩ वापस', save:'💾 सहेजो', discard:'✕ वापस', name:'👤 आपका नाम'}});
+const $=s=>document.querySelector(s);
+
+/* ---------------- practicals ---------------- */
+const PRACS=[
+ {id:'free', t:'Free observation', ch:'', need:'any', mat:[], steps:[], look:[]},
+ {id:'onion', t:'Onion peel cells', ch:'I PUC Ch 8 · Cell: The Unit of Life', need:'100×',
+  mat:['Onion','Iodine solution or safranin','Glass slide and cover slip (or a clean piece of clear plastic)','Water, forceps or tweezers, blade'],
+  steps:['Cut an onion and peel off the thin transparent layer from the inner side of a fleshy scale leaf.','Place a small flat piece on the slide with a drop of water.','Add one drop of iodine (or safranin) and wait one minute.','Put the cover slip gently so there are no air bubbles; soak up extra liquid with tissue.','Look first at low zoom, then increase zoom on a clear area.'],
+  look:['Rectangular, brick-like cells fitted closely together','A clear cell wall around each cell','A darkly stained nucleus near the edge of each cell','Large vacuole making the cytoplasm thin'],
+  draw:'Draw 3–4 cells and label: cell wall, cytoplasm, nucleus, vacuole.', size:'Each cell is roughly 0.2–0.4 mm long.'},
+ {id:'cheek', t:'Human cheek cells', ch:'I PUC Ch 8 · Cell: The Unit of Life', need:'100×',
+  mat:['A clean new toothpick','Methylene blue (or iodine)','Slide and cover slip','Water'],
+  steps:['Rinse your mouth with clean water.','Gently scrape the inner side of your cheek with the flat end of a NEW toothpick.','Spread the scraping in a drop of water on the slide.','Add a drop of methylene blue, wait one minute and put the cover slip.','Throw the toothpick away and wash your hands.'],
+  look:['Flat, irregular cells, often overlapping','A blue-stained nucleus in the centre','No cell wall — only the cell membrane'],
+  draw:'Draw 2 cells and label: cell membrane, cytoplasm, nucleus. Write one difference from the onion cell.', size:'Each cell is about 0.05–0.06 mm (50–60 µm) across.'},
+ {id:'stomata', t:'Stomata in a leaf peel', ch:'I PUC Ch 6 · Anatomy of Flowering Plants', need:'100×',
+  mat:['A fresh leaf (Rhoeo/Tradescantia, money plant, or any leaf)','Safranin (optional)','Slide, cover slip, forceps','Clear nail polish (for the impression method)'],
+  steps:['Fold the leaf and gently tear it so a thin transparent peel of the LOWER surface comes off.','Mount the peel in a drop of water (stain with safranin if you have it).','No peel? Paint a thin layer of clear nail polish on the lower surface, let it dry, lift it with clear tape and stick it on a slide.','Focus on the epidermis and look for pairs of guard cells.'],
+  look:['Pairs of bean-shaped guard cells (dicots) — or dumb-bell shaped in grasses','The pore (stoma) between them','Epidermal cells around them; chloroplasts inside the guard cells'],
+  draw:'Draw one stoma and label: guard cells, stomatal pore, epidermal cells, chloroplasts. Count the stomata in the field of view.', size:'A stoma is only about 0.02–0.03 mm long — use your highest magnification.'},
+ {id:'pollen', t:'Pollen grains', ch:'II PUC Ch 1 · Sexual Reproduction in Flowering Plants', need:'100×',
+  mat:['A fresh flower (Hibiscus, lily, Tecoma, grass)','Slide, cover slip','A little sugar solution (optional, for germination)'],
+  steps:['Gently tap an open anther over a clean slide so pollen falls on it.','Add a drop of water and put the cover slip.','For germination: use a drop of sugar solution instead, keep the slide in a covered moist box for 15–30 minutes and look again.'],
+  look:['Round grains with a patterned or spiny outer wall (exine)','Germ pores on the surface','Pollen tubes growing out, if you used sugar solution'],
+  draw:'Draw a pollen grain and label: exine, germ pore (and pollen tube if seen).', size:'Most pollen grains are 0.025–0.05 mm across; Hibiscus pollen is larger.'},
+ {id:'pond', t:'Life in a drop of pond water', ch:'I PUC Ch 2 & 3 · Classification & Plant Kingdom', need:'100×',
+  mat:['A little water from a pond or a vase with old flowers (take it near the green scum)','Slide and cover slip','A dropper or a straw'],
+  steps:['Put one drop of pond water (with a bit of the green scum) on the slide.','Add the cover slip and wait a few seconds for things to settle.','Scan slowly from one side to the other; moving things are alive!','Wash your hands after the activity.'],
+  look:['Spirogyra — green threads with spiral chloroplasts','Diatoms — tiny glassy boxes','Moving protozoans like Paramecium (ciliated, slipper-shaped)','Green, flagellated cells like Euglena or Chlamydomonas'],
+  draw:'Draw any two organisms you found and name their kingdom or group.', size:'Paramecium is about 0.2 mm long; Spirogyra cells are about 0.03 mm wide.'},
+ {id:'curd', t:'Bacteria in curd', ch:'II PUC Ch 8 · Microbes in Human Welfare', need:'highest',
+  mat:['A tiny drop of fresh curd','Slide, cover slip, water','Methylene blue (optional)'],
+  steps:['Mix a very small drop of curd with a drop of water on the slide.','Add methylene blue if you have it, then the cover slip.','Use your strongest lens and the highest zoom; focus very slowly.'],
+  look:['Very small rod-shaped Lactobacillus (they may look like tiny dots or short dashes)','Fat droplets (larger, round and shiny)'],
+  draw:'Draw what you see and write what Lactobacillus does to milk.', size:'Lactobacillus is only about 0.002–0.005 mm long — a phone lens shows it only as tiny specks.'},
+ {id:'roothair', t:'Root hairs', ch:'I PUC Ch 5 · Morphology of Flowering Plants', need:'clip-on',
+  mat:['Moong or mustard seeds germinated on wet cotton for 2–3 days'],
+  steps:['Take a germinated seedling with a white root.','Place it on a slide or a dark surface with a drop of water.','Look at the region a little behind the root tip.'],
+  look:['A fuzzy zone of fine root hairs behind the tip','Root cap at the very tip','Region of elongation between the tip and the hairs'],
+  draw:'Draw the root tip and label: root cap, region of elongation, root hair zone.', size:'Root hairs are fine and up to a few mm long.'},
+ {id:'fern', t:'Fern sori and moss', ch:'I PUC Ch 3 · Plant Kingdom', need:'clip-on',
+  mat:['A fern leaf with brown dots on the underside','A small piece of moss from a wet wall'],
+  steps:['Turn the fern leaf over and look at the brown dots (sori).','Look at the moss: find its tiny leaves, rhizoids and any stalked capsules.'],
+  look:['Sori — clusters of sporangia on the fern leaf','Moss: leafy gametophyte, rhizoids, and capsule on a stalk (sporophyte)'],
+  draw:'Draw a fern pinna with sori, and a moss plant with capsule; label them.', size:'Sori are about 1–2 mm across.'},
+ {id:'insect', t:'Parts of an insect', ch:'I PUC Ch 4 · Animal Kingdom', need:'clip-on',
+  mat:['A dead housefly, mosquito or ant (do not kill one for this)'],
+  steps:['Place the insect on white paper.','Look at the head, legs and wings one by one.'],
+  look:['Jointed legs (Arthropoda!)','Compound eyes','Wings with veins; bristles on the body'],
+  draw:'Draw a leg and label its joints; write why insects belong to Arthropoda.', size:'A housefly is about 6–7 mm long.'},
+];
+const specSel=$('#specSel');
+specSel.innerHTML=PRACS.map(p=>`<option value="${p.id}">${p.t}</option>`).join('');
+const needTxt=n=>n==='clip-on'?'✅ Works with a clip-on macro lens':n==='100×'?'🔎 Needs a 100× lens (laser-pointer / DVD lens or Foldscope)':n==='highest'?'🔎 Needs your strongest lens':'';
+function drawPracs(){
+  $('#pracList').innerHTML=PRACS.filter(p=>p.id!=='free').map(p=>`<div class="pcard"><h3>${p.t}</h3><div class="meta"><span class="pill2">${p.ch}</span><span class="pill2 ${p.need==='clip-on'?'':'need'}">${needTxt(p.need)}</span></div>
+   <details><summary>🧰 What you need</summary><ul>${p.mat.map(x=>`<li>${x}</li>`).join('')}</ul></details>
+   <details open><summary>🪜 Steps</summary><ol>${p.steps.map(x=>`<li>${x}</li>`).join('')}</ol></details>
+   <details><summary>👀 What to look for</summary><ul>${p.look.map(x=>`<li>${x}</li>`).join('')}</ul><p class="muted" style="margin:8px 0 0">📏 ${p.size}</p></details>
+   <p class="muted" style="margin:10px 0 0">✏️ <b>Record:</b> ${p.draw}</p>
+   <div class="btns"><button class="btn primary" data-go="${p.id}">🔬 Start observing</button></div></div>`).join('');
+  $('#pracList').querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{ specSel.value=b.dataset.go; showTab('scope'); });
+}
+
+/* ---------------- lens guide ---------------- */
+$('#lensGuide').innerHTML=`
+ <h3 style="margin-top:0">Why you need a lens</h3>
+ <p>Phone zoom only enlarges pixels — it cannot show cells. A tiny, strong lens placed right on the camera does the real magnifying. The app then helps you see, measure and record.</p>
+ <h3>Option 1 · Clip-on macro lens (₹150–500)</h3>
+ <p>About 10–30×. Clip it over the back camera. Good for root hairs, fern sori, moss, insect parts, leaf venation and onion peel in outline.</p>
+ <h3>Option 2 · DIY lens from a laser pointer or old DVD drive (₹50–100) — about 100×</h3>
+ <ol><li>Take out the batteries of a cheap laser pointer and unscrew its front end; inside is a tiny bead-like lens. (An old DVD/CD drive has a similar lens in its laser head.)</li>
+ <li>Push the lens out gently with a pen refill.</li>
+ <li>Fix it exactly over the back camera with a hairclip, a piece of clear tape with a hole, or a bit of Blu-Tack ring.</li>
+ <li>Open the microscope, bring the slide almost touching the lens (1–2 mm) and move it slowly until the picture is sharp.</li></ol>
+ <div class="warn">⚠️ Always remove the batteries before opening a laser pointer, and never look into a laser beam.</div>
+ <h3>Option 3 · Foldscope (₹1,000–1,500)</h3>
+ <p>A sturdy paper microscope (about 140×) used in many Indian schools. It has its own slide holder and a magnetic clip for the phone.</p>
+ <h3>Make a simple stand (free)</h3>
+ <ol><li>Make two equal stacks of books about 10–12 cm high.</li><li>Lay a clear sheet (old photo-frame glass or acrylic) across them.</li><li>Put the phone on top, camera facing down through the glass, with the lens attached.</li><li>Slide the specimen underneath on a third, lower stack and move it up or down to focus.</li><li>Shine a torch (or another phone's flashlight) from below the slide.</li></ol>
+ <h3>Tips for a sharp picture</h3>
+ <ul><li>Focus by moving the slide, not by zooming.</li><li>Use a thin specimen — one cell layer thick is ideal.</li><li>Use ✨ Enhance or more contrast for unstained specimens.</li><li>Use 📏 Set scale once with a ruler so you can measure cells.</li></ul>`;
+
+/* ---------------- camera ---------------- */
+const vid=$('#vid'); let stream=null, track=null, facing='environment', caps={}, hwZoom=1, torchOn=false;
+const st={zoom:1,bright:100,contrast:100,sat:100,enh:false,bw:false};
+function filterCss(){ const c=st.contrast*(st.enh?1.5:1), s=st.bw?0:st.sat*(st.enh?1.3:1); return `brightness(${st.bright}%) contrast(${c}%) saturate(${s}%)`+(st.enh?' url(#sharpen)':''); }
+function applyView(){ const dz=st.zoom/hwZoom; vid.style.transform=`scale(${Math.max(1,dz)})`; vid.style.filter=filterCss(); $('#zoomTag').textContent=st.zoom.toFixed(1)+'×'; $('#zoomOut').textContent=st.zoom.toFixed(1)+'×'; drawScaleBar(); }
+async function startCam(){
+  $('#camMsg').innerHTML='<p>Starting camera…</p>';
+  try{
+    if(stream) stream.getTracks().forEach(t=>t.stop());
+    stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:facing},width:{ideal:1920},height:{ideal:1080}}});
+    vid.srcObject=stream; await vid.play().catch(()=>{});
+    track=stream.getVideoTracks()[0]; caps=track.getCapabilities?track.getCapabilities():{};
+    $('#camMsg').hidden=true; $('#ctrls').hidden=false; $('#shoot').hidden=false;
+    $('#tTorch').disabled=!caps.torch; hwZoom=1;
+    if(caps.focusDistance&&caps.focusMode&&caps.focusMode.includes('manual')){ $('#focusRow').hidden=false; const f=$('#focus'); f.min=caps.focusDistance.min; f.max=caps.focusDistance.max; f.step=caps.focusDistance.step||0.01; f.value=caps.focusDistance.min; }
+    else $('#focusRow').hidden=true;
+    setZoom(st.zoom); calInfo();
+  }catch(e){
+    $('#camMsg').hidden=false;
+    $('#camMsg').innerHTML=`<div><div style="font-size:38px">📷</div><p>${e&&e.name==='NotAllowedError'?'Camera permission was blocked. Allow camera access for this site in your browser settings, then try again.':'The camera could not be opened on this device.'}</p><button class="btn primary" id="startCam2">Try again</button></div>`;
+    $('#startCam2').onclick=startCam;
+  }
+}
+async function setZoom(z){
+  st.zoom=z;
+  if(caps.zoom&&track){ const hz=Math.min(z,caps.zoom.max); try{ await track.applyConstraints({advanced:[{zoom:hz}]}); hwZoom=hz; }catch(e){ hwZoom=1; } }
+  applyView();
+}
+$('#startCam').onclick=startCam;
+$('#zoom').oninput=e=>setZoom(+e.target.value);
+['bright','contrast','sat'].forEach(k=>{ $('#'+k).oninput=e=>{ st[k]=+e.target.value; $('#'+k+'Out').textContent=st[k]+'%'; applyView(); }; });
+$('#focus').oninput=async e=>{ try{ await track.applyConstraints({advanced:[{focusMode:'manual',focusDistance:+e.target.value}]}); }catch(_){} };
+$('#tTorch').onclick=async()=>{ if(!track) return; torchOn=!torchOn; try{ await track.applyConstraints({advanced:[{torch:torchOn}]}); }catch(e){ torchOn=false; } $('#tTorch').classList.toggle('on',torchOn); };
+$('#tEnh').onclick=()=>{ st.enh=!st.enh; $('#tEnh').classList.toggle('on',st.enh); applyView(); };
+$('#tBW').onclick=()=>{ st.bw=!st.bw; $('#tBW').classList.toggle('on',st.bw); applyView(); };
+$('#tCircle').onclick=()=>{ const on=$('#circleOv').hidden; $('#circleOv').hidden=!on; $('#tCircle').classList.toggle('on',on); };
+$('#tGrid').onclick=()=>{ const on=$('#gridOv').hidden; $('#gridOv').hidden=!on; $('#crossOv').hidden=!on; $('#tGrid').classList.toggle('on',on); };
+$('#tFlip').onclick=()=>{ facing=facing==='environment'?'user':'environment'; startCam(); };
+
+/* ---------------- calibration (pixels per mm) ---------------- */
+// stored as camera pixels per mm ÷ frame width, at the camera's own (optical) zoom; digital zoom only crops
+let CAL=null; try{ CAL=JSON.parse(localStorage.getItem('baio_scope_cal')||'null'); if(CAL&&!CAL.hz) CAL=null; }catch(e){}
+const pxPerMmSrc=(vw,hz)=>CAL? CAL.r*vw*(hz/CAL.hz) : null;
+function calInfo(){ $('#calInfo').textContent = CAL ? `📏 Scale set — you can measure in µm. Set it again if you change the lens.` : '📏 Scale not set yet — capture a ruler and tap two marks to measure real sizes.'; drawScaleBar(); }
+function drawScaleBar(){ const bar=$('#scope .scalebar'); if(!CAL||!vid.videoWidth){ bar.hidden=true; return; }
+  const B=$('#scope').clientWidth, vw=vid.videoWidth, vh=vid.videoHeight, c=Math.max(B/vw,B/vh), dz=Math.max(1,st.zoom/hwZoom);
+  const ppmScreen=pxPerMmSrc(vw,hwZoom)*c*dz;
+  const um=[10,20,50,100,200,500,1000,2000,5000].find(u=>ppmScreen*u/1000>=40)||10000, px=ppmScreen*um/1000;
+  bar.hidden=false; bar.querySelector('i').style.width=px+'px'; bar.querySelector('span').textContent=um>=1000?(um/1000)+' mm':um+' µm'; }
+
+/* ---------------- capture & editor ---------------- */
+const edc=$('#edc'), ctx=edc.getContext('2d'); let ED=null, mode='label';
+function capture(cal){
+  if(!vid.videoWidth) return;
+  const vw=vid.videoWidth, vh=vid.videoHeight, side=Math.min(vw,vh), dz=Math.max(1,st.zoom/hwZoom), s=side/dz;
+  const W=Math.round(Math.max(720,Math.min(1080,s))); edc.width=W; edc.height=W;
+  ctx.filter=filterCss().replace(' url(#sharpen)','');
+  ctx.drawImage(vid,(vw-s)/2,(vh-s)/2,s,s,0,0,W,W); ctx.filter='none';
+  if(!$('#circleOv').hidden){ ctx.save(); ctx.globalCompositeOperation='destination-in'; ctx.beginPath(); ctx.arc(W/2,W/2,W*0.485,0,Math.PI*2); ctx.fill(); ctx.restore(); ctx.save(); ctx.globalCompositeOperation='destination-over'; ctx.fillStyle='#000'; ctx.fillRect(0,0,W,W); ctx.restore(); }
+  // full-frame px per mm conversion: capture pixels per source pixel = W/s
+  ED={base:ctx.getImageData(0,0,W,W), W, scaleSrc:W/s, vw, hz:hwZoom, zoom:st.zoom, labels:[], lines:[], pending:null, cal:!!cal, spec:specSel.value};
+  $('#editor').hidden=false; $('#scope').hidden=true; $('#ctrls').hidden=true; $('#shoot').hidden=true;
+  setMode(cal?'cal':'label'); redraw(); window.scrollTo({top:$('#editor').offsetTop-70,behavior:'smooth'});
+}
+function backToScope(){ $('#editor').hidden=true; $('#scope').hidden=false; $('#ctrls').hidden=false; $('#shoot').hidden=false; $('#labelBar').hidden=true; $('#calBar').hidden=true; ED=null; }
+$('#shoot').onclick=()=>capture(false);
+$('#tCal').onclick=()=>capture(true);
+$('#discard').onclick=backToScope;
+function setMode(m){ mode=m; $('#mLabel').classList.toggle('on',m==='label'); $('#mMeasure').classList.toggle('on',m==='measure');
+  $('#mLabel').hidden=$('#mMeasure').hidden=$('#mUndo').hidden=$('#save').hidden=(m==='cal');
+  $('#edHint').textContent = m==='cal' ? 'Point the microscope at a ruler. Tap one millimetre mark, then the next mark. Enter the distance between your taps and save.'
+   : m==='measure' ? (CAL?'Tap the two ends of the thing you want to measure.':'Set the scale first (📏 Set scale with a ruler) to measure in µm.')
+   : 'Tap on the picture where you want a label (e.g. on the nucleus).'; }
+$('#mLabel').onclick=()=>setMode('label'); $('#mMeasure').onclick=()=>setMode('measure');
+$('#mUndo').onclick=()=>{ if(!ED) return; const a=ED.labels.length, b=ED.lines.length; if(ED.lastWas==='line'&&b) ED.lines.pop(); else if(a) ED.labels.pop(); else if(b) ED.lines.pop(); redraw(); };
+function ptFromEvent(e){ const r=edc.getBoundingClientRect(); return [(e.clientX-r.left)/r.width*ED.W,(e.clientY-r.top)/r.height*ED.W]; }
+const umPerPx=()=>{ const ppm=pxPerMmSrc(ED.vw,ED.hz); return ppm? 1000/(ppm*ED.scaleSrc) : null; };  // ppm is per camera pixel
+edc.addEventListener('click',e=>{
+  if(!ED) return; const p=ptFromEvent(e);
+  if(mode==='label'){ ED.pending=p; $('#labelBar').hidden=false; $('#labelIn').value=''; $('#labelIn').focus(); redraw(); return; }
+  if(mode==='measure'||mode==='cal'){
+    if(!ED.pending){ ED.pending=p; redraw(); return; }
+    const a=ED.pending; ED.pending=null; const d=Math.hypot(p[0]-a[0],p[1]-a[1]);
+    if(mode==='cal'){ ED.calPx=d; ED.calLine=[a,p]; $('#calBar').hidden=false; redraw(); return; }
+    const u=umPerPx(); ED.lines.push({a,b:p,um:u?d*u:null}); ED.lastWas='line'; redraw();
+  }
+});
+$('#labelOk').onclick=()=>{ const t=$('#labelIn').value.trim(); if(t&&ED.pending){ ED.labels.push({p:ED.pending,t}); ED.lastWas='label'; } ED.pending=null; $('#labelBar').hidden=true; redraw(); };
+$('#labelIn').addEventListener('keydown',e=>{ if(e.key==='Enter') $('#labelOk').click(); });
+$('#calOk').onclick=()=>{ const mm=+$('#calIn').value; if(!(mm>0)||!ED.calPx) return;
+  const pxPerMmCapture=ED.calPx/mm, pxPerMmSource=pxPerMmCapture/ED.scaleSrc;
+  CAL={r:pxPerMmSource/ED.vw, hz:ED.hz}; try{ localStorage.setItem('baio_scope_cal',JSON.stringify(CAL)); }catch(e){}
+  calInfo(); backToScope(); };
+const fmt=um=>um==null?'set scale':um>=1000?(um/1000).toFixed(2)+' mm':Math.round(um)+' µm';
+function redraw(bake){
+  if(!ED) return; ctx.putImageData(ED.base,0,0); const W=ED.W, k=W/600;
+  ctx.lineCap='round';
+  const dot=(p,c)=>{ ctx.fillStyle=c; ctx.beginPath(); ctx.arc(p[0],p[1],6*k,0,7); ctx.fill(); };
+  ED.lines.forEach(L=>{ ctx.strokeStyle='#f3d27a'; ctx.lineWidth=3*k; ctx.beginPath(); ctx.moveTo(...L.a); ctx.lineTo(...L.b); ctx.stroke(); dot(L.a,'#f3d27a'); dot(L.b,'#f3d27a');
+    const m=[(L.a[0]+L.b[0])/2,(L.a[1]+L.b[1])/2]; pill(fmt(L.um),m[0],m[1]-16*k,'#f3d27a','#1a1406'); });
+  if(ED.calLine){ ctx.strokeStyle='#2EE6C5'; ctx.lineWidth=3*k; ctx.beginPath(); ctx.moveTo(...ED.calLine[0]); ctx.lineTo(...ED.calLine[1]); ctx.stroke(); }
+  ED.labels.forEach(L=>{ dot(L.p,'#2EE6C5'); const x=L.p[0], y=L.p[1]-30*k; ctx.strokeStyle='#2EE6C5'; ctx.lineWidth=2*k; ctx.beginPath(); ctx.moveTo(x,L.p[1]); ctx.lineTo(x,y+10*k); ctx.stroke(); pill(L.t,x,y,'rgba(10,20,16,.85)','#fff'); });
+  if(ED.pending) dot(ED.pending,'#e05d5d');
+  if(bake){ // header and footer strip for the practical record
+    const P=PRACS.find(p=>p.id===ED.spec), name=localStorage.getItem('baio_student_name')||'';
+    ctx.fillStyle='rgba(11,27,20,.88)'; ctx.fillRect(0,0,W,40*k); ctx.fillRect(0,W-34*k,W,34*k);
+    ctx.fillStyle='#f3d27a'; ctx.font=`800 ${18*k}px Inter,sans-serif`; ctx.textBaseline='middle'; ctx.textAlign='left'; ctx.fillText('🔬 '+P.t,12*k,20*k);
+    ctx.fillStyle='#cfe'; ctx.font=`600 ${13*k}px Inter,sans-serif`; ctx.fillText(`${new Date().toLocaleString()}${name?' · '+name:''} · zoom ${ED.zoom.toFixed(1)}×`,12*k,W-17*k);
+    ctx.textAlign='right'; ctx.fillStyle='#f3d27a'; ctx.fillText('BAIO Phone Microscope',W-12*k,W-17*k);
+  }
+  function pill(t,x,y,bg,fg){ ctx.font=`700 ${15*k}px Inter,sans-serif`; const w=ctx.measureText(t).width+16*k, h=24*k; ctx.fillStyle=bg; ctx.beginPath(); if(ctx.roundRect) ctx.roundRect(x-w/2,y-h/2,w,h,h/2); else ctx.rect(x-w/2,y-h/2,w,h); ctx.fill(); ctx.fillStyle=fg; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(t,x,y+1); ctx.textAlign='left'; }
+}
+
+/* ---------------- saved observations (IndexedDB, on this phone only) ---------------- */
+let dbp=null; const db=()=>dbp||(dbp=new Promise((res,rej)=>{ const r=indexedDB.open('baio_microscope',1); r.onupgradeneeded=()=>r.result.createObjectStore('obs',{keyPath:'id'}); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }));
+const tx=async(m,fn)=>{ const d=await db(); return new Promise((res,rej)=>{ const t=d.transaction('obs',m); const s=t.objectStore('obs'); const r=fn(s); t.oncomplete=()=>res(r&&r.result); t.onerror=()=>rej(t.error); }); };
+$('#save').onclick=async()=>{
+  redraw(true); const img=edc.toDataURL('image/jpeg',.85); const P=PRACS.find(p=>p.id===ED.spec);
+  try{ await tx('readwrite',s=>s.put({id:Date.now(),img,spec:ED.spec,title:P.t,date:new Date().toISOString(),labels:ED.labels.map(l=>l.t),measures:ED.lines.map(l=>fmt(l.um))})); }catch(e){ alert('Could not save on this phone (storage may be full).'); }
+  backToScope(); $('#calInfo').textContent='✅ Saved to My observations.'; setTimeout(calInfo,2500);
+};
+$('#stuName').value=localStorage.getItem('baio_student_name')||'';
+$('#stuName').oninput=e=>{ try{ localStorage.setItem('baio_student_name',e.target.value.trim()); }catch(_){} };
+async function drawGal(){
+  let items=[]; try{ items=await tx('readonly',s=>s.getAll()); }catch(e){}
+  items=(items||[]).sort((a,b)=>b.id-a.id);
+  $('#gal').innerHTML=items.length?items.map(o=>`<div class="gi"><img src="${o.img}" alt="${o.title}"><div><b>${o.title}</b>${new Date(o.date).toLocaleDateString()}${o.labels.length?'<br>🏷️ '+o.labels.join(', '):''}${o.measures.length?'<br>📏 '+o.measures.join(', '):''}</div>
+     <div class="gb"><a href="${o.img}" download="BAIO-${o.spec}-${o.id}.jpg">⬇ Save</a><button data-sh="${o.id}">📤</button><button data-del="${o.id}">🗑</button></div></div>`).join('')
+   : '<p class="empty">No observations yet. Open the 🔬 Microscope, capture what you see and save it here.</p>';
+  $('#gal').querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{ await tx('readwrite',s=>s.delete(+b.dataset.del)); drawGal(); });
+  $('#gal').querySelectorAll('[data-sh]').forEach(b=>b.onclick=async()=>{ const o=items.find(x=>x.id==b.dataset.sh); try{ const blob=await (await fetch(o.img)).blob(); const f=new File([blob],`BAIO-${o.spec}.jpg`,{type:'image/jpeg'}); if(navigator.canShare&&navigator.canShare({files:[f]})) await navigator.share({files:[f],title:o.title,text:'My observation on the BAIO Phone Microscope'}); else { const a=document.createElement('a'); a.href=o.img; a.download=f.name; a.click(); } }catch(e){} });
+}
+
+/* ---------------- tabs ---------------- */
+function showTab(t){ ['scope','prac','lens','gal'].forEach(x=>$('#p-'+x).hidden=x!==t); document.querySelectorAll('#tabs .tab').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  try{ history.replaceState(null,'','#'+t); }catch(e){} if(t==='prac') drawPracs(); if(t==='gal') drawGal(); }
+$('#tabs').addEventListener('click',e=>{ const b=e.target.closest('.tab'); if(b) showTab(b.dataset.t); });
+GZ.startLang();
+showTab(['scope','prac','lens','gal'].includes(location.hash.slice(1))?location.hash.slice(1):'scope');
+calInfo();
+</script>
+<svg width="0" height="0" style="position:absolute"><filter id="sharpen"><feConvolveMatrix order="3" kernelMatrix="0 -0.6 0 -0.6 3.4 -0.6 0 -0.6 0"/></filter></svg>
+</body>
+</html>
