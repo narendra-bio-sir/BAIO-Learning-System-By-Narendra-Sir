@@ -64,7 +64,7 @@
   <div id="stage"></div>
   <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
 </div>
-<script src="common.js?v=1"></script>
+<script src="common.js?v=2"></script>
 <script>
 GZ.nav();
 GZ.i18n({
@@ -84,6 +84,18 @@ function resultCard(id,score,max,label){
 const head=(title,i,n,score)=>`<div class="bar"><b>${title}</b><span class="score">${score} pts</span></div><div class="muted">${GZ.t('round')} ${i} / ${n}</div><div class="prog"><i style="width:${(i-1)/n*100}%"></i></div>`;
 
 /* ---------- 1. Cell builder ---------- */
+const ORG_ALT={
+ wall:['I am a non-living rigid layer outside the plasma membrane.','My main material in plants is cellulose; I protect against mechanical damage.'],
+ nucleus:['I have a double membrane with pores and hold the cell\'s chromatin.','I contain the nucleolus and direct all the activities of the cell.'],
+ chloro:['I am a plastid whose thylakoids are stacked into grana.','I am double-membraned, green, and found only in plant cells.'],
+ mito:['My inner membrane folds into cristae.','I have my own circular DNA and 70S ribosomes, and I release energy as ATP.'],
+ vac:['My membrane is called the tonoplast.','I am filled with cell sap and keep the plant cell turgid.'],
+ golgi:['My flat cisternae have a cis face and a trans face.','I receive proteins from the ER and send them on in vesicles.'],
+ er:['I am a network of tubules; some of my parts are studded with ribosomes.','I divide the cytoplasm into compartments and make proteins and lipids.'],
+ ribo:['I am made of RNA and protein, with no membrane; in eukaryotes I am 80S.','I read mRNA and join amino acids into proteins.'],
+ centro:['I have two cylinders at right angles, each with nine triplet microtubules.','I help form the spindle fibres when an animal cell divides.'],
+ lyso:['I am a vesicle formed by the Golgi body, with enzymes that work at acidic pH.','I digest worn-out parts of the cell.']
+};
 const ORG={
  wall:['Cell wall','I give the plant cell its shape and protection. I am made of cellulose.'],
  nucleus:['Nucleus','I hold the chromatin (DNA) and control the whole cell.'],
@@ -124,13 +136,14 @@ function buildStart(){
   $('#pl').onclick=()=>go('plant'); $('#an').onclick=()=>go('animal');
 }
 function buildDraw(msg){
+  if(!BLD.clue||BLD.clueFor!==BLD.order[BLD.i]){ const k=BLD.order[BLD.i]; BLD.clueFor=k; BLD.clue=k?GZ.pick([ORG[k][1],...(ORG_ALT[k]||[])]):''; }
   const P=SVGP[BLD.kind], parts=Object.keys(P).filter(x=>x!=='outline'&&x!=='vb'), n=parts.length, max=n*10;
   if(BLD.i>=n && !msg) return resultCard('cell-build-'+BLD.kind,BLD.score,max,(BLD.kind==='plant'?'Plant':'Animal')+' Cell Builder');
   const cur=BLD.order[BLD.i];
   const pool=GZ.shuffle(parts.concat(BLD.kind==='plant'?['centro','lyso']:['wall','chloro','vac']));
   stage.innerHTML=`<div class="card">${head('🧫 '+(BLD.kind==='plant'?'Plant':'Animal')+' Cell Builder',Math.min(BLD.i+1,n),n,BLD.score)}
    <svg class="cellsvg" viewBox="${P.vb}">${P.outline}${parts.map(p=>`<g class="part ${BLD.placed.includes(p)?'on':''}">${P[p]}</g>`).join('')}</svg>
-   ${BLD.i<n?`<div class="fn">“${ORG[cur][1]}”</div><div class="tray">${pool.map(p=>`<button class="chip ${BLD.placed.includes(p)?'used':''}" data-p="${p}" ${BLD.placed.includes(p)?'disabled':''}>${ORG[p][0]}</button>`).join('')}</div>`:''}
+   ${BLD.i<n?`<div class="fn">“${BLD.clue}”</div><div class="tray">${pool.map(p=>`<button class="chip ${BLD.placed.includes(p)?'used':''}" data-p="${p}" ${BLD.placed.includes(p)?'disabled':''}>${ORG[p][0]}</button>`).join('')}</div>`:''}
    <div id="v">${msg||''}</div></div>`;
   stage.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
     if(c.dataset.p===cur){ const pts=BLD.miss?5:10; BLD.score+=pts; BLD.placed.push(cur); BLD.i++; BLD.miss=0;
@@ -147,9 +160,13 @@ function buildDraw(msg){
 const PVA=[['Cell wall','plant','Cellulose cell wall is present only in plant cells.'],['Chloroplasts','plant','Plastids like chloroplasts are found in plant cells.'],['Large central vacuole','plant','Plant cells have one big vacuole; animal cells have small ones.'],
  ['Plasmodesmata','plant','Cytoplasmic bridges through the cell walls of neighbouring plant cells.'],['Starch as stored food','plant','Plants store food as starch.'],['Glycogen as stored food','animal','Animals store food as glycogen.'],
  ['Centrioles','animal','Centrioles are absent in almost all plant cells.'],['Mitochondria','both','Both plant and animal cells respire.'],['Nucleus','both','Every eukaryotic cell has a nucleus (except a few like mature RBCs).'],
- ['Ribosomes','both','Ribosomes make proteins in every cell.'],['Golgi apparatus','both','Both cells package materials with Golgi bodies.'],['Plasma membrane','both','Every cell is bound by a plasma membrane.']];
+ ['Ribosomes','both','Ribosomes make proteins in every cell.'],['Golgi apparatus','both','Both cells package materials with Golgi bodies.'],['Plasma membrane','both','Every cell is bound by a plasma membrane.'],
+ ['Cell plate during cytokinesis','plant','Plant cells divide their cytoplasm by forming a cell plate.'],['Furrow during cytokinesis','animal','Animal cells pinch in with a furrow to divide.'],['Leucoplasts','plant','Colourless storage plastids are found in plant cells.'],
+ ['Tonoplast','plant','The tonoplast is the membrane around the large plant vacuole.'],['Chromoplasts','plant','Plastids with carotenoids give colour to flowers and fruits.'],['Middle lamella (calcium pectate)','plant','The middle lamella glues neighbouring plant cells together.'],
+ ['Centrosome','animal','The centrosome with its two centrioles is found in animal cells.'],['Endoplasmic reticulum','both','Both cells have an ER network.'],['Microbodies','both','Small membrane-bound vesicles with enzymes occur in both.'],
+ ['Cytoskeleton','both','Both cells have a network of protein filaments for support and movement.'],['Nucleolus','both','Both cells make rRNA in the nucleolus.'],['Cytoplasm','both','Every cell has cytoplasm.']];
 const PV={};
-function pvaStart(){ PV.list=GZ.shuffle(PVA); PV.i=0; PV.score=0; pvaDraw(); }
+function pvaStart(){ PV.list=GZ.fresh('pva',PVA,12,x=>x[0]); PV.i=0; PV.score=0; pvaDraw(); }
 function pvaDraw(msg){
   if(PV.i>=PV.list.length && !msg) return resultCard('cell-pva',PV.score,PV.list.length*5,'Plant vs Animal Cell');
   const it=PV.list[Math.min(PV.i,PV.list.length-1)];
@@ -167,17 +184,17 @@ function pvaDraw(msg){
 /* ---------- 3. Classification tree ---------- */
 const TREES={
  kingdoms:{t:'Five kingdoms (I PUC Ch 2)', root:'Living organisms', groups:['Monera','Protista','Fungi','Plantae','Animalia'],
-  items:[['Nostoc','Monera','A cyanobacterium — a prokaryote.'],['Mycoplasma','Monera','A bacterium with no cell wall.'],['Euglena','Protista','A unicellular eukaryote with a pellicle.'],['Paramecium','Protista','A ciliated protozoan.'],['Plasmodium','Protista','A sporozoan protozoan.'],['Agaricus (mushroom)','Fungi','A basidiomycete fungus.'],['Yeast','Fungi','A unicellular ascomycete fungus.'],['Fern','Plantae','A pteridophyte — a plant.'],['Hydra','Animalia','A cnidarian — an animal.'],['Earthworm','Animalia','An annelid — an animal.']]},
+  items:[['Nostoc','Monera','A cyanobacterium — a prokaryote.'],['Mycoplasma','Monera','A bacterium with no cell wall.'],['Euglena','Protista','A unicellular eukaryote with a pellicle.'],['Paramecium','Protista','A ciliated protozoan.'],['Plasmodium','Protista','A sporozoan protozoan.'],['Agaricus (mushroom)','Fungi','A basidiomycete fungus.'],['Yeast','Fungi','A unicellular ascomycete fungus.'],['Fern','Plantae','A pteridophyte — a plant.'],['Hydra','Animalia','A cnidarian — an animal.'],['Earthworm','Animalia','An annelid — an animal.'],['Anabaena','Monera','A nitrogen-fixing cyanobacterium.'],['Methanogens','Monera','Archaebacteria that make methane.'],['Gonyaulax','Protista','A dinoflagellate that causes red tide.'],['Trypanosoma','Protista','A flagellated protozoan.'],['Penicillium','Fungi','An ascomycete mould.'],['Puccinia','Fungi','The wheat rust fungus.'],['Pinus','Plantae','A gymnosperm — a plant.'],['Mango tree','Plantae','A flowering plant.'],['Frog','Animalia','An amphibian — an animal.'],['Starfish','Animalia','An echinoderm — an animal.']]},
  plants:{t:'Plant groups (I PUC Ch 3)', root:'Plant kingdom', groups:['Algae','Bryophytes','Pteridophytes','Gymnosperms','Angiosperms'],
-  items:[['Spirogyra','Algae','A green alga (Chlorophyceae).'],['Laminaria','Algae','A brown alga (Phaeophyceae).'],['Polysiphonia','Algae','A red alga (Rhodophyceae).'],['Marchantia','Bryophytes','A liverwort.'],['Funaria','Bryophytes','A moss.'],['Selaginella','Pteridophytes','A heterosporous pteridophyte.'],['Equisetum','Pteridophytes','Horsetail — a pteridophyte.'],['Pinus','Gymnosperms','Naked seeds; needle-like leaves.'],['Cycas','Gymnosperms','Coralloid roots; unbranched stem.'],['Wolffia','Angiosperms','The smallest flowering plant.']]},
+  items:[['Spirogyra','Algae','A green alga (Chlorophyceae).'],['Laminaria','Algae','A brown alga (Phaeophyceae).'],['Polysiphonia','Algae','A red alga (Rhodophyceae).'],['Marchantia','Bryophytes','A liverwort.'],['Funaria','Bryophytes','A moss.'],['Selaginella','Pteridophytes','A heterosporous pteridophyte.'],['Equisetum','Pteridophytes','Horsetail — a pteridophyte.'],['Pinus','Gymnosperms','Naked seeds; needle-like leaves.'],['Cycas','Gymnosperms','Coralloid roots; unbranched stem.'],['Wolffia','Angiosperms','The smallest flowering plant.'],['Volvox','Algae','A colonial green alga.'],['Fucus','Algae','A brown alga.'],['Sphagnum','Bryophytes','A moss that gives peat.'],['Polytrichum','Bryophytes','A moss.'],['Adiantum','Pteridophytes','Maidenhair fern.'],['Dryopteris','Pteridophytes','A fern.'],['Ginkgo','Gymnosperms','A gymnosperm with fan-shaped leaves.'],['Cedrus','Gymnosperms','Deodar — a gymnosperm.'],['Eucalyptus','Angiosperms','A very tall flowering tree.'],['Mango','Angiosperms','A flowering plant with fruits.']]},
  animals:{t:'Animal phyla (I PUC Ch 4)', root:'Animal kingdom', groups:['Porifera','Cnidaria','Platyhelminthes','Aschelminthes','Annelida','Arthropoda','Mollusca','Echinodermata','Chordata'],
-  items:[['Sycon','Porifera','A sponge with a canal system.'],['Physalia','Cnidaria','Portuguese man-of-war — has cnidoblasts.'],['Taenia (tapeworm)','Platyhelminthes','A flatworm with flame cells.'],['Ascaris','Aschelminthes','A roundworm — pseudocoelomate.'],['Nereis','Annelida','A segmented worm.'],['Limulus','Arthropoda','King crab — a living fossil with jointed legs.'],['Pila','Mollusca','Apple snail with a radula.'],['Asterias','Echinodermata','Starfish with a water vascular system.'],['Pigeon','Chordata','Has a notochord in the embryo — a bird.'],['Locusta','Arthropoda','A gregarious pest — jointed legs.'],['Octopus','Mollusca','Devil fish — a mollusc.'],['Hirudinaria','Annelida','The blood-sucking leech.']]}
+  items:[['Sycon','Porifera','A sponge with a canal system.'],['Physalia','Cnidaria','Portuguese man-of-war — has cnidoblasts.'],['Taenia (tapeworm)','Platyhelminthes','A flatworm with flame cells.'],['Ascaris','Aschelminthes','A roundworm — pseudocoelomate.'],['Nereis','Annelida','A segmented worm.'],['Limulus','Arthropoda','King crab — a living fossil with jointed legs.'],['Pila','Mollusca','Apple snail with a radula.'],['Asterias','Echinodermata','Starfish with a water vascular system.'],['Pigeon','Chordata','Has a notochord in the embryo — a bird.'],['Locusta','Arthropoda','A gregarious pest — jointed legs.'],['Octopus','Mollusca','Devil fish — a mollusc.'],['Hirudinaria','Annelida','The blood-sucking leech.'],['Spongilla','Porifera','A freshwater sponge.'],['Adamsia','Cnidaria','Sea anemone.'],['Fasciola','Platyhelminthes','The liver fluke.'],['Wuchereria','Aschelminthes','The filarial worm.'],['Pheretima','Annelida','The earthworm.'],['Apis','Arthropoda','The honey bee.'],['Sepia','Mollusca','The cuttlefish.'],['Ophiura','Echinodermata','The brittle star.'],['Frog','Chordata','An amphibian with a notochord in the embryo.'],['Euspongia','Porifera','The bath sponge.'],['Aurelia','Cnidaria','A jellyfish (medusa).'],['Pinctada','Mollusca','The pearl oyster.']]}
 };
 const TR={};
 function treeStart(){
   stage.innerHTML=`<div class="card"><h2>🌳 Classification Tree</h2><p class="sub">An organism appears in the middle. Tap the group it belongs to and watch the tree fill up.</p>
    <div class="btns">${Object.entries(TREES).map(([k,v])=>`<button class="btn primary" data-t="${k}">${v.t}</button>`).join('')}</div></div>`;
-  stage.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{ TR.k=b.dataset.t; TR.list=GZ.shuffle(TREES[TR.k].items); TR.i=0; TR.score=0; TR.miss=0; TR.placed={}; treeDraw(); });
+  stage.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{ TR.k=b.dataset.t; TR.list=GZ.fresh('tree-'+TR.k,TREES[TR.k].items,TR.k==='animals'?12:10,x=>x[0]); TR.i=0; TR.score=0; TR.miss=0; TR.placed={}; treeDraw(); });
 }
 function treeDraw(msg){
   const T=TREES[TR.k], n=TR.list.length;
@@ -198,12 +215,17 @@ function treeDraw(msg){
 }
 
 /* ---------- 4. Food-web builder ---------- */
-const NODES={grass:['🌾','Grass',160,262,'Producer'],gh:['🦗','Grasshopper',70,196,'Herbivore'],rab:['🐇','Rabbit',250,196,'Herbivore'],frog:['🐸','Frog',70,122,'Carnivore'],
- snake:['🐍','Snake',210,110,'Carnivore'],hawk:['🦅','Hawk',150,36,'Carnivore'],mush:['🍄','Mushroom',290,268,'Decomposer / detritivore'],worm:['🪱','Earthworm',30,268,'Decomposer / detritivore']};
-const EATS={gh:['grass'],rab:['grass'],frog:['gh'],snake:['frog','rab'],hawk:['snake','rab']};
+const WEBS=[{name:'Grassland',P:'grass',TOP:'hawk',N:{grass:['🌾','Grass',160,262,'Producer'],gh:['🦗','Grasshopper',70,196,'Herbivore'],rab:['🐇','Rabbit',250,196,'Herbivore'],frog:['🐸','Frog',70,122,'Carnivore'],
+ snake:['🐍','Snake',210,110,'Carnivore'],hawk:['🦅','Hawk',150,36,'Carnivore'],mush:['🍄','Mushroom',290,268,'Decomposer / detritivore'],worm:['🪱','Earthworm',30,268,'Decomposer / detritivore']
+},E:{gh:['grass'],rab:['grass'],frog:['gh'],snake:['frog','rab'],hawk:['snake','rab']}},
+ {name:'Pond',P:'phyto',TOP:'kf',N:{phyto:['🦠','Phytoplankton',160,262,'Producer'],zoo:['🦐','Zooplankton',70,196,'Herbivore'],snail:['🐌','Water snail',250,196,'Herbivore'],sfish:['🐟','Small fish',160,140,'Carnivore'],bfish:['🐠','Big fish',250,96,'Carnivore'],kf:['🐦','Kingfisher',120,36,'Carnivore'],bact:['🧫','Bacteria',290,268,'Decomposer / detritivore'],worm:['🪱','Mud worm',30,268,'Decomposer / detritivore']},
+  E:{zoo:['phyto'],snail:['phyto'],sfish:['zoo','snail'],bfish:['sfish'],kf:['bfish','sfish']}},
+ {name:'Forest',P:'plants',TOP:'eagle',N:{plants:['🌳','Plants',160,262,'Producer'],rab:['🐇','Rabbit',250,196,'Herbivore'],insect:['🐛','Caterpillar',70,196,'Herbivore'],bird:['🐦','Sparrow',70,122,'Carnivore'],snake:['🐍','Snake',210,110,'Carnivore'],eagle:['🦅','Eagle',150,36,'Carnivore'],fungi:['🍄','Fungi',290,268,'Decomposer / detritivore'],worm:['🪱','Earthworm',30,268,'Decomposer / detritivore']},
+  E:{rab:['plants'],insect:['plants'],bird:['insect'],snake:['bird','rab'],eagle:['snake','rab','bird']}}];
+let NODES=WEBS[0].N, EATS=WEBS[0].E, WEB=WEBS[0];
 const ROLES=['Producer','Herbivore','Carnivore','Decomposer / detritivore'];
 const FW={};
-function webStart(){ FW.score=0; FW.stage=1; FW.list=GZ.shuffle(Object.keys(NODES)); FW.i=0; FW.chain=[]; FW.chains=[]; webDraw(); }
+function webStart(){ WEB=GZ.fresh('web',WEBS,1,w=>w.name)[0]; NODES=WEB.N; EATS=WEB.E; FW.score=0; FW.stage=1; FW.list=GZ.shuffle(Object.keys(NODES)); FW.i=0; FW.chain=[]; FW.chains=[]; webDraw(); }
 function webSvg(){
   const arr=[]; FW.chains.forEach(ch=>{ for(let i=0;i<ch.length-1;i++){ const a=NODES[ch[i]], b=NODES[ch[i+1]]; const k=ch[i]+'>'+ch[i+1]; if(!arr.includes(k)) arr.push(k); } });
   FW.chain.forEach((c,i)=>{ if(i){ const k=FW.chain[i-1]+'>'+c; if(!arr.includes(k)) arr.push(k); } });
@@ -214,10 +236,10 @@ function webSvg(){
 }
 function webDraw(msg){
   if(FW.stage===1){
-    if(FW.i>=FW.list.length){ FW.stage=2; return webDraw(`<div class="verdict info">Roles done! Now build <b>3 food chains</b> from 🌾 Grass up to 🦅 Hawk. Tap the organisms in order — energy flows from food to feeder.</div>`); }
+    if(FW.i>=FW.list.length){ FW.stage=2; return webDraw(`<div class="verdict info">Roles done! Now build <b>3 food chains</b> from ${NODES[WEB.P][0]} ${NODES[WEB.P][1]} up to ${NODES[WEB.TOP][0]} ${NODES[WEB.TOP][1]}. Tap the organisms in order — energy flows from food to feeder.</div>`); }
     const k=FW.list[FW.i], v=NODES[k];
-    stage.innerHTML=`<div class="card">${head('🕸️ Food-Web Builder · step 1: roles',FW.i+1,FW.list.length,FW.score)}${webSvg()}
-     <div class="item">${v[0]} ${v[1]}<small>What is its role in this grassland?</small></div>
+    stage.innerHTML=`<div class="card">${head(`🕸️ ${WEB.name} food web · step 1: roles`,FW.i+1,FW.list.length,FW.score)}${webSvg()}
+     <div class="item">${v[0]} ${v[1]}<small>What is its role in this ${WEB.name.toLowerCase()} ecosystem?</small></div>
      <div class="opts">${ROLES.map(r=>`<button class="opt" data-r="${r}">${r}</button>`).join('')}</div><div id="v">${msg||''}</div></div>`;
     stage.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{
       if(b.dataset.r===v[4]){ FW.score+=5; FW.i++; webDraw(`<div class="verdict good">${GZ.c('correct')} ${v[1]} is a ${v[4].toLowerCase()}.</div>`); }
@@ -226,9 +248,9 @@ function webDraw(msg){
     return;
   }
   if(FW.chains.length>=3 && !msg) return resultCard('foodweb',FW.score,100,'Food-Web Builder');
-  stage.innerHTML=`<div class="card"><div class="bar"><b>🕸️ Food-Web Builder · step 2: chains</b><span class="score">${FW.score} pts</span></div>
+  stage.innerHTML=`<div class="card"><div class="bar"><b>🕸️ ${WEB.name} food web · step 2: chains</b><span class="score">${FW.score} pts</span></div>
    <div class="muted">${GZ.t('round')} ${Math.min(FW.chains.length+1,3)} / 3</div>${webSvg()}
-   <div class="chain">${FW.chain.map(c=>NODES[c][1]).join(' → ')||'Tap 🌾 Grass to start a chain'}</div>
+   <div class="chain">${FW.chain.map(c=>NODES[c][1]).join(' → ')||`Tap ${NODES[WEB.P][0]} ${NODES[WEB.P][1]} to start a chain`}</div>
    <div class="btns"><button class="btn" id="clr">↺ Clear chain</button></div>
    <div class="chains">${FW.chains.map(c=>`<div>✅ ${c.map(x=>NODES[x][1]).join(' → ')}</div>`).join('')}</div><div id="v">${msg||''}</div>
    ${FW.chains.length>=3?`<div class="btns"><button class="btn primary" id="fin">${GZ.c('done')}</button></div>`:''}</div>`;
@@ -237,11 +259,11 @@ function webDraw(msg){
   stage.querySelectorAll('.node').forEach(nd=>nd.onclick=()=>{
     if(FW.chains.length>=3) return;
     const k=nd.dataset.n;
-    if(!FW.chain.length){ if(k!=='grass'){ $('#v').innerHTML=`<div class="verdict badv">Every food chain here starts with the producer — 🌾 Grass.</div>`; return; } FW.chain=[k]; return webDraw(); }
+    if(!FW.chain.length){ if(k!==WEB.P){ $('#v').innerHTML=`<div class="verdict badv">Every food chain here starts with the producer — ${NODES[WEB.P][0]} ${NODES[WEB.P][1]}.</div>`; return; } FW.chain=[k]; return webDraw(); }
     const last=FW.chain[FW.chain.length-1];
     if(!(EATS[k]||[]).includes(last)){ $('#v').innerHTML=`<div class="verdict badv">${NODES[k][1]} does not eat ${NODES[last][1].toLowerCase()} in this web. Try another!</div>`; return; }
     FW.chain.push(k);
-    if(k==='hawk'){ const key=FW.chain.join('>');
+    if(k===WEB.TOP){ const key=FW.chain.join('>');
       if(FW.chains.some(c=>c.join('>')===key)){ FW.chain=[]; return webDraw(`<div class="verdict info">You already built that chain — find a different path!</div>`); }
       FW.chains.push(FW.chain); FW.score+=20; FW.chain=[];
       return webDraw(`<div class="verdict good">${GZ.c('correct')} Food chain added. +20 ${FW.chains.length>=3?'— you found all three!':''}</div>`); }

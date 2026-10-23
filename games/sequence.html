@@ -36,9 +36,9 @@ h3.grp{font-size:13px;color:var(--gold);margin-top:16px;letter-spacing:.5px}
   <div id="stage"></div>
   <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
 </div>
-<script src="common.js?v=1"></script>
-<script src="riddles.js?v=1"></script>
-<script src="sequences.js?v=1"></script>
+<script src="common.js?v=2"></script>
+<script src="riddles.js?v=2"></script>
+<script src="sequences.js?v=2"></script>
 <script>
 GZ.nav();
 GZ.i18n({
@@ -53,7 +53,7 @@ function menu(){
   const groups={}; SEQS.forEach(s=>(groups[s.ch]=groups[s.ch]||[]).push(s));
   stage.innerHTML=`<div class="btns"><button class="btn primary" id="mix">🎲 Mixed challenge · 6 random sets</button></div>`+
    Object.entries(groups).map(([ch,list])=>`<h3 class="grp">${chName(ch)}</h3><div class="sets">${list.map(s=>{ const b=GZ.best('seq-'+s.id); return `<button class="set" data-s="${s.id}"><span>${s.t}<small>${s.s.length} steps</small></span><span class="b">${b!=null?'★ '+b+'/10':''}</span></button>`; }).join('')}</div>`).join('');
-  $('#mix').onclick=()=>{ mixed=true; queue=GZ.shuffle(SEQS).slice(0,6); qi=0; total=0; play(); };
+  $('#mix').onclick=()=>{ mixed=true; queue=GZ.fresh('seqmix',SEQS,6,s=>s.id); qi=0; total=0; play(); };
   stage.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{ mixed=false; queue=[SEQS.find(s=>s.id===b.dataset.s)]; qi=0; total=0; play(); });
 }
 function play(){
@@ -88,13 +88,13 @@ function finish(){
   stage.innerHTML=`<div class="card result"><div class="eyebrow">${label}</div><div class="big">${total} / ${max}</div><div class="stars">${GZ.stars(total,max)}</div>
    <p class="muted">${GZ.rating(total,max)}</p>
    <div class="btns"><button class="btn primary" id="again">${GZ.c('again')}</button><button class="btn teal" id="shr">${GZ.c('share')}</button><button class="btn" id="m">← All sets</button><a class="btn" href="${GZ.HUB}">${GZ.c('hub')}</a></div></div>`;
-  $('#again').onclick=()=>{ if(mixed) queue=GZ.shuffle(SEQS).slice(0,6); qi=0; total=0; play(); };
+  $('#again').onclick=()=>{ if(mixed) queue=GZ.fresh('seqmix',SEQS,6,s=>s.id); qi=0; total=0; play(); };
   $('#m').onclick=menu;
   $('#shr').onclick=()=>GZ.share(`🔢 I scored ${total}/${max} in "${label}" on BAIO Game Zone. Can you beat me?`,'games/sequence.html#'+(mixed?'mix':queue[0].id));
 }
 GZ.startLang();
 (function(){ const h=location.hash.slice(1); const s=SEQS.find(x=>x.id===h);
-  if(h==='mix'){ mixed=true; queue=GZ.shuffle(SEQS).slice(0,6); qi=0; total=0; play(); }
+  if(h==='mix'){ mixed=true; queue=GZ.fresh('seqmix',SEQS,6,s=>s.id); qi=0; total=0; play(); }
   else if(s){ mixed=false; queue=[s]; qi=0; total=0; play(); } else menu(); })();
 </script>
 </body>

@@ -57,9 +57,10 @@
   <div class="games" id="games"></div>
   <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
 </div>
-<script src="games/common.js?v=1"></script>
-<script src="games/riddles.js?v=1"></script>
-<script src="games/sequences.js?v=1"></script>
+<script src="games/common.js?v=2"></script>
+<script src="games/riddles.js?v=2"></script>
+<script src="games/riddles-more.js?v=1"></script>
+<script src="games/sequences.js?v=2"></script>
 <script>
 GZ.nav({hub:true});
 GZ.i18n({
@@ -74,11 +75,11 @@ const $=s=>document.querySelector(s);
 /* ---------- game cards ---------- */
 const GAMES=[
  ['games/lab3d.html','🧊','3D Biology Lab','15 interactive 3D models — rotate, slice open, tap to learn, then find the parts.','3d-'],
- ['games/who-am-i.html','🕵️','Who Am I?','152 clue-by-clue riddles across 19 chapters. Fewer clues, more points.','riddles'],
+ ['games/who-am-i.html','🕵️','Who Am I?','304 clue-by-clue riddles across 19 chapters — a fresh set every game.','riddles'],
  ['games/genetics.html','🧬','Genetics Lab','DNA base pairs, Codon Decoder, Mutation Detective and Punnett squares.','gen-'],
  ['games/cells.html','🔬','Cells & Trees','Cell Builder, Plant vs Animal, Classification Tree and Food-Web Builder.','cell-|tree-|foodweb'],
  ['games/words.html','🔠','Word Puzzles','Crossword, word search and match-the-pairs for every chapter.','xw-|ws-|mp-'],
- ['games/sequence.html','🔢','Put It in Order','Arrange the steps of 20 processes — sewage treatment, embryo sac, succession…','seq-']];
+ ['games/sequence.html','🔢','Put It in Order','Arrange the steps of 33 processes — sewage treatment, embryo sac, HIV, succession…','seq-']];
 function drawGames(){
   let all={}; try{ all=JSON.parse(localStorage.getItem('baio_game_best')||'{}'); }catch(e){}
   let rb={}; try{ rb=JSON.parse(localStorage.getItem('baio_riddle_best')||'{}'); }catch(e){}

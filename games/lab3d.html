@@ -76,7 +76,7 @@
   </section>
   <footer>Narendra Sir · Biology Lecturer · BAIO Learning System · 3D engine: three.js (MIT)</footer>
 </div>
-<script src="common.js?v=1"></script>
+<script src="common.js?v=2"></script>
 <script src="lib/three.min.js"></script>
 <script src="lib/OrbitControls.js"></script>
 <script src="models3d.js?v=1"></script>
@@ -206,13 +206,17 @@ function exploreInfo(k){
 }
 function startGame(m){
   const ks=S.order.filter(k=>m==='find'||S.parts[k].q);
-  G={m,q:GZ.shuffle(ks),i:0,score:0,miss:0}; selected=null; highlight(null); ask();
+  G={m,q:GZ.shuffle(ks),i:0,score:0,miss:0,txt:{}};
+  ks.forEach(k=>{ const P=S.parts[k]; const first=P.info.split(/(?<=\.)\s/)[0]; const words=P.name.replace(/[()₂–-]/g,' ').split(/\s+/).filter(w=>w.length>=4).map(w=>w.toLowerCase());
+    const ws=P.name.replace(/[()]/g,' ').split(/\s+/).filter(Boolean), acr=[ws.map(w=>w[0]).join(''),ws.slice(1).map(w=>w[0]).join('')].filter(a=>a.length>=2).map(a=>a.toUpperCase());
+    const gives = words.some(w=>first.toLowerCase().includes(w.replace(/s$/,''))) || acr.some(a=>new RegExp('\\b'+a+'\\b').test(first));
+    const alt = (gives||first.length<30) ? null : `Which part is this? “${first}”`; G.txt[k]= alt&&Math.random()<.5 ? alt : P.q; }); selected=null; highlight(null); ask();
 }
 function ask(){
   if(G.i>=G.q.length) return finish();
   const P=S.parts[G.q[G.i]];
   $('#vscore').textContent=G.score+' pts';
-  panel(`<div class="muted">${G.i+1} / ${G.q.length}</div><div class="prompt">${G.m==='find'?`${GZ.t('tapThe')} <span style="color:var(--gold)">${P.name}</span>`:P.q}</div><div id="gv"></div>`);
+  panel(`<div class="muted">${G.i+1} / ${G.q.length}</div><div class="prompt">${G.m==='find'?`${GZ.t('tapThe')} <span style="color:var(--gold)">${P.name}</span>`:G.txt[G.q[G.i]]}</div><div id="gv"></div>`);
 }
 function onPick(k){
   if(mode==='explore') return exploreInfo(k);

@@ -108,8 +108,9 @@
   <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
 </div>
 
-<script src="common.js?v=1"></script>
-<script src="riddles.js?v=1"></script>
+<script src="common.js?v=2"></script>
+<script src="riddles.js?v=2"></script>
+<script src="riddles-more.js?v=1"></script>
 <script>
 GZ.nav();
 
@@ -147,14 +148,14 @@ const $=id=>document.getElementById(id);
 const shuffle=a=>{ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
 function getBest(){ try{ return JSON.parse(localStorage.getItem(BEST_KEY)||'{}'); }catch(e){ return {}; } }
 function setBest(id,s){ const b=getBest(); if(!(b[id]>=s)){ b[id]=s; try{ localStorage.setItem(BEST_KEY,JSON.stringify(b)); }catch(e){} } }
-const maxPts=c=>c.r.length*30;
+const PER=8, maxPts=c=>Math.min(PER,c.r.length)*30;
 
 function renderHome(){
   const u=UI[lang], best=getBest();
   const list=RIDDLES.filter(c=>c.pu===pu);
   $('chapters').innerHTML=list.map(c=>{ const b=best[c.id];
     return `<button class="chap" data-id="${c.id}"><span class="no">${c.ch}</span><span><span class="nm">${c.t}</span>
-      <span class="best${b!=null?' done':''}">${b!=null?u.best(b+' / '+maxPts(c)):u.notYet} · ${c.r.length} ${lang==='en'?'riddles':'🧩'}</span></span></button>`; }).join('');
+      <span class="best${b!=null?' done':''}">${b!=null?u.best(b+' / '+maxPts(c)):u.notYet} · ${c.r.length} ${lang==='en'?'riddles':'🧩'} · ${PER} per game</span></span></button>`; }).join('');
   const sum=RIDDLES.reduce((a,c)=>a+(best[c.id]||0),0), mx=RIDDLES.reduce((a,c)=>a+maxPts(c),0);
   $('total').innerHTML=u.total(sum,mx);
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',+t.dataset.pu===pu));
@@ -163,7 +164,7 @@ function show(sec){ ['home','play','result'].forEach(s=>$(s).hidden=s!==sec); wi
 
 function start(id){
   cur=RIDDLES.find(c=>c.id===id); if(!cur) return;
-  order=shuffle(cur.r.map((_,i)=>i)); qi=0; total=0; log=[];
+  order=GZ.fresh('riddle-'+id, cur.r.map((_,i)=>i), PER, i=>cur.r[i][0]); qi=0; total=0; log=[];
   try{ history.replaceState(null,'','#'+id); }catch(e){}
   show('play'); ask();
 }
