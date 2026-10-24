@@ -4231,12 +4231,12 @@ function renderDownloads(){
    PrintScreen is pressed or the page is printed.
    NOTE: no website can fully block phone screenshots or screen recording. The
    watermark keeps the brand on any copy that leaks. */
-const COLOUR_NOTES_PAGES = 10;
+const COLOUR_NOTES_PAGES = 4;
 const CN_UNLOCK_KEY = 'pu1ch10_colour_notes_unlock';
 const CN_CONTENT_KEY = 'CH10-PU1-COLOURNOTES';
 const CN_PRICE_RUPEES = 100;
 const CN_RAZORPAY_LINK = 'https://rzp.io/rzp/rV09xlyo'; /* Cell Cycle Colour Notes ₹100 payment link */
-function cnPageSrc(i){ return `pu1-ch10-assets/colour-notes/page-${String(i).padStart(2,'0')}.jpg?v=1`; }
+function cnPageSrc(i){ return `pu1-ch10-assets/colour-notes/page-${String(i).padStart(2,'0')}.jpg?v=2`; }
 function cnStudent(){ try{ return JSON.parse(localStorage.getItem(STUDENT_KEY)||'null')||{}; }catch(e){ return {}; } }
 function cnGetUnlock(){ try{ return JSON.parse(localStorage.getItem(CN_UNLOCK_KEY)||'null'); }catch(e){ return null; } }
 function cnQualifies(){ const u=cnGetUnlock(); return !!(u && u.unlocked); }
@@ -4303,7 +4303,7 @@ function renderColourNotes(){
   const wmRows=Array.from({length:9},()=>`<span>${wm} &nbsp;&nbsp; ${wm}</span>`).join('');
   let pages='';
   for(let i=1;i<=COLOUR_NOTES_PAGES;i++){
-    pages += `<figure class="cn-page" id="cnp${i}"><div class="cn-imgwrap"><img src="${cnPageSrc(i)}" alt="Cell Cycle colour notes, page ${i} of ${COLOUR_NOTES_PAGES}" loading="${i<=2?'eager':'lazy'}" decoding="async" draggable="false" width="1100" height="1450"><div class="cn-wm" aria-hidden="true">${wmRows}</div></div><figcaption>Page ${i} / ${COLOUR_NOTES_PAGES}</figcaption></figure>`;
+    pages += `<figure class="cn-page" id="cnp${i}"><div class="cn-imgwrap"><img src="${cnPageSrc(i)}" alt="Cell Cycle colour notes, page ${i} of ${COLOUR_NOTES_PAGES}" loading="${i<=2?'eager':'lazy'}" decoding="async" draggable="false" width="1100" height="1556"><div class="cn-wm" aria-hidden="true">${wmRows}</div></div><figcaption>Page ${i} / ${COLOUR_NOTES_PAGES}</figcaption></figure>`;
   }
   const jump=Array.from({length:COLOUR_NOTES_PAGES},(_,k)=>`<button type="button" class="cn-jump" onclick="document.getElementById('cnp${k+1}').scrollIntoView({behavior:'smooth',block:'start'})">${k+1}</button>`).join('');
   document.getElementById('content').innerHTML = `<div class="setup-card cn-wrap" id="cnWrap">
