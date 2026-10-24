@@ -149,12 +149,13 @@
     return GZ.shareImage(cv, 'BAIO_result_' + String(card.game).replace(/[^A-Za-z0-9]+/g, '_').slice(0, 30) + '.jpg', text, path);
   };
   // share any canvas as an image + text + link (falls back to a preview with download / WhatsApp / copy)
-  GZ.shareImage = async function(cv, fname, text, path){
+  GZ.shareImage = async function(cv, fname, text, path, opts){
+    opts = opts || {};
     const url = GZ.BASE + path;
     const blob = await new Promise(r => cv.toBlob(r, 'image/jpeg', .92));
     const file = blob && new File([blob], fname, { type: 'image/jpeg' });
     if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
-      try { await navigator.share({ files: [file], title: 'BAIO Game Zone', text: text + '\n' + url }); return; }
+      try { await navigator.share({ files: [file], title: opts.title || 'BAIO Game Zone', text: text + '\n' + url }); return; }
       catch (e) { if (e && e.name === 'AbortError') return; }
     }
     // fallback: preview with download + WhatsApp link + copy
@@ -165,9 +166,9 @@
     const B = 'display:block;width:100%;padding:12px;border-radius:12px;border:1.5px solid #e6e0d2;background:#fbf8f1;color:#0c1830;font:700 14px Inter,sans-serif;text-align:center;text-decoration:none;cursor:pointer;margin-top:8px';
     box.innerHTML = '<div style="position:relative;width:100%;max-width:400px;max-height:94vh;overflow:auto;background:#fff;color:#0c1830;border-radius:18px;padding:16px;font-family:Inter,sans-serif">' +
       '<button id="gzX" aria-label="' + bt('close') + '" style="position:absolute;right:10px;top:10px;width:34px;height:34px;border-radius:50%;border:0;background:#f1ede2;cursor:pointer">✕</button>' +
-      '<b style="font:800 17px Space Grotesk,Inter,sans-serif">' + bt('sheet') + '</b>' +
+      '<b style="font:800 17px Space Grotesk,Inter,sans-serif">' + (opts.sheet || bt('sheet')) + '</b>' +
       '<img src="' + href + '" alt="" style="display:block;width:100%;border-radius:12px;margin-top:10px;box-shadow:0 6px 18px rgba(0,0,0,.15)">' +
-      '<a id="gzDl" href="' + href + '" download="' + fname + '" style="' + B + ';background:linear-gradient(135deg,#D4AF37,#B8912A);border-color:#D4AF37;color:#1a1406">' + bt('dl') + '</a>' +
+      '<a id="gzDl" href="' + href + '" download="' + fname + '" style="' + B + ';background:linear-gradient(135deg,#D4AF37,#B8912A);border-color:#D4AF37;color:#1a1406">' + (opts.dl || bt('dl')) + '</a>' +
       '<a href="https://wa.me/?text=' + encodeURIComponent(text + ' ' + url) + '" target="_blank" rel="noopener" style="' + B + '">' + bt('wa') + '</a>' +
       '<button id="gzCp" style="' + B + '">' + bt('copy') + '</button>' +
       '<p style="font-size:12px;color:#5f6b80;margin:10px 2px 0;line-height:1.5">' + bt('tip') + '</p></div>';
