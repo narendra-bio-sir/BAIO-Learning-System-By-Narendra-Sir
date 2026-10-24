@@ -235,7 +235,49 @@ $('#tAuto').onclick=()=>{ auto=!auto; $('#tAuto').classList.toggle('on',auto); i
 $('#prev').onclick=()=>{ auto=false; $('#tAuto').classList.remove('on'); stopSpeak(); go(pi-1,-1); };
 $('#next').onclick=()=>{ stopSpeak(); go(pi+1,1); };
 $('#back').onclick=()=>{ auto=false; stopSpeak(); $('#reader').hidden=true; $('#library').hidden=false; $('#hero').hidden=false; drawLibrary(); try{ history.replaceState(null,'',location.pathname); }catch(e){} };
-$('#tShare').onclick=()=>GZ.share(T('shareMsg',{t:B.title,c:B.ch}),'stories.html#'+bid);
+/* Share = a 1080×1350 story card image (cover, title, chapter, cast, first-page teaser, BAIO branding) + text + link */
+const SC={en:{tag:'BAIO STORYBOOK',pages:'{n} illustrated pages · Read-aloud · Quiz',read:'Read free on the BAIO app',role:'Biology Lecturer · Founder & CEO, BAIO',cast:'Starring Bindu & Prof. BAIO',teaser:'Page 1',sheet:'Share this storybook',dl:'⬇ Download story card'},
+ kn:{tag:'BAIO ಕಥಾ ಪುಸ್ತಕ',pages:'{n} ಚಿತ್ರ ಪುಟಗಳು · ಓದಿ ಹೇಳು · ರಸಪ್ರಶ್ನೆ',read:'BAIO ಆ್ಯಪ್‌ನಲ್ಲಿ ಉಚಿತವಾಗಿ ಓದಿ',role:'ಜೀವಶಾಸ್ತ್ರ ಉಪನ್ಯಾಸಕರು · Founder & CEO, BAIO',cast:'ಬಿಂದು & ಪ್ರೊ. BAIO ಅವರ ಕಥೆ',teaser:'ಪುಟ 1',sheet:'ಈ ಕಥಾ ಪುಸ್ತಕ ಹಂಚಿ',dl:'⬇ ಕಥೆ ಕಾರ್ಡ್ ಡೌನ್‌ಲೋಡ್'},
+ hi:{tag:'BAIO कहानी की किताब',pages:'{n} चित्र पेज · पढ़कर सुनाओ · क्विज़',read:'BAIO ऐप पर मुफ़्त पढ़ो',role:'बायोलॉजी लेक्चरर · Founder & CEO, BAIO',cast:'बिंदु और प्रो. BAIO की कहानी',teaser:'पेज 1',sheet:'यह कहानी की किताब शेयर करो',dl:'⬇ कहानी कार्ड डाउनलोड करो'}};
+const SCt=k=>(SC[GZ.lang]||SC.en)[k]||SC.en[k];
+const S_SANS="Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif", S_HEAD="'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari',sans-serif", S_SERIF="Lora,'Noto Sans Kannada','Noto Sans Devanagari',Georgia,serif", S_EMO="'Noto Color Emoji','Apple Color Emoji','Segoe UI Emoji',sans-serif";
+function scWrap(g,text,maxW){ const words=String(text).split(/\s+/); const lines=[]; let cur=''; words.forEach(w=>{ const t=cur?cur+' '+w:w; if(g.measureText(t).width>maxW&&cur){ lines.push(cur); cur=w; } else cur=t; }); if(cur) lines.push(cur); return lines; }
+function scRR(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
+async function storyCard(B){
+  try{ await Promise.all(['800 40px "Space Grotesk"','700 40px Inter','500 40px Lora','700 40px "Noto Sans Kannada"','700 40px "Noto Sans Devanagari"'].map(f=>document.fonts.load(f,'Aಕक'))); }catch(e){}
+  const W=1080,H=1350,cv=document.createElement('canvas'); cv.width=W; cv.height=H; const g=cv.getContext('2d'), col=B.color||'#2f9e8f';
+  let gr=g.createLinearGradient(0,0,0,H); gr.addColorStop(0,col); gr.addColorStop(.62,'#0f2a22'); gr.addColorStop(1,'#08140f'); g.fillStyle=gr; g.fillRect(0,0,W,H);
+  [[160,170,260,.18],[930,260,200,.14],[860,820,300,.08],[120,980,220,.08]].forEach(([x,y,r,a])=>{ const rg=g.createRadialGradient(x,y,0,x,y,r); rg.addColorStop(0,`rgba(255,255,255,${a})`); rg.addColorStop(1,'rgba(255,255,255,0)'); g.fillStyle=rg; g.beginPath(); g.arc(x,y,r,0,7); g.fill(); });
+  g.textAlign='center';
+  // tag
+  g.font=`800 30px ${S_SANS}`; const tag='📚 '+SCt('tag'), tw=g.measureText(tag).width+60; g.fillStyle='rgba(255,225,77,.95)'; scRR(g,W/2-tw/2,70,tw,58,29); g.fill(); g.fillStyle='#1d2433'; g.fillText(tag,W/2,110);
+  // cover emoji
+  g.font=`230px ${S_EMO}`; g.fillText(B.cover||'📖',W/2,400);
+  // title
+  let ts=82; g.font=`800 ${ts}px ${S_HEAD}`; let tl=scWrap(g,B.title,W-160); while(tl.length>2&&ts>52){ ts-=4; g.font=`800 ${ts}px ${S_HEAD}`; tl=scWrap(g,B.title,W-160); }
+  g.fillStyle='#fff'; g.shadowColor='rgba(0,0,0,.35)'; g.shadowBlur=18; let y=520; tl.slice(0,3).forEach(L=>{ g.fillText(L,W/2,y); y+=ts*1.12; }); g.shadowBlur=0;
+  // chapter + cast
+  g.font=`700 32px ${S_SANS}`; g.fillStyle='#ffe58a'; let cs=32; while(g.measureText(B.ch).width>W-120&&cs>20){ cs--; g.font=`700 ${cs}px ${S_SANS}`; } g.fillText(B.ch,W/2,y+10);
+  g.font=`500 30px ${S_SERIF}`; g.fillStyle='rgba(255,255,255,.88)'; g.fillText((B.star?(T('starringX')+' '+B.star.replace(/\p{Extended_Pictographic}|‍|️/gu,'').trim()):SCt('cast'))+'  👧🦉',W/2,y+64);
+  // teaser box: page 1 title + opening line
+  const p1=B.pages[0]||{}; const bx=90,bw=W-180,by=y+110;
+  g.font=`500 34px ${S_SERIF}`; const plain=String(p1.x||'').replace(/\[\[([^\]]+)\]\]/g,'$1'); let tx=scWrap(g,plain,bw-80); const more=tx.length>4; tx=tx.slice(0,4); if(more) tx[3]=tx[3].replace(/\s*\S*$/,'')+' …';
+  const bh=96+tx.length*48+20; g.fillStyle='rgba(255,255,255,.96)'; scRR(g,bx,by,bw,bh,30); g.fill();
+  g.textAlign='left'; g.font=`800 26px ${S_SANS}`; g.fillStyle=col; g.fillText(SCt('teaser').toUpperCase()+' · '+(p1.t||''),bx+40,by+56);
+  g.font=`500 34px ${S_SERIF}`; g.fillStyle='#22283a'; tx.forEach((L,k)=>g.fillText(L,bx+40,by+108+k*48));
+  // chips
+  g.textAlign='center'; g.font=`700 28px ${S_SANS}`; g.fillStyle='rgba(255,255,255,.9)'; g.fillText(SCt('pages').replace('{n}',B.pages.length),W/2,by+bh+62);
+  // footer
+  const fy=H-150; g.fillStyle='rgba(255,255,255,.08)'; g.fillRect(0,fy,W,150);
+  gr=g.createLinearGradient(70,fy+30,160,fy+120); gr.addColorStop(0,'#e9c45a'); gr.addColorStop(1,'#c99a2e'); g.fillStyle=gr; g.beginPath(); g.arc(115,fy+75,44,0,7); g.fill();
+  g.fillStyle='#14203a'; g.font=`800 48px ${S_HEAD}`; g.fillText('B',115,fy+92);
+  g.textAlign='left'; g.fillStyle='#fff'; g.font=`800 36px ${S_SANS}`; g.fillText('Narendra Sir',180,fy+66); g.fillStyle='#7fe0b8'; g.font=`700 22px ${S_SANS}`; g.fillText(SCt('role'),180,fy+102);
+  g.textAlign='right'; g.fillStyle='#ffd65a'; g.font=`800 28px ${S_SANS}`; g.fillText('📲 BAIO app',W-60,fy+66); g.fillStyle='rgba(255,255,255,.8)'; g.font=`600 22px ${S_SANS}`; g.fillText(SCt('read'),W-60,fy+102);
+  return cv; }
+$('#tShare').onclick=async()=>{ const b=$('#tShare'); b.disabled=true;
+  try{ const cv=await storyCard(B); await GZ.shareImage(cv,'BAIO_Story_'+bid+'.jpg',T('shareMsg',{t:B.title,c:B.ch}),'stories.html#'+bid,{sheet:SCt('sheet'),dl:SCt('dl'),title:B.title}); }
+  catch(e){ GZ.share(T('shareMsg',{t:B.title,c:B.ch}),'stories.html#'+bid); }
+  b.disabled=false; };
 // swipe to turn pages
 (function(){ let x0=null,y0=null; const el=$('#page');
   el.addEventListener('touchstart',e=>{ x0=e.touches[0].clientX; y0=e.touches[0].clientY; },{passive:true});
