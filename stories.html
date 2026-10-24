@@ -258,7 +258,7 @@ async function storyCard(B){
   g.fillStyle='#fff'; g.shadowColor='rgba(0,0,0,.35)'; g.shadowBlur=18; let y=520; tl.slice(0,3).forEach(L=>{ g.fillText(L,W/2,y); y+=ts*1.12; }); g.shadowBlur=0;
   // chapter + cast
   g.font=`700 32px ${S_SANS}`; g.fillStyle='#ffe58a'; let cs=32; while(g.measureText(B.ch).width>W-120&&cs>20){ cs--; g.font=`700 ${cs}px ${S_SANS}`; } g.fillText(B.ch,W/2,y+10);
-  g.font=`500 30px ${S_SERIF}`; g.fillStyle='rgba(255,255,255,.88)'; g.fillText((B.star?(T('starringX')+' '+B.star.replace(/\p{Extended_Pictographic}|‍|️/gu,'').trim()):SCt('cast'))+'  👧🦉',W/2,y+64);
+  g.font=`500 30px ${S_SERIF}`; g.fillStyle='rgba(255,255,255,.88)'; g.fillText(B.star?(T('starringX')+' '+B.star):(SCt('cast')+'  👧🦉'),W/2,y+64);
   // teaser box: page 1 title + opening line
   const p1=B.pages[0]||{}; const bx=90,bw=W-180,by=y+110;
   g.font=`500 34px ${S_SERIF}`; const plain=String(p1.x||'').replace(/\[\[([^\]]+)\]\]/g,'$1'); let tx=scWrap(g,plain,bw-80); const more=tx.length>4; tx=tx.slice(0,4); if(more) tx[3]=tx[3].replace(/\s*\S*$/,'')+' …';
