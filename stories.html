@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script src="baio-speak.js?v=1"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0B1B14">
@@ -223,7 +224,7 @@ const VLANG={en:'en-IN',kn:'kn-IN',hi:'hi-IN'};
 function pickVoice(){ const v=speechSynthesis.getVoices(), l=GZ.lang||'en', re=new RegExp('^'+l+'[-_]IN','i'), re2=new RegExp('^'+l,'i'); voice=v.find(x=>re.test(x.lang))||v.find(x=>re2.test(x.lang))||null; }
 if('speechSynthesis' in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
 // read "I PUC" / "II PUC" as words (otherwise the voice says "I" like the pronoun)
-const PUC_SAY={en:['first year P U C','second year P U C','Chapter'],kn:['ಪ್ರಥಮ ಪಿ ಯು ಸಿ','ದ್ವಿತೀಯ ಪಿ ಯು ಸಿ',''],hi:['प्रथम वर्ष पी यू सी','द्वितीय वर्ष पी यू सी','']};
+const PUC_SAY={en:['First year P U C','Second year P U C','Chapter'],kn:['ಪ್ರಥಮ ಪಿ ಯು ಸಿ','ದ್ವಿತೀಯ ಪಿ ಯು ಸಿ',''],hi:['प्रथम वर्ष पी यू सी','द्वितीय वर्ष पी यू सी','']};
 const spoken=t=>{ const w=PUC_SAY[GZ.lang]||PUC_SAY.en; t=t.replace(/\bII PUC\b/g,w[1]).replace(/\bI PUC\b/g,w[0]); if(w[2]) t=t.replace(/\bCh (\d+)/g,w[2]+' $1'); return t; };
 function say(text,onend){ if(!('speechSynthesis' in window)) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(spoken(text)); if(voice) u.voice=voice; u.lang=voice?voice.lang:VLANG[GZ.lang]||'en-IN'; u.rate=.95; u.onend=onend||null; speechSynthesis.speak(u); }
 function stopSpeak(){ if('speechSynthesis' in window) speechSynthesis.cancel(); speaking=false; $('#tRead').classList.remove('on'); }
