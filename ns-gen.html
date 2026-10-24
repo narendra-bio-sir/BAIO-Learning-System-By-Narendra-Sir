@@ -152,7 +152,7 @@ input[type="checkbox"]{width:16px; height:16px; accent-color:var(--teal2); curso
 
   <div class="card" id="lookupCard">
     <h3>Find All Codes For A Student</h3>
-    <div class="hint" style="margin-bottom:10px;">Search your imported records (181 students — PU1 &amp; PU2 Report Card Passwords, PU1 Chapter 2 Premium + Handwritten Notes, PU1 Chapter 3 Premium + Handwritten Notes, PU1 Chapter 4 Premium + Handwritten Notes, PU2 Chapter 4 Premium + Handwritten Notes, PU1 Chapter 5 Premium + Handwritten Notes, PU1 Chapter 6 Premium + Handwritten Notes, PU2 Chapter 9 Premium + Handwritten Notes, plus Electronics-stream students' Report Card Passwords) by any combination of Name, Roll Number, or Section. Leave fields blank to widen the search.</div>
+    <div class="hint" style="margin-bottom:10px;">Search your imported records (181 students, plus saved and guest students) by any combination of Name, Roll Number, or Section. Leave fields blank to widen the search. Each student shows their Report Card Password and every live chapter code — Premium, Handwritten Notes, Colour Notes and Flash Cards. Codes saved from your Excel sheets are shown as saved; any chapter or content added since is calculated live, so nothing is ever missing.</div>
     <label>Student Name</label>
     <div class="autocomplete-wrap">
       <input type="text" id="lkName" placeholder="Start typing a name..." autocomplete="off" oninput="onNameTyping()" onfocus="onNameTyping()">
@@ -224,9 +224,19 @@ input[type="checkbox"]{width:16px; height:16px; accent-color:var(--teal2); curso
 Anjali Rao, 26MPU0018, Prime
 Kiran Kumar, 26MPU0042, Spark"></textarea>
     <div class="hint">Each line needs exactly 3 values separated by commas: Name, Roll Number, Section. Blank lines are ignored.</div>
-    <label style="margin-top:14px;">⚡ Upcoming chapter codes to generate (optional)</label>
-    <div class="hint" style="margin-bottom:6px;">Report Card Password is always included. These checkboxes are for chapters without a live unlock page yet (Chapter 10+) — they won't work in Chapter <span id="existingChapterNumsBulk">2, 3, 4, 5, 6, or 9</span>, which already have their own real codes.</div>
-    <div id="bulkContentTypeChecks"></div>
+    <label style="margin-top:14px;">✅ Chapter codes to generate</label>
+    <div class="hint" style="margin-bottom:6px;">Report Card Password is always included. Tick the codes you want as columns — every live chapter's Premium, Handwritten Notes, Colour Notes and Flash Cards codes are here, and each works on its chapter page for that exact name + roll + section. (Live chapters: <span id="existingChapterNumsBulk"></span>.)</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">
+      <button type="button" class="action-btn" onclick="bulkTick('all')">All</button>
+      <button type="button" class="action-btn" onclick="bulkTick('none')">None</button>
+      <button type="button" class="action-btn" onclick="bulkTick(0)">Premium</button>
+      <button type="button" class="action-btn" onclick="bulkTick(1)">Handwritten</button>
+      <button type="button" class="action-btn" onclick="bulkTick(2)">Colour Notes</button>
+      <button type="button" class="action-btn" onclick="bulkTick(3)">Flash Cards</button>
+      <button type="button" class="action-btn" onclick="bulkTick('PU1')">PU-I only</button>
+      <button type="button" class="action-btn" onclick="bulkTick('PU2')">PU-II only</button>
+    </div>
+    <div id="bulkContentTypeChecks" style="max-height:320px;overflow:auto;border:1px solid var(--line,#ddd);border-radius:10px;padding:6px 10px;"></div>
     <button class="btn" onclick="generateBulk()" style="margin-top:12px;">Generate All Codes</button>
     <div id="bulkOutput"></div>
   </div>
@@ -474,6 +484,8 @@ function renderRealMasterTable(){
   html += '<tr><td>Staff Demo Code (yours) <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Same 24-hour Premium unlock as the trial code, but reusable — keep it for yourself to demo the app on any device without burning a student\'s one-time trial.</div></td><td class="code-cell">' + codeHtml(PREMIUM_MASTER_DEMO_CODE) + '</td></tr>';
   html += '<tr><td>Master Premium Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks Premium content on every chapter</div></td><td class="code-cell">' + codeHtml(PREMIUM_MASTER_CODE) + '</td></tr>';
   html += '<tr><td>Master PU2-All Bundle Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks Premium content on all 13 PU-II chapters at once, entered on any single one (localStorage is shared across chapters on the same site)</div></td><td class="code-cell">' + codeHtml(PREMIUM_MASTER_CODE_PU2_ALL) + '</td></tr>';
+  html += '<tr><td>Master Colour Notes Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks the Colour Notes PDF download (₹100) on every chapter that has Colour Notes (same as the Handwritten master)</div></td><td class="code-cell">' + codeHtml(HANDWRITTEN_MASTER_CODE) + '</td></tr>';
+  html += '<tr><td>Master Flash Cards Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks Flash Cards download &amp; share (₹50) for every chapter in flashcards.html (same as the Handwritten master)</div></td><td class="code-cell">' + codeHtml(HANDWRITTEN_MASTER_CODE) + '</td></tr>';
   html += '<tr><td>Master Handwritten Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks Handwritten Notes on every chapter</div></td><td class="code-cell">' + codeHtml(HANDWRITTEN_MASTER_CODE) + '</td></tr>';
   html += '<tr><td>Master Performance Analysis Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks class-wide analytics (bypasses per-student login)</div></td><td class="code-cell">' + codeHtml(ANALYTICS_MASTER_CODE) + '</td></tr>';
   html += '</table></div>';
@@ -867,11 +879,11 @@ function existingChapterNumsText(){
 function renderExistingChapterSummaries(){
   const listText = existingChapterListText();
   const numsText = existingChapterNumsText();
-  ['existingChapterListSingle', 'existingChapterListMaster'].forEach(id => {
+  ['existingChapterListSingle', 'existingChapterListMaster', 'existingChapterNumsBulk'].forEach(id => {
     const el = document.getElementById(id);
     if(el) el.textContent = listText;
   });
-  ['existingChapterNumsSingle', 'existingChapterNumsBulk'].forEach(id => {
+  ['existingChapterNumsSingle'].forEach(id => {
     const el = document.getElementById(id);
     if(el) el.textContent = numsText;
   });
@@ -1341,14 +1353,35 @@ function codeHtml(code, digitColor, letterColor){
 function renderBulkContentTypeChecks(){
   const wrap = document.getElementById('bulkContentTypeChecks');
   if(!wrap) return;
-  wrap.innerHTML = CONTENT_TYPES.map((ct,i)=>
-    '<div class="checkbox-row"><input type="checkbox" class="bulk-ct-check" value="' + i + '" id="bulkCt' + i + '"><label for="bulkCt' + i + '">' + escapeHtml(ct.label) + '</label></div>'
-  ).join('');
+  /* every live code (EXISTING_CONTENT_TYPES) plus any upcoming CONTENT_TYPES, grouped PU-I / PU-II */
+  const all = bulkContentTypes();
+  let lastGroup = null, html = '';
+  all.forEach((ct,i)=>{
+    const g = puGroupOf(ct.label);
+    if(g && g !== lastGroup){ html += '<div style="font-weight:700;font-size:11px;letter-spacing:.5px;margin:8px 0 2px;color:var(--teal2,#0f8f7a);">' + puGroupHeaderText(g) + '</div>'; lastGroup = g; }
+    html += '<div class="checkbox-row"><input type="checkbox" class="bulk-ct-check" value="' + i + '" id="bulkCt' + i + '" checked><label for="bulkCt' + i + '">' + escapeHtml(ct.label) + '</label></div>';
+  });
+  wrap.innerHTML = html;
+}
+function bulkContentTypes(){
+  if(!window.__bulkTypes){
+    window.__bulkTypes = EXISTING_CONTENT_TYPES.filter(ct => /^PU[12] Chapter \d+/.test(ct.label)).slice()
+      .sort((a,b) => compareCodeLabels(a.label, b.label)).concat(CONTENT_TYPES);
+  }
+  return window.__bulkTypes;
+}
+function bulkTick(what){
+  const all = bulkContentTypes();
+  document.querySelectorAll('.bulk-ct-check').forEach(el => {
+    const ct = all[parseInt(el.value,10)], k = codeLabelSortKey(ct.label);
+    el.checked = what === 'all' ? true : what === 'none' ? false
+      : (what === 'PU1' || what === 'PU2') ? puGroupOf(ct.label) === what : k[2] === what;
+  });
 }
 function generateBulk(){
   const raw = document.getElementById('bulkInput').value;
   const lines = raw.split('\n').map(l=>l.trim()).filter(l=>l.length>0);
-  const selectedTypes = Array.from(document.querySelectorAll('.bulk-ct-check:checked')).map(el => CONTENT_TYPES[parseInt(el.value,10)]);
+  const selectedTypes = Array.from(document.querySelectorAll('.bulk-ct-check:checked')).map(el => bulkContentTypes()[parseInt(el.value,10)]);
   const rows = [];
   const errors = [];
   lines.forEach((line, i)=>{
