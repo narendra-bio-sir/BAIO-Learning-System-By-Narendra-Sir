@@ -43,6 +43,10 @@ body{font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif}
 .fcbuy .row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
 .fcbuy input{flex:1 1 140px;min-width:0;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:500 14px Inter,sans-serif}
 .fcbuy .msg{color:#e0575b;font-size:12.5px;min-height:1em}
+.fcshield{display:none;position:fixed;inset:0;z-index:99999;background:rgba(5,12,9,.55);-webkit-backdrop-filter:blur(26px);backdrop-filter:blur(26px);color:#fff;font:700 20px/1.6 Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;text-align:center;align-items:center;justify-content:center;flex-direction:column;cursor:pointer;padding:20px}
+.fcshield span{font-weight:500;font-size:14px;opacity:.85}
+body.fc-hide .fcshield{display:flex}
+body.fc-hide .thumbs img,body.fc-hide #vimg{filter:blur(28px)}
 .flash{animation:fcflash 1.2s ease 2}@keyframes fcflash{50%{box-shadow:0 0 0 4px var(--gold)}}
 </style>
 </head>
@@ -63,6 +67,7 @@ body{font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif}
   </section>
   <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
 </div>
+<div class="fcshield" id="fcShield" role="button"></div>
 <div class="viewer" id="viewer" hidden oncontextmenu="return false">
   <button class="vx" id="vx" aria-label="Close">✕</button>
   <img id="vimg" alt="">
@@ -77,13 +82,13 @@ GZ.nav();
 GZ.i18n({
  en:{eyebrow:'BAIO Learning System · Revise & share', h1:'🧠 Biology <span class="accent">Flash Cards</span>', intro:'Six flash cards for every chapter — definitions, key terms, formulas and tables. Tap a card to view it free. Download and share (WhatsApp, Instagram, Facebook) are ₹50 per chapter.',
   all:'← All chapters', cards:'cards', zip:'⬇ Download all cards (ZIP)', zipping:'Preparing…', chapter:'📘 Open chapter', share:'📤 Share card', dl:'⬇ Download', tip:'Tip: tap a card to see it full size. Once unlocked, 📤 Share card sends it as an image with the BAIO link.', tag:'FLASH CARD', card:'Card', shareMsg:'🧠 Flash card: {t} ({c}). Revise every chapter with BAIO by Narendra Sir:', role:'Biology Lecturer · Founder & CEO, BAIO', app:'📲 BAIO app', free:'Free notes & MCQs',
-  buyH:'🔒 Download & share – ₹{p}', buyP:'Viewing the cards here is free. To download them or share them as images, pay ₹{p} for this chapter, then send Narendra Sir the payment screenshot on WhatsApp. He will send your personal unlock code.', pay:'Pay ₹{p}', wa:'💬 Send payment on WhatsApp', name:'Full name', section:'Section', roll:'Roll number', code:'Unlock code (e.g. ABCD-EFGH)', unlock:'Unlock', okH:'🔓 Download & share unlocked', okP:'Thank you! Download or share any card of this chapter.', needCode:'Please enter your unlock code.', needAll:'Fill in name, section and roll number exactly as you gave them to Narendra Sir.', bad:'That code does not match this name, section and roll number. Check the spelling, or ask Narendra Sir.', waMsg:'Hi Narendra Sir, I paid ₹{p} for the Flash Cards download: {c}.\n\nName: {n}\nSection: {s}\nRoll No: {r}\n\n(Attaching my payment screenshot below)', locked:'🔒'},
+  buyH:'🔒 Download & share – ₹{p}', buyP:'Viewing the cards here is free. To download them or share them as images, pay ₹{p} for this chapter, then send Narendra Sir the payment screenshot on WhatsApp. He will send your personal unlock code.', pay:'Pay ₹{p}', wa:'💬 Send payment on WhatsApp', name:'Full name', section:'Section', roll:'Roll number', code:'Unlock code (e.g. ABCD-EFGH)', unlock:'Unlock', okH:'🔓 Download & share unlocked', okP:'Thank you! Download or share any card of this chapter.', needCode:'Please enter your unlock code.', needAll:'Fill in name, section and roll number exactly as you gave them to Narendra Sir.', bad:'That code does not match this name, section and roll number. Check the spelling, or ask Narendra Sir.', waMsg:'Hi Narendra Sir, I paid ₹{p} for the Flash Cards download: {c}.\n\nName: {n}\nSection: {s}\nRoll No: {r}\n\n(Attaching my payment screenshot below)', locked:'🔒', hidden:'🔒 Cards hidden', hiddenSub:'Tap here to continue viewing', wm:'PREVIEW · BAIO · Narendra Sir · Not for sharing', wmBar:'🔒 Preview — unlock this chapter (₹50) to download & share'},
  kn:{eyebrow:'BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್ · ಪುನರಾವರ್ತಿಸಿ ಮತ್ತು ಹಂಚಿ', h1:'🧠 ಜೀವಶಾಸ್ತ್ರ <span class="accent">ಫ್ಲ್ಯಾಶ್ ಕಾರ್ಡ್‌ಗಳು</span>', intro:'ಪ್ರತಿ ಅಧ್ಯಾಯಕ್ಕೆ ಆರು ಫ್ಲ್ಯಾಶ್ ಕಾರ್ಡ್‌ಗಳು — ವ್ಯಾಖ್ಯೆಗಳು, ಮುಖ್ಯ ಪದಗಳು, ಸೂತ್ರಗಳು ಮತ್ತು ಕೋಷ್ಟಕಗಳು. ಕಾರ್ಡ್ ಒತ್ತಿ ಉಚಿತವಾಗಿ ನೋಡಿ. ಡೌನ್‌ಲೋಡ್ ಮತ್ತು ಹಂಚಿಕೆ (WhatsApp, Instagram, Facebook) ಪ್ರತಿ ಅಧ್ಯಾಯಕ್ಕೆ ₹50.',
   all:'← ಎಲ್ಲ ಅಧ್ಯಾಯಗಳು', cards:'ಕಾರ್ಡ್‌ಗಳು', zip:'⬇ ಎಲ್ಲ ಕಾರ್ಡ್ ಡೌನ್‌ಲೋಡ್ (ZIP)', zipping:'ಸಿದ್ಧಪಡಿಸಲಾಗುತ್ತಿದೆ…', chapter:'📘 ಅಧ್ಯಾಯ ತೆರೆಯಿರಿ', share:'📤 ಕಾರ್ಡ್ ಹಂಚಿ', dl:'⬇ ಡೌನ್‌ಲೋಡ್', tip:'ಸಲಹೆ: ಪೂರ್ಣ ಗಾತ್ರದಲ್ಲಿ ನೋಡಲು ಕಾರ್ಡ್ ಒತ್ತಿ. ಅನ್‌ಲಾಕ್ ನಂತರ 📤 ಕಾರ್ಡ್ ಹಂಚಿ — ಅದು BAIO ಲಿಂಕ್ ಜೊತೆ ಚಿತ್ರವಾಗಿ ಹೋಗುತ್ತದೆ.', tag:'ಫ್ಲ್ಯಾಶ್ ಕಾರ್ಡ್', card:'ಕಾರ್ಡ್', shareMsg:'🧠 ಫ್ಲ್ಯಾಶ್ ಕಾರ್ಡ್: {t} ({c}). ನರೇಂದ್ರ ಸರ್ ಅವರ BAIO ಜೊತೆ ಪ್ರತಿ ಅಧ್ಯಾಯ ಪುನರಾವರ್ತಿಸಿ:', role:'ಜೀವಶಾಸ್ತ್ರ ಉಪನ್ಯಾಸಕರು · Founder & CEO, BAIO', app:'📲 BAIO ಆ್ಯಪ್', free:'ಉಚಿತ ನೋಟ್ಸ್ ಮತ್ತು MCQ',
-  buyH:'🔒 ಡೌನ್‌ಲೋಡ್ ಮತ್ತು ಹಂಚಿಕೆ – ₹{p}', buyP:'ಇಲ್ಲಿ ಕಾರ್ಡ್‌ಗಳನ್ನು ನೋಡುವುದು ಉಚಿತ. ಅವುಗಳನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಲು ಅಥವಾ ಚಿತ್ರಗಳಾಗಿ ಹಂಚಲು, ಈ ಅಧ್ಯಾಯಕ್ಕೆ ₹{p} ಪಾವತಿಸಿ, ನಂತರ ಪಾವತಿಯ ಸ್ಕ್ರೀನ್‌ಶಾಟ್ ಅನ್ನು WhatsApp ನಲ್ಲಿ ನರೇಂದ್ರ ಸರ್ ಅವರಿಗೆ ಕಳುಹಿಸಿ. ಅವರು ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ಅನ್‌ಲಾಕ್ ಕೋಡ್ ಕಳುಹಿಸುತ್ತಾರೆ.', pay:'₹{p} ಪಾವತಿಸಿ', wa:'💬 WhatsApp ನಲ್ಲಿ ಪಾವತಿ ಕಳುಹಿಸಿ', name:'ಪೂರ್ಣ ಹೆಸರು', section:'ವಿಭಾಗ', roll:'ರೋಲ್ ಸಂಖ್ಯೆ', code:'ಅನ್‌ಲಾಕ್ ಕೋಡ್ (ಉದಾ. ABCD-EFGH)', unlock:'ಅನ್‌ಲಾಕ್', okH:'🔓 ಡೌನ್‌ಲೋಡ್ ಮತ್ತು ಹಂಚಿಕೆ ಅನ್‌ಲಾಕ್ ಆಗಿದೆ', okP:'ಧನ್ಯವಾದಗಳು! ಈ ಅಧ್ಯಾಯದ ಯಾವುದೇ ಕಾರ್ಡ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ ಅಥವಾ ಹಂಚಿ.', needCode:'ದಯವಿಟ್ಟು ನಿಮ್ಮ ಅನ್‌ಲಾಕ್ ಕೋಡ್ ನಮೂದಿಸಿ.', needAll:'ನರೇಂದ್ರ ಸರ್ ಅವರಿಗೆ ಕೊಟ್ಟಂತೆಯೇ ಹೆಸರು, ವಿಭಾಗ ಮತ್ತು ರೋಲ್ ಸಂಖ್ಯೆ ತುಂಬಿ.', bad:'ಈ ಕೋಡ್ ಈ ಹೆಸರು, ವಿಭಾಗ ಮತ್ತು ರೋಲ್ ಸಂಖ್ಯೆಗೆ ಹೊಂದುತ್ತಿಲ್ಲ. ಕಾಗುಣಿತ ಪರಿಶೀಲಿಸಿ ಅಥವಾ ನರೇಂದ್ರ ಸರ್ ಅವರನ್ನು ಕೇಳಿ.', waMsg:'Hi Narendra Sir, I paid ₹{p} for the Flash Cards download: {c}.\n\nName: {n}\nSection: {s}\nRoll No: {r}\n\n(Attaching my payment screenshot below)', locked:'🔒'},
+  buyH:'🔒 ಡೌನ್‌ಲೋಡ್ ಮತ್ತು ಹಂಚಿಕೆ – ₹{p}', buyP:'ಇಲ್ಲಿ ಕಾರ್ಡ್‌ಗಳನ್ನು ನೋಡುವುದು ಉಚಿತ. ಅವುಗಳನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಲು ಅಥವಾ ಚಿತ್ರಗಳಾಗಿ ಹಂಚಲು, ಈ ಅಧ್ಯಾಯಕ್ಕೆ ₹{p} ಪಾವತಿಸಿ, ನಂತರ ಪಾವತಿಯ ಸ್ಕ್ರೀನ್‌ಶಾಟ್ ಅನ್ನು WhatsApp ನಲ್ಲಿ ನರೇಂದ್ರ ಸರ್ ಅವರಿಗೆ ಕಳುಹಿಸಿ. ಅವರು ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ಅನ್‌ಲಾಕ್ ಕೋಡ್ ಕಳುಹಿಸುತ್ತಾರೆ.', pay:'₹{p} ಪಾವತಿಸಿ', wa:'💬 WhatsApp ನಲ್ಲಿ ಪಾವತಿ ಕಳುಹಿಸಿ', name:'ಪೂರ್ಣ ಹೆಸರು', section:'ವಿಭಾಗ', roll:'ರೋಲ್ ಸಂಖ್ಯೆ', code:'ಅನ್‌ಲಾಕ್ ಕೋಡ್ (ಉದಾ. ABCD-EFGH)', unlock:'ಅನ್‌ಲಾಕ್', okH:'🔓 ಡೌನ್‌ಲೋಡ್ ಮತ್ತು ಹಂಚಿಕೆ ಅನ್‌ಲಾಕ್ ಆಗಿದೆ', okP:'ಧನ್ಯವಾದಗಳು! ಈ ಅಧ್ಯಾಯದ ಯಾವುದೇ ಕಾರ್ಡ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ ಅಥವಾ ಹಂಚಿ.', needCode:'ದಯವಿಟ್ಟು ನಿಮ್ಮ ಅನ್‌ಲಾಕ್ ಕೋಡ್ ನಮೂದಿಸಿ.', needAll:'ನರೇಂದ್ರ ಸರ್ ಅವರಿಗೆ ಕೊಟ್ಟಂತೆಯೇ ಹೆಸರು, ವಿಭಾಗ ಮತ್ತು ರೋಲ್ ಸಂಖ್ಯೆ ತುಂಬಿ.', bad:'ಈ ಕೋಡ್ ಈ ಹೆಸರು, ವಿಭಾಗ ಮತ್ತು ರೋಲ್ ಸಂಖ್ಯೆಗೆ ಹೊಂದುತ್ತಿಲ್ಲ. ಕಾಗುಣಿತ ಪರಿಶೀಲಿಸಿ ಅಥವಾ ನರೇಂದ್ರ ಸರ್ ಅವರನ್ನು ಕೇಳಿ.', waMsg:'Hi Narendra Sir, I paid ₹{p} for the Flash Cards download: {c}.\n\nName: {n}\nSection: {s}\nRoll No: {r}\n\n(Attaching my payment screenshot below)', locked:'🔒', hidden:'🔒 ಕಾರ್ಡ್‌ಗಳನ್ನು ಮರೆಮಾಡಲಾಗಿದೆ', hiddenSub:'ನೋಡುವುದನ್ನು ಮುಂದುವರಿಸಲು ಇಲ್ಲಿ ಒತ್ತಿ', wm:'PREVIEW · BAIO · Narendra Sir · Not for sharing', wmBar:'🔒 ಪ್ರಿವ್ಯೂ — ಡೌನ್‌ಲೋಡ್ ಮತ್ತು ಹಂಚಿಕೆಗೆ ಈ ಅಧ್ಯಾಯ ಅನ್‌ಲಾಕ್ ಮಾಡಿ (₹50)'},
  hi:{eyebrow:'BAIO लर्निंग सिस्टम · दोहराओ और शेयर करो', h1:'🧠 बायोलॉजी <span class="accent">फ़्लैश कार्ड</span>', intro:'हर अध्याय के लिए छह फ़्लैश कार्ड — परिभाषाएँ, मुख्य शब्द, सूत्र और तालिकाएँ। कार्ड छूकर मुफ़्त में देखो। डाउनलोड और शेयर (WhatsApp, Instagram, Facebook) हर अध्याय के ₹50।',
   all:'← सभी अध्याय', cards:'कार्ड', zip:'⬇ सभी कार्ड डाउनलोड (ZIP)', zipping:'तैयार हो रहा है…', chapter:'📘 अध्याय खोलो', share:'📤 कार्ड शेयर करो', dl:'⬇ डाउनलोड', tip:'टिप: पूरा देखने के लिए कार्ड छुओ। अनलॉक के बाद 📤 कार्ड शेयर करो — यह BAIO लिंक के साथ चित्र के रूप में जाता है।', tag:'फ़्लैश कार्ड', card:'कार्ड', shareMsg:'🧠 फ़्लैश कार्ड: {t} ({c})। नरेंद्र सर के BAIO के साथ हर अध्याय दोहराओ:', role:'बायोलॉजी लेक्चरर · Founder & CEO, BAIO', app:'📲 BAIO ऐप', free:'मुफ़्त नोट्स और MCQ',
-  buyH:'🔒 डाउनलोड और शेयर – ₹{p}', buyP:'यहाँ कार्ड देखना मुफ़्त है। इन्हें डाउनलोड करने या चित्र के रूप में शेयर करने के लिए इस अध्याय के ₹{p} का भुगतान करो, फिर भुगतान का स्क्रीनशॉट WhatsApp पर नरेंद्र सर को भेजो। वे तुम्हारा निजी अनलॉक कोड भेजेंगे।', pay:'₹{p} भुगतान करो', wa:'💬 WhatsApp पर भुगतान भेजो', name:'पूरा नाम', section:'सेक्शन', roll:'रोल नंबर', code:'अनलॉक कोड (जैसे ABCD-EFGH)', unlock:'अनलॉक', okH:'🔓 डाउनलोड और शेयर अनलॉक', okP:'धन्यवाद! इस अध्याय का कोई भी कार्ड डाउनलोड या शेयर करो।', needCode:'कृपया अपना अनलॉक कोड लिखो।', needAll:'नाम, सेक्शन और रोल नंबर ठीक वैसे ही भरो जैसे नरेंद्र सर को दिए थे।', bad:'यह कोड इस नाम, सेक्शन और रोल नंबर से मेल नहीं खाता। वर्तनी जाँचो या नरेंद्र सर से पूछो।', waMsg:'Hi Narendra Sir, I paid ₹{p} for the Flash Cards download: {c}.\n\nName: {n}\nSection: {s}\nRoll No: {r}\n\n(Attaching my payment screenshot below)', locked:'🔒'}});
+  buyH:'🔒 डाउनलोड और शेयर – ₹{p}', buyP:'यहाँ कार्ड देखना मुफ़्त है। इन्हें डाउनलोड करने या चित्र के रूप में शेयर करने के लिए इस अध्याय के ₹{p} का भुगतान करो, फिर भुगतान का स्क्रीनशॉट WhatsApp पर नरेंद्र सर को भेजो। वे तुम्हारा निजी अनलॉक कोड भेजेंगे।', pay:'₹{p} भुगतान करो', wa:'💬 WhatsApp पर भुगतान भेजो', name:'पूरा नाम', section:'सेक्शन', roll:'रोल नंबर', code:'अनलॉक कोड (जैसे ABCD-EFGH)', unlock:'अनलॉक', okH:'🔓 डाउनलोड और शेयर अनलॉक', okP:'धन्यवाद! इस अध्याय का कोई भी कार्ड डाउनलोड या शेयर करो।', needCode:'कृपया अपना अनलॉक कोड लिखो।', needAll:'नाम, सेक्शन और रोल नंबर ठीक वैसे ही भरो जैसे नरेंद्र सर को दिए थे।', bad:'यह कोड इस नाम, सेक्शन और रोल नंबर से मेल नहीं खाता। वर्तनी जाँचो या नरेंद्र सर से पूछो।', waMsg:'Hi Narendra Sir, I paid ₹{p} for the Flash Cards download: {c}.\n\nName: {n}\nSection: {s}\nRoll No: {r}\n\n(Attaching my payment screenshot below)', locked:'🔒', hidden:'🔒 कार्ड छिपे हैं', hiddenSub:'आगे देखने के लिए यहाँ छुओ', wm:'PREVIEW · BAIO · Narendra Sir · Not for sharing', wmBar:'🔒 प्रीव्यू — डाउनलोड और शेयर के लिए यह अध्याय अनलॉक करो (₹50)'}});
 const $=s=>document.querySelector(s), esc=GZ.esc;
 const T=(k,o)=>{ let v=GZ.t(k); if(o) Object.keys(o).forEach(x=>v=v.split('{'+x+'}').join(o[x])); return v; };
 const ids=Object.keys(FC);
@@ -222,12 +227,38 @@ function drawBuy(){
 function fcSubmit(){
   const v=id=>(($('#'+id)||{}).value||'').trim(), name=v('fcName'), section=v('fcSection'), roll=v('fcRoll'), code=v('fcCode').toUpperCase(), m=$('#fcMsg');
   if(!code){ m.textContent=T('needCode'); return; }
-  if(code===FC_MASTER_CODE){ fcSave(cid,{method:'master'}); drawBuy(); return; }
+  if(code===FC_MASTER_CODE){ fcSave(cid,{method:'master'}); drawBuy(); openCh(cid); return; }
   if(!name||!section||!roll){ m.textContent=T('needAll'); return; }
-  if(computeStudentCode(name,roll,section,'FC-'+cid.toUpperCase())===code){ fcSave(cid,{method:'code',name,roll,section}); drawBuy(); return; }
+  if(computeStudentCode(name,roll,section,'FC-'+cid.toUpperCase())===code){ fcSave(cid,{method:'code',name,roll,section}); drawBuy(); openCh(cid); return; }
   m.textContent=T('bad');
 }
 function needUnlock(){ if(fcUnlocked(cid)) return false; $('#viewer').hidden=true; const b=$('#fcbuy'); b.scrollIntoView({behavior:'smooth',block:'center'}); b.classList.remove('flash'); void b.offsetWidth; b.classList.add('flash'); return true; }
+
+/* ---------- locked chapters: watermarked preview + hide on screenshot attempts ----------
+   A web page cannot block or detect a phone's Power+Volume screenshot. What it can do:
+   bake a PREVIEW watermark into every card until the chapter is unlocked (so any screenshot carries it),
+   and blur the cards the moment the page loses focus, is hidden, the 3-finger screenshot swipe starts,
+   or PrintScreen / Cmd-Shift-3/4/5 / Ctrl-P / Ctrl-S is pressed. */
+function previewCanvas(cv){
+  const c=document.createElement('canvas'); c.width=cv.width; c.height=cv.height; const g=c.getContext('2d'); g.drawImage(cv,0,0);
+  const t=T('wm'); g.save(); g.translate(c.width/2,c.height/2); g.rotate(-Math.PI/6); g.textAlign='center';
+  g.font=`800 34px ${SANS}`; g.fillStyle='rgba(20,32,58,.13)';
+  for(let k=-7;k<=7;k++) g.fillText(t,(k%2)*120,k*150);
+  g.font=`900 150px ${HEAD}`; g.fillStyle='rgba(224,69,123,.08)'; g.fillText('PREVIEW',0,30);
+  g.restore();
+  g.fillStyle='rgba(20,32,58,.82)'; g.fillRect(0,c.height-58,c.width,58); g.fillStyle='#ffe14d'; g.textAlign='center';
+  let fs=26; g.font=`700 ${fs}px ${SANS}`; while(g.measureText(T('wmBar')).width>c.width-60&&fs>16){ fs--; g.font=`700 ${fs}px ${SANS}`; } g.fillText(T('wmBar'),c.width/2,c.height-20); g.textAlign='left';
+  return c; }
+function fcHide(){ if(!cid||fcUnlocked(cid)||$('#chapter').hidden) return; $('#fcShield').innerHTML=`${esc(T('hidden'))}<span>${esc(T('hiddenSub'))}</span>`; document.body.classList.add('fc-hide'); }
+function fcShow(){ document.body.classList.remove('fc-hide'); }
+$('#fcShield').onclick=fcShow;
+document.addEventListener('visibilitychange',()=>{ if(document.hidden) fcHide(); });
+window.addEventListener('blur',fcHide); window.addEventListener('pagehide',fcHide);
+document.addEventListener('touchstart',e=>{ if(e.touches&&e.touches.length>=3) fcHide(); },{passive:true,capture:true});
+document.addEventListener('keydown',e=>{ const k=(e.key||'').toLowerCase();
+  if(k==='printscreen'||((e.ctrlKey||e.metaKey)&&(k==='p'||k==='s'))||(e.metaKey&&e.shiftKey&&['3','4','5','s'].includes(k))){ if(cid&&!fcUnlocked(cid)&&!$('#chapter').hidden){ fcHide(); e.preventDefault(); } } });
+document.addEventListener('keyup',e=>{ if((e.key||'').toLowerCase()==='printscreen'){ fcHide(); try{ navigator.clipboard&&navigator.clipboard.writeText(''); }catch(_){} } });
+document.addEventListener('dragstart',e=>{ if(e.target.closest&&e.target.closest('.thumbs,.viewer')) e.preventDefault(); });
 
 /* ---------- chapter + viewer ---------- */
 let cid=null, A=null, urls=[], cur=0, canv=[];
@@ -235,7 +266,8 @@ async function openCh(id,show){ cid=id; A=loc(id); $('#library').hidden=true; $(
   $('#back').textContent=T('all'); $('#cch').textContent=A.ch; $('#zipAll').textContent=T('zip'); $('#openCh').textContent=T('chapter'); $('#openCh').href=A.page; $('#tip').textContent=T('tip'); drawBuy();
   $('#thumbs').innerHTML=A.cards.map((c,i)=>`<button data-i="${i}" aria-label="${esc(c.t)}"></button>`).join(''); window.scrollTo(0,0);
   await fontsReady(); urls.forEach(u=>URL.revokeObjectURL(u)); urls=[]; canv=[];
-  for(let i=0;i<A.cards.length;i++){ const cv=drawCard(A,i); canv[i]=cv; const blob=await new Promise(r=>cv.toBlob(r,'image/jpeg',.9)); urls[i]=URL.createObjectURL(blob);
+  const locked=!fcUnlocked(id);
+  for(let i=0;i<A.cards.length;i++){ const cv=drawCard(A,i); canv[i]=cv; const blob=await new Promise(r=>(locked?previewCanvas(cv):cv).toBlob(r,'image/jpeg',.9)); urls[i]=URL.createObjectURL(blob);
     const b=$('#thumbs').querySelector(`[data-i="${i}"]`); if(b){ b.innerHTML=`<img src="${urls[i]}" alt="${esc(A.cards[i].t)}">`; b.onclick=()=>view(i); } }
   if(show!=null) view(show);
   try{ history.replaceState(null,'','#'+cid); }catch(e){} }
