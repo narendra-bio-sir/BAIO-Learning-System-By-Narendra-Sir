@@ -72,6 +72,16 @@ const MORE = {
   ['Oxidoreductases',['We are a class of enzymes.','We catalyse oxidation–reduction between two substrates.','Dehydrogenases belong to us.'],['Transferases','Hydrolases','Lyases']],
   ['Coenzymes',['We are organic compounds.','We bind to an enzyme only for a short time during catalysis.','Many of us contain vitamins — NAD and NADP contain niacin.'],['Prosthetic groups','Metal ions','Apoenzymes']],
  ],
+ 'pu1-ch10':[
+  ['Interphase',['I take more than 95% of the cell cycle.','My old name is the resting phase.','G1, S and G2 are my parts.'],['M phase','Prophase','Cytokinesis']],
+  ['S phase',['DNA content goes from 2C to 4C in me.','The chromosome number stays 2n in me.','DNA replication happens in me.'],['G1 phase','G2 phase','G0 phase']],
+  ['Cytokinesis',['I follow karyokinesis.','In animals I use a furrow.','I divide the cytoplasm.'],['Karyokinesis','Interkinesis','Synapsis']],
+  ['Cell plate',['I form in plant cells.','I grow from the centre outwards.','I become the middle lamella.'],['Cleavage furrow','Metaphase plate','Nuclear envelope']],
+  ['Synaptonemal complex',['I form in zygotene.','I dissolve at the start of diplotene.','I hold paired homologous chromosomes together.'],['Kinetochore','Spindle','Chiasma']],
+  ['Diakinesis',['I am the last stage of prophase I.','Chiasmata terminalise in me.','The nucleolus and nuclear envelope vanish by my end.'],['Diplotene','Pachytene','Leptotene']],
+  ['Interkinesis',['I come between meiosis I and meiosis II.','I am usually short.','No DNA replication happens in me.'],['Interphase','Diakinesis','Telophase']],
+  ['Tetrad of cells',['I form at the end of meiosis II.','I have four cells.','All my cells are haploid.'],['Dyad','Syncytium','Bivalent']],
+ ],
  'pu2-ch1':[
   ['Endothecium',['I am a wall layer of the microsporangium.','I lie just below the epidermis.','I help the anther split open.'],['Tapetum','Middle layer','Epidermis']],
   ['Megaspore mother cell',['I am a large cell in the nucellus.','I have dense cytoplasm and a big nucleus.','I divide by meiosis to form four megaspores.'],['Microspore mother cell','Functional megaspore','Egg cell']],
