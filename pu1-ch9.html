@@ -591,6 +591,8 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
 .cn-buy-h{font-weight:700;color:var(--gold);margin-bottom:4px;}
 .cn-small{font-size:12px;color:var(--ink-dim);line-height:1.45;}
 .cn-buy-btns{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;}
+.cn-share{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px;}
+.cn-share .dl-btn{font-size:12.5px;padding:8px 12px;}
 .cn-buy-btns a{text-decoration:none;}
 .cn-form{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
 .cn-form input{padding:9px 10px;border-radius:8px;border:1px solid var(--line,rgba(127,127,127,.35));background:transparent;color:inherit;font:inherit;font-size:13px;min-width:0;}
@@ -4409,6 +4411,24 @@ async function cnDownload(){
   }catch(e){ if(btn) btn.textContent=orig; alert('Download failed. Please check your internet and try again.'); }
 }
 window.cnDownload=cnDownload;
+/* Share: link that opens this chapter straight on the Colour Notes tab (pay + download at the top). */
+function cnShareUrl(){ return location.origin + location.pathname + '#colour-notes'; }
+function cnShareText(){
+  const h=document.querySelector('#cnWrap h3'); const t=h?h.textContent.replace('🎨','').replace(/Colour Notes\s*[–-]\s*/,'').trim():'';
+  return '🎨 ' + (t ? t + ' – ' : '') + 'NEET Colour Notes by Narendra Sir (BAIO Learning System). Read free in the app, or pay ₹' + CN_PRICE_RUPEES + ' to download the PDF:';
+}
+async function cnShare(){
+  const url=cnShareUrl(), text=cnShareText();
+  if(navigator.share){ try{ await navigator.share({title:document.title, text, url}); return; }catch(e){ if(e && e.name==='AbortError') return; } }
+  window.open('https://wa.me/?text='+encodeURIComponent(text+'\n'+url), '_blank', 'noopener');
+}
+window.cnShare=cnShare;
+function cnCopyLink(btn){
+  const url=cnShareUrl(), done=()=>{ if(btn){ const o=btn.textContent; btn.textContent='✓ Link copied'; setTimeout(()=>btn.textContent=o,1800); } };
+  if(navigator.clipboard && window.isSecureContext){ navigator.clipboard.writeText(url).then(done, ()=>{ prompt('Copy this link:', url); }); }
+  else { prompt('Copy this link:', url); }
+}
+window.cnCopyLink=cnCopyLink;
 function renderColourNotes(){
   const wm=cnEscape(cnWatermarkText());
   const wmRows=Array.from({length:9},()=>`<span>${wm} &nbsp;&nbsp; ${wm}</span>`).join('');
@@ -4420,6 +4440,7 @@ function renderColourNotes(){
   document.getElementById('content').innerHTML = `<div class="setup-card cn-wrap" id="cnWrap">
     <h3 style="color:var(--gold);margin-bottom:4px;">🎨 Colour Notes – Biomolecules</h3>
     <div style="color:var(--ink-dim);font-size:12px;margin-bottom:10px;">NEET short notes by Narendra Sir · ${COLOUR_NOTES_PAGES} pages · free to read here, just scroll down.</div>
+    <div class="cn-share"><button type="button" class="dl-btn view" onclick="cnShare()">📤 Share these notes</button><button type="button" class="dl-btn" onclick="cnCopyLink(this)">🔗 Copy link</button></div>
     ${cnDownloadBox()}
     <div class="cn-bar"><span class="cn-bar-l">Go to page:</span>${jump}</div>
     <div class="cn-pages" oncontextmenu="return false">${pages}</div>
@@ -5954,9 +5975,24 @@ function renderProgress(){
   });
 })();
 
+/* Shareable deep links: #colour-notes opens the Colour Notes tab; any tab id also works (#podcast, ?tab=diagrams). */
+function openTabFromLink(){
+  const alias = {'colour-notes':'colournotes','color-notes':'colournotes','colornotes':'colournotes'};
+  let h = decodeURIComponent((location.hash||'').slice(1)).toLowerCase();
+  if(!h){ const q = new URLSearchParams(location.search).get('tab'); if(q) h = q.toLowerCase(); }
+  h = alias[h] || h;
+  if(!h || !TABS.some(t => t.id === h)) return false;
+  currentTab = h;
+  const cat = TAB_CATEGORIES.find(c => c.tabs.indexOf(h) !== -1);
+  if(cat) currentCategory = cat.id;
+  return true;
+}
+const openedFromLink = openTabFromLink();
 renderTabbar();
 renderLangSwitcher();
 renderContent();
+if(openedFromLink) setTimeout(() => { const a = document.querySelector('#tabbar .tab.active'); if(a) a.scrollIntoView({inline:'center', block:'nearest'}); }, 50);
+window.addEventListener('hashchange', () => { if(openTabFromLink()){ renderTabbar(); renderContent(); window.scrollTo({top:0}); } });
 
 /* Android/iOS often keep this page frozen in the background instead of reloading it,
    so re-opening the app can silently resume on whatever tab (e.g. a locked premium
