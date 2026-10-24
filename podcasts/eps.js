@@ -1,5 +1,5 @@
 /* BAIO Podcasts — English episodes.
-   Speakers: S = Narendra Sir, P = Priya (student), N = narrator, R = the episode's character (name in ep.r).
+   Speakers: S = Narendra Sir (male voice), P = Priya (female voice), N = narrator, R = the episode's character (name in ep.r, voice gender in ep.g: 'f' / 'm').
    ['~', n] = an n-second pause (rapid-fire / myth-or-fact: answer aloud!).
    Translations: podcasts/eps-<lang>.js → PODS_I18N[lang][id] = {t, ch, r?, l:[line texts, null for pauses], q:[[question, options]]}. */
 window.PODS = [
@@ -112,7 +112,7 @@ window.PODS = [
     ['tRNA is called an adaptor molecule because it:',['Carries the mRNA','Reads a codon and carries an amino acid','Forms the ribosome','Joins exons'],1]]},
 
 /* ================= 📖 Biology Stories ================= */
-{ id:'story-1', s:'story', ic:'🫛', t:'Mendel: The Monk Who Counted Peas', ch:'II PUC · Ch 4 · Principles of Inheritance and Variation', page:'pu2-ch4.html', r:'Gregor Mendel',
+{ id:'story-1', s:'story', g:'m', ic:'🫛', t:'Mendel: The Monk Who Counted Peas', ch:'II PUC · Ch 4 · Principles of Inheritance and Variation', page:'pu2-ch4.html', r:'Gregor Mendel',
  l:[
   ['N','Brno, 1856. In a quiet monastery garden, a monk named Gregor Mendel is planting peas.'],
   ['P','Sir, why peas? Why not roses or mangoes?'],
@@ -137,7 +137,7 @@ window.PODS = [
     ['The F2 phenotypic ratio of a monohybrid cross is:',['1:2:1','3:1','9:3:3:1','1:1'],1],
     ['Mendel’s work was rediscovered in:',['1865','1900','1884','1953'],1]]},
 
-{ id:'story-2', s:'story', ic:'🧫', t:'Fleming’s Lucky Mould', ch:'II PUC · Ch 8 · Microbes in Human Welfare', page:'pu2-ch8.html', r:'Alexander Fleming',
+{ id:'story-2', s:'story', g:'m', ic:'🧫', t:'Fleming’s Lucky Mould', ch:'II PUC · Ch 8 · Microbes in Human Welfare', page:'pu2-ch8.html', r:'Alexander Fleming',
  l:[
   ['N','London, 1928. The bacteriologist Alexander Fleming is working with culture plates of Staphylococci bacteria.'],
   ['R','Hmm, one of these unwashed plates has gone mouldy. Wait — look at this!'],
@@ -161,7 +161,7 @@ window.PODS = [
     ['Penicillin was obtained from:',['Penicillium notatum','Streptococcus','Aspergillus niger','Trichoderma'],0],
     ['Antibiotics are NOT useful against:',['Bacterial pneumonia','The common cold virus','Plague','Diphtheria'],1]]},
 
-{ id:'story-3', s:'story', ic:'🩸', t:'A Day in the Life of a Red Blood Cell', ch:'Bonus · Body Fluids and Circulation', page:'', r:'Rubi the RBC',
+{ id:'story-3', s:'story', g:'f', ic:'🩸', t:'A Day in the Life of a Red Blood Cell', ch:'Bonus · Body Fluids and Circulation', page:'', r:'Rubi the RBC',
  l:[
   ['R','Hello! I’m Rubi, a red blood cell. I’m a tiny biconcave disc, and I have no nucleus — that leaves more room for haemoglobin.'],
   ['P','How many of you are there, Rubi?'],
@@ -186,7 +186,7 @@ window.PODS = [
     ['The average lifespan of an RBC is about:',['20 days','120 days','1 year','12 days'],1],
     ['Most CO₂ is carried in the blood as:',['Carbamino-haemoglobin','Bicarbonate','Dissolved CO₂','Oxyhaemoglobin'],1]]},
 
-{ id:'story-4', s:'story', ic:'🌼', t:'A Pollen Grain’s Big Adventure', ch:'II PUC · Ch 1 · Sexual Reproduction in Flowering Plants', page:'pu2-ch1.html', r:'Polly the pollen grain',
+{ id:'story-4', s:'story', g:'f', ic:'🌼', t:'A Pollen Grain’s Big Adventure', ch:'II PUC · Ch 1 · Sexual Reproduction in Flowering Plants', page:'pu2-ch1.html', r:'Polly the pollen grain',
  l:[
   ['R','Hi! I’m Polly, a pollen grain. I was born inside an anther, in a pollen sac, from a microspore mother cell that divided by meiosis.'],
   ['S','So Polly is haploid, Priya.'],

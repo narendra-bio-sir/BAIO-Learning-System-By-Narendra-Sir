@@ -31,5 +31,21 @@
     try { if (u && u.text) u.text = fix(u.text, u.lang || (u.voice && u.voice.lang) || document.documentElement.lang); } catch (e) {}
     return orig(u);
   };
-  window.BAIOSpeak = { fix };
+  /* Pick a male or female voice for a language. Browsers do not report a voice's gender, so it is read from
+     well-known voice names (Microsoft, Google, Apple, Samsung). When the phone has no voice of the wanted gender
+     (most Android phones offer one voice per language), the pitch is shifted instead: higher for female, lower for male. */
+  const FEMALE = /female|woman|girl|heera|neerja|swara|sapna|kalpana|lekha|veena|aditi|raveena|priya|isha|kajal|zira|samantha|karen|moira|tessa|fiona|victoria|susan|hazel|catherine|aria|jenny|sonia|libby|natasha|ananya|pallavi|google हिन्दी|google us english/i;
+  const MALE = /(^|[^e])male|\bman\b|\bboy\b|ravi|hemant|prabhat|madhur|gagan|rishi|kunal|arjun|david|mark|daniel|alex|fred|\bguy\b|ryan|george|aaron|rahul|thomas|oliver/i;
+  const genderOf = v => { const n = (v.name || '') + ' ' + (v.voiceURI || ''); return FEMALE.test(n) ? 'f' : MALE.test(n) ? 'm' : ''; };
+  function voices(lang){ const l = String(lang || 'en').slice(0, 2).toLowerCase(), all = ss.getVoices();
+    let v = all.filter(x => new RegExp('^' + l + '[-_]IN', 'i').test(x.lang)); if (!v.length) v = all.filter(x => new RegExp('^' + l, 'i').test(x.lang)); return v; }
+  // gender: 'f' | 'm' | '' ; returns {voice, pitch}
+  function voiceFor(lang, gender){ const list = voices(lang); if (!gender) return { voice: list[0] || null, pitch: 1 };
+    const exact = list.find(v => genderOf(v) === gender);
+    if (exact) return { voice: exact, pitch: gender === 'f' ? 1.08 : .95 };
+    const neutral = list.find(v => !genderOf(v)) || list[0] || null, other = neutral ? genderOf(neutral) : '';
+    // shift pitch away from the voice we had to use
+    return { voice: neutral, pitch: gender === 'f' ? (other === 'm' ? 1.6 : 1.35) : (other === 'f' ? .62 : .75) };
+  }
+  window.BAIOSpeak = { fix, voices, voiceFor, genderOf };
 })();

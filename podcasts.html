@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<script src="baio-speak.js?v=1"></script>
+<script src="baio-speak.js?v=2"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0B1B14">
@@ -107,7 +107,7 @@ body.print #printArea{display:block}
   <footer>Narendra Sir · Biology Lecturer · Founder &amp; CEO, BAIO Learning System</footer>
 </div>
 <script src="games/common.js?v=4"></script>
-<script src="podcasts/eps.js?v=1"></script>
+<script src="podcasts/eps.js?v=2"></script>
 <script>
 const PRINT=/[?&]print=1/.test(location.search);
 if(!PRINT) GZ.nav();
@@ -149,7 +149,8 @@ function pickVoices(){ if(!('speechSynthesis' in window)) return; const v=speech
   vlist=v.filter(x=>new RegExp('^'+l+'[-_]IN','i').test(x.lang)); if(!vlist.length) vlist=v.filter(x=>new RegExp('^'+l,'i').test(x.lang));
   $('#vnote').textContent=(!vlist.length&&v.length&&l!=='en')?T('novoice'):''; }
 if('speechSynthesis' in window) speechSynthesis.onvoiceschanged=pickVoices;
-const VOICE={S:[0,.92,.96],P:[1,1.28,1.03],N:[0,1.05,.98],R:[2,.82,.95]}; // [voice index, pitch, rate factor]
+// speaker → [gender, rate factor]; R (the episode character) uses ep.g
+const VOICE={S:['m',.96],P:['f',1.03],N:['',.98],R:['',.95]};
 const clean=s=>s.replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}]/gu,'').replace(/₂/g,' 2').trim();
 
 /* ---------- player ---------- */
@@ -177,8 +178,9 @@ function step(my){ if(my!==seq) return; if(li>=E.l.length){ playing=false; mark(
   if(s==='~'){ let n=txt; const bx=$('#tr').querySelector(`.ln[data-i="${li}"] .bx`); bx.textContent=`${T('think')} ${n}`;
     timer=setInterval(()=>{ if(my!==seq){ clearInterval(timer); return; } n--; bx.textContent=n>0?`${T('think')} ${n}`:'✓'; if(n<=0){ clearInterval(timer); go(); } },1000/+$('#rate').value); return; }
   if(!('speechSynthesis' in window)){ setTimeout(go,Math.max(2000,txt.length*60)); return; }
-  const [vi,pitch,rf]=VOICE[s]||VOICE.N, u=new SpeechSynthesisUtterance(clean(txt)); const v=vlist.length?vlist[Math.min(vi,vlist.length-1)]:null;
-  if(v) u.voice=v; u.lang=v?v.lang:VL[GZ.lang]; u.pitch=pitch; u.rate=+$('#rate').value*rf;
+  const [g0,rf]=VOICE[s]||VOICE.N, g=s==='R'?(E.g||''):g0, u=new SpeechSynthesisUtterance(clean(txt));
+  const pk=window.BAIOSpeak?BAIOSpeak.voiceFor(GZ.lang,g):{voice:vlist[0]||null,pitch:g==='f'?1.35:g==='m'?.75:1}, v=pk.voice;
+  if(v) u.voice=v; u.lang=v?v.lang:VL[GZ.lang]; u.pitch=pk.pitch; u.rate=+$('#rate').value*rf;
   let fin=false; const end=()=>{ if(fin) return; fin=true; go(); }; u.onend=end; u.onerror=()=>setTimeout(end,600); setTimeout(end,Math.max(7000,txt.length*160/u.rate)); speechSynthesis.speak(u); }
 function finish(){ const d=getDone(); d[E.id]=1; try{ localStorage.setItem(doneKey,JSON.stringify(d)); }catch(e){} $('#quiz').hidden=false; $('#quiz').scrollIntoView({behavior:'smooth',block:'start'}); }
 $('#play').onclick=()=>{ if(playing) stop(); else { if(li>=E.l.length) li=0; play(); } };
