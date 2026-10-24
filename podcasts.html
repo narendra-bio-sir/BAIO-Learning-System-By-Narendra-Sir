@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script src="baio-speak.js?v=1"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>BAIO Podcasts | BAIO Learning System</title>
+<meta name="description" content="Short Biology podcasts by Narendra Sir — NEET & KCET Corner, Biology Stories and Everyday Biology. English, Kannada and Hindi, with captions and a quiz.">
+<meta property="og:title" content="BAIO Podcasts">
+<meta property="og:description" content="Listen and learn: 5-minute Biology podcasts with a quiz at the end.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Kannada:wght@500;700&family=Noto+Sans+Devanagari:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="games/game.css?v=1">
+<style>
+body{font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif}
+.series{margin-top:20px}
+.series h3{margin:0;font:700 17px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;color:var(--gold)}
+.series p.d{margin:2px 0 0;font-size:12.5px;color:var(--ink-dim)}
+.eps{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-top:10px}
+.ep{display:flex;gap:12px;align-items:center;text-align:left;padding:10px;border-radius:16px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;font:inherit;position:relative}
+.ep .art{flex:0 0 58px;height:58px;border-radius:14px;display:grid;place-items:center;font-size:30px;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.ep b{display:block;font:700 14px/1.25 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari',sans-serif}
+.ep small{display:block;color:var(--ink-dim);font-size:11.5px;margin-top:3px}
+.ep .ok{position:absolute;right:10px;top:8px;font:800 11px Inter;color:var(--teal)}
+/* player */
+.ph{display:flex;gap:14px;align-items:center;margin-top:12px;padding:14px;border-radius:18px;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.ph .art{flex:0 0 76px;height:76px;border-radius:18px;display:grid;place-items:center;font-size:42px;background:rgba(255,255,255,.14);position:relative}
+.ph .art.live::after{content:'';position:absolute;inset:-5px;border-radius:22px;border:2px solid rgba(255,255,255,.6);animation:ring 1.4s infinite}
+@keyframes ring{0%{opacity:1;transform:scale(.95)}100%{opacity:0;transform:scale(1.12)}}
+.ph .k{font:800 11px Inter;letter-spacing:1px;opacity:.85;text-transform:uppercase}
+.ph h2{margin:2px 0;font:700 18px/1.25 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari',sans-serif}
+.ph small{font-size:12px;opacity:.85}
+.bar{height:6px;border-radius:6px;background:var(--line);margin-top:12px;overflow:hidden;cursor:pointer}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--gold));transition:width .3s}
+.tm{display:flex;justify-content:space-between;font:600 12px Inter;color:var(--ink-dim);margin-top:4px}
+.ctl{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:10px}
+.ctl .big{width:64px;height:64px;border-radius:50%;border:0;font-size:26px;cursor:pointer;background:linear-gradient(135deg,var(--gold),#B8912A);color:#1a1406;box-shadow:0 6px 16px rgba(0,0,0,.3)}
+.ctl .sm{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:18px;cursor:pointer}
+.opts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;margin-top:10px;font-size:13px;color:var(--ink-dim)}
+.opts select{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:6px 8px;font:600 13px Inter}
+.tr{margin-top:12px;max-height:52vh;overflow:auto;padding:4px 2px 10px;scroll-behavior:smooth;border-radius:14px}
+.ln{display:flex;gap:9px;align-items:flex-start;margin:8px 4px;cursor:pointer;transition:opacity .2s}
+.ln .av{flex:0 0 34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:18px;background:var(--panel2);border:1px solid var(--line)}
+.ln .bx{flex:1;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:4px 14px 14px 14px;padding:8px 11px}
+.ln .who{font:800 10.5px Inter;letter-spacing:.4px;text-transform:uppercase;color:var(--ink-dim);margin-bottom:2px}
+.ln .tx{font-size:14.5px;line-height:1.5;color:var(--ink)}
+.ln.P{flex-direction:row-reverse}.ln.P .bx{border-radius:14px 4px 14px 14px;background:rgba(46,230,197,.08)}
+.ln.N .bx{background:transparent;border-style:dashed}.ln.N .tx{font-style:italic}
+.ln.R .bx{background:rgba(233,196,90,.1)}
+.ln.on .bx{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold)}
+.ln.done{opacity:.6}
+.ln.wait .bx{text-align:center;font:700 14px Inter;color:var(--gold);border-style:dashed}
+.acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.quiz{margin-top:16px;padding:14px;border-radius:16px;border:1.5px solid var(--gold);background:var(--panel)}
+.quiz h3{margin:0 0 8px;font:700 16px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari',sans-serif}
+.qq{margin-top:12px}.qq .q{font-weight:700;font-size:14.5px}
+.qq .o{display:grid;gap:6px;margin-top:6px}
+.qq button{text-align:left;padding:9px 11px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:500 14px Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;cursor:pointer}
+.qq button.r{background:rgba(51,196,138,.2);border-color:#33c48a}.qq button.w{background:rgba(231,105,91,.2);border-color:#e7695b}
+.qs{text-align:center;font:800 18px 'Space Grotesk';margin-top:12px}
+.vnote{font-size:12px;color:var(--ink-dim);text-align:center;margin-top:6px}
+/* script print view */
+#printArea{display:none}
+body.print{background:#fff;color:#111}
+body.print .wrap>*:not(#printArea),body.print .topnav{display:none!important}
+body.print #printArea{display:block}
+.ps{font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;color:#111;max-width:760px;margin:0 auto;padding:10mm 4mm}
+.ps .cv{text-align:center;padding:30mm 0 10mm;page-break-after:always}
+.ps .cv h1{font:700 30px 'Space Grotesk',sans-serif;margin:8px 0}
+.ps .ep2{page-break-before:always}
+.ps h2{font:700 20px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;margin:0 0 2px}
+.ps .meta{font-size:12px;color:#555;margin-bottom:10px}
+.ps p{margin:6px 0;font-size:13.5px;line-height:1.55}
+.ps p b{display:inline-block;min-width:96px;color:#0f6f5e}
+.ps p.n{font-style:italic;color:#333}
+.ps p.w{color:#b8912a;font-weight:700}
+.ps .qz{margin-top:10px;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px}
+@media print{ @page{size:A4;margin:12mm} .topnav{display:none!important} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero" id="hero">
+    <div class="eyebrow" data-i18n="eyebrow">BAIO Learning System · Listen &amp; learn</div>
+    <h1 data-i18n-html="h1">🎧 BAIO <span class="accent">Podcasts</span></h1>
+    <p data-i18n="intro">Five-minute Biology talks with Narendra Sir and Priya — exam traps, stories of scientists and Biology in everyday life. Listen with captions, then take the quiz.</p>
+    <div class="acts"><a class="tbtn" id="allScripts" download></a></div>
+  </section>
+  <section id="shelf"></section>
+  <section id="player" hidden>
+    <div class="rhead" style="display:flex;justify-content:space-between;align-items:center;margin-top:12px"><button class="tbtn" id="back"></button><span class="muted" id="pser"></span></div>
+    <div class="ph" id="ph"></div>
+    <div class="bar" id="bar"><i id="barI"></i></div>
+    <div class="tm"><span id="tNow"></span><span id="tAll"></span></div>
+    <div class="ctl"><button class="sm" id="prev" aria-label="Previous line">⏮</button><button class="big" id="play" aria-label="Play">▶</button><button class="sm" id="next" aria-label="Next line">⏭</button></div>
+    <div class="opts"><label><span data-i18n="speed">Speed</span> <select id="rate"><option value=".85">0.85×</option><option value="1" selected>1×</option><option value="1.15">1.15×</option><option value="1.3">1.3×</option></select></label></div>
+    <div class="vnote" id="vnote"></div>
+    <div class="tr" id="tr"></div>
+    <div class="acts"><a class="tbtn" id="openCh"></a><button class="tbtn" id="shareEp"></button><a class="tbtn" id="script" target="_blank" rel="noopener"></a></div>
+    <div class="quiz" id="quiz" hidden></div>
+  </section>
+  <div id="printArea"></div>
+  <footer>Narendra Sir · Biology Lecturer · Founder &amp; CEO, BAIO Learning System</footer>
+</div>
+<script src="games/common.js?v=4"></script>
+<script src="podcasts/eps.js?v=1"></script>
+<script>
+const PRINT=/[?&]print=1/.test(location.search);
+if(!PRINT) GZ.nav();
+GZ.i18n({
+ en:{eyebrow:'BAIO Learning System · Listen & learn', h1:'🎧 BAIO <span class="accent">Podcasts</span>', intro:'Five-minute Biology talks with Narendra Sir and Priya — exam traps, stories of scientists and Biology in everyday life. Listen with captions, then take the quiz.',
+  s_exam:'🎯 NEET & KCET Corner', d_exam:'Exam traps, rapid-fire rounds and Assertion–Reason tricks.', s_story:'📖 Biology Stories', d_story:'Scientists, cells and pollen grains tell their stories.', s_life:'🍳 Everyday Biology', d_life:'The Biology hiding in your kitchen, your health and your state.',
+  min:'min', back:'← All podcasts', speed:'Speed', S:'Narendra Sir', P:'Priya', N:'Narrator', think:'Think… answer aloud!', chapter:'📘 Open chapter', share:'📤 Share episode', script:'📝 Script', quiz:'🧠 Quick quiz', score:'You scored', again:'🔁 Listen again', nextEp:'Next episode ▶', done:'✓ Listened',
+  novoice:'No voice for this language on your phone — read the captions, or install it in your phone’s Text-to-speech settings.', shareMsg:'🎧 Listen to "{t}" — a 5-minute Biology podcast on BAIO by Narendra Sir:', scoreMsg:'🎧 I scored {s}/{m} in the "{t}" podcast quiz on BAIO. Can you beat me?', scriptT:'BAIO Podcast Scripts', scriptS:'Ready-to-record scripts · Narendra Sir', ans:'Answers', pause:'pause', sec:'s'},
+ kn:{eyebrow:'BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್ · ಕೇಳಿ ಕಲಿಯಿರಿ', h1:'🎧 BAIO <span class="accent">ಪಾಡ್‌ಕಾಸ್ಟ್‌ಗಳು</span>', intro:'ನರೇಂದ್ರ ಸರ್ ಮತ್ತು ಪ್ರಿಯಾ ಅವರ ಐದು ನಿಮಿಷದ ಜೀವಶಾಸ್ತ್ರ ಮಾತುಕತೆಗಳು — ಪರೀಕ್ಷೆಯ ಬಲೆಗಳು, ವಿಜ್ಞಾನಿಗಳ ಕಥೆಗಳು ಮತ್ತು ದಿನನಿತ್ಯದ ಜೀವಶಾಸ್ತ್ರ. ಶೀರ್ಷಿಕೆಗಳೊಂದಿಗೆ ಕೇಳಿ, ನಂತರ ರಸಪ್ರಶ್ನೆ.',
+  s_exam:'🎯 NEET & KCET ಮೂಲೆ', d_exam:'ಪರೀಕ್ಷೆಯ ಬಲೆಗಳು, ರ‍್ಯಾಪಿಡ್ ಫೈರ್ ಮತ್ತು Assertion–Reason ತಂತ್ರಗಳು.', s_story:'📖 ಜೀವಶಾಸ್ತ್ರದ ಕಥೆಗಳು', d_story:'ವಿಜ್ಞಾನಿಗಳು, ಕೋಶಗಳು ಮತ್ತು ಪರಾಗ ಕಣಗಳು ತಮ್ಮ ಕಥೆ ಹೇಳುತ್ತವೆ.', s_life:'🍳 ದಿನನಿತ್ಯದ ಜೀವಶಾಸ್ತ್ರ', d_life:'ನಿಮ್ಮ ಅಡುಗೆಮನೆ, ಆರೋಗ್ಯ ಮತ್ತು ರಾಜ್ಯದಲ್ಲಿ ಅಡಗಿರುವ ಜೀವಶಾಸ್ತ್ರ.',
+  min:'ನಿಮಿಷ', back:'← ಎಲ್ಲ ಪಾಡ್‌ಕಾಸ್ಟ್‌ಗಳು', speed:'ವೇಗ', S:'ನರೇಂದ್ರ ಸರ್', P:'ಪ್ರಿಯಾ', N:'ನಿರೂಪಕ', think:'ಯೋಚಿಸಿ… ಜೋರಾಗಿ ಉತ್ತರಿಸಿ!', chapter:'📘 ಅಧ್ಯಾಯ ತೆರೆಯಿರಿ', share:'📤 ಸಂಚಿಕೆ ಹಂಚಿ', script:'📝 ಸ್ಕ್ರಿಪ್ಟ್', quiz:'🧠 ಕಿರು ರಸಪ್ರಶ್ನೆ', score:'ನಿಮ್ಮ ಅಂಕ', again:'🔁 ಮತ್ತೆ ಕೇಳಿ', nextEp:'ಮುಂದಿನ ಸಂಚಿಕೆ ▶', done:'✓ ಕೇಳಿದೆ',
+  novoice:'ನಿಮ್ಮ ಫೋನ್‌ನಲ್ಲಿ ಈ ಭಾಷೆಯ ಧ್ವನಿ ಇಲ್ಲ — ಶೀರ್ಷಿಕೆ ಓದಿ, ಅಥವಾ ಫೋನ್‌ನ Text-to-speech ಸೆಟ್ಟಿಂಗ್‌ನಲ್ಲಿ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ.', shareMsg:'🎧 "{t}" ಕೇಳಿ — ನರೇಂದ್ರ ಸರ್ ಅವರ BAIO ನಲ್ಲಿ 5 ನಿಮಿಷದ ಜೀವಶಾಸ್ತ್ರ ಪಾಡ್‌ಕಾಸ್ಟ್:', scoreMsg:'🎧 BAIO ನ "{t}" ಪಾಡ್‌ಕಾಸ್ಟ್ ರಸಪ್ರಶ್ನೆಯಲ್ಲಿ ನನಗೆ {s}/{m}. ನನ್ನನ್ನು ಮೀರಿಸಬಲ್ಲಿರಾ?', scriptT:'BAIO ಪಾಡ್‌ಕಾಸ್ಟ್ ಸ್ಕ್ರಿಪ್ಟ್‌ಗಳು', scriptS:'ರೆಕಾರ್ಡ್ ಮಾಡಲು ಸಿದ್ಧ ಸ್ಕ್ರಿಪ್ಟ್‌ಗಳು · ನರೇಂದ್ರ ಸರ್', ans:'ಉತ್ತರಗಳು', pause:'ವಿರಾಮ', sec:'ಸೆ'},
+ hi:{eyebrow:'BAIO लर्निंग सिस्टम · सुनो और सीखो', h1:'🎧 BAIO <span class="accent">पॉडकास्ट</span>', intro:'नरेंद्र सर और प्रिया की पाँच मिनट की बायोलॉजी बातचीत — परीक्षा के जाल, वैज्ञानिकों की कहानियाँ और रोज़मर्रा की बायोलॉजी। कैप्शन के साथ सुनो, फिर क्विज़ दो।',
+  s_exam:'🎯 NEET & KCET कॉर्नर', d_exam:'परीक्षा के जाल, रैपिड फ़ायर और Assertion–Reason के ट्रिक।', s_story:'📖 बायोलॉजी की कहानियाँ', d_story:'वैज्ञानिक, कोशिकाएँ और परागकण अपनी कहानी सुनाते हैं।', s_life:'🍳 रोज़मर्रा की बायोलॉजी', d_life:'आपकी रसोई, सेहत और राज्य में छिपी बायोलॉजी।',
+  min:'मिनट', back:'← सभी पॉडकास्ट', speed:'गति', S:'नरेंद्र सर', P:'प्रिया', N:'सूत्रधार', think:'सोचो… ज़ोर से जवाब दो!', chapter:'📘 अध्याय खोलो', share:'📤 एपिसोड शेयर करो', script:'📝 स्क्रिप्ट', quiz:'🧠 छोटा क्विज़', score:'आपका स्कोर', again:'🔁 फिर से सुनो', nextEp:'अगला एपिसोड ▶', done:'✓ सुन लिया',
+  novoice:'आपके फ़ोन में इस भाषा की आवाज़ नहीं है — कैप्शन पढ़ो, या फ़ोन की Text-to-speech सेटिंग में इंस्टॉल करो।', shareMsg:'🎧 "{t}" सुनो — नरेंद्र सर के BAIO पर 5 मिनट का बायोलॉजी पॉडकास्ट:', scoreMsg:'🎧 BAIO के "{t}" पॉडकास्ट क्विज़ में मेरा स्कोर {s}/{m}। क्या तुम मुझसे आगे निकल सकते हो?', scriptT:'BAIO पॉडकास्ट स्क्रिप्ट', scriptS:'रिकॉर्ड करने के लिए तैयार स्क्रिप्ट · नरेंद्र सर', ans:'उत्तर', pause:'विराम', sec:'से'}});
+const $=s=>document.querySelector(s), esc=GZ.esc, T=(k,o)=>{ let v=GZ.t(k); if(o) Object.keys(o).forEach(x=>v=v.split('{'+x+'}').join(o[x])); return v; };
+const SERIES=[['exam','#d0584e','#7a1f3a'],['story','#7c4dd6','#2b1a5c'],['life','#2e9e4f','#0e4a2a']];
+const AV={S:'👨‍🏫',P:'👧',N:'🎙️'};
+
+/* ---------- translations (lazy) ---------- */
+window.PODS_I18N=window.PODS_I18N||{}; const loaded={en:true};
+function needLang(l,cb){ if(loaded[l]) return cb(); const s=document.createElement('script'); s.src=`podcasts/eps-${l}.js?v=1`; s.onload=s.onerror=()=>{ loaded[l]=true; cb(); }; document.head.appendChild(s); }
+function loc(e){ const L=(PODS_I18N[GZ.lang]||{})[e.id]; if(!L) return e; let k=0;
+  return {...e, t:L.t||e.t, ch:L.ch||e.ch, r:L.r||e.r, l:e.l.map((x,i)=>x[0]==='~'?x:[x[0],(L.l&&L.l[i])||x[1]]), q:e.q.map((x,i)=>[(L.q&&L.q[i]&&L.q[i][0])||x[0],(L.q&&L.q[i]&&L.q[i][1])||x[1],x[2]])}; }
+const words=e=>e.l.reduce((a,x)=>a+(x[0]==='~'?x[1]*2.6:x[1].split(/\s+/).length),0);
+const mins=e=>Math.max(2,Math.round(words(e)/140));
+const doneKey='baio_pod_done'; const getDone=()=>{ try{ return JSON.parse(localStorage.getItem(doneKey)||'{}'); }catch(e){ return {}; } };
+
+/* ---------- shelf ---------- */
+function drawShelf(){ $('#allScripts').textContent=T('script')+' · PDF'; $('#allScripts').href=`podcasts/scripts/BAIO_Podcast_Scripts_${GZ.lang}.pdf`; let best={}; try{ best=JSON.parse(localStorage.getItem('baio_game_best')||'{}'); }catch(e){} const dn=getDone();
+  $('#shelf').innerHTML=SERIES.map(([s,c1,c2])=>`<div class="series"><h3>${T('s_'+s)}</h3><p class="d">${T('d_'+s)}</p><div class="eps">${PODS.filter(e=>e.s===s).map(e0=>{ const e=loc(e0);
+    return `<button class="ep" data-id="${e.id}">${dn[e.id]?`<span class="ok">${best['pod-'+e.id]!=null?'🧠 '+best['pod-'+e.id]+'/3':'✓'}</span>`:''}<span class="art" style="background:linear-gradient(150deg,${c1},${c2})">${e.ic}</span><span><b>${esc(e.t)}</b><small>${esc(e.ch.replace(/^I+ PUC · /,''))} · ~${mins(e)} ${T('min')}</small></span></button>`; }).join('')}</div></div>`).join('');
+  $('#shelf').querySelectorAll('.ep').forEach(b=>b.onclick=()=>openEp(b.dataset.id)); }
+
+/* ---------- voices ---------- */
+const VL={en:'en-IN',kn:'kn-IN',hi:'hi-IN'}; let vlist=[];
+function pickVoices(){ if(!('speechSynthesis' in window)) return; const v=speechSynthesis.getVoices(), l=GZ.lang;
+  vlist=v.filter(x=>new RegExp('^'+l+'[-_]IN','i').test(x.lang)); if(!vlist.length) vlist=v.filter(x=>new RegExp('^'+l,'i').test(x.lang));
+  $('#vnote').textContent=(!vlist.length&&v.length&&l!=='en')?T('novoice'):''; }
+if('speechSynthesis' in window) speechSynthesis.onvoiceschanged=pickVoices;
+const VOICE={S:[0,.92,.96],P:[1,1.28,1.03],N:[0,1.05,.98],R:[2,.82,.95]}; // [voice index, pitch, rate factor]
+const clean=s=>s.replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}]/gu,'').replace(/₂/g,' 2').trim();
+
+/* ---------- player ---------- */
+let E=null, E0=null, li=0, playing=false, seq=0, timer=null, answered={};
+function openEp(id,startLine){ stop(); E0=PODS.find(e=>e.id===id); if(!E0) return; E=loc(E0); li=startLine||0; answered={};
+  $('#shelf').hidden=true; $('#hero').hidden=true; $('#player').hidden=false;
+  const [,c1,c2]=SERIES.find(x=>x[0]===E.s); $('#back').textContent=T('back'); $('#pser').textContent=T('s_'+E.s);
+  $('#ph').style.background=`linear-gradient(135deg,${c1},${c2})`;
+  $('#ph').innerHTML=`<div class="art" id="art">${E.ic}</div><div><div class="k">BAIO PODCAST</div><h2>${esc(E.t)}</h2><small>${esc(E.ch)} · ~${mins(E)} ${T('min')}</small></div>`;
+  $('#tr').innerHTML=E.l.map((x,i)=>{ const s=x[0]; if(s==='~') return `<div class="ln wait" data-i="${i}"><div class="av">⏳</div><div class="bx" data-w="${x[1]}">${T('think')} ${x[1]}</div></div>`;
+    const who=s==='R'?E.r:T(s), av=s==='R'?E.ic:AV[s]; return `<div class="ln ${s}" data-i="${i}"><div class="av">${av}</div><div class="bx"><div class="who">${esc(who)}</div><div class="tx">${esc(x[1])}</div></div></div>`; }).join('');
+  $('#tr').querySelectorAll('.ln').forEach(d=>d.onclick=()=>{ li=+d.dataset.i; if(playing) play(); else mark(); });
+  $('#openCh').textContent=T('chapter'); $('#openCh').hidden=!E.page; $('#openCh').href=E.page||'#';
+  $('#shareEp').textContent=T('share'); $('#script').textContent=T('script'); $('#script').href=`podcasts.html?print=1&lang=${GZ.lang}#${E.id}`;
+  $('#tAll').textContent=`~${mins(E)} ${T('min')}`; drawQuiz(); $('#quiz').hidden=true; mark(); pickVoices(); window.scrollTo(0,0);
+  try{ history.replaceState(null,'','#'+E.id); }catch(e){} }
+function mark(){ $('#tr').querySelectorAll('.ln').forEach(d=>{ const i=+d.dataset.i; d.classList.toggle('on',i===li); d.classList.toggle('done',i<li); });
+  const on=$('#tr').querySelector('.ln.on'); if(on){ const tr=$('#tr'); tr.scrollTop=on.offsetTop-tr.offsetTop-tr.clientHeight/3; }
+  $('#barI').style.width=(li/E.l.length*100)+'%'; $('#tNow').textContent=`${Math.min(li+1,E.l.length)} / ${E.l.length}`;
+  $('#play').textContent=playing?'⏸':'▶'; const a=$('#art'); if(a) a.classList.toggle('live',playing); }
+function stop(){ seq++; playing=false; clearInterval(timer); try{ speechSynthesis.cancel(); }catch(e){} if(E&&!$('#player').hidden) mark(); }
+function play(){ seq++; clearInterval(timer); try{ speechSynthesis.cancel(); }catch(e){} playing=true; step(seq); }
+function step(my){ if(my!==seq) return; if(li>=E.l.length){ playing=false; mark(); finish(); return; } mark(); const [s,txt]=E.l[li];
+  const go=()=>{ if(my!==seq) return; li++; setTimeout(()=>step(my),380); };
+  if(s==='~'){ let n=txt; const bx=$('#tr').querySelector(`.ln[data-i="${li}"] .bx`); bx.textContent=`${T('think')} ${n}`;
+    timer=setInterval(()=>{ if(my!==seq){ clearInterval(timer); return; } n--; bx.textContent=n>0?`${T('think')} ${n}`:'✓'; if(n<=0){ clearInterval(timer); go(); } },1000/+$('#rate').value); return; }
+  if(!('speechSynthesis' in window)){ setTimeout(go,Math.max(2000,txt.length*60)); return; }
+  const [vi,pitch,rf]=VOICE[s]||VOICE.N, u=new SpeechSynthesisUtterance(clean(txt)); const v=vlist.length?vlist[Math.min(vi,vlist.length-1)]:null;
+  if(v) u.voice=v; u.lang=v?v.lang:VL[GZ.lang]; u.pitch=pitch; u.rate=+$('#rate').value*rf;
+  let fin=false; const end=()=>{ if(fin) return; fin=true; go(); }; u.onend=end; u.onerror=()=>setTimeout(end,600); setTimeout(end,Math.max(7000,txt.length*160/u.rate)); speechSynthesis.speak(u); }
+function finish(){ const d=getDone(); d[E.id]=1; try{ localStorage.setItem(doneKey,JSON.stringify(d)); }catch(e){} $('#quiz').hidden=false; $('#quiz').scrollIntoView({behavior:'smooth',block:'start'}); }
+$('#play').onclick=()=>{ if(playing) stop(); else { if(li>=E.l.length) li=0; play(); } };
+$('#prev').onclick=()=>{ li=Math.max(0,li-1); playing?play():mark(); };
+$('#next').onclick=()=>{ li=Math.min(E.l.length-1,li+1); playing?play():mark(); };
+$('#bar').onclick=e=>{ const r=$('#bar').getBoundingClientRect(); li=Math.floor((e.clientX-r.left)/r.width*E.l.length); playing?play():mark(); };
+$('#rate').onchange=()=>{ if(playing) play(); };
+$('#back').onclick=()=>{ stop(); $('#player').hidden=true; $('#shelf').hidden=false; $('#hero').hidden=false; drawShelf(); try{ history.replaceState(null,'',location.pathname); }catch(e){} };
+$('#shareEp').onclick=()=>GZ.share(T('shareMsg',{t:E.t}),'podcasts.html#'+E.id);
+document.addEventListener('keydown',e=>{ if($('#player').hidden||e.target.tagName==='SELECT') return; if(e.key===' '){ e.preventDefault(); $('#play').click(); } if(e.key==='ArrowRight') $('#next').click(); if(e.key==='ArrowLeft') $('#prev').click(); });
+document.addEventListener('visibilitychange',()=>{ if(document.hidden&&playing) stop(); });
+
+/* ---------- quiz ---------- */
+function drawQuiz(){ $('#quiz').innerHTML=`<h3>${T('quiz')}</h3>${E.q.map((q,i)=>`<div class="qq"><div class="q">${i+1}. ${esc(q[0])}</div><div class="o">${q[1].map((o,j)=>`<button data-q="${i}" data-o="${j}">${esc(o)}</button>`).join('')}</div></div>`).join('')}<div class="qs" id="qs"></div>`;
+  $('#quiz').querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{ const q=+b.dataset.q, o=+b.dataset.o; if(answered[q]!=null) return; answered[q]=o; const right=E.q[q][2];
+    $('#quiz').querySelectorAll(`[data-q="${q}"]`).forEach(x=>{ const k=+x.dataset.o; if(k===right) x.classList.add('r'); else if(k===o) x.classList.add('w'); });
+    if(Object.keys(answered).length===E.q.length){ const sc=Object.entries(answered).filter(([k,v])=>E.q[k][2]===v).length; GZ.saveBest('pod-'+E.id,sc);
+      const idx=PODS.findIndex(e=>e.id===E.id), nx=PODS[idx+1];
+      $('#qs').innerHTML=`${T('score')} ${sc} / ${E.q.length} ${GZ.stars(sc,E.q.length)}<br><span style="font:600 13px Inter">${GZ.rating(sc,E.q.length)}</span><div class="acts"><button class="tbtn" id="qsh">${GZ.c('share')}</button><button class="tbtn" id="qag">${T('again')}</button>${nx?`<button class="tbtn" id="qnx">${T('nextEp')}</button>`:''}</div>`;
+      $('#qsh').onclick=()=>GZ.share(T('scoreMsg',{s:sc,m:E.q.length,t:E.t}),'podcasts.html#'+E.id,{icon:E.ic,game:E.t,sub:'BAIO Podcast · '+T('s_'+E.s),score:sc,max:E.q.length,color:SERIES.find(x=>x[0]===E.s).slice(1)});
+      $('#qag').onclick=()=>openEp(E.id); if(nx) $('#qnx').onclick=()=>openEp(nx.id); } }); }
+
+/* ---------- printable script (for recording) ---------- */
+function printScripts(ids){ const S=ids.map(id=>loc(PODS.find(e=>e.id===id)));
+  $('#printArea').innerHTML=`<div class="ps">${ids.length>1?`<div class="cv"><div style="font-size:64px">🎧</div><h1>${T('scriptT')}</h1><p>${T('scriptS')}</p><p style="margin-top:12mm;color:#666">${SERIES.map(([s])=>T('s_'+s)).join(' · ')}</p></div>`:''}
+    ${S.map((e,k)=>`<div class="${k||ids.length>1?'ep2':''}"><h2>${e.ic} ${esc(e.t)}</h2><div class="meta">${T('s_'+e.s)} · ${esc(e.ch)} · ~${mins(e)} ${T('min')}</div>
+      ${e.l.map(x=>x[0]==='~'?`<p class="w">⏸ [${T('pause')} ${x[1]} ${T('sec')}]</p>`:`<p class="${x[0]==='N'?'n':''}"><b>${esc(x[0]==='R'?e.r:T(x[0]))}:</b> ${esc(x[1])}</p>`).join('')}
+      <div class="qz"><b>${T('quiz')}</b>${e.q.map((q,i)=>`<div>${i+1}. ${esc(q[0])} — <i>${q[1].map(esc).join(' / ')}</i></div>`).join('')}<div style="margin-top:4px">${T('ans')}: ${e.q.map((q,i)=>`${i+1}-${esc(q[1][q[2]])}`).join(' · ')}</div></div></div>`).join('')}</div>`;
+  document.body.classList.add('print'); }
+
+/* ---------- start ---------- */
+const P=new URLSearchParams(location.search); if(PRINT&&P.get('lang')) try{ localStorage.setItem('baio_lang',P.get('lang')); }catch(e){}
+GZ.startLang();
+GZ.onLang(l=>needLang(l,()=>{ if(PRINT) return; pickVoices(); if(!$('#player').hidden&&E0){ const was=playing, k=li; openEp(E0.id,k); if(was) play(); } else drawShelf(); }));
+needLang(GZ.lang,()=>{ const id=location.hash.slice(1);
+  if(PRINT){ printScripts(PODS.find(e=>e.id===id)?[id]:PODS.map(e=>e.id)); window.__ready=true; return; }
+  drawShelf(); if(PODS.find(e=>e.id===id)) openEp(id); });
+</script>
+</body>
+</html>
