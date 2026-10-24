@@ -556,7 +556,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
   <div class="hz" id="hz">
     <a class="hz-card hz-daily" href="zone.html#daily" id="hzDaily"><span class="fl">🔥</span><span><b id="hzDT">Daily Bio Challenge</b><small id="hzDS">5 questions · 3 minutes · build your streak</small></span><span class="go">Play ▶</span></a>
     <div class="hz-card"><div class="hz-k">💡 Fact of the day <button type="button" id="hzFShare">📤 Share</button></div><div class="hz-fact" id="hzFact"></div></div>
-    <div class="hz-card"><div class="hz-k">📅 Exam countdown <button type="button" id="hzEdit">✏️ Change</button></div>
+    <div class="hz-card"><div class="hz-k">📅 Exam countdown <button type="button" id="hzCdShare">📤 Share</button><button type="button" id="hzEdit" style="margin-left:0">✏️ Change</button></div>
       <div class="hz-cd"><div class="n" id="hzN"><b>–</b><small>days left</small></div><div class="hz-plan" id="hzPlan"></div></div>
       <div class="hz-row"><button type="button" id="hzRemind">🔔 Remind me at 7 pm</button><a href="zone.html#test">📝 Chapter tests</a><a href="zone.html#guess">🧩 Guess It</a><a href="zone.html#memes">😂 Memes</a><a href="zone.html#invite">🎁 Invite &amp; earn</a></div>
     </div>
@@ -2834,6 +2834,7 @@ window.indexHardRefresh = indexHardRefresh;
 <script src="assistant/home-tour.js?v=1"></script>
 <script src="zone/content.js?v=1"></script>
 <script src="zone/fact-card.js?v=5" defer></script>
+<script src="zone/countdown-card.js?v=1" defer></script>
 <script>
 /* Daily Bio Zone on the home screen: streak, Fact of the Day, exam countdown + today's plan,
    7 pm reminder opt-in, and invite links (?ref=CODE). */
@@ -2858,15 +2859,18 @@ window.indexHardRefresh = indexHardRefresh;
     var date=store.get('baio_exam_date')||DEF[cls]||'', n=document.getElementById('hzN'), plan=document.getElementById('hzPlan');
     if(!cls){ n.innerHTML='<b>🎓</b><small>pick class</small>'; plan.innerHTML='Tell us your class to see your exam countdown and today\'s plan. <div class="hz-row"><button type="button" data-c="1">I PUC</button><button type="button" data-c="2">II PUC</button></div>';
       plan.querySelectorAll('[data-c]').forEach(function(b){ b.onclick=function(){ cls=+b.dataset.c; Z.cls=cls; store.set('baio_zone',JSON.stringify(Z)); paint(); }; }); return; }
-    if(date){ var d=Math.ceil((new Date(date+'T09:00:00+05:30')-Date.now())/864e5); n.innerHTML='<b>'+Math.max(0,d)+'</b><small>days left</small>'; }
+    var daysLeft=null;
+    if(date){ var d=Math.ceil((new Date(date+'T09:00:00+05:30')-Date.now())/864e5); daysLeft=Math.max(0,d); n.innerHTML='<b>'+daysLeft+'</b><small>days left</small>'; }
     else n.innerHTML='<b>✏️</b><small>set date</small>';
     // focus chapter: weakest (≥3 attempts), else rotate one chapter per day
     var list=chs(), st=Z.chap||{}, weak=null;
     list.forEach(function(c){ var v=st[c[0]]; if(v&&v.t>=3){ var a=v.c/v.t; if(!weak||a<weak.a) weak={c:c,a:a}; } });
     var focus=weak&&weak.a<0.7?weak.c:list[Math.floor(Date.now()/864e5)%list.length];
+    window.__hzCd={cls:cls, days:daysLeft, chap:focus[2], provisional:cls===2&&!store.get('baio_exam_date')};
     plan.innerHTML=(date?'<b>'+(cls===1?'I PUC':'II PUC')+' Biology exam</b>'+(cls===2&&!store.get('baio_exam_date')?' (15 Mar 2027, provisional)':'')+'<br>':'<b>Set your exam date</b> with ✏️<br>')+
       'Today: '+(weak&&weak.a<0.7?'revise your weak chapter ':'revise ')+'<a href="'+focus[1]+'">'+focus[2]+'</a> → <a href="zone.html#daily">Daily 5</a> → <a href="important-cards.html#'+focus[0]+'">Quick card</a>';
   }
+  document.getElementById('hzCdShare').onclick=function(){ if(window.baioCountdownShare) baioCountdownShare(window.__hzCd||{cls:cls}); };
   document.getElementById('hzEdit').onclick=function(){ var cur=store.get('baio_exam_date')||DEF[cls]||''; var v=prompt('Your Biology exam date (YYYY-MM-DD):', cur); if(v===null) return; v=v.trim();
     if(/^\d{4}-\d{2}-\d{2}$/.test(v)) store.set('baio_exam_date',v); else if(!v) { try{ localStorage.removeItem('baio_exam_date'); }catch(e){} } paint(); };
   paint();
