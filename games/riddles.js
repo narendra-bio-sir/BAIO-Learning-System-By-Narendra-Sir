@@ -72,6 +72,16 @@ window.RIDDLES = [
   ['Adenine',['I am a nitrogen base.','I am a purine.','In DNA I always pair with thymine.'],['Cytosine','Uracil','Thymine']],
   ['Competitive inhibitor',['I look very much like the substrate.','I sit in the enzyme\'s active site.','Malonate does this to succinic dehydrogenase.'],['Co-factor','Coenzyme','Prosthetic group']],
  ]},
+ {id:'pu1-ch10', pu:1, ch:10, t:'Cell Cycle and Cell Division', page:'pu1-ch10.html', r:[
+  ['Centromere',['I am a constriction on a chromosome.','I hold two sister chromatids together.','I split in anaphase.'],['Centriole','Telomere','Nucleolus']],
+  ['Kinetochore',['I am a small disc.','I sit on the surface of the centromere.','Spindle fibres attach to me.'],['Aster','Centriole','Chiasma']],
+  ['Metaphase',['Condensation is complete in me.','The nuclear envelope has fully gone.','I am the best stage to count chromosomes.'],['Prophase','Anaphase','Telophase']],
+  ['Anaphase',['I am a stage of mitosis.','Centromeres split at my start.','Sister chromatids move to opposite poles in me.'],['Metaphase','Telophase','Prophase']],
+  ['Syncytium',['I am a multinucleate condition.','I form when cytokinesis does not follow karyokinesis.','Coconut water is my example.'],['Tetrad','Dyad','Cell plate']],
+  ['Recombinase',['I am an enzyme.','I work in pachytene.','I bring about crossing over.'],['Helicase','Ligase','Amylase']],
+  ['Chiasmata',['I am X-shaped.','I appear in diplotene.','I mark the points of crossing over.'],['Kinetochores','Asters','Centromeres']],
+  ['G0 phase',['I am entered by cells leaving G1.','Cells in me are active but do not divide.','Adult heart cells stay in me.'],['S phase','G2 phase','M phase']],
+ ]},
  {id:'pu2-ch1', pu:2, ch:1, t:'Sexual Reproduction in Flowering Plants', page:'pu2-ch1.html', r:[
   ['Tapetum',['I am the innermost wall layer of the microsporangium.','My cells often have more than one nucleus.','I nourish the developing pollen grains.'],['Endothecium','Epidermis','Middle layer']],
   ['Sporopollenin',['I am found in the exine of pollen.','Strong acids, alkalis and high heat cannot destroy me.','I am the most resistant organic material known.'],['Pectin','Cellulose','Lignin']],

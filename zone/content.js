@@ -14,6 +14,12 @@ ZONE.FACTS = [
  {t:'Inulin is a polymer of fructose, not glucose.', c:'pu1-ch9'},
  {t:'Chitin, the exoskeleton of arthropods, is a complex polysaccharide.', c:'pu1-ch9'},
  {t:'Enzymes are mostly proteins, but some RNAs (ribozymes) also act as enzymes.', c:'pu1-ch9'},
+ {t:'A human cell in culture divides about once every 24 hours, but yeast can finish a cell cycle in about 90 minutes.', c:'pu1-ch10'},
+ {t:'More than 95% of the cell cycle is spent in interphase; the actual division lasts only about an hour.', c:'pu1-ch10'},
+ {t:'Coconut water is a syncytium: the nucleus divided many times but the cytoplasm did not.', c:'pu1-ch10'},
+ {t:'In the oocytes of some vertebrates, diplotene of meiosis can last for months or even years.', c:'pu1-ch10'},
+ {t:'Crossing over in pachytene is why brothers and sisters never look exactly alike.', c:'pu1-ch10'},
+ {t:'Walther Flemming coined the word "mitosis" in 1879, after Strasburger saw it in plant cells in 1870.', c:'pu1-ch10'},
  {t:'Robert Brown discovered the nucleus in 1831.', c:'pu1-ch8'},
  {t:'Camillo Golgi first saw the Golgi apparatus in 1898.', c:'pu1-ch8'},
  {t:'Lysosomes are called "suicide bags": their hydrolytic enzymes work best at acidic pH.', c:'pu1-ch8'},
@@ -99,7 +105,11 @@ ZONE.CLUES = [
  {a:'Bt toxin', o:['Bt toxin','Insulin','Restriction enzyme','RNAi'], c:['I\'m a protein crystal','A soil bacterium makes me','I become active in an insect\'s alkaline gut','My <i>cry</i> genes are put into cotton'], ch:'pu2-ch10', e:'🐛'},
  {a:'Pyramid of energy', o:['Pyramid of energy','Pyramid of number','Pyramid of biomass','Food web'], c:['I\'m an ecological pyramid','I show energy at each trophic level','Only about 10% passes from one level to the next','I can never be inverted'], ch:'pu2-ch12', e:'🔺'},
  {a:'Dodo', o:['Dodo','Quagga','Thylacine','Steller\'s sea cow'], c:['I was a bird','I couldn\'t fly','I lived only on Mauritius','I\'m extinct now'], ch:'pu2-ch13', e:'🦤'},
- {a:'Sacred groves', o:['Sacred groves','National parks','Botanical gardens','Seed banks'], c:['We\'re forest patches','Communities protect us for religious reasons','You\'ll find us in the Khasi & Jaintia hills','We\'re a kind of in situ conservation'], ch:'pu2-ch13', e:'🌳'}
+ {a:'Sacred groves', o:['Sacred groves','National parks','Botanical gardens','Seed banks'], c:['We\'re forest patches','Communities protect us for religious reasons','You\'ll find us in the Khasi & Jaintia hills','We\'re a kind of in situ conservation'], ch:'pu2-ch13', e:'🌳'},
+ {a:'Metaphase', o:['Metaphase','Prophase','Anaphase','Telophase'], c:['I am a stage of mitosis','The nuclear envelope has completely gone','Spindle fibres hold every kinetochore','All chromosomes line up on my plate'], ch:'pu1-ch10', e:'📏'},
+ {a:'Crossing over', o:['Crossing over','Synapsis','Terminalisation','Cytokinesis'], c:['I happen in prophase I','I happen in pachytene','The enzyme recombinase helps me','I swap pieces between non-sister chromatids'], ch:'pu1-ch10', e:'🔀'},
+ {a:'Cell plate', o:['Cell plate','Cleavage furrow','Metaphase plate','Nuclear envelope'], c:['I form only in plant cells','I appear after telophase','I grow from the centre outwards','I become the middle lamella'], ch:'pu1-ch10', e:'🧱'},
+ {a:'Interphase', o:['Interphase','M phase','Cytokinesis','Prophase'], c:['People call me the resting phase','But I am really very busy','I take more than 95% of the cycle','G1, S and G2 are my parts'], ch:'pu1-ch10', e:'⏳'}
 ];
 
 /* Meme of the week: images in zone/memes/, newest first. The first one is "this week's meme". */

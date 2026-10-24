@@ -10,7 +10,7 @@
   var CH = {
     'pu1-ch2':'Biological Classification','pu1-ch3':'Plant Kingdom','pu1-ch4':'Animal Kingdom',
     'pu1-ch5':'Morphology of Flowering Plants','pu1-ch6':'Anatomy of Flowering Plants','pu1-ch7':'Structural Organisation in Animals',
-    'pu1-ch8':'Cell: The Unit of Life','pu1-ch9':'Biomolecules',
+    'pu1-ch8':'Cell: The Unit of Life','pu1-ch9':'Biomolecules','pu1-ch10':'Cell Cycle and Cell Division',
     'pu2-ch1':'Sexual Reproduction in Flowering Plants','pu2-ch2':'Human Reproduction','pu2-ch3':'Reproductive Health',
     'pu2-ch4':'Principles of Inheritance and Variation','pu2-ch5':'Molecular Basis of Inheritance','pu2-ch6':'Evolution',
     'pu2-ch7':'Human Health and Disease','pu2-ch8':'Microbes in Human Welfare','pu2-ch10':'Biotechnology and its Applications',

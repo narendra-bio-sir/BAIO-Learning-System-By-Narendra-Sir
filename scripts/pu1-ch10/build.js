@@ -199,8 +199,8 @@ window.podcastSetLang = podcastSetLang;
 /* Colour Notes */
 setConst('COLOUR_NOTES_PAGES', String(man.cnPages || 10));
 rep("const CN_RAZORPAY_LINK = 'https://rzp.io/rzp/PzZQP9K'; /* Biomolecules Colour Notes ₹100 payment link */",
-    "const CN_RAZORPAY_LINK = 'YOUR_CHAPTER10_COLOUR_NOTES_LINK_HERE'; /* add the Ch10 ₹100 Razorpay link here; until then students pay via WhatsApp */");
-rep("const RAZORPAY_PREMIUM_LINK = 'YOUR_CHAPTER9_PREMIUM_LINK_HERE';", "const RAZORPAY_PREMIUM_LINK = 'YOUR_CHAPTER10_PREMIUM_LINK_HERE';");
+    "const CN_RAZORPAY_LINK = 'https://rzp.io/rzp/rV09xlyo'; /* Cell Cycle Colour Notes ₹100 payment link */");
+rep("const RAZORPAY_PREMIUM_LINK = 'YOUR_CHAPTER9_PREMIUM_LINK_HERE';", "const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/DRVyP7MF';");
 
 /* Header, titles, jump list */
 rep('<title>Chapter 9: Biomolecules — PU-I Biology | Narendra Sir</title>', '<title>Chapter 10: Cell Cycle and Cell Division — PU-I Biology | Narendra Sir</title>');
