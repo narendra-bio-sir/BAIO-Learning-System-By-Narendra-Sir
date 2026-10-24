@@ -184,11 +184,14 @@ const OS_IO = {
 rep('12 topics · step by step', (man.animTopics || 12) + ' topics · step by step', true);
 rep("pu1-ch9-assets/animated.html?lang=${pptLang}&v=5", "pu1-ch9-assets/animated.html?lang=${pptLang}&v=1");
 
-/* Podcasts: recorded English & Hindi episodes */
+/* Podcasts: Narendra Sir's recorded episodes in 5 languages */
 cut('const PODCASTS_CH9 = {', 'function renderPodcast(){',
 `const PODCASTS_CH9 = {
-  en: {label:'English', url:'pu1-ch9-assets/podcast-english.mp3?v=1'},
-  hi: {label:'Hindi', url:'pu1-ch9-assets/podcast-hindi.mp3?v=1'}
+  en: {label:'English', url:'pu1-ch9-assets/podcast-english.mp3?v=2'},
+  kn: {label:'Kannada', url:'pu1-ch9-assets/podcast-kannada.mp3?v=2'},
+  hi: {label:'Hindi', url:'pu1-ch9-assets/podcast-hindi.mp3?v=2'},
+  mr: {label:'Marathi', url:'pu1-ch9-assets/podcast-marathi.mp3?v=2'},
+  ur: {label:'Urdu', url:'pu1-ch9-assets/podcast-urdu.mp3?v=2'}
 };
 let podcastLang = 'en';
 let podcastSpeed = 1;
