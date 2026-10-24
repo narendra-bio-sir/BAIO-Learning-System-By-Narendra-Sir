@@ -1,0 +1,106 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="../../notes/src/draw.js"></script><script src="cc-draw.js"></script><script src="diagrams.js"></script><script src="vis.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1100px;height:1448px;overflow:hidden;font-family:Inter,'Noto Color Emoji',sans-serif;color:#1b2333;background:#fffdf6}
+.hero{height:250px;position:relative;background:linear-gradient(120deg,#0b3d2e,#1b7a4f 55%,#4fa83d);overflow:hidden;color:#fff}
+.hero:before{content:'';position:absolute;right:-80px;top:-120px;width:420px;height:420px;border-radius:50%;background:rgba(255,255,255,.08)}
+.logo{position:absolute;left:26px;top:26px;width:118px;height:118px;border-radius:50%;background:#fff;color:#0b3d2e;display:flex;flex-direction:column;align-items:center;justify-content:center;font:900 30px Inter;border:5px solid #d8b04a}
+.logo small{font:700 11px Inter;color:#555}
+.who{position:absolute;left:165px;top:22px;font:italic 800 40px 'Kalam',cursive;color:#fff}
+.who span{display:inline-block;background:#f2d24b;color:#1b2a12;font:700 17px Inter;padding:4px 14px;border-radius:6px;margin-left:10px;transform:rotate(-2deg)}
+.cls{position:absolute;right:24px;top:22px;background:#0d1a33;color:#fff;border-radius:12px;padding:8px 16px;text-align:center;font:900 26px Inter;line-height:1.05;border:2px solid #f2d24b}
+.cls small{display:block;font:700 12px Inter;color:#f2d24b;letter-spacing:1px;margin-top:4px}
+.h1{position:absolute;left:165px;top:80px;right:200px;font:900 50px/1 Inter;letter-spacing:-1px;text-transform:uppercase;color:#fff;text-shadow:0 4px 0 #0b2a1e}
+.h1 em{font-style:normal;color:#f7d046;display:block}
+.tag{position:absolute;left:165px;bottom:14px;background:rgba(255,255,255,.92);color:#0b3d2e;font:700 19px Inter;padding:6px 18px;border-radius:30px}
+.wrap{padding:16px 22px 0;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sec{border:3px solid var(--c);border-radius:18px;overflow:hidden;background:#fff}
+.sec.full{grid-column:1/3}
+.sh{background:var(--c);color:#fff;font:800 24px Inter;display:flex;align-items:center;gap:12px;padding:8px 14px;text-transform:uppercase;letter-spacing:.5px}
+.sh b{background:#fff;color:var(--c);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:900 21px Inter}
+.sb{padding:10px 14px;font:500 18.5px/1.42 Inter}
+.sb b{color:#0b3d2e}.sb li{margin:3px 0 3px 20px}
+.sb .hl{background:#fff3c4;border-radius:6px;padding:0 4px;font-weight:700}
+.sb img{width:100%;max-height:var(--ih,460px);object-fit:contain;display:block;border-radius:10px;margin-top:6px}
+.sb svg{width:100%;height:auto;max-height:var(--sh,230px);display:block;margin-top:4px}
+.sb{font-size:var(--fs,18.5px)!important}
+table{width:100%;border-collapse:collapse;font:500 17px Inter;margin-top:4px}
+th{background:var(--c);color:#fff;padding:6px 8px;text-align:left}
+td{padding:5px 8px;border-bottom:1px solid #eee}
+tr:nth-child(even) td{background:#f8f6ef}
+.note{margin-top:8px;background:#fff7d6;border:2px dashed #e0b82e;border-radius:12px;padding:8px 12px;font:600 17.5px/1.4 Inter}
+.ft{position:absolute;left:0;right:0;bottom:0;height:118px;background:#0d1a33;color:#fff}
+.ft .row{display:flex;justify-content:space-around;padding:12px 30px 6px;font:800 16px Inter;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,.15)}
+.ft .sig{text-align:center;font:italic 800 26px 'Kalam',cursive;color:#f2d24b;margin-top:8px}
+.ft .sig span{font:800 22px Inter;color:#fff;font-style:normal;margin-left:10px}
+.pg{position:absolute;right:20px;bottom:10px;font:700 14px Inter;color:#9aa5b8}
+</style></head><body><div id="p"></div>
+<script>
+const R = '#d63c3c', G = '#1f8a4c', Bl = '#1f6fb0', P = '#6c48d6', O = '#d9761e', T = '#0d7f70';
+const img = n => `<img src="../../pu1-ch10-assets/${n}.jpg">`;
+const PAGES = [
+ { t1: 'The Cell', t2: 'Cycle', tag: 'From one cell to millions', secs: [
+  [R, 'What is the cell cycle?', `<ul><li>Sequence of events by which a cell <b>duplicates its genome</b>, <b>synthesises</b> other constituents and <b>divides into two daughter cells</b>.</li><li>Cell growth is <b>continuous</b>; <span class="hl">DNA synthesis only in S phase</span>.</li><li>All events are under <b>genetic control</b>.</li></ul>`],
+  [G, 'Duration', `<table><tr><th>Cell</th><th>One cycle</th></tr><tr><td>Human cell (culture)</td><td><b>~24 hours</b></td></tr><tr><td>Yeast</td><td><b>~90 minutes</b></td></tr><tr><td>M phase (human)</td><td><b>~1 hour</b></td></tr><tr><td>Interphase</td><td><b>&gt; 95%</b> of the cycle</td></tr></table>`],
+  [Bl, 'Phases of the cell cycle', img('diag-cell-cycle'), 'full'],
+  [O, 'M phase', `<b>Karyokinesis</b> (nuclear division) → <b>Cytokinesis</b> (cytoplasm division).<br>Karyokinesis: <span class="hl">Prophase → Metaphase → Anaphase → Telophase</span>`],
+  [P, 'Exam tip', `<div class="note">"Interphase = resting phase" is only a name — the cell is <b>metabolically very active</b>: it grows, copies DNA and makes proteins for division.</div>`]]},
+ { t1: 'Interphase', t2: 'G₁ · S · G₂ · G₀', tag: 'The busy preparation phase', secs: [
+  [G, 'G₁ phase (Gap 1)', `<ul><li>Between end of mitosis and start of DNA replication.</li><li>Cell <b>grows</b>, metabolically active.</li><li><b>No</b> DNA replication.</li></ul>`],
+  [R, 'S phase (Synthesis)', `<ul><li><span class="hl">DNA 2C → 4C</span></li><li>Chromosome number <b>stays 2n</b> (2 sister chromatids each).</li><li>Animal cells: <b>centriole duplicates</b> in cytoplasm.</li></ul>`],
+  [Bl, 'G₂ phase (Gap 2)', `<ul><li><b>Proteins for mitosis</b> are synthesised.</li><li>Cell growth continues.</li></ul>`],
+  [P, 'G₀ — quiescent stage', `<ul><li>Cells <b>exit G₁</b> and stop dividing.</li><li>Metabolically <b>active</b>, divide only when needed.</li><li>e.g. <b>heart cells</b>.</li></ul>`],
+  [O, 'S phase in one picture', V.dna(), 'full'],
+  [T, 'Chromosome number vs DNA content', `<table><tr><th>Stage</th><th>Chromosomes</th><th>DNA</th></tr><tr><td>G₁</td><td>2n</td><td>2C</td></tr><tr><td>G₂</td><td>2n</td><td>4C</td></tr><tr><td>After mitosis</td><td>2n</td><td>2C</td></tr><tr><td>After meiosis I</td><td>n</td><td>2C</td></tr><tr><td>After meiosis II</td><td>n</td><td>C</td></tr></table><div class="note">Mitosis in animals: only <b>diploid somatic</b> cells · plants: <b>haploid and diploid</b> cells.</div>`, 'full']]},
+ { t1: 'Mitosis', t2: 'Prophase · Metaphase', tag: 'Equational division', secs: [
+  [R, 'Mitosis = equational division', `<ul><li>Parent and daughter cells have the <b>same chromosome number</b>.</li><li><b>Strasburger (1870)</b> – plant cells · <b>Flemming (1879)</b> – animal cells, coined "mitosis".</li></ul>`, 'full'],
+  [G, 'Prophase', `<ul><li>Chromatin <b>condenses</b>; each chromosome = 2 chromatids at the centromere.</li><li>Centrosomes move to <b>opposite poles</b>; <b>asters</b> form.</li><li>Asters + spindle = <b>mitotic apparatus</b>.</li><li>Golgi, ER, nucleolus, nuclear envelope <b>disappear</b>.</li></ul>${V.prophase()}`],
+  [Bl, 'Metaphase', `<ul><li>Starts with <b>complete breakdown</b> of nuclear envelope.</li><li>Condensation <b>complete</b> — <span class="hl">best stage to study chromosomes</span>.</li><li>Spindle fibres attach to <b>kinetochores</b>.</li><li>Chromosomes align on the <b>metaphase plate</b>.</li></ul>${V.metaphase()}`],
+  [P, 'Metaphase chromosome & kinetochore', img('diag-chromosome'), 'full']]},
+ { t1: 'Mitosis', t2: 'Anaphase · Telophase', tag: 'Split, move, rebuild', secs: [
+  [R, 'Anaphase', `<ul><li><span class="hl">Centromeres split</span>, chromatids separate.</li><li>Daughter chromosomes move to <b>opposite poles</b>.</li><li><b>Centromere leads</b>, arms trail (V/J shapes).</li></ul>${V.anaphase()}`],
+  [G, 'Telophase', `<ul><li>Chromosomes reach poles, <b>decondense</b>, lose individuality.</li><li>Nuclear envelope forms → <b>2 daughter nuclei</b>.</li><li>Nucleolus, Golgi, ER <b>reform</b>.</li><li>= <b>reverse of prophase</b>.</li></ul>${V.telophase()}`],
+  [Bl, 'All stages of mitosis', img('diag-mitosis'), 'full']]},
+ { t1: 'Cytokinesis', t2: '& Why Mitosis?', tag: 'Dividing the cytoplasm', secs: [
+  [R, 'Animal cell', `<ul><li><b>Furrow</b> in plasma membrane deepens and joins in the centre.</li><li><b>Centripetal</b> (outside → in).</li></ul>${V.furrow()}`],
+  [G, 'Plant cell', `<ul><li><b>Cell plate</b> forms in the centre, grows outward to lateral walls.</li><li>Cell plate = <span class="hl">middle lamella</span> · centrifugal.</li><li>Mitochondria & plastids are shared.</li></ul>${V.plate()}`],
+  [P, 'Syncytium', `Karyokinesis <b>not followed</b> by cytokinesis → <b>multinucleate</b> cell = syncytium.<br>e.g. <span class="hl">liquid endosperm of coconut</span>${V.syncytium()}`, 'full'],
+  [Bl, 'Significance of mitosis', `<ul><li>Diploid, <b>genetically identical</b> daughter cells.</li><li><b>Growth</b> of multicellular organisms.</li><li>Restores <b>nucleo-cytoplasmic ratio</b> (nucleus volume : cytoplasm volume).</li><li><b>Cell repair</b> — epidermis, gut lining, blood cells.</li><li><b>Apical & lateral meristems</b> → lifelong plant growth.</li><li><b>Vegetative reproduction</b>.</li></ul>`, 'full']]},
+ { t1: 'Meiosis', t2: '& Prophase I', tag: 'Reductional division', secs: [
+  [R, 'Meiosis — key features', `<ul><li>Halves the chromosome number → <b>haploid</b> gametes; fertilisation restores diploidy.</li><li><span class="hl">2 divisions, 1 DNA replication</span>.</li><li>Pairing of homologues + recombination between <b>non-sister</b> chromatids.</li><li>Ends with <b>4 haploid cells</b>.</li></ul>`, 'full'],
+  [G, 'Prophase I — longest', `5 sub-stages: <span class="hl">L · Z · P · D · D</span><br>"<b>L</b>azy <b>Z</b>ebras <b>P</b>lay <b>D</b>uring <b>D</b>ay"`],
+  [Bl, 'Leptotene', `Chromosomes become <b>visible</b>; compaction continues.${V.leptotene()}`],
+  [P, 'Zygotene', `<b>Synapsis</b> of homologues + <b>synaptonemal complex</b> → <b>bivalent / tetrad</b>.${V.zygotene()}`],
+  [O, 'Pachytene', `Tetrads clear · <b>recombination nodules</b> · <span class="hl">crossing over</span> between non-sister chromatids by <b>recombinase</b>.${V.pachytene()}`]]},
+ { t1: 'Prophase I', t2: '& Meiosis I', tag: 'Homologues part ways', secs: [
+  [R, 'Diplotene', `Synaptonemal complex <b>dissolves</b>; homologues separate except at <span class="hl">chiasmata</span> (X-shaped). Can last <b>months/years</b> in vertebrate oocytes.${V.diplotene()}`],
+  [G, 'Diakinesis', `<b>Terminalisation</b> of chiasmata · chromosomes fully condensed · spindle forms · nucleolus & nuclear envelope disappear.${V.diakinesis()}`],
+  [Bl, 'Sub-stages of prophase I', img('diag-prophase1'), 'full'],
+  [P, 'Metaphase I → Telophase I', `<ul><li><b>Metaphase I:</b> bivalents on the equatorial plate.</li><li><b>Anaphase I:</b> <span class="hl">homologues separate</span>; sister chromatids stay joined.</li><li><b>Telophase I:</b> envelope & nucleolus reappear → <b>dyad</b>.</li><li><b>Interkinesis:</b> short, <b>no DNA replication</b>.</li></ul>`, 'full']]},
+ { t1: 'Meiosis I', t2: '& Meiosis II', tag: 'Two divisions, four cells', secs: [
+  [R, 'Meiosis I — reductional', img('diag-meiosis1'), 'full'],
+  [G, 'Meiosis II — like mitosis', `<ul><li><b>Prophase II:</b> chromosomes compact; nuclear membrane disappears.</li><li><b>Metaphase II:</b> fibres to <b>kinetochores of sister chromatids</b>.</li><li><b>Anaphase II:</b> <span class="hl">centromeres split</span>.</li><li><b>Telophase II:</b> <b>tetrad</b> = 4 haploid cells.</li></ul>`, 'full'],
+  [Bl, 'Stages of meiosis II', img('diag-meiosis2'), 'full']]},
+ { t1: 'Significance', t2: 'of Meiosis', tag: 'Constancy and variation', secs: [
+  [R, 'Why meiosis matters', `<ul><li><b>Conserves chromosome number</b> of a species: halved in gametes, restored at fertilisation.</li><li><b>Crossing over</b> (pachytene) → <span class="hl">genetic variability</span>.</li><li>Variations = <b>raw material for evolution</b>.</li></ul>`, 'full'],
+  [G, 'Mitosis vs meiosis', img('diag-mitosis-vs-meiosis'), 'full'],
+  [Bl, 'Quick comparison', `<table><tr><th>Feature</th><th>Mitosis</th><th>Meiosis</th></tr><tr><td>Divisions</td><td>One</td><td>Two (one DNA replication)</td></tr><tr><td>Daughter cells</td><td>2, diploid</td><td>4, haploid</td></tr><tr><td>Crossing over</td><td>No</td><td>Yes (prophase I)</td></tr><tr><td>Type</td><td>Equational</td><td>Reductional + equational</td></tr><tr><td>Role</td><td>Growth, repair</td><td>Gametes, variation</td></tr></table>`, 'full']]},
+ { t1: 'NEET', t2: 'Quick Revision', tag: 'Numbers & traps', secs: [
+  [R, 'Numerical shortcuts', `<ul><li>Pollen grains ÷ 4 = number of meioses (100 pollen → <b>25</b>).</li><li>Seeds: pollen meioses + egg meioses (100 seeds → <b>125</b>).</li><li>Bivalents = 2n ÷ 2 · chromatids in pachytene = 2 × 2n.</li><li>Metaphase chromatids = 2 × chromosomes.</li></ul>`, 'full'],
+  [G, 'Classic traps', `<ul><li>S phase doubles <b>DNA</b>, not chromosomes.</li><li>Kinetochores are on <b>centromeres</b>, not centrioles.</li><li>Centromeres do <b>not</b> split in anaphase I.</li><li><b>No</b> DNA replication in interkinesis.</li></ul>`],
+  [Bl, 'Where does it happen?', `<table><tr><th>Event</th><th>Stage</th></tr><tr><td>Synapsis</td><td>Zygotene</td></tr><tr><td>Crossing over</td><td>Pachytene</td></tr><tr><td>Chiasmata seen</td><td>Diplotene</td></tr><tr><td>Terminalisation</td><td>Diakinesis</td></tr><tr><td>Homologues separate</td><td>Anaphase I</td></tr><tr><td>Centromeres split</td><td>Anaphase (II)</td></tr></table>`],
+  [P, 'One-line definitions', `<ul><li><b>Syncytium</b> — multinucleate cell (coconut endosperm).</li><li><b>Cell plate</b> — middle lamella of the new wall.</li><li><b>Metaphase plate</b> — plane where chromosomes line up.</li><li><b>Dyad</b> — 2 cells after meiosis I · <b>Tetrad</b> — 4 cells after meiosis II.</li></ul>`, 'full']]}
+];
+const n = +new URLSearchParams(location.search).get('p') || 1, pg = PAGES[n - 1];
+document.getElementById('p').innerHTML = `<div class="hero"><div class="logo">BAIO<small>Learning System</small></div>
+  <div class="who">Narendra Sir <span>Biology Lecturer, Founder/CEO</span></div><div class="cls">Class 11<br>BIOLOGY<small>NCERT BASED<br>SHORT NOTES</small></div>
+  <div class="h1">${pg.t1}<em>${pg.t2}</em></div><div class="tag">Chapter 10 · Cell Cycle and Cell Division · ${pg.tag}</div></div>
+  <div class="wrap">${pg.secs.map((s, i) => `<div class="sec ${s[3] || ''}" style="--c:${s[0]}"><div class="sh"><b>${i + 1}</b>${s[1]}</div><div class="sb">${s[2]}</div></div>`).join('')}</div>
+  <div class="ft"><div class="row"><span>📖 NCERT BASED</span><span>🎯 NEET FOCUSED</span><span>🧠 EASY REVISION</span><span>📝 CONCEPT CLARITY</span></div><div class="sig">Narendra Sir – Biology Lecturer, Founder/CEO<span>· BAIO Learning System</span></div></div><div class="pg">${n} / ${PAGES.length}</div>`;
+window.PAGES_N = PAGES.length;
+/* report overflow so the builder can warn */
+window.OVER = () => { const w = document.querySelector('.wrap'); return w.getBoundingClientRect().bottom > 1448 - 124; };
+window.FIT = () => { let ih = 460, sh = 230, fs = 18.5; const st = document.documentElement.style;
+  for (let k = 0; k < 40 && OVER(); k++){ ih *= .93; sh *= .93; if (k > 8) fs *= .985; st.setProperty('--ih', ih + 'px'); st.setProperty('--sh', sh + 'px'); st.setProperty('--fs', fs + 'px'); } };
+</script></body></html>
