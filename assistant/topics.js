@@ -119,6 +119,15 @@ window.BAIO_TOPICS = [
       hi:{h:'प्रोजेक्ट और गतिविधियाँ', s:'करके सीखो — घर पर, लैब में और स्क्रीन पर।',
           p:['हर अध्याय में दो हाथों से करने वाली गतिविधियाँ और एक डिजिटल सिम्युलेटर।','अपने अवलोकन नोटबुक में लिखो — वे फ़ोन में सेव रहते हैं।','प्रैक्टिकल रिकॉर्ड के लिए A4 वर्कशीट PDF प्रिंट करो।']}}},
 
+{ id:'podcasts', ic:'🎧', url:'podcasts.html', kw:'podcast podcasts listen audio talk episode neet kcet stories everyday ಪಾಡ್‌ಕಾಸ್ಟ್ ಕೇಳು ಆಡಿಯೋ पॉडकास्ट सुनो ऑडियो',
+  mock:[['top','🎧 BAIO Podcasts','',''],['grid',['🎯 NEET & KCET','📖 Stories','🍳 Everyday'],1],['card','👨‍🏫','Narendra Sir & Priya','Captions · speed',2],['btn','🧠 Quiz · 📝 Script',3,1]],
+  t:{ en:{h:'BAIO Podcasts', s:'Five-minute Biology talks you can listen to anywhere.',
+          p:['Three series: NEET & KCET Corner, Biology Stories and Everyday Biology.','Narendra Sir and Priya talk it through — captions show every line, and in rapid-fire rounds you get a pause to answer aloud.','Each episode ends with a 3-question quiz; share your score or open the script.']},
+      kn:{h:'BAIO ಪಾಡ್‌ಕಾಸ್ಟ್‌ಗಳು', s:'ಎಲ್ಲಿ ಬೇಕಾದರೂ ಕೇಳಬಹುದಾದ ಐದು ನಿಮಿಷದ ಜೀವಶಾಸ್ತ್ರ ಮಾತುಕತೆಗಳು.',
+          p:['ಮೂರು ಸರಣಿಗಳು: NEET & KCET ಮೂಲೆ, ಜೀವಶಾಸ್ತ್ರದ ಕಥೆಗಳು ಮತ್ತು ದಿನನಿತ್ಯದ ಜೀವಶಾಸ್ತ್ರ.','ನರೇಂದ್ರ ಸರ್ ಮತ್ತು ಪ್ರಿಯಾ ಮಾತಾಡುತ್ತಾರೆ — ಪ್ರತಿ ಸಾಲೂ ಶೀರ್ಷಿಕೆಯಲ್ಲಿ; ರ‍್ಯಾಪಿಡ್ ಫೈರ್‌ನಲ್ಲಿ ಜೋರಾಗಿ ಉತ್ತರಿಸಲು ವಿರಾಮ ಸಿಗುತ್ತದೆ.','ಪ್ರತಿ ಸಂಚಿಕೆಯ ಕೊನೆಯಲ್ಲಿ 3 ಪ್ರಶ್ನೆಗಳ ರಸಪ್ರಶ್ನೆ; ಅಂಕ ಹಂಚಿ ಅಥವಾ ಸ್ಕ್ರಿಪ್ಟ್ ತೆರೆಯಿರಿ.']},
+      hi:{h:'BAIO पॉडकास्ट', s:'पाँच मिनट की बायोलॉजी बातचीत, जिसे कहीं भी सुन सकते हो।',
+          p:['तीन सीरीज़: NEET & KCET कॉर्नर, बायोलॉजी की कहानियाँ और रोज़मर्रा की बायोलॉजी।','नरेंद्र सर और प्रिया बात करते हैं — हर लाइन कैप्शन में दिखती है, और रैपिड फ़ायर में ज़ोर से जवाब देने का विराम मिलता है।','हर एपिसोड के अंत में 3 सवालों का क्विज़; स्कोर शेयर करो या स्क्रिप्ट खोलो।']}}},
+
 { id:'microscope', ic:'🔬', url:'games/microscope.html', kw:'microscope camera zoom practical measure micrometre slide lens ಸೂಕ್ಷ್ಮದರ್ಶಕ ಕ್ಯಾಮೆರಾ सूक्ष्मदर्शी माइक्रोस्कोप कैमरा',
   mock:[['top','🔬 Phone Microscope','',''],['pic','📷','Camera view · zoom',1],['grid',['💡 Light','◐ Contrast','📏 µm'],2],['btn','📒 Save practical record',3,1]],
   t:{ en:{h:'Phone Microscope', s:'Turn your Android phone into a microscope.',
