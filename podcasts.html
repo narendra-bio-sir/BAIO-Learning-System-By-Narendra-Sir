@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<script src="baio-speak.js?v=2"></script>
+<script src="baio-speak.js?v=3"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0B1B14">
@@ -174,8 +174,8 @@ function mark(){ $('#tr').querySelectorAll('.ln').forEach(d=>{ const i=+d.datase
 /* recorded audio (real female / male neural voices) for these languages; others use the phone voice */
 const AUD_LANGS=['en','hi']; let AU=null, AT=null;
 function setupAudio(){ if(AU){ AU.pause(); AU.src=''; } AU=null; AT=null; if(!AUD_LANGS.includes(GZ.lang)){ if(GZ.lang==='kn') $('#vnote').textContent=T('kvoice'); return; }
-  const base=`podcasts/audio/${GZ.lang}/${E.id}`, a=new Audio(); a.preload='metadata'; a.src=base+'.mp3?v=1'; a.playbackRate=+$('#rate').value;
-  fetch(base+'.json?v=1').then(r=>r.ok?r.json():null).then(j=>{ if(j&&a===AU){ AT=j; $('#tAll').textContent=fmt(j.dur); } }).catch(()=>{});
+  const base=`podcasts/audio/${GZ.lang}/${E.id}`, a=new Audio(); a.preload='metadata'; a.src=base+'.mp3?v=2'; a.playbackRate=+$('#rate').value;
+  fetch(base+'.json?v=2').then(r=>r.ok?r.json():null).then(j=>{ if(j&&a===AU){ AT=j; $('#tAll').textContent=fmt(j.dur); } }).catch(()=>{});
   a.addEventListener('timeupdate',()=>{ if(!AT||a!==AU) return; const t=a.currentTime; let k=0; while(k+1<AT.starts.length&&AT.starts[k+1]<=t+.05) k++;
     const st=E.l[k]; if(st&&st[0]==='~'){ const left=Math.max(0,Math.ceil(AT.starts[k]+st[1]-t)); const bx=$('#tr').querySelector(`.ln[data-i="${k}"] .bx`); if(bx) bx.textContent=left>0?`${T('think')} ${left}`:'✓'; }
     if(k!==li){ li=k; mark(); } $('#barI').style.width=(t/AT.dur*100)+'%'; $('#tNow').textContent=fmt(t); });
