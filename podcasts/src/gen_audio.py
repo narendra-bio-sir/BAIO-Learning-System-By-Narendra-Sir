@@ -32,6 +32,7 @@ def speakable(t, lang):
     t = re.sub(r'\bF([12])\b', r'F \1', t)
     t = re.sub(r'(?<![A-Za-z])I A and I B(?![A-Za-z])', 'I-A and I-B', t)
     if lang == 'en': t = t.replace('Rubi', 'Ruby')
+    t = re.sub(r'(?<![A-Za-z])BAIO(?![A-Za-z])', {'en': 'Bio', 'hi': 'बायो', 'kn': 'ಬಯೋ'}.get(lang, 'Bio'), t)
     return t.strip()
 
 def synth(args):

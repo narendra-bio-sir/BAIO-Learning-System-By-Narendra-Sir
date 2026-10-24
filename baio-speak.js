@@ -1,13 +1,13 @@
 /* BAIO speech helper — loaded on every page that reads text aloud.
    Before any text is spoken, class names are rewritten so the voice says them clearly:
-   "I PUC" → "First year P U C", "II PUC" → "Second year P U C" (Kannada: ಪ್ರಥಮ / ದ್ವಿತೀಯ ಪಿ ಯು ಸಿ, Hindi: प्रथम / द्वितीय वर्ष पी यू सी).
+   "I PUC" → "First year P U C", "II PUC" → "Second year P U C", "BAIO" → "Bio" (Kannada: ಪ್ರಥಮ / ದ್ವಿತೀಯ ಪಿ ಯು ಸಿ, Hindi: प्रथम / द्वितीय वर्ष पी यू सी).
    Works for every page because it wraps speechSynthesis.speak itself. */
 (function(){
   if (!('speechSynthesis' in window) || window.BAIOSpeak) return;
   const W = {
-    en:{ one:'First year P U C', two:'Second year P U C', both:'First and Second year P U C', puc:'P U C', pu:'P U', ch:'Chapter' },
-    kn:{ one:'ಪ್ರಥಮ ಪಿ ಯು ಸಿ', two:'ದ್ವಿತೀಯ ಪಿ ಯು ಸಿ', both:'ಪ್ರಥಮ ಮತ್ತು ದ್ವಿತೀಯ ಪಿ ಯು ಸಿ', puc:'ಪಿ ಯು ಸಿ', pu:'ಪಿ ಯು', ch:'ಅಧ್ಯಾಯ' },
-    hi:{ one:'प्रथम वर्ष पी यू सी', two:'द्वितीय वर्ष पी यू सी', both:'प्रथम और द्वितीय वर्ष पी यू सी', puc:'पी यू सी', pu:'पी यू', ch:'अध्याय' }
+    en:{ one:'First year P U C', two:'Second year P U C', both:'First and Second year P U C', puc:'P U C', pu:'P U', ch:'Chapter', baio:'Bio' },
+    kn:{ one:'ಪ್ರಥಮ ಪಿ ಯು ಸಿ', two:'ದ್ವಿತೀಯ ಪಿ ಯು ಸಿ', both:'ಪ್ರಥಮ ಮತ್ತು ದ್ವಿತೀಯ ಪಿ ಯು ಸಿ', puc:'ಪಿ ಯು ಸಿ', pu:'ಪಿ ಯು', ch:'ಅಧ್ಯಾಯ', baio:'ಬಯೋ' },
+    hi:{ one:'प्रथम वर्ष पी यू सी', two:'द्वितीय वर्ष पी यू सी', both:'प्रथम और द्वितीय वर्ष पी यू सी', puc:'पी यू सी', pu:'पी यू', ch:'अध्याय', baio:'बायो' }
   };
   const E = '(?![A-Za-z0-9])', B = '(?<![A-Za-z0-9])';
   function fix(text, lang){
@@ -23,6 +23,8 @@
       // any other PUC / PU
       .replace(new RegExp(B + 'PUC' + E, 'g'), w.puc)
       .replace(new RegExp(B + 'PU' + E, 'g'), w.pu)
+      // "BAIO" is said "Bio"
+      .replace(/(?<![A-Za-z])(?:BAIO|Baio)(?![A-Za-z])/g, w.baio)
       // "Ch 8" / "Ch. 8" → "Chapter 8"
       .replace(/(?<![A-Za-z])Ch\.?\s+(\d+)/g, w.ch + ' $1');
   }
