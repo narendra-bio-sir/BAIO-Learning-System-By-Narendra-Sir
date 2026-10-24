@@ -2869,6 +2869,7 @@ window.indexHardRefresh = indexHardRefresh;
     window.__hzCd={cls:cls, days:daysLeft, chap:focus[2], provisional:cls===2&&!store.get('baio_exam_date')};
     plan.innerHTML=(date?'<b>'+(cls===1?'I PUC':'II PUC')+' Biology exam</b>'+(cls===2&&!store.get('baio_exam_date')?' (15 Mar 2027, provisional)':'')+'<br>':'<b>Set your exam date</b> with ✏️<br>')+
       'Today: '+(weak&&weak.a<0.7?'revise your weak chapter ':'revise ')+'<a href="'+focus[1]+'">'+focus[2]+'</a> → <a href="zone.html#daily">Daily 5</a> → <a href="important-cards.html#'+focus[0]+'">Quick card</a>';
+    if(cls===1 && Date.now()<Date.parse('2026-10-30T00:00:00+05:30')) plan.innerHTML+='<br>📝 <a href="midterm-practice.html"><b>Mid-term practice paper</b></a> (Biology on 29 Oct)';
   }
   document.getElementById('hzCdShare').onclick=function(){ if(window.baioCountdownShare) baioCountdownShare(window.__hzCd||{cls:cls}); };
   document.getElementById('hzEdit').onclick=function(){ var cur=store.get('baio_exam_date')||DEF[cls]||''; var v=prompt('Your Biology exam date (YYYY-MM-DD):', cur); if(v===null) return; v=v.trim();
