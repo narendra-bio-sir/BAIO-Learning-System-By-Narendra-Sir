@@ -199,6 +199,28 @@ function podcastSetLang(lang){ podcastLang = lang; renderContent(); }
 window.podcastSetLang = podcastSetLang;
 `);
 
+/* Shareable deep links: pu1-ch10.html#colour-notes opens the Colour Notes tab (pay + download box at the top).
+   Any tab id also works, e.g. #podcast, #diagrams. */
+rep('\nrenderTabbar();\nrenderLangSwitcher();\nrenderContent();\n', `
+function openTabFromLink(){
+  const alias = {'colour-notes':'colournotes','color-notes':'colournotes','colornotes':'colournotes'};
+  let h = decodeURIComponent((location.hash||'').slice(1)).toLowerCase();
+  if(!h){ const q = new URLSearchParams(location.search).get('tab'); if(q) h = q.toLowerCase(); }
+  h = alias[h] || h;
+  if(!h || !TABS.some(t => t.id === h)) return false;
+  currentTab = h;
+  const cat = TAB_CATEGORIES.find(c => c.tabs.indexOf(h) !== -1);
+  if(cat) currentCategory = cat.id;
+  return true;
+}
+const openedFromLink = openTabFromLink();
+renderTabbar();
+renderLangSwitcher();
+renderContent();
+if(openedFromLink) setTimeout(() => { const a = document.querySelector('#tabbar .tab.active'); if(a) a.scrollIntoView({inline:'center', block:'nearest'}); }, 50);
+window.addEventListener('hashchange', () => { if(openTabFromLink()){ renderTabbar(); renderContent(); window.scrollTo({top:0}); } });
+`);
+
 /* Colour Notes */
 setConst('COLOUR_NOTES_PAGES', String(man.cnPages || 4));
 /* Pages are Narendra Sir's own 4-page Colour Notes PDF, as 1100x1556 JPGs (render-cn.js is no longer used). */
