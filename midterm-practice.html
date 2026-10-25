@@ -13,7 +13,10 @@
 <meta property="og:title" content="I PUC Biology Mid-Term — 70/70 Practice Paper by Narendra Sir">
 <meta property="og:description" content="70-mark mock paper in the exact blueprint pattern, model answers, chapter-wise practice and diagrams. Free on BAIO.">
 <meta property="og:url" content="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/midterm-practice.html">
-<meta property="og:image" content="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/exam-corner/pu1-midterm-2026-share.jpg">
+<meta property="og:image" content="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/exam-corner/midterm-practice-share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Kannada:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
@@ -132,6 +135,13 @@ textarea.ans{width:100%;min-height:90px;margin-top:10px;border-radius:10px;borde
 .drill-q{font:600 17px/1.5 Inter,sans-serif}
 .progress{height:8px;border-radius:99px;background:var(--panel2);overflow:hidden;margin-top:10px}
 .progress i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--teal))}
+.share-sheet{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;justify-content:center;padding:16px}
+.share-box{position:relative;width:100%;max-width:400px;background:#fff;color:#0c1830;border-radius:18px;padding:18px;display:grid;gap:10px;font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif}
+.share-box b{font:700 17px 'Space Grotesk',Inter,sans-serif}
+.share-box p{margin:0;font-size:13px;line-height:1.5;color:#3d4a5f}
+.share-opt{display:block;text-align:left;padding:13px 14px;border-radius:12px;border:1.5px solid #e6e0d2;background:#fbf8f1;color:#0c1830;text-decoration:none;font:600 15px Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;cursor:pointer;min-height:44px}
+.share-x{position:absolute;right:10px;top:10px;width:36px;height:36px;border-radius:50%;border:none;background:#f1ede2;cursor:pointer;font-size:14px}
+.share-hero{margin-top:12px}
 .tips-list{margin:6px 0 0;padding-left:20px;line-height:1.65;font-size:14px}
 .weak{margin-top:8px;display:grid;gap:6px}
 .weak a,.weak div{display:flex;justify-content:space-between;gap:8px;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);text-decoration:none;font-size:13.5px}
@@ -146,6 +156,7 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
     <a class="brand" href="index.html"><div class="b">B</div><span>BAIO Learning System</span></a>
     <div class="tools">
       <div id="langSwitcher" class="lang-switcher" role="group" aria-label="Language"></div>
+      <button class="icon-btn" id="shareTop" title="Share" aria-label="Share this practice paper">📤</button>
       <a href="exam-corner.html" class="icon-btn" title="Exam Corner" aria-label="Exam Corner">📝</a>
       <a href="index.html" class="icon-btn" title="Back to BAIO home" aria-label="Back to BAIO home">🏠</a>
       <button class="icon-btn" id="themeToggle" title="Toggle dark/light theme" aria-label="Toggle dark/light theme">🌙</button>
@@ -186,7 +197,8 @@ var L={
   chH:'Chapter-wise practice', chS:'Pick a chapter. Try each question in your notebook first, then open the answer.', showAns:'Show answer', hideAns:'Hide answer', sirExplains:'Sir explains', listen:'🔊 Listen', stop:'■ Stop', slide:'🖼 Sir\'s slide', openCh:'📘 Open chapter app', marksIn:'marks in the paper',
   dgH:'Diagrams to master', dgS:'Draw each one large, in pencil, in about 3 minutes. Tick every label you included.', ref:'NCERT diagram', labelsH:'Labels to include', drawn:'labels done',
   tipsH:'Exam-hall tips', ansLang:'Answers are in English, as in the paper.', noVoice:'No voice for this language on this phone — read the text instead.',
-  partShort:['A','B','C','D'], qWord:'Q', marks:'marks', mark:'mark'},
+  partShort:['A','B','C','D'], qWord:'Q', marks:'marks', mark:'mark',
+  shareBtn:'📤 Share with friends', shareH:'Share the practice paper', shareMsg:'📝 I PUC Biology Mid-Term (29 Oct) — Narendra Sir\'s practice paper on BAIO: a 70-mark mock in the exact pattern, instant marks for one-markers and full-mark model answers for every question. Aim for 70/70! 👇', wa:'💬 WhatsApp', tg:'✈️ Telegram', copy:'🔗 Copy link', copied:'✅ Link copied', more:'📱 More apps'},
  kn:{eyebrow:'ಪರೀಕ್ಷಾ ಕಾರ್ನರ್ · ಪ್ರಥಮ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ · ಮಧ್ಯಾವಧಿ 2026', h1:'ಮಧ್ಯಾವಧಿ <span class="accent">ಅಭ್ಯಾಸ ಪತ್ರಿಕೆ</span>',
   intro:'ಪರೀಕ್ಷೆಯಲ್ಲಿ ಬರುವಂತೆಯೇ ಅಭ್ಯಾಸ ಮಾಡಿ — ಬ್ಲೂಪ್ರಿಂಟ್ ಮಾದರಿ, ನರೇಂದ್ರ ಸರ್ ಅವರ ಅಧ್ಯಾಯವಾರು ಸ್ಲೈಡ್‌ಗಳ ಪ್ರತಿ ವಿಷಯ, ಮತ್ತು ಪೂರ್ಣ ಅಂಕದ ಮಾದರಿ ಉತ್ತರಗಳು. ಗುರಿ: 70 ಕ್ಕೆ 70.',
   paperOn:'ಜೀವಶಾಸ್ತ್ರ ಪತ್ರಿಕೆ 29 ಅಕ್ಟೋಬರ್ 2026', daysLeft:'ದಿನ ಬಾಕಿ', today:'ಇಂದೇ ಪರೀಕ್ಷೆ — ಶುಭವಾಗಲಿ!', done:'ಪರೀಕ್ಷೆ ಮುಗಿದಿದೆ — ಅಂತಿಮ ಪರೀಕ್ಷೆಗೆ ಅಭ್ಯಾಸ ಮುಂದುವರಿಸಿ',
@@ -209,7 +221,8 @@ var L={
   chH:'ಅಧ್ಯಾಯವಾರು ಅಭ್ಯಾಸ', chS:'ಅಧ್ಯಾಯ ಆರಿಸಿ. ಮೊದಲು ಪ್ರತಿ ಪ್ರಶ್ನೆಯನ್ನು ನೋಟ್‌ಬುಕ್‌ನಲ್ಲಿ ಪ್ರಯತ್ನಿಸಿ, ನಂತರ ಉತ್ತರ ತೆರೆಯಿರಿ.', showAns:'ಉತ್ತರ ತೋರಿಸಿ', hideAns:'ಉತ್ತರ ಮರೆಮಾಡಿ', sirExplains:'ಸರ್ ವಿವರಿಸುತ್ತಾರೆ', listen:'🔊 ಕೇಳಿ', stop:'■ ನಿಲ್ಲಿಸಿ', slide:'🖼 ಸರ್ ಅವರ ಸ್ಲೈಡ್', openCh:'📘 ಅಧ್ಯಾಯ ಆ್ಯಪ್ ತೆರೆಯಿರಿ', marksIn:'ಅಂಕ ಪತ್ರಿಕೆಯಲ್ಲಿ',
   dgH:'ಕರಗತ ಮಾಡಬೇಕಾದ ಚಿತ್ರಗಳು', dgS:'ಪ್ರತಿಯೊಂದನ್ನೂ ದೊಡ್ಡದಾಗಿ, ಪೆನ್ಸಿಲ್‌ನಲ್ಲಿ, ಸುಮಾರು 3 ನಿಮಿಷದಲ್ಲಿ ಬರೆಯಿರಿ. ಸೇರಿಸಿದ ಪ್ರತಿ ಲೇಬಲ್ ಗುರುತಿಸಿ.', ref:'NCERT ಚಿತ್ರ', labelsH:'ಸೇರಿಸಬೇಕಾದ ಲೇಬಲ್‌ಗಳು', drawn:'ಲೇಬಲ್ ಆಯಿತು',
   tipsH:'ಪರೀಕ್ಷಾ ಕೊಠಡಿ ಸಲಹೆಗಳು', ansLang:'ಉತ್ತರಗಳು ಪತ್ರಿಕೆಯಂತೆ English ನಲ್ಲಿವೆ.', noVoice:'ಈ ಫೋನ್‌ನಲ್ಲಿ ಈ ಭಾಷೆಯ ಧ್ವನಿ ಇಲ್ಲ — ಪಠ್ಯ ಓದಿ.',
-  partShort:['A','B','C','D'], qWord:'ಪ್ರ', marks:'ಅಂಕ', mark:'ಅಂಕ'},
+  partShort:['A','B','C','D'], qWord:'ಪ್ರ', marks:'ಅಂಕ', mark:'ಅಂಕ',
+  shareBtn:'📤 ಸ್ನೇಹಿತರೊಂದಿಗೆ ಹಂಚಿ', shareH:'ಅಭ್ಯಾಸ ಪತ್ರಿಕೆ ಹಂಚಿ', shareMsg:'📝 ಪ್ರಥಮ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ ಮಧ್ಯಾವಧಿ (29 ಅಕ್ಟೋಬರ್) — BAIO ನಲ್ಲಿ ನರೇಂದ್ರ ಸರ್ ಅವರ ಅಭ್ಯಾಸ ಪತ್ರಿಕೆ: ನಿಖರ ಮಾದರಿಯ 70 ಅಂಕದ ಪತ್ರಿಕೆ, ಒಂದು ಅಂಕದವುಗಳಿಗೆ ತಕ್ಷಣ ಅಂಕ ಮತ್ತು ಪ್ರತಿ ಪ್ರಶ್ನೆಗೆ ಪೂರ್ಣ ಅಂಕದ ಮಾದರಿ ಉತ್ತರ. 70/70 ಗುರಿ! 👇', wa:'💬 WhatsApp', tg:'✈️ Telegram', copy:'🔗 ಲಿಂಕ್ ಕಾಪಿ', copied:'✅ ಲಿಂಕ್ ಕಾಪಿ ಆಯಿತು', more:'📱 ಇತರ ಆ್ಯಪ್‌ಗಳು'},
  hi:{eyebrow:'परीक्षा कॉर्नर · प्रथम पीयूसी जीव विज्ञान · मध्यावधि 2026', h1:'मध्यावधि <span class="accent">अभ्यास प्रश्नपत्र</span>',
   intro:'प्रश्नपत्र ठीक वैसे ही अभ्यास करो जैसे आएगा — ब्लूप्रिंट का पैटर्न, नरेंद्र सर की अध्यायवार स्लाइडों का हर विषय, और पूरे अंक वाले आदर्श उत्तर। लक्ष्य: 70 में 70।',
   paperOn:'जीव विज्ञान का पेपर 29 अक्टूबर 2026', daysLeft:'दिन बाकी', today:'आज पेपर है — शुभकामनाएँ!', done:'पेपर हो गया — फ़ाइनल के लिए अभ्यास जारी रखो',
@@ -232,7 +245,8 @@ var L={
   chH:'अध्यायवार अभ्यास', chS:'अध्याय चुनो। पहले हर प्रश्न नोटबुक में करो, फिर उत्तर खोलो।', showAns:'उत्तर दिखाओ', hideAns:'उत्तर छिपाओ', sirExplains:'सर समझाते हैं', listen:'🔊 सुनो', stop:'■ रोको', slide:'🖼 सर की स्लाइड', openCh:'📘 अध्याय ऐप खोलो', marksIn:'अंक पेपर में',
   dgH:'ज़रूरी चित्र', dgS:'हर चित्र बड़ा, पेंसिल से, लगभग 3 मिनट में बनाओ। हर लेबल टिक करो।', ref:'NCERT चित्र', labelsH:'ये लेबल लगाओ', drawn:'लेबल हुए',
   tipsH:'परीक्षा-हॉल टिप्स', ansLang:'उत्तर पेपर की तरह English में हैं।', noVoice:'इस फ़ोन में इस भाषा की आवाज़ नहीं है — पाठ पढ़ो।',
-  partShort:['A','B','C','D'], qWord:'प्र', marks:'अंक', mark:'अंक'}
+  partShort:['A','B','C','D'], qWord:'प्र', marks:'अंक', mark:'अंक',
+  shareBtn:'📤 दोस्तों के साथ शेयर करो', shareH:'अभ्यास प्रश्नपत्र शेयर करो', shareMsg:'📝 प्रथम पीयूसी जीव विज्ञान मध्यावधि (29 अक्टूबर) — BAIO पर नरेंद्र सर का अभ्यास प्रश्नपत्र: ठीक पैटर्न में 70 अंक का मॉक, एक अंक वालों के तुरंत अंक और हर प्रश्न का पूरे अंक वाला आदर्श उत्तर। लक्ष्य 70/70! 👇', wa:'💬 WhatsApp', tg:'✈️ Telegram', copy:'🔗 लिंक कॉपी करो', copied:'✅ लिंक कॉपी हुआ', more:'📱 और ऐप'}
 };
 var lang='en'; try{ var sl=localStorage.getItem('baio_mt_lang')||localStorage.getItem('baio_lang'); if(L[sl]) lang=sl; }catch(e){}
 function T(k){ return (L[lang]&&L[lang][k]!=null)?L[lang][k]:L.en[k]; }
@@ -270,6 +284,25 @@ function say(text,btn){
 }
 function slideSrc(s){ var dark=document.documentElement.getAttribute('data-theme')!=='light'; return 'exam-corner/practice-slides/'+(dark?'dark':'light')+'/'+String(s).padStart(2,'0')+'.webp'; }
 
+/* ---------- share the page (phone share sheet, else WhatsApp / Telegram / copy) ---------- */
+var PAGE_URL='https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/midterm-practice.html';
+function sharePage(){
+  var msg=T('shareMsg'), url=PAGE_URL;
+  if(navigator.share && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){ navigator.share({title:'BAIO · Mid-Term practice paper', text:msg, url:url}).catch(function(){}); return; }
+  var ov=document.createElement('div'); ov.className='share-sheet';
+  ov.innerHTML='<div class="share-box" role="dialog" aria-modal="true"><button class="share-x" aria-label="Close">✕</button><b>'+esc(T('shareH'))+'</b><p>'+esc(msg)+'</p>'+
+    '<a class="share-opt" target="_blank" rel="noopener" href="https://wa.me/?text='+encodeURIComponent(msg+'\n'+url)+'">'+esc(T('wa'))+'</a>'+
+    '<a class="share-opt" target="_blank" rel="noopener" href="https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(msg)+'">'+esc(T('tg'))+'</a>'+
+    '<button class="share-opt" data-cp>'+esc(T('copy'))+'</button>'+(navigator.share?'<button class="share-opt" data-more>'+esc(T('more'))+'</button>':'')+'</div>';
+  document.body.appendChild(ov);
+  function close(){ ov.remove(); }
+  ov.addEventListener('click',function(e){ if(e.target===ov) close(); }); ov.querySelector('.share-x').onclick=close;
+  ov.querySelector('[data-cp]').onclick=function(){ var b=this, done=function(){ b.textContent=T('copied'); };
+    if(navigator.clipboard&&window.isSecureContext) navigator.clipboard.writeText(msg+'\n'+url).then(done,function(){ prompt('Copy:',url); }); else prompt('Copy:',url); };
+  var mb=ov.querySelector('[data-more]'); if(mb) mb.onclick=function(){ navigator.share({title:'BAIO · Mid-Term practice paper', text:msg, url:url}).catch(function(){}); };
+}
+document.getElementById('shareTop').onclick=sharePage;
+
 /* ---------- state & routing ---------- */
 var view='home', mock=null, drill=null, chSel=8, timerId=null;
 function go(v){ view=v; stopSpeak(); render(); window.scrollTo(0,0); }
@@ -287,7 +320,7 @@ function renderHome(){
   var rows=[[2,1,0,0],[2,0,1,1],[3,1,0,1],[3,0,1,2],[1,1,1,1],[2,0,1,0],[1,0,1,0],[2,2,0,3],[2,1,1,1],[2,1,1,1]];
   rows.forEach(function(r,i){ bp+='<tr><td>'+esc(chName(i+1))+'</td>'+r.map(function(x){ return '<td>'+(x||'–')+'</td>'; }).join('')+'<td><b>'+M.marks[i+1]+'</b></td></tr>'; });
   bp+='</table></div>';
-  app.innerHTML='<section class="hero"><div class="eyebrow">'+esc(T('eyebrow'))+'</div><h1>'+T('h1')+'</h1><p>'+esc(T('intro'))+'</p><div class="when">📅 '+when+'</div></section>'+
+  app.innerHTML='<section class="hero"><div class="eyebrow">'+esc(T('eyebrow'))+'</div><h1>'+T('h1')+'</h1><p>'+esc(T('intro'))+'</p><div class="when">📅 '+when+'</div><div class="share-hero"><button class="btn teal" data-share-page>'+esc(T('shareBtn'))+'</button></div></section>'+
    '<div class="modes">'+
     '<button class="mode big" data-go="mock"><span class="ic">📝</span><span><b>'+esc(T('m1'))+'</b><small>'+esc(T('m1s'))+'</small>'+(best!=null?'<span class="best">🏆 '+esc(T('best'))+': '+fmt(best)+'/70 · '+hist.length+' '+esc(T('attempts'))+'</span>':'')+'</span></button>'+
     '<button class="mode" data-go="drill"><span class="ic">⚡</span><span><b>'+esc(T('m2'))+'</b><small>'+esc(T('m2s'))+'</small></span></button>'+
@@ -297,6 +330,7 @@ function renderHome(){
    '</div>'+
    '<div class="card"><h3 style="font-size:16px">📊 '+esc(T('bpH'))+'</h3>'+bp+'<p class="hint">'+esc(T('bpN'))+'</p></div>'+
    '<footer>Narendra Sir · Biology Lecturer · Founder &amp; CEO, BAIO Learning System</footer>';
+  app.querySelectorAll('[data-share-page]').forEach(function(b){ b.onclick=sharePage; });
   app.querySelectorAll('[data-go]').forEach(function(b){ b.onclick=function(){ var v=b.dataset.go; if(v==='mock') return startScreen(); if(v==='drill') newDrill(); location.hash=v; go(v); }; });
 }
 
