@@ -164,7 +164,7 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
   </div>
 </nav>
 <div class="wrap" id="app"></div>
-<script src="exam-corner/midterm-practice-data.js?v=2"></script>
+<script src="exam-corner/midterm-practice-data.js?v=3"></script>
 <script>
 (function(){
 /* ---------- theme ---------- */
@@ -494,7 +494,7 @@ function chapterItems(c){
   var out=[];
   M.mcq.forEach(function(q){ if(q.ch===c) out.push({part:'A',marks:1,q:q.q,ans:'<p><b>'+esc(q.o[q.a])+'</b></p><p>'+esc(q.e)+'</p>',s:q.s,opts:q.o}); });
   M.fib.forEach(function(q){ if(q.ch===c) out.push({part:'A',marks:1,q:q.q,ans:'<p><b>'+esc(q.a)+'</b></p><p>'+esc(q.e)+'</p>',s:q.s}); });
-  M.B.forEach(function(q){ if(q.ch===c) out.push({part:'B',marks:2,q:q.q,ans:q.m,s:q.s}); });
+  M.B.forEach(function(q){ if(q.ch===c) out.push({part:'B',marks:2,q:q.q,ans:q.m,s:q.s,img:q.img}); });
   M.C.forEach(function(q){ if(q.ch===c) out.push({part:'C',marks:3,q:q.q,ans:q.m,s:q.s,img:q.img,labels:q.labels}); });
   M.D.forEach(function(q){ if(q.ch===c) out.push({part:'D',marks:5,q:q.q,ans:q.m,s:q.s,img:q.img,labels:q.labels}); });
   M.D2.forEach(function(q){ if(q.ch===c) out.push({part:'D',marks:5,q:q.q,ans:(q.table?'':'')+'<ul>'+q.blanks.map(function(b){ return '<li>'+esc(q.table?'('+b[0]+')':b[0])+' → <b>'+esc(b[1])+'</b></li>'; }).join('')+'</ul>',s:q.s,table:q.table}); });
@@ -525,12 +525,10 @@ function renderDiagrams(){
   M.diagrams.forEach(function(d,k){ var dn=done[k]||{}, cnt=d.labels.filter(function(_,j){ return dn[j]; }).length;
     h+='<div class="q"><div class="row" style="justify-content:space-between"><div class="qt"><span class="qn">'+(k+1)+'.</span> '+esc(d.t)+'</div><span class="hint" data-cnt="'+k+'">'+cnt+'/'+d.labels.length+' '+esc(T('drawn'))+'</span></div><div class="meta">Ch '+esc(chName(d.ch))+'</div>'+
      '<div class="model-h" style="margin-top:10px">'+esc(T('labelsH'))+'</div><div class="labels">'+d.labels.map(function(l,j){ return '<label><input type="checkbox" data-dg="'+k+'" data-j="'+j+'"'+(dn[j]?' checked':'')+'> '+esc(l)+'</label>'; }).join('')+'</div>'+
-     '<div class="row" style="margin-top:10px">'+(d.img?'<button class="btn" data-ref="'+k+'">🖼 '+esc(T('ref'))+'</button>':'')+'<button class="btn" data-dsl="'+k+'">'+esc(T('slide'))+'</button></div><div data-dimg="'+k+'"></div></div>'; });
+     (d.img?'<div class="model-h" style="margin-top:12px">'+esc(T('ref'))+'</div><img class="dimg" loading="lazy" alt="NCERT diagram: '+esc(d.t)+'" src="'+d.img+'">':'')+'</div>'; });
   app.innerHTML=h;
   document.getElementById('bk').onclick=function(){ location.hash=''; go('home'); };
   app.querySelectorAll('[data-dg]').forEach(function(c){ c.onchange=function(){ var k=+c.dataset.dg, o=done[k]||(done[k]={}); o[+c.dataset.j]=c.checked; store('baio_mt_dg',done); var d=M.diagrams[k]; app.querySelector('[data-cnt="'+k+'"]').textContent=d.labels.filter(function(_,j){ return o[j]; }).length+'/'+d.labels.length+' '+T('drawn'); }; });
-  app.querySelectorAll('[data-ref]').forEach(function(b){ b.onclick=function(){ var el=app.querySelector('[data-dimg="'+b.dataset.ref+'"]'); el.innerHTML='<img class="dimg" loading="lazy" alt="" src="'+M.diagrams[+b.dataset.ref].img+'">'; }; });
-  app.querySelectorAll('[data-dsl]').forEach(function(b){ b.onclick=function(){ var el=app.querySelector('[data-dimg="'+b.dataset.dsl+'"]'); el.innerHTML='<img class="slideimg" loading="lazy" alt="" src="'+slideSrc(M.diagrams[+b.dataset.dsl].s)+'">'; }; });
 }
 
 /* ---------- tips (Sir's narration of slides 48 and 49) ---------- */
