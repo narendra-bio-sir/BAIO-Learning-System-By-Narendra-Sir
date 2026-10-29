@@ -80,10 +80,24 @@ body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.65 Inter,
 footer{margin-top:36px;text-align:center;color:var(--dim);font-size:13px}
 @media (max-width:640px){.grid,.plan{grid-template-columns:1fr}.fx .row{grid-template-columns:1fr}.gal{grid-template-columns:repeat(3,minmax(0,1fr))}.hero h1{font-size:27px}.week{grid-template-columns:repeat(4,minmax(0,1fr))}.brand span{display:none}}
 @media print{.top,.lb,.gal-sec{display:none}.hero{-webkit-print-color-adjust:exact;print-color-adjust:exact}.card,.fx,.pl,.letter{break-inside:avoid}}
+
+.tools{display:flex;align-items:center;gap:6px}
+.thm{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;width:38px;height:38px;display:grid;place-items:center;font-size:17px;cursor:pointer;flex:0 0 auto}
+:root[data-theme="dark"]{--paper:#0F1520;--card:#18212F;--ink:#E8ECF2;--dim:#A3ADBD;--gold:#E9C45A;--teal:#3CC9B4;--teal-bg:#123A36;--rose:#F08A7E;--rose-bg:#3A1F1D;--line:#2A3547;--navy:#0B1424;color-scheme:dark}
+:root[data-theme="dark"] .top{background:rgba(15,21,32,.94)}
+:root[data-theme="dark"] .langs button{background:var(--card);color:var(--ink)}
+:root[data-theme="dark"] .langs button.on{background:var(--gold2);color:#0E1B33;border-color:var(--gold2)}
+:root[data-theme="dark"] .brand .b{border:1px solid var(--line)}
+:root[data-theme="dark"] .sign{color:var(--gold2)}
+:root[data-theme="dark"] .quote{background:linear-gradient(135deg,#2A2414,#12302C);color:#F3E6C0}
+:root[data-theme="dark"] .gal button{background:var(--card)}
+:root[data-theme="dark"] .letter{box-shadow:none}
+@media (max-width:420px){.langs button{padding:7px 10px}}
+@media print{.thm{display:none}}
 </style>
 </head>
 <body>
-<div class="top"><div class="top-in"><div class="brand"><div class="b">B</div><span>BAIO Learning System</span></div><div class="langs" id="langs"></div></div></div>
+<div class="top"><div class="top-in"><div class="brand"><div class="b">B</div><span>BAIO Learning System</span></div><div class="tools"><div class="langs" id="langs"></div><button class="thm" id="thm" type="button" aria-label="Switch theme">🌙</button></div></div></div>
 <div class="wrap" id="app"></div>
 <div class="lb" id="lb"><button class="x" id="lbx" aria-label="Close">✕</button><img id="lbi" alt="Answer sheet page"><div class="nv"><button id="lbp" aria-label="Previous page">‹</button><button id="lbn" aria-label="Next page">›</button></div></div>
 <script>
@@ -248,5 +262,9 @@ $('#langs').innerHTML=[['en','English'],['hi','हिंदी'],['kn','ಕನ�
 $('#langs').onclick=e=>{ const b=e.target.closest('button'); if(b){ lang=b.dataset.l; render(); } };
 render();
 </script>
-</body>
+<script>(function(){var r=document.documentElement,b=document.getElementById('thm');
+function set(t,save){r.setAttribute('data-theme',t);b.textContent=t==='dark'?'☀️':'🌙';b.setAttribute('aria-label',t==='dark'?'Switch to light theme':'Switch to dark theme');if(save){try{localStorage.setItem('baio-report-theme',t)}catch(e){}}}
+var s=null;try{s=localStorage.getItem('baio-report-theme')}catch(e){}
+set(s||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
+b.onclick=function(){set(r.getAttribute('data-theme')==='dark'?'light':'dark',true)};})();</script></body>
 </html>
