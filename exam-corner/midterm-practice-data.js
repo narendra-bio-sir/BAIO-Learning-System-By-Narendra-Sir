@@ -54,7 +54,7 @@ window.MT = {
   {id:'B5',ch:8,s:33,q:'Write any two differences between a plant cell and an animal cell.',
    p:[['First difference (e.g. cell wall present / absent)',1],['Second difference (e.g. plastids, large central vacuole vs small vacuoles, centrioles)',1]],
    m:'<table><tr><th>Plant cell</th><th>Animal cell</th></tr><tr><td>Cellulose <b>cell wall</b> present</td><td>Cell wall absent</td></tr><tr><td><b>Plastids</b> (chloroplasts) present</td><td>Plastids absent</td></tr><tr><td>One large <b>central vacuole</b></td><td>Vacuoles small or absent</td></tr><tr><td>Centrioles usually absent</td><td><b>Centrioles</b> present</td></tr></table><p class="tip">Any two clear differences in a table = 2 marks.</p>',
-   img:'exam-corner/diagrams/ncert-plant-cell.jpg'},
+   img:'exam-corner/diagrams/plant-cell-v2.jpg'},
   {id:'B6',ch:9,s:39,q:'What are polysaccharides? Give two examples.',
    p:[['Definition: long chains of monosaccharides (sugars) joined by glycosidic bonds',1],['Two examples: cellulose, starch, glycogen, inulin, chitin',1]],
    m:'<p><b>Polysaccharides</b> are long chains (polymers) of <b>monosaccharides</b> (sugars) joined by <b>glycosidic bonds</b>.</p><p><b>Examples:</b> cellulose (homopolymer of glucose), starch, glycogen, inulin (polymer of fructose), chitin.</p>'},
@@ -79,7 +79,7 @@ window.MT = {
   {id:'C5',ch:7,s:29,q:'Describe the digestive system of frog with a neat labelled diagram.',
    p:[['Alimentary canal short (carnivore): mouth → buccal cavity → pharynx → oesophagus → stomach → intestine → rectum → cloaca',1],['Digestion: prey caught by bilobed tongue; HCl & gastric juices in stomach; bile and pancreatic juice reach the duodenum by the common bile duct; absorption by villi & microvilli',1],['Neat labelled diagram',1]],
    m:'<ul><li>The alimentary canal is <b>short</b> because frogs are <b>carnivores</b>: mouth → buccal cavity → pharynx → oesophagus → <b>stomach</b> → intestine → rectum → opens outside by the <b>cloaca</b>.</li><li>Food (prey) is captured by the <b>bilobed tongue</b>. In the stomach it is digested by <b>HCl and gastric juices</b> (chyme).</li><li><b>Liver</b> secretes bile (stored in the gall bladder); <b>pancreas</b> makes pancreatic juice; both reach the <b>duodenum</b> through the <b>common bile duct</b>. Bile emulsifies fat; pancreatic juice digests carbohydrates and proteins.</li><li>Final digestion takes place in the intestine; digested food is absorbed by the numerous finger-like folds, <b>villi and microvilli</b>.</li></ul>',
-   img:'exam-corner/diagrams/ncert-frog-digestive.jpg',
+   img:'exam-corner/diagrams/frog-digestive-v2.jpg',
    labels:['Mouth','Buccal cavity','Tongue','Pharynx','Oesophagus','Stomach','Duodenum','Intestine (ileum)','Rectum','Cloaca','Cloacal aperture','Liver','Gall bladder','Common bile duct','Pancreas']},
   {id:'C6',ch:9,s:40,q:'Explain the structure of a nucleotide.',
    p:[['Three parts: nitrogenous base + pentose sugar + phosphate group',1],['Base + sugar joined by N-glycosidic bond (C1′) = nucleoside',1],['Phosphate joined by phosphoester bond (C5′) = nucleotide; nucleotides linked by 3′→5′ phosphodiester bonds',1]],
@@ -130,9 +130,9 @@ window.MT = {
    e:'Cisternae — Golgi · Cristae — mitochondrion · Thylakoids — chloroplast · Nucleolus — nucleus · Tonoplast — vacuole membrane.'}
  ],
  diagrams: [
-  {t:'Plant cell',ch:8,s:34,img:'exam-corner/diagrams/ncert-plant-cell.jpg',labels:['Cell wall','Plasma membrane','Cytoplasm','Nucleus','Nucleolus','Chloroplast','Mitochondrion','Central vacuole','Tonoplast','Golgi apparatus','ER','Ribosomes','Plasmodesmata']},
+  {t:'Plant cell',ch:8,s:34,img:'exam-corner/diagrams/plant-cell-v2.jpg',labels:['Cell wall','Plasma membrane','Cytoplasm','Nucleus','Nucleolus','Chloroplast','Mitochondrion','Central vacuole','Tonoplast','Golgi apparatus','ER','Ribosomes','Plasmodesmata']},
   {t:'Mitochondrion',ch:8,s:36,img:'exam-corner/diagrams/ncert-mitochondrion-fig8-7.jpg',labels:['Outer membrane','Inner membrane','Cristae','Intermembrane space','Matrix','F₀–F₁ particles','Circular DNA','70S ribosomes']},
   {t:'Cell cycle',ch:10,s:46,img:'exam-corner/diagrams/ncert-cell-cycle.jpg',labels:['Interphase','G₁','S','G₂','G₀','M phase','Prophase','Metaphase','Anaphase','Telophase','Cytokinesis']},
-  {t:'Digestive system of frog',ch:7,s:30,img:'exam-corner/diagrams/ncert-frog-digestive.jpg',labels:['Mouth','Buccal cavity','Tongue','Pharynx','Oesophagus','Stomach','Duodenum','Intestine (ileum)','Rectum','Cloaca','Cloacal aperture','Liver','Gall bladder','Common bile duct','Pancreas']}
+  {t:'Digestive system of frog',ch:7,s:30,img:'exam-corner/diagrams/frog-digestive-v2.jpg',labels:['Mouth','Buccal cavity','Tongue','Pharynx','Oesophagus','Stomach','Duodenum','Intestine (ileum)','Rectum','Cloaca','Cloacal aperture','Liver','Gall bladder','Common bile duct','Pancreas']}
  ]
 };
