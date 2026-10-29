@@ -4362,7 +4362,7 @@ function setHwUnlock(method, extra){
 function hwQualifies(){
   const u = getHwUnlock();
   if(!u || !u.unlocked) return false;
-  if(u.method === 'code' && Date.now() > STUDENT_CODE_EXPIRY){
+  if(u.method === 'code' && studentCodeExpired(u)){
     try{ localStorage.removeItem(HW_UNLOCK_KEY); }catch(e){}
     return false;
   }
@@ -4462,7 +4462,7 @@ function premiumQualifies(){
     try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){}
     return false;
   }
-  if(u.method === 'code' && Date.now() > STUDENT_CODE_EXPIRY){
+  if(u.method === 'code' && studentCodeExpired(u)){
     try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){}
     return false;
   }
@@ -4476,6 +4476,18 @@ const CODE_SALT = 'BAIO-STUDENT-LOCK-2026';
 /* Student-entered unlock codes (not the master code) stop granting access after this
    date - Narendra Sir can renew access for everyone by moving this one date forward. */
 const STUDENT_CODE_EXPIRY = new Date('2026-10-25T23:59:59+05:30').getTime();
+/* Per-student renewals: a code-unlock for these SECTION_ROLL keys stays active
+   until the date given here, even after STUDENT_CODE_EXPIRY has passed. */
+const STUDENT_CODE_RENEWALS = {
+  'SPARK_26MPU0106': '2027-03-31T23:59:59+05:30' /* Ritesh */
+};
+function studentCodeExpired(u){
+  const now = Date.now();
+  if(now <= STUDENT_CODE_EXPIRY) return false;
+  const k = ((u && u.section)||'').toString().trim().toUpperCase() + '_' + ((u && u.roll)||'').toString().trim().toUpperCase();
+  const until = STUDENT_CODE_RENEWALS[k];
+  return !(until && now <= new Date(until).getTime());
+}
 const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 function normalizeField(s){ return (s || '').toString().trim().toUpperCase().replace(/\s+/g, ' '); }
 function fnv1aHash(str){
