@@ -363,6 +363,24 @@ header{padding:34px 0 22px; text-align:center;}
 .sp-fill{height:100%; background:linear-gradient(90deg,var(--teal),var(--gold)); border-radius:6px; transition:width .8s ease;}
 .sp-sub{font-size:11px; color:var(--ink-dim); margin-top:6px;}
 
+.start3{border:1.5px solid var(--gold);border-radius:16px;padding:14px 14px 12px;margin-top:16px;background:linear-gradient(120deg,var(--panel),var(--panel2));}
+.start3-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.start3-k{font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--teal);font-weight:800;}
+.start3-t{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;color:var(--ink);margin-top:2px;}
+.start3-sub{font-size:11.5px;color:var(--ink-dim);margin-top:2px;}
+.start3-count{flex:0 0 auto;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);color:var(--ink);white-space:nowrap;}
+.start3-count.done{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;border-color:transparent;}
+.start3-ch{display:flex;align-items:center;gap:8px;margin:12px 0 4px;font-size:12px;color:var(--ink-dim);}
+.start3-ch select{flex:1;min-width:0;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:600 12.5px 'Inter',sans-serif;}
+.start3-step{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px dashed var(--line);}
+.start3-step:first-of-type{border-top:0;}
+.start3-n{flex:0 0 auto;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:700 14px 'Space Grotesk',sans-serif;background:var(--panel);border:1.5px solid var(--gold);color:var(--gold);}
+.start3-step.done .start3-n{background:var(--teal);border-color:var(--teal);color:#fff;}
+.start3-b{flex:1;min-width:0;}
+.start3-b b{display:block;font-size:13.5px;color:var(--ink);}
+.start3-b small{display:block;font-size:11.5px;color:var(--ink-dim);line-height:1.4;margin-top:1px;}
+.start3-go{flex:0 0 auto;text-decoration:none;font:700 12px 'Space Grotesk',sans-serif;padding:9px 12px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;white-space:nowrap;}
+.start3-step.done .start3-go{background:transparent;border:1px solid var(--teal);color:var(--teal);}
 .continue-widget{
   display:none; align-items:center; gap:12px; border:1px solid var(--line); border-radius:14px;
   padding:14px 16px; background:linear-gradient(120deg, var(--panel), var(--panel2)); margin-top:16px;
@@ -506,6 +524,33 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     <button id="indexHardRefreshBtn" class="theme-toggle-btn" style="right:66px;" onclick="indexHardRefresh()" title="Force-refresh this page (clears any cached copy)" aria-label="Force-refresh this page">&#128260;</button>
     <button id="pu2ChapterJumpBtn" class="theme-toggle-btn" style="right:108px;" title="Jump to a live PU-II chapter" aria-label="Jump to a live PU-II chapter" aria-haspopup="true" aria-expanded="false">&#127942;</button>
     <button id="pu1ChapterJumpBtn" class="theme-toggle-btn" style="right:150px;" title="Jump to a live PU-I chapter" aria-label="Jump to a live PU-I chapter" aria-haspopup="true" aria-expanded="false">&#127891;</button>
+  </div>
+
+  <div id="start3" class="start3" aria-label="Start here: your daily 3 steps">
+    <div class="start3-head">
+      <div>
+        <div class="start3-k">🚀 Start here · NEET daily plan</div>
+        <div class="start3-t">Your 3 steps every day</div>
+        <div class="start3-sub">Too many options? Just do these three, in this order.</div>
+      </div>
+      <div class="start3-count" id="start3Count">0 / 3 today</div>
+    </div>
+    <label class="start3-ch">Chapter <select id="start3Chapter" aria-label="Choose your chapter"></select></label>
+    <div class="start3-step" data-step="1">
+      <div class="start3-n">1</div>
+      <div class="start3-b"><b>📘 Learn · 45 min</b><small>Open the chapter → <b style="display:inline">Study Mode</b> or <b style="display:inline">One-Shot Revision</b>. The <b style="display:inline">Pacing</b> tab tells you today's topic.</small></div>
+      <a class="start3-go" id="start3Go1" href="#">Learn →</a>
+    </div>
+    <div class="start3-step" data-step="2">
+      <div class="start3-n">2</div>
+      <div class="start3-b"><b>🎯 Practise · 15 min</b><small>Same chapter → <b style="display:inline">NEET Practice</b> → 10 timed questions. Sunday: a 50-question mock test.</small></div>
+      <a class="start3-go" id="start3Go2" href="#">Practise →</a>
+    </div>
+    <div class="start3-step" data-step="3">
+      <div class="start3-n">3</div>
+      <div class="start3-b"><b>🔥 Revise · 5 min</b><small><b style="display:inline">Daily Bio Zone</b> → today's 5 questions. Keep your streak alive.</small></div>
+      <a class="start3-go" id="start3Go3" href="zone.html#daily">Revise →</a>
+    </div>
   </div>
 
   <div style="border:1px solid var(--gold); border-radius:16px; padding:16px 18px; margin-top:16px; margin-bottom:16px; background:linear-gradient(120deg, var(--panel), var(--panel2)); text-align:center;">
@@ -2903,6 +2948,47 @@ window.indexHardRefresh = indexHardRefresh;
       }).then(function(){ store.set('baio_reminder','on'); rb.textContent='🔔 Reminder on (7 pm)'; alert('Done! We\'ll remind you at 7 pm every day 🔥'); });
     }).catch(function(){ alert('Could not turn on reminders right now. Please try again later.'); });
   };
+})();
+</script>
+<script>
+/* ---- Start here: daily 3 steps (Learn → Practise → Revise). A step counts as done
+   for today when its button is tapped; the chosen chapter is remembered. ---- */
+(function(){
+  try{
+    var box=document.getElementById('start3'); if(!box || typeof CHAPTERS==='undefined') return;
+    var live=CHAPTERS.filter(function(c){return c.live;});
+    var sel=document.getElementById('start3Chapter');
+    var dayKey='baio_3steps_'+new Date().toDateString();
+    function get(k,d){try{var v=localStorage.getItem(k);return v===null?d:v;}catch(e){return d;}}
+    function set(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+    var recent=null;try{var r=document.getElementById('cwBtn').getAttribute('href');if(r&&r!=='#')recent=r;}catch(e){}
+    var chosen=get('baio_3steps_chapter',recent||(live[0]&&live[0].href));
+    ['PUC-1','PUC-2'].forEach(function(p){
+      var g=document.createElement('optgroup');g.label=p==='PUC-1'?'I PUC':'II PUC';
+      live.filter(function(c){return c.puc===p;}).forEach(function(c){
+        var o=document.createElement('option');o.value=c.href;o.textContent=c.num+' · '+c.title;if(c.href===chosen)o.selected=true;g.appendChild(o);});
+      if(g.children.length) sel.appendChild(g);
+    });
+    function links(){
+      var h=sel.value;
+      document.getElementById('start3Go1').href=h+(h.indexOf('?')<0?'?tab=study':'');
+      document.getElementById('start3Go2').href=h+(h.indexOf('?')<0?'?tab=neet':'');
+    }
+    function done(){ var d=get(dayKey,'');return d?d.split(','):[]; }
+    function paint(){
+      var d=done();
+      box.querySelectorAll('.start3-step').forEach(function(s){s.classList.toggle('done',d.indexOf(s.getAttribute('data-step'))>=0);});
+      var c=document.getElementById('start3Count');c.textContent=d.length>=3?'🎉 All 3 done today':d.length+' / 3 today';c.classList.toggle('done',d.length>=3);
+    }
+    sel.addEventListener('change',function(){set('baio_3steps_chapter',sel.value);links();});
+    box.querySelectorAll('.start3-step').forEach(function(s){
+      s.querySelector('.start3-go').addEventListener('click',function(){
+        var d=done(),n=s.getAttribute('data-step');if(d.indexOf(n)<0){d.push(n);set(dayKey,d.join(','));}
+        set('baio_3steps_chapter',sel.value);paint();
+      });
+    });
+    links();paint();
+  }catch(e){}
 })();
 </script>
 </body>
