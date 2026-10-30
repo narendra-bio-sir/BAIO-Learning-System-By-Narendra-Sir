@@ -137,6 +137,44 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
 .g-wave{display:inline-block;animation:gWave 1.2s ease-in-out infinite;transform-origin:70% 70%}
 @keyframes gWave{0%,100%{transform:rotate(0)}30%{transform:rotate(18deg)}60%{transform:rotate(-8deg)}}
 @media (prefers-reduced-motion:reduce){.g-finger span,.g-finger i,.g-pulse,.g-phone div,.g-wave{animation:none}.g-card,.g-finger{transition:none}}
+
+/* ---- II PUC personal exam timetable ---- */
+.tt-ctl{display:grid;gap:10px;margin-top:14px}
+.tt-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.tt-lbl{font:700 11px Inter,'Noto Sans Kannada','Noto Sans Devanagari';letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);min-width:92px}
+.tt-code{display:flex;gap:6px;flex:1;min-width:230px}
+.tt-code input{flex:1;min-width:0;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:600 14px Inter;text-transform:uppercase}
+.tt-chip{border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:999px;padding:8px 13px;font:600 13px Inter,'Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer;min-height:38px}
+.tt-chip.on{background:var(--teal);border-color:var(--teal);color:#06231c}
+.tt-msg{font-size:12.5px;color:var(--teal);min-height:1em}
+.tt-tabs{display:flex;gap:6px;margin-top:14px;padding:4px;border-radius:14px;border:1px solid var(--line);background:var(--panel2)}
+.tt-tabs button{flex:1;border:0;background:transparent;color:var(--ink);font:700 13.5px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari';padding:10px 8px;border-radius:10px;cursor:pointer;line-height:1.25}
+.tt-tabs button small{display:block;font:500 11.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari';opacity:.75}
+.tt-tabs button.on{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406}
+.tt-count{margin-top:12px;display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:16px;background:linear-gradient(120deg,#0e1b33,#13304a);color:#fff;border:1px solid var(--gold)}
+.tt-count .n{font:700 34px/1 'Space Grotesk';color:#E9C45A;min-width:58px;text-align:center}
+.tt-count .n small{display:block;font:600 10.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari';letter-spacing:.08em;text-transform:uppercase;color:#cfd8e6;margin-top:4px}
+.tt-count .t{font-size:13.5px;line-height:1.5}
+.tt-count .t b{color:#fff}
+.tt-list{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px}
+.tt-item{display:grid;grid-template-columns:62px 1fr auto;gap:12px;align-items:center;padding:10px 12px;border-radius:14px;background:var(--panel2);border:1px solid var(--line)}
+.tt-item.bio{border:1.5px solid var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,.12)}
+.tt-item.past{opacity:.5}
+.tt-date{text-align:center;border-radius:11px;background:var(--panel);border:1px solid var(--line);padding:6px 2px}
+.tt-date .d{font:700 22px/1 'Space Grotesk'}
+.tt-date .m{font:700 10.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari';letter-spacing:.06em;text-transform:uppercase;color:var(--gold)}
+.tt-date .w{font:600 10.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari';color:var(--ink-dim)}
+.tt-sub{font:700 16px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari'}
+.tt-meta{font-size:12.5px;color:var(--ink-dim);margin-top:2px}
+.tt-gap{font:700 11.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari';color:var(--teal);border:1px solid var(--teal);border-radius:999px;padding:4px 9px;white-space:nowrap;text-align:center}
+.tt-gap.tight{color:var(--new);border-color:var(--new)}
+.tt-hol{font-size:12px;color:var(--ink-dim);padding:2px 12px 2px 86px}
+.tt-note{font-size:12px;color:var(--ink-dim);margin-top:10px;line-height:1.6}
+@media (max-width:640px){ .tt-item{grid-template-columns:54px 1fr;} .tt-gap{grid-column:2;justify-self:start} .tt-hol{padding-left:70px} .tt-lbl{min-width:0;width:100%} }
+@media print{
+  body.tt-print .topnav, body.tt-print .hero, body.tt-print .wrap > section:not(#ii-puc-timetable), body.tt-print .soon, body.tt-print footer, body.tt-print .tt-ctl, body.tt-print .tt-tabs, body.tt-print #ttActions{display:none!important}
+  body.tt-print{background:#fff;color:#000} body.tt-print .card{border:0}
+}
 </style>
 </head>
 <body>
@@ -156,6 +194,27 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
     <div class="eyebrow" data-i18n="eyebrow">BAIO Learning System · Exam Corner</div>
     <h1 data-i18n-html="h1">📝 Exam <span class="accent">Corner</span></h1>
     <p data-i18n="intro">Everything you need just before an exam — what to study, how to write, and how to plan your last days. Start with Narendra Sir's presentation below.</p>
+  </section>
+
+
+  <section class="card" id="ii-puc-timetable" style="border-color:var(--teal)">
+    <div class="card-head"><span class="pill" data-i18n="tt_pill">II PUC · Board Exams 2027</span><span class="new" data-i18n="new">NEW</span></div>
+    <h2 data-i18n-html="tt_title">Your personal <em>II PUC exam timetable</em></h2>
+    <p data-i18n="tt_desc">Only your papers, with how many study days you get before each one. Enter your enrollment code, or choose your language and fourth subject.</p>
+    <div class="tt-ctl">
+      <div class="tt-row"><span class="tt-lbl" data-i18n="tt_code_l">Enrollment code</span>
+        <div class="tt-code"><input id="ttCode" inputmode="text" autocomplete="off" placeholder="25MPU0012" maxlength="12"><button class="tt-chip on" id="ttGo" data-i18n="tt_go">Show</button></div></div>
+      <div class="tt-msg" id="ttMsg"></div>
+      <div class="tt-row"><span class="tt-lbl" data-i18n="tt_lang_l">Language</span><span id="ttLang"></span></div>
+      <div class="tt-row"><span class="tt-lbl" data-i18n="tt_opt_l">4th subject</span><span id="ttOpt"></span></div>
+    </div>
+    <div class="tt-tabs" id="ttTabs"></div>
+    <div id="ttBody"></div>
+    <div class="actions" id="ttActions">
+      <button class="act primary" id="ttPrint" data-i18n="tt_print">🖨 Print / save my timetable</button>
+      <a class="act" href="exam-corner/ii-puc-2027-exam-1-2-official-timetable.pdf" target="_blank" rel="noopener" data-i18n="tt_official">📄 Official KSEAB timetable (PDF)</a>
+    </div>
+    <p class="tt-note" data-i18n="tt_note">Source: KSEAB final timetable dated 29-10-2026. Every paper is 10:00 AM – 1:00 PM (3 hours). Students may take Exam 2 to improve their score — check with the college office.</p>
   </section>
 
   <section class="card" id="practice-paper" style="border-color:var(--gold)">
@@ -242,6 +301,10 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
 /* Language — English / ಕನ್ನಡ / ಹಿಂದಿ; also switches the presentation's narration */
 const I18N = {
   kn: {
+    tt_pill:'ದ್ವಿತೀಯ ಪಿಯುಸಿ · ಬೋರ್ಡ್ ಪರೀಕ್ಷೆ 2027', tt_title:'ನಿಮ್ಮ ವೈಯಕ್ತಿಕ <em>ದ್ವಿತೀಯ ಪಿಯುಸಿ ಪರೀಕ್ಷಾ ವೇಳಾಪಟ್ಟಿ</em>',
+    tt_desc:'ನಿಮ್ಮ ಪತ್ರಿಕೆಗಳು ಮಾತ್ರ, ಪ್ರತಿ ಪತ್ರಿಕೆಗೆ ಮುನ್ನ ಎಷ್ಟು ಓದುವ ದಿನಗಳಿವೆ ಎಂಬುದರೊಂದಿಗೆ. ನಿಮ್ಮ ನೋಂದಣಿ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ, ಅಥವಾ ಭಾಷೆ ಮತ್ತು ನಾಲ್ಕನೇ ವಿಷಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ.',
+    tt_code_l:'ನೋಂದಣಿ ಸಂಖ್ಯೆ', tt_go:'ತೋರಿಸಿ', tt_lang_l:'ಭಾಷೆ', tt_opt_l:'4ನೇ ವಿಷಯ', tt_print:'🖨 ನನ್ನ ವೇಳಾಪಟ್ಟಿ ಮುದ್ರಿಸಿ / ಉಳಿಸಿ', tt_official:'📄 KSEAB ಅಧಿಕೃತ ವೇಳಾಪಟ್ಟಿ (PDF)',
+    tt_note:'ಮೂಲ: 29-10-2026ರ KSEAB ಅಂತಿಮ ವೇಳಾಪಟ್ಟಿ. ಪ್ರತಿ ಪತ್ರಿಕೆ ಬೆಳಿಗ್ಗೆ 10:00 – ಮಧ್ಯಾಹ್ನ 1:00 (3 ಗಂಟೆ). ಅಂಕ ಹೆಚ್ಚಿಸಲು ಪರೀಕ್ಷೆ-2 ಬರೆಯಬಹುದು — ಕಾಲೇಜು ಕಚೇರಿಯಲ್ಲಿ ವಿಚಾರಿಸಿ.',
     eyebrow:'BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್ · ಪರೀಕ್ಷಾ ಕಾರ್ನರ್',
     h1:'📝 ಪರೀಕ್ಷಾ <span class="accent">ಕಾರ್ನರ್</span>',
     intro:'ಪರೀಕ್ಷೆಗೆ ಮುನ್ನ ನಿಮಗೆ ಬೇಕಾದ ಎಲ್ಲವೂ — ಏನು ಓದಬೇಕು, ಹೇಗೆ ಬರೆಯಬೇಕು ಮತ್ತು ಕೊನೆಯ ದಿನಗಳನ್ನು ಹೇಗೆ ಯೋಜಿಸಬೇಕು. ಕೆಳಗಿನ ನರೇಂದ್ರ ಸರ್ ಅವರ ಪ್ರೆಸೆಂಟೇಶನ್‌ನಿಂದ ಆರಂಭಿಸಿ.',
@@ -262,6 +325,10 @@ const I18N = {
     soon:'ಪ್ರತಿ ಪರೀಕ್ಷೆಗೆ ಮುನ್ನ ಇನ್ನಷ್ಟು ಸಾಮಗ್ರಿಗಳು ಇಲ್ಲಿ ಬರುತ್ತವೆ. 🔔 ಪ್ರಕಟಣೆಗಳ ಗಂಟೆಯನ್ನು ಗಮನಿಸಿ.'
   },
   hi: {
+    tt_pill:'द्वितीय पीयूसी · बोर्ड परीक्षा 2027', tt_title:'आपकी अपनी <em>द्वितीय पीयूसी परीक्षा समय-सारिणी</em>',
+    tt_desc:'सिर्फ़ आपके पेपर, और हर पेपर से पहले पढ़ाई के कितने दिन मिलेंगे। अपना नामांकन कोड डालिए, या अपनी भाषा और चौथा विषय चुनिए।',
+    tt_code_l:'नामांकन कोड', tt_go:'दिखाएँ', tt_lang_l:'भाषा', tt_opt_l:'चौथा विषय', tt_print:'🖨 मेरी समय-सारिणी प्रिंट / सेव करें', tt_official:'📄 KSEAB आधिकारिक समय-सारिणी (PDF)',
+    tt_note:'स्रोत: 29-10-2026 की KSEAB अंतिम समय-सारिणी। हर पेपर सुबह 10:00 – दोपहर 1:00 (3 घंटे)। अंक सुधारने के लिए परीक्षा-2 दे सकते हैं — कॉलेज ऑफ़िस से पूछें।',
     eyebrow:'BAIO लर्निंग सिस्टम · परीक्षा कॉर्नर',
     h1:'📝 परीक्षा <span class="accent">कॉर्नर</span>',
     intro:'परीक्षा से पहले आपको जो कुछ चाहिए — क्या पढ़ना है, कैसे लिखना है और आखिरी दिनों की योजना कैसे बनानी है। नीचे नरेंद्र सर की प्रेज़ेंटेशन से शुरू कीजिए।',
@@ -298,6 +365,108 @@ function setLang(l, fromUser){
 sw.addEventListener('click',e=>{ const b=e.target.closest('button'); if(b) setLang(b.dataset.l,true); });
 let startLang='en'; try{ startLang=localStorage.getItem('baio_mt_lang')||localStorage.getItem('baio_lang')||'en'; }catch(e){}
 setLang(['en','kn','hi'].includes(startLang)?startLang:'en', false);
+
+/* ---- II PUC personal exam timetable (KSEAB final timetable, 29-10-2026) ---- */
+(function(){
+  var ROSTER = {"0087":"HB","0075":"KB","0081":"HB","0052":"KB","0094":"HE","0056":"HB","0007":"HB","0003":"HE","0006":"KE","0045":"KB","0064":"HB","0004":"KB","0089":"KB","0028":"KB","0041":"KB","0002":"HB","0024":"KB","0011":"HB","0034":"KB","0072":"KB","0008":"HB","0040":"HB","0021":"HB","0026":"HB","0022":"HE","0047":"HB","0059":"HB","0029":"KB","0078":"KB","0038":"HB","0051":"HB","0027":"HB","0012":"KB","0062":"HB","0079":"KB","0067":"KE","0048":"HB","0013":"HE","0080":"HB","0077":"HB","0071":"KB","0082":"KB","0035":"KB","0095":"HE","0073":"HB","0076":"HB","0046":"HB","0063":"HB","0014":"HB","0030":"HB","0020":"HB","0023":"KB","0044":"HB","0088":"HB","0050":"HB","0070":"KB","0036":"HB","0057":"KB","0069":"HB","0098":"HB","0049":"HB","0101":"KB","0053":"HB","0039":"HE","0068":"KB","0093":"KB"}; /* enrollment no. (after 25MPU) -> language K/H + 4th subject B/E, from BAIO analytics */
+  var EXAMS = {
+    e1:{ papers:[['2027-02-27','KAN','01',80],['2027-03-01','ENG','02',80],['2027-03-04','PHY','33',70],['2027-03-08','CHE','34',70],['2027-03-12','MAT','35',80],
+                 ['2027-03-15','BIO','36',70],['2027-03-15','CS','41',70],['2027-03-16','ELE','40',70],['2027-03-17','HIN','03',80]],
+         hol:[['2027-02-28','sun'],['2027-03-06','shiv'],['2027-03-07','sun'],['2027-03-10','ramzan'],['2027-03-14','sun']] },
+    e2:{ papers:[['2027-05-03','KAN','01',80],['2027-05-04','BIO','36',70],['2027-05-04','ELE','40',70],['2027-05-05','CS','41',70],['2027-05-06','CHE','34',70],
+                 ['2027-05-08','PHY','33',70],['2027-05-10','MAT','35',80],['2027-05-11','HIN','03',80],['2027-05-12','ENG','02',80]],
+         hol:[['2027-05-09','sun']] }
+  };
+  var ICON = {KAN:'📗',HIN:'📙',ENG:'📘',PHY:'⚛️',CHE:'⚗️',MAT:'📐',BIO:'🧬',ELE:'🔌',CS:'💻'};
+  var L = {
+    en:{ sub:{KAN:'Kannada',HIN:'Hindi',ENG:'English',PHY:'Physics',CHE:'Chemistry',MAT:'Mathematics',BIO:'Biology',ELE:'Electronics',CS:'Computer Science'},
+         wd:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], mo:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+         e1:'Exam 1', e1s:'27 Feb – 17 Mar 2027', e2:'Exam 2', e2s:'3 – 12 May 2027',
+         time:'10:00 AM – 1:00 PM · 3 hrs', marks:'marks', code:'Code', first:'First paper', gap:function(n){ return n===1?'1 study day':n+' study days'; }, nogap:'Next day!',
+         days:'days', left:function(sub,date){ return 'until your first paper — <b>'+sub+'</b>, '+date+'. Start revising now.'; },
+         today:'Your exam is <b>today</b>. All the best! 💪', done:'This exam is over. Well done!', running:function(sub,date){ return 'Exam is on. Next paper: <b>'+sub+'</b>, '+date+'.'; },
+         hol:{sun:'Holiday (Sunday)',shiv:'Holiday — Mahashivaratri',ramzan:'Holiday — Khutub-e-Ramzan'},
+         found:function(l,o){ return '✓ Showing the timetable for '+l+' + '+o+'.'; }, notfound:'Code not found — choose your language and 4th subject below.' },
+    kn:{ sub:{KAN:'ಕನ್ನಡ',HIN:'ಹಿಂದಿ',ENG:'ಇಂಗ್ಲಿಷ್',PHY:'ಭೌತಶಾಸ್ತ್ರ',CHE:'ರಸಾಯನಶಾಸ್ತ್ರ',MAT:'ಗಣಿತ',BIO:'ಜೀವಶಾಸ್ತ್ರ',ELE:'ವಿದ್ಯುನ್ಮಾನಶಾಸ್ತ್ರ',CS:'ಗಣಕ ವಿಜ್ಞಾನ'},
+         wd:['ಭಾನು','ಸೋಮ','ಮಂಗಳ','ಬುಧ','ಗುರು','ಶುಕ್ರ','ಶನಿ'], mo:['ಜನ','ಫೆಬ್ರ','ಮಾರ್ಚ್','ಏಪ್ರಿ','ಮೇ','ಜೂನ್','ಜುಲೈ','ಆಗ','ಸೆಪ್ಟೆ','ಅಕ್ಟೋ','ನವೆಂ','ಡಿಸೆಂ'],
+         e1:'ಪರೀಕ್ಷೆ 1', e1s:'27 ಫೆಬ್ರ – 17 ಮಾರ್ಚ್ 2027', e2:'ಪರೀಕ್ಷೆ 2', e2s:'3 – 12 ಮೇ 2027',
+         time:'ಬೆಳಿಗ್ಗೆ 10:00 – ಮಧ್ಯಾಹ್ನ 1:00 · 3 ಗಂಟೆ', marks:'ಅಂಕ', code:'ಸಂಕೇತ', first:'ಮೊದಲ ಪತ್ರಿಕೆ', gap:function(n){ return n+' ಓದುವ ದಿನ'; }, nogap:'ಮರುದಿನವೇ!',
+         days:'ದಿನಗಳು', left:function(sub,date){ return 'ನಿಮ್ಮ ಮೊದಲ ಪತ್ರಿಕೆ — <b>'+sub+'</b>, '+date+'. ಈಗಲೇ ಪುನರಾವರ್ತನೆ ಆರಂಭಿಸಿ.'; },
+         today:'ಇಂದು ನಿಮ್ಮ ಪರೀಕ್ಷೆ. ಶುಭವಾಗಲಿ! 💪', done:'ಈ ಪರೀಕ್ಷೆ ಮುಗಿದಿದೆ. ಉತ್ತಮ ಕೆಲಸ!', running:function(sub,date){ return 'ಪರೀಕ್ಷೆ ನಡೆಯುತ್ತಿದೆ. ಮುಂದಿನ ಪತ್ರಿಕೆ: <b>'+sub+'</b>, '+date+'.'; },
+         hol:{sun:'ರಜಾ ದಿನ (ಭಾನುವಾರ)',shiv:'ರಜಾ ದಿನ — ಮಹಾಶಿವರಾತ್ರಿ',ramzan:'ರಜಾ ದಿನ — ಖುತುಬ್-ಎ-ರಂಜಾನ್'},
+         found:function(l,o){ return '✓ '+l+' + '+o+' ವೇಳಾಪಟ್ಟಿ ತೋರಿಸಲಾಗುತ್ತಿದೆ.'; }, notfound:'ಸಂಖ್ಯೆ ಸಿಗಲಿಲ್ಲ — ಕೆಳಗೆ ನಿಮ್ಮ ಭಾಷೆ ಮತ್ತು 4ನೇ ವಿಷಯ ಆಯ್ಕೆಮಾಡಿ.' },
+    hi:{ sub:{KAN:'कन्नड़',HIN:'हिंदी',ENG:'अंग्रेज़ी',PHY:'भौतिकी',CHE:'रसायन विज्ञान',MAT:'गणित',BIO:'जीव विज्ञान',ELE:'इलेक्ट्रॉनिक्स',CS:'कंप्यूटर विज्ञान'},
+         wd:['रवि','सोम','मंगल','बुध','गुरु','शुक्र','शनि'], mo:['जन','फ़र','मार्च','अप्रै','मई','जून','जुला','अग','सित','अक्टू','नव','दिस'],
+         e1:'परीक्षा 1', e1s:'27 फ़र – 17 मार्च 2027', e2:'परीक्षा 2', e2s:'3 – 12 मई 2027',
+         time:'सुबह 10:00 – दोपहर 1:00 · 3 घंटे', marks:'अंक', code:'कोड', first:'पहला पेपर', gap:function(n){ return 'पढ़ाई के '+n+' दिन'; }, nogap:'अगले ही दिन!',
+         days:'दिन', left:function(sub,date){ return 'आपके पहले पेपर तक — <b>'+sub+'</b>, '+date+'। अभी से दोहराना शुरू करें।'; },
+         today:'आज आपकी परीक्षा है। शुभकामनाएँ! 💪', done:'यह परीक्षा पूरी हो गई। बहुत बढ़िया!', running:function(sub,date){ return 'परीक्षा चल रही है। अगला पेपर: <b>'+sub+'</b>, '+date+'।'; },
+         hol:{sun:'छुट्टी (रविवार)',shiv:'छुट्टी — महाशिवरात्रि',ramzan:'छुट्टी — खुतुब-ए-रमज़ान'},
+         found:function(l,o){ return '✓ '+l+' + '+o+' की समय-सारिणी दिखाई जा रही है।'; }, notfound:'कोड नहीं मिला — नीचे अपनी भाषा और चौथा विषय चुनिए।' }
+  };
+  var st = { lang:'KAN', opt:'BIO', exam:'e1' };
+  try{ var sv = JSON.parse(localStorage.getItem('baio_tt_puc2') || 'null'); if(sv){ if(sv.lang) st.lang = sv.lang; if(sv.opt) st.opt = sv.opt; if(sv.code) document.getElementById('ttCode').value = sv.code; } }catch(e){}
+  var q = /[?&#]tt=(K|H)(B|E|C)/i.exec(location.search + location.hash);
+  if(q){ st.lang = q[1].toUpperCase()==='H' ? 'HIN' : 'KAN'; st.opt = {B:'BIO',E:'ELE',C:'CS'}[q[2].toUpperCase()]; }
+  function ui(){ var l = document.documentElement.lang; return L[l] ? L[l] : L.en; }
+  function save(){ try{ localStorage.setItem('baio_tt_puc2', JSON.stringify({lang:st.lang, opt:st.opt, code:document.getElementById('ttCode').value.trim()})); }catch(e){} }
+  function d(s){ var p = s.split('-'); return new Date(+p[0], +p[1]-1, +p[2]); }
+  function today(){ var n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); }
+  function fmt(s){ var t = ui(), x = d(s); return t.wd[x.getDay()] + ', ' + x.getDate() + ' ' + t.mo[x.getMonth()]; }
+  function mine(){ var keep = {ENG:1,PHY:1,CHE:1,MAT:1}; keep[st.lang] = 1; keep[st.opt] = 1; return EXAMS[st.exam].papers.filter(function(p){ return keep[p[1]]; }); }
+  function chips(id, opts, key){
+    var t = ui(), el = document.getElementById(id);
+    el.innerHTML = opts.map(function(o){ return '<button class="tt-chip'+(st[key]===o?' on':'')+'" data-v="'+o+'">'+ICON[o]+' '+t.sub[o]+'</button>'; }).join(' ');
+    el.onclick = function(e){ var b = e.target.closest('button'); if(!b) return; st[key] = b.dataset.v; document.getElementById('ttMsg').textContent = ''; save(); render(); };
+  }
+  function render(){
+    var t = ui();
+    chips('ttLang', ['KAN','HIN'], 'lang'); chips('ttOpt', ['BIO','ELE','CS'], 'opt');
+    var tabs = document.getElementById('ttTabs');
+    tabs.innerHTML = ['e1','e2'].map(function(k){ return '<button data-e="'+k+'" class="'+(st.exam===k?'on':'')+'">'+t[k]+'<small>'+t[k+'s']+'</small></button>'; }).join('');
+    tabs.onclick = function(e){ var b = e.target.closest('button'); if(!b) return; st.exam = b.dataset.e; render(); };
+    var ps = mine(), now = today(), html = '';
+    /* countdown */
+    var next = ps.find(function(p){ return d(p[0]) >= now; });
+    if(!next) html += '<div class="tt-count"><div class="n">✓</div><div class="t">'+t.done+'</div></div>';
+    else {
+      var nd = Math.round((d(next[0]) - now) / 864e5);
+      if(nd === 0) html += '<div class="tt-count"><div class="n">🎯</div><div class="t">'+t.today+' — <b>'+t.sub[next[1]]+'</b></div></div>';
+      else if(d(ps[0][0]) < now) html += '<div class="tt-count"><div class="n">'+nd+'<small>'+t.days+'</small></div><div class="t">'+t.running(t.sub[next[1]], fmt(next[0]))+'</div></div>';
+      else html += '<div class="tt-count"><div class="n">'+nd+'<small>'+t.days+'</small></div><div class="t">'+t.left(t.sub[next[1]], fmt(next[0]))+'</div></div>';
+    }
+    /* papers with study days and holidays in between */
+    html += '<ol class="tt-list">';
+    var hol = EXAMS[st.exam].hol;
+    ps.forEach(function(p, i){
+      if(i){ hol.filter(function(h){ return h[0] > ps[i-1][0] && h[0] < p[0]; }).forEach(function(h){ html += '<li class="tt-hol">🌴 '+fmt(h[0])+' · '+t.hol[h[1]]+'</li>'; }); }
+      var x = d(p[0]), gap = i ? Math.round((x - d(ps[i-1][0])) / 864e5) - 1 : null;
+      var chip = i===0 ? '<span class="tt-gap">'+t.first+'</span>' : (gap<=0 ? '<span class="tt-gap tight">'+t.nogap+'</span>' : '<span class="tt-gap'+(gap<=1?' tight':'')+'">'+t.gap(gap)+'</span>');
+      html += '<li class="tt-item'+(p[1]==='BIO'?' bio':'')+(x < now?' past':'')+'">'
+        + '<div class="tt-date"><div class="m">'+t.mo[x.getMonth()]+'</div><div class="d">'+x.getDate()+'</div><div class="w">'+t.wd[x.getDay()]+'</div></div>'
+        + '<div><div class="tt-sub">'+ICON[p[1]]+' '+t.sub[p[1]]+'</div><div class="tt-meta">'+t.time+' · '+p[3]+' '+t.marks+' · '+t.code+' '+p[2]+'</div></div>'
+        + chip + '</li>';
+    });
+    html += '</ol>';
+    document.getElementById('ttBody').innerHTML = html;
+  }
+  function lookup(){
+    var t = ui(), v = document.getElementById('ttCode').value.trim().toUpperCase(), msg = document.getElementById('ttMsg');
+    var k = (v.match(/(\d{4})$/) || [])[1], r = k && /25MPU|^\d{4}$/.test(v) ? ROSTER[k] : null;
+    if(!v){ msg.textContent = ''; return; }
+    if(!r){ msg.textContent = t.notfound; save(); return; }
+    st.lang = r[0]==='H' ? 'HIN' : 'KAN'; st.opt = r[1]==='E' ? 'ELE' : 'BIO';
+    save(); render(); msg.textContent = t.found(t.sub[st.lang], t.sub[st.opt]);
+  }
+  document.getElementById('ttGo').addEventListener('click', lookup);
+  document.getElementById('ttCode').addEventListener('keydown', function(e){ if(e.key === 'Enter') lookup(); });
+  document.getElementById('ttPrint').addEventListener('click', function(){ document.body.classList.add('tt-print'); window.print(); setTimeout(function(){ document.body.classList.remove('tt-print'); }, 500); });
+  /* auto-pick from the student's BAIO profile when it's a PU-II roll */
+  try{ var pr = JSON.parse(localStorage.getItem('baio_student') || 'null'); if(pr && pr.roll && /^25MPU\d{4}$/i.test(pr.roll) && !document.getElementById('ttCode').value){ document.getElementById('ttCode').value = pr.roll.toUpperCase(); lookup(); } }catch(e){}
+  if(document.getElementById('ttCode').value && !q) lookup();
+  var _setLang = setLang; setLang = function(l, f){ _setLang(l, f); render(); var m = document.getElementById('ttMsg'); if(m.textContent) lookup(); };
+  render();
+})();
 
 /* Share — native share sheet on phones; WhatsApp / Telegram / copy link otherwise */
 (function(){
