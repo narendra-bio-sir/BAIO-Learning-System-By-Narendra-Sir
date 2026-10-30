@@ -631,6 +631,7 @@ html:not([data-theme="light"]) #pptImg,html:not([data-theme="light"]) .ppt-thumb
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN_HERE"}'></script>
+<script src="../premium-sample.js"></script>
 </head>
 <body>
 <div id="pageLoadOverlay" style="position:fixed; inset:0; z-index:99999; background:#0B1B14;"></div>
@@ -1239,7 +1240,7 @@ function renderTabbar(){
   const cat = TAB_CATEGORIES.find(c => c.id === currentCategory) || TAB_CATEGORIES[0];
   bar.innerHTML = TABS.filter(t2 => cat.tabs.indexOf(t2.id) !== -1).map(t2 => {
     const isPremium = PREMIUM_LOCKED_TABS.indexOf(t2.id) !== -1;
-    const lockIcon = (isPremium && !premUnlocked) ? '\uD83D\uDD12 ' : '';
+    const lockIcon = (isPremium && !premUnlocked) ? ((window.BaioSample&&BaioSample.allow(t2.id))?'🎁 ':'🔒 ') : '';
     return `<div class="tab ${t2.id===currentTab?'active':''}" onclick="switchTab('${t2.id}')">${lockIcon}${t2.label}</div>`;
   }).join('');
   const ddBtn = document.getElementById('catDdBtn');
@@ -5361,9 +5362,16 @@ function injectDemoAccessBanner(){
   demoBannerInterval = setInterval(tick, 1000);
 }
 function renderContent(){
+  if(window.BaioSample) BaioSample.clear();
   if(PREMIUM_LOCKED_TABS.indexOf(currentTab) !== -1 && !premiumQualifies()){
-    renderPremiumLockScreen(currentTab);
-    return;
+    if(window.BaioSample && BaioSample.allow(currentTab)){
+      const __sampleTab = currentTab;
+      setTimeout(function(){ if(currentTab === __sampleTab) BaioSample.start(__sampleTab, document.getElementById('content'), function(t){ renderPremiumLockScreen(t); }, null, {single:true}); }, 0);
+    } else {
+      renderPremiumLockScreen(currentTab);
+      if(window.BaioSample) BaioSample.notice(currentTab, document.getElementById('content'));
+      return;
+    }
   }
   if(currentTab==='study') renderStudy();
   else if(currentTab==='podcast') renderPodcast();

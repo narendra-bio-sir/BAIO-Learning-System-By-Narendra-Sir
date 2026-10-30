@@ -926,6 +926,7 @@ html .clg-deck-switch button.active{background:#0f7b6c;border-color:#0f7b6c;colo
 </style>
 <script src="class-large.js?v=2"></script>
 <script src="quick-card.js?v=1"></script>
+<script src="premium-sample.js"></script>
 </head>
 <body>
 <div id="pageLoadOverlay" style="position:fixed; inset:0; z-index:99999; background:#0B1B14;"></div>
@@ -4021,7 +4022,9 @@ function applyPremiumGates(){
     const overlay = document.getElementById('premLock_' + tabId);
     if(!overlay) return;
     if(unlocked){ overlay.classList.remove('show'); overlay.innerHTML = ''; premiumToggleSiblings(tabId, false); }
-    else { renderPremiumLockScreenCh2(tabId); premiumToggleSiblings(tabId, true); }
+    else if(window.BaioSample && BaioSample.allow(tabId)){ overlay.classList.remove('show'); overlay.innerHTML = ''; premiumToggleSiblings(tabId, false);
+      BaioSample.start(tabId, overlay.parentElement, function(t){ renderPremiumLockScreenCh2(t); premiumToggleSiblings(t, true); }, null, {noticeEl: function(){ return overlay; }}); }
+    else { renderPremiumLockScreenCh2(tabId); premiumToggleSiblings(tabId, true); if(window.BaioSample) BaioSample.notice(tabId, overlay); }
   });
   document.querySelectorAll('.panel').forEach(function(panel){
     let banner = panel.querySelector('.demo-access-banner');
@@ -4043,10 +4046,10 @@ function applyPremiumGates(){
     const isPremium = PREMIUM_LOCKED_TABS.indexOf(tabId) !== -1;
     const alreadyMarked = btn.getAttribute('data-lock-marked') === '1';
     if(isPremium && !unlocked && !alreadyMarked){
-      btn.innerHTML = '🔒 ' + btn.innerHTML;
+      btn.innerHTML = ((window.BaioSample&&BaioSample.allow(tabId))?'🎁 ':'🔒 ') + btn.innerHTML;
       btn.setAttribute('data-lock-marked', '1');
     } else if((!isPremium || unlocked) && alreadyMarked){
-      btn.innerHTML = btn.innerHTML.replace('🔒 ', '');
+      btn.innerHTML = btn.innerHTML.replace('🎁 ', '').replace('🔒 ', '');
       btn.removeAttribute('data-lock-marked');
     }
   });

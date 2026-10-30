@@ -1001,6 +1001,7 @@ html:not([data-theme="light"]) .ppt-scene{filter:invert(.93) hue-rotate(180deg) 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="quick-card.js?v=1"></script>
+<script src="premium-sample.js"></script>
 </head>
 <body>
 <div class="app">
@@ -1372,7 +1373,7 @@ function renderTabbar(){
   const cat = TAB_CATEGORIES.find(c => c.id === currentCategory) || TAB_CATEGORIES[0];
   bar.innerHTML = TABS.filter(t => cat.tabs.indexOf(t.id) !== -1).map(t => {
     const locked = PREMIUM_LOCKED_TABS.indexOf(t.id) !== -1 && !unlocked;
-    return `<div class="tab ${t.id===currentTab?'active':''}" onclick="switchTab('${t.id}')">${locked?'🔒 ':''}${t.label}</div>`;
+    return `<div class="tab ${t.id===currentTab?'active':''}" onclick="switchTab('${t.id}')">${locked?((window.BaioSample&&BaioSample.allow(t.id))?'🎁 ':'🔒 '):''}${t.label}</div>`;
   }).join('');
   const ddBtn = document.getElementById('catDdBtn');
   const ddMenu = document.getElementById('catDdMenu');
@@ -5365,9 +5366,16 @@ function renderContent(){
   if(currentTab !== 'oneshot' && typeof osStop === 'function') osStop();
   if(currentTab !== 'classppt' && typeof pptTalking !== 'undefined' && pptTalking) pptStopTalk();
   if(currentTab !== 'classppt' && typeof pptAnimPost === 'function') pptAnimPost({type:'baio-anim-stop'});
+  if(window.BaioSample) BaioSample.clear();
   if(PREMIUM_LOCKED_TABS.indexOf(currentTab) !== -1 && !premiumQualifies()){
-    renderPremiumLock(currentTab);
-    return;
+    if(window.BaioSample && BaioSample.allow(currentTab)){
+      const __sampleTab = currentTab;
+      setTimeout(function(){ if(currentTab === __sampleTab) BaioSample.start(__sampleTab, document.getElementById('content'), function(t){ renderPremiumLock(t); }, null, {single:true}); }, 0);
+    } else {
+      renderPremiumLock(currentTab);
+      if(window.BaioSample) BaioSample.notice(currentTab, document.getElementById('content'));
+      return;
+    }
   }
   if(currentTab==='badges') renderBadgesCard();
   else if(currentTab==='progress') renderProgress();

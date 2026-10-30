@@ -632,6 +632,7 @@ html .clg-deck-switch button.active{background:#0f7b6c;border-color:#0f7b6c;colo
 </style>
 <script src="class-large.js?v=2"></script>
 <script src="quick-card.js?v=1"></script>
+<script src="premium-sample.js"></script>
 </head>
 <body>
 <div class="app">
@@ -998,7 +999,7 @@ function renderTabbar(){
   const cat = TAB_CATEGORIES.find(c => c.id === currentCategory) || TAB_CATEGORIES[0];
   bar.innerHTML = TABS.filter(t => cat.tabs.indexOf(t.id) !== -1).map(t => {
     const locked = PREMIUM_LOCKED_TABS.indexOf(t.id) !== -1 && !unlocked;
-    return `<div class="tab ${t.id===currentTab?'active':''}" onclick="switchTab('${t.id}')">${locked?'🔒 ':''}${t.label}</div>`;
+    return `<div class="tab ${t.id===currentTab?'active':''}" onclick="switchTab('${t.id}')">${locked?((window.BaioSample&&BaioSample.allow(t.id))?'🎁 ':'🔒 '):''}${t.label}</div>`;
   }).join('');
   const ddBtn = document.getElementById('catDdBtn');
   const ddMenu = document.getElementById('catDdMenu');
@@ -4035,9 +4036,16 @@ renderClassPpt = function(){
 function renderContent(){
   if(currentTab !== 'classppt' && window.ClassLarge) ClassLarge.unmount();
   if(currentTab !== 'oneshot' && window.OneShotStudy) OneShotStudy.stop();
+  if(window.BaioSample) BaioSample.clear();
   if(PREMIUM_LOCKED_TABS.indexOf(currentTab) !== -1 && !premiumQualifies()){
-    renderPremiumLock(currentTab);
-    return;
+    if(window.BaioSample && BaioSample.allow(currentTab)){
+      const __sampleTab = currentTab;
+      setTimeout(function(){ if(currentTab === __sampleTab) BaioSample.start(__sampleTab, document.getElementById('content'), function(t){ renderPremiumLock(t); }, null, {single:true}); }, 0);
+    } else {
+      renderPremiumLock(currentTab);
+      if(window.BaioSample) BaioSample.notice(currentTab, document.getElementById('content'));
+      return;
+    }
   }
   if(currentTab==='badges') renderBadgesCard();
   else if(currentTab==='progress') renderProgress();
