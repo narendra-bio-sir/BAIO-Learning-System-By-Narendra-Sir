@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Biology Exam Planner 2027</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a teacher's desk planner — countdown strip, then the student paper sequence, the week-by-week plan, and trackers. BAIO brand colours. */
+:root{
+  --bg:#F6F4EC; --surface:#FFFFFF; --surface2:#EFEBDD; --ink:#18241E; --dim:#5D6B63; --line:#E2DAC4;
+  --gold:#A9821F; --gold-soft:#F3E7C2; --teal:#0F7F6C; --teal-soft:#DDF1EC; --navy:#0E1B33; --navy-ink:#F4EFE0; --hot:#B8442F; --hot-soft:#F8E1DA;
+  --display:'Space Grotesk',ui-sans-serif,system-ui,sans-serif; --body:'Inter',ui-sans-serif,system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0C1712; --surface:#12221A; --surface2:#182C22; --ink:#E8F0EB; --dim:#9DB5A9; --line:#26402F;
+  --gold:#E2BF57; --gold-soft:#3A3115; --teal:#3FD9BC; --teal-soft:#123A30; --navy:#0A1428; --navy-ink:#F4EFE0; --hot:#F08A72; --hot-soft:#3D1C14; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0C1712; --surface:#12221A; --surface2:#182C22; --ink:#E8F0EB; --dim:#9DB5A9; --line:#26402F;
+  --gold:#E2BF57; --gold-soft:#3A3115; --teal:#3FD9BC; --teal-soft:#123A30; --navy:#0A1428; --navy-ink:#F4EFE0; --hot:#F08A72; --hot-soft:#3D1C14; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 15px/1.55 var(--body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:900px;margin:0 auto;display:grid;gap:28px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance}
+h1{font-size:30px;line-height:1.15}
+h2{font-size:20px}
+.eyebrow{font:700 11px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--teal)}
+.sub{color:var(--dim);margin:6px 0 0;max-width:62ch}
+.count{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;min-width:0}
+.tile.main{background:var(--navy);border-color:var(--navy);color:var(--navy-ink)}
+.tile .n{font:700 38px/1 var(--display);font-variant-numeric:tabular-nums;color:var(--gold)}
+.tile.main .n{color:#E9C45A}
+.tile .l{font-size:13px;margin-top:6px}
+.tile .d{font-size:12px;color:var(--dim)}
+.tile.main .d{color:#C7CFDD}
+.now{background:var(--gold-soft);border:1.5px solid var(--gold);border-radius:14px;padding:14px 16px;display:grid;gap:4px}
+.now b{font-family:var(--display);font-size:17px}
+.now .tag{font:700 11px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+section{display:grid;gap:12px}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:520px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:700 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--dim);background:var(--surface2)}
+tr:last-child td{border-bottom:0}
+td.bio{font-weight:700;color:var(--teal)}
+.pill{display:inline-block;font:700 12px var(--body);border-radius:999px;padding:2px 9px;white-space:nowrap}
+.pill.ok{background:var(--teal-soft);color:var(--teal)}
+.pill.warn{background:var(--hot-soft);color:var(--hot)}
+.phase{display:grid;gap:8px}
+.phase h3{font-size:15px;color:var(--gold);letter-spacing:.02em}
+.wk{display:grid;grid-template-columns:auto 96px minmax(0,1fr);gap:12px;align-items:start;padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.wk.cur{border:1.5px solid var(--teal);box-shadow:0 0 0 3px var(--teal-soft)}
+.wk.past:not(.cur){opacity:.6}
+.wk.exam{background:var(--navy);border-color:var(--navy);color:var(--navy-ink)}
+.wk.exam .dt{color:#E9C45A}
+.wk input{width:18px;height:18px;margin-top:2px;accent-color:var(--teal)}
+.dt{font:600 13px var(--body);color:var(--gold);font-variant-numeric:tabular-nums}
+.wk .t{font-weight:600}
+.wk .x{font-size:13.5px;color:var(--dim);margin-top:2px}
+.wk.exam .x{color:#C7CFDD}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.stat .n{font:700 26px/1 var(--display);font-variant-numeric:tabular-nums}
+.stat .l{font-size:12.5px;color:var(--dim);margin-top:4px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12.5px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:3px 10px}
+.chip b{color:var(--hot)}
+.grp{display:grid;gap:6px}
+.grp .h{font:600 13px var(--body)}
+.ch td:not(:first-child),.ch th:not(:first-child){text-align:center;width:92px}
+.ch input{width:18px;height:18px;accent-color:var(--teal)}
+.note{font-size:13px;color:var(--dim)}
+input:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+@media (max-width:640px){ h1{font-size:25px} .count{grid-template-columns:1fr} .stats{grid-template-columns:repeat(2,minmax(0,1fr))} .wk{grid-template-columns:auto minmax(0,1fr)} .wk .dt{grid-column:2} .wk .body{grid-column:2} }
+</style>
+<style>
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line);margin:-20px calc(-1*max(16px,env(safe-area-inset-left,0px))) 0;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px))}
+.bar-in{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.brand{display:flex;align-items:center;gap:8px;font:700 14px var(--display)}
+.brand .b{width:30px;height:30px;border-radius:8px;background:#0c1830;color:#D4AF37;display:grid;place-items:center}
+.tools{display:flex;gap:6px}
+.ib{min-width:36px;height:36px;padding:0 10px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font:600 13px var(--body);cursor:pointer}
+[hidden]{display:none!important}
+#lock{max-width:420px;margin:60px auto;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;display:grid;gap:10px;text-align:center}
+#lock input{padding:11px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface2);color:var(--ink);font:600 14px var(--body);text-align:center}
+#lock button{padding:11px;border-radius:10px;border:0;background:var(--teal);color:#fff;font:700 14px var(--body);cursor:pointer}
+#lockMsg{color:var(--hot);font-size:13px;min-height:1em}
+</style>
+</head>
+<body>
+
+<div class="bar"><div class="bar-in">
+  <div class="brand"><div class="b">B</div><span>BAIO · Teacher</span></div>
+  <div class="tools">
+    <a class="ib" href="analytics.html" title="Back to analytics">📊 Analytics</a>
+    <a class="ib" href="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/" title="BAIO home" aria-label="BAIO home">🏠</a>
+    <button class="ib" id="themeBtn" aria-label="Toggle theme">🌙</button>
+  </div>
+</div></div>
+<div id="lock" hidden>
+  <h2>Teacher only</h2>
+  <p class="note">Enter the analytics master key to open your Biology Exam Planner.</p>
+  <input id="lockKey" type="password" autocomplete="off" placeholder="Master key">
+  <button id="lockGo">Unlock</button>
+  <div id="lockMsg"></div>
+</div>
+
+
+<div class="wrap" id="planner" hidden>
+  <header>
+    <div class="eyebrow">PU-II Biology · Narendra Sir · Private planner</div>
+    <h1>Biology Exam Planner 2027</h1>
+    <p class="sub">Your two Biology board papers, what your students write before each one, and a week-by-week plan from now to the exam. Ticks are saved in this browser.</p>
+  </header>
+
+  <div class="count" id="count"></div>
+  <div class="now" id="now"></div>
+
+  <section>
+    <h2>What your Biology students write before Biology</h2>
+    <p class="note">58 Biology students: 23 take Kannada, 35 take Hindi. Electronics students (8) don't write Biology.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Group</th><th>Exam 1 · 27 Feb – 17 Mar</th><th>Study days before Biology</th><th>Exam 2 · 3 – 12 May</th><th>Study days before Biology</th></tr></thead>
+      <tbody>
+        <tr><td><b>Kannada + Biology</b><br><span class="note">23 students</span></td>
+          <td>Kannada 27 Feb · English 1 Mar · Physics 4 Mar · Chemistry 8 Mar · Maths 12 Mar · <span class="bio">Biology Mon 15 Mar</span></td>
+          <td><span class="pill ok">2 days</span><br><span class="note">Sat 13, Sun 14 Mar</span></td>
+          <td>Kannada Mon 3 May · <span class="bio">Biology Tue 4 May</span> · Chemistry · Physics · Maths · English</td>
+          <td><span class="pill warn">0 days</span><br><span class="note">Biology is the day after Kannada</span></td></tr>
+        <tr><td><b>Hindi + Biology</b><br><span class="note">35 students</span></td>
+          <td>English 1 Mar · Physics 4 Mar · Chemistry 8 Mar · Maths 12 Mar · <span class="bio">Biology Mon 15 Mar</span> · Hindi 17 Mar</td>
+          <td><span class="pill ok">2 days</span><br><span class="note">Sat 13, Sun 14 Mar</span></td>
+          <td><span class="bio">Biology Tue 4 May</span> (first paper) · Chemistry · Physics · Maths · Hindi · English</td>
+          <td><span class="pill ok">Open</span><br><span class="note">Biology is their first paper</span></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>Week-by-week plan</h2>
+    <p class="note">Weeks start on Monday. The current week is outlined; tick a week when it's done. Adjust Round 1 to whatever is still left to teach.</p>
+    <div id="plan" class="phase"></div>
+  </section>
+
+  <section>
+    <h2>Where they stand · Pre-Midterm Biology (12–17 Oct)</h2>
+    <div class="stats">
+      <div class="stat"><div class="n">24.9<span style="font-size:15px;color:var(--dim)">/40</span></div><div class="l">Class average (62%)</div></div>
+      <div class="stat"><div class="n">40</div><div class="l">Wrote the Biology paper</div></div>
+      <div class="stat"><div class="n" style="color:var(--hot)">17</div><div class="l">Absent for Biology</div></div>
+      <div class="stat"><div class="n" style="color:var(--teal)">5</div><div class="l">Scored 35 or more</div></div>
+    </div>
+    <div class="grp"><div class="h">Below 20/40, for the weak-area clinic</div>
+      <div class="chips"><span class="chip">Devraj <b>2</b></span><span class="chip">Niteeshkumar <b>8</b></span><span class="chip">Srinivas <b>11</b></span><span class="chip">Akshata <b>12</b></span><span class="chip">Renuka <b>15</b></span><span class="chip">Vikas S Swamy <b>17</b></span><span class="chip">Praniti <b>19</b></span><span class="chip">Preetam <b>19</b></span><span class="chip">Vijaylaxmi <b>19</b></span></div></div>
+    <div class="grp"><div class="h">Absent for the Biology paper</div>
+      <div class="chips"><span class="chip">Sudha Rani</span><span class="chip">Danvi</span><span class="chip">Sanvi</span><span class="chip">Mahesh A Chakrakar</span><span class="chip">Syeda Rida Imana Sheeza</span><span class="chip">Soumya</span><span class="chip">Mohammed Shahid Firas</span><span class="chip">Divya</span><span class="chip">Syed Amaan Ali</span><span class="chip">Abdul Quddus</span><span class="chip">Mohammed Aasim Zubair</span><span class="chip">Syed Sufiyan Wazeer</span><span class="chip">Bhakti</span><span class="chip">Jaha Uzma Badadal</span><span class="chip">MD Talha</span><span class="chip">Rohit Patange</span><span class="chip">Shaikh Ghulam Mustafa</span></div></div>
+  </section>
+
+  <section>
+    <h2>Chapter tracker</h2>
+    <div class="tbl"><table class="ch">
+      <thead><tr><th>Chapter</th><th>Taught</th><th>Revision 1</th><th>Revision 2</th></tr></thead>
+      <tbody id="chap"></tbody>
+    </table></div>
+    <p class="note">Source: KSEAB final timetable, 29-10-2026 (Biology code 36, 70 marks, 10:00 AM – 1:00 PM). NEET and KCET 2027 dates aren't on this timetable; add them here once they're announced.</p>
+  </section>
+</div>
+
+<script>
+(function(){
+  var KEY = 'bio_planner_2027';
+  var st = {}; try{ st = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }catch(e){ st = {}; }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(st)); }catch(e){} }
+  function d(s){ var p = s.split('-'); return new Date(+p[0], +p[1]-1, +p[2]); }
+  var MO = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], WD = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  function short(x){ return x.getDate()+' '+MO[x.getMonth()]; }
+  var n0 = new Date(), today = new Date(n0.getFullYear(), n0.getMonth(), n0.getDate());
+  function days(s){ return Math.round((d(s) - today) / 864e5); }
+
+  /* countdown */
+  var e1 = days('2027-03-15'), e2 = days('2027-05-04'), start = days('2027-02-27');
+  var weeks = Math.max(0, Math.floor(start / 7));
+  document.getElementById('count').innerHTML =
+    '<div class="tile main"><div class="n">'+Math.max(0,e1)+'</div><div class="l">days to the Biology paper · Exam 1</div><div class="d">Mon 15 Mar 2027 · 10:00 AM – 1:00 PM</div></div>'
+  + '<div class="tile"><div class="n">'+weeks+'</div><div class="l">teaching weeks before exams begin</div><div class="d">First board paper Sat 27 Feb 2027</div></div>'
+  + '<div class="tile"><div class="n">'+Math.max(0,e2)+'</div><div class="l">days to the Biology paper · Exam 2</div><div class="d">Tue 4 May 2027 · 10:00 AM – 1:00 PM</div></div>';
+
+  /* plan: [monday, title, detail, kind] */
+  var PLAN = [
+    ['Round 1 · Consolidate every chapter', [
+      ['2026-11-02','Ch 1 Sexual Reproduction in Flowering Plants','Anther TS, embryo sac, pollination and double fertilisation diagrams'],
+      ['2026-11-09','Ch 2 Human Reproduction · Ch 3 Reproductive Health','Gametogenesis flow charts, menstrual cycle, contraception table'],
+      ['2026-11-16','Ch 4 Principles of Inheritance and Variation','Monohybrid, dihybrid and test crosses; pedigree and sex-determination problems'],
+      ['2026-11-23','Ch 5 Molecular Basis of Inheritance','Replication, transcription, lac operon, DNA fingerprinting'],
+      ['2026-11-30','Ch 6 Evolution · Ch 7 Human Health and Disease','Hardy-Weinberg, malaria life cycle, antibody structure'],
+      ['2026-12-07','Ch 8 Microbes in Human Welfare · Ch 9 Biotechnology: Principles and Processes','Biogas plant, pBR322, PCR, gel electrophoresis'],
+      ['2026-12-14','Ch 10 Biotechnology and its Applications · Ch 11 Organisms and Populations','Bt crops, RNAi, gene therapy; growth curves, interactions table'],
+      ['2026-12-21','Ch 12 Ecosystem · Ch 13 Biodiversity and Conservation','Pyramids, nutrient cycles, in-situ vs ex-situ. Full-syllabus test Sat 26 Dec']
+    ]],
+    ['Round 2 · One 70-mark board-pattern paper every Saturday', [
+      ['2026-12-28','Must-draw diagrams across all 13 chapters','Model Paper 1 · Sat 2 Jan'],
+      ['2027-01-04','Reproduction unit (Ch 1–3), second pass','Model Paper 2 · Sat 9 Jan'],
+      ['2027-01-11','Genetics and Evolution (Ch 4–6)','Model Paper 3 · Sat 16 Jan'],
+      ['2027-01-18','Human welfare and Biotechnology (Ch 7–10)','Model Paper 4 · Sat 23 Jan'],
+      ['2027-01-25','Ecology (Ch 11–13)','Model Paper 5 · Sat 30 Jan'],
+      ['2027-02-01','Weak-area clinic: students below 20/40 and the Pre-Midterm absentees','Model Paper 6 · Sat 6 Feb'],
+      ['2027-02-08','Previous years\' KSEAB papers · 5-mark answer writing','Model Paper 7 · Sat 13 Feb']
+    ]],
+    ['Final sprint', [
+      ['2027-02-15','Full mock under exam timing, 10:00 AM – 1:00 PM','Mock on Sat 20 Feb; return scripts with remarks on Mon 22 Feb'],
+      ['2027-02-22','One-shot revision of all 13 chapters','Last class before the board exams: Fri 26 Feb'],
+      ['2027-03-01','Students are writing papers (Kannada 27 Feb, English 1 Mar, Physics 4 Mar)','No Biology tests. Share short revision notes only'],
+      ['2027-03-08','Chemistry Mon 8 Mar, Maths Fri 12 Mar','Biology one-shot session on Sat 13 Mar, the first of the 2 study days'],
+      ['2027-03-15','Biology paper · Exam 1','Mon 15 Mar, 10:00 AM – 1:00 PM','exam']
+    ]],
+    ['Exam 2 · for students who need to improve', [
+      ['2027-03-22','Identify students for Exam 2 once Exam 1 results are out','Plan chapter-wise tests for that batch'],
+      ['2027-04-26','Final Biology revision for Exam 2','Finish by Sun 2 May: Kannada students write Kannada on 3 May and Biology the next day'],
+      ['2027-05-04','Biology paper · Exam 2','Tue 4 May, 10:00 AM – 1:00 PM','exam']
+    ]]
+  ];
+  var html = '', current = null, flat = [];
+  PLAN.forEach(function(ph){ ph[1].forEach(function(w){ flat.push(w[0]); }); });
+  flat.forEach(function(s){ if(d(s) <= today) current = s; });
+  if(!current) current = flat[0];
+  var nowWeek = null;
+  PLAN.forEach(function(ph, pi){
+    html += '<h3>'+ph[0]+'</h3>';
+    ph[1].forEach(function(w){
+      var x = d(w[0]), end = new Date(x); end.setDate(end.getDate()+6);
+      var exam = w[3] === 'exam', cur = w[0] === current, past = end < today;
+      if(cur) nowWeek = w;
+      var label = exam ? WD[x.getDay()]+' '+short(x) : short(x)+' – '+short(end);
+      html += '<div class="wk'+(cur?' cur':'')+(past?' past':'')+(exam?' exam':'')+'">'
+        + '<input type="checkbox" id="w'+w[0]+'" aria-label="Done: '+w[1].replace(/"/g,'')+'"'+(st['w'+w[0]]?' checked':'')+'>'
+        + '<div class="dt">'+label+'</div>'
+        + '<div class="body"><div class="t">'+w[1]+'</div><div class="x">'+w[2]+'</div></div></div>';
+    });
+  });
+  var plan = document.getElementById('plan'); plan.innerHTML = html;
+  plan.addEventListener('change', function(e){ if(e.target.type === 'checkbox'){ st[e.target.id] = e.target.checked; save(); } });
+
+  var nw = document.getElementById('now');
+  if(today < d(flat[0])) nowWeek = PLAN[0][1][0];
+  nw.innerHTML = nowWeek ? '<span class="tag">This week</span><b>'+nowWeek[1]+'</b><span>'+nowWeek[2]+'</span>' : '<b>All Biology papers are done.</b>';
+
+  /* chapter tracker */
+  var CH = ['Sexual Reproduction in Flowering Plants','Human Reproduction','Reproductive Health','Principles of Inheritance and Variation','Molecular Basis of Inheritance','Evolution','Human Health and Disease','Microbes in Human Welfare','Biotechnology: Principles and Processes','Biotechnology and its Applications','Organisms and Populations','Ecosystem','Biodiversity and Conservation'];
+  var cols = ['t','r1','r2'], rows = '';
+  CH.forEach(function(c, i){
+    rows += '<tr><td>'+(i+1)+'. '+c+'</td>' + cols.map(function(k){ var id = 'c'+(i+1)+k; return '<td><input type="checkbox" id="'+id+'" aria-label="'+c+' '+k+'"'+(st[id]?' checked':'')+'></td>'; }).join('') + '</tr>';
+  });
+  var tb = document.getElementById('chap'); tb.innerHTML = rows;
+  tb.addEventListener('change', function(e){ if(e.target.type === 'checkbox'){ st[e.target.id] = e.target.checked; save(); } });
+})();
+</script>
+
+<script>
+(function(){
+  var root=document.documentElement, btn=document.getElementById('themeBtn');
+  function apply(t){ root.setAttribute('data-theme', t==='dark'?'dark':'light'); btn.textContent = t==='dark'?'☀️':'🌙'; }
+  var t='light'; try{ t=localStorage.getItem('baio_theme')||'light'; }catch(e){}
+  apply(t);
+  btn.addEventListener('click',function(){ var n=root.getAttribute('data-theme')==='dark'?'light':'dark'; apply(n); try{ localStorage.setItem('baio_theme',n); }catch(e){} });
+  var CODE='BAIO-NS-2026-R4T9';
+  function unlocked(){ try{ return localStorage.getItem('baio_analytics_unlock')==='true'; }catch(e){ return false; } }
+  function show(){ document.getElementById('lock').hidden = true; document.getElementById('planner').hidden = false; }
+  if(unlocked()) show(); else document.getElementById('lock').hidden = false;
+  function go(){
+    var v=document.getElementById('lockKey').value.trim().toUpperCase();
+    if(v===CODE){ try{ localStorage.setItem('baio_analytics_unlock','true'); }catch(e){} show(); }
+    else { document.getElementById('lockMsg').textContent='Incorrect master key. Please try again.'; document.getElementById('lockKey').value=''; }
+  }
+  document.getElementById('lockGo').addEventListener('click',go);
+  document.getElementById('lockKey').addEventListener('keydown',function(e){ if(e.key==='Enter') go(); });
+})();
+</script>
+</body>
+</html>
