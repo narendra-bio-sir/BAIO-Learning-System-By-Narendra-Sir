@@ -6,6 +6,9 @@
    When the sample is used up, the chapter's own unlock screen (payment + unlock code) is shown,
    with a short "you've used your free sample" note on top. Samples are counted per chapter, per tab,
    on this device.
+   While a sample is running, the content is protected: share / download / print / copy / PDF buttons
+   are blocked, long-press, text selection and right-click are off, a "FREE SAMPLE · name · roll"
+   watermark sits over the content, and the content blurs when the app loses focus or PrintScreen is pressed.
 
    API (called from each chapter app):
      BaioSample.allow(tab)                    -> true while the sample for this tab is not used up
@@ -42,11 +45,14 @@
   function lang(){ try{ if(typeof currentLang !== 'undefined' && (currentLang === 'kn' || currentLang === 'hi')) return currentLang; }catch(e){} return 'en'; }
   var T = {
     en:{ free:'Free sample', q:function(n){ return n + ' of ' + Q_LIMIT + ' free questions left'; }, g:'1 free paper', t:function(s){ return fmt(s) + ' free preview left'; },
-         unlock:'Unlock all', used:'You have used your free sample of this feature.', usedSub:'Liked it? Unlock every premium feature of this chapter below.' },
+         unlock:'Unlock all', used:'You have used your free sample of this feature.', usedSub:'Liked it? Unlock every premium feature of this chapter below.',
+         prot:'🔒 Share, download and screenshots are available after you unlock this chapter.', wm:'FREE SAMPLE' },
     kn:{ free:'ಉಚಿತ ಮಾದರಿ', q:function(n){ return Q_LIMIT + ' ರಲ್ಲಿ ' + n + ' ಉಚಿತ ಪ್ರಶ್ನೆ ಉಳಿದಿವೆ'; }, g:'1 ಉಚಿತ ಪತ್ರಿಕೆ', t:function(s){ return fmt(s) + ' ಉಚಿತ ಮುನ್ನೋಟ ಉಳಿದಿದೆ'; },
-         unlock:'ಎಲ್ಲ ತೆರೆಯಿರಿ', used:'ಈ ವಿಭಾಗದ ಉಚಿತ ಮಾದರಿ ಮುಗಿದಿದೆ.', usedSub:'ಇಷ್ಟವಾಯಿತೇ? ಈ ಅಧ್ಯಾಯದ ಎಲ್ಲಾ ಪ್ರೀಮಿಯಂ ವಿಭಾಗಗಳನ್ನು ಕೆಳಗೆ ತೆರೆಯಿರಿ.' },
+         unlock:'ಎಲ್ಲ ತೆರೆಯಿರಿ', used:'ಈ ವಿಭಾಗದ ಉಚಿತ ಮಾದರಿ ಮುಗಿದಿದೆ.', usedSub:'ಇಷ್ಟವಾಯಿತೇ? ಈ ಅಧ್ಯಾಯದ ಎಲ್ಲಾ ಪ್ರೀಮಿಯಂ ವಿಭಾಗಗಳನ್ನು ಕೆಳಗೆ ತೆರೆಯಿರಿ.',
+         prot:'🔒 ಹಂಚಿಕೆ, ಡೌನ್‌ಲೋಡ್ ಮತ್ತು ಸ್ಕ್ರೀನ್‌ಶಾಟ್ ಈ ಅಧ್ಯಾಯವನ್ನು ತೆರೆದ ನಂತರ ಲಭ್ಯ.', wm:'FREE SAMPLE' },
     hi:{ free:'मुफ़्त नमूना', q:function(n){ return Q_LIMIT + ' में से ' + n + ' मुफ़्त प्रश्न बाकी'; }, g:'1 मुफ़्त पेपर', t:function(s){ return fmt(s) + ' मुफ़्त प्रीव्यू बाकी'; },
-         unlock:'सब अनलॉक करें', used:'इस फ़ीचर का आपका मुफ़्त नमूना पूरा हो गया।', usedSub:'पसंद आया? इस अध्याय के सभी प्रीमियम फ़ीचर नीचे अनलॉक करें।' }
+         unlock:'सब अनलॉक करें', used:'इस फ़ीचर का आपका मुफ़्त नमूना पूरा हो गया।', usedSub:'पसंद आया? इस अध्याय के सभी प्रीमियम फ़ीचर नीचे अनलॉक करें।',
+         prot:'🔒 शेयर, डाउनलोड और स्क्रीनशॉट इस अध्याय को अनलॉक करने के बाद उपलब्ध हैं।', wm:'FREE SAMPLE' }
   };
   function fmt(s){ s = Math.max(0, Math.ceil(s)); var m = Math.floor(s / 60), x = s % 60; return m + ':' + (x < 10 ? '0' : '') + x; }
 
@@ -56,7 +62,16 @@
     + '.bsmp-bar .ic{font-size:18px}.bsmp-bar .tx{flex:1;min-width:0;line-height:1.3}.bsmp-bar .tx b{color:#e9c45a;display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase}'
     + '.bsmp-bar button{flex:0 0 auto;border:0;border-radius:10px;padding:8px 12px;background:linear-gradient(135deg,#d4af37,#e9c45a);color:#1a1406;font:700 12.5px Inter,system-ui,sans-serif;cursor:pointer}'
     + '.bsmp-note{margin:0 0 12px;padding:12px 14px;border-radius:12px;background:#fbf1d6;border:1px solid #e6cf8a;color:#3a2c05;font:600 14px/1.45 Inter,system-ui,sans-serif}'
-    + '.bsmp-note small{display:block;font-weight:400;margin-top:2px}';
+    + '.bsmp-note small{display:block;font-weight:400;margin-top:2px}'
+    + '.bsmp-guard{-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important}'
+    + '.bsmp-guard input,.bsmp-guard textarea,.bsmp-guard [contenteditable]{-webkit-user-select:text!important;user-select:text!important}'
+    + '.bsmp-guard img,.bsmp-guard canvas,.bsmp-guard svg{-webkit-user-drag:none;-webkit-touch-callout:none}'
+    + '.bsmp-wm{position:absolute;inset:0;z-index:30;pointer-events:none;background-repeat:repeat;opacity:.16}'
+    + '.bsmp-blocked{opacity:.45!important;filter:grayscale(1)!important;cursor:not-allowed!important}'
+    + 'body.bsmp-hide .bsmp-guard{filter:blur(18px)!important}'
+    + '.bsmp-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:2147483600;max-width:min(92vw,440px);padding:11px 16px;border-radius:12px;'
+    + 'background:#0e1b33;color:#fff;border:1px solid #e9c45a;box-shadow:0 8px 24px rgba(0,0,0,.3);font:600 13.5px/1.4 Inter,system-ui,sans-serif;text-align:center}'
+    + '@media print{.bsmp-guard{display:none!important}}';
   function addCss(){ if(document.getElementById('bsmpCss')) return; var s = document.createElement('style'); s.id = 'bsmpCss'; s.textContent = css; (document.head || document.documentElement).appendChild(s); }
 
   /* ---------- active samples ---------- */
@@ -76,6 +91,7 @@
     setTimeout(function(){ api.notice(a.tab, a.noticeEl ? a.noticeEl() : a.el); try{ (a.noticeEl ? a.noticeEl() : a.el).scrollIntoView({block:'start'}); }catch(e){} }, 30);
   }
   function detach(a){
+    guardOff(a);
     if(a.handler) a.el.removeEventListener('click', a.handler, true);
     if(a.bar && a.bar.parentNode) a.bar.parentNode.removeChild(a.bar);
     var i = active.indexOf(a); if(i >= 0) active.splice(i, 1);
@@ -107,8 +123,111 @@
         if(o.r.t >= (TIME[a.tab] || DEFAULT_TIME)){ finish(a); return; }
       }
       paintBar(a);
+      if(a.guard) markGuard(a);
     });
   }, 1000);
+
+  /* ---------- content protection while a sample runs ---------- */
+  var BLOCK_RE = /share|download|export|print|pdf|save ?as|save ?image|whatsapp|copy|screenshot|\.png|html2canvas/i;
+  function guarding(){ return active.some(function(a){ return visible(a.el); }); }
+  function guardedEl(node){ for(var i = 0; i < active.length; i++){ if(active[i].el.contains(node)) return active[i]; } return null; }
+  function isBlockedCtl(t){
+    if(!t || (t.closest && t.closest('.bsmp-bar'))) return false;
+    var s = (t.textContent || '').slice(0, 80) + ' ' + (t.getAttribute('onclick') || '') + ' ' + (t.id || '') + ' ' + (typeof t.className === 'string' ? t.className : '') + ' ' + (t.getAttribute('aria-label') || '') + ' ' + (t.getAttribute('title') || '');
+    return BLOCK_RE.test(s) || (t.tagName === 'A' && t.hasAttribute('download'));
+  }
+  var toastT = null;
+  function toast(){
+    addCss();
+    var n = document.getElementById('bsmpToast');
+    if(!n){ n = document.createElement('div'); n.id = 'bsmpToast'; n.className = 'bsmp-toast'; document.body.appendChild(n); }
+    n.textContent = T[lang()].prot; n.style.display = 'block';
+    clearTimeout(toastT); toastT = setTimeout(function(){ n.style.display = 'none'; }, 3200);
+  }
+  function studentTag(){
+    var p = null; try{ p = JSON.parse(localStorage.getItem('baio_student') || 'null'); }catch(e){}
+    var bits = [T.en.wm, 'BAIO']; if(p && p.name) bits.push(String(p.name).slice(0, 24)); if(p && p.roll) bits.push(String(p.roll).slice(0, 14));
+    return bits.join(' · ');
+  }
+  function wmUrl(){
+    var txt = studentTag().replace(/[<>&"']/g, '');
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="190"><text x="150" y="100" text-anchor="middle" transform="rotate(-28 150 95)" '
+      + 'font-family="Inter,Arial,sans-serif" font-size="15" font-weight="700" fill="#c0392b">' + txt + '</text></svg>';
+    return 'url("data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg) + '")';
+  }
+  function guardOn(a){
+    a.el.classList.add('bsmp-guard');
+    if(getComputedStyle(a.el).position === 'static'){ a.el.style.position = 'relative'; a.posSet = true; }
+    a.guard = function(e){
+      if(!a.el.isConnected) return;
+      var t = e.target && e.target.closest ? e.target.closest('button,a,[onclick],[role="button"],label,input[type="button"]') : null;
+      if(t && a.el.contains(t) && isBlockedCtl(t)){ e.preventDefault(); e.stopImmediatePropagation(); toast(); }
+    };
+    a.stopEv = function(e){ var tg = e.target; if(e.type === 'selectstart' && tg && (tg.closest ? tg.closest('input,textarea,[contenteditable]') : null)) return; e.preventDefault(); if(e.type !== 'selectstart') toast(); };
+    a.el.addEventListener('click', a.guard, true);
+    ['contextmenu','copy','cut','dragstart'].forEach(function(ev){ a.el.addEventListener(ev, a.stopEv, true); });
+    a.el.addEventListener('selectstart', a.stopEv, true);
+    markGuard(a);
+  }
+  function guardOff(a){
+    if(!a.guard) return;
+    a.el.removeEventListener('click', a.guard, true);
+    ['contextmenu','copy','cut','dragstart','selectstart'].forEach(function(ev){ a.el.removeEventListener(ev, a.stopEv, true); });
+    a.el.classList.remove('bsmp-guard');
+    if(a.posSet) a.el.style.position = '';
+    if(a.wm && a.wm.parentNode) a.wm.parentNode.removeChild(a.wm);
+    try{ a.el.querySelectorAll('.bsmp-blocked').forEach(function(b){ b.classList.remove('bsmp-blocked'); }); }catch(e){}
+    a.guard = null;
+    if(!active.some(function(x){ return x !== a && x.guard; })) document.body.classList.remove('bsmp-hide');
+  }
+  /* keep watermark and dimmed buttons in place after the chapter re-renders its content */
+  function markGuard(a){
+    if(!a.wm){ a.wm = document.createElement('div'); a.wm.className = 'bsmp-wm'; a.wm.setAttribute('aria-hidden', 'true'); a.wm.style.backgroundImage = wmUrl(); }
+    if(a.wm.parentNode !== a.el) a.el.appendChild(a.wm);
+    try{ a.el.querySelectorAll('button,a,[onclick],[role="button"]').forEach(function(b){ if(isBlockedCtl(b)) b.classList.add('bsmp-blocked'); }); }catch(e){}
+  }
+
+  /* page-wide: block the browser's share / print / download paths while a sample is on screen */
+  (function(){
+    try{
+      if(navigator.share){ var sh = navigator.share.bind(navigator); navigator.share = function(){ if(guarding()){ toast(); return Promise.reject(new Error('sample')); } return sh.apply(null, arguments); }; }
+    }catch(e){}
+    try{ var pr = window.print; window.print = function(){ if(guarding()){ toast(); return; } return pr.apply(window, arguments); }; }catch(e){}
+    try{
+      var ac = HTMLAnchorElement.prototype.click;
+      HTMLAnchorElement.prototype.click = function(){ if(guarding() && (this.hasAttribute('download') || /^(blob|data):/i.test(this.href || ''))){ toast(); return; } return ac.apply(this, arguments); };
+    }catch(e){}
+    try{
+      var wo = window.open;
+      window.open = function(u){ if(guarding() && /^(blob|data):|wa\.me|whatsapp|facebook\.com\/sharer|twitter\.com\/intent|t\.me\/share/i.test(String(u || ''))){ toast(); return null; } return wo.apply(window, arguments); };
+    }catch(e){}
+    document.addEventListener('click', function(e){
+      if(!guarding()) return;
+      var t = e.target && e.target.closest ? e.target.closest('a[download]') : null;
+      if(t){ e.preventDefault(); e.stopImmediatePropagation(); toast(); }
+    }, true);
+    document.addEventListener('keydown', function(e){
+      if(!guarding()) return;
+      var k = (e.key || '').toLowerCase(), mod = e.ctrlKey || e.metaKey;
+      if(k === 'printscreen' || (mod && (k === 'p' || k === 's' || k === 'c')) || (e.metaKey && e.shiftKey && /[345]/.test(k))){
+        e.preventDefault();
+        if(k === 'printscreen'){ try{ navigator.clipboard && navigator.clipboard.writeText(''); }catch(x){} document.body.classList.add('bsmp-hide'); setTimeout(function(){ document.body.classList.remove('bsmp-hide'); }, 1500); }
+        toast();
+      }
+    }, true);
+    document.addEventListener('keyup', function(e){ if(guarding() && (e.key || '').toLowerCase() === 'printscreen'){ try{ navigator.clipboard && navigator.clipboard.writeText(''); }catch(x){} toast(); } }, true);
+    /* blur the sample when the app goes to the background / loses focus (app switcher, snipping tools) */
+    function hide(){
+      if(!active.some(function(a){ return a.guard; })) return;
+      var f = document.activeElement; if(f && f.tagName === 'IFRAME' && guardedEl(f)) return;
+      document.body.classList.add('bsmp-hide');
+    }
+    function show(){ document.body.classList.remove('bsmp-hide'); }
+    window.addEventListener('blur', hide);
+    window.addEventListener('focus', show);
+    document.addEventListener('visibilitychange', function(){ if(document.visibilityState === 'hidden') hide(); else setTimeout(show, 250); });
+    window.addEventListener('beforeprint', function(){ if(guarding()) toast(); });
+  })();
 
   var api = {
     allow: function(tab, key){ return !usedUp(chapterKey(key), tab); },
@@ -144,6 +263,7 @@
       }
       active.push(a);
       paintBar(a);
+      guardOn(a);
     },
     notice: function(tab, el){
       if(!el) return; addCss();
