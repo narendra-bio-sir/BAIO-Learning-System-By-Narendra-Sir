@@ -381,6 +381,15 @@ header{padding:34px 0 22px; text-align:center;}
 .start3-b small{display:block;font-size:11.5px;color:var(--ink-dim);line-height:1.4;margin-top:1px;}
 .start3-go{flex:0 0 auto;text-decoration:none;font:700 12px 'Space Grotesk',sans-serif;padding:9px 12px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;white-space:nowrap;}
 .start3-step.done .start3-go{background:transparent;border:1px solid var(--teal);color:var(--teal);}
+.start3-watch{display:flex;align-items:center;gap:12px;width:100%;margin-top:10px;padding:8px;border-radius:12px;border:1px dashed var(--gold);background:transparent;cursor:pointer;text-align:left;color:var(--ink);font-family:inherit;}
+.start3-watch img{width:44px;height:78px;object-fit:cover;border-radius:8px;flex:0 0 auto;}
+.start3-watch b{display:block;font:700 13.5px 'Space Grotesk',sans-serif;color:var(--gold);}
+.start3-watch small{display:block;font-size:11.5px;color:var(--ink-dim);margin-top:2px;}
+.start3-vmodal{position:fixed;inset:0;z-index:9999;background:rgba(5,10,20,.88);display:flex;align-items:center;justify-content:center;padding:16px;}
+.start3-vmodal[hidden]{display:none;}
+.start3-vbox{position:relative;width:min(420px,100%);}
+.start3-vbox video{width:100%;max-height:calc(100vh - 80px);border-radius:16px;background:#000;display:block;}
+.start3-vclose{position:absolute;top:-14px;right:-6px;width:40px;height:40px;border-radius:50%;border:0;background:#fff;color:#111;font-size:18px;cursor:pointer;z-index:1;box-shadow:0 2px 10px rgba(0,0,0,.4);}
 .continue-widget{
   display:none; align-items:center; gap:12px; border:1px solid var(--line); border-radius:14px;
   padding:14px 16px; background:linear-gradient(120deg, var(--panel), var(--panel2)); margin-top:16px;
@@ -526,6 +535,12 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     <button id="pu1ChapterJumpBtn" class="theme-toggle-btn" style="right:150px;" title="Jump to a live PU-I chapter" aria-label="Jump to a live PU-I chapter" aria-haspopup="true" aria-expanded="false">&#127891;</button>
   </div>
 
+  <div class="start3-vmodal" id="start3VModal" role="dialog" aria-modal="true" aria-label="How to start in 3 steps" hidden>
+    <div class="start3-vbox">
+      <button type="button" class="start3-vclose" id="start3VClose" aria-label="Close video">✕</button>
+      <video id="start3Video" controls playsinline preload="none" poster="reels/baio-start-3-steps-cover.jpg"><source src="reels/baio-start-3-steps.mp4" type="video/mp4"></video>
+    </div>
+  </div>
   <div id="start3" class="start3" aria-label="Start here: your daily 3 steps">
     <div class="start3-head">
       <div>
@@ -551,6 +566,10 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       <div class="start3-b"><b>🔥 Revise · 5 min</b><small><b style="display:inline">Daily Bio Zone</b> → today's 5 questions. Keep your streak alive.</small></div>
       <a class="start3-go" id="start3Go3" href="zone.html#daily">Revise →</a>
     </div>
+    <button type="button" class="start3-watch" id="start3Watch" aria-label="Watch the video: how to start in 3 steps">
+      <img src="reels/baio-start-3-steps-cover.jpg" alt="" loading="lazy">
+      <span><b>▶ Watch: how to start in 3 steps</b><small>4-min video · Learn, Practise, Revise · every tab shown</small></span>
+    </button>
   </div>
 
   <div style="border:1px solid var(--gold); border-radius:16px; padding:16px 18px; margin-top:16px; margin-bottom:16px; background:linear-gradient(120deg, var(--panel), var(--panel2)); text-align:center;">
@@ -2990,6 +3009,17 @@ window.indexHardRefresh = indexHardRefresh;
     links();paint();
   }catch(e){}
 })();
+</script>
+<script>
+(function(){try{
+  var m=document.getElementById('start3VModal'),v=document.getElementById('start3Video'),b=document.getElementById('start3Watch');
+  if(!m||!v||!b)return;
+  function close(){try{v.pause();}catch(e){}m.hidden=true;document.body.style.overflow='';}
+  b.addEventListener('click',function(){m.hidden=false;document.body.style.overflow='hidden';try{var p=v.play();if(p&&p.catch)p.catch(function(){});}catch(e){}});
+  document.getElementById('start3VClose').addEventListener('click',close);
+  m.addEventListener('click',function(e){if(e.target===m)close();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!m.hidden)close();});
+}catch(e){}})();
 </script>
 </body>
 </html>
