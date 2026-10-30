@@ -370,8 +370,32 @@ header{padding:34px 0 22px; text-align:center;}
 .start3-sub{font-size:11.5px;color:var(--ink-dim);margin-top:2px;}
 .start3-count{flex:0 0 auto;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);color:var(--ink);white-space:nowrap;}
 .start3-count.done{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;border-color:transparent;}
-.start3-ch{display:flex;align-items:center;gap:8px;margin:12px 0 4px;font-size:12px;color:var(--ink-dim);}
-.start3-ch select{flex:1;min-width:0;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:600 12.5px 'Inter',sans-serif;}
+.start3-ch{margin:12px 0 4px;}
+.start3-pick{display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;border-radius:12px;border:1.5px solid var(--gold);background:var(--panel);color:var(--ink);cursor:pointer;text-align:left;font-family:inherit;}
+.start3-pick-ic{flex:0 0 auto;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:20px;background:linear-gradient(135deg,rgba(212,175,55,.18),rgba(45,212,191,.16));}
+.start3-pick-tx{flex:1;min-width:0;}
+.start3-pick-tx small{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--teal);font-weight:800;}
+.start3-pick-tx b{display:block;font:700 14px 'Space Grotesk',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.start3-pick-chev{flex:0 0 auto;color:var(--gold);font-size:14px;}
+.start3-sheet{position:fixed;inset:0;z-index:2147483000;background:rgba(5,10,20,.55);display:flex;align-items:flex-end;justify-content:center;}
+.start3-sheet[hidden]{display:none;}
+.start3-sheet-box{width:min(520px,100%);max-height:78vh;display:flex;flex-direction:column;background:var(--bg,var(--panel));border:1px solid var(--line);border-bottom:0;border-radius:22px 22px 0 0;padding:14px 14px calc(12px + env(safe-area-inset-bottom));box-shadow:0 -10px 30px rgba(0,0,0,.25);animation:start3Up .22s ease;}
+@keyframes start3Up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.start3-sheet-head{display:flex;align-items:center;justify-content:space-between;padding:2px 4px 10px;}
+.start3-sheet-head b{font:700 17px 'Space Grotesk',sans-serif;color:var(--ink);}
+.start3-sheet-head button{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:15px;cursor:pointer;}
+.start3-sheet-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:4px;border-radius:12px;background:var(--panel);border:1px solid var(--line);margin-bottom:10px;}
+.start3-sheet-tabs button{border:0;border-radius:9px;padding:9px;background:transparent;color:var(--ink-dim);font:700 13px 'Space Grotesk',sans-serif;cursor:pointer;}
+.start3-sheet-tabs button.on{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;}
+.start3-sheet-list{overflow-y:auto;display:grid;grid-template-columns:1fr;gap:8px;padding:2px 2px 4px;}
+.start3-opt{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;text-align:left;font-family:inherit;}
+.start3-opt .ic{flex:0 0 auto;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:linear-gradient(135deg,rgba(212,175,55,.16),rgba(45,212,191,.14));}
+.start3-opt .tx{flex:1;min-width:0;}
+.start3-opt .tx small{display:block;font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--gold);font-weight:800;}
+.start3-opt .tx b{display:block;font-size:14px;line-height:1.3;}
+.start3-opt .ck{flex:0 0 auto;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-size:13px;color:transparent;}
+.start3-opt.on{border-color:var(--teal);box-shadow:0 0 0 1px var(--teal) inset;}
+.start3-opt.on .ck{background:var(--teal);border-color:var(--teal);color:#fff;}
 .start3-step{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px dashed var(--line);}
 .start3-step:first-of-type{border-top:0;}
 .start3-n{flex:0 0 auto;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:700 14px 'Space Grotesk',sans-serif;background:var(--panel);border:1.5px solid var(--gold);color:var(--gold);}
@@ -385,7 +409,7 @@ header{padding:34px 0 22px; text-align:center;}
 .start3-watch img{width:44px;height:78px;object-fit:cover;border-radius:8px;flex:0 0 auto;}
 .start3-watch b{display:block;font:700 13.5px 'Space Grotesk',sans-serif;color:var(--gold);}
 .start3-watch small{display:block;font-size:11.5px;color:var(--ink-dim);margin-top:2px;}
-.start3-vmodal{position:fixed;inset:0;z-index:9999;background:rgba(5,10,20,.88);display:flex;align-items:center;justify-content:center;padding:16px;}
+.start3-vmodal{position:fixed;inset:0;z-index:2147483001;background:rgba(5,10,20,.88);display:flex;align-items:center;justify-content:center;padding:16px;}
 .start3-vmodal[hidden]{display:none;}
 .start3-vbox{position:relative;width:min(420px,100%);}
 .start3-vbox video{width:100%;max-height:calc(100vh - 80px);border-radius:16px;background:#000;display:block;}
@@ -541,6 +565,16 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       <video id="start3Video" controls playsinline preload="none" poster="reels/baio-start-3-steps-cover.jpg"><source src="reels/baio-start-3-steps.mp4" type="video/mp4"></video>
     </div>
   </div>
+  <div class="start3-sheet" id="start3Sheet" role="dialog" aria-modal="true" aria-label="Choose your chapter" hidden>
+    <div class="start3-sheet-box">
+      <div class="start3-sheet-head"><b>Choose your chapter</b><button type="button" id="start3SheetClose" aria-label="Close">✕</button></div>
+      <div class="start3-sheet-tabs" role="tablist">
+        <button type="button" data-puc="PUC-1" role="tab">I PUC</button>
+        <button type="button" data-puc="PUC-2" role="tab">II PUC</button>
+      </div>
+      <div class="start3-sheet-list" id="start3SheetList"></div>
+    </div>
+  </div>
   <div id="start3" class="start3" aria-label="Start here: your daily 3 steps">
     <div class="start3-head">
       <div>
@@ -550,7 +584,14 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
       </div>
       <div class="start3-count" id="start3Count">0 / 3 today</div>
     </div>
-    <label class="start3-ch">Chapter <select id="start3Chapter" aria-label="Choose your chapter"></select></label>
+    <div class="start3-ch">
+      <select id="start3Chapter" aria-hidden="true" tabindex="-1" hidden></select>
+      <button type="button" class="start3-pick" id="start3Pick" aria-haspopup="dialog" aria-expanded="false">
+        <span class="start3-pick-ic" id="start3PickIc">📘</span>
+        <span class="start3-pick-tx"><small id="start3PickK">Your chapter</small><b id="start3PickT">Choose a chapter</b></span>
+        <span class="start3-pick-chev">▾</span>
+      </button>
+    </div>
     <div class="start3-step" data-step="1">
       <div class="start3-n">1</div>
       <div class="start3-b"><b>📘 Learn · 45 min</b><small>Open the chapter → <b style="display:inline">Study Mode</b> or <b style="display:inline">One-Shot Revision</b>. The <b style="display:inline">Pacing</b> tab tells you today's topic.</small></div>
@@ -3014,11 +3055,46 @@ window.indexHardRefresh = indexHardRefresh;
 (function(){try{
   var m=document.getElementById('start3VModal'),v=document.getElementById('start3Video'),b=document.getElementById('start3Watch');
   if(!m||!v||!b)return;
+  document.body.appendChild(m);
   function close(){try{v.pause();}catch(e){}m.hidden=true;document.body.style.overflow='';}
   b.addEventListener('click',function(){m.hidden=false;document.body.style.overflow='hidden';try{var p=v.play();if(p&&p.catch)p.catch(function(){});}catch(e){}});
   document.getElementById('start3VClose').addEventListener('click',close);
   m.addEventListener('click',function(e){if(e.target===m)close();});
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!m.hidden)close();});
+}catch(e){}})();
+</script>
+<script>
+/* ---- Start here: chapter picker (bottom sheet with icons, grouped I PUC / II PUC) ---- */
+(function(){try{
+  var sel=document.getElementById('start3Chapter'),btn=document.getElementById('start3Pick'),sh=document.getElementById('start3Sheet'),list=document.getElementById('start3SheetList');
+  if(!sel||!btn||!sh||typeof CHAPTERS==='undefined')return;
+  document.body.appendChild(sh); /* escape any parent stacking context so it sits above floating buttons */
+  var live=CHAPTERS.filter(function(c){return c.live;});
+  function find(h){for(var i=0;i<live.length;i++)if(live[i].href===h)return live[i];return null;}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  var puc='PUC-1';
+  function paintBtn(){var c=find(sel.value);if(!c)return;
+    document.getElementById('start3PickIc').textContent=c.icon||'📘';
+    document.getElementById('start3PickK').textContent=(c.puc==='PUC-2'?'II PUC':'I PUC')+' · '+c.num;
+    document.getElementById('start3PickT').textContent=c.title;}
+  function renderList(){
+    sh.querySelectorAll('.start3-sheet-tabs button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-puc')===puc);});
+    list.innerHTML=live.filter(function(c){return c.puc===puc;}).map(function(c){
+      var on=c.href===sel.value;
+      return '<button type="button" class="start3-opt'+(on?' on':'')+'" data-href="'+esc(c.href)+'"><span class="ic">'+(c.icon||'📘')+'</span><span class="tx"><small>'+esc(c.num)+'</small><b>'+esc(c.title)+'</b></span><span class="ck">✓</span></button>';
+    }).join('');
+    var on=list.querySelector('.start3-opt.on');if(on)setTimeout(function(){on.scrollIntoView({block:'nearest'});},30);
+  }
+  function open(){var c=find(sel.value);puc=c?c.puc:'PUC-1';renderList();sh.hidden=false;btn.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';}
+  function close(){sh.hidden=true;btn.setAttribute('aria-expanded','false');document.body.style.overflow='';}
+  btn.addEventListener('click',open);
+  document.getElementById('start3SheetClose').addEventListener('click',close);
+  sh.addEventListener('click',function(e){if(e.target===sh)close();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!sh.hidden)close();});
+  sh.querySelectorAll('.start3-sheet-tabs button').forEach(function(b){b.addEventListener('click',function(){puc=b.getAttribute('data-puc');renderList();});});
+  list.addEventListener('click',function(e){var o=e.target.closest('.start3-opt');if(!o)return;
+    sel.value=o.getAttribute('data-href');sel.dispatchEvent(new Event('change'));paintBtn();close();});
+  paintBtn();
 }catch(e){}})();
 </script>
 </body>
