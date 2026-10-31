@@ -15,3 +15,7 @@ jobs:
           node-version: 20
       - name: Check inline script syntax
         run: node scripts/check-html-scripts.js
+      - name: Check offline file list is up to date
+        run: |
+          python3 scripts/build-offline-manifest.py
+          git diff --exit-code offline-manifest.json || { echo "::error::offline-manifest.json is out of date. Run: python3 scripts/build-offline-manifest.py and commit it."; exit 1; }

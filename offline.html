@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Use BAIO offline | BAIO Learning System</title>
+<meta name="description" content="Save BAIO chapters on your phone so they open without internet.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="subject-apps/app.css?v=1">
+<style>
+[hidden]{display:none!important}
+body{font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',system-ui,sans-serif}
+.net{display:inline-flex;align-items:center;gap:7px;margin-top:12px;font:700 12.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari';padding:6px 11px;border-radius:999px;border:1.5px solid var(--line);background:var(--panel)}
+.net i{width:8px;height:8px;border-radius:50%;background:#2F9E6B;display:inline-block}
+.net.off i{background:#C9792B}
+.note{margin-top:14px;padding:13px 15px;border-radius:14px;font-size:14px;line-height:1.5}
+.note.miss{background:color-mix(in srgb,#C9792B 14%,var(--panel));border:1.5px solid color-mix(in srgb,#C9792B 55%,transparent)}
+.note.ok{background:color-mix(in srgb,#2F9E6B 13%,var(--panel));border:1.5px solid color-mix(in srgb,#2F9E6B 50%,transparent)}
+.note.bad{background:color-mix(in srgb,var(--red) 12%,var(--panel));border:1.5px solid color-mix(in srgb,var(--red) 45%,transparent)}
+h2.sec{font:700 18px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari';margin:26px 0 10px}
+.packs{display:grid;gap:10px}
+.pack{display:grid;grid-template-columns:46px minmax(0,1fr) auto;gap:12px;align-items:center;padding:13px 14px;border-radius:16px;background:var(--panel);border:1.5px solid var(--line);cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none}
+.pack.on{border-color:var(--gold2);box-shadow:0 0 0 1px var(--gold2) inset}
+.pack.fixed{cursor:default}
+.pack .ic{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:24px;background:var(--panel2);border:1px solid var(--line)}
+.pack b{display:block;font:700 15.5px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari';line-height:1.3}
+.pack small{display:block;color:var(--dim);font-size:12.5px;line-height:1.4;margin-top:2px}
+.pack .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tag{font:700 11px Inter,'Noto Sans Kannada','Noto Sans Devanagari';padding:3px 8px;border-radius:999px;border:1px solid var(--line);color:var(--dim);white-space:nowrap}
+.tag.saved{color:#1F7A52;border-color:#2F9E6B;background:color-mix(in srgb,#2F9E6B 12%,transparent)}
+[data-theme="dark"] .tag.saved{color:#6FD3A3}
+.tag.part{color:#A0601F;border-color:#C9792B}
+[data-theme="dark"] .tag.part{color:#F0B774}
+.box{width:26px;height:26px;border-radius:8px;border:2px solid var(--line);display:grid;place-items:center;font:800 15px Inter;color:#1a1406}
+.pack.on .box{background:linear-gradient(135deg,var(--gold2),#E9C45A);border-color:var(--gold2)}
+.pack.fixed .box{background:var(--panel2);color:var(--dim);border-color:var(--line)}
+.rm{background:none;border:0;color:var(--dim);font:600 12px Inter,'Noto Sans Kannada','Noto Sans Devanagari';text-decoration:underline;cursor:pointer;padding:0}
+.go{display:block;width:100%;margin-top:14px;border:0;border-radius:14px;padding:15px 16px;font:700 16px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari';background:linear-gradient(135deg,var(--gold2),#E9C45A);color:#1a1406;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.go:disabled{opacity:.55;cursor:not-allowed}
+.bar{height:10px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);overflow:hidden;margin-top:12px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--gold2));transition:width .25s}
+.prog{font-size:13px;color:var(--dim);margin-top:7px}
+.small{font-size:12.5px;color:var(--dim);margin-top:8px}
+.saved-list{display:grid;gap:8px}
+details.grp{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+details.grp summary{cursor:pointer;padding:12px 14px;font:700 14.5px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari';list-style:none;display:flex;justify-content:space-between;gap:10px}
+details.grp summary::-webkit-details-marker{display:none}
+details.grp summary span{color:var(--dim);font:600 12.5px Inter}
+details.grp ul{list-style:none;margin:0;padding:0 8px 8px}
+details.grp li a{display:block;padding:9px 8px;border-radius:10px;color:var(--ink);text-decoration:none;font-size:14px}
+details.grp li a:active,details.grp li a:hover{background:var(--panel2)}
+.empty{color:var(--dim);font-size:14px;padding:4px 2px}
+ul.need{margin:0;padding-left:20px;color:var(--dim);font-size:14px;line-height:1.7}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="brand" href="index.html"><div class="b">B</div><span>BAIO Learning System</span></a>
+  <div class="tools"><div id="langs"></div>
+    <a class="ib" href="index.html" aria-label="BAIO home">🏠</a>
+    <button class="ib" id="themeBtn" aria-label="Toggle theme">🌙</button></div>
+</div></header>
+<main class="wrap">
+  <section class="hero">
+    <div class="eyebrow" id="eyebrow" style="color:var(--teal)"></div>
+    <h1><span class="ic">📥</span><span id="h1"></span></h1>
+    <p id="intro"></p>
+    <div class="net" id="net"><i></i><span></span></div>
+  </section>
+  <div class="note miss" id="miss" hidden></div>
+  <div class="note bad" id="unsup" hidden></div>
+
+  <h2 class="sec" id="hPick"></h2>
+  <div class="packs" id="packs"></div>
+  <button class="go" id="go" type="button"></button>
+  <div id="progWrap" hidden><div class="bar"><i id="barFill"></i></div><div class="prog" id="prog"></div></div>
+  <div class="note ok" id="done" hidden></div>
+  <p class="small" id="wifi"></p>
+
+  <h2 class="sec" id="hSaved"></h2>
+  <div class="saved-list" id="saved"></div>
+  <p class="small" id="storage"></p>
+
+  <h2 class="sec" id="hNeed"></h2>
+  <ul class="need" id="need"></ul>
+  <p class="hint" id="keep"></p>
+  <footer>BAIO Learning System · Narendra Sir</footer>
+</main>
+<script src="offline-sync.js"></script>
+<script>
+(function(){
+  var UI = {
+    en:{ eyebrow:'Works without internet', h1:'Use BAIO offline',
+         intro:'Save chapters on your phone once. After that they open even when there is no internet or the signal is weak.',
+         online:'Online', offline:'Offline',
+         miss:function(p){ return '📶 You are offline and this page is not saved on your phone yet. Connect to the internet once and download it below. Pages that are already saved are listed further down.'; },
+         unsup:'This browser cannot save BAIO for offline use. Please open BAIO in Chrome.',
+         pick:'1. Choose what to save', saved:'2. Saved on this phone', need:'Still needs internet',
+         packs:{
+           core:['📱','App basics','Home page, Exam Corner, Exam Scorer, time table, study tips and quick cards'],
+           pu1:['🌱','I PUC Biology','Every live chapter: notes, diagrams, MCQs, NEET practice and worksheets'],
+           pu2:['🧬','II PUC Biology','Every live chapter: notes, diagrams, MCQs, NEET practice and worksheets'],
+           pcm:['⚛️','Physics, Chemistry & Maths','Chapter 1 apps for I PUC and II PUC'],
+           extras:['🧪','Flash cards, notes & practicals','Flash cards, illustrated notes, NCERT library and practical guides']
+         },
+         always:'Always included', isSaved:'✓ Saved', part:function(a,b){ return 'Partly saved · '+a+'/'+b; }, notSaved:'Not saved', remove:'Remove',
+         go:function(mb){ return '📥 Download selected · about '+mb; }, update:'🔄 Check for updates', needNet:'Connect to the internet to download',
+         saving:function(a,b,c,d){ return 'Saving '+a+' of '+b+' files · '+c+' of '+d; }, wait:'Getting the file list…',
+         done:function(f){ return '✅ Saved! These parts of BAIO now open without internet.'+(f?' ('+f+' files could not be saved; tap Download again later.)':''); },
+         upToDate:'✅ Everything is already saved and up to date.',
+         failed:'Could not download right now. Check your internet and try again.',
+         wifi:'Tip: download on Wi-Fi. Saved chapters update by themselves whenever you open BAIO with internet.',
+         nothing:'Nothing saved yet. Choose above and tap Download.',
+         pages:function(n){ return n+' pages'; },
+         storage:function(u){ return 'BAIO is using about '+u+' of phone storage.'; },
+         needList:['Videos and podcasts','PDF and PPT downloads','WhatsApp, feedback form and payment','BAIO AI Assistant answers','Chapters you have not saved'],
+         keep:'💡 Your progress, scores and premium unlocks are kept on your phone, so they work offline too.',
+         removeAsk:'Remove this from your phone?' },
+    kn:{ eyebrow:'ಇಂಟರ್ನೆಟ್ ಇಲ್ಲದೆಯೂ ಕೆಲಸ ಮಾಡುತ್ತದೆ', h1:'BAIO ಆಫ್‌ಲೈನ್ ಬಳಸಿ',
+         intro:'ಅಧ್ಯಾಯಗಳನ್ನು ಒಮ್ಮೆ ನಿಮ್ಮ ಫೋನ್‌ನಲ್ಲಿ ಉಳಿಸಿ. ನಂತರ ಇಂಟರ್ನೆಟ್ ಇಲ್ಲದಿದ್ದರೂ ಅಥವಾ ಸಿಗ್ನಲ್ ದುರ್ಬಲವಾಗಿದ್ದರೂ ಅವು ತೆರೆಯುತ್ತವೆ.',
+         online:'ಆನ್‌ಲೈನ್', offline:'ಆಫ್‌ಲೈನ್',
+         miss:function(){ return '📶 ನೀವು ಆಫ್‌ಲೈನ್‌ನಲ್ಲಿದ್ದೀರಿ ಮತ್ತು ಈ ಪುಟ ಇನ್ನೂ ನಿಮ್ಮ ಫೋನ್‌ನಲ್ಲಿ ಉಳಿಸಿಲ್ಲ. ಒಮ್ಮೆ ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕಿಸಿ ಕೆಳಗೆ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ. ಈಗಾಗಲೇ ಉಳಿಸಿದ ಪುಟಗಳು ಕೆಳಗೆ ಇವೆ.'; },
+         unsup:'ಈ ಬ್ರೌಸರ್ BAIO ಅನ್ನು ಆಫ್‌ಲೈನ್‌ಗಾಗಿ ಉಳಿಸಲಾರದು. ದಯವಿಟ್ಟು Chrome ನಲ್ಲಿ ತೆರೆಯಿರಿ.',
+         pick:'1. ಏನು ಉಳಿಸಬೇಕು ಆಯ್ಕೆಮಾಡಿ', saved:'2. ಈ ಫೋನ್‌ನಲ್ಲಿ ಉಳಿಸಲಾಗಿದೆ', need:'ಇನ್ನೂ ಇಂಟರ್ನೆಟ್ ಬೇಕು',
+         packs:{
+           core:['📱','ಆ್ಯಪ್ ಮೂಲಭಾಗ','ಮುಖಪುಟ, ಎಕ್ಸಾಮ್ ಕಾರ್ನರ್, ಎಕ್ಸಾಮ್ ಸ್ಕೋರರ್, ವೇಳಾಪಟ್ಟಿ, ಅಧ್ಯಯನ ಸಲಹೆಗಳು, ಕ್ವಿಕ್ ಕಾರ್ಡ್‌ಗಳು'],
+           pu1:['🌱','ಪ್ರಥಮ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ','ಎಲ್ಲಾ ಅಧ್ಯಾಯಗಳು: ನೋಟ್ಸ್, ಚಿತ್ರಗಳು, MCQ, NEET ಅಭ್ಯಾಸ, ವರ್ಕ್‌ಶೀಟ್'],
+           pu2:['🧬','ದ್ವಿತೀಯ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ','ಎಲ್ಲಾ ಅಧ್ಯಾಯಗಳು: ನೋಟ್ಸ್, ಚಿತ್ರಗಳು, MCQ, NEET ಅಭ್ಯಾಸ, ವರ್ಕ್‌ಶೀಟ್'],
+           pcm:['⚛️','ಭೌತಶಾಸ್ತ್ರ, ರಸಾಯನಶಾಸ್ತ್ರ, ಗಣಿತ','ಪ್ರಥಮ ಮತ್ತು ದ್ವಿತೀಯ ಪಿಯುಸಿ ಅಧ್ಯಾಯ 1 ಆ್ಯಪ್‌ಗಳು'],
+           extras:['🧪','ಫ್ಲ್ಯಾಶ್ ಕಾರ್ಡ್, ನೋಟ್ಸ್, ಪ್ರಾಯೋಗಿಕ','ಫ್ಲ್ಯಾಶ್ ಕಾರ್ಡ್, ಚಿತ್ರ ನೋಟ್ಸ್, NCERT ಲೈಬ್ರರಿ, ಪ್ರಾಯೋಗಿಕ ಮಾರ್ಗದರ್ಶಿ']
+         },
+         always:'ಯಾವಾಗಲೂ ಸೇರಿದೆ', isSaved:'✓ ಉಳಿಸಲಾಗಿದೆ', part:function(a,b){ return 'ಭಾಗಶಃ · '+a+'/'+b; }, notSaved:'ಉಳಿಸಿಲ್ಲ', remove:'ತೆಗೆದುಹಾಕಿ',
+         go:function(mb){ return '📥 ಆಯ್ದವನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ · ಸುಮಾರು '+mb; }, update:'🔄 ಅಪ್‌ಡೇಟ್ ಪರಿಶೀಲಿಸಿ', needNet:'ಡೌನ್‌ಲೋಡ್‌ಗೆ ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕಿಸಿ',
+         saving:function(a,b,c,d){ return b+' ರಲ್ಲಿ '+a+' ಫೈಲ್ ಉಳಿಸಲಾಗುತ್ತಿದೆ · '+d+' ರಲ್ಲಿ '+c; }, wait:'ಫೈಲ್ ಪಟ್ಟಿ ಪಡೆಯಲಾಗುತ್ತಿದೆ…',
+         done:function(f){ return '✅ ಉಳಿಸಲಾಗಿದೆ! ಈ ಭಾಗಗಳು ಈಗ ಇಂಟರ್ನೆಟ್ ಇಲ್ಲದೆ ತೆರೆಯುತ್ತವೆ.'+(f?' ('+f+' ಫೈಲ್ ಉಳಿಸಲಾಗಲಿಲ್ಲ; ನಂತರ ಮತ್ತೆ ಡೌನ್‌ಲೋಡ್ ಒತ್ತಿ.)':''); },
+         upToDate:'✅ ಎಲ್ಲವೂ ಈಗಾಗಲೇ ಉಳಿಸಲಾಗಿದೆ ಮತ್ತು ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ.',
+         failed:'ಈಗ ಡೌನ್‌ಲೋಡ್ ಆಗಲಿಲ್ಲ. ಇಂಟರ್ನೆಟ್ ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
+         wifi:'ಸಲಹೆ: Wi-Fi ನಲ್ಲಿ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ. ಇಂಟರ್ನೆಟ್ ಇದ್ದಾಗ BAIO ತೆರೆದರೆ ಉಳಿಸಿದ ಅಧ್ಯಾಯಗಳು ತಾವಾಗಿಯೇ ಅಪ್‌ಡೇಟ್ ಆಗುತ್ತವೆ.',
+         nothing:'ಇನ್ನೂ ಏನೂ ಉಳಿಸಿಲ್ಲ. ಮೇಲೆ ಆಯ್ಕೆಮಾಡಿ ಡೌನ್‌ಲೋಡ್ ಒತ್ತಿ.',
+         pages:function(n){ return n+' ಪುಟಗಳು'; },
+         storage:function(u){ return 'BAIO ಸುಮಾರು '+u+' ಫೋನ್ ಸ್ಟೋರೇಜ್ ಬಳಸುತ್ತಿದೆ.'; },
+         needList:['ವಿಡಿಯೋ ಮತ್ತು ಪಾಡ್‌ಕಾಸ್ಟ್','PDF ಮತ್ತು PPT ಡೌನ್‌ಲೋಡ್','WhatsApp, ಅಭಿಪ್ರಾಯ ಫಾರ್ಮ್ ಮತ್ತು ಪಾವತಿ','BAIO AI ಅಸಿಸ್ಟೆಂಟ್ ಉತ್ತರಗಳು','ನೀವು ಉಳಿಸದ ಅಧ್ಯಾಯಗಳು'],
+         keep:'💡 ನಿಮ್ಮ ಪ್ರಗತಿ, ಅಂಕಗಳು ಮತ್ತು ಪ್ರೀಮಿಯಂ ಅನ್‌ಲಾಕ್ ಫೋನ್‌ನಲ್ಲೇ ಇರುತ್ತವೆ, ಆದ್ದರಿಂದ ಆಫ್‌ಲೈನ್‌ನಲ್ಲೂ ಕೆಲಸ ಮಾಡುತ್ತವೆ.',
+         removeAsk:'ಇದನ್ನು ಫೋನ್‌ನಿಂದ ತೆಗೆದುಹಾಕಬೇಕೆ?' },
+    hi:{ eyebrow:'बिना इंटरनेट के भी चलता है', h1:'BAIO ऑफ़लाइन इस्तेमाल करें',
+         intro:'अध्याय एक बार अपने फ़ोन में सेव कर लें। उसके बाद इंटरनेट न होने पर या कमज़ोर सिग्नल में भी वे खुलेंगे।',
+         online:'ऑनलाइन', offline:'ऑफ़लाइन',
+         miss:function(){ return '📶 आप ऑफ़लाइन हैं और यह पेज अभी आपके फ़ोन में सेव नहीं है। एक बार इंटरनेट से जुड़ें और नीचे डाउनलोड करें। जो पेज पहले से सेव हैं, वे नीचे दिए हैं।'; },
+         unsup:'यह ब्राउज़र BAIO को ऑफ़लाइन के लिए सेव नहीं कर सकता। कृपया Chrome में खोलें।',
+         pick:'1. क्या सेव करना है चुनें', saved:'2. इस फ़ोन में सेव है', need:'इनके लिए अभी भी इंटरनेट चाहिए',
+         packs:{
+           core:['📱','ऐप की बुनियादी चीज़ें','होम पेज, एग्ज़ाम कॉर्नर, एग्ज़ाम स्कोरर, टाइम टेबल, स्टडी टिप्स, क्विक कार्ड'],
+           pu1:['🌱','प्रथम पीयूसी जीवविज्ञान','सभी अध्याय: नोट्स, चित्र, MCQ, NEET अभ्यास, वर्कशीट'],
+           pu2:['🧬','द्वितीय पीयूसी जीवविज्ञान','सभी अध्याय: नोट्स, चित्र, MCQ, NEET अभ्यास, वर्कशीट'],
+           pcm:['⚛️','भौतिकी, रसायन, गणित','प्रथम और द्वितीय पीयूसी के अध्याय 1 ऐप'],
+           extras:['🧪','फ़्लैश कार्ड, नोट्स, प्रैक्टिकल','फ़्लैश कार्ड, चित्र नोट्स, NCERT लाइब्रेरी, प्रैक्टिकल गाइड']
+         },
+         always:'हमेशा शामिल', isSaved:'✓ सेव है', part:function(a,b){ return 'आंशिक · '+a+'/'+b; }, notSaved:'सेव नहीं', remove:'हटाएँ',
+         go:function(mb){ return '📥 चुने हुए डाउनलोड करें · लगभग '+mb; }, update:'🔄 अपडेट देखें', needNet:'डाउनलोड के लिए इंटरनेट से जुड़ें',
+         saving:function(a,b,c,d){ return b+' में से '+a+' फ़ाइलें सेव हो रही हैं · '+d+' में से '+c; }, wait:'फ़ाइल सूची ली जा रही है…',
+         done:function(f){ return '✅ सेव हो गया! BAIO के ये हिस्से अब बिना इंटरनेट के खुलेंगे।'+(f?' ('+f+' फ़ाइलें सेव नहीं हुईं; बाद में फिर डाउनलोड दबाएँ।)':''); },
+         upToDate:'✅ सब कुछ पहले से सेव और अपडेट है।',
+         failed:'अभी डाउनलोड नहीं हो सका। इंटरनेट जाँचें और फिर कोशिश करें।',
+         wifi:'सुझाव: Wi-Fi पर डाउनलोड करें। इंटरनेट रहते BAIO खोलने पर सेव किए अध्याय अपने-आप अपडेट हो जाते हैं।',
+         nothing:'अभी कुछ सेव नहीं है। ऊपर चुनें और डाउनलोड दबाएँ।',
+         pages:function(n){ return n+' पेज'; },
+         storage:function(u){ return 'BAIO लगभग '+u+' फ़ोन स्टोरेज इस्तेमाल कर रहा है।'; },
+         needList:['वीडियो और पॉडकास्ट','PDF और PPT डाउनलोड','WhatsApp, फ़ीडबैक फ़ॉर्म और भुगतान','BAIO AI असिस्टेंट के जवाब','जो अध्याय आपने सेव नहीं किए'],
+         keep:'💡 आपकी प्रगति, अंक और प्रीमियम अनलॉक फ़ोन में ही रहते हैं, इसलिए ऑफ़लाइन भी काम करते हैं।',
+         removeAsk:'इसे फ़ोन से हटाएँ?' }
+  };
+  var ORDER = ['core','pu1','pu2','pcm','extras'];
+  function $(id){ return document.getElementById(id); }
+  var lang = 'en'; try{ lang = localStorage.getItem('baio_lang') || 'en'; }catch(e){} if(!UI[lang]) lang = 'en';
+  var tb = $('themeBtn');
+  function theme(t){ document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light'); tb.textContent = t === 'dark' ? '☀️' : '🌙'; }
+  var th = 'light'; try{ th = localStorage.getItem('baio_theme') || 'light'; }catch(e){} theme(th);
+  tb.onclick = function(){ var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; theme(n); try{ localStorage.setItem('baio_theme', n); }catch(e){} };
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
+  function mb(b){ return b >= 1e6 ? (Math.round(b / 1e5) / 10) + ' MB' : Math.max(1, Math.round(b / 1e3)) + ' KB'; }
+
+  var BO = window.BaioOffline, ok = !!(BO && BO.supported());
+  var M = null, ST = null, PAGES = {}, busy = false, msg = null;
+  var missing = new URLSearchParams(location.search).get('missing');
+
+  /* Which packs start ticked: what is already saved, else the student's own year + small packs. */
+  var sel = {};
+  (function(){
+    var s = ok ? BO.state() : { packs: [] };
+    if(s.packs.length){ s.packs.forEach(function(p){ sel[p] = true; }); return; }
+    var roll = ''; try{ roll = (JSON.parse(localStorage.getItem('baio_student') || 'null') || {}).roll || ''; }catch(e){}
+    if(/^26MPU/i.test(roll)) sel.pu1 = true; else if(/^25MPU/i.test(roll)) sel.pu2 = true; else { sel.pu1 = true; sel.pu2 = true; }
+    sel.pcm = true; sel.extras = true;
+  })();
+
+  function chosenBytes(){
+    if(!M) return 0;
+    var seen = {}, b = 0;
+    ['core'].concat(ORDER.filter(function(p){ return sel[p] && p !== 'core'; })).forEach(function(id){
+      var p = M.packs[id]; if(!p) return;
+      p.files.forEach(function(f){ if(!seen[f[0]]){ seen[f[0]] = 1; b += f[1]; } });
+    });
+    return b;
+  }
+
+  function render(){
+    var u = UI[lang];
+    document.documentElement.lang = lang;
+    $('langs').innerHTML = [['en','English'],['kn','ಕನ್ನಡ'],['hi','हिंदी']].map(function(l){ return '<button class="lang'+(l[0]===lang?' on':'')+'" data-l="'+l[0]+'">'+l[1]+'</button>'; }).join('');
+    $('eyebrow').textContent = u.eyebrow; $('h1').textContent = u.h1; $('intro').textContent = u.intro;
+    var on = navigator.onLine;
+    $('net').className = 'net' + (on ? '' : ' off'); $('net').querySelector('span').textContent = on ? u.online : u.offline;
+    $('miss').hidden = !missing; $('miss').textContent = u.miss(missing);
+    $('unsup').hidden = ok; $('unsup').textContent = u.unsup;
+    $('hPick').textContent = u.pick; $('hSaved').textContent = u.saved; $('hNeed').textContent = u.need;
+    $('wifi').textContent = u.wifi; $('keep').textContent = u.keep;
+    $('need').innerHTML = u.needList.map(function(x){ return '<li>'+esc(x)+'</li>'; }).join('');
+
+    $('packs').innerHTML = ORDER.map(function(id){
+      var P = u.packs[id], fixed = id === 'core', isOn = fixed || !!sel[id];
+      var s = ST && ST[id], tag = '';
+      if(s){ tag = s.have >= s.total ? '<span class="tag saved">'+u.isSaved+'</span>' : s.have ? '<span class="tag part">'+u.part(s.have, s.total)+'</span>' : '<span class="tag">'+u.notSaved+'</span>'; }
+      var size = M && M.packs[id] ? '<span class="tag">≈ '+mb(M.packs[id].bytes)+'</span>' : '';
+      var savedPack = ok && BO.state().packs.indexOf(id) >= 0 && !fixed;
+      return '<div class="pack'+(isOn?' on':'')+(fixed?' fixed':'')+'" data-p="'+id+'" role="checkbox" aria-checked="'+isOn+'" tabindex="0">'
+        + '<div class="ic">'+P[0]+'</div><div><b>'+esc(P[1])+'</b><small>'+esc(P[2])+'</small><div class="meta">'
+        + (fixed ? '<span class="tag">'+u.always+'</span>' : '') + size + tag
+        + (savedPack && !busy ? '<button class="rm" data-rm="'+id+'" type="button">'+u.remove+'</button>' : '')
+        + '</div></div><div class="box">'+(isOn?'✓':'')+'</div></div>';
+    }).join('');
+
+    var go = $('go');
+    var allSaved = ST && ORDER.every(function(id){ return !(id === 'core' || sel[id]) || (ST[id] && ST[id].have >= ST[id].total); });
+    if(!ok){ go.disabled = true; go.textContent = u.go('—'); }
+    else if(!on){ go.disabled = true; go.textContent = u.needNet; }
+    else if(!M){ go.disabled = true; go.textContent = u.wait; }
+    else { go.disabled = busy; go.textContent = allSaved ? u.update : u.go(mb(chosenBytes())); }
+
+    if(msg){ $('done').hidden = false; $('done').className = 'note ' + (msg.bad ? 'bad' : 'ok'); $('done').textContent = msg.bad ? u.failed : msg.same ? u.upToDate : u.done(msg.failed); }
+    else $('done').hidden = true;
+
+    var groups = ORDER.map(function(id){
+      var list = PAGES[id] || []; if(!list.length) return '';
+      return '<details class="grp"'+(id===ORDER.find(function(x){ return (PAGES[x]||[]).length && x !== 'core'; })?' open':'')+'><summary>'+u.packs[id][0]+' '+esc(u.packs[id][1])+'<span>'+u.pages(list.length)+'</span></summary><ul>'
+        + list.map(function(p){ return '<li><a href="'+esc(p[0])+'">'+esc(p[1])+'</a></li>'; }).join('') + '</ul></details>';
+    }).join('');
+    $('saved').innerHTML = groups || '<div class="empty">'+u.nothing+'</div>';
+  }
+
+  /* Which pages are actually on the phone right now (checks the cache, so it is always true). */
+  function refreshSaved(){
+    if(!ok || !M) { render(); return Promise.resolve(); }
+    return Promise.all([BO.status(M), caches.open('baio-shell-v3')]).then(function(r){
+      ST = r[0]; var c = r[1];
+      return Promise.all(ORDER.map(function(id){
+        var pages = (M.packs[id] && M.packs[id].pages) || [];
+        return Promise.all(pages.map(function(p){ return c.match(new URL(p[0], location.href).href).then(function(h){ return h ? p : null; }); }))
+          .then(function(l){ PAGES[id] = l.filter(Boolean); });
+      }));
+    }).then(function(){
+      render();
+      if(navigator.storage && navigator.storage.estimate) navigator.storage.estimate().then(function(e){ if(e && e.usage) $('storage').textContent = UI[lang].storage(mb(e.usage)); }).catch(function(){});
+    }).catch(render);
+  }
+
+  /* The file list: from the network when online; offline, the copy saved with the core pack. */
+  function getManifest(){
+    return BO.manifest().catch(function(){
+      return caches.match(new URL('offline-manifest.json', location.href).href).then(function(r){ if(!r) throw 0; return r.json(); });
+    });
+  }
+
+  $('packs').addEventListener('click', function(e){
+    var rm = e.target.closest('[data-rm]');
+    if(rm){
+      e.stopPropagation();
+      if(!M || busy || !confirm(UI[lang].removeAsk)) return;
+      var id = rm.getAttribute('data-rm'); sel[id] = false; msg = null;
+      BO.remove(M, id).then(refreshSaved); return;
+    }
+    var card = e.target.closest('.pack'); if(!card || busy) return;
+    var id2 = card.getAttribute('data-p'); if(id2 === 'core') return;
+    sel[id2] = !sel[id2]; msg = null; render();
+  });
+  $('packs').addEventListener('keydown', function(e){ if((e.key === ' ' || e.key === 'Enter') && e.target.classList.contains('pack')){ e.preventDefault(); e.target.click(); } });
+
+  $('go').addEventListener('click', function(){
+    if(!M || busy) return;
+    busy = true; msg = null; render();
+    $('progWrap').hidden = false; $('barFill').style.width = '0';
+    var ids = ORDER.filter(function(p){ return p === 'core' || sel[p]; });
+    getManifest().then(function(m){ M = m;
+      return BO.download(M, ids, { onProgress: function(d, t, bd, bt){
+        $('barFill').style.width = (t ? Math.round(d / t * 100) : 100) + '%';
+        $('prog').textContent = UI[lang].saving(d, t, mb(bd), mb(bt));
+      }});
+    }).then(function(r){
+      msg = { failed: r.failed, same: r.fetched === 0 && r.failed === 0 };
+      if(missing){ missing = null; try{ history.replaceState(null, '', 'offline.html'); }catch(x){} }
+    }).catch(function(){ msg = { bad: true }; })
+      .then(function(){ busy = false; $('progWrap').hidden = true; return refreshSaved(); });
+  });
+
+  $('langs').addEventListener('click', function(e){ var b = e.target.closest('button'); if(!b) return; lang = b.dataset.l; try{ localStorage.setItem('baio_lang', lang); }catch(x){} render(); });
+  window.addEventListener('online', render); window.addEventListener('offline', render);
+
+  render();
+  if(ok){
+    if(!navigator.serviceWorker.controller) navigator.serviceWorker.register('sw.js').catch(function(){});
+    getManifest().then(function(m){ M = m; return refreshSaved(); }).catch(render);
+  }
+})();
+</script>
+</body>
+</html>
