@@ -87,6 +87,22 @@ a{color:var(--teal)}
 .labels span{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:2px 8px;background:var(--panel)}
 .facts{margin:10px 0 0;padding-left:20px;font-size:14px;line-height:1.7}
 .trick{margin-top:8px;padding:10px 12px;border-radius:12px;background:var(--panel2);font-size:14px;line-height:1.6;border:1px solid var(--line)}
+.paper{margin-top:18px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px}
+.paper h3{font-size:17px}
+.ptbl{overflow-x:auto;margin-top:10px;border:1px solid var(--line);border-radius:14px}
+.ptbl table{border-collapse:collapse;width:100%;font-size:13px;table-layout:fixed}
+.ptbl th,.ptbl td{padding:8px 9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.ptbl th{font:700 10.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari';letter-spacing:.06em;text-transform:uppercase;color:var(--ink-dim);background:var(--panel2)}
+.ptbl td:last-child,.ptbl th:last-child{text-align:right;width:58px;font-variant-numeric:tabular-nums}
+.ptbl th:first-child{width:62px}
+.ptbl th:nth-child(3){width:78px}
+.ptbl tr:last-child td{border-bottom:0;font-weight:700}
+.smart{margin:12px 0 0;padding-left:20px;font-size:14px;line-height:1.65}
+.order{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.order button{border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:999px;padding:6px 11px;font:600 12.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer;min-height:34px}
+.order button b{color:var(--gold);font-variant-numeric:tabular-nums}
+.bpline{margin-top:8px;font-size:13px;color:var(--ink-dim)}
+.bpline b{color:var(--ink)}
 .nav2{display:flex;justify-content:space-between;gap:8px;margin-top:20px}
 .act{display:inline-flex;align-items:center;gap:6px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);text-decoration:none;font:600 13px 'Inter','Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer;min-height:42px}
 .act.primary{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;border-color:var(--gold)}
@@ -96,7 +112,7 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
 button:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
 @media (max-width:640px){ .hero h1{font-size:25px} .rules{grid-template-columns:repeat(2,minmax(0,1fr))} .brand span{display:none} .chapter{padding:14px} .chgrid{grid-template-columns:repeat(2,minmax(0,1fr))} }
 </style>
-<script src="exam-corner/exam-scorer-data.js?v=1"></script>
+<script src="exam-corner/exam-scorer-data.js?v=2"></script>
 </head>
 <body>
 <nav class="topnav"><div class="topnav-inner">
@@ -115,6 +131,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offse
     <p id="tIntro"></p>
     <div class="rules" id="rules"></div>
   </section>
+  <section class="paper" id="paper"></section>
   <div class="chgrid" id="chgrid"></div>
   <article class="chapter" id="chapter"></article>
   <section class="tips" id="tips"></section>
@@ -128,6 +145,11 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offse
     en:{ eyebrow:'II PUC Biology · Exam Scorer', h1:'Score sure marks in <span>Biology</span>',
          intro:'Pass-first material by Narendra Sir for students who want safe, sure marks. For each chapter: the questions that come again and again, short answers in points, must-draw diagrams, one-mark facts and memory tricks. Tick each answer once you can write it without looking.',
          rules:[['1-mark first','Learn the "one-mark facts" of every chapter. They are the easiest marks in Part A.'],['Draw diagrams','A neat, labelled diagram earns marks even if your answer is short.'],['Write in points','Write 5-mark answers as numbered points or a flow-chart, not a paragraph.'],['Practicals = 30','Practical marks are added to your total. Attend every lab and keep your record ready.']],
+         paperH:'The Biology paper: 70 marks', pc:['Part','Questions','You answer','Marks'],
+         prow:[['A – I','MCQ, 1 mark each','All 15','15'],['A – II','Fill in the blanks, 1 mark','All 5','5'],['B','2-mark short answers','5 of 7','10'],['C','3-mark short answers','5 of 7','15'],['D – V','5-mark long answers','4 of 7','20'],['D – VI','5-mark reasoning (HOTS)','1 of 3','5'],['','Total','','70']],
+         smart:['Part A (20 marks) is compulsory and the easiest. Learn the one-mark facts of all 13 chapters.','You can leave 2 questions in Parts B and C and 3 in Part D – V. So it is better to know 9–10 chapters well than all 13 half-way.','Part D – VI asks reasoning questions; in the model blueprint they come from Chapters 4, 5 and 9. Practise genetic crosses to answer one.'],
+         orderH:'Study order by marks (KSEAB blueprint, out of 105 with choices)', bpLink:'📄 Official blueprint (PDF)',
+         bpChap:function(m){ return '<b>'+m+' of 105 marks</b> in the KSEAB blueprint'; }, inPaper:'In the model paper', one:'1M', two:'2M', three:'3M', five:'5M',
          marks:'marks in the board paper', plan:'Plan for this chapter', simple:'In simple words', q:'Questions that score', learnt:'I can write this', learntOn:'✓ Learnt', kn:'ಕನ್ನಡ', hi:'हिंदी',
          dia:'Must-draw diagrams — labels to remember', facts:'One-mark facts', trick:'Memory tricks', prog:function(a,b){ return a+' of '+b+' answers learnt'; },
          prev:'← Previous chapter', next:'Next chapter →', mk:function(n){ return n+' M'; },
@@ -136,6 +158,11 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offse
     kn:{ eyebrow:'ದ್ವಿತೀಯ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ · ಎಕ್ಸಾಮ್ ಸ್ಕೋರರ್', h1:'<span>ಜೀವಶಾಸ್ತ್ರ</span>ದಲ್ಲಿ ಖಚಿತ ಅಂಕ ಗಳಿಸಿ',
          intro:'ಸುರಕ್ಷಿತ, ಖಚಿತ ಅಂಕಗಳು ಬೇಕಾದ ವಿದ್ಯಾರ್ಥಿಗಳಿಗಾಗಿ ನರೇಂದ್ರ ಸರ್ ಅವರ ಪಾಸ್-ಮೊದಲು ಸಾಮಗ್ರಿ. ಪ್ರತಿ ಅಧ್ಯಾಯಕ್ಕೆ: ಮತ್ತೆ ಮತ್ತೆ ಬರುವ ಪ್ರಶ್ನೆಗಳು, ಅಂಶರೂಪದ ಕಿರು ಉತ್ತರಗಳು, ಕಡ್ಡಾಯ ಚಿತ್ರಗಳು, ಒಂದು ಅಂಕದ ಸಂಗತಿಗಳು ಮತ್ತು ನೆನಪಿನ ಸೂತ್ರಗಳು. ನೋಡದೆ ಬರೆಯಲು ಬಂದಾಗ ಗುರುತು ಹಾಕಿ.',
          rules:[['ಮೊದಲು 1 ಅಂಕ','ಪ್ರತಿ ಅಧ್ಯಾಯದ "ಒಂದು ಅಂಕದ ಸಂಗತಿಗಳು" ಕಲಿಯಿರಿ. ಭಾಗ A ಯಲ್ಲಿ ಇವು ಸುಲಭ ಅಂಕಗಳು.'],['ಚಿತ್ರ ಬರೆಯಿರಿ','ಅಂದವಾದ, ಹೆಸರಿಸಿದ ಚಿತ್ರಕ್ಕೆ ಉತ್ತರ ಚಿಕ್ಕದಾದರೂ ಅಂಕ ಸಿಗುತ್ತದೆ.'],['ಅಂಶಗಳಲ್ಲಿ ಬರೆಯಿರಿ','5 ಅಂಕದ ಉತ್ತರವನ್ನು ಸಂಖ್ಯೆ ಹಾಕಿದ ಅಂಶಗಳು ಅಥವಾ ಹರಿವು-ಚಿತ್ರವಾಗಿ ಬರೆಯಿರಿ.'],['ಪ್ರಾಯೋಗಿಕ = 30','ಪ್ರಾಯೋಗಿಕ ಅಂಕಗಳು ಒಟ್ಟು ಅಂಕಕ್ಕೆ ಸೇರುತ್ತವೆ. ಪ್ರತಿ ಲ್ಯಾಬ್‌ಗೆ ಹಾಜರಾಗಿ, ರೆಕಾರ್ಡ್ ಸಿದ್ಧವಿಡಿ.']],
+         paperH:'ಜೀವಶಾಸ್ತ್ರ ಪತ್ರಿಕೆ: 70 ಅಂಕ', pc:['ಭಾಗ','ಪ್ರಶ್ನೆಗಳು','ನೀವು ಉತ್ತರಿಸುವುದು','ಅಂಕ'],
+         prow:[['A – I','MCQ, ತಲಾ 1 ಅಂಕ','ಎಲ್ಲಾ 15','15'],['A – II','ಬಿಟ್ಟ ಸ್ಥಳ ತುಂಬಿ, 1 ಅಂಕ','ಎಲ್ಲಾ 5','5'],['B','2 ಅಂಕದ ಕಿರು ಉತ್ತರ','7 ರಲ್ಲಿ 5','10'],['C','3 ಅಂಕದ ಕಿರು ಉತ್ತರ','7 ರಲ್ಲಿ 5','15'],['D – V','5 ಅಂಕದ ದೀರ್ಘ ಉತ್ತರ','7 ರಲ್ಲಿ 4','20'],['D – VI','5 ಅಂಕದ ತಾರ್ಕಿಕ (HOTS)','3 ರಲ್ಲಿ 1','5'],['','ಒಟ್ಟು','','70']],
+         smart:['ಭಾಗ A (20 ಅಂಕ) ಕಡ್ಡಾಯ ಮತ್ತು ಅತ್ಯಂತ ಸುಲಭ. ಎಲ್ಲಾ 13 ಅಧ್ಯಾಯಗಳ ಒಂದು ಅಂಕದ ಸಂಗತಿಗಳನ್ನು ಕಲಿಯಿರಿ.','ಭಾಗ B ಮತ್ತು C ಯಲ್ಲಿ 2, ಭಾಗ D – V ಯಲ್ಲಿ 3 ಪ್ರಶ್ನೆ ಬಿಡಬಹುದು. ಆದ್ದರಿಂದ 13 ಅಧ್ಯಾಯ ಅರ್ಧಂಬರ್ಧಕ್ಕಿಂತ 9–10 ಅಧ್ಯಾಯ ಚೆನ್ನಾಗಿ ಕಲಿಯುವುದು ಉತ್ತಮ.','ಭಾಗ D – VI ತಾರ್ಕಿಕ ಪ್ರಶ್ನೆಗಳು; ಮಾದರಿ ನೀಲನಕ್ಷೆಯಲ್ಲಿ ಇವು ಅಧ್ಯಾಯ 4, 5, 9 ರಿಂದ. ಒಂದಕ್ಕೆ ಉತ್ತರಿಸಲು ಆನುವಂಶಿಕ ಸಂಕರಗಳನ್ನು ಅಭ್ಯಾಸ ಮಾಡಿ.'],
+         orderH:'ಅಂಕಗಳ ಪ್ರಕಾರ ಓದುವ ಕ್ರಮ (KSEAB ನೀಲನಕ್ಷೆ, ಆಯ್ಕೆಗಳೊಂದಿಗೆ 105 ರಲ್ಲಿ)', bpLink:'📄 ಅಧಿಕೃತ ನೀಲನಕ್ಷೆ (PDF)',
+         bpChap:function(m){ return 'KSEAB ನೀಲನಕ್ಷೆಯಲ್ಲಿ <b>105 ರಲ್ಲಿ '+m+' ಅಂಕ</b>'; }, inPaper:'ಮಾದರಿ ಪತ್ರಿಕೆಯಲ್ಲಿ', one:'1 ಅಂಕ', two:'2 ಅಂಕ', three:'3 ಅಂಕ', five:'5 ಅಂಕ',
          marks:'ಬೋರ್ಡ್ ಪತ್ರಿಕೆಯಲ್ಲಿ ಅಂಕಗಳು', plan:'ಈ ಅಧ್ಯಾಯದ ಯೋಜನೆ', simple:'ಸರಳವಾಗಿ', q:'ಅಂಕ ತರುವ ಪ್ರಶ್ನೆಗಳು', learnt:'ನನಗೆ ಬರೆಯಲು ಬರುತ್ತದೆ', learntOn:'✓ ಕಲಿತೆ', kn:'ಕನ್ನಡ', hi:'हिंदी',
          dia:'ಕಡ್ಡಾಯ ಚಿತ್ರಗಳು — ನೆನಪಿಡಬೇಕಾದ ಹೆಸರುಗಳು', facts:'ಒಂದು ಅಂಕದ ಸಂಗತಿಗಳು', trick:'ನೆನಪಿನ ಸೂತ್ರಗಳು', prog:function(a,b){ return b+' ರಲ್ಲಿ '+a+' ಉತ್ತರ ಕಲಿತಿದ್ದೀರಿ'; },
          prev:'← ಹಿಂದಿನ ಅಧ್ಯಾಯ', next:'ಮುಂದಿನ ಅಧ್ಯಾಯ →', mk:function(n){ return n+' ಅಂಕ'; },
@@ -144,6 +171,11 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offse
     hi:{ eyebrow:'द्वितीय पीयूसी जीव विज्ञान · एग्ज़ाम स्कोरर', h1:'<span>जीव विज्ञान</span> में पक्के अंक पाइए',
          intro:'सुरक्षित, पक्के अंक चाहने वाले छात्रों के लिए नरेंद्र सर की पास-पहले सामग्री। हर अध्याय के लिए: बार-बार आने वाले प्रश्न, बिंदुओं में छोटे उत्तर, ज़रूरी चित्र, एक अंक के तथ्य और याद करने की ट्रिक। बिना देखे लिख पाएँ तो निशान लगाइए।',
          rules:[['पहले 1 अंक','हर अध्याय के "एक अंक के तथ्य" सीखिए। भाग A में ये सबसे आसान अंक हैं।'],['चित्र बनाइए','साफ़, नामांकित चित्र से उत्तर छोटा होने पर भी अंक मिलते हैं।'],['बिंदुओं में लिखिए','5 अंक के उत्तर क्रमांकित बिंदुओं या फ़्लो-चार्ट में लिखिए।'],['प्रायोगिक = 30','प्रायोगिक अंक कुल में जुड़ते हैं। हर लैब में जाइए, रिकॉर्ड तैयार रखिए।']],
+         paperH:'जीव विज्ञान पेपर: 70 अंक', pc:['भाग','प्रश्न','आप हल करेंगे','अंक'],
+         prow:[['A – I','MCQ, हर एक 1 अंक','सभी 15','15'],['A – II','रिक्त स्थान, 1 अंक','सभी 5','5'],['B','2 अंक के लघु उत्तर','7 में से 5','10'],['C','3 अंक के लघु उत्तर','7 में से 5','15'],['D – V','5 अंक के दीर्घ उत्तर','7 में से 4','20'],['D – VI','5 अंक तर्क आधारित (HOTS)','3 में से 1','5'],['','कुल','','70']],
+         smart:['भाग A (20 अंक) अनिवार्य और सबसे आसान है। सभी 13 अध्यायों के एक अंक के तथ्य सीखिए।','भाग B और C में 2 और भाग D – V में 3 प्रश्न छोड़ सकते हैं। इसलिए 13 अध्याय आधे-अधूरे से बेहतर है 9–10 अध्याय अच्छे से सीखना।','भाग D – VI तर्क आधारित प्रश्न; मॉडल ब्लूप्रिंट में ये अध्याय 4, 5 और 9 से हैं। एक हल करने के लिए आनुवंशिक संकरण का अभ्यास कीजिए।'],
+         orderH:'अंकों के अनुसार पढ़ाई का क्रम (KSEAB ब्लूप्रिंट, विकल्पों सहित 105 में से)', bpLink:'📄 आधिकारिक ब्लूप्रिंट (PDF)',
+         bpChap:function(m){ return 'KSEAB ब्लूप्रिंट में <b>105 में से '+m+' अंक</b>'; }, inPaper:'मॉडल पेपर में', one:'1 अंक', two:'2 अंक', three:'3 अंक', five:'5 अंक',
          marks:'बोर्ड पेपर में अंक', plan:'इस अध्याय की योजना', simple:'आसान शब्दों में', q:'अंक दिलाने वाले प्रश्न', learnt:'मैं यह लिख सकता/सकती हूँ', learntOn:'✓ सीख लिया', kn:'ಕನ್ನಡ', hi:'हिंदी',
          dia:'ज़रूरी चित्र — याद रखने वाले नाम', facts:'एक अंक के तथ्य', trick:'याद करने की ट्रिक', prog:function(a,b){ return b+' में से '+a+' उत्तर सीखे'; },
          prev:'← पिछला अध्याय', next:'अगला अध्याय →', mk:function(n){ return n+' अंक'; },
@@ -174,6 +206,14 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offse
     document.getElementById('tH1').innerHTML = u.h1;
     document.getElementById('tIntro').textContent = u.intro;
     document.getElementById('rules').innerHTML = u.rules.map(function(r){ return '<div class="rule"><b>'+r[0]+'</b>'+r[1]+'</div>'; }).join('');
+    var ord = D.slice().sort(function(a, b){ return (+b.m) - (+a.m) || a.ch - b.ch; });
+    document.getElementById('paper').innerHTML = '<h3>🧾 '+u.paperH+'</h3>'
+      + '<div class="ptbl"><table><thead><tr>'+u.pc.map(function(x){ return '<th>'+x+'</th>'; }).join('')+'</tr></thead><tbody>'
+      + u.prow.map(function(r){ return '<tr>'+r.map(function(x){ return '<td>'+x+'</td>'; }).join('')+'</tr>'; }).join('')+'</tbody></table></div>'
+      + '<ol class="smart">'+u.smart.map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ol>'
+      + '<h3 style="margin-top:16px;font-size:15px">📊 '+u.orderH+'</h3>'
+      + '<div class="order">'+ord.map(function(c){ return '<button data-ch="'+c.ch+'">Ch '+c.ch+' · <b>'+c.m+'</b></button>'; }).join('')+'</div>'
+      + '<div class="nav2" style="margin-top:12px"><a class="act" href="exam-corner/ii-puc-biology-blueprint-2024-25.pdf" target="_blank" rel="noopener">'+u.bpLink+'</a></div>';
     document.getElementById('tips').innerHTML = '<h3>📝 '+u.tipsH+'</h3><ol>'+u.tips.map(function(t){ return '<li>'+t+'</li>'; }).join('')+'</ol><p style="font-size:12.5px;color:var(--ink-dim);margin:10px 0 0;line-height:1.6">'+u.src+'</p>';
   }
   function renderGrid(){
@@ -184,8 +224,10 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offse
   }
   function renderChapter(){
     var u = UI[lang], c = chap(cur); if(!c) return;
-    var html = '<div class="ch-head"><span class="pill">Chapter '+c.ch+'</span>'+(c.m ? '<span class="pill t">~'+c.m+' '+u.marks+'</span>' : '')+'</div>'
+    var bpParts = []; [[u.one,0],[u.two,1],[u.three,2],[u.five,3]].forEach(function(x){ var n = c.bp ? c.bp[x[1]] : 0; if(n) bpParts.push(n+' × '+x[0]); });
+    var html = '<div class="ch-head"><span class="pill">Chapter '+c.ch+'</span>'+(c.m ? '<span class="pill t">'+c.m+' / 105</span>' : '')+'</div>'
       + '<h2>'+esc(c.t)+'</h2>'
+      + (c.m ? '<div class="bpline">'+u.bpChap(c.m)+(bpParts.length ? ' · '+u.inPaper+': '+bpParts.join(' · ') : '')+'</div>' : '')
       + '<div class="plan"><b>🎯 '+u.plan+':</b> '+esc(c.plan)+'</div>';
     if(lang !== 'en') html += '<div class="simple"><b>'+u.simple+'</b>'+esc(c[lang])+'</div>';
     var lc = learntCount(c);
@@ -215,6 +257,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offse
     if(scroll) document.getElementById('chapter').scrollIntoView({behavior:'smooth', block:'start'});
   }
   document.getElementById('langs').addEventListener('click', function(e){ var b = e.target.closest('button'); if(!b) return; lang = b.dataset.l; try{ localStorage.setItem('baio_lang', lang); }catch(x){} all(); });
+  document.getElementById('paper').addEventListener('click', function(e){ var b = e.target.closest('.order button'); if(b) go(+b.dataset.ch, true); });
   document.getElementById('chgrid').addEventListener('click', function(e){ var b = e.target.closest('.chbtn'); if(b) go(+b.dataset.ch, true); });
   document.getElementById('chapter').addEventListener('click', function(e){
     var b = e.target.closest('button'); if(!b) return;
