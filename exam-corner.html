@@ -138,6 +138,38 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
 @keyframes gWave{0%,100%{transform:rotate(0)}30%{transform:rotate(18deg)}60%{transform:rotate(-8deg)}}
 @media (prefers-reduced-motion:reduce){.g-finger span,.g-finger i,.g-pulse,.g-phone div,.g-wave{animation:none}.g-card,.g-finger{transition:none}}
 
+/* ---- II PUC exam planner ---- */
+.ep-now{margin-top:12px;padding:14px 16px;border-radius:16px;border:1.5px solid var(--gold);background:var(--panel2);display:grid;gap:4px}
+.ep-now .tag{font:800 11px Inter,'Noto Sans Kannada','Noto Sans Devanagari';letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+.ep-now b{font:700 17px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari'}
+.ep-now span{font-size:13.5px;color:var(--ink-dim);line-height:1.55}
+.ep-h{font:700 15px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari';margin:18px 0 8px}
+.ep-phases{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.ep-ph{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);font-size:12.5px;line-height:1.45;color:var(--ink-dim);min-width:0}
+.ep-ph b{display:block;color:var(--ink);font-size:13px}
+.ep-ph i{font-style:normal;display:block;color:var(--gold);font-weight:700;font-size:11.5px;margin-bottom:2px}
+.ep-ph.on{border-color:var(--teal);box-shadow:0 0 0 3px rgba(46,230,197,.15)}
+.ep-ph.done{opacity:.55}
+.ep-wk{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+.ep-wk table{border-collapse:collapse;width:100%;table-layout:fixed;font-size:13px}
+.ep-wk th:first-child{width:58px}
+.ep-wk th,.ep-wk td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.ep-wk th{font:700 11px Inter,'Noto Sans Kannada','Noto Sans Devanagari';letter-spacing:.06em;text-transform:uppercase;color:var(--ink-dim);background:var(--panel2)}
+.ep-wk tr:last-child td{border-bottom:0}
+.ep-wk tr.today td{background:rgba(46,230,197,.08)}
+.ep-wk td:first-child{font-weight:700;white-space:nowrap}
+.ep-days{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.ep-day{display:grid;grid-template-columns:96px minmax(0,1fr);gap:10px;align-items:center;padding:8px 12px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);font-size:13.5px}
+.ep-day .dt{font:700 12.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari';color:var(--ink-dim)}
+.ep-day.paper{border-color:var(--gold);background:var(--panel)}
+.ep-day.paper b{color:var(--gold)}
+.ep-day.past{opacity:.5}
+.ep-day small{display:block;color:var(--ink-dim);font-size:12px}
+.ep-bio{margin-top:6px;padding:12px 14px;border-radius:14px;border:1px solid var(--teal);background:var(--panel2);font-size:13.5px;line-height:1.55}
+.ep-bio b{color:var(--teal)}
+@media (max-width:640px){ .ep-phases{grid-template-columns:repeat(2,minmax(0,1fr))} .ep-day{grid-template-columns:82px minmax(0,1fr)} }
+@media print{ body.tt-print .wrap > section#my-exam-planner{display:none!important} }
+
 /* ---- II PUC personal exam timetable ---- */
 .tt-ctl{display:grid;gap:10px;margin-top:14px}
 .tt-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
@@ -215,6 +247,13 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
       <a class="act" href="exam-corner/ii-puc-2027-exam-1-2-official-timetable.pdf" target="_blank" rel="noopener" data-i18n="tt_official">📄 Official KSEAB timetable (PDF)</a>
     </div>
     <p class="tt-note" data-i18n="tt_note">Source: KSEAB final timetable dated 29-10-2026. Every paper is 10:00 AM – 1:00 PM (3 hours). Students may take Exam 2 to improve their score — check with the college office.</p>
+  </section>
+
+  <section class="card" id="my-exam-planner" style="border-color:var(--gold)">
+    <div class="card-head"><span class="pill" data-i18n="ep_pill">II PUC · Exam planner</span><span class="new" data-i18n="new">NEW</span></div>
+    <h2 data-i18n-html="ep_title">Your <em>study plan</em> from today to the last paper</h2>
+    <p data-i18n="ep_desc">Made for your subjects. Change your language or 4th subject, and Exam 1 or Exam 2, in the timetable above.</p>
+    <div id="epBody"></div>
   </section>
 
   <section class="card" id="practice-paper" style="border-color:var(--gold)">
@@ -301,6 +340,7 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
 /* Language — English / ಕನ್ನಡ / ಹಿಂದಿ; also switches the presentation's narration */
 const I18N = {
   kn: {
+    ep_pill:'ದ್ವಿತೀಯ ಪಿಯುಸಿ · ಪರೀಕ್ಷಾ ಯೋಜಕ', ep_title:'ಇಂದಿನಿಂದ ಕೊನೆಯ ಪತ್ರಿಕೆಯವರೆಗೆ ನಿಮ್ಮ <em>ಓದುವ ಯೋಜನೆ</em>', ep_desc:'ನಿಮ್ಮ ವಿಷಯಗಳಿಗೆ ತಕ್ಕಂತೆ ಮಾಡಲಾಗಿದೆ. ಭಾಷೆ, 4ನೇ ವಿಷಯ ಮತ್ತು ಪರೀಕ್ಷೆ 1 / 2 ಅನ್ನು ಮೇಲಿನ ವೇಳಾಪಟ್ಟಿಯಲ್ಲಿ ಬದಲಿಸಿ.',
     tt_pill:'ದ್ವಿತೀಯ ಪಿಯುಸಿ · ಬೋರ್ಡ್ ಪರೀಕ್ಷೆ 2027', tt_title:'ನಿಮ್ಮ ವೈಯಕ್ತಿಕ <em>ದ್ವಿತೀಯ ಪಿಯುಸಿ ಪರೀಕ್ಷಾ ವೇಳಾಪಟ್ಟಿ</em>',
     tt_desc:'ನಿಮ್ಮ ಪತ್ರಿಕೆಗಳು ಮಾತ್ರ, ಪ್ರತಿ ಪತ್ರಿಕೆಗೆ ಮುನ್ನ ಎಷ್ಟು ಓದುವ ದಿನಗಳಿವೆ ಎಂಬುದರೊಂದಿಗೆ. ನಿಮ್ಮ ನೋಂದಣಿ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ, ಅಥವಾ ಭಾಷೆ ಮತ್ತು ನಾಲ್ಕನೇ ವಿಷಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ.',
     tt_code_l:'ನೋಂದಣಿ ಸಂಖ್ಯೆ', tt_go:'ತೋರಿಸಿ', tt_lang_l:'ಭಾಷೆ', tt_opt_l:'4ನೇ ವಿಷಯ', tt_print:'🖨 ನನ್ನ ವೇಳಾಪಟ್ಟಿ ಮುದ್ರಿಸಿ / ಉಳಿಸಿ', tt_official:'📄 KSEAB ಅಧಿಕೃತ ವೇಳಾಪಟ್ಟಿ (PDF)',
@@ -325,6 +365,7 @@ const I18N = {
     soon:'ಪ್ರತಿ ಪರೀಕ್ಷೆಗೆ ಮುನ್ನ ಇನ್ನಷ್ಟು ಸಾಮಗ್ರಿಗಳು ಇಲ್ಲಿ ಬರುತ್ತವೆ. 🔔 ಪ್ರಕಟಣೆಗಳ ಗಂಟೆಯನ್ನು ಗಮನಿಸಿ.'
   },
   hi: {
+    ep_pill:'द्वितीय पीयूसी · परीक्षा प्लानर', ep_title:'आज से आखिरी पेपर तक आपकी <em>पढ़ाई की योजना</em>', ep_desc:'आपके विषयों के अनुसार बनाई गई। भाषा, चौथा विषय और परीक्षा 1 / 2 ऊपर की समय-सारिणी में बदलिए।',
     tt_pill:'द्वितीय पीयूसी · बोर्ड परीक्षा 2027', tt_title:'आपकी अपनी <em>द्वितीय पीयूसी परीक्षा समय-सारिणी</em>',
     tt_desc:'सिर्फ़ आपके पेपर, और हर पेपर से पहले पढ़ाई के कितने दिन मिलेंगे। अपना नामांकन कोड डालिए, या अपनी भाषा और चौथा विषय चुनिए।',
     tt_code_l:'नामांकन कोड', tt_go:'दिखाएँ', tt_lang_l:'भाषा', tt_opt_l:'चौथा विषय', tt_print:'🖨 मेरी समय-सारिणी प्रिंट / सेव करें', tt_official:'📄 KSEAB आधिकारिक समय-सारिणी (PDF)',
@@ -404,6 +445,102 @@ setLang(['en','kn','hi'].includes(startLang)?startLang:'en', false);
          hol:{sun:'छुट्टी (रविवार)',shiv:'छुट्टी — महाशिवरात्रि',ramzan:'छुट्टी — खुतुब-ए-रमज़ान'},
          found:function(l,o){ return '✓ '+l+' + '+o+' की समय-सारिणी दिखाई जा रही है।'; }, notfound:'कोड नहीं मिला — नीचे अपनी भाषा और चौथा विषय चुनिए।' }
   };
+  var PL = {
+    en:{ now:'This week', ph:[['Round 1','Finish and revise every chapter','One chapter per subject each week. Make short notes and formula / diagram sheets as you go.'],
+                                 ['Round 2','Practice papers','A full 3-hour paper every Saturday, 10:00 AM – 1:00 PM. Correct it the same evening.'],
+                                 ['Final sprint','Mocks and short notes','Only short notes, formulas and diagrams. One full mock every other day at exam time.'],
+                                 ['Exam days','Follow the day-by-day plan','Each free day goes to the next paper only. Sleep by 10:30 PM.']],
+          ph2:[['Revise','Weak chapters first','Start with the chapters you lost marks in during Exam 1.'],['Practice','One paper a week','A full paper every Saturday at exam time.'],['Final sprint','Short notes only','Formulas, diagrams and definitions.'],['Exam days','Day-by-day plan','Each free day goes to the next paper.']],
+          e2wait:'This plan starts after Exam 1 (from 18 Mar). Until then, follow the Exam 1 plan.', over:'Your exam is over. Well done!', week:'Your weekly study timetable', slot1:'5:30 – 7:00 PM', slot2:'7:30 – 9:00 PM', day:'Day',
+          paperSat:function(s){ return '📝 Full '+s+' paper · 10 AM – 1 PM'; }, fix:'Check answers, note mistakes',
+          sunA:'Revise the week\'s short notes, diagrams, formulas', sunB:'Rest / light reading',
+          weekNote:'Use this from now until the exams start. Each Saturday the practice paper moves to the next subject.',
+          days:'Exam days, day by day', paper:'Paper', revise:function(s){ return '📖 Revise '+s; }, eve:function(s){ return 'Evening: start '+s; }, last:'Last paper — all the best!',
+          bio:'🧬 Biology with Narendra Sir this week', bioOpen:'Open this chapter in the BAIO app' },
+    kn:{ now:'ಈ ವಾರ', ph:[['ಸುತ್ತು 1','ಪ್ರತಿ ಅಧ್ಯಾಯ ಮುಗಿಸಿ, ಪುನರಾವರ್ತಿಸಿ','ಪ್ರತಿ ವಾರ ಪ್ರತಿ ವಿಷಯದ ಒಂದು ಅಧ್ಯಾಯ. ಕಿರು ಟಿಪ್ಪಣಿ, ಸೂತ್ರ / ಚಿತ್ರಗಳ ಹಾಳೆ ಮಾಡಿಕೊಳ್ಳಿ.'],
+                                 ['ಸುತ್ತು 2','ಅಭ್ಯಾಸ ಪತ್ರಿಕೆಗಳು','ಪ್ರತಿ ಶನಿವಾರ ಬೆಳಿಗ್ಗೆ 10 – ಮಧ್ಯಾಹ್ನ 1 ಪೂರ್ಣ ಪತ್ರಿಕೆ. ಅದೇ ಸಂಜೆ ತಿದ್ದಿಕೊಳ್ಳಿ.'],
+                                 ['ಕೊನೆಯ ಓಟ','ಮಾಕ್ ಮತ್ತು ಕಿರು ಟಿಪ್ಪಣಿ','ಕಿರು ಟಿಪ್ಪಣಿ, ಸೂತ್ರ, ಚಿತ್ರಗಳು ಮಾತ್ರ. ದಿನ ಬಿಟ್ಟು ದಿನ ಪರೀಕ್ಷಾ ಸಮಯದಲ್ಲಿ ಮಾಕ್.'],
+                                 ['ಪರೀಕ್ಷಾ ದಿನಗಳು','ದಿನವಾರು ಯೋಜನೆ ಅನುಸರಿಸಿ','ಪ್ರತಿ ಬಿಡುವಿನ ದಿನ ಮುಂದಿನ ಪತ್ರಿಕೆಗೆ ಮಾತ್ರ. ರಾತ್ರಿ 10:30ರೊಳಗೆ ಮಲಗಿ.']],
+          ph2:[['ಪುನರಾವರ್ತನೆ','ದುರ್ಬಲ ಅಧ್ಯಾಯಗಳು ಮೊದಲು','ಪರೀಕ್ಷೆ 1ರಲ್ಲಿ ಅಂಕ ಕಳೆದುಕೊಂಡ ಅಧ್ಯಾಯಗಳಿಂದ ಆರಂಭಿಸಿ.'],['ಅಭ್ಯಾಸ','ವಾರಕ್ಕೊಂದು ಪತ್ರಿಕೆ','ಪ್ರತಿ ಶನಿವಾರ ಪರೀಕ್ಷಾ ಸಮಯದಲ್ಲಿ ಪೂರ್ಣ ಪತ್ರಿಕೆ.'],['ಕೊನೆಯ ಓಟ','ಕಿರು ಟಿಪ್ಪಣಿ ಮಾತ್ರ','ಸೂತ್ರ, ಚಿತ್ರ, ವ್ಯಾಖ್ಯೆಗಳು.'],['ಪರೀಕ್ಷಾ ದಿನಗಳು','ದಿನವಾರು ಯೋಜನೆ','ಪ್ರತಿ ಬಿಡುವಿನ ದಿನ ಮುಂದಿನ ಪತ್ರಿಕೆಗೆ.']],
+          e2wait:'ಈ ಯೋಜನೆ ಪರೀಕ್ಷೆ 1ರ ನಂತರ (18 ಮಾರ್ಚ್‌ನಿಂದ) ಆರಂಭ. ಅಲ್ಲಿಯವರೆಗೆ ಪರೀಕ್ಷೆ 1ರ ಯೋಜನೆ ಅನುಸರಿಸಿ.', over:'ನಿಮ್ಮ ಪರೀಕ್ಷೆ ಮುಗಿದಿದೆ. ಉತ್ತಮ ಕೆಲಸ!', week:'ನಿಮ್ಮ ವಾರದ ಓದುವ ವೇಳಾಪಟ್ಟಿ', slot1:'ಸಂಜೆ 5:30 – 7:00', slot2:'ರಾತ್ರಿ 7:30 – 9:00', day:'ದಿನ',
+          paperSat:function(s){ return '📝 ಪೂರ್ಣ '+s+' ಪತ್ರಿಕೆ · ಬೆ 10 – ಮ 1'; }, fix:'ಉತ್ತರ ತಿದ್ದಿ, ತಪ್ಪುಗಳನ್ನು ಬರೆಯಿರಿ',
+          sunA:'ವಾರದ ಕಿರು ಟಿಪ್ಪಣಿ, ಚಿತ್ರ, ಸೂತ್ರಗಳ ಪುನರಾವರ್ತನೆ', sunB:'ವಿಶ್ರಾಂತಿ / ಲಘು ಓದು',
+          weekNote:'ಪರೀಕ್ಷೆ ಆರಂಭವಾಗುವವರೆಗೆ ಇದನ್ನು ಅನುಸರಿಸಿ. ಪ್ರತಿ ಶನಿವಾರ ಅಭ್ಯಾಸ ಪತ್ರಿಕೆ ಮುಂದಿನ ವಿಷಯಕ್ಕೆ ಬದಲಾಗುತ್ತದೆ.',
+          days:'ಪರೀಕ್ಷಾ ದಿನಗಳು, ದಿನವಾರು', paper:'ಪತ್ರಿಕೆ', revise:function(s){ return '📖 '+s+' ಪುನರಾವರ್ತನೆ'; }, eve:function(s){ return 'ಸಂಜೆ: '+s+' ಆರಂಭಿಸಿ'; }, last:'ಕೊನೆಯ ಪತ್ರಿಕೆ — ಶುಭವಾಗಲಿ!',
+          bio:'🧬 ಈ ವಾರ ನರೇಂದ್ರ ಸರ್ ಜೊತೆ ಜೀವಶಾಸ್ತ್ರ', bioOpen:'ಈ ಅಧ್ಯಾಯವನ್ನು BAIO ಆ್ಯಪ್‌ನಲ್ಲಿ ತೆರೆಯಿರಿ' },
+    hi:{ now:'इस हफ़्ते', ph:[['राउंड 1','हर अध्याय पूरा करें और दोहराएँ','हर हफ़्ते हर विषय का एक अध्याय। छोटे नोट्स और फ़ॉर्मूला / चित्र शीट बनाते चलें।'],
+                                 ['राउंड 2','अभ्यास पेपर','हर शनिवार सुबह 10 – दोपहर 1 पूरा पेपर। उसी शाम जाँचें।'],
+                                 ['आखिरी दौड़','मॉक और छोटे नोट्स','सिर्फ़ छोटे नोट्स, फ़ॉर्मूले और चित्र। एक दिन छोड़कर परीक्षा के समय पर मॉक।'],
+                                 ['परीक्षा के दिन','दिन-वार योजना अपनाएँ','हर खाली दिन सिर्फ़ अगले पेपर के लिए। रात 10:30 तक सो जाएँ।']],
+          ph2:[['दोहराना','कमज़ोर अध्याय पहले','परीक्षा 1 में जिन अध्यायों में अंक कटे, वहाँ से शुरू करें।'],['अभ्यास','हफ़्ते में एक पेपर','हर शनिवार परीक्षा के समय पर पूरा पेपर।'],['आखिरी दौड़','सिर्फ़ छोटे नोट्स','फ़ॉर्मूले, चित्र और परिभाषाएँ।'],['परीक्षा के दिन','दिन-वार योजना','हर खाली दिन अगले पेपर के लिए।']],
+          e2wait:'यह योजना परीक्षा 1 के बाद (18 मार्च से) शुरू होगी। तब तक परीक्षा 1 की योजना अपनाएँ।', over:'आपकी परीक्षा पूरी हो गई। बहुत बढ़िया!', week:'आपकी साप्ताहिक पढ़ाई समय-सारिणी', slot1:'शाम 5:30 – 7:00', slot2:'रात 7:30 – 9:00', day:'दिन',
+          paperSat:function(s){ return '📝 पूरा '+s+' पेपर · सुबह 10 – दोपहर 1'; }, fix:'उत्तर जाँचें, गलतियाँ लिखें',
+          sunA:'हफ़्ते के छोटे नोट्स, चित्र, फ़ॉर्मूले दोहराएँ', sunB:'आराम / हल्का पढ़ना',
+          weekNote:'परीक्षा शुरू होने तक इसे अपनाएँ। हर शनिवार अभ्यास पेपर अगले विषय का होता है।',
+          days:'परीक्षा के दिन, दिन-वार', paper:'पेपर', revise:function(s){ return '📖 '+s+' दोहराएँ'; }, eve:function(s){ return 'शाम: '+s+' शुरू करें'; }, last:'आखिरी पेपर — शुभकामनाएँ!',
+          bio:'🧬 इस हफ़्ते नरेंद्र सर के साथ जीव विज्ञान', bioOpen:'यह अध्याय BAIO ऐप में खोलें' }
+  };
+
+  /* Biology chapter of the week — Narendra Sir's class plan (Mondays) */
+  var BIOWEEK = [['2026-11-02',1,'Sexual Reproduction in Flowering Plants'],['2026-11-09',2,'Human Reproduction · Reproductive Health'],['2026-11-16',4,'Principles of Inheritance and Variation'],
+    ['2026-11-23',5,'Molecular Basis of Inheritance'],['2026-11-30',6,'Evolution · Human Health and Disease'],['2026-12-07',8,'Microbes in Human Welfare · Biotechnology: Principles and Processes'],
+    ['2026-12-14',10,'Biotechnology and its Applications · Organisms and Populations'],['2026-12-21',12,'Ecosystem · Biodiversity and Conservation'],['2026-12-28',0,'Must-draw diagrams from all 13 chapters'],
+    ['2027-01-04',1,'Reproduction unit (Ch 1–3), second pass'],['2027-01-11',4,'Genetics and Evolution (Ch 4–6)'],['2027-01-18',7,'Human welfare and Biotechnology (Ch 7–10)'],
+    ['2027-01-25',11,'Ecology (Ch 11–13)'],['2027-02-01',0,'Weak-area clinic'],['2027-02-08',0,'Previous years\' KSEAB papers'],['2027-02-15',0,'Full mock at exam time'],['2027-02-22',0,'One-shot revision of all 13 chapters']];
+  var PHASE_END = { e1:['2026-12-20','2027-02-14','2027-02-26'], e2:['2027-04-18','2027-04-25','2027-05-02'] };
+  function iso(x){ return x.getFullYear()+'-'+('0'+(x.getMonth()+1)).slice(-2)+'-'+('0'+x.getDate()).slice(-2); }
+  function renderPlan(){
+    var t = ui(), lp = PL[document.documentElement.lang] || PL.en, ps = mine(), now = today(), tn = iso(now), html = '';
+    var ends = PHASE_END[st.exam], phs = st.exam === 'e1' ? lp.ph : lp.ph2, last = ps[ps.length-1][0];
+    var cur = tn > last ? 4 : (tn <= ends[0] ? 0 : tn <= ends[1] ? 1 : tn <= ends[2] ? 2 : 3);
+    if(st.exam === 'e2' && tn <= '2027-03-17') cur = -1;
+    if(cur === 4) html += '<div class="ep-now"><b>'+lp.over+'</b></div>';
+    if(cur === -1) html += '<div class="ep-now"><span>'+lp.e2wait+'</span></div>';
+    /* phases */
+    html += '<div class="ep-phases" style="margin-top:10px">';
+    phs.forEach(function(ph, i){
+      var from = i===0 ? (st.exam==='e1' ? new Date(now) : d('2027-03-18')) : d(ends[i-1]); if(i) from.setDate(from.getDate()+1);
+      var to = i<3 ? d(ends[i]) : d(last);
+      var rng = from.getDate()+' '+t.mo[from.getMonth()] + ' – ' + to.getDate()+' '+t.mo[to.getMonth()];
+      html += '<div class="ep-ph'+(i===cur?' on':'')+(i<cur?' done':'')+'"><i>'+(i===cur?'▶ '+lp.now+' · ':'')+rng+'</i><b>'+ph[0]+' · '+ph[1]+'</b>'+ph[2]+'</div>';
+    });
+    html += '</div>';
+    /* Biology of the week */
+    if(st.opt === 'BIO' && st.exam === 'e1' && cur >= 0 && cur < 3){
+      var bw = null; BIOWEEK.forEach(function(w){ if(w[0] <= tn) bw = w; }); if(!bw) bw = BIOWEEK[0];
+      html += '<div class="ep-bio"><b>'+lp.bio+'</b><br>'+(bw[1] ? 'Ch '+bw[1]+' · ' : '')+bw[2]
+        + (bw[1] ? '<br><a href="'+(bw[1]===9?'pu2-ch10.html':'pu2-ch'+bw[1]+'.html')+'">'+lp.bioOpen+' →</a>' : '') + '</div>';
+    }
+    /* weekly timetable (before exam days) */
+    if(cur < 3){
+      var O = st.opt, LG = st.lang;
+      var rows = [[1,'PHY','CHE'],[2,'MAT',O],[3,'ENG','PHY'],[4,'CHE','MAT'],[5,O,LG]];
+      var rot = ['PHY','CHE','MAT',O,'ENG',LG];
+      var wkIdx = Math.max(0, Math.floor((now - d('2026-11-02')) / (7*864e5)));
+      var satSub = rot[wkIdx % rot.length], dow = now.getDay();
+      html += '<div class="ep-h">'+lp.week+'</div><div class="ep-wk"><table><thead><tr><th>'+lp.day+'</th><th>'+lp.slot1+'</th><th>'+lp.slot2+'</th></tr></thead><tbody>';
+      rows.forEach(function(r){ html += '<tr'+(dow===r[0]?' class="today"':'')+'><td>'+t.wd[r[0]]+'</td><td>'+ICON[r[1]]+' '+t.sub[r[1]]+'</td><td>'+ICON[r[2]]+' '+t.sub[r[2]]+'</td></tr>'; });
+      html += '<tr'+(dow===6?' class="today"':'')+'><td>'+t.wd[6]+'</td><td>'+lp.paperSat(t.sub[satSub])+'</td><td>✅ '+lp.fix+'</td></tr>';
+      html += '<tr'+(dow===0?' class="today"':'')+'><td>'+t.wd[0]+'</td><td>🔁 '+lp.sunA+'</td><td>🌿 '+lp.sunB+'</td></tr>';
+      html += '</tbody></table></div><p style="font-size:12.5px">'+lp.weekNote+'</p>';
+    }
+    /* exam days, day by day */
+    html += '<div class="ep-h">'+lp.days+'</div><ol class="ep-days">';
+    var first = d(ps[0][0]), startDay = d(st.exam==='e1' ? '2027-02-27' : '2027-05-03'), lastD = d(last), hol = {};
+    EXAMS[st.exam].hol.forEach(function(h){ hol[h[0]] = h[1]; });
+    for(var x = new Date(startDay); x <= lastD; x.setDate(x.getDate()+1)){
+      var k = iso(x), p = ps.find(function(pp){ return pp[0] === k; }), nx = ps.find(function(pp){ return pp[0] > k; });
+      var past = x < now ? ' past' : '', dt = t.wd[x.getDay()]+', '+x.getDate()+' '+t.mo[x.getMonth()];
+      if(p){
+        html += '<li class="ep-day paper'+past+'"><span class="dt">'+dt+'</span><span><b>✍️ '+lp.paper+': '+ICON[p[1]]+' '+t.sub[p[1]]+'</b> · 10–1'
+          + '<small>'+(nx ? lp.eve(t.sub[nx[1]]) : lp.last)+'</small></span></li>';
+      } else if(nx){
+        html += '<li class="ep-day'+past+'"><span class="dt">'+dt+'</span><span>'+lp.revise(ICON[nx[1]]+' '+t.sub[nx[1]])+(hol[k] ? '<small>🌴 '+t.hol[hol[k]]+'</small>' : '')+'</span></li>';
+      }
+    }
+    html += '</ol>';
+    document.getElementById('epBody').innerHTML = html;
+  }
   var st = { lang:'KAN', opt:'BIO', exam:'e1' };
   try{ var sv = JSON.parse(localStorage.getItem('baio_tt_puc2') || 'null'); if(sv){ if(sv.lang) st.lang = sv.lang; if(sv.opt) st.opt = sv.opt; if(sv.code) document.getElementById('ttCode').value = sv.code; } }catch(e){}
   var q = /[?&#]tt=(K|H)(B|E|C)/i.exec(location.search + location.hash);
@@ -449,6 +586,7 @@ setLang(['en','kn','hi'].includes(startLang)?startLang:'en', false);
     });
     html += '</ol>';
     document.getElementById('ttBody').innerHTML = html;
+    renderPlan();
   }
   function lookup(){
     var t = ui(), v = document.getElementById('ttCode').value.trim().toUpperCase(), msg = document.getElementById('ttMsg');
