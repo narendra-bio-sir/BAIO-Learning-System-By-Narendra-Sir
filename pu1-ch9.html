@@ -4326,7 +4326,7 @@ function hwRow(){
 }
 function renderDownloads(){
   let html = `<div class="dl-topic-block"><div class="dl-section-title">Premium Content</div>${premiumStatusRow()}</div>`;
-  html += `<div class="dl-topic-block"><div class="dl-section-title">Study Material</div><div class="dl-row"><div class="dl-info"><div class="t">🎨 Colour Notes – Biomolecules</div><div class="d">12 full-colour pages · free to read in the app · download ₹100</div></div><div class="dl-btns"><button class="dl-btn view" onclick="switchTab('colournotes')">Open</button></div></div>${pdfRow('typed_notes')}</div>`;
+  html += `<div class="dl-topic-block"><div class="dl-section-title">Study Material</div><div class="dl-row"><div class="dl-info"><div class="t">🎨 Colour Notes – Biomolecules</div><div class="d">12 full-colour pages · free to read in the app · download ₹100</div></div><div class="dl-btns"><button class="dl-btn view" onclick="switchTab('colournotes')">Open</button></div></div><div class="dl-row"><div class="dl-info"><div class="t">🧠 Short Notes &amp; Tricks – Biomolecules</div><div class="d">One-page notes, memory tricks and exam traps · free</div></div><div class="dl-btns"><a class="dl-btn view" href="tricks.html#pu1-ch9" style="text-decoration:none">Open</a></div></div>${pdfRow('typed_notes')}</div>`;
   html += `<div class="dl-topic-block"><div class="dl-section-title">Narendra Sir's Handwritten Notes</div>${hwRow()}</div>`;
   const worksheetRows = DATA.topics.filter(t => TOPIC_WORKSHEET_FILES[t.id]).map(t => pdfRow(TOPIC_WORKSHEET_FILES[t.id])).join('');
   if(worksheetRows){
