@@ -58,6 +58,8 @@
          unlock:'🔓 अनलॉक करें', bad:'नाम / रोल / सेक्शन / कोड मेल नहीं खाया। नरेंद्र सर से पूछें।', needAll:'कोड के साथ नाम, रोल नंबर और सेक्शन डालें।', demoUsed:'यह ट्रायल कोड पहले ही इस्तेमाल हो चुका है।',
          unlocked:'✅ इस डिवाइस पर प्रीमियम अनलॉक है', relock:'फिर से लॉक करें', note:'सामग्री अंग्रेज़ी में है (जैसे परीक्षा में लिखते हैं)।', fbT:'💬 नरेंद्र सर को अपनी राय बताइए', fbP:'आप इस अध्याय का उपयोग करने वाले पहले छात्रों में से हैं। क्या कुछ अस्पष्ट, गलत या छूटा हुआ है? आपकी राय से यह बेहतर बनेगा।', fbB:'💬 WhatsApp पर राय भेजें', free:'मुफ़्त', prem:'प्रीमियम', back:'← BAIO होम' }
   };
+  /* per-subject tab names (e.g. Maths: Solved Examples, JEE Main Practice) */
+  if(A.tabLabels) Object.keys(A.tabLabels).forEach(function(t){ Object.keys(UI).forEach(function(l){ if(A.tabLabels[t][l]) UI[l].tabs[t] = A.tabLabels[t][l]; }); });
   var lang = 'en'; try{ lang = localStorage.getItem('baio_lang') || 'en'; }catch(e){} if(!UI[lang]) lang = 'en';
   window.currentLang = lang;
   var TAB_ORDER = ['notes','formulas','numericals','mcq','neet','kcet','boardimp'];
@@ -78,7 +80,7 @@
     var u = UI[lang];
     document.documentElement.lang = lang;
     $('langs').innerHTML = [['en','English'],['kn','ಕನ್ನಡ'],['hi','हिंदी']].map(function(l){ return '<button class="lang'+(l[0]===lang?' on':'')+'" data-l="'+l[0]+'">'+l[1]+'</button>'; }).join('');
-    $('eyebrow').textContent = A.cls + ' ' + A.subject + ' · NEET / KCET aligned';
+    $('eyebrow').textContent = A.eyebrow || (A.cls + ' ' + A.subject + ' · NEET / KCET aligned');
     $('title').textContent = 'Chapter ' + A.ch + ': ' + A.title;
     $('intro').textContent = A.intro;
     var p = null; try{ p = JSON.parse(localStorage.getItem('baio_student') || 'null'); }catch(e){}
