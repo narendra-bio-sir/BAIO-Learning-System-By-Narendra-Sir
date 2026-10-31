@@ -173,6 +173,14 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
 /* ---- II PUC personal exam timetable ---- */
 .tt-ctl{display:grid;gap:10px;margin-top:14px}
 .tt-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+#ttLang,#ttOpt{display:flex;flex-wrap:wrap;gap:8px}
+.tt-code{min-width:0!important;flex:1 1 100%!important}
+.tt-code input{min-width:0;width:100%}
+#ttGo{flex:none}
+#ii-puc-timetable button,#ii-puc-timetable a,#my-exam-planner a,.lang-btn,.icon-btn,.act{-webkit-tap-highlight-color:transparent}
+#ii-puc-timetable button:focus:not(:focus-visible),#ii-puc-timetable input:focus:not(:focus-visible){outline:none}
+.tt-code input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(46,230,197,.18)}
+#ttGo:active,.tt-chip:active,.tt-tabs button:active{transform:scale(.97)}
 .tt-lbl{font:700 11px Inter,'Noto Sans Kannada','Noto Sans Devanagari';letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);min-width:92px}
 .tt-code{display:flex;gap:6px;flex:1;min-width:230px}
 .tt-code input{flex:1;min-width:0;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:600 14px Inter;text-transform:uppercase}
@@ -562,7 +570,7 @@ setLang(['en','kn','hi'].includes(startLang)?startLang:'en', false);
   function mine(){ var keep = {ENG:1,PHY:1,CHE:1,MAT:1}; keep[st.lang] = 1; keep[st.opt] = 1; return EXAMS[st.exam].papers.filter(function(p){ return keep[p[1]]; }); }
   function chips(id, opts, key){
     var t = ui(), el = document.getElementById(id);
-    el.innerHTML = opts.map(function(o){ return '<button class="tt-chip'+(st[key]===o?' on':'')+'" data-v="'+o+'">'+ICON[o]+' '+t.sub[o]+'</button>'; }).join(' ');
+    el.innerHTML = opts.map(function(o){ return '<button class="tt-chip'+(st[key]===o?' on':'')+'" data-v="'+o+'">'+ICON[o]+' '+t.sub[o]+'</button>'; }).join('');
     el.onclick = function(e){ var b = e.target.closest('button'); if(!b) return; st[key] = b.dataset.v; document.getElementById('ttMsg').textContent = ''; save(); render(); };
   }
   function render(){
@@ -607,7 +615,7 @@ setLang(['en','kn','hi'].includes(startLang)?startLang:'en', false);
     st.lang = r[0]==='H' ? 'HIN' : 'KAN'; st.opt = r[1]==='E' ? 'ELE' : 'BIO';
     save(); render(); msg.textContent = t.found(t.sub[st.lang], t.sub[st.opt], nm);
   }
-  document.getElementById('ttGo').addEventListener('click', lookup);
+  document.getElementById('ttGo').addEventListener('click', function(){ lookup(); this.blur(); document.getElementById('ttCode').blur(); });
   document.getElementById('ttCode').addEventListener('keydown', function(e){ if(e.key === 'Enter') lookup(); });
   document.getElementById('ttPrint').addEventListener('click', function(){ document.body.classList.add('tt-print'); window.print(); setTimeout(function(){ document.body.classList.remove('tt-print'); }, 500); });
   /* auto-pick from the student's BAIO profile when it's a PU-II roll */
