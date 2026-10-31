@@ -1,0 +1,81 @@
+/* BAIO subject chapter apps — shared styles (Physics / Chemistry) */
+:root{
+  --bg:#F6F4EC; --panel:#FFFFFF; --panel2:#F1EDE0; --ink:#1B2620; --dim:#5C6B62; --line:#E3DBC4;
+  --gold:#B8912A; --gold2:#D4AF37; --teal:#0F8F7A; --teal-soft:#DDF1EC; --red:#C33A2C; --red-soft:#F8E1DA; --navy:#0E1B33;
+  --accent:var(--subj,#2B6CB0);
+}
+:root[data-theme="dark"]{
+  --bg:#0B1B14; --panel:#13281E; --panel2:#0E211A; --ink:#EAF3EE; --dim:#9FC4B6; --line:rgba(212,175,55,.22);
+  --gold:#E2BF57; --gold2:#D4AF37; --teal:#2EE6C5; --teal-soft:#123A30; --red:#F08A72; --red-soft:#3D1C14; color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15.5px/1.6 Inter,'Noto Sans Kannada','Noto Sans Devanagari',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;margin:0;text-wrap:balance}
+button,a{-webkit-tap-highlight-color:transparent}
+button:focus:not(:focus-visible){outline:none}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.top-in{max-width:900px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:8px;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);font:700 14px 'Space Grotesk',sans-serif}
+.brand .b{width:32px;height:32px;border-radius:9px;background:var(--navy);color:#E9C45A;display:grid;place-items:center}
+.tools{display:flex;gap:6px;align-items:center}
+#langs{display:flex;gap:4px}
+.lang{border:1px solid var(--line);background:var(--panel2);color:var(--dim);border-radius:12px;padding:6px 10px;font:700 11.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer;min-height:34px}
+.lang.on{background:var(--gold2);color:#1a1406;border-color:var(--gold2)}
+.ib{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);display:grid;place-items:center;text-decoration:none;font-size:16px;cursor:pointer}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px 70px}
+.hero{padding:22px 0 6px}
+.eyebrow{font:700 12px Inter;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.hero h1{font-size:28px;line-height:1.2;margin-top:6px;display:flex;gap:10px;align-items:center}
+.hero h1 .ic{font-size:30px}
+.hero p{color:var(--dim);margin:8px 0 0;max-width:68ch}
+.hello{margin-top:10px;font-size:14px;color:var(--dim)}
+.tabs{position:sticky;top:53px;z-index:15;display:flex;gap:6px;overflow-x:auto;padding:10px 0;margin-top:10px;background:var(--bg);scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:9px 14px;font:600 13.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer;white-space:nowrap;min-height:40px}
+.tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:12px}
+.card h3{font-size:16.5px;line-height:1.4;display:flex;gap:10px;align-items:flex-start}
+.card ul,.card ol{margin:10px 0 0;padding-left:22px}
+.card li{margin:5px 0}
+.num{flex:none;min-width:28px;height:28px;border-radius:9px;background:var(--panel2);border:1px solid var(--line);display:grid;place-items:center;font:700 13px Inter;color:var(--accent)}
+.note{font-size:13px;color:var(--dim);margin:8px 0 0}
+.ftable{display:grid;gap:0}
+.frow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:4px 14px;padding:10px 4px;border-bottom:1px solid var(--line);align-items:baseline}
+.frow:last-child{border-bottom:0}
+.fname{font-weight:600;font-size:14px}
+.feq{font:600 16px 'Space Grotesk',Inter,sans-serif;color:var(--accent)}
+.fnote{grid-column:2;font-size:12.5px;color:var(--dim)}
+.btn{display:inline-flex;align-items:center;gap:6px;border-radius:12px;padding:10px 14px;font:600 13.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer;text-decoration:none;border:1px solid var(--line);min-height:42px}
+.btn.ghost{background:var(--panel2);color:var(--ink);margin-top:10px}
+.btn.gold{background:linear-gradient(135deg,var(--gold2),#E9C45A);color:#1a1406;border-color:var(--gold2)}
+.btn.teal{background:var(--teal);color:#fff;border-color:var(--teal);justify-content:center}
+.btn:active,.tab:active,.qz-opt:active{transform:scale(.98)}
+.sol{margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--panel2);border:1px dashed var(--line)}
+.sol ol{margin:0}
+.ans{margin-top:8px;font-size:14.5px}
+.ans b{color:var(--teal)}
+.scorebar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;font-size:14px;color:var(--dim)}
+.scorebar .btn{margin:0}
+.opts{display:grid;gap:8px;margin-top:12px}
+.qz-opt{text-align:left;border:1.5px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:12px;padding:11px 12px;font:500 14.5px/1.45 Inter,'Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer;min-height:44px}
+.qz-opt b{color:var(--accent);margin-right:6px}
+.qz-opt.correct{border-color:var(--teal);background:var(--teal-soft)}
+.qz-opt.wrong{border-color:var(--red);background:var(--red-soft)}
+.qz-opt:disabled{cursor:default;opacity:1;color:var(--ink)}
+.expl{margin-top:10px;font-size:14px;line-height:1.55;padding:10px 12px;border-radius:12px;background:var(--panel2)}
+.grp{font-size:18px;margin-top:22px}
+.mk{flex:none;font:800 12px Inter;border-radius:8px;padding:4px 7px;background:var(--gold2);color:#1a1406}
+.mk.m2{background:var(--dim);color:var(--bg)} .mk.m3{background:var(--teal);color:#06231c} .mk.m1{background:var(--panel2);color:var(--ink);border:1px solid var(--line)}
+.lock{text-align:center;border:1.5px solid var(--gold2)}
+.lock h2{font-size:22px}
+.lock p{color:var(--dim);max-width:52ch;margin:8px auto 0}
+.price{font:700 26px 'Space Grotesk';color:var(--gold);margin:12px 0}
+.form{display:grid;gap:8px;max-width:420px;margin:10px auto 0}
+.form input{padding:11px 12px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:500 14.5px Inter}
+.msg{min-height:1.2em;color:var(--red);font-size:13.5px}
+.unl{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;padding:10px 14px;border-radius:12px;background:var(--teal-soft);color:var(--ink);font-size:14px}
+.unl .btn{margin:0;min-height:36px;padding:6px 12px}
+footer{text-align:center;color:var(--dim);font-size:12px;margin-top:30px}
+@media (max-width:640px){ .hero h1{font-size:23px} .brand span{display:none} .frow{grid-template-columns:1fr} .fnote{grid-column:1} .tabs{top:53px} }
