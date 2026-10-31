@@ -2698,7 +2698,7 @@ window.indexHardRefresh = indexHardRefresh;
   }
   function checkConnectivity(isRetry){
     if(!navigator.onLine){ showOfflineBanner(); return; }
-    fetch('manifest.json', { cache:'no-store' }).then(function(res){
+    fetch('manifest.json', { cache:'no-store', headers:{ 'x-baio-offline':'1' } }).then(function(res){
       if(res && res.ok) hideOfflineBanner();
       else if(isRetry) showOfflineBanner();
       else setTimeout(function(){ checkConnectivity(true); }, 1000);
