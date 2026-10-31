@@ -29,7 +29,9 @@ a.ch:hover,a.ch:active{background:var(--panel2)}
 .ch .t{font-weight:600;font-size:15px;line-height:1.35}
 .ch .t small{display:block;font-weight:500;font-size:12.5px;color:var(--dim);margin-top:2px}
 .ch .go{font:700 13px Inter;color:var(--c);white-space:nowrap}
-.ch.soon{opacity:.55}
+.ch .n.ic{font-size:21px;background:color-mix(in srgb,var(--c) 16%,var(--panel));border:1.5px solid var(--c)}
+.ch.soon{opacity:.6}
+.ch.soon .n.ic{filter:grayscale(.85);border-color:var(--line)}
 .ch.soon .n{background:var(--panel2);color:var(--dim);border:1px solid var(--line)}
 .ch.soon .go{color:var(--dim);font-weight:600;font-size:12px}
 .more{display:block;width:calc(100% - 12px);margin:0 6px 8px;border:1px dashed var(--line);background:transparent;color:var(--dim);border-radius:12px;padding:10px;font:600 13px Inter,'Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer;-webkit-tap-highlight-color:transparent}
@@ -72,6 +74,17 @@ a.ch:hover,a.ch:active{background:var(--panel2)}
       {k:'ele', ic:'🔌', c:'#0F8F7A', ch:[]}
     ]
   };
+  /* one icon per chapter, in syllabus order */
+  var ICONS = {
+    pu1phy:['📏','➡️','🏹','🚀','🔋','🌀','🪐','🧱','💧','🌡️','🔥','💨','🕰️','🌊'],
+    pu1che:['⚖️','⚛️','🗂️','🔗','🔥','🔄','🔋','🌿','⛽'],
+    pu1mat:['⭕','🔀','📐','🌀','📶','🎲','🧮','📈','📏','🥚','🧊','📉','📊','🪙'],
+    pu1ele:[],
+    pu2phy:['⚡','🔋','💡','🧲','🧭','🌀','🔌','📡','🔍','🌈','🔦','⚛️','☢️','💻'],
+    pu2che:['💧','🔋','⏱️','🔩','🧩','🧯','🧴','🍋','🐟','🧬'],
+    pu2mat:['🔀','📐','🔲','🧮','〽️','📈','♾️','🗻','🔁','➡️','🧊','📊','🎲'],
+    pu2ele:[]
+  };
   var UI = {
     en:{ eyebrow:'BAIO Learning System · New subjects', h1:'Physics · Chemistry · Maths', intro:'Chapter apps in the BAIO style: notes, formula sheets, solved problems, MCQ, NEET / JEE / KCET practice and board answers. Pick your year.',
          pu1:'I PUC', pu1s:'Spark · Prime', pu2:'II PUC', pu2s:'Champion · Elite',
@@ -106,6 +119,7 @@ a.ch:hover,a.ch:active{background:var(--panel2)}
     $('eyebrow').textContent = u.eyebrow; $('h1').textContent = u.h1; $('intro').textContent = u.intro; $('hint').textContent = u.hint;
     $('seg').innerHTML = ['pu1','pu2'].map(function(y){ return '<button role="tab" aria-selected="'+(y===yr)+'" class="'+(y===yr?'on':'')+'" data-y="'+y+'">'+u[y]+'<small>'+u[y+'s']+'</small></button>'; }).join('');
     $('list').innerHTML = CAT[yr].map(function(S){
+      var IC = ICONS[yr + S.k] || []; function ic(i){ return IC[i] || (i + 1); }
       var live = S.ch.filter(function(c){ return Array.isArray(c); }).length, key = yr + S.k, showAll = !!open[key];
       var h = '<section class="subj" style="--c:'+S.c+'"><div class="subj-h"><div class="subj-ic">'+S.ic+'</div><div><h2>'+u.s[S.k]+'</h2>'+(u.d[S.k]?'<p>'+u.d[S.k]+'</p>':'')+'</div>'
         + (S.ch.length ? '<span class="live">'+u.live(live, S.ch.length)+'</span>' : '<span class="live">'+u.soon+'</span>') + '</div>';
@@ -115,8 +129,8 @@ a.ch:hover,a.ch:active{background:var(--panel2)}
         var isLive = Array.isArray(c), title = isLive ? c[0] : c;
         if(!isLive && !showAll && i > live) return;
         h += isLive
-          ? '<li><a class="ch" href="'+c[1]+'"><span class="n">'+(i+1)+'</span><span class="t">'+esc(title)+'<small>'+u.ch+' '+(i+1)+' · '+u.free+'</small></span><span class="go">'+u.open+'</span></a></li>'
-          : '<li><div class="ch soon"><span class="n">'+(i+1)+'</span><span class="t">'+esc(title)+'</span><span class="go">'+u.soon+'</span></div></li>';
+          ? '<li><a class="ch" href="'+c[1]+'"><span class="n ic">'+ic(i)+'</span><span class="t">'+esc(title)+'<small>'+u.ch+' '+(i+1)+' · '+u.free+'</small></span><span class="go">'+u.open+'</span></a></li>'
+          : '<li><div class="ch soon"><span class="n ic">'+ic(i)+'</span><span class="t">'+esc(title)+'<small>'+u.ch+' '+(i+1)+'</small></span><span class="go">'+u.soon+'</span></div></li>';
       });
       h += '</ul>';
       if(S.ch.length > live + 1) h += '<button class="more" data-k="'+key+'">'+(showAll ? u.less : u.more(S.ch.length))+'</button>';
