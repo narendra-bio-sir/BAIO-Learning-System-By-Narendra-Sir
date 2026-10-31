@@ -418,7 +418,7 @@ setLang(['en','kn','hi'].includes(startLang)?startLang:'en', false);
 
 /* ---- II PUC personal exam timetable (KSEAB final timetable, 29-10-2026) ---- */
 (function(){
-  var ROSTER = {"0087":"HB","0075":"KB","0081":"HB","0052":"KB","0094":"HE","0056":"HB","0007":"HB","0003":"HE","0006":"KE","0045":"KB","0064":"HB","0004":"KB","0089":"KB","0028":"KB","0041":"KB","0002":"HB","0024":"KB","0011":"HB","0034":"KB","0072":"KB","0008":"HB","0040":"HB","0021":"HB","0026":"HB","0022":"HE","0047":"HB","0059":"HB","0029":"KB","0078":"KB","0038":"HB","0051":"HB","0027":"HB","0012":"KB","0062":"HB","0079":"KB","0067":"KE","0048":"HB","0013":"HE","0080":"HB","0077":"HB","0071":"KB","0082":"KB","0035":"KB","0095":"HE","0073":"HB","0076":"HB","0046":"HB","0063":"HB","0014":"HB","0030":"HB","0020":"HB","0023":"KB","0044":"HB","0088":"HB","0050":"HB","0070":"KB","0036":"HB","0057":"KB","0069":"HB","0098":"HB","0049":"HB","0101":"KB","0053":"HB","0039":"HE","0068":"KB","0093":"KB"}; /* enrollment no. (after 25MPU) -> language K/H + 4th subject B/E, from BAIO analytics */
+  var ROSTER = {"0087":"HB|Abdul Quddus","0075":"KB|Aditi Sajjan","0081":"HB|Almeena","0052":"KB|Anjali","0094":"HE|Aryansujay Jalsandhi","0056":"HB|Bhumika Harilal","0007":"HB|Danvi","0003":"HE|Darshana M Shah","0006":"KE|Harsha Sangashetty","0045":"KB|Laxmi","0064":"HB|Mahesh A Chakrakar","0004":"KB|Manjunath","0089":"KB|Megha","0028":"KB|Nikitha","0041":"KB|Pallavi","0002":"HB|Prateek","0024":"KB|Rahul Beerappa Pujari","0011":"HB|Rinku","0034":"KB|Samarth Malagond","0072":"KB|Sangamesh R Maralabhavi","0008":"HB|Sanvi","0040":"HB|Shaikh Ghulam Mustafa Quadri","0021":"HB|Shubham Akade","0026":"HB|Simran","0022":"HE|Sirigiri Rupanjana","0047":"HB|Sonakshi Pawar","0059":"HB|Soumya","0029":"KB|Srushti","0078":"KB|Sudha Rani","0038":"HB|Syed Abdul Haseeb","0051":"HB|Syed Sufiyan Wazeer","0027":"HB|Syeda Rida Imana Sheeza","0012":"KB|Varsha","0062":"HB|Vikas S Swamy","0079":"KB|Vinaysagar","0067":"KE|Abhishek","0048":"HB|Akshata","0013":"HE|Anush Iranna Suryavanshi","0080":"HB|Arifa Nazneen","0077":"HB|Bhagyashree","0071":"KB|Bhakti","0082":"KB|Devraj","0035":"KB|Divya","0095":"HE|Faaz Hamid Hussain","0073":"HB|Inshara Anum Fatima","0076":"HB|Jaha Uzma Badadal","0046":"HB|Md Talha","0063":"HB|Mohammed Aasim Zubair","0014":"HB|Mohammed Hisamuddin Soharwardi","0030":"HB|Mohammed Shahid Firas","0020":"HB|Nidhi Mishra","0023":"KB|Numan Taif","0044":"HB|Praniti","0088":"HB|Preetam","0050":"HB|Rakshita","0070":"KB|Renuka","0036":"HB|Rohit Patange","0057":"KB|Srinivas","0069":"HB|Swati","0098":"HB|Syed Amaan Ali","0049":"HB|Veda","0101":"KB|Vijaylaxmi","0053":"HB|Naman","0039":"HE|Anandraj V Soppan","0068":"KB|Apoorva","0093":"KB|Niteeshkumar","0099":"??|Ashwini","0017":"??|Shradha Patil"}; /* enrollment no. (after 25MPU) -> language K/H + 4th subject B/E, from BAIO analytics */
   var EXAMS = {
     e1:{ papers:[['2027-02-27','KAN','01',80],['2027-03-01','ENG','02',80],['2027-03-04','PHY','33',70],['2027-03-08','CHE','34',70],['2027-03-12','MAT','35',80],
                  ['2027-03-15','BIO','36',70],['2027-03-15','CS','41',70],['2027-03-16','ELE','40',70],['2027-03-17','HIN','03',80]],
@@ -436,7 +436,7 @@ setLang(['en','kn','hi'].includes(startLang)?startLang:'en', false);
          days:'days', left:function(sub,date){ return 'until your first paper — <b>'+sub+'</b>, '+date+'. Start revising now.'; },
          today:'Your exam is <b>today</b>. All the best! 💪', done:'This exam is over. Well done!', running:function(sub,date){ return 'Exam is on. Next paper: <b>'+sub+'</b>, '+date+'.'; },
          hol:{sun:'Holiday (Sunday)',shiv:'Holiday — Mahashivaratri',ramzan:'Holiday — Khutub-e-Ramzan'},
-         found:function(l,o){ return '✓ Showing the timetable for '+l+' + '+o+'.'; }, notfound:'Code not found — choose your language and 4th subject below.' },
+         found:function(l,o,n){ return '✓ Hi '+n+'! Showing your timetable for '+l+' + '+o+'.'; }, pick:function(n){ return '✓ Hi '+n+'! Choose your language and 4th subject below.'; }, notfound:'Code not found — choose your language and 4th subject below.' },
     kn:{ sub:{KAN:'ಕನ್ನಡ',HIN:'ಹಿಂದಿ',ENG:'ಇಂಗ್ಲಿಷ್',PHY:'ಭೌತಶಾಸ್ತ್ರ',CHE:'ರಸಾಯನಶಾಸ್ತ್ರ',MAT:'ಗಣಿತ',BIO:'ಜೀವಶಾಸ್ತ್ರ',ELE:'ವಿದ್ಯುನ್ಮಾನಶಾಸ್ತ್ರ',CS:'ಗಣಕ ವಿಜ್ಞಾನ'},
          wd:['ಭಾನು','ಸೋಮ','ಮಂಗಳ','ಬುಧ','ಗುರು','ಶುಕ್ರ','ಶನಿ'], mo:['ಜನ','ಫೆಬ್ರ','ಮಾರ್ಚ್','ಏಪ್ರಿ','ಮೇ','ಜೂನ್','ಜುಲೈ','ಆಗ','ಸೆಪ್ಟೆ','ಅಕ್ಟೋ','ನವೆಂ','ಡಿಸೆಂ'],
          e1:'ಪರೀಕ್ಷೆ 1', e1s:'27 ಫೆಬ್ರ – 17 ಮಾರ್ಚ್ 2027', e2:'ಪರೀಕ್ಷೆ 2', e2s:'3 – 12 ಮೇ 2027',
@@ -444,7 +444,7 @@ setLang(['en','kn','hi'].includes(startLang)?startLang:'en', false);
          days:'ದಿನಗಳು', left:function(sub,date){ return 'ನಿಮ್ಮ ಮೊದಲ ಪತ್ರಿಕೆ — <b>'+sub+'</b>, '+date+'. ಈಗಲೇ ಪುನರಾವರ್ತನೆ ಆರಂಭಿಸಿ.'; },
          today:'ಇಂದು ನಿಮ್ಮ ಪರೀಕ್ಷೆ. ಶುಭವಾಗಲಿ! 💪', done:'ಈ ಪರೀಕ್ಷೆ ಮುಗಿದಿದೆ. ಉತ್ತಮ ಕೆಲಸ!', running:function(sub,date){ return 'ಪರೀಕ್ಷೆ ನಡೆಯುತ್ತಿದೆ. ಮುಂದಿನ ಪತ್ರಿಕೆ: <b>'+sub+'</b>, '+date+'.'; },
          hol:{sun:'ರಜಾ ದಿನ (ಭಾನುವಾರ)',shiv:'ರಜಾ ದಿನ — ಮಹಾಶಿವರಾತ್ರಿ',ramzan:'ರಜಾ ದಿನ — ಖುತುಬ್-ಎ-ರಂಜಾನ್'},
-         found:function(l,o){ return '✓ '+l+' + '+o+' ವೇಳಾಪಟ್ಟಿ ತೋರಿಸಲಾಗುತ್ತಿದೆ.'; }, notfound:'ಸಂಖ್ಯೆ ಸಿಗಲಿಲ್ಲ — ಕೆಳಗೆ ನಿಮ್ಮ ಭಾಷೆ ಮತ್ತು 4ನೇ ವಿಷಯ ಆಯ್ಕೆಮಾಡಿ.' },
+         found:function(l,o,n){ return '✓ ನಮಸ್ಕಾರ '+n+'! ನಿಮ್ಮ '+l+' + '+o+' ವೇಳಾಪಟ್ಟಿ ತೋರಿಸಲಾಗುತ್ತಿದೆ.'; }, pick:function(n){ return '✓ ನಮಸ್ಕಾರ '+n+'! ಕೆಳಗೆ ನಿಮ್ಮ ಭಾಷೆ ಮತ್ತು 4ನೇ ವಿಷಯ ಆಯ್ಕೆಮಾಡಿ.'; }, notfound:'ಸಂಖ್ಯೆ ಸಿಗಲಿಲ್ಲ — ಕೆಳಗೆ ನಿಮ್ಮ ಭಾಷೆ ಮತ್ತು 4ನೇ ವಿಷಯ ಆಯ್ಕೆಮಾಡಿ.' },
     hi:{ sub:{KAN:'कन्नड़',HIN:'हिंदी',ENG:'अंग्रेज़ी',PHY:'भौतिकी',CHE:'रसायन विज्ञान',MAT:'गणित',BIO:'जीव विज्ञान',ELE:'इलेक्ट्रॉनिक्स',CS:'कंप्यूटर विज्ञान'},
          wd:['रवि','सोम','मंगल','बुध','गुरु','शुक्र','शनि'], mo:['जन','फ़र','मार्च','अप्रै','मई','जून','जुला','अग','सित','अक्टू','नव','दिस'],
          e1:'परीक्षा 1', e1s:'27 फ़र – 17 मार्च 2027', e2:'परीक्षा 2', e2s:'3 – 12 मई 2027',
@@ -452,7 +452,7 @@ setLang(['en','kn','hi'].includes(startLang)?startLang:'en', false);
          days:'दिन', left:function(sub,date){ return 'आपके पहले पेपर तक — <b>'+sub+'</b>, '+date+'। अभी से दोहराना शुरू करें।'; },
          today:'आज आपकी परीक्षा है। शुभकामनाएँ! 💪', done:'यह परीक्षा पूरी हो गई। बहुत बढ़िया!', running:function(sub,date){ return 'परीक्षा चल रही है। अगला पेपर: <b>'+sub+'</b>, '+date+'।'; },
          hol:{sun:'छुट्टी (रविवार)',shiv:'छुट्टी — महाशिवरात्रि',ramzan:'छुट्टी — खुतुब-ए-रमज़ान'},
-         found:function(l,o){ return '✓ '+l+' + '+o+' की समय-सारिणी दिखाई जा रही है।'; }, notfound:'कोड नहीं मिला — नीचे अपनी भाषा और चौथा विषय चुनिए।' }
+         found:function(l,o,n){ return '✓ नमस्ते '+n+'! आपकी '+l+' + '+o+' की समय-सारिणी दिखाई जा रही है।'; }, pick:function(n){ return '✓ नमस्ते '+n+'! नीचे अपनी भाषा और चौथा विषय चुनिए।'; }, notfound:'कोड नहीं मिला — नीचे अपनी भाषा और चौथा विषय चुनिए।' }
   };
   var PL = {
     en:{ now:'This week', ph:[['Round 1','Finish and revise every chapter','One chapter per subject each week. Make short notes and formula / diagram sheets as you go.'],
@@ -602,8 +602,10 @@ setLang(['en','kn','hi'].includes(startLang)?startLang:'en', false);
     var k = (v.match(/(\d{4})$/) || [])[1], r = k && /25MPU|^\d{4}$/.test(v) ? ROSTER[k] : null;
     if(!v){ msg.textContent = ''; return; }
     if(!r){ msg.textContent = t.notfound; save(); return; }
+    var nm = r.split('|')[1] || '';
+    if(r[0] === '?' || r[1] === '?'){ save(); render(); msg.textContent = t.pick(nm); return; }
     st.lang = r[0]==='H' ? 'HIN' : 'KAN'; st.opt = r[1]==='E' ? 'ELE' : 'BIO';
-    save(); render(); msg.textContent = t.found(t.sub[st.lang], t.sub[st.opt]);
+    save(); render(); msg.textContent = t.found(t.sub[st.lang], t.sub[st.opt], nm);
   }
   document.getElementById('ttGo').addEventListener('click', lookup);
   document.getElementById('ttCode').addEventListener('keydown', function(e){ if(e.key === 'Enter') lookup(); });
