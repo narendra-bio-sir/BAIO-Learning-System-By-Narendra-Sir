@@ -23,7 +23,7 @@ PACKS = [
     ('core', ['index.html', 'offline.html', 'manifest.json', 'icon-192.png', 'icon-512.png',
               'apple-touch-icon.png', 'announcements-index.json', 'exam-corner.html', 'exam-scorer.html',
               'study-tips.html', 'timetable.html', 'important-cards.html', 'guide.html', 'about.html',
-              'neet-3-steps.html', 'midterm-practice.html', 'offline-sync.js']),
+              'neet-3-steps.html', 'midterm-practice.html', 'offline-sync.js', 'tricks.html']),
     ('pu1', ['ch2/index.html', 'ch3/index.html', 'pu1-ch4.html', 'pu1-ch5.html', 'pu1-ch6.html',
              'pu1-ch8.html', 'pu1-ch9.html', 'pu1-ch10.html']),
     ('pu2', ['pu2-ch%d.html' % i for i in range(1, 14)]),

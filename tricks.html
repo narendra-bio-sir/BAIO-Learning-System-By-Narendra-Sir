@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Short Notes &amp; Tricks | BAIO Learning System</title>
+<meta name="description" content="One-page short notes, memory tricks and exam traps for PU Biology chapters, by Narendra Sir.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="subject-apps/app.css?v=1">
+<style>
+[hidden]{display:none!important}
+body{font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',system-ui,sans-serif}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;border-radius:16px;background:var(--panel2);border:1px solid var(--line);margin-top:16px}
+.seg button{border:0;background:transparent;color:var(--ink);border-radius:12px;padding:11px 8px;font:700 16px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer;-webkit-tap-highlight-color:transparent}
+.seg button.on{background:linear-gradient(135deg,var(--gold2),#E9C45A);color:#1a1406}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:14px 2px 6px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1.5px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:8px 13px;font:600 13.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.chip.on{border-color:var(--gold2);background:color-mix(in srgb,var(--gold2) 16%,var(--panel))}
+.chip.soon{color:var(--dim)}
+.chip .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#2F9E6B;margin-right:6px;vertical-align:1px}
+.chhead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-top:14px}
+.chhead h2{font:700 22px/1.25 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari';margin:0}
+.chhead small{display:block;color:var(--dim);font-size:13px;margin-top:3px}
+.chhead a{flex:none;font:700 13px Inter,'Noto Sans Kannada','Noto Sans Devanagari';color:var(--teal);text-decoration:none;border:1.5px solid var(--teal);border-radius:999px;padding:6px 11px;white-space:nowrap}
+.tools2{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.tbtn{border:1.5px solid var(--line);background:var(--panel);color:var(--ink);border-radius:12px;padding:9px 13px;font:700 13.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer;-webkit-tap-highlight-color:transparent}
+.tbtn.on{border-color:var(--teal);background:color-mix(in srgb,var(--teal) 14%,var(--panel))}
+.prog{font:600 13px Inter,'Noto Sans Kannada','Noto Sans Devanagari';color:var(--dim)}
+.topic{margin-top:14px;background:var(--panel);border:1.5px solid var(--line);border-radius:18px;overflow:hidden}
+.topic.done{border-color:color-mix(in srgb,#2F9E6B 60%,var(--line))}
+.th{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.th .n{flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font:700 14px 'Space Grotesk';background:var(--panel2);border:1px solid var(--line)}
+.topic.done .th .n{background:#2F9E6B;color:#fff;border-color:#2F9E6B}
+.th h3{margin:0;font:700 17px/1.3 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari'}
+.tb{padding:6px 16px 16px}
+.lbl{font:800 11px Inter,'Noto Sans Kannada','Noto Sans Devanagari';letter-spacing:.09em;text-transform:uppercase;color:var(--dim);margin:12px 0 6px}
+ul.pts{margin:0;padding-left:19px;line-height:1.6;font-size:15px}
+ul.pts li{margin:3px 0}
+ul.pts b,.trick b{color:var(--ink)}
+.trick{margin-top:8px;padding:11px 13px;border-radius:13px;background:color-mix(in srgb,var(--gold2) 11%,var(--panel));border:1px solid color-mix(in srgb,var(--gold2) 45%,transparent);font-size:14.5px;line-height:1.55}
+.trick strong{display:block;font:700 13px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari';color:var(--gold2);margin-bottom:2px}
+[data-theme="dark"] .trick strong{color:#E9C45A}
+.trap{margin-top:8px;padding:10px 13px;border-radius:13px;background:color-mix(in srgb,var(--red) 9%,var(--panel));border:1px solid color-mix(in srgb,var(--red) 35%,transparent);font-size:14px;line-height:1.5}
+.simple{margin-top:10px;padding:10px 13px;border-radius:13px;background:var(--panel2);font-size:14.5px;line-height:1.6}
+.learnt{margin-top:12px;border:1.5px solid var(--line);background:transparent;color:var(--ink);border-radius:12px;padding:9px 13px;font:700 13.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer;-webkit-tap-highlight-color:transparent}
+.topic.done .learnt{border-color:#2F9E6B;color:#1F7A52;background:color-mix(in srgb,#2F9E6B 12%,transparent)}
+[data-theme="dark"] .topic.done .learnt{color:#6FD3A3}
+/* Test myself: key words become tappable blanks */
+body.quiz ul.pts b{background:var(--panel2);color:transparent;border-radius:6px;border:1px dashed var(--line);cursor:pointer;-webkit-tap-highlight-color:transparent}
+body.quiz ul.pts b.show{background:color-mix(in srgb,var(--teal) 16%,transparent);color:var(--ink);border-color:transparent}
+.box{margin-top:18px;background:var(--panel);border:1.5px solid var(--line);border-radius:18px;padding:14px 16px}
+.box h3{margin:0 0 8px;font:700 17px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari'}
+table.nums{width:100%;border-collapse:collapse;font-size:14px;table-layout:fixed}
+table.nums td{padding:8px 4px;border-top:1px solid var(--line);vertical-align:top;overflow-wrap:anywhere}
+table.nums td:last-child{text-align:right;font-weight:700;width:46%}
+.last label{display:flex;gap:10px;align-items:flex-start;padding:8px 2px;border-top:1px solid var(--line);font-size:14.5px;line-height:1.5;cursor:pointer}
+.last input{margin-top:4px;width:18px;height:18px;accent-color:#2F9E6B;flex:none}
+.soonbox{margin-top:16px;padding:18px 16px;border-radius:18px;border:1.5px dashed var(--line);color:var(--dim);font-size:15px;line-height:1.55;text-align:center}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="brand" href="index.html"><div class="b">B</div><span>BAIO Learning System</span></a>
+  <div class="tools"><div id="langs"></div>
+    <a class="ib" href="index.html" aria-label="BAIO home">🏠</a>
+    <button class="ib" id="themeBtn" aria-label="Toggle theme">🌙</button></div>
+</div></header>
+<main class="wrap">
+  <section class="hero">
+    <div class="eyebrow" id="eyebrow" style="color:var(--teal)"></div>
+    <h1><span class="ic">🧠</span><span id="h1"></span></h1>
+    <p id="intro"></p>
+  </section>
+  <div class="seg" id="seg" role="tablist"></div>
+  <div class="chips" id="chips"></div>
+  <div id="body"></div>
+  <p class="hint" id="hint"></p>
+  <footer>BAIO Learning System · Narendra Sir</footer>
+</main>
+<!-- One data file per chapter (listed here so "Use BAIO Offline" saves them too). -->
+<script src="tricks/pu1-ch9.js?v=1"></script>
+<script>
+(function(){
+  var CHS = {
+    pu1: [['pu1-ch2','ch2/index.html','Biological Classification',2],['pu1-ch3','ch3/index.html','Plant Kingdom',3],['pu1-ch4','pu1-ch4.html','Animal Kingdom',4],
+          ['pu1-ch5','pu1-ch5.html','Morphology of Flowering Plants',5],['pu1-ch6','pu1-ch6.html','Anatomy of Flowering Plants',6],['pu1-ch8','pu1-ch8.html','Cell: The Unit of Life',8],
+          ['pu1-ch9','pu1-ch9.html','Biomolecules',9],['pu1-ch10','pu1-ch10.html','Cell Cycle and Cell Division',10]],
+    pu2: [['pu2-ch1','pu2-ch1.html','Sexual Reproduction in Flowering Plants',1],['pu2-ch2','pu2-ch2.html','Human Reproduction',2],['pu2-ch3','pu2-ch3.html','Reproductive Health',3],
+          ['pu2-ch4','pu2-ch4.html','Principles of Inheritance and Variation',4],['pu2-ch5','pu2-ch5.html','Molecular Basis of Inheritance',5],['pu2-ch6','pu2-ch6.html','Evolution',6],
+          ['pu2-ch7','pu2-ch7.html','Human Health and Disease',7],['pu2-ch8','pu2-ch8.html','Microbes in Human Welfare',8],['pu2-ch10','pu2-ch10.html','Biotechnology and its Applications',10],
+          ['pu2-ch11','pu2-ch11.html','Organisms and Populations',11],['pu2-ch12','pu2-ch12.html','Ecosystem',12],['pu2-ch13','pu2-ch13.html','Biodiversity and Conservation',13]]
+  };
+  var UI = {
+    en:{ eyebrow:'Revise fast · remember longer', h1:'Short Notes & Tricks',
+         intro:'One-page notes for each chapter, with memory tricks and the traps examiners love. Read a topic, then tap "Test myself" to hide the key words and recall them.',
+         pu1:'I PUC', pu2:'II PUC', ch:'Chapter', open:'Open chapter →', soon:'Coming soon',
+         soonText:'Short notes and tricks for this chapter are being written. Biomolecules is ready now; more chapters are coming.',
+         quiz:'🙈 Test myself', quizOn:'👀 Show all', notes:'Short notes', tricks:'Memory tricks', traps:'Exam traps', simple:'In simple words',
+         learnt:'☐ I have learnt this', learntOn:'✓ Learnt', prog:function(a,b){ return a+' of '+b+' topics learnt'; },
+         nums:'🔢 Numbers to remember', last:'⚡ Last-minute 10 (tick when you can say it without looking)',
+         hint:'💬 Found a trick that helps you more? Tell Narendra Sir in class or on WhatsApp — the best ones will be added here.' },
+    kn:{ eyebrow:'ವೇಗವಾಗಿ ಪುನರಾವರ್ತನೆ · ಹೆಚ್ಚು ದಿನ ನೆನಪು', h1:'ಶಾರ್ಟ್ ನೋಟ್ಸ್ ಮತ್ತು ಟ್ರಿಕ್ಸ್',
+         intro:'ಪ್ರತಿ ಅಧ್ಯಾಯಕ್ಕೆ ಒಂದು ಪುಟದ ನೋಟ್ಸ್, ನೆನಪಿನ ಟ್ರಿಕ್ಸ್ ಮತ್ತು ಪರೀಕ್ಷೆಯ ಬಲೆಗಳು. ಒಂದು ವಿಷಯ ಓದಿ, ನಂತರ "ನನ್ನನ್ನು ಪರೀಕ್ಷಿಸು" ಒತ್ತಿ ಮುಖ್ಯ ಪದಗಳನ್ನು ನೆನಪಿಸಿಕೊಳ್ಳಿ.',
+         pu1:'ಪ್ರಥಮ ಪಿಯುಸಿ', pu2:'ದ್ವಿತೀಯ ಪಿಯುಸಿ', ch:'ಅಧ್ಯಾಯ', open:'ಅಧ್ಯಾಯ ತೆರೆಯಿರಿ →', soon:'ಶೀಘ್ರದಲ್ಲೇ',
+         soonText:'ಈ ಅಧ್ಯಾಯದ ಶಾರ್ಟ್ ನೋಟ್ಸ್ ಮತ್ತು ಟ್ರಿಕ್ಸ್ ತಯಾರಾಗುತ್ತಿವೆ. ಜೈವಿಕ ಅಣುಗಳು (Biomolecules) ಈಗ ಸಿದ್ಧ; ಇನ್ನಷ್ಟು ಬರಲಿವೆ.',
+         quiz:'🙈 ನನ್ನನ್ನು ಪರೀಕ್ಷಿಸು', quizOn:'👀 ಎಲ್ಲಾ ತೋರಿಸು', notes:'ಶಾರ್ಟ್ ನೋಟ್ಸ್', tricks:'ನೆನಪಿನ ಟ್ರಿಕ್ಸ್', traps:'ಪರೀಕ್ಷೆಯ ಬಲೆಗಳು', simple:'ಸರಳ ಮಾತಿನಲ್ಲಿ',
+         learnt:'☐ ನಾನು ಇದನ್ನು ಕಲಿತಿದ್ದೇನೆ', learntOn:'✓ ಕಲಿತಿದ್ದೇನೆ', prog:function(a,b){ return b+' ರಲ್ಲಿ '+a+' ವಿಷಯಗಳು ಕಲಿತಿದ್ದೀರಿ'; },
+         nums:'🔢 ನೆನಪಿಡಬೇಕಾದ ಸಂಖ್ಯೆಗಳು', last:'⚡ ಕೊನೆಯ ನಿಮಿಷದ 10 (ನೋಡದೆ ಹೇಳಲು ಸಾಧ್ಯವಾದಾಗ ಟಿಕ್ ಮಾಡಿ)',
+         hint:'💬 ನಿಮಗೆ ಇನ್ನೂ ಉತ್ತಮ ಟ್ರಿಕ್ ಗೊತ್ತಿದೆಯೇ? ತರಗತಿಯಲ್ಲಿ ಅಥವಾ WhatsApp ನಲ್ಲಿ ನರೇಂದ್ರ ಸರ್‌ಗೆ ತಿಳಿಸಿ.' },
+    hi:{ eyebrow:'तेज़ दोहराव · लंबे समय तक याद', h1:'शॉर्ट नोट्स और ट्रिक्स',
+         intro:'हर अध्याय के लिए एक पेज के नोट्स, याद रखने की ट्रिक्स और परीक्षा के जाल। एक टॉपिक पढ़ें, फिर "खुद को परखें" दबाकर मुख्य शब्द याद करें।',
+         pu1:'प्रथम पीयूसी', pu2:'द्वितीय पीयूसी', ch:'अध्याय', open:'अध्याय खोलें →', soon:'जल्द आ रहा',
+         soonText:'इस अध्याय के शॉर्ट नोट्स और ट्रिक्स तैयार हो रहे हैं। जैव अणु (Biomolecules) अभी तैयार है; और अध्याय आ रहे हैं।',
+         quiz:'🙈 खुद को परखें', quizOn:'👀 सब दिखाएँ', notes:'शॉर्ट नोट्स', tricks:'याद रखने की ट्रिक्स', traps:'परीक्षा के जाल', simple:'आसान शब्दों में',
+         learnt:'☐ मैंने यह सीख लिया', learntOn:'✓ सीख लिया', prog:function(a,b){ return b+' में से '+a+' टॉपिक सीखे'; },
+         nums:'🔢 याद रखने वाली संख्याएँ', last:'⚡ आख़िरी मिनट के 10 (बिना देखे बोल सकें तो टिक करें)',
+         hint:'💬 आपके पास इससे अच्छी ट्रिक है? क्लास में या WhatsApp पर नरेंद्र सर को बताइए।' }
+  };
+  var KEY = 'baio_tricks_v1';
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+  var lang = 'en'; try{ lang = localStorage.getItem('baio_lang') || 'en'; }catch(e){} if(!UI[lang]) lang = 'en';
+  var tb = $('themeBtn');
+  function theme(t){ document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light'); tb.textContent = t === 'dark' ? '☀️' : '🌙'; }
+  var th = 'light'; try{ th = localStorage.getItem('baio_theme') || 'light'; }catch(e){} theme(th);
+  tb.onclick = function(){ var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; theme(n); try{ localStorage.setItem('baio_theme', n); }catch(e){} };
+
+  var store = {}; try{ store = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }catch(e){}
+  function saveStore(){ try{ localStorage.setItem(KEY, JSON.stringify(store)); }catch(e){} }
+  var D = window.TRICKS || {};
+
+  /* Start on the chapter in the link (#pu1-ch9), else the student's year, else the first ready chapter. */
+  var yr = 'pu1', cur = null;
+  try{ var p = JSON.parse(localStorage.getItem('baio_student') || 'null'); if(p && /^25MPU/i.test(p.roll || '')) yr = 'pu2'; }catch(e){}
+  var h = location.hash.slice(1);
+  if(/^pu[12]-ch\d+$/.test(h)){ yr = h.slice(0, 3); cur = h; }
+  function firstReady(y){ var r = CHS[y].filter(function(c){ return D[c[0]]; })[0]; return (r || CHS[y][0])[0]; }
+  if(!cur) cur = firstReady(yr);
+  var quiz = false;
+
+  function render(){
+    var u = UI[lang];
+    document.documentElement.lang = lang;
+    $('langs').innerHTML = [['en','English'],['kn','ಕನ್ನಡ'],['hi','हिंदी']].map(function(l){ return '<button class="lang'+(l[0]===lang?' on':'')+'" data-l="'+l[0]+'">'+l[1]+'</button>'; }).join('');
+    $('eyebrow').textContent = u.eyebrow; $('h1').textContent = u.h1; $('intro').textContent = u.intro; $('hint').textContent = u.hint;
+    $('seg').innerHTML = ['pu1','pu2'].map(function(y){ return '<button role="tab" aria-selected="'+(y===yr)+'" class="'+(y===yr?'on':'')+'" data-y="'+y+'">'+u[y]+'</button>'; }).join('');
+    $('chips').innerHTML = CHS[yr].map(function(c){
+      var ready = !!D[c[0]];
+      return '<button class="chip'+(c[0]===cur?' on':'')+(ready?'':' soon')+'" data-c="'+c[0]+'">'+(ready?'<span class="dot"></span>':'')+u.ch+' '+c[3]+' · '+esc(c[2])+'</button>';
+    }).join('');
+    var meta = CHS[yr].filter(function(c){ return c[0] === cur; })[0] || CHS[yr][0];
+    var d = D[cur];
+    var head = '<div class="chhead"><div><h2>'+esc(meta[2])+'</h2><small>'+u[yr]+' · '+u.ch+' '+meta[3]+'</small></div><a href="'+meta[1]+'">'+u.open+'</a></div>';
+    if(!d){ $('body').innerHTML = head + '<div class="soonbox">⏳ '+u.soon+'<br>'+u.soonText+'</div>'; document.body.classList.remove('quiz'); return; }
+    var done = store[cur] || (store[cur] = { t:{}, l:{} });
+    var nDone = d.topics.filter(function(_, i){ return done.t[i]; }).length;
+    var html = head + '<div class="tools2"><button class="tbtn'+(quiz?' on':'')+'" id="quizBtn">'+(quiz?u.quizOn:u.quiz)+'</button><span class="prog">'+u.prog(nDone, d.topics.length)+'</span></div>';
+    d.topics.forEach(function(t, i){
+      var simple = lang === 'kn' ? t.kn : lang === 'hi' ? t.hi : '';
+      html += '<section class="topic'+(done.t[i]?' done':'')+'"><div class="th"><span class="n">'+(i+1)+'</span><h3>'+esc(t.t)+'</h3></div><div class="tb">'
+        + '<div class="lbl">📝 '+u.notes+'</div><ul class="pts">'+t.notes.map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ul>'
+        + '<div class="lbl">🧠 '+u.tricks+'</div>'+t.tricks.map(function(x){ return '<div class="trick"><strong>'+x[0]+'</strong>'+x[1]+'</div>'; }).join('')
+        + (t.traps && t.traps.length ? '<div class="lbl">⚠️ '+u.traps+'</div>'+t.traps.map(function(x){ return '<div class="trap">'+x+'</div>'; }).join('') : '')
+        + (simple ? '<div class="simple">🗣️ <b>'+u.simple+':</b> '+esc(simple)+'</div>' : '')
+        + '<button class="learnt" data-t="'+i+'">'+(done.t[i]?u.learntOn:u.learnt)+'</button></div></section>';
+    });
+    html += '<div class="box"><h3>'+u.nums+'</h3><table class="nums">'+d.numbers.map(function(r){ return '<tr><td>'+esc(r[0])+'</td><td>'+esc(r[1])+'</td></tr>'; }).join('')+'</table></div>';
+    html += '<div class="box last"><h3>'+u.last+'</h3>'+d.last.map(function(x, i){ return '<label><input type="checkbox" data-l="'+i+'"'+(done.l[i]?' checked':'')+'><span>'+esc(x)+'</span></label>'; }).join('')+'</div>';
+    $('body').innerHTML = html;
+    document.body.classList.toggle('quiz', quiz);
+  }
+
+  $('langs').addEventListener('click', function(e){ var b = e.target.closest('button'); if(!b) return; lang = b.dataset.l; try{ localStorage.setItem('baio_lang', lang); }catch(x){} render(); });
+  $('seg').addEventListener('click', function(e){ var b = e.target.closest('button'); if(!b) return; yr = b.dataset.y; cur = firstReady(yr); quiz = false; try{ history.replaceState(null, '', '#' + cur); }catch(x){} render(); });
+  $('chips').addEventListener('click', function(e){ var b = e.target.closest('.chip'); if(!b) return; cur = b.dataset.c; quiz = false; try{ history.replaceState(null, '', '#' + cur); }catch(x){} render(); });
+  $('body').addEventListener('click', function(e){
+    if(e.target.id === 'quizBtn'){ quiz = !quiz; render(); return; }
+    var lb = e.target.closest('.learnt');
+    if(lb){
+      /* Update in place so words already revealed in "Test myself" stay revealed. */
+      var s = store[cur], i = lb.dataset.t, u = UI[lang], d = D[cur];
+      s.t[i] = !s.t[i]; saveStore();
+      lb.closest('.topic').classList.toggle('done', !!s.t[i]); lb.textContent = s.t[i] ? u.learntOn : u.learnt;
+      $('body').querySelector('.prog').textContent = u.prog(d.topics.filter(function(_, k){ return s.t[k]; }).length, d.topics.length);
+      return;
+    }
+    if(quiz && e.target.tagName === 'B' && e.target.closest('.pts')) e.target.classList.toggle('show');
+  });
+  $('body').addEventListener('change', function(e){
+    var c = e.target.closest('input[data-l]'); if(!c) return;
+    store[cur].l[c.dataset.l] = c.checked; saveStore();
+  });
+  render();
+  /* Bring the chosen chapter chip into view on small screens. */
+  var on = document.querySelector('.chip.on'); if(on && on.scrollIntoView) on.scrollIntoView({ block:'nearest', inline:'center' });
+})();
+</script>
+</body>
+</html>
