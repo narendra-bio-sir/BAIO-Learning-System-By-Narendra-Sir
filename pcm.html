@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>PCM · Physics, Chemistry, Maths | BAIO Learning System</title>
+<meta name="description" content="BAIO Physics, Chemistry and Maths chapter apps for I PUC and II PUC: notes, formula sheets, solved problems, MCQ, NEET / JEE / KCET practice and board answers.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="subject-apps/app.css?v=1">
+<style>
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:5px;border-radius:16px;background:var(--panel2);border:1px solid var(--line);margin-top:16px}
+.seg button{border:0;background:transparent;color:var(--ink);border-radius:12px;padding:11px 8px;font:700 16px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer;line-height:1.25;-webkit-tap-highlight-color:transparent}
+.seg button small{display:block;font:500 12px Inter,'Noto Sans Kannada','Noto Sans Devanagari';opacity:.75}
+.seg button.on{background:linear-gradient(135deg,var(--gold2),#E9C45A);color:#1a1406}
+.subj{margin-top:16px;background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.subj-h{display:flex;align-items:center;gap:14px;padding:16px;border-bottom:1px solid var(--line);background:linear-gradient(120deg,color-mix(in srgb,var(--c) 12%,var(--panel)),var(--panel))}
+.subj-ic{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-size:28px;background:color-mix(in srgb,var(--c) 18%,var(--panel));border:1.5px solid var(--c);flex:none}
+.subj-h h2{font-size:20px}
+.subj-h p{margin:2px 0 0;font-size:13px;color:var(--dim)}
+.live{margin-left:auto;font:800 11px Inter;letter-spacing:.08em;color:var(--c);border:1.5px solid var(--c);border-radius:999px;padding:4px 9px;white-space:nowrap}
+.chs{list-style:none;margin:0;padding:6px}
+.ch{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 10px;border-radius:12px;text-decoration:none;color:var(--ink);-webkit-tap-highlight-color:transparent}
+a.ch:hover,a.ch:active{background:var(--panel2)}
+.ch .n{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;font:700 15px 'Space Grotesk';background:var(--c);color:#fff}
+.ch .t{font-weight:600;font-size:15px;line-height:1.35}
+.ch .t small{display:block;font-weight:500;font-size:12.5px;color:var(--dim);margin-top:2px}
+.ch .go{font:700 13px Inter;color:var(--c);white-space:nowrap}
+.ch .n.ic{font-size:21px;background:color-mix(in srgb,var(--c) 16%,var(--panel));border:1.5px solid var(--c)}
+.ch.soon{opacity:.6}
+.ch.soon .n.ic{filter:grayscale(.85);border-color:var(--line)}
+.ch.soon .n{background:var(--panel2);color:var(--dim);border:1px solid var(--line)}
+.ch.soon .go{color:var(--dim);font-weight:600;font-size:12px}
+.more{display:block;width:calc(100% - 12px);margin:0 6px 8px;border:1px dashed var(--line);background:transparent;color:var(--dim);border-radius:12px;padding:10px;font:600 13px Inter,'Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer;-webkit-tap-highlight-color:transparent}
+.soonbox{padding:16px;color:var(--dim);font-size:14px}
+.hint{margin-top:14px;padding:12px 14px;border-radius:14px;background:var(--panel2);border:1px solid var(--line);font-size:13.5px;color:var(--dim)}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="brand" href="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/"><div class="b">B</div><span>BAIO Learning System</span></a>
+  <div class="tools"><div id="langs"></div>
+    <a class="ib" href="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/" aria-label="BAIO home">🏠</a>
+    <button class="ib" id="themeBtn" aria-label="Toggle theme">🌙</button></div>
+</div></header>
+<main class="wrap">
+  <section class="hero">
+    <div class="eyebrow" id="eyebrow" style="color:var(--teal)"></div>
+    <h1><span class="ic">⚛️</span><span id="h1"></span></h1>
+    <p id="intro"></p>
+  </section>
+  <div class="seg" id="seg" role="tablist"></div>
+  <div id="list"></div>
+  <p class="hint" id="hint"></p>
+  <footer>BAIO Learning System · Narendra Sir · Physics · Chemistry · Maths</footer>
+</main>
+<script>
+(function(){
+  /* Catalog: chapter titles per KSEAB / NCERT syllabus. href = live chapter app. */
+  var CAT = {
+    pu1:[
+      {k:'phy', ic:'📏', c:'#2B6CB0', ch:[['Units and Measurements','pu1-phy-ch1.html'],'Motion in a Straight Line','Motion in a Plane','Laws of Motion','Work, Energy and Power','System of Particles and Rotational Motion','Gravitation','Mechanical Properties of Solids','Mechanical Properties of Fluids','Thermal Properties of Matter','Thermodynamics','Kinetic Theory','Oscillations','Waves']},
+      {k:'che', ic:'🧪', c:'#B4531F', ch:[['Some Basic Concepts of Chemistry','pu1-che-ch1.html'],'Structure of Atom','Classification of Elements and Periodicity in Properties','Chemical Bonding and Molecular Structure','Thermodynamics','Equilibrium','Redox Reactions','Organic Chemistry: Some Basic Principles and Techniques','Hydrocarbons']},
+      {k:'mat', ic:'🔵', c:'#6B46C1', ch:[['Sets','pu1-mat-ch1.html'],'Relations and Functions','Trigonometric Functions','Complex Numbers and Quadratic Equations','Linear Inequalities','Permutations and Combinations','Binomial Theorem','Sequences and Series','Straight Lines','Conic Sections','Introduction to Three Dimensional Geometry','Limits and Derivatives','Statistics','Probability']},
+      {k:'ele', ic:'🔌', c:'#0F8F7A', ch:[]}
+    ],
+    pu2:[
+      {k:'phy', ic:'⚡', c:'#2B6CB0', ch:[['Electric Charges and Fields','pu2-phy-ch1.html'],'Electrostatic Potential and Capacitance','Current Electricity','Moving Charges and Magnetism','Magnetism and Matter','Electromagnetic Induction','Alternating Current','Electromagnetic Waves','Ray Optics and Optical Instruments','Wave Optics','Dual Nature of Radiation and Matter','Atoms','Nuclei','Semiconductor Electronics']},
+      {k:'che', ic:'⚗️', c:'#B4531F', ch:[['Solutions','pu2-che-ch1.html'],'Electrochemistry','Chemical Kinetics','The d- and f-Block Elements','Coordination Compounds','Haloalkanes and Haloarenes','Alcohols, Phenols and Ethers','Aldehydes, Ketones and Carboxylic Acids','Amines','Biomolecules']},
+      {k:'mat', ic:'📐', c:'#6B46C1', ch:[['Relations and Functions','pu2-mat-ch1.html'],'Inverse Trigonometric Functions','Matrices','Determinants','Continuity and Differentiability','Application of Derivatives','Integrals','Application of Integrals','Differential Equations','Vector Algebra','Three Dimensional Geometry','Linear Programming','Probability']},
+      {k:'ele', ic:'🔌', c:'#0F8F7A', ch:[]}
+    ]
+  };
+  /* one icon per chapter, in syllabus order */
+  var ICONS = {
+    pu1phy:['📏','➡️','🏹','🚀','🔋','🌀','🪐','🧱','💧','🌡️','🔥','💨','🕰️','🌊'],
+    pu1che:['⚖️','⚛️','🗂️','🔗','🔥','🔄','🔋','🌿','⛽'],
+    pu1mat:['⭕','🔀','📐','🌀','📶','🎲','🧮','📈','📏','🥚','🧊','📉','📊','🪙'],
+    pu1ele:[],
+    pu2phy:['⚡','🔋','💡','🧲','🧭','🌀','🔌','📡','🔍','🌈','🔦','⚛️','☢️','💻'],
+    pu2che:['💧','🔋','⏱️','🔩','🧩','🧯','🧴','🍋','🐟','🧬'],
+    pu2mat:['🔀','📐','🔲','🧮','〽️','📈','♾️','🗻','🔁','➡️','🧊','📊','🎲'],
+    pu2ele:[]
+  };
+  var UI = {
+    en:{ eyebrow:'BAIO Learning System · New subjects', h1:'Physics · Chemistry · Maths', intro:'Chapter apps in the BAIO style: notes, formula sheets, solved problems, MCQ, NEET / JEE / KCET practice and board answers. Pick your year.',
+         pu1:'I PUC', pu1s:'Spark · Prime', pu2:'II PUC', pu2s:'Champion · Elite',
+         s:{phy:'Physics', che:'Chemistry', mat:'Mathematics', ele:'Electronics'}, d:{phy:'NEET · KCET', che:'NEET · KCET', mat:'JEE Main · KCET', ele:''},
+         live:function(a,b){ return a+' / '+b+' LIVE'; }, ch:'Chapter', open:'Open →', free:'Free · new', soon:'Coming soon', more:function(n){ return '▾ Show all '+n+' chapters'; }, less:'▴ Show fewer',
+         eleSoon:'Electronics chapters are being prepared. They will appear here soon.', hint:'💬 Everything is free for now. Use the feedback button inside each chapter to tell Narendra Sir what to improve.' },
+    kn:{ eyebrow:'BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್ · ಹೊಸ ವಿಷಯಗಳು', h1:'ಭೌತಶಾಸ್ತ್ರ · ರಸಾಯನಶಾಸ್ತ್ರ · ಗಣಿತ', intro:'BAIO ಶೈಲಿಯ ಅಧ್ಯಾಯ ಆ್ಯಪ್‌ಗಳು: ಟಿಪ್ಪಣಿ, ಸೂತ್ರ ಹಾಳೆ, ಬಿಡಿಸಿದ ಸಮಸ್ಯೆಗಳು, MCQ, NEET / JEE / KCET ಅಭ್ಯಾಸ ಮತ್ತು ಬೋರ್ಡ್ ಉತ್ತರಗಳು. ನಿಮ್ಮ ತರಗತಿ ಆಯ್ಕೆಮಾಡಿ.',
+         pu1:'ಪ್ರಥಮ ಪಿಯುಸಿ', pu1s:'Spark · Prime', pu2:'ದ್ವಿತೀಯ ಪಿಯುಸಿ', pu2s:'Champion · Elite',
+         s:{phy:'ಭೌತಶಾಸ್ತ್ರ', che:'ರಸಾಯನಶಾಸ್ತ್ರ', mat:'ಗಣಿತ', ele:'ವಿದ್ಯುನ್ಮಾನಶಾಸ್ತ್ರ'}, d:{phy:'NEET · KCET', che:'NEET · KCET', mat:'JEE Main · KCET', ele:''},
+         live:function(a,b){ return a+' / '+b+' ಲಭ್ಯ'; }, ch:'ಅಧ್ಯಾಯ', open:'ತೆರೆಯಿರಿ →', free:'ಉಚಿತ · ಹೊಸದು', soon:'ಶೀಘ್ರದಲ್ಲಿ', more:function(n){ return '▾ ಎಲ್ಲಾ '+n+' ಅಧ್ಯಾಯಗಳು'; }, less:'▴ ಕಡಿಮೆ ತೋರಿಸಿ',
+         eleSoon:'ವಿದ್ಯುನ್ಮಾನಶಾಸ್ತ್ರ ಅಧ್ಯಾಯಗಳು ಸಿದ್ಧವಾಗುತ್ತಿವೆ. ಶೀಘ್ರದಲ್ಲಿ ಇಲ್ಲಿ ಬರುತ್ತವೆ.', hint:'💬 ಸದ್ಯಕ್ಕೆ ಎಲ್ಲವೂ ಉಚಿತ. ಪ್ರತಿ ಅಧ್ಯಾಯದೊಳಗಿನ ಅಭಿಪ್ರಾಯ ಬಟನ್ ಮೂಲಕ ನರೇಂದ್ರ ಸರ್ ಅವರಿಗೆ ತಿಳಿಸಿ.' },
+    hi:{ eyebrow:'BAIO लर्निंग सिस्टम · नए विषय', h1:'भौतिकी · रसायन · गणित', intro:'BAIO शैली के अध्याय ऐप: नोट्स, सूत्र पत्रक, हल किए प्रश्न, MCQ, NEET / JEE / KCET अभ्यास और बोर्ड उत्तर। अपनी कक्षा चुनिए।',
+         pu1:'प्रथम पीयूसी', pu1s:'Spark · Prime', pu2:'द्वितीय पीयूसी', pu2s:'Champion · Elite',
+         s:{phy:'भौतिकी', che:'रसायन', mat:'गणित', ele:'इलेक्ट्रॉनिक्स'}, d:{phy:'NEET · KCET', che:'NEET · KCET', mat:'JEE Main · KCET', ele:''},
+         live:function(a,b){ return a+' / '+b+' उपलब्ध'; }, ch:'अध्याय', open:'खोलें →', free:'मुफ़्त · नया', soon:'जल्द आ रहा', more:function(n){ return '▾ सभी '+n+' अध्याय'; }, less:'▴ कम दिखाएँ',
+         eleSoon:'इलेक्ट्रॉनिक्स के अध्याय तैयार हो रहे हैं। जल्द ही यहाँ आएँगे।', hint:'💬 फ़िलहाल सब कुछ मुफ़्त है। हर अध्याय के अंदर राय बटन से नरेंद्र सर को बताइए।' }
+  };
+  function $(id){ return document.getElementById(id); }
+  var lang = 'en'; try{ lang = localStorage.getItem('baio_lang') || 'en'; }catch(e){} if(!UI[lang]) lang = 'en';
+  var yr = 'pu2', open = {};
+  try{ var sv = localStorage.getItem('baio_pcm_year'); if(sv) yr = sv; else { var p = JSON.parse(localStorage.getItem('baio_student') || 'null'); if(p && /^26MPU/i.test(p.roll || '')) yr = 'pu1'; } }catch(e){}
+  if(/^#pu[12]$/.test(location.hash)) yr = location.hash.slice(1);
+  var tb = $('themeBtn');
+  function theme(t){ document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light'); tb.textContent = t === 'dark' ? '☀️' : '🌙'; }
+  var th = 'light'; try{ th = localStorage.getItem('baio_theme') || 'light'; }catch(e){} theme(th);
+  tb.onclick = function(){ var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; theme(n); try{ localStorage.setItem('baio_theme', n); }catch(e){} };
+  function esc(s){ return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function render(){
+    var u = UI[lang];
+    document.documentElement.lang = lang;
+    $('langs').innerHTML = [['en','English'],['kn','ಕನ್ನಡ'],['hi','हिंदी']].map(function(l){ return '<button class="lang'+(l[0]===lang?' on':'')+'" data-l="'+l[0]+'">'+l[1]+'</button>'; }).join('');
+    $('eyebrow').textContent = u.eyebrow; $('h1').textContent = u.h1; $('intro').textContent = u.intro; $('hint').textContent = u.hint;
+    $('seg').innerHTML = ['pu1','pu2'].map(function(y){ return '<button role="tab" aria-selected="'+(y===yr)+'" class="'+(y===yr?'on':'')+'" data-y="'+y+'">'+u[y]+'<small>'+u[y+'s']+'</small></button>'; }).join('');
+    $('list').innerHTML = CAT[yr].map(function(S){
+      var IC = ICONS[yr + S.k] || []; function ic(i){ return IC[i] || (i + 1); }
+      var live = S.ch.filter(function(c){ return Array.isArray(c); }).length, key = yr + S.k, showAll = !!open[key];
+      var h = '<section class="subj" style="--c:'+S.c+'"><div class="subj-h"><div class="subj-ic">'+S.ic+'</div><div><h2>'+u.s[S.k]+'</h2>'+(u.d[S.k]?'<p>'+u.d[S.k]+'</p>':'')+'</div>'
+        + (S.ch.length ? '<span class="live">'+u.live(live, S.ch.length)+'</span>' : '<span class="live">'+u.soon+'</span>') + '</div>';
+      if(!S.ch.length) return h + '<div class="soonbox">'+u.eleSoon+'</div></section>';
+      h += '<ul class="chs">';
+      S.ch.forEach(function(c, i){
+        var isLive = Array.isArray(c), title = isLive ? c[0] : c;
+        if(!isLive && !showAll && i > live) return;
+        h += isLive
+          ? '<li><a class="ch" href="'+c[1]+'"><span class="n ic">'+ic(i)+'</span><span class="t">'+esc(title)+'<small>'+u.ch+' '+(i+1)+' · '+u.free+'</small></span><span class="go">'+u.open+'</span></a></li>'
+          : '<li><div class="ch soon"><span class="n ic">'+ic(i)+'</span><span class="t">'+esc(title)+'<small>'+u.ch+' '+(i+1)+'</small></span><span class="go">'+u.soon+'</span></div></li>';
+      });
+      h += '</ul>';
+      if(S.ch.length > live + 1) h += '<button class="more" data-k="'+key+'">'+(showAll ? u.less : u.more(S.ch.length))+'</button>';
+      return h + '</section>';
+    }).join('');
+  }
+  $('langs').addEventListener('click', function(e){ var b = e.target.closest('button'); if(!b) return; lang = b.dataset.l; try{ localStorage.setItem('baio_lang', lang); }catch(x){} render(); });
+  $('seg').addEventListener('click', function(e){ var b = e.target.closest('button'); if(!b) return; yr = b.dataset.y; try{ localStorage.setItem('baio_pcm_year', yr); history.replaceState(null, '', '#' + yr); }catch(x){} render(); });
+  $('list').addEventListener('click', function(e){ var b = e.target.closest('.more'); if(!b) return; open[b.dataset.k] = !open[b.dataset.k]; render(); });
+  render();
+})();
+</script>
+</body>
+</html>
