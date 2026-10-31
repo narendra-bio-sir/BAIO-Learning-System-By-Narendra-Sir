@@ -103,6 +103,51 @@ a{color:var(--teal)}
 .order button b{color:var(--gold);font-variant-numeric:tabular-nums}
 .bpline{margin-top:8px;font-size:13px;color:var(--ink-dim)}
 .bpline b{color:var(--ink)}
+.dg{width:100%;height:auto;max-width:560px;display:block;margin:10px auto 0;overflow:visible}
+.dg text{fill:var(--ink);font:500 11.5px Inter,system-ui,sans-serif}
+.dg text.b{font-weight:700;font-size:12px}
+.dg text.sm{font-size:10.5px}
+.dg text.cap{fill:var(--ink-dim);font-size:11px;font-style:italic}
+.dg .o{stroke:var(--ink);stroke-width:1.6;fill:none}
+.dg .o.thin{stroke-width:1}
+.dg .l{stroke:var(--ink-dim);stroke-width:1;fill:none}
+.dg .l.dash{stroke-dasharray:4 3}
+.dg .dot{fill:var(--ink-dim)}
+.dg .arh{fill:var(--ink-dim)}
+.dg .arr{stroke-width:1.6}
+.dg .fa{fill:rgba(212,175,55,.28)}
+.dg .fb{fill:rgba(46,230,197,.22)}
+.dg .fc{fill:rgba(231,105,91,.25)}
+.dg .fd{fill:var(--panel)}
+.dg .fe{fill:rgba(120,140,230,.25)}
+.dg .fg{fill:rgba(160,110,220,.3)}
+.dg .band{fill:none;stroke:rgba(212,175,55,.45)}
+.dg .nuc{fill:var(--ink)}
+.dg .nuc2{fill:rgba(0,0,0,.18)}
+.dg .vein{stroke:#C33A2C;stroke-width:2;fill:none}
+.dg .cu{fill:none;stroke:#C77B30;stroke-width:2}
+.dg .ss{stroke:#C77B30;stroke-width:2.2;fill:none}
+.dg .spark{stroke:#D4AF37;stroke-width:2;fill:none}
+.dg .flame{fill:#E7695B}
+.dg .ground{stroke:#8A6A1A;stroke-width:3;stroke-dasharray:8 4}
+.dg .slurry{fill:rgba(138,106,26,.25)}
+.dg .gene{fill:none;stroke-width:9;stroke-linecap:butt}
+.dg .g1{stroke:rgba(46,230,197,.75)} .dg .g2{stroke:rgba(212,175,55,.85)} .dg .g3{stroke:rgba(231,105,91,.8)} .dg .g4{stroke:rgba(120,140,230,.8)}
+.dg .st1{stroke:var(--ink);stroke-width:3} .dg .st2{stroke:var(--ink-dim);stroke-width:3}
+.dg .pr{fill:#E7695B} .dg .newst{stroke:#2EA88F;stroke-width:3;stroke-dasharray:5 3}
+.dg .bh{fill:#8A6A1A} .dg .bm{fill:#D4AF37} .dg .bl{fill:#2EA88F}
+.dg .ax{stroke:var(--ink);stroke-width:1.6;fill:none}
+.dg .cj{stroke:#E7695B;stroke-width:2.4;fill:none} .dg .cs{stroke:#2EA88F;stroke-width:2.4;fill:none}
+.dcard .dgwrap{margin-top:6px;border-radius:12px;background:var(--panel);border:1px solid var(--line);padding:6px;cursor:zoom-in}
+.dcard .dgwrap .dg{margin:0 auto}
+.dcard .dact{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.dcard .dact a,.dcard .dact button{font:600 12px 'Inter','Noto Sans Kannada','Noto Sans Devanagari';border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:6px 11px;text-decoration:none;cursor:pointer;min-height:32px}
+.zoom{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px))}
+.zoom .zin{position:relative;width:100%;max-width:900px;max-height:100%;overflow:auto;background:var(--panel);border-radius:16px;padding:16px}
+.zoom .zin b{display:block;font:700 15px 'Space Grotesk';margin:0 40px 6px 0}
+.zoom .dg{max-width:none}
+.zoom .zx{position:absolute;right:10px;top:10px;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font-size:16px;cursor:pointer}
+.dia{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))!important}
 .nav2{display:flex;justify-content:space-between;gap:8px;margin-top:20px}
 .act{display:inline-flex;align-items:center;gap:6px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);text-decoration:none;font:600 13px 'Inter','Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer;min-height:42px}
 .act.primary{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;border-color:var(--gold)}
@@ -113,6 +158,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offse
 @media (max-width:640px){ .hero h1{font-size:25px} .rules{grid-template-columns:repeat(2,minmax(0,1fr))} .brand span{display:none} .chapter{padding:14px} .chgrid{grid-template-columns:repeat(2,minmax(0,1fr))} }
 </style>
 <script src="exam-corner/exam-scorer-data.js?v=2"></script>
+<script src="exam-corner/exam-scorer-diagrams.js?v=1"></script>
 </head>
 <body>
 <nav class="topnav"><div class="topnav-inner">
@@ -145,6 +191,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offse
     en:{ eyebrow:'II PUC Biology · Exam Scorer', h1:'Score sure marks in <span>Biology</span>',
          intro:'Pass-first material by Narendra Sir for students who want safe, sure marks. For each chapter: the questions that come again and again, short answers in points, must-draw diagrams, one-mark facts and memory tricks. Tick each answer once you can write it without looking.',
          rules:[['1-mark first','Learn the "one-mark facts" of every chapter. They are the easiest marks in Part A.'],['Draw diagrams','A neat, labelled diagram earns marks even if your answer is short.'],['Write in points','Write 5-mark answers as numbered points or a flow-chart, not a paragraph.'],['Practicals = 30','Practical marks are added to your total. Attend every lab and keep your record ready.']],
+         dzoom:'🔍 Enlarge', dncert:'📖 NCERT chapter (PDF)', dnote:'Diagrams drawn for BAIO to show what to draw and label. Check the full figure in your NCERT textbook.',
          paperH:'The Biology paper: 70 marks', pc:['Part','Questions','You answer','Marks'],
          prow:[['A – I','MCQ, 1 mark each','All 15','15'],['A – II','Fill in the blanks, 1 mark','All 5','5'],['B','2-mark short answers','5 of 7','10'],['C','3-mark short answers','5 of 7','15'],['D – V','5-mark long answers','4 of 7','20'],['D – VI','5-mark reasoning (HOTS)','1 of 3','5'],['','Total','','70']],
          smart:['Part A (20 marks) is compulsory and the easiest. Learn the one-mark facts of all 13 chapters.','You can leave 2 questions in Parts B and C and 3 in Part D – V. So it is better to know 9–10 chapters well than all 13 half-way.','Part D – VI asks reasoning questions; in the model blueprint they come from Chapters 4, 5 and 9. Practise genetic crosses to answer one.'],
@@ -158,6 +205,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offse
     kn:{ eyebrow:'ದ್ವಿತೀಯ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ · ಎಕ್ಸಾಮ್ ಸ್ಕೋರರ್', h1:'<span>ಜೀವಶಾಸ್ತ್ರ</span>ದಲ್ಲಿ ಖಚಿತ ಅಂಕ ಗಳಿಸಿ',
          intro:'ಸುರಕ್ಷಿತ, ಖಚಿತ ಅಂಕಗಳು ಬೇಕಾದ ವಿದ್ಯಾರ್ಥಿಗಳಿಗಾಗಿ ನರೇಂದ್ರ ಸರ್ ಅವರ ಪಾಸ್-ಮೊದಲು ಸಾಮಗ್ರಿ. ಪ್ರತಿ ಅಧ್ಯಾಯಕ್ಕೆ: ಮತ್ತೆ ಮತ್ತೆ ಬರುವ ಪ್ರಶ್ನೆಗಳು, ಅಂಶರೂಪದ ಕಿರು ಉತ್ತರಗಳು, ಕಡ್ಡಾಯ ಚಿತ್ರಗಳು, ಒಂದು ಅಂಕದ ಸಂಗತಿಗಳು ಮತ್ತು ನೆನಪಿನ ಸೂತ್ರಗಳು. ನೋಡದೆ ಬರೆಯಲು ಬಂದಾಗ ಗುರುತು ಹಾಕಿ.',
          rules:[['ಮೊದಲು 1 ಅಂಕ','ಪ್ರತಿ ಅಧ್ಯಾಯದ "ಒಂದು ಅಂಕದ ಸಂಗತಿಗಳು" ಕಲಿಯಿರಿ. ಭಾಗ A ಯಲ್ಲಿ ಇವು ಸುಲಭ ಅಂಕಗಳು.'],['ಚಿತ್ರ ಬರೆಯಿರಿ','ಅಂದವಾದ, ಹೆಸರಿಸಿದ ಚಿತ್ರಕ್ಕೆ ಉತ್ತರ ಚಿಕ್ಕದಾದರೂ ಅಂಕ ಸಿಗುತ್ತದೆ.'],['ಅಂಶಗಳಲ್ಲಿ ಬರೆಯಿರಿ','5 ಅಂಕದ ಉತ್ತರವನ್ನು ಸಂಖ್ಯೆ ಹಾಕಿದ ಅಂಶಗಳು ಅಥವಾ ಹರಿವು-ಚಿತ್ರವಾಗಿ ಬರೆಯಿರಿ.'],['ಪ್ರಾಯೋಗಿಕ = 30','ಪ್ರಾಯೋಗಿಕ ಅಂಕಗಳು ಒಟ್ಟು ಅಂಕಕ್ಕೆ ಸೇರುತ್ತವೆ. ಪ್ರತಿ ಲ್ಯಾಬ್‌ಗೆ ಹಾಜರಾಗಿ, ರೆಕಾರ್ಡ್ ಸಿದ್ಧವಿಡಿ.']],
+         dzoom:'🔍 ದೊಡ್ಡದಾಗಿ', dncert:'📖 NCERT ಅಧ್ಯಾಯ (PDF)', dnote:'ಏನು ಬರೆಯಬೇಕು ಮತ್ತು ಹೆಸರಿಸಬೇಕು ಎಂದು ತೋರಿಸಲು BAIO ಗಾಗಿ ಬರೆದ ಚಿತ್ರಗಳು. ಪೂರ್ಣ ಚಿತ್ರವನ್ನು ನಿಮ್ಮ NCERT ಪಠ್ಯಪುಸ್ತಕದಲ್ಲಿ ನೋಡಿ.',
          paperH:'ಜೀವಶಾಸ್ತ್ರ ಪತ್ರಿಕೆ: 70 ಅಂಕ', pc:['ಭಾಗ','ಪ್ರಶ್ನೆಗಳು','ನೀವು ಉತ್ತರಿಸುವುದು','ಅಂಕ'],
          prow:[['A – I','MCQ, ತಲಾ 1 ಅಂಕ','ಎಲ್ಲಾ 15','15'],['A – II','ಬಿಟ್ಟ ಸ್ಥಳ ತುಂಬಿ, 1 ಅಂಕ','ಎಲ್ಲಾ 5','5'],['B','2 ಅಂಕದ ಕಿರು ಉತ್ತರ','7 ರಲ್ಲಿ 5','10'],['C','3 ಅಂಕದ ಕಿರು ಉತ್ತರ','7 ರಲ್ಲಿ 5','15'],['D – V','5 ಅಂಕದ ದೀರ್ಘ ಉತ್ತರ','7 ರಲ್ಲಿ 4','20'],['D – VI','5 ಅಂಕದ ತಾರ್ಕಿಕ (HOTS)','3 ರಲ್ಲಿ 1','5'],['','ಒಟ್ಟು','','70']],
          smart:['ಭಾಗ A (20 ಅಂಕ) ಕಡ್ಡಾಯ ಮತ್ತು ಅತ್ಯಂತ ಸುಲಭ. ಎಲ್ಲಾ 13 ಅಧ್ಯಾಯಗಳ ಒಂದು ಅಂಕದ ಸಂಗತಿಗಳನ್ನು ಕಲಿಯಿರಿ.','ಭಾಗ B ಮತ್ತು C ಯಲ್ಲಿ 2, ಭಾಗ D – V ಯಲ್ಲಿ 3 ಪ್ರಶ್ನೆ ಬಿಡಬಹುದು. ಆದ್ದರಿಂದ 13 ಅಧ್ಯಾಯ ಅರ್ಧಂಬರ್ಧಕ್ಕಿಂತ 9–10 ಅಧ್ಯಾಯ ಚೆನ್ನಾಗಿ ಕಲಿಯುವುದು ಉತ್ತಮ.','ಭಾಗ D – VI ತಾರ್ಕಿಕ ಪ್ರಶ್ನೆಗಳು; ಮಾದರಿ ನೀಲನಕ್ಷೆಯಲ್ಲಿ ಇವು ಅಧ್ಯಾಯ 4, 5, 9 ರಿಂದ. ಒಂದಕ್ಕೆ ಉತ್ತರಿಸಲು ಆನುವಂಶಿಕ ಸಂಕರಗಳನ್ನು ಅಭ್ಯಾಸ ಮಾಡಿ.'],
@@ -171,6 +219,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offse
     hi:{ eyebrow:'द्वितीय पीयूसी जीव विज्ञान · एग्ज़ाम स्कोरर', h1:'<span>जीव विज्ञान</span> में पक्के अंक पाइए',
          intro:'सुरक्षित, पक्के अंक चाहने वाले छात्रों के लिए नरेंद्र सर की पास-पहले सामग्री। हर अध्याय के लिए: बार-बार आने वाले प्रश्न, बिंदुओं में छोटे उत्तर, ज़रूरी चित्र, एक अंक के तथ्य और याद करने की ट्रिक। बिना देखे लिख पाएँ तो निशान लगाइए।',
          rules:[['पहले 1 अंक','हर अध्याय के "एक अंक के तथ्य" सीखिए। भाग A में ये सबसे आसान अंक हैं।'],['चित्र बनाइए','साफ़, नामांकित चित्र से उत्तर छोटा होने पर भी अंक मिलते हैं।'],['बिंदुओं में लिखिए','5 अंक के उत्तर क्रमांकित बिंदुओं या फ़्लो-चार्ट में लिखिए।'],['प्रायोगिक = 30','प्रायोगिक अंक कुल में जुड़ते हैं। हर लैब में जाइए, रिकॉर्ड तैयार रखिए।']],
+         dzoom:'🔍 बड़ा करें', dncert:'📖 NCERT अध्याय (PDF)', dnote:'क्या बनाना और नामांकित करना है, यह दिखाने के लिए BAIO के लिए बनाए गए चित्र। पूरा चित्र अपनी NCERT पाठ्यपुस्तक में देखें।',
          paperH:'जीव विज्ञान पेपर: 70 अंक', pc:['भाग','प्रश्न','आप हल करेंगे','अंक'],
          prow:[['A – I','MCQ, हर एक 1 अंक','सभी 15','15'],['A – II','रिक्त स्थान, 1 अंक','सभी 5','5'],['B','2 अंक के लघु उत्तर','7 में से 5','10'],['C','3 अंक के लघु उत्तर','7 में से 5','15'],['D – V','5 अंक के दीर्घ उत्तर','7 में से 4','20'],['D – VI','5 अंक तर्क आधारित (HOTS)','3 में से 1','5'],['','कुल','','70']],
          smart:['भाग A (20 अंक) अनिवार्य और सबसे आसान है। सभी 13 अध्यायों के एक अंक के तथ्य सीखिए।','भाग B और C में 2 और भाग D – V में 3 प्रश्न छोड़ सकते हैं। इसलिए 13 अध्याय आधे-अधूरे से बेहतर है 9–10 अध्याय अच्छे से सीखना।','भाग D – VI तर्क आधारित प्रश्न; मॉडल ब्लूप्रिंट में ये अध्याय 4, 5 और 9 से हैं। एक हल करने के लिए आनुवंशिक संकरण का अभ्यास कीजिए।'],
@@ -243,7 +292,11 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offse
         + '</div></div>';
     });
     html += '</div>';
-    html += '<div class="sec"><h3>🖊️ '+u.dia+'</h3><div class="dia">'+c.dia.map(function(d){ return '<div class="dcard"><b>'+esc(d.n)+'</b><div class="labels">'+d.l.map(function(l){ return '<span>'+esc(l)+'</span>'; }).join('')+'</div></div>'; }).join('')+'</div></div>';
+    var DG = (window.ES_DIAGRAMS || {})[c.ch] || [], NC = (window.ES_NCERT || {})[c.ch];
+    html += '<div class="sec"><h3>🖊️ '+u.dia+'</h3><p style="font-size:12.5px;color:var(--ink-dim);margin:4px 0 0">'+u.dnote+'</p><div class="dia">'+c.dia.map(function(d, di){
+      return '<div class="dcard"><b>'+esc(d.n)+'</b>'+(DG[di] ? '<div class="dgwrap" data-zoom="'+di+'">'+DG[di]+'</div>' : '')
+        + '<div class="labels" style="margin-top:8px">'+d.l.map(function(l){ return '<span>'+esc(l)+'</span>'; }).join('')+'</div>'
+        + '<div class="dact">'+(DG[di] ? '<button data-zoom="'+di+'">'+u.dzoom+'</button>' : '')+(NC ? '<a href="https://ncert.nic.in/textbook/pdf/'+NC+'.pdf" target="_blank" rel="noopener">'+u.dncert+'</a>' : '')+'</div></div>'; }).join('')+'</div></div>';
     html += '<div class="sec"><h3>⚡ '+u.facts+'</h3><ul class="facts">'+c.facts.map(function(f){ return '<li>'+esc(f)+'</li>'; }).join('')+'</ul></div>';
     html += '<div class="sec"><h3>🧠 '+u.trick+'</h3>'+c.trick.map(function(t){ return '<div class="trick">'+esc(t)+'</div>'; }).join('')+'</div>';
     html += '<div class="nav2">'+(cur>1?'<button class="act" data-go="'+(cur-1)+'">'+u.prev+'</button>':'<span></span>')+(cur<13?'<button class="act primary" data-go="'+(cur+1)+'">'+u.next+'</button>':'')+'</div>';
@@ -259,9 +312,19 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offse
   document.getElementById('langs').addEventListener('click', function(e){ var b = e.target.closest('button'); if(!b) return; lang = b.dataset.l; try{ localStorage.setItem('baio_lang', lang); }catch(x){} all(); });
   document.getElementById('paper').addEventListener('click', function(e){ var b = e.target.closest('.order button'); if(b) go(+b.dataset.ch, true); });
   document.getElementById('chgrid').addEventListener('click', function(e){ var b = e.target.closest('.chbtn'); if(b) go(+b.dataset.ch, true); });
+  function zoom(i){
+    var c = chap(cur), DG = (window.ES_DIAGRAMS || {})[c.ch] || []; if(!DG[i]) return;
+    var z = document.createElement('div'); z.className = 'zoom';
+    z.innerHTML = '<div class="zin"><button class="zx" aria-label="Close">✕</button><b>'+esc(c.dia[i].n)+'</b>'+DG[i]+'</div>';
+    z.addEventListener('click', function(e){ if(e.target === z || e.target.closest('.zx')) z.remove(); });
+    document.body.appendChild(z);
+  }
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ var z = document.querySelector('.zoom'); if(z) z.remove(); } });
   document.getElementById('chapter').addEventListener('click', function(e){
+    var w = e.target.closest('.dgwrap'); if(w){ zoom(+w.dataset.zoom); return; }
     var b = e.target.closest('button'); if(!b) return;
     if(b.dataset.go){ go(+b.dataset.go, true); return; }
+    if(b.dataset.zoom){ zoom(+b.dataset.zoom); return; }
     if(b.dataset.learn){ st[b.dataset.learn] = !st[b.dataset.learn]; save(); var y = window.scrollY; renderGrid(); renderChapter(); window.scrollTo(0, y); return; }
     if(b.dataset.gist){
       var c = chap(cur), q = c.qs[+b.dataset.i], g = document.getElementById('g'+b.dataset.i), same = !g.hidden && g.dataset.l === b.dataset.gist;
