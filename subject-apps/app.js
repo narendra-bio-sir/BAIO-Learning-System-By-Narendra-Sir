@@ -13,7 +13,10 @@
   var DEMO_MS = 24 * 60 * 60 * 1000;
   var STUDENT_CODE_EXPIRY = new Date('2027-03-31T23:59:59+05:30').getTime();
   var CODE_SALT = 'BAIO-STUDENT-LOCK-2026', CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  var PREMIUM_TABS = ['mcq','neet','kcet','boardimp'];
+  /* OPEN_ACCESS = true: everything is free while students try the chapter and send feedback.
+     Set it back to false to restore the premium tabs (price, free sample and unlock codes are unchanged). */
+  var OPEN_ACCESS = true;
+  var PREMIUM_TABS = OPEN_ACCESS ? [] : ['mcq','neet','kcet','boardimp'];
 
   /* ---------- code system (same formula as the Biology chapter apps) ---------- */
   function norm(s){ return (s || '').toString().trim().toUpperCase().replace(/\s+/g, ' '); }
@@ -41,19 +44,19 @@
          marks:function(m){ return m+' mark'+(m>1?'s':''); }, lockT:'🔒 Premium content', lockP:function(t){ return t+' is part of this chapter\'s Premium content. Unlock it to practise every question with explanations.'; },
          price:'₹'+PRICE+' · this chapter', pay:'💬 Pay / request unlock on WhatsApp', haveCode:'Already have an unlock code?', name:'Full name', roll:'Roll number (e.g. 25MPU0024)', section:'Section (e.g. CHAMPION)', code:'Unlock code',
          unlock:'🔓 Unlock', bad:'That name / roll / section / code was not recognised. Check with Narendra Sir.', needAll:'Please enter your name, roll number and section with the code (or use a master code alone).', demoUsed:'This trial code has already been used on this device.',
-         unlocked:'✅ Premium unlocked on this device', relock:'Lock again', note:'Content is in English (as written in the exam).', free:'FREE', prem:'PREMIUM', back:'← BAIO home' },
+         unlocked:'✅ Premium unlocked on this device', relock:'Lock again', note:'Content is in English (as written in the exam).', fbT:'💬 Tell Narendra Sir what you think', fbP:'You are among the first students to use this chapter. Was anything unclear, wrong or missing? Your feedback will improve it.', fbB:'💬 Send feedback on WhatsApp', free:'FREE', prem:'PREMIUM', back:'← BAIO home' },
     kn:{ tabs:{notes:'📖 ಅಧ್ಯಯನ ಟಿಪ್ಪಣಿ', formulas:'🧮 ಸೂತ್ರ ಹಾಳೆ', numericals:'✍️ ಸಮಸ್ಯೆಗಳು', mcq:'MCQ ರಸಪ್ರಶ್ನೆ', neet:'NEET ಅಭ್ಯಾಸ', kcet:'KCET ಅಭ್ಯಾಸ', boardimp:'ಬೋರ್ಡ್ ಮುಖ್ಯ'},
          hi_user:function(n){ return 'ನಮಸ್ಕಾರ, '+n; }, show:'ಪರಿಹಾರ ತೋರಿಸಿ', hide:'ಪರಿಹಾರ ಮರೆಮಾಡಿ', ans:'ಉತ್ತರ', score:function(a,b,c){ return 'ಅಂಕ: '+a+' / '+b+' ಉತ್ತರಿಸಿದ · ಒಟ್ಟು '+c; }, reset:'↺ ಮತ್ತೆ ಆರಂಭಿಸಿ',
          marks:function(m){ return m+' ಅಂಕ'; }, lockT:'🔒 ಪ್ರೀಮಿಯಂ ವಿಭಾಗ', lockP:function(t){ return t+' ಈ ಅಧ್ಯಾಯದ ಪ್ರೀಮಿಯಂ ವಿಭಾಗ. ವಿವರಣೆಯೊಂದಿಗೆ ಎಲ್ಲ ಪ್ರಶ್ನೆಗಳನ್ನು ಅಭ್ಯಾಸ ಮಾಡಲು ತೆರೆಯಿರಿ.'; },
          price:'₹'+PRICE+' · ಈ ಅಧ್ಯಾಯ', pay:'💬 WhatsApp ನಲ್ಲಿ ಪಾವತಿ / ವಿನಂತಿ', haveCode:'ಅನ್‌ಲಾಕ್ ಕೋಡ್ ಇದೆಯೇ?', name:'ಪೂರ್ಣ ಹೆಸರು', roll:'ರೋಲ್ ಸಂಖ್ಯೆ (ಉದಾ: 25MPU0024)', section:'ವಿಭಾಗ (ಉದಾ: CHAMPION)', code:'ಅನ್‌ಲಾಕ್ ಕೋಡ್',
          unlock:'🔓 ತೆರೆಯಿರಿ', bad:'ಹೆಸರು / ರೋಲ್ / ವಿಭಾಗ / ಕೋಡ್ ಹೊಂದಿಕೆಯಾಗಲಿಲ್ಲ. ನರೇಂದ್ರ ಸರ್ ಅವರನ್ನು ಕೇಳಿ.', needAll:'ಕೋಡ್ ಜೊತೆಗೆ ಹೆಸರು, ರೋಲ್ ಸಂಖ್ಯೆ ಮತ್ತು ವಿಭಾಗ ನಮೂದಿಸಿ.', demoUsed:'ಈ ಪ್ರಾಯೋಗಿಕ ಕೋಡ್ ಈಗಾಗಲೇ ಬಳಸಲಾಗಿದೆ.',
-         unlocked:'✅ ಈ ಸಾಧನದಲ್ಲಿ ಪ್ರೀಮಿಯಂ ತೆರೆದಿದೆ', relock:'ಮತ್ತೆ ಲಾಕ್ ಮಾಡಿ', note:'ವಿಷಯ ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿದೆ (ಪರೀಕ್ಷೆಯಲ್ಲಿ ಬರೆಯುವಂತೆ).', free:'ಉಚಿತ', prem:'ಪ್ರೀಮಿಯಂ', back:'← BAIO ಮುಖಪುಟ' },
+         unlocked:'✅ ಈ ಸಾಧನದಲ್ಲಿ ಪ್ರೀಮಿಯಂ ತೆರೆದಿದೆ', relock:'ಮತ್ತೆ ಲಾಕ್ ಮಾಡಿ', note:'ವಿಷಯ ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿದೆ (ಪರೀಕ್ಷೆಯಲ್ಲಿ ಬರೆಯುವಂತೆ).', fbT:'💬 ನಿಮ್ಮ ಅಭಿಪ್ರಾಯ ನರೇಂದ್ರ ಸರ್ ಅವರಿಗೆ ತಿಳಿಸಿ', fbP:'ಈ ಅಧ್ಯಾಯವನ್ನು ಬಳಸುತ್ತಿರುವ ಮೊದಲ ವಿದ್ಯಾರ್ಥಿಗಳಲ್ಲಿ ನೀವೂ ಒಬ್ಬರು. ಏನಾದರೂ ಅಸ್ಪಷ್ಟ, ತಪ್ಪು ಅಥವಾ ಕೊರತೆ ಇದೆಯೇ? ನಿಮ್ಮ ಅಭಿಪ್ರಾಯ ಇದನ್ನು ಉತ್ತಮಗೊಳಿಸುತ್ತದೆ.', fbB:'💬 WhatsApp ನಲ್ಲಿ ಅಭಿಪ್ರಾಯ ಕಳುಹಿಸಿ', free:'ಉಚಿತ', prem:'ಪ್ರೀಮಿಯಂ', back:'← BAIO ಮುಖಪುಟ' },
     hi:{ tabs:{notes:'📖 अध्ययन नोट्स', formulas:'🧮 सूत्र पत्रक', numericals:'✍️ संख्यात्मक प्रश्न', mcq:'MCQ क्विज़', neet:'NEET अभ्यास', kcet:'KCET अभ्यास', boardimp:'बोर्ड महत्वपूर्ण'},
          hi_user:function(n){ return 'नमस्ते, '+n; }, show:'हल दिखाएँ', hide:'हल छिपाएँ', ans:'उत्तर', score:function(a,b,c){ return 'अंक: '+a+' / '+b+' हल किए · कुल '+c; }, reset:'↺ फिर से शुरू करें',
          marks:function(m){ return m+' अंक'; }, lockT:'🔒 प्रीमियम सामग्री', lockP:function(t){ return t+' इस अध्याय की प्रीमियम सामग्री है। व्याख्या सहित सभी प्रश्नों के अभ्यास के लिए अनलॉक करें।'; },
          price:'₹'+PRICE+' · यह अध्याय', pay:'💬 WhatsApp पर भुगतान / अनुरोध', haveCode:'अनलॉक कोड है?', name:'पूरा नाम', roll:'रोल नंबर (जैसे 25MPU0024)', section:'सेक्शन (जैसे CHAMPION)', code:'अनलॉक कोड',
          unlock:'🔓 अनलॉक करें', bad:'नाम / रोल / सेक्शन / कोड मेल नहीं खाया। नरेंद्र सर से पूछें।', needAll:'कोड के साथ नाम, रोल नंबर और सेक्शन डालें।', demoUsed:'यह ट्रायल कोड पहले ही इस्तेमाल हो चुका है।',
-         unlocked:'✅ इस डिवाइस पर प्रीमियम अनलॉक है', relock:'फिर से लॉक करें', note:'सामग्री अंग्रेज़ी में है (जैसे परीक्षा में लिखते हैं)।', free:'मुफ़्त', prem:'प्रीमियम', back:'← BAIO होम' }
+         unlocked:'✅ इस डिवाइस पर प्रीमियम अनलॉक है', relock:'फिर से लॉक करें', note:'सामग्री अंग्रेज़ी में है (जैसे परीक्षा में लिखते हैं)।', fbT:'💬 नरेंद्र सर को अपनी राय बताइए', fbP:'आप इस अध्याय का उपयोग करने वाले पहले छात्रों में से हैं। क्या कुछ अस्पष्ट, गलत या छूटा हुआ है? आपकी राय से यह बेहतर बनेगा।', fbB:'💬 WhatsApp पर राय भेजें', free:'मुफ़्त', prem:'प्रीमियम', back:'← BAIO होम' }
   };
   var lang = 'en'; try{ lang = localStorage.getItem('baio_lang') || 'en'; }catch(e){} if(!UI[lang]) lang = 'en';
   window.currentLang = lang;
@@ -169,8 +172,13 @@
         if(window.BaioSample) BaioSample.notice(cur, el);
       }
     } else {
-      el.innerHTML = (prem && open ? '<div class="unl"><span>'+u.unlocked+'</span><button class="btn ghost" id="relock">'+u.relock+'</button></div>' : '') + body(cur);
+      el.innerHTML = (prem && open ? '<div class="unl"><span>'+u.unlocked+'</span><button class="btn ghost" id="relock">'+u.relock+'</button></div>' : '') + body(cur) + (OPEN_ACCESS ? feedbackCard() : '');
     }
+  }
+  function feedbackCard(){
+    var u = UI[lang], who = ''; try{ var p = JSON.parse(localStorage.getItem('baio_student') || 'null'); if(p && p.name) who = '\nName: ' + p.name + (p.roll ? ' (' + p.roll + ')' : ''); }catch(e){}
+    var msg = encodeURIComponent('Hi Narendra Sir, my feedback on ' + A.cls + ' ' + A.subject + ' Chapter ' + A.ch + ' (' + A.title + '), ' + u.tabs[cur].replace(/^[^A-Za-z\u0C80-\u0CFF\u0900-\u097F]+/, '') + ' tab:' + who + '\n\n');
+    return '<section class="card fb"><h3><span>'+u.fbT+'</span></h3><p class="note" style="margin-top:6px">'+u.fbP+'</p><a class="btn gold" style="margin-top:10px" href="https://wa.me/'+WA+'?text='+msg+'" target="_blank" rel="noopener">'+u.fbB+'</a></section>';
   }
   function body(t){ return t === 'notes' ? rNotes() : t === 'formulas' ? rFormulas() : t === 'numericals' ? rNumericals() : t === 'boardimp' ? rBoard() : rQuiz(t); }
 
