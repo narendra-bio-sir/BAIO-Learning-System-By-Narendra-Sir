@@ -40,19 +40,19 @@
   /* ---------- UI strings ---------- */
   var UI = {
     en:{ tabs:{notes:'📖 Study Notes', formulas:'🧮 Formula Sheet', numericals:'✍️ Numericals', mcq:'MCQ Quiz', neet:'NEET Practice', kcet:'KCET Practice', boardimp:'Board Important'},
-         hi_user:function(n){ return 'Hi, '+n; }, show:'Show solution', hide:'Hide solution', ans:'Answer', score:function(a,b,c){ return 'Score: '+a+' / '+b+' answered · '+c+' total'; }, reset:'↺ Start again',
+         hi_user:function(n){ return 'Hi, '+n; }, show:'Show solution', hide:'Hide solution', easy:'🐢 Explain simply', easyHide:'🐢 Hide simple steps', eg:'🎯 What is asked', ek:'🔑 Key idea', es:'👣 Step by step', et:'⚠️ Don\'t make this mistake', ans:'Answer', score:function(a,b,c){ return 'Score: '+a+' / '+b+' answered · '+c+' total'; }, reset:'↺ Start again',
          marks:function(m){ return m+' mark'+(m>1?'s':''); }, lockT:'🔒 Premium content', lockP:function(t){ return t+' is part of this chapter\'s Premium content. Unlock it to practise every question with explanations.'; },
          price:'₹'+PRICE+' · this chapter', pay:'💬 Pay / request unlock on WhatsApp', haveCode:'Already have an unlock code?', name:'Full name', roll:'Roll number (e.g. 25MPU0024)', section:'Section (e.g. CHAMPION)', code:'Unlock code',
          unlock:'🔓 Unlock', bad:'That name / roll / section / code was not recognised. Check with Narendra Sir.', needAll:'Please enter your name, roll number and section with the code (or use a master code alone).', demoUsed:'This trial code has already been used on this device.',
          unlocked:'✅ Premium unlocked on this device', relock:'Lock again', note:'Content is in English (as written in the exam).', fbT:'💬 Tell Narendra Sir what you think', fbP:'You are among the first students to use this chapter. Was anything unclear, wrong or missing? Your feedback will improve it.', fbB:'💬 Send feedback on WhatsApp', free:'FREE', prem:'PREMIUM', back:'← BAIO home' },
     kn:{ tabs:{notes:'📖 ಅಧ್ಯಯನ ಟಿಪ್ಪಣಿ', formulas:'🧮 ಸೂತ್ರ ಹಾಳೆ', numericals:'✍️ ಸಮಸ್ಯೆಗಳು', mcq:'MCQ ರಸಪ್ರಶ್ನೆ', neet:'NEET ಅಭ್ಯಾಸ', kcet:'KCET ಅಭ್ಯಾಸ', boardimp:'ಬೋರ್ಡ್ ಮುಖ್ಯ'},
-         hi_user:function(n){ return 'ನಮಸ್ಕಾರ, '+n; }, show:'ಪರಿಹಾರ ತೋರಿಸಿ', hide:'ಪರಿಹಾರ ಮರೆಮಾಡಿ', ans:'ಉತ್ತರ', score:function(a,b,c){ return 'ಅಂಕ: '+a+' / '+b+' ಉತ್ತರಿಸಿದ · ಒಟ್ಟು '+c; }, reset:'↺ ಮತ್ತೆ ಆರಂಭಿಸಿ',
+         hi_user:function(n){ return 'ನಮಸ್ಕಾರ, '+n; }, show:'ಪರಿಹಾರ ತೋರಿಸಿ', hide:'ಪರಿಹಾರ ಮರೆಮಾಡಿ', easy:'🐢 ಸರಳವಾಗಿ ವಿವರಿಸಿ', easyHide:'🐢 ಸರಳ ಹಂತಗಳನ್ನು ಮರೆಮಾಡಿ', eg:'🎯 ಏನು ಕೇಳಲಾಗಿದೆ', ek:'🔑 ಮುಖ್ಯ ಅಂಶ', es:'👣 ಹಂತ ಹಂತವಾಗಿ', et:'⚠️ ಈ ತಪ್ಪು ಮಾಡಬೇಡಿ', ans:'ಉತ್ತರ', score:function(a,b,c){ return 'ಅಂಕ: '+a+' / '+b+' ಉತ್ತರಿಸಿದ · ಒಟ್ಟು '+c; }, reset:'↺ ಮತ್ತೆ ಆರಂಭಿಸಿ',
          marks:function(m){ return m+' ಅಂಕ'; }, lockT:'🔒 ಪ್ರೀಮಿಯಂ ವಿಭಾಗ', lockP:function(t){ return t+' ಈ ಅಧ್ಯಾಯದ ಪ್ರೀಮಿಯಂ ವಿಭಾಗ. ವಿವರಣೆಯೊಂದಿಗೆ ಎಲ್ಲ ಪ್ರಶ್ನೆಗಳನ್ನು ಅಭ್ಯಾಸ ಮಾಡಲು ತೆರೆಯಿರಿ.'; },
          price:'₹'+PRICE+' · ಈ ಅಧ್ಯಾಯ', pay:'💬 WhatsApp ನಲ್ಲಿ ಪಾವತಿ / ವಿನಂತಿ', haveCode:'ಅನ್‌ಲಾಕ್ ಕೋಡ್ ಇದೆಯೇ?', name:'ಪೂರ್ಣ ಹೆಸರು', roll:'ರೋಲ್ ಸಂಖ್ಯೆ (ಉದಾ: 25MPU0024)', section:'ವಿಭಾಗ (ಉದಾ: CHAMPION)', code:'ಅನ್‌ಲಾಕ್ ಕೋಡ್',
          unlock:'🔓 ತೆರೆಯಿರಿ', bad:'ಹೆಸರು / ರೋಲ್ / ವಿಭಾಗ / ಕೋಡ್ ಹೊಂದಿಕೆಯಾಗಲಿಲ್ಲ. ನರೇಂದ್ರ ಸರ್ ಅವರನ್ನು ಕೇಳಿ.', needAll:'ಕೋಡ್ ಜೊತೆಗೆ ಹೆಸರು, ರೋಲ್ ಸಂಖ್ಯೆ ಮತ್ತು ವಿಭಾಗ ನಮೂದಿಸಿ.', demoUsed:'ಈ ಪ್ರಾಯೋಗಿಕ ಕೋಡ್ ಈಗಾಗಲೇ ಬಳಸಲಾಗಿದೆ.',
          unlocked:'✅ ಈ ಸಾಧನದಲ್ಲಿ ಪ್ರೀಮಿಯಂ ತೆರೆದಿದೆ', relock:'ಮತ್ತೆ ಲಾಕ್ ಮಾಡಿ', note:'ವಿಷಯ ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿದೆ (ಪರೀಕ್ಷೆಯಲ್ಲಿ ಬರೆಯುವಂತೆ).', fbT:'💬 ನಿಮ್ಮ ಅಭಿಪ್ರಾಯ ನರೇಂದ್ರ ಸರ್ ಅವರಿಗೆ ತಿಳಿಸಿ', fbP:'ಈ ಅಧ್ಯಾಯವನ್ನು ಬಳಸುತ್ತಿರುವ ಮೊದಲ ವಿದ್ಯಾರ್ಥಿಗಳಲ್ಲಿ ನೀವೂ ಒಬ್ಬರು. ಏನಾದರೂ ಅಸ್ಪಷ್ಟ, ತಪ್ಪು ಅಥವಾ ಕೊರತೆ ಇದೆಯೇ? ನಿಮ್ಮ ಅಭಿಪ್ರಾಯ ಇದನ್ನು ಉತ್ತಮಗೊಳಿಸುತ್ತದೆ.', fbB:'💬 WhatsApp ನಲ್ಲಿ ಅಭಿಪ್ರಾಯ ಕಳುಹಿಸಿ', free:'ಉಚಿತ', prem:'ಪ್ರೀಮಿಯಂ', back:'← BAIO ಮುಖಪುಟ' },
     hi:{ tabs:{notes:'📖 अध्ययन नोट्स', formulas:'🧮 सूत्र पत्रक', numericals:'✍️ संख्यात्मक प्रश्न', mcq:'MCQ क्विज़', neet:'NEET अभ्यास', kcet:'KCET अभ्यास', boardimp:'बोर्ड महत्वपूर्ण'},
-         hi_user:function(n){ return 'नमस्ते, '+n; }, show:'हल दिखाएँ', hide:'हल छिपाएँ', ans:'उत्तर', score:function(a,b,c){ return 'अंक: '+a+' / '+b+' हल किए · कुल '+c; }, reset:'↺ फिर से शुरू करें',
+         hi_user:function(n){ return 'नमस्ते, '+n; }, show:'हल दिखाएँ', hide:'हल छिपाएँ', easy:'🐢 आसान भाषा में समझें', easyHide:'🐢 आसान स्टेप छिपाएँ', eg:'🎯 क्या पूछा गया है', ek:'🔑 मुख्य बात', es:'👣 स्टेप बाय स्टेप', et:'⚠️ यह गलती न करें', ans:'उत्तर', score:function(a,b,c){ return 'अंक: '+a+' / '+b+' हल किए · कुल '+c; }, reset:'↺ फिर से शुरू करें',
          marks:function(m){ return m+' अंक'; }, lockT:'🔒 प्रीमियम सामग्री', lockP:function(t){ return t+' इस अध्याय की प्रीमियम सामग्री है। व्याख्या सहित सभी प्रश्नों के अभ्यास के लिए अनलॉक करें।'; },
          price:'₹'+PRICE+' · यह अध्याय', pay:'💬 WhatsApp पर भुगतान / अनुरोध', haveCode:'अनलॉक कोड है?', name:'पूरा नाम', roll:'रोल नंबर (जैसे 25MPU0024)', section:'सेक्शन (जैसे CHAMPION)', code:'अनलॉक कोड',
          unlock:'🔓 अनलॉक करें', bad:'नाम / रोल / सेक्शन / कोड मेल नहीं खाया। नरेंद्र सर से पूछें।', needAll:'कोड के साथ नाम, रोल नंबर और सेक्शन डालें।', demoUsed:'यह ट्रायल कोड पहले ही इस्तेमाल हो चुका है।',
@@ -107,7 +107,14 @@
     var u = UI[lang];
     return A.numericals.map(function(n, i){
       return '<section class="card num-q"><h3><span class="num">'+(i+1)+'</span><span>'+n.q+'</span></h3>'
-        + '<button class="btn ghost" data-sol="'+i+'">'+u.show+'</button>'
+        + '<div class="sol-btns"><button class="btn ghost" data-sol="'+i+'">'+u.show+'</button>'
+        + (n.easy ? '<button class="btn easy-btn" data-easy="'+i+'">'+u.easy+'</button>' : '') + '</div>'
+        + (n.easy ? '<div class="easy" id="easy'+i+'" hidden>'
+            + '<div class="easy-h">'+u.eg+'</div><p>'+n.easy.g+'</p>'
+            + '<div class="easy-h">'+u.ek+'</div><p class="easy-k">'+n.easy.k+'</p>'
+            + '<div class="easy-h">'+u.es+'</div><ol class="easy-s">'+n.easy.s.map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ol>'
+            + '<div class="ans">'+u.ans+': <b>'+n.a+'</b></div>'
+            + (n.easy.t ? '<div class="easy-t">'+u.et+': '+n.easy.t+'</div>' : '') + '</div>' : '')
         + '<div class="sol" id="sol'+i+'" hidden><ol>'+n.s.map(function(s){ return '<li>'+s+'</li>'; }).join('')+'</ol><div class="ans">'+u.ans+': <b>'+n.a+'</b></div></div></section>'; }).join('');
   }
   function rQuiz(tab){
@@ -191,6 +198,7 @@
     var b = e.target.closest('button'); if(!b) return;
     if(b.id === 'uGo') return tryUnlock();
     if(b.id === 'relock'){ try{ localStorage.removeItem(PREMIUM_KEY); }catch(x){} renderHeader(); renderBody(); return; }
+    if(b.dataset.easy !== undefined){ var e = $('easy' + b.dataset.easy), ue = UI[lang]; e.hidden = !e.hidden; b.textContent = e.hidden ? ue.easy : ue.easyHide; return; }
     if(b.dataset.sol !== undefined){ var s = $('sol' + b.dataset.sol), u = UI[lang]; s.hidden = !s.hidden; b.textContent = s.hidden ? u.show : u.hide; return; }
     if(b.dataset.reset){ answered[b.dataset.reset] = {}; renderBody(); return; }
     if(b.classList.contains('qz-opt') && !b.disabled){
