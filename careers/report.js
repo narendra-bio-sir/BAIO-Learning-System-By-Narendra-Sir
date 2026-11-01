@@ -136,6 +136,30 @@
   var LINK = (location.hash.match(/report=([0-9a-f]{64})/) || [])[1] || null;
   if(LINK) me = LINK;
   var PAGE = 'https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/careers.html';
+  /* Teacher mode: the analytics master code unlocks an encrypted list of every student (CAREER_TEACHER),
+     so Narendra Sir can open any report instantly. The code is remembered on his phone until he locks it. */
+  var TKEY = 'baio_career_teacher', TLIST = null, tq = '';
+  function unlockTeacher(code){
+    var T0 = window.CAREER_TEACHER; if(!T0 || !crypto.subtle) return Promise.resolve(null);
+    function b64(x){ return Uint8Array.from(atob(x), function(c){ return c.charCodeAt(0); }); }
+    return crypto.subtle.importKey('raw', new TextEncoder().encode(String(code).toUpperCase()), 'PBKDF2', false, ['deriveKey'])
+      .then(function(base){ return crypto.subtle.deriveKey({ name:'PBKDF2', salt:b64(T0.s), iterations:150000, hash:'SHA-256' }, base, { name:'AES-GCM', length:256 }, false, ['decrypt']); })
+      .then(function(k){ return crypto.subtle.decrypt({ name:'AES-GCM', iv:b64(T0.i) }, k, b64(T0.c)); })
+      .then(function(buf){ return JSON.parse(new TextDecoder().decode(buf)); })
+      .catch(function(){ return null; });
+  }
+  function teacherList(){
+    var q = tq.trim().toLowerCase();
+    var rows = TLIST.filter(function(x){ return !q || (x.n + ' ' + x.r + ' ' + (x.s || '')).toLowerCase().indexOf(q) >= 0; });
+    return rows.slice(0, 200).map(function(x){
+      return '<button type="button" class="sg" data-tk="'+x.k+'"><span class="e">'+(x.pu === 2 ? '🎓' : '📘')+'</span><span><b>'+esc(x.n)+'</b><small>'+x.r+' · '+(x.pu === 2 ? 'II PUC' : 'I PUC')+(x.s ? ' · '+esc(x.s) : '')+'</small></span><span class="op">Open →</span></button>';
+    }).join('') || '<p class="sub">No student matches “'+esc(tq)+'”.</p>';
+  }
+  function teacherHtml(){
+    return '<div class="rhead"><div><b>👨‍🏫 Teacher view</b><small>'+TLIST.length+' students · tap a name to open the report</small></div><button type="button" class="lnk" data-rp="tlock">🔒 Lock</button></div>'
+      + '<div class="frm" style="margin-top:10px"><input id="cpT" placeholder="Search name, roll number or section…" value="'+esc(tq)+'" style="text-transform:none"></div>'
+      + '<div id="cpTL" style="max-height:60vh;overflow:auto;margin-top:4px">'+teacherList()+'</div>';
+  }
   function loadData(cb){
     if(window.CAREER_STUDENTS){ DATA = window.CAREER_STUDENTS; cb(true); return; }
     var sc = document.createElement('script'); sc.src = 'careers/student-data.js';
@@ -158,7 +182,8 @@
   }
   function reportHtml(r, lang, D){
     var u = T[lang] || T.en, h = '';
-    h += '<div class="rhead"><div><b>'+u.hi+', '+esc(r.name)+' 👋</b><small>'+u.puc[r.pu]+' · '+esc(r.sec || '')+'</small></div><button type="button" class="lnk" data-rp="out">'+u.out+'</button></div>';
+    if(TLIST) h += '<div class="rhead" style="background:var(--panel2);border-radius:12px;padding:8px 10px"><div><b style="font-size:14px">👨‍🏫 Teacher view</b></div><button type="button" class="lnk" data-rp="tback">← All students</button></div>';
+    h += '<div class="rhead"><div><b>'+u.hi+', '+esc(r.name)+' 👋</b><small>'+u.puc[r.pu]+' · '+esc(r.sec || '')+'</small></div>'+(TLIST ? '' : '<button type="button" class="lnk" data-rp="out">'+u.out+'</button>')+'</div>';
     h += '<h4>'+u.stand+'</h4>';
     if(r.th){ var pi = pIdx(r.th.p), col = ['#2F9E6B','#C9A227','#E08A1E','#D0544B'][pi];
       h += '<div class="mrow"><div class="mh"><b>'+u.theory+'</b><span class="pill" style="background:'+col+'">'+u.pband[pi]+'</span></div>'+bar(r.th.p, col)
@@ -194,6 +219,7 @@
     var u = T[curLang] || T.en;
     var inner = '<h3>'+u.h+'</h3>';
     if(me && DATA && DATA[me]) inner += reportHtml(DATA[me], curLang, D);
+    else if(TLIST) inner += teacherHtml();
     else inner += formHtml(curLang, lastErr);
     box.innerHTML = inner;
   }
@@ -208,22 +234,32 @@
     return bits.join('\n');
   }
   function onClick(e){
-    var b = e.target.closest('[data-rp],[data-go]'); if(!b) return;
+    var b = e.target.closest('[data-rp],[data-go],[data-tk]'); if(!b) return;
     if(b.dataset.go){ goFn(b.dataset.go); return; }
+    if(b.dataset.tk){ me = b.dataset.tk; paint(); box.scrollIntoView({ block:'start' }); return; }
+    if(b.dataset.rp === 'tback'){ me = null; paint(); box.scrollIntoView({ block:'start' }); var i = document.getElementById('cpT'); if(i) i.focus({ preventScroll:true }); return; }
+    if(b.dataset.rp === 'tlock'){ TLIST = null; me = null; tq = ''; try{ localStorage.removeItem(TKEY); }catch(x){} paint(); return; }
     var a = b.dataset.rp;
     if(a === 'go'){
       var roll = (document.getElementById('cpRoll').value || '').trim().toUpperCase().replace(/\s+/g, '');
       var pw = (document.getElementById('cpPass').value || '').trim().toUpperCase();
-      if(!roll || !pw){ lastErr = T[curLang].bad; paint(); return; }
+      if(!pw){ lastErr = T[curLang].bad; paint(); return; }
       loading = true; lastErr = ''; paint();
       loadData(function(ok){
         if(!ok){ loading = false; lastErr = T[curLang].nodata; paint(); return; }
-        sha(roll + '|' + pw).then(function(k){
+        unlockTeacher(pw).then(function(list){
+          if(list){
+            loading = false; TLIST = list; lastErr = ''; try{ localStorage.setItem(TKEY, pw); }catch(x){}
+            var hit = list.filter(function(x){ return x.r === roll; })[0]; me = hit ? hit.k : null;
+            paint(); box.scrollIntoView({ behavior:'smooth', block:'start' }); return;
+          }
+          sha(roll + '|' + pw).then(function(k){
           loading = false;
           if(DATA[k]){ me = k; try{ localStorage.setItem(KEY, k); }catch(x){} lastErr = ''; }
           else lastErr = T[curLang].bad;
           paint();
           if(me) box.scrollIntoView({ behavior:'smooth', block:'start' });
+          });
         });
       });
     } else if(a === 'out'){
@@ -244,10 +280,15 @@
       if(first){
         box.addEventListener('click', onClick);
         box.addEventListener('keydown', function(e){ if(e.key === 'Enter' && e.target.id === 'cpPass'){ var g = box.querySelector('[data-rp="go"]'); if(g) g.click(); } });
-        if(me){ loadData(function(){
-          if(!DATA || !DATA[me]) me = null;
-          paint();
-          if(me && me === LINK) setTimeout(function(){ box.scrollIntoView({ block:'start' }); }, 150);
+        box.addEventListener('input', function(e){ if(e.target.id === 'cpT'){ tq = e.target.value; var l = document.getElementById('cpTL'); if(l) l.innerHTML = teacherList(); } });
+        var tcode = null; try{ tcode = localStorage.getItem(TKEY); }catch(x){}
+        if(me || tcode){ loadData(function(){
+          (tcode ? unlockTeacher(tcode) : Promise.resolve(null)).then(function(list){
+            if(list){ TLIST = list; if(me && !LINK){ me = null; } }
+            if(me && (!DATA || !DATA[me])) me = null;
+            paint();
+            if(me && me === LINK) setTimeout(function(){ box.scrollIntoView({ block:'start' }); }, 150);
+          });
         }); }
       }
       paint();
