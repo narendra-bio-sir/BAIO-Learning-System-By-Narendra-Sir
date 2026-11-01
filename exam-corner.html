@@ -215,6 +215,37 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
   body.tt-print .topnav, body.tt-print .hero, body.tt-print .wrap > section:not(#ii-puc-timetable), body.tt-print .soon, body.tt-print footer, body.tt-print .tt-ctl, body.tt-print .tt-tabs, body.tt-print #ttActions{display:none!important}
   body.tt-print{background:#fff;color:#000} body.tt-print .card{border:0}
 }
+
+/* ---- Printed / PDF timetable: brand, credentials, marks, remarks, BAIO tips ---- */
+.pr-only{display:none}
+@media print{
+  @page{size:A4;margin:12mm}
+  body.tt-print .pr-only{display:block!important}
+  body.tt-print #ii-puc-timetable > .card-head, body.tt-print #ii-puc-timetable > h2, body.tt-print #ii-puc-timetable > p[data-i18n="tt_desc"], body.tt-print .tt-count{display:none!important}
+  body.tt-print, body.tt-print *{color:#111!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body.tt-print .tt-item{break-inside:avoid;border-color:#ccc!important;background:#fff!important}
+  body.tt-print .tt-gap{border-color:#0F8F7A!important;color:#0F8F7A!important}
+  body.tt-print .tt-date .m{color:#9A7614!important}
+  body.tt-print .pk-logo{color:#E9C45A!important}
+  body.tt-print .tt-note{display:none!important}
+}
+.pk-head{display:flex;align-items:center;gap:14px;border-bottom:3px solid #B8912A;padding-bottom:10px;margin-bottom:10px}
+.pk-logo{width:54px;height:54px;border-radius:14px;background:#0E1B33!important;color:#E9C45A!important;display:grid;place-items:center;font:800 30px 'Space Grotesk'}
+.pk-brand b{display:block;font:800 21px 'Space Grotesk'}
+.pk-brand span{display:block;font-size:12px}
+.pk-title{margin-left:auto;text-align:right;font:700 13px Inter}
+.pk-title b{display:block;font:800 16px 'Space Grotesk'}
+.pk-stu{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;margin:6px 0 12px;padding:8px 10px;border:1px solid #ddd;border-radius:10px}
+.pk-sec{margin-top:16px;break-inside:avoid}
+.pk-sec h3{font:800 15px 'Space Grotesk';margin:0 0 6px;padding-bottom:4px;border-bottom:1.5px solid #ddd}
+.pk-tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.pk-tbl th,.pk-tbl td{border:1px solid #ccc;padding:5px 8px;text-align:left}
+.pk-tbl th{background:#F3EEDF!important}
+.pk-rem{font-size:13.5px;line-height:1.6;padding:10px 12px;border-left:4px solid #B8912A;background:#FBF8F0!important;border-radius:6px}
+.pk-tips{margin:0;padding-left:18px;font-size:13px;line-height:1.6}
+.pk-sign{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin-top:18px;padding-top:10px;border-top:1.5px solid #ddd;font-size:12px}
+.pk-sign b{display:block;font:800 15px 'Space Grotesk'}
+.pk-foot{margin-top:8px;font-size:11px;text-align:center}
 </style>
 </head>
 <body>
@@ -241,6 +272,7 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
     <div class="card-head"><span class="pill" data-i18n="tt_pill">II PUC · Board Exams 2027</span><span class="new" data-i18n="new">NEW</span></div>
     <h2 data-i18n-html="tt_title">Your personal <em>II PUC exam timetable</em></h2>
     <p data-i18n="tt_desc">Only your papers, with how many study days you get before each one. Enter your enrollment code, or choose your language and fourth subject.</p>
+    <div class="pr-only" id="ttPrintHead"></div>
     <div class="tt-ctl">
       <div class="tt-row"><span class="tt-lbl" data-i18n="tt_code_l">Enrollment code</span>
         <div class="tt-code"><input id="ttCode" inputmode="text" autocomplete="off" placeholder="25MPU0012" maxlength="12"><button class="tt-chip on" id="ttGo" data-i18n="tt_go">Show</button></div></div>
@@ -250,6 +282,7 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
     </div>
     <div class="tt-tabs" id="ttTabs"></div>
     <div id="ttBody"></div>
+    <div class="pr-only" id="ttPrintTail"></div>
     <div class="actions" id="ttActions">
       <button class="act primary" id="ttPrint" data-i18n="tt_print">🖨 Print / save my timetable</button>
       <a class="act" href="exam-corner/ii-puc-2027-exam-1-2-official-timetable.pdf" target="_blank" rel="noopener" data-i18n="tt_official">📄 Official KSEAB timetable (PDF)</a>
@@ -629,7 +662,80 @@ setLang(['en','kn','hi'].includes(startLang)?startLang:'en', false);
   }
   document.getElementById('ttGo').addEventListener('click', function(){ lookup(); this.blur(); document.getElementById('ttCode').blur(); });
   document.getElementById('ttCode').addEventListener('keydown', function(e){ if(e.key === 'Enter') lookup(); });
-  document.getElementById('ttPrint').addEventListener('click', function(){ document.body.classList.add('tt-print'); window.print(); setTimeout(function(){ document.body.classList.remove('tt-print'); }, 500); });
+  /* ---- Print / PDF pack: brand, credentials, Pre-Midterm snapshot, Sir's remarks, BAIO tips ---- */
+  var SUBN = {KAN:'Kannada',HIN:'Hindi',ENG:'English',PHY:'Physics',CHE:'Chemistry',MAT:'Mathematics',BIO:'Biology',ELE:'Electronics',CS:'Computer Science'};
+  function esc(x){ return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+  function level(p){ return p >= 80 ? 'Excellent' : p >= 65 ? 'Very good' : p >= 50 ? 'Good' : p >= 35 ? 'Needs steady effort' : 'Needs focused support'; }
+  function analyse(key){
+    var R = window.PU2_REPORT && window.PU2_REPORT[key]; if(!R) return null;
+    var exp = [st.lang, 'ENG', 'PHY', 'CHE', 'MAT', st.opt], rows = [], sum = 0, n = 0, absent = [];
+    exp.forEach(function(k){ var v = R.m[k]; if(v === undefined || v === null){ absent.push(k); return; } var pc = Math.round(v / 40 * 100); rows.push([k, v, pc]); sum += v; n++; });
+    if(!n) return { rows:[], absent:absent, rank:R.r, earlier:R.e };
+    var pct = Math.round(sum / (40 * n) * 100), sorted = rows.slice().sort(function(a, b){ return b[2] - a[2]; });
+    var ea = R.e && R.e.length ? Math.round(R.e.reduce(function(a, b){ return a + b; }, 0) / R.e.length) : null;
+    return { rows:rows, pct:pct, best:sorted[0], weak:sorted[sorted.length - 1], absent:absent, rank:R.r, earlier:ea };
+  }
+  function remarks(a, name){
+    var first = name.split(' ')[0], t = [];
+    if(!a.rows.length) return first + ', I do not have your Pre-Midterm marks yet. Write every paper in the coming tests so we can plan your board preparation together.';
+    var open = {
+      'Excellent': first + ', your Pre-Midterm result (' + a.pct + '%) shows real command over the syllabus. Keep this level and aim for a distinction in every paper.',
+      'Very good': first + ', you scored ' + a.pct + '% in the Pre-Midterm — a very good base. With steady revision you can move into the distinction range.',
+      'Good': first + ', you scored ' + a.pct + '% in the Pre-Midterm — a good base. Regular practice of full papers will lift you higher.',
+      'Needs steady effort': first + ', you scored ' + a.pct + '% in the Pre-Midterm. You can clearly pass well and score more — what you need now is daily revision and writing practice.',
+      'Needs focused support': first + ', you scored ' + a.pct + '% in the Pre-Midterm. Do not lose heart — many students improve a lot in the last months. Follow the plan below every day and bring your doubts to me.'
+    };
+    t.push(open[level(a.pct)]);
+    if(a.earlier !== null){
+      if(a.pct - a.earlier >= 5) t.push('Good to see you improving compared to your earlier tests (' + a.earlier + '% → ' + a.pct + '%).');
+      else if(a.earlier - a.pct >= 5) t.push('Your score has dipped from your earlier average (' + a.earlier + '% → ' + a.pct + '%) — let us find the reason and fix it early.');
+      else t.push('Your performance has been consistent across the tests (about ' + a.earlier + '% earlier).');
+    }
+    if(a.rows.length > 1 && a.best[2] - a.weak[2] >= 8) t.push('Your strongest subject is ' + SUBN[a.best[0]] + ' (' + a.best[2] + '%). Give extra time to ' + SUBN[a.weak[0]] + ' (' + a.weak[2] + '%) — it can add the most marks.');
+    else if(a.rows.length > 1) t.push('Your subjects are evenly balanced — keep all of them moving together.');
+    if(a.absent.length) t.push('You missed ' + a.absent.map(function(k){ return SUBN[k]; }).join(', ') + ' in the Pre-Midterm. Write those papers at home under exam time so nothing is left unpractised.');
+    t.push('I believe in you — work daily, not just before the exam.');
+    return t.join(' ');
+  }
+  function tips(a){
+    var L = [], weak = a && a.rows.length ? a.rows.filter(function(r){ return r[2] < 60; }).map(function(r){ return r[0]; }) : [];
+    if(a && a.weak) weak.push(a.weak[0]);
+    L.push('<b>📅 Exam planner</b> (Exam Corner): a day-by-day plan from today to your last paper — follow it daily.');
+    if(st.opt === 'BIO') L.push('<b>🎯 Exam Scorer</b> (Exam Corner): Biology must-do questions for 1, 2, 3 and 5 marks, matched to the official blueprint.');
+    if(st.opt === 'BIO') L.push('<b>🧬 Chapter apps</b>: Board Important answers, labelled diagrams and NEET practice for every Biology chapter.');
+    L.push('<b>🧠 Short Notes &amp; Tricks</b>: one-page notes, memory tricks and exam traps — perfect for the last revision.');
+    if(weak.indexOf('MAT') >= 0) L.push('<b>📐 PCM → Maths</b>: solved examples with <b>🐢 Explain simply</b> and <b>🔊 voice</b> explanation, step by step.');
+    if(weak.indexOf('PHY') >= 0 || weak.indexOf('CHE') >= 0) L.push('<b>⚛️ PCM → Physics &amp; Chemistry</b>: notes, formula sheets and solved numericals.');
+    L.push('<b>📝 Saturday mock</b>: write one full 3-hour paper (10:00 AM – 1:00 PM) and check it with the model answers the same evening.');
+    L.push('<b>📥 Use BAIO Offline</b>: save your chapters on the phone and study even without internet.');
+    return L;
+  }
+  function buildPack(){
+    var head = document.getElementById('ttPrintHead'), tail = document.getElementById('ttPrintTail'), t = ui();
+    var key = st.mine ? ((document.getElementById('ttCode').value.trim().match(/(\d{4})$/) || [])[1]) : null;
+    var r = key && ROSTER[key], name = r ? r.split('|')[1] : '', code = key ? '25MPU' + key : '';
+    var ex = st.exam === 'e1' ? 'Exam 1 · 27 Feb – 17 Mar 2027' : 'Exam 2 · 3 – 12 May 2027';
+    head.innerHTML = '<div class="pk-head"><div class="pk-logo">B</div><div class="pk-brand"><b>BAIO Learning System</b><span>Biology All In One · by Narendra Sir</span></div>'
+      + '<div class="pk-title"><b>Personal II PUC Board Timetable</b>' + ex + '</div></div>'
+      + '<div class="pk-stu">' + (name ? '<span><b>Student:</b> ' + esc(name) + '</span><span><b>Enrollment:</b> ' + code + '</span>' : '')
+      + '<span><b>Subjects:</b> ' + [st.lang, 'ENG', 'PHY', 'CHE', 'MAT', st.opt].map(function(k){ return SUBN[k]; }).join(', ') + '</span>'
+      + '<span><b>Printed:</b> ' + new Date().toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'}) + '</span></div>';
+    var a = key ? analyse(key) : null, html = '';
+    if(a && a.rows.length){
+      html += '<div class="pk-sec"><h3>📊 Pre-Midterm Exam (12–17 Oct 2026) — your marks</h3><table class="pk-tbl"><tr><th>Subject</th><th>Marks</th><th>%</th><th>Level</th></tr>'
+        + a.rows.map(function(x){ return '<tr><td>' + SUBN[x[0]] + '</td><td>' + x[1] + ' / 40</td><td>' + x[2] + '%</td><td>' + level(x[2]) + '</td></tr>'; }).join('')
+        + a.absent.map(function(k){ return '<tr><td>' + SUBN[k] + '</td><td colspan="3">Absent / not written</td></tr>'; }).join('')
+        + '<tr><th>Overall</th><th colspan="3">' + a.pct + '% · ' + level(a.pct) + (a.rank ? ' · Class rank #' + a.rank : '') + '</th></tr></table></div>';
+    }
+    if(a) html += '<div class="pk-sec"><h3>✍️ Narendra Sir\'s remarks</h3><div class="pk-rem">' + esc(remarks(a, name)) + '</div></div>';
+    html += '<div class="pk-sec"><h3>📱 How the BAIO app helps you prepare for the board</h3><ul class="pk-tips">' + tips(a).map(function(x){ return '<li>' + x + '</li>'; }).join('') + '</ul></div>';
+    html += '<div class="pk-sign"><div><b>Narendra Sir</b>M.Sc (Biochemistry), B.Ed, KSET (Life Science)<br>Biology Lecturer · Founder &amp; CEO, BAIO Learning System</div>'
+      + '<div style="text-align:right">BAIO app → Home page → 📝 Exam Corner<br>narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir</div></div>'
+      + '<div class="pk-foot">Every paper: 10:00 AM – 1:00 PM (3 hours). Source: KSEAB final timetable dated 29-10-2026. Marks are from the college Pre-Midterm Exam.</div>';
+    tail.innerHTML = html;
+  }
+  window.addEventListener('beforeprint', function(){ if(document.body.classList.contains('tt-print')) buildPack(); });
+  document.getElementById('ttPrint').addEventListener('click', function(){ buildPack(); document.body.classList.add('tt-print'); window.print(); setTimeout(function(){ document.body.classList.remove('tt-print'); }, 500); });
   /* auto-pick from the student's BAIO profile when it's a PU-II roll */
   try{ var pr = JSON.parse(localStorage.getItem('baio_student') || 'null'); if(pr && pr.roll && /^25MPU\d{4}$/i.test(pr.roll) && !document.getElementById('ttCode').value){ document.getElementById('ttCode').value = pr.roll.toUpperCase(); lookup(); } }catch(e){}
   if(document.getElementById('ttCode').value && !q) lookup();
@@ -884,5 +990,6 @@ if('serviceWorker' in navigator){ window.addEventListener('load',function(){ nav
   btns.forEach(function(b){ b.addEventListener('click',function(){ set(b.getAttribute('data-vt'), true); }); });
 })();
 </script>
+<script src="exam-corner/pu2-report-data.js?v=1"></script>
 </body>
 </html>
