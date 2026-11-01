@@ -135,6 +135,7 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
     <button class="sec-tab on" data-sec="revision" role="tab"><span data-i18n="t_rev">🎬 Revision Reels</span><small data-i18n="t_rev_s">Board-important topics</small></button>
     <button class="sec-tab" data-sec="mehfil" role="tab"><span data-i18n="t_meh">🎤 BAIO – Biology Ki Mehfil</span><small data-i18n="t_meh_s">Biology in shayari</small></button>
     <button class="sec-tab" data-sec="comedy" role="tab"><span data-i18n="t_com">😂 Comedy</span><small data-i18n="t_com_s">Laugh &amp; learn</small></button>
+    <button class="sec-tab" data-sec="updates" role="tab"><span data-i18n="t_upd">📢 Video Updates</span><small data-i18n="t_upd_s">New in the app</small></button>
   </div>
   <div class="filters" role="group" aria-label="Filter by class">
     <button class="f-btn on" data-f="all" data-i18n="f_all">All</button>
@@ -161,6 +162,32 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
 
 /* ---- Reels data: add a new reel here (newest first) ---- */
 const REELS = [
+  /* 📢 Video Updates — app guides, newest first */
+  { id:'guide-join-channels', cat:'updates', dur:'0:53', added:'1 Nov 2026', video:'reels/guide-join-channels.mp4', cover:'reels/guide-join-channels-cover.jpg', chapter:'app-walkthrough.html#find-us',
+    title:{en:'Join Narendra Sir\'s 4 channels', kn:'ನರೇಂದ್ರ ಸರ್ ಅವರ 4 ಚಾನೆಲ್‌ಗಳಿಗೆ ಸೇರಿ', hi:'नरेंद्र सर के 4 चैनल जॉइन करें'},
+    desc:{en:'What you get on the WhatsApp, Telegram, Instagram and YouTube channels, and where to find the links in the app.',
+          kn:'WhatsApp, Telegram, Instagram ಮತ್ತು YouTube ಚಾನೆಲ್‌ಗಳಲ್ಲಿ ಏನು ಸಿಗುತ್ತದೆ ಮತ್ತು ಆ್ಯಪ್‌ನಲ್ಲಿ ಲಿಂಕ್‌ಗಳು ಎಲ್ಲಿವೆ.',
+          hi:'WhatsApp, Telegram, Instagram और YouTube चैनल पर क्या मिलता है, और ऐप में लिंक कहाँ हैं।'} },
+  { id:'guide-timetable-download', cat:'updates', dur:'1:23', added:'1 Nov 2026', video:'reels/guide-timetable-download.mp4', cover:'reels/guide-timetable-download-cover.jpg', chapter:'exam-corner.html#ii-puc-timetable',
+    title:{en:'Download your personal exam timetable', kn:'ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ಪರೀಕ್ಷಾ ವೇಳಾಪಟ್ಟಿ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ', hi:'अपना पर्सनल परीक्षा टाइमटेबल डाउनलोड करें'},
+    desc:{en:'II PUC board exams 2027: save your timetable as a PDF with your marks, Sir\'s remarks and study tips, in 6 easy steps.',
+          kn:'ದ್ವಿತೀಯ ಪಿಯುಸಿ ಬೋರ್ಡ್ ಪರೀಕ್ಷೆ 2027: ನಿಮ್ಮ ಅಂಕಗಳು, ಸರ್ ಅವರ ಅಭಿಪ್ರಾಯ ಮತ್ತು ಸಲಹೆಗಳೊಂದಿಗೆ ವೇಳಾಪಟ್ಟಿಯನ್ನು PDF ಆಗಿ ಉಳಿಸಿ.',
+          hi:'द्वितीय पीयूसी बोर्ड परीक्षा 2027: अपने अंक, सर की टिप्पणी और टिप्स के साथ टाइमटेबल PDF में सेव करें।'} },
+  { id:'guide-offline-mode', cat:'updates', dur:'1:41', added:'31 Oct 2026', video:'reels/guide-offline-mode.mp4', cover:'reels/guide-offline-mode-cover.jpg', chapter:'offline.html',
+    title:{en:'Use BAIO without internet', kn:'ಇಂಟರ್ನೆಟ್ ಇಲ್ಲದೆ BAIO ಬಳಸಿ', hi:'बिना इंटरनेट के BAIO इस्तेमाल करें'},
+    desc:{en:'Save chapters once, then study anywhere, even with no signal. How to download and keep your packs up to date.',
+          kn:'ಅಧ್ಯಾಯಗಳನ್ನು ಒಮ್ಮೆ ಉಳಿಸಿ, ನಂತರ ಸಿಗ್ನಲ್ ಇಲ್ಲದಿದ್ದರೂ ಓದಿ. ಡೌನ್‌ಲೋಡ್ ಮತ್ತು ಅಪ್‌ಡೇಟ್ ಮಾಡುವ ವಿಧಾನ.',
+          hi:'अध्याय एक बार सेव करें, फिर बिना सिग्नल के भी पढ़ें। डाउनलोड और अपडेट कैसे करें।'} },
+  { id:'guide-neet-3-steps', cat:'updates', dur:'3:53', added:'30 Oct 2026', video:'reels/baio-start-3-steps.mp4', cover:'reels/baio-start-3-steps-cover.jpg', chapter:'neet-3-steps.html',
+    title:{en:'Prepare for NEET in 3 simple steps', kn:'3 ಸರಳ ಹಂತಗಳಲ್ಲಿ NEET ತಯಾರಿ', hi:'3 आसान स्टेप में NEET की तैयारी'},
+    desc:{en:'Study the chapter, practise MCQs, then take the NEET mock test: the BAIO way, shown with Biomolecules.',
+          kn:'ಅಧ್ಯಾಯ ಓದಿ, MCQ ಅಭ್ಯಾಸ ಮಾಡಿ, ನಂತರ NEET ಮಾಕ್ ಟೆಸ್ಟ್ ಬರೆಯಿರಿ — ಜೈವಿಕ ಅಣುಗಳ ಉದಾಹರಣೆಯೊಂದಿಗೆ.',
+          hi:'अध्याय पढ़ें, MCQ अभ्यास करें, फिर NEET मॉक टेस्ट दें — जैव अणु के उदाहरण के साथ।'} },
+  { id:'guide-exam-corner', cat:'updates', dur:'0:52', added:'18 Oct 2026', video:'reels/guide-exam-corner.mp4', cover:'reels/guide-exam-corner-cover.jpg', chapter:'exam-corner.html',
+    title:{en:'How to open Exam Corner', kn:'ಪರೀಕ್ಷಾ ಕಾರ್ನರ್ ತೆರೆಯುವುದು ಹೇಗೆ', hi:'एग्ज़ाम कॉर्नर कैसे खोलें'},
+    desc:{en:'From your phone\'s home screen to Exam Corner: timetables, practice papers and exam tips in one place.',
+          kn:'ಫೋನ್ ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ನಿಂದ ಪರೀಕ್ಷಾ ಕಾರ್ನರ್‌ಗೆ: ವೇಳಾಪಟ್ಟಿ, ಅಭ್ಯಾಸ ಪತ್ರಿಕೆಗಳು ಮತ್ತು ಸಲಹೆಗಳು ಒಂದೇ ಕಡೆ.',
+          hi:'फ़ोन की होम स्क्रीन से एग्ज़ाम कॉर्नर तक: टाइमटेबल, प्रैक्टिस पेपर और टिप्स एक जगह।'} },
   { id:'comedy-eco', cat:'comedy', pu:2, ch:12, dur:'0:46', video:'reels/comedy-eco-chat.mp4', cover:'reels/comedy-eco-chat-cover.jpg', chapter:'pu2-ch12.html',
     title:{en:'Food Chain Family · Group Chat', kn:'ಆಹಾರ ಸರಪಳಿ ಕುಟುಂಬ · ಗ್ರೂಪ್ ಚಾಟ್', hi:'फ़ूड चेन फ़ैमिली · ग्रुप चैट'},
     desc:{en:'Sun, grass, frog, snake and earthworm discuss 2–10% PAR, the 10 per cent law, the energy pyramid and decomposition.',
@@ -385,15 +412,15 @@ const REELS = [
           hi:'8 बोर्ड-महत्वपूर्ण विषयों का झटपट रिवीजन — परीक्षा से पहले देखें।'} }
 ];
 const UI = {
-  en:{pu1:'I PUC', pu2:'II PUC', ch:'Ch', dl:'⬇ Download (MP4)', share:'📤 Share', open:'📘 Open chapter', min:'min', board:'Board important'},
-  kn:{pu1:'ಪ್ರಥಮ ಪಿಯುಸಿ', pu2:'ದ್ವಿತೀಯ ಪಿಯುಸಿ', ch:'ಅಧ್ಯಾಯ', dl:'⬇ ಡೌನ್‌ಲೋಡ್ (MP4)', share:'📤 ಹಂಚಿಕೊಳ್ಳಿ', open:'📘 ಅಧ್ಯಾಯ ತೆರೆಯಿರಿ', min:'ನಿಮಿಷ', board:'ಬೋರ್ಡ್ ಮುಖ್ಯ'},
-  hi:{pu1:'प्रथम पीयूसी', pu2:'द्वितीय पीयूसी', ch:'अध्याय', dl:'⬇ डाउनलोड (MP4)', share:'📤 शेयर करें', open:'📘 अध्याय खोलें', min:'मिनट', board:'बोर्ड महत्वपूर्ण'}
+  en:{guide:'📢 App guide', added:'Added', go:'👉 Open in app', pu1:'I PUC', pu2:'II PUC', ch:'Ch', dl:'⬇ Download (MP4)', share:'📤 Share', open:'📘 Open chapter', min:'min', board:'Board important'},
+  kn:{guide:'📢 ಆ್ಯಪ್ ಮಾರ್ಗದರ್ಶಿ', added:'ಸೇರಿಸಿದ್ದು', go:'👉 ಆ್ಯಪ್‌ನಲ್ಲಿ ತೆರೆಯಿರಿ', pu1:'ಪ್ರಥಮ ಪಿಯುಸಿ', pu2:'ದ್ವಿತೀಯ ಪಿಯುಸಿ', ch:'ಅಧ್ಯಾಯ', dl:'⬇ ಡೌನ್‌ಲೋಡ್ (MP4)', share:'📤 ಹಂಚಿಕೊಳ್ಳಿ', open:'📘 ಅಧ್ಯಾಯ ತೆರೆಯಿರಿ', min:'ನಿಮಿಷ', board:'ಬೋರ್ಡ್ ಮುಖ್ಯ'},
+  hi:{guide:'📢 ऐप गाइड', added:'जोड़ा गया', go:'👉 ऐप में खोलें', pu1:'प्रथम पीयूसी', pu2:'द्वितीय पीयूसी', ch:'अध्याय', dl:'⬇ डाउनलोड (MP4)', share:'📤 शेयर करें', open:'📘 अध्याय खोलें', min:'मिनट', board:'बोर्ड महत्वपूर्ण'}
 };
 const I18N = {
-  kn:{ t_com:'😂 ಹಾಸ್ಯ', t_com_s:'ನಗುತ್ತಾ ಕಲಿಯಿರಿ', t_rev:'🎬 ಪುನರಾವರ್ತನೆ ರೀಲ್ಸ್', t_rev_s:'ಬೋರ್ಡ್ ಮುಖ್ಯ ವಿಷಯಗಳು', t_meh:'🎤 BAIO – ಬಯಾಲಜಿ ಕಿ ಮೆಹ್ಫಿಲ್', t_meh_s:'ಶಾಯರಿಯಲ್ಲಿ ಜೀವಶಾಸ್ತ್ರ', feed:'📱 ರೀಲ್ಸ್ ಫೀಡ್ ನೋಡಿ · ಸ್ವೈಪ್, ಲೈಕ್ ಮತ್ತು ಕಾಮೆಂಟ್', eyebrow:'BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್ · ಪುನರಾವರ್ತನೆ ರೀಲ್ಸ್', h1:'🎬 ಪುನರಾವರ್ತನೆ <span class="accent">ರೀಲ್ಸ್</span>',
+  kn:{ t_upd:'📢 ವಿಡಿಯೋ ಅಪ್‌ಡೇಟ್ಸ್', t_upd_s:'ಆ್ಯಪ್‌ನಲ್ಲಿ ಹೊಸದು', t_com:'😂 ಹಾಸ್ಯ', t_com_s:'ನಗುತ್ತಾ ಕಲಿಯಿರಿ', t_rev:'🎬 ಪುನರಾವರ್ತನೆ ರೀಲ್ಸ್', t_rev_s:'ಬೋರ್ಡ್ ಮುಖ್ಯ ವಿಷಯಗಳು', t_meh:'🎤 BAIO – ಬಯಾಲಜಿ ಕಿ ಮೆಹ್ಫಿಲ್', t_meh_s:'ಶಾಯರಿಯಲ್ಲಿ ಜೀವಶಾಸ್ತ್ರ', feed:'📱 ರೀಲ್ಸ್ ಫೀಡ್ ನೋಡಿ · ಸ್ವೈಪ್, ಲೈಕ್ ಮತ್ತು ಕಾಮೆಂಟ್', eyebrow:'BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್ · ಪುನರಾವರ್ತನೆ ರೀಲ್ಸ್', h1:'🎬 ಪುನರಾವರ್ತನೆ <span class="accent">ರೀಲ್ಸ್</span>',
        intro:'ಅಧ್ಯಾಯವಾರು ಬೋರ್ಡ್ ಪರೀಕ್ಷೆಯ ಮುಖ್ಯ ವಿಷಯಗಳ ಒಂದು ನಿಮಿಷದ ವಿಡಿಯೋಗಳು. ತರಗತಿಗೆ ಮುನ್ನ ನೋಡಿ, ಪರೀಕ್ಷೆಗೆ ಉಳಿಸಿ, ಸ್ನೇಹಿತರೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಿ.',
        f_all:'ಎಲ್ಲಾ', f_1:'ಪ್ರಥಮ ಪಿಯುಸಿ', f_2:'ದ್ವಿತೀಯ ಪಿಯುಸಿ', soon:'ಹೊಸ ರೀಲ್‌ಗಳು ಅಧ್ಯಾಯವಾರು ಸೇರುತ್ತವೆ. 🔔 ಪ್ರಕಟಣೆಗಳ ಘಂಟೆಯನ್ನು ಗಮನಿಸಿ.' },
-  hi:{ t_com:'😂 कॉमेडी', t_com_s:'हँसो और सीखो', t_rev:'🎬 रिवीज़न रील्स', t_rev_s:'बोर्ड-महत्वपूर्ण विषय', t_meh:'🎤 BAIO – बायोलॉजी की महफ़िल', t_meh_s:'शायरी में जीवविज्ञान', feed:'📱 रील्स फ़ीड आज़माएँ · स्वाइप, लाइक और कमेंट', eyebrow:'BAIO लर्निंग सिस्टम · रिवीज़न रील्स', h1:'🎬 रिवीज़न <span class="accent">रील्स</span>',
+  hi:{ t_upd:'📢 वीडियो अपडेट्स', t_upd_s:'ऐप में नया', t_com:'😂 कॉमेडी', t_com_s:'हँसो और सीखो', t_rev:'🎬 रिवीज़न रील्स', t_rev_s:'बोर्ड-महत्वपूर्ण विषय', t_meh:'🎤 BAIO – बायोलॉजी की महफ़िल', t_meh_s:'शायरी में जीवविज्ञान', feed:'📱 रील्स फ़ीड आज़माएँ · स्वाइप, लाइक और कमेंट', eyebrow:'BAIO लर्निंग सिस्टम · रिवीज़न रील्स', h1:'🎬 रिवीज़न <span class="accent">रील्स</span>',
        intro:'अध्यायवार बोर्ड-महत्वपूर्ण विषयों के एक मिनट के वीडियो। क्लास से पहले देखिए, परीक्षा के लिए सेव कीजिए और दोस्तों से शेयर कीजिए।',
        f_all:'सभी', f_1:'प्रथम पीयूसी', f_2:'द्वितीय पीयूसी', soon:'नई रील्स अध्याय दर अध्याय जुड़ती रहेंगी। 🔔 घोषणाओं की घंटी पर नज़र रखिए।' }
 };
@@ -403,17 +430,17 @@ const box=document.getElementById('reels');
 function render(){
   const u=UI[lang];
   const playing=[...box.querySelectorAll('video')].filter(v=>!v.paused).map(v=>v.closest('.reel').id);
-  box.innerHTML=REELS.filter(r=>((r.cat||'revision')===section) && (filter==='all'||String(r.pu)===filter)).map(r=>`
+  box.innerHTML=REELS.filter(r=>((r.cat||'revision')===section) && (r.cat==='updates'||filter==='all'||String(r.pu)===filter)).map(r=>`
     <article class="reel" id="${r.id}">
-      <div class="card-head"><span class="pill">${r.pu===1?u.pu1:u.pu2} · ${u.ch} ${r.ch}</span><span class="new">${r.cat==='mehfil' ? '🎤 Mehfil' : r.cat==='comedy' ? '😂 Comedy' : u.board}</span></div>
+      <div class="card-head"><span class="pill">${r.cat==='updates' ? u.guide : (r.pu===1?u.pu1:u.pu2)+' · '+u.ch+' '+r.ch}</span><span class="new">${r.cat==='updates' ? '🆕 '+u.added+' '+r.added : r.cat==='mehfil' ? '🎤 Mehfil' : r.cat==='comedy' ? '😂 Comedy' : u.board}</span></div>
       <h2>${r.title[lang]||r.title.en}</h2>
       <div class="meta">⏱ ${r.dur} ${u.min}</div>
       <p>${r.desc[lang]||r.desc.en}</p>
-      <div class="rv"><video controls preload="none" playsinline poster="${r.cover}" src="${r.video}"></video></div>
+      <div class="rv"><video controls preload="none" playsinline poster="${r.cover}" src="${r.video}"${r.cat==='updates'?' style="object-fit:contain"':''}></video></div>
       <div class="actions">
         <a class="act primary" href="${r.video}" download>${u.dl}</a>
         <button class="act share" type="button" data-reel="${r.id}">${u.share}</button>
-        <a class="act" href="${r.chapter}">${u.open}</a>
+        <a class="act" href="${r.chapter}">${r.cat==='updates'?u.go:u.open}</a>
       </div>
     </article>`).join('');
   // only one reel plays at a time
@@ -433,13 +460,13 @@ function setLang(l){
   render();
 }
 sw.addEventListener('click',e=>{ const b=e.target.closest('button'); if(b) setLang(b.dataset.l); });
-function setSection(sec){ section=sec; document.querySelectorAll('.sec-tab').forEach(x=>x.classList.toggle('on',x.dataset.sec===sec)); render(); }
+function setSection(sec){ section=sec; var fl=document.querySelector('.filters'); if(fl) fl.style.display = sec==='updates' ? 'none' : ''; document.querySelectorAll('.sec-tab').forEach(x=>x.classList.toggle('on',x.dataset.sec===sec)); render(); }
 document.querySelectorAll('.sec-tab').forEach(b=>b.addEventListener('click',()=>setSection(b.dataset.sec)));
 document.querySelectorAll('.f-btn').forEach(b=>b.addEventListener('click',()=>{ filter=b.dataset.f; document.querySelectorAll('.f-btn').forEach(x=>x.classList.toggle('on',x===b)); render(); }));
 let startLang='en'; try{ startLang=localStorage.getItem('baio_lang')||localStorage.getItem('baio_mt_lang')||'en'; }catch(e){}
 setLang(['en','kn','hi'].includes(startLang)?startLang:'en');
 // opened from a shared link (#reel-id): scroll to that reel and highlight it
-(function(){ const id=location.hash.slice(1); const r=REELS.find(x=>x.id===id); if(r && (r.cat==='mehfil'||r.cat==='comedy')) setSection(r.cat); })();
+(function(){ const id=location.hash.slice(1); const r=REELS.find(x=>x.id===id); if(r && (r.cat==='mehfil'||r.cat==='comedy'||r.cat==='updates')) setSection(r.cat); else if(id==='updates') setSection('updates'); })();
 (function(){ const id=location.hash.slice(1); const el=id&&document.getElementById(id); if(el){ setTimeout(()=>{ el.scrollIntoView({behavior:'smooth',block:'start'}); el.classList.add('flash'); setTimeout(()=>el.classList.remove('flash'),2500); },300); } })();
 
 /* Share — native share sheet on phones; WhatsApp / Telegram / copy link otherwise */
@@ -466,7 +493,7 @@ setLang(['en','kn','hi'].includes(startLang)?startLang:'en');
   box.addEventListener('click',function(e){
     var btn=e.target.closest('[data-reel]'); if(!btn) return;
     var r=REELS.find(function(x){return x.id===btn.dataset.reel;}); if(!r) return;
-    var title=(r.pu===1?'I PUC':'II PUC')+' Biology · '+(r.title[lang]||r.title.en), text=MSG[lang](title), url=BASE+'#'+r.id; curURL=url;
+    var title=r.cat==='updates' ? (r.title[lang]||r.title.en) : (r.pu===1?'I PUC':'II PUC')+' Biology · '+(r.title[lang]||r.title.en), text=r.cat==='updates' ? '📢 '+title+' — a short video guide from Narendra Sir (BAIO Learning System).' : MSG[lang](title), url=BASE+'#'+r.id; curURL=url;
     if(navigator.share){ navigator.share({title:'BAIO · '+r.title.en,text:text,url:url}).catch(function(){}); return; }
     sheet.querySelector('#shareTtl').textContent=LBL[lang][0];
     sheet.querySelector('.wa').href='https://wa.me/?text='+encodeURIComponent(text+'\n'+url);
