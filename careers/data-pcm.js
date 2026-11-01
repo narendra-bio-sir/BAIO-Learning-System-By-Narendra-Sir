@@ -127,7 +127,7 @@
       scope:{en:'Airlines are expanding fast in India; plan the cost carefully with your family.', kn:'ಭಾರತದಲ್ಲಿ ಏರ್‌ಲೈನ್‌ಗಳು ವೇಗವಾಗಿ ಬೆಳೆಯುತ್ತಿವೆ; ಖರ್ಚನ್ನು ಕುಟುಂಬದೊಂದಿಗೆ ಯೋಜಿಸಿ.', hi:'भारत में एयरलाइंस तेज़ी से बढ़ रही हैं; ख़र्च परिवार के साथ सोच-समझकर तय करें।'} }
   ]);
   /* Biotech engineering already exists in the PCB list; show it in the engineering stream too. */
-  D.alsoIn = { btbio:'eng', govt:'oth', teach:'oth' };
+  D.alsoIn = { btbio:['eng'], govt:['oth'], teach:['oth'] };
 
   D.quizPcm = [
     { t:'code', q:{en:'I enjoy computers, coding or apps.', kn:'ಕಂಪ್ಯೂಟರ್, ಕೋಡಿಂಗ್ ಅಥವಾ ಆ್ಯಪ್‌ಗಳು ಇಷ್ಟ.', hi:'मुझे कंप्यूटर, कोडिंग या ऐप पसंद हैं।'} },
