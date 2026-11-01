@@ -41,6 +41,10 @@ a{color:var(--teal)}
 .lang-btn.active{background:var(--gold);color:#1a1406;border-color:var(--gold)}
 .icon-btn{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none}
 .hero{padding:26px 0 8px}
+.vid{margin-top:14px;background:var(--panel);border:1.5px solid var(--teal);border-radius:16px;padding:12px 14px}
+.vid summary{cursor:pointer;font-weight:700;font-size:15px;color:var(--ink);list-style:none}
+.vid summary::-webkit-details-marker{display:none}
+.vid video{display:block;width:100%;max-width:330px;aspect-ratio:9/16;margin:12px auto 2px;border-radius:14px;background:#000}
 .eyebrow{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--teal);font-weight:700}
 .hero h1{font-size:30px;line-height:1.15;margin-top:8px}
 .hero h1 span{color:var(--gold)}
@@ -130,6 +134,9 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offse
     <h1 id="tH1"></h1>
     <p id="tIntro"></p>
     <div class="rules" id="rules"></div>
+    <details class="vid" id="howVid"><summary id="vidT">▶️ Watch: how Exam Scorer works (1½ min)</summary>
+      <video controls preload="none" playsinline poster="reels/guide-exam-scorer-cover.jpg" src="reels/guide-exam-scorer.mp4"></video>
+    </details>
   </section>
   <section class="paper" id="paper"></section>
   <div class="chgrid" id="chgrid"></div>
@@ -142,7 +149,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offse
 (function(){
   var D = window.EXAM_SCORER || [];
   var UI = {
-    en:{ eyebrow:'II PUC Biology · Exam Scorer', h1:'Score sure marks in <span>Biology</span>',
+    en:{ vid:'▶️ Watch: how Exam Scorer works (1½ min)', eyebrow:'II PUC Biology · Exam Scorer', h1:'Score sure marks in <span>Biology</span>',
          intro:'Pass-first material by Narendra Sir for students who want safe, sure marks. For each chapter: the questions that come again and again, short answers in points, must-draw diagrams, one-mark facts and memory tricks. Tick each answer once you can write it without looking.',
          rules:[['1-mark first','Learn the "one-mark facts" of every chapter. They are the easiest marks in Part A.'],['Draw diagrams','A neat, labelled diagram earns marks even if your answer is short.'],['Write in points','Write 5-mark answers as numbered points or a flow-chart, not a paragraph.'],['Practicals = 30','Practical marks are added to your total. Attend every lab and keep your record ready.']],
          paperH:'The Biology paper: 70 marks', pc:['Part','Questions','You answer','Marks'],
@@ -155,7 +162,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offse
          prev:'← Previous chapter', next:'Next chapter →', mk:function(n){ return n+' M'; },
          tipsH:'On exam day', tips:['Read the whole paper for 10 minutes. Start with the questions you know best.','Answer every one-mark question. There is no negative mark.','For each 5-mark answer, write a one-line definition, then 5–6 numbered points, then the diagram.','Underline key words (e.g. "triple fusion", "semi-conservative", "10% law").','Leave 10 minutes at the end to label diagrams and check question numbers.'],
          src:'Prepared by Narendra Sir from the BAIO Board Important lists. Answers are kept short on purpose — learn these first, then read your full notes.' },
-    kn:{ eyebrow:'ದ್ವಿತೀಯ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ · ಎಕ್ಸಾಮ್ ಸ್ಕೋರರ್', h1:'<span>ಜೀವಶಾಸ್ತ್ರ</span>ದಲ್ಲಿ ಖಚಿತ ಅಂಕ ಗಳಿಸಿ',
+    kn:{ vid:'▶️ ನೋಡಿ: ಎಕ್ಸಾಮ್ ಸ್ಕೋರರ್ ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ (1½ ನಿಮಿಷ)', eyebrow:'ದ್ವಿತೀಯ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ · ಎಕ್ಸಾಮ್ ಸ್ಕೋರರ್', h1:'<span>ಜೀವಶಾಸ್ತ್ರ</span>ದಲ್ಲಿ ಖಚಿತ ಅಂಕ ಗಳಿಸಿ',
          intro:'ಸುರಕ್ಷಿತ, ಖಚಿತ ಅಂಕಗಳು ಬೇಕಾದ ವಿದ್ಯಾರ್ಥಿಗಳಿಗಾಗಿ ನರೇಂದ್ರ ಸರ್ ಅವರ ಪಾಸ್-ಮೊದಲು ಸಾಮಗ್ರಿ. ಪ್ರತಿ ಅಧ್ಯಾಯಕ್ಕೆ: ಮತ್ತೆ ಮತ್ತೆ ಬರುವ ಪ್ರಶ್ನೆಗಳು, ಅಂಶರೂಪದ ಕಿರು ಉತ್ತರಗಳು, ಕಡ್ಡಾಯ ಚಿತ್ರಗಳು, ಒಂದು ಅಂಕದ ಸಂಗತಿಗಳು ಮತ್ತು ನೆನಪಿನ ಸೂತ್ರಗಳು. ನೋಡದೆ ಬರೆಯಲು ಬಂದಾಗ ಗುರುತು ಹಾಕಿ.',
          rules:[['ಮೊದಲು 1 ಅಂಕ','ಪ್ರತಿ ಅಧ್ಯಾಯದ "ಒಂದು ಅಂಕದ ಸಂಗತಿಗಳು" ಕಲಿಯಿರಿ. ಭಾಗ A ಯಲ್ಲಿ ಇವು ಸುಲಭ ಅಂಕಗಳು.'],['ಚಿತ್ರ ಬರೆಯಿರಿ','ಅಂದವಾದ, ಹೆಸರಿಸಿದ ಚಿತ್ರಕ್ಕೆ ಉತ್ತರ ಚಿಕ್ಕದಾದರೂ ಅಂಕ ಸಿಗುತ್ತದೆ.'],['ಅಂಶಗಳಲ್ಲಿ ಬರೆಯಿರಿ','5 ಅಂಕದ ಉತ್ತರವನ್ನು ಸಂಖ್ಯೆ ಹಾಕಿದ ಅಂಶಗಳು ಅಥವಾ ಹರಿವು-ಚಿತ್ರವಾಗಿ ಬರೆಯಿರಿ.'],['ಪ್ರಾಯೋಗಿಕ = 30','ಪ್ರಾಯೋಗಿಕ ಅಂಕಗಳು ಒಟ್ಟು ಅಂಕಕ್ಕೆ ಸೇರುತ್ತವೆ. ಪ್ರತಿ ಲ್ಯಾಬ್‌ಗೆ ಹಾಜರಾಗಿ, ರೆಕಾರ್ಡ್ ಸಿದ್ಧವಿಡಿ.']],
          paperH:'ಜೀವಶಾಸ್ತ್ರ ಪತ್ರಿಕೆ: 70 ಅಂಕ', pc:['ಭಾಗ','ಪ್ರಶ್ನೆಗಳು','ನೀವು ಉತ್ತರಿಸುವುದು','ಅಂಕ'],
@@ -168,7 +175,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offse
          prev:'← ಹಿಂದಿನ ಅಧ್ಯಾಯ', next:'ಮುಂದಿನ ಅಧ್ಯಾಯ →', mk:function(n){ return n+' ಅಂಕ'; },
          tipsH:'ಪರೀಕ್ಷೆಯ ದಿನ', tips:['10 ನಿಮಿಷ ಇಡೀ ಪತ್ರಿಕೆ ಓದಿ. ಚೆನ್ನಾಗಿ ಗೊತ್ತಿರುವ ಪ್ರಶ್ನೆಗಳಿಂದ ಆರಂಭಿಸಿ.','ಪ್ರತಿ ಒಂದು ಅಂಕದ ಪ್ರಶ್ನೆಗೂ ಉತ್ತರಿಸಿ. ಋಣಾತ್ಮಕ ಅಂಕ ಇಲ್ಲ.','5 ಅಂಕದ ಉತ್ತರ: ಒಂದು ಸಾಲಿನ ವ್ಯಾಖ್ಯೆ, ನಂತರ 5–6 ಅಂಶಗಳು, ನಂತರ ಚಿತ್ರ.','ಮುಖ್ಯ ಪದಗಳಿಗೆ ಅಡಿಗೆರೆ ಹಾಕಿ (ಉದಾ: "triple fusion", "10% law").','ಕೊನೆಯ 10 ನಿಮಿಷ ಚಿತ್ರಗಳ ಹೆಸರು ಮತ್ತು ಪ್ರಶ್ನೆ ಸಂಖ್ಯೆ ಪರಿಶೀಲಿಸಲು ಇಡಿ.'],
          src:'BAIO Board Important ಪಟ್ಟಿಗಳಿಂದ ನರೇಂದ್ರ ಸರ್ ಸಿದ್ಧಪಡಿಸಿದ್ದು. ಉತ್ತರಗಳು ಉದ್ದೇಶಪೂರ್ವಕವಾಗಿ ಚಿಕ್ಕವು — ಮೊದಲು ಇವನ್ನು ಕಲಿಯಿರಿ, ನಂತರ ಪೂರ್ಣ ನೋಟ್ಸ್ ಓದಿ. ಪರೀಕ್ಷೆಯಲ್ಲಿ ಉತ್ತರ ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿ ಬರೆಯಿರಿ.' },
-    hi:{ eyebrow:'द्वितीय पीयूसी जीव विज्ञान · एग्ज़ाम स्कोरर', h1:'<span>जीव विज्ञान</span> में पक्के अंक पाइए',
+    hi:{ vid:'▶️ देखें: एग्ज़ाम स्कोरर कैसे काम करता है (1½ मिनट)', eyebrow:'द्वितीय पीयूसी जीव विज्ञान · एग्ज़ाम स्कोरर', h1:'<span>जीव विज्ञान</span> में पक्के अंक पाइए',
          intro:'सुरक्षित, पक्के अंक चाहने वाले छात्रों के लिए नरेंद्र सर की पास-पहले सामग्री। हर अध्याय के लिए: बार-बार आने वाले प्रश्न, बिंदुओं में छोटे उत्तर, ज़रूरी चित्र, एक अंक के तथ्य और याद करने की ट्रिक। बिना देखे लिख पाएँ तो निशान लगाइए।',
          rules:[['पहले 1 अंक','हर अध्याय के "एक अंक के तथ्य" सीखिए। भाग A में ये सबसे आसान अंक हैं।'],['चित्र बनाइए','साफ़, नामांकित चित्र से उत्तर छोटा होने पर भी अंक मिलते हैं।'],['बिंदुओं में लिखिए','5 अंक के उत्तर क्रमांकित बिंदुओं या फ़्लो-चार्ट में लिखिए।'],['प्रायोगिक = 30','प्रायोगिक अंक कुल में जुड़ते हैं। हर लैब में जाइए, रिकॉर्ड तैयार रखिए।']],
          paperH:'जीव विज्ञान पेपर: 70 अंक', pc:['भाग','प्रश्न','आप हल करेंगे','अंक'],
@@ -202,7 +209,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offse
     var u = UI[lang];
     document.documentElement.lang = lang;
     document.getElementById('langs').innerHTML = [['en','English'],['kn','ಕನ್ನಡ'],['hi','हिंदी']].map(function(l){ return '<button class="lang-btn'+(l[0]===lang?' active':'')+'" data-l="'+l[0]+'">'+l[1]+'</button>'; }).join('');
-    document.getElementById('tEyebrow').textContent = u.eyebrow;
+    document.getElementById('tEyebrow').textContent = u.eyebrow; document.getElementById('vidT').textContent = u.vid;
     document.getElementById('tH1').innerHTML = u.h1;
     document.getElementById('tIntro').textContent = u.intro;
     document.getElementById('rules').innerHTML = u.rules.map(function(r){ return '<div class="rule"><b>'+r[0]+'</b>'+r[1]+'</div>'; }).join('');
