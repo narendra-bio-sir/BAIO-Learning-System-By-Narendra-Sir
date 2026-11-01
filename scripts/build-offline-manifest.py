@@ -95,7 +95,7 @@ def collect(entries, assigned):
         size = os.path.getsize(path)
         if not is_entry and ext != '.html' and size > MAX_FILE:
             continue
-        if path == 'sw.js':
+        if path in ('sw.js', 'offline-manifest.json'):   # sw.js installs itself; the manifest is fetched and cached by offline-sync.js (and listing itself would change its own hash on every build)
             continue
         if url not in assigned:
             assigned.add(url)
