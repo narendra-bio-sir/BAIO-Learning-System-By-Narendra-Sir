@@ -21,7 +21,7 @@ body{font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',system-ui,sans
 .qcard .e{font-size:30px;flex:none}
 .qcard b{display:block;font:700 17px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari'}
 .qcard small{color:var(--dim);font-size:13.5px}
-.seg2{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:5px;border-radius:16px;background:var(--panel2);border:1px solid var(--line);margin-top:18px}
+.seg2{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;padding:5px;border-radius:16px;background:var(--panel2);border:1px solid var(--line);margin-top:18px}
 .seg2 button{border:0;background:transparent;color:var(--ink);border-radius:12px;padding:10px 8px;cursor:pointer;text-align:center;-webkit-tap-highlight-color:transparent}
 .seg2 button b{display:block;font:700 14px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari'}
 .seg2 button small{display:block;font-size:11.5px;color:var(--dim);margin-top:2px}
@@ -152,6 +152,7 @@ ol.stp{margin:0;padding-left:20px;font-size:14.5px;line-height:1.55}ol.stp li{ma
 <script src="careers/data.js?v=2"></script>
 <script src="careers/data-pcm.js?v=2"></script>
 <script src="careers/data-more.js?v=1"></script>
+<script src="careers/data-skills.js?v=1"></script>
 <script src="careers/report.js?v=6"></script>
 <script>
 (function(){
@@ -162,7 +163,7 @@ ol.stp{margin:0;padding-left:20px;font-size:14.5px;line-height:1.55}ol.stp li{ma
          tip:'<b>💡 Smart move:</b> register for <b>both NEET-UG and KCET</b>. In Karnataka, nursing, pharmacy, agriculture, BVSc, BNYS and physiotherapy seats come through KCET, and physiotherapy is expected to move to NEET soon. Two exams = more doors open.',
          qT:'Which career suits me?', qS:'Answer 10 quick questions and see your top 3 matches', qClose:'Close quiz',
          qSub:'There are no right or wrong answers. Be honest!', yes:'Yes', maybe:'Maybe', no:'No',
-         vid:['Watch: how it works','1½ min'], tipBeyond:'<b>🌟 Did you know?</b> PU Science keeps <b>every</b> door open. Besides medical and engineering, you can choose law, CA, management, media, design, hotel management, sports, aviation and more. Pick what you truly enjoy, and talk to Narendra Sir before you decide.', tipPcm:'<b>💡 Smart move:</b> write <b>both JEE Main and KCET</b> (and COMEDK). Your <b>PU PCM marks count for 50%</b> of your KCET engineering rank, so board exams matter as much as the CET.', shareP:'📤 Share this page', shareC:'📤 Share', copied:'Link copied ✓', shareMsg:'🎓 Career Guidance for PU Science students — every path after PU with exams, fees and a career quiz. By Narendra Sir, BAIO Learning System.',
+         vid:['Watch: how it works','1½ min'], tipSkills:'<b>🛠️ Skills + degree = best combo.</b> A short diploma or certificate can help you earn early, and a skill course <b>alongside</b> your degree (in holidays or online) makes your résumé stand out. Many are <b>free</b>: SWAYAM, NPTEL and Skill India.', tipBeyond:'<b>🌟 Did you know?</b> PU Science keeps <b>every</b> door open. Besides medical and engineering, you can choose law, CA, management, media, design, hotel management, sports, aviation and more. Pick what you truly enjoy, and talk to Narendra Sir before you decide.', tipPcm:'<b>💡 Smart move:</b> write <b>both JEE Main and KCET</b> (and COMEDK). Your <b>PU PCM marks count for 50%</b> of your KCET engineering rank, so board exams matter as much as the CET.', shareP:'📤 Share this page', shareC:'📤 Share', copied:'Link copied ✓', shareMsg:'🎓 Career Guidance for PU Science students — every path after PU with exams, fees and a career quiz. By Narendra Sir, BAIO Learning System.',
          see:'See my matches', reset:'Start again', top:'Your top matches', need:'Answer at least 5 questions first.',
          lWhat:'What you do', dur:'Duration', exam:'Entrance exam', elig:'Eligibility', fee:'Fees (approx.)', pay:'Starting pay (approx.)', scope:'Future scope',
          exT:'📅 Exam calendar (typical months)', note:'Fees and pay are approximate and change every year. Always check the latest KEA (cetonline.karnataka.gov.in), NTA and college notices before deciding. Confused? Ask Narendra Sir in class or on WhatsApp.' },
@@ -171,7 +172,7 @@ ol.stp{margin:0;padding-left:20px;font-size:14.5px;line-height:1.55}ol.stp li{ma
          tip:'<b>💡 ಜಾಣ ನಿರ್ಧಾರ:</b> <b>NEET-UG ಮತ್ತು KCET ಎರಡಕ್ಕೂ</b> ನೋಂದಾಯಿಸಿ. ಕರ್ನಾಟಕದಲ್ಲಿ ನರ್ಸಿಂಗ್, ಫಾರ್ಮಸಿ, ಕೃಷಿ, BVSc, BNYS, ಫಿಸಿಯೋಥೆರಪಿ ಸೀಟುಗಳು KCET ಮೂಲಕ; ಫಿಸಿಯೋಥೆರಪಿ ಶೀಘ್ರದಲ್ಲೇ NEET ಗೆ ಬದಲಾಗುವ ನಿರೀಕ್ಷೆ. ಎರಡು ಪರೀಕ್ಷೆ = ಹೆಚ್ಚು ಅವಕಾಶ.',
          qT:'ನನಗೆ ಯಾವ ವೃತ್ತಿ ಸೂಕ್ತ?', qS:'10 ಚಿಕ್ಕ ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸಿ, ನಿಮ್ಮ ಟಾಪ್ 3 ನೋಡಿ', qClose:'ಕ್ವಿಜ್ ಮುಚ್ಚಿ',
          qSub:'ಸರಿ-ತಪ್ಪು ಉತ್ತರಗಳಿಲ್ಲ. ಪ್ರಾಮಾಣಿಕವಾಗಿ ಉತ್ತರಿಸಿ!', yes:'ಹೌದು', maybe:'ಇರಬಹುದು', no:'ಇಲ್ಲ',
-         vid:['ಹೇಗೆ ಬಳಸುವುದು ನೋಡಿ','1½ ನಿಮಿಷ'], tipBeyond:'<b>🌟 ನಿಮಗೆ ಗೊತ್ತೇ?</b> ಪಿಯುಸಿ ವಿಜ್ಞಾನ <b>ಎಲ್ಲಾ</b> ಬಾಗಿಲುಗಳನ್ನು ತೆರೆದಿಡುತ್ತದೆ. ವೈದ್ಯಕೀಯ ಮತ್ತು ಎಂಜಿನಿಯರಿಂಗ್ ಜೊತೆಗೆ ಕಾನೂನು, CA, ನಿರ್ವಹಣೆ, ಮಾಧ್ಯಮ, ವಿನ್ಯಾಸ, ಹೋಟೆಲ್ ನಿರ್ವಹಣೆ, ಕ್ರೀಡೆ, ವಿಮಾನಯಾನ ಇನ್ನೂ ಹಲವು ಆಯ್ಕೆಗಳಿವೆ. ನಿಮಗೆ ನಿಜವಾಗಿ ಇಷ್ಟವಾದುದನ್ನು ಆರಿಸಿ, ನಿರ್ಧರಿಸುವ ಮೊದಲು ನರೇಂದ್ರ ಸರ್ ಜೊತೆ ಮಾತನಾಡಿ.', tipPcm:'<b>💡 ಜಾಣ ನಿರ್ಧಾರ:</b> <b>JEE Main ಮತ್ತು KCET ಎರಡನ್ನೂ</b> (ಮತ್ತು COMEDK) ಬರೆಯಿರಿ. KCET ಎಂಜಿನಿಯರಿಂಗ್ ರ್‍ಯಾಂಕ್‌ನಲ್ಲಿ <b>ಪಿಯುಸಿ PCM ಅಂಕಗಳಿಗೆ 50%</b> ತೂಕ, ಹಾಗಾಗಿ ಬೋರ್ಡ್ ಪರೀಕ್ಷೆಯೂ CET ಯಷ್ಟೇ ಮುಖ್ಯ.', shareP:'📤 ಈ ಪುಟ ಹಂಚಿಕೊಳ್ಳಿ', shareC:'📤 ಹಂಚಿಕೊಳ್ಳಿ', copied:'ಲಿಂಕ್ ನಕಲಾಯಿತು ✓', shareMsg:'🎓 ಪಿಯುಸಿ ವಿಜ್ಞಾನ ವಿದ್ಯಾರ್ಥಿಗಳಿಗೆ ವೃತ್ತಿ ಮಾರ್ಗದರ್ಶನ — ಪರೀಕ್ಷೆ, ಶುಲ್ಕ ಮತ್ತು ಕ್ವಿಜ್ ಜೊತೆ. ನರೇಂದ್ರ ಸರ್, BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್.',
+         vid:['ಹೇಗೆ ಬಳಸುವುದು ನೋಡಿ','1½ ನಿಮಿಷ'], tipSkills:'<b>🛠️ ಕೌಶಲ್ಯ + ಪದವಿ = ಅತ್ಯುತ್ತಮ ಜೋಡಿ.</b> ಕಿರು ಡಿಪ್ಲೊಮಾ ಅಥವಾ ಪ್ರಮಾಣಪತ್ರ ಬೇಗ ಸಂಪಾದನೆಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ; ಪದವಿಯ <b>ಜೊತೆಗೆ</b> (ರಜೆಯಲ್ಲಿ ಅಥವಾ ಆನ್‌ಲೈನ್) ಕೌಶಲ್ಯ ಕೋರ್ಸ್ ನಿಮ್ಮ ಸ್ವವಿವರವನ್ನು ಎದ್ದು ಕಾಣುವಂತೆ ಮಾಡುತ್ತದೆ. ಹಲವು <b>ಉಚಿತ</b>: SWAYAM, NPTEL, ಸ್ಕಿಲ್ ಇಂಡಿಯಾ.', tipBeyond:'<b>🌟 ನಿಮಗೆ ಗೊತ್ತೇ?</b> ಪಿಯುಸಿ ವಿಜ್ಞಾನ <b>ಎಲ್ಲಾ</b> ಬಾಗಿಲುಗಳನ್ನು ತೆರೆದಿಡುತ್ತದೆ. ವೈದ್ಯಕೀಯ ಮತ್ತು ಎಂಜಿನಿಯರಿಂಗ್ ಜೊತೆಗೆ ಕಾನೂನು, CA, ನಿರ್ವಹಣೆ, ಮಾಧ್ಯಮ, ವಿನ್ಯಾಸ, ಹೋಟೆಲ್ ನಿರ್ವಹಣೆ, ಕ್ರೀಡೆ, ವಿಮಾನಯಾನ ಇನ್ನೂ ಹಲವು ಆಯ್ಕೆಗಳಿವೆ. ನಿಮಗೆ ನಿಜವಾಗಿ ಇಷ್ಟವಾದುದನ್ನು ಆರಿಸಿ, ನಿರ್ಧರಿಸುವ ಮೊದಲು ನರೇಂದ್ರ ಸರ್ ಜೊತೆ ಮಾತನಾಡಿ.', tipPcm:'<b>💡 ಜಾಣ ನಿರ್ಧಾರ:</b> <b>JEE Main ಮತ್ತು KCET ಎರಡನ್ನೂ</b> (ಮತ್ತು COMEDK) ಬರೆಯಿರಿ. KCET ಎಂಜಿನಿಯರಿಂಗ್ ರ್‍ಯಾಂಕ್‌ನಲ್ಲಿ <b>ಪಿಯುಸಿ PCM ಅಂಕಗಳಿಗೆ 50%</b> ತೂಕ, ಹಾಗಾಗಿ ಬೋರ್ಡ್ ಪರೀಕ್ಷೆಯೂ CET ಯಷ್ಟೇ ಮುಖ್ಯ.', shareP:'📤 ಈ ಪುಟ ಹಂಚಿಕೊಳ್ಳಿ', shareC:'📤 ಹಂಚಿಕೊಳ್ಳಿ', copied:'ಲಿಂಕ್ ನಕಲಾಯಿತು ✓', shareMsg:'🎓 ಪಿಯುಸಿ ವಿಜ್ಞಾನ ವಿದ್ಯಾರ್ಥಿಗಳಿಗೆ ವೃತ್ತಿ ಮಾರ್ಗದರ್ಶನ — ಪರೀಕ್ಷೆ, ಶುಲ್ಕ ಮತ್ತು ಕ್ವಿಜ್ ಜೊತೆ. ನರೇಂದ್ರ ಸರ್, BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್.',
          see:'ನನ್ನ ಹೊಂದಾಣಿಕೆ ನೋಡಿ', reset:'ಮತ್ತೆ ಆರಂಭಿಸಿ', top:'ನಿಮಗೆ ಹೆಚ್ಚು ಹೊಂದುವ ವೃತ್ತಿಗಳು', need:'ಮೊದಲು ಕನಿಷ್ಠ 5 ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸಿ.',
          lWhat:'ಏನು ಮಾಡುತ್ತೀರಿ', dur:'ಅವಧಿ', exam:'ಪ್ರವೇಶ ಪರೀಕ್ಷೆ', elig:'ಅರ್ಹತೆ', fee:'ಶುಲ್ಕ (ಅಂದಾಜು)', pay:'ಆರಂಭಿಕ ಸಂಬಳ (ಅಂದಾಜು)', scope:'ಭವಿಷ್ಯದ ಅವಕಾಶ',
          exT:'📅 ಪರೀಕ್ಷಾ ಕ್ಯಾಲೆಂಡರ್ (ಸಾಮಾನ್ಯ ತಿಂಗಳುಗಳು)', note:'ಶುಲ್ಕ ಮತ್ತು ಸಂಬಳ ಅಂದಾಜು, ಪ್ರತಿ ವರ್ಷ ಬದಲಾಗುತ್ತವೆ. ನಿರ್ಧರಿಸುವ ಮೊದಲು KEA (cetonline.karnataka.gov.in), NTA ಮತ್ತು ಕಾಲೇಜಿನ ಇತ್ತೀಚಿನ ಸೂಚನೆ ನೋಡಿ. ಗೊಂದಲವೇ? ತರಗತಿಯಲ್ಲಿ ಅಥವಾ WhatsApp ನಲ್ಲಿ ನರೇಂದ್ರ ಸರ್ ಅವರನ್ನು ಕೇಳಿ.' },
@@ -180,7 +181,7 @@ ol.stp{margin:0;padding-left:20px;font-size:14.5px;line-height:1.55}ol.stp li{ma
          tip:'<b>💡 समझदारी:</b> <b>NEET-UG और KCET दोनों</b> के लिए रजिस्टर करें। कर्नाटक में नर्सिंग, फ़ार्मेसी, कृषि, BVSc, BNYS और फ़िज़ियोथेरेपी की सीटें KCET से मिलती हैं, और फ़िज़ियोथेरेपी जल्द NEET पर जा सकती है। दो परीक्षा = ज़्यादा मौके।',
          qT:'मेरे लिए कौन-सा करियर सही है?', qS:'10 छोटे सवालों के जवाब दें और अपने टॉप 3 देखें', qClose:'क्विज़ बंद करें',
          qSub:'कोई सही या गलत जवाब नहीं है। ईमानदारी से जवाब दें!', yes:'हाँ', maybe:'शायद', no:'नहीं',
-         vid:['देखें: कैसे इस्तेमाल करें','1½ मिनट'], tipBeyond:'<b>🌟 क्या आप जानते हैं?</b> पीयूसी साइंस <b>हर</b> दरवाज़ा खुला रखता है। मेडिकल और इंजीनियरिंग के अलावा क़ानून, CA, मैनेजमेंट, मीडिया, डिज़ाइन, होटल मैनेजमेंट, खेल, एविएशन और भी बहुत कुछ चुन सकते हैं। जो सच में पसंद हो वही चुनें, और फ़ैसले से पहले नरेंद्र सर से बात करें।', tipPcm:'<b>💡 समझदारी:</b> <b>JEE Main और KCET दोनों</b> (और COMEDK) दें। KCET इंजीनियरिंग रैंक में <b>पीयूसी PCM अंकों का 50%</b> वज़न है, इसलिए बोर्ड परीक्षा भी CET जितनी ज़रूरी है।', shareP:'📤 यह पेज शेयर करें', shareC:'📤 शेयर', copied:'लिंक कॉपी हो गया ✓', shareMsg:'🎓 पीयूसी साइंस छात्रों के लिए करियर मार्गदर्शन — परीक्षा, फ़ीस और करियर क्विज़ के साथ। नरेंद्र सर, BAIO लर्निंग सिस्टम।',
+         vid:['देखें: कैसे इस्तेमाल करें','1½ मिनट'], tipSkills:'<b>🛠️ स्किल + डिग्री = सबसे अच्छा मेल।</b> छोटा डिप्लोमा या सर्टिफ़िकेट जल्दी कमाने में मदद करता है, और डिग्री के <b>साथ</b> (छुट्टियों में या ऑनलाइन) स्किल कोर्स आपका रिज़्यूमे अलग बनाता है। कई <b>मुफ़्त</b> हैं: SWAYAM, NPTEL, स्किल इंडिया।', tipBeyond:'<b>🌟 क्या आप जानते हैं?</b> पीयूसी साइंस <b>हर</b> दरवाज़ा खुला रखता है। मेडिकल और इंजीनियरिंग के अलावा क़ानून, CA, मैनेजमेंट, मीडिया, डिज़ाइन, होटल मैनेजमेंट, खेल, एविएशन और भी बहुत कुछ चुन सकते हैं। जो सच में पसंद हो वही चुनें, और फ़ैसले से पहले नरेंद्र सर से बात करें।', tipPcm:'<b>💡 समझदारी:</b> <b>JEE Main और KCET दोनों</b> (और COMEDK) दें। KCET इंजीनियरिंग रैंक में <b>पीयूसी PCM अंकों का 50%</b> वज़न है, इसलिए बोर्ड परीक्षा भी CET जितनी ज़रूरी है।', shareP:'📤 यह पेज शेयर करें', shareC:'📤 शेयर', copied:'लिंक कॉपी हो गया ✓', shareMsg:'🎓 पीयूसी साइंस छात्रों के लिए करियर मार्गदर्शन — परीक्षा, फ़ीस और करियर क्विज़ के साथ। नरेंद्र सर, BAIO लर्निंग सिस्टम।',
          see:'मेरे मैच देखें', reset:'फिर से शुरू करें', top:'आपके सबसे अच्छे मैच', need:'पहले कम से कम 5 सवालों के जवाब दें।',
          lWhat:'क्या करेंगे', dur:'अवधि', exam:'प्रवेश परीक्षा', elig:'योग्यता', fee:'फ़ीस (अनुमान)', pay:'शुरुआती वेतन (अनुमान)', scope:'भविष्य',
          exT:'📅 परीक्षा कैलेंडर (आम तौर पर महीने)', note:'फ़ीस और वेतन अनुमानित हैं और हर साल बदलते हैं। फ़ैसले से पहले KEA (cetonline.karnataka.gov.in), NTA और कॉलेज की ताज़ा सूचना ज़रूर देखें। उलझन है? क्लास में या WhatsApp पर नरेंद्र सर से पूछें।' }
@@ -202,9 +203,9 @@ ol.stp{margin:0;padding-left:20px;font-size:14.5px;line-height:1.55}ol.stp li{ma
   function alsoHere(c){ return also(c).filter(function(g){ return stOf(g) === stream; })[0]; }
   function inStream(c){ return stOf(c.g) === stream || !!alsoHere(c); }
   function qKey(){ return 'baio_career_quiz' + (stream === 'pcb' ? '' : '_' + stream); }
-  function quizList(){ return stream === 'pcm' ? D.quizPcm : stream === 'beyond' ? D.quizBeyond : D.quiz; }
+  function quizList(){ return stream === 'pcm' ? D.quizPcm : stream === 'beyond' ? D.quizBeyond : stream === 'skills' ? D.quizSkills : D.quiz; }
   function loadAns(){ try{ ans = JSON.parse(localStorage.getItem(qKey()) || '{}') || {}; }catch(e){ ans = {}; } }
-  try{ var ss = localStorage.getItem('baio_career_stream'); if(ss === 'pcm' || ss === 'beyond') stream = ss; }catch(e){}
+  try{ var ss = localStorage.getItem('baio_career_stream'); if(ss === 'pcm' || ss === 'beyond' || ss === 'skills') stream = ss; }catch(e){}
   var h = location.hash.slice(1);
   var hc = D.list.filter(function(c){ return c.id === h; })[0];
   if(hc){ grp = hc.g; stream = stOf(hc.g); open[hc.id] = true; }
@@ -212,6 +213,7 @@ ol.stp{margin:0;padding-left:20px;font-size:14.5px;line-height:1.55}ol.stp li{ma
   else if(h === 'pcm' || h === 'engineering'){ stream = 'pcm'; }
   else if(h === 'pcb' || h === 'medical'){ stream = 'pcb'; }
   else if(h === 'beyond' || h === 'other'){ stream = 'beyond'; }
+  else if(h === 'skills' || h === 'diploma'){ stream = 'skills'; }
   else if(h === 'quiz') quizOpen = true;
   if(stOf(grp) !== stream) grp = firstGroup(stream);
   loadAns();
@@ -257,7 +259,7 @@ ol.stp{margin:0;padding-left:20px;font-size:14.5px;line-height:1.55}ol.stp li{ma
     var u = UI[lang];
     document.documentElement.lang = lang;
     $('langs').innerHTML = [['en','English'],['kn','ಕನ್ನಡ'],['hi','हिंदी']].map(function(l){ return '<button class="lang'+(l[0]===lang?' on':'')+'" data-l="'+l[0]+'">'+l[1]+'</button>'; }).join('');
-    $('eyebrow').textContent = u.eyebrow; $('h1').textContent = u.h1; $('intro').textContent = u.intro; $('tip').innerHTML = stream === 'pcm' ? u.tipPcm : stream === 'beyond' ? u.tipBeyond : u.tip;
+    $('eyebrow').textContent = u.eyebrow; $('h1').textContent = u.h1; $('intro').textContent = u.intro; $('tip').innerHTML = stream === 'pcm' ? u.tipPcm : stream === 'beyond' ? u.tipBeyond : stream === 'skills' ? u.tipSkills : u.tip;
     $('shareBtn').textContent = u.shareP; $('vidT').innerHTML = '<span class="vp">▶</span><span class="vt">'+u.vid[0]+'</span><span class="vd">'+u.vid[1]+'</span>';
     if(window.CareerReport) window.CareerReport.render($('myReport'), lang, go, D);
     $('qT').textContent = u.qT; $('qS').textContent = u.qS; $('note').textContent = u.note;
