@@ -56,7 +56,24 @@
 
   /* ---------- Career suggestions from results ---------- */
   /* PCM students: no Biology marks and no NEET mocks on file. */
-  function isPcm(r){ var s = r.sub || {}; return s.BIO == null && !r.neet; }
+  function pcmOnly(r){ var s = r.sub || {}; return s.BIO == null && !r.neet; }
+  /* PCMB students (Biology + Maths) can choose their goal: medical (default) or engineering. */
+  var GKEY = 'baio_career_goal', GOAL = {};
+  try{ GOAL = JSON.parse(localStorage.getItem(GKEY) || '{}') || {}; }catch(e){ GOAL = {}; }
+  function canEng(r){ var s = r.sub || {}; return !pcmOnly(r) && (s.MAT != null || !!r.kpcm || !!r.jee); }
+  function keyOf(r){ return (DATA && me && DATA[me] === r) ? me : null; }
+  function engGoal(r){ var k = keyOf(r); return canEng(r) && !!k && GOAL[k] === 'eng'; }
+  function isPcm(r){ return pcmOnly(r) || engGoal(r); }
+  var G = {
+    en:{ l:'🎯 My goal', med:'🩺 Medical', eng:'⚙️ Engineering', note:'You study both Biology and Maths, so both doors are open. Choose your goal to see matching careers and steps.' },
+    kn:{ l:'🎯 ನನ್ನ ಗುರಿ', med:'🩺 ವೈದ್ಯಕೀಯ', eng:'⚙️ ಎಂಜಿನಿಯರಿಂಗ್', note:'ನೀವು ಜೀವಶಾಸ್ತ್ರ ಮತ್ತು ಗಣಿತ ಎರಡನ್ನೂ ಓದುತ್ತಿದ್ದೀರಿ, ಎರಡೂ ದಾರಿ ತೆರೆದಿವೆ. ಹೊಂದುವ ವೃತ್ತಿ ಮತ್ತು ಹಂತಗಳನ್ನು ನೋಡಲು ನಿಮ್ಮ ಗುರಿ ಆಯ್ಕೆಮಾಡಿ.' },
+    hi:{ l:'🎯 मेरा लक्ष्य', med:'🩺 मेडिकल', eng:'⚙️ इंजीनियरिंग', note:'आप बायोलॉजी और गणित दोनों पढ़ते हैं, इसलिए दोनों रास्ते खुले हैं। मेल खाते करियर और कदम देखने के लिए अपना लक्ष्य चुनें।' }
+  };
+  function goalHtml(r, lang){
+    if(!canEng(r)) return '';
+    var g = G[lang] || G.en, e = engGoal(r);
+    return '<div class="goal"><b>'+g.l+'</b><div class="gseg"><button type="button" data-goal="med"'+(e ? '' : ' class="on"')+'>'+g.med+'</button><button type="button" data-goal="eng"'+(e ? ' class="on"' : '')+'>'+g.eng+'</button></div><small>'+g.note+'</small></div>';
+  }
   function suggestPcm(r, add, list){
     var s = r.sub || {}, mat = s.MAT, kp = r.kpcm ? r.kpcm.p : null, jee = r.jee ? r.jee.p : null, th = r.th ? r.th.p : null;
     if(jee != null && jee >= 50) add('iit', { en:'Your JEE mock scores are strong. Aim for JEE Advanced and the IITs.', kn:'ನಿಮ್ಮ JEE ಅಂಕಗಳು ಬಲಿಷ್ಠ. JEE Advanced ಮತ್ತು IIT ಗುರಿ ಇಡಿ.', hi:'आपके JEE अंक मज़बूत हैं। JEE Advanced और IIT का लक्ष्य रखें।' });
@@ -73,7 +90,15 @@
     var neet = r.neet ? r.neet.p : null, kp = r.kpcb ? r.kpcb.p : null, s = r.sub || {}, th = r.th ? r.th.p : null;
     var bio = s.BIO, mat = s.MAT, list = [];
     function add(id, why){ if(!list.some(function(x){ return x.id === id; })) list.push({ id:id, why:why }); }
-    if(isPcm(r)) return suggestPcm(r, add, list);
+    if(isPcm(r)){
+      var L = suggestPcm(r, add, list);
+      if(engGoal(r)){
+        L = L.filter(function(x){ return x.id !== 'nda'; }).slice(0, 3);
+        L.push({ id:'bme', why:{ en:'You know Biology and Maths: biomedical engineering joins medicine and machines.', kn:'ನಿಮಗೆ ಜೀವಶಾಸ್ತ್ರ ಮತ್ತು ಗಣಿತ ಎರಡೂ ಗೊತ್ತು: ಬಯೋಮೆಡಿಕಲ್ ಎಂಜಿನಿಯರಿಂಗ್ ವೈದ್ಯಕೀಯ ಮತ್ತು ಯಂತ್ರಗಳನ್ನು ಜೋಡಿಸುತ್ತದೆ.', hi:'आपको बायोलॉजी और गणित दोनों आते हैं: बायोमेडिकल इंजीनियरिंग चिकित्सा और मशीनों को जोड़ती है।' } });
+        L.push({ id:'btbio', why:{ en:'Biotech engineering uses your Biology strength through KCET (PCM).', kn:'ಬಯೋಟೆಕ್ ಎಂಜಿನಿಯರಿಂಗ್ KCET (PCM) ಮೂಲಕ ನಿಮ್ಮ ಜೀವಶಾಸ್ತ್ರ ಶಕ್ತಿಯನ್ನು ಬಳಸುತ್ತದೆ.', hi:'बायोटेक इंजीनियरिंग KCET (PCM) के ज़रिए आपकी बायोलॉजी की ताक़त का उपयोग करती है।' } });
+      }
+      return L;
+    }
     var sc = r.neet ? r.neet.sc : 0;
     if(neet != null && neet >= 70){
       add('mbbs', { en:'Your NEET mock scores are in the strong band ('+sc+'/720). A govt MBBS seat usually needs about 600+, so keep pushing your weakest subject.', kn:'ನಿಮ್ಮ NEET ಅಂಕಗಳು ಬಲಿಷ್ಠ ಮಟ್ಟದಲ್ಲಿವೆ ('+sc+'/720). ಸರ್ಕಾರಿ MBBS ಸೀಟಿಗೆ ಸಾಮಾನ್ಯವಾಗಿ ಸುಮಾರು 600+ ಬೇಕು; ದುರ್ಬಲ ವಿಷಯವನ್ನು ಇನ್ನಷ್ಟು ಸುಧಾರಿಸಿ.', hi:'आपके NEET अंक मज़बूत स्तर पर हैं ('+sc+'/720)। सरकारी MBBS सीट के लिए आमतौर पर लगभग 600+ चाहिए, कमज़ोर विषय पर और मेहनत करें।' });
@@ -118,7 +143,11 @@
     return out;
   }
   function steps(r){
-    if(isPcm(r)) return stepsPcm(r);
+    if(isPcm(r)){
+      var sp = stepsPcm(r);
+      if(engGoal(r)) sp.unshift({ en:'For an engineering seat, your KCET rank uses PU Physics, Chemistry and Maths marks (50%) plus the CET PCM paper (50%). Keep scoring well in Biology too: it counts for your PU result, and NEET stays open as a backup.', kn:'ಎಂಜಿನಿಯರಿಂಗ್ ಸೀಟಿಗೆ KCET ರ‍್ಯಾಂಕ್ ಪಿಯು ಭೌತ, ರಸಾಯನ, ಗಣಿತ ಅಂಕ (50%) ಮತ್ತು CET PCM ಪತ್ರಿಕೆ (50%) ಬಳಸುತ್ತದೆ. ಜೀವಶಾಸ್ತ್ರದಲ್ಲೂ ಉತ್ತಮ ಅಂಕ ಪಡೆಯಿರಿ: ಅದು ಪಿಯು ಫಲಿತಾಂಶಕ್ಕೆ ಸೇರುತ್ತದೆ, NEET ಬ್ಯಾಕಪ್ ಆಗಿ ಉಳಿಯುತ್ತದೆ.', hi:'इंजीनियरिंग सीट के लिए KCET रैंक में पीयू भौतिकी, रसायन, गणित के अंक (50%) और CET PCM पेपर (50%) गिने जाते हैं। बायोलॉजी में भी अच्छे अंक लाएँ: वह पीयू परिणाम में गिनी जाती है, और NEET बैकअप के रूप में खुला रहता है।' });
+      return sp;
+    }
     var out = [], s = r.sub || {}, pu = r.pu;
     var weakT = Object.keys(s).filter(function(k){ return k !== 'MAT'; }).sort(function(a, b){ return s[a] - s[b]; })[0];
     var neetWeak = null;
@@ -218,11 +247,17 @@
     var u = T[lang] || T.en, h = '';
     if(TLIST) h += '<div class="rhead" style="background:var(--panel2);border-radius:12px;padding:8px 10px"><div><b style="font-size:14px">👨‍🏫 Teacher view</b></div><button type="button" class="lnk" data-rp="tback">← All students</button></div>';
     h += '<div class="rhead"><div><b>'+u.hi+', '+esc(r.name)+' 👋</b><small>'+u.puc[r.pu]+' · '+esc(r.sec || '')+'</small></div>'+(TLIST ? '' : '<button type="button" class="lnk" data-rp="out">'+u.out+'</button>')+'</div>';
+    h += goalHtml(r, lang);
     h += '<h4>'+u.stand+'</h4>';
     if(r.th){ var pi = pIdx(r.th.p), col = ['#2F9E6B','#C9A227','#E08A1E','#D0544B'][pi];
       h += '<div class="mrow"><div class="mh"><b>'+u.theory+'</b><span class="pill" style="background:'+col+'">'+u.pband[pi]+'</span></div>'+bar(r.th.p, col)
         + '<div class="mut">'+esc(u.rank(r.th.rk, r.th.of, r.th.lb))+' · '+u.tests(r.th.n)+' '+trendTxt(u, r.th.tr)+'</div></div>'; }
-    if(isPcm(r)) h += examRow(u, lang, u.kpcm, r.kpcm) + examRow(u, lang, u.jee, r.jee);
+    if(pcmOnly(r)) h += examRow(u, lang, u.kpcm, r.kpcm) + examRow(u, lang, u.jee, r.jee);
+    else if(engGoal(r)){
+      h += examRow(u, lang, u.kpcm, r.kpcm) + examRow(u, lang, u.jee, r.jee);
+      if(r.neet) h += examRow(u, lang, u.neet, r.neet);
+      if(r.kpcb) h += examRow(u, lang, u.kpcb, r.kpcb);
+    }
     else {
       h += examRow(u, lang, u.neet, r.neet) + examRow(u, lang, u.kpcb, r.kpcb);
       if(r.kpcm && (r.sub || {}).MAT != null) h += examRow(u, lang, u.kpcm, r.kpcm);
@@ -272,7 +307,8 @@
     return bits.join('\n');
   }
   function onClick(e){
-    var b = e.target.closest('[data-rp],[data-go],[data-tk]'); if(!b) return;
+    var b = e.target.closest('[data-rp],[data-go],[data-tk],[data-goal]'); if(!b) return;
+    if(b.dataset.goal){ if(me){ if(b.dataset.goal === 'eng') GOAL[me] = 'eng'; else delete GOAL[me]; try{ localStorage.setItem(GKEY, JSON.stringify(GOAL)); }catch(x){} } paint(); return; }
     if(b.dataset.go){ goFn(b.dataset.go); return; }
     if(b.dataset.tk){ me = b.dataset.tk; paint(); box.scrollIntoView({ block:'start' }); return; }
     if(b.dataset.rp === 'tback'){ me = null; paint(); box.scrollIntoView({ block:'start' }); var i = document.getElementById('cpT'); if(i) i.focus({ preventScroll:true }); return; }
