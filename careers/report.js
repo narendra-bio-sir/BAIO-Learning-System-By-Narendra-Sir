@@ -1,0 +1,244 @@
+/* Personalised career report for careers.html.
+   The student enters roll number + report-card password; the matching record in
+   careers/student-data.js (built from analytics.html) is found by sha256(ROLL|PASSWORD).
+   Exposes window.CareerReport = { render(box, lang, go) }. */
+(function(){
+  var KEY = 'baio_career_me';
+  var T = {
+    en:{ h:'🎯 My personal career report', s:'Enter your roll number and report-card password to see where you stand in all your tests, which careers fit your results, and how BAIO can help.',
+      roll:'Roll number', pass:'Report-card password', go:'Show my report', busy:'Checking…', bad:'Roll number or password does not match. Use the same password as your report card. Forgot it? Ask Narendra Sir.',
+      nodata:'Your results could not be loaded. Please check your internet and try again.',
+      hi:'Hi', puc:['','I PUC','II PUC'], out:'Not you? Sign out', print:'🖨️ Save as PDF', share:'📤 Share my report',
+      stand:'📊 Where you stand', theory:'Board / theory tests', neet:'NEET mock tests', kpcb:'KCET (PCB) mock tests', kpcm:'KCET (PCM) mock tests', jee:'JEE mock tests',
+      rank:function(r,n,l){ return 'Rank '+r+' of '+n+' in '+l; }, latest:function(l,s,m){ return 'Latest: '+l+' · '+s+'/'+m; },
+      tests:function(n){ return n+' test'+(n===1?'':'s'); }, up:function(x){ return '↑ up '+x+' pts'; }, down:function(x){ return '↓ down '+x+' pts'; },
+      noTest:'No test taken yet', subj:'📚 Subject strength (theory tests average)', strong:'Strongest', weak:'Needs most work',
+      band:{ strong:'Strong', competitive:'Competitive', 'needs-work':'Needs work', 'high-risk':'High risk' },
+      pband:['Top 10% of class','Top 25% of class','Top half of class','Bottom half of class'],
+      sugg:'🧭 Careers that fit your results', open:'Open →',
+      steps:'✅ What to do next', baio:'📱 How BAIO helps you reach your goal',
+      note:'This report is a guide based on your class tests so far, not a final prediction. Hard work in the coming months can change everything. Talk to Narendra Sir before you decide.',
+      sub:{PHY:'Physics',CHE:'Chemistry',BIO:'Biology',MAT:'Maths'} },
+    kn:{ h:'🎯 ನನ್ನ ವೈಯಕ್ತಿಕ ವೃತ್ತಿ ವರದಿ', s:'ಎಲ್ಲಾ ಪರೀಕ್ಷೆಗಳಲ್ಲಿ ನೀವು ಎಲ್ಲಿದ್ದೀರಿ, ಯಾವ ವೃತ್ತಿಗಳು ನಿಮ್ಮ ಫಲಿತಾಂಶಕ್ಕೆ ಹೊಂದುತ್ತವೆ ಮತ್ತು BAIO ಹೇಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ ಎಂದು ನೋಡಲು ರೋಲ್ ಸಂಖ್ಯೆ ಮತ್ತು ರಿಪೋರ್ಟ್ ಕಾರ್ಡ್ ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ.',
+      roll:'ರೋಲ್ ಸಂಖ್ಯೆ', pass:'ರಿಪೋರ್ಟ್ ಕಾರ್ಡ್ ಪಾಸ್‌ವರ್ಡ್', go:'ನನ್ನ ವರದಿ ತೋರಿಸಿ', busy:'ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ…', bad:'ರೋಲ್ ಸಂಖ್ಯೆ ಅಥವಾ ಪಾಸ್‌ವರ್ಡ್ ಹೊಂದುತ್ತಿಲ್ಲ. ರಿಪೋರ್ಟ್ ಕಾರ್ಡ್‌ನ ಅದೇ ಪಾಸ್‌ವರ್ಡ್ ಬಳಸಿ. ಮರೆತಿದ್ದರೆ ನರೇಂದ್ರ ಸರ್ ಅವರನ್ನು ಕೇಳಿ.',
+      nodata:'ಫಲಿತಾಂಶ ಲೋಡ್ ಆಗಲಿಲ್ಲ. ಇಂಟರ್ನೆಟ್ ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
+      hi:'ನಮಸ್ಕಾರ', puc:['','ಪ್ರಥಮ ಪಿಯುಸಿ','ದ್ವಿತೀಯ ಪಿಯುಸಿ'], out:'ನೀವಲ್ಲವೇ? ಸೈನ್ ಔಟ್', print:'🖨️ PDF ಆಗಿ ಉಳಿಸಿ', share:'📤 ನನ್ನ ವರದಿ ಹಂಚಿಕೊಳ್ಳಿ',
+      stand:'📊 ನೀವು ಎಲ್ಲಿದ್ದೀರಿ', theory:'ಬೋರ್ಡ್ / ಥಿಯರಿ ಪರೀಕ್ಷೆಗಳು', neet:'NEET ಮಾಕ್ ಟೆಸ್ಟ್‌ಗಳು', kpcb:'KCET (PCB) ಮಾಕ್ ಟೆಸ್ಟ್‌ಗಳು', kpcm:'KCET (PCM) ಮಾಕ್ ಟೆಸ್ಟ್‌ಗಳು', jee:'JEE ಮಾಕ್ ಟೆಸ್ಟ್‌ಗಳು',
+      rank:function(r,n,l){ return l+' ನಲ್ಲಿ '+n+' ರಲ್ಲಿ '+r+'ನೇ ರ್‍ಯಾಂಕ್'; }, latest:function(l,s,m){ return 'ಇತ್ತೀಚಿನದು: '+l+' · '+s+'/'+m; },
+      tests:function(n){ return n+' ಪರೀಕ್ಷೆ'; }, up:function(x){ return '↑ '+x+' ಅಂಕ ಏರಿಕೆ'; }, down:function(x){ return '↓ '+x+' ಅಂಕ ಇಳಿಕೆ'; },
+      noTest:'ಇನ್ನೂ ಪರೀಕ್ಷೆ ಬರೆದಿಲ್ಲ', subj:'📚 ವಿಷಯವಾರು ಸಾಮರ್ಥ್ಯ (ಥಿಯರಿ ಪರೀಕ್ಷೆಗಳ ಸರಾಸರಿ)', strong:'ಅತ್ಯಂತ ಬಲ', weak:'ಹೆಚ್ಚು ಶ್ರಮ ಬೇಕು',
+      band:{ strong:'ಬಲಿಷ್ಠ', competitive:'ಸ್ಪರ್ಧಾತ್ಮಕ', 'needs-work':'ಇನ್ನಷ್ಟು ಶ್ರಮ ಬೇಕು', 'high-risk':'ಅಪಾಯದ ಮಟ್ಟ' },
+      pband:['ತರಗತಿಯ ಮೊದಲ 10%','ತರಗತಿಯ ಮೊದಲ 25%','ತರಗತಿಯ ಮೇಲಿನ ಅರ್ಧ','ತರಗತಿಯ ಕೆಳಗಿನ ಅರ್ಧ'],
+      sugg:'🧭 ನಿಮ್ಮ ಫಲಿತಾಂಶಕ್ಕೆ ಹೊಂದುವ ವೃತ್ತಿಗಳು', open:'ತೆರೆಯಿರಿ →',
+      steps:'✅ ಮುಂದೆ ಏನು ಮಾಡಬೇಕು', baio:'📱 ನಿಮ್ಮ ಗುರಿ ತಲುಪಲು BAIO ಹೇಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ',
+      note:'ಈ ವರದಿ ಇದುವರೆಗಿನ ತರಗತಿ ಪರೀಕ್ಷೆಗಳ ಆಧಾರದ ಮಾರ್ಗದರ್ಶಿ, ಅಂತಿಮ ಭವಿಷ್ಯವಾಣಿ ಅಲ್ಲ. ಮುಂದಿನ ತಿಂಗಳುಗಳ ಶ್ರಮ ಎಲ್ಲವನ್ನೂ ಬದಲಾಯಿಸಬಹುದು. ನಿರ್ಧರಿಸುವ ಮೊದಲು ನರೇಂದ್ರ ಸರ್ ಜೊತೆ ಮಾತನಾಡಿ.',
+      sub:{PHY:'ಭೌತಶಾಸ್ತ್ರ',CHE:'ರಸಾಯನಶಾಸ್ತ್ರ',BIO:'ಜೀವಶಾಸ್ತ್ರ',MAT:'ಗಣಿತ'} },
+    hi:{ h:'🎯 मेरी पर्सनल करियर रिपोर्ट', s:'अपना रोल नंबर और रिपोर्ट कार्ड पासवर्ड डालें और देखें कि सभी टेस्ट में आप कहाँ हैं, कौन-से करियर आपके नतीजों के अनुसार सही हैं, और BAIO कैसे मदद करेगा।',
+      roll:'रोल नंबर', pass:'रिपोर्ट कार्ड पासवर्ड', go:'मेरी रिपोर्ट दिखाएँ', busy:'जाँच हो रही है…', bad:'रोल नंबर या पासवर्ड मेल नहीं खाता। रिपोर्ट कार्ड वाला ही पासवर्ड डालें। भूल गए? नरेंद्र सर से पूछें।',
+      nodata:'नतीजे लोड नहीं हुए। इंटरनेट जाँचें और फिर कोशिश करें।',
+      hi:'नमस्ते', puc:['','प्रथम पीयूसी','द्वितीय पीयूसी'], out:'आप नहीं? साइन आउट', print:'🖨️ PDF सेव करें', share:'📤 मेरी रिपोर्ट शेयर करें',
+      stand:'📊 आप कहाँ हैं', theory:'बोर्ड / थ्योरी टेस्ट', neet:'NEET मॉक टेस्ट', kpcb:'KCET (PCB) मॉक टेस्ट', kpcm:'KCET (PCM) मॉक टेस्ट', jee:'JEE मॉक टेस्ट',
+      rank:function(r,n,l){ return l+' में '+n+' में से '+r+'वाँ रैंक'; }, latest:function(l,s,m){ return 'ताज़ा: '+l+' · '+s+'/'+m; },
+      tests:function(n){ return n+' टेस्ट'; }, up:function(x){ return '↑ '+x+' अंक ऊपर'; }, down:function(x){ return '↓ '+x+' अंक नीचे'; },
+      noTest:'अभी कोई टेस्ट नहीं दिया', subj:'📚 विषयवार ताक़त (थ्योरी टेस्ट का औसत)', strong:'सबसे मज़बूत', weak:'सबसे ज़्यादा मेहनत चाहिए',
+      band:{ strong:'मज़बूत', competitive:'प्रतिस्पर्धी', 'needs-work':'और मेहनत चाहिए', 'high-risk':'जोखिम में' },
+      pband:['क्लास के टॉप 10%','क्लास के टॉप 25%','क्लास का ऊपरी आधा','क्लास का निचला आधा'],
+      sugg:'🧭 आपके नतीजों के अनुसार करियर', open:'खोलें →',
+      steps:'✅ आगे क्या करें', baio:'📱 लक्ष्य तक पहुँचने में BAIO कैसे मदद करता है',
+      note:'यह रिपोर्ट अब तक के क्लास टेस्ट पर आधारित एक मार्गदर्शन है, अंतिम भविष्यवाणी नहीं। आने वाले महीनों की मेहनत सब बदल सकती है। फ़ैसले से पहले नरेंद्र सर से बात करें।',
+      sub:{PHY:'भौतिकी',CHE:'रसायन',BIO:'जीवविज्ञान',MAT:'गणित'} }
+  };
+  function bandOf(p){ return p >= 70 ? 'strong' : p >= 50 ? 'competitive' : p >= 30 ? 'needs-work' : 'high-risk'; }
+  var BC = { strong:'#2F9E6B', competitive:'#C9A227', 'needs-work':'#E08A1E', 'high-risk':'#D0544B' };
+  function pIdx(p){ return p >= 90 ? 0 : p >= 75 ? 1 : p >= 50 ? 2 : 3; }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+  function M(o, lang){ return typeof o === 'string' ? o : (o[lang] || o.en); }
+
+  /* ---------- Career suggestions from results ---------- */
+  function suggest(r){
+    var neet = r.neet ? r.neet.p : null, kp = r.kpcb ? r.kpcb.p : null, s = r.sub || {}, th = r.th ? r.th.p : null;
+    var bio = s.BIO, mat = s.MAT, list = [];
+    function add(id, why){ if(!list.some(function(x){ return x.id === id; })) list.push({ id:id, why:why }); }
+    var sc = r.neet ? r.neet.sc : 0;
+    if(neet != null && neet >= 70){
+      add('mbbs', { en:'Your NEET mock scores are in the strong band ('+sc+'/720). A govt MBBS seat usually needs about 600+, so keep pushing your weakest subject.', kn:'ನಿಮ್ಮ NEET ಅಂಕಗಳು ಬಲಿಷ್ಠ ಮಟ್ಟದಲ್ಲಿವೆ ('+sc+'/720). ಸರ್ಕಾರಿ MBBS ಸೀಟಿಗೆ ಸಾಮಾನ್ಯವಾಗಿ ಸುಮಾರು 600+ ಬೇಕು; ದುರ್ಬಲ ವಿಷಯವನ್ನು ಇನ್ನಷ್ಟು ಸುಧಾರಿಸಿ.', hi:'आपके NEET अंक मज़बूत स्तर पर हैं ('+sc+'/720)। सरकारी MBBS सीट के लिए आमतौर पर लगभग 600+ चाहिए, कमज़ोर विषय पर और मेहनत करें।' });
+      add('bds', { en:'Same NEET exam, a great second choice.', kn:'ಅದೇ NEET ಪರೀಕ್ಷೆ, ಉತ್ತಮ ಎರಡನೇ ಆಯ್ಕೆ.', hi:'वही NEET परीक्षा, बढ़िया दूसरा विकल्प।' });
+      add('bvsc', { en:'Karnataka seats come through KCET: a good extra chance.', kn:'ಕರ್ನಾಟಕ ಸೀಟುಗಳು KCET ಮೂಲಕ: ಹೆಚ್ಚುವರಿ ಅವಕಾಶ.', hi:'कर्नाटक की सीटें KCET से: एक और मौका।' });
+    } else if(neet != null && neet >= 50){
+      add('bds', { en:'Your NEET mocks are in the competitive band ('+sc+'/720). BDS is a realistic NEET target.', kn:'ನಿಮ್ಮ NEET ಅಂಕ ಸ್ಪರ್ಧಾತ್ಮಕ ಮಟ್ಟದಲ್ಲಿದೆ ('+sc+'/720). BDS ವಾಸ್ತವಿಕ NEET ಗುರಿ.', hi:'आपके NEET अंक प्रतिस्पर्धी स्तर पर हैं ('+sc+'/720)। BDS एक वास्तविक NEET लक्ष्य है।' });
+      add('ayush', { en:'A strong NEET option at your current level.', kn:'ನಿಮ್ಮ ಈಗಿನ ಮಟ್ಟಕ್ಕೆ ಉತ್ತಮ NEET ಆಯ್ಕೆ.', hi:'आपके मौजूदा स्तर पर अच्छा NEET विकल्प।' });
+      add('mbbs', { en:'Stretch goal: a govt MBBS seat usually needs about 600+/720, so you need to add roughly '+Math.max(0, 600 - sc)+' marks. Possible with steady work.', kn:'ದೊಡ್ಡ ಗುರಿ: ಸರ್ಕಾರಿ MBBS ಗೆ ಸಾಮಾನ್ಯವಾಗಿ ಸುಮಾರು 600+/720 ಬೇಕು; ಇನ್ನೂ ಸುಮಾರು '+Math.max(0, 600 - sc)+' ಅಂಕ ಹೆಚ್ಚಿಸಬೇಕು. ನಿರಂತರ ಶ್ರಮದಿಂದ ಸಾಧ್ಯ.', hi:'बड़ा लक्ष्य: सरकारी MBBS के लिए आमतौर पर लगभग 600+/720 चाहिए, यानी लगभग '+Math.max(0, 600 - sc)+' अंक और बढ़ाने हैं। लगातार मेहनत से संभव।' });
+      add('bvsc', { en:'Karnataka seats come through KCET, so it is a good extra chance.', kn:'ಕರ್ನಾಟಕ ಸೀಟುಗಳು KCET ಮೂಲಕ, ಹಾಗಾಗಿ ಹೆಚ್ಚುವರಿ ಅವಕಾಶ.', hi:'कर्नाटक की सीटें KCET से, इसलिए एक और अच्छा मौका।' });
+    } else if(neet != null && neet >= 30){
+      add('ayush', { en:'Reachable through NEET if you raise your score steadily.', kn:'NEET ಅಂಕವನ್ನು ಹಂತಹಂತವಾಗಿ ಹೆಚ್ಚಿಸಿದರೆ ಸಾಧ್ಯ.', hi:'NEET स्कोर धीरे-धीरे बढ़ाएँ तो संभव।' });
+      add('nursing', { en:'Through KCET; huge job demand in India and abroad.', kn:'KCET ಮೂಲಕ; ಭಾರತ ಮತ್ತು ವಿದೇಶದಲ್ಲಿ ಭಾರಿ ಬೇಡಿಕೆ.', hi:'KCET से; भारत और विदेश में भारी माँग।' });
+      add('bpharm', { en:'Through KCET; good if you like Chemistry and medicines.', kn:'KCET ಮೂಲಕ; ರಸಾಯನ ಮತ್ತು ಔಷಧಿ ಇಷ್ಟವಾದರೆ ಉತ್ತಮ.', hi:'KCET से; रसायन और दवाएँ पसंद हों तो अच्छा।' });
+      add('bvsc', { en:'Through KCET in Karnataka.', kn:'ಕರ್ನಾಟಕದಲ್ಲಿ KCET ಮೂಲಕ.', hi:'कर्नाटक में KCET से।' });
+    } else {
+      add('nursing', { en:'Through KCET; a steady career with jobs everywhere.', kn:'KCET ಮೂಲಕ; ಎಲ್ಲೆಡೆ ಉದ್ಯೋಗವಿರುವ ಸ್ಥಿರ ವೃತ್ತಿ.', hi:'KCET से; हर जगह नौकरी वाला स्थिर करियर।' });
+      add('ahs', { en:'Every hospital needs lab, imaging and OT experts.', kn:'ಪ್ರತಿ ಆಸ್ಪತ್ರೆಗೆ ಲ್ಯಾಬ್, ಇಮೇಜಿಂಗ್, OT ತಜ್ಞರು ಬೇಕು.', hi:'हर अस्पताल को लैब, इमेजिंग, OT विशेषज्ञ चाहिए।' });
+      add('agri', { en:'Through KCET; good govt job options.', kn:'KCET ಮೂಲಕ; ಉತ್ತಮ ಸರ್ಕಾರಿ ಉದ್ಯೋಗ ಅವಕಾಶ.', hi:'KCET से; अच्छे सरकारी नौकरी विकल्प।' });
+      add('bsc', { en:'Admission on PU marks; build towards MSc and a stable job.', kn:'ಪಿಯುಸಿ ಅಂಕಗಳ ಮೇಲೆ ಪ್ರವೇಶ; MSc ಮತ್ತು ಸ್ಥಿರ ಉದ್ಯೋಗದತ್ತ.', hi:'पीयूसी अंकों पर प्रवेश; MSc और स्थिर नौकरी की ओर।' });
+    }
+    if(kp != null && kp >= 50){
+      add('bpharm', { en:'Your KCET (PCB) mock score is good, so KCET courses are in reach.', kn:'ನಿಮ್ಮ KCET (PCB) ಅಂಕ ಉತ್ತಮ, KCET ಕೋರ್ಸ್‌ಗಳು ಕೈಗೆಟುಕುತ್ತವೆ.', hi:'आपका KCET (PCB) स्कोर अच्छा है, KCET कोर्स पहुँच में हैं।' });
+      add('agri', { en:'Good KCET score: agriculture universities are a solid option.', kn:'ಉತ್ತಮ KCET ಅಂಕ: ಕೃಷಿ ವಿವಿಗಳು ಉತ್ತಮ ಆಯ್ಕೆ.', hi:'अच्छा KCET स्कोर: कृषि विश्वविद्यालय अच्छा विकल्प।' });
+    }
+    if(bio != null && bio >= 75 && th != null && th >= 75) add('iiser', { en:'Strong Biology and top-quarter class rank: research is a great fit.', kn:'ಬಲಿಷ್ಠ ಜೀವಶಾಸ್ತ್ರ ಮತ್ತು ಉನ್ನತ ರ್‍ಯಾಂಕ್: ಸಂಶೋಧನೆ ಸೂಕ್ತ.', hi:'मज़बूत जीवविज्ञान और ऊँचा रैंक: रिसर्च अच्छा विकल्प।' });
+    if((mat != null && mat >= 60) || (r.kpcm && r.kpcm.p >= 50)) add('btbio', { en:'You are good at Maths too, so biotech engineering is open to you.', kn:'ಗಣಿತದಲ್ಲೂ ಉತ್ತಮ, ಬಯೋಟೆಕ್ ಎಂಜಿನಿಯರಿಂಗ್ ನಿಮಗೆ ತೆರೆದಿದೆ.', hi:'गणित में भी अच्छे हैं, बायोटेक इंजीनियरिंग आपके लिए खुला है।' });
+    return list.slice(0, 5);
+  }
+
+  /* ---------- Next steps ---------- */
+  function steps(r){
+    var out = [], s = r.sub || {}, pu = r.pu;
+    var weakT = Object.keys(s).filter(function(k){ return k !== 'MAT'; }).sort(function(a, b){ return s[a] - s[b]; })[0];
+    var neetWeak = null;
+    if(r.neet && r.neet.sub && r.neet.sub.length){
+      neetWeak = r.neet.sub.map(function(x){ return [x[0], x[1] / x[2]]; }).sort(function(a, b){ return a[1] - b[1]; })[0][0];
+    }
+    var nm = { Phy:'PHY', Che:'CHE', Bio:'BIO', Mat:'MAT' };
+    if(pu === 2) out.push({ en:'Board exam starts late February and NEET is in early May: about 6 months left. Fix a daily timetable now (Exam Corner has yours).', kn:'ಬೋರ್ಡ್ ಪರೀಕ್ಷೆ ಫೆಬ್ರವರಿ ಕೊನೆಯಲ್ಲಿ, NEET ಮೇ ಆರಂಭದಲ್ಲಿ: ಸುಮಾರು 6 ತಿಂಗಳು ಉಳಿದಿದೆ. ಈಗಲೇ ದೈನಂದಿನ ವೇಳಾಪಟ್ಟಿ ಮಾಡಿ (ಪರೀಕ್ಷಾ ಕಾರ್ನರ್‌ನಲ್ಲಿ ನಿಮ್ಮದು ಇದೆ).', hi:'बोर्ड परीक्षा फ़रवरी के अंत में और NEET मई की शुरुआत में: लगभग 6 महीने बचे हैं। अभी से रोज़ का टाइमटेबल बनाएँ (एग्ज़ाम कॉर्नर में आपका है)।' });
+    else out.push({ en:'You have about 1½ years before NEET and KCET. Finish each I PUC chapter well now: almost half of NEET comes from I PUC.', kn:'NEET ಮತ್ತು KCET ಗೆ ಸುಮಾರು 1½ ವರ್ಷ ಇದೆ. ಪ್ರಥಮ ಪಿಯುಸಿ ಅಧ್ಯಾಯಗಳನ್ನು ಈಗಲೇ ಚೆನ್ನಾಗಿ ಮುಗಿಸಿ: NEET ನ ಸುಮಾರು ಅರ್ಧ ಪ್ರಥಮ ಪಿಯುಸಿಯಿಂದ.', hi:'NEET और KCET में लगभग 1½ साल हैं। प्रथम पीयूसी के अध्याय अभी अच्छे से पूरे करें: NEET का लगभग आधा प्रथम पीयूसी से आता है।' });
+    if(neetWeak){
+      var k = nm[neetWeak] || neetWeak;
+      out.push({ en:'In NEET mocks, '+T.en.sub[k]+' is pulling your score down. Give it one extra hour daily and solve 30 MCQs a day.', kn:'NEET ಮಾಕ್‌ಗಳಲ್ಲಿ '+T.kn.sub[k]+' ನಿಮ್ಮ ಅಂಕ ಕಡಿಮೆ ಮಾಡುತ್ತಿದೆ. ದಿನಕ್ಕೆ ಒಂದು ಗಂಟೆ ಹೆಚ್ಚು ಕೊಟ್ಟು 30 MCQ ಬಿಡಿಸಿ.', hi:'NEET मॉक में '+T.hi.sub[k]+' आपका स्कोर घटा रहा है। रोज़ एक घंटा ज़्यादा दें और 30 MCQ हल करें।' });
+    }
+    if(weakT && s[weakT] < 60) out.push({ en:'In class tests, '+T.en.sub[weakT]+' is your weakest ('+Math.round(s[weakT])+'%). Board marks decide eligibility (50% in PCB for NEET courses), so revise its basics first.', kn:'ತರಗತಿ ಪರೀಕ್ಷೆಗಳಲ್ಲಿ '+T.kn.sub[weakT]+' ಅತ್ಯಂತ ದುರ್ಬಲ ('+Math.round(s[weakT])+'%). ಅರ್ಹತೆಗೆ ಬೋರ್ಡ್ ಅಂಕ ಮುಖ್ಯ (NEET ಕೋರ್ಸ್‌ಗಳಿಗೆ PCB ಯಲ್ಲಿ 50%), ಮೊದಲು ಮೂಲಾಂಶ ಪುನರಾವರ್ತಿಸಿ.', hi:'क्लास टेस्ट में '+T.hi.sub[weakT]+' सबसे कमज़ोर है ('+Math.round(s[weakT])+'%)। योग्यता के लिए बोर्ड अंक ज़रूरी हैं (NEET कोर्स के लिए PCB में 50%), पहले बेसिक्स दोहराएँ।' });
+    var drop = [r.th, r.neet, r.kpcb].filter(function(x){ return x && x.tr != null && x.tr <= -5; }).length;
+    if(drop) out.push({ en:'Your recent scores have dropped. Do not panic: go back to the chapters of your last test, fix the mistakes, and take the next test seriously.', kn:'ಇತ್ತೀಚಿನ ಅಂಕಗಳು ಇಳಿದಿವೆ. ಆತಂಕ ಬೇಡ: ಕೊನೆಯ ಪರೀಕ್ಷೆಯ ಅಧ್ಯಾಯಗಳಿಗೆ ಹಿಂತಿರುಗಿ, ತಪ್ಪುಗಳನ್ನು ಸರಿಪಡಿಸಿ, ಮುಂದಿನ ಪರೀಕ್ಷೆಯನ್ನು ಗಂಭೀರವಾಗಿ ಬರೆಯಿರಿ.', hi:'हाल के अंक गिरे हैं। घबराएँ नहीं: पिछले टेस्ट के अध्याय फिर पढ़ें, गलतियाँ सुधारें, और अगला टेस्ट गंभीरता से दें।' });
+    else if([r.th, r.neet, r.kpcb].some(function(x){ return x && x.tr != null && x.tr >= 5; })) out.push({ en:'Your scores are rising. Great work: keep the same routine.', kn:'ನಿಮ್ಮ ಅಂಕಗಳು ಏರುತ್ತಿವೆ. ಅದ್ಭುತ: ಇದೇ ದಿನಚರಿ ಮುಂದುವರಿಸಿ.', hi:'आपके अंक बढ़ रहे हैं। शानदार: यही दिनचर्या जारी रखें।' });
+    if(!r.neet) out.push({ en:'You have not written a NEET mock yet. Write every NEET test in college: it is the only way to know your real level.', kn:'ನೀವು ಇನ್ನೂ NEET ಮಾಕ್ ಬರೆದಿಲ್ಲ. ಕಾಲೇಜಿನ ಪ್ರತಿ NEET ಟೆಸ್ಟ್ ಬರೆಯಿರಿ: ನಿಮ್ಮ ನಿಜವಾದ ಮಟ್ಟ ತಿಳಿಯುವ ಏಕೈಕ ದಾರಿ.', hi:'आपने अभी तक NEET मॉक नहीं दिया। कॉलेज का हर NEET टेस्ट दें: अपना असली स्तर जानने का यही तरीका है।' });
+    out.push({ en:'Register for both NEET-UG and KCET so you have more than one door open.', kn:'ಒಂದಕ್ಕಿಂತ ಹೆಚ್ಚು ಅವಕಾಶಕ್ಕಾಗಿ NEET-UG ಮತ್ತು KCET ಎರಡಕ್ಕೂ ನೋಂದಾಯಿಸಿ.', hi:'एक से ज़्यादा रास्ते खुले रखने के लिए NEET-UG और KCET दोनों में रजिस्टर करें।' });
+    return out;
+  }
+
+  /* ---------- How BAIO helps (tailored) ---------- */
+  function helps(r){
+    var s = r.sub || {}, out = [];
+    var pk = r.pu === 2 ? 'II PUC' : 'I PUC';
+    out.push({ u:'index.html', e:'📖', t:{ en:'Chapter Study Mode + MCQs', kn:'ಅಧ್ಯಾಯ ಸ್ಟಡಿ ಮೋಡ್ + MCQ', hi:'अध्याय स्टडी मोड + MCQ' }, d:{ en:'Learn every '+pk+' Biology chapter step by step, then test yourself with NEET-style MCQs.', kn:'ಪ್ರತಿ '+pk+' ಜೀವಶಾಸ್ತ್ರ ಅಧ್ಯಾಯವನ್ನು ಹಂತಹಂತವಾಗಿ ಕಲಿಯಿರಿ, ನಂತರ NEET ಮಾದರಿ MCQ.', hi:'हर '+pk+' बायोलॉजी अध्याय स्टेप-बाय-स्टेप सीखें, फिर NEET जैसे MCQ।' } });
+    if(r.neet || r.pu === 2) out.push({ u:'neet-3-steps.html', e:'🩺', t:{ en:'NEET in 3 steps', kn:'3 ಹಂತಗಳಲ್ಲಿ NEET', hi:'3 स्टेप में NEET' }, d:{ en:'Study → practise → mock test: the routine that lifts NEET scores.', kn:'ಓದು → ಅಭ್ಯಾಸ → ಮಾಕ್ ಟೆಸ್ಟ್: NEET ಅಂಕ ಹೆಚ್ಚಿಸುವ ದಿನಚರಿ.', hi:'पढ़ो → अभ्यास → मॉक टेस्ट: NEET स्कोर बढ़ाने वाली दिनचर्या।' } });
+    out.push({ u:'tricks.html', e:'🧠', t:{ en:'Short Notes & Tricks', kn:'ಶಾರ್ಟ್ ನೋಟ್ಸ್ ಮತ್ತು ಟ್ರಿಕ್ಸ್', hi:'शॉर्ट नोट्स और ट्रिक्स' }, d:{ en:'One-page notes, memory tricks and exam traps for fast revision.', kn:'ವೇಗದ ಪುನರಾವರ್ತನೆಗೆ ಒಂದು ಪುಟದ ನೋಟ್ಸ್, ಟ್ರಿಕ್ಸ್, ಪರೀಕ್ಷಾ ಬಲೆಗಳು.', hi:'तेज़ दोहराव के लिए एक पेज के नोट्स, ट्रिक्स, परीक्षा जाल।' } });
+    if((s.PHY != null && s.PHY < 60) || (s.CHE != null && s.CHE < 60) || (s.MAT != null && s.MAT < 60))
+      out.push({ u:'pcm.html', e:'⚛️', t:{ en:'Physics, Chemistry & Maths', kn:'ಭೌತ, ರಸಾಯನ ಮತ್ತು ಗಣಿತ', hi:'भौतिकी, रसायन और गणित' }, d:{ en:'Solved problems with "Explain simply" and voice explanation for your weaker subjects.', kn:'ದುರ್ಬಲ ವಿಷಯಗಳಿಗೆ "ಸರಳವಾಗಿ ವಿವರಿಸಿ" ಮತ್ತು ಧ್ವನಿ ವಿವರಣೆಯೊಂದಿಗೆ ಬಿಡಿಸಿದ ಸಮಸ್ಯೆಗಳು.', hi:'कमज़ोर विषयों के लिए "आसान भाषा में" और आवाज़ वाली व्याख्या के साथ हल किए सवाल।' } });
+    out.push({ u:'reels.html', e:'🎬', t:{ en:'Revision Reels', kn:'ಪುನರಾವರ್ತನೆ ರೀಲ್ಸ್', hi:'रिवीज़न रील्स' }, d:{ en:'One-minute videos of board-important topics, plus shayari and comedy to remember.', kn:'ಬೋರ್ಡ್ ಮುಖ್ಯ ವಿಷಯಗಳ ಒಂದು ನಿಮಿಷದ ವಿಡಿಯೋಗಳು, ಶಾಯರಿ ಮತ್ತು ಹಾಸ್ಯ.', hi:'बोर्ड-ज़रूरी टॉपिक के एक मिनट के वीडियो, शायरी और कॉमेडी।' } });
+    out.push({ u:'exam-corner.html', e:'📝', t:{ en:'Exam Corner', kn:'ಪರೀಕ್ಷಾ ಕಾರ್ನರ್', hi:'एग्ज़ाम कॉर्नर' }, d:{ en:'Your personal timetable, practice papers and exam tips.', kn:'ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ವೇಳಾಪಟ್ಟಿ, ಅಭ್ಯಾಸ ಪತ್ರಿಕೆಗಳು, ಪರೀಕ್ಷಾ ಸಲಹೆಗಳು.', hi:'आपका पर्सनल टाइमटेबल, प्रैक्टिस पेपर और टिप्स।' } });
+    out.push({ u:'flashcards.html', e:'🃏', t:{ en:'Flash Cards & Quick Cards', kn:'ಫ್ಲ್ಯಾಶ್ ಕಾರ್ಡ್‌ಗಳು', hi:'फ़्लैश कार्ड' }, d:{ en:'10 minutes a day on the bus or before sleep keeps facts fresh.', kn:'ಬಸ್‌ನಲ್ಲಿ ಅಥವಾ ಮಲಗುವ ಮುನ್ನ ದಿನಕ್ಕೆ 10 ನಿಮಿಷ.', hi:'बस में या सोने से पहले रोज़ 10 मिनट।' } });
+    out.push({ u:'offline.html', e:'📥', t:{ en:'Use BAIO offline', kn:'ಆಫ್‌ಲೈನ್‌ನಲ್ಲಿ BAIO', hi:'ऑफ़लाइन BAIO' }, d:{ en:'Save chapters once and study even without internet.', kn:'ಒಮ್ಮೆ ಉಳಿಸಿ, ಇಂಟರ್ನೆಟ್ ಇಲ್ಲದೆಯೂ ಓದಿ.', hi:'एक बार सेव करें, बिना इंटरनेट के भी पढ़ें।' } });
+    return out;
+  }
+
+  /* ---------- UI ---------- */
+  var DATA = null, me = null, loading = false;
+  try{ me = localStorage.getItem(KEY); }catch(e){}
+  function loadData(cb){
+    if(window.CAREER_STUDENTS){ DATA = window.CAREER_STUDENTS; cb(true); return; }
+    var sc = document.createElement('script'); sc.src = 'careers/student-data.js?v=1';
+    sc.onload = function(){ DATA = window.CAREER_STUDENTS || null; cb(!!DATA); };
+    sc.onerror = function(){ cb(false); };
+    document.head.appendChild(sc);
+  }
+  function sha(s){
+    var b = new TextEncoder().encode(s);
+    return crypto.subtle.digest('SHA-256', b).then(function(h){ return Array.from(new Uint8Array(h)).map(function(x){ return ('0' + x.toString(16)).slice(-2); }).join(''); });
+  }
+  function bar(p, color){ p = Math.max(0, Math.min(100, p)); return '<span class="mbar"><i style="width:'+p+'%;background:'+color+'"></i></span>'; }
+  function trendTxt(u, tr){ return tr == null ? '' : tr >= 0 ? '<span class="up">'+u.up(tr)+'</span>' : '<span class="dn">'+u.down(Math.abs(tr))+'</span>'; }
+  function examRow(u, lang, label, x){
+    if(!x) return '<div class="mrow"><div class="mh"><b>'+label+'</b><span class="mut">'+u.noTest+'</span></div></div>';
+    var b = bandOf(x.p);
+    return '<div class="mrow"><div class="mh"><b>'+label+'</b><span class="pill" style="background:'+BC[b]+'">'+u.band[b]+' · '+Math.round(x.p)+'%</span></div>'
+      + bar(x.p, BC[b]) + '<div class="mut">'+esc(u.latest(x.lb, x.sc, x.mx))+' · '+u.tests(x.n)+' '+trendTxt(u, x.tr)+'</div>'
+      + (x.sub && x.sub.length ? '<div class="chipsm">'+x.sub.map(function(sb){ return '<span>'+sb[0]+' '+sb[1]+'/'+sb[2]+'</span>'; }).join('')+'</div>' : '') + '</div>';
+  }
+  function reportHtml(r, lang, D){
+    var u = T[lang] || T.en, h = '';
+    h += '<div class="rhead"><div><b>'+u.hi+', '+esc(r.name)+' 👋</b><small>'+u.puc[r.pu]+' · '+esc(r.sec || '')+'</small></div><button type="button" class="lnk" data-rp="out">'+u.out+'</button></div>';
+    h += '<h4>'+u.stand+'</h4>';
+    if(r.th){ var pi = pIdx(r.th.p), col = ['#2F9E6B','#C9A227','#E08A1E','#D0544B'][pi];
+      h += '<div class="mrow"><div class="mh"><b>'+u.theory+'</b><span class="pill" style="background:'+col+'">'+u.pband[pi]+'</span></div>'+bar(r.th.p, col)
+        + '<div class="mut">'+esc(u.rank(r.th.rk, r.th.of, r.th.lb))+' · '+u.tests(r.th.n)+' '+trendTxt(u, r.th.tr)+'</div></div>'; }
+    h += examRow(u, lang, u.neet, r.neet) + examRow(u, lang, u.kpcb, r.kpcb);
+    if(r.kpcm && (r.sub || {}).MAT != null) h += examRow(u, lang, u.kpcm, r.kpcm);
+    var s = r.sub || {}, ks = ['BIO','CHE','PHY','MAT'].filter(function(k){ return s[k] != null; });
+    if(ks.length){
+      var sorted = ks.slice().sort(function(a, b){ return s[b] - s[a]; });
+      h += '<h4>'+u.subj+'</h4>' + ks.map(function(k){ var p = s[k], c = p >= 70 ? BC.strong : p >= 50 ? BC.competitive : p >= 35 ? BC['needs-work'] : BC['high-risk'];
+        return '<div class="srow"><span class="sl">'+u.sub[k]+(k === sorted[0] ? ' ⭐' : '')+(k === sorted[sorted.length-1] && ks.length > 1 ? ' ⚠️' : '')+'</span>'+bar(p, c)+'<span class="sv">'+Math.round(p)+'%</span></div>'; }).join('')
+        + '<div class="mut">⭐ '+u.strong+': '+u.sub[sorted[0]]+(ks.length > 1 ? ' · ⚠️ '+u.weak+': '+u.sub[sorted[sorted.length-1]] : '')+'</div>';
+    }
+    h += '<h4>'+u.sugg+'</h4>' + suggest(r).map(function(x){
+      var c = D.list.filter(function(k){ return k.id === x.id; })[0]; if(!c) return '';
+      return '<button type="button" class="sg" data-go="'+c.id+'"><span class="e">'+c.ic+'</span><span><b>'+esc(c.name)+'</b><small>'+esc(M(x.why, lang))+'</small></span><span class="op">'+u.open+'</span></button>';
+    }).join('');
+    h += '<h4>'+u.steps+'</h4><ol class="stp">' + steps(r).map(function(x){ return '<li>'+esc(M(x, lang))+'</li>'; }).join('') + '</ol>';
+    h += '<h4>'+u.baio+'</h4><div class="hp">' + helps(r).map(function(x){ return '<a href="'+x.u+'"><span class="e">'+x.e+'</span><span><b>'+esc(M(x.t, lang))+'</b><small>'+esc(M(x.d, lang))+'</small></span></a>'; }).join('') + '</div>';
+    h += '<div class="qact"><button type="button" class="btn" data-rp="print">'+u.print+'</button><button type="button" class="btn ghost" data-rp="share">'+u.share+'</button></div>';
+    h += '<p class="note">'+u.note+'</p>';
+    return h;
+  }
+  function formHtml(lang, err){
+    var u = T[lang] || T.en, roll = '';
+    try{ var p = JSON.parse(localStorage.getItem('baio_student') || 'null'); if(p && p.roll && /^2[56]MPU\d{4}$/i.test(p.roll)) roll = p.roll.toUpperCase(); }catch(e){}
+    return '<p class="sub">'+u.s+'</p><div class="frm"><label>'+u.roll+'<input id="cpRoll" autocomplete="username" placeholder="26MPU0001" value="'+roll+'" autocapitalize="characters"></label>'
+      + '<label>'+u.pass+'<input id="cpPass" type="password" autocomplete="current-password"></label>'
+      + '<button type="button" class="btn" data-rp="go">'+(loading ? u.busy : u.go)+'</button></div>' + (err ? '<p class="err">'+err+'</p>' : '');
+  }
+  var lastErr = '', curLang = 'en', box = null, goFn = null, D = null;
+  function paint(){
+    var u = T[curLang] || T.en;
+    var inner = '<h3>'+u.h+'</h3>';
+    if(me && DATA && DATA[me]) inner += reportHtml(DATA[me], curLang, D);
+    else inner += formHtml(curLang, lastErr);
+    box.innerHTML = inner;
+  }
+  function shareText(r){
+    var u = T.en, bits = ['🎯 My BAIO career report (' + u.puc[r.pu] + ')'];
+    if(r.th) bits.push('Theory: ' + u.pband[pIdx(r.th.p)]);
+    if(r.neet) bits.push('NEET mocks: ' + r.neet.sc + '/' + r.neet.mx + ' (' + u.band[bandOf(r.neet.p)] + ')');
+    if(r.kpcb) bits.push('KCET (PCB): ' + r.kpcb.sc + '/' + r.kpcb.mx);
+    var sg = suggest(r).map(function(x){ var c = D.list.filter(function(k){ return k.id === x.id; })[0]; return c ? c.name : ''; }).filter(Boolean);
+    if(sg.length) bits.push('Careers that fit me: ' + sg.join(', '));
+    bits.push('Find yours on the BAIO app by Narendra Sir:');
+    return bits.join('\n');
+  }
+  function onClick(e){
+    var b = e.target.closest('[data-rp],[data-go]'); if(!b) return;
+    if(b.dataset.go){ goFn(b.dataset.go); return; }
+    var a = b.dataset.rp;
+    if(a === 'go'){
+      var roll = (document.getElementById('cpRoll').value || '').trim().toUpperCase().replace(/\s+/g, '');
+      var pw = (document.getElementById('cpPass').value || '').trim().toUpperCase();
+      if(!roll || !pw){ lastErr = T[curLang].bad; paint(); return; }
+      loading = true; lastErr = ''; paint();
+      loadData(function(ok){
+        if(!ok){ loading = false; lastErr = T[curLang].nodata; paint(); return; }
+        sha(roll + '|' + pw).then(function(k){
+          loading = false;
+          if(DATA[k]){ me = k; try{ localStorage.setItem(KEY, k); }catch(x){} lastErr = ''; }
+          else lastErr = T[curLang].bad;
+          paint();
+          if(me) box.scrollIntoView({ behavior:'smooth', block:'start' });
+        });
+      });
+    } else if(a === 'out'){ me = null; try{ localStorage.removeItem(KEY); }catch(x){} paint(); }
+    else if(a === 'print'){ document.body.classList.add('print-report'); window.print(); setTimeout(function(){ document.body.classList.remove('print-report'); }, 800); }
+    else if(a === 'share'){
+      var r = DATA[me], txt = shareText(r), url = location.origin + location.pathname;
+      if(navigator.share) navigator.share({ title:'My BAIO career report', text:txt, url:url }).catch(function(){});
+      else window.open('https://wa.me/?text=' + encodeURIComponent(txt + '\n' + url), '_blank');
+    }
+  }
+  window.CareerReport = {
+    render: function(el, lang, go, data){
+      var first = !box; box = el; curLang = lang; goFn = go; D = data;
+      if(first){
+        box.addEventListener('click', onClick);
+        box.addEventListener('keydown', function(e){ if(e.key === 'Enter' && e.target.id === 'cpPass'){ var g = box.querySelector('[data-rp="go"]'); if(g) g.click(); } });
+        if(me){ loadData(function(){ if(!DATA || !DATA[me]) me = null; paint(); }); }
+      }
+      paint();
+    }
+  };
+})();
