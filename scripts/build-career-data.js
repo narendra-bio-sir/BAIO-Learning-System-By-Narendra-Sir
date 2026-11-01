@@ -43,7 +43,7 @@ function serve(){
       const keys = pu === 2 ? ['march','april','may','june','july','premid'] : ['june','mt','august','september'];
       const max = k => (pu === 1 && k === 'september') ? 20 : 40;
       const acc = {};
-      keys.forEach(k => { const t = s[k]; if(!t) return; ['PHY','CHE','BIO','MAT'].forEach(sb => {
+      keys.forEach(k => { const t = s[k]; if(!t) return; ['PHY','CHE','BIO','MAT','ELE'].forEach(sb => {
         const v = t[sb]; if(v == null || isNaN(v)) return; (acc[sb] = acc[sb] || []).push(100 * v / max(k)); }); });
       const o = {}; Object.keys(acc).forEach(sb => { o[sb] = r1(acc[sb].reduce((a, b) => a + b, 0) / acc[sb].length); });
       return o;

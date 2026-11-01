@@ -18,7 +18,7 @@
       sugg:'🧭 Careers that fit your results', open:'Open →',
       steps:'✅ What to do next', baio:'📱 How BAIO helps you reach your goal',
       note:'This report is a guide based on your class tests so far, not a final prediction. Hard work in the coming months can change everything. Talk to Narendra Sir before you decide.',
-      sub:{PHY:'Physics',CHE:'Chemistry',BIO:'Biology',MAT:'Maths'} },
+      sub:{PHY:'Physics',CHE:'Chemistry',BIO:'Biology',MAT:'Maths',ELE:'Electronics'} },
     kn:{ h:'🎯 ನನ್ನ ವೈಯಕ್ತಿಕ ವೃತ್ತಿ ವರದಿ', s:'ಎಲ್ಲಾ ಪರೀಕ್ಷೆಗಳಲ್ಲಿ ನೀವು ಎಲ್ಲಿದ್ದೀರಿ, ಯಾವ ವೃತ್ತಿಗಳು ನಿಮ್ಮ ಫಲಿತಾಂಶಕ್ಕೆ ಹೊಂದುತ್ತವೆ ಮತ್ತು BAIO ಹೇಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ ಎಂದು ನೋಡಲು ರೋಲ್ ಸಂಖ್ಯೆ ಮತ್ತು ರಿಪೋರ್ಟ್ ಕಾರ್ಡ್ ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ.',
       roll:'ರೋಲ್ ಸಂಖ್ಯೆ', pass:'ರಿಪೋರ್ಟ್ ಕಾರ್ಡ್ ಪಾಸ್‌ವರ್ಡ್', go:'ನನ್ನ ವರದಿ ತೋರಿಸಿ', busy:'ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ…', bad:'ರೋಲ್ ಸಂಖ್ಯೆ ಅಥವಾ ಪಾಸ್‌ವರ್ಡ್ ಹೊಂದುತ್ತಿಲ್ಲ. ರಿಪೋರ್ಟ್ ಕಾರ್ಡ್‌ನ ಅದೇ ಪಾಸ್‌ವರ್ಡ್ ಬಳಸಿ. ಮರೆತಿದ್ದರೆ ನರೇಂದ್ರ ಸರ್ ಅವರನ್ನು ಕೇಳಿ.',
       nodata:'ಫಲಿತಾಂಶ ಲೋಡ್ ಆಗಲಿಲ್ಲ. ಇಂಟರ್ನೆಟ್ ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
@@ -32,7 +32,7 @@
       sugg:'🧭 ನಿಮ್ಮ ಫಲಿತಾಂಶಕ್ಕೆ ಹೊಂದುವ ವೃತ್ತಿಗಳು', open:'ತೆರೆಯಿರಿ →',
       steps:'✅ ಮುಂದೆ ಏನು ಮಾಡಬೇಕು', baio:'📱 ನಿಮ್ಮ ಗುರಿ ತಲುಪಲು BAIO ಹೇಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ',
       note:'ಈ ವರದಿ ಇದುವರೆಗಿನ ತರಗತಿ ಪರೀಕ್ಷೆಗಳ ಆಧಾರದ ಮಾರ್ಗದರ್ಶಿ, ಅಂತಿಮ ಭವಿಷ್ಯವಾಣಿ ಅಲ್ಲ. ಮುಂದಿನ ತಿಂಗಳುಗಳ ಶ್ರಮ ಎಲ್ಲವನ್ನೂ ಬದಲಾಯಿಸಬಹುದು. ನಿರ್ಧರಿಸುವ ಮೊದಲು ನರೇಂದ್ರ ಸರ್ ಜೊತೆ ಮಾತನಾಡಿ.',
-      sub:{PHY:'ಭೌತಶಾಸ್ತ್ರ',CHE:'ರಸಾಯನಶಾಸ್ತ್ರ',BIO:'ಜೀವಶಾಸ್ತ್ರ',MAT:'ಗಣಿತ'} },
+      sub:{PHY:'ಭೌತಶಾಸ್ತ್ರ',CHE:'ರಸಾಯನಶಾಸ್ತ್ರ',BIO:'ಜೀವಶಾಸ್ತ್ರ',MAT:'ಗಣಿತ',ELE:'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್'} },
     hi:{ h:'🎯 मेरी पर्सनल करियर रिपोर्ट', s:'अपना रोल नंबर और रिपोर्ट कार्ड पासवर्ड डालें और देखें कि सभी टेस्ट में आप कहाँ हैं, कौन-से करियर आपके नतीजों के अनुसार सही हैं, और BAIO कैसे मदद करेगा।',
       roll:'रोल नंबर', pass:'रिपोर्ट कार्ड पासवर्ड', go:'मेरी रिपोर्ट दिखाएँ', busy:'जाँच हो रही है…', bad:'रोल नंबर या पासवर्ड मेल नहीं खाता। रिपोर्ट कार्ड वाला ही पासवर्ड डालें। भूल गए? नरेंद्र सर से पूछें।',
       nodata:'नतीजे लोड नहीं हुए। इंटरनेट जाँचें और फिर कोशिश करें।',
@@ -46,7 +46,7 @@
       sugg:'🧭 आपके नतीजों के अनुसार करियर', open:'खोलें →',
       steps:'✅ आगे क्या करें', baio:'📱 लक्ष्य तक पहुँचने में BAIO कैसे मदद करता है',
       note:'यह रिपोर्ट अब तक के क्लास टेस्ट पर आधारित एक मार्गदर्शन है, अंतिम भविष्यवाणी नहीं। आने वाले महीनों की मेहनत सब बदल सकती है। फ़ैसले से पहले नरेंद्र सर से बात करें।',
-      sub:{PHY:'भौतिकी',CHE:'रसायन',BIO:'जीवविज्ञान',MAT:'गणित'} }
+      sub:{PHY:'भौतिकी',CHE:'रसायन',BIO:'जीवविज्ञान',MAT:'गणित',ELE:'इलेक्ट्रॉनिक्स'} }
   };
   function bandOf(p){ return p >= 70 ? 'strong' : p >= 50 ? 'competitive' : p >= 30 ? 'needs-work' : 'high-risk'; }
   var BC = { strong:'#2F9E6B', competitive:'#C9A227', 'needs-work':'#E08A1E', 'high-risk':'#D0544B' };
@@ -76,6 +76,7 @@
   }
   function suggestPcm(r, add, list){
     var s = r.sub || {}, mat = s.MAT, kp = r.kpcm ? r.kpcm.p : null, jee = r.jee ? r.jee.p : null, th = r.th ? r.th.p : null;
+    if(s.ELE != null) return suggestEle(r, add, list);
     if(jee != null && jee >= 50) add('iit', { en:'Your JEE mock scores are strong. Aim for JEE Advanced and the IITs.', kn:'ನಿಮ್ಮ JEE ಅಂಕಗಳು ಬಲಿಷ್ಠ. JEE Advanced ಮತ್ತು IIT ಗುರಿ ಇಡಿ.', hi:'आपके JEE अंक मज़बूत हैं। JEE Advanced और IIT का लक्ष्य रखें।' });
     if(jee != null && jee >= 25) add('nit', { en:'Keep improving in JEE Main: NITs and IIITs are a realistic target.', kn:'JEE Main ನಲ್ಲಿ ಸುಧಾರಿಸುತ್ತಿರಿ: NIT ಮತ್ತು IIT ವಾಸ್ತವಿಕ ಗುರಿ.', hi:'JEE Main में सुधार करते रहें: NIT और IIIT वास्तविक लक्ष्य हैं।' });
     if((kp != null && kp >= 55) || (mat != null && mat >= 75)) add('cse', { en:'Good KCET / Maths scores: Computer Science at a good Karnataka college is within reach.', kn:'ಉತ್ತಮ KCET / ಗಣಿತ ಅಂಕ: ಉತ್ತಮ ಕರ್ನಾಟಕ ಕಾಲೇಜಿನಲ್ಲಿ ಕಂಪ್ಯೂಟರ್ ಸೈನ್ಸ್ ಸಾಧ್ಯ.', hi:'अच्छे KCET / गणित अंक: अच्छे कर्नाटक कॉलेज में कंप्यूटर साइंस संभव।' });
@@ -84,6 +85,21 @@
     add('mech', { en:'Mechanical / Civil have steady jobs and many govt engineer posts.', kn:'ಮೆಕ್ಯಾನಿಕಲ್ / ಸಿವಿಲ್: ಸ್ಥಿರ ಉದ್ಯೋಗ ಮತ್ತು ಸರ್ಕಾರಿ ಎಂಜಿನಿಯರ್ ಹುದ್ದೆಗಳು.', hi:'मैकेनिकल / सिविल: स्थिर नौकरियाँ और कई सरकारी इंजीनियर पद।' });
     if(th != null && th < 50) add('bscpcm', { en:'A strong backup: BSc / BCA on PU marks, then MSc or MCA.', kn:'ಉತ್ತಮ ಬ್ಯಾಕಪ್: ಪಿಯು ಅಂಕಗಳ ಮೇಲೆ BSc / BCA, ನಂತರ MSc ಅಥವಾ MCA.', hi:'मज़बूत बैकअप: पीयू अंकों पर BSc / BCA, फिर MSc या MCA।' });
     add('nda', { en:'If you like discipline and adventure, NDA is open to PCM students (all three services).', kn:'ಶಿಸ್ತು ಮತ್ತು ಸಾಹಸ ಇಷ್ಟವಾದರೆ, PCM ವಿದ್ಯಾರ್ಥಿಗಳಿಗೆ NDA (ಮೂರೂ ಪಡೆಗಳು).', hi:'अनुशासन और रोमांच पसंद हो तो PCM छात्रों के लिए NDA (तीनों सेनाएँ)।' });
+    return list.slice(0, 5);
+  }
+  /* Electronics (PCME) students: electronics-led engineering careers first. */
+  function suggestEle(r, add, list){
+    var s = r.sub || {}, ele = Math.round(s.ELE), kp = r.kpcm ? r.kpcm.p : null, jee = r.jee ? r.jee.p : null, th = r.th ? r.th.p : null, mat = s.MAT;
+    add('ece', ele >= 60
+      ? { en:'Electronics is your 4th subject and you score '+ele+'% in it: ECE / EEE engineering is the natural next step.', kn:'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ ನಿಮ್ಮ 4ನೇ ವಿಷಯ, ಅದರಲ್ಲಿ '+ele+'%: ECE / EEE ಎಂಜಿನಿಯರಿಂಗ್ ಸಹಜ ಮುಂದಿನ ಹೆಜ್ಜೆ.', hi:'इलेक्ट्रॉनिक्स आपका चौथा विषय है और उसमें '+ele+'%: ECE / EEE इंजीनियरिंग स्वाभाविक अगला कदम है।' }
+      : { en:'You already study Electronics in PU: ECE / EEE builds directly on it. Raise your Electronics score ('+ele+'%) too.', kn:'ಪಿಯುನಲ್ಲೇ ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ ಓದುತ್ತಿದ್ದೀರಿ: ECE / EEE ಅದರ ಮೇಲೆಯೇ ನಿಂತಿದೆ. ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ ಅಂಕವನ್ನೂ ('+ele+'%) ಹೆಚ್ಚಿಸಿ.', hi:'आप पीयू में इलेक्ट्रॉनिक्स पढ़ते हैं: ECE / EEE सीधे उसी पर आधारित है। इलेक्ट्रॉनिक्स के अंक ('+ele+'%) भी बढ़ाएँ।' });
+    if(jee != null && jee >= 25) add('nit', { en:'Your JEE scores make NITs and IIITs a realistic target: their ECE seats are among the best.', kn:'ನಿಮ್ಮ JEE ಅಂಕಗಳಿಂದ NIT ಮತ್ತು IIIT ವಾಸ್ತವಿಕ ಗುರಿ: ಅಲ್ಲಿನ ECE ಸೀಟುಗಳು ಅತ್ಯುತ್ತಮ.', hi:'आपके JEE अंकों से NIT और IIIT वास्तविक लक्ष्य हैं: वहाँ की ECE सीटें सबसे अच्छी हैं।' });
+    add('embed', { en:'Electronics + a little coding = embedded systems and IoT, a big job area in Bengaluru.', kn:'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ + ಸ್ವಲ್ಪ ಕೋಡಿಂಗ್ = ಎಂಬೆಡೆಡ್ ಸಿಸ್ಟಮ್ಸ್ ಮತ್ತು IoT, ಬೆಂಗಳೂರಿನಲ್ಲಿ ದೊಡ್ಡ ಉದ್ಯೋಗ ಕ್ಷೇತ್ರ.', hi:'इलेक्ट्रॉनिक्स + थोड़ी कोडिंग = एम्बेडेड सिस्टम और IoT, बेंगलुरु में बड़ा नौकरी क्षेत्र।' });
+    if(ele >= 70 || (kp != null && kp >= 55)) add('vlsi', { en:'Strong Electronics: chip design (VLSI) is a high-paying path after ECE.', kn:'ಬಲಿಷ್ಠ ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್: ECE ನಂತರ ಚಿಪ್ ವಿನ್ಯಾಸ (VLSI) ಹೆಚ್ಚು ಸಂಬಳದ ದಾರಿ.', hi:'मज़बूत इलेक्ट्रॉनिक्स: ECE के बाद चिप डिज़ाइन (VLSI) ऊँचे वेतन का रास्ता।' });
+    if((kp != null && kp >= 55) || (mat != null && mat >= 75)) add('cse', { en:'Good KCET / Maths scores also open Computer Science.', kn:'ಉತ್ತಮ KCET / ಗಣಿತ ಅಂಕದಿಂದ ಕಂಪ್ಯೂಟರ್ ಸೈನ್ಸ್ ಕೂಡ ಸಾಧ್ಯ.', hi:'अच्छे KCET / गणित अंक कंप्यूटर साइंस भी खोलते हैं।' });
+    add('robot', { en:'Like building things? Robotics and mechatronics mix electronics with machines.', kn:'ವಸ್ತು ನಿರ್ಮಾಣ ಇಷ್ಟವೇ? ರೋಬೋಟಿಕ್ಸ್ ಮತ್ತು ಮೆಕಟ್ರಾನಿಕ್ಸ್ ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ ಅನ್ನು ಯಂತ್ರಗಳೊಂದಿಗೆ ಬೆರೆಸುತ್ತವೆ.', hi:'चीज़ें बनाना पसंद है? रोबोटिक्स और मेकाट्रॉनिक्स इलेक्ट्रॉनिक्स को मशीनों से जोड़ते हैं।' });
+    add('bscele', { en:'A safe backup on PU marks: BSc Electronics, then MSc, MCA or govt jobs (BEL, ISRO).', kn:'ಪಿಯು ಅಂಕಗಳ ಮೇಲೆ ಸುರಕ್ಷಿತ ಬ್ಯಾಕಪ್: BSc ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್, ನಂತರ MSc, MCA ಅಥವಾ ಸರ್ಕಾರಿ ಉದ್ಯೋಗ (BEL, ISRO).', hi:'पीयू अंकों पर सुरक्षित बैकअप: BSc इलेक्ट्रॉनिक्स, फिर MSc, MCA या सरकारी नौकरी (BEL, ISRO)।' });
+    if(th != null && th < 50) add('evtech', { en:'Want to earn sooner? EV, solar and electronics technician courses are short and in demand.', kn:'ಬೇಗ ಸಂಪಾದಿಸಬೇಕೇ? EV, ಸೋಲಾರ್, ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ ತಂತ್ರಜ್ಞ ಕೋರ್ಸ್‌ಗಳು ಚಿಕ್ಕವು, ಬೇಡಿಕೆಯಲ್ಲಿವೆ.', hi:'जल्दी कमाना है? EV, सोलर और इलेक्ट्रॉनिक्स तकनीशियन कोर्स छोटे हैं और माँग में हैं।' });
     return list.slice(0, 5);
   }
   function suggest(r){
@@ -138,6 +154,7 @@
     var weak = ['PHY','CHE','MAT'].filter(function(k){ return s[k] != null; }).sort(function(a, b){ return s[a] - s[b]; })[0];
     if(weak && s[weak] < 70) out.push({ en:T.en.sub[weak]+' is your weakest subject ('+Math.round(s[weak])+'%). Practise 20 problems a day: PU marks are 50% of your KCET engineering rank.', kn:T.kn.sub[weak]+' ನಿಮ್ಮ ದುರ್ಬಲ ವಿಷಯ ('+Math.round(s[weak])+'%). ದಿನಕ್ಕೆ 20 ಸಮಸ್ಯೆ ಅಭ್ಯಾಸ ಮಾಡಿ: KCET ರ್‍ಯಾಂಕ್‌ನ 50% ಪಿಯು ಅಂಕಗಳಿಂದ.', hi:T.hi.sub[weak]+' आपका सबसे कमज़ोर विषय है ('+Math.round(s[weak])+'%)। रोज़ 20 सवाल हल करें: KCET रैंक का 50% पीयू अंकों से।' });
     if([r.th, r.kpcm, r.jee].some(function(x){ return x && x.tr != null && x.tr <= -5; })) out.push({ en:'Your recent scores have dropped. Revise the chapters of your last test and fix every mistake before the next one.', kn:'ಇತ್ತೀಚಿನ ಅಂಕಗಳು ಇಳಿದಿವೆ. ಕೊನೆಯ ಪರೀಕ್ಷೆಯ ಅಧ್ಯಾಯಗಳನ್ನು ಪುನರಾವರ್ತಿಸಿ, ತಪ್ಪುಗಳನ್ನು ಸರಿಪಡಿಸಿ.', hi:'हाल के अंक गिरे हैं। पिछले टेस्ट के अध्याय दोहराएँ और हर गलती सुधारें।' });
+    if(s.ELE != null) out.push({ en:'Electronics ('+Math.round(s.ELE)+'%) counts for your PU result and your eligibility, but your KCET engineering rank uses only Physics, Chemistry and Maths. Give Chemistry and Maths equal time.', kn:'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ ('+Math.round(s.ELE)+'%) ಪಿಯು ಫಲಿತಾಂಶ ಮತ್ತು ಅರ್ಹತೆಗೆ ಸೇರುತ್ತದೆ, ಆದರೆ KCET ಎಂಜಿನಿಯರಿಂಗ್ ರ‍್ಯಾಂಕ್ ಭೌತ, ರಸಾಯನ, ಗಣಿತ ಮಾತ್ರ ಬಳಸುತ್ತದೆ. ರಸಾಯನ ಮತ್ತು ಗಣಿತಕ್ಕೆ ಸಮಾನ ಸಮಯ ಕೊಡಿ.', hi:'इलेक्ट्रॉनिक्स ('+Math.round(s.ELE)+'%) पीयू परिणाम और पात्रता में गिना जाता है, लेकिन KCET इंजीनियरिंग रैंक में सिर्फ़ भौतिकी, रसायन और गणित गिने जाते हैं। रसायन और गणित को बराबर समय दें।' });
     if(!r.jee) out.push({ en:'Write the JEE mock tests in college too: JEE Main opens NITs and IIITs.', kn:'ಕಾಲೇಜಿನ JEE ಮಾಕ್ ಟೆಸ್ಟ್‌ಗಳನ್ನೂ ಬರೆಯಿರಿ: JEE Main ನಿಂದ NIT ಮತ್ತು IIIT.', hi:'कॉलेज के JEE मॉक टेस्ट भी दें: JEE Main से NIT और IIIT।' });
     out.push({ en:'Register for JEE Main, KCET and COMEDK so you have more than one door open.', kn:'ಒಂದಕ್ಕಿಂತ ಹೆಚ್ಚು ಅವಕಾಶಕ್ಕಾಗಿ JEE Main, KCET ಮತ್ತು COMEDK ಗೆ ನೋಂದಾಯಿಸಿ.', hi:'एक से ज़्यादा रास्ते खुले रखने के लिए JEE Main, KCET और COMEDK में रजिस्टर करें।' });
     return out;
@@ -263,7 +280,7 @@
       if(r.kpcm && (r.sub || {}).MAT != null) h += examRow(u, lang, u.kpcm, r.kpcm);
       if(r.jee) h += examRow(u, lang, u.jee, r.jee);
     }
-    var s = r.sub || {}, ks = ['BIO','CHE','PHY','MAT'].filter(function(k){ return s[k] != null; });
+    var s = r.sub || {}, ks = ['BIO','ELE','CHE','PHY','MAT'].filter(function(k){ return s[k] != null; });
     if(ks.length){
       var sorted = ks.slice().sort(function(a, b){ return s[b] - s[a]; });
       h += '<h4>'+u.subj+'</h4>' + ks.map(function(k){ var p = s[k], c = p >= 70 ? BC.strong : p >= 50 ? BC.competitive : p >= 35 ? BC['needs-work'] : BC['high-risk'];
