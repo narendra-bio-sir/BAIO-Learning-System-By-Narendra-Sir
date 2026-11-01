@@ -55,10 +55,25 @@
   function M(o, lang){ return typeof o === 'string' ? o : (o[lang] || o.en); }
 
   /* ---------- Career suggestions from results ---------- */
+  /* PCM students: no Biology marks and no NEET mocks on file. */
+  function isPcm(r){ var s = r.sub || {}; return s.BIO == null && !r.neet; }
+  function suggestPcm(r, add, list){
+    var s = r.sub || {}, mat = s.MAT, kp = r.kpcm ? r.kpcm.p : null, jee = r.jee ? r.jee.p : null, th = r.th ? r.th.p : null;
+    if(jee != null && jee >= 50) add('iit', { en:'Your JEE mock scores are strong. Aim for JEE Advanced and the IITs.', kn:'ನಿಮ್ಮ JEE ಅಂಕಗಳು ಬಲಿಷ್ಠ. JEE Advanced ಮತ್ತು IIT ಗುರಿ ಇಡಿ.', hi:'आपके JEE अंक मज़बूत हैं। JEE Advanced और IIT का लक्ष्य रखें।' });
+    if(jee != null && jee >= 25) add('nit', { en:'Keep improving in JEE Main: NITs and IIITs are a realistic target.', kn:'JEE Main ನಲ್ಲಿ ಸುಧಾರಿಸುತ್ತಿರಿ: NIT ಮತ್ತು IIT ವಾಸ್ತವಿಕ ಗುರಿ.', hi:'JEE Main में सुधार करते रहें: NIT और IIIT वास्तविक लक्ष्य हैं।' });
+    if((kp != null && kp >= 55) || (mat != null && mat >= 75)) add('cse', { en:'Good KCET / Maths scores: Computer Science at a good Karnataka college is within reach.', kn:'ಉತ್ತಮ KCET / ಗಣಿತ ಅಂಕ: ಉತ್ತಮ ಕರ್ನಾಟಕ ಕಾಲೇಜಿನಲ್ಲಿ ಕಂಪ್ಯೂಟರ್ ಸೈನ್ಸ್ ಸಾಧ್ಯ.', hi:'अच्छे KCET / गणित अंक: अच्छे कर्नाटक कॉलेज में कंप्यूटर साइंस संभव।' });
+    add('ece', { en:'Electronics and electrical jobs are growing fast (chips, EVs).', kn:'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ ಮತ್ತು ವಿದ್ಯುತ್ ಉದ್ಯೋಗಗಳು ವೇಗವಾಗಿ ಬೆಳೆಯುತ್ತಿವೆ.', hi:'इलेक्ट्रॉनिक्स और इलेक्ट्रिकल नौकरियाँ तेज़ी से बढ़ रही हैं।' });
+    if(kp == null || kp < 55) add('cse', { en:'Raise your KCET score and PU marks (each counts 50%) to get Computer Science.', kn:'ಕಂಪ್ಯೂಟರ್ ಸೈನ್ಸ್‌ಗಾಗಿ KCET ಅಂಕ ಮತ್ತು ಪಿಯು ಅಂಕ (ತಲಾ 50%) ಹೆಚ್ಚಿಸಿ.', hi:'कंप्यूटर साइंस के लिए KCET और पीयू अंक (दोनों 50%) बढ़ाएँ।' });
+    add('mech', { en:'Mechanical / Civil have steady jobs and many govt engineer posts.', kn:'ಮೆಕ್ಯಾನಿಕಲ್ / ಸಿವಿಲ್: ಸ್ಥಿರ ಉದ್ಯೋಗ ಮತ್ತು ಸರ್ಕಾರಿ ಎಂಜಿನಿಯರ್ ಹುದ್ದೆಗಳು.', hi:'मैकेनिकल / सिविल: स्थिर नौकरियाँ और कई सरकारी इंजीनियर पद।' });
+    if(th != null && th < 50) add('bscpcm', { en:'A strong backup: BSc / BCA on PU marks, then MSc or MCA.', kn:'ಉತ್ತಮ ಬ್ಯಾಕಪ್: ಪಿಯು ಅಂಕಗಳ ಮೇಲೆ BSc / BCA, ನಂತರ MSc ಅಥವಾ MCA.', hi:'मज़बूत बैकअप: पीयू अंकों पर BSc / BCA, फिर MSc या MCA।' });
+    add('nda', { en:'If you like discipline and adventure, NDA is open to PCM students (all three services).', kn:'ಶಿಸ್ತು ಮತ್ತು ಸಾಹಸ ಇಷ್ಟವಾದರೆ, PCM ವಿದ್ಯಾರ್ಥಿಗಳಿಗೆ NDA (ಮೂರೂ ಪಡೆಗಳು).', hi:'अनुशासन और रोमांच पसंद हो तो PCM छात्रों के लिए NDA (तीनों सेनाएँ)।' });
+    return list.slice(0, 5);
+  }
   function suggest(r){
     var neet = r.neet ? r.neet.p : null, kp = r.kpcb ? r.kpcb.p : null, s = r.sub || {}, th = r.th ? r.th.p : null;
     var bio = s.BIO, mat = s.MAT, list = [];
     function add(id, why){ if(!list.some(function(x){ return x.id === id; })) list.push({ id:id, why:why }); }
+    if(isPcm(r)) return suggestPcm(r, add, list);
     var sc = r.neet ? r.neet.sc : 0;
     if(neet != null && neet >= 70){
       add('mbbs', { en:'Your NEET mock scores are in the strong band ('+sc+'/720). A govt MBBS seat usually needs about 600+, so keep pushing your weakest subject.', kn:'ನಿಮ್ಮ NEET ಅಂಕಗಳು ಬಲಿಷ್ಠ ಮಟ್ಟದಲ್ಲಿವೆ ('+sc+'/720). ಸರ್ಕಾರಿ MBBS ಸೀಟಿಗೆ ಸಾಮಾನ್ಯವಾಗಿ ಸುಮಾರು 600+ ಬೇಕು; ದುರ್ಬಲ ವಿಷಯವನ್ನು ಇನ್ನಷ್ಟು ಸುಧಾರಿಸಿ.', hi:'आपके NEET अंक मज़बूत स्तर पर हैं ('+sc+'/720)। सरकारी MBBS सीट के लिए आमतौर पर लगभग 600+ चाहिए, कमज़ोर विषय पर और मेहनत करें।' });
@@ -86,11 +101,24 @@
     }
     if(bio != null && bio >= 75 && th != null && th >= 75) add('iiser', { en:'Strong Biology and top-quarter class rank: research is a great fit.', kn:'ಬಲಿಷ್ಠ ಜೀವಶಾಸ್ತ್ರ ಮತ್ತು ಉನ್ನತ ರ್‍ಯಾಂಕ್: ಸಂಶೋಧನೆ ಸೂಕ್ತ.', hi:'मज़बूत जीवविज्ञान और ऊँचा रैंक: रिसर्च अच्छा विकल्प।' });
     if((mat != null && mat >= 60) || (r.kpcm && r.kpcm.p >= 50)) add('btbio', { en:'You are good at Maths too, so biotech engineering is open to you.', kn:'ಗಣಿತದಲ್ಲೂ ಉತ್ತಮ, ಬಯೋಟೆಕ್ ಎಂಜಿನಿಯರಿಂಗ್ ನಿಮಗೆ ತೆರೆದಿದೆ.', hi:'गणित में भी अच्छे हैं, बायोटेक इंजीनियरिंग आपके लिए खुला है।' });
+    if((r.kpcm && r.kpcm.p >= 55) || (mat != null && mat >= 80)) add('cse', { en:'Your Maths / KCET (PCM) scores also open Computer Science engineering.', kn:'ನಿಮ್ಮ ಗಣಿತ / KCET (PCM) ಅಂಕಗಳು ಕಂಪ್ಯೂಟರ್ ಸೈನ್ಸ್ ಎಂಜಿನಿಯರಿಂಗ್‌ಗೂ ದಾರಿ.', hi:'आपके गणित / KCET (PCM) अंक कंप्यूटर साइंस इंजीनियरिंग भी खोलते हैं।' });
     return list.slice(0, 5);
   }
 
   /* ---------- Next steps ---------- */
+  function stepsPcm(r){
+    var out = [], s = r.sub || {}, pu = r.pu;
+    if(pu === 2) out.push({ en:'JEE Main is in January and April, KCET in April, boards from late February. Make a daily plan now (Exam Corner has your timetable).', kn:'JEE Main ಜನವರಿ ಮತ್ತು ಏಪ್ರಿಲ್‌ನಲ್ಲಿ, KCET ಏಪ್ರಿಲ್‌ನಲ್ಲಿ, ಬೋರ್ಡ್ ಫೆಬ್ರವರಿ ಕೊನೆಯಿಂದ. ಈಗಲೇ ದೈನಂದಿನ ಯೋಜನೆ ಮಾಡಿ.', hi:'JEE Main जनवरी और अप्रैल में, KCET अप्रैल में, बोर्ड फ़रवरी के अंत से। अभी से रोज़ की योजना बनाएँ।' });
+    else out.push({ en:'You have about 1½ years before JEE and KCET. Build strong I PUC Maths and Physics basics now: they carry into II PUC.', kn:'JEE ಮತ್ತು KCET ಗೆ ಸುಮಾರು 1½ ವರ್ಷ ಇದೆ. ಈಗಲೇ ಪ್ರಥಮ ಪಿಯುಸಿ ಗಣಿತ ಮತ್ತು ಭೌತಶಾಸ್ತ್ರದ ತಳಹದಿ ಗಟ್ಟಿ ಮಾಡಿ.', hi:'JEE और KCET में लगभग 1½ साल हैं। अभी से प्रथम पीयूसी गणित और भौतिकी की नींव मज़बूत करें।' });
+    var weak = ['PHY','CHE','MAT'].filter(function(k){ return s[k] != null; }).sort(function(a, b){ return s[a] - s[b]; })[0];
+    if(weak && s[weak] < 70) out.push({ en:T.en.sub[weak]+' is your weakest subject ('+Math.round(s[weak])+'%). Practise 20 problems a day: PU marks are 50% of your KCET engineering rank.', kn:T.kn.sub[weak]+' ನಿಮ್ಮ ದುರ್ಬಲ ವಿಷಯ ('+Math.round(s[weak])+'%). ದಿನಕ್ಕೆ 20 ಸಮಸ್ಯೆ ಅಭ್ಯಾಸ ಮಾಡಿ: KCET ರ್‍ಯಾಂಕ್‌ನ 50% ಪಿಯು ಅಂಕಗಳಿಂದ.', hi:T.hi.sub[weak]+' आपका सबसे कमज़ोर विषय है ('+Math.round(s[weak])+'%)। रोज़ 20 सवाल हल करें: KCET रैंक का 50% पीयू अंकों से।' });
+    if([r.th, r.kpcm, r.jee].some(function(x){ return x && x.tr != null && x.tr <= -5; })) out.push({ en:'Your recent scores have dropped. Revise the chapters of your last test and fix every mistake before the next one.', kn:'ಇತ್ತೀಚಿನ ಅಂಕಗಳು ಇಳಿದಿವೆ. ಕೊನೆಯ ಪರೀಕ್ಷೆಯ ಅಧ್ಯಾಯಗಳನ್ನು ಪುನರಾವರ್ತಿಸಿ, ತಪ್ಪುಗಳನ್ನು ಸರಿಪಡಿಸಿ.', hi:'हाल के अंक गिरे हैं। पिछले टेस्ट के अध्याय दोहराएँ और हर गलती सुधारें।' });
+    if(!r.jee) out.push({ en:'Write the JEE mock tests in college too: JEE Main opens NITs and IIITs.', kn:'ಕಾಲೇಜಿನ JEE ಮಾಕ್ ಟೆಸ್ಟ್‌ಗಳನ್ನೂ ಬರೆಯಿರಿ: JEE Main ನಿಂದ NIT ಮತ್ತು IIIT.', hi:'कॉलेज के JEE मॉक टेस्ट भी दें: JEE Main से NIT और IIIT।' });
+    out.push({ en:'Register for JEE Main, KCET and COMEDK so you have more than one door open.', kn:'ಒಂದಕ್ಕಿಂತ ಹೆಚ್ಚು ಅವಕಾಶಕ್ಕಾಗಿ JEE Main, KCET ಮತ್ತು COMEDK ಗೆ ನೋಂದಾಯಿಸಿ.', hi:'एक से ज़्यादा रास्ते खुले रखने के लिए JEE Main, KCET और COMEDK में रजिस्टर करें।' });
+    return out;
+  }
   function steps(r){
+    if(isPcm(r)) return stepsPcm(r);
     var out = [], s = r.sub || {}, pu = r.pu;
     var weakT = Object.keys(s).filter(function(k){ return k !== 'MAT'; }).sort(function(a, b){ return s[a] - s[b]; })[0];
     var neetWeak = null;
@@ -116,6 +144,12 @@
   /* ---------- How BAIO helps (tailored) ---------- */
   function helps(r){
     var s = r.sub || {}, out = [];
+    if(isPcm(r)) return [
+      { u:'pcm.html', e:'⚛️', t:{ en:'Physics, Chemistry & Maths', kn:'ಭೌತ, ರಸಾಯನ ಮತ್ತು ಗಣಿತ', hi:'भौतिकी, रसायन और गणित' }, d:{ en:'Notes, solved problems with "Explain simply" and voice, MCQs for JEE and KCET.', kn:'ನೋಟ್ಸ್, "ಸರಳವಾಗಿ ವಿವರಿಸಿ" ಮತ್ತು ಧ್ವನಿ ಸಹಿತ ಸಮಸ್ಯೆಗಳು, JEE ಮತ್ತು KCET MCQ.', hi:'नोट्स, "आसान भाषा" और आवाज़ के साथ हल सवाल, JEE और KCET MCQ।' } },
+      { u:'careers.html#pcm', e:'⚙️', t:{ en:'Engineering career guide', kn:'ಎಂಜಿನಿಯರಿಂಗ್ ವೃತ್ತಿ ಮಾರ್ಗದರ್ಶಿ', hi:'इंजीनियरिंग करियर गाइड' }, d:{ en:'Branches, exams, fees and pay for every engineering path.', kn:'ಪ್ರತಿ ಎಂಜಿನಿಯರಿಂಗ್ ದಾರಿಗೆ ಶಾಖೆ, ಪರೀಕ್ಷೆ, ಶುಲ್ಕ, ಸಂಬಳ.', hi:'हर इंजीनियरिंग रास्ते की ब्रांच, परीक्षा, फ़ीस और वेतन।' } },
+      { u:'exam-corner.html', e:'📝', t:{ en:'Exam Corner', kn:'ಪರೀಕ್ಷಾ ಕಾರ್ನರ್', hi:'एग्ज़ाम कॉर्नर' }, d:{ en:'Your personal timetable, practice papers and exam tips.', kn:'ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ವೇಳಾಪಟ್ಟಿ, ಅಭ್ಯಾಸ ಪತ್ರಿಕೆಗಳು, ಸಲಹೆಗಳು.', hi:'आपका पर्सनल टाइमटेबल, प्रैक्टिस पेपर और टिप्स।' } },
+      { u:'offline.html', e:'📥', t:{ en:'Use BAIO offline', kn:'ಆಫ್‌ಲೈನ್‌ನಲ್ಲಿ BAIO', hi:'ऑफ़लाइन BAIO' }, d:{ en:'Save chapters once and study even without internet.', kn:'ಒಮ್ಮೆ ಉಳಿಸಿ, ಇಂಟರ್ನೆಟ್ ಇಲ್ಲದೆಯೂ ಓದಿ.', hi:'एक बार सेव करें, बिना इंटरनेट के भी पढ़ें।' } }
+    ];
     var pk = r.pu === 2 ? 'II PUC' : 'I PUC';
     out.push({ u:'index.html', e:'📖', t:{ en:'Chapter Study Mode + MCQs', kn:'ಅಧ್ಯಾಯ ಸ್ಟಡಿ ಮೋಡ್ + MCQ', hi:'अध्याय स्टडी मोड + MCQ' }, d:{ en:'Learn every '+pk+' Biology chapter step by step, then test yourself with NEET-style MCQs.', kn:'ಪ್ರತಿ '+pk+' ಜೀವಶಾಸ್ತ್ರ ಅಧ್ಯಾಯವನ್ನು ಹಂತಹಂತವಾಗಿ ಕಲಿಯಿರಿ, ನಂತರ NEET ಮಾದರಿ MCQ.', hi:'हर '+pk+' बायोलॉजी अध्याय स्टेप-बाय-स्टेप सीखें, फिर NEET जैसे MCQ।' } });
     if(r.neet || r.pu === 2) out.push({ u:'neet-3-steps.html', e:'🩺', t:{ en:'NEET in 3 steps', kn:'3 ಹಂತಗಳಲ್ಲಿ NEET', hi:'3 स्टेप में NEET' }, d:{ en:'Study → practise → mock test: the routine that lifts NEET scores.', kn:'ಓದು → ಅಭ್ಯಾಸ → ಮಾಕ್ ಟೆಸ್ಟ್: NEET ಅಂಕ ಹೆಚ್ಚಿಸುವ ದಿನಚರಿ.', hi:'पढ़ो → अभ्यास → मॉक टेस्ट: NEET स्कोर बढ़ाने वाली दिनचर्या।' } });
@@ -188,8 +222,11 @@
     if(r.th){ var pi = pIdx(r.th.p), col = ['#2F9E6B','#C9A227','#E08A1E','#D0544B'][pi];
       h += '<div class="mrow"><div class="mh"><b>'+u.theory+'</b><span class="pill" style="background:'+col+'">'+u.pband[pi]+'</span></div>'+bar(r.th.p, col)
         + '<div class="mut">'+esc(u.rank(r.th.rk, r.th.of, r.th.lb))+' · '+u.tests(r.th.n)+' '+trendTxt(u, r.th.tr)+'</div></div>'; }
-    h += examRow(u, lang, u.neet, r.neet) + examRow(u, lang, u.kpcb, r.kpcb);
-    if(r.kpcm && (r.sub || {}).MAT != null) h += examRow(u, lang, u.kpcm, r.kpcm);
+    if(isPcm(r)) h += examRow(u, lang, u.kpcm, r.kpcm) + examRow(u, lang, u.jee, r.jee);
+    else {
+      h += examRow(u, lang, u.neet, r.neet) + examRow(u, lang, u.kpcb, r.kpcb);
+      if(r.kpcm && (r.sub || {}).MAT != null) h += examRow(u, lang, u.kpcm, r.kpcm);
+    }
     var s = r.sub || {}, ks = ['BIO','CHE','PHY','MAT'].filter(function(k){ return s[k] != null; });
     if(ks.length){
       var sorted = ks.slice().sort(function(a, b){ return s[b] - s[a]; });
