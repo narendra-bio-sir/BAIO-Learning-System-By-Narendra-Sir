@@ -134,7 +134,7 @@
   try{ me = localStorage.getItem(KEY); }catch(e){}
   function loadData(cb){
     if(window.CAREER_STUDENTS){ DATA = window.CAREER_STUDENTS; cb(true); return; }
-    var sc = document.createElement('script'); sc.src = 'careers/student-data.js?v=1';
+    var sc = document.createElement('script'); sc.src = 'careers/student-data.js';
     sc.onload = function(){ DATA = window.CAREER_STUDENTS || null; cb(!!DATA); };
     sc.onerror = function(){ cb(false); };
     document.head.appendChild(sc);
