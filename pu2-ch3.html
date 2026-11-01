@@ -4438,20 +4438,15 @@ document.getElementById('tgLink').addEventListener('click', (e)=>{ e.preventDefa
 async function shareAllSocial(){
   const text = '\u{1F4DA} BAIO Learning System \u2014 by Narendra Sir\nBiology All In One, for PU-I/PU-II & NEET/KCET aspirants.\n\n'
     + '\u{1F310} App: https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/\n\n'
-    + '\u{1F4AC} WhatsApp Channel: https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X\n\n'
-    + '\u{1F4F8} Instagram: https://www.instagram.com/new_gen_bioguru\n\n'
-    + '\u25B6\uFE0F YouTube: https://youtube.com/@biogurunarendrasir\n\n'
-    + '\u{1F4E2} Telegram: https://t.me/BAIO_Learning_System';
-  /* Phones: attach the 'Follow us' card with the official WhatsApp, Instagram, YouTube and Telegram logos. */
-  if(navigator.share && navigator.canShare && window.File){
-    try{
-      const res = await fetch('assets/social/baio-follow-us.jpg');
-      if(res.ok){
-        const img = new File([await res.blob()], 'BAIO-follow-us.jpg', { type:'image/jpeg' });
-        if(navigator.canShare({ files:[img] })){ await navigator.share({ files:[img], title:'BAIO Learning System \u2014 by Narendra Sir', text }); return; }
-      }
-    }catch(e){ if(e && e.name === 'AbortError') return; }
+    + '\u{1F7E2} WhatsApp Channel: https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X\n\n'
+    + '\u{1F7E3} Instagram: https://www.instagram.com/new_gen_bioguru\n\n'
+    + '\u{1F534} YouTube: https://youtube.com/@biogurunarendrasir\n\n'
+    + '\u{1F535} Telegram: https://t.me/BAIO_Learning_System';
+  /* Share sheet: picture size + links only / picture only / picture + links (assets/social/share-sheet.js). */
+  if(!window.BAIOShare){
+    await new Promise(function(ok){ const sc = document.createElement('script'); sc.src = 'assets/social/share-sheet.js?v=1'; sc.onload = ok; sc.onerror = ok; document.head.appendChild(sc); });
   }
+  if(window.BAIOShare){ window.BAIOShare.open(text, 'assets/social/'); return; }
   if(navigator.share){
     try{ await navigator.share({ title:'BAIO Learning System \u2014 by Narendra Sir', text }); return; }catch(e){ if(e && e.name === 'AbortError') return; }
   }
