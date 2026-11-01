@@ -132,6 +132,10 @@
   /* ---------- UI ---------- */
   var DATA = null, me = null, loading = false;
   try{ me = localStorage.getItem(KEY); }catch(e){}
+  /* A shared report link (careers.html#report=<key>) opens that report directly, without saving it on this phone. */
+  var LINK = (location.hash.match(/report=([0-9a-f]{64})/) || [])[1] || null;
+  if(LINK) me = LINK;
+  var PAGE = 'https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/careers.html';
   function loadData(cb){
     if(window.CAREER_STUDENTS){ DATA = window.CAREER_STUDENTS; cb(true); return; }
     var sc = document.createElement('script'); sc.src = 'careers/student-data.js';
@@ -194,13 +198,13 @@
     box.innerHTML = inner;
   }
   function shareText(r){
-    var u = T.en, bits = ['🎯 My BAIO career report (' + u.puc[r.pu] + ')'];
+    var u = T.en, bits = ['🎯 BAIO career report: ' + r.name + ' (' + u.puc[r.pu] + ')'];
     if(r.th) bits.push('Theory: ' + u.pband[pIdx(r.th.p)]);
     if(r.neet) bits.push('NEET mocks: ' + r.neet.sc + '/' + r.neet.mx + ' (' + u.band[bandOf(r.neet.p)] + ')');
     if(r.kpcb) bits.push('KCET (PCB): ' + r.kpcb.sc + '/' + r.kpcb.mx);
     var sg = suggest(r).map(function(x){ var c = D.list.filter(function(k){ return k.id === x.id; })[0]; return c ? c.name : ''; }).filter(Boolean);
-    if(sg.length) bits.push('Careers that fit me: ' + sg.join(', '));
-    bits.push('Find yours on the BAIO app by Narendra Sir:');
+    if(sg.length) bits.push('Careers that fit: ' + sg.join(', '));
+    bits.push('👉 Tap to open the full report (where you stand, next steps, how BAIO helps):');
     return bits.join('\n');
   }
   function onClick(e){
@@ -222,10 +226,14 @@
           if(me) box.scrollIntoView({ behavior:'smooth', block:'start' });
         });
       });
-    } else if(a === 'out'){ me = null; try{ localStorage.removeItem(KEY); }catch(x){} paint(); }
+    } else if(a === 'out'){
+      if(me === LINK){ LINK = null; try{ history.replaceState(null, '', location.pathname); }catch(x){} me = null; try{ me = localStorage.getItem(KEY); }catch(x){} if(me && !(DATA && DATA[me])) me = null; }
+      else { me = null; try{ localStorage.removeItem(KEY); }catch(x){} }
+      paint();
+    }
     else if(a === 'print'){ document.body.classList.add('print-report'); window.print(); setTimeout(function(){ document.body.classList.remove('print-report'); }, 800); }
     else if(a === 'share'){
-      var r = DATA[me], txt = shareText(r), url = location.origin + location.pathname;
+      var r = DATA[me], txt = shareText(r), url = PAGE + '#report=' + me;
       if(navigator.share) navigator.share({ title:'My BAIO career report', text:txt, url:url }).catch(function(){});
       else window.open('https://wa.me/?text=' + encodeURIComponent(txt + '\n' + url), '_blank');
     }
@@ -236,7 +244,11 @@
       if(first){
         box.addEventListener('click', onClick);
         box.addEventListener('keydown', function(e){ if(e.key === 'Enter' && e.target.id === 'cpPass'){ var g = box.querySelector('[data-rp="go"]'); if(g) g.click(); } });
-        if(me){ loadData(function(){ if(!DATA || !DATA[me]) me = null; paint(); }); }
+        if(me){ loadData(function(){
+          if(!DATA || !DATA[me]) me = null;
+          paint();
+          if(me && me === LINK) setTimeout(function(){ box.scrollIntoView({ block:'start' }); }, 150);
+        }); }
       }
       paint();
     }
