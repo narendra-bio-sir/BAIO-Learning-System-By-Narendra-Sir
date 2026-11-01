@@ -34,9 +34,9 @@ const header = (t, i) => `
 const footer = n => `
     <div class="ws-footer">
       Biology All In One (BAIO) Learning System &middot; Worksheet by Narendra Sir &ndash; Lecturer in Biology
-      &middot; <a href="https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X">WhatsApp</a>
-      &middot; <a href="https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw">Instagram</a>
-      &middot; <a href="https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0">YouTube</a>
+      &middot; <a href="https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X"><img class="soc-ic" src="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/assets/social/wa.png" alt="" style="width:1.15em;height:1.15em;vertical-align:-0.22em;margin-right:5px;border:0;">WhatsApp</a>
+      &middot; <a href="https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw"><img class="soc-ic" src="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/assets/social/ig.png" alt="" style="width:1.15em;height:1.15em;vertical-align:-0.22em;margin-right:5px;border:0;">Instagram</a>
+      &middot; <a href="https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0"><img class="soc-ic" src="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/assets/social/yt.png" alt="" style="width:1.15em;height:1.15em;vertical-align:-0.22em;margin-right:5px;border:0;">YouTube</a>
       &middot; <span class="pnum">Page ${n} of 2</span>
     </div>`;
 const lines = n => `<div class="ws-answer-lines">${'<div class="rl"></div>'.repeat(n)}</div>`;
