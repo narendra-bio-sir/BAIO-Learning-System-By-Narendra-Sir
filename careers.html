@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Career Guidance | BAIO Learning System</title>
+<meta name="description" content="Career guidance for PU Science (PCB) students: medical via NEET, KCET courses, research and more, with exams, eligibility, fees, pay and a career quiz. By Narendra Sir.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="subject-apps/app.css?v=2">
+<style>
+[hidden]{display:none!important}
+body{font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',system-ui,sans-serif}
+.F{font-family:'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari',sans-serif}
+.tip{margin-top:16px;padding:13px 15px;border-radius:16px;background:color-mix(in srgb,var(--gold2) 12%,var(--panel));border:1.5px solid color-mix(in srgb,var(--gold2) 45%,transparent);font-size:14.5px;line-height:1.55}
+.tip b{color:var(--ink)}
+.qcard{margin-top:14px;display:flex;gap:12px;align-items:center;padding:14px 15px;border-radius:18px;background:var(--panel);border:1.5px solid var(--teal);cursor:pointer;width:100%;text-align:left;color:var(--ink);font:inherit}
+.qcard .e{font-size:30px;flex:none}
+.qcard b{display:block;font:700 17px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari'}
+.qcard small{color:var(--dim);font-size:13.5px}
+.groups{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+.gbtn{border:1.5px solid var(--line);background:var(--panel);color:var(--ink);border-radius:15px;padding:11px 12px;text-align:left;cursor:pointer;font:inherit;-webkit-tap-highlight-color:transparent}
+.gbtn b{display:block;font:700 15px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari'}
+.gbtn small{display:block;color:var(--dim);font-size:12px;line-height:1.35;margin-top:2px}
+.gbtn.on{border-color:var(--gold2);background:color-mix(in srgb,var(--gold2) 15%,var(--panel))}
+.cards{margin-top:14px;display:grid;gap:10px}
+.car{background:var(--panel);border:1.5px solid var(--line);border-radius:18px;overflow:hidden}
+.car.open{border-color:color-mix(in srgb,var(--teal) 60%,var(--line))}
+.car.flash{box-shadow:0 0 0 3px var(--gold2)}
+.ch{display:flex;gap:12px;align-items:center;padding:13px 15px;cursor:pointer;width:100%;background:none;border:0;color:var(--ink);text-align:left;font:inherit;-webkit-tap-highlight-color:transparent}
+.ch .e{font-size:28px;flex:none;width:40px;text-align:center}
+.ch h3{margin:0;font:700 17px/1.25 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari'}
+.ch small{display:block;color:var(--dim);font-size:13px;line-height:1.4;margin-top:2px}
+.ch .dur{display:inline-block;margin-top:5px;font:700 11.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari';color:var(--teal);background:color-mix(in srgb,var(--teal) 12%,transparent);border-radius:999px;padding:3px 9px}
+.ch .ar{margin-left:auto;flex:none;color:var(--dim);transition:transform .2s}
+.car.open .ch .ar{transform:rotate(90deg)}
+.cb{padding:0 15px 14px;display:none}
+.car.open .cb{display:block}
+.cb p.what{margin:0 0 6px;font-size:14.5px;line-height:1.55}
+.row{display:flex;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:14px;line-height:1.5}
+.row .k{flex:none;width:26px;text-align:center}
+.row .v b{display:block;font:800 11px Inter,'Noto Sans Kannada','Noto Sans Devanagari';letter-spacing:.07em;text-transform:uppercase;color:var(--dim);margin-bottom:1px}
+.box{margin-top:18px;background:var(--panel);border:1.5px solid var(--line);border-radius:18px;padding:14px 16px}
+.box h3{margin:0 0 8px;font:700 17px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari'}
+.ex{padding:9px 0;border-top:1px solid var(--line);font-size:14px;line-height:1.5}
+.ex .n{font-weight:800}.ex .by{color:var(--dim);font-size:12px;margin-left:6px}
+.ex .f{color:var(--dim);font-size:13px}
+.note{margin-top:14px;font-size:12.5px;line-height:1.55;color:var(--dim)}
+/* quiz */
+.qz{margin-top:14px;background:var(--panel);border:1.5px solid var(--teal);border-radius:18px;padding:14px 15px}
+.qz h3{margin:0 0 4px;font:700 18px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari'}
+.qz .sub{color:var(--dim);font-size:13.5px;margin:0 0 6px}
+.qq{padding:10px 0;border-top:1px solid var(--line)}
+.qq p{margin:0 0 7px;font-size:15px;line-height:1.45}
+.opts{display:flex;gap:6px}
+.opts button{flex:1;border:1.5px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:11px;padding:8px 4px;font:700 13.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer}
+.opts button.on{border-color:var(--teal);background:color-mix(in srgb,var(--teal) 18%,var(--panel))}
+.qact{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.btn{border:0;border-radius:12px;padding:10px 15px;font:700 14px Inter,'Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer;background:linear-gradient(135deg,var(--gold2),#E9C45A);color:#1a1406}
+.btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink)}
+.res{margin-top:12px}
+.res .r{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:14px;background:var(--panel2);margin-top:8px;cursor:pointer;border:0;width:100%;text-align:left;color:var(--ink);font:inherit}
+.res .r .e{font-size:24px}
+.res .r b{display:block;font:700 15px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari'}
+.res .r small{color:var(--dim);font-size:12.5px}
+.res .rk{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:800 13px Inter;background:var(--gold2);color:#1a1406}
+@media print{.top,.qcard,.qz,.groups{display:none!important}.car .cb{display:block!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="brand" href="index.html"><div class="b">B</div><span>BAIO Learning System</span></a>
+  <div class="tools"><div id="langs"></div>
+    <a class="ib" href="index.html" aria-label="BAIO home">🏠</a>
+    <button class="ib" id="themeBtn" aria-label="Toggle theme">🌙</button></div>
+</div></header>
+<main class="wrap">
+  <section class="hero">
+    <div class="eyebrow" id="eyebrow" style="color:var(--teal)"></div>
+    <h1><span class="ic">🎓</span><span id="h1"></span></h1>
+    <p id="intro"></p>
+  </section>
+  <div class="tip" id="tip"></div>
+  <button class="qcard" id="qOpen" type="button"><span class="e">🧭</span><span><b id="qT"></b><small id="qS"></small></span></button>
+  <div id="quiz" hidden></div>
+  <div class="groups" id="groups" role="tablist"></div>
+  <div class="cards" id="cards"></div>
+  <div class="box" id="exams"></div>
+  <p class="note" id="note"></p>
+  <footer>BAIO Learning System · Narendra Sir</footer>
+</main>
+<script src="careers/data.js?v=1"></script>
+<script>
+(function(){
+  var D = window.CAREERS;
+  var UI = {
+    en:{ eyebrow:'After PU Science · PCB', h1:'Career Guidance',
+         intro:'Every path a Biology student can take after PU: what you study, which exam to write, fees, pay and future scope. Tap a career to open it.',
+         tip:'<b>💡 Smart move:</b> register for <b>both NEET-UG and KCET</b>. In Karnataka, nursing, pharmacy, agriculture, BVSc, BNYS and physiotherapy seats come through KCET, and physiotherapy is expected to move to NEET soon. Two exams = more doors open.',
+         qT:'Which career suits me?', qS:'Answer 10 quick questions and see your top 3 matches', qClose:'Close quiz',
+         qSub:'There are no right or wrong answers. Be honest!', yes:'Yes', maybe:'Maybe', no:'No',
+         see:'See my matches', reset:'Start again', top:'Your top matches', need:'Answer at least 5 questions first.',
+         lWhat:'What you do', dur:'Duration', exam:'Entrance exam', elig:'Eligibility', fee:'Fees (approx.)', pay:'Starting pay (approx.)', scope:'Future scope',
+         exT:'📅 Exam calendar (typical months)', note:'Fees and pay are approximate and change every year. Always check the latest KEA (cetonline.karnataka.gov.in), NTA and college notices before deciding. Confused? Ask Narendra Sir in class or on WhatsApp.' },
+    kn:{ eyebrow:'ಪಿಯುಸಿ ವಿಜ್ಞಾನದ ನಂತರ · PCB', h1:'ವೃತ್ತಿ ಮಾರ್ಗದರ್ಶನ',
+         intro:'ಪಿಯುಸಿ ನಂತರ ಜೀವಶಾಸ್ತ್ರ ವಿದ್ಯಾರ್ಥಿಗಳ ಎಲ್ಲಾ ದಾರಿಗಳು: ಏನು ಓದುತ್ತೀರಿ, ಯಾವ ಪರೀಕ್ಷೆ, ಶುಲ್ಕ, ಸಂಬಳ ಮತ್ತು ಭವಿಷ್ಯ. ತೆರೆಯಲು ವೃತ್ತಿಯ ಮೇಲೆ ಟ್ಯಾಪ್ ಮಾಡಿ.',
+         tip:'<b>💡 ಜಾಣ ನಿರ್ಧಾರ:</b> <b>NEET-UG ಮತ್ತು KCET ಎರಡಕ್ಕೂ</b> ನೋಂದಾಯಿಸಿ. ಕರ್ನಾಟಕದಲ್ಲಿ ನರ್ಸಿಂಗ್, ಫಾರ್ಮಸಿ, ಕೃಷಿ, BVSc, BNYS, ಫಿಸಿಯೋಥೆರಪಿ ಸೀಟುಗಳು KCET ಮೂಲಕ; ಫಿಸಿಯೋಥೆರಪಿ ಶೀಘ್ರದಲ್ಲೇ NEET ಗೆ ಬದಲಾಗುವ ನಿರೀಕ್ಷೆ. ಎರಡು ಪರೀಕ್ಷೆ = ಹೆಚ್ಚು ಅವಕಾಶ.',
+         qT:'ನನಗೆ ಯಾವ ವೃತ್ತಿ ಸೂಕ್ತ?', qS:'10 ಚಿಕ್ಕ ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸಿ, ನಿಮ್ಮ ಟಾಪ್ 3 ನೋಡಿ', qClose:'ಕ್ವಿಜ್ ಮುಚ್ಚಿ',
+         qSub:'ಸರಿ-ತಪ್ಪು ಉತ್ತರಗಳಿಲ್ಲ. ಪ್ರಾಮಾಣಿಕವಾಗಿ ಉತ್ತರಿಸಿ!', yes:'ಹೌದು', maybe:'ಇರಬಹುದು', no:'ಇಲ್ಲ',
+         see:'ನನ್ನ ಹೊಂದಾಣಿಕೆ ನೋಡಿ', reset:'ಮತ್ತೆ ಆರಂಭಿಸಿ', top:'ನಿಮಗೆ ಹೆಚ್ಚು ಹೊಂದುವ ವೃತ್ತಿಗಳು', need:'ಮೊದಲು ಕನಿಷ್ಠ 5 ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸಿ.',
+         lWhat:'ಏನು ಮಾಡುತ್ತೀರಿ', dur:'ಅವಧಿ', exam:'ಪ್ರವೇಶ ಪರೀಕ್ಷೆ', elig:'ಅರ್ಹತೆ', fee:'ಶುಲ್ಕ (ಅಂದಾಜು)', pay:'ಆರಂಭಿಕ ಸಂಬಳ (ಅಂದಾಜು)', scope:'ಭವಿಷ್ಯದ ಅವಕಾಶ',
+         exT:'📅 ಪರೀಕ್ಷಾ ಕ್ಯಾಲೆಂಡರ್ (ಸಾಮಾನ್ಯ ತಿಂಗಳುಗಳು)', note:'ಶುಲ್ಕ ಮತ್ತು ಸಂಬಳ ಅಂದಾಜು, ಪ್ರತಿ ವರ್ಷ ಬದಲಾಗುತ್ತವೆ. ನಿರ್ಧರಿಸುವ ಮೊದಲು KEA (cetonline.karnataka.gov.in), NTA ಮತ್ತು ಕಾಲೇಜಿನ ಇತ್ತೀಚಿನ ಸೂಚನೆ ನೋಡಿ. ಗೊಂದಲವೇ? ತರಗತಿಯಲ್ಲಿ ಅಥವಾ WhatsApp ನಲ್ಲಿ ನರೇಂದ್ರ ಸರ್ ಅವರನ್ನು ಕೇಳಿ.' },
+    hi:{ eyebrow:'पीयूसी साइंस के बाद · PCB', h1:'करियर मार्गदर्शन',
+         intro:'पीयूसी के बाद बायोलॉजी छात्रों के सभी रास्ते: क्या पढ़ेंगे, कौन-सी परीक्षा, फ़ीस, वेतन और भविष्य। खोलने के लिए करियर पर टैप करें।',
+         tip:'<b>💡 समझदारी:</b> <b>NEET-UG और KCET दोनों</b> के लिए रजिस्टर करें। कर्नाटक में नर्सिंग, फ़ार्मेसी, कृषि, BVSc, BNYS और फ़िज़ियोथेरेपी की सीटें KCET से मिलती हैं, और फ़िज़ियोथेरेपी जल्द NEET पर जा सकती है। दो परीक्षा = ज़्यादा मौके।',
+         qT:'मेरे लिए कौन-सा करियर सही है?', qS:'10 छोटे सवालों के जवाब दें और अपने टॉप 3 देखें', qClose:'क्विज़ बंद करें',
+         qSub:'कोई सही या गलत जवाब नहीं है। ईमानदारी से जवाब दें!', yes:'हाँ', maybe:'शायद', no:'नहीं',
+         see:'मेरे मैच देखें', reset:'फिर से शुरू करें', top:'आपके सबसे अच्छे मैच', need:'पहले कम से कम 5 सवालों के जवाब दें।',
+         lWhat:'क्या करेंगे', dur:'अवधि', exam:'प्रवेश परीक्षा', elig:'योग्यता', fee:'फ़ीस (अनुमान)', pay:'शुरुआती वेतन (अनुमान)', scope:'भविष्य',
+         exT:'📅 परीक्षा कैलेंडर (आम तौर पर महीने)', note:'फ़ीस और वेतन अनुमानित हैं और हर साल बदलते हैं। फ़ैसले से पहले KEA (cetonline.karnataka.gov.in), NTA और कॉलेज की ताज़ा सूचना ज़रूर देखें। उलझन है? क्लास में या WhatsApp पर नरेंद्र सर से पूछें।' }
+  };
+  function $(id){ return document.getElementById(id); }
+  function L(o){ return o ? (o[lang] || o.en) : ''; }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+  var lang = 'en'; try{ lang = localStorage.getItem('baio_lang') || 'en'; }catch(e){} if(!UI[lang]) lang = 'en';
+  var tb = $('themeBtn');
+  function theme(t){ document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light'); tb.textContent = t === 'dark' ? '☀️' : '🌙'; }
+  var th = 'light'; try{ th = localStorage.getItem('baio_theme') || 'light'; }catch(e){} theme(th);
+  tb.onclick = function(){ var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; theme(n); try{ localStorage.setItem('baio_theme', n); }catch(e){} };
+
+  var grp = 'neet', open = {}, ans = {}, showRes = false, quizOpen = false;
+  try{ ans = JSON.parse(localStorage.getItem('baio_career_quiz') || '{}') || {}; }catch(e){}
+  var h = location.hash.slice(1);
+  var hc = D.list.filter(function(c){ return c.id === h; })[0];
+  if(hc){ grp = hc.g; open[hc.id] = true; }
+  else if(D.groups.some(function(g){ return g.id === h; })) grp = h;
+  else if(h === 'quiz') quizOpen = true;
+
+  function card(c){
+    var u = UI[lang];
+    function row(k, lab, v){ return '<div class="row"><span class="k">'+k+'</span><div class="v"><b>'+lab+'</b>'+esc(L(v))+'</div></div>'; }
+    return '<article class="car'+(open[c.id]?' open':'')+'" id="'+c.id+'"><button class="ch" type="button" data-id="'+c.id+'" aria-expanded="'+!!open[c.id]+'"><span class="e">'+c.ic+'</span><span><h3>'+esc(c.name)+'</h3><small>'+esc(L(c.sub))+'</small><span class="dur">⏱ '+esc(L(c.dur))+'</span></span><span class="ar">›</span></button>'
+      + '<div class="cb"><p class="what">'+esc(L(c.what))+'</p>'
+      + row('📝', u.exam, c.exam) + row('✅', u.elig, c.elig) + row('💰', u.fee, c.fee) + row('💼', u.pay, c.pay) + row('🚀', u.scope, c.scope)
+      + '</div></article>';
+  }
+  function scores(){
+    return D.list.map(function(c){
+      var s = 0; c.t.forEach(function(t){ var a = ans[t]; s += a === 2 ? 2 : a === 1 ? 1 : 0; });
+      return { c:c, s:s / Math.sqrt(c.t.length) };
+    }).sort(function(a, b){ return b.s - a.s; });
+  }
+  function renderQuiz(){
+    var u = UI[lang], q = $('quiz');
+    q.hidden = !quizOpen; $('qOpen').hidden = quizOpen;
+    if(!quizOpen) return;
+    var n = Object.keys(ans).length;
+    var html = '<div class="qz"><h3>🧭 '+u.qT+'</h3><p class="sub">'+u.qSub+'</p>';
+    D.quiz.forEach(function(x){
+      var a = ans[x.t];
+      html += '<div class="qq"><p>'+esc(L(x.q))+'</p><div class="opts">'
+        + [[2,u.yes],[1,u.maybe],[0,u.no]].map(function(o){ return '<button type="button" data-t="'+x.t+'" data-v="'+o[0]+'" class="'+(a===o[0]?'on':'')+'">'+o[1]+'</button>'; }).join('')
+        + '</div></div>';
+    });
+    html += '<div class="qact"><button class="btn" id="qSee" type="button">'+u.see+'</button><button class="btn ghost" id="qReset" type="button">'+u.reset+'</button><button class="btn ghost" id="qClose" type="button">'+u.qClose+'</button></div>';
+    if(showRes){
+      if(n < 5) html += '<div class="res"><p class="sub">'+u.need+'</p></div>';
+      else {
+        html += '<div class="res"><h3>⭐ '+u.top+'</h3>' + scores().slice(0, 3).map(function(r, i){
+          return '<button class="r" type="button" data-go="'+r.c.id+'"><span class="rk">'+(i+1)+'</span><span class="e">'+r.c.ic+'</span><span><b>'+esc(r.c.name)+'</b><small>'+esc(L(r.c.sub))+'</small></span></button>';
+        }).join('') + '</div>';
+      }
+    }
+    q.innerHTML = html + '</div>';
+  }
+  function render(){
+    var u = UI[lang];
+    document.documentElement.lang = lang;
+    $('langs').innerHTML = [['en','English'],['kn','ಕನ್ನಡ'],['hi','हिंदी']].map(function(l){ return '<button class="lang'+(l[0]===lang?' on':'')+'" data-l="'+l[0]+'">'+l[1]+'</button>'; }).join('');
+    $('eyebrow').textContent = u.eyebrow; $('h1').textContent = u.h1; $('intro').textContent = u.intro; $('tip').innerHTML = u.tip;
+    $('qT').textContent = u.qT; $('qS').textContent = u.qS; $('note').textContent = u.note;
+    $('groups').innerHTML = D.groups.map(function(g){ return '<button class="gbtn'+(g.id===grp?' on':'')+'" role="tab" aria-selected="'+(g.id===grp)+'" data-g="'+g.id+'"><b>'+g.ic+' '+esc(L(g.t))+'</b><small>'+esc(L(g.s))+'</small></button>'; }).join('');
+    $('cards').innerHTML = D.list.filter(function(c){ return c.g === grp; }).map(card).join('');
+    $('exams').innerHTML = '<h3>'+u.exT+'</h3>' + D.exams.map(function(x){ return '<div class="ex"><span class="n">'+esc(x.n)+'</span><span class="by">'+esc(x.by)+'</span><div>'+esc(L(x.m))+'</div><div class="f">'+esc(L(x.f))+'</div></div>'; }).join('');
+    renderQuiz();
+  }
+  function go(id){
+    var c = D.list.filter(function(x){ return x.id === id; })[0]; if(!c) return;
+    grp = c.g; open = {}; open[id] = true; render();
+    var el = $(id); if(el){ el.scrollIntoView({ behavior:'smooth', block:'start' }); el.classList.add('flash'); setTimeout(function(){ el.classList.remove('flash'); }, 2000); }
+    try{ history.replaceState(null, '', '#' + id); }catch(e){}
+  }
+
+  $('langs').addEventListener('click', function(e){ var b = e.target.closest('button'); if(!b) return; lang = b.dataset.l; try{ localStorage.setItem('baio_lang', lang); }catch(x){} render(); });
+  $('groups').addEventListener('click', function(e){ var b = e.target.closest('.gbtn'); if(!b) return; grp = b.dataset.g; open = {}; render(); try{ history.replaceState(null, '', '#' + grp); }catch(x){} });
+  $('cards').addEventListener('click', function(e){
+    var b = e.target.closest('.ch'); if(!b) return;
+    var id = b.dataset.id; open[id] = !open[id];
+    var a = b.closest('.car'); a.classList.toggle('open', !!open[id]); b.setAttribute('aria-expanded', !!open[id]);
+  });
+  $('qOpen').onclick = function(){ quizOpen = true; renderQuiz(); $('quiz').scrollIntoView({ behavior:'smooth', block:'start' }); };
+  $('quiz').addEventListener('click', function(e){
+    var o = e.target.closest('.opts button');
+    if(o){ ans[o.dataset.t] = +o.dataset.v; try{ localStorage.setItem('baio_career_quiz', JSON.stringify(ans)); }catch(x){} o.parentNode.querySelectorAll('button').forEach(function(x){ x.classList.toggle('on', x === o); }); return; }
+    if(e.target.id === 'qSee'){ showRes = true; renderQuiz(); var r = document.querySelector('.res'); if(r) r.scrollIntoView({ behavior:'smooth', block:'center' }); return; }
+    if(e.target.id === 'qReset'){ ans = {}; showRes = false; try{ localStorage.removeItem('baio_career_quiz'); }catch(x){} renderQuiz(); return; }
+    if(e.target.id === 'qClose'){ quizOpen = false; showRes = false; renderQuiz(); return; }
+    var g = e.target.closest('[data-go]'); if(g) go(g.dataset.go);
+  });
+  render();
+  if(hc) setTimeout(function(){ go(hc.id); }, 200);
+})();
+</script>
+</body>
+</html>
