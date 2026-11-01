@@ -226,6 +226,7 @@
     else {
       h += examRow(u, lang, u.neet, r.neet) + examRow(u, lang, u.kpcb, r.kpcb);
       if(r.kpcm && (r.sub || {}).MAT != null) h += examRow(u, lang, u.kpcm, r.kpcm);
+      if(r.jee) h += examRow(u, lang, u.jee, r.jee);
     }
     var s = r.sub || {}, ks = ['BIO','CHE','PHY','MAT'].filter(function(k){ return s[k] != null; });
     if(ks.length){
