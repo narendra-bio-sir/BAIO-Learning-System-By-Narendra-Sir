@@ -631,8 +631,8 @@ function runLookup(){
       html += '<div class="table-wrap"><table><tr><th class="chk-col"><input type="checkbox" checked onchange="toggleAllInCard(\'' + cardId + '\', this.checked)"></th><th>Code Type</th><th>Code</th></tr>';
       let lastGroup = null;
       labels.forEach((label, idx)=>{
-        const group = puGroupOf(label);
-        if(group && group !== lastGroup){ html += puGroupHeaderRow(group); lastGroup = group; }
+        const group = puGroupOf(label) || 'OTHER';
+        if(group !== lastGroup){ html += puGroupHeaderRow(group); lastGroup = group; }
         html += '<tr><td class="chk-col"><input type="checkbox" class="code-check" data-label="' + escapeHtml(label) + '" data-code="' + escapeHtml(s.codes[label]) + '" checked></td>' +
           '<td>' + escapeHtml(label) + '</td><td class="code-cell">' + codeHtml(s.codes[label]) + '</td></tr>';
       });
@@ -657,6 +657,7 @@ function runLookup(){
 function toggleAllInCard(cardId, checked){
   const card = document.getElementById(cardId);
   card.querySelectorAll('.code-check').forEach(cb=> cb.checked = checked);
+  syncAllGroupHeaders(card);
 }
 function getSelectedFromCard(cardId){
   const card = document.getElementById(cardId);
@@ -927,11 +928,43 @@ function puGroupOf(label){
   return /^PU2\b/.test(label) ? 'PU2' : (/^PU1\b/.test(label) ? 'PU1' : null);
 }
 function puGroupHeaderText(group){
-  return group === 'RC' ? 'REPORT CARD PASSWORDS' : (group === 'PU1' ? 'PU-I CHAPTERS' : 'PU-II CHAPTERS');
+  return group === 'RC' ? 'REPORT CARD PASSWORDS' : group === 'PU1' ? 'PU-I CHAPTERS' : group === 'PU2' ? 'PU-II CHAPTERS' : 'OTHER CODES';
 }
+/* Group header row with its own tick box: selects / deselects every code in that group at once. */
 function puGroupHeaderRow(group){
-  return '<tr><td colspan="3" style="background:var(--teal2); color:#fff; font-weight:700; font-size:11px; letter-spacing:0.5px; padding:6px 10px;">' + puGroupHeaderText(group) + '</td></tr>';
+  return '<tr class="grp-row"><td class="chk-col" style="background:var(--teal2); padding:6px 10px;"><input type="checkbox" class="grp-chk" checked aria-label="Select all ' + puGroupHeaderText(group) + '"></td>' +
+    '<td colspan="2" style="background:var(--teal2); color:#fff; font-weight:700; font-size:11px; letter-spacing:0.5px; padding:6px 10px;"><label style="display:flex; justify-content:space-between; gap:8px; cursor:pointer; margin:0; color:#fff; font-size:11px; letter-spacing:0.5px;">' +
+    '<span>' + puGroupHeaderText(group) + '</span><span class="grp-n" style="font-weight:600; opacity:.85;">All</span></label></td></tr>';
 }
+function groupRowsOf(head){
+  const out = []; let r = head.nextElementSibling;
+  while(r && !r.classList.contains('grp-row')){ const cb = r.querySelector('input[type="checkbox"]'); if(cb) out.push(cb); r = r.nextElementSibling; }
+  return out;
+}
+function syncGroupHeader(head){
+  const cbs = groupRowsOf(head), on = cbs.filter(c => c.checked).length, g = head.querySelector('.grp-chk'), n = head.querySelector('.grp-n');
+  g.checked = cbs.length > 0 && on === cbs.length; g.indeterminate = on > 0 && on < cbs.length;
+  if(n) n.textContent = on === cbs.length ? 'All' : on === 0 ? 'None' : on + ' of ' + cbs.length;
+}
+function syncTopBox(table){
+  const top = table && table.querySelector('th input[type="checkbox"]'); if(!top) return;
+  const cbs = Array.from(table.querySelectorAll('tr:not(.grp-row) td input[type="checkbox"]')), on = cbs.filter(c => c.checked).length;
+  top.checked = cbs.length > 0 && on === cbs.length; top.indeterminate = on > 0 && on < cbs.length;
+}
+function syncAllGroupHeaders(root){ (root || document).querySelectorAll('tr.grp-row').forEach(syncGroupHeader); }
+document.addEventListener('click', e => {
+  const lab = e.target.closest('tr.grp-row label');
+  if(lab){ e.preventDefault(); const g = lab.closest('tr').querySelector('.grp-chk'); g.checked = !g.checked; g.dispatchEvent(new Event('change', {bubbles:true})); }
+});
+document.addEventListener('change', e => {
+  const t = e.target; if(!t || t.type !== 'checkbox') return;
+  if(t.classList.contains('grp-chk')){ const head = t.closest('tr'); groupRowsOf(head).forEach(cb => cb.checked = t.checked); syncGroupHeader(head); syncTopBox(head.closest('table')); return; }
+  const tr = t.closest('tr'); if(!tr) return;
+  if(tr.querySelector('th')){ setTimeout(() => syncAllGroupHeaders(tr.closest('table')), 0); return; }
+  let r = tr.previousElementSibling; while(r && !r.classList.contains('grp-row')) r = r.previousElementSibling;
+  if(r) syncGroupHeader(r);
+  syncTopBox(tr.closest('table'));
+});
 function codeLabelSortKey(label){
   const isRC = /Report Card Password/i.test(label);
   const pu = /^PU2\b/.test(label) ? 2 : 1;
@@ -952,12 +985,12 @@ function renderExistingChapterCodes(name, roll, section){
     id: 'exrow_' + i,
     label: ct.label,
     code: computeStudentCode(name, roll, section, ct.key)
-  }));
+  })).sort((a, b) => compareCodeLabels(a.label, b.label));
   let html = '<div class="table-wrap"><table><tr><th></th><th>Content</th><th>Code</th></tr>';
   let lastGroup = null;
   window.__lastExistingRows.forEach(r=>{
-    const group = puGroupOf(r.label);
-    if(group && group !== lastGroup){ html += puGroupHeaderRow(group); lastGroup = group; }
+    const group = puGroupOf(r.label) || 'OTHER';
+    if(group !== lastGroup){ html += puGroupHeaderRow(group); lastGroup = group; }
     html += '<tr><td><input type="checkbox" id="' + r.id + '" checked></td><td>' + escapeHtml(r.label) + '</td><td class="code-cell">' + codeHtml(r.code) + '</td></tr>';
   });
   html += '</table></div>';
@@ -969,6 +1002,7 @@ function toggleAllExistingCodes(checked){
     const el = document.getElementById(r.id);
     if(el) el.checked = checked;
   });
+  syncAllGroupHeaders();
 }
 function getSelectedExisting(){
   return (window.__lastExistingRows || []).filter(r=>{
@@ -1118,12 +1152,12 @@ function renderExistingMasterCodes(label){
     id: 'exmrow_' + i,
     label: ct.label,
     code: computeMasterCode(label, ct.key)
-  }));
+  })).sort((a, b) => compareCodeLabels(a.label, b.label));
   let html = '<div class="table-wrap"><table><tr><th></th><th>Content</th><th>Code</th></tr>';
   let lastGroup = null;
   window.__lastExistingMasterRows.forEach(r=>{
-    const group = puGroupOf(r.label);
-    if(group && group !== lastGroup){ html += puGroupHeaderRow(group); lastGroup = group; }
+    const group = puGroupOf(r.label) || 'OTHER';
+    if(group !== lastGroup){ html += puGroupHeaderRow(group); lastGroup = group; }
     html += '<tr><td><input type="checkbox" id="' + r.id + '" checked></td><td>' + escapeHtml(r.label) + '</td><td class="code-cell">' + codeHtml(r.code) + '</td></tr>';
   });
   html += '</table></div>';
@@ -1135,6 +1169,7 @@ function toggleAllExistingMaster(checked){
     const el = document.getElementById(r.id);
     if(el) el.checked = checked;
   });
+  syncAllGroupHeaders();
 }
 function getSelectedExistingMaster(){
   return (window.__lastExistingMasterRows || []).filter(r=>{
