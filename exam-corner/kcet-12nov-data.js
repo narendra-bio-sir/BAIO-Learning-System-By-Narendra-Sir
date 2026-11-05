@@ -17,8 +17,8 @@ window.KCET12 = {
   { c:'anat', src:'paper', q:'Find out the <b>wrong</b> statement about angiosperm roots.', o:['Cuticle is absent in young stages.','The apex is protected by root cap.','Vascular bundles are collateral.','Xylem is centripetal in growth in the young roots.'], a:2,
     e:'In roots, xylem and phloem lie on different radii, so the vascular bundles are <b>radial</b>, not collateral.' },
   { c:'anat', src:'paper', img:'exam-corner/kcet-12nov/monocot-leaf-ts.jpg', q:'The diagram represents the T.S. of a monocot leaf. Identify the functions of the parts labelled A, B, C and D and choose the correct option.',
-    o:['A: Motor action · B: Photosynthesis · C: Conduction · D: Transpiration','A: Motor action · B: Conduction · C: Photosynthesis · D: Transpiration','A: Transpiration · B: Photosynthesis · C: Conduction · D: Transpiration','A: Transpiration · B: Conduction · C: Photosynthesis · D: Motor action'], a:2,
-    e:'A and D point to stomata on the upper and lower epidermis (a monocot leaf is isobilateral, with stomata on both surfaces): transpiration. B is mesophyll: photosynthesis. C is a vascular bundle: conduction.' },
+    o:['A: Motor action · B: Photosynthesis · C: Conduction · D: Transpiration','A: Motor action · B: Conduction · C: Photosynthesis · D: Transpiration','A: Transpiration · B: Photosynthesis · C: Conduction · D: Transpiration','A: Transpiration · B: Conduction · C: Photosynthesis · D: Motor action'], a:0,
+    e:'A points to the large bulliform cells of the upper (adaxial) epidermis, which roll the leaf: motor action. B is mesophyll: photosynthesis. C is a vascular bundle: conduction. D is a stoma on the lower epidermis: transpiration.' },
   { c:'anat', src:'paper', q:'The opening and closing of stomata is controlled by the activity of', o:['Guard cells','Epidermal cells','Mesophyll cells','Lenticels'], a:0,
     e:'Each stoma has two bean-shaped (in grasses dumb-bell-shaped) guard cells that regulate the opening and closing of the pore.' },
   { c:'anat', src:'paper', q:'In plants, lateral roots arise from', o:['Epidermis','Hypodermis','Endodermis','Pericycle'], a:3,
@@ -94,8 +94,8 @@ window.KCET12 = {
     e:'The frog has 10 pairs of cranial nerves (humans have 12 pairs).' },
 
   /* ---------- Cell: The Unit of Life ---------- */
-  { c:'cell', src:'paper', img:'exam-corner/kcet-12nov/animal-cell.jpg', q:'The RER in a cell synthesised a protein that would later be used to build the plasma membrane. The protein in the membrane is slightly different from the one made in the RER, so it was probably modified in another organelle. Identify that organelle in the diagram.', o:['B','C','D','A'], a:2,
-    e:'Proteins from the ER are modified in the Golgi apparatus (glycoproteins, glycolipids) before going to the membrane. In the diagram, D points to the curved stack of Golgi cisternae.' },
+  { c:'cell', src:'paper', img:'exam-corner/kcet-12nov/animal-cell.jpg', q:'The RER in a cell synthesised a protein that would later be used to build the plasma membrane. The protein in the membrane is slightly different from the one made in the RER, so it was probably modified in another organelle. Identify that organelle in the diagram.', o:['B','C','D','A'], a:1,
+    e:'Proteins from the ER are modified in the Golgi apparatus (glycoproteins, glycolipids) before going to the membrane. In the diagram, C points to the stack of Golgi cisternae beside the nucleus.' },
   { c:'cell', src:'paper', q:'During endocytosis', o:['The cell engulfs and internalises materials using its membrane','The cell enables extracellular digestion of large molecules','The cell divides its cytoplasm during mitosis','The cell digests itself'], a:0,
     e:'Endocytosis: the plasma membrane folds in to take materials into the cell.' },
   { c:'cell', src:'paper', q:'An RBC and a plant cell (with a thick cell wall) are placed in distilled water. The solute concentration is the same in both cells. What changes would be observed?', o:['The plant cell would increase in size and burst, while the RBC would remain about the same size.','Both the plant cell and the RBC would decrease in size and collapse.','Neither cell would change.','The RBC would increase in size and burst, while the plant cell would remain about the same size.'], a:3,
