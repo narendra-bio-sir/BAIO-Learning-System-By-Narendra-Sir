@@ -115,6 +115,19 @@ table.mt th{background:var(--panel2)}
 .verdict{float:right;font:800 12px Inter;padding:2px 8px;border-radius:999px}
 .verdict.ok{background:var(--okbg);color:var(--ok)}.verdict.bad{background:var(--badbg);color:var(--bad)}.verdict.skip{background:var(--panel2);color:var(--ink-dim)}
 .note{font-size:12px;color:var(--ink-dim);line-height:1.55;margin-top:10px}
+.lock h3{font-size:17px}.lock p{font-size:13.5px;color:var(--ink-dim);line-height:1.6;margin:6px 0 0}
+.fld{display:grid;gap:8px;margin-top:12px}
+.fld input{width:100%;min-height:46px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);padding:10px 12px;font:600 15px Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif}
+.fld input#kCode{letter-spacing:2px;text-transform:uppercase;font-family:'JetBrains Mono',ui-monospace,monospace}
+.msg{margin-top:8px;font-size:13px;font-weight:600;color:var(--bad);min-height:18px}
+.who{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--ink-dim)}
+.who b{color:var(--ink)}
+.opt.locked{cursor:default}.opt.locked:not(.sel){opacity:.6}
+.rc-ov{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.62);display:flex;align-items:flex-end;justify-content:center}
+.rc-sh{width:100%;max-width:520px;max-height:94vh;overflow:auto;background:var(--panel);color:var(--ink);border-radius:20px 20px 0 0;padding:14px 16px 20px}
+.rc-sh img{display:block;width:100%;border-radius:12px;border:1px solid var(--line);margin:8px 0 12px}
+.rc-h{display:flex;justify-content:space-between;align-items:center;font:800 16px 'Space Grotesk',sans-serif}
+.rc-x{background:none;border:0;color:inherit;font-size:26px;min-width:44px;min-height:44px;cursor:pointer}
 footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
 @media (max-width:640px){ .hero h1{font-size:25px} .brand span{display:none} .facts,.parts{grid-template-columns:repeat(2,minmax(0,1fr))} .pal{grid-template-columns:repeat(8,minmax(0,1fr))} }
 @media print{ .topnav,.timerbar,.noprint{display:none!important} body{background:#fff;color:#000} .q,.card{border:1px solid #999;break-inside:avoid} }
@@ -166,7 +179,11 @@ var T = {
   yourAns:'Your answer', rightAns:'Correct answer', why:'Why', again:'↻ Try again', shareScore:'📤 Share my score', home:'← Mock test home',
   shareMsg:'📝 KCET Mock Test (I PUC Biology, 12 Nov) — 60 questions in 60 minutes with the paper\'s diagrams and explanations. Free on BAIO by Narendra Sir:',
   myScore:function(s){ return '🎯 I scored ' + s + '/60 in the BAIO KCET Mock Test (I PUC Biology). Try it:'; },
-  note:'Mock test made from the class KCET cumulative test (45 questions) plus 15 new practice questions on the same chapters.' },
+  note:'Mock test made from the class KCET cumulative test (45 questions) plus 15 new practice questions on the same chapters.',
+  lockH:'🔒 Unlock the mock test', lockP:'This mock test is for Narendra Sir\'s students. Enter your name, section and roll number exactly as on your report card, and the mock test code Sir gave you.',
+  name:'Full name', section:'Section (e.g. Spark)', roll:'Roll number (e.g. 26MPU0077)', code:'Mock test code (e.g. ABCD-1234)', unlock:'🔓 Unlock', need:'Please fill in all four boxes.', bad:'This code does not match. Check your name, section and roll number, exactly as given by Sir.',
+  wa:'💬 Ask Sir for a code on WhatsApp', waMsg:'Hello Sir, please send me the KCET mock test (12 Nov) code. Name: {n}, Section: {s}, Roll: {r}', for:'Unlocked for', notYou:'Not you?', teacher:'Teacher access',
+  lockAns:'Once you tap an option, your answer is locked and cannot be changed — read all four options first, just like on the KCET OMR sheet.', card:'📄 Report card', making:'Making your report card…', rcShare:'📤 Share report card', rcSave:'⬇ Save picture' },
  kn:{ eyebrow:'ಪರೀಕ್ಷಾ ಕಾರ್ನರ್ · ಪ್ರಥಮ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ · KCET ಸಂಚಿತ ಪರೀಕ್ಷೆ', h1:'KCET <span class="accent">ಮಾಕ್ ಟೆಸ್ಟ್</span>',
   intro:'ನವೆಂಬರ್ 12 ರ KCET ಸಂಚಿತ ಪರೀಕ್ಷೆಯನ್ನು KCET ರೀತಿಯಲ್ಲೇ ಅಭ್ಯಾಸ ಮಾಡಿ: 60 ನಿಮಿಷದಲ್ಲಿ 60 ಬಹು ಆಯ್ಕೆ ಪ್ರಶ್ನೆಗಳು, ಪತ್ರಿಕೆಯ ಅದೇ ಚಿತ್ರಗಳೊಂದಿಗೆ. ಅಂಕ, ಅಧ್ಯಾಯವಾರು ವಿಶ್ಲೇಷಣೆ ಮತ್ತು ಪ್ರತಿ ಉತ್ತರಕ್ಕೆ ವಿವರಣೆ ಪಡೆಯಿರಿ.',
   on:'KCET ಪರೀಕ್ಷೆ 12 ನವೆಂಬರ್ 2026', left:'ದಿನ ಬಾಕಿ', today:'ಇಂದು ಪರೀಕ್ಷೆ — ಶುಭವಾಗಲಿ!', over:'ಪರೀಕ್ಷೆ ಮುಗಿದಿದೆ — KCET ಗಾಗಿ ಅಭ್ಯಾಸ ಮುಂದುವರಿಸಿ',
@@ -182,7 +199,11 @@ var T = {
   yourAns:'ನಿಮ್ಮ ಉತ್ತರ', rightAns:'ಸರಿಯಾದ ಉತ್ತರ', why:'ಏಕೆ', again:'↻ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ', shareScore:'📤 ನನ್ನ ಅಂಕ ಹಂಚಿ', home:'← ಮಾಕ್ ಟೆಸ್ಟ್ ಮುಖಪುಟ',
   shareMsg:'📝 KCET ಮಾಕ್ ಟೆಸ್ಟ್ (ಪ್ರಥಮ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ, 12 ನವೆಂಬರ್) — 60 ನಿಮಿಷದಲ್ಲಿ 60 ಪ್ರಶ್ನೆಗಳು, ಚಿತ್ರಗಳು ಮತ್ತು ವಿವರಣೆಗಳೊಂದಿಗೆ. ನರೇಂದ್ರ ಸರ್ ಅವರ BAIO ನಲ್ಲಿ ಉಚಿತ:',
   myScore:function(s){ return '🎯 BAIO KCET ಮಾಕ್ ಟೆಸ್ಟ್‌ನಲ್ಲಿ (ಪ್ರಥಮ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ) ನನಗೆ 60 ಕ್ಕೆ ' + s + ' ಅಂಕ. ನೀವೂ ಪ್ರಯತ್ನಿಸಿ:'; },
-  note:'ತರಗತಿಯ KCET ಸಂಚಿತ ಪರೀಕ್ಷೆಯ 45 ಪ್ರಶ್ನೆಗಳು ಮತ್ತು ಅದೇ ಅಧ್ಯಾಯಗಳ 15 ಹೊಸ ಅಭ್ಯಾಸ ಪ್ರಶ್ನೆಗಳಿಂದ ಮಾಡಿದ ಮಾಕ್ ಟೆಸ್ಟ್.' },
+  note:'ತರಗತಿಯ KCET ಸಂಚಿತ ಪರೀಕ್ಷೆಯ 45 ಪ್ರಶ್ನೆಗಳು ಮತ್ತು ಅದೇ ಅಧ್ಯಾಯಗಳ 15 ಹೊಸ ಅಭ್ಯಾಸ ಪ್ರಶ್ನೆಗಳಿಂದ ಮಾಡಿದ ಮಾಕ್ ಟೆಸ್ಟ್.',
+  lockH:'🔒 ಮಾಕ್ ಟೆಸ್ಟ್ ಅನ್‌ಲಾಕ್ ಮಾಡಿ', lockP:'ಈ ಮಾಕ್ ಟೆಸ್ಟ್ ನರೇಂದ್ರ ಸರ್ ಅವರ ವಿದ್ಯಾರ್ಥಿಗಳಿಗೆ. ವರದಿ ಪತ್ರದಲ್ಲಿರುವಂತೆಯೇ ನಿಮ್ಮ ಹೆಸರು, ವಿಭಾಗ, ರೋಲ್ ಸಂಖ್ಯೆ ಮತ್ತು ಸರ್ ನೀಡಿದ ಮಾಕ್ ಟೆಸ್ಟ್ ಕೋಡ್ ನಮೂದಿಸಿ.',
+  name:'ಪೂರ್ಣ ಹೆಸರು', section:'ವಿಭಾಗ (ಉದಾ. Spark)', roll:'ರೋಲ್ ಸಂಖ್ಯೆ (ಉದಾ. 26MPU0077)', code:'ಮಾಕ್ ಟೆಸ್ಟ್ ಕೋಡ್ (ಉದಾ. ABCD-1234)', unlock:'🔓 ಅನ್‌ಲಾಕ್', need:'ದಯವಿಟ್ಟು ನಾಲ್ಕೂ ಬಾಕ್ಸ್ ತುಂಬಿ.', bad:'ಈ ಕೋಡ್ ಹೊಂದುತ್ತಿಲ್ಲ. ಸರ್ ನೀಡಿದಂತೆಯೇ ಹೆಸರು, ವಿಭಾಗ ಮತ್ತು ರೋಲ್ ಸಂಖ್ಯೆ ಪರಿಶೀಲಿಸಿ.',
+  wa:'💬 WhatsApp ನಲ್ಲಿ ಸರ್ ಅವರಿಂದ ಕೋಡ್ ಪಡೆಯಿರಿ', waMsg:'Hello Sir, please send me the KCET mock test (12 Nov) code. Name: {n}, Section: {s}, Roll: {r}', for:'ಅನ್‌ಲಾಕ್ ಆಗಿದೆ:', notYou:'ನೀವಲ್ಲವೇ?', teacher:'ಶಿಕ್ಷಕರ ಪ್ರವೇಶ',
+  lockAns:'ಒಮ್ಮೆ ಆಯ್ಕೆ ಒತ್ತಿದರೆ ಉತ್ತರ ಲಾಕ್ ಆಗುತ್ತದೆ, ಬದಲಾಯಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ — KCET OMR ನಂತೆಯೇ, ನಾಲ್ಕೂ ಆಯ್ಕೆಗಳನ್ನು ಓದಿ ನಂತರ ಉತ್ತರಿಸಿ.', card:'📄 ವರದಿ ಪತ್ರ', making:'ವರದಿ ಪತ್ರ ತಯಾರಾಗುತ್ತಿದೆ…', rcShare:'📤 ವರದಿ ಪತ್ರ ಹಂಚಿ', rcSave:'⬇ ಚಿತ್ರ ಉಳಿಸಿ' },
  hi:{ eyebrow:'एग्ज़ाम कॉर्नर · I PUC बायोलॉजी · KCET संचयी टेस्ट', h1:'KCET <span class="accent">मॉक टेस्ट</span>',
   intro:'12 नवंबर के KCET संचयी टेस्ट का अभ्यास KCET के तरीके से करें: 60 मिनट में 60 बहुविकल्पीय प्रश्न, पेपर के उन्हीं चित्रों के साथ। अपना स्कोर, अध्यायवार विश्लेषण और हर उत्तर की व्याख्या पाएँ।',
   on:'KCET टेस्ट 12 नवंबर 2026', left:'दिन बाकी', today:'आज टेस्ट है — शुभकामनाएँ!', over:'टेस्ट हो गया — KCET के लिए अभ्यास जारी रखें',
@@ -198,7 +219,11 @@ var T = {
   yourAns:'आपका उत्तर', rightAns:'सही उत्तर', why:'क्यों', again:'↻ फिर से प्रयास करें', shareScore:'📤 मेरा स्कोर शेयर करें', home:'← मॉक टेस्ट होम',
   shareMsg:'📝 KCET मॉक टेस्ट (I PUC बायोलॉजी, 12 नवंबर) — 60 मिनट में 60 प्रश्न, चित्रों और व्याख्याओं के साथ। नरेंद्र सर के BAIO पर मुफ़्त:',
   myScore:function(s){ return '🎯 BAIO KCET मॉक टेस्ट (I PUC बायोलॉजी) में मेरा स्कोर ' + s + '/60. आप भी आज़माएँ:'; },
-  note:'क्लास के KCET संचयी टेस्ट के 45 प्रश्न और उन्हीं अध्यायों के 15 नए अभ्यास प्रश्नों से बना मॉक टेस्ट।' }
+  note:'क्लास के KCET संचयी टेस्ट के 45 प्रश्न और उन्हीं अध्यायों के 15 नए अभ्यास प्रश्नों से बना मॉक टेस्ट।',
+  lockH:'🔒 मॉक टेस्ट अनलॉक करें', lockP:'यह मॉक टेस्ट नरेंद्र सर के छात्रों के लिए है। रिपोर्ट कार्ड के अनुसार अपना नाम, सेक्शन, रोल नंबर और सर का दिया मॉक टेस्ट कोड डालें।',
+  name:'पूरा नाम', section:'सेक्शन (जैसे Spark)', roll:'रोल नंबर (जैसे 26MPU0077)', code:'मॉक टेस्ट कोड (जैसे ABCD-1234)', unlock:'🔓 अनलॉक', need:'कृपया चारों बॉक्स भरें।', bad:'यह कोड मेल नहीं खाता। सर के दिए अनुसार नाम, सेक्शन और रोल नंबर जाँचें।',
+  wa:'💬 WhatsApp पर सर से कोड माँगें', waMsg:'Hello Sir, please send me the KCET mock test (12 Nov) code. Name: {n}, Section: {s}, Roll: {r}', for:'अनलॉक:', notYou:'आप नहीं?', teacher:'शिक्षक प्रवेश',
+  lockAns:'विकल्प चुनते ही उत्तर लॉक हो जाता है, बदला नहीं जा सकता — KCET OMR की तरह, पहले चारों विकल्प पढ़ें।', card:'📄 रिपोर्ट कार्ड', making:'रिपोर्ट कार्ड बन रहा है…', rcShare:'📤 रिपोर्ट कार्ड शेयर करें', rcSave:'⬇ चित्र सेव करें' }
 };
 var lang = 'en'; try{ var sl = localStorage.getItem('baio_lang'); if(T[sl]) lang = sl; }catch(e){}
 var sw = document.getElementById('langSwitcher');
@@ -206,6 +231,123 @@ sw.innerHTML = [['en','EN'],['kn','ಕನ್ನಡ'],['hi','हिंदी']].m
 sw.onclick = function(e){ var b = e.target.closest('[data-l]'); if(!b) return; lang = b.dataset.l; try{ localStorage.setItem('baio_lang', lang); }catch(x){} draw(); };
 function u(){ return T[lang]; }
 function chName(k){ var c = D.chapters[k]; return c[lang] || c.en; }
+
+/* ---------- unlock: per-student code from ns-gen.html (content key KCET-PU1-12NOV) ---------- */
+var UKEY = 'baio_kcet12_unlock', CKEY = 'KCET-PU1-12NOV';
+var TEACHER_SHA = 'b9190174838a61ef2b513521c8c7372cd34c4de412a2fc8e9fdc564af592397c'; /* sha256 of the analytics master code */
+var CODE_SALT = 'BAIO-STUDENT-LOCK-2026', CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+function normalizeField(s){ return (s || '').toString().trim().toUpperCase().replace(/\s+/g, ' '); }
+function fnv1aHash(str){ var h = 0x811c9dc5; for(var i = 0; i < str.length; i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); } return h >>> 0; }
+function computeStudentCode(name, roll, section, contentKey){
+  var ck = contentKey ? ('|' + normalizeField(contentKey)) : '';
+  var key = CODE_SALT + '|' + normalizeField(name) + '|' + normalizeField(roll) + '|' + normalizeField(section) + ck;
+  var h1 = fnv1aHash(key), h2 = fnv1aHash(key.split('').reverse().join('') + CODE_SALT);
+  var n = (BigInt(h1) << 32n) | BigInt(h2), base = BigInt(CODE_CHARS.length), code = '';
+  for(var i = 0; i < 8; i++){ code += CODE_CHARS[Number(n % base)]; n = n / base; }
+  return code.slice(0, 4) + '-' + code.slice(4, 8);
+}
+function sha(s){ return crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)).then(function(b){ return Array.from(new Uint8Array(b)).map(function(x){ return x.toString(16).padStart(2, '0'); }).join(''); }); }
+function esc(s){ return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+var me = get(UKEY);
+function lockHtml(){
+  var t = u(), pr = {}; try{ pr = JSON.parse(localStorage.getItem('baio_student') || 'null') || {}; }catch(e){}
+  return '<div class="card lock"><h3>' + t.lockH + '</h3><p>' + t.lockP + '</p><div class="fld">' +
+    '<input id="kName" autocomplete="name" placeholder="' + esc(t.name) + '" value="' + esc(pr.name || '') + '">' +
+    '<input id="kSec" placeholder="' + esc(t.section) + '" value="' + esc(pr.section || '') + '">' +
+    '<input id="kRoll" autocapitalize="characters" placeholder="' + esc(t.roll) + '" value="' + esc(pr.roll || '') + '">' +
+    '<input id="kCode" autocapitalize="characters" autocomplete="off" placeholder="' + esc(t.code) + '"></div>' +
+    '<div class="msg" id="kMsg"></div><button class="btn pri big" data-a="unlock">' + t.unlock + '</button>' +
+    '<div class="row" style="margin-top:10px;justify-content:center"><a class="btn" id="kWa" target="_blank" rel="noopener" href="https://wa.me/919008968389?text=' + encodeURIComponent(t.waMsg.replace('{n}', pr.name || '').replace('{s}', pr.section || '').replace('{r}', pr.roll || '')) + '">' + t.wa + '</a></div></div>';
+}
+function tryUnlock(){
+  var t = u(), v = function(id){ return ((document.getElementById(id) || {}).value || '').trim(); };
+  var name = v('kName'), sec = v('kSec'), roll = v('kRoll').toUpperCase(), code = v('kCode').toUpperCase().replace(/\s+/g, ''), m = document.getElementById('kMsg');
+  if(code && !/-/.test(code) && code.length === 8) code = code.slice(0, 4) + '-' + code.slice(4);
+  if(!code){ m.textContent = t.need; return; }
+  sha(v('kCode').toUpperCase()).then(function(hx){
+    if(hx === TEACHER_SHA){ me = { teacher:true, name:'', roll:'', section:'' }; put(UKEY, me); draw(); return; }
+    if(!name || !sec || !roll){ m.textContent = t.need; return; }
+    if(computeStudentCode(name, roll, sec, CKEY) === code){ me = { name:name.replace(/\s+/g, ' '), roll:roll, section:sec }; put(UKEY, me); if(st && !st.done && !st.who){ st.who = me; put(SKEY, st); } draw(); window.scrollTo(0, 0); }
+    else m.textContent = t.bad;
+  }, function(){ m.textContent = t.bad; });
+}
+document.addEventListener('input', function(e){
+  if(!/^k(Name|Sec|Roll)$/.test(e.target.id || '')) return;
+  var w = document.getElementById('kWa'); if(!w) return;
+  var v = function(id){ return ((document.getElementById(id) || {}).value || '').trim(); };
+  w.href = 'https://wa.me/919008968389?text=' + encodeURIComponent(u().waMsg.replace('{n}', v('kName')).replace('{s}', v('kSec')).replace('{r}', v('kRoll')));
+});
+
+/* ---------- report card picture ---------- */
+function rr(x, X, Y, W, H, R){ x.beginPath(); x.moveTo(X + R, Y); x.arcTo(X + W, Y, X + W, Y + H, R); x.arcTo(X + W, Y + H, X, Y + H, R); x.arcTo(X, Y + H, X, Y, R); x.arcTo(X, Y, X + W, Y, R); x.closePath(); }
+function fitText(x, text, weight, max, min, fam, maxW){ var z = max; for(; z > min; z--){ x.font = weight + ' ' + z + 'px ' + fam; if(x.measureText(text).width <= maxW) break; } return z; }
+function drawCard(logo){
+  var r = grade(), pct = Math.round(100 * r.s / N), who = st.who || me || {}, W = 1080, H = 1350;
+  var cv = document.createElement('canvas'); cv.width = W; cv.height = H; var x = cv.getContext('2d');
+  var GOLD = '#B8912A', NAVY = '#14302A', TEAL = '#0F766E', HF = "'Space Grotesk', Inter, sans-serif", F = "Inter, 'Noto Sans Kannada', 'Noto Sans Devanagari', sans-serif";
+  x.fillStyle = '#FFFBF0'; x.fillRect(0, 0, W, H);
+  var g = x.createRadialGradient(W, 0, 0, W, 0, 900); g.addColorStop(0, 'rgba(45,212,191,.18)'); g.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+  /* header band */
+  var hg = x.createLinearGradient(0, 0, W, 0); hg.addColorStop(0, '#0B1B14'); hg.addColorStop(1, '#1D3B2E'); x.fillStyle = hg; x.fillRect(0, 0, W, 190);
+  if(logo){ x.save(); rr(x, 60, 50, 90, 90, 22); x.fillStyle = '#fff'; x.fill(); rr(x, 64, 54, 82, 82, 19); x.clip(); x.drawImage(logo, 64, 54, 82, 82); x.restore(); }
+  x.fillStyle = '#E9C45A'; x.font = '700 22px ' + F; if('letterSpacing' in x) x.letterSpacing = '4px'; x.fillText('BAIO LEARNING SYSTEM', 172, 82); if('letterSpacing' in x) x.letterSpacing = '0px';
+  x.fillStyle = '#fff'; x.font = '700 44px ' + HF; x.fillText('KCET Mock Test · Report Card', 172, 136);
+  x.fillStyle = '#9FC4B6'; x.font = '600 22px ' + F; x.fillText('I PUC Biology · Cumulative test · 12 Nov 2026', 172, 170);
+  /* student */
+  var y = 250; x.fillStyle = NAVY; fitText(x, who.name || 'Student', '800', 52, 30, HF, W - 120); x.fillText(who.name || 'Student', 60, y);
+  x.fillStyle = '#5C6E63'; x.font = '600 26px ' + F;
+  var sub = (who.roll ? 'Roll ' + who.roll + '   ·   Section ' + who.section + '   ·   ' : '') + 'Taken ' + new Date(st.end || Date.now()).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+  x.fillText(sub, 60, y + 46);
+  /* score ring */
+  var cx = 250, cy = 520, rad = 150;
+  x.lineWidth = 30; x.strokeStyle = '#EFE7D2'; x.beginPath(); x.arc(cx, cy, rad, 0, 7); x.stroke();
+  var sg = x.createLinearGradient(cx - rad, cy - rad, cx + rad, cy + rad); sg.addColorStop(0, '#E9C45A'); sg.addColorStop(1, '#0F8F7A');
+  x.strokeStyle = sg; x.lineCap = 'round'; x.beginPath(); x.arc(cx, cy, rad, -Math.PI / 2, -Math.PI / 2 + Math.max(0.01, r.s / N) * Math.PI * 2); x.stroke(); x.lineCap = 'butt';
+  x.textAlign = 'center'; x.fillStyle = NAVY; x.font = '800 96px ' + HF; x.fillText(String(r.s), cx, cy + 18); x.fillStyle = '#5C6E63'; x.font = '700 28px ' + F; x.fillText('out of ' + N, cx, cy + 62); x.textAlign = 'left';
+  /* stats */
+  var sx = 470, stats = [['Correct', r.s, '#1d8a52'], ['Wrong', r.w, '#c03a32'], ['Not answered', r.k, '#5C6E63'], ['Percentage', pct + '%', GOLD]];
+  stats.forEach(function(s2, i){ var X = sx + (i % 2) * 280, Y = 390 + Math.floor(i / 2) * 140;
+    rr(x, X, Y, 260, 120, 22); x.fillStyle = '#fff'; x.fill(); x.lineWidth = 2; x.strokeStyle = 'rgba(184,145,42,.35)'; x.stroke();
+    x.fillStyle = s2[2]; x.font = '800 50px ' + HF; x.fillText(String(s2[1]), X + 24, Y + 64); x.fillStyle = '#5C6E63'; x.font = '600 22px ' + F; x.fillText(s2[0], X + 24, Y + 100); });
+  /* remark */
+  var rem = pct >= 85 ? 'Outstanding — KCET-ready!' : pct >= 65 ? 'Very good — revise the questions you missed.' : pct >= 40 ? 'Good effort — revise the weak chapter and retry.' : 'Keep going — read the chapters again and retry.';
+  rr(x, 60, 720, W - 120, 74, 20); x.fillStyle = 'rgba(15,143,122,.10)'; x.fill(); x.fillStyle = TEAL; fitText(x, rem, '700', 30, 20, F, W - 180); x.fillText(rem, 90, 768);
+  /* chapter bars */
+  x.fillStyle = NAVY; x.font = '700 32px ' + HF; x.fillText('Chapter-wise score', 60, 860);
+  var yy = 900;
+  Object.keys(r.ch).forEach(function(k){ var c = r.ch[k], p = c.s / c.n, nm = D.chapters[k].en;
+    x.fillStyle = NAVY; fitText(x, nm, '600', 26, 18, F, 760); x.fillText(nm, 60, yy + 26);
+    x.textAlign = 'right'; x.fillStyle = GOLD; x.font = '800 28px ' + HF; x.fillText(c.s + ' / ' + c.n, W - 60, yy + 26); x.textAlign = 'left';
+    rr(x, 60, yy + 42, W - 120, 20, 10); x.fillStyle = '#EFE7D2'; x.fill();
+    if(p > 0){ var bg2 = x.createLinearGradient(60, 0, W - 60, 0); bg2.addColorStop(0, '#E9C45A'); bg2.addColorStop(1, '#0F8F7A'); rr(x, 60, yy + 42, Math.max(20, (W - 120) * p), 20, 10); x.fillStyle = bg2; x.fill(); }
+    yy += 100; });
+  /* footer */
+  var fy = H - 150, fg = x.createLinearGradient(0, fy, W, fy); fg.addColorStop(0, '#E9C45A'); fg.addColorStop(1, '#B8912A'); x.fillStyle = fg; x.fillRect(0, fy, W, 150);
+  x.fillStyle = '#14203A'; x.font = '800 32px ' + F; x.fillText('Free KCET practice on the BAIO app', 60, fy + 62);
+  x.font = '600 22px ' + F; x.fillText('Open BAIO → Exam Corner → KCET mock test', 60, fy + 100);
+  x.textAlign = 'right'; x.font = '800 28px ' + F; x.fillText('Narendra Sir', W - 60, fy + 62); x.font = '600 18px ' + F; x.fillText('Biology Lecturer · Founder & CEO, BAIO', W - 60, fy + 98); x.textAlign = 'left';
+  return cv;
+}
+var logoP = null;
+function loadLogo(){ if(!logoP) logoP = new Promise(function(res){ var i = new Image(); i.onload = function(){ res(i); }; i.onerror = function(){ res(null); }; i.src = 'zone/baio-logo.png?v=2'; }); return logoP; }
+function reportCard(){
+  var t = u(), ov = document.createElement('div'); ov.className = 'rc-ov';
+  ov.innerHTML = '<div class="rc-sh" role="dialog" aria-modal="true"><div class="rc-h"><span>' + t.card + '</span><button class="rc-x" aria-label="Close">×</button></div><div id="rcBody" class="note">' + t.making + '</div>' +
+    '<div class="row"><button class="btn pri" id="rcShare" style="flex:1" disabled>' + t.rcShare + '</button><button class="btn" id="rcSave" disabled>' + t.rcSave + '</button></div></div>';
+  document.body.appendChild(ov);
+  var close = function(){ ov.remove(); }; ov.addEventListener('click', function(e){ if(e.target === ov) close(); }); ov.querySelector('.rc-x').onclick = close;
+  var who = st.who || me || {}, fname = 'BAIO_KCET_Mock_Report_' + (who.roll || 'student') + '.jpg', text = t.myScore(grade().s) + '\n' + PAGE;
+  Promise.all([document.fonts && document.fonts.ready, loadLogo()]).then(function(res){
+    var cv = drawCard(res[1]), url = cv.toDataURL('image/jpeg', 0.92);
+    document.getElementById('rcBody').outerHTML = '<img alt="Report card" src="' + url + '">';
+    var sb = document.getElementById('rcShare'), sv = document.getElementById('rcSave'); sb.disabled = false; sv.disabled = false;
+    sv.onclick = function(){ var a = document.createElement('a'); a.href = url; a.download = fname; document.body.appendChild(a); a.click(); a.remove(); };
+    sb.onclick = function(){ cv.toBlob(function(b){ var f = b && new File([b], fname, { type:'image/jpeg' });
+      if(f && navigator.canShare && navigator.canShare({ files:[f] })) navigator.share({ files:[f], text:text }).catch(function(){});
+      else if(navigator.share) navigator.share({ title:'BAIO · KCET Mock Test', text:text }).catch(function(){});
+      else window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank', 'noopener'); }, 'image/jpeg', 0.92); };
+  });
+}
 
 var app = document.getElementById('app'), view = 'home', st = get(SKEY), timer = null, filt = 'all';
 function daysLeft(){ return Math.ceil((new Date(D.date + 'T09:00:00+05:30') - Date.now()) / 864e5); }
@@ -219,7 +361,9 @@ function homeHtml(){
   h += '<div class="when">📅 ' + (d > 0 ? t.on + ' · <b>' + d + '</b> ' + t.left : d === 0 ? t.today : t.over) + '</div></div>';
   h += '<div class="facts"><div class="fact"><b>' + N + '</b><small>' + t.fq + '</small></div><div class="fact"><b>' + D.minutes + '</b><small>' + t.fm + '</small></div><div class="fact"><b>+1</b><small>' + t.fmk + '</small></div><div class="fact"><b>0</b><small>' + t.fneg + '</small></div></div>';
   h += '<div class="card"><h3 style="font-size:16px">' + t.chH + '</h3><div class="chl">' + Object.keys(cnt).map(function(k){ return '<div><span>' + chName(k) + '</span><b>' + cnt[k] + ' ' + t.qs + '</b></div>'; }).join('') + '</div></div>';
-  h += '<div class="card"><h3 style="font-size:16px">' + t.insH + '</h3><ul class="ins">' + t.ins.map(function(x){ return '<li>' + x + '</li>'; }).join('') + '</ul></div>';
+  h += '<div class="card"><h3 style="font-size:16px">' + t.insH + '</h3><ul class="ins">' + t.ins.concat([t.lockAns]).map(function(x){ return '<li>' + x + '</li>'; }).join('') + '</ul></div>';
+  if(!me) return h + lockHtml();
+  h += '<div class="card who"><span>' + t.for + ' <b>' + esc(me.name || t.teacher) + '</b>' + (me.roll ? ' · ' + esc(me.roll) + ' · ' + esc(me.section) : '') + '</span><button class="clear" data-a="logout">' + t.notYou + '</button></div>';
   if(best) h += '<div class="card" style="text-align:center"><b style="font:800 28px \'Space Grotesk\';color:var(--gold)">' + best.s + '/60</b><div class="note" style="margin-top:2px">' + t.best + ' · ' + best.n + ' ' + t.attempts + '</div></div>';
   if(st && !st.done){
     h += '<div class="card"><button class="btn pri big" data-a="resume">' + t.resume + ' · ' + nAns(st.ans) + '/' + N + '</button><div class="row" style="margin-top:8px;justify-content:center"><button class="btn" data-a="start">' + t.restart + '</button></div></div>';
@@ -239,9 +383,9 @@ function qHtml(q, i, mode, a){
     var cls = 'opt';
     if(mode === 'review'){ if(k === q.a) cls += ' ok'; else if(k === a) cls += ' bad'; }
     else if(a === k) cls += ' sel';
-    return '<label class="' + cls + '"><input type="radio" name="r' + i + '" value="' + k + '"' + (a === k ? ' checked' : '') + (mode === 'review' ? ' disabled' : '') + '><span class="l">' + LET[k] + ')</span><span>' + o + '</span></label>';
+    if(mode === 'test' && a != null) cls += ' locked';
+    return '<label class="' + cls + '"><input type="radio" name="r' + i + '" value="' + k + '"' + (a === k ? ' checked' : '') + (mode === 'review' || a != null ? ' disabled' : '') + '><span class="l">' + LET[k] + ')</span><span>' + o + '</span></label>';
   }).join('') + '</div>';
-  if(mode === 'test' && a != null) h += '<button class="clear" data-clear="' + i + '">✕ ' + t.clear + '</button>';
   if(mode === 'review') h += '<div class="explain"><b class="h">' + t.why + '</b>' + (a !== q.a ? t.rightAns + ': <b>' + LET[q.a] + ') ' + q.o[q.a] + '</b><br>' : '') + q.e + '</div>';
   return h + '</div>';
 }
@@ -271,9 +415,9 @@ function grade(){
 function resultHtml(){
   var t = u(), r = grade(), pct = Math.round(100 * r.s / N), mi = pct >= 85 ? 0 : pct >= 65 ? 1 : pct >= 40 ? 2 : 3;
   var used = Math.max(1, Math.round(((st.end || Date.now()) - st.start) / 60000));
-  var h = '<div class="card"><div class="score-big"><div class="eyebrow">' + t.score + '</div><div class="n">' + r.s + '<small> / ' + N + '</small></div><div class="m">' + t.m[mi] + '</div></div>';
+  var h = '<div class="card"><div class="score-big">' + (st.who && st.who.name ? '<div style="font-weight:700;margin-bottom:6px">' + esc(st.who.name) + (st.who.roll ? ' · ' + esc(st.who.roll) + ' · ' + esc(st.who.section) : '') + '</div>' : '') + '<div class="eyebrow">' + t.score + '</div><div class="n">' + r.s + '<small> / ' + N + '</small></div><div class="m">' + t.m[mi] + '</div></div>';
   h += '<div class="parts"><div class="part"><b style="color:var(--ok)">' + r.s + '</b><small>' + t.correct + '</small></div><div class="part"><b style="color:var(--bad)">' + r.w + '</b><small>' + t.wrong + '</small></div><div class="part"><b>' + r.k + '</b><small>' + t.skipped + '</small></div><div class="part"><b>' + Math.min(used, D.minutes) + '</b><small>' + t.time + ' (' + t.min + ')</small></div></div>';
-  h += '<div class="row noprint" style="margin-top:14px;justify-content:center"><button class="btn pri" data-a="start">' + t.again + '</button><button class="btn" data-a="shareScore">' + t.shareScore + '</button><button class="btn" data-a="home">' + t.home + '</button></div></div>';
+  h += '<div class="row noprint" style="margin-top:14px;justify-content:center"><button class="btn pri" data-a="start">' + t.again + '</button><button class="btn" data-a="shareScore">' + t.shareScore + '</button><button class="btn" data-a="card">' + t.card + '</button><button class="btn" data-a="home">' + t.home + '</button></div></div>';
   h += '<div class="card"><h3 style="font-size:16px">' + t.chRes + '</h3>' + Object.keys(r.ch).map(function(k){ var c = r.ch[k], p = Math.round(100 * c.s / c.n), href = D.chapters[k].href;
     return '<div style="margin-top:12px"><div class="row" style="justify-content:space-between"><b style="font-size:14px">' + chName(k) + '</b><span style="font-weight:800;color:var(--gold)">' + c.s + '/' + c.n + '</span></div><div class="bar"><i style="width:' + p + '%"></i></div>' +
       (p < 80 && href ? '<a href="' + href + '" style="font-size:12.5px;font-weight:700">' + t.revise + '</a>' : '') + '</div>'; }).join('') + '</div>';
@@ -313,33 +457,34 @@ document.getElementById('shareTop').onclick = function(){ share(u().shareMsg, PA
 
 app.addEventListener('change', function(e){
   var r = e.target; if(r.type !== 'radio' || view !== 'test') return;
-  var i = +r.name.slice(1); st.ans[i] = +r.value; put(SKEY, st);
+  var i = +r.name.slice(1); if(st.ans[i] != null) return; st.ans[i] = +r.value; put(SKEY, st);
   var box = document.getElementById('q' + i); box.outerHTML = qHtml(Q[i], i, 'test', st.ans[i]);
   document.getElementById('na').textContent = nAns(st.ans);
   var pb = document.querySelector('#pal [data-go="' + i + '"]'); if(pb) pb.classList.add('done');
 });
 app.addEventListener('click', function(e){
-  var c = e.target.closest('[data-clear]');
-  if(c){ var i = +c.dataset.clear; delete st.ans[i]; put(SKEY, st); document.getElementById('q' + i).outerHTML = qHtml(Q[i], i, 'test', null);
-    document.getElementById('na').textContent = nAns(st.ans); var pb = document.querySelector('#pal [data-go="' + i + '"]'); if(pb) pb.classList.remove('done'); return; }
   var g = e.target.closest('[data-go]'); if(g){ var pl = document.getElementById('pal'); if(pl) pl.classList.remove('show'); var el = document.getElementById('q' + g.dataset.go); if(el){ el.scrollIntoView({ block:'start' }); setTimeout(function(){ el.scrollIntoView({ block:'start' }); }, 350); } return; }
   var f = e.target.closest('[data-f]'); if(f){ filt = f.dataset.f; draw(); var rv = document.querySelector('.chips'); if(rv) rv.scrollIntoView({ block:'start' }); return; }
   var b = e.target.closest('[data-a]'); if(!b) return;
   var a = b.dataset.a, t = u();
-  if(a === 'start'){ st = { start:Date.now(), ans:{} }; put(SKEY, st); view = 'test'; draw(); startTimer(); window.scrollTo(0, 0); }
+  if((a === 'start' || a === 'resume') && !me){ draw(); return; }
+  if(a === 'start'){ st = { start:Date.now(), ans:{}, who:me }; put(SKEY, st); view = 'test'; draw(); startTimer(); window.scrollTo(0, 0); }
   else if(a === 'resume'){ if(remaining() <= 0){ finish(true); return; } view = 'test'; draw(); startTimer(); window.scrollTo(0, 0); }
   else if(a === 'pal'){ document.getElementById('pal').classList.toggle('show'); }
   else if(a === 'submit'){ var left = N - nAns(st.ans); if(confirm(left ? t.submitQ.replace('{n}', left) : t.submitQ0)) finish(false); }
   else if(a === 'home'){ view = 'home'; draw(); window.scrollTo(0, 0); }
-  else if(a === 'shareScore'){ share(t.myScore(grade().s), PAGE); }
+  else if(a === 'shareScore' || a === 'card'){ reportCard(); }
+  else if(a === 'logout'){ me = null; put(UKEY, null); draw(); }
+  else if(a === 'unlock'){ tryUnlock(); }
 });
 
-/* open where the student left off */
-if(st && st.done && location.hash !== '#start') view = 'result';
+/* open where the student left off (only once unlocked) */
+if(!me) view = 'home';
+else if(st && st.done && location.hash !== '#start') view = 'result';
 else if(st && !st.done && remaining() > 0) view = 'home';
 else if(st && !st.done){ draw(); finish(true); }
 draw();
-if(location.hash === '#start' && !(st && !st.done)){ st = { start:Date.now(), ans:{} }; put(SKEY, st); view = 'test'; draw(); startTimer(); }
+if(location.hash === '#start' && me && !(st && !st.done)){ st = { start:Date.now(), ans:{}, who:me }; put(SKEY, st); view = 'test'; draw(); startTimer(); }
 })();
 </script>
 </body>

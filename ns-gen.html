@@ -802,6 +802,8 @@ const EXISTING_CONTENT_TYPES = [
   { key: 'CH9-PU1-HWNOTES',  label: 'PU1 Chapter 9 \u2014 Handwritten Notes' },
   { key: 'CH9-PU1-COLOURNOTES',  label: 'PU1 Chapter 9 \u2014 Colour Notes Download (\u20B9100)' },
   { key: 'CH10-PU1-PREMIUM',  label: 'PU1 Chapter 10 \u2014 Premium Unlock Code' },
+  /* KCET cumulative mock test (kcet-mock-12nov.html) */
+  { key: 'KCET-PU1-12NOV',  label: 'PU1 KCET Mock Test (12 Nov) \u2014 Unlock Code' },
   { key: 'CH10-PU1-HWNOTES',  label: 'PU1 Chapter 10 \u2014 Handwritten Notes' },
   { key: 'CH10-PU1-COLOURNOTES',  label: 'PU1 Chapter 10 \u2014 Colour Notes Download (\u20B9100)' },
   { key: 'CH4-PREMIUM',  label: 'PU2 Chapter 4 \u2014 Premium Unlock Code' },
@@ -969,6 +971,7 @@ function codeLabelSortKey(label){
   const isRC = /Report Card Password/i.test(label);
   const pu = /^PU2\b/.test(label) ? 2 : 1;
   if(isRC) return [0, pu, 0];
+  if(/KCET Mock Test/i.test(label)) return [pu, 900, 0];
   const m = label.match(/Chapter (\d+)/);
   const chapter = m ? parseInt(m[1], 10) : 999;
   /* content type: 0 Premium, 1 Handwritten, 2 Colour Notes, 3 Flash Cards (keeps them from matching each other) */
@@ -1411,7 +1414,7 @@ function renderBulkContentTypeChecks(){
 }
 function bulkContentTypes(){
   if(!window.__bulkTypes){
-    window.__bulkTypes = EXISTING_CONTENT_TYPES.filter(ct => /^PU[12] Chapter \d+/.test(ct.label)).slice()
+    window.__bulkTypes = EXISTING_CONTENT_TYPES.filter(ct => /^PU[12] (Chapter \d+|KCET Mock Test)/.test(ct.label)).slice()
       .sort((a,b) => compareCodeLabels(a.label, b.label)).concat(CONTENT_TYPES);
   }
   return window.__bulkTypes;
