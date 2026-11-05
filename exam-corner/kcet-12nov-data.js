@@ -94,8 +94,8 @@ window.KCET12 = {
     e:'The frog has 10 pairs of cranial nerves (humans have 12 pairs).' },
 
   /* ---------- Cell: The Unit of Life ---------- */
-  { c:'cell', src:'paper', img:'exam-corner/kcet-12nov/animal-cell.jpg', q:'The RER in a cell synthesised a protein that would later be used to build the plasma membrane. The protein in the membrane is slightly different from the one made in the RER, so it was probably modified in another organelle. Identify that organelle in the diagram.', o:['B','C','D','A'], a:1,
-    e:'Proteins from the ER are modified in the Golgi apparatus (glycoproteins, glycolipids) before going to the membrane. In the diagram, C points to the stack of Golgi cisternae beside the nucleus.' },
+  { c:'cell', src:'paper', img:'exam-corner/kcet-12nov/animal-cell.jpg', q:'The RER in a cell synthesised a protein that would later be used to build the plasma membrane. The protein in the membrane is slightly different from the one made in the RER, so it was probably modified in another organelle. Identify that organelle in the diagram.', o:['B','C','D','A'], a:2,
+    e:'Proteins from the ER are modified in the Golgi apparatus (glycoproteins, glycolipids) before going to the membrane. In the diagram, D points to the curved stack of Golgi cisternae.' },
   { c:'cell', src:'paper', q:'During endocytosis', o:['The cell engulfs and internalises materials using its membrane','The cell enables extracellular digestion of large molecules','The cell divides its cytoplasm during mitosis','The cell digests itself'], a:0,
     e:'Endocytosis: the plasma membrane folds in to take materials into the cell.' },
   { c:'cell', src:'paper', q:'An RBC and a plant cell (with a thick cell wall) are placed in distilled water. The solute concentration is the same in both cells. What changes would be observed?', o:['The plant cell would increase in size and burst, while the RBC would remain about the same size.','Both the plant cell and the RBC would decrease in size and collapse.','Neither cell would change.','The RBC would increase in size and burst, while the plant cell would remain about the same size.'], a:3,
