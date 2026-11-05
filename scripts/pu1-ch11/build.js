@@ -202,10 +202,11 @@ if (PODS.length) {
 setConst('COLOUR_NOTES_PAGES', String(man.cnPages || 8));
 /* Pages are drawn by colour-notes.html → render-cn.js (1100x1448 JPGs). */
 rep('draggable="false" width="1100" height="1450"', 'draggable="false" width="1100" height="1448"');
-/* Payment links for Ch11 are not made yet: the Colour Notes card then offers WhatsApp payment only, and
-   the Premium card shows its "payment not set up" message. Paste the Razorpay links here when ready. */
+/* Razorpay links for Ch11 */
 rep("const CN_RAZORPAY_LINK = 'https://rzp.io/rzp/PzZQP9K'; /* Biomolecules Colour Notes ₹100 payment link */",
-    "const CN_RAZORPAY_LINK = 'YOUR_CH11_COLOUR_NOTES_LINK'; /* Photosynthesis Colour Notes ₹100 payment link */");
+    "const CN_RAZORPAY_LINK = 'https://rzp.io/rzp/xWUwnHU'; /* Photosynthesis Colour Notes ₹100 payment link */");
+rep("const RAZORPAY_PREMIUM_LINK = 'YOUR_CHAPTER9_PREMIUM_LINK_HERE';", "const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/kFobyadb';");
+rep("const HW_RAZORPAY_LINK = 'YOUR_CHAPTER9_HW_PREMIUM_LINK_HERE';", "const HW_RAZORPAY_LINK = 'https://rzp.io/rzp/xCJhowtA';");
 
 rep('All 8 topics, condensed', 'All ' + topics.length + ' topics, condensed');
 rep('12 full-colour pages', (man.cnPages || 8) + ' full-colour pages');

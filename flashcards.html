@@ -193,6 +193,8 @@ function drawLibrary(){
    Codes come from ns-gen.html (content key FC-<CHAPTER ID>, e.g. FC-PU1-CH10), same formula as the chapter pages. */
 const FC_PRICE = 50;
 const FC_RAZORPAY_LINK = 'https://rzp.io/rzp/cfFaVLoE'; /* one ₹50 Razorpay link for every chapter's flash cards */
+const FC_RAZORPAY_LINKS = {'pu1-ch11':'https://rzp.io/rzp/hDpfP67'}; /* chapters with their own ₹50 link */
+function fcPayLink(){ return FC_RAZORPAY_LINKS[cid] || FC_RAZORPAY_LINK; }
 const FC_MASTER_CODE = 'NS-MASTER-2027';
 const FC_UNLOCK_KEY = 'baio_flashcards_unlock';
 const CODE_SALT = 'BAIO-STUDENT-LOCK-2026', CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -218,7 +220,7 @@ function drawBuy(){
   if(fcUnlocked(cid)){ box.className='fcbuy ok'; box.innerHTML=`<div><h4 style="color:var(--teal)">${esc(T('okH'))}</h4><p>${esc(T('okP'))}</p></div>`; }
   else { const st=fcStudent(cid);
     box.className='fcbuy'; box.innerHTML=`<h4>${esc(T('buyH',{p:FC_PRICE}))}</h4><p>${esc(T('buyP',{p:FC_PRICE}))}</p>
-    <div class="row">${FC_RAZORPAY_LINK?`<a class="btn primary" href="${FC_RAZORPAY_LINK}" target="_blank" rel="noopener">${esc(T('pay',{p:FC_PRICE}))}</a>`:''}<a class="btn teal" href="${fcWaLink()}" target="_blank" rel="noopener">${esc(T('wa'))}</a></div>
+    <div class="row">${fcPayLink()?`<a class="btn primary" href="${fcPayLink()}" target="_blank" rel="noopener">${esc(T('pay',{p:FC_PRICE}))}</a>`:''}<a class="btn teal" href="${fcWaLink()}" target="_blank" rel="noopener">${esc(T('wa'))}</a></div>
     <div class="row"><input id="fcName" placeholder="${esc(T('name'))}" value="${esc(st.name||'')}"><input id="fcSection" placeholder="${esc(T('section'))}" value="${esc(st.section||'')}"><input id="fcRoll" placeholder="${esc(T('roll'))}" value="${esc(st.roll||'')}"></div>
     <div class="row"><input id="fcCode" placeholder="${esc(T('code'))}" autocapitalize="characters"><button class="btn primary" id="fcGo">${esc(T('unlock'))}</button></div><div class="msg" id="fcMsg"></div>`;
     $('#fcGo').onclick=fcSubmit; }
