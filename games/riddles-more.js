@@ -82,6 +82,16 @@ const MORE = {
   ['Interkinesis',['I come between meiosis I and meiosis II.','I am usually short.','No DNA replication happens in me.'],['Interphase','Diakinesis','Telophase']],
   ['Tetrad of cells',['I form at the end of meiosis II.','I have four cells.','All my cells are haploid.'],['Dyad','Syncytium','Bivalent']],
  ],
+ 'pu1-ch11':[
+  ['PEP',['I have three carbons.','I am found in C₄ mesophyll cells.','I am the first acceptor of CO₂ in C₄ plants.'],['RuBP','OAA','3-PGA']],
+  ['OAA',['I have four carbons.','I am the first product in C₄ plants.','I can become malic or aspartic acid.'],['PEP','3-PGA','Pyruvate']],
+  ['ATP synthase',['I have two parts, CF₀ and CF₁.','Protons flow through me.','I make ATP.'],['RuBisCO','PEPcase','Cytochrome']],
+  ['Lumen',['I am inside the thylakoid.','Protons pile up in me.','My pH falls in light.'],['Stroma','Cytoplasm','Mitochondrion']],
+  ['Phosphoglycolate',['I have two carbons.','I form when RuBisCO binds oxygen.','I start the C₂ pathway.'],['3-PGA','Glucose','OAA']],
+  ['Engelmann',['I used a prism and aerobic bacteria.','I worked with Cladophora.','I drew the first action spectrum.'],['Priestley','Sachs','Calvin']],
+  ['Blackman',['I gave a law in 1905.','I spoke of limiting factors.','My rule: the factor nearest its minimum decides.'],['Mitchell','Hill','van Niel']],
+  ['Carotenoids',['I am yellow to yellow-orange.','I am an accessory pigment.','I protect chlorophyll a from photo-oxidation.'],['Chlorophyll a','Chlorophyll b','RuBisCO']],
+ ],
  'pu2-ch1':[
   ['Endothecium',['I am a wall layer of the microsporangium.','I lie just below the epidermis.','I help the anther split open.'],['Tapetum','Middle layer','Epidermis']],
   ['Megaspore mother cell',['I am a large cell in the nucellus.','I have dense cytoplasm and a big nucleus.','I divide by meiosis to form four megaspores.'],['Microspore mother cell','Functional megaspore','Egg cell']],
