@@ -389,7 +389,7 @@ function qHtml(q, i, mode, a){
     var v = a == null ? 'skip' : a === q.a ? 'ok' : 'bad';
     h += '<span class="verdict ' + v + '">' + (v === 'ok' ? '✓ ' + t.correct : v === 'bad' ? '✗ ' + t.wrong : '— ' + t.skipped) + '</span>';
   }
-  h += '<div class="qt"><span class="qn">' + pos(i) + '.</span>' + (q.src === 'new' ? '<span class="tag">' + t.newQ + '</span> ' : ' ') + q.q + '</div>';
+  h += '<div class="qt"><span class="qn">' + pos(i) + '.</span>' + (q.src === 'new' && me && me.teacher ? '<span class="tag">' + t.newQ + '</span> ' : ' ') + q.q + '</div>';
   if(q.img) h += '<img class="qimg" src="' + q.img + '" alt="Diagram for question ' + pos(i) + '">';
   h += '<div class="opts">' + q.o.map(function(o, k){
     var cls = 'opt';
