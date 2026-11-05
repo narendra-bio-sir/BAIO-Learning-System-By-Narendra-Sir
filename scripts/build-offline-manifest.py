@@ -25,7 +25,7 @@ PACKS = [
               'study-tips.html', 'timetable.html', 'important-cards.html', 'guide.html', 'about.html',
               'neet-3-steps.html', 'midterm-practice.html', 'kcet-mock-12nov.html', 'exam-corner/kcet-12nov-data.js',
               'exam-corner/kcet-12nov/monocot-leaf-ts.jpg', 'exam-corner/kcet-12nov/animal-cell.jpg', 'exam-corner/kcet-12nov/plant-cell.jpg',
-              'exam-corner/kcet-12nov/chromosome.jpg', 'exam-corner/kcet-12nov/cilium-ts.jpg', 'offline-sync.js', 'tricks.html', 'careers.html', 'careers/student-data.js']),
+              'exam-corner/kcet-12nov/chromosome.jpg', 'exam-corner/kcet-12nov/cilium-ts.jpg', 'exam-corner/kcet-mock-share.jpg', 'offline-sync.js', 'tricks.html', 'careers.html', 'careers/student-data.js']),
     ('pu1', ['ch2/index.html', 'ch3/index.html', 'pu1-ch4.html', 'pu1-ch5.html', 'pu1-ch6.html',
              'pu1-ch8.html', 'pu1-ch9.html', 'pu1-ch10.html']),
     ('pu2', ['pu2-ch%d.html' % i for i in range(1, 14)]),
