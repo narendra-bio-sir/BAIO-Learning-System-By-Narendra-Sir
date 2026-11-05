@@ -82,6 +82,16 @@ window.RIDDLES = [
   ['Chiasmata',['I am X-shaped.','I appear in diplotene.','I mark the points of crossing over.'],['Kinetochores','Asters','Centromeres']],
   ['G0 phase',['I am entered by cells leaving G1.','Cells in me are active but do not divide.','Adult heart cells stay in me.'],['S phase','G2 phase','M phase']],
  ]},
+ {id:'pu1-ch11', pu:1, ch:11, t:'Photosynthesis in Higher Plants', page:'pu1-ch11.html', r:[
+  ['RuBisCO',['I am the most abundant enzyme on Earth.','I fix CO₂ on RuBP.','I can also bind O₂ by mistake.'],['PEPcase','ATP synthase','NADP reductase']],
+  ['P680',['I am a reaction centre.','My absorption peak is in red light.','I belong to photosystem II.'],['P700','RuBP','PEP']],
+  ['Stroma',['I am the fluid matrix of the chloroplast.','I hold the enzymes of the Calvin cycle.','I lose protons when light falls.'],['Lumen','Granum','Thylakoid']],
+  ['Kranz anatomy',['My name means wreath.','I am seen in maize leaves.','My bundle sheath cells have thick walls.'],['Z scheme','Calvin cycle','Hill reaction']],
+  ['Photolysis',['I need light.','I split water.','Manganese and chlorine help me.'],['Photorespiration','Carboxylation','Chemiosmosis']],
+  ['3-PGA',['I have three carbons.','I am the first stable product of the Calvin cycle.','Two of me form from one RuBP.'],['OAA','PEP','RuBP']],
+  ['Chlorophyll a',['I am blue-green on a chromatogram.','I am the chief pigment.','I sit in the reaction centre.'],['Chlorophyll b','Xanthophyll','Carotene']],
+  ['Cyclic photophosphorylation',['I use PS I only.','I happen in the stroma lamellae.','I give ATP but no NADPH.'],['Z scheme','Photolysis','Calvin cycle']],
+ ]},
  {id:'pu2-ch1', pu:2, ch:1, t:'Sexual Reproduction in Flowering Plants', page:'pu2-ch1.html', r:[
   ['Tapetum',['I am the innermost wall layer of the microsporangium.','My cells often have more than one nucleus.','I nourish the developing pollen grains.'],['Endothecium','Epidermis','Middle layer']],
   ['Sporopollenin',['I am found in the exine of pollen.','Strong acids, alkalis and high heat cannot destroy me.','I am the most resistant organic material known.'],['Pectin','Cellulose','Lignin']],

@@ -20,6 +20,12 @@ ZONE.FACTS = [
  {t:'In the oocytes of some vertebrates, diplotene of meiosis can last for months or even years.', c:'pu1-ch10'},
  {t:'Crossing over in pachytene is why brothers and sisters never look exactly alike.', c:'pu1-ch10'},
  {t:'Walther Flemming coined the word "mitosis" in 1879, after Strasburger saw it in plant cells in 1870.', c:'pu1-ch10'},
+ {t:'RuBisCO is the most abundant enzyme on Earth.', c:'pu1-ch11'},
+ {t:'Light saturation is reached at only about 10% of full sunlight, so light rarely limits photosynthesis in nature.', c:'pu1-ch11'},
+ {t:'All the oxygen given out in photosynthesis comes from water, not from carbon dioxide.', c:'pu1-ch11'},
+ {t:'Making one glucose in the Calvin cycle uses 18 ATP and 12 NADPH.', c:'pu1-ch11'},
+ {t:'Tomatoes and capsicum give higher yields when grown in greenhouses enriched with carbon dioxide.', c:'pu1-ch11'},
+ {t:'In 1770 Joseph Priestley showed that a mint plant could restore air in which a candle had burned out.', c:'pu1-ch11'},
  {t:'Robert Brown discovered the nucleus in 1831.', c:'pu1-ch8'},
  {t:'Camillo Golgi first saw the Golgi apparatus in 1898.', c:'pu1-ch8'},
  {t:'Lysosomes are called "suicide bags": their hydrolytic enzymes work best at acidic pH.', c:'pu1-ch8'},
@@ -109,7 +115,11 @@ ZONE.CLUES = [
  {a:'Metaphase', o:['Metaphase','Prophase','Anaphase','Telophase'], c:['I am a stage of mitosis','The nuclear envelope has completely gone','Spindle fibres hold every kinetochore','All chromosomes line up on my plate'], ch:'pu1-ch10', e:'📏'},
  {a:'Crossing over', o:['Crossing over','Synapsis','Terminalisation','Cytokinesis'], c:['I happen in prophase I','I happen in pachytene','The enzyme recombinase helps me','I swap pieces between non-sister chromatids'], ch:'pu1-ch10', e:'🔀'},
  {a:'Cell plate', o:['Cell plate','Cleavage furrow','Metaphase plate','Nuclear envelope'], c:['I form only in plant cells','I appear after telophase','I grow from the centre outwards','I become the middle lamella'], ch:'pu1-ch10', e:'🧱'},
- {a:'Interphase', o:['Interphase','M phase','Cytokinesis','Prophase'], c:['People call me the resting phase','But I am really very busy','I take more than 95% of the cycle','G1, S and G2 are my parts'], ch:'pu1-ch10', e:'⏳'}
+ {a:'Interphase', o:['Interphase','M phase','Cytokinesis','Prophase'], c:['People call me the resting phase','But I am really very busy','I take more than 95% of the cycle','G1, S and G2 are my parts'], ch:'pu1-ch10', e:'⏳'},
+ {a:'RuBisCO', o:['RuBisCO','PEPcase','ATP synthase','Amylase'], c:['I am an enzyme','I am the most abundant protein on Earth','I work in the stroma','I fix CO₂ on RuBP'], ch:'pu1-ch11', e:'🧪'},
+ {a:'Photorespiration', o:['Photorespiration','Photolysis','Respiration','Transpiration'], c:['I happen in light','I am found in C₃ plants','I start when RuBisCO binds O₂','I waste energy and carbon'], ch:'pu1-ch11', e:'💨'},
+ {a:'Z scheme', o:['Z scheme','Calvin cycle','C₄ pathway','Krebs cycle'], c:['I am a path of electrons','I use two photosystems','I end by making NADPH','My shape is a letter of the alphabet'], ch:'pu1-ch11', e:'⚡'},
+ {a:'Chlorophyll a', o:['Chlorophyll a','Chlorophyll b','Carotene','Xanthophyll'], c:['I am a pigment','I absorb blue and red light','I am blue-green','I am the chief pigment of photosynthesis'], ch:'pu1-ch11', e:'🌿'}
 ];
 
 /* Meme of the week: images in zone/memes/, newest first. The first one is "this week's meme". */
