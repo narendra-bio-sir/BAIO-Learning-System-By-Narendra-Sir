@@ -2997,6 +2997,7 @@ window.indexHardRefresh = indexHardRefresh;
     plan.innerHTML='<div class="hz-cls" role="group" aria-label="Your class"><button type="button" data-c="1"'+(cls===1?' class="on" aria-pressed="true"':' aria-pressed="false"')+'>I PUC</button><button type="button" data-c="2"'+(cls===2?' class="on" aria-pressed="true"':' aria-pressed="false"')+'>II PUC</button></div>'+(date?'<b>'+(cls===1?'I PUC':'II PUC')+' Biology exam</b>'+(cls===2&&!myDate()?' (15 Mar 2027, provisional)':'')+'<br>':'<b>Set your exam date</b> with ✏️<br>')+
       'Today: '+(weak&&weak.a<0.7?'revise your weak chapter ':'revise ')+'<a href="'+focus[1]+'">'+focus[2]+'</a> → <a href="zone.html#daily">Daily 5</a> → <a href="important-cards.html#'+focus[0]+'">Quick card</a>';
     if(cls===1 && Date.now()<Date.parse('2026-10-30T00:00:00+05:30')) plan.innerHTML+='<br>📝 <a href="midterm-practice.html"><b>Mid-term practice paper</b></a> (Biology on 29 Oct)';
+    if(cls===1 && Date.now()<Date.parse('2026-11-13T00:00:00+05:30')) plan.innerHTML+='<br>📝 <a href="kcet-mock-12nov.html"><b>KCET mock test</b></a> (60 Q · 60 min, test on 12 Nov)';
     plan.querySelectorAll('.hz-cls [data-c]').forEach(function(b){ b.onclick=function(){ if(+b.dataset.c!==cls) setCls(+b.dataset.c); }; });
   }
   document.getElementById('hzCdShare').onclick=function(){ if(window.baioCountdownShare) baioCountdownShare(window.__hzCd||{cls:cls}); };
