@@ -81,6 +81,8 @@ textarea{min-height:140px; font-family:'Space Mono', monospace; font-size:12.5px
 table{width:100%; border-collapse:collapse; margin-top:14px; font-size:12.5px;}
 th{background:var(--panel2); color:var(--gold); text-align:left; padding:8px 10px; font-size:11px; text-transform:uppercase;}
 td{padding:8px 10px; border-top:1px solid var(--line);}
+.mc-copy{display:block; margin-top:6px; padding:5px 12px; border-radius:8px; border:1px solid var(--teal2); background:transparent; color:var(--teal); font:600 12px system-ui,sans-serif; letter-spacing:0; cursor:pointer;}
+.mc-copy.ok{border-color:var(--gold); color:var(--gold);}
 td.code-cell{font-family:'JetBrains Mono',monospace; font-weight:700; color:var(--teal); letter-spacing:1px;}
 .table-wrap{overflow-x:auto; margin-top:14px;}
 th.chk-col, td.chk-col{width:30px; text-align:center; padding:8px 6px;}
@@ -463,7 +465,7 @@ function renderQuickRefTable(){
   if(!wrap) return;
   let html = '<div class="table-wrap"><table><tr><th>Label</th><th>Code</th></tr>';
   STANDARD_MASTER_LABELS.forEach(label=>{
-    html += '<tr><td>' + escapeHtml(label) + '</td><td class="code-cell">' + codeHtml(computeMasterCode(label)) + '</td></tr>';
+    html += '<tr><td>' + escapeHtml(label) + '</td><td class="code-cell">' + codeHtml(computeMasterCode(label)) + mcCopyBtn(computeMasterCode(label)) + '</td></tr>';
   });
   html += '</table></div>';
   wrap.innerHTML = html;
@@ -481,18 +483,28 @@ const PREMIUM_MASTER_DEMO_CODE = 'NS-STAFFDEMO-2027';
 const PREMIUM_MASTER_CODE_PU2_ALL = 'NS-PU2-ALL-2027';
 const HANDWRITTEN_MASTER_CODE = 'NS-MASTER-2027';
 const ANALYTICS_MASTER_CODE = 'BAIO-NS-2026-R4T9';
+/* Copy button beside each master code */
+function mcCopyBtn(code){
+  return '<button type="button" class="mc-copy" data-code="' + escapeHtml(code) + '" onclick="mcCopy(this)" aria-label="Copy code">📋 Copy</button>';
+}
+function mcCopy(btn){
+  const code = btn.getAttribute('data-code');
+  const done = function(){ btn.textContent = '✅ Copied'; btn.classList.add('ok'); setTimeout(function(){ btn.textContent = '📋 Copy'; btn.classList.remove('ok'); }, 1500); };
+  const fallback = function(){ const t = document.createElement('textarea'); t.value = code; t.setAttribute('readonly',''); t.style.position='fixed'; t.style.opacity='0'; document.body.appendChild(t); t.select(); try{ document.execCommand('copy'); }catch(e){} document.body.removeChild(t); done(); };
+  if(navigator.clipboard && window.isSecureContext){ navigator.clipboard.writeText(code).then(done, fallback); } else fallback();
+}
 function renderRealMasterTable(){
   const wrap = document.getElementById('realMasterTable');
   if(!wrap) return;
   let html = '<div class="table-wrap"><table><tr><th>Master Code</th><th>Code</th></tr>';
-  html += '<tr><td>Demo Premium Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks Premium content on every chapter for 24 hours from the moment a student enters it, then auto-expires on that device. Hand this out for trials — same code works for everyone, each student gets their own 24-hour window from first use.</div></td><td class="code-cell">' + codeHtml(PREMIUM_DEMO_CODE) + '</td></tr>';
-  html += '<tr><td>Staff Demo Code (yours) <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Same 24-hour Premium unlock as the trial code, but reusable — keep it for yourself to demo the app on any device without burning a student\'s one-time trial.</div></td><td class="code-cell">' + codeHtml(PREMIUM_MASTER_DEMO_CODE) + '</td></tr>';
-  html += '<tr><td>Master Premium Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks Premium content on every chapter</div></td><td class="code-cell">' + codeHtml(PREMIUM_MASTER_CODE) + '</td></tr>';
-  html += '<tr><td>Master PU2-All Bundle Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks Premium content on all 13 PU-II chapters at once, entered on any single one (localStorage is shared across chapters on the same site)</div></td><td class="code-cell">' + codeHtml(PREMIUM_MASTER_CODE_PU2_ALL) + '</td></tr>';
-  html += '<tr><td>Master Colour Notes Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks the Colour Notes PDF download (₹100) on every chapter that has Colour Notes (same as the Handwritten master)</div></td><td class="code-cell">' + codeHtml(HANDWRITTEN_MASTER_CODE) + '</td></tr>';
-  html += '<tr><td>Master Flash Cards Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks Flash Cards download &amp; share (₹50) for every chapter in flashcards.html (same as the Handwritten master)</div></td><td class="code-cell">' + codeHtml(HANDWRITTEN_MASTER_CODE) + '</td></tr>';
-  html += '<tr><td>Master Handwritten Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks Handwritten Notes on every chapter</div></td><td class="code-cell">' + codeHtml(HANDWRITTEN_MASTER_CODE) + '</td></tr>';
-  html += '<tr><td>Master Performance Analysis Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks class-wide analytics (bypasses per-student login)</div></td><td class="code-cell">' + codeHtml(ANALYTICS_MASTER_CODE) + '</td></tr>';
+  html += '<tr><td>Demo Premium Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks Premium content on every chapter for 24 hours from the moment a student enters it, then auto-expires on that device. Hand this out for trials — same code works for everyone, each student gets their own 24-hour window from first use.</div></td><td class="code-cell">' + codeHtml(PREMIUM_DEMO_CODE) + mcCopyBtn(PREMIUM_DEMO_CODE) + '</td></tr>';
+  html += '<tr><td>Staff Demo Code (yours) <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Same 24-hour Premium unlock as the trial code, but reusable — keep it for yourself to demo the app on any device without burning a student\'s one-time trial.</div></td><td class="code-cell">' + codeHtml(PREMIUM_MASTER_DEMO_CODE) + mcCopyBtn(PREMIUM_MASTER_DEMO_CODE) + '</td></tr>';
+  html += '<tr><td>Master Premium Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks Premium content on every chapter</div></td><td class="code-cell">' + codeHtml(PREMIUM_MASTER_CODE) + mcCopyBtn(PREMIUM_MASTER_CODE) + '</td></tr>';
+  html += '<tr><td>Master PU2-All Bundle Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks Premium content on all 13 PU-II chapters at once, entered on any single one (localStorage is shared across chapters on the same site)</div></td><td class="code-cell">' + codeHtml(PREMIUM_MASTER_CODE_PU2_ALL) + mcCopyBtn(PREMIUM_MASTER_CODE_PU2_ALL) + '</td></tr>';
+  html += '<tr><td>Master Colour Notes Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks the Colour Notes PDF download (₹100) on every chapter that has Colour Notes (same as the Handwritten master)</div></td><td class="code-cell">' + codeHtml(HANDWRITTEN_MASTER_CODE) + mcCopyBtn(HANDWRITTEN_MASTER_CODE) + '</td></tr>';
+  html += '<tr><td>Master Flash Cards Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks Flash Cards download &amp; share (₹50) for every chapter in flashcards.html (same as the Handwritten master)</div></td><td class="code-cell">' + codeHtml(HANDWRITTEN_MASTER_CODE) + mcCopyBtn(HANDWRITTEN_MASTER_CODE) + '</td></tr>';
+  html += '<tr><td>Master Handwritten Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks Handwritten Notes on every chapter</div></td><td class="code-cell">' + codeHtml(HANDWRITTEN_MASTER_CODE) + mcCopyBtn(HANDWRITTEN_MASTER_CODE) + '</td></tr>';
+  html += '<tr><td>Master Performance Analysis Code <div style="font-size:10.5px;color:var(--ink-dim);font-weight:400;">Unlocks class-wide analytics (bypasses per-student login)</div></td><td class="code-cell">' + codeHtml(ANALYTICS_MASTER_CODE) + mcCopyBtn(ANALYTICS_MASTER_CODE) + '</td></tr>';
   html += '</table></div>';
   wrap.innerHTML = html;
 }
