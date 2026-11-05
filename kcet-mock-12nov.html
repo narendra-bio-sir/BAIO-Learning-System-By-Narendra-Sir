@@ -12,10 +12,10 @@
 <meta property="og:site_name" content="BAIO Learning System">
 <meta property="og:title" content="KCET Mock Test · 60 questions · 60 minutes — by Narendra Sir">
 <meta property="og:description" content="I PUC Biology KCET cumulative test practice: Anatomy, Frog and Cell. Score, analysis and explanations. Free on BAIO.">
-<meta property="og:url" content="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/kcet-mock-12nov.html?v=1">
-<meta property="og:image" content="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/exam-corner/kcet-mock-share.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/kcet-mock-12nov.html?v=2">
+<meta property="og:image" content="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/exam-corner/kcet-mock-share.jpg?v=2">
+<meta property="og:image:width" content="1080">
+<meta property="og:image:height" content="1080">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -155,7 +155,7 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
 <script>
 (function(){
 var D = window.KCET12, Q = D.qs, N = Q.length, LET = ['a','b','c','d'];
-var PAGE = 'https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/kcet-mock-12nov.html?v=1'; /* ?v= makes WhatsApp/Telegram fetch the preview banner */
+var PAGE = 'https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/kcet-mock-12nov.html?v=2'; /* ?v= makes WhatsApp/Telegram fetch the preview banner */
 var SKEY = 'baio_kcet12_state', BKEY = 'baio_kcet12_best';
 function get(k){ try{ return JSON.parse(localStorage.getItem(k) || 'null'); }catch(e){ return null; } }
 function put(k, v){ try{ if(v == null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
@@ -473,7 +473,7 @@ function share(text, url){
 /* Share the page: the banner picture + message + link where the phone allows files, else text + link (the link preview shows the banner) */
 function sharePage(){
   var text = u().shareMsg, url = PAGE;
-  fetch('exam-corner/kcet-mock-share.jpg').then(function(r){ return r.blob(); }).then(function(b){
+  fetch('exam-corner/kcet-mock-share.jpg?v=2').then(function(r){ return r.blob(); }).then(function(b){
     var f = new File([b], 'BAIO_KCET_Mock_Test.jpg', { type:'image/jpeg' });
     if(navigator.canShare && navigator.canShare({ files:[f] })) return navigator.share({ files:[f], text:text + '\n' + url }).catch(function(){});
     share(text, url);

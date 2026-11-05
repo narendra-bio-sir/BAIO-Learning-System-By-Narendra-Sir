@@ -767,7 +767,7 @@ setLang(['en','kn','hi'].includes(startLang)?startLang:'en', false);
       en:"🎬 I PUC Biology Mid-Term — 11-minute chapter-wise practice video by Narendra Sir: key facts for MCQs, marks for every topic, key answers, diagrams to practise and exam tips for all 10 chapters. Light and dark versions, with slides PDF.",
       kn:"🎬 ಪ್ರಥಮ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ ಮಧ್ಯಾವಧಿ — ನರೇಂದ್ರ ಸರ್ ಅವರ 11 ನಿಮಿಷದ ಅಧ್ಯಾಯವಾರು ಅಭ್ಯಾಸ ವಿಡಿಯೋ: ಬಹು ಆಯ್ಕೆ ಪ್ರಶ್ನೆಗಳ ಮುಖ್ಯ ಅಂಶಗಳು, ಪ್ರತಿ ವಿಷಯದ ಅಂಕಗಳು, ಎಲ್ಲಾ 10 ಅಧ್ಯಾಯಗಳ ಮುಖ್ಯ ಉತ್ತರಗಳು, ಚಿತ್ರಗಳು ಮತ್ತು ಪರೀಕ್ಷಾ ಸಲಹೆಗಳು.",
       hi:"🎬 प्रथम पीयूसी जीव विज्ञान मध्यावधि — नरेंद्र सर का 11 मिनट का अध्यायवार अभ्यास वीडियो: बहुविकल्पीय प्रश्नों के मुख्य तथ्य, हर विषय के अंक, सभी 10 अध्यायों के मुख्य उत्तर, चित्र और परीक्षा टिप्स।"}},
-    kcet:{url:BASE.replace('exam-corner.html','kcet-mock-12nov.html?v=1'), img:'exam-corner/kcet-mock-share.jpg', title:'BAIO · KCET Mock Test', msg:{
+    kcet:{url:BASE.replace('exam-corner.html','kcet-mock-12nov.html?v=2'), img:'exam-corner/kcet-mock-share.jpg?v=2', title:'BAIO · KCET Mock Test', msg:{
       en:"📝 KCET Mock Test for I PUC Biology (12 Nov) by Narendra Sir — 60 questions in 60 minutes on Anatomy, Frog and Cell, with the paper's diagrams, instant score, chapter-wise analysis and an explanation for every answer. Are you KCET-ready?",
       kn:"📝 ನರೇಂದ್ರ ಸರ್ ಅವರ ಪ್ರಥಮ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ KCET ಮಾಕ್ ಟೆಸ್ಟ್ (12 ನವೆಂಬರ್) — ಅಂಗರಚನೆ, ಕಪ್ಪೆ ಮತ್ತು ಜೀವಕೋಶದ 60 ಪ್ರಶ್ನೆಗಳು 60 ನಿಮಿಷದಲ್ಲಿ, ಪತ್ರಿಕೆಯ ಚಿತ್ರಗಳು, ತಕ್ಷಣ ಅಂಕ, ಅಧ್ಯಾಯವಾರು ವಿಶ್ಲೇಷಣೆ ಮತ್ತು ಪ್ರತಿ ಉತ್ತರಕ್ಕೆ ವಿವರಣೆ. ನೀವು KCET ಗೆ ಸಿದ್ಧರೇ?",
       hi:"📝 नरेंद्र सर का I PUC बायोलॉजी KCET मॉक टेस्ट (12 नवंबर) — शारीर, मेंढक और कोशिका पर 60 मिनट में 60 प्रश्न, पेपर के चित्र, तुरंत स्कोर, अध्यायवार विश्लेषण और हर उत्तर की व्याख्या। क्या आप KCET के लिए तैयार हैं?"}},
@@ -807,7 +807,7 @@ setLang(['en','kn','hi'].includes(startLang)?startLang:'en', false);
     curURL=url;
     if(it && it.img && navigator.canShare){
       fetch(it.img).then(function(r){ return r.blob(); }).then(function(b){
-        var f=new File([b], it.img.split('/').pop(), {type:'image/jpeg'});
+        var f=new File([b], it.img.split('/').pop().split('?')[0], {type:'image/jpeg'});
         if(navigator.canShare({files:[f]})) navigator.share({files:[f], text:text+'\n'+url}).catch(function(){});
         else navigator.share({title:title,text:text,url:url}).catch(function(){});
       }).catch(function(){ navigator.share({title:title,text:text,url:url}).catch(function(){}); });
