@@ -31,6 +31,7 @@ PACKS = [
     ('pu2', ['pu2-ch%d.html' % i for i in range(1, 14)]),
     ('pcm', ['pcm.html', 'pu1-phy-ch1.html', 'pu1-che-ch1.html', 'pu1-mat-ch1.html',
              'pu2-phy-ch1.html', 'pu2-che-ch1.html', 'pu2-mat-ch1.html',
+             'pu2-phy-ch2.html', 'pu2-che-ch2.html', 'pu2-mat-ch2.html',
              'pu2-maths-colour-notes.html']),
     ('extras', ['flashcards.html', 'notes.html', 'ncert-library.html', 'genetic-cross-simulator.html',
                 'practical-benedict-test.html', 'practical-biuret-test.html', 'practical-pigment-extraction.html',
