@@ -11,7 +11,7 @@ old_icon = s.split('<span class="ic">')[1].split('<')[0]
 s = s.replace(f'Chapter 1: {old_title}', f'Chapter {ch}: {title}').replace(f'Chapter 1 ({old_title})', f'Chapter {ch} ({title})')
 s = s.replace(f'<span class="ic">{old_icon}</span>', f'<span class="ic">{icon}</span>')
 s = re.sub(r'(· Chapter )1(</footer>)', rf'\g<1>{ch}\2', s)
-s = s.replace(f'subject-apps/{yr}-{sub}-ch1-data.js?v=1', f'subject-apps/{yr}-{sub}-ch{ch}-data.js?v=1')
+s = re.sub(rf'subject-apps/{yr}-{sub}-ch1-data\.js\?v=\d+', f'subject-apps/{yr}-{sub}-ch{ch}-data.js?v=1', s)
 s = re.sub(rf'<script src="subject-apps/{yr}-{sub}-ch1-easy[^"]*"></script>\n', '', s)
 assert f'Chapter {ch}: {title}' in s and f'{yr}-{sub}-ch{ch}-data.js' in s and f'Chapter {ch}</footer>' in s
 open(dst, 'w', encoding='utf-8').write(s)
