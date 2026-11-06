@@ -167,7 +167,7 @@ window.SUBJECT_APP = {
     ['If sin<sup>−1</sup>x = π/5, cos<sup>−1</sup>x equals','π/5|3π/10|2π/5|3π/5',1,'π/2 − π/5.'],
     ['tan<sup>−1</sup>2 + tan<sup>−1</sup>3 equals','π/4|3π/4|π/2|−π/4',1,'Here xy = 6 > 1 with x, y > 0, so the sum is π + tan<sup>−1</sup>(5/−5) = π − π/4.'],
     ['The value of cos(2cos<sup>−1</sup>(1/2)) is','1/2|−1/2|1|0',1,'cos(2π/3).'],
-    ['sin<sup>−1</sup>x exists only if','|x| ≥ 1||x| ≤ 1|x > 0|x < 0',1,'Domain [−1, 1].'],
+    ['sin<sup>−1</sup>x exists only if','∣x∣ ≥ 1|∣x∣ ≤ 1|x > 0|x < 0',1,'Domain [−1, 1].'],
     ['tan<sup>−1</sup>x is an increasing function on','[−1, 1] only|ℝ|(0, ∞) only|(−∞, 0) only',1,'Derivative 1/(1 + x<sup>2</sup>) > 0.'],
     ['cos<sup>−1</sup>(cos(−π/3)) equals','−π/3|π/3|2π/3|0',1,'cos(−π/3) = cos(π/3).']
   ],

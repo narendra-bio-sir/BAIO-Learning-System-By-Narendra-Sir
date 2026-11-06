@@ -173,7 +173,7 @@ window.SUBJECT_APP = {
     ['If R is symmetric and (2, 5) ∈ R, then','(5, 2) ∈ R|(2, 2) ∈ R|(5, 5) ∈ R|nothing follows',0,'Definition of symmetric.'],
     ['A relation R on A is reflexive if','(a, b) ∈ R ⇒ (b, a) ∈ R|(a, a) ∈ R for all a ∈ A|R = ∅|R = A × A only',1,'Definition.'],
     ['For a finite set A, f : A → A is onto. Then f is','one-one|constant|not one-one|not defined',0,'For finite sets onto ⇔ one-one.'],
-    ['Which of these is a bijection from ℝ to ℝ?','x<sup>2</sup>|x<sup>3</sup>||x||sin x',1,'Only x<sup>3</sup> is both one-one and onto.']
+    ['Which of these is a bijection from ℝ to ℝ?','x<sup>2</sup>|x<sup>3</sup>|∣x∣|sin x',1,'Only x<sup>3</sup> is both one-one and onto.']
   ],
 
   board:[
