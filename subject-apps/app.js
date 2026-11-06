@@ -44,24 +44,42 @@
          marks:function(m){ return m+' mark'+(m>1?'s':''); }, lockT:'🔒 Premium content', lockP:function(t){ return t+' is part of this chapter\'s Premium content. Unlock it to practise every question with explanations.'; },
          price:'₹'+PRICE+' · this chapter', pay:'💬 Pay / request unlock on WhatsApp', haveCode:'Already have an unlock code?', name:'Full name', roll:'Roll number (e.g. 25MPU0024)', section:'Section (e.g. CHAMPION)', code:'Unlock code',
          unlock:'🔓 Unlock', bad:'That name / roll / section / code was not recognised. Check with Narendra Sir.', needAll:'Please enter your name, roll number and section with the code (or use a master code alone).', demoUsed:'This trial code has already been used on this device.',
-         unlocked:'✅ Premium unlocked on this device', relock:'Lock again', note:'Content is in English (as written in the exam).', fbT:'💬 Tell Narendra Sir what you think', fbP:'You are among the first students to use this chapter. Was anything unclear, wrong or missing? Your feedback will improve it.', fbB:'💬 Send feedback on WhatsApp', free:'FREE', prem:'PREMIUM', back:'← BAIO home' },
+         unlocked:'✅ Premium unlocked on this device', relock:'Lock again', note:'Content is in English (as written in the exam).', noteTr:'', chw:'Chapter', fbT:'💬 Tell Narendra Sir what you think', fbP:'You are among the first students to use this chapter. Was anything unclear, wrong or missing? Your feedback will improve it.', fbB:'💬 Send feedback on WhatsApp', free:'FREE', prem:'PREMIUM', back:'← BAIO home' },
     kn:{ tabs:{notes:'📖 ಅಧ್ಯಯನ ಟಿಪ್ಪಣಿ', formulas:'🧮 ಸೂತ್ರ ಹಾಳೆ', numericals:'✍️ ಸಮಸ್ಯೆಗಳು', mcq:'MCQ ರಸಪ್ರಶ್ನೆ', neet:'NEET ಅಭ್ಯಾಸ', kcet:'KCET ಅಭ್ಯಾಸ', boardimp:'ಬೋರ್ಡ್ ಮುಖ್ಯ'},
          hi_user:function(n){ return 'ನಮಸ್ಕಾರ, '+n; }, show:'ಪರಿಹಾರ ತೋರಿಸಿ', hide:'ಪರಿಹಾರ ಮರೆಮಾಡಿ', easy:'🐢 ಸರಳವಾಗಿ ವಿವರಿಸಿ', listen:'🔊 ಕೇಳಿ', pause:'⏸ ವಿರಾಮ', easyHide:'🐢 ಸರಳ ಹಂತಗಳನ್ನು ಮರೆಮಾಡಿ', eg:'🎯 ಏನು ಕೇಳಲಾಗಿದೆ', ek:'🔑 ಮುಖ್ಯ ಅಂಶ', es:'👣 ಹಂತ ಹಂತವಾಗಿ', et:'⚠️ ಈ ತಪ್ಪು ಮಾಡಬೇಡಿ', ans:'ಉತ್ತರ', score:function(a,b,c){ return 'ಅಂಕ: '+a+' / '+b+' ಉತ್ತರಿಸಿದ · ಒಟ್ಟು '+c; }, reset:'↺ ಮತ್ತೆ ಆರಂಭಿಸಿ',
          marks:function(m){ return m+' ಅಂಕ'; }, lockT:'🔒 ಪ್ರೀಮಿಯಂ ವಿಭಾಗ', lockP:function(t){ return t+' ಈ ಅಧ್ಯಾಯದ ಪ್ರೀಮಿಯಂ ವಿಭಾಗ. ವಿವರಣೆಯೊಂದಿಗೆ ಎಲ್ಲ ಪ್ರಶ್ನೆಗಳನ್ನು ಅಭ್ಯಾಸ ಮಾಡಲು ತೆರೆಯಿರಿ.'; },
          price:'₹'+PRICE+' · ಈ ಅಧ್ಯಾಯ', pay:'💬 WhatsApp ನಲ್ಲಿ ಪಾವತಿ / ವಿನಂತಿ', haveCode:'ಅನ್‌ಲಾಕ್ ಕೋಡ್ ಇದೆಯೇ?', name:'ಪೂರ್ಣ ಹೆಸರು', roll:'ರೋಲ್ ಸಂಖ್ಯೆ (ಉದಾ: 25MPU0024)', section:'ವಿಭಾಗ (ಉದಾ: CHAMPION)', code:'ಅನ್‌ಲಾಕ್ ಕೋಡ್',
          unlock:'🔓 ತೆರೆಯಿರಿ', bad:'ಹೆಸರು / ರೋಲ್ / ವಿಭಾಗ / ಕೋಡ್ ಹೊಂದಿಕೆಯಾಗಲಿಲ್ಲ. ನರೇಂದ್ರ ಸರ್ ಅವರನ್ನು ಕೇಳಿ.', needAll:'ಕೋಡ್ ಜೊತೆಗೆ ಹೆಸರು, ರೋಲ್ ಸಂಖ್ಯೆ ಮತ್ತು ವಿಭಾಗ ನಮೂದಿಸಿ.', demoUsed:'ಈ ಪ್ರಾಯೋಗಿಕ ಕೋಡ್ ಈಗಾಗಲೇ ಬಳಸಲಾಗಿದೆ.',
-         unlocked:'✅ ಈ ಸಾಧನದಲ್ಲಿ ಪ್ರೀಮಿಯಂ ತೆರೆದಿದೆ', relock:'ಮತ್ತೆ ಲಾಕ್ ಮಾಡಿ', note:'ವಿಷಯ ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿದೆ (ಪರೀಕ್ಷೆಯಲ್ಲಿ ಬರೆಯುವಂತೆ).', fbT:'💬 ನಿಮ್ಮ ಅಭಿಪ್ರಾಯ ನರೇಂದ್ರ ಸರ್ ಅವರಿಗೆ ತಿಳಿಸಿ', fbP:'ಈ ಅಧ್ಯಾಯವನ್ನು ಬಳಸುತ್ತಿರುವ ಮೊದಲ ವಿದ್ಯಾರ್ಥಿಗಳಲ್ಲಿ ನೀವೂ ಒಬ್ಬರು. ಏನಾದರೂ ಅಸ್ಪಷ್ಟ, ತಪ್ಪು ಅಥವಾ ಕೊರತೆ ಇದೆಯೇ? ನಿಮ್ಮ ಅಭಿಪ್ರಾಯ ಇದನ್ನು ಉತ್ತಮಗೊಳಿಸುತ್ತದೆ.', fbB:'💬 WhatsApp ನಲ್ಲಿ ಅಭಿಪ್ರಾಯ ಕಳುಹಿಸಿ', free:'ಉಚಿತ', prem:'ಪ್ರೀಮಿಯಂ', back:'← BAIO ಮುಖಪುಟ' },
+         unlocked:'✅ ಈ ಸಾಧನದಲ್ಲಿ ಪ್ರೀಮಿಯಂ ತೆರೆದಿದೆ', relock:'ಮತ್ತೆ ಲಾಕ್ ಮಾಡಿ', note:'ವಿಷಯ ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿದೆ (ಪರೀಕ್ಷೆಯಲ್ಲಿ ಬರೆಯುವಂತೆ).', noteTr:'ಕನ್ನಡ ವಿವರಣೆ · ಸೂತ್ರಗಳು, ಚಿಹ್ನೆಗಳು ಮತ್ತು ಘಟಕಗಳು ಪರೀಕ್ಷೆಯಂತೆ ಇಂಗ್ಲಿಷ್ ಸಂಕೇತಗಳಲ್ಲಿವೆ.', chw:'ಅಧ್ಯಾಯ', fbT:'💬 ನಿಮ್ಮ ಅಭಿಪ್ರಾಯ ನರೇಂದ್ರ ಸರ್ ಅವರಿಗೆ ತಿಳಿಸಿ', fbP:'ಈ ಅಧ್ಯಾಯವನ್ನು ಬಳಸುತ್ತಿರುವ ಮೊದಲ ವಿದ್ಯಾರ್ಥಿಗಳಲ್ಲಿ ನೀವೂ ಒಬ್ಬರು. ಏನಾದರೂ ಅಸ್ಪಷ್ಟ, ತಪ್ಪು ಅಥವಾ ಕೊರತೆ ಇದೆಯೇ? ನಿಮ್ಮ ಅಭಿಪ್ರಾಯ ಇದನ್ನು ಉತ್ತಮಗೊಳಿಸುತ್ತದೆ.', fbB:'💬 WhatsApp ನಲ್ಲಿ ಅಭಿಪ್ರಾಯ ಕಳುಹಿಸಿ', free:'ಉಚಿತ', prem:'ಪ್ರೀಮಿಯಂ', back:'← BAIO ಮುಖಪುಟ' },
     hi:{ tabs:{notes:'📖 अध्ययन नोट्स', formulas:'🧮 सूत्र पत्रक', numericals:'✍️ संख्यात्मक प्रश्न', mcq:'MCQ क्विज़', neet:'NEET अभ्यास', kcet:'KCET अभ्यास', boardimp:'बोर्ड महत्वपूर्ण'},
          hi_user:function(n){ return 'नमस्ते, '+n; }, show:'हल दिखाएँ', hide:'हल छिपाएँ', easy:'🐢 आसान भाषा में समझें', listen:'🔊 सुनें', pause:'⏸ रोकें', easyHide:'🐢 आसान स्टेप छिपाएँ', eg:'🎯 क्या पूछा गया है', ek:'🔑 मुख्य बात', es:'👣 स्टेप बाय स्टेप', et:'⚠️ यह गलती न करें', ans:'उत्तर', score:function(a,b,c){ return 'अंक: '+a+' / '+b+' हल किए · कुल '+c; }, reset:'↺ फिर से शुरू करें',
          marks:function(m){ return m+' अंक'; }, lockT:'🔒 प्रीमियम सामग्री', lockP:function(t){ return t+' इस अध्याय की प्रीमियम सामग्री है। व्याख्या सहित सभी प्रश्नों के अभ्यास के लिए अनलॉक करें।'; },
          price:'₹'+PRICE+' · यह अध्याय', pay:'💬 WhatsApp पर भुगतान / अनुरोध', haveCode:'अनलॉक कोड है?', name:'पूरा नाम', roll:'रोल नंबर (जैसे 25MPU0024)', section:'सेक्शन (जैसे CHAMPION)', code:'अनलॉक कोड',
          unlock:'🔓 अनलॉक करें', bad:'नाम / रोल / सेक्शन / कोड मेल नहीं खाया। नरेंद्र सर से पूछें।', needAll:'कोड के साथ नाम, रोल नंबर और सेक्शन डालें।', demoUsed:'यह ट्रायल कोड पहले ही इस्तेमाल हो चुका है।',
-         unlocked:'✅ इस डिवाइस पर प्रीमियम अनलॉक है', relock:'फिर से लॉक करें', note:'सामग्री अंग्रेज़ी में है (जैसे परीक्षा में लिखते हैं)।', fbT:'💬 नरेंद्र सर को अपनी राय बताइए', fbP:'आप इस अध्याय का उपयोग करने वाले पहले छात्रों में से हैं। क्या कुछ अस्पष्ट, गलत या छूटा हुआ है? आपकी राय से यह बेहतर बनेगा।', fbB:'💬 WhatsApp पर राय भेजें', free:'मुफ़्त', prem:'प्रीमियम', back:'← BAIO होम' }
+         unlocked:'✅ इस डिवाइस पर प्रीमियम अनलॉक है', relock:'फिर से लॉक करें', note:'सामग्री अंग्रेज़ी में है (जैसे परीक्षा में लिखते हैं)।', noteTr:'हिंदी व्याख्या · सूत्र, चिह्न और मात्रक परीक्षा की तरह अंग्रेज़ी संकेतों में हैं।', chw:'अध्याय', fbT:'💬 नरेंद्र सर को अपनी राय बताइए', fbP:'आप इस अध्याय का उपयोग करने वाले पहले छात्रों में से हैं। क्या कुछ अस्पष्ट, गलत या छूटा हुआ है? आपकी राय से यह बेहतर बनेगा।', fbB:'💬 WhatsApp पर राय भेजें', free:'मुफ़्त', prem:'प्रीमियम', back:'← BAIO होम' }
   };
   /* per-subject tab names (e.g. Maths: Solved Examples, JEE Main Practice) */
   if(A.tabLabels) Object.keys(A.tabLabels).forEach(function(t){ Object.keys(UI).forEach(function(l){ if(A.tabLabels[t][l]) UI[l].tabs[t] = A.tabLabels[t][l]; }); });
   var lang = 'en'; try{ lang = localStorage.getItem('baio_lang') || 'en'; }catch(e){} if(!UI[lang]) lang = 'en';
   window.currentLang = lang;
+  /* ---------- translations: subject-apps/<id>-kn.js / -hi.js set window.SUBJECT_TR[lang] with the same
+     shape as SUBJECT_APP (quiz items as [q, options or '' to keep English options, explanation]; board items as [q, [points]];
+     formulas as [name, note] — the formula itself is kept; numericals may give only q and a).
+     Answer indexes and marks always come from the English data. ---------- */
+  var VC = {};
+  function V(){
+    var t = (window.SUBJECT_TR || {})[lang]; if(!t) return A;
+    if(VC[lang]) return VC[lang];
+    var o = {}; Object.keys(A).forEach(function(k){ o[k] = A[k]; });
+    ['title','intro','eyebrow'].forEach(function(k){ if(t[k]) o[k] = t[k]; });
+    if(t.notes && t.notes.length === A.notes.length) o.notes = t.notes;
+    if(t.formulas && t.formulas.length === A.formulas.length) o.formulas = A.formulas.map(function(f, i){ var y = t.formulas[i]; return y.length === 2 ? [y[0], f[1], y[1]] : y; });
+    if(t.numericals && t.numericals.length === A.numericals.length) o.numericals = A.numericals.map(function(n, i){ var x = {}; Object.keys(n).forEach(function(k){ x[k] = n[k]; }); var y = t.numericals[i]; ['q','s','a'].forEach(function(k){ if(y[k]) x[k] = y[k]; }); return x; });
+    ['mcq','neet','kcet'].forEach(function(k){ if(t[k] && A[k] && t[k].length === A[k].length) o[k] = A[k].map(function(q, i){ var y = t[k][i]; return [y[0], (y[1] && y[1].split('|').length === 4) ? y[1] : q[1], q[2], y[2] || q[3]]; }); });
+    if(t.board && t.board.length === A.board.length) o.board = A.board.map(function(b, i){ return [b[0], t.board[i][0], t.board[i][1]]; });
+    o.translated = true;
+    return (VC[lang] = o);
+  }
   var TAB_ORDER = ['notes','formulas','numericals','mcq','neet','kcet','boardimp'];
   var cur = 'notes'; var h = (location.hash || '').slice(1); if(TAB_ORDER.indexOf(h) >= 0) cur = h;
   var answered = {}; /* tab -> {i: correct?} */
@@ -80,9 +98,9 @@
     var u = UI[lang];
     document.documentElement.lang = lang;
     $('langs').innerHTML = [['en','English'],['kn','ಕನ್ನಡ'],['hi','हिंदी']].map(function(l){ return '<button class="lang'+(l[0]===lang?' on':'')+'" data-l="'+l[0]+'">'+l[1]+'</button>'; }).join('');
-    $('eyebrow').textContent = A.eyebrow || (A.cls + ' ' + A.subject + ' · NEET / KCET aligned');
-    $('title').textContent = 'Chapter ' + A.ch + ': ' + A.title;
-    $('intro').textContent = A.intro;
+    $('eyebrow').textContent = V().eyebrow || (A.cls + ' ' + A.subject + ' · NEET / KCET aligned');
+    $('title').textContent = (UI[lang].chw || 'Chapter') + ' ' + A.ch + ': ' + V().title;
+    $('intro').textContent = V().intro;
     var p = null; try{ p = JSON.parse(localStorage.getItem('baio_student') || 'null'); }catch(e){}
     $('hello').textContent = p && p.name ? u.hi_user(p.name) + (p.roll ? ' (' + p.roll + ')' : '') : '';
     $('hello').hidden = !(p && p.name);
@@ -96,11 +114,11 @@
 
   /* ---------- content renderers ---------- */
   function rNotes(){
-    return '<p class="note">'+UI[lang].note+'</p>' + A.notes.map(function(n, i){
+    return '<p class="note">'+(V().translated ? UI[lang].noteTr : UI[lang].note)+'</p>' + V().notes.map(function(n, i){
       return '<section class="card"><h3><span class="num">'+(i+1)+'</span><span>'+n.t+'</span></h3><ul>'+n.b.map(function(b){ return '<li>'+b+'</li>'; }).join('')+'</ul></section>'; }).join('');
   }
   function rFormulas(){
-    return '<section class="card"><div class="ftable">' + A.formulas.map(function(f){
+    return '<section class="card"><div class="ftable">' + V().formulas.map(function(f){
       return '<div class="frow"><div class="fname">'+f[0]+'</div><div class="feq">'+f[1]+'</div>'+(f[2]?'<div class="fnote">'+f[2]+'</div>':'')+'</div>'; }).join('') + '</div></section>';
   }
   /* Voice explanation for "Explain simply": one recorded mp3 per example, with segment
@@ -129,7 +147,7 @@
   }
   function rNumericals(){
     var u = UI[lang];
-    return A.numericals.map(function(n, i){
+    return V().numericals.map(function(n, i){
       return '<section class="card num-q"><h3><span class="num">'+(i+1)+'</span><span>'+n.q+'</span></h3>'
         + '<div class="sol-btns"><button class="btn ghost" data-sol="'+i+'">'+u.show+'</button>'
         + (n.easy ? '<button class="btn easy-btn" data-easy="'+i+'">'+u.easy+'</button>' : '')
@@ -143,7 +161,7 @@
         + '<div class="sol" id="sol'+i+'" hidden><ol>'+n.s.map(function(s){ return '<li>'+s+'</li>'; }).join('')+'</ol><div class="ans">'+u.ans+': <b>'+n.a+'</b></div></div></section>'; }).join('');
   }
   function rQuiz(tab){
-    var u = UI[lang], list = A[tab === 'mcq' ? 'mcq' : tab], st = answered[tab] || (answered[tab] = {});
+    var u = UI[lang], list = V()[tab === 'mcq' ? 'mcq' : tab], st = answered[tab] || (answered[tab] = {});
     var qk = Object.keys(st).filter(function(k){ return k[0] !== 'p'; }), done = qk.length, right = qk.filter(function(k){ return st[k]; }).length;
     var html = '<div class="scorebar"><span>'+u.score(right, done, list.length)+'</span><button class="btn ghost" data-reset="'+tab+'">'+u.reset+'</button></div>';
     list.forEach(function(q, i){
@@ -160,7 +178,7 @@
   }
   function rBoard(){
     var u = UI[lang], groups = {};
-    A.board.forEach(function(b){ (groups[b[0]] = groups[b[0]] || []).push(b); });
+    V().board.forEach(function(b){ (groups[b[0]] = groups[b[0]] || []).push(b); });
     return Object.keys(groups).sort().map(function(m){
       return '<h2 class="grp">'+u.marks(+m)+'</h2>' + groups[m].map(function(b){
         return '<section class="card"><h3><span class="mk m'+m+'">'+m+'M</span><span>'+b[1]+'</span></h3><ol>'+b[2].map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ol></section>'; }).join(''); }).join('');
@@ -229,13 +247,13 @@
     if(b.dataset.sol !== undefined){ var s = $('sol' + b.dataset.sol), u = UI[lang]; s.hidden = !s.hidden; b.textContent = s.hidden ? u.show : u.hide; return; }
     if(b.dataset.reset){ answered[b.dataset.reset] = {}; renderBody(); return; }
     if(b.classList.contains('qz-opt') && !b.disabled){
-      var t = b.dataset.tab, i = +b.dataset.i, j = +b.dataset.j, q = A[t][i], st = answered[t] || (answered[t] = {});
+      var t = b.dataset.tab, i = +b.dataset.i, j = +b.dataset.j, q = V()[t][i], st = answered[t] || (answered[t] = {});
       st[i] = (j === q[2]); st['p' + i] = j;
       var card = b.closest('.card'), opts = card.querySelectorAll('.qz-opt');
       opts.forEach(function(o, k){ o.disabled = true; if(k === q[2]) o.classList.add('correct'); else if(k === j) o.classList.add('wrong'); });
       var ex = document.createElement('div'); ex.className = 'expl'; ex.innerHTML = (st[i] ? '✅ ' : '❌ ') + q[3]; card.appendChild(ex);
       var u2 = UI[lang], keys = Object.keys(st).filter(function(k){ return k[0] !== 'p'; }), right = keys.filter(function(k){ return st[k]; }).length;
-      var sb = $('content').querySelector('.scorebar span'); if(sb) sb.textContent = u2.score(right, keys.length, A[t].length);
+      var sb = $('content').querySelector('.scorebar span'); if(sb) sb.textContent = u2.score(right, keys.length, V()[t].length);
     }
   });
   $('content').addEventListener('keydown', function(e){ if(e.key === 'Enter' && e.target.id === 'uCode') tryUnlock(); });
