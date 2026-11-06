@@ -1,0 +1,108 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<title>II PUC Mathematics Colour Notes</title>
+<link rel="stylesheet" href="katex/katex.min.css">
+<script src="katex/katex.min.js"></script>
+<script src="katex/contrib/auto-render.min.js"></script>
+<style>
+@page{size:A4;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#14203a;--soft:#4a5568}
+body{font-family:Inter,sans-serif;color:var(--ink);background:#777}
+.page{width:210mm;height:297mm;position:relative;overflow:hidden;background:#fffdf7;display:flex;flex-direction:column;page-break-after:always;margin:0 auto 10px}
+/* header */
+.hd{position:relative;flex:none;height:37mm;padding:5mm 7mm 0 7mm;color:#fff;overflow:hidden;
+ background:radial-gradient(110mm 60mm at 100% 0%,rgba(167,139,250,.55),transparent 70%),linear-gradient(120deg,#1e1b4b 0%,#3730a3 55%,#6d28d9 100%)}
+.hd::after{content:'';position:absolute;right:-30mm;top:-40mm;width:90mm;height:90mm;border-radius:50%;border:1px solid rgba(255,255,255,.12)}
+.seal{position:absolute;left:7mm;top:5mm;width:25mm;height:25mm;border-radius:50%;background:#fff;border:2.2mm solid #f2c14e;color:#1e1b4b;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.seal b{font:900 17px 'Inter Display',Inter;letter-spacing:.5px}
+.seal i{font:600 6.5px Inter;font-style:normal;color:#475569}
+.hd .who{margin-left:30mm;display:flex;align-items:center;gap:3mm}
+.hd .who .nm{font:400 23px Kalam;color:#fff}
+.hd .who .rl{font:700 9px Inter;color:#1e1b4b;background:#fde047;padding:1mm 2.6mm;border-radius:1.5mm;transform:rotate(-2deg)}
+.hd h1{margin-left:30mm;margin-top:.5mm;font:900 27px/1 'Inter Display',Inter;letter-spacing:-.4px;text-transform:uppercase;max-width:128mm}
+.hd h1 span{color:#fde047}
+.hd .pill{position:absolute;left:37mm;bottom:3mm;background:#fff;color:#1e1b4b;font:700 10.5px Inter;padding:1.3mm 4mm;border-radius:6mm;max-width:160mm;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tag{position:absolute;right:7mm;top:5mm;background:#1e1b4b;border:.6mm solid #fde047;border-radius:3mm;padding:2mm 3.5mm;text-align:center}
+.tag b{display:block;font:900 15px/1.05 'Inter Display',Inter;color:#fff}
+.tag i{display:block;font:700 6.8px/1.3 Inter;font-style:normal;letter-spacing:1px;color:#fde047;margin-top:1mm}
+/* body */
+.bd{flex:1;padding:3.4mm 6mm 0 6mm;display:grid;grid-template-columns:1fr 1fr;gap:3.4mm;align-content:start}
+.box{border:.55mm solid var(--c);border-radius:4mm;overflow:hidden;background:#fff;break-inside:avoid}
+.box.full{grid-column:1/3}
+.box h2{background:var(--c);color:#fff;font:800 13.4px Inter;letter-spacing:.3px;text-transform:uppercase;padding:1.8mm 3mm;display:flex;align-items:center;gap:2.2mm}
+.box h2 .n{flex:none;width:5.6mm;height:5.6mm;border-radius:50%;background:#fff;color:var(--c);font:900 10.5px/5.6mm Inter;text-align:center}
+.box .ct{padding:2.6mm 3.4mm 2.8mm;font:500 12.2px/1.5 Inter}
+.ct ul{padding-left:4mm}.ct li{margin:.5mm 0}
+.ct li::marker{color:var(--c)}
+.ct b{color:var(--c);font-weight:700}
+.ct p+p,.ct p+ul,.ct ul+p,.ct table+p,.ct p+table,.ct .fx+p,.ct p+.fx,.ct .fx+.fx,.ct ul+.fx,.ct .fx+ul,.ct .note+p,.ct p+.note,.ct ul+.note,.ct table+.note,.ct .fx+.note{margin-top:1.6mm}
+.hl{background:#fef08a;padding:0 1mm;border-radius:1mm;font-weight:700;color:var(--ink)!important}
+.fx{background:color-mix(in srgb,var(--c) 8%,#fff);border-left:1mm solid var(--c);border-radius:1.5mm;padding:1.6mm 2.6mm;text-align:center}
+.fx.l{text-align:left}
+.note{border:.4mm dashed #eab308;background:#fefce8;border-radius:2mm;padding:1.6mm 2.6mm;font-size:11.6px}
+.note.tip::before{content:'💡 ';}
+.note.trap::before{content:'⚠️ ';}
+table{width:100%;border-collapse:collapse;font-size:11.6px}
+th{background:var(--c);color:#fff;text-align:left;padding:1.1mm 2mm;font-weight:700}
+td{padding:1mm 2mm;border-bottom:.25mm solid #e5e7eb;vertical-align:top}
+tr:nth-child(even) td{background:#fafaf7}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:2.4mm}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2mm}
+.katex{font-size:1.06em}
+.two>*,.three>*{margin-top:0!important}
+.ct p+.two,.ct p+.three,.ct .two+p,.ct .three+p,.ct .two+.fx,.ct .fx+.three,.ct .two+.note,.ct .three+.note,.ct table+table,.ct ul+.two,.ct .note+.two,.ct .three+.three,.ct .two+.two,.ct .fx+.two,.ct table+.two{margin-top:1.6mm}
+.fx .katex-display{margin:.6mm 0}
+.qs{display:grid;grid-template-columns:1fr 1fr;gap:1.6mm 4mm}
+.q{padding:1mm 0 1mm;border-bottom:.25mm dashed #e5d3a8;font-size:11.6px}
+.q .katex,td .katex{font-size:1.13em}
+.q .ans{display:block;margin-top:.6mm;color:#0f766e;font-weight:600}
+.tight .bd{gap:2.4mm}
+/* footer */
+.ft{flex:none;margin-top:auto;background:#1e1b4b;color:#fff}
+.ft .row{display:flex;justify-content:space-around;padding:2mm 0;font:800 8.6px Inter;letter-spacing:1.2px;border-bottom:.3mm solid rgba(255,255,255,.12)}
+.ft .sig{text-align:center;padding:2mm 0 2.4mm;font:700 12px Inter}
+.ft .sig span{font:400 15px Kalam;color:#fde047}
+.pn{position:absolute;right:6mm;bottom:2.4mm;font:700 9px Inter;color:#a5b4fc}
+/* cover */
+.cover{background:linear-gradient(160deg,#1e1b4b,#3730a3 55%,#6d28d9);color:#fff;justify-content:center;align-items:center;text-align:center}
+.cover .grid{position:absolute;inset:0;opacity:.13;background-image:linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px);background-size:10mm 10mm}
+.cover .sym{position:absolute;font:700 46px 'Times New Roman',serif;color:rgba(255,255,255,.12)}
+</style></head>
+<body>
+<div id="book"></div>
+<script src="content.js"></script>
+<script src="ch1-4.js"></script>
+<script src="ch5-8.js"></script>
+<script src="ch9-13.js"></script>
+<script src="practice.js"></script>
+<script>
+const COL={g:'#15803d',b:'#1d4ed8',o:'#c2410c',p:'#6d28d9',t:'#0f766e',r:'#be123c',i:'#4338ca',a:'#b45309'};
+const book=document.getElementById('book');
+let pno=0; const total=()=>PAGES.length;
+function header(pg){
+  return `<div class="hd"><div class="seal"><b>BAIO</b><i>Learning System</i></div>
+   <div class="who"><span class="nm">Narendra Sir</span><span class="rl">Founder & CEO, BAIO</span></div>
+   <h1>${pg.title}</h1>
+   <div class="pill">${pg.pill}</div>
+   <div class="tag"><b>II PUC<br>MATHS</b><i>KARNATAKA BOARD<br>COLOUR NOTES</i></div></div>`;
+}
+const FOOT=`<div class="ft"><div class="row"><span>📘 NCERT BASED</span><span>🎯 BOARD + KCET</span><span>🧠 EASY REVISION</span><span>✍️ FORMULA READY</span></div>
+  <div class="sig"><span>Narendra Sir</span> &nbsp;·&nbsp; BAIO Learning System</div></div>`;
+if(window.buildContents) buildContents();
+PAGES.forEach((pg,ix)=>{
+  const d=document.createElement('div'); d.className='page'+(pg.cls?' '+pg.cls:'');
+  if(pg.raw){ d.innerHTML=pg.raw; }
+  else{
+    let n=0;
+    d.innerHTML=header(pg)+`<div class="bd">${pg.boxes.map(bx=>{n++; return `<div class="box${bx.full?' full':''}" style="--c:${COL[bx.c]||bx.c}"><h2><span class="n">${n}</span>${bx.h}</h2><div class="ct">${bx.x}</div></div>`}).join('')}</div>`+FOOT+`<div class="pn">${ix+1} / ${PAGES.length}</div>`;
+  }
+  book.appendChild(d);
+});
+document.querySelectorAll('.fx:not(.k)').forEach(e=>{ e.innerHTML=e.innerHTML.replace(/\\frac/g,'\\dfrac').replace(/\\tfrac/g,'\\dfrac'); });
+renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});
+document.querySelectorAll('.hd h1').forEach(h=>{ let f=27; while(h.scrollHeight>34 && f>17){ f-=1; h.style.fontSize=f+'px'; } });
+window.CHECK=()=>[...document.querySelectorAll('.page')].map((p,i)=>{const bd=p.querySelector('.bd');if(!bd)return null;const F=p.querySelector('.ft').getBoundingClientRect(),P=p.getBoundingClientRect();const last=Math.max(...[...bd.children].map(c=>c.getBoundingClientRect().bottom));return {i:i+1,t:PAGES[i].title.replace(/<[^>]+>/g,''),slack:Math.round((F.top-last)-(F.bottom-P.bottom))}}).filter(Boolean);
+window.ERRS=[...document.querySelectorAll('.katex-error')].map(e=>e.title||e.textContent);
+</script>
+</body></html>
