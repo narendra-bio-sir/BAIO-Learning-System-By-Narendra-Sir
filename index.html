@@ -2998,6 +2998,7 @@ window.indexHardRefresh = indexHardRefresh;
       'Today: '+(weak&&weak.a<0.7?'revise your weak chapter ':'revise ')+'<a href="'+focus[1]+'">'+focus[2]+'</a> → <a href="zone.html#daily">Daily 5</a> → <a href="important-cards.html#'+focus[0]+'">Quick card</a>';
     if(cls===1 && Date.now()<Date.parse('2026-10-30T00:00:00+05:30')) plan.innerHTML+='<br>📝 <a href="midterm-practice.html"><b>Mid-term practice paper</b></a> (Biology on 29 Oct)';
     if(cls===1 && Date.now()<Date.parse('2026-11-13T00:00:00+05:30')) plan.innerHTML+='<br>📝 <a href="kcet-mock-12nov.html"><b>KCET mock test</b></a> (60 Q · 60 min, test on 12 Nov)';
+    if(cls===2) plan.innerHTML+='<br>🗓️ <a href="exam-corner.html#my-exam-planner"><b>Your II PUC exam planner</b></a> — a study plan to your last paper<br>🎯 <a href="exam-scorer.html"><b>Biology Exam Scorer</b></a> — sure marks across all 13 chapters';
     plan.querySelectorAll('.hz-cls [data-c]').forEach(function(b){ b.onclick=function(){ if(+b.dataset.c!==cls) setCls(+b.dataset.c); }; });
   }
   document.getElementById('hzCdShare').onclick=function(){ if(window.baioCountdownShare) baioCountdownShare(window.__hzCd||{cls:cls}); };
