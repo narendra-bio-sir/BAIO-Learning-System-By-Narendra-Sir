@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script src="baio-speak.js?v=3"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0B1B14">
@@ -180,6 +181,106 @@ header{padding:34px 0 22px; text-align:center;}
   text-decoration:none; cursor:pointer; transition:background .15s ease;
 }
 .quick-action-btn:hover{background:rgba(212,175,55,0.08);}
+/* Exam Corner: full-width, filled so it stands out at the top of the row */
+.quick-action-btn.exam-corner-btn{flex:1 1 100%; background:linear-gradient(135deg,var(--gold),#B8912A); color:#1a1406; border-color:var(--gold);}
+.quick-action-btn.exam-corner-btn:hover{filter:brightness(1.05); background:linear-gradient(135deg,var(--gold),#B8912A);}
+.quick-action-btn.reels-btn{flex:1 1 100%; border-color:var(--gold); border-width:2px;}
+/* Daily Bio Zone cards on the home screen */
+.hz{margin-top:18px;display:grid;gap:10px}
+.hz-card{border-radius:18px;padding:14px 16px;border:1px solid var(--line);background:var(--panel);position:relative;overflow:hidden}
+.hz-daily{background:linear-gradient(135deg,#ff8a00,#ff3d77 60%,#7b2ff7);color:#fff;border:0;text-decoration:none;display:flex;align-items:center;gap:14px}
+.hz-daily .fl{font-size:40px;animation:hzf 1s ease-in-out infinite alternate}
+@keyframes hzf{from{transform:scale(1) rotate(-5deg)}to{transform:scale(1.12) rotate(5deg)}}
+.hz-daily b{display:block;font:800 17px 'Space Grotesk',sans-serif}
+.hz-daily small{display:block;font:600 12.5px 'Inter',sans-serif;opacity:.95;margin-top:2px}
+.hz-daily .go{margin-left:auto;flex:none;background:#fff;color:#ff3d77;font:800 13px 'Inter';padding:8px 12px;border-radius:999px}
+.hz-k{font:800 10.5px 'Space Grotesk',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);display:flex;align-items:center;gap:8px}
+.hz-k button{margin-left:auto;background:none;border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:4px 10px;font:700 11.5px 'Inter';cursor:pointer}
+.hz-fact{font:600 15px/1.5 'Inter','Noto Sans Devanagari',sans-serif;color:var(--ink);margin-top:6px}
+.hz-cd{display:flex;align-items:center;gap:14px;margin-top:6px}
+.hz-cd .n{flex:none;min-width:84px;text-align:center;padding:8px 10px;border-radius:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406}
+.hz-cd .n b{display:block;font:800 30px 'Space Grotesk',sans-serif;line-height:1}
+.hz-cd .n small{font:700 10.5px 'Inter'}
+.hz-plan{font:600 13px/1.5 'Inter';color:var(--ink)}
+.hz-plan a{color:var(--teal);font-weight:800}
+.hz-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.hz-cls{display:flex;width:max-content;gap:3px;padding:3px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);margin-bottom:6px}
+.hz-cls button{border:0;background:none;color:var(--ink);border-radius:999px;padding:5px 12px;font:700 12px 'Inter';cursor:pointer;min-height:30px}
+.hz-cls button.on{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406}
+.hz-row button,.hz-row a{padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:700 12px 'Inter';cursor:pointer;text-decoration:none}
+/* BAIO theme song player */
+.theme-song{margin-top:18px; display:flex; align-items:center; gap:14px; padding:14px 16px; border-radius:16px;
+  border:1px solid var(--line); background:linear-gradient(135deg,rgba(212,175,55,0.10),rgba(46,230,197,0.06)), var(--panel);}
+.ts-play{flex:none; width:52px; height:52px; border-radius:50%; border:none; cursor:pointer;
+  background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#1a1406; font-size:20px; display:grid; place-items:center;
+  box-shadow:0 4px 14px rgba(212,175,55,0.35);}
+.ts-play:focus-visible{outline:2px solid var(--teal); outline-offset:3px;}
+.ts-body{flex:1; min-width:0;}
+.ts-art{flex:none; width:56px; height:56px; border-radius:12px; object-fit:cover; box-shadow:0 4px 14px rgba(0,0,0,.35); border:1px solid var(--line);}
+.ts-art[hidden]{display:none;}
+.theme-song.has-art{gap:11px;}
+.theme-song.has-art .ts-kick{letter-spacing:.06em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+@media(max-width:380px){ .theme-song.has-art{padding:12px; gap:9px;} .theme-song.has-art .ts-eq{display:none;} .theme-song.has-art .ts-play{width:44px;height:44px;font-size:17px;} .theme-song.has-art .ts-art{width:52px;height:52px;} .theme-song.has-art .ts-kick{letter-spacing:.02em;font-size:10px;} }
+.ts-kick{font:700 10.5px 'Space Grotesk',sans-serif; letter-spacing:.12em; text-transform:uppercase; color:var(--teal);}
+.ts-title{font:700 16px 'Noto Sans Devanagari','Noto Sans Kannada','Space Grotesk',sans-serif; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;}
+.ts-bar{position:relative; height:6px; border-radius:6px; background:var(--panel2); margin-top:9px; cursor:pointer; touch-action:none;}
+.ts-fill{position:absolute; left:0; top:0; bottom:0; width:0; border-radius:6px; background:linear-gradient(90deg,var(--teal),var(--gold));}
+.ts-time{display:flex; justify-content:space-between; font:600 11px 'Space Grotesk',sans-serif; color:var(--ink-dim); margin-top:5px; font-variant-numeric:tabular-nums;}
+.theme-song.playing .ts-eq i{animation:tsEq .9s ease-in-out infinite alternate;}
+.ts-eq{flex:none; display:flex; align-items:flex-end; gap:3px; height:22px;}
+.ts-eq i{width:4px; height:30%; border-radius:2px; background:var(--gold); opacity:.8;}
+.ts-eq i:nth-child(2){animation-delay:.25s!important} .ts-eq i:nth-child(3){animation-delay:.5s!important}
+@keyframes tsEq{from{height:20%}to{height:100%}}
+@media(prefers-reduced-motion:reduce){.theme-song.playing .ts-eq i{animation:none;height:70%}}
+/* Students Ki Jeeth video song (YouTube, loads only when tapped) */
+.vsong{margin-top:10px; border:1px solid var(--line); border-radius:16px; overflow:hidden; background:var(--panel);}
+.vsong-head{display:flex; align-items:center; gap:10px; padding:11px 14px;}
+.vsong-head .vk{font:700 10.5px 'Space Grotesk',sans-serif; letter-spacing:.12em; text-transform:uppercase; color:var(--teal);}
+.vsong-head .vt{font:700 15px 'Noto Sans Devanagari','Space Grotesk',sans-serif; color:var(--ink); margin-top:1px;}
+.vsong-head .vnew{margin-left:auto; flex:none; font:800 10px 'Space Grotesk',sans-serif; letter-spacing:.08em; color:#fff; background:#e5484d; border-radius:20px; padding:3px 8px;}
+.vsong-frame{position:relative; aspect-ratio:16/9; background:#000; cursor:pointer;}
+.vsong-frame img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+.vsong-frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+.vsong-frame .vplay{position:absolute; left:50%; top:50%; width:68px; height:48px; margin:-24px 0 0 -34px; border:0; border-radius:14px; background:#ff0033; color:#fff; font-size:22px; display:grid; place-items:center; box-shadow:0 6px 20px rgba(0,0,0,.4); cursor:pointer;}
+.vsong-frame .vplay:focus-visible{outline:3px solid #fff; outline-offset:3px;}
+.vsong-pick{display:flex; gap:6px; padding:0 14px 10px; overflow-x:auto; scrollbar-width:none;}
+.vsong-pick::-webkit-scrollbar{display:none;}
+.vsong-pick button{flex:none; padding:7px 12px; border-radius:999px; border:1px solid var(--line); background:var(--panel2); color:var(--ink); font:700 12.5px 'Noto Sans Kannada','Noto Sans Devanagari','Inter',sans-serif; cursor:pointer;}
+.vsong-pick button.on{background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#1a1406; border-color:var(--gold);}
+.vsong-acts{display:flex; gap:8px; padding:10px 14px 12px; flex-wrap:wrap;}
+.vsong-acts a,.vsong-acts button{flex:1 1 140px; text-align:center; padding:9px 12px; border-radius:12px; border:1px solid var(--line); background:var(--panel2); color:var(--ink); text-decoration:none; font:600 13px 'Inter',sans-serif; cursor:pointer;}
+.ts-list{margin-top:8px; border:1px solid var(--line); border-radius:14px; background:var(--panel); overflow:hidden;}
+.ts-list summary{list-style:none; cursor:pointer; padding:11px 16px; font:700 13px 'Space Grotesk',sans-serif; color:var(--gold); display:flex; align-items:center; gap:8px;}
+.ts-list summary::-webkit-details-marker{display:none;}
+.ts-list summary::after{content:"▾"; margin-left:auto; transition:transform .2s;}
+.ts-list[open] summary::after{transform:rotate(180deg);}
+.ts-track{display:flex; align-items:center; gap:12px; width:100%; padding:10px 16px; border:none; border-top:1px solid var(--line); background:transparent; color:var(--ink); cursor:pointer; text-align:left; font:inherit;}
+.ts-track:hover{background:rgba(212,175,55,0.06);}
+.ts-track .n{flex:none; width:28px; height:28px; border-radius:50%; display:grid; place-items:center; font:700 12px 'Space Grotesk',sans-serif; background:var(--panel2); color:var(--ink-dim);}
+.ts-track .t{flex:1; min-width:0;}
+.ts-track .t b{display:block; font:700 14px 'Noto Sans Devanagari','Noto Sans Kannada','Space Grotesk',sans-serif; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.ts-track .t span{font:500 11.5px Inter,sans-serif; color:var(--ink-dim);}
+.ts-track .d{flex:none; font:600 11.5px 'Space Grotesk',sans-serif; color:var(--ink-dim); font-variant-numeric:tabular-nums;}
+.ts-track.on .n{background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#1a1406;}
+.ts-track.on .t b{color:var(--gold);}
+.qa-new{display:inline-block; margin-left:6px; padding:2px 7px; border-radius:10px; background:#E7695B; color:#fff; font-size:10px; letter-spacing:1px; vertical-align:2px;}
+.qb-dropdown{flex:1 1 calc(50% - 6px); min-width:140px;}
+.qb-dropdown summary{
+  text-align:center; padding:13px 16px; border-radius:12px; list-style:none; cursor:pointer;
+  border:1px solid var(--gold); background:transparent; color:var(--gold);
+  font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13.5px;
+  transition:background .15s ease;
+}
+.qb-dropdown summary::-webkit-details-marker{display:none;}
+.qb-dropdown summary:hover{background:rgba(212,175,55,0.08);}
+.qb-dropdown-menu{display:flex; flex-direction:column; gap:8px; margin-top:8px;}
+.qb-dropdown-menu a{
+  display:block; text-align:center; padding:11px 16px; border-radius:10px;
+  border:1px solid var(--gold); color:var(--gold); text-decoration:none;
+  font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12.5px;
+  background:transparent; transition:background .15s ease;
+}
+.qb-dropdown-menu a:hover{background:rgba(212,175,55,0.08);}
 @keyframes bellRing{
   0%, 45%, 100%{ transform:rotate(0); }
   5%{ transform:rotate(15deg); } 10%{ transform:rotate(-13deg); }
@@ -265,6 +366,58 @@ header{padding:34px 0 22px; text-align:center;}
 .sp-fill{height:100%; background:linear-gradient(90deg,var(--teal),var(--gold)); border-radius:6px; transition:width .8s ease;}
 .sp-sub{font-size:11px; color:var(--ink-dim); margin-top:6px;}
 
+.start3{border:1.5px solid var(--gold);border-radius:16px;padding:14px 14px 12px;margin-top:16px;background:linear-gradient(120deg,var(--panel),var(--panel2));}
+.start3-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.start3-k{font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--teal);font-weight:800;}
+.start3-t{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;color:var(--ink);margin-top:2px;}
+.start3-sub{font-size:11.5px;color:var(--ink-dim);margin-top:2px;}
+.start3-count{flex:0 0 auto;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);color:var(--ink);white-space:nowrap;}
+.start3-count.done{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;border-color:transparent;}
+.start3-ch{margin:12px 0 4px;}
+.start3-pick{display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;border-radius:12px;border:1.5px solid var(--gold);background:var(--panel);color:var(--ink);cursor:pointer;text-align:left;font-family:inherit;}
+.start3-pick-ic{flex:0 0 auto;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:20px;background:linear-gradient(135deg,rgba(212,175,55,.18),rgba(45,212,191,.16));}
+.start3-pick-tx{flex:1;min-width:0;}
+.start3-pick-tx small{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--teal);font-weight:800;}
+.start3-pick-tx b{display:block;font:700 14px 'Space Grotesk',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.start3-pick-chev{flex:0 0 auto;color:var(--gold);font-size:14px;}
+.start3-sheet{position:fixed;inset:0;z-index:2147483000;background:rgba(5,10,20,.55);display:flex;align-items:flex-end;justify-content:center;}
+.start3-sheet[hidden]{display:none;}
+.start3-sheet-box{width:min(520px,100%);max-height:78vh;display:flex;flex-direction:column;background:var(--bg,var(--panel));border:1px solid var(--line);border-bottom:0;border-radius:22px 22px 0 0;padding:14px 14px calc(12px + env(safe-area-inset-bottom));box-shadow:0 -10px 30px rgba(0,0,0,.25);animation:start3Up .22s ease;}
+@keyframes start3Up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.start3-sheet-head{display:flex;align-items:center;justify-content:space-between;padding:2px 4px 10px;}
+.start3-sheet-head b{font:700 17px 'Space Grotesk',sans-serif;color:var(--ink);}
+.start3-sheet-head button{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:15px;cursor:pointer;}
+.start3-sheet-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:4px;border-radius:12px;background:var(--panel);border:1px solid var(--line);margin-bottom:10px;}
+.start3-sheet-tabs button{border:0;border-radius:9px;padding:9px;background:transparent;color:var(--ink-dim);font:700 13px 'Space Grotesk',sans-serif;cursor:pointer;}
+.start3-sheet-tabs button.on{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;}
+.start3-sheet-list{overflow-y:auto;display:grid;grid-template-columns:1fr;gap:8px;padding:2px 2px 4px;}
+.start3-opt{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;text-align:left;font-family:inherit;}
+.start3-opt .ic{flex:0 0 auto;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:linear-gradient(135deg,rgba(212,175,55,.16),rgba(45,212,191,.14));}
+.start3-opt .tx{flex:1;min-width:0;}
+.start3-opt .tx small{display:block;font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--gold);font-weight:800;}
+.start3-opt .tx b{display:block;font-size:14px;line-height:1.3;}
+.start3-opt .ck{flex:0 0 auto;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-size:13px;color:transparent;}
+.start3-opt.on{border-color:var(--teal);box-shadow:0 0 0 1px var(--teal) inset;}
+.start3-opt.on .ck{background:var(--teal);border-color:var(--teal);color:#fff;}
+.start3-step{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px dashed var(--line);}
+.start3-step:first-of-type{border-top:0;}
+.start3-n{flex:0 0 auto;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:700 14px 'Space Grotesk',sans-serif;background:var(--panel);border:1.5px solid var(--gold);color:var(--gold);}
+.start3-step.done .start3-n{background:var(--teal);border-color:var(--teal);color:#fff;}
+.start3-b{flex:1;min-width:0;}
+.start3-b b{display:block;font-size:13.5px;color:var(--ink);}
+.start3-b small{display:block;font-size:11.5px;color:var(--ink-dim);line-height:1.4;margin-top:1px;}
+.start3-go{flex:0 0 auto;text-decoration:none;font:700 12px 'Space Grotesk',sans-serif;padding:9px 12px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;white-space:nowrap;}
+.start3-step.done .start3-go{background:transparent;border:1px solid var(--teal);color:var(--teal);}
+.start3-watch{display:flex;align-items:center;gap:12px;width:100%;margin-top:10px;padding:8px;border-radius:12px;border:1px dashed var(--gold);background:transparent;cursor:pointer;text-align:left;color:var(--ink);font-family:inherit;}
+.start3-watch img{width:44px;height:78px;object-fit:cover;border-radius:8px;flex:0 0 auto;}
+.start3-watch b{display:block;font:700 13.5px 'Space Grotesk',sans-serif;color:var(--gold);}
+.start3-watch small{display:block;font-size:11.5px;color:var(--ink-dim);margin-top:2px;}
+.start3-share{display:block;margin-top:8px;text-align:center;font:700 12.5px 'Space Grotesk',sans-serif;color:var(--teal);text-decoration:none;padding:6px;}
+.start3-vmodal{position:fixed;inset:0;z-index:2147483001;background:rgba(5,10,20,.88);display:flex;align-items:center;justify-content:center;padding:16px;}
+.start3-vmodal[hidden]{display:none;}
+.start3-vbox{position:relative;width:min(420px,100%);}
+.start3-vbox video{width:100%;max-height:calc(100vh - 80px);border-radius:16px;background:#000;display:block;}
+.start3-vclose{position:absolute;top:-14px;right:-6px;width:40px;height:40px;border-radius:50%;border:0;background:#fff;color:#111;font-size:18px;cursor:pointer;z-index:1;box-shadow:0 2px 10px rgba(0,0,0,.4);}
 .continue-widget{
   display:none; align-items:center; gap:12px; border:1px solid var(--line); border-radius:14px;
   padding:14px 16px; background:linear-gradient(120deg, var(--panel), var(--panel2)); margin-top:16px;
@@ -410,6 +563,61 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     <button id="pu1ChapterJumpBtn" class="theme-toggle-btn" style="right:150px;" title="Jump to a live PU-I chapter" aria-label="Jump to a live PU-I chapter" aria-haspopup="true" aria-expanded="false">&#127891;</button>
   </div>
 
+  <div class="start3-vmodal" id="start3VModal" role="dialog" aria-modal="true" aria-label="How to start in 3 steps" hidden>
+    <div class="start3-vbox">
+      <button type="button" class="start3-vclose" id="start3VClose" aria-label="Close video">✕</button>
+      <video id="start3Video" controls playsinline preload="none" poster="reels/baio-start-3-steps-cover.jpg"><source src="reels/baio-start-3-steps.mp4" type="video/mp4"></video>
+    </div>
+  </div>
+  <div class="start3-sheet" id="start3Sheet" role="dialog" aria-modal="true" aria-label="Choose your chapter" hidden>
+    <div class="start3-sheet-box">
+      <div class="start3-sheet-head"><b>Choose your chapter</b><button type="button" id="start3SheetClose" aria-label="Close">✕</button></div>
+      <div class="start3-sheet-tabs" role="tablist">
+        <button type="button" data-puc="PUC-1" role="tab">I PUC</button>
+        <button type="button" data-puc="PUC-2" role="tab">II PUC</button>
+      </div>
+      <div class="start3-sheet-list" id="start3SheetList"></div>
+    </div>
+  </div>
+  <div id="start3" class="start3" aria-label="Start here: your daily 3 steps">
+    <div class="start3-head">
+      <div>
+        <div class="start3-k">🚀 Start here · NEET daily plan</div>
+        <div class="start3-t">Your 3 steps every day</div>
+        <div class="start3-sub">Too many options? Just do these three, in this order.</div>
+      </div>
+      <div class="start3-count" id="start3Count">0 / 3 today</div>
+    </div>
+    <div class="start3-ch">
+      <select id="start3Chapter" aria-hidden="true" tabindex="-1" hidden></select>
+      <button type="button" class="start3-pick" id="start3Pick" aria-haspopup="dialog" aria-expanded="false">
+        <span class="start3-pick-ic" id="start3PickIc">📘</span>
+        <span class="start3-pick-tx"><small id="start3PickK">Your chapter</small><b id="start3PickT">Choose a chapter</b></span>
+        <span class="start3-pick-chev">▾</span>
+      </button>
+    </div>
+    <div class="start3-step" data-step="1">
+      <div class="start3-n">1</div>
+      <div class="start3-b"><b>📘 Learn · 45 min</b><small>Open the chapter → <b style="display:inline">Study Mode</b> or <b style="display:inline">One-Shot Revision</b>. The <b style="display:inline">Pacing</b> tab tells you today's topic.</small></div>
+      <a class="start3-go" id="start3Go1" href="#">Learn →</a>
+    </div>
+    <div class="start3-step" data-step="2">
+      <div class="start3-n">2</div>
+      <div class="start3-b"><b>🎯 Practise · 15 min</b><small>Same chapter → <b style="display:inline">NEET Practice</b> → 10 timed questions. Sunday: a 50-question mock test.</small></div>
+      <a class="start3-go" id="start3Go2" href="#">Practise →</a>
+    </div>
+    <div class="start3-step" data-step="3">
+      <div class="start3-n">3</div>
+      <div class="start3-b"><b>🔥 Revise · 5 min</b><small><b style="display:inline">Daily Bio Zone</b> → today's 5 questions. Keep your streak alive.</small></div>
+      <a class="start3-go" id="start3Go3" href="zone.html#daily">Revise →</a>
+    </div>
+    <button type="button" class="start3-watch" id="start3Watch" aria-label="Watch the video: how to start in 3 steps">
+      <img src="reels/baio-start-3-steps-cover.jpg" alt="" loading="lazy">
+      <span><b>▶ Watch: how to start in 3 steps</b><small>4-min video · Learn, Practise, Revise · every tab shown</small></span>
+    </button>
+    <a class="start3-share" id="start3Share" href="neet-3-steps.html">📤 Share this video with friends</a>
+  </div>
+
   <div style="border:1px solid var(--gold); border-radius:16px; padding:16px 18px; margin-top:16px; margin-bottom:16px; background:linear-gradient(120deg, var(--panel), var(--panel2)); text-align:center;">
     <div style="font-size:13px; font-weight:800; color:var(--gold-2, var(--gold));">🎁 Get All 13 PU-II Chapters, One Payment</div>
     <div style="font-size:12px; color:var(--ink-dim); margin:6px 0 10px; max-width:480px; margin-left:auto; margin-right:auto;">Mind Map, Class Presentation, MCQ Quiz, NEET &amp; KCET Practice, Answer Practice, Paper Generator, Board Important and Audio Podcast &mdash; unlocked on every PU-II chapter with one code.</div>
@@ -455,13 +663,80 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
     <div class="sp-sub" id="spSub"></div>
   </div>
 
+  <div class="hz" id="hz">
+    <a class="hz-card hz-daily" href="zone.html#daily" id="hzDaily"><span class="fl">🔥</span><span><b id="hzDT">Daily Bio Challenge</b><small id="hzDS">5 questions · 3 minutes · build your streak</small></span><span class="go">Play ▶</span></a>
+    <div class="hz-card"><div class="hz-k">💡 Fact of the day <button type="button" id="hzFShare">📤 Share</button></div><div class="hz-fact" id="hzFact"></div></div>
+    <div class="hz-card"><div class="hz-k">📅 Exam countdown <button type="button" id="hzCdShare">📤 Share</button><button type="button" id="hzEdit" style="margin-left:0">✏️ Change</button></div>
+      <div class="hz-cd"><div class="n" id="hzN"><b>–</b><small>days left</small></div><div class="hz-plan" id="hzPlan"></div></div>
+      <div class="hz-row"><button type="button" id="hzRemind">🔔 Remind me at 7 pm</button><a href="zone.html#test">📝 Chapter tests</a><a href="zone.html#guess">🧩 Guess It</a><a href="zone.html#memes">😂 Memes</a><a href="zone.html#invite">🎁 Invite &amp; earn</a></div>
+    </div>
+  </div>
+
+  <div class="theme-song" id="themeSong">
+    <img class="ts-art" id="tsArt" alt="Song cover" hidden>
+    <button class="ts-play" id="tsPlay" aria-label="Play the BAIO theme song">▶</button>
+    <div class="ts-body">
+      <div class="ts-kick" id="tsKick">🎵 BAIO Theme Song</div>
+      <div class="ts-title" id="tsTitle">सीखो, समझो, सुधारो, पाओ</div>
+      <div class="ts-bar" id="tsBar" role="slider" aria-label="Song position" tabindex="0"><div class="ts-fill" id="tsFill"></div></div>
+      <div class="ts-time"><span id="tsCur">0:00</span><span id="tsDur">2:22</span></div>
+    </div>
+    <div class="ts-eq" aria-hidden="true"><i></i><i></i><i></i></div>
+    <audio id="tsAudio" src="audio/baio-theme-song.mp3" preload="none"></audio>
+  </div>
+  <details class="ts-list" id="tsList">
+    <summary>🎶 BAIO Songs · 10 tracks</summary>
+    <div id="tsTracks"></div>
+  </details>
+
+  <div class="vsong" id="vsong">
+    <div class="vsong-head">
+      <div><div class="vk">🎬 Video Songs · Dedicated to Narendra Sir</div><div class="vt" id="vsongTitle">स्टूडेंट्स की जीत · Students Ki Jeeth</div></div>
+      <span class="vnew">NEW</span>
+    </div>
+    <div class="vsong-pick" id="vsongPick" role="tablist" aria-label="Choose a video song"></div>
+    <div class="vsong-frame" id="vsongFrame" role="button" tabindex="0" aria-label="Play the video song">
+      <img id="vsongImg" src="https://i.ytimg.com/vi/TblguxqWbfw/hqdefault.jpg" alt="Video song" loading="lazy">
+      <button class="vplay" type="button" tabindex="-1" aria-hidden="true">▶</button>
+    </div>
+    <div class="vsong-acts">
+      <a id="vsongYt" href="https://youtu.be/TblguxqWbfw" target="_blank" rel="noopener">▶️ Open in YouTube</a>
+      <button type="button" id="vsongShare">📤 Share with friends</button>
+    </div>
+  </div>
+
   <div class="quick-actions-row">
+    <a href="assistant.html" class="quick-action-btn exam-corner-btn">🦉 BAIO AI Assistant <span class="qa-new">NEW</span></a>
+    <a href="exam-corner.html" class="quick-action-btn exam-corner-btn">📝 Exam Corner <span class="qa-new">NEW</span></a>
+<a href="pcm.html" class="quick-action-btn exam-corner-btn">⚛️ PCM · Physics, Chemistry &amp; Maths <span class="qa-new">NEW</span></a>
+    <a href="offline.html" class="quick-action-btn exam-corner-btn">📥 Use BAIO Offline · No internet needed <span class="qa-new">NEW</span></a>
+    <a href="tricks.html" class="quick-action-btn exam-corner-btn">🧠 Short Notes &amp; Tricks <span class="qa-new">NEW</span></a>
+    <a href="careers.html" class="quick-action-btn exam-corner-btn">🎓 Career Guidance · After PU Science <span class="qa-new">NEW</span></a>
+    <a href="reels.html#updates" class="quick-action-btn reels-btn">📢 Video Updates · App guides <span class="qa-new">NEW</span></a>
+    <a href="reels.html" class="quick-action-btn reels-btn">🎬 Revision Reels <span class="qa-new">NEW</span></a>
+    <a href="games.html" class="quick-action-btn reels-btn">🧩 BAIO Game Zone <span class="qa-new">NEW</span></a>
+    <a href="games/microscope.html" class="quick-action-btn reels-btn">🔬 Phone Microscope <span class="qa-new">NEW</span></a>
+    <a href="stories.html" class="quick-action-btn reels-btn">📚 Biology Storybooks <span class="qa-new">NEW</span></a>
+    <a href="activities.html" class="quick-action-btn reels-btn">🧪 Projects &amp; Activities <span class="qa-new">NEW</span></a>
+    <a href="flashcards.html" class="quick-action-btn reels-btn">🧠 Flash Cards <span class="qa-new">NEW</span></a>
+    <a href="notes.html" class="quick-action-btn reels-btn">📒 Illustrated Notes <span class="qa-new">NEW</span></a>
+    <a href="podcasts.html" class="quick-action-btn reels-btn">🎧 BAIO Podcasts <span class="qa-new">NEW</span></a>
+    <a href="important-cards.html" class="quick-action-btn reels-btn">🃏 Board &amp; NEET Quick Cards <span class="qa-new">NEW</span></a>
     <a href="analytics.html" class="quick-action-btn">📊 Performance Analysis</a>
     <a href="timetable.html" class="quick-action-btn">🗓️ Time Table</a>
     <a href="announcements.html" class="quick-action-btn"><span class="bell-wrap"><span id="bellIcon">🔔</span><span id="bellCount" class="bell-count"></span></span> Announcements</a>
     <a href="install-guide.html" class="quick-action-btn">📲 Install Guide</a>
     <a href="guide.html" class="quick-action-btn">📘 Student Guide</a>
     <a href="download-notes-guide.html" class="quick-action-btn">📥 Download Notes Guide</a>
+    <a href="ncert-library.html" class="quick-action-btn">📚 NCERT Resource Library</a>
+    <a href="ncert-library.html#kcet" class="quick-action-btn">🎯 KCET Previous Year Papers</a>
+    <details class="qb-dropdown">
+      <summary>📚 PU Question Bank</summary>
+      <div class="qb-dropdown-menu">
+        <a href="https://dpue-pragathi.karnataka.gov.in/question_bank/Biology/IPUC-%20BIOLOGY%20REVISED%20QB-2024-25%20%20FINAL%20(1).pdf" target="_blank" rel="noopener">PU-I Question Bank</a>
+        <a href="https://dpue-pragathi.karnataka.gov.in/question_bank/Biology/IIPUC-BIOLOGY%20REVISED%20QB%202024%20-%2025%20FinaL.pdf" target="_blank" rel="noopener">PU-II Question Bank</a>
+      </div>
+    </details>
     <a href="app-walkthrough.html" class="quick-action-btn">🧭 App Walkthrough</a>
     <a href="ppt-generator.html" class="quick-action-btn">🖥️ PPT Generator</a>
     <a href="study-tips.html" class="quick-action-btn">🎯 Study Tips</a>
@@ -528,12 +803,17 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
   <footer>
     <div class="footer-tagline">Empowering future doctors. Crafted for PU BIOLOGY &amp; NEET Aspirants.</div>
     <div class="footer-copy">&copy; Narendra Sir - Lecturer in Biology</div>
-    <div class="footer-social">
+    <div class="footer-social" style="row-gap:8px;">
+      <span class="follow-wrap" style="flex-basis:100%;display:flex;flex-direction:column;align-items:center;gap:6px;">
+        <span class="follow-us" style="font-weight:700;font-size:11.5px;opacity:.85;">Follow us on</span>
+        <span class="follow-icons" style="display:flex;justify-content:center;gap:16px;">
+          <a href="https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp"><img class="soc-ic" src="assets/social/wa.png" alt="WhatsApp" style="width:30px;height:30px;display:block;border:0;"></a>
+          <a href="https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram"><img class="soc-ic" src="assets/social/ig.png" alt="Instagram" style="width:30px;height:30px;display:block;border:0;"></a>
+          <a href="https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube"><img class="soc-ic" src="assets/social/yt.png" alt="YouTube" style="width:30px;height:30px;display:block;border:0;"></a>
+          <a href="https://t.me/BAIO_Learning_System" target="_blank" rel="noopener" aria-label="Telegram" title="Telegram"><img class="soc-ic" src="assets/social/tg.png" alt="Telegram" style="width:30px;height:30px;display:block;border:0;"></a>
+        </span>
+      </span>
       <a href="#" id="shareAppLink">📤 Share This App</a>
-      <a href="https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X" target="_blank" rel="noopener">WhatsApp Channel</a>
-      <a href="https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw" target="_blank" rel="noopener">Instagram Channel</a>
-      <a href="https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0" target="_blank" rel="noopener">YouTube Channel</a>
-      <a href="https://t.me/BAIO_Learning_System" target="_blank" rel="noopener">Telegram Channel</a>
       <a href="https://wa.me/919008968389" target="_blank" rel="noopener">📱 WhatsApp: 9008968389</a>
       <a href="mailto:bioguru102@gmail.com">✉️ bioguru102@gmail.com</a>
     </div>
@@ -796,9 +1076,9 @@ const CHAPTERS = [
   { num: 'Chapter 6', title: 'Anatomy of Flowering Plants', href: 'pu1-ch6.html', icon: '🔬', desc: 'Internal tissue systems & anatomy of roots, stems & leaves.', progressKey: 'pu1ch6_anatomy_progress_v1', hwKey: 'pu1ch6_hw_unlock', topicCount: 8, puc: 'PUC-1', live: true },
   { num: 'Chapter 7', title: 'Structural Organisation in Animals', href: 'pu1-ch7.html', icon: '🐛', desc: 'Animal tissues & organ-level organisation, using the frog as a model.', progressKey: 'pu1ch7_animalorg_progress_v1', hwKey: 'pu1ch7_hw_unlock', topicCount: 8, puc: 'PUC-1' },
   { num: 'Chapter 8', title: 'Cell: The Unit of Life', href: 'pu1-ch8.html', icon: '🧫', desc: 'Cell theory, prokaryotic vs eukaryotic cells & cell organelles.', progressKey: 'pu1ch8_cell_progress_v1', hwKey: 'pu1ch8_hw_unlock', topicCount: 8, puc: 'PUC-1', live: true },
-  { num: 'Chapter 9', title: 'Biomolecules', href: 'pu1-ch9.html', icon: '🧪', desc: 'Carbohydrates, proteins, lipids, nucleic acids & enzymes.', progressKey: 'pu1ch9_biomolecules_progress_v1', hwKey: 'pu1ch9_hw_unlock', topicCount: 8, puc: 'PUC-1' },
-  { num: 'Chapter 10', title: 'Cell Cycle and Cell Division', href: 'pu1-ch10.html', icon: '🔄', desc: 'Cell cycle phases, mitosis & meiosis.', progressKey: 'pu1ch10_cellcycle_progress_v1', hwKey: 'pu1ch10_hw_unlock', topicCount: 8, puc: 'PUC-1' },
-  { num: 'Chapter 11', title: 'Photosynthesis in Higher Plants', href: 'pu1-ch11.html', icon: '☀️', desc: 'Light & dark reactions, C3/C4 pathways & photorespiration.', progressKey: 'pu1ch11_photosynthesis_progress_v1', hwKey: 'pu1ch11_hw_unlock', topicCount: 8, puc: 'PUC-1' },
+  { num: 'Chapter 9', title: 'Biomolecules', href: 'pu1-ch9.html', icon: '🧪', desc: 'Carbohydrates, proteins, lipids, nucleic acids & enzymes.', progressKey: 'pu1ch9_biomolecules_progress_v1', hwKey: 'pu1ch9_hw_unlock', topicCount: 8, puc: 'PUC-1', live: true },
+  { num: 'Chapter 10', title: 'Cell Cycle and Cell Division', href: 'pu1-ch10.html', icon: '🔄', desc: 'Cell cycle phases, mitosis & meiosis.', progressKey: 'pu1ch10_cellcycle_progress_v1', hwKey: 'pu1ch10_hw_unlock', topicCount: 8, puc: 'PUC-1', live: true },
+  { num: 'Chapter 11', title: 'Photosynthesis in Higher Plants', href: 'pu1-ch11.html', icon: '☀️', desc: 'Light & dark reactions, C3/C4 pathways & photorespiration.', progressKey: 'pu1ch11_photosynthesis_progress_v1', hwKey: 'pu1ch11_hw_unlock', topicCount: 9, puc: 'PUC-1', live: true },
   { num: 'Chapter 12', title: 'Respiration in Plants', href: 'pu1-ch12.html', icon: '💨', desc: 'Glycolysis, fermentation, Krebs cycle & electron transport.', progressKey: 'pu1ch12_plantresp_progress_v1', hwKey: 'pu1ch12_hw_unlock', topicCount: 8, puc: 'PUC-1' },
   { num: 'Chapter 13', title: 'Plant Growth and Development', href: 'pu1-ch13.html', icon: '🌱', desc: 'Plant growth, development, hormones & photoperiodism.', progressKey: 'pu1ch13_plantgrowth_progress_v1', hwKey: 'pu1ch13_hw_unlock', topicCount: 8, puc: 'PUC-1' },
   { num: 'Chapter 14', title: 'Breathing and Exchange of Gases', href: 'pu1-ch14.html', icon: '🫁', desc: 'Respiratory organs, mechanism of breathing & gas transport.', progressKey: 'pu1ch14_breathing_progress_v1', hwKey: 'pu1ch14_hw_unlock', topicCount: 8, puc: 'PUC-1' },
@@ -2380,10 +2660,13 @@ if(stripRows){
   });
 })();
 </script>
+<script src="offline-sync.js"></script>
 <script>
 if('serviceWorker' in navigator){
   window.addEventListener('load', function(){
     navigator.serviceWorker.register('sw.js').catch(function(){});
+    // Chapters saved with "Use BAIO Offline" quietly pick up updates while online.
+    setTimeout(function(){ if(window.BaioOffline) window.BaioOffline.autoSync(); }, 4000);
   });
 }
 /* Force-refresh: unregister any controlling service worker, clear its caches, then
@@ -2414,7 +2697,7 @@ window.indexHardRefresh = indexHardRefresh;
     bar.id = 'baioOfflineBanner';
     bar.setAttribute('role','status');
     bar.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#B8912A;color:#0B1B14;font:600 13px/1.4 -apple-system,"Segoe UI",Roboto,sans-serif;padding:9px 40px 9px 14px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.25);';
-    bar.innerHTML = '📶 You’re offline — showing saved content, which may be out of date.'
+    bar.innerHTML = '📶 You’re offline — showing saved content. <a href="offline.html" style="color:inherit;font-weight:800">See what’s saved</a>'
       + '<button type="button" aria-label="Dismiss" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#0B1B14;font-weight:800;font-size:16px;cursor:pointer;line-height:1;padding:2px 4px;">&times;</button>';
     bar.querySelector('button').addEventListener('click', function(){ bar.remove(); });
     document.body.prepend(bar);
@@ -2576,6 +2859,274 @@ window.indexHardRefresh = indexHardRefresh;
 
   render();
 })();
+</script>
+
+<script>
+/* Video songs (YouTube): pick a song, the player loads only when tapped (keeps the home screen fast) */
+(function(){
+  var VIDEOS=[
+    {id:'TblguxqWbfw', label:'स्टूडेंट्स की जीत', title:'स्टूडेंट्स की जीत · Students Ki Jeeth', cover:'audio/covers/students-ki-jeeth.jpg',
+     share:'🎵 Students Ki Jeeth — a song dedicated to Narendra Sir (BAIO Learning System). Watch it!'},
+    {id:'iwng_9nNvH0', label:'ಕನಸಿನ ಹರಿಕಾರ', title:'ಕನಸಿನ ಹರಿಕಾರ · Kanasina Harikara', cover:'audio/covers/kanasina-harikara.jpg',
+     share:'🎵 ಕನಸಿನ ಹರಿಕಾರ (Kanasina Harikara) — a Kannada song dedicated to Narendra Sir (BAIO Learning System). Watch it!'}
+  ];
+  var fr=document.getElementById('vsongFrame'); if(!fr) return;
+  var pick=document.getElementById('vsongPick'), cur=0;
+  pick.innerHTML=VIDEOS.map(function(v,i){ return '<button type="button" role="tab" data-i="'+i+'">'+v.label+'</button>'; }).join('');
+  function show(i){
+    cur=i; var v=VIDEOS[i];
+    pick.querySelectorAll('button').forEach(function(b){ var on=+b.dataset.i===i; b.classList.toggle('on',on); b.setAttribute('aria-selected',on); });
+    document.getElementById('vsongTitle').textContent=v.title;
+    document.getElementById('vsongYt').href='https://youtu.be/'+v.id;
+    fr.innerHTML='<img src="https://i.ytimg.com/vi/'+v.id+'/hqdefault.jpg" alt="'+v.title+'" loading="lazy"><button class="vplay" type="button" tabindex="-1" aria-hidden="true">▶</button>';
+    var img=fr.querySelector('img'); img.onerror=function(){ img.onerror=null; img.src=v.cover; };
+    fr.style.cursor='pointer'; fr.setAttribute('role','button'); fr.setAttribute('tabindex','0'); fr.setAttribute('aria-label','Play '+v.title);
+  }
+  function play(){
+    if(fr.querySelector('iframe')) return;
+    var au=document.getElementById('tsAudio'); if(au && !au.paused) au.pause();
+    var f=document.createElement('iframe');
+    f.src='https://www.youtube-nocookie.com/embed/'+VIDEOS[cur].id+'?autoplay=1&rel=0&playsinline=1&modestbranding=1&enablejsapi=1';
+    f.title=VIDEOS[cur].title;
+    f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen';
+    f.allowFullscreen=true; f.referrerPolicy='strict-origin-when-cross-origin';
+    fr.innerHTML=''; fr.appendChild(f); fr.style.cursor='default'; fr.removeAttribute('role'); fr.removeAttribute('tabindex');
+  }
+  pick.addEventListener('click', function(e){ var b=e.target.closest('button'); if(b && +b.dataset.i!==cur) show(+b.dataset.i); });
+  fr.addEventListener('click', play);
+  fr.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); play(); } });
+  // the song player and the video never play together
+  var au=document.getElementById('tsAudio');
+  if(au) au.addEventListener('play', function(){ var f=fr.querySelector('iframe'); if(f){ try{ f.contentWindow.postMessage(JSON.stringify({event:'command',func:'pauseVideo',args:[]}),'*'); }catch(e){} } });
+  document.getElementById('vsongShare').addEventListener('click', function(){
+    var v=VIDEOS[cur], url='https://youtu.be/'+v.id;
+    if(navigator.share){ navigator.share({title:v.title, text:v.share, url:url}).catch(function(){}); return; }
+    window.open('https://wa.me/?text='+encodeURIComponent(v.share+'\n'+url), '_blank', 'noopener');
+  });
+  show(0);
+})();
+/* BAIO songs player: theme song + playlist (tap to play; never autoplays; plays the next song when one ends) */
+(function(){
+  var box=document.getElementById('themeSong'); if(!box) return;
+  var TRACKS=[
+    {src:'audio/baio-theme-song.mp3',   kick:'BAIO Theme Song', title:'सीखो, समझो, सुधारो, पाओ', en:'Seekho, Samjho, Sudhaaro, Paao', dur:'2:22'},
+    {src:'audio/har-student-ki-jeet.mp3', kick:'Dedicated to Narendra Sir', title:'स्टूडेंट्स की जीत', en:'Students Ki Jeeth · Male vocals', dur:'3:00', cover:'audio/covers/students-ki-jeeth.jpg'},
+    {src:'audio/har-student-ki-jeet-female.mp3', kick:'Dedicated to Narendra Sir', title:'स्टूडेंट्स की जीत', en:'Students Ki Jeeth · Female vocals', dur:'2:59', cover:'audio/covers/students-ki-jeeth.jpg'},
+    {src:'audio/har-jeet-narendra-sir-ke-naam-duet.mp3', kick:'Dedicated to Narendra Sir', title:'हर जीत नरेंद्र सर के नाम', en:'Har Jeet Narendra Sir Ke Naam · Duet', dur:'2:58'},
+    {src:'audio/kanasina-harikara.mp3', kick:'Dedicated to Narendra Sir', title:'ಕನಸಿನ ಹರಿಕಾರ', en:'Kanasina Harikara · Kannada', dur:'3:03', cover:'audio/covers/kanasina-harikara.jpg'},
+    {src:'audio/geluvina-sarathi.mp3', kick:'Dedicated to Narendra Sir', title:'ಗೆಲುವಿನ ಸಾರಥಿ', en:'Geluvina Sarathi · Kannada', dur:'3:02'},
+    {src:'audio/cell-ki-kahani.mp3',     kick:'BAIO Song',       title:'सेल की कहानी',            en:'Cell Ki Kahani',                dur:'2:50'},
+    {src:'audio/zindagi-ka-system.mp3',  kick:'BAIO Song',       title:'ज़िंदगी का सिस्टम',        en:'Zindagi Ka System',             dur:'2:46'},
+    {src:'audio/life-ka-logic.mp3',      kick:'BAIO Song',       title:'लाइफ़ का लॉजिक',           en:'Life Ka Logic',                 dur:'2:45', cover:'audio/covers/life-ka-logic.jpg'},
+    {src:'audio/sapno-ki-udaan.mp3',     kick:'BAIO Song',       title:'सपनों की उड़ान',           en:'Sapno Ki Udaan',                dur:'2:27'}
+  ];
+  var a=document.getElementById('tsAudio'), btn=document.getElementById('tsPlay'), bar=document.getElementById('tsBar'),
+      fill=document.getElementById('tsFill'), cur=document.getElementById('tsCur'), dur=document.getElementById('tsDur'),
+      kick=document.getElementById('tsKick'), ttl=document.getElementById('tsTitle'), list=document.getElementById('tsTracks'), art=document.getElementById('tsArt');
+  var idx=0;
+  list.innerHTML=TRACKS.map(function(t,i){ return '<button class="ts-track" type="button" data-i="'+i+'"><span class="n">'+(i+1)+'</span><span class="t"><b>'+t.title+'</b><span>'+t.en+'</span></span><span class="d">'+t.dur+'</span></button>'; }).join('');
+  function fmt(t){ t=Math.max(0,Math.floor(t||0)); return Math.floor(t/60)+':'+String(t%60).padStart(2,'0'); }
+  function ui(){ var p=!a.paused; box.classList.toggle('playing',p); btn.textContent=p?'❚❚':'▶';
+    btn.setAttribute('aria-label',(p?'Pause':'Play')+' '+TRACKS[idx].en);
+    [].forEach.call(list.children,function(el,i){ el.classList.toggle('on',i===idx); el.setAttribute('aria-current',i===idx?'true':'false'); }); }
+  function load(i,play){ idx=(i+TRACKS.length)%TRACKS.length; var t=TRACKS[idx];
+    a.src=t.src; kick.textContent='🎵 '+t.kick; ttl.textContent=t.title; dur.textContent=t.dur; cur.textContent='0:00'; fill.style.width='0%';
+    if(t.cover){ art.src=t.cover; art.hidden=false; } else { art.hidden=true; art.removeAttribute('src'); }
+    box.classList.toggle('has-art',!!t.cover);
+    if('mediaSession' in navigator){ try{ navigator.mediaSession.metadata=new MediaMetadata({title:t.title+' · '+t.en.split(' · ')[0],artist:'BAIO Learning System',album:t.kick,
+      artwork:t.cover?[{src:t.cover,sizes:'512x512',type:'image/jpeg'}]:[{src:'apple-touch-icon.png',sizes:'180x180',type:'image/png'}]}); }catch(e){} }
+    if(play) a.play().catch(function(){}); ui(); }
+  btn.addEventListener('click',function(){ if(a.paused){ a.play().catch(function(){}); } else a.pause(); });
+  list.addEventListener('click',function(e){ var b=e.target.closest('.ts-track'); if(!b) return; var i=+b.dataset.i;
+    if(i===idx && a.currentSrc){ a.paused?a.play().catch(function(){}):a.pause(); } else load(i,true); });
+  a.addEventListener('play',ui); a.addEventListener('pause',ui);
+  a.addEventListener('ended',function(){ if(idx<TRACKS.length-1) load(idx+1,true); else { load(0,false); } });
+  a.addEventListener('loadedmetadata',function(){ if(isFinite(a.duration)) dur.textContent=fmt(a.duration); });
+  a.addEventListener('timeupdate',function(){ cur.textContent=fmt(a.currentTime);
+    if(a.duration) fill.style.width=(a.currentTime/a.duration*100)+'%'; bar.setAttribute('aria-valuenow',Math.round(a.currentTime)); });
+  function seek(e){ var r=bar.getBoundingClientRect(), x=(e.clientX-r.left)/r.width;
+    if(!a.duration){ a.play().catch(function(){}); return; } a.currentTime=Math.min(1,Math.max(0,x))*a.duration; }
+  bar.addEventListener('pointerdown',function(e){ seek(e); bar.setPointerCapture(e.pointerId); });
+  bar.addEventListener('pointermove',function(e){ if(bar.hasPointerCapture&&bar.hasPointerCapture(e.pointerId)) seek(e); });
+  bar.addEventListener('keydown',function(e){ if(!a.duration) return;
+    if(e.key==='ArrowRight') a.currentTime=Math.min(a.duration,a.currentTime+5);
+    if(e.key==='ArrowLeft') a.currentTime=Math.max(0,a.currentTime-5); });
+  ui();
+})();
+</script>
+<script src="assistant/home-tour.js?v=1"></script>
+<script src="zone/content.js?v=1"></script>
+<script src="zone/fact-card.js?v=5" defer></script>
+<script src="zone/countdown-card.js?v=2" defer></script>
+<script>
+/* Daily Bio Zone on the home screen: streak, Fact of the Day, exam countdown + today's plan,
+   7 pm reminder opt-in, and invite links (?ref=CODE). */
+(function(){
+  var store={get:function(k){try{return localStorage.getItem(k);}catch(e){return null;}},set:function(k,v){try{localStorage.setItem(k,v);}catch(e){}}};
+  var Z={}; try{ Z=JSON.parse(store.get('baio_zone')||'{}'); }catch(e){}
+  function dk(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  var today=dk(new Date()), yday=dk(new Date(Date.now()-864e5));
+  var streak=(Z.last===today||Z.last===yday)?(Z.streak||0):0, done=Z.hist&&Z.hist[today]!=null;
+  var t=document.getElementById('hzDT'), s=document.getElementById('hzDS');
+  if(done){ t.textContent='🔥 '+streak+'-day streak!'; s.textContent='Today\'s challenge done ('+Z.hist[today]+'/5) · come back tomorrow'; }
+  else if(streak){ t.textContent='🔥 '+streak+'-day streak: keep it alive!'; s.textContent='Today\'s 5 questions are waiting'; }
+  /* fact of the day (changes at midnight IST) */
+  if(window.ZONE){ var F=ZONE.FACTS, f=F[Math.floor((Date.now()+330*60000)/864e5)%F.length];
+    document.getElementById('hzFact').innerHTML=f.t;
+    document.getElementById('hzFShare').onclick=function(){ if(window.baioFactShare) baioFactShare(f); }; }
+  /* exam countdown + today's plan */
+  var cls=Z.cls||0, DEF={2:'2027-03-15'};
+  /* exam date is saved per class (I PUC / II PUC); move the old single date to the current class */
+  (function(){ var old=store.get('baio_exam_date'); if(old && cls && !store.get('baio_exam_date_'+cls)) store.set('baio_exam_date_'+cls, old); })();
+  function myDate(){ return store.get('baio_exam_date_'+cls); }
+  function setCls(c){ cls=c; Z.cls=c; store.set('baio_zone',JSON.stringify(Z)); paint(); }
+  function chs(){ return cls===1?[['pu1-ch2','ch2/index.html','Biological Classification'],['pu1-ch3','ch3/index.html','Plant Kingdom'],['pu1-ch4','pu1-ch4.html','Animal Kingdom'],['pu1-ch5','pu1-ch5.html','Morphology of Flowering Plants'],['pu1-ch6','pu1-ch6.html','Anatomy of Flowering Plants'],['pu1-ch8','pu1-ch8.html','Cell: The Unit of Life'],['pu1-ch9','pu1-ch9.html','Biomolecules'],['pu1-ch10','pu1-ch10.html','Cell Cycle and Cell Division'],['pu1-ch11','pu1-ch11.html','Photosynthesis in Higher Plants']]
+    : [['pu2-ch1','pu2-ch1.html','Sexual Reproduction in Flowering Plants'],['pu2-ch2','pu2-ch2.html','Human Reproduction'],['pu2-ch3','pu2-ch3.html','Reproductive Health'],['pu2-ch4','pu2-ch4.html','Principles of Inheritance and Variation'],['pu2-ch5','pu2-ch5.html','Molecular Basis of Inheritance'],['pu2-ch6','pu2-ch6.html','Evolution'],['pu2-ch7','pu2-ch7.html','Human Health and Disease'],['pu2-ch8','pu2-ch8.html','Microbes in Human Welfare'],['pu2-ch10','pu2-ch10.html','Biotechnology and its Applications'],['pu2-ch11','pu2-ch11.html','Organisms and Populations'],['pu2-ch12','pu2-ch12.html','Ecosystem'],['pu2-ch13','pu2-ch13.html','Biodiversity and Conservation']]; }
+  function paint(){
+    var date=myDate()||DEF[cls]||'', n=document.getElementById('hzN'), plan=document.getElementById('hzPlan');
+    if(!cls){ n.innerHTML='<b>🎓</b><small>pick class</small>'; plan.innerHTML='Tell us your class to see your exam countdown and today\'s plan. <div class="hz-row"><button type="button" data-c="1">I PUC</button><button type="button" data-c="2">II PUC</button></div>';
+      plan.querySelectorAll('[data-c]').forEach(function(b){ b.onclick=function(){ setCls(+b.dataset.c); }; }); return; }
+    var daysLeft=null;
+    if(date){ var d=Math.ceil((new Date(date+'T09:00:00+05:30')-Date.now())/864e5); daysLeft=Math.max(0,d); n.innerHTML='<b>'+daysLeft+'</b><small>days left</small>'; }
+    else n.innerHTML='<b>✏️</b><small>set date</small>';
+    // focus chapter: weakest (≥3 attempts), else rotate one chapter per day
+    var list=chs(), st=Z.chap||{}, weak=null;
+    list.forEach(function(c){ var v=st[c[0]]; if(v&&v.t>=3){ var a=v.c/v.t; if(!weak||a<weak.a) weak={c:c,a:a}; } });
+    var focus=weak&&weak.a<0.7?weak.c:list[Math.floor(Date.now()/864e5)%list.length];
+    window.__hzCd={cls:cls, days:daysLeft, chap:focus[2], provisional:cls===2&&!myDate()};
+    plan.innerHTML='<div class="hz-cls" role="group" aria-label="Your class"><button type="button" data-c="1"'+(cls===1?' class="on" aria-pressed="true"':' aria-pressed="false"')+'>I PUC</button><button type="button" data-c="2"'+(cls===2?' class="on" aria-pressed="true"':' aria-pressed="false"')+'>II PUC</button></div>'+(date?'<b>'+(cls===1?'I PUC':'II PUC')+' Biology exam</b>'+(cls===2&&!myDate()?' (15 Mar 2027, provisional)':'')+'<br>':'<b>Set your exam date</b> with ✏️<br>')+
+      'Today: '+(weak&&weak.a<0.7?'revise your weak chapter ':'revise ')+'<a href="'+focus[1]+'">'+focus[2]+'</a> → <a href="zone.html#daily">Daily 5</a> → <a href="important-cards.html#'+focus[0]+'">Quick card</a>';
+    if(cls===1 && Date.now()<Date.parse('2026-10-30T00:00:00+05:30')) plan.innerHTML+='<br>📝 <a href="midterm-practice.html"><b>Mid-term practice paper</b></a> (Biology on 29 Oct)';
+    if(cls===1 && Date.now()<Date.parse('2026-11-13T00:00:00+05:30')) plan.innerHTML+='<br>📝 <a href="kcet-mock-12nov.html"><b>KCET mock test</b></a> (60 Q · 60 min, test on 12 Nov)';
+    plan.querySelectorAll('.hz-cls [data-c]').forEach(function(b){ b.onclick=function(){ if(+b.dataset.c!==cls) setCls(+b.dataset.c); }; });
+  }
+  document.getElementById('hzCdShare').onclick=function(){ if(window.baioCountdownShare) baioCountdownShare(window.__hzCd||{cls:cls}); };
+  document.getElementById('hzEdit').onclick=function(){ if(!cls){ paint(); return; } var cur=myDate()||DEF[cls]||''; var v=prompt((cls===1?'I PUC':'II PUC')+' Biology exam date (YYYY-MM-DD):', cur); if(v===null) return; v=v.trim();
+    if(/^\d{4}-\d{2}-\d{2}$/.test(v)) store.set('baio_exam_date_'+cls,v); else if(!v) { try{ localStorage.removeItem('baio_exam_date_'+cls); localStorage.removeItem('baio_exam_date'); }catch(e){} } paint(); };
+  paint();
+
+  /* invite links: remember ?ref=CODE once, then report it to the BAIO server */
+  var FB={ apiKey:"AIzaSyBfbVcutUkubiq8w6eHkd4FE8xX9-IyEbU", authDomain:"baio-learning-system.firebaseapp.com", projectId:"baio-learning-system", storageBucket:"baio-learning-system.firebasestorage.app", messagingSenderId:"564399701604", appId:"1:564399701604:web:5d3aefd97e626201ce6971" };
+  function dev(){ var d=store.get('baio_device_id'); if(!d){ d='d'+Date.now().toString(36)+Math.random().toString(36).slice(2,10); store.set('baio_device_id',d); } return d; }
+  function load(src){ return new Promise(function(res,rej){ var x=document.createElement('script'); x.src=src; x.onload=res; x.onerror=rej; document.head.appendChild(x); }); }
+  function fb(extra){ var p=window.firebase?Promise.resolve():load('https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js').then(function(){ return load('https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js'); });
+    return p.then(function(){ return extra&&!(firebase.messaging)?load('https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js'):null; }).then(function(){ if(!firebase.apps.length) firebase.initializeApp(FB); return firebase; }); }
+  try{ var ref=(new URLSearchParams(location.search).get('ref')||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,10);
+    if(ref && !store.get('baio_ref_by') && !store.get('baio_zone')) store.set('baio_ref_pending', ref);
+  }catch(e){}
+  var pend=store.get('baio_ref_pending');
+  if(pend){ fb().then(function(f){ return f.firestore().collection('referrals').doc(dev()).set({ref:pend, at:f.firestore.FieldValue.serverTimestamp()}); })
+    .then(function(){ store.set('baio_ref_by',pend); try{ localStorage.removeItem('baio_ref_pending'); }catch(e){} }).catch(function(){}); }
+
+  /* 7 pm reminder: browser push via Firebase Cloud Messaging (functions/index.js sends it) */
+  var rb=document.getElementById('hzRemind');
+  if(store.get('baio_reminder')==='on') rb.textContent='🔔 Reminder on (7 pm)';
+  if(!('Notification' in window) || !('serviceWorker' in navigator)) rb.style.display='none';
+  rb.onclick=function(){
+    if(store.get('baio_reminder')==='on'){ alert('Your daily 7 pm reminder is on. To turn it off, block notifications for this site in your browser settings.'); return; }
+    Notification.requestPermission().then(function(perm){
+      if(perm!=='granted'){ alert('Please allow notifications to get the 7 pm reminder.'); return; }
+      return navigator.serviceWorker.register('sw.js').then(function(){ return navigator.serviceWorker.ready; }).then(function(reg){
+        return fb(true).then(function(f){ return f.messaging().getToken({vapidKey:'BO8AyYXvtRLj7iRD5u8Aiet_qKvOOPhR9idmvBLwHj4mKYKDhyz_1mD1eFCqbIsEKyqM412fT_v1G7ZPCXRZlCI', serviceWorkerRegistration:reg})
+          .then(function(tok){ return f.firestore().collection('reminderTokens').doc(tok).set({token:tok, cls:cls||0, at:f.firestore.FieldValue.serverTimestamp()}); }); });
+      }).then(function(){ store.set('baio_reminder','on'); rb.textContent='🔔 Reminder on (7 pm)'; alert('Done! We\'ll remind you at 7 pm every day 🔥'); });
+    }).catch(function(){ alert('Could not turn on reminders right now. Please try again later.'); });
+  };
+})();
+</script>
+<script>
+/* ---- Start here: daily 3 steps (Learn → Practise → Revise). A step counts as done
+   for today when its button is tapped; the chosen chapter is remembered. ---- */
+(function(){
+  try{
+    var box=document.getElementById('start3'); if(!box || typeof CHAPTERS==='undefined') return;
+    var live=CHAPTERS.filter(function(c){return c.live;});
+    var sel=document.getElementById('start3Chapter');
+    var dayKey='baio_3steps_'+new Date().toDateString();
+    function get(k,d){try{var v=localStorage.getItem(k);return v===null?d:v;}catch(e){return d;}}
+    function set(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+    var recent=null;try{var r=document.getElementById('cwBtn').getAttribute('href');if(r&&r!=='#')recent=r;}catch(e){}
+    var chosen=get('baio_3steps_chapter',recent||(live[0]&&live[0].href));
+    ['PUC-1','PUC-2'].forEach(function(p){
+      var g=document.createElement('optgroup');g.label=p==='PUC-1'?'I PUC':'II PUC';
+      live.filter(function(c){return c.puc===p;}).forEach(function(c){
+        var o=document.createElement('option');o.value=c.href;o.textContent=c.num+' · '+c.title;if(c.href===chosen)o.selected=true;g.appendChild(o);});
+      if(g.children.length) sel.appendChild(g);
+    });
+    function links(){
+      var h=sel.value;
+      document.getElementById('start3Go1').href=h+(h.indexOf('?')<0?'?tab=study':'');
+      document.getElementById('start3Go2').href=h+(h.indexOf('?')<0?'?tab=neet':'');
+    }
+    function done(){ var d=get(dayKey,'');return d?d.split(','):[]; }
+    function paint(){
+      var d=done();
+      box.querySelectorAll('.start3-step').forEach(function(s){s.classList.toggle('done',d.indexOf(s.getAttribute('data-step'))>=0);});
+      var c=document.getElementById('start3Count');c.textContent=d.length>=3?'🎉 All 3 done today':d.length+' / 3 today';c.classList.toggle('done',d.length>=3);
+    }
+    sel.addEventListener('change',function(){set('baio_3steps_chapter',sel.value);links();});
+    box.querySelectorAll('.start3-step').forEach(function(s){
+      s.querySelector('.start3-go').addEventListener('click',function(){
+        var d=done(),n=s.getAttribute('data-step');if(d.indexOf(n)<0){d.push(n);set(dayKey,d.join(','));}
+        set('baio_3steps_chapter',sel.value);paint();
+      });
+    });
+    links();paint();
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){try{
+  var m=document.getElementById('start3VModal'),v=document.getElementById('start3Video'),b=document.getElementById('start3Watch');
+  if(!m||!v||!b)return;
+  document.body.appendChild(m);
+  function close(){try{v.pause();}catch(e){}m.hidden=true;document.body.style.overflow='';}
+  b.addEventListener('click',function(){m.hidden=false;document.body.style.overflow='hidden';try{var p=v.play();if(p&&p.catch)p.catch(function(){});}catch(e){}});
+  document.getElementById('start3VClose').addEventListener('click',close);
+  m.addEventListener('click',function(e){if(e.target===m)close();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!m.hidden)close();});
+}catch(e){}})();
+</script>
+<script>
+/* ---- Start here: chapter picker (bottom sheet with icons, grouped I PUC / II PUC) ---- */
+(function(){try{
+  var sel=document.getElementById('start3Chapter'),btn=document.getElementById('start3Pick'),sh=document.getElementById('start3Sheet'),list=document.getElementById('start3SheetList');
+  if(!sel||!btn||!sh||typeof CHAPTERS==='undefined')return;
+  document.body.appendChild(sh); /* escape any parent stacking context so it sits above floating buttons */
+  var live=CHAPTERS.filter(function(c){return c.live;});
+  function find(h){for(var i=0;i<live.length;i++)if(live[i].href===h)return live[i];return null;}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  var puc='PUC-1';
+  function paintBtn(){var c=find(sel.value);if(!c)return;
+    document.getElementById('start3PickIc').textContent=c.icon||'📘';
+    document.getElementById('start3PickK').textContent=(c.puc==='PUC-2'?'II PUC':'I PUC')+' · '+c.num;
+    document.getElementById('start3PickT').textContent=c.title;}
+  function renderList(){
+    sh.querySelectorAll('.start3-sheet-tabs button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-puc')===puc);});
+    list.innerHTML=live.filter(function(c){return c.puc===puc;}).map(function(c){
+      var on=c.href===sel.value;
+      return '<button type="button" class="start3-opt'+(on?' on':'')+'" data-href="'+esc(c.href)+'"><span class="ic">'+(c.icon||'📘')+'</span><span class="tx"><small>'+esc(c.num)+'</small><b>'+esc(c.title)+'</b></span><span class="ck">✓</span></button>';
+    }).join('');
+    var on=list.querySelector('.start3-opt.on');if(on)setTimeout(function(){on.scrollIntoView({block:'nearest'});},30);
+  }
+  function open(){var c=find(sel.value);puc=c?c.puc:'PUC-1';renderList();sh.hidden=false;btn.setAttribute('aria-expanded','true');document.body.style.overflow='hidden';}
+  function close(){sh.hidden=true;btn.setAttribute('aria-expanded','false');document.body.style.overflow='';}
+  btn.addEventListener('click',open);
+  document.getElementById('start3SheetClose').addEventListener('click',close);
+  sh.addEventListener('click',function(e){if(e.target===sh)close();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!sh.hidden)close();});
+  sh.querySelectorAll('.start3-sheet-tabs button').forEach(function(b){b.addEventListener('click',function(){puc=b.getAttribute('data-puc');renderList();});});
+  list.addEventListener('click',function(e){var o=e.target.closest('.start3-opt');if(!o)return;
+    sel.value=o.getAttribute('data-href');sel.dispatchEvent(new Event('change'));paintBtn();close();});
+  paintBtn();
+}catch(e){}})();
+</script>
+<script>
+(function(){try{var a=document.getElementById('start3Share');if(!a)return;
+  var U='https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/neet-3-steps.html';
+  var T='🎯 Prepare for NEET in 3 simple steps — Learn · Practise · Revise, every day. Watch this 4-min guide to the BAIO app by Narendra Sir 👇';
+  a.addEventListener('click',function(e){ if(navigator.share){ e.preventDefault(); navigator.share({title:'Prepare for NEET in 3 simple steps',text:T,url:U}).catch(function(){}); } });
+}catch(e){}})();
 </script>
 </body>
 </html>

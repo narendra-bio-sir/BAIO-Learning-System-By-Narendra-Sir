@@ -1,0 +1,194 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="data.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden}
+body{font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari','Noto Color Emoji',sans-serif}
+.L{position:absolute;inset:0}
+em{font-style:normal;color:#f5c542}
+.ab{position:absolute}
+/* ---------- chat ---------- */
+.chat{background:#0b141a;color:#e9edef}
+.ci{background:radial-gradient(circle at 50% 42%,#1d5c46,#0c2a22 62%,#081a15);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 90px}
+.kick{position:absolute;top:56px;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:16px;font:700 27px Inter;letter-spacing:7px;color:#f5c542}
+.kick b{width:44px;height:44px;border:2.5px solid #f5c542;border-radius:10px;display:flex;align-items:center;justify-content:center;font:800 24px Inter;letter-spacing:0}
+.ci .em{font-size:150px;margin-bottom:40px}
+.ci h1{font:800 76px/1.18 Inter;color:#fff}
+.ci .tl{font-size:84px;margin-top:10px}
+.ci p{font:600 32px Inter;letter-spacing:4px;color:#cfd8dc;margin-top:40px}
+.hd{position:absolute;left:0;right:0;top:0;height:170px;background:#1f2c34;display:flex;align-items:center;gap:26px;padding:40px 36px 0}
+.hd .bk{font-size:46px;color:#d1d7db}
+.hd .av{width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#7be07b,#1b7a4f);display:flex;align-items:center;justify-content:center;font-size:54px}
+.hd .nm{font:700 40px Inter}.hd .mb{font:400 27px Inter;color:#aebac1;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:640px}
+.hd .bb{margin-left:auto;width:62px;height:62px;border:3px solid #f5c542;color:#f5c542;border-radius:14px;display:flex;align-items:center;justify-content:center;font:800 32px Inter}
+.area{position:absolute;left:0;right:0;top:170px;bottom:170px;overflow:hidden;background:#0b141a radial-gradient(#13232c 2px,transparent 2px);background-size:46px 46px}
+.col{position:absolute;left:0;right:0;top:0;padding:30px 30px 0}
+.day{margin:20px auto 30px;width:max-content;background:#182229;color:#8696a0;font:600 26px Inter;padding:10px 26px;border-radius:14px}
+.m{max-width:820px;margin-bottom:34px;padding:18px 26px 16px;border-radius:24px;font:400 37px/1.38 Inter;position:relative;transform-origin:left bottom}
+.m.l{background:#202c33;border-top-left-radius:6px}
+.m.r{background:#005c4b;margin-left:auto;border-top-right-radius:6px;transform-origin:right bottom}
+.m .w{font:700 30px Inter;margin-bottom:6px}
+.m .tm{display:block;text-align:right;font:400 23px Inter;color:#9fb0b8;margin-top:4px}
+.m b{font-weight:800;color:#f5c542}
+.m .rx{position:absolute;bottom:-26px;left:22px;background:#202c33;border:3px solid #0b141a;border-radius:24px;font-size:30px;padding:0 10px}
+.m.r .rx{left:auto;right:22px}
+.typing{position:absolute;bottom:0;padding:22px 30px;background:#202c33;border-radius:24px;display:flex;gap:12px;left:30px}
+.typing i{width:16px;height:16px;border-radius:50%;background:#8696a0;display:block}
+.bar{position:absolute;left:0;right:0;bottom:0;height:170px;display:flex;align-items:center;gap:20px;padding:0 26px 30px}
+.bar .in{flex:1;height:96px;border-radius:48px;background:#202c33;color:#8696a0;font:400 34px Inter;display:flex;align-items:center;padding:0 36px}
+.bar .mic{width:96px;height:96px;border-radius:50%;background:#00a884;display:flex;align-items:center;justify-content:center;font-size:44px}
+.rem{background:radial-gradient(circle at 50% 30%,#1a3550,#0d1b2c 70%);text-align:center;padding:0 70px}
+.rem h3{margin-top:300px;font:700 32px Inter;letter-spacing:7px;color:#f5c542}
+.rem h2{font:800 74px/1.15 Inter;color:#fff;margin:22px 0 46px}
+.rem .bx{background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.14);border-radius:36px;padding:16px 44px;text-align:left}
+.rem .it{font:500 37px/1.42 Inter;color:#e3e8ec;padding:24px 0;border-bottom:2px solid rgba(255,255,255,.1)}
+.rem .it:last-child{border:0}
+.cta{display:inline-block;margin-top:56px;background:#f5c542;color:#1b1404;font:800 38px Inter;padding:24px 52px;border-radius:60px}
+.by{font:500 30px Inter;color:#c7d0d8;margin-top:30px}
+/* ---------- topic ---------- */
+.topic{background:#eef8f3;color:#12201b}
+.grid{background:#eef8f3 linear-gradient(#dcefe6 2px,transparent 2px) 0 0/72px 72px,linear-gradient(90deg,#dcefe6 2px,transparent 2px) 0 0/72px 72px}
+.th{position:absolute;left:54px;right:54px;top:52px;display:flex;align-items:center;gap:24px}
+.th .lg{width:84px;height:84px;border-radius:20px;background:#0d7f70;color:#fff;font:900 44px Inter;display:flex;align-items:center;justify-content:center}
+.th .tx{font:800 28px/1.25 Inter;letter-spacing:2px;color:#33463f}
+.th .pl{margin-left:auto;background:#f5c542;color:#2b2100;font:800 30px Inter;padding:12px 26px;border-radius:30px}
+.pb{position:absolute;left:54px;right:54px;top:164px;height:12px;border-radius:6px;background:#d3e8de;overflow:hidden}
+.pb i{display:block;height:100%;background:#0d7f70}
+.sl{position:absolute;left:54px;right:54px;top:250px;bottom:150px}
+.sl .k{font:800 36px Inter;letter-spacing:4px;color:#0d7f70}
+.sl h1{font:900 104px/1.05 Inter;letter-spacing:-2px;margin:18px 0 22px}
+.sl h1 span{color:#0d9a6f}
+.sl .ul{width:120px;height:12px;border-radius:6px;background:#f5c542;margin-bottom:44px}
+.sl .pp{font:500 46px/1.4 Inter;color:#3f504a;margin-bottom:40px}
+.chips{display:flex;flex-wrap:wrap;gap:22px}
+.chips span{background:#fff;border:3px solid #cfe4d9;border-radius:22px;padding:16px 28px;font:700 40px Inter}
+.row{display:flex;align-items:center;gap:30px;margin:0 0 34px}
+.row .n{flex:0 0 96px;height:96px;border-radius:24px;background:#0d7f70;color:#fff;font:900 46px Inter;display:flex;align-items:center;justify-content:center}
+.row .n.t{flex-basis:auto;width:auto;min-width:96px;padding:0 24px;font-size:34px;background:#12201b}
+.row .x{font:500 44px/1.32 Inter;color:#22322c}.row b{font-weight:800;color:#12201b}
+.card{background:#fff;border-radius:30px;box-shadow:0 6px 0 #d3e8de;padding:30px 36px;margin-bottom:32px}
+.card .c1{font:800 32px Inter;letter-spacing:3px;color:#c4561e;margin-bottom:8px}
+.card .c2{font:500 44px/1.35 Inter}.card b{font-weight:800}
+.sw{display:flex;align-items:center;gap:30px;margin-bottom:34px}
+.sw i{flex:0 0 120px;height:54px;border-radius:16px}
+.sw .x{font:800 46px Inter}.sw .x span{display:block;font:500 36px Inter;color:#3f504a}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-bottom:34px}
+.flow span{background:#12201b;color:#fff;font:800 42px Inter;padding:18px 26px;border-radius:20px}
+.flow i{font-style:normal;font:800 44px Inter;color:#0d7f70}
+.foot{background:#12201b;color:#fff;border-radius:30px;padding:30px 40px;font:600 42px/1.35 Inter;margin-top:10px}
+.foot em{color:#f5c542}
+.pic{width:100%;border-radius:26px;border:3px solid #d3e8de;margin:8px 0 30px;display:block;background:#fff}
+.tf{position:absolute;left:0;right:0;bottom:56px;text-align:center;font:500 30px Inter;color:#3f504a}.tf b{font-weight:800}
+/* ---------- shayari ---------- */
+.sh{background:radial-gradient(circle at 50% 35%,#2b1b52,#140d2b 60%,#0a0718);color:#fff;text-align:center}
+.sh .kick{color:#e8c766}.sh .kick b{border-color:#e8c766}
+.sh .ft{position:absolute;bottom:64px;left:0;right:0;font:600 26px Inter;letter-spacing:5px;color:#9a93b8}
+.sh .pr{position:absolute;bottom:0;left:0;height:8px;background:#e8c766}
+.sh .pill{display:inline-block;border:2.5px solid #e8c766;color:#f2dc8a;font:700 32px Inter;padding:10px 30px;border-radius:40px}
+.sh .ic{height:180px;margin:46px auto 40px;display:block}
+.sh .ln{font-size:64px;line-height:1.45;padding:0 70px;color:#f7f2ff}
+.sh .ln .g{color:#f5c542}.sh .ln .tq{color:#7fe0cf}
+.sh .dv{display:flex;align-items:center;justify-content:center;gap:24px;margin:50px 0 26px}
+.sh .dv i{width:150px;height:3px;background:#e8c766;display:block}.sh .dv b{color:#e8c766;font-size:34px}
+.sh .rk{font:800 28px Inter;letter-spacing:5px;color:#7fe0cf}
+.sh .rt{font:italic 500 38px/1.4 Georgia,serif;color:#d8d3ea;padding:0 120px;margin-top:12px}
+.sh .wah{font-size:66px;color:#f5c542;margin-top:46px}
+.sh .tt{font-size:150px;line-height:1.2}.sh .tt em{color:#f5c542}
+.sh .end h2{font-size:84px;line-height:1.3}
+.sh .bL{width:150px;height:150px;border:5px solid #e8c766;border-radius:34px;margin:0 auto 60px;display:flex;align-items:center;justify-content:center;font:900 84px Inter;color:#e8c766}
+.sh .who{font:800 50px Inter;margin-top:60px}.sh .who span{display:block;font:500 34px Inter;color:#b9b2d6;margin-top:10px}
+.star{position:absolute;width:5px;height:5px;border-radius:50%;background:#fff}
+</style></head><body><div id="root"></div>
+<script>
+const Q = new URLSearchParams(location.search), RID = Q.get('r') || 'comedy', LG = Q.get('l') || 'hi';
+const R = window.REEL_DATA[RID];
+const $ = s => document.querySelector(s), ROOT = document.getElementById('root');
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v)), ease = x => 1 - Math.pow(1 - clamp(x, 0, 1), 3);
+const fmt = s => s.replace(/\*(.+?)\*/g, '<b class="g">$1</b>').replace(/_(.+?)_/g, '<b class="tq">$1</b>');
+const EV = []; /* audio events: [t, type] */
+const show = (el, t, t0, dur, dy) => { const p = ease((t - t0) / (dur || .45)); el.style.opacity = p; el.style.transform = `translateY(${(1 - p) * (dy == null ? 40 : dy)}px)`; };
+const fade = (el, t, t0, t1, d) => { d = d || .4; const a = clamp((t - t0) / d, 0, 1), b = t1 == null ? 1 : clamp((t1 - t) / d, 0, 1); el.style.opacity = Math.min(a, b); el.style.visibility = Math.min(a, b) > 0 ? 'visible' : 'hidden'; };
+let DUR = 0, FRAME;
+
+if (R.kind === 'chat') {
+  const T_IN = 3.6, GAP = 3.1, t0 = T_IN + .6, tm = R.msgs.map((m, i) => t0 + .9 + i * GAP + (m.text.length > 90 ? i * .0 : 0));
+  const tRem = tm[tm.length - 1] + 3.4; DUR = tRem + 9;
+  ROOT.innerHTML = `<div class="L chat" id="cs"><div class="hd"><span class="bk">←</span><div class="av">${R.group.icon}</div><div><div class="nm">${R.group.name}</div><div class="mb">${R.group.members}</div></div><div class="bb">B</div></div>
+    <div class="area" id="area"><div class="col" id="col"><div class="day">TODAY</div>${R.msgs.map((m, i) => `<div class="m ${m.side}" id="m${i}"><div class="w" style="color:${m.c}">${m.who}</div>${m.text.replace(/\*(.+?)\*/g, '<b>$1</b>')}<span class="tm">10:${String(41 + i).padStart(2, '0')} pm${m.side === 'r' ? ' ✓✓' : ''}</span>${m.react ? `<span class="rx" id="rx${i}">${m.react}</span>` : ''}</div>`).join('')}</div>
+    <div class="typing" id="typ"><i></i><i></i><i></i></div></div>
+    <div class="bar"><div class="in">BAIO · Biology Comedy 😂</div><div class="mic">🎤</div></div></div>
+    <div class="L ci" id="ci"><div class="kick"><b>B</b>BAIO · BIOLOGY COMEDY</div><div class="em">${R.intro.emoji}</div><h1>${R.intro.title}</h1><div class="tl">${R.intro.tail}</div><p>${R.intro.sub}</p></div>
+    <div class="L rem" id="rm"><div class="kick"><b>B</b>BAIO · BIOLOGY COMEDY</div><h3>😂 HASO, PAR YAAD RAKHO</h3><h2>Exam ke liye<br>REMEMBER ✍️</h2><div class="bx">${R.remember.map((x, i) => `<div class="it" id="ri${i}">${x}</div>`).join('')}</div><div class="cta" id="cta">📲 More in the BAIO app</div><div class="by">Narendra Sir · Instagram @new_gen_bioguru</div></div>`;
+  const area = $('#area'), col = $('#col'), AH = area.clientHeight, M = R.msgs.map((m, i) => document.getElementById('m' + i));
+  const bottoms = M.map(e => e.offsetTop + e.offsetHeight + 40);
+  EV.push([0, 'whoosh']); tm.forEach((x, i) => { EV.push([x, R.msgs[i].side === 'r' ? 'send' : 'pop']); if (R.msgs[i].react) EV.push([x + 1.2, 'react']); }); EV.push([tRem, 'whoosh']); R.remember.forEach((_, i) => EV.push([tRem + 1 + i * .9, 'tick']));
+  FRAME = t => {
+    fade($('#ci'), t, -1, T_IN); $('#ci h1').style.transform = `scale(${.94 + .06 * ease(t / 1)})`;
+    fade($('#rm'), t, tRem, null, .5);
+    let k = -1; M.forEach((e, i) => { const a = t - tm[i]; if (a >= 0) k = i; const p = ease(a / .35); e.style.opacity = a < 0 ? 0 : p; e.style.transform = `scale(${.86 + .14 * p})`; const rx = document.getElementById('rx' + i); if (rx) { const q = ease((a - 1.2) / .3); rx.style.opacity = q; rx.style.transform = `scale(${.4 + .6 * q})`; } });
+    /* scroll so the newest bubble sits at the bottom of the area */
+    const target = i => Math.max(0, (i >= 0 ? bottoms[i] : 0) - AH + 90);
+    let off = target(k); if (k >= 0) { const p = ease((t - tm[k]) / .5); off = target(k - 1) + (target(k) - target(k - 1)) * p; }
+    col.style.transform = `translateY(${-off}px)`;
+    const nx = tm.findIndex(x => x > t), typ = $('#typ'); const showTyp = nx >= 0 && t > tm[nx] - 1.1 && t >= t0 && R.msgs[nx].side === 'l';
+    typ.style.opacity = showTyp ? 1 : 0; typ.querySelectorAll('i').forEach((d, j) => { d.style.transform = `translateY(${-8 * Math.max(0, Math.sin((t * 6 - j * .9)))}px)`; });
+    R.remember.forEach((_, i) => show(document.getElementById('ri' + i), t, tRem + 1 + i * .9));
+    const c = $('#cta'); show(c, t, tRem + 4.8); c.style.transform += ` scale(${1 + .03 * Math.sin(t * 4)})`;
+  };
+}
+
+if (R.kind === 'topic') {
+  const TI = 4.2, TT = 7, n = R.topics.length, tEnd = TI + n * TT; DUR = tEnd + 5;
+  const slides = [`<div class="sl" id="s0"><div class="k">${R.intro.kick}</div><h1>${R.intro.t1}<br><span>${R.intro.t2}</span></h1><div class="pp">${R.intro.p}</div><div class="chips">${R.intro.chips.map((c, i) => `<span id="ch${i}">${c}</span>`).join('')}</div></div>`];
+  R.topics.forEach((tp, i) => { let b = '';
+    if (tp.rows) b += tp.rows.map((r, j) => `<div class="row" data-a="${j}"><div class="n ${tp.num ? '' : 't'}">${tp.num ? r[0] : r[0]}</div><div class="x">${tp.num ? r[1] : '— ' + r[1]}</div></div>`).join('');
+    if (tp.sw) b += tp.sw.map((r, j) => `<div class="sw" data-a="${j}"><i style="background:${r[0]}"></i><div class="x">${r[1]}<span>${r[2]}</span></div></div>`).join('');
+    if (tp.cards) b += tp.cards.map((r, j) => `<div class="card" data-a="${j}"><div class="c1">${r[0]}</div><div class="c2">${r[1]}</div></div>`).join('');
+    if (tp.flow) b += `<div class="flow" data-a="0">${tp.flow.map(f => `<span>${f}</span>`).join('<i>→</i>')}</div>`;
+    const na = (tp.rows || tp.sw || tp.cards || [0]).length;
+    if (tp.img) b += `<img class="pic" data-a="${na}" src="../../../pu1-ch11-assets/${tp.img}">`;
+    if (tp.foot) b += `<div class="foot" data-a="${na + (tp.img ? 1 : 0)}">${tp.foot}</div>`;
+    slides.push(`<div class="sl" id="s${i + 1}"><div class="k">TOPIC ${i + 1} · ${tp.m}</div><h1 style="font-size:${tp.t.length > 20 ? 84 : 100}px">${tp.t}</h1><div class="ul"></div>${b}</div>`); });
+  slides.push(`<div class="sl" id="s${n + 1}" style="text-align:center;top:520px"><div class="k">REVISE · PRACTISE · EXCEL</div><h1>Full chapter in<br><span>the BAIO app</span></h1><div class="pp">Notes · MCQs · NEET · KCET · animated slides · podcasts</div><div class="cta" style="background:#0d7f70;color:#fff">📲 Open Chapter 11</div><div class="by" style="color:#3f504a">Narendra Sir · Instagram @new_gen_bioguru</div></div>`);
+  ROOT.innerHTML = `<div class="L topic grid"><div class="th"><div class="lg">B</div><div class="tx">I PUC BIOLOGY · CH 11<br>PHOTOSYNTHESIS</div><div class="pl" id="pl">Board ★</div></div><div class="pb"><i id="pbi"></i></div>${slides.join('')}<div class="tf"><b>Narendra Sir</b> · BAIO Learning System</div></div>`;
+  const S = [...document.querySelectorAll('.sl')], st = i => i === 0 ? 0 : i <= n ? TI + (i - 1) * TT : tEnd, en = i => i === 0 ? TI : i <= n ? TI + i * TT : DUR + 1;
+  S.forEach((s, i) => { EV.push([st(i), i ? 'whoosh' : 'start']); s.querySelectorAll('[data-a]').forEach(e => EV.push([st(i) + 1.2 + (+e.dataset.a) * .8, 'tick'])); });
+  FRAME = t => {
+    S.forEach((s, i) => { const a = st(i), b = en(i); const vis = t >= a - .01 && t < b; s.style.display = vis ? 'block' : 'none'; if (!vis) return;
+      const p = ease((t - a) / .5), q = clamp((b - t) / .35, 0, 1); s.style.opacity = Math.min(p, q); s.style.transform = `translateX(${(1 - p) * 120}px)`;
+      s.querySelectorAll('[data-a]').forEach(e => show(e, t, a + 1.2 + (+e.dataset.a) * .8, .45, 50));
+      s.querySelectorAll('.chips span').forEach((e, j) => show(e, t, a + 1 + j * .25, .35, 30)); });
+    const ti = t < TI ? 0 : Math.min(n, Math.floor((t - TI) / TT) + 1);
+    $('#pl').textContent = t >= tEnd ? 'Done ✓' : ti === 0 ? 'Board ★' : `Topic ${ti} / ${n}`;
+    $('#pbi').style.width = (clamp(t / tEnd, 0, 1) * 100) + '%';
+  };
+}
+
+if (R.kind === 'shayari') {
+  const L = R.langs[LG], TI = 4.5, TC = 8.6, n = L.c.length, tEnd = TI + n * TC; DUR = tEnd + 6.5;
+  const ICON = { leaf: '<path d="M30 150 C30 60 110 20 170 20 C170 90 130 150 30 150 Z M30 150 L120 70" />', drop: '<path d="M100 20 C130 70 150 95 150 125 A50 50 0 0 1 50 125 C50 95 70 70 100 20 Z M80 125 A20 20 0 0 0 100 145"/>',
+    zig: '<path d="M20 140 L60 40 L100 120 L140 30 L180 110"/><circle cx="60" cy="40" r="10"/><circle cx="140" cy="30" r="10"/>', cycle: '<path d="M150 90 A50 50 0 1 1 135 54"/><path d="M118 40 L138 52 L128 74"/><circle cx="100" cy="90" r="14"/>',
+    corn: '<path d="M100 20 C130 40 130 120 100 160 C70 120 70 40 100 20 Z M85 60 H115 M82 85 H118 M85 110 H115 M100 160 C60 150 40 120 30 90 M100 160 C140 150 160 120 170 90"/>', star: '<path d="M100 20 L120 75 L178 75 L131 108 L149 162 L100 130 L51 162 L69 108 L22 75 L80 75 Z"/>' };
+  const stars = Array.from({ length: 70 }, (_, i) => { const r = Math.sin(i * 91.7) * 1e4, x = (r - Math.floor(r)), r2 = Math.sin(i * 47.3) * 1e4, y = r2 - Math.floor(r2); return `<i class="star" style="left:${(x * 1080).toFixed(0)}px;top:${(y * 1920).toFixed(0)}px" data-s="${i}"></i>`; }).join('');
+  const font = `font-family:${L.font},'Noto Color Emoji',sans-serif`;
+  ROOT.innerHTML = `<div class="L sh">${stars}<div class="kick"><b>B</b>BAIO · BIOLOGY SHAYARI</div>
+    <div class="L" id="in" style="display:flex;flex-direction:column;justify-content:center;align-items:center"><div style="font-size:120px">🪶</div><div class="tt" style="${font}">${L.title}</div></div>
+    ${L.c.map((c, i) => `<div class="L" id="c${i}" style="padding-top:400px"><span class="pill" data-a="0">${c[0]}</span><svg class="ic" data-a="0" viewBox="0 0 200 180" fill="none" stroke="#7fe0cf" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">${ICON[c[1]]}</svg>
+      <div class="ln" data-a="1" style="${font}">${fmt(c[2])}</div><div class="ln" data-a="2" style="${font};margin-top:18px">${fmt(c[3])}</div>
+      <div data-a="3"><div class="dv"><i></i><b>◆</b><i></i></div><div class="rk">${i === n - 1 ? 'REVISE' : 'REMEMBER'}</div><div class="rt">${c[4]}</div></div><div class="wah" data-a="4" style="${font}">${c[5]}</div></div>`).join('')}
+    <div class="L end" id="en" style="padding-top:470px"><div class="bL">B</div><h2 style="${font}">${L.end}</h2><div class="who">Narendra Sir<span>Biology Lecturer<br>Founder, BAIO Learning System</span></div><div class="cta" id="cta2">📲 Learn more in the BAIO app</div><div class="by">Instagram · @new_gen_bioguru</div></div>
+    <div class="ft">I PUC BIOLOGY · CH 11 PHOTOSYNTHESIS</div><i class="pr" id="pr"></i></div>`;
+  const C = L.c.map((_, i) => document.getElementById('c' + i)), AT = [0, 1.1, 2.7, 4.4, 5.8];
+  EV.push([0, 'start']); C.forEach((_, i) => { const a = TI + i * TC; EV.push([a, 'bell']); EV.push([a + AT[4], 'wah']); }); EV.push([tEnd, 'bell']);
+  FRAME = t => {
+    fade($('#in'), t, -1, TI); $('#in').style.transform = `scale(${1 + .04 * clamp(t / TI, 0, 1)})`;
+    C.forEach((c, i) => { const a = TI + i * TC; fade(c, t, a, a + TC, .45); if (c.style.visibility === 'hidden') return;
+      c.querySelectorAll('[data-a]').forEach(e => show(e, t, a + AT[+e.dataset.a], .6, 30));
+      const ic = c.querySelector('svg'); ic.querySelectorAll('path,circle').forEach(pth => { pth.style.strokeDasharray = 1200; pth.style.strokeDashoffset = 1200 * (1 - ease((t - a - .2) / 1.6)); }); });
+    fade($('#en'), t, tEnd, null, .6); show($('#cta2'), t, tEnd + 2.4);
+    document.querySelectorAll('.star').forEach(s => { s.style.opacity = .25 + .55 * Math.abs(Math.sin(t * .8 + +s.dataset.s)); });
+    $('#pr').style.width = (clamp(t / DUR, 0, 1) * 1080) + 'px';
+  };
+}
+window.DUR = DUR; window.EVENTS = EV.sort((a, b) => a[0] - b[0]); window.frame = FRAME;
+</script></body></html>

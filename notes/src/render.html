@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BAIO Notes slide renderer</title>
+<!-- Build tool: renders the notes slides (1080 × 1080) that notes.html shows as images.
+     render.html?ch=pu1-ch8&s=3  → one slide ·  render.html?ch=pu1-ch8&all=1 → every slide (PDF) -->
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+@page{size:1080px 1080px;margin:0}
+html,body{margin:0;background:#ddd}
+body.print{background:#fff}
+.slide{width:1080px;height:1080px;background:#fffdf8;position:relative;padding:14px 22px 0;box-sizing:border-box;display:flex;flex-direction:column;gap:12px;font-family:'Patrick Hand',sans-serif;color:#202020;overflow:hidden;page-break-after:always;break-after:page}
+.slide *{box-sizing:border-box}
+.hd{height:146px;position:relative;flex:none}
+.deco{position:absolute;inset:0;pointer-events:none}
+.tag-l{position:absolute;left:30px;top:26px;transform:rotate(-7deg);background:#fde2ea;border:2px solid #e7a3b6;padding:4px 24px 0;font:700 46px/1.25 Kalam;color:#222;border-radius:4px;box-shadow:3px 4px 0 rgba(0,0,0,.07)}
+.tag-r{position:absolute;right:30px;top:14px;transform:rotate(5deg);background:#fdf3c6;border:2px solid #d5bf73;padding:8px 16px 6px;font:30px/1.02 'Patrick Hand';text-align:center;color:#222;box-shadow:3px 4px 0 rgba(0,0,0,.07);min-width:150px}
+.ttl{position:absolute;left:250px;right:250px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.ttl svg.brush{position:absolute;left:-26px;right:-26px;top:10px;bottom:6px;width:calc(100% + 52px);height:calc(100% - 16px);z-index:0}
+.ttl h1,.ttl h2{position:relative;z-index:1;margin:0;color:#13286e;font-family:Kalam;font-weight:700;white-space:nowrap}
+.ttl h1{font-size:60px;line-height:1.02}
+.ttl h2{font-size:33px;line-height:1.1}
+.def{background:#edf5fd;border:2px solid #bad6f0;border-radius:16px;padding:9px 26px 7px;text-align:center;font-size:27px;line-height:1.28;flex:none}
+.pk{color:#d6175f}.bl{color:#1d48cf}.gr{color:#1f8a35}
+.rows{flex:1;display:flex;flex-direction:column;gap:12px;min-height:0}
+.row{display:flex;gap:14px;min-height:0}
+.pn{border:2px solid var(--bd);border-radius:16px;background:var(--bg);display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.ph{background:var(--hd);text-align:center;padding:5px 10px 2px;font:700 33px/1.12 Kalam;color:#1a1a1a;flex:none;border-bottom:1.5px solid var(--bd)}
+.ph small{display:block;font:700 21px/1.1 Kalam;color:#333;margin-bottom:2px}
+.pb{flex:1;min-height:0;padding:8px 16px;font-size:var(--fs,25px);line-height:1.2;position:relative;overflow:hidden}
+.pb.svg{padding:4px 6px}
+.pb.svg svg{width:100%;height:100%;display:block}
+.list{display:flex;flex-direction:column;justify-content:space-evenly}
+.li{display:flex;gap:14px;align-items:center;padding:4px 0}
+.li+.li{border-top:1.5px dashed rgba(0,0,0,.13)}
+.num{flex:none;width:1.75em;height:1.75em;border-radius:50%;color:#fff;font:700 1.12em/1 Kalam;display:grid;place-items:center;padding-top:.12em;box-shadow:0 2px 3px rgba(0,0,0,.18)}
+.li .tx{flex:1;min-width:0}
+.li .tx b{display:block;font:700 1.1em/1.1 Kalam;margin-bottom:1px}
+.li .ic{flex:none;width:var(--icw,108px);height:var(--icw,108px)}
+.li .ic svg{width:100%;height:100%}
+table.tb{width:100%;height:100%;border-collapse:separate;border-spacing:0;font-size:inherit;line-height:1.12}
+.tb th{background:var(--hd);font:700 1.05em Kalam;padding:4px 8px;border-bottom:2px solid var(--bd)}
+.tb td{padding:3px 10px;border-bottom:1.5px dashed rgba(0,0,0,.14);vertical-align:middle}
+.tb td:first-child{font-family:Kalam;font-weight:700;color:#13286e;white-space:nowrap}
+.tb tr:last-child td{border-bottom:0}
+.tb td+td,.tb th+th{border-left:1.5px solid rgba(0,0,0,.1)}
+.split{display:flex;height:100%;gap:0}
+.split>div{flex:1;display:flex;flex-direction:column;min-width:0}
+.split>div+div{border-left:2.5px dashed rgba(0,0,0,.25);margin-left:10px;padding-left:10px}
+.sh{text-align:center;font:700 1.12em/1.15 Kalam;border-radius:10px;padding:3px 6px;margin:2px 4px 6px}
+.items{flex:1;display:flex;justify-content:space-around;align-items:stretch;gap:6px;min-height:0}
+.it{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0}
+.it .ic{flex:1;width:100%;min-height:0}
+.it .ic svg{width:100%;height:100%}
+.it .lb{line-height:1.08;margin-top:2px}
+.it .lb small{display:block;font-size:.8em;color:#444}
+.cards{display:flex;gap:12px;height:100%}
+.card{flex:1;background:#fffffffa;border-radius:12px;border:1.5px solid var(--bd);padding:6px 10px;display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0}
+.card .ic{flex:1;width:100%;min-height:0}
+.card .ic svg{width:100%;height:100%}
+.card b{font:700 1.08em/1.1 Kalam;display:block;margin-top:2px}
+.card p{margin:2px 0 0;line-height:1.14}
+.flowrow{display:flex;align-items:center;justify-content:center;gap:10px;height:100%}
+.ft{height:30px;flex:none;display:flex;align-items:center;justify-content:center;gap:10px;font:700 17px Kalam;color:#8a8a8a;letter-spacing:.3px}
+.ft i{font-style:normal;color:#b8912a}
+</style>
+</head>
+<body>
+<div id="out"></div>
+<script src="draw.js"></script>
+<script>
+const Q=new URLSearchParams(location.search), CH=Q.get('ch')||'pu1-ch8';
+const TH={pink:['#fdf0f3','#fbdbe3','#efbccb'],lav:['#f5f3fe','#e6e0fb','#cdc3f1'],yel:['#fffaea','#fdf0c6','#ecd896'],grn:['#f3faef','#def1d2','#bfe0aa'],blu:['#f1f7fd','#dbeafa','#b7d4ef'],pch:['#fff5ee','#fde3d1','#f1c4a3']};
+const NUM=['#e91e63','#1f6fe0','#2c9a3a','#f57c00','#8e44ad','#00897b'];
+const m=s=>String(s).replace(/\[\[(.+?)\]\]/g,'<span class="pk">$1</span>').replace(/\{\{(.+?)\}\}/g,'<span class="bl">$1</span>').replace(/\(\((.+?)\)\)/g,'<span class="gr">$1</span>').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+const sv=x=>typeof x==='function'?x():(x||'');
+function brush(c){ return `<svg class="brush" viewBox="0 0 600 140" preserveAspectRatio="none"><path d="M14,30 C80,8 200,18 300,12 C420,6 520,10 590,22 C598,50 592,90 596,118 C520,132 400,126 300,132 C190,138 90,130 10,124 C4,96 8,60 14,30 Z" fill="${c}" opacity=".9"/><path d="M30,24 C150,14 300,20 560,16" stroke="#fff" stroke-width="5" opacity=".35" fill="none"/></svg>`; }
+function deco(){ return D.svg(1036,146,()=>D.sprig(14,74,1.1,-25)+D.leaf(260,118,.9,-40)+D.leaf(244,40,.7,-120)+D.leaf(774,120,.9,-140)+D.leaf(792,44,.7,-60)+D.sprig(1016,98,1.05,25),'class="deco"'); }
+function list(p){ return `<div class="pb list">${p.list.map((x,i)=>{ const c=x.c||NUM[(p.c0||0)+i]||NUM[i%NUM.length];
+  return `<div class="li"><span class="num" style="background:radial-gradient(circle at 35% 30%,${D.lt(c,.45)},${c} 55%,${D.dk(c,.25)})">${x.n||i+1}</span><div class="tx">${x.t?`<b style="color:${c}">${m(x.t)}</b>`:''}${m(x.d||'')}</div>${x.ic?`<div class="ic">${sv(x.ic)}</div>`:''}</div>`; }).join('')}</div>`; }
+function table(p){ return `<div class="pb"><table class="tb"><tr>${p.table.h.map(h=>`<th>${m(h)}</th>`).join('')}</tr>${p.table.r.map(r=>`<tr>${r.map(c=>`<td>${m(c)}</td>`).join('')}</tr>`).join('')}</table></div>`; }
+function split(p){ return `<div class="pb"><div class="split">${p.split.map(s=>`<div><div class="sh" style="background:${TH[s.th][1]}">${m(s.h)}</div><div class="items">${s.items.map(it=>`<div class="it">${it.ic?`<div class="ic">${sv(it.ic)}</div>`:''}<div class="lb">${m(it.t)}${it.s?`<small>${m(it.s)}</small>`:''}</div></div>`).join('')}</div></div>`).join('')}</div></div>`; }
+function cards(p){ return `<div class="pb"><div class="cards">${p.cards.map(c=>`<div class="card">${c.ic?`<div class="ic">${sv(c.ic)}</div>`:''}${c.t?`<b style="color:${c.c||'#13286e'}">${m(c.t)}</b>`:''}${c.d?`<p>${m(c.d)}</p>`:''}</div>`).join('')}</div></div>`; }
+function panel(p){ const t=TH[p.th||'pink'];
+  const body=p.svg?`<div class="pb svg">${sv(p.svg)}</div>`:p.list?list(p):p.table?table(p):p.split?split(p):p.cards?cards(p):`<div class="pb">${sv(p.html)}</div>`;
+  return `<div class="pn" style="flex:${p.w||1} 1 0;--bg:${t[0]};--hd:${t[1]};--bd:${t[2]};${p.icw?`--icw:${p.icw}px;`:''}">${p.h?`<div class="ph">${m(p.h)}${p.sub?`<small>${m(p.sub)}</small>`:''}</div>`:''}${body}</div>`; }
+function slide(N,i){ const S=N.slides[i];
+  return `<section class="slide" id="s${i+1}"><div class="hd">${deco()}<div class="tag-l">Slide ${i+1}</div><div class="ttl">${brush(S.bc||'#d9f0c8')}<h1>${m(S.t)}</h1>${S.s?`<h2>${m(S.s)}</h2>`:''}</div><div class="tag-r">${N.tag.map(x=>m(x)).join('<br>')}</div></div>
+   ${S.d?`<div class="def">${m(S.d)}</div>`:''}
+   <div class="rows">${S.rows.map(r=>`<div class="row" style="flex:${r.f||1} 1 0">${r.cols.map(panel).join('')}</div>`).join('')}</div>
+   <div class="ft"><i>✦</i> BAIO Learning System · Narendra Sir · ${N.ch} <i>✦</i></div></section>`; }
+function fit(root){
+  root.querySelectorAll('.ttl').forEach(t=>{ [['h1',60,34],['h2',33,22]].forEach(([s,a,b])=>{ const h=t.querySelector(s); if(!h) return; let f=a; h.style.fontSize=f+'px'; while(h.offsetWidth>t.clientWidth-10&&f>b){ f--; h.style.fontSize=f+'px'; } }); });
+  root.querySelectorAll('.def').forEach(d=>{ let f=27; while(d.offsetHeight>112&&f>19){ f--; d.style.fontSize=f+'px'; } });
+  root.querySelectorAll('.pb:not(.svg)').forEach(b=>{ let f=parseFloat(b.dataset.fs||26); b.style.setProperty('--fs',f+'px');
+    const over=()=>b.scrollHeight>b.clientHeight+1||[...b.querySelectorAll('.lb,.card p,.tx,td')].some(e=>e.scrollWidth>e.clientWidth+2);
+    while(over()&&f>15){ f-=.5; b.style.setProperty('--fs',f+'px'); } });
+}
+const s=document.createElement('script'); s.src=`${CH}.js`;
+s.onload=async()=>{ const N=NOTES[CH]; try{ await Promise.all(['700 30px Kalam','400 30px "Patrick Hand"'].map(f=>document.fonts.load(f))); await document.fonts.ready; }catch(e){}
+  const idx=Q.get('all')?N.slides.map((_,i)=>i):[Math.max(0,(+Q.get('s')||1)-1)];
+  if(Q.get('all')) document.body.className='print';
+  const out=document.getElementById('out'); out.innerHTML=idx.map(i=>slide(N,i)).join(''); fit(out);
+  window.__n=N.slides.length; window.__ready=true; };
+document.head.appendChild(s);
+</script>
+</body>
+</html>

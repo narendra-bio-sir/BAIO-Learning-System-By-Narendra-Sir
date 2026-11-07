@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script src="../baio-speak.js?v=3"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <link rel="manifest" href="../manifest.json">
 <meta name="theme-color" content="#0B1B14">
@@ -185,6 +186,24 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .tip-list.neet li{border-left-color:var(--gold-2);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold-2);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel-2);color:var(--gold-2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--border);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--border);color:var(--text);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--text-dim);line-height:1.55;background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel-2);border:1px solid var(--border);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--text-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--text);min-width:20px;font-weight:700;color:var(--gold-2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .chip-row{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 2px;}
 .chip{
   font-size:11px; padding:4px 9px; border-radius:99px; background:rgba(66,198,160,0.1);
@@ -432,9 +451,11 @@ footer{text-align:center; color:var(--text-dim); font-size:11px; margin-top:22px
 @media(max-width:380px){
   .footer-tagline{font-size:9.5px;}
 }
-.footer-social{margin-top:8px; display:flex; justify-content:center; gap:14px; flex-wrap:wrap;}
+.footer-social{margin-top:8px; display:flex; justify-content:center; align-items:center; gap:20px; flex-wrap:wrap;}
 .footer-social a{color:var(--teal-2); text-decoration:none; font-weight:600; font-size:11.5px; cursor:pointer;}
 .footer-social a:hover{text-decoration:underline;}
+.footer-share-btn{background:none; border:none; padding:0; color:var(--teal-2); font-weight:600; font-size:11.5px; font-family:inherit; cursor:pointer; display:inline-flex; align-items:center; gap:4px;}
+.footer-share-btn:hover{text-decoration:underline;}
 
 /* Downloads */
 .dl-row{
@@ -871,6 +892,8 @@ footer{text-align:center; color:var(--text-dim); font-size:11px; margin-top:22px
   }
   .panel{grid-column:2; min-width:0;}
 }
+/* ppt-dark-theme: in dark theme dim the illustrated slides a little so they don't glare (not inverted: they are artwork/photos) */
+html:not([data-theme="light"]) #pptImg,html:not([data-theme="light"]) .ppt-thumb img{filter:brightness(.8) contrast(1.06) saturate(.95);}
 </style>
 <style>
 /* ---- Pacing tab ---- */
@@ -903,6 +926,18 @@ footer{text-align:center; color:var(--text-dim); font-size:11px; margin-top:22px
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN_HERE"}'></script>
+<script src="../oneshot-study.js?v=1"></script>
+<style id="clgSwitchCss">
+.clg-deck-switch{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 10px}
+.clg-deck-switch button{flex:1 1 180px;font:700 14px Inter,sans-serif;border-radius:12px;padding:10px 12px;border:1px solid #d9d2c3;background:#ffffff;color:#13202e;cursor:pointer;text-align:center}
+html:not([data-theme="light"]) .clg-deck-switch button{background:#17251f;border-color:#3a4f45;color:#eef4f1}
+html .clg-deck-switch button.active{background:#0f7b6c;border-color:#0f7b6c;color:#fff}
+.clg-deck-switch button span{display:block;font-weight:500;font-size:12px;opacity:.75;margin-top:2px}
+.clg-deck-switch button.active{background:#0f7b6c;border-color:#0f7b6c;color:#fff}
+</style>
+<script src="../class-large.js?v=2"></script>
+<script src="../quick-card.js?v=1"></script>
+<script src="../premium-sample.js"></script>
 </head>
 <body>
 <div id="pageLoadOverlay" style="position:fixed; inset:0; z-index:99999; background:#0B1B14;"></div>
@@ -1008,6 +1043,18 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
         <span class="chapter-jump-icon">🧫</span>
         <span><b>Chapter 8</b><span class="chapter-jump-title">Cell: The Unit of Life</span></span>
       </a>
+      <a class="notif-modal-item chapter-jump-item" href="../pu1-ch9.html">
+        <span class="chapter-jump-icon">🧪</span>
+        <span><b>Chapter 9</b><span class="chapter-jump-title">Biomolecules</span></span>
+      </a>
+      <a class="notif-modal-item chapter-jump-item" href="../pu1-ch10.html">
+        <span class="chapter-jump-icon">🔄</span>
+        <span><b>Chapter 10</b><span class="chapter-jump-title">Cell Cycle and Cell Division</span></span>
+      </a>
+      <a class="notif-modal-item chapter-jump-item" href="../pu1-ch11.html">
+        <span class="chapter-jump-icon">☀️</span>
+        <span><b>Chapter 11</b><span class="chapter-jump-title">Photosynthesis in Higher Plants</span></span>
+      </a>
       <div class="chapter-jump-group">PUC-2 &middot; Second Year</div>
       <a class="notif-modal-item chapter-jump-item" href="../pu2-ch1.html">
         <span class="chapter-jump-icon">🌸</span>
@@ -1070,6 +1117,14 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="btn" id="streakModalCloseBtn" style="width:100%; margin-top:4px;">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="btn" id="tipExampleCloseBtn" style="width:100%; margin-top:4px;">Close</button>
     </div>
   </div>
 
@@ -1326,6 +1381,7 @@ document.addEventListener('DOMContentLoaded', function(){
     <button class="tab-btn" data-tab="badges">Milestones</button>
     <button class="tab-btn" data-tab="progress">Progress</button>
     <button class="tab-btn active" data-tab="study">Study Mode</button>
+    <button class="tab-btn" data-tab="oneshot">One-Shot Revision</button>
     <button class="tab-btn" data-tab="podcast">Audio Podcast</button>
     <button class="tab-btn" data-tab="studytips">Study Tips</button>
     <button class="tab-btn" data-tab="pacing">Pacing</button>
@@ -1349,6 +1405,12 @@ document.addEventListener('DOMContentLoaded', function(){
     <button class="tab-btn" data-tab="dl">Downloads</button>
     </div>
     <button class="tab-scroll-btn" id="tabScrollRight">&#8250;</button>
+  </div>
+
+  <!-- ===================== ONE-SHOT REVISION ===================== -->
+  <div class="panel" id="panel-oneshot">
+    <div id="oneshotContent"></div>
+    <div class="premium-lock-overlay" id="premLock_oneshot"></div>
   </div>
 
   <!-- ===================== STUDY MODE ===================== -->
@@ -1458,7 +1520,8 @@ document.addEventListener('DOMContentLoaded', function(){
             <div class="seg-opt" data-val="10">10</div>
             <div class="seg-opt" data-val="25">25</div>
             <div class="seg-opt" data-val="50">50</div>
-            <div class="seg-opt active" data-val="all">All matching</div>
+            <div class="seg-opt active" data-val="90">90</div>
+            <div class="seg-opt" data-val="all">All matching</div>
           </div>
         </div>
       </div>
@@ -2048,13 +2111,17 @@ document.addEventListener('DOMContentLoaded', function(){
     <div class="card">
       <h3 style="color:var(--gold-2); margin-bottom:4px;">Chapter 2 &ndash; Mind Map</h3>
       <div style="color:var(--text-dim); font-size:12px; margin-bottom:10px;">One-page visual overview of the whole chapter &middot; pinch or use buttons to zoom</div>
+      <div class="mm-toolbar" id="mmPicker" style="margin-bottom:8px;">
+        <button class="btn" id="mmPickQuick" data-src="assets/mindmap-quick.jpg" data-name="Ch2_Biological_Classification_Quick_Mind_Map.jpg">Quick Mind Map</button>
+        <button class="btn secondary" id="mmPickFull" data-src="assets/mindmap.jpg" data-name="Ch2_Biological_Classification_Mind_Map.jpg">Detailed Mind Map</button>
+      </div>
       <div class="mm-toolbar">
         <button class="btn secondary" id="mmZoomOut">&minus; Zoom Out</button>
         <button class="btn secondary" id="mmZoomReset">Reset</button>
         <button class="btn secondary" id="mmZoomIn">+ Zoom In</button>
       </div>
       <div class="mindmap-wrap" id="mmWrap">
-        <img id="mmImg" src="assets/mindmap.jpg" alt="Chapter 2 Biological Classification Mind Map" onload="this.classList.add('loaded')">
+        <img id="mmImg" src="assets/mindmap-quick.jpg" alt="Chapter 2 Biological Classification Mind Map" onload="this.classList.add('loaded')">
       </div>
       <div class="mindmap-hint">Tip: on mobile, pinch-to-zoom inside the frame; on desktop, use the zoom buttons or scroll.</div>
       <div class="dl-row" data-pdf="" style="margin-top:12px;" id="mmDlRow">
@@ -2187,13 +2254,19 @@ document.addEventListener('DOMContentLoaded', function(){
   <footer>
     <div class="footer-tagline">Empowering future doctors. Crafted for PU BIOLOGY &amp; NEET Aspirants.</div>
     <div class="footer-copy">&copy; Narendra Sir - Lecturer in Biology</div>
-    <div class="footer-social">
-      <a href="https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X" id="waLink" rel="noopener noreferrer">WhatsApp Channel</a>
-      <a href="https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw" id="igLink" rel="noopener noreferrer">Instagram Channel</a>
-      <a href="https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0" id="ytLink" rel="noopener noreferrer">YouTube Channel</a>
-      <a href="https://t.me/BAIO_Learning_System" id="tgLink" rel="noopener noreferrer">Telegram Channel</a>
+    <div class="footer-social" style="row-gap:8px;">
+      <span class="follow-wrap" style="flex-basis:100%;display:flex;flex-direction:column;align-items:center;gap:6px;">
+        <span class="follow-us" style="font-weight:700;font-size:11.5px;opacity:.85;">Follow us on</span>
+        <span class="follow-icons" style="display:flex;justify-content:center;gap:16px;">
+          <a href="https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X" id="waLink" rel="noopener noreferrer" aria-label="WhatsApp" title="WhatsApp"><img class="soc-ic" src="../assets/social/wa.png" alt="WhatsApp" style="width:30px;height:30px;display:block;border:0;"></a>
+          <a href="https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw" id="igLink" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><img class="soc-ic" src="../assets/social/ig.png" alt="Instagram" style="width:30px;height:30px;display:block;border:0;"></a>
+          <a href="https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0" id="ytLink" rel="noopener noreferrer" aria-label="YouTube" title="YouTube"><img class="soc-ic" src="../assets/social/yt.png" alt="YouTube" style="width:30px;height:30px;display:block;border:0;"></a>
+          <a href="https://t.me/BAIO_Learning_System" id="tgLink" rel="noopener noreferrer" aria-label="Telegram" title="Telegram"><img class="soc-ic" src="../assets/social/tg.png" alt="Telegram" style="width:30px;height:30px;display:block;border:0;"></a>
+        </span>
+      </span>
       <a href="https://wa.me/919008968389" rel="noopener noreferrer">📱 9008968389</a>
       <a href="mailto:bioguru102@gmail.com">✉️ bioguru102@gmail.com</a>
+      <button type="button" class="footer-share-btn" id="shareAllBtn" onclick="shareAllSocial()">&#128228; Share All Links</button>
     </div>
   </footer>
 </div>
@@ -3400,6 +3473,7 @@ function goToTab(id){
   const panel = document.getElementById('panel-'+id);
   if(panel) panel.classList.add('active');
   try{ localStorage.setItem('ch2_last_tab', id); }catch(e){}
+  if(id==='oneshot'){ if(typeof renderOneShotStudy==='function') setTimeout(renderOneShotStudy,0); } else if(window.OneShotStudy) OneShotStudy.stop();
   window.scrollTo({top:0, behavior:'smooth'});
 }
 window.goToTab = goToTab;
@@ -3934,6 +4008,55 @@ const STUDY_TRANSLATIONS_CH2 = {
     }
   }
 };
+/* ---------------- ONE-SHOT REVISION (Study Mode notes, narrated: oneshot-study.js) ----------------
+   Chapter 2 keeps its notes as one HTML block per topic, so this adapter splits each block into
+   sections at every .subhead, flattens nested lists into single points and lifts the comparison
+   table out for the table slides. */
+function oneShotCh2Study(id, l){
+  const base = STUDY_DATA.find(x=>x.id===id); if(!base) return null;
+  const t = l==='en' ? base : (STUDY_TRANSLATIONS_CH2[id] && STUDY_TRANSLATIONS_CH2[id][l]);
+  if(!t) return null;
+  const box = document.createElement('div'); box.innerHTML = t.html;
+  const sections = []; let table = null;
+  let cur = {h: String(t.title).replace(/^\s*\d+\.\s*/, ''), items: []};
+  const flat = (ul)=>{ [...ul.children].forEach(li=>{ if(li.tagName!=='LI') return;
+      const c = li.cloneNode(true); const subs = [...c.querySelectorAll(':scope > ul, :scope > ol')]; subs.forEach(u=>u.remove());
+      if(c.textContent.trim()) cur.items.push(c.innerHTML.trim());
+      [...li.querySelectorAll(':scope > ul, :scope > ol')].forEach(flat); }); };
+  const push = ()=>{ if(cur.items.length) sections.push({h:cur.h, body:'<ul>'+cur.items.map(x=>'<li>'+x+'</li>').join('')+'</ul>'}); };
+  [...box.children].forEach(el=>{
+    if(el.classList.contains('subhead')){ push(); cur = {h: el.textContent.trim(), items: []}; return; }
+    if(/^(UL|OL)$/.test(el.tagName)){ flat(el); return; }
+    const tb = el.tagName==='TABLE' ? el : el.querySelector('table');
+    if(tb){
+      const rows = [...tb.querySelectorAll('tr')].map(r=>[...r.children].map(c=>c.innerHTML.trim()));
+      if(!table && rows.length > 1) table = {title: cur.h, headers: rows[0], rows: rows.slice(1)};
+      else rows.slice(1).forEach(r=>cur.items.push('<b>'+r[0]+'</b>: '+r.slice(1).join(' | ')));
+      return;
+    }
+    if(el.textContent.trim()) cur.items.push(el.innerHTML.trim());
+  });
+  push();
+  return {recap: t.chips || [], sections, table};
+}
+function renderOneShotStudy(){
+  const box = document.getElementById('oneshotContent');
+  if(!window.OneShotStudy){ box.innerHTML = '<div class="card">Loading One-Shot Revision…</div>'; setTimeout(()=>{ if(document.getElementById('panel-oneshot').classList.contains('active')) renderOneShotStudy(); }, 400); return; }
+  const nm = (o)=>String(o && o.title || '').replace(/^\s*\d+\.\s*/, '');
+  OneShotStudy.render({
+    key:'pu1ch2', chapterNo:2, cls:'PU-I',
+    chapterName:{en:'Biological Classification', kn:'ಜೈವಿಕ ವರ್ಗೀಕರಣ', hi:'जैव वर्गीकरण'},
+    topics: STUDY_DATA.map(t=>{ const tr = STUDY_TRANSLATIONS_CH2[t.id] || {}; return {id:t.id, name:{en:nm(t), kn:nm(tr.kn)||nm(t), hi:nm(tr.hi)||nm(t)}}; }),
+    getStudy: oneShotCh2Study,
+    container:()=>box,
+    lang:()=>(typeof currentLang!=='undefined' ? currentLang : 'en')
+  });
+}
+document.addEventListener('click', function(e){
+  const b = e.target.closest && e.target.closest('.tab-btn'); if(!b) return;
+  if(b.dataset.tab === 'oneshot') setTimeout(renderOneShotStudy, 0);
+  else if(window.OneShotStudy) OneShotStudy.stop();
+});
 function renderStudy(){
   const base = STUDY_DATA.find(x=>x.id===currentTopic);
   const trans = STUDY_TRANSLATIONS_CH2[currentTopic] && STUDY_TRANSLATIONS_CH2[currentTopic][currentLang];
@@ -4150,6 +4273,168 @@ const STUDYTIPS_CH2_TRANSLATIONS = {
     ]
   }
 };
+/* ---- Study Tips "View example" popovers: three tips describe a concrete
+   artifact ("build a comparison table...", "memorize one example per fungal
+   class...", "draw and label a virus/bacteriophage...") with nothing to look
+   at. These buttons show the actual filled-in artifact, built from this
+   chapter's own data (the Five Kingdom table already in the Last-Minute
+   Revision tab, the fungal-class COMPARE_DATA used by the Compare & Contrast
+   tab, and the TMV/bacteriophage label lists already in the Important
+   Diagrams tab) so the facts always match the rest of the chapter - nothing
+   is duplicated or re-typed by hand. ---- */
+const TIP_EXAMPLE_INDEX = {0:'five-kingdom', 2:'fungal-classes', 3:'virus-labels'};
+const TIP_EXAMPLE_BTN_LABEL = {en:'View example', kn:'ಉದಾಹರಣೆ ನೋಡಿ', hi:'उदाहरण देखें'};
+/* Trilingual content below reuses the exact vetted Kannada/Hindi vocabulary
+   already established in GLOSSARY_TRANSLATIONS_CH2, STUDYTIPS_CH2_TRANSLATIONS
+   and the Kingdom/Fungi comparison tables already in the Last-Minute Revision
+   tab (Monera/Protista/.../Animalia, Phycomycetes/Ascomycetes/..., capsid,
+   capsomeres, etc.) so terminology stays consistent with the rest of the
+   chapter rather than introducing new, unverified translations. */
+const TIP_EXAMPLES = {
+  'five-kingdom': {
+    title: {
+      en: '📊 Sample Comparison Table — Five Kingdoms',
+      kn: '📊 ಮಾದರಿ ಹೋಲಿಕೆ ಟೇಬಲ್ — ಪಂಚ ಸಾಮ್ರಾಜ್ಯಗಳು',
+      hi: '📊 नमूना तुलना तालिका — पंच जगत'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"This is exactly the table the tip describes — one row per character, all five kingdoms side by side, matching the table already in the Last-Minute Revision tab.",
+              kingdoms:['Monera','Protista','Fungi','Plantae','Animalia'],
+              rows:[
+                {ch:'Cell type', vals:['Prokaryotic','Eukaryotic','Eukaryotic','Eukaryotic','Eukaryotic']},
+                {ch:'Cell wall', vals:['Non-cellulosic (peptidoglycan)','Present in some','Chitin (no cellulose)','Cellulose','Absent']},
+                {ch:'Nuclear membrane', vals:['Absent','Present','Present','Present','Present']},
+                {ch:'Body organisation', vals:['Cellular','Cellular','Multicellular/loose tissue','Tissue/organ','Tissue/organ/organ system']},
+                {ch:'Nutrition', vals:['Auto + Hetero','Auto + Hetero','Heterotrophic (saprophytic/parasitic)','Autotrophic (photosynthetic)','Heterotrophic']}
+              ],
+              note:'Full detail (merits, examples) is in the <b>Last-Minute Revision</b> tab (Five Kingdoms section) — this is the condensed version worth memorising first.' },
+        kn: { intro:'ಇದು ಸಲಹೆ ವಿವರಿಸುವ ನಿಖರವಾದ ಟೇಬಲ್ — ಪ್ರತಿ ಗುಣಲಕ್ಷಣಕ್ಕೂ ಒಂದು ಸಾಲು, ಎಲ್ಲಾ ಐದು ಸಾಮ್ರಾಜ್ಯಗಳು ಪಕ್ಕಪಕ್ಕದಲ್ಲಿ, Last-Minute Revision ಟ್ಯಾಬ್‌ನಲ್ಲಿರುವ ಟೇಬಲ್‌ಗೆ ಹೊಂದಿಕೆಯಾಗುತ್ತದೆ.',
+              kingdoms:['ಮೊನೇರಾ','ಪ್ರೊಟಿಸ್ಟಾ','ಶಿಲೀಂಧ್ರ','ಪ್ಲಾಂಟೇ','ಅನಿಮೇಲಿಯಾ'],
+              rows:[
+                {ch:'ಕೋಶ ವಿಧ', vals:['ಪ್ರೊಕ್ಯಾರಿಯೋಟಿಕ್','ಯೂಕ್ಯಾರಿಯೋಟಿಕ್','ಯೂಕ್ಯಾರಿಯೋಟಿಕ್','ಯೂಕ್ಯಾರಿಯೋಟಿಕ್','ಯೂಕ್ಯಾರಿಯೋಟಿಕ್']},
+                {ch:'ಕೋಶ ಗೋಡೆ', vals:['ಸೆಲ್ಯುಲೋಸ್‌ರಹಿತ (ಪೆಪ್ಟಿಡೋಗ್ಲೈಕನ್)','ಕೆಲವುಗಳಲ್ಲಿ ಇದೆ','ಚಿಟಿನ್ (ಸೆಲ್ಯುಲೋಸ್ ಇಲ್ಲ)','ಸೆಲ್ಯುಲೋಸ್','ಇಲ್ಲ']},
+                {ch:'ನ್ಯೂಕ್ಲಿಯರ್ ಮೆಂಬ್ರೇನ್', vals:['ಇಲ್ಲ','ಇದೆ','ಇದೆ','ಇದೆ','ಇದೆ']},
+                {ch:'ದೇಹ ಸಂಘಟನೆ', vals:['ಕೋಶೀಯ','ಕೋಶೀಯ','ಬಹುಕೋಶೀಯ/ಸಡಿಲ ಅಂಗಾಂಶ','ಅಂಗಾಂಶ/ಅಂಗ','ಅಂಗಾಂಶ/ಅಂಗ/ಅಂಗ ವ್ಯವಸ್ಥೆ']},
+                {ch:'ಪೋಷಣೆ', vals:['ಸ್ವ + ವಿಷಮ','ಸ್ವ + ವಿಷಮ','ವಿಷಮಪೋಷಕ (ಸಪ್ರೋಫೈಟಿಕ್/ಪರಾವಲಂಬಿ)','ಸ್ವಪೋಷಕ (ದ್ಯುತಿಸಂಶ್ಲೇಷಕ)','ವಿಷಮಪೋಷಕ']}
+              ],
+              note:'ಪ್ರತಿ ವಿವರ (ಅನುಕೂಲಗಳು, ಉದಾಹರಣೆಗಳು) <b>Last-Minute Revision</b> ಟ್ಯಾಬ್‌ನಲ್ಲಿ (ಪಂಚ ಸಾಮ್ರಾಜ್ಯ ವಿಭಾಗ) ಇದೆ — ಇದು ಮೊದಲು ಕಂಠಪಾಠ ಮಾಡಲು ಯೋಗ್ಯವಾದ ಸಂಕ್ಷಿಪ್ತ ಆವೃತ್ತಿ.' },
+        hi: { intro:'यह ठीक वही तालिका है जिसका वर्णन यह सुझाव करता है — प्रत्येक लक्षण के लिए एक पंक्ति, सभी पांच जगत साथ-साथ, Last-Minute Revision टैब की तालिका से मेल खाती हुई।',
+              kingdoms:['मोनेरा','प्रोटिस्टा','कवक','प्लांटी','एनिमेलिया'],
+              rows:[
+                {ch:'कोशिका प्रकार', vals:['प्रोकैरियोटिक','यूकैरियोटिक','यूकैरियोटिक','यूकैरियोटिक','यूकैरियोटिक']},
+                {ch:'कोशिका भित्ति', vals:['असेल्युलोसिक (पेप्टिडोग्लाइकन)','कुछ में मौजूद','काइटिन (सेल्युलोज़ नहीं)','सेल्युलोज़','अनुपस्थित']},
+                {ch:'केंद्रकीय झिल्ली', vals:['अनुपस्थित','उपस्थित','उपस्थित','उपस्थित','उपस्थित']},
+                {ch:'शारीरिक संगठन', vals:['कोशिकीय','कोशिकीय','बहुकोशिकीय/शिथिल ऊतक','ऊतक/अंग','ऊतक/अंग/अंग तंत्र']},
+                {ch:'पोषण', vals:['स्व + विषम','स्व + विषम','विषमपोषी (मृतोपजीवी/परजीवी)','स्वपोषी (प्रकाशसंश्लेषी)','विषमपोषी']}
+              ],
+              note:'पूरा विवरण (गुण, उदाहरण) <b>Last-Minute Revision</b> टैब में (पंच जगत खंड) है — यह पहले याद करने योग्य संक्षिप्त संस्करण है।' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${lang==='kn'?'ಗುಣಲಕ್ಷಣ':(lang==='hi'?'लक्षण':'Character')}</th>${l.kingdoms.map(k=>`<th>${k}</th>`).join('')}</tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r.ch}</td>${r.vals.map(v=>`<td>${v}</td>`).join('')}</tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">${l.note}</div>`;
+    }
+  },
+  'fungal-classes': {
+    title: {
+      en: '🍄 Sample Table — One Example + Reproductive Structure per Fungal Class',
+      kn: '🍄 ಮಾದರಿ ಟೇಬಲ್ — ಪ್ರತಿ ಶಿಲೀಂಧ್ರ ವರ್ಗಕ್ಕೆ ಒಂದು ಉದಾಹರಣೆ + ಸಂತಾನೋತ್ಪತ್ತಿ ರಚನೆ',
+      hi: '🍄 नमूना तालिका — प्रत्येक कवक वर्ग के लिए एक उदाहरण + जनन संरचना'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"The exact one-example-per-class table the tip describes, pulled straight from this chapter's own Compare &amp; Contrast data.",
+              th:['Class','Distinguishing Reproductive Structure','Classic Example'],
+              rows:[
+                {name:'Phycomycetes', reproduction:'Zoospores/aplanospores (asexual); zygospore (sexual)', example:'Mucor, Rhizopus, Albugo'},
+                {name:'Ascomycetes', reproduction:'Ascospores in an ascus (sexual); conidia (asexual)', example:'Penicillium, Aspergillus, yeast'},
+                {name:'Basidiomycetes', reproduction:'Basidiospores on a basidium (exogenous)', example:'Agaricus (mushroom), rust &amp; smut fungi'},
+                {name:'Deuteromycetes', reproduction:'Only asexual spores (conidia) known', example:'Alternaria, Trichoderma'}
+              ],
+              note:'Full detail (cell wall, mycelium, nutrition) for each class is in the <b>Compare &amp; Contrast Matrix</b> on the Rapid Fire / Compare tab.' },
+        kn: { intro:'ಇದು ಸಲಹೆ ವಿವರಿಸುವ ನಿಖರವಾದ ಪ್ರತಿ-ವರ್ಗಕ್ಕೆ-ಒಂದು-ಉದಾಹರಣೆ ಟೇಬಲ್, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Compare &amp; Contrast ಡೇಟಾದಿಂದ ನೇರವಾಗಿ ಪಡೆಯಲಾಗಿದೆ.',
+              th:['ವರ್ಗ','ವಿಶಿಷ್ಟ ಸಂತಾನೋತ್ಪತ್ತಿ ರಚನೆ','ಕ್ಲಾಸಿಕ್ ಉದಾಹರಣೆ'],
+              rows:[
+                {name:'ಫೈಕೊಮೈಸಿಟೀಸ್', reproduction:'ಝೂಸ್ಪೋರ್/ಅಪ್ಲಾನೋಸ್ಪೋರ್ (ಅಲೈಂಗಿಕ); ಝೈಗೋಸ್ಪೋರ್ (ಲೈಂಗಿಕ)', example:'Mucor, Rhizopus, Albugo'},
+                {name:'ಆಸ್ಕೊಮೈಸಿಟೀಸ್', reproduction:'ಆಸ್ಕಿಯಲ್ಲಿ ಆಸ್ಕೋಸ್ಪೋರ್‌ಗಳು (ಲೈಂಗಿಕ); ಕೋನಿಡಿಯಾ (ಅಲೈಂಗಿಕ)', example:'Penicillium, Aspergillus, ಯೀಸ್ಟ್'},
+                {name:'ಬೇಸಿಡಿಯೋಮೈಸಿಟೀಸ್', reproduction:'ಬೇಸಿಡಿಯಂನ ಮೇಲೆ ಬೇಸಿಡಿಯೋಸ್ಪೋರ್‌ಗಳು (ಬಾಹ್ಯ)', example:'Agaricus (ಮಶ್ರೂಮ್), ರಸ್ಟ್ ಮತ್ತು ಸ್ಮಟ್ ಶಿಲೀಂಧ್ರಗಳು'},
+                {name:'ಡ್ಯೂಟೆರೋಮೈಸಿಟೀಸ್', reproduction:'ಕೇವಲ ಕೋನಿಡಿಯಾ (ಅಲೈಂಗಿಕ ಬೀಜಕಗಳು) ಮಾತ್ರ ತಿಳಿದಿವೆ', example:'Alternaria, Trichoderma'}
+              ],
+              note:'ಪ್ರತಿ ವರ್ಗದ ಪೂರ್ಣ ವಿವರ (ಕೋಶ ಗೋಡೆ, ಮೈಸಿಲಿಯಂ, ಪೋಷಣೆ) Rapid Fire / Compare ಟ್ಯಾಬ್‌ನ <b>Compare &amp; Contrast Matrix</b> ನಲ್ಲಿದೆ.' },
+        hi: { intro:'यह ठीक वही प्रत्येक-वर्ग-के-लिए-एक-उदाहरण तालिका है जिसका वर्णन यह सुझाव करता है, जो इस अध्याय के अपने Compare &amp; Contrast डेटा से सीधे ली गई है।',
+              th:['वर्ग','विशिष्ट जनन संरचना','क्लासिक उदाहरण'],
+              rows:[
+                {name:'फाइकोमाइसिटीज़', reproduction:'चलबीजाणु/अचलबीजाणु (अलैंगिक); युग्मबीजाणु (लैंगिक)', example:'Mucor, Rhizopus, Albugo'},
+                {name:'एस्कोमाइसिटीज़', reproduction:'एस्काई में एस्कोस्पोर (लैंगिक); कोनिडिया (अलैंगिक)', example:'Penicillium, Aspergillus, यीस्ट'},
+                {name:'बेसिडियोमाइसिटीज़', reproduction:'बेसिडियम पर बेसिडियोस्पोर (बाह्य)', example:'Agaricus (मशरूम), रतुआ और कंडुआ कवक'},
+                {name:'ड्यूटेरोमाइसिटीज़', reproduction:'केवल कोनिडिया (अलैंगिक बीजाणु) ही ज्ञात हैं', example:'Alternaria, Trichoderma'}
+              ],
+              note:'प्रत्येक वर्ग का पूरा विवरण (कोशिका भित्ति, माइसीलियम, पोषण) Rapid Fire / Compare टैब के <b>Compare &amp; Contrast Matrix</b> में है।' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${l.th[1]}</th><th>${l.th[2]}</th></tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td>${r.reproduction}</td><td>${r.example}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">${l.note}</div>`;
+    }
+  },
+  'virus-labels': {
+    title: {
+      en: '🦠 Label Checklist — TMV vs Bacteriophage',
+      kn: '🦠 ಲೇಬಲ್ ಪರಿಶೀಲನಾ ಪಟ್ಟಿ — TMV vs ಬ್ಯಾಕ್ಟೀರಿಯೋಫೇಜ್',
+      hi: '🦠 लेबल चेकलिस्ट — TMV बनाम बैक्टीरियोफेज'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"These are the exact labels this chapter's Important Diagrams tab flags as board-exam-priority for each figure — practice drawing both from memory and labelling every part below.",
+              items:[
+                {name:'Tobacco Mosaic Virus (TMV) — Fig 2.6(a)', labels:'Helical Capsid (Capsomeres), Single-stranded RNA (ssRNA) core'},
+                {name:'Bacteriophage — Fig 2.6(b)', labels:'Hexagonal Head (dsDNA), Collar, Helical Sheath, Tail fibres, Base plate'}
+              ],
+              note:'Both figures are ★★★ Top Priority, 2–3 marks — see the <b>Important Diagrams</b> tab for the linked NCERT page.' },
+        kn: { intro:'ಇವು ಈ ಅಧ್ಯಾಯದ Important Diagrams ಟ್ಯಾಬ್ ಪ್ರತಿ ಚಿತ್ರಕ್ಕೂ ಬೋರ್ಡ್-ಪರೀಕ್ಷೆ-ಆದ್ಯತೆ ಎಂದು ಗುರುತಿಸಿದ ನಿಖರವಾದ ಲೇಬಲ್‌ಗಳು — ಎರಡನ್ನೂ ನೆನಪಿನಿಂದ ಬಿಡಿಸಿ ಕೆಳಗಿನ ಪ್ರತಿ ಭಾಗವನ್ನೂ ಲೇಬಲ್ ಮಾಡುವ ಅಭ್ಯಾಸ ಮಾಡಿ.',
+              items:[
+                {name:'ತಂಬಾಕು ಮೊಸಾಯಿಕ್ ವೈರಸ್ (TMV) — Fig 2.6(a)', labels:'ಹೆಲಿಕಲ್ ಕ್ಯಾಪ್ಸಿಡ್ (ಕ್ಯಾಪ್ಸೋಮಿಯರ್‌ಗಳು), ಸಿಂಗಲ್-ಸ್ಟ್ರಾಂಡೆಡ್ RNA (ssRNA) ಕೋರ್'},
+                {name:'ಬ್ಯಾಕ್ಟೀರಿಯೋಫೇಜ್ — Fig 2.6(b)', labels:'ಹೆಕ್ಸಾಗೋನಲ್ ಹೆಡ್ (dsDNA), ಕಾಲರ್, ಹೆಲಿಕಲ್ ಶೀಥ್, ಟೈಲ್ ಫೈಬರ್‌ಗಳು, ಬೇಸ್ ಪ್ಲೇಟ್'}
+              ],
+              note:'ಎರಡೂ ಚಿತ್ರಗಳು ★★★ Top Priority, 2–3 ಅಂಕಗಳು — ಲಿಂಕ್ ಮಾಡಲಾದ NCERT ಪುಟಕ್ಕಾಗಿ <b>Important Diagrams</b> ಟ್ಯಾಬ್ ನೋಡಿ.' },
+        hi: { intro:'ये इस अध्याय के Important Diagrams टैब द्वारा हर चित्र के लिए बोर्ड-परीक्षा-प्राथमिकता के रूप में चिह्नित सटीक लेबल हैं — दोनों को याददाश्त से बनाकर नीचे दिए हर भाग को लेबल करने का अभ्यास करें।',
+              items:[
+                {name:'तंबाकू मोज़ेक वायरस (TMV) — Fig 2.6(a)', labels:'कुंडलित कैप्सिड (कैप्सोमियर), एकल-रज्जुक RNA (ssRNA) कोर'},
+                {name:'बैक्टीरियोफेज — Fig 2.6(b)', labels:'हेक्सागोनल हेड (dsDNA), कॉलर, कुंडलित शीथ, टेल फाइबर, बेस प्लेट'}
+              ],
+              note:'दोनों चित्र ★★★ Top Priority, 2–3 अंक — लिंक किए गए NCERT पृष्ठ के लिए <b>Important Diagrams</b> टैब देखें।' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">${l.intro}</div>
+        ${l.items.map(it=>`<div class="tipex-case"><div class="tipex-case-title">${it.name}</div><div class="tipex-step"><span class="tipex-q">✓</span><span>${it.labels}</span></div></div>`).join('')}
+        <div class="tipex-note">${l.note}</div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  const lang = (typeof currentLang!=='undefined' && ex.title[currentLang]) ? currentLang : 'en';
+  document.getElementById('tipExampleTitle').textContent = ex.title[lang];
+  document.getElementById('tipExampleBody').innerHTML = ex.render(lang);
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTipsCh2(){
   const el = document.getElementById('studyTipsContent');
   if(!el) return;
@@ -4160,7 +4445,7 @@ function renderStudyTipsCh2(){
     <h3 style="color:var(--gold-2); margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--text-dim); font-size:12px; margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ ${TIP_EXAMPLE_BTN_LABEL[currentLang]||TIP_EXAMPLE_BTN_LABEL.en}</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   `;
@@ -4184,8 +4469,8 @@ function setFcWeight(idx, gotIt){
 }
 function renderFlashcard(){
   const idx = fcOrder[fcIndex];
-  document.getElementById('fcFrontText').textContent = FLASHCARDS[idx][0];
-  document.getElementById('fcBackText').textContent = FLASHCARDS[idx][1];
+  document.getElementById('fcFrontText').innerHTML = FLASHCARDS[idx][0];
+  document.getElementById('fcBackText').innerHTML = FLASHCARDS[idx][1];
   document.getElementById('fcProgress').textContent = `Card ${fcIndex+1} / ${FLASHCARDS.length}`;
   document.getElementById('fcCard').classList.remove('flipped');
   document.getElementById('fcRateRow').style.display = 'none';
@@ -4749,6 +5034,7 @@ document.getElementById('quizStartBtn').addEventListener('click', ()=>{
   pool = shuffleArr(pool);
   const countVal = segVal('quizCountSeg');
   const n = countVal==='all' ? pool.length : Math.min(parseInt(countVal), pool.length);
+  if(countVal!=='all' && parseInt(countVal) > pool.length){ alert(`Only ${pool.length} questions match your filters (you selected ${countVal}) — starting with all ${pool.length}.`); }
   pool = pool.slice(0,n);
   if(pool.length===0){ alert('No questions match those filters. Try widening your selection.'); return; }
   const topicScope = (quizTopicMode==='select' && quizTopicIds.length===1) ? quizTopicIds[0] : null;
@@ -4813,11 +5099,12 @@ function quizGoBack(){
   document.getElementById('quizSetup').style.display='block';
 }
 function quizStopTest(){
-  if(!confirm('Stop this quiz now and see your report card based on the questions you\'ve answered so far?')) return;
+  if(!confirm('Stop this quiz now and see your report card? Unanswered questions will count as incorrect toward your selected total.')) return;
   quizClearTimer();
   if(document.fullscreenElement) document.exitFullscreen();
   const s = quizState;
-  s.pool = s.pool.slice(0, s.idx);
+  const remaining = s.pool.length - s.idx;
+  if(remaining > 0) s.timedOut += remaining;
   showQuizReport();
 }
 function quizTimeout(){
@@ -4987,6 +5274,7 @@ document.getElementById('advStartBtn').addEventListener('click', ()=>{
     && (advTopicMode==='full' || advTopicIds.length===0 || advTopicIds.indexOf(q.top)!==-1));
   const countVal = segVal('advCountSeg');
   const n = countVal==='all' ? pool.length : Math.min(parseInt(countVal), pool.length);
+  if(countVal!=='all' && parseInt(countVal) > pool.length){ alert(`Only ${pool.length} questions match your filters (you selected ${countVal}) — starting with all ${pool.length}.`); }
   pool = advBuildSessionPool(pool, n);
   if(pool.length===0){ alert('No questions match those filters. Try widening your selection.'); return; }
   const timerSec = parseInt(segVal('advTimerSeg'));
@@ -5124,10 +5412,11 @@ function advGoBack(){
   document.getElementById('advSetup').style.display='block';
 }
 function advStopTest(){
-  if(!confirm('Stop this test now and see your report card based on the questions you\'ve answered so far?')) return;
+  if(!confirm('Stop this test now and see your report card? Unanswered questions will count as 0 marks toward your selected total.')) return;
   const s = advState; clearInterval(s.timerHandle);
   if(document.fullscreenElement) document.exitFullscreen();
-  s.pool = s.pool.slice(0, s.idx);
+  const remaining = s.pool.length - s.idx;
+  if(remaining > 0) s.skipped += remaining;
   showAdvReport();
 }
 function advTimeout(){
@@ -5263,6 +5552,30 @@ if(kcetPracticeWeakBtn){
 
 segSetup('kcetCountSeg'); segSetup('kcetTimerSeg');
 
+function fixCountSegDefault(containerId, total){
+  const el = document.getElementById(containerId);
+  if(!el || !total) return;
+  const opts = Array.from(el.querySelectorAll('.seg-opt'));
+  const active = el.querySelector('.seg-opt.active');
+  if(!active) return;
+  const av = active.dataset.val;
+  if(av==='all'||av==='All') return;
+  if(parseInt(av) <= total) return;
+  let best = null;
+  opts.forEach(o=>{
+    const v = o.dataset.val;
+    if(v==='all'||v==='All') return;
+    const n = parseInt(v);
+    if(n<=total && (!best || n>parseInt(best.dataset.val))) best = o;
+  });
+  const allOpt = opts.find(o=>o.dataset.val==='all'||o.dataset.val==='All');
+  opts.forEach(o=>o.classList.remove('active'));
+  (best || allOpt || opts[0]).classList.add('active');
+}
+fixCountSegDefault('quizCountSeg', MCQ.length);
+fixCountSegDefault('advCountSeg', ADV.length);
+fixCountSegDefault('kcetCountSeg', KCET_QUESTIONS.length);
+
 const KCET_SEEN_KEY = 'ch2_kcet_seen_ids';
 function kcetGetSeenIds(){
   try{ const raw = localStorage.getItem(KCET_SEEN_KEY); return raw ? new Set(JSON.parse(raw)) : new Set(); }catch(e){ return new Set(); }
@@ -5289,6 +5602,7 @@ document.getElementById('kcetStartBtn').addEventListener('click', ()=>{
     && (kcetTopicMode==='full' || kcetTopicIds.length===0 || kcetTopicIds.indexOf(q.topic)!==-1));
   const countVal = segVal('kcetCountSeg');
   const n = countVal==='all' ? pool.length : Math.min(parseInt(countVal), pool.length);
+  if(countVal!=='all' && parseInt(countVal) > pool.length){ alert(`Only ${pool.length} questions match your filters (you selected ${countVal}) — starting with all ${pool.length}.`); }
   pool = kcetBuildSessionPool(pool, n);
   if(pool.length===0){ alert('No questions match those filters. Try widening your selection.'); return; }
   const timerSec = parseInt(segVal('kcetTimerSeg'));
@@ -5325,11 +5639,12 @@ function updateKcetTimerUI(playSound){
   if(playSound && isLow) playTickSound(kcetState.timeLeft%2===0);
 }
 function kcetStopTest(){
-  if(!confirm('Stop this test now and see your report card based on the questions you\'ve answered so far?')) return;
+  if(!confirm('Stop this test now and see your report card? Unanswered questions will count as 0 marks toward your selected total.')) return;
   kcetClearTimer();
   if(document.fullscreenElement) document.exitFullscreen();
   const s = kcetState;
-  s.pool = s.pool.slice(0, s.idx);
+  const remaining = s.pool.length - s.idx;
+  if(remaining > 0) s.skipped += remaining;
   showKcetReport();
 }
 function kcetGoBack(){
@@ -5502,7 +5817,12 @@ function bestNeetScoreCh2(){
 }
 function hwQualifies(){
   const unlock = getHwUnlock();
-  return !!(unlock && unlock.unlocked && (unlock.method === 'master' || unlock.method === 'code'));
+  if(!unlock || !unlock.unlocked || (unlock.method !== 'master' && unlock.method !== 'code')) return false;
+  if(unlock.method === 'code' && studentCodeExpired(unlock)){
+    try{ localStorage.removeItem(HW_UNLOCK_KEY); }catch(e){}
+    return false;
+  }
+  return true;
 }
 function hwUnlockLookupKey(section, roll){
   return (String(section).trim() + '_' + String(roll).trim()).toUpperCase();
@@ -5538,7 +5858,7 @@ function hwSubmitUnlock(){
   if(!name){
     msgEl.textContent = 'That roll number / code combination was not recognized. If Narendra Sir gave you a new-style code, please also enter your full name above.';
   } else {
-    msgEl.textContent = 'That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir.';
+    msgEl.textContent = 'That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir, or note that student unlock codes expire on 25 Oct 2026 and may need to be renewed.';
   }
   msgEl.className = 'hw-msg bad';
 }
@@ -5556,8 +5876,8 @@ const PREMIUM_PRICE_RUPEES = 1999;
 const PREMIUM_PRICE_ORIGINAL = 3000;
 const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/j2zWhMQ7';
 const PREMIUM_UNLOCK_LOOKUP = {"SPARK_26MPU0010": {"name": "AAKANKSH", "code": "9UT4-88R7"}, "SPARK_26MPU0124": {"name": "ABDUL HAQ", "code": "K2NJ-ET4X"}, "SPARK_26MPU0008": {"name": "ABDUL RAQIB", "code": "TAUV-9K68"}, "SPARK_26MPU0082": {"name": "ADITYA", "code": "YX27-WNR2"}, "SPARK_26MPU0117": {"name": "ADITYA", "code": "Q4CW-822K"}, "SPARK_26MPU0077": {"name": "AKSHATA", "code": "9CJX-G6G7"}, "SPARK_26MPU0014": {"name": "AMBRESH", "code": "AK4K-E8SX"}, "SPARK_26MPU0023": {"name": "AMRUTA", "code": "3FX2-W9CE"}, "SPARK_26MPU0030": {"name": "ANUSHKA HALKUDE", "code": "RUQF-5GG6"}, "SPARK_26MPU0040": {"name": "Akhil N Hudgi", "code": "LVBC-WDUY"}, "SPARK_26MPU0005": {"name": "Akshay Desai", "code": "Z5KR-4MLM"}, "SPARK_26MPU0074": {"name": "Amar Singh Thakur", "code": "F2R9-KQ7S"}, "SPARK_26MPU0068": {"name": "Bhavani Sheelvant", "code": "7SA7-ULE6"}, "SPARK_26MPU0018": {"name": "D PRAGYA", "code": "YV5S-7VN2"}, "SPARK_26MPU0059": {"name": "DHANESHWARI", "code": "8GR2-YUUB"}, "SPARK_26MPU0102": {"name": "FATIMA HABEEB", "code": "3TAD-9UQY"}, "SPARK_26MPU0076": {"name": "GANGA", "code": "QNSJ-GCV6"}, "SPARK_26MPU0036": {"name": "Ganded Navaneeth", "code": "CZJF-UW4M"}, "SPARK_26MPU0095": {"name": "Hemanth Mundada", "code": "NJZT-LS8U"}, "SPARK_26MPU0089": {"name": "Jyoti", "code": "XH7E-KQ3Z"}, "SPARK_26MPU0090": {"name": "KAVIRAJ", "code": "F3AS-H7ZS"}, "SPARK_26MPU0029": {"name": "Kupendra", "code": "2ZGQ-8BWQ"}, "SPARK_26MPU0119": {"name": "MARUTHI C", "code": "E7V4-HJCC"}, "SPARK_26MPU0006": {"name": "MOHAMMED AMMAR FIRAS", "code": "V9HG-RJ27"}, "SPARK_26MPU0079": {"name": "MOHAMMED ARFAT", "code": "Z4K4-G94T"}, "SPARK_26MPU0135": {"name": "NAVATEJ CHINDAM", "code": "CZP6-6RZG"}, "SPARK_26MPU0104": {"name": "OM SHARAN", "code": "ZYD3-TNH7"}, "SPARK_26MPU0128": {"name": "OMKESH", "code": "FPBD-XRJP"}, "SPARK_26MPU0096": {"name": "PALLAVI", "code": "EPPQ-XKAT"}, "SPARK_26MPU0001": {"name": "PRASHANT MATHPATI", "code": "KJSM-HBJA"}, "SPARK_26MPU0065": {"name": "Prateek", "code": "YRWB-MSDJ"}, "SPARK_26MPU0084": {"name": "RASHI", "code": "4HE8-6ZG6"}, "SPARK_26MPU0002": {"name": "RENUKA HOSMATH", "code": "QCV7-BD83"}, "SPARK_26MPU0106": {"name": "Ritesh", "code": "5G96-EFWK"}, "SPARK_26MPU0075": {"name": "SAGAR", "code": "EJTW-2U75"}, "SPARK_26MPU0073": {"name": "SAMIKSHA DIVAKAR", "code": "GHP5-6Q4X"}, "SPARK_26MPU0041": {"name": "SANCHITA R PRACHANDE", "code": "734G-W5WS"}, "SPARK_26MPU0052": {"name": "SANJU", "code": "ZK8E-FFF5"}, "SPARK_26MPU0054": {"name": "SHAMBHAVI", "code": "GZJD-XH4Y"}, "SPARK_26MPU0015": {"name": "SHARADA", "code": "5DUV-YGPK"}, "SPARK_26MPU0114": {"name": "SNEHA", "code": "8QGY-ZHTQ"}, "SPARK_26MPU0100": {"name": "SOUMYA", "code": "5BTB-MTVX"}, "SPARK_26MPU0069": {"name": "SUGANDHA", "code": "YAMK-3EKB"}, "SPARK_26MPU0058": {"name": "Samarth mahantayya Hiremath", "code": "FP24-7XLZ"}, "SPARK_26MPU0044": {"name": "Shanamma", "code": "VWFD-KLDF"}, "SPARK_26MPU0093": {"name": "Shravya Biradar", "code": "T659-64TP"}, "SPARK_26MPU0039": {"name": "Shreya", "code": "HY5H-U9VC"}, "SPARK_26MPU0033": {"name": "Sneha", "code": "Q3DA-PVPJ"}, "SPARK_26MPU0026": {"name": "Soundarya", "code": "SUWH-A95M"}, "SPARK_26MPU0007": {"name": "Syed Muzammil", "code": "J2QY-E3C5"}, "SPARK_26MPU0012": {"name": "VAIDEHI", "code": "B7EW-534U"}, "SPARK_26MPU0016": {"name": "VIJAY KUMAR", "code": "H3BW-L7ZF"}, "SPARK_26MPU0056": {"name": "VISHNU", "code": "5GR5-3F3V"}, "SPARK_26MPU0011": {"name": "Vedant Chincholi", "code": "XQXL-EHNY"}, "SPARK_26MPU0020": {"name": "Vishwas", "code": "YKRG-KSNM"}, "SPARK_26MPU0003": {"name": "ZAINAB FATIMA", "code": "KEM9-76WW"}, "SPARK_26MPU0103": {"name": "kanchana", "code": "K6E8-6VTD"}, "ELITE_25MPU0067": {"name": "ABHISHEK", "code": "UEF2-7C6N"}, "ELITE_25MPU0048": {"name": "AKSHATA", "code": "MCR6-6LZZ"}, "ELITE_25MPU0013": {"name": "ANUSH IRANNA SURYAVANSHI", "code": "YV3J-FV2X"}, "ELITE_25MPU0080": {"name": "ARIFA NAZNEEN", "code": "JF5Z-BZVM"}, "ELITE_25MPU0077": {"name": "BHAGYASHREE", "code": "UGCX-J2KL"}, "ELITE_25MPU0071": {"name": "BHAKTI", "code": "ML6C-4ZR6"}, "ELITE_25MPU0082": {"name": "DEVRAJ", "code": "LT6K-5FQ6"}, "ELITE_25MPU0035": {"name": "DIVYA", "code": "YB4D-3ZR2"}, "ELITE_25MPU0095": {"name": "FAAZ HAMID HUSSAIN", "code": "FZQB-WGXK"}, "ELITE_25MPU0073": {"name": "INSHARA ANUM FATIMA", "code": "FBSP-K5HU"}, "ELITE_25MPU0076": {"name": "JAHA UZMA BADADAL", "code": "RVHD-R47E"}, "ELITE_25MPU0046": {"name": "MD TALHA", "code": "EYRG-XJCY"}, "ELITE_25MPU0063": {"name": "MOHAMMED AASIM ZUBAIR", "code": "CUNC-NCWV"}, "ELITE_25MPU0014": {"name": "MOHAMMED HISAMUDDIN SOHARWARDI", "code": "38SC-NUYD"}, "ELITE_25MPU0030": {"name": "MOHAMMED SHAHID FIRAS", "code": "XTHZ-5362"}, "ELITE_25MPU0053": {"name": "NAMAN", "code": "XM99-ZTF5"}, "ELITE_25MPU0020": {"name": "NIDHI MISHRA", "code": "F5MU-WGFW"}, "ELITE_25MPU0023": {"name": "NUMAN TAIF", "code": "CY5T-DE3Z"}, "ELITE_25MPU0044": {"name": "PRANITI", "code": "ZZ2C-K6ZZ"}, "ELITE_25MPU0088": {"name": "PREETAM", "code": "HBM9-2HSS"}, "ELITE_25MPU0050": {"name": "RAKSHITA", "code": "6M6F-WYEU"}, "ELITE_25MPU0070": {"name": "RENUKA", "code": "VLMZ-QHNJ"}, "ELITE_25MPU0036": {"name": "ROHIT PATANGE", "code": "EV38-44EJ"}, "ELITE_25MPU0057": {"name": "SRINIVAS", "code": "DU24-RLWW"}, "ELITE_25MPU0069": {"name": "SWATI", "code": "U98U-AG5J"}, "ELITE_25MPU0098": {"name": "SYED AMAAN ALI", "code": "ZUE2-6THJ"}, "ELITE_25MPU0049": {"name": "VEDA", "code": "V8BZ-XH4V"}, "ELITE_25MPU0101": {"name": "VIJAYLAXMI", "code": "B8SQ-D8L2"}, "CHAMPION_25MPU0087": {"name": "ABDUL QUDDUS", "code": "U6C4-JZ3M"}, "CHAMPION_25MPU0075": {"name": "ADITI SAJJAN", "code": "893D-PHYB"}, "CHAMPION_25MPU0081": {"name": "ALMEENA", "code": "T7R5-SS3P"}, "CHAMPION_25MPU0052": {"name": "ANJALI", "code": "W5VT-EWPT"}, "CHAMPION_25MPU0094": {"name": "ARYANSUJAY JALSANDHI", "code": "FBMR-S5GQ"}, "CHAMPION_25MPU0056": {"name": "BHUMIKA HARILAL", "code": "6GHJ-7AXT"}, "CHAMPION_25MPU0007": {"name": "DANVI", "code": "CX7A-8ANC"}, "CHAMPION_25MPU0003": {"name": "DARSHANA M SHAH", "code": "2ZHU-GEHW"}, "CHAMPION_25MPU0006": {"name": "HARSHA SANGASHETTY", "code": "N2PC-6ZTJ"}, "CHAMPION_25MPU0045": {"name": "LAXMI", "code": "UBR5-86RB"}, "CHAMPION_25MPU0064": {"name": "MAHESH A CHAKRAKAR", "code": "Z5YF-RPZU"}, "CHAMPION_25MPU0004": {"name": "MANJUNATH", "code": "SPHF-HYPX"}, "CHAMPION_25MPU0089": {"name": "MEGHA", "code": "KZYS-B8SJ"}, "CHAMPION_25MPU0028": {"name": "NIKITHA", "code": "HYF3-BRX7"}, "CHAMPION_25MPU0041": {"name": "PALLAVI", "code": "GEF2-2LH5"}, "CHAMPION_25MPU0002": {"name": "PRATEEK", "code": "2LUY-TWM8"}, "CHAMPION_25MPU0024": {"name": "RAHUL BEERAPPA PUJARI", "code": "8WWR-CSNQ"}, "CHAMPION_25MPU0011": {"name": "RINKU", "code": "4DA2-3CR4"}, "CHAMPION_25MPU0034": {"name": "SAMARTH MALAGOND", "code": "KX55-5NFD"}, "CHAMPION_25MPU0072": {"name": "SANGAMESH R MARALABHAVI", "code": "8MBY-KNYE"}, "CHAMPION_25MPU0008": {"name": "SANVI", "code": "B7E7-89ZD"}, "CHAMPION_25MPU0040": {"name": "SHAIKH GHULAM MUSTAFA QUADRI", "code": "Z2H3-DW5J"}, "CHAMPION_25MPU0021": {"name": "SHUBHAM AKADE", "code": "ZRBH-JV3R"}, "CHAMPION_25MPU0026": {"name": "SIMRAN", "code": "7LQC-H9DY"}, "CHAMPION_25MPU0022": {"name": "SIRIGIRI RUPANJANA", "code": "95XA-JJDQ"}, "CHAMPION_25MPU0047": {"name": "SONAKSHI PAWAR", "code": "CP4A-69KJ"}, "CHAMPION_25MPU0059": {"name": "SOUMYA", "code": "ETN3-MQQW"}, "CHAMPION_25MPU0029": {"name": "SRUSHTI", "code": "NVFX-53ZU"}, "CHAMPION_25MPU0078": {"name": "SUDHA RANI", "code": "ESVR-6FJW"}, "CHAMPION_25MPU0038": {"name": "SYED ABDUL HASEEB", "code": "6Z2F-WXFR"}, "CHAMPION_25MPU0051": {"name": "SYED SUFIYAN WAZEER", "code": "V9JQ-S76S"}, "CHAMPION_25MPU0027": {"name": "SYEDA RIDA IMANA SHEEZA", "code": "EN8S-7ED2"}, "CHAMPION_25MPU0012": {"name": "VARSHA", "code": "YPJ8-UYNJ"}, "CHAMPION_25MPU0062": {"name": "VIKAS S SWAMY", "code": "7LVJ-3XB3"}, "CHAMPION_25MPU0079": {"name": "VINAYSAGAR", "code": "L69B-SW77"}, "PRIME_26MPU0013": {"name": "Aashritha", "code": "87VN-R5DC"}, "PRIME_26MPU0122": {"name": "ABHAY", "code": "R4W6-5YRN"}, "PRIME_26MPU0055": {"name": "Abhishek", "code": "CZ7X-BGNM"}, "PRIME_26MPU0028": {"name": "Aditya", "code": "JLZK-FM9U"}, "PRIME_26MPU0063": {"name": "Akshara R Pawar", "code": "KEUQ-QX2J"}, "PRIME_26MPU0133": {"name": "AMAN", "code": "F8VX-ETTC"}, "PRIME_26MPU0112": {"name": "ANKITREDDY", "code": "7CYB-GEEG"}, "PRIME_26MPU0048": {"name": "ANUSHA PATIL", "code": "Z5RP-2XQK"}, "PRIME_26MPU0072": {"name": "ANUSHKA DEOKAR", "code": "DU5W-CHF5"}, "PRIME_26MPU0047": {"name": "Apoorva", "code": "ANV7-93L9"}, "PRIME_26MPU0024": {"name": "Arpita", "code": "UM5C-4P4Q"}, "PRIME_26MPU0126": {"name": "BHARAT KUMAR", "code": "7QDW-HWTJ"}, "PRIME_26MPU0092": {"name": "Bhavani", "code": "CYHX-CNSS"}, "PRIME_26MPU0083": {"name": "CHANDAN", "code": "KP78-UPP2"}, "PRIME_26MPU0125": {"name": "Deepika", "code": "PWPZ-UQM7"}, "PRIME_26MPU0034": {"name": "DIVYA LAXMI", "code": "K8UB-6MFW"}, "PRIME_26MPU0113": {"name": "HABIB UR RAHMAN", "code": "9D2K-9ZP8"}, "PRIME_26MPU0120": {"name": "J PAVAN", "code": "2HDU-L75S"}, "PRIME_26MPU0098": {"name": "KHAJA MOINUDDIN", "code": "V7EH-S6K7"}, "PRIME_26MPU0061": {"name": "KHATIJA TUL KUBRA", "code": "TYJY-FBQU"}, "PRIME_26MPU0022": {"name": "Kritikaa", "code": "SVEN-73A6"}, "PRIME_26MPU0050": {"name": "MANASA", "code": "S3DG-SACB"}, "PRIME_26MPU0064": {"name": "MANOJ", "code": "KV7T-9RU8"}, "PRIME_26MPU0108": {"name": "MAYURI", "code": "JPDN-F98N"}, "PRIME_26MPU0060": {"name": "MD Atif Ali", "code": "P7GL-HZK3"}, "PRIME_26MPU0066": {"name": "MD IBRAHIM", "code": "H8WY-TSVU"}, "PRIME_26MPU0105": {"name": "MOHAMMAD FARHAN AKMAL", "code": "574Q-MBNV"}, "PRIME_26MPU0070": {"name": "MOHAMMED ABDULLAH ZAYAN", "code": "HQNL-PSYZ"}, "PRIME_26MPU0035": {"name": "MOHAMMED ABUBAKAR SIDDIQ", "code": "EW6N-QCYH"}, "PRIME_26MPU0080": {"name": "MOHAMMED ASAD", "code": "KNNB-SK8X"}, "PRIME_26MPU0049": {"name": "Mohammed Atif Ahmed Ahmed", "code": "PC3Z-M9QN"}, "PRIME_26MPU0078": {"name": "MOHAMMED JUNAID", "code": "9ERU-Z2YL"}, "SPARK_26MPU0121": {"name": "NETRAVATI .", "code": "QKK8-43U9"}, "PRIME_26MPU0085": {"name": "NIRAJ MALKUD", "code": "3SUL-FZZZ"}, "PRIME_26MPU0129": {"name": "OMER ABDULLAH", "code": "3FAZ-L9BC"}, "PRIME_26MPU0123": {"name": "PRAJWAL", "code": "483C-62ZL"}, "PRIME_26MPU0131": {"name": "PRIYANKA", "code": "F6HJ-XW2F"}, "PRIME_26MPU0038": {"name": "RENUKA", "code": "9HB5-4G83"}, "PRIME_26MPU0032": {"name": "RITISHA", "code": "FED3-DUFL"}, "PRIME_26MPU0037": {"name": "SAHANA SHIRSAND", "code": "ECK6-TDLH"}, "PRIME_26MPU0021": {"name": "Saikamal lakka", "code": "DK6Q-DR97"}, "PRIME_26MPU0116": {"name": "SANCHET DIGAMBAR MANE", "code": "SF6E-P7HQ"}, "PRIME_26MPU0086": {"name": "SANJANA", "code": "LXJV-7F95"}, "PRIME_26MPU0067": {"name": "Savita Khajure", "code": "RFDP-9NKA"}, "PRIME_26MPU0111": {"name": "SHAIKH ABDUL RAHMAN", "code": "GGJS-FDNG"}, "PRIME_26MPU0087": {"name": "SHARANABASAPPA P K", "code": "U6N7-9YKY"}, "PRIME_26MPU0109": {"name": "SHAZFA LAIBA", "code": "UUH2-6H6J"}, "PRIME_26MPU0136": {"name": "Sheetal", "code": "E8HG-EK3J"}, "PRIME_26MPU0057": {"name": "Shivaleela", "code": "MTQ9-9Z4W"}, "PRIME_26MPU0027": {"name": "SHRADDHA", "code": "LRMS-WJWV"}, "PRIME_26MPU0099": {"name": "Shrusti", "code": "ZC7F-CN6N"}, "PRIME_26MPU0053": {"name": "SHWETA M GIRI", "code": "SQVS-HESF"}, "PRIME_26MPU0101": {"name": "Srushti", "code": "FY2A-ZYVP"}, "PRIME_26MPU0009": {"name": "SWATIKUMARI", "code": "Y5GE-RADX"}, "PRIME_26MPU0019": {"name": "Syed Nabi", "code": "RW34-L9UA"}, "PRIME_26MPU0017": {"name": "Vishwapal", "code": "UBMQ-VLZK"}, "GUEST_001": {"name": "Guest Student 001", "code": "NFAS-DB4L"}, "GUEST_002": {"name": "Guest Student 002", "code": "ZYT7-5AYG"}, "GUEST_003": {"name": "Guest Student 003", "code": "GZLQ-LKCE"}, "GUEST_004": {"name": "Guest Student 004", "code": "3UBZ-VJ92"}, "GUEST_005": {"name": "Guest Student 005", "code": "ST4Y-T6LL"}, "GUEST_006": {"name": "Guest Student 006", "code": "M6EZ-KJFN"}, "GUEST_007": {"name": "Guest Student 007", "code": "LGW7-HWUX"}, "GUEST_008": {"name": "Guest Student 008", "code": "76EF-PERY"}, "GUEST_009": {"name": "Guest Student 009", "code": "W69B-XL53"}, "GUEST_010": {"name": "Guest Student 010", "code": "QY87-QPB4"}, "GUEST_011": {"name": "Guest Student 011", "code": "MT73-M2W6"}, "GUEST_012": {"name": "Guest Student 012", "code": "22EX-5Q2A"}, "GUEST_013": {"name": "Guest Student 013", "code": "P7ZG-FUNK"}, "GUEST_014": {"name": "Guest Student 014", "code": "UE5L-56UD"}, "GUEST_015": {"name": "Guest Student 015", "code": "R342-PGFU"}, "GUEST_016": {"name": "Guest Student 016", "code": "N6D9-VSKS"}, "GUEST_017": {"name": "Guest Student 017", "code": "TSJG-9Z9G"}, "GUEST_018": {"name": "Guest Student 018", "code": "YNUX-G7DK"}, "GUEST_019": {"name": "Guest Student 019", "code": "V4BD-UKWM"}, "GUEST_020": {"name": "Guest Student 020", "code": "5Y36-QMGD"}, "GUEST_021": {"name": "Guest Student 021", "code": "8EPD-HKSA"}, "GUEST_022": {"name": "Guest Student 022", "code": "T7BJ-HG8R"}, "GUEST_023": {"name": "Guest Student 023", "code": "W86A-MML7"}, "GUEST_024": {"name": "Guest Student 024", "code": "96EY-Z6XB"}, "GUEST_025": {"name": "Guest Student 025", "code": "CDQ7-W3BZ"}, "GUEST_026": {"name": "Guest Student 026", "code": "FCDK-ZARC"}, "GUEST_027": {"name": "Guest Student 027", "code": "25P7-ZN2F"}, "GUEST_028": {"name": "Guest Student 028", "code": "DN6W-9KGJ"}, "GUEST_029": {"name": "Guest Student 029", "code": "G7GZ-DYVB"}, "GUEST_030": {"name": "Guest Student 030", "code": "6NS5-LC3V"}, "GUEST_031": {"name": "Guest Student 031", "code": "F5U7-A2Q2"}, "GUEST_032": {"name": "Guest Student 032", "code": "LHL7-YACF"}, "GUEST_033": {"name": "Guest Student 033", "code": "VW6Q-TRWZ"}, "GUEST_034": {"name": "Guest Student 034", "code": "AXSR-SLKM"}, "GUEST_035": {"name": "Guest Student 035", "code": "KXYJ-AP67"}, "GUEST_036": {"name": "Guest Student 036", "code": "8DWV-3KUY"}, "GUEST_037": {"name": "Guest Student 037", "code": "Z3FY-A8EB"}, "GUEST_038": {"name": "Guest Student 038", "code": "EQXX-PS2N"}, "GUEST_039": {"name": "Guest Student 039", "code": "PDEB-RTQX"}, "GUEST_040": {"name": "Guest Student 040", "code": "TJ2Z-TV67"}, "GUEST_041": {"name": "Guest Student 041", "code": "JY8L-ESMM"}, "GUEST_042": {"name": "Guest Student 042", "code": "5MYL-TEGB"}, "GUEST_043": {"name": "Guest Student 043", "code": "CQ6E-TZVY"}, "GUEST_044": {"name": "Guest Student 044", "code": "7DFN-EKQ2"}, "GUEST_045": {"name": "Guest Student 045", "code": "WVVX-Y74V"}, "GUEST_046": {"name": "Guest Student 046", "code": "H78B-TPZZ"}, "GUEST_047": {"name": "Guest Student 047", "code": "Q8QN-6TAF"}, "GUEST_048": {"name": "Guest Student 048", "code": "3HB8-A39U"}, "GUEST_049": {"name": "Guest Student 049", "code": "SGGH-24MN"}, "GUEST_050": {"name": "Guest Student 050", "code": "L8DR-4RVN"}, "GUEST_051": {"name": "Guest Student 051", "code": "HYNU-B4H9"}, "GUEST_052": {"name": "Guest Student 052", "code": "675V-NMM3"}, "GUEST_053": {"name": "Guest Student 053", "code": "KJN2-2P9M"}, "GUEST_054": {"name": "Guest Student 054", "code": "YR9L-6TCD"}, "GUEST_055": {"name": "Guest Student 055", "code": "VBQS-93YP"}, "GUEST_056": {"name": "Guest Student 056", "code": "JPUU-D62T"}, "GUEST_057": {"name": "Guest Student 057", "code": "XC2B-49PQ"}, "GUEST_058": {"name": "Guest Student 058", "code": "UTFJ-QLSP"}, "GUEST_059": {"name": "Guest Student 059", "code": "RQKA-2JFE"}, "GUEST_060": {"name": "Guest Student 060", "code": "ZTXH-V3XD"}, "GUEST_061": {"name": "Guest Student 061", "code": "4SRX-M4CB"}, "GUEST_062": {"name": "Guest Student 062", "code": "XDJ2-49RW"}, "GUEST_063": {"name": "Guest Student 063", "code": "S2LN-GZ39"}, "GUEST_064": {"name": "Guest Student 064", "code": "D9HG-5VH7"}, "GUEST_065": {"name": "Guest Student 065", "code": "GA4F-V7UC"}, "GUEST_066": {"name": "Guest Student 066", "code": "BSTB-3B8K"}, "GUEST_067": {"name": "Guest Student 067", "code": "6WAL-2GJZ"}, "GUEST_068": {"name": "Guest Student 068", "code": "9PEW-EBWW"}, "GUEST_069": {"name": "Guest Student 069", "code": "CW7H-VCBU"}, "GUEST_070": {"name": "Guest Student 070", "code": "2V7Q-LJKW"}, "GUEST_071": {"name": "Guest Student 071", "code": "BFKP-L264"}, "GUEST_072": {"name": "Guest Student 072", "code": "QMZA-UCTH"}, "GUEST_073": {"name": "Guest Student 073", "code": "RAEB-EKFG"}, "GUEST_074": {"name": "Guest Student 074", "code": "E75G-G73W"}, "GUEST_075": {"name": "Guest Student 075", "code": "P4CR-7TR7"}, "GUEST_076": {"name": "Guest Student 076", "code": "45ST-XSAQ"}, "GUEST_077": {"name": "Guest Student 077", "code": "58KM-6RXA"}, "GUEST_078": {"name": "Guest Student 078", "code": "AUFR-SELV"}, "GUEST_079": {"name": "Guest Student 079", "code": "KGE6-YE9F"}, "GUEST_080": {"name": "Guest Student 080", "code": "PMWR-6XP4"}, "GUEST_081": {"name": "Guest Student 081", "code": "EMQK-UC37"}, "GUEST_082": {"name": "Guest Student 082", "code": "R97D-JDW3"}, "GUEST_083": {"name": "Guest Student 083", "code": "QAZ3-8NCR"}, "GUEST_084": {"name": "Guest Student 084", "code": "BHGN-MM7H"}, "GUEST_085": {"name": "Guest Student 085", "code": "248C-XJMX"}, "GUEST_086": {"name": "Guest Student 086", "code": "D66T-4UE5"}, "GUEST_087": {"name": "Guest Student 087", "code": "CE8E-QMV2"}, "GUEST_088": {"name": "Guest Student 088", "code": "FUCN-6ZNH"}, "GUEST_089": {"name": "Guest Student 089", "code": "6EAP-773Q"}, "GUEST_090": {"name": "Guest Student 090", "code": "GFZF-T4C7"}, "GUEST_091": {"name": "Guest Student 091", "code": "DF8L-TYYR"}, "GUEST_092": {"name": "Guest Student 092", "code": "SHDX-AR3M"}, "GUEST_093": {"name": "Guest Student 093", "code": "XECS-TVRS"}, "GUEST_094": {"name": "Guest Student 094", "code": "4UEZ-5CSQ"}, "GUEST_095": {"name": "Guest Student 095", "code": "ZS5P-VRE3"}, "GUEST_096": {"name": "Guest Student 096", "code": "E8XU-J3LD"}, "GUEST_097": {"name": "Guest Student 097", "code": "KYE3-TP7X"}, "GUEST_098": {"name": "Guest Student 098", "code": "8VVY-8AA8"}, "GUEST_099": {"name": "Guest Student 099", "code": "5QKQ-BHZS"}, "GUEST_100": {"name": "Guest Student 100", "code": "WM3Y-SE3K"}};
-const PREMIUM_LOCKED_TABS = ['mindmap', 'classppt', 'quiz', 'adv', 'kcet', 'writeit', 'papergen', 'boardimp', 'podcast'];
-const PREMIUM_TAB_LABELS = {mindmap:'Mind Map', classppt:'Class Presentation', revision:'Revision', quiz:'MCQ Quiz', adv:'NEET Practice', kcet:'KCET Practice', writeit:'Answer Practice', papergen:'Paper Generator', boardimp:'Board Important', podcast:'Audio Podcast'};
+const PREMIUM_LOCKED_TABS = ['oneshot', 'mindmap', 'classppt', 'quiz', 'adv', 'kcet', 'writeit', 'papergen', 'boardimp', 'podcast'];
+const PREMIUM_TAB_LABELS = {oneshot:'One-Shot Revision', mindmap:'Mind Map', classppt:'Class Presentation', revision:'Revision', quiz:'MCQ Quiz', adv:'NEET Practice', kcet:'KCET Practice', writeit:'Answer Practice', papergen:'Paper Generator', boardimp:'Board Important', podcast:'Audio Podcast'};
 
 const PODCASTS_CH2 = {
   en: {label:'English', url:'assets/podcast-english.mp3'},
@@ -5608,6 +5928,10 @@ function premiumQualifies(){
     try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){}
     return false;
   }
+  if(u.method === 'code' && studentCodeExpired(u)){
+    try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){}
+    return false;
+  }
   return true;
 }
 function reLockPremium(){
@@ -5635,6 +5959,21 @@ function premiumStatusRowCh2(){
 }
 /* ---------------- Student-locked unlock code (must match code_generator.html exactly) ---------------- */
 const CODE_SALT = 'BAIO-STUDENT-LOCK-2026';
+/* Student-entered unlock codes (not the master code) stop granting access after this
+   date - Narendra Sir can renew access for everyone by moving this one date forward. */
+const STUDENT_CODE_EXPIRY = new Date('2026-10-25T23:59:59+05:30').getTime();
+/* Per-student renewals: a code-unlock for these SECTION_ROLL keys stays active
+   until the date given here, even after STUDENT_CODE_EXPIRY has passed. */
+const STUDENT_CODE_RENEWALS = {
+  'SPARK_26MPU0077': '2027-03-31T23:59:59+05:30'  /* Akshata (I PUC) */
+};
+function studentCodeExpired(u){
+  const now = Date.now();
+  if(now <= STUDENT_CODE_EXPIRY) return false;
+  const k = ((u && u.section)||'').toString().trim().toUpperCase() + '_' + ((u && u.roll)||'').toString().trim().toUpperCase();
+  const until = STUDENT_CODE_RENEWALS[k];
+  return !(until && now <= new Date(until).getTime());
+}
 const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 function normalizeField(s){ return (s || '').toString().trim().toUpperCase().replace(/\s+/g, ' '); }
 function fnv1aHash(str){
@@ -5701,7 +6040,7 @@ function premiumSubmitUnlock(tabId){
   if(!name){
     msgEl.textContent = 'That roll number / code combination was not recognized. If Narendra Sir gave you a new-style code, please also enter your full name above.';
   } else {
-    msgEl.textContent = 'That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir.';
+    msgEl.textContent = 'That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir, or note that student unlock codes expire on 25 Oct 2026 and may need to be renewed.';
   }
   msgEl.className = 'hw-msg bad';
 }
@@ -5836,7 +6175,9 @@ function applyPremiumGates(){
     const overlay = document.getElementById('premLock_' + tabId);
     if(!overlay) return;
     if(unlocked){ overlay.classList.remove('show'); overlay.innerHTML = ''; premiumToggleSiblings(tabId, false); }
-    else { renderPremiumLockScreenCh2(tabId); premiumToggleSiblings(tabId, true); }
+    else if(window.BaioSample && BaioSample.allow(tabId)){ overlay.classList.remove('show'); overlay.innerHTML = ''; premiumToggleSiblings(tabId, false);
+      BaioSample.start(tabId, overlay.parentElement, function(t){ renderPremiumLockScreenCh2(t); premiumToggleSiblings(t, true); }, null, {noticeEl: function(){ return overlay; }}); }
+    else { renderPremiumLockScreenCh2(tabId); premiumToggleSiblings(tabId, true); if(window.BaioSample) BaioSample.notice(tabId, overlay); }
   });
   document.querySelectorAll('.panel').forEach(function(panel){
     let banner = panel.querySelector('.demo-access-banner');
@@ -5858,10 +6199,10 @@ function applyPremiumGates(){
     const isPremium = PREMIUM_LOCKED_TABS.indexOf(tabId) !== -1;
     const alreadyMarked = btn.getAttribute('data-lock-marked') === '1';
     if(isPremium && !unlocked && !alreadyMarked){
-      btn.innerHTML = '\uD83D\uDD12 ' + btn.innerHTML;
+      btn.innerHTML = ((window.BaioSample&&BaioSample.allow(tabId))?'🎁 ':'🔒 ') + btn.innerHTML;
       btn.setAttribute('data-lock-marked', '1');
     } else if((!isPremium || unlocked) && alreadyMarked){
-      btn.innerHTML = btn.innerHTML.replace('\uD83D\uDD12 ', '');
+      btn.innerHTML = btn.innerHTML.replace('🎁 ', '').replace('🔒 ', '');
       btn.removeAttribute('data-lock-marked');
     }
   });
@@ -6023,9 +6364,18 @@ document.getElementById('mmZoomReset').addEventListener('click', ()=>{
   mmScale = 1;
   mmApplyZoom();
 });
+['mmPickQuick','mmPickFull'].forEach(id=>{
+  const btn=document.getElementById(id);
+  if(!btn) return;
+  btn.addEventListener('click',()=>{
+    mmImg.classList.remove('loaded');
+    mmImg.src=btn.dataset.src; mmImg.dataset.dlname=btn.dataset.name;
+    ['mmPickQuick','mmPickFull'].forEach(o=>document.getElementById(o).classList.toggle('secondary', o!==id));
+  });
+});
 document.getElementById('mmDownloadBtn').addEventListener('click', (e)=>{
   const a = document.createElement('a');
-  a.href = mmImg.src; a.download = 'Ch2_Biological_Classification_Mind_Map.jpg';
+  a.href = mmImg.src; a.download = mmImg.dataset.dlname || 'Ch2_Biological_Classification_Quick_Mind_Map.jpg';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   const btn = e.target;
   const orig = btn.textContent; btn.textContent='Downloaded ✓'; btn.classList.add('done');
@@ -6148,6 +6498,29 @@ document.getElementById('waLink').addEventListener('click', (e)=>{ e.preventDefa
 document.getElementById('igLink').addEventListener('click', (e)=>{ e.preventDefault(); openExternal('https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw'); });
 document.getElementById('ytLink').addEventListener('click', (e)=>{ e.preventDefault(); openExternal('https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0'); });
 document.getElementById('tgLink').addEventListener('click', (e)=>{ e.preventDefault(); openExternal('https://t.me/BAIO_Learning_System'); });
+async function shareAllSocial(){
+  const text = '\u{1F4DA} BAIO Learning System \u2014 by Narendra Sir\nBiology All In One, for PU-I/PU-II & NEET/KCET aspirants.\n\n'
+    + '\u{1F310} App: https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/\n\n'
+    + '\u{1F4AC} WhatsApp Channel: https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X\n\n'
+    + '\u{1F4F8} Instagram: https://www.instagram.com/new_gen_bioguru\n\n'
+    + '\u25B6\uFE0F YouTube: https://youtube.com/@biogurunarendrasir\n\n'
+    + '\u{1F4E2} Telegram: https://t.me/BAIO_Learning_System';
+  /* Share sheet: picture size + links only / picture only / picture + links (assets/social/share-sheet.js). */
+  if(!window.BAIOShare){
+    await new Promise(function(ok){ const sc = document.createElement('script'); sc.src = '../assets/social/share-sheet.js?v=1'; sc.onload = ok; sc.onerror = ok; document.head.appendChild(sc); });
+  }
+  if(window.BAIOShare){ window.BAIOShare.open(text, '../assets/social/'); return; }
+  if(navigator.share){
+    try{ await navigator.share({ title:'BAIO Learning System \u2014 by Narendra Sir', text }); return; }catch(e){ if(e && e.name === 'AbortError') return; }
+  }
+  try{
+    await navigator.clipboard.writeText(text);
+    alert('All links copied! Paste anywhere to share.');
+  }catch(e){
+    openExternal('https://wa.me/?text=' + encodeURIComponent(text));
+  }
+}
+window.shareAllSocial = shareAllSocial;
 /* =========================================================
    1. INTERACTIVE TAXONOMICAL TREE EXPLORER
    ========================================================= */
@@ -6911,6 +7284,7 @@ function setLang(lang){
     const tabId = activePanel.id.replace('panel-', '');
     if(tabId === 'study' && typeof renderStudy === 'function') renderStudy();
     else if(tabId === 'concept' && typeof renderConcept === 'function') renderConcept();
+    else if(tabId === 'oneshot' && typeof renderOneShotStudy === 'function') renderOneShotStudy();
     else if(tabId === 'studytips' && typeof renderStudyTipsCh2 === 'function') renderStudyTipsCh2();
     else if(tabId === 'glossary' && typeof renderGlossary === 'function') renderGlossary(document.getElementById('glossarySearch') ? document.getElementById('glossarySearch').value : '');
     else if(tabId === 'writeit' && typeof renderWriteItQuestion === 'function' && typeof waSession !== 'undefined' && waSession && waSession.idx < waSession.questions.length) renderWriteItQuestion();
@@ -7087,7 +7461,7 @@ if(!window.__langSwitcherOutsideClickBound){
    tab click handlers are untouched — this only shows/hides the buttons. ---- */
 (function(){
   var CATEGORIES = [
-    {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','concept','podcast','studytips','boardimp','diagrams']},
+    {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','oneshot','concept','podcast','studytips','boardimp','diagrams']},
     {id:'practice', label:'Practice', icon:'✍️', tabs:['flash','quiz','writeit','revision']},
     {id:'test', label:'Test Prep', icon:'\u{1F3AF}', tabs:['adv','kcet','papergen']},
     {id:'explore', label:'Explore', icon:'\u{1F50D}', tabs:['tree','compare','mindmap','classppt','glossary']},
@@ -7585,7 +7959,7 @@ enableTopicNavScrolling('conceptTopicNav', 'conceptTopicNavScrollLeft', 'concept
       + '</div>'
       + '<div class="notes-print-body">' + escapeHtml(text) + '</div>'
       + '<div class="notes-print-footer">Notes prepared by ' + escapeHtml(meta.name) + ' &middot; Biology All In One (BAIO) Learning System, Chapter 2: Biological Classification<br>By Narendra Sir &ndash; Lecturer in Biology'
-      + '<br><a href="https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X">WhatsApp</a> &middot; <a href="https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw">Instagram</a> &middot; <a href="https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0">YouTube</a></div>'
+      + '<br><a href="https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X"><img class="soc-ic" src="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/assets/social/wa.png" alt="" style="width:1.15em;height:1.15em;vertical-align:-0.22em;margin-right:5px;border:0;">WhatsApp</a> &middot; <a href="https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw"><img class="soc-ic" src="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/assets/social/ig.png" alt="" style="width:1.15em;height:1.15em;vertical-align:-0.22em;margin-right:5px;border:0;">Instagram</a> &middot; <a href="https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0"><img class="soc-ic" src="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/assets/social/yt.png" alt="" style="width:1.15em;height:1.15em;vertical-align:-0.22em;margin-right:5px;border:0;">YouTube</a></div>'
       + '</body></html>';
   }
   function doPrintPdf(){
@@ -7731,10 +8105,10 @@ function buildReportCardHtmlCH2(r){
     + '<div style="border-top:1px solid rgba(227,175,67,0.35); padding-top:12px; text-align:center; font-size:10.5px; color:'+textDim+'; line-height:2;">'
     + 'Narendra Sir &ndash; Lecturer in Biology<br>'
     + '<div style="margin-top:4px;">📱 <a href="https://wa.me/919008968389" target="_blank" rel="noopener" style="color:'+teal+'; text-decoration:none;">9008968389</a> &nbsp;&middot;&nbsp; ✉️ <a href="mailto:bioguru102@gmail.com" style="color:'+teal+'; text-decoration:none;">bioguru102@gmail.com</a></div>'
-    + '<div style="margin-top:4px;">WhatsApp Channel: <a href="https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X" target="_blank" rel="noopener" style="color:'+teal+'; text-decoration:none;">BioGuru Narendra Sir</a></div>'
-    + '<div>Instagram Channel: <a href="https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw" target="_blank" rel="noopener" style="color:'+teal+'; text-decoration:none;">@new_gen_bioguru</a></div>'
-    + '<div>YouTube Channel: <a href="https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0" target="_blank" rel="noopener" style="color:'+teal+'; text-decoration:none;">@biogurunarendrasir</a></div>'
-    + '<div>Telegram Channel: <a href="https://t.me/BAIO_Learning_System" target="_blank" rel="noopener" style="color:'+teal+'; text-decoration:none;">BAIO Learning System</a></div>'
+    + '<div style="margin-top:4px;">WhatsApp Channel: <a href="https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X" target="_blank" rel="noopener" style="color:'+teal+'; text-decoration:none;"><img class="soc-ic" src="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/assets/social/wa.png" alt="" style="width:1.15em;height:1.15em;vertical-align:-0.22em;margin-right:5px;border:0;">BioGuru Narendra Sir</a></div>'
+    + '<div>Instagram Channel: <a href="https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw" target="_blank" rel="noopener" style="color:'+teal+'; text-decoration:none;"><img class="soc-ic" src="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/assets/social/ig.png" alt="" style="width:1.15em;height:1.15em;vertical-align:-0.22em;margin-right:5px;border:0;">@new_gen_bioguru</a></div>'
+    + '<div>YouTube Channel: <a href="https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0" target="_blank" rel="noopener" style="color:'+teal+'; text-decoration:none;"><img class="soc-ic" src="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/assets/social/yt.png" alt="" style="width:1.15em;height:1.15em;vertical-align:-0.22em;margin-right:5px;border:0;">@biogurunarendrasir</a></div>'
+    + '<div>Telegram Channel: <a href="https://t.me/BAIO_Learning_System" target="_blank" rel="noopener" style="color:'+teal+'; text-decoration:none;"><img class="soc-ic" src="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/assets/social/tg.png" alt="" style="width:1.15em;height:1.15em;vertical-align:-0.22em;margin-right:5px;border:0;">BAIO Learning System</a></div>'
     + '</div></div>';
 }
 async function openShareCardCH2(){
@@ -7822,6 +8196,7 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
     else if(targetTab === 'progress' && typeof renderProgress === 'function') renderProgress();
     else if(targetTab === 'badges' && typeof renderBadgesCard === 'function') renderBadgesCard();
     else if(targetTab === 'dl' && typeof hwInjectPaymentButton === 'function') hwInjectPaymentButton();
+    else if(targetTab === 'oneshot' && typeof renderOneShotStudy === 'function') renderOneShotStudy();
   }
   try{ localStorage.setItem(LAST_TAB_KEY, targetTab); }catch(e){}
   try{
@@ -7977,6 +8352,56 @@ window.chapterHardRefresh = chapterHardRefresh;
   if(document.readyState === 'complete' || document.readyState === 'interactive'){ checkConnectivity(); }
   else { document.addEventListener('DOMContentLoaded', checkConnectivity); }
 })();
+</script>
+<script>
+/* ---------------- CLASS PRESENTATION · Large Text (projector) deck (class-large.js) ----------------
+   Adds a Standard / Large Text switch above the slide viewer. The Large Text deck is built live
+   from this chapter's Study Mode notes and follows the app's light/dark theme. */
+(function(){
+  const panel = document.getElementById('panel-classppt'); if(!panel) return;
+  const card = panel.querySelector(':scope > .card'); const lock = document.getElementById('premLock_classppt');
+  const hasStd = (typeof CLASS_SLIDES!=='undefined' && CLASS_SLIDES.length > 0);
+  const KEY = 'pu1ch2_ppt_deck';
+  let deck = (function(){ try{ return localStorage.getItem(KEY) || ''; }catch(e){ return ''; } })();
+  const box = document.createElement('div'); box.className = 'card'; box.id = 'clgCard';
+  box.innerHTML = '<h3 style="color:var(--gold-2); margin-bottom:4px;">Narendra Sir &ndash; Class Presentation</h3>' +
+    (hasStd ? '<div class="clg-deck-switch"><button type="button" data-d="std">🖼️ Standard <span>' + CLASS_SLIDES.length + ' slides</span></button><button type="button" data-d="large">🔠 Large Text · Projector <span>light &amp; dark · EN / ಕ / हि</span></button></div>' : '') +
+    '<div id="clgHost"></div>';
+  panel.insertBefore(box, card || lock);
+  const stdSwitch = document.createElement('div');
+  if(card && hasStd){ stdSwitch.innerHTML = box.querySelector('.clg-deck-switch').outerHTML; const h = card.querySelector('h3'); if(h) h.after(stdSwitch.firstChild); }
+  const cur = ()=> hasStd ? (deck==='large' ? 'large' : 'std') : 'large';
+  const locked = ()=> lock && lock.classList.contains('show');
+  function topicName(t, l){ const o = l==='en' ? t : (STUDY_TRANSLATIONS_CH2[t.id] && STUDY_TRANSLATIONS_CH2[t.id][l]); return String((o && o.title) || t.title || '').replace(/^\s*\d+\.\s*/, '').replace(/&amp;/g,'&'); }
+  function mountLarge(){
+    if(!window.ClassLarge){ setTimeout(apply, 400); return; }
+    ClassLarge.mount(document.getElementById('clgHost'), {
+      key:'pu1ch2', chapterNo:2, cls:'PU-I',
+      chapterName:{"en": "Biological Classification", "kn": "ಜೈವಿಕ ವರ್ಗೀಕರಣ", "hi": "जैव वर्गीकरण"},
+      topics: STUDY_DATA.map(t=>({id:t.id, name:{en:topicName(t,'en'), kn:topicName(t,'kn'), hi:topicName(t,'hi')}})),
+      getStudy:(id, l)=>{ const t = l==='en' ? STUDY_DATA.find(x=>x.id===id) : (STUDY_TRANSLATIONS_CH2[id] && STUDY_TRANSLATIONS_CH2[id][l]); return t ? ClassLarge.fromHtml(t) : null; },
+      lang:()=>(typeof currentLang!=='undefined' ? currentLang : 'en')
+    });
+  }
+  function apply(){
+    const active = panel.classList.contains('active');
+    document.querySelectorAll('#panel-classppt .clg-deck-switch button').forEach(b=>b.classList.toggle('active', b.getAttribute('data-d')===cur()));
+    if(locked()){ if(window.ClassLarge) ClassLarge.unmount(); return; }
+    if(card) card.style.display = cur()==='std' ? '' : 'none';
+    box.style.display = cur()==='large' ? '' : 'none';
+    if(active && cur()==='large'){ if(!document.querySelector('#clgHost .clg')) mountLarge(); }
+    else if(window.ClassLarge && document.querySelector('#clgHost .clg')){ ClassLarge.unmount(); document.getElementById('clgHost').innerHTML = ''; }
+  }
+  panel.addEventListener('click', e=>{ const b = e.target.closest && e.target.closest('.clg-deck-switch button'); if(!b) return; deck = b.getAttribute('data-d'); try{ localStorage.setItem(KEY, deck); }catch(err){} apply(); });
+  new MutationObserver(apply).observe(panel, {attributes:true, attributeFilter:['class']});
+  if(lock) new MutationObserver(apply).observe(lock, {attributes:true, attributeFilter:['class']});
+  apply();
+})();
+</script>
+<script>
+/* Chapter Quick Card at the top of the Board Important tab (quick-card.js) */
+(function(){ function go(){ const c=document.querySelector('#panel-boardimp > .card'); if(c && window.QuickCard) QuickCard.mount(c, {id:'pu1-ch2', base:'../', title:'Biological Classification', cls:'I PUC', ch:2}); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go(); })();
 </script>
 </body>
 </html>

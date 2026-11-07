@@ -1,0 +1,92 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="../../notes/src/draw.js"></script><script src="cc-draw.js"></script><script src="diagrams.js"></script><script src="vis.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#f8f5ec}
+:root{--ui:Inter,'Noto Sans Kannada','Noto Sans Devanagari','Noto Color Emoji',sans-serif;--teal:#0d7f70;--gold:#a87d14;--ink:#15203a}
+#s{position:absolute;inset:0;font-family:var(--ui);color:var(--ink);background:#f8f5ec}
+.bar{position:absolute;left:0;top:0;right:0;height:10px;background:linear-gradient(90deg,#0d7f70 0 66%,#d4af37 66% 100%)}
+.kick{position:absolute;left:4.2%;top:4.6%;font-weight:800;letter-spacing:.2em;color:var(--gold);font-size:calc(var(--u)*1.25)}
+.ttl{position:absolute;left:4.2%;right:4.2%;top:8.2%;font-weight:800;letter-spacing:-.01em;font-size:calc(var(--u)*3.2);line-height:1.12}
+.ttl em{font-style:normal;color:var(--teal)}
+.body{position:absolute;left:4.2%;right:4.2%;top:21%;bottom:9.5%;display:flex;gap:2.2%}
+.cards{flex:1;display:grid;gap:calc(var(--u)*1);align-content:start}
+.cards.two{grid-template-columns:1fr 1fr}
+.card{background:#fff;border:2px solid #e6dcc4;border-left:calc(var(--u)*.55) solid var(--teal);border-radius:calc(var(--u)*1.1);padding:calc(var(--u)*.9) calc(var(--u)*1.25);font-size:var(--f);line-height:1.38;font-weight:500;display:flex;gap:calc(var(--u)*.8);align-items:flex-start}
+.card:nth-child(4n+2){border-left-color:#c99a1c}.card:nth-child(4n+3){border-left-color:#6c48d6}.card:nth-child(4n+4){border-left-color:#c24f28}
+.card b{color:var(--teal);font-weight:750}
+.num{flex:0 0 auto;width:calc(var(--f)*1.45);height:calc(var(--f)*1.45);border-radius:50%;background:#f2e3b3;color:#6b4e00;font-weight:800;font-size:calc(var(--f)*.8);display:flex;align-items:center;justify-content:center;margin-top:.1em}
+.vis{flex:0 0 38%;background:#fffdf7;border:2px solid #eadfc6;border-radius:calc(var(--u)*1.3);display:flex;align-items:center;justify-content:center;padding:1%}
+.vis svg{width:100%;height:100%}
+.foot{position:absolute;left:4.2%;right:4.2%;bottom:3.2%;display:flex;justify-content:space-between;font-size:calc(var(--u)*.95);color:#6b7280}
+.foot b{color:var(--teal)}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:var(--f);background:#fff;border-radius:calc(var(--u)*1.1);overflow:hidden;border:2px solid #e6dcc4}
+th{background:var(--teal);color:#fff;text-align:left;padding:calc(var(--u)*.75) calc(var(--u)*1.1);font-weight:700}
+td{padding:calc(var(--u)*.7) calc(var(--u)*1.1);border-top:1.5px solid #efe7d4;line-height:1.3}
+tr:nth-child(even) td{background:#fbf7ec}
+td:first-child{font-weight:700}
+.tip{margin-top:calc(var(--u)*1);background:#fdf4d8;border:2px solid #e8c766;border-radius:calc(var(--u)*1);padding:calc(var(--u)*.8) calc(var(--u)*1.2);font-size:var(--f);font-weight:600}
+.tip span{color:var(--gold);font-weight:800;letter-spacing:.12em;margin-right:.6em;font-size:.8em}
+/* part / cover */
+.part{position:absolute;left:4.2%;top:9%;display:flex;align-items:center;gap:calc(var(--u)*1.2)}
+.badge{background:var(--teal);color:#fff;font-weight:800;border-radius:calc(var(--u)*.8);padding:calc(var(--u)*.4) calc(var(--u)*1);font-size:calc(var(--u)*1.6)}
+.cover{position:absolute;inset:0;background:radial-gradient(circle at 78% 40%,#e3f3ec,#f8f5ec 60%)}
+.cover .big{position:absolute;left:5%;top:20%;width:52%;font-weight:850;font-size:calc(var(--u)*5.2);line-height:1.05;letter-spacing:-.02em}
+.cover .big em{font-style:normal;color:var(--teal)}
+.cover .sub{position:absolute;left:5%;top:58%;font-size:calc(var(--u)*1.6);color:#4b5563;font-weight:600}
+.cover .who{position:absolute;left:5%;top:70%;font-size:calc(var(--u)*1.9);font-weight:800;color:var(--gold)}
+.cover .who span{display:block;font-size:.62em;color:#4b5563;font-weight:600;margin-top:.3em}
+.cover .art{position:absolute;right:3%;top:14%;width:42%;height:72%}
+.lang-kn .kick,.lang-hi .kick{letter-spacing:.03em}
+.road{display:grid;grid-template-columns:1fr 1fr;gap:calc(var(--u)*1);width:100%}
+.road .card{align-items:center}
+/* standard deck: navy header band */
+.std #s{background:#fdfcf8}
+.std .cover .bar{height:10px;background:linear-gradient(90deg,#0d7f70 0 66%,#d4af37 66% 100%)}
+.std .cover .kick{color:var(--gold)}
+.std .bar{height:auto;top:0;bottom:auto;height:17.5%;background:linear-gradient(120deg,#0b2a3a,#0f4c4a)}
+.std .kick{color:#e8c766;top:3.6%}
+.std .ttl{color:#fff;top:7.4%;font-size:calc(var(--u)*2.8)}
+.std .ttl em{color:#7fe0cf}
+.std .body{top:21.5%}
+.std .card{border-left-width:2px;border-top:calc(var(--u)*.4) solid var(--teal)}
+.std .card:nth-child(4n+2){border-top-color:#c99a1c}.std .card:nth-child(4n+3){border-top-color:#6c48d6}.std .card:nth-child(4n+4){border-top-color:#c24f28}
+</style></head><body><div id="s"></div>
+<script>
+function fit(){ /* shrink text until the body fits */
+  const b = document.querySelector('.body'); if (!b) return; let f = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--f'));
+  for (let i = 0; i < 30 && (b.scrollHeight > b.clientHeight + 2 || [...b.querySelectorAll('.cards,.road')].some(c => c.scrollHeight > b.clientHeight + 2)); i++){ f *= .95; document.documentElement.style.setProperty('--f', f + 'px'); }
+}
+window.renderSlide = function(s){
+  const W = innerWidth, u = W / 100 * 1.04; const large = s.kind === 'large';
+  document.documentElement.style.setProperty('--u', u + 'px');
+  document.documentElement.style.setProperty('--f', (large ? u * 1.72 : u * 1.36) + 'px');
+  document.body.className = (large ? "large" : "std") + " lang-" + s.lang;
+  const U = s.ui, el = document.getElementById('s');
+  const foot = `<div class="foot"><span><b>${U.foot}</b> · ${U.by}</span><span>${s.n}</span></div>`;
+  const head = (t, hl) => `<div class="bar"></div><div class="kick">${U.kick}</div><div class="ttl" data-cue="0">${t}${hl ? ' — <em>' + hl + '</em>' : ''}</div>`;
+  let h = '';
+  if (s.type === 'cover' || s.type === 'close'){
+    h = `<div class="cover" data-cue="0"><div class="bar"></div><div class="kick">${U.kick}</div>
+      <div class="big">${s.type === 'cover' ? U.ch + '<br><em>' + U.chap + '</em>' : '<em>' + U.thanks + '</em>'}</div>
+      <div class="sub">${s.type === 'cover' ? U.sub : U.chap}</div><div class="who">${U.by}<span>${U.role}</span></div>
+      <div class="art">${s.type === 'cover' ? V.mitosisRow() : V.meiosisRow()}</div></div>`;
+  } else if (s.type === 'road'){
+    h = head(s.title) + `<div class="body"><div class="road">${s.items.map((x, i) => `<div class="card" data-cue="${i + 1}"><span class="num">${i + 1}</span><span>${x}</span></div>`).join('')}</div></div>` + foot;
+  } else if (s.type === 'part'){
+    h = `<div class="bar"></div><div class="kick">${U.kick}</div><div class="ttl" data-cue="0" style="top:8.2%"><span class="badge">${U.part} ${s.pn}</span>&nbsp; ${s.title}</div>
+      <div class="body"><div class="cards">${s.items.map((x, i) => `<div class="card" data-cue="${i + 1}"><span class="num">✓</span><span>${x}</span></div>`).join('')}</div></div>` + foot;
+  } else if (s.type === 'sec'){
+    const two = !s.vis && s.cards.length > 2;
+    h = head(s.title, s.hl) + `<div class="body"><div class="cards ${two ? 'two' : ''}">${s.cards.map((x, i) => `<div class="card" data-cue="${i + 1}"><span class="num">${i + 1}</span><span>${x}</span></div>`).join('')}</div>${s.vis ? `<div class="vis">${V[s.vis]()}</div>` : ''}</div>` + foot;
+  } else if (s.type === 'table'){
+    const t = s.table;
+    h = head(t.title) + `<div class="body"><div class="cards"><table><tr>${t.headers.map(x => `<th>${x}</th>`).join('')}</tr>${t.rows.map((r, i) => `<tr data-cue="${i + 1}">${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</table></div>${s.vis ? `<div class="vis">${V[s.vis]()}</div>` : ''}</div>` + foot;
+  } else if (s.type === 'rem'){
+    h = head(s.title) + `<div class="body"><div class="cards">${s.items.map((x, i) => `<div class="card" data-cue="${i + 1}"><span class="num">★</span><span>${x}</span></div>`).join('')}</div></div>` + foot;
+  }
+  el.innerHTML = h; fit();
+  const rects = {}; el.querySelectorAll('[data-cue]').forEach(n => { const r = n.getBoundingClientRect(); rects[n.dataset.cue] = [r.left, r.top, r.width, r.height]; });
+  return rects;
+};
+</script></body></html>

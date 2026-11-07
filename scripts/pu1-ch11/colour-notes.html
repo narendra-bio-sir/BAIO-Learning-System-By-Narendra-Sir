@@ -1,0 +1,92 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="../../notes/src/draw.js"></script><script src="ps-draw.js"></script><script src="diagrams.js"></script><script src="vis.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1100px;height:1448px;overflow:hidden;font-family:Inter,'Noto Color Emoji',sans-serif;color:#1b2333;background:#fffdf6}
+.hero{height:250px;position:relative;background:linear-gradient(120deg,#0b3d2e,#1b7a4f 55%,#4fa83d);overflow:hidden;color:#fff}
+.hero:before{content:'';position:absolute;right:-80px;top:-120px;width:420px;height:420px;border-radius:50%;background:rgba(255,255,255,.08)}
+.logo{position:absolute;left:26px;top:26px;width:118px;height:118px;border-radius:50%;background:#fff;color:#0b3d2e;display:flex;flex-direction:column;align-items:center;justify-content:center;font:900 30px Inter;border:5px solid #d8b04a}
+.logo small{font:700 11px Inter;color:#555}
+.who{position:absolute;left:165px;top:22px;font:italic 800 40px 'Kalam',cursive;color:#fff}
+.who span{display:inline-block;background:#f2d24b;color:#1b2a12;font:700 17px Inter;padding:4px 14px;border-radius:6px;margin-left:10px;transform:rotate(-2deg)}
+.cls{position:absolute;right:24px;top:22px;background:#0d1a33;color:#fff;border-radius:12px;padding:8px 16px;text-align:center;font:900 26px Inter;line-height:1.05;border:2px solid #f2d24b}
+.cls small{display:block;font:700 12px Inter;color:#f2d24b;letter-spacing:1px;margin-top:4px}
+.h1{position:absolute;left:165px;top:80px;right:200px;font:900 50px/1 Inter;letter-spacing:-1px;text-transform:uppercase;color:#fff;text-shadow:0 4px 0 #0b2a1e}
+.h1 em{font-style:normal;color:#f7d046;display:block}
+.tag{position:absolute;left:165px;bottom:14px;background:rgba(255,255,255,.92);color:#0b3d2e;font:700 19px Inter;padding:6px 18px;border-radius:30px}
+.wrap{padding:16px 22px 0;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sec{border:3px solid var(--c);border-radius:18px;overflow:hidden;background:#fff}
+.sec.full{grid-column:1/3}
+.sh{background:var(--c);color:#fff;font:800 24px Inter;display:flex;align-items:center;gap:12px;padding:8px 14px;text-transform:uppercase;letter-spacing:.5px}
+.sh b{background:#fff;color:var(--c);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:900 21px Inter}
+.sb{padding:10px 14px;font:500 18.5px/1.42 Inter}
+.sb b{color:#0b3d2e}.sb li{margin:3px 0 3px 20px}
+.sb .hl{background:#fff3c4;border-radius:6px;padding:0 4px;font-weight:700}
+.sb img{width:100%;max-height:var(--ih,460px);object-fit:contain;display:block;border-radius:10px;margin-top:6px}
+.sb svg{width:100%;height:auto;max-height:var(--sh,230px);display:block;margin-top:4px}
+.sb{font-size:var(--fs,18.5px)!important}
+table{width:100%;border-collapse:collapse;font:500 17px Inter;margin-top:4px}
+th{background:var(--c);color:#fff;padding:6px 8px;text-align:left}
+td{padding:5px 8px;border-bottom:1px solid #eee}
+tr:nth-child(even) td{background:#f8f6ef}
+.note{margin-top:8px;background:#fff7d6;border:2px dashed #e0b82e;border-radius:12px;padding:8px 12px;font:600 17.5px/1.4 Inter}
+.ft{position:absolute;left:0;right:0;bottom:0;height:118px;background:#0d1a33;color:#fff}
+.ft .row{display:flex;justify-content:space-around;padding:12px 30px 6px;font:800 16px Inter;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,.15)}
+.ft .sig{text-align:center;font:italic 800 26px 'Kalam',cursive;color:#f2d24b;margin-top:8px}
+.ft .sig span{font:800 22px Inter;color:#fff;font-style:normal;margin-left:10px}
+.pg{position:absolute;right:20px;bottom:10px;font:700 14px Inter;color:#9aa5b8}
+</style></head><body><div id="p"></div>
+<script>
+const R = '#d63c3c', G = '#1f8a4c', Bl = '#1f6fb0', Pu = '#6c48d6', O = '#d9761e', T = '#0d7f70';
+const img = n => `<img src="../../pu1-ch11-assets/${n}.jpg">`;
+const PAGES = [
+ { t1: 'Photosynthesis', t2: 'Early Experiments', tag: 'How we found out', secs: [
+  [G, 'What is photosynthesis?', `<ul><li>A <b>physico-chemical process</b>: green plants use <b>light energy</b> to make organic compounds.</li><li>Source of <span class="hl">all food on Earth</span> and of the <b>O₂</b> in the air.</li><li>Needs <b>chlorophyll, light, CO₂</b> (variegated-leaf and half-leaf experiments).</li></ul>`],
+  [O, 'Half-leaf experiment', `Part of a leaf in a test tube with <b>KOH</b>-soaked cotton (absorbs CO₂) → <span class="hl">no starch</span> in that part → CO₂ is needed.${V.halfLeaf()}`],
+  [Bl, 'Scientists & discoveries', `<table><tr><th>Scientist</th><th>Finding</th></tr><tr><td><b>Priestley</b> (1770)</td><td>Mint plant restores air fouled by candle / mouse</td></tr><tr><td><b>Ingenhousz</b></td><td>Needs <b>sunlight</b>; only <b>green parts</b> release O₂ (bubbles)</td></tr><tr><td><b>Sachs</b> (1854)</td><td>Glucose made in green parts, stored as <b>starch</b>; chlorophyll in chloroplasts</td></tr><tr><td><b>Engelmann</b></td><td><i>Cladophora</i> + aerobic bacteria → <b>first action spectrum</b> (blue &amp; red)</td></tr><tr><td><b>van Niel</b></td><td>Purple &amp; green (sulphur) bacteria → O₂ comes from <b>H₂O</b></td></tr><tr><td><b>Ruben &amp; Kamen</b> (1941)</td><td>¹⁸O in water → ¹⁸O₂ released (<i>Chlorella</i>)</td></tr></table>`, 'full'],
+  [R, 'Priestley\'s bell jar', V.belljar()],
+  [Pu, 'The equations', `<ul><li>van Niel: <b>2H₂A + CO₂ → 2A + CH₂O + H₂O</b></li><li>Sulphur bacteria: H₂S donor → <b>sulphur</b>, not O₂</li></ul><div class="note">6CO₂ + 12H₂O → C₆H₁₂O₆ + 6H₂O + 6O₂<br>All 6 O₂ come from the 12 H₂O.</div>`]]},
+ { t1: 'Chloroplast', t2: '& Pigments', tag: 'The site of photosynthesis', secs: [
+  [G, 'Structure of chloroplast', img('diag-chloroplast'), 'full'],
+  [Bl, 'Division of labour', `<ul><li><b>Membrane system</b> (grana + stroma lamellae) → traps light, makes <span class="hl">ATP &amp; NADPH</span> = light reaction.</li><li><b>Stroma</b> → enzymes fix CO₂ into <b>sugar</b> = "dark" reaction (not run directly by light).</li><li>Chloroplasts line up along mesophyll walls for <b>optimum light</b>.</li></ul>`],
+  [O, 'Four pigments', `<table><tr><th>Pigment</th><th>Colour</th></tr><tr><td><b>Chlorophyll a</b></td><td>Bright / blue-green — chief pigment</td></tr><tr><td>Chlorophyll b</td><td>Yellow-green</td></tr><tr><td>Xanthophylls</td><td>Yellow</td></tr><tr><td>Carotenoids</td><td>Yellow to yellow-orange</td></tr></table><div class="note">Accessory pigments widen the range of light used and protect chl a from <b>photo-oxidation</b>.</div>`],
+  [Pu, 'Absorption vs action spectrum', `Chl a absorbs most in <b>blue &amp; red</b>; rate of photosynthesis is also highest there → chl a is the <span class="hl">chief pigment</span>.${V.spectrum()}`, 'full']]},
+ { t1: 'Light Reaction', t2: 'Photolysis', tag: 'Photochemical phase', secs: [
+  [G, 'What happens?', `<ul><li>Light absorption · <b>water splitting</b> · <b>O₂ release</b> · <b>ATP + NADPH</b> formation.</li><li>Takes place on <b>thylakoid membranes</b>.</li></ul>`],
+  [Bl, 'PS I vs PS II', `<table><tr><th></th><th>PS I</th><th>PS II</th></tr><tr><td>Reaction centre</td><td><b>P700</b></td><td><b>P680</b></td></tr><tr><td>Water splitting</td><td>No</td><td><b>Yes</b> (Mn, Cl)</td></tr><tr><td>Cyclic flow</td><td>Yes</td><td>No</td></tr></table>Named in <span class="hl">order of discovery</span>, not of working.`],
+  [O, 'Light harvesting complex', `Hundreds of pigments + proteins = <b>antenna</b>; one <b>chlorophyll a</b> = <span class="hl">reaction centre</span>.${V.lhc()}`, 'full'],
+  [R, 'Photolysis of water', `<div class="note">2H₂O → 4H⁺ + O₂ + 4e⁻</div><ul><li>Linked to <b>PS II</b>, inner (lumen) side.</li><li>e⁻ replace those lost by P680; H⁺ stay in lumen; O₂ = by-product.</li></ul>`],
+  [Pu, 'Hill reaction (1939)', `Isolated chloroplasts + electron acceptor, in light → <b>O₂ released without CO₂</b>. Proves O₂ comes from water in the light reaction.${V.hill()}`]]},
+ { t1: 'Z Scheme', t2: '& Cyclic Flow', tag: 'Photophosphorylation', secs: [
+  [G, 'Non-cyclic photophosphorylation (Z scheme)', img('diag-z-scheme'), 'full'],
+  [Bl, 'Path of electrons', `<ul><li>H₂O → <b>P680</b> → acceptor → <b>ETS (cytochromes)</b> → <b>P700</b> → acceptor → <b>NADP reductase</b> → NADPH.</li><li>Uphill–downhill on the <b>redox scale</b> = "Z".</li><li>Products: <span class="hl">ATP + NADPH + O₂</span>.</li></ul>`],
+  [R, 'Cyclic photophosphorylation', `<ul><li><b>PS I only</b>; e⁻ returns to PS I.</li><li>In <b>stroma lamellae</b> (no PS II, no NADP reductase).</li><li>Also when only light <b>&gt; 680 nm</b> is available.</li><li><span class="hl">ATP only</span> — no NADPH, no O₂.</li></ul>${V.cyclic()}`, 'full']]},
+ { t1: 'Chemiosmosis', t2: 'Making ATP', tag: 'Peter Mitchell (1961)', secs: [
+  [G, 'ATP synthesis through chemiosmosis', img('diag-chemiosmosis'), 'full'],
+  [O, 'Why a proton gradient?', `<ol style="margin-left:20px"><li>Water splits on the <b>lumen</b> side → H⁺ in lumen.</li><li>H carrier takes H⁺ from <b>stroma</b>, releases into lumen.</li><li>NADP reductase uses H⁺ from <b>stroma</b>.</li></ol><div class="note">Lumen: high H⁺, low pH · Stroma: low H⁺</div>`],
+  [Bl, 'ATP synthase', `<ul><li><b>CF₀</b> — in the membrane, proton channel.</li><li><b>CF₁</b> — on the stroma side; changes shape → makes ATP.</li><li><span class="hl">~3 H⁺ out → 1 ATP</span>.</li><li>Needs: membrane, proton pump, gradient, ATP synthase.</li></ul>`]]},
+ { t1: 'Calvin Cycle', t2: 'Biosynthetic Phase', tag: 'The C₃ pathway', secs: [
+  [G, 'The three stages', img('diag-calvin'), 'full'],
+  [Bl, 'Key facts', `<ul><li><b>Melvin Calvin</b>, ¹⁴C, algae.</li><li>First product: <b>3-PGA</b> (3C) → <b>C₃ plants</b>.</li><li>Acceptor: <span class="hl">RuBP</span> (5C ketose) · enzyme <b>RuBisCO</b>.</li><li>Occurs in <b>all</b> photosynthetic plants.</li></ul>`],
+  [O, 'Count it', `<table><tr><th></th><th>ATP</th><th>NADPH</th></tr><tr><td>Per CO₂</td><td>3</td><td>2</td></tr><tr><td>Per glucose (6 turns)</td><td><b>18</b></td><td><b>12</b></td></tr></table><div class="note">The extra ATP need is met by <b>cyclic</b> photophosphorylation.</div>`]]},
+ { t1: 'C₄ Pathway', t2: '& Photorespiration', tag: 'Hatch and Slack', secs: [
+  [G, 'C₄ pathway', img('diag-c4'), 'full'],
+  [O, 'Kranz anatomy', `Large <b>bundle sheath cells</b> in a wreath around veins: many chloroplasts, <b>thick gas-tight walls</b>, no intercellular spaces.${V.kranz()}`],
+  [R, 'Photorespiration (C₂)', `<ul><li>RuBisCO binds <b>O₂</b> → 1 PGA + 1 <b>phosphoglycolate</b>.</li><li>No sugar, no ATP; ATP used, CO₂ lost → <span class="hl">wasteful</span>.</li><li>Chloroplast → peroxisome → mitochondrion.</li><li><b>Absent in C₄</b> plants.</li></ul>`]]},
+ { t1: 'C₃ vs C₄', t2: '& Limiting Factors', tag: 'Compare and apply', secs: [
+  [Pu, 'C₃ vs C₄ plants', `<table><tr><th>Feature</th><th>C₃</th><th>C₄</th></tr><tr><td>Acceptor</td><td>RuBP (5C)</td><td>PEP (3C)</td></tr><tr><td>First product</td><td>3-PGA</td><td>OAA (4C)</td></tr><tr><td>Enzyme</td><td>RuBisCO</td><td>PEPcase</td></tr><tr><td>Cell types</td><td>1</td><td>2 (Kranz)</td></tr><tr><td>Photorespiration</td><td>Yes</td><td>Negligible</td></tr><tr><td>Optimum temp.</td><td>10–25 °C</td><td>30–45 °C</td></tr><tr><td>Examples</td><td>Wheat, rice</td><td>Maize, sugarcane</td></tr></table>`, 'full'],
+  [G, 'Blackman (1905)', `Rate is set by the factor <span class="hl">nearest its minimum</span>.${V.lightgraph()}`],
+  [O, 'The factors', `<ul><li><b>Light:</b> saturates at ~<b>10%</b> sunlight; excess → solarisation.</li><li><b>CO₂:</b> 0.03–0.04% — <b>major limit</b>; C₄ saturate ~360 µl/L, C₃ above 450 µl/L (tomato, capsicum in CO₂-rich greenhouses).</li><li><b>Temperature:</b> controls dark reactions.</li><li><b>Water:</b> stress closes stomata, wilts leaves.</li></ul>`]]}
+];
+const n = +new URLSearchParams(location.search).get('p') || 1, pg = PAGES[n - 1];
+document.getElementById('p').innerHTML = `<div class="hero"><div class="logo">BAIO<small>Learning System</small></div>
+  <div class="who">Narendra Sir <span>Biology Lecturer, Founder/CEO</span></div><div class="cls">Class 11<br>BIOLOGY<small>NCERT BASED<br>SHORT NOTES</small></div>
+  <div class="h1">${pg.t1}<em>${pg.t2}</em></div><div class="tag">Chapter 11 · Photosynthesis in Higher Plants · ${pg.tag}</div></div>
+  <div class="wrap">${pg.secs.map((s, i) => `<div class="sec ${s[3] || ''}" style="--c:${s[0]}"><div class="sh"><b>${i + 1}</b>${s[1]}</div><div class="sb">${s[2]}</div></div>`).join('')}</div>
+  <div class="ft"><div class="row"><span>📖 NCERT BASED</span><span>🎯 NEET FOCUSED</span><span>🧠 EASY REVISION</span><span>📝 CONCEPT CLARITY</span></div><div class="sig">Narendra Sir – Biology Lecturer, Founder/CEO<span>· BAIO Learning System</span></div></div><div class="pg">${n} / ${PAGES.length}</div>`;
+window.PAGES_N = PAGES.length;
+/* report overflow so the builder can warn */
+window.OVER = () => { const w = document.querySelector('.wrap'); return w.getBoundingClientRect().bottom > 1448 - 124; };
+window.FIT = () => { let ih = 460, sh = 230, fs = 18.5; const st = document.documentElement.style;
+  for (let k = 0; k < 40 && OVER(); k++){ ih *= .93; sh *= .93; if (k > 8) fs *= .985; st.setProperty('--ih', ih + 'px'); st.setProperty('--sh', sh + 'px'); st.setProperty('--fs', fs + 'px'); } };
+</script></body></html>

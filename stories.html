@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script src="baio-speak.js?v=3"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Biology Storybooks | BAIO Learning System</title>
+<meta name="description" content="Chapter-wise Biology storybooks for I PUC and II PUC — Bindu and Prof. BAIO make every term and definition easy to remember. Read aloud, quiz and PDF.">
+<meta property="og:title" content="BAIO Biology Storybooks — learn every chapter as a story">
+<meta property="og:description" content="31 illustrated storybooks with key terms, remember boxes, read-aloud and quizzes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,500;0,600;1,500&family=Noto+Sans+Kannada:wght@500;700&family=Noto+Sans+Devanagari:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="games/game.css?v=1">
+<style>
+.shelf h3{font-size:15px;color:var(--gold);margin-top:18px}
+.books{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:10px}
+.cover{position:relative;display:flex;flex-direction:column;justify-content:space-between;aspect-ratio:3/4;padding:14px 12px;border-radius:6px 16px 16px 6px;color:#fff;text-align:left;cursor:pointer;border:0;box-shadow:inset 6px 0 0 rgba(0,0,0,.25),0 6px 16px rgba(0,0,0,.3);overflow:hidden}
+.cover .ce{font-size:44px;filter:drop-shadow(0 3px 4px rgba(0,0,0,.3))}
+.cover b{font:800 15px/1.2 'Space Grotesk',sans-serif;text-shadow:0 1px 3px rgba(0,0,0,.35)}
+.cover small{display:block;font:700 10.5px Inter;opacity:.9;margin-top:4px}
+.cover .prog{position:absolute;left:0;right:0;bottom:0;height:5px;background:rgba(0,0,0,.25);margin:0;border-radius:0}
+.cover .prog i{background:#fff}
+.cover .alt{position:absolute;left:10px;top:8px;font:800 10px Inter;background:#ffe14d;color:#3a2a00;padding:3px 8px;border-radius:999px;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.swap{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.swap button{flex:1;min-width:140px;padding:9px 10px;border-radius:12px;border:1.5px solid var(--line);background:var(--panel);color:var(--ink);font:700 12.5px Inter,sans-serif;cursor:pointer;text-align:left}
+.swap button.on{border-color:var(--gold);background:linear-gradient(135deg,rgba(212,175,55,.22),rgba(212,175,55,.06))}
+.swap button small{display:block;font-weight:600;font-size:11px;opacity:.75;margin-top:2px}
+.cover .done{position:absolute;right:8px;top:8px;font:800 11px Inter;background:rgba(0,0,0,.35);padding:3px 7px;border-radius:999px}
+/* reader */
+.rhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px}
+.book{position:relative;margin-top:10px;perspective:1600px}
+.page{background:#fffaf0;color:#2a2418;border-radius:6px 18px 18px 6px;box-shadow:inset 8px 0 12px -6px rgba(0,0,0,.25),0 10px 24px rgba(0,0,0,.35);overflow:hidden;min-height:520px;transform-origin:left center;font-family:'Lora','Noto Sans Kannada','Noto Sans Devanagari',Georgia,serif}
+[data-theme="light"] .page{box-shadow:inset 8px 0 12px -6px rgba(0,0,0,.18),0 8px 20px rgba(0,0,0,.15)}
+.page.flip-next{animation:flipN .45s ease}
+.page.flip-prev{animation:flipP .45s ease}
+@keyframes flipN{0%{transform:rotateY(0)}49%{transform:rotateY(-80deg);opacity:.6}51%{transform:rotateY(80deg);opacity:.6}100%{transform:rotateY(0)}}
+@keyframes flipP{0%{transform:rotateY(0)}49%{transform:rotateY(80deg);opacity:.6}51%{transform:rotateY(-80deg);opacity:.6}100%{transform:rotateY(0)}}
+.scene{position:relative;height:190px;display:flex;align-items:flex-end;justify-content:center;gap:10px;padding-bottom:18px;overflow:hidden}
+.scene::after{content:'';position:absolute;left:0;right:0;bottom:0;height:36px;background:linear-gradient(transparent,rgba(255,250,240,1))}
+.scene span{position:relative;z-index:1;font-size:56px;line-height:1;animation:bob 3s ease-in-out infinite;filter:drop-shadow(0 4px 4px rgba(0,0,0,.25))}
+.scene span:nth-child(2){animation-delay:-.8s;font-size:64px}.scene span:nth-child(3){animation-delay:-1.6s}.scene span:nth-child(4){animation-delay:-2.2s;font-size:46px}
+@keyframes bob{50%{transform:translateY(-8px)}}
+.scene .dot{position:absolute;border-radius:50%;background:rgba(255,255,255,.35);z-index:0}
+.pbody{padding:6px 20px 18px}
+.pno{font:800 11px Inter;letter-spacing:2px;text-transform:uppercase;color:#a0803a}
+.page h2{font:700 23px/1.25 'Space Grotesk',sans-serif;color:#2a2418;margin-top:4px}
+.story{font-size:17px;line-height:1.75;margin-top:10px}
+.story mark{background:#ffe9a8;color:#1f1a10;font-weight:700;padding:.06em .3em;margin:0 .04em;cursor:pointer;border-radius:.35em;box-shadow:inset 0 -.14em 0 #f0b92e;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.story mark.nw{white-space:nowrap}
+.story mark.say{background:#ffd34d}
+.remember{margin-top:14px;padding:12px 14px;border-radius:12px;background:#eaf7ef;border:1.5px dashed #2e9e4f;font:600 14px/1.6 Inter,sans-serif;color:#17402a}
+.remember b{display:block;font:800 11.5px Inter;letter-spacing:1.5px;color:#2e9e4f;margin-bottom:2px}
+html[lang=kn] .pno,html[lang=hi] .pno,html[lang=kn] .remember b,html[lang=hi] .remember b{letter-spacing:0;font-size:12.5px}
+html[lang=kn] .story,html[lang=hi] .story{line-height:1.75}
+.coverpage{min-height:520px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 22px;color:#fff}
+.coverpage .ce{font-size:96px;filter:drop-shadow(0 6px 8px rgba(0,0,0,.3));animation:bob 3s ease-in-out infinite}
+.coverpage h2{color:#fff;font-size:30px;margin-top:14px;text-shadow:0 2px 6px rgba(0,0,0,.3)}
+.coverpage p{font:700 13px Inter;opacity:.95;margin:10px 0 0}
+.coverpage .star{margin-top:22px;font:600 15px 'Lora','Noto Sans Kannada','Noto Sans Devanagari',serif;background:rgba(0,0,0,.2);padding:8px 14px;border-radius:999px}
+.terms{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.terms button{padding:6px 10px;border-radius:999px;border:1px solid #e3d6b5;background:#fff3d6;color:#3a2f16;font:600 13px Inter;cursor:pointer}
+.terms button small{color:#a0803a;font-weight:800;margin-left:4px}
+.qz{margin-top:12px;display:grid;gap:12px}
+.qz .q{font:700 15.5px/1.45 Inter;color:#2a2418}
+.qz .o{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.qz .o button{padding:10px 8px;border-radius:12px;border:1.5px solid #e3d6b5;background:#fffdf7;color:#2a2418;font:600 13.5px Inter;cursor:pointer;min-height:44px}
+.qz .o button.ok{background:#2fbf71;border-color:#2fbf71;color:#fff}
+.qz .o button.bad{border-color:#e7695b;color:#c33a2c;text-decoration:line-through}
+.qscore{margin-top:14px;text-align:center;font:800 20px 'Space Grotesk',sans-serif;color:#2a2418}
+.ctrl{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px}
+.ctrl .btn{min-width:56px}
+.dots{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;flex:1}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--line);cursor:pointer}
+.dots i.on{background:var(--gold);transform:scale(1.3)}
+.tools2{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:10px}
+.tbtn{padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:700 12.5px Inter,sans-serif;cursor:pointer;min-height:40px;text-decoration:none}
+.tbtn.on{border-color:var(--teal);color:var(--teal)}
+/* print / PDF layout */
+@media print{ @page{size:A5;margin:0} body{background:#fff} .topnav,.wrap>*:not(#printArea){display:none!important} #printArea{display:block!important} }
+#printArea{display:none}
+.pp{width:148mm;height:209mm;page-break-after:always;break-after:page;overflow:hidden;position:relative;background:#fffaf0;color:#2a2418;font-family:'Lora','Noto Sans Kannada','Noto Sans Devanagari',Georgia,serif}
+.pp .scene{height:80mm}
+.pp .scene span{animation:none;font-size:60px}.pp .scene span:nth-child(2){font-size:72px}
+.pp .pbody{padding:2mm 9mm}
+.pp h2{font:700 27px/1.25 'Space Grotesk',sans-serif;margin-top:1mm}
+.pp .story{font-size:20.5px;line-height:1.66;margin-top:4mm}
+.pp .remember{font-size:17px;margin-top:6mm;padding:4mm 5mm}
+.pp.pq .scene{height:38mm}.pp.pq .story{font-size:11px!important;line-height:1.4;margin-top:2mm}.pp.pq .scene span{font-size:46px}.pp.pq .scene span:nth-child(2){font-size:52px}
+.pp .foot{position:absolute;left:0;right:0;bottom:4mm;text-align:center;font:600 9px Inter;color:#a0803a}
+.pp.cov{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;padding:10mm}
+.pp.cov .ce{font-size:110px}.pp.cov h2{color:#fff;font-size:28px;margin-top:6mm}
+.pp .qz .o{grid-template-columns:1fr 1fr}.pp .qz .q{font-size:14px}.pp .qz .o button{min-height:0;padding:1.6mm;font-size:11px}
+.pp .terms button{font-size:12.5px;padding:1.2mm 2.6mm}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero" id="hero">
+    <div class="eyebrow" data-i18n="eyebrow">BAIO Learning System · Storybooks</div>
+    <h1 data-i18n-html="h1">📚 Biology <span class="accent">Storybooks</span></h1>
+    <p data-i18n="intro">Every chapter as a story! Join Bindu 👧 and Prof. BAIO 🦉 on an adventure — key terms are highlighted, every page has a Remember box, and each book ends with a quiz.</p>
+  </section>
+  <section id="library"></section>
+  <section id="reader" hidden>
+    <div class="rhead"><button class="tbtn" id="back">← <span data-i18n="all">All books</span></button><span class="muted" id="rch"></span></div>
+    <div class="swap" id="swap" hidden></div>
+    <div class="book"><div class="page" id="page"></div></div>
+    <div class="ctrl"><button class="btn" id="prev" aria-label="Previous page">◀</button><div class="dots" id="dots"></div><button class="btn primary" id="next" aria-label="Next page">▶</button></div>
+    <div class="tools2">
+      <button class="tbtn" id="tRead" data-i18n="read">🔊 Read aloud</button>
+      <button class="tbtn" id="tAuto" data-i18n="auto">▶️ Auto-play story</button>
+      <a class="tbtn" id="tPdf" download data-i18n="pdf">⬇ PDF book</a>
+      <a class="tbtn" id="tCh" data-i18n="chapter">📘 Open chapter</a>
+      <button class="tbtn" id="tShare" data-i18n="share">📤 Share</button>
+    </div>
+  </section>
+  <div id="printArea"></div>
+  <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
+</div>
+<script src="games/common.js?v=4"></script>
+<script src="stories/books-pu1.js?v=1"></script>
+<script src="stories/books-pu2.js?v=1"></script>
+<script src="stories/books-alt.js?v=1"></script>
+<script>
+const PRINT=/[?&]print=1/.test(location.search);
+if(!PRINT) GZ.nav();
+GZ.i18n({
+ en:{eyebrow:'BAIO Learning System · Storybooks', h1:'📚 Biology <span class="accent">Storybooks</span>', intro:'Every chapter as a story! Join Bindu 👧 and Prof. BAIO 🦉 on an adventure — key terms are highlighted, every page has a Remember box, and each book ends with a quiz.',
+  all:'All books', read:'🔊 Read aloud', auto:'▶️ Auto-play story', pdf:'⬇ PDF book', chapter:'📘 Open chapter', share:'📤 Share',
+  pageOf:'Page {a} of {b}', remember:'💡 REMEMBER', rememberSay:'Remember', keyTerms:'Key terms', wordsMet:'Words you met in this story', tapWord:'Tap a word to jump to its page. Can you explain each one?', quickQuiz:'Quick quiz', doYou:'Do you remember?', starring:'Starring Bindu 👧 &amp; Prof. BAIO 🦉', starringSay:'Starring Bindu and Professor BAIO.', by:'A BAIO storybook by Narendra Sir', answers:'Answers', story1:'📖 Story 1', story2:'📗 Story 2', bonus:'⭐ Bonus stories', bonusNote:'Extra storybooks on topics from the syllabus', starringX:'Starring', shareMsg:'📚 Read "{t}" — a Biology storybook for {c} on BAIO by Narendra Sir:'},
+ kn:{eyebrow:'BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್ · ಕಥಾ ಪುಸ್ತಕಗಳು', h1:'📚 ಜೀವಶಾಸ್ತ್ರ <span class="accent">ಕಥಾ ಪುಸ್ತಕಗಳು</span>', intro:'ಪ್ರತಿ ಅಧ್ಯಾಯ ಒಂದು ಕಥೆ! ಬಿಂದು 👧 ಮತ್ತು ಪ್ರೊ. BAIO 🦉 ಜೊತೆ ಸಾಹಸಕ್ಕೆ ಬನ್ನಿ — ಮುಖ್ಯ ಪದಗಳು (ಇಂಗ್ಲಿಷ್‌ನಲ್ಲೇ) ಹೈಲೈಟ್ ಆಗಿವೆ, ಪ್ರತಿ ಪುಟದಲ್ಲಿ "ನೆನಪಿಡಿ" ಪೆಟ್ಟಿಗೆ, ಕೊನೆಯಲ್ಲಿ ರಸಪ್ರಶ್ನೆ.',
+  all:'ಎಲ್ಲ ಪುಸ್ತಕಗಳು', read:'🔊 ಓದಿ ಹೇಳು', auto:'▶️ ಕಥೆ ಆಟೋ-ಪ್ಲೇ', pdf:'⬇ PDF ಪುಸ್ತಕ', chapter:'📘 ಅಧ್ಯಾಯ ತೆರೆಯಿರಿ', share:'📤 ಹಂಚಿಕೊಳ್ಳಿ',
+  pageOf:'ಪುಟ {a} / {b}', remember:'💡 ನೆನಪಿಡಿ', rememberSay:'ನೆನಪಿಡಿ', keyTerms:'ಮುಖ್ಯ ಪದಗಳು', wordsMet:'ಈ ಕಥೆಯಲ್ಲಿ ಬಂದ ಪದಗಳು', tapWord:'ಪದವನ್ನು ಒತ್ತಿದರೆ ಅದರ ಪುಟಕ್ಕೆ ಹೋಗುತ್ತದೆ. ಪ್ರತಿಯೊಂದನ್ನೂ ವಿವರಿಸಬಲ್ಲಿರಾ?', quickQuiz:'ಕಿರು ರಸಪ್ರಶ್ನೆ', doYou:'ನಿಮಗೆ ನೆನಪಿದೆಯೇ?', starring:'ಬಿಂದು 👧 &amp; ಪ್ರೊ. BAIO 🦉 ಅಭಿನಯಿಸಿದ ಕಥೆ', starringSay:'ಬಿಂದು ಮತ್ತು ಪ್ರೊಫೆಸರ್ BAIO ಅವರ ಕಥೆ.', by:'ನರೇಂದ್ರ ಸರ್ ಅವರ BAIO ಕಥಾ ಪುಸ್ತಕ', answers:'ಉತ್ತರಗಳು', story1:'📖 ಕಥೆ 1', story2:'📗 ಕಥೆ 2', bonus:'⭐ ಬೋನಸ್ ಕಥೆಗಳು', bonusNote:'ಪಠ್ಯಕ್ರಮದ ವಿಷಯಗಳ ಮೇಲೆ ಹೆಚ್ಚುವರಿ ಕಥಾ ಪುಸ್ತಕಗಳು', starringX:'ಪಾತ್ರಗಳು:', shareMsg:'📚 "{t}" ಓದಿ — {c} ಗಾಗಿ ಜೀವಶಾಸ್ತ್ರ ಕಥಾ ಪುಸ್ತಕ, ನರೇಂದ್ರ ಸರ್ ಅವರ BAIO ನಲ್ಲಿ:'},
+ hi:{eyebrow:'BAIO लर्निंग सिस्टम · कहानी की किताबें', h1:'📚 बायोलॉजी <span class="accent">कहानी की किताबें</span>', intro:'हर अध्याय एक कहानी! बिंदु 👧 और प्रो. BAIO 🦉 के साथ सफ़र करो — मुख्य शब्द (अंग्रेज़ी में ही) हाइलाइट हैं, हर पेज पर "याद रखो" बॉक्स, और आख़िर में क्विज़।',
+  all:'सभी किताबें', read:'🔊 पढ़कर सुनाओ', auto:'▶️ कहानी ऑटो-प्ले', pdf:'⬇ PDF किताब', chapter:'📘 अध्याय खोलो', share:'📤 शेयर',
+  pageOf:'पेज {a} / {b}', remember:'💡 याद रखो', rememberSay:'याद रखो', keyTerms:'मुख्य शब्द', wordsMet:'इस कहानी में आए शब्द', tapWord:'किसी शब्द को छुओ और उसके पेज पर पहुँचो। क्या तुम हर शब्द समझा सकते हो?', quickQuiz:'छोटा क्विज़', doYou:'क्या तुम्हें याद है?', starring:'बिंदु 👧 और प्रो. BAIO 🦉 की कहानी', starringSay:'बिंदु और प्रोफ़ेसर BAIO की कहानी।', by:'नरेंद्र सर की BAIO कहानी की किताब', answers:'उत्तर', story1:'📖 कहानी 1', story2:'📗 कहानी 2', bonus:'⭐ बोनस कहानियाँ', bonusNote:'पाठ्यक्रम के विषयों पर अतिरिक्त कहानी की किताबें', starringX:'मुख्य पात्र:', shareMsg:'📚 "{t}" पढ़ो — {c} के लिए बायोलॉजी कहानी की किताब, नरेंद्र सर के BAIO पर:'}});
+const $=s=>document.querySelector(s);
+const BG={lab:['#1f3b4d','#3f7f8f'],forest:['#1d4d2b','#4f9a52'],sea:['#0b3d66','#2a8fc4'],pond:['#1b4f4a','#46a08a'],sky:['#3a7bd5','#a6d4ff'],field:['#6a8f2a','#c9d96a'],desert:['#b8742a','#f0c46a'],night:['#141e3c','#3b3d8e'],garden:['#2d6a3e','#a9dc8f'],city:['#3b3f58','#8a8fb0'],river:['#1f5f7a','#7cc2de'],space:['#090a1f','#4a2b7d'],cell:['#3b1f5c','#9a6fc0']};
+const ids=Object.keys(BOOKS).sort((a,b)=>{ const k=x=>x.replace(/-b$/,'').replace(/ch(\d)$/,'ch0$1')+(x.endsWith('-b')?'~':''); return k(a)<k(b)?-1:k(a)>k(b)?1:0; });
+const starOf=B=>B.star?`${T('starringX')} ${GZ.esc(B.star)}`:T('starring');
+const altOf=id=>BOOKS[id+'-b']?id+'-b':(BOOKS[id]&&BOOKS[id].alt)||null;
+const T=(k,o)=>{ let v=GZ.t(k); if(o) Object.keys(o).forEach(x=>v=v.split('{'+x+'}').join(o[x])); return v; };
+/* translated books live in stories/books-pu1-<lang>.js etc.: BOOKS_I18N[lang][id]={title,ch,p:[[title,text,remember]×8],q:[[question,options?]×5]} */
+window.BOOKS_I18N=window.BOOKS_I18N||{};
+const loaded={en:true};
+function needLang(l,cb){ if(loaded[l]) return cb(); let n=3; const done=()=>{ if(--n===0){ loaded[l]=true; cb(); } };
+  ['pu1','pu2','alt'].forEach(f=>{ const s=document.createElement('script'); s.src=`stories/books-${f}-${l}.js?v=1`; s.onload=done; s.onerror=done; document.head.appendChild(s); }); }
+function loc(id){ const E=BOOKS[id], L=(BOOKS_I18N[GZ.lang]||{})[id]; if(!L) return E;
+  return {...E, title:L.title, ch:L.ch, star:L.s||E.star, pages:E.pages.map((p,i)=>({...p, t:L.p[i][0], x:L.p[i][1], r:L.p[i][2]})), quiz:E.quiz.map((q,i)=>[L.q[i][0], L.q[i][1]||q[1], q[2]])}; }
+const seg=s=>{ try{ return [...new Intl.Segmenter('en',{granularity:'grapheme'}).segment(s)].map(x=>x.segment).filter(x=>x.trim()); }catch(e){ return Array.from(s); } };
+const plain=s=>s.replace(/\[\[|\]\]/g,'');
+const fmt=s=>GZ.esc(s).replace(/\[\[(.+?)\]\]/g,(_,t)=>`<mark${t.length<=24?' class="nw"':''}>${t}</mark>`);
+const termsOf=b=>{ const seen=new Map(); b.pages.forEach((p,i)=>{ (p.x.match(/\[\[(.+?)\]\]/g)||[]).forEach(m=>{ const t=m.slice(2,-2); if(!seen.has(t.toLowerCase())) seen.set(t.toLowerCase(),[t,i+1]); }); }); return [...seen.values()]; };
+const progKey='baio_story_prog';
+const getProg=()=>{ try{ return JSON.parse(localStorage.getItem(progKey)||'{}'); }catch(e){ return {}; } };
+const setProg=(id,n)=>{ const p=getProg(); p[id]=Math.max(p[id]||0,n); try{ localStorage.setItem(progKey,JSON.stringify(p)); }catch(e){} };
+
+function scene(p){
+  const [a,b]=BG[p.bg]||BG.lab; let dots=''; for(let i=0;i<6;i++){ const s=6+((i*37)%18); dots+=`<i class="dot" style="width:${s}px;height:${s}px;left:${(i*53)%92+3}%;top:${(i*29)%60+6}%"></i>`; }
+  return `<div class="scene" style="background:linear-gradient(160deg,${a},${b})">${dots}${seg(p.e).slice(0,5).map(x=>`<span>${x}</span>`).join('')}</div>`;
+}
+function coverHtml(B){ return `<div class="coverpage" style="background:linear-gradient(160deg,${B.color},#0b1b14)"><div class="ce">${B.cover}</div><h2>${GZ.esc(B.title)}</h2><p>${B.ch}</p><div class="star">${starOf(B)}</div><p style="margin-top:18px;opacity:.8">${T('by')}</p></div>`; }
+function pageHtml(B,i){ const p=B.pages[i]; return scene(p)+`<div class="pbody"><div class="pno">${T('pageOf',{a:i+1,b:B.pages.length})}</div><h2>${GZ.esc(p.t)}</h2><div class="story">${fmt(p.x)}</div><div class="remember"><b>${T('remember')}</b>${GZ.esc(p.r)}</div></div>`; }
+function termsHtml(B,print){ return scene({bg:'night',e:'📖🔑✨'})+`<div class="pbody"><div class="pno">${T('keyTerms')}</div><h2>${T('wordsMet')}</h2><p class="story" style="font-size:14.5px">${T('tapWord')}</p><div class="terms">${termsOf(B).map(([t,n])=>`<button data-go="${n}">${GZ.esc(t)}<small>p.${n}</small></button>`).join('')}</div></div>`; }
+function quizHtml(B,print){ return scene({bg:'sky',e:'🦉❓👧'})+`<div class="pbody"><div class="pno">${T('quickQuiz')}</div><h2>${T('doYou')}</h2><div class="qz">${B.quiz.map((q,i)=>`<div><div class="q">${i+1}. ${GZ.esc(q[0])}</div><div class="o">${q[1].map((o,j)=>`<button data-q="${i}" data-o="${j}">${GZ.esc(o)}</button>`).join('')}</div></div>`).join('')}</div>${print?`<p class="story" style="font-size:11px;margin-top:4mm">${T('answers')}: ${B.quiz.map((q,i)=>`${i+1}-${q[1][q[2]]}`).join(' · ')}</p>`:'<div class="qscore" id="qscore"></div>'}</div>`; }
+
+/* ---------- library ---------- */
+function drawLibrary(){
+  const pr=getProg(); let best={}; try{ best=JSON.parse(localStorage.getItem('baio_game_best')||'{}'); }catch(e){}
+  const card=id=>{ const B=loc(id), read=pr[id]||0, tot=B.pages.length;
+    return `<button class="cover" data-id="${id}" style="background:linear-gradient(160deg,${B.color},#0b1b14)">${B.alt?`<span class="alt">${T('story2')}</span>`:''}${best['story-'+id]!=null?`<span class="done">✅ ${best['story-'+id]}/5</span>`:''}<span class="ce">${B.cover}</span><span><b>${GZ.esc(B.title)}</b><small>${B.bonus?B.ch.split(' · ').slice(1).join(' · '):B.ch.replace(/^I+ PUC · /,'')}</small></span><span class="prog"><i style="width:${Math.min(100,read/tot*100)}%"></i></span></button>`; };
+  $('#library').innerHTML=[[1,'I PUC'],[2,'II PUC']].map(([n,lbl])=>`<div class="shelf"><h3>${lbl}</h3><div class="books">${ids.filter(id=>id.startsWith('pu'+n)).map(card).join('')}</div></div>`).join('')
+    +`<div class="shelf"><h3>${T('bonus')}</h3><p class="muted" style="font-size:12.5px;margin:2px 0 0">${T('bonusNote')}</p><div class="books">${Object.keys(BOOKS).filter(id=>id.startsWith('bonus')).map(card).join('')}</div></div>`;
+  $('#library').querySelectorAll('.cover').forEach(c=>c.onclick=()=>openBook(c.dataset.id,0));
+}
+
+/* ---------- reader ---------- */
+function drawSwap(){ const base=BOOKS[bid].alt||bid, other=altOf(base), el=$('#swap'); if(!other){ el.hidden=true; el.innerHTML=''; return; }
+  el.hidden=false; el.innerHTML=[[base,'story1'],[other,'story2']].map(([id,k])=>`<button data-id="${id}" class="${id===bid?'on':''}">${T(k)}<small>${GZ.esc(loc(id).title)}</small></button>`).join('');
+  el.querySelectorAll('button').forEach(b=>b.onclick=()=>{ if(b.dataset.id!==bid){ openBook(b.dataset.id,0); try{ history.replaceState(null,'','#'+b.dataset.id); }catch(e){} } }); }
+let B=null, bid=null, pi=0, total=0, auto=false, speaking=false, answered={};
+function openBook(id,n){
+  bid=id; B=loc(id); total=B.pages.length+3; answered={}; stopSpeak();
+  $('#library').hidden=true; $('#hero').hidden=true; $('#reader').hidden=false;
+  $('#rch').textContent=B.ch; $('#tPdf').href='stories/pdf/'+(GZ.lang==='en'?'':GZ.lang+'/')+id+'.pdf'; $('#tCh').href=B.page||'#'; $('#tCh').hidden=!B.page; drawSwap();
+  go(n||0,0); window.scrollTo(0,0);
+}
+function go(n,dir){
+  pi=Math.max(0,Math.min(total-1,n)); const el=$('#page');
+  el.classList.remove('flip-next','flip-prev'); void el.offsetWidth; if(dir) el.classList.add(dir>0?'flip-next':'flip-prev');
+  setTimeout(()=>render(),dir?220:0);
+  try{ history.replaceState(null,'','#'+bid+'/'+pi); }catch(e){}
+}
+function render(){
+  const el=$('#page'); el.style.background='';
+  if(pi===0){ el.innerHTML=coverHtml(B); el.style.background='transparent'; }
+  else if(pi<=B.pages.length){ el.innerHTML=pageHtml(B,pi-1); setProg(bid,pi); }
+  else if(pi===B.pages.length+1){ el.innerHTML=termsHtml(B); el.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(+b.dataset.go,-1)); }
+  else { el.innerHTML=quizHtml(B); wireQuiz(); }
+  el.querySelectorAll('.story mark').forEach(m=>m.onclick=()=>{ say(m.textContent); m.classList.add('say'); setTimeout(()=>m.classList.remove('say'),900); });
+  $('#dots').innerHTML=Array.from({length:total},(_,i)=>`<i class="${i===pi?'on':''}" data-i="${i}"></i>`).join('');
+  $('#dots').querySelectorAll('i').forEach(d=>d.onclick=()=>go(+d.dataset.i,+d.dataset.i>pi?1:-1));
+  $('#prev').disabled=pi===0; $('#next').disabled=pi===total-1;
+  if(auto) readPage();
+}
+function wireQuiz(){
+  const el=$('#page'); let score=0;
+  el.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{
+    const q=+b.dataset.q, o=+b.dataset.o; if(answered[q]!=null) return; answered[q]=o;
+    const right=B.quiz[q][2]; const row=el.querySelectorAll(`[data-q="${q}"]`);
+    row.forEach(x=>x.disabled=true); row[right].classList.add('ok'); if(o!==right) b.classList.add('bad');
+    const done=Object.keys(answered).length; score=Object.entries(answered).filter(([k,v])=>B.quiz[k][2]===v).length;
+    if(done===B.quiz.length){ GZ.saveBest('story-'+bid,score); $('#qscore').innerHTML=`${score} / ${B.quiz.length} ${GZ.stars(score,B.quiz.length)}<br><span style="font:600 13px Inter">${GZ.rating(score,B.quiz.length)}</span><br><button class="tbtn" id="qshr" style="margin-top:10px">${GZ.c('share')}</button>`;
+      const sc=score; $('#qshr').onclick=()=>GZ.share(`📚 I scored ${sc}/${B.quiz.length} in the "${B.title}" storybook quiz (${B.ch}) on BAIO. Can you beat me?`,'stories.html#'+bid+'/'+(total-1),{icon:B.cover,game:B.title,sub:B.ch,score:sc,max:B.quiz.length,color:[B.color,'#1f6fe0']}); }
+  });
+}
+/* read aloud */
+let voice=null;
+const VLANG={en:'en-IN',kn:'kn-IN',hi:'hi-IN'};
+function pickVoice(){ const v=speechSynthesis.getVoices(), l=GZ.lang||'en', re=new RegExp('^'+l+'[-_]IN','i'), re2=new RegExp('^'+l,'i'); voice=v.find(x=>re.test(x.lang))||v.find(x=>re2.test(x.lang))||null; }
+if('speechSynthesis' in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
+// read "I PUC" / "II PUC" as words (otherwise the voice says "I" like the pronoun)
+const PUC_SAY={en:['First year P U C','Second year P U C','Chapter'],kn:['ಪ್ರಥಮ ಪಿ ಯು ಸಿ','ದ್ವಿತೀಯ ಪಿ ಯು ಸಿ',''],hi:['प्रथम वर्ष पी यू सी','द्वितीय वर्ष पी यू सी','']};
+const spoken=t=>{ const w=PUC_SAY[GZ.lang]||PUC_SAY.en; t=t.replace(/\bII PUC\b/g,w[1]).replace(/\bI PUC\b/g,w[0]); if(w[2]) t=t.replace(/\bCh (\d+)/g,w[2]+' $1'); return t; };
+function say(text,onend){ if(!('speechSynthesis' in window)) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(spoken(text)); if(voice) u.voice=voice; u.lang=voice?voice.lang:VLANG[GZ.lang]||'en-IN'; u.rate=.95; u.onend=onend||null; speechSynthesis.speak(u); }
+function stopSpeak(){ if('speechSynthesis' in window) speechSynthesis.cancel(); speaking=false; $('#tRead').classList.remove('on'); }
+function pageText(){ if(pi===0) return `${B.title}. ${B.ch.replace(/·/g,',')}. ${B.star?T('starringX')+' '+B.star.replace(/\p{Extended_Pictographic}|\u200d|\ufe0f/gu,'')+'.':T('starringSay')}`; if(pi<=B.pages.length){ const p=B.pages[pi-1]; return `${p.t}. ${plain(p.x)} ${T('rememberSay')}: ${p.r}`; } if(pi===B.pages.length+1) return T('wordsMet')+': '+termsOf(B).map(t=>t[0]).join(', ')+'.'; return T('quickQuiz')+'. '+T('doYou'); }
+function readPage(){ speaking=true; $('#tRead').classList.add('on'); say(pageText().replace(/Prof\. BAIO/g,'Professor BAIO'),()=>{ speaking=false; $('#tRead').classList.remove('on'); if(auto&&pi<B.pages.length+1) setTimeout(()=>go(pi+1,1),700); else if(auto){ auto=false; $('#tAuto').classList.remove('on'); } }); }
+$('#tRead').onclick=()=>{ if(speaking){ auto=false; $('#tAuto').classList.remove('on'); stopSpeak(); } else readPage(); };
+$('#tAuto').onclick=()=>{ auto=!auto; $('#tAuto').classList.toggle('on',auto); if(auto) readPage(); else stopSpeak(); };
+$('#prev').onclick=()=>{ auto=false; $('#tAuto').classList.remove('on'); stopSpeak(); go(pi-1,-1); };
+$('#next').onclick=()=>{ stopSpeak(); go(pi+1,1); };
+$('#back').onclick=()=>{ auto=false; stopSpeak(); $('#reader').hidden=true; $('#library').hidden=false; $('#hero').hidden=false; drawLibrary(); try{ history.replaceState(null,'',location.pathname); }catch(e){} };
+/* Share = a 1080×1350 story card image (cover, title, chapter, cast, first-page teaser, BAIO branding) + text + link */
+const SC={en:{tag:'BAIO STORYBOOK',pages:'{n} illustrated pages · Read-aloud · Quiz',read:'Read free on the BAIO app',role:'Biology Lecturer · Founder & CEO, BAIO',cast:'Starring Bindu & Prof. BAIO',teaser:'Page 1',sheet:'Share this storybook',dl:'⬇ Download story card'},
+ kn:{tag:'BAIO ಕಥಾ ಪುಸ್ತಕ',pages:'{n} ಚಿತ್ರ ಪುಟಗಳು · ಓದಿ ಹೇಳು · ರಸಪ್ರಶ್ನೆ',read:'BAIO ಆ್ಯಪ್‌ನಲ್ಲಿ ಉಚಿತವಾಗಿ ಓದಿ',role:'ಜೀವಶಾಸ್ತ್ರ ಉಪನ್ಯಾಸಕರು · Founder & CEO, BAIO',cast:'ಬಿಂದು & ಪ್ರೊ. BAIO ಅವರ ಕಥೆ',teaser:'ಪುಟ 1',sheet:'ಈ ಕಥಾ ಪುಸ್ತಕ ಹಂಚಿ',dl:'⬇ ಕಥೆ ಕಾರ್ಡ್ ಡೌನ್‌ಲೋಡ್'},
+ hi:{tag:'BAIO कहानी की किताब',pages:'{n} चित्र पेज · पढ़कर सुनाओ · क्विज़',read:'BAIO ऐप पर मुफ़्त पढ़ो',role:'बायोलॉजी लेक्चरर · Founder & CEO, BAIO',cast:'बिंदु और प्रो. BAIO की कहानी',teaser:'पेज 1',sheet:'यह कहानी की किताब शेयर करो',dl:'⬇ कहानी कार्ड डाउनलोड करो'}};
+const SCt=k=>(SC[GZ.lang]||SC.en)[k]||SC.en[k];
+const S_SANS="Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif", S_HEAD="'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari',sans-serif", S_SERIF="Lora,'Noto Sans Kannada','Noto Sans Devanagari',Georgia,serif", S_EMO="'Noto Color Emoji','Apple Color Emoji','Segoe UI Emoji',sans-serif";
+function scWrap(g,text,maxW){ const words=String(text).split(/\s+/); const lines=[]; let cur=''; words.forEach(w=>{ const t=cur?cur+' '+w:w; if(g.measureText(t).width>maxW&&cur){ lines.push(cur); cur=w; } else cur=t; }); if(cur) lines.push(cur); return lines; }
+function scRR(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
+async function storyCard(B){
+  try{ await Promise.all(['800 40px "Space Grotesk"','700 40px Inter','500 40px Lora','700 40px "Noto Sans Kannada"','700 40px "Noto Sans Devanagari"'].map(f=>document.fonts.load(f,'Aಕक'))); }catch(e){}
+  const W=1080,H=1350,cv=document.createElement('canvas'); cv.width=W; cv.height=H; const g=cv.getContext('2d'), col=B.color||'#2f9e8f';
+  let gr=g.createLinearGradient(0,0,0,H); gr.addColorStop(0,col); gr.addColorStop(.62,'#0f2a22'); gr.addColorStop(1,'#08140f'); g.fillStyle=gr; g.fillRect(0,0,W,H);
+  [[160,170,260,.18],[930,260,200,.14],[860,820,300,.08],[120,980,220,.08]].forEach(([x,y,r,a])=>{ const rg=g.createRadialGradient(x,y,0,x,y,r); rg.addColorStop(0,`rgba(255,255,255,${a})`); rg.addColorStop(1,'rgba(255,255,255,0)'); g.fillStyle=rg; g.beginPath(); g.arc(x,y,r,0,7); g.fill(); });
+  g.textAlign='center';
+  // tag
+  g.font=`800 30px ${S_SANS}`; const tag='📚 '+SCt('tag'), tw=g.measureText(tag).width+60; g.fillStyle='rgba(255,225,77,.95)'; scRR(g,W/2-tw/2,70,tw,58,29); g.fill(); g.fillStyle='#1d2433'; g.fillText(tag,W/2,110);
+  // cover emoji
+  g.font=`230px ${S_EMO}`; g.fillText(B.cover||'📖',W/2,400);
+  // title
+  let ts=82; g.font=`800 ${ts}px ${S_HEAD}`; let tl=scWrap(g,B.title,W-160); while(tl.length>2&&ts>52){ ts-=4; g.font=`800 ${ts}px ${S_HEAD}`; tl=scWrap(g,B.title,W-160); }
+  g.fillStyle='#fff'; g.shadowColor='rgba(0,0,0,.35)'; g.shadowBlur=18; let y=520; tl.slice(0,3).forEach(L=>{ g.fillText(L,W/2,y); y+=ts*1.12; }); g.shadowBlur=0;
+  // chapter + cast
+  g.font=`700 32px ${S_SANS}`; g.fillStyle='#ffe58a'; let cs=32; while(g.measureText(B.ch).width>W-120&&cs>20){ cs--; g.font=`700 ${cs}px ${S_SANS}`; } g.fillText(B.ch,W/2,y+10);
+  g.font=`500 30px ${S_SERIF}`; g.fillStyle='rgba(255,255,255,.88)'; g.fillText(B.star?(T('starringX')+' '+B.star):(SCt('cast')+'  👧🦉'),W/2,y+64);
+  // teaser box: page 1 title + opening line
+  const p1=B.pages[0]||{}; const bx=90,bw=W-180,by=y+110;
+  g.font=`500 34px ${S_SERIF}`; const plain=String(p1.x||'').replace(/\[\[([^\]]+)\]\]/g,'$1'); let tx=scWrap(g,plain,bw-80); const more=tx.length>4; tx=tx.slice(0,4); if(more) tx[3]=tx[3].replace(/\s*\S*$/,'')+' …';
+  const bh=96+tx.length*48+20; g.fillStyle='rgba(255,255,255,.96)'; scRR(g,bx,by,bw,bh,30); g.fill();
+  g.textAlign='left'; g.font=`800 26px ${S_SANS}`; g.fillStyle=col; g.fillText(SCt('teaser').toUpperCase()+' · '+(p1.t||''),bx+40,by+56);
+  g.font=`500 34px ${S_SERIF}`; g.fillStyle='#22283a'; tx.forEach((L,k)=>g.fillText(L,bx+40,by+108+k*48));
+  // chips
+  g.textAlign='center'; g.font=`700 28px ${S_SANS}`; g.fillStyle='rgba(255,255,255,.9)'; g.fillText(SCt('pages').replace('{n}',B.pages.length),W/2,by+bh+62);
+  // footer
+  const fy=H-150; g.fillStyle='rgba(255,255,255,.08)'; g.fillRect(0,fy,W,150);
+  gr=g.createLinearGradient(70,fy+30,160,fy+120); gr.addColorStop(0,'#e9c45a'); gr.addColorStop(1,'#c99a2e'); g.fillStyle=gr; g.beginPath(); g.arc(115,fy+75,44,0,7); g.fill();
+  g.fillStyle='#14203a'; g.font=`800 48px ${S_HEAD}`; g.fillText('B',115,fy+92);
+  g.textAlign='left'; g.fillStyle='#fff'; g.font=`800 36px ${S_SANS}`; g.fillText('Narendra Sir',180,fy+66); g.fillStyle='#7fe0b8'; g.font=`700 22px ${S_SANS}`; g.fillText(SCt('role'),180,fy+102);
+  g.textAlign='right'; g.fillStyle='#ffd65a'; g.font=`800 28px ${S_SANS}`; g.fillText('📲 BAIO app',W-60,fy+66); g.fillStyle='rgba(255,255,255,.8)'; g.font=`600 22px ${S_SANS}`; g.fillText(SCt('read'),W-60,fy+102);
+  return cv; }
+$('#tShare').onclick=async()=>{ const b=$('#tShare'); b.disabled=true;
+  try{ const cv=await storyCard(B); await GZ.shareImage(cv,'BAIO_Story_'+bid+'.jpg',T('shareMsg',{t:B.title,c:B.ch}),'stories.html#'+bid,{sheet:SCt('sheet'),dl:SCt('dl'),title:B.title}); }
+  catch(e){ GZ.share(T('shareMsg',{t:B.title,c:B.ch}),'stories.html#'+bid); }
+  b.disabled=false; };
+// swipe to turn pages
+(function(){ let x0=null,y0=null; const el=$('#page');
+  el.addEventListener('touchstart',e=>{ x0=e.touches[0].clientX; y0=e.touches[0].clientY; },{passive:true});
+  el.addEventListener('touchend',e=>{ if(x0==null) return; const dx=e.changedTouches[0].clientX-x0, dy=e.changedTouches[0].clientY-y0; if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5){ stopSpeak(); go(pi+(dx<0?1:-1),dx<0?1:-1); } x0=null; },{passive:true}); })();
+document.addEventListener('keydown',e=>{ if($('#reader').hidden) return; if(e.key==='ArrowRight') $('#next').click(); if(e.key==='ArrowLeft') $('#prev').click(); });
+
+/* ---------- print view (used to make the PDF books) ---------- */
+function printBook(id){
+  const B=loc(id), foot=n=>`<div class="foot">${GZ.esc(B.title)} · ${B.ch} · BAIO Learning System · page ${n}</div>`;
+  let h=`<div class="pp cov" style="background:linear-gradient(160deg,${B.color},#0b1b14)"><div class="ce">${B.cover}</div><h2>${GZ.esc(B.title)}</h2><p style="font:700 13px Inter">${B.ch}</p><p style="font:600 15px Lora,sans-serif;margin-top:8mm">${starOf(B)}</p><p style="font:600 11px Inter,sans-serif;margin-top:14mm;opacity:.85">${T('by')} · Biology Lecturer</p></div>`;
+  B.pages.forEach((p,i)=>{ h+=`<div class="pp">${pageHtml(B,i)}${foot(i+1)}</div>`; });
+  h+=`<div class="pp">${termsHtml(B,true)}${foot(B.pages.length+1)}</div><div class="pp pq">${quizHtml(B,true)}${foot(B.pages.length+2)}</div>`;
+  $('#printArea').innerHTML=h; document.body.classList.add('printing');
+  // shrink text on any page that would spill past one A5 sheet
+  $('#printArea').style.display='block';
+  document.querySelectorAll('.pp').forEach(pg=>{ let f=20.5, k=0; const st=pg.querySelector('.story'), qz=pg.querySelector('.qz');
+    while(pg.scrollHeight>pg.clientHeight+1 && k++<18){ f-=.4; if(st) st.style.fontSize=f+'px'; if(qz) qz.style.fontSize=(f-1)+'px'; pg.querySelectorAll('.remember').forEach(r=>r.style.fontSize=(f-2.5)+'px'); const sc=pg.querySelector('.scene'); if(sc&&k>4) sc.style.height=Math.max(50,80-(k-4)*3)+'mm'; } });
+}
+const QL=(location.search.match(/[?&]lang=(kn|hi|en)/)||[])[1];
+if(QL){ try{ localStorage.setItem('baio_lang',QL); }catch(e){} }
+GZ.startLang(); if(QL&&GZ.lang!==QL) GZ.setLang(QL);
+GZ.onLang(l=>{ needLang(l,()=>{ if('speechSynthesis' in window) pickVoice(); if(PRINT) return; if(!$('#reader').hidden&&bid){ stopSpeak(); B=loc(bid); $('#rch').textContent=B.ch; $('#tPdf').href='stories/pdf/'+(l==='en'?'':l+'/')+bid+'.pdf'; drawSwap(); render(); } else drawLibrary(); }); });
+needLang(GZ.lang,()=>{ const [id,n]=location.hash.slice(1).split('/');
+  if(PRINT&&BOOKS[id]){ printBook(id); window.__ready=true; document.querySelector('.wrap').style.maxWidth='none'; document.querySelector('.wrap').style.padding='0'; ['#hero','#library','#reader','footer'].forEach(s=>$(s).hidden=true); $('#printArea').style.display='block'; return; }
+  drawLibrary(); if(BOOKS[id]) openBook(id,+n||0); });
+</script>
+</body>
+</html>

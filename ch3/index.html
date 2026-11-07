@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script src="../baio-speak.js?v=3"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <link rel="manifest" href="../manifest.json">
 <meta name="theme-color" content="#0B1B14">
@@ -71,15 +72,17 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 12px 16px;padding-top:14px;border-top:1px solid var(--line);}
 .footer-tagline{white-space:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;font-size:11px;}
 .footer-copy{margin-top:4px;font-size:11px;}
-.footer-social{margin-top:8px;display:flex;justify-content:center;gap:14px;flex-wrap:wrap;}
+.footer-social{margin-top:8px;display:flex;justify-content:center;align-items:center;gap:20px;flex-wrap:wrap;}
 .footer-social a{color:var(--teal2);text-decoration:none;font-weight:600;font-size:11.5px;cursor:pointer;}
 .footer-social a:hover{text-decoration:underline;}
+.footer-share-btn{background:none;border:none;padding:0;color:var(--teal2);font-weight:600;font-size:11.5px;font-family:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:4px;}
+.footer-share-btn:hover{text-decoration:underline;}
 
 /* TABS */
-.tabbar{display:flex;overflow-x:auto;gap:6px;padding:10px 12px;border-bottom:1px solid var(--line);position:sticky;top:8px;z-index:19;background:var(--navy);scrollbar-width:none;}
+.tabbar{display:flex;overflow-x:auto;gap:6px;padding:0 12px;border-bottom:1px solid var(--line);position:sticky;top:8px;z-index:19;background:var(--navy);scrollbar-width:none;}
 .tabbar::-webkit-scrollbar{display:none;}
-.tab{flex:0 0 auto;min-width:84px;padding:9px 12px;border-radius:10px;font-size:11px;font-weight:600;color:var(--ink-dim);background:var(--panel2);border:1px solid var(--line);cursor:pointer;text-align:center;white-space:nowrap;line-height:1.25;}
-.tab.active{background:var(--btn-gold);color:#1A1406;border-color:var(--btn-gold);}
+.tab{flex:0 0 auto;min-width:84px;padding:9px 12px;border-radius:10px;font-family:'Fraunces',Georgia,serif;font-size:11px;font-weight:600;color:var(--ink-dim);background:var(--panel2);border:1px solid var(--line);cursor:pointer;text-align:center;white-space:nowrap;line-height:1.25;}
+.tab.active{background:linear-gradient(135deg, rgba(227,175,67,0.18), rgba(66,198,160,0.12));border-color:var(--gold);color:var(--gold2);box-shadow:0 4px 14px rgba(227,175,67,0.15);}
 .cat-dd-wrap{ position:relative; flex:0 0 auto; }
 .cat-dd-btn{
   display:flex; align-items:center; gap:5px; height:100%;
@@ -107,8 +110,8 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 12px 16
 /* TOPIC PILLS */
 .pillrow{display:flex;overflow-x:auto;gap:8px;padding:12px 14px 4px;scrollbar-width:none;}
 .pillrow::-webkit-scrollbar{display:none;}
-.pill{flex:0 0 auto;padding:7px 13px;border-radius:16px;font-size:12px;font-weight:600;background:var(--panel);color:var(--ink-dim);border:1px solid var(--line);cursor:pointer;white-space:nowrap;}
-.pill.active{background:var(--teal2);color:#EFFFFA;border-color:var(--teal);}
+.pill{flex:0 0 auto;background:var(--panel2);border:1px solid var(--line);color:var(--ink-dim);padding:8px 12px;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.pill.active{background:var(--gold);color:#1A1406;border-color:var(--gold);font-weight:700;}
 
 /* Study Mode dropdown (topic switcher + Full Screen Mode combined) */
 .study-dd{position:relative;margin-bottom:4px;}
@@ -126,7 +129,7 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 12px 16
 
 /* CHIPS */
 .chiprow{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 14px;}
-.chip{background:var(--btn-gold);color:#1A1406;font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px;}
+.chip{background:rgba(227,175,67,0.1);border:1px solid rgba(227,175,67,0.35);color:var(--gold2);font-size:11px;font-weight:600;padding:4px 9px;border-radius:99px;}
 
 /* STUDY SECTIONS */
 .section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 15px;margin-bottom:10px;}
@@ -198,9 +201,27 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .tip-list.neet li{border-left-color:var(--gold);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold);}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel2);color:var(--gold2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--line);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--line);color:var(--ink);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--ink-dim);line-height:1.55;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--ink-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--ink);min-width:20px;font-weight:700;color:var(--gold2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
 .marks-info{background:linear-gradient(135deg,var(--teal2),#0a4239);border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:12.5px;color:#EFFFFA;line-height:1.6;}
 .marks-info b{color:var(--gold);}
-.whatsnew-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;font-size:12px;color:#EFFFFA;background:linear-gradient(135deg,var(--teal2),#0a4239);border-bottom:1px solid var(--line);line-height:1.5;}
+.whatsnew-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;margin-bottom:10px;font-size:12px;color:#EFFFFA;background:linear-gradient(135deg,var(--teal2),#0a4239);border-bottom:1px solid var(--line);line-height:1.5;}
 .whatsnew-banner b{color:var(--gold);}
 .whatsnew-banner button{flex:none;background:none;border:none;color:#EFFFFA;font-size:19px;line-height:1;cursor:pointer;padding:0 2px;opacity:0.8;}
 .whatsnew-banner button:hover{opacity:1;}
@@ -613,7 +634,7 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .pacing-note{margin-top:12px;padding:11px 13px;border-radius:10px;background:rgba(66,198,160,0.08);border:1px solid var(--teal2);font-size:11.5px;line-height:1.6;color:var(--ink);}
 .student-modal input[type="text"]{width:100%;padding:9px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font-size:14px;}
 .sm-save-btn{margin-top:16px;width:100%;padding:10px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;font-weight:700;font-size:14px;cursor:pointer;}
-.student-greet-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 18px;font-size:12.5px;color:var(--ink-dim);background:var(--panel2);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:19;}
+.student-greet-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 18px;margin-bottom:10px;font-size:12.5px;color:var(--ink-dim);background:var(--panel2);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:19;}
 .student-greet-bar b{color:var(--gold);}
 .sm-edit-btn{background:none;border:1px solid var(--line);color:var(--ink-dim);padding:3px 9px;border-radius:12px;font-size:11px;cursor:pointer;}
 
@@ -666,9 +687,23 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
   .content{min-width:0;}
 }
 
+/* ppt-dark-theme: in dark theme dim the illustrated slides a little so they don't glare (not inverted: they are artwork/photos) */
+html:not([data-theme="light"]) #pptImg,html:not([data-theme="light"]) .ppt-thumb img{filter:brightness(.8) contrast(1.06) saturate(.95);}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="../oneshot-study.js?v=1"></script>
+<style id="clgSwitchCss">
+.clg-deck-switch{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 10px}
+.clg-deck-switch button{flex:1 1 180px;font:700 14px Inter,sans-serif;border-radius:12px;padding:10px 12px;border:1px solid #d9d2c3;background:#ffffff;color:#13202e;cursor:pointer;text-align:center}
+html:not([data-theme="light"]) .clg-deck-switch button{background:#17251f;border-color:#3a4f45;color:#eef4f1}
+html .clg-deck-switch button.active{background:#0f7b6c;border-color:#0f7b6c;color:#fff}
+.clg-deck-switch button span{display:block;font-weight:500;font-size:12px;opacity:.75;margin-top:2px}
+.clg-deck-switch button.active{background:#0f7b6c;border-color:#0f7b6c;color:#fff}
+</style>
+<script src="../class-large.js?v=2"></script>
+<script src="../quick-card.js?v=1"></script>
+<script src="../premium-sample.js"></script>
 </head>
 <body>
 <div class="app">
@@ -745,6 +780,18 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
         <span class="chapter-jump-icon">🧫</span>
         <span><b>Chapter 8</b><span class="chapter-jump-title">Cell: The Unit of Life</span></span>
       </a>
+      <a class="notif-modal-item chapter-jump-item" href="../pu1-ch9.html">
+        <span class="chapter-jump-icon">🧪</span>
+        <span><b>Chapter 9</b><span class="chapter-jump-title">Biomolecules</span></span>
+      </a>
+      <a class="notif-modal-item chapter-jump-item" href="../pu1-ch10.html">
+        <span class="chapter-jump-icon">🔄</span>
+        <span><b>Chapter 10</b><span class="chapter-jump-title">Cell Cycle and Cell Division</span></span>
+      </a>
+      <a class="notif-modal-item chapter-jump-item" href="../pu1-ch11.html">
+        <span class="chapter-jump-icon">☀️</span>
+        <span><b>Chapter 11</b><span class="chapter-jump-title">Photosynthesis in Higher Plants</span></span>
+      </a>
       <div class="chapter-jump-group">PUC-2 &middot; Second Year</div>
       <a class="notif-modal-item chapter-jump-item" href="../pu2-ch1.html">
         <span class="chapter-jump-icon">🌸</span>
@@ -807,6 +854,14 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
       <h3>🔥 Daily Study Streak</h3>
       <div id="streakModalBody"></div>
       <button class="sm-save-btn" id="streakModalCloseBtn">Close</button>
+    </div>
+  </div>
+
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="sm-save-btn" id="tipExampleCloseBtn">Close</button>
     </div>
   </div>
 
@@ -1020,13 +1075,19 @@ function closeStreakModal(){
   <footer>
     <div class="footer-tagline">Empowering future doctors. Crafted for PU BIOLOGY &amp; NEET Aspirants.</div>
     <div class="footer-copy">&copy; Narendra Sir - Lecturer in Biology</div>
-    <div class="footer-social">
-      <a href="https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X" rel="noopener noreferrer">WhatsApp Channel</a>
-      <a href="https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw" rel="noopener noreferrer">Instagram Channel</a>
-      <a href="https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0" rel="noopener noreferrer">YouTube Channel</a>
-      <a href="https://t.me/BAIO_Learning_System" rel="noopener noreferrer">Telegram Channel</a>
+    <div class="footer-social" style="row-gap:8px;">
+      <span class="follow-wrap" style="flex-basis:100%;display:flex;flex-direction:column;align-items:center;gap:6px;">
+        <span class="follow-us" style="font-weight:700;font-size:11.5px;opacity:.85;">Follow us on</span>
+        <span class="follow-icons" style="display:flex;justify-content:center;gap:16px;">
+          <a href="https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X" rel="noopener noreferrer" aria-label="WhatsApp" title="WhatsApp"><img class="soc-ic" src="../assets/social/wa.png" alt="WhatsApp" style="width:30px;height:30px;display:block;border:0;"></a>
+          <a href="https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><img class="soc-ic" src="../assets/social/ig.png" alt="Instagram" style="width:30px;height:30px;display:block;border:0;"></a>
+          <a href="https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0" rel="noopener noreferrer" aria-label="YouTube" title="YouTube"><img class="soc-ic" src="../assets/social/yt.png" alt="YouTube" style="width:30px;height:30px;display:block;border:0;"></a>
+          <a href="https://t.me/BAIO_Learning_System" rel="noopener noreferrer" aria-label="Telegram" title="Telegram"><img class="soc-ic" src="../assets/social/tg.png" alt="Telegram" style="width:30px;height:30px;display:block;border:0;"></a>
+        </span>
+      </span>
       <a href="https://wa.me/919008968389" rel="noopener noreferrer">📱 9008968389</a>
       <a href="mailto:bioguru102@gmail.com">✉️ bioguru102@gmail.com</a>
+      <button type="button" class="footer-share-btn" id="shareAllBtn" onclick="shareAllSocial()">&#128228; Share All Links</button>
     </div>
   </footer>
 </div>
@@ -1357,6 +1418,7 @@ const TABS = [
   {id:'badges', label:'Milestones'},
   {id:'progress', label:'Progress'},
   {id:'study', label:'Study Mode'},
+  {id:'oneshot', label:'One-Shot Revision'},
   {id:'podcast', label:'Audio Podcast'},
   {id:'studytips', label:'Study Tips'},
   {id:'pacing', label:'Pacing'},
@@ -1387,7 +1449,7 @@ function esc(s){ return (s===undefined||s===null)?'':String(s); }
 /* ---- Chapter tab bar: group the tabs into categories behind a dropdown,
    so the long tab list no longer needs one long scrolling row. ---- */
 const TAB_CATEGORIES = [
-  {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','concepts','podcast','studytips','boardimp','diagrams']},
+  {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','oneshot','concepts','podcast','studytips','boardimp','diagrams']},
   {id:'practice', label:'Practice', icon:'\u270D\uFE0F', tabs:['flashcards','mcq','writeit','revision']},
   {id:'test', label:'Test Prep', icon:'\u{1F3AF}', tabs:['neet','kcet','papergen']},
   {id:'explore', label:'Explore', icon:'\u{1F50D}', tabs:['tree','compare','mindmap','classppt','glossary']},
@@ -1403,7 +1465,7 @@ function renderTabbar(){
   const cat = TAB_CATEGORIES.find(c => c.id === currentCategory) || TAB_CATEGORIES[0];
   bar.innerHTML = TABS.filter(t => cat.tabs.indexOf(t.id) !== -1).map(t => {
     const locked = PREMIUM_LOCKED_TABS.indexOf(t.id) !== -1 && !unlocked;
-    return `<div class="tab ${t.id===currentTab?'active':''}" onclick="switchTab('${t.id}')">${locked?'\uD83D\uDD12 ':''}${t.label}</div>`;
+    return `<div class="tab ${t.id===currentTab?'active':''}" onclick="switchTab('${t.id}')">${locked?((window.BaioSample&&BaioSample.allow(t.id))?'🎁 ':'🔒 '):''}${t.label}</div>`;
   }).join('');
   const ddBtn = document.getElementById('catDdBtn');
   const ddMenu = document.getElementById('catDdMenu');
@@ -1828,11 +1890,12 @@ function mcqStart(){
 window.mcqStart = mcqStart;
 function mcqClearTimer(){ if(mcqTimerInt){ clearInterval(mcqTimerInt); mcqTimerInt=null; } }
 function mcqStopTest(){
-  if(!confirm('Stop this quiz now and see your report card based on the questions you\'ve answered so far?')) return;
+  if(!confirm('Stop this quiz now and see your report card? Unanswered questions will count as 0 marks toward your selected total.')) return;
   mcqClearTimer();
   if(document.fullscreenElement) document.exitFullscreen();
   const s = mcqSession;
-  s.questions = s.questions.slice(0, s.idx);
+  const remaining = s.questions.length - s.idx;
+  if(remaining > 0) s.timeoutCount += remaining;
   renderMcqReport();
 }
 function mcqGoBack(){
@@ -1948,10 +2011,10 @@ function buildReportCardHtml(r){
     <div style="border-top:1px solid rgba(227,175,67,0.35); padding-top:12px; text-align:center; font-size:10.5px; color:${textDim}; line-height:2;">
       Narendra Sir &ndash; Lecturer in Biology<br>
       <div style="margin-top:4px;">📱 <a href="https://wa.me/919008968389" target="_blank" rel="noopener" style="color:${teal}; text-decoration:none;">9008968389</a> &nbsp;&middot;&nbsp; ✉️ <a href="mailto:bioguru102@gmail.com" style="color:${teal}; text-decoration:none;">bioguru102@gmail.com</a></div>
-      <div style="margin-top:4px;">WhatsApp Channel: <a href="https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X" target="_blank" rel="noopener" style="color:${teal}; text-decoration:none;">BioGuru Narendra Sir</a></div>
-      <div>Instagram Channel: <a href="https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw" target="_blank" rel="noopener" style="color:${teal}; text-decoration:none;">@new_gen_bioguru</a></div>
-      <div>YouTube Channel: <a href="https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0" target="_blank" rel="noopener" style="color:${teal}; text-decoration:none;">@biogurunarendrasir</a></div>
-      <div>Telegram Channel: <a href="https://t.me/BAIO_Learning_System" target="_blank" rel="noopener" style="color:${teal}; text-decoration:none;">BAIO Learning System</a></div>
+      <div style="margin-top:4px;">WhatsApp Channel: <a href="https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X" target="_blank" rel="noopener" style="color:${teal}; text-decoration:none;"><img class="soc-ic" src="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/assets/social/wa.png" alt="" style="width:1.15em;height:1.15em;vertical-align:-0.22em;margin-right:5px;border:0;">BioGuru Narendra Sir</a></div>
+      <div>Instagram Channel: <a href="https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw" target="_blank" rel="noopener" style="color:${teal}; text-decoration:none;"><img class="soc-ic" src="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/assets/social/ig.png" alt="" style="width:1.15em;height:1.15em;vertical-align:-0.22em;margin-right:5px;border:0;">@new_gen_bioguru</a></div>
+      <div>YouTube Channel: <a href="https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0" target="_blank" rel="noopener" style="color:${teal}; text-decoration:none;"><img class="soc-ic" src="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/assets/social/yt.png" alt="" style="width:1.15em;height:1.15em;vertical-align:-0.22em;margin-right:5px;border:0;">@biogurunarendrasir</a></div>
+      <div>Telegram Channel: <a href="https://t.me/BAIO_Learning_System" target="_blank" rel="noopener" style="color:${teal}; text-decoration:none;"><img class="soc-ic" src="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/assets/social/tg.png" alt="" style="width:1.15em;height:1.15em;vertical-align:-0.22em;margin-right:5px;border:0;">BAIO Learning System</a></div>
     </div>
   </div>`;
 }
@@ -2262,11 +2325,12 @@ function neetQText(q){
 }
 function neetClearTimer(){ if(neetTimerInt){ clearInterval(neetTimerInt); neetTimerInt=null; } }
 function neetStopTest(){
-  if(!confirm('Stop this test now and see your report card based on the questions you\'ve answered so far?')) return;
+  if(!confirm('Stop this test now and see your report card? Unanswered questions will count as 0 marks toward your selected total.')) return;
   neetClearTimer();
   if(document.fullscreenElement) document.exitFullscreen();
   const s = neetSession;
-  s.questions = s.questions.slice(0, s.idx);
+  const remaining = s.questions.length - s.idx;
+  if(remaining > 0) s.timeoutCount += remaining;
   renderNeetReport();
 }
 function neetGoBack(){
@@ -2500,11 +2564,12 @@ function kcetStart(){
 window.kcetStart = kcetStart;
 function kcetClearTimer(){ if(kcetTimerInt){ clearInterval(kcetTimerInt); kcetTimerInt=null; } }
 function kcetStopTest(){
-  if(!confirm('Stop this test now and see your report card based on the questions you\'ve answered so far?')) return;
+  if(!confirm('Stop this test now and see your report card? Unanswered questions will count as 0 marks toward your selected total.')) return;
   kcetClearTimer();
   if(document.fullscreenElement) document.exitFullscreen();
   const s = kcetSession;
-  s.questions = s.questions.slice(0, s.idx);
+  const remaining = s.questions.length - s.idx;
+  if(remaining > 0) s.timeoutCount += remaining;
   renderKcetReport();
 }
 function kcetGoBack(){
@@ -3209,7 +3274,7 @@ function renderGlossary(){
 const CLASS_SLIDES = ["assets/slide-01.jpg", "assets/slide-02.jpg", "assets/slide-03.jpg", "assets/slide-04.jpg", "assets/slide-05.jpg", "assets/slide-06.jpg", "assets/slide-07.jpg", "assets/slide-08.jpg", "assets/slide-09.jpg", "assets/slide-10.jpg", "assets/slide-11.jpg", "assets/slide-12.jpg", "assets/slide-13.jpg", "assets/slide-14.jpg", "assets/slide-15.jpg", "assets/slide-16.jpg", "assets/slide-17.jpg", "assets/slide-18.jpg", "assets/slide-19.jpg", "assets/slide-20.jpg", "assets/slide-21.jpg", "assets/slide-22.jpg", "assets/slide-23.jpg", "assets/slide-24.jpg", "assets/slide-25.jpg", "assets/slide-26.jpg", "assets/slide-27.jpg", "assets/slide-28.jpg", "assets/slide-29.jpg", "assets/slide-30.jpg", "assets/slide-31.jpg", "assets/slide-32.jpg"];
 const BOARD_IMPORTANT_IMAGES = ["assets/board-01.jpg", "assets/board-02.jpg", "assets/board-03.jpg"];
 
-const MINDMAP_IMAGES = ["assets/mindmap-01.jpg", "assets/mindmap-02.jpg"];
+const MINDMAP_IMAGES = ["assets/mindmap-quick.jpg", "assets/mindmap-01.jpg", "assets/mindmap-02.jpg"];
 let mmZoom = 1;
 let mmIdx = 0;
 /* Shared pinch-to-zoom for fullscreen viewers (mind map + presentation).
@@ -3324,8 +3389,9 @@ function renderMindmap(){
     <h3 style="color:var(--gold);margin-bottom:4px;">Plant Kingdom &ndash; Mind Map</h3>
     <div style="color:var(--ink-dim);font-size:12px;margin-bottom:10px;">Tap the tabs to switch mind maps &middot; use buttons to zoom, view fullscreen, or pinch to zoom while fullscreen</div>
     <div class="opt-row" style="margin-bottom:10px;">
-      <div class="opt-btn${mmIdx===0?' sel':''}" onclick="mmSelect(0)">Complete Mind Map</div>
-      <div class="opt-btn${mmIdx===1?' sel':''}" onclick="mmSelect(1)">Detailed Mind Map</div>
+      <div class="opt-btn${mmIdx===0?' sel':''}" onclick="mmSelect(0)">Quick Mind Map</div>
+      <div class="opt-btn${mmIdx===1?' sel':''}" onclick="mmSelect(1)">Complete Mind Map</div>
+      <div class="opt-btn${mmIdx===2?' sel':''}" onclick="mmSelect(2)">Detailed Mind Map</div>
     </div>
     <div class="mm-toolbar">
       <button class="opt-btn" onclick="mmZoomOut()">&minus; Zoom Out</button>
@@ -3539,6 +3605,161 @@ const STUDYTIPS_CH3_TRANSLATIONS = {
     ]
   }
 };
+/* ---- Study Tips "View example" popovers: three tips describe a concrete
+   artifact ("build one master table...", "memorize the algae classes with
+   pigments and stored food...", "learn one classic life cycle diagram...")
+   with nothing to look at. These buttons show the actual filled-in artifact,
+   built from this chapter's own data (COMPARE_DATA used by the Compare &
+   Contrast tab, and BOARD_DIAGRAMS used by the Important Diagrams tab) so the
+   facts always match the rest of the chapter - nothing is duplicated or
+   re-typed by hand. ---- */
+const TIP_EXAMPLE_INDEX = {0:'master-table', 2:'life-cycle-diagram', 3:'algae-pigments'};
+const TIP_EXAMPLE_BTN_LABEL = {en:'View example', kn:'ಉದಾಹರಣೆ ನೋಡಿ', hi:'उदाहरण देखें'};
+/* Trilingual content below reuses the exact vetted Kannada/Hindi vocabulary
+   already established in GLOSSARY_TRANSLATIONS_CH3 and the comparison tables
+   already built into STUDY_TRANSLATIONS_CH3 (Gymnosperm vs Angiosperm,
+   Gametophyte vs Sporophyte, Chlorophyceae/Phaeophyceae/Rhodophyceae) so
+   terminology stays consistent with the rest of the chapter rather than
+   introducing new, unverified translations. */
+const TIP_EXAMPLES = {
+  'master-table': {
+    title: {
+      en: '📊 Sample Master Table — Algae to Angiosperms',
+      kn: '📊 ಮಾದರಿ ಮಾಸ್ಟರ್ ಟೇಬಲ್ — ಪಾಚಿಯಿಂದ ಆಂಜಿಯೋಸ್ಪರ್ಮ್‌ಗಳವರೆಗೆ',
+      hi: '📊 नमूना मास्टर तालिका — शैवाल से एंजियोस्पर्म तक'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"This is exactly the table the tip describes — one row per group, built from this chapter's own Compare Matrix.",
+              th:['Group','Dominant Phase','Vascular Tissue','Fertilisation','Seed / Fruit'],
+              rows: COMPARE_DATA.map(g=>({name:g.name, domPhase:g.domPhase, vascular:g.vascular, fertilisation:g.fertilisation, seedFruit:g.seedFruit})),
+              note:'Examples for every row are in the <b>Compare &amp; Contrast Matrix</b> tab — this is the condensed version worth memorising first.' },
+        kn: { intro:'ಇದು ಸಲಹೆ ವಿವರಿಸುವ ನಿಖರವಾದ ಟೇಬಲ್ — ಪ್ರತಿ ಗುಂಪಿಗೂ ಒಂದು ಸಾಲು, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Compare Matrix ನಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ.',
+              th:['ಗುಂಪು','ಪ್ರಬಲ ಹಂತ','ವಾಹಕ ಅಂಗಾಂಶ','ಫಲೀಕರಣ','ಬೀಜ / ಹಣ್ಣು'],
+              rows:[
+                {name:'ಪಾಚಿ', domPhase:'ಗ್ಯಾಮಿಟೋಫೈಟ್ (n)', vascular:'ಇಲ್ಲ', fertilisation:'ನೀರು', seedFruit:'ಇಲ್ಲ'},
+                {name:'ಬ್ರಯೋಫೈಟ್‌ಗಳು', domPhase:'ಗ್ಯಾಮಿಟೋಫೈಟ್ (n)', vascular:'ಇಲ್ಲ', fertilisation:'ನೀರು', seedFruit:'ಇಲ್ಲ'},
+                {name:'ಟೆರಿಡೋಫೈಟ್‌ಗಳು', domPhase:'ಸ್ಪೋರೋಫೈಟ್ (2n)', vascular:'ಇದೆ', fertilisation:'ನೀರು', seedFruit:'ಇಲ್ಲ (ಹೆಟೆರೊಸ್ಪೋರಸ್ ರೂಪಗಳಲ್ಲಿ ಪೂರ್ವಗಾಮಿ)'},
+                {name:'ಜಿಮ್ನೋಸ್ಪರ್ಮ್‌ಗಳು', domPhase:'ಸ್ಪೋರೋಫೈಟ್ (2n)', vascular:'ಇದೆ', fertilisation:'ಗಾಳಿಯ ಪ್ರವಾಹಗಳು', seedFruit:'ಬೆತ್ತಲೆ ಬೀಜ'},
+                {name:'ಆಂಜಿಯೋಸ್ಪರ್ಮ್‌ಗಳು', domPhase:'ಸ್ಪೋರೋಫೈಟ್ (2n)', vascular:'ಇದೆ', fertilisation:'ಪರಾಗಸ್ಪರ್ಶಕಗಳು (ಗಾಳಿ/ಕೀಟ/ಇತ್ಯಾದಿ)', seedFruit:'ಹಣ್ಣಿನಲ್ಲಿ ಮುಚ್ಚಲ್ಪಟ್ಟ ಬೀಜ'}
+              ],
+              note:'ಪ್ರತಿ ಸಾಲಿನ ಉದಾಹರಣೆಗಳು <b>Compare &amp; Contrast Matrix</b> ಟ್ಯಾಬ್‌ನಲ್ಲಿವೆ — ಇದು ಮೊದಲು ಕಂಠಪಾಠ ಮಾಡಲು ಯೋಗ್ಯವಾದ ಸಂಕ್ಷಿಪ್ತ ಆವೃತ್ತಿ.' },
+        hi: { intro:'यह ठीक वही तालिका है जिसका वर्णन यह सुझाव करता है — प्रत्येक समूह के लिए एक पंक्ति, इस अध्याय के अपने Compare Matrix से बनाई गई।',
+              th:['समूह','प्रमुख अवस्था','संवहन ऊतक','निषेचन','बीज / फल'],
+              rows:[
+                {name:'शैवाल', domPhase:'युग्मकोद्भिद (n)', vascular:'अनुपस्थित', fertilisation:'जल', seedFruit:'अनुपस्थित'},
+                {name:'ब्रायोफाइट', domPhase:'युग्मकोद्भिद (n)', vascular:'अनुपस्थित', fertilisation:'जल', seedFruit:'अनुपस्थित'},
+                {name:'टेरिडोफाइट', domPhase:'बीजाणुद्भिद (2n)', vascular:'उपस्थित', fertilisation:'जल', seedFruit:'अनुपस्थित (विषमबीजाणुक रूपों में पूर्वगामी)'},
+                {name:'जिम्नोस्पर्म', domPhase:'बीजाणुद्भिद (2n)', vascular:'उपस्थित', fertilisation:'वायु धाराओं (हवा)', seedFruit:'नग्न बीज'},
+                {name:'एंजियोस्पर्म', domPhase:'बीजाणुद्भिद (2n)', vascular:'उपस्थित', fertilisation:'परागणक (हवा/कीट/आदि)', seedFruit:'फल में बंद बीज'}
+              ],
+              note:'हर पंक्ति के उदाहरण <b>Compare &amp; Contrast Matrix</b> टैब में हैं — यह पहले याद करने योग्य संक्षिप्त संस्करण है।' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${l.th[1]}</th><th>${l.th[2]}</th><th>${l.th[3]}</th><th>${l.th[4]}</th></tr></thead><tbody>
+        ${l.rows.map(g=>`<tr><td class="tipex-organ">${g.name}</td><td>${g.domPhase}</td><td>${g.vascular}</td><td>${g.fertilisation}</td><td>${g.seedFruit}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">${l.note}</div>`;
+    }
+  },
+  'algae-pigments': {
+    title: {
+      en: '🟢 Sample Table — Algae Classes: Pigments &amp; Stored Food',
+      kn: '🟢 ಮಾದರಿ ಟೇಬಲ್ — ಪಾಚಿ ವರ್ಗಗಳು: ವರ್ಣದ್ರವ್ಯ ಮತ್ತು ಸಂಗ್ರಹಿತ ಆಹಾರ',
+      hi: '🟢 नमूना तालिका — शैवाल वर्ग: वर्णक और संचित भोजन'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"The exact pigment / stored-food recall table the tip describes, matching this chapter's own model-answer key points.",
+              th:['Class','Pigments','Stored Food'],
+              rows:[
+                {name:'Chlorophyceae', pigments:'Chlorophyll a and b (grass green)', food:'Starch in pyrenoids (plus oil in some)'},
+                {name:'Phaeophyceae', pigments:'Chlorophyll a, c and fucoxanthin (olive-brown)', food:'Complex carbohydrates — laminarin or mannitol'},
+                {name:'Rhodophyceae', pigments:'Chlorophyll a, d and r-phycoerythrin (red)', food:'Floridean starch (like amylopectin/glycogen)'}
+              ],
+              note:'Cell wall and flagella details for each class are in the Essay/Long-Answer practice set under "Compare the cell wall composition and flagellar arrangement...".' },
+        kn: { intro:'ಇದು ಸಲಹೆ ವಿವರಿಸುವ ನಿಖರವಾದ ವರ್ಣದ್ರವ್ಯ / ಸಂಗ್ರಹಿತ ಆಹಾರ ಜ್ಞಾಪಕ ಟೇಬಲ್, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ ಮಾದರಿ-ಉತ್ತರದ ಪ್ರಮುಖ ಅಂಶಗಳಿಗೆ ಹೊಂದಿಕೆಯಾಗುತ್ತದೆ.',
+              th:['ವರ್ಗ','ವರ್ಣದ್ರವ್ಯ','ಸಂಗ್ರಹಿತ ಆಹಾರ'],
+              rows:[
+                {name:'ಕ್ಲೋರೊಫಿಸೀ', pigments:'ಕ್ಲೋರೊಫಿಲ್ a ಮತ್ತು b (ಹುಲ್ಲು-ಹಸಿರು)', food:'ಪಿಷ್ಟ (ಪೈರಿನಾಯ್ಡ್‌ನಲ್ಲಿ)/ಎಣ್ಣೆ'},
+                {name:'ಫಿಯೋಫಿಸೀ', pigments:'ಕ್ಲೋರೊಫಿಲ್ a, c ಮತ್ತು fucoxanthin (ಆಲಿವ್-ಕಂದು)', food:'ಸಂಕೀರ್ಣ ಕಾರ್ಬೋಹೈಡ್ರೇಟ್‌ಗಳು — ಲ್ಯಾಮಿನೇರಿನ್ ಅಥವಾ ಮ್ಯಾನಿಟಾಲ್'},
+                {name:'ರೋಡೊಫಿಸೀ', pigments:'ಕ್ಲೋರೊಫಿಲ್ a, d ಮತ್ತು r-ಫೈಕೊಎರಿಥ್ರಿನ್ (ಕೆಂಪು)', food:'ಫ್ಲೋರಿಡೀನ್ ಪಿಷ್ಟ (amylopectin/glycogen ನಂತೆ)'}
+              ],
+              note:'ಪ್ರತಿ ವರ್ಗದ ಜೀವಕೋಶ ಗೋಡೆ ಮತ್ತು ಫ್ಲಾಜೆಲ್ಲಾ ವಿವರಗಳು Essay/Long-Answer ಅಭ್ಯಾಸ ಸೆಟ್‌ನಲ್ಲಿ "Compare the cell wall composition and flagellar arrangement..." ಅಡಿಯಲ್ಲಿವೆ.' },
+        hi: { intro:'यह ठीक वही वर्णक / संचित भोजन याद करने वाली तालिका है जिसका वर्णन यह सुझाव करता है, जो इस अध्याय के अपने मॉडल-उत्तर के मुख्य बिंदुओं से मेल खाती है।',
+              th:['वर्ग','वर्णक','संचित भोजन'],
+              rows:[
+                {name:'क्लोरोफाइसी', pigments:'क्लोरोफिल a और b (घास-हरा)', food:'स्टार्च (पाइरेनॉइड में)/तेल'},
+                {name:'फियोफाइसी', pigments:'क्लोरोफिल a, c और fucoxanthin (जैतूनी-भूरा)', food:'जटिल कार्बोहाइड्रेट — लैमिनारिन या मैनिटॉल'},
+                {name:'रोडोफाइसी', pigments:'क्लोरोफिल a, d और r-फाइकोएरिथ्रिन (लाल)', food:'फ्लोरिडियन स्टार्च (amylopectin/glycogen जैसा)'}
+              ],
+              note:'प्रत्येक वर्ग की कोशिका भित्ति और कशाभिका (फ्लैजेला) का विवरण Essay/Long-Answer अभ्यास सेट में "Compare the cell wall composition and flagellar arrangement..." के अंतर्गत है।' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${l.th[1]}</th><th>${l.th[2]}</th></tr></thead><tbody>
+        ${l.rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td>${r.pigments}</td><td>${r.food}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">${l.note}</div>`;
+    }
+  },
+  'life-cycle-diagram': {
+    title: {
+      en: '🔍 Label Checklist — One Classic Life-Cycle Diagram',
+      kn: '🔍 ಲೇಬಲ್ ಪರಿಶೀಲನಾ ಪಟ್ಟಿ — ಒಂದು ಕ್ಲಾಸಿಕ್ ಜೀವನ ಚಕ್ರ ರೇಖಾಚಿತ್ರ',
+      hi: '🔍 लेबल चेकलिस्ट — एक क्लासिक जीवन-चक्र आरेख'
+    },
+    render: function(lang){
+      const funaria = BOARD_DIAGRAMS.find(d=>d.fig.includes('Funaria'));
+      const equisetum = BOARD_DIAGRAMS.find(d=>d.fig.includes('Equisetum'));
+      const cases = [funaria, equisetum].filter(Boolean);
+      const L = {
+        en: { intro:"Pick one classic life cycle per group and learn it this deeply — these are the exact board-priority labels this chapter's Important Diagrams tab flags for each figure.",
+              cases:cases.map(c=>({fig:c.fig, labels:c.labels})),
+              prLabel:cases[0]?cases[0].prLabel:'',
+              note:'Both are {pr} figures — see the <b>Important Diagrams</b> tab for page numbers and mark weightage.' },
+        kn: { intro:'ಪ್ರತಿ ಗುಂಪಿಗೂ ಒಂದು ಕ್ಲಾಸಿಕ್ ಜೀವನ ಚಕ್ರವನ್ನು ಆಯ್ಕೆಮಾಡಿ ಮತ್ತು ಅದನ್ನು ಇಷ್ಟು ಆಳವಾಗಿ ಕಲಿಯಿರಿ — ಇವು ಈ ಅಧ್ಯಾಯದ Important Diagrams ಟ್ಯಾಬ್ ಪ್ರತಿ ಚಿತ್ರಕ್ಕೂ ಗುರುತಿಸಿದ ನಿಖರವಾದ ಬೋರ್ಡ್-ಆದ್ಯತೆ ಲೇಬಲ್‌ಗಳು.',
+              cases:[
+                {fig:'Fig 3.2(c) — Funaria (ಮಾಸ್) ಗ್ಯಾಮಿಟೋಫೈಟ್ ಮತ್ತು ಸ್ಪೋರೋಫೈಟ್', labels:'Sporophyte — Capsule, Seta, Foot; Gametophyte — Leaves, ಮುಖ್ಯ ಆಕ್ಸಿಸ್, Rhizoids — ಅವಲಂಬಿತ ಡಿಪ್ಲಾಯ್ಡ್ ಸ್ಪೋರೋಫೈಟ್ ಹ್ಯಾಪ್ಲಾಯ್ಡ್ ಗ್ಯಾಮಿಟೋಫೈಟ್‌ಗೆ ಎಲ್ಲಿ ಜೋಡಣೆಗೊಂಡಿದೆ ಎಂಬುದನ್ನು ಸ್ಪಷ್ಟವಾಗಿ ಗುರುತಿಸಿ'},
+                {fig:'Fig 3.3(b) — Equisetum (ಹಾರ್ಸ್ ಟೇಲ್)', labels:'ಸ್ಟ್ರೋಬೈಲಸ್ (ಕೋನ್), ನೋಡ್, ಇಂಟರ್ನೋಡ್, ಬ್ರಾಂಚ್‌ಗಳು, ಭೂಗತ ರೈಜೋಮ್'}
+              ],
+              prLabel:cases[0]?cases[0].prLabel:'',
+              note:'ಎರಡೂ {pr} ಚಿತ್ರಗಳು — ಪುಟ ಸಂಖ್ಯೆಗಳು ಮತ್ತು ಅಂಕ ಹಂಚಿಕೆಗಾಗಿ <b>Important Diagrams</b> ಟ್ಯಾಬ್ ನೋಡಿ.' },
+        hi: { intro:'हर समूह के लिए एक क्लासिक जीवन-चक्र चुनें और उसे इतनी गहराई से सीखें — ये इस अध्याय के Important Diagrams टैब द्वारा हर चित्र के लिए चिह्नित सटीक बोर्ड-प्राथमिकता लेबल हैं।',
+              cases:[
+                {fig:'Fig 3.2(c) — Funaria (मॉस) युग्मकोद्भिद और बीजाणुद्भिद', labels:'Sporophyte — Capsule, Seta, Foot; Gametophyte — Leaves, मुख्य एक्सिस, Rhizoids — स्पष्ट रूप से चिह्नित करें कि आश्रित द्विगुणित sporophyte अगुणित gametophyte से कहाँ जुड़ता है'},
+                {fig:'Fig 3.3(b) — Equisetum (हॉर्सटेल)', labels:'स्ट्रोबिलस (शंकु), नोड, इंटरनोड, ब्रांचें, भूमिगत राइज़ोम'}
+              ],
+              prLabel:cases[0]?cases[0].prLabel:'',
+              note:'दोनों {pr} चित्र हैं — पृष्ठ संख्या और अंक भार के लिए <b>Important Diagrams</b> टैब देखें।' }
+      };
+      const l = L[lang] || L.en;
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">${l.intro}</div>
+        ${l.cases.map(c=>`<div class="tipex-case"><div class="tipex-case-title">${c.fig}</div><div class="tipex-step"><span class="tipex-q">✓</span><span>${c.labels}</span></div></div>`).join('')}
+        <div class="tipex-note">${l.note.replace('{pr}', l.prLabel)}</div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  const lang = (typeof currentLang!=='undefined' && ex.title[currentLang]) ? currentLang : 'en';
+  document.getElementById('tipExampleTitle').textContent = ex.title[lang];
+  document.getElementById('tipExampleBody').innerHTML = ex.render(lang);
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTips(){
   const en = STUDYTIPS_CH3_EN;
   const tr = (currentLang !== 'en') && STUDYTIPS_CH3_TRANSLATIONS[currentLang];
@@ -3547,7 +3768,7 @@ function renderStudyTips(){
     <h3 style="color:var(--gold);margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--ink-dim);font-size:12px;margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ ${TIP_EXAMPLE_BTN_LABEL[currentLang]||TIP_EXAMPLE_BTN_LABEL.en}</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   </div>`;
@@ -4148,7 +4369,15 @@ function getHwUnlock(){ try{ return JSON.parse(localStorage.getItem(HW_UNLOCK_KE
 function setHwUnlock(method, extra){
   try{ localStorage.setItem(HW_UNLOCK_KEY, JSON.stringify(Object.assign({unlocked:true, method:method, ts:Date.now()}, extra||{}))); }catch(e){}
 }
-function hwQualifies(){ const u = getHwUnlock(); return !!(u && u.unlocked); }
+function hwQualifies(){
+  const u = getHwUnlock();
+  if(!u || !u.unlocked) return false;
+  if(u.method === 'code' && studentCodeExpired(u)){
+    try{ localStorage.removeItem(HW_UNLOCK_KEY); }catch(e){}
+    return false;
+  }
+  return true;
+}
 function reLockHw(){ try{ localStorage.removeItem(HW_UNLOCK_KEY); }catch(e){} renderDownloads(); }
 window.reLockHw = reLockHw;
 function bestNeetScore(){
@@ -4171,7 +4400,7 @@ function hwSubmitUnlock(){
   if(entry && entry.code.toUpperCase() === code){ setHwUnlock('code', {roll:roll, section:section}); renderDownloads(); return; }
   if(name && computeStudentCode(name, roll, section, 'CH3-HWNOTES') === code){ setHwUnlock('code', {roll:roll, section:section, name:name}); renderDownloads(); return; }
   if(!name){ msgEl.textContent = 'That roll number / code combination was not recognized. If Narendra Sir gave you a new-style code, please also enter your full name above.'; }
-  else { msgEl.textContent = 'That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir.'; }
+  else { msgEl.textContent = 'That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir, or note that student unlock codes expire on 25 Oct 2026 and may need to be renewed.'; }
   msgEl.className = 'hw-msg bad';
 }
 window.hwSubmitUnlock = hwSubmitUnlock;
@@ -4229,8 +4458,8 @@ const PREMIUM_PRICE_RUPEES = 1999;
 const PREMIUM_PRICE_ORIGINAL = 3000;
 const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/3WXDfYoj';
 const HW_RAZORPAY_LINK = 'https://rzp.io/rzp/ZFZzLN9e';
-const PREMIUM_LOCKED_TABS = ['mcq','neet','kcet','writeit','mindmap','classppt','papergen','boardimp','podcast'];
-const PREMIUM_TAB_LABELS = {mcq:'MCQ Quiz', neet:'NEET Practice', kcet:'KCET Practice', writeit:'Answer Practice', mindmap:'Mind Map', classppt:'Class Presentation', papergen:'Paper Generator', boardimp:'Board Important', podcast:'Audio Podcast'};
+const PREMIUM_LOCKED_TABS = ['oneshot','mcq','neet','kcet','writeit','mindmap','classppt','papergen','boardimp','podcast'];
+const PREMIUM_TAB_LABELS = {oneshot:'One-Shot Revision', mcq:'MCQ Quiz', neet:'NEET Practice', kcet:'KCET Practice', writeit:'Answer Practice', mindmap:'Mind Map', classppt:'Class Presentation', papergen:'Paper Generator', boardimp:'Board Important', podcast:'Audio Podcast'};
 
 function getPremiumUnlock(){ try{ return JSON.parse(localStorage.getItem(PREMIUM_KEY) || 'null'); }catch(e){ return null; } }
 function setPremiumUnlock(method, extra){
@@ -4243,6 +4472,10 @@ function premiumQualifies(){
     try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){}
     return false;
   }
+  if(u.method === 'code' && studentCodeExpired(u)){
+    try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){}
+    return false;
+  }
   return true;
 }
 function reLockPremium(){ try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){} renderContent(); renderTabbar(); }
@@ -4250,6 +4483,21 @@ window.reLockPremium = reLockPremium;
 function premiumUnlockKey(section, roll){ return (section||'').trim().toUpperCase()+'_'+(roll||'').trim().toUpperCase(); }
 /* ---------------- Student-locked unlock code (must match code_generator.html exactly) ---------------- */
 const CODE_SALT = 'BAIO-STUDENT-LOCK-2026';
+/* Student-entered unlock codes (not the master code) stop granting access after this
+   date - Narendra Sir can renew access for everyone by moving this one date forward. */
+const STUDENT_CODE_EXPIRY = new Date('2026-10-25T23:59:59+05:30').getTime();
+/* Per-student renewals: a code-unlock for these SECTION_ROLL keys stays active
+   until the date given here, even after STUDENT_CODE_EXPIRY has passed. */
+const STUDENT_CODE_RENEWALS = {
+  'SPARK_26MPU0077': '2027-03-31T23:59:59+05:30'  /* Akshata (I PUC) */
+};
+function studentCodeExpired(u){
+  const now = Date.now();
+  if(now <= STUDENT_CODE_EXPIRY) return false;
+  const k = ((u && u.section)||'').toString().trim().toUpperCase() + '_' + ((u && u.roll)||'').toString().trim().toUpperCase();
+  const until = STUDENT_CODE_RENEWALS[k];
+  return !(until && now <= new Date(until).getTime());
+}
 const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 function normalizeField(s){ return (s || '').toString().trim().toUpperCase().replace(/\s+/g, ' '); }
 function fnv1aHash(str){
@@ -4293,7 +4541,7 @@ function premiumSubmitUnlock(){
   if(entry && entry.code.toUpperCase() === code){ setPremiumUnlock('code', {roll:roll, section:section}); renderContent(); renderTabbar(); return; }
   if(name && (computeStudentCode(name, roll, section, 'CH3-PREMIUM') === code || computeStudentCode(name, roll, section) === code)){ setPremiumUnlock('code', {roll:roll, section:section, name:name}); renderContent(); renderTabbar(); return; }
   if(!name){ msgEl.textContent = 'That roll number / code combination was not recognized. If Narendra Sir gave you a new-style code, please also enter your full name above.'; }
-  else { msgEl.textContent = 'That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir.'; }
+  else { msgEl.textContent = 'That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir, or note that student unlock codes expire on 25 Oct 2026 and may need to be renewed.'; }
   msgEl.className='hw-msg bad';
 }
 window.premiumSubmitUnlock = premiumSubmitUnlock;
@@ -4379,12 +4627,64 @@ function injectDemoAccessBanner(){
   tick();
   demoBannerInterval = setInterval(tick, 1000);
 }
-function renderContent(){
-  if(PREMIUM_LOCKED_TABS.indexOf(currentTab) !== -1 && !premiumQualifies()){
-    renderPremiumLock(currentTab);
+
+/* ---------------- ONE-SHOT REVISION (Study Mode notes, narrated: oneshot-study.js) ---------------- */
+const ONESHOT_TOPIC_NAMES = {"classification": {"kn": "ವರ್ಗೀಕರಣ ಪದ್ಧತಿಗಳು", "hi": "वर्गीकरण पद्धतियाँ"}, "algae": {"kn": "ಶೈವಲಗಳು: ಸಾಮಾನ್ಯ ಲಕ್ಷಣಗಳು", "hi": "शैवाल: सामान्य लक्षण"}, "algae-classes": {"kn": "ಶೈವಲಗಳ ವರ್ಗಗಳು", "hi": "शैवाल के वर्ग"}, "bryophyta": {"kn": "ಬ್ರಯೋಫೈಟಾ: ಸಾಮಾನ್ಯ ಲಕ್ಷಣಗಳು", "hi": "ब्रायोफाइटा: सामान्य लक्षण"}, "bryo-classes": {"kn": "ಬ್ರಯೋಫೈಟ್‌ಗಳ ವರ್ಗಗಳು", "hi": "ब्रायोफाइट के वर्ग"}, "pteridophyta": {"kn": "ಟೆರಿಡೋಫೈಟಾ", "hi": "टेरिडोफाइटा"}, "gymnosperms": {"kn": "ಅನಾವೃತಬೀಜಿಗಳು", "hi": "अनावृतबीजी"}, "angiosperms": {"kn": "ಆವೃತಬೀಜಿಗಳು", "hi": "आवृतबीजी"}};
+function renderOneShotStudy(){
+  if(!window.OneShotStudy){ document.getElementById('content').innerHTML = '<div class="setup-card">Loading One-Shot Revision…</div>'; setTimeout(()=>{ if(currentTab==='oneshot') renderOneShotStudy(); }, 400); return; }
+  OneShotStudy.render({
+    key:'pu1ch3', chapterNo:3, cls:'PU-I',
+    chapterName:{"en": "Plant Kingdom", "kn": "ಸಸ್ಯ ಸಾಮ್ರಾಜ್ಯ", "hi": "पादप जगत"},
+    topics: DATA.topics.map(t=>({id:t.id, name:Object.assign({en:t.name}, ONESHOT_TOPIC_NAMES[t.id]||{})})),
+    getStudy:(id, l)=> l==='en' ? DATA.study[id] : ((typeof STUDY_TRANSLATIONS_CH3!=='undefined' && STUDY_TRANSLATIONS_CH3[id] && STUDY_TRANSLATIONS_CH3[id][l]) || null),
+    container:()=>document.getElementById('content'),
+    lang:()=>(typeof currentLang!=='undefined' ? currentLang : 'en')
+  });
+}
+
+/* ---------------- CLASS PRESENTATION · Large Text (projector) deck (class-large.js) ---------------- */
+let clgDeck = (function(){ try{ return localStorage.getItem('pu1ch3_ppt_deck') || ''; }catch(e){ return ''; } })();
+function clgSetDeck(d){ clgDeck = d; try{ localStorage.setItem('pu1ch3_ppt_deck', d); }catch(e){} renderClassPpt(); }
+function clgSwitchHtml(active){
+  return `<div class="clg-deck-switch"><button type="button" class="${active==='std'?'active':''}" onclick="clgSetDeck('std')">🖼️ Standard <span>${CLASS_SLIDES.length} slides</span></button><button type="button" class="${active==='large'?'active':''}" onclick="clgSetDeck('large')">🔠 Large Text · Projector <span>light &amp; dark · EN / ಕ / हि</span></button></div>`;
+}
+const _clgStdRenderClassPpt = renderClassPpt;
+renderClassPpt = function(){
+  if(window.ClassLarge) ClassLarge.unmount();
+  const deck = CLASS_SLIDES.length ? (clgDeck==='large' ? 'large' : 'std') : 'large';
+  if(deck==='std'){
+    _clgStdRenderClassPpt();
+    const h = document.querySelector('#content .setup-card h3');
+    if(h) h.insertAdjacentHTML('afterend', clgSwitchHtml('std'));
     return;
   }
+  document.getElementById('content').innerHTML = `<div class="setup-card"><h3 style="color:var(--gold);margin-bottom:8px;">Class Presentation</h3>${CLASS_SLIDES.length ? clgSwitchHtml('large') : ''}<div id="clgHost"></div></div>`;
+  if(!window.ClassLarge){ document.getElementById('clgHost').innerHTML = '<div style="padding:20px;text-align:center">Loading slides…</div>'; setTimeout(()=>{ if(currentTab==='classppt') renderClassPpt(); }, 400); return; }
+  ClassLarge.mount(document.getElementById('clgHost'), {
+    key:'pu1ch3', chapterNo:3, cls:'PU-I',
+    chapterName:{"en": "Plant Kingdom", "kn": "ಸಸ್ಯ ಸಾಮ್ರಾಜ್ಯ", "hi": "पादप जगत"},
+    topics: DATA.topics.map(t=>({id:t.id, name:Object.assign({en:t.name}, (typeof ONESHOT_TOPIC_NAMES!=='undefined' && ONESHOT_TOPIC_NAMES[t.id])||{})})),
+    getStudy:(id, l)=> l==='en' ? DATA.study[id] : ((typeof STUDY_TRANSLATIONS_CH3!=='undefined' && STUDY_TRANSLATIONS_CH3[id] && STUDY_TRANSLATIONS_CH3[id][l]) || null),
+    lang:()=>(typeof currentLang!=='undefined' ? currentLang : 'en')
+  });
+};
+
+function renderContent(){
+  if(currentTab !== 'classppt' && window.ClassLarge) ClassLarge.unmount();
+  if(currentTab !== 'oneshot' && window.OneShotStudy) OneShotStudy.stop();
+  if(window.BaioSample) BaioSample.clear();
+  if(PREMIUM_LOCKED_TABS.indexOf(currentTab) !== -1 && !premiumQualifies()){
+    if(window.BaioSample && BaioSample.allow(currentTab)){
+      const __sampleTab = currentTab;
+      setTimeout(function(){ if(currentTab === __sampleTab) BaioSample.start(__sampleTab, document.getElementById('content'), function(t){ renderPremiumLock(t); }, null, {single:true}); }, 0);
+    } else {
+      renderPremiumLock(currentTab);
+      if(window.BaioSample) BaioSample.notice(currentTab, document.getElementById('content'));
+      return;
+    }
+  }
   if(currentTab==='study') renderStudy();
+  else if(currentTab==='oneshot') renderOneShotStudy();
   else if(currentTab==='podcast') renderPodcast();
   else if(currentTab==='studytips') renderStudyTips();
   else if(currentTab==='pacing') renderPacing();
@@ -4730,6 +5030,36 @@ window.chapterHardRefresh = chapterHardRefresh;
   if(document.readyState === 'complete' || document.readyState === 'interactive'){ checkConnectivity(); }
   else { document.addEventListener('DOMContentLoaded', checkConnectivity); }
 })();
+</script>
+<script>
+async function shareAllSocial(){
+  const text = '\u{1F4DA} BAIO Learning System \u2014 by Narendra Sir\nBiology All In One, for PU-I/PU-II & NEET/KCET aspirants.\n\n'
+    + '\u{1F310} App: https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/\n\n'
+    + '\u{1F4AC} WhatsApp Channel: https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X\n\n'
+    + '\u{1F4F8} Instagram: https://www.instagram.com/new_gen_bioguru\n\n'
+    + '\u25B6\uFE0F YouTube: https://youtube.com/@biogurunarendrasir\n\n'
+    + '\u{1F4E2} Telegram: https://t.me/BAIO_Learning_System';
+  /* Share sheet: picture size + links only / picture only / picture + links (assets/social/share-sheet.js). */
+  if(!window.BAIOShare){
+    await new Promise(function(ok){ const sc = document.createElement('script'); sc.src = '../assets/social/share-sheet.js?v=1'; sc.onload = ok; sc.onerror = ok; document.head.appendChild(sc); });
+  }
+  if(window.BAIOShare){ window.BAIOShare.open(text, '../assets/social/'); return; }
+  if(navigator.share){
+    try{ await navigator.share({ title:'BAIO Learning System \u2014 by Narendra Sir', text }); return; }catch(e){ if(e && e.name === 'AbortError') return; }
+  }
+  try{
+    await navigator.clipboard.writeText(text);
+    alert('All links copied! Paste anywhere to share.');
+  }catch(e){
+    window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank', 'noopener,noreferrer');
+  }
+}
+window.shareAllSocial = shareAllSocial;
+</script>
+<script>
+/* Chapter Quick Card at the top of the Board Important tab (quick-card.js) */
+(function(){ if(typeof renderBoardImportant!=='function') return; const _rbi=renderBoardImportant;
+  renderBoardImportant=function(){ const r=_rbi.apply(this,arguments); if(window.QuickCard) QuickCard.mount(document.getElementById('content'), {id:'pu1-ch3', base:'../', title:'Plant Kingdom', cls:'I PUC', ch:3}); return r; }; })();
 </script>
 </body>
 </html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Parent Feedback · BAIO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Caveat:wght@600&family=Noto+Sans+Kannada:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#FBF7EE;--card:#FFFFFF;--ink:#1D2433;--dim:#5E6677;--gold:#B8912A;--gold2:#E9C45A;--teal:#0E8F7E;--teal-bg:#E6F4F1;--rose:#C2554A;--line:#EADFC6;--navy:#0E1B33;--chip:#FFFFFF;--topbg:rgba(251,247,238,.94);color-scheme:light}
+:root[data-theme="dark"]{--paper:#0F1520;--card:#18212F;--ink:#E8ECF2;--dim:#A3ADBD;--gold:#E9C45A;--teal:#3CC9B4;--teal-bg:#123A36;--rose:#F08A7E;--line:#2A3547;--navy:#0B1424;--chip:#1E2938;--topbg:rgba(15,21,32,.94);color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.6 Inter,'Noto Sans Devanagari','Noto Sans Kannada',sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 120px}
+.top{position:sticky;top:0;z-index:10;background:var(--topbg);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.top-in{max-width:760px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.brand .b{width:34px;height:34px;border-radius:9px;background:var(--navy);color:var(--gold2);display:grid;place-items:center;font:700 18px Fraunces;border:1px solid var(--line)}
+.tools{display:flex;gap:6px;align-items:center}
+.tools button{border:1px solid var(--line);background:var(--chip);color:var(--ink);border-radius:999px;padding:7px 12px;font:600 13px Inter,'Noto Sans Devanagari','Noto Sans Kannada';cursor:pointer;min-height:38px}
+.tools button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+:root[data-theme="dark"] .tools button.on{background:var(--gold2);color:#0E1B33;border-color:var(--gold2)}
+.tools .thm{width:38px;padding:0;font-size:16px}
+.progress{height:4px;background:var(--line)}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--gold2));transition:width .3s}
+.hero{margin-top:20px;border-radius:24px;padding:28px 24px;background:linear-gradient(140deg,#0E1B33 0%,#13304A 55%,#0E8F7E 140%);color:#fff;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;right:-70px;top:-70px;width:230px;height:230px;border-radius:50%;background:radial-gradient(circle,rgba(233,196,90,.35),rgba(233,196,90,0) 70%)}
+.eyebrow{font:700 12px Inter;letter-spacing:2.2px;text-transform:uppercase;color:var(--gold2)}
+.hero h1{font:700 30px/1.2 Fraunces,'Noto Sans Devanagari','Noto Sans Kannada',serif;margin:10px 0 8px}
+.hero p{margin:0;color:#D6E2EC}
+.hero .meta{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+.hero .meta span{padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);font:600 13px Inter,'Noto Sans Devanagari','Noto Sans Kannada'}
+.note{margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 20px}
+.note p{margin:0 0 10px}
+.sign{font:600 26px/1 Caveat,cursive;color:var(--navy)}
+:root[data-theme="dark"] .sign{color:var(--gold2)}
+.sign-sub{font:500 12.5px Inter;color:var(--dim)}
+.sec{margin-top:28px}
+.sec h2{font:700 21px/1.3 Fraunces,'Noto Sans Devanagari','Noto Sans Kannada',serif;margin:0 0 4px;display:flex;align-items:center;gap:10px}
+.sec h2 .n{width:32px;height:32px;border-radius:10px;background:var(--teal-bg);color:var(--teal);display:grid;place-items:center;font:700 15px Inter;flex:0 0 auto}
+.sec .lead{color:var(--dim);margin:0 0 12px;font-size:14.5px}
+.q{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:10px}
+.q .qt{font:600 15.5px/1.45 Inter,'Noto Sans Devanagari','Noto Sans Kannada';margin-bottom:10px}
+.q .qd{font-size:13px;color:var(--dim);margin:-6px 0 10px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:12px;padding:9px 13px;font:500 14px Inter,'Noto Sans Devanagari','Noto Sans Kannada';cursor:pointer;min-height:42px;text-align:left}
+.opt.on{border-color:var(--teal);background:var(--teal-bg);color:var(--ink);font-weight:700}
+.stars{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.star{width:44px;height:44px;border-radius:12px;border:1.5px solid var(--line);background:var(--paper);font-size:22px;cursor:pointer;color:#C9C2B0;line-height:1}
+.star.on{color:#E2A913;border-color:#E9C45A;background:#FFF6DC}
+:root[data-theme="dark"] .star.on{background:#2A2414}
+.stars .lbl{font:600 13px Inter,'Noto Sans Devanagari','Noto Sans Kannada';color:var(--dim);margin-left:6px}
+textarea,input[type=text]{width:100%;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:12px;padding:11px 12px;font:400 15px Inter,'Noto Sans Devanagari','Noto Sans Kannada';resize:vertical}
+textarea{min-height:84px}
+textarea:focus,input:focus{outline:none;border-color:var(--teal)}
+.tool{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;padding:12px 0;border-top:1px dashed var(--line)}
+.tool:first-of-type{border-top:0;padding-top:2px}
+.tool .tn{font:600 15px Inter,'Noto Sans Devanagari','Noto Sans Kannada';display:flex;gap:8px;align-items:flex-start}
+.tool .tn i{font-style:normal;font-size:18px;line-height:1.3}
+.tool .td{font-size:13px;color:var(--dim);margin-top:1px;font-weight:400}
+.tool .opts .opt{padding:7px 11px;min-height:38px;font-size:13.5px}
+.submit{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--topbg);backdrop-filter:blur(6px);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
+.submit-in{max-width:760px;margin:0 auto;display:flex;gap:8px;align-items:center}
+.submit .cnt{font:600 12.5px Inter,'Noto Sans Devanagari','Noto Sans Kannada';color:var(--dim);flex:1;min-width:0}
+.btn{border:0;border-radius:14px;padding:12px 16px;font:700 15px Inter,'Noto Sans Devanagari','Noto Sans Kannada';cursor:pointer;min-height:48px}
+.btn.wa{background:#1FA855;color:#fff}
+.btn.sec2{background:var(--chip);color:var(--ink);border:1px solid var(--line)}
+.done{display:none;margin-top:18px;background:var(--teal-bg);border:1px solid var(--teal);border-radius:16px;padding:16px 18px}
+.done.on{display:block}
+footer{margin-top:30px;text-align:center;color:var(--dim);font-size:13px}
+@media (max-width:420px){.hero h1{font-size:25px}.tools button{padding:7px 9px}.btn{padding:12px 12px;font-size:14px}}
+</style>
+</head>
+<body>
+<div class="top"><div class="top-in"><div class="brand"><div class="b">B</div></div><div class="tools"><div id="langs" style="display:flex;gap:6px"></div><button class="thm" id="thm" type="button" aria-label="Switch theme">🌙</button></div></div><div class="progress"><i id="bar"></i></div></div>
+<div class="wrap" id="app"></div>
+<div class="submit"><div class="submit-in"><div class="cnt" id="cnt"></div><button class="btn sec2" id="copyBtn" type="button"></button><button class="btn wa" id="sendBtn" type="button"></button></div></div>
+<script>
+const STUDENT={en:'Laiba',kn:'ಲೈಬಾ',hi:'लाइबा'};
+const WA='919008968389';
+const L={
+en:{eyebrow:'BAIO Learning System · Parent Feedback',h1:'Your feedback on Laiba’s journey to NEET',sub:'A few minutes of your time will help me guide Laiba even better towards a high score and her NEET dream.',meta:['I PUC Biology','About 5 minutes','Sent to Narendra Sir on WhatsApp'],
+ note:['Dear Mother of Laiba,','Thank you for trusting me with Laiba’s Biology preparation. Over this year I have built many tools for exams — chapter apps, practice papers, notes, reels, podcasts, daily challenges and personal report cards — all to help students like Laiba score high and aim for NEET.','Please share honestly what is working and what I can do better. Every answer is optional; answer whatever you can. When you finish, tap <b>Send on WhatsApp</b> and your answers will come directly to me.'],
+ sig:'Narendra Sir',sigSub:'Biology Lecturer · Founder & CEO, BAIO Learning System',
+ send:'Send on WhatsApp',copy:'Copy',copied:'Copied ✓',answered:(a,t)=>a+' of '+t+' answered',
+ done:'<b>Thank you!</b> WhatsApp should now be open with your answers. Please tap the send button there. If it didn’t open, tap <b>Copy</b> and paste the answers in a WhatsApp message to 90089 68389.',
+ ph:'Type here (optional)',rate:['','Poor','Fair','Good','Very good','Excellent'],
+ tOpts:['Very helpful','Somewhat helpful','Not used yet'],foot:'Prepared with care by Narendra Sir · BAIO Learning System'},
+kn:{eyebrow:'BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್ · ಪೋಷಕರ ಅಭಿಪ್ರಾಯ',h1:'ಲೈಬಾಳ NEET ಪಯಣದ ಬಗ್ಗೆ ನಿಮ್ಮ ಅಭಿಪ್ರಾಯ',sub:'ನಿಮ್ಮ ಕೆಲವು ನಿಮಿಷಗಳು ಲೈಬಾಳನ್ನು ಹೆಚ್ಚಿನ ಅಂಕ ಮತ್ತು NEET ಕನಸಿನತ್ತ ಇನ್ನೂ ಉತ್ತಮವಾಗಿ ಮಾರ್ಗದರ್ಶಿಸಲು ನನಗೆ ಸಹಾಯ ಮಾಡುತ್ತವೆ.',meta:['ಪ್ರಥಮ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ','ಸುಮಾರು 5 ನಿಮಿಷ','ವಾಟ್ಸಾಪ್‌ನಲ್ಲಿ ನರೇಂದ್ರ ಸರ್‌ಗೆ'],
+ note:['ಗೌರವಾನ್ವಿತ ಲೈಬಾಳ ತಾಯಿಯವರೇ,','ಲೈಬಾಳ ಜೀವಶಾಸ್ತ್ರ ತಯಾರಿಗೆ ನನ್ನ ಮೇಲೆ ನಂಬಿಕೆ ಇಟ್ಟಿದ್ದಕ್ಕೆ ಧನ್ಯವಾದಗಳು. ಈ ವರ್ಷ ಪರೀಕ್ಷೆಗಾಗಿ ನಾನು ಅನೇಕ ಸಾಧನಗಳನ್ನು ರೂಪಿಸಿದ್ದೇನೆ — ಅಧ್ಯಾಯ ಆ್ಯಪ್‌ಗಳು, ಅಭ್ಯಾಸ ಪತ್ರಿಕೆಗಳು, ನೋಟ್ಸ್, ರೀಲ್ಸ್, ಪಾಡ್‌ಕಾಸ್ಟ್‌ಗಳು, ದೈನಂದಿನ ಸವಾಲುಗಳು ಮತ್ತು ವೈಯಕ್ತಿಕ ವರದಿ ಪತ್ರಗಳು — ಲೈಬಾಳಂತಹ ವಿದ್ಯಾರ್ಥಿಗಳು ಹೆಚ್ಚು ಅಂಕ ಪಡೆದು NEET ಗುರಿ ಮುಟ್ಟಲು.','ಯಾವುದು ಚೆನ್ನಾಗಿ ನಡೆಯುತ್ತಿದೆ, ನಾನು ಏನನ್ನು ಉತ್ತಮಪಡಿಸಬಹುದು ಎಂದು ಪ್ರಾಮಾಣಿಕವಾಗಿ ತಿಳಿಸಿ. ಎಲ್ಲಾ ಉತ್ತರಗಳು ಐಚ್ಛಿಕ. ಮುಗಿದ ನಂತರ <b>ವಾಟ್ಸಾಪ್‌ನಲ್ಲಿ ಕಳುಹಿಸಿ</b> ಒತ್ತಿ — ನಿಮ್ಮ ಉತ್ತರಗಳು ನೇರವಾಗಿ ನನಗೆ ಬರುತ್ತವೆ.'],
+ sig:'ನರೇಂದ್ರ ಸರ್',sigSub:'ಜೀವಶಾಸ್ತ್ರ ಉಪನ್ಯಾಸಕರು · ಸಂಸ್ಥಾಪಕರು ಮತ್ತು CEO, BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್',
+ send:'ವಾಟ್ಸಾಪ್‌ನಲ್ಲಿ ಕಳುಹಿಸಿ',copy:'ನಕಲಿಸಿ',copied:'ನಕಲಾಯಿತು ✓',answered:(a,t)=>t+' ರಲ್ಲಿ '+a+' ಉತ್ತರಿಸಲಾಗಿದೆ',
+ done:'<b>ಧನ್ಯವಾದಗಳು!</b> ನಿಮ್ಮ ಉತ್ತರಗಳೊಂದಿಗೆ ವಾಟ್ಸಾಪ್ ತೆರೆದಿರಬೇಕು. ಅಲ್ಲಿ ಕಳುಹಿಸು ಬಟನ್ ಒತ್ತಿ. ತೆರೆಯದಿದ್ದರೆ <b>ನಕಲಿಸಿ</b> ಒತ್ತಿ, 90089 68389 ಗೆ ವಾಟ್ಸಾಪ್ ಸಂದೇಶದಲ್ಲಿ ಅಂಟಿಸಿ.',
+ ph:'ಇಲ್ಲಿ ಬರೆಯಿರಿ (ಐಚ್ಛಿಕ)',rate:['','ಕಳಪೆ','ಸಾಧಾರಣ','ಉತ್ತಮ','ತುಂಬಾ ಉತ್ತಮ','ಅತ್ಯುತ್ತಮ'],
+ tOpts:['ತುಂಬಾ ಉಪಯುಕ್ತ','ಸ್ವಲ್ಪ ಉಪಯುಕ್ತ','ಇನ್ನೂ ಬಳಸಿಲ್ಲ'],foot:'ನರೇಂದ್ರ ಸರ್ ಅವರಿಂದ ಪ್ರೀತಿಯಿಂದ ಸಿದ್ಧಪಡಿಸಲಾಗಿದೆ · BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್'},
+hi:{eyebrow:'BAIO लर्निंग सिस्टम · अभिभावक प्रतिक्रिया',h1:'लाइबा की NEET यात्रा पर आपकी राय',sub:'आपके कुछ मिनट मुझे लाइबा को ऊँचे अंकों और उसके NEET सपने की ओर और बेहतर मार्गदर्शन देने में मदद करेंगे।',meta:['प्रथम पीयूसी जीव विज्ञान','लगभग 5 मिनट','व्हाट्सऐप पर नरेंद्र सर को'],
+ note:['आदरणीय लाइबा की माताजी,','लाइबा की जीव विज्ञान की तैयारी के लिए मुझ पर भरोसा करने के लिए धन्यवाद। इस वर्ष मैंने परीक्षा के लिए कई साधन बनाए हैं — अध्याय ऐप, अभ्यास प्रश्नपत्र, नोट्स, रील्स, पॉडकास्ट, रोज़ के चैलेंज और व्यक्तिगत रिपोर्ट कार्ड — ताकि लाइबा जैसे विद्यार्थी ऊँचे अंक लाएँ और NEET का लक्ष्य पाएँ।','कृपया ईमानदारी से बताएँ कि क्या अच्छा चल रहा है और मैं क्या बेहतर कर सकता हूँ। हर उत्तर वैकल्पिक है। अंत में <b>व्हाट्सऐप पर भेजें</b> दबाएँ — आपके उत्तर सीधे मुझे मिलेंगे।'],
+ sig:'नरेंद्र सर',sigSub:'जीव विज्ञान व्याख्याता · संस्थापक एवं CEO, BAIO लर्निंग सिस्टम',
+ send:'व्हाट्सऐप पर भेजें',copy:'कॉपी',copied:'कॉपी हो गया ✓',answered:(a,t)=>t+' में से '+a+' उत्तर दिए',
+ done:'<b>धन्यवाद!</b> आपके उत्तरों के साथ व्हाट्सऐप खुल गया होगा। वहाँ भेजें बटन दबाएँ। अगर नहीं खुला, तो <b>कॉपी</b> दबाकर 90089 68389 पर व्हाट्सऐप संदेश में चिपकाएँ।',
+ ph:'यहाँ लिखें (वैकल्पिक)',rate:['','कमज़ोर','ठीक','अच्छा','बहुत अच्छा','उत्कृष्ट'],
+ tOpts:['बहुत उपयोगी','थोड़ा उपयोगी','अभी उपयोग नहीं किया'],foot:'नरेंद्र सर द्वारा स्नेह से तैयार · BAIO लर्निंग सिस्टम'}
+};
+const T=(en,kn,hi)=>({en,kn,hi});
+/* Each section: title, lead, questions. Question types: text, choice, multi, rate, tools */
+const S=[
+{t:T('About you','ನಿಮ್ಮ ಬಗ್ಗೆ','आपके बारे में'),l:T('So I know who is writing.','ಯಾರು ಬರೆಯುತ್ತಿದ್ದಾರೆ ಎಂದು ತಿಳಿಯಲು.','ताकि मुझे पता रहे कि कौन लिख रहा है।'),q:[
+ {id:'name',type:'text',short:1,t:T('Your name','ನಿಮ್ಮ ಹೆಸರು','आपका नाम')},
+ {id:'rel',type:'choice',t:T('You are Laiba’s…','ನೀವು ಲೈಬಾಳ…','आप लाइबा की/के…'),o:[T('Mother','ತಾಯಿ','माँ'),T('Father','ತಂದೆ','पिता'),T('Guardian','ಪೋಷಕರು','अभिभावक')]}]},
+{t:T('My teaching','ನನ್ನ ಬೋಧನೆ','मेरा पढ़ाना'),l:T('Based on what Laiba tells you at home.','ಲೈಬಾ ಮನೆಯಲ್ಲಿ ಹೇಳುವುದರ ಆಧಾರದ ಮೇಲೆ.','लाइबा घर पर जो बताती है, उसके आधार पर।'),q:[
+ {id:'clarity',type:'rate',t:T('How clearly are Biology concepts explained in class?','ತರಗತಿಯಲ್ಲಿ ಜೀವಶಾಸ್ತ್ರದ ಪರಿಕಲ್ಪನೆಗಳನ್ನು ಎಷ್ಟು ಸ್ಪಷ್ಟವಾಗಿ ವಿವರಿಸಲಾಗುತ್ತದೆ?','कक्षा में जीव विज्ञान की अवधारणाएँ कितनी स्पष्ट समझाई जाती हैं?')},
+ {id:'attention',type:'rate',t:T('Personal attention and care for Laiba','ಲೈಬಾಳ ಮೇಲೆ ವೈಯಕ್ತಿಕ ಗಮನ ಮತ್ತು ಕಾಳಜಿ','लाइबा पर व्यक्तिगत ध्यान और देखभाल')},
+ {id:'motivation',type:'rate',t:T('How much has she been motivated towards NEET?','NEET ಕಡೆಗೆ ಅವಳು ಎಷ್ಟು ಪ್ರೇರಿತಳಾಗಿದ್ದಾಳೆ?','NEET की ओर वह कितनी प्रेरित हुई है?')},
+ {id:'doubts',type:'rate',t:T('Are her doubts answered patiently?','ಅವಳ ಸಂದೇಹಗಳಿಗೆ ತಾಳ್ಮೆಯಿಂದ ಉತ್ತರಿಸಲಾಗುತ್ತದೆಯೇ?','क्या उसकी शंकाओं का धैर्य से उत्तर दिया जाता है?')},
+ {id:'report',type:'rate',t:T('How useful was the personal Mid-Term Report Card I sent you?','ನಾನು ಕಳುಹಿಸಿದ ವೈಯಕ್ತಿಕ ಮಧ್ಯಾವಧಿ ವರದಿ ಪತ್ರ ಎಷ್ಟು ಉಪಯುಕ್ತವಾಗಿತ್ತು?','मेरे भेजे गए व्यक्तिगत मध्यावधि रिपोर्ट कार्ड कितना उपयोगी था?')}]},
+{t:T('BAIO app — tools I built for exams','BAIO ಆ್ಯಪ್ — ಪರೀಕ್ಷೆಗಾಗಿ ನಾನು ರೂಪಿಸಿದ ಸಾಧನಗಳು','BAIO ऐप — परीक्षा के लिए मेरे बनाए साधन'),l:T('For each one, tell me how helpful it has been for Laiba.','ಪ್ರತಿಯೊಂದೂ ಲೈಬಾಗೆ ಎಷ್ಟು ಉಪಯುಕ್ತವಾಗಿದೆ ಎಂದು ತಿಳಿಸಿ.','हर एक लाइबा के लिए कितना उपयोगी रहा, बताइए।'),q:[
+ {id:'tools',type:'tools',items:[
+  ['chapter','📘',T('Chapter Apps','ಅಧ್ಯಾಯ ಆ್ಯಪ್‌ಗಳು','अध्याय ऐप'),T('Study Mode, Mind Map, One-Shot Revision, Class Presentation','ಅಧ್ಯಯನ ಮೋಡ್, ಮೈಂಡ್ ಮ್ಯಾಪ್, ಒನ್-ಶಾಟ್ ಪುನರಾವರ್ತನೆ, ತರಗತಿ ಪ್ರಸ್ತುತಿ','स्टडी मोड, माइंड मैप, वन-शॉट रिवीज़न, क्लास प्रेज़ेंटेशन')],
+  ['practice','🎯',T('MCQ Quiz, NEET & KCET Practice','MCQ ಕ್ವಿಜ್, NEET ಮತ್ತು KCET ಅಭ್ಯಾಸ','MCQ क्विज़, NEET और KCET अभ्यास'),T('200+ questions per chapter in NEET formats','ಪ್ರತಿ ಅಧ್ಯಾಯಕ್ಕೆ NEET ಮಾದರಿಯ 200+ ಪ್ರಶ್ನೆಗಳು','हर अध्याय में NEET प्रारूप के 200+ प्रश्न')],
+  ['midterm','📝',T('Mid-Term Practice Paper','ಮಧ್ಯಾವಧಿ ಅಭ್ಯಾಸ ಪತ್ರಿಕೆ','मध्यावधि अभ्यास प्रश्नपत्र'),T('70-mark mock paper in the exam blueprint','ಪರೀಕ್ಷಾ ನೀಲನಕ್ಷೆಯಂತೆ 70 ಅಂಕದ ಮಾದರಿ ಪತ್ರಿಕೆ','परीक्षा ब्लूप्रिंट में 70 अंकों का मॉक पेपर')],
+  ['examcorner','🏁',T('Exam Corner','ಎಕ್ಸಾಮ್ ಕಾರ್ನರ್','एग्ज़ाम कॉर्नर'),T('Topics to practise, must-draw diagrams, scoring tips','ಅಭ್ಯಾಸಿಸಬೇಕಾದ ವಿಷಯಗಳು, ಕಡ್ಡಾಯ ಚಿತ್ರಗಳು, ಅಂಕ ಗಳಿಸುವ ಸಲಹೆಗಳು','अभ्यास के विषय, ज़रूरी चित्र, अंक लाने के टिप्स')],
+  ['boardimp','⭐',T('Board Important & Chapter Quick Cards','ಬೋರ್ಡ್ ಮುಖ್ಯ ಪ್ರಶ್ನೆಗಳು ಮತ್ತು ಕ್ವಿಕ್ ಕಾರ್ಡ್‌ಗಳು','बोर्ड महत्वपूर्ण और क्विक कार्ड'),T('Board-important topics and NEET high-yield facts','ಬೋರ್ಡ್ ಮುಖ್ಯ ವಿಷಯಗಳು ಮತ್ತು NEET ಹೈ-ಯೀಲ್ಡ್ ಅಂಶಗಳು','बोर्ड के महत्वपूर्ण विषय और NEET हाई-यील्ड तथ्य')],
+  ['notes','✍️',T('Handwritten & Colour Notes','ಕೈಬರಹ ಮತ್ತು ಬಣ್ಣದ ನೋಟ್ಸ್','हस्तलिखित और रंगीन नोट्स'),T('Chapter notes and NEET short notes','ಅಧ್ಯಾಯ ನೋಟ್ಸ್ ಮತ್ತು NEET ಸಂಕ್ಷಿಪ್ತ ನೋಟ್ಸ್','अध्याय नोट्स और NEET शॉर्ट नोट्स')],
+  ['illus','🖼️',T('Illustrated Notes & NCERT Library','ಚಿತ್ರಸಹಿತ ನೋಟ್ಸ್ ಮತ್ತು NCERT ಗ್ರಂಥಾಲಯ','सचित्र नोट्स और NCERT लाइब्रेरी'),T('Labelled diagrams and NCERT resources','ಲೇಬಲ್ ಮಾಡಿದ ಚಿತ್ರಗಳು ಮತ್ತು NCERT ಸಂಪನ್ಮೂಲ','लेबल वाले चित्र और NCERT संसाधन')],
+  ['flash','🃏',T('Flash Cards','ಫ್ಲ್ಯಾಶ್ ಕಾರ್ಡ್‌ಗಳು','फ़्लैश कार्ड'),T('Key terms, definitions and tables','ಮುಖ್ಯ ಪದಗಳು, ವ್ಯಾಖ್ಯೆಗಳು ಮತ್ತು ಕೋಷ್ಟಕಗಳು','मुख्य शब्द, परिभाषाएँ और तालिकाएँ')],
+  ['reels','🎬',T('Revision Reels','ಪುನರಾವರ್ತನೆ ರೀಲ್ಸ್','रिवीज़न रील्स'),T('One-minute board-important videos','ಒಂದು ನಿಮಿಷದ ಬೋರ್ಡ್ ಮುಖ್ಯ ವೀಡಿಯೊಗಳು','एक मिनट के बोर्ड-महत्वपूर्ण वीडियो')],
+  ['podcast','🎧',T('BAIO Podcasts','BAIO ಪಾಡ್‌ಕಾಸ್ಟ್‌ಗಳು','BAIO पॉडकास्ट'),T('NEET & KCET Corner, Biology Stories','NEET ಮತ್ತು KCET ಕಾರ್ನರ್, ಜೀವಶಾಸ್ತ್ರ ಕಥೆಗಳು','NEET और KCET कॉर्नर, जीव विज्ञान कहानियाँ')],
+  ['stories','📖',T('Biology Storybooks','ಜೀವಶಾಸ್ತ್ರ ಕಥಾಪುಸ್ತಕಗಳು','जीव विज्ञान कहानी पुस्तकें'),T('Every term made easy to remember','ಪ್ರತಿ ಪದ ನೆನಪಿಡಲು ಸುಲಭ','हर शब्द याद रखना आसान')],
+  ['zone','🔥',T('Daily Bio Zone','ಡೈಲಿ ಬಯೋ ಝೋನ್','डेली बायो ज़ोन'),T('Daily challenge, streaks, chapter tests with certificates','ದೈನಂದಿನ ಸವಾಲು, ಸ್ಟ್ರೀಕ್, ಪ್ರಮಾಣಪತ್ರದೊಂದಿಗೆ ಅಧ್ಯಾಯ ಪರೀಕ್ಷೆ','रोज़ का चैलेंज, स्ट्रीक, प्रमाणपत्र के साथ अध्याय टेस्ट')],
+  ['games','🧩',T('Game Zone, Projects & Practicals','ಗೇಮ್ ಝೋನ್, ಯೋಜನೆಗಳು ಮತ್ತು ಪ್ರಾಯೋಗಿಕಗಳು','गेम ज़ोन, प्रोजेक्ट और प्रायोगिक'),T('Learning through puzzles, activities and virtual labs','ಪಝಲ್, ಚಟುವಟಿಕೆ ಮತ್ತು ವರ್ಚುವಲ್ ಲ್ಯಾಬ್ ಮೂಲಕ ಕಲಿಕೆ','पहेली, गतिविधि और वर्चुअल लैब से सीखना')],
+  ['tips','🧭',T('Study Tips & NEET Strategy','ಅಧ್ಯಯನ ಸಲಹೆ ಮತ್ತು NEET ತಂತ್ರ','अध्ययन टिप्स और NEET रणनीति'),T('How to plan and prepare for NEET','NEET ಗೆ ಯೋಜನೆ ಮತ್ತು ತಯಾರಿ ಹೇಗೆ','NEET की योजना और तैयारी कैसे करें')],
+  ['timetable','⏰',T('Time Table & 7 pm Study Reminders','ವೇಳಾಪಟ್ಟಿ ಮತ್ತು ಸಂಜೆ 7 ರ ಜ್ಞಾಪನೆ','टाइम टेबल और शाम 7 बजे का रिमाइंडर'),T('Keeps her study routine regular','ಅವಳ ಓದಿನ ದಿನಚರಿಯನ್ನು ನಿಯಮಿತವಾಗಿಡುತ್ತದೆ','उसकी पढ़ाई की दिनचर्या नियमित रखता है')],
+  ['ai','🤖',T('BAIO AI Assistant','BAIO AI ಸಹಾಯಕ','BAIO AI सहायक'),T('Explains how to use every part of the app','ಆ್ಯಪ್‌ನ ಪ್ರತಿ ಭಾಗ ಬಳಸುವುದನ್ನು ವಿವರಿಸುತ್ತದೆ','ऐप के हर हिस्से का उपयोग समझाता है')],
+  ['lang','🌐',T('English, ಕನ್ನಡ & हिंदी explanations','ಇಂಗ್ಲಿಷ್, ಕನ್ನಡ ಮತ್ತು ಹಿಂದಿ ವಿವರಣೆ','अंग्रेज़ी, कन्नड़ और हिंदी में व्याख्या'),T('Learning in the language she understands best','ಅವಳಿಗೆ ಚೆನ್ನಾಗಿ ಅರ್ಥವಾಗುವ ಭಾಷೆಯಲ್ಲಿ ಕಲಿಕೆ','जिस भाषा में वह सबसे अच्छा समझे, उसमें सीखना')]
+ ]},
+ {id:'bestTool',type:'text',t:T('Which tool helps Laiba the most, and why?','ಯಾವ ಸಾಧನ ಲೈಬಾಗೆ ಹೆಚ್ಚು ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಏಕೆ?','कौन-सा साधन लाइबा की सबसे ज़्यादा मदद करता है, और क्यों?')}]},
+{t:T('Laiba’s progress','ಲೈಬಾಳ ಪ್ರಗತಿ','लाइबा की प्रगति'),l:T('What you notice at home.','ಮನೆಯಲ್ಲಿ ನೀವು ಗಮನಿಸುವುದು.','घर पर आप जो देखते हैं।'),q:[
+ {id:'usage',type:'choice',t:T('How often does Laiba use the BAIO app?','ಲೈಬಾ BAIO ಆ್ಯಪ್ ಅನ್ನು ಎಷ್ಟು ಬಾರಿ ಬಳಸುತ್ತಾಳೆ?','लाइबा BAIO ऐप कितनी बार उपयोग करती है?'),o:[T('Every day','ಪ್ರತಿದಿನ','रोज़'),T('3–4 days a week','ವಾರಕ್ಕೆ 3–4 ದಿನ','हफ़्ते में 3–4 दिन'),T('Once a week','ವಾರಕ್ಕೆ ಒಮ್ಮೆ','हफ़्ते में एक बार'),T('Rarely','ಅಪರೂಪಕ್ಕೆ','कभी-कभार')]},
+ {id:'studyTime',type:'choice',t:T('Biology study time at home each day','ಪ್ರತಿದಿನ ಮನೆಯಲ್ಲಿ ಜೀವಶಾಸ್ತ್ರ ಓದುವ ಸಮಯ','रोज़ घर पर जीव विज्ञान पढ़ने का समय'),o:[T('Less than 30 min','30 ನಿಮಿಷಕ್ಕಿಂತ ಕಡಿಮೆ','30 मिनट से कम'),T('30–60 min','30–60 ನಿಮಿಷ','30–60 मिनट'),T('1–2 hours','1–2 ಗಂಟೆ','1–2 घंटे'),T('More than 2 hours','2 ಗಂಟೆಗಿಂತ ಹೆಚ್ಚು','2 घंटे से ज़्यादा')]},
+ {id:'confidence',type:'rate',t:T('How much has her confidence in Biology grown?','ಜೀವಶಾಸ್ತ್ರದಲ್ಲಿ ಅವಳ ಆತ್ಮವಿಶ್ವಾಸ ಎಷ್ಟು ಬೆಳೆದಿದೆ?','जीव विज्ञान में उसका आत्मविश्वास कितना बढ़ा है?')},
+ {id:'marks',type:'choice',t:T('Have you seen improvement in her marks?','ಅವಳ ಅಂಕಗಳಲ್ಲಿ ಸುಧಾರಣೆ ಕಂಡಿದೆಯೇ?','क्या उसके अंकों में सुधार दिखा है?'),o:[T('Yes, clearly','ಹೌದು, ಸ್ಪಷ್ಟವಾಗಿ','हाँ, साफ़ तौर पर'),T('A little','ಸ್ವಲ್ಪ','थोड़ा'),T('Not yet','ಇನ್ನೂ ಇಲ್ಲ','अभी नहीं'),T('Too early to say','ಹೇಳಲು ಇನ್ನೂ ಬೇಗ','कहना जल्दी है')]},
+ {id:'changes',type:'multi',t:T('What changes have you noticed? (tick all)','ಯಾವ ಬದಲಾವಣೆಗಳನ್ನು ಗಮನಿಸಿದ್ದೀರಿ? (ಎಲ್ಲವನ್ನೂ ಆರಿಸಿ)','आपने क्या बदलाव देखे? (सभी चुनें)'),o:[T('Studies regularly','ನಿಯಮಿತವಾಗಿ ಓದುತ್ತಾಳೆ','नियमित पढ़ती है'),T('Draws neat diagrams','ಅಚ್ಚುಕಟ್ಟಾದ ಚಿತ್ರ ಬಿಡಿಸುತ್ತಾಳೆ','साफ़ चित्र बनाती है'),T('Explains topics at home','ಮನೆಯಲ್ಲಿ ವಿಷಯ ವಿವರಿಸುತ್ತಾಳೆ','घर पर विषय समझाती है'),T('Practises MCQs on her own','ಸ್ವತಃ MCQ ಅಭ್ಯಾಸ ಮಾಡುತ್ತಾಳೆ','खुद MCQ अभ्यास करती है'),T('Less exam fear','ಪರೀಕ್ಷಾ ಭಯ ಕಡಿಮೆ','परीक्षा का डर कम'),T('Better time management','ಉತ್ತಮ ಸಮಯ ನಿರ್ವಹಣೆ','बेहतर समय प्रबंधन'),T('Talks about becoming a doctor','ವೈದ್ಯೆಯಾಗುವ ಬಗ್ಗೆ ಮಾತನಾಡುತ್ತಾಳೆ','डॉक्टर बनने की बात करती है')]}]},
+{t:T('Aim: NEET','ಗುರಿ: NEET','लक्ष्य: NEET'),l:T('Help me plan the next steps for her.','ಅವಳ ಮುಂದಿನ ಹೆಜ್ಜೆಗಳನ್ನು ಯೋಜಿಸಲು ಸಹಾಯ ಮಾಡಿ.','उसके अगले कदमों की योजना में मेरी मदद करें।'),q:[
+ {id:'goal',type:'choice',t:T('Laiba’s NEET goal','ಲೈಬಾಳ NEET ಗುರಿ','लाइबा का NEET लक्ष्य'),o:[T('Government MBBS seat','ಸರ್ಕಾರಿ MBBS ಸೀಟು','सरकारी MBBS सीट'),T('MBBS in any college','ಯಾವುದೇ ಕಾಲೇಜಿನಲ್ಲಿ MBBS','किसी भी कॉलेज में MBBS'),T('BDS / AYUSH / allied health','BDS / AYUSH / ಆರೋಗ್ಯ ಸಂಬಂಧಿತ','BDS / AYUSH / संबद्ध स्वास्थ्य'),T('Still deciding','ಇನ್ನೂ ನಿರ್ಧರಿಸುತ್ತಿದ್ದೇವೆ','अभी तय कर रहे हैं')]},
+ {id:'ready',type:'rate',t:T('How prepared do you feel she is for NEET right now?','ಈಗ ಅವಳು NEET ಗೆ ಎಷ್ಟು ಸಿದ್ಧಳಾಗಿದ್ದಾಳೆ ಎಂದು ನಿಮಗನಿಸುತ್ತದೆ?','आपको लगता है अभी वह NEET के लिए कितनी तैयार है?')},
+ {id:'support',type:'multi',t:T('What extra support would help her most? (tick all)','ಅವಳಿಗೆ ಯಾವ ಹೆಚ್ಚುವರಿ ಬೆಂಬಲ ಹೆಚ್ಚು ಸಹಾಯ ಮಾಡುತ್ತದೆ? (ಎಲ್ಲವನ್ನೂ ಆರಿಸಿ)','उसे कौन-सी अतिरिक्त मदद सबसे ज़्यादा काम आएगी? (सभी चुनें)'),o:[T('Full-length NEET mock tests','ಪೂರ್ಣ NEET ಮಾದರಿ ಪರೀಕ್ಷೆಗಳು','पूर्ण NEET मॉक टेस्ट'),T('Weekly chapter tests','ವಾರದ ಅಧ್ಯಾಯ ಪರೀಕ್ಷೆಗಳು','साप्ताहिक अध्याय टेस्ट'),T('Previous-year NEET questions','ಹಿಂದಿನ ವರ್ಷಗಳ NEET ಪ್ರಶ್ನೆಗಳು','पिछले वर्षों के NEET प्रश्न'),T('NCERT line-by-line revision','NCERT ಸಾಲು-ಸಾಲಿನ ಪುನರಾವರ್ತನೆ','NCERT लाइन-दर-लाइन रिवीज़न'),T('Doubt-clearing sessions','ಸಂದೇಹ ನಿವಾರಣಾ ತರಗತಿಗಳು','डाउट क्लियरिंग सत्र'),T('Monthly progress report for parents','ಪೋಷಕರಿಗೆ ಮಾಸಿಕ ಪ್ರಗತಿ ವರದಿ','अभिभावकों के लिए मासिक प्रगति रिपोर्ट'),T('Parent–teacher meeting','ಪೋಷಕ–ಶಿಕ್ಷಕ ಸಭೆ','अभिभावक–शिक्षक बैठक'),T('Exam stress & motivation guidance','ಪರೀಕ್ಷಾ ಒತ್ತಡ ಮತ್ತು ಪ್ರೇರಣೆ ಮಾರ್ಗದರ್ಶನ','परीक्षा तनाव और प्रेरणा मार्गदर्शन')]},
+ {id:'concern',type:'text',t:T('Any concern about her NEET preparation?','ಅವಳ NEET ತಯಾರಿಯ ಬಗ್ಗೆ ಯಾವುದೇ ಚಿಂತೆ ಇದೆಯೇ?','उसकी NEET तैयारी को लेकर कोई चिंता?')}]},
+{t:T('Your message','ನಿಮ್ಮ ಸಂದೇಶ','आपका संदेश'),l:T('Your honest words mean a lot to me.','ನಿಮ್ಮ ಪ್ರಾಮಾಣಿಕ ಮಾತುಗಳು ನನಗೆ ತುಂಬಾ ಮುಖ್ಯ.','आपके सच्चे शब्द मेरे लिए बहुत मायने रखते हैं।'),q:[
+ {id:'like',type:'text',t:T('What do you like most about my teaching or the BAIO app?','ನನ್ನ ಬೋಧನೆ ಅಥವಾ BAIO ಆ್ಯಪ್‌ನಲ್ಲಿ ನಿಮಗೆ ಹೆಚ್ಚು ಇಷ್ಟವಾದದ್ದು ಯಾವುದು?','मेरे पढ़ाने या BAIO ऐप में आपको सबसे ज़्यादा क्या पसंद है?')},
+ {id:'improve',type:'text',t:T('What should I improve or add?','ನಾನು ಏನನ್ನು ಉತ್ತಮಪಡಿಸಬೇಕು ಅಥವಾ ಸೇರಿಸಬೇಕು?','मुझे क्या सुधारना या जोड़ना चाहिए?')},
+ {id:'overall',type:'rate',t:T('Overall rating','ಒಟ್ಟಾರೆ ರೇಟಿಂಗ್','कुल रेटिंग')},
+ {id:'recommend',type:'choice',t:T('Would you recommend BAIO and Narendra Sir to other parents?','BAIO ಮತ್ತು ನರೇಂದ್ರ ಸರ್ ಅವರನ್ನು ಇತರ ಪೋಷಕರಿಗೆ ಶಿಫಾರಸು ಮಾಡುವಿರಾ?','क्या आप BAIO और नरेंद्र सर की सिफ़ारिश दूसरे अभिभावकों से करेंगे?'),o:[T('Yes, definitely','ಹೌದು, ಖಂಡಿತ','हाँ, ज़रूर'),T('Maybe','ಬಹುಶಃ','शायद'),T('No','ಇಲ್ಲ','नहीं')]},
+ {id:'msg',type:'text',t:T('A message for Narendra Sir','ನರೇಂದ್ರ ಸರ್‌ಗೆ ಒಂದು ಸಂದೇಶ','नरेंद्र सर के लिए एक संदेश')}]}
+];
+const DRAFT='baio_fb_laiba_v1';
+let A={};try{A=JSON.parse(localStorage.getItem(DRAFT)||'{}')||{}}catch(e){A={}}
+let lang='en';try{const s=localStorage.getItem('baio_fb_lang');if(L[s])lang=s}catch(e){}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function save(){try{localStorage.setItem(DRAFT,JSON.stringify(A))}catch(e){}count()}
+function allQ(){const r=[];S.forEach(s=>s.q.forEach(q=>{if(q.type==='tools')q.items.forEach(it=>r.push({id:'tool_'+it[0]}));else r.push(q)}));return r}
+function filled(id){const v=A[id];return Array.isArray(v)?v.length>0:(v!==undefined&&v!==null&&String(v).trim()!=='')}
+function count(){const qs=allQ(),a=qs.filter(q=>filled(q.id)).length;document.getElementById('cnt').textContent=L[lang].answered(a,qs.length);document.getElementById('bar').style.width=(a/qs.length*100)+'%'}
+function render(){
+ const t=L[lang];document.documentElement.lang=lang;
+ document.getElementById('langs').innerHTML=[['en','English'],['kn','ಕನ್ನಡ'],['hi','हिंदी']].map(([k,n])=>`<button type="button" class="${k===lang?'on':''}" data-l="${k}">${n}</button>`).join('');
+ let h=`<div class="hero"><div class="eyebrow">${t.eyebrow}</div><h1>${t.h1}</h1><p>${t.sub}</p><div class="meta">${t.meta.map(m=>`<span>${m}</span>`).join('')}</div></div>`;
+ h+=`<div class="note"><p><b>${t.note[0]}</b></p><p>${t.note[1]}</p><p>${t.note[2]}</p><div class="sign">${t.sig}</div><div class="sign-sub">${t.sigSub}</div></div>`;
+ S.forEach((s,si)=>{
+  h+=`<div class="sec"><h2><span class="n">${si+1}</span>${s.t[lang]}</h2><p class="lead">${s.l[lang]}</p>`;
+  s.q.forEach(q=>{
+   if(q.type==='tools'){
+    h+=`<div class="q">`+q.items.map(it=>{const id='tool_'+it[0];return `<div class="tool"><div class="tn"><i>${it[1]}</i><div>${it[2][lang]}<div class="td">${it[3][lang]}</div></div></div><div class="opts">${t.tOpts.map((o,oi)=>`<button type="button" class="opt ${A[id]===oi?'on':''}" data-q="${id}" data-v="${oi}">${o}</button>`).join('')}</div></div>`}).join('')+`</div>`;return}
+   h+=`<div class="q"><div class="qt">${q.t[lang]}</div>`;
+   if(q.type==='text') h+=q.short?`<input type="text" data-t="${q.id}" value="${esc(A[q.id]||'')}" placeholder="${t.ph}">`:`<textarea data-t="${q.id}" placeholder="${t.ph}">${esc(A[q.id]||'')}</textarea>`;
+   if(q.type==='choice') h+=`<div class="opts">${q.o.map((o,oi)=>`<button type="button" class="opt ${A[q.id]===oi?'on':''}" data-q="${q.id}" data-v="${oi}">${o[lang]}</button>`).join('')}</div>`;
+   if(q.type==='multi'){const cur=A[q.id]||[];h+=`<div class="opts">${q.o.map((o,oi)=>`<button type="button" class="opt ${cur.includes(oi)?'on':''}" data-m="${q.id}" data-v="${oi}">${cur.includes(oi)?'✓ ':''}${o[lang]}</button>`).join('')}</div>`}
+   if(q.type==='rate'){const v=A[q.id]||0;h+=`<div class="stars">${[1,2,3,4,5].map(n=>`<button type="button" class="star ${n<=v?'on':''}" data-r="${q.id}" data-v="${n}" aria-label="${n}">★</button>`).join('')}<span class="lbl">${t.rate[v]||''}</span></div>`}
+   h+=`</div>`});
+  h+=`</div>`});
+ h+=`<div class="done" id="done">${t.done}</div><footer>${t.foot}</footer>`;
+ document.getElementById('app').innerHTML=h;
+ document.getElementById('sendBtn').textContent='💬 '+t.send;document.getElementById('copyBtn').textContent=t.copy;
+ count();
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.l){lang=b.dataset.l;try{localStorage.setItem('baio_fb_lang',lang)}catch(x){}render();return}
+ if(b.dataset.q){const id=b.dataset.q,v=+b.dataset.v;A[id]=A[id]===v?undefined:v;b.parentNode.querySelectorAll('.opt').forEach(o=>o.classList.toggle('on',A[id]===+o.dataset.v));save();return}
+ if(b.dataset.m){const id=b.dataset.m,v=+b.dataset.v,cur=A[id]||[];A[id]=cur.includes(v)?cur.filter(x=>x!==v):cur.concat(v);
+  const q=S.flatMap(s=>s.q).find(x=>x.id===id);b.classList.toggle('on',A[id].includes(v));b.textContent=(A[id].includes(v)?'✓ ':'')+q.o[v][lang];save();return}
+ if(b.dataset.r){const id=b.dataset.r,v=+b.dataset.v;A[id]=v;b.parentNode.querySelectorAll('.star').forEach(s=>s.classList.toggle('on',+s.dataset.v<=v));b.parentNode.querySelector('.lbl').textContent=L[lang].rate[v];save();return}
+});
+document.addEventListener('input',e=>{const id=e.target.dataset&&e.target.dataset.t;if(id){A[id]=e.target.value;save()}});
+function message(){
+ const stars=n=>n?'★'.repeat(n)+'☆'.repeat(5-n)+' ('+L.en.rate[n]+')':'—';
+ let m='*BAIO Parent Feedback — Laiba (I PUC Biology)*\n';
+ S.forEach(s=>{
+  m+='\n*'+s.t.en+'*\n';
+  s.q.forEach(q=>{
+   if(q.type==='tools'){q.items.forEach(it=>{const v=A['tool_'+it[0]];m+='• '+it[2].en+': '+(v===undefined||v===null?'—':L.en.tOpts[v])+'\n'});return}
+   let v=A[q.id],out='—';
+   if(q.type==='text'&&v&&String(v).trim())out=String(v).trim();
+   if(q.type==='choice'&&v!==undefined&&v!==null)out=q.o[v].en;
+   if(q.type==='multi'&&v&&v.length)out=v.slice().sort((a,b)=>a-b).map(i=>q.o[i].en).join(', ');
+   if(q.type==='rate')out=stars(v);
+   m+='• '+q.t.en+': '+out+'\n';
+  })});
+ m+='\n(Form language: '+({en:'English',kn:'Kannada',hi:'Hindi'})[lang]+')';
+ return m;
+}
+document.getElementById('sendBtn').onclick=()=>{
+ const url='https://wa.me/'+WA+'?text='+encodeURIComponent(message());
+ document.getElementById('done').classList.add('on');
+ window.open(url,'_blank')||(location.href=url);
+};
+document.getElementById('copyBtn').onclick=async()=>{
+ const b=document.getElementById('copyBtn'),txt=message();
+ try{await navigator.clipboard.writeText(txt)}catch(e){const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand('copy')}catch(x){}ta.remove()}
+ b.textContent=L[lang].copied;setTimeout(()=>b.textContent=L[lang].copy,1800);
+};
+(function(){const r=document.documentElement,b=document.getElementById('thm');
+function set(t,s){r.setAttribute('data-theme',t);b.textContent=t==='dark'?'☀️':'🌙';if(s){try{localStorage.setItem('baio-report-theme',t)}catch(e){}}}
+let s=null;try{s=localStorage.getItem('baio-report-theme')}catch(e){}
+set(s||'light');b.onclick=()=>set(r.getAttribute('data-theme')==='dark'?'light':'dark',true)})();
+render();
+</script>
+</body>
+</html>

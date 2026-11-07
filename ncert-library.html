@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BAIO">
+<title>NCERT Resource Library — BAIO Learning System</title>
+<script>
+(function(){
+  try{
+    var t = localStorage.getItem('baio_theme') || 'light';
+    if(t === 'light'){
+      document.documentElement.setAttribute('data-theme','light');
+      var m = document.querySelector('meta[name="theme-color"]');
+      if(m) m.setAttribute('content', '#F7F5EE');
+    }
+  }catch(e){}
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B1B14; --navy2:#0F2419; --panel:#13281E; --panel2:#0E211A;
+  --gold:#D4AF37; --gold2:#B8912A; --teal:#2EE6C5; --teal2:#127566;
+  --ink:#EAF3EE; --ink-dim:#9FC4B6; --line:rgba(212,175,55,0.22);
+}
+[data-theme="light"]{
+  --navy:#F7F5EE; --navy2:#EFEBDD; --panel:#FFFFFF; --panel2:#F3F0E6;
+  --gold:#B8912A; --gold2:#8A6A1A; --teal:#0F8F7A; --teal2:#0B6F5E;
+  --ink:#1E2A22; --ink-dim:#5C6E63; --line:rgba(184,145,42,0.25);
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:
+    radial-gradient(circle at 15% 8%, rgba(46,230,197,0.05), transparent 40%),
+    radial-gradient(circle at 85% 92%, rgba(212,175,55,0.06), transparent 45%),
+    var(--navy);
+  color:var(--ink); font-family:'Inter',-apple-system,sans-serif; -webkit-font-smoothing:antialiased;
+  transition:background-color .2s ease, color .2s ease;
+}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif; margin:0;}
+.wrap{max-width:760px; margin:0 auto; padding:0 18px 60px;}
+
+header{padding:30px 0 18px; text-align:center; position:relative;}
+.eyebrow{font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--teal); font-weight:600;}
+h1{font-size:24px; font-weight:700; margin-top:8px; letter-spacing:-0.3px; line-height:1.25;}
+.tag{font-size:13px; color:var(--ink-dim); margin-top:8px; line-height:1.6; max-width:540px; margin-left:auto; margin-right:auto;}
+.theme-toggle-btn{
+  position:absolute; top:6px; right:0; width:34px; height:34px; border-radius:50%;
+  border:1px solid var(--line); background:var(--panel2); font-size:15px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+}
+
+.jump-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:22px;}
+.jump-btn{
+  flex:1 1 calc(33.333% - 6px); min-width:100px; text-align:center; padding:11px 10px; border-radius:12px;
+  border:1px solid var(--gold); background:transparent; color:var(--gold);
+  font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12px;
+  text-decoration:none; cursor:pointer; transition:background .15s ease;
+}
+.jump-btn:hover{background:rgba(212,175,55,0.08);}
+
+.section-label{
+  font-size:16px; letter-spacing:0.5px; color:var(--gold); font-weight:800;
+  margin:30px 0 12px; display:flex; align-items:center; gap:10px;
+}
+.section-label:after{content:''; flex:1; height:2px; background:var(--line);}
+.section-sub{font-size:11.5px; color:var(--ink-dim); margin-top:-6px; margin-bottom:12px;}
+
+.lab-details{margin-top:6px;}
+.lab-summary{
+  font-size:16px; letter-spacing:0.5px; color:var(--gold); font-weight:800;
+  margin:30px 0 12px; display:flex; align-items:center; gap:10px; cursor:pointer; list-style:none;
+}
+.lab-summary::-webkit-details-marker{display:none;}
+.lab-summary:after{content:''; flex:1; height:2px; background:var(--line);}
+.lab-summary .chevron{font-size:12px; color:var(--ink-dim); transition:transform .15s ease; margin-left:-2px;}
+.lab-details[open] .lab-summary .chevron{transform:rotate(90deg);}
+.lab-details .section-sub{margin-top:0;}
+
+.ch-list{display:flex; flex-direction:column; gap:8px;}
+.ch-row{
+  display:flex; align-items:center; gap:12px; border:1px solid var(--line); border-radius:12px;
+  padding:11px 14px; background:var(--panel); flex-wrap:wrap;
+}
+.ch-num{
+  flex:0 0 auto; width:30px; height:30px; border-radius:8px; background:var(--panel2);
+  display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif;
+  font-weight:700; font-size:12px; color:var(--gold);
+}
+.ch-body{flex:1 1 auto; min-width:160px;}
+.ch-title{font-size:13px; font-weight:600; color:var(--ink); line-height:1.3;}
+.ch-inapp{font-size:10.5px; margin-top:2px;}
+.ch-inapp a{color:var(--teal); text-decoration:none; font-weight:600;}
+.ch-inapp a:hover{text-decoration:underline;}
+.ch-inapp .soon{color:var(--ink-dim); font-weight:500;}
+.ch-links{flex:0 0 auto; display:flex; gap:6px;}
+.ch-link{
+  flex:0 0 auto; display:flex; align-items:center; gap:5px; font-size:11px; font-weight:700;
+  color:#1a1406; background:linear-gradient(135deg,var(--gold),var(--gold2)); text-decoration:none;
+  padding:7px 10px; border-radius:9px; white-space:nowrap;
+}
+.ch-link.exemplar{
+  color:var(--teal); background:var(--panel2); border:1px solid var(--teal2);
+}
+[data-theme="light"] .ch-link{color:#fff;}
+[data-theme="light"] .ch-link.exemplar{color:var(--teal2);}
+.ch-link:hover{opacity:0.85;}
+
+.more-row{
+  text-align:center; font-size:11.5px; color:var(--ink-dim); font-style:italic; padding:12px 14px;
+  border:1px dashed var(--line); border-radius:12px;
+}
+.more-row a{color:var(--teal); text-decoration:none; font-weight:600; font-style:normal;}
+.more-row a:hover{text-decoration:underline;}
+
+.kcet-note{
+  text-align:center; font-size:11.5px; color:var(--ink-dim); padding:10px 14px; line-height:1.6;
+}
+
+.back-row{margin-top:36px; text-align:center;}
+.back-row a{color:var(--ink-dim); text-decoration:none; font-size:12.5px;}
+.back-row a:hover{color:var(--gold);}
+
+footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px; padding-top:16px; border-top:1px solid var(--line);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <button class="theme-toggle-btn" id="themeToggle">🌙</button>
+    <div class="eyebrow">BAIO Learning System</div>
+    <h1>NCERT Resource Library</h1>
+    <p class="tag">Direct links to the official NCERT textbook, Exemplar practice problems, and Laboratory Manual for every PU-I and PU-II Biology chapter — the same source Narendra Sir's diagram references point to. Useful any time you want extra practice problems, the original text, or your practical syllabus.</p>
+  </header>
+
+  <div class="jump-row">
+    <a class="jump-btn" href="#pu1">📗 PU-I</a>
+    <a class="jump-btn" href="#pu2">📘 PU-II</a>
+    <a class="jump-btn" href="#labs">🧪 Lab Manual</a>
+    <a class="jump-btn" href="#kcet">🎯 KCET PYQs</a>
+    <a class="jump-btn" href="#pu-board">📋 PU Board MQP</a>
+  </div>
+
+  <div class="section-label" id="pu1">📗 PU-I &middot; 19 Chapters</div>
+  <div class="section-sub">Class 11 Biology (Karnataka PU-I syllabus)</div>
+  <div class="ch-list" id="pu1List"></div>
+
+  <div class="section-label" id="pu2">📘 PU-II &middot; 13 Chapters</div>
+  <div class="section-sub">Class 12 Biology (Karnataka PU-II syllabus)</div>
+  <div class="ch-list" id="pu2List"></div>
+
+  <details class="lab-details" id="labs">
+    <summary class="lab-summary">🧪 PU-I Laboratory Manual <span class="chevron">▸</span></summary>
+    <div class="section-sub">Class 11 Biology practicals, individually verified against the real NCERT PDF</div>
+    <div class="ch-list" id="pu1LabList"></div>
+  </details>
+
+  <details class="lab-details">
+    <summary class="lab-summary">🧪 PU-II Laboratory Manual <span class="chevron">▸</span></summary>
+    <div class="section-sub">Class 12 Biology practicals, individually verified against the real NCERT PDF</div>
+    <div class="ch-list" id="pu2LabList"></div>
+  </details>
+
+  <div class="section-label" id="kcet">🎯 KCET Previous Year Papers</div>
+  <div class="section-sub">Karnataka CET Biology — question papers &amp; answer keys, direct from KEA</div>
+  <div class="ch-list" id="kcetList"></div>
+  <div class="kcet-note">Only years individually confirmed on KEA's site are listed here — KCET's file naming isn't consistent year to year the way NCERT's is, so more years will be added here as each one is verified.</div>
+
+  <div class="section-label" id="pu-board">📋 PU Board Model Question Papers</div>
+  <div class="section-sub">Karnataka DPUE/KSEAB official Model QP &amp; Blue Print, for board exam pattern practice</div>
+  <div class="ch-list" id="puBoardList"></div>
+  <div class="more-row">New Model QPs, Question Banks, and syllabus updates get published here before this page can be updated to match. <a href="https://pue.karnataka.gov.in/new-page/Recent%20Circulars/en" target="_blank" rel="noopener">Check PUE's Official Circulars &amp; Notifications &rarr;</a></div>
+
+  <div class="back-row"><a href="index.html">&larr; Back to BAIO Learning System</a></div>
+
+  <footer>
+    Biology All In One (BAIO) Learning System &middot; Narendra Sir &mdash; Lecturer in Biology
+  </footer>
+</div>
+
+<script>
+const PU1_CHAPTERS = [
+  {n:1, title:'The Living World'},
+  {n:2, title:'Biological Classification', href:'ch2/'},
+  {n:3, title:'Plant Kingdom', href:'ch3/'},
+  {n:4, title:'Animal Kingdom', href:'pu1-ch4.html'},
+  {n:5, title:'Morphology of Flowering Plants', href:'pu1-ch5.html'},
+  {n:6, title:'Anatomy of Flowering Plants', href:'pu1-ch6.html'},
+  {n:7, title:'Structural Organisation in Animals'},
+  {n:8, title:'Cell: The Unit of Life', href:'pu1-ch8.html'},
+  {n:9, title:'Biomolecules', href:'pu1-ch9.html'},
+  {n:10, title:'Cell Cycle and Cell Division', href:'pu1-ch10.html'},
+  {n:11, title:'Photosynthesis in Higher Plants', orig:13, href:'pu1-ch11.html'},
+  {n:12, title:'Respiration in Plants', orig:14},
+  {n:13, title:'Plant Growth and Development', orig:15},
+  {n:14, title:'Breathing and Exchange of Gases', orig:17},
+  {n:15, title:'Body Fluids and Circulation', orig:18},
+  {n:16, title:'Excretory Products and their Elimination', orig:19},
+  {n:17, title:'Locomotion and Movement', orig:20},
+  {n:18, title:'Neural Control and Coordination', orig:21},
+  {n:19, title:'Chemical Coordination and Integration', orig:22},
+];
+const PU2_CHAPTERS = [
+  {n:1, title:'Sexual Reproduction in Flowering Plants', href:'pu2-ch1.html', orig:2},
+  {n:2, title:'Human Reproduction', href:'pu2-ch2.html', orig:3},
+  {n:3, title:'Reproductive Health', href:'pu2-ch3.html', orig:4},
+  {n:4, title:'Principles of Inheritance and Variation', href:'pu2-ch4.html', orig:5},
+  {n:5, title:'Molecular Basis of Inheritance', href:'pu2-ch5.html', orig:6},
+  {n:6, title:'Evolution', href:'pu2-ch6.html', orig:7},
+  {n:7, title:'Human Health and Disease', href:'pu2-ch7.html', orig:8},
+  {n:8, title:'Microbes in Human Welfare', href:'pu2-ch8.html', orig:10},
+  {n:9, title:'Biotechnology: Principles and Processes', href:'ch9/', orig:11},
+  {n:10, title:'Biotechnology and its Applications', href:'pu2-ch10.html', orig:12},
+  {n:11, title:'Organisms and Populations', href:'pu2-ch11.html', orig:13},
+  {n:12, title:'Ecosystem', href:'pu2-ch12.html', orig:14},
+  {n:13, title:'Biodiversity and Conservation', href:'pu2-ch13.html', orig:15},
+];
+
+function pad2(n){ return n < 10 ? '0'+n : ''+n; }
+function renderList(containerId, chapters, textbookPrefix, exemplarPrefix){
+  const el = document.getElementById(containerId);
+  el.innerHTML = chapters.map(c => {
+    const textbookCode = textbookPrefix + '1' + pad2(c.n);
+    const textbookUrl = 'https://ncert.nic.in/textbook/pdf/' + textbookCode + '.pdf';
+    const origN = c.orig || c.n;
+    const examplarClass = textbookPrefix === 'kebo' ? 'classXI' : 'classXII';
+    const exemplarCode = exemplarPrefix + '4' + pad2(origN);
+    const exemplarUrl = 'https://ncert.nic.in/pdf/publication/exemplarproblem/' + examplarClass + '/biology/' + exemplarCode + '.pdf';
+    const inApp = c.href
+      ? `<a href="${c.href}">Open in app &rarr;</a>`
+      : `<span class="soon">Chapter not built in app yet</span>`;
+    return `<div class="ch-row">
+      <div class="ch-num">${c.n}</div>
+      <div class="ch-body">
+        <div class="ch-title">${c.title}</div>
+        <div class="ch-inapp">${inApp}</div>
+      </div>
+      <div class="ch-links">
+        <a class="ch-link" href="${textbookUrl}" target="_blank" rel="noopener">📄 Textbook</a>
+        <a class="ch-link exemplar" href="${exemplarUrl}" target="_blank" rel="noopener">📝 Exemplar</a>
+      </div>
+    </div>`;
+  }).join('');
+}
+renderList('pu1List', PU1_CHAPTERS, 'kebo', 'ke');
+renderList('pu2List', PU2_CHAPTERS, 'lebo', 'le');
+
+/* ---- Laboratory Manual: individually verified against the real NCERT PDF filenames
+   (not a guessed sequential pattern — the file numbering doesn't reliably match
+   exercise numbering, so each row below was confirmed one at a time). Anything
+   not yet verified is left out rather than linked with a guessed file number. ---- */
+const PU1_LAB = [
+  {title:'Parts of a Compound Microscope', code:'kelm301'},
+  {title:'Morphology of Representative Bacteria, Fungi & Plant Groups', code:'kelm302'},
+  {title:'Selected Animals by External Features (Spotting)', code:'kelm303'},
+  {title:'Plant Tissues — Diversity in Shape & Size', code:'kelm304'},
+  {title:'Temporary Slide of Animal Tissues', code:'kelm305'},
+  {title:'Study of Mitosis', code:'kelm306'},
+  {title:'Modifications of Root', code:'kelm307'},
+  {title:'Herbarium Sheets of Flowering Plants', code:'kelm310'},
+];
+const PU2_LAB = [
+  {title:'Percentage of Pollen Germination', code:'lelm202'},
+  {title:'Stages of Gametogenesis in Mammalian Testis & Ovary', code:'lelm203'},
+  {title:'Homologous and Analogous Organs in Plants and Animals', code:'lelm215'},
+];
+function renderLabList(containerId, items, classFolder, fullManualUrl, totalKnown){
+  const el = document.getElementById(containerId);
+  const rows = items.map((it, i) => `<div class="ch-row">
+    <div class="ch-num">${i+1}</div>
+    <div class="ch-body"><div class="ch-title">${it.title}</div></div>
+    <div class="ch-links">
+      <a class="ch-link" href="https://ncert.nic.in/pdf/publication/sciencelaboratorymanuals/${classFolder}/biology/${it.code}.pdf" target="_blank" rel="noopener">📄 Open</a>
+    </div>
+  </div>`).join('');
+  const more = totalKnown
+    ? `<div class="more-row">+ ~${totalKnown - items.length} more practicals in the full manual (~${totalKnown} total) — not yet individually verified here, so not guessed. <a href="${fullManualUrl}" target="_blank" rel="noopener">Browse the complete manual &rarr;</a></div>`
+    : `<div class="more-row">More practicals exist in the full manual — not yet individually verified here, so not guessed. <a href="${fullManualUrl}" target="_blank" rel="noopener">Browse the complete manual &rarr;</a></div>`;
+  el.innerHTML = rows + more;
+}
+renderLabList('pu1LabList', PU1_LAB, 'classXI', 'https://ncert.nic.in/science-laboratory-manual.php?ln=en', 34);
+renderLabList('pu2LabList', PU2_LAB, 'classXII', 'https://ncert.nic.in/science-laboratory-manual.php?ln=en', 25);
+
+/* ---- KCET Previous Year Papers: individually confirmed against KEA's real published
+   filenames (search-indexed, not guessed) — KEA's naming isn't a fixed formula like
+   NCERT's, so each year below was found and checked one at a time. Years not yet
+   individually found are left out rather than linked with a guessed filename. ---- */
+const KCET_PAPERS = [
+  {year:2016, paper:'bio2016.pdf'},
+  {year:2017, paper:'bio2017.pdf'},
+  {year:2020, paper:'bio2020.pdf', key:'cet2020/biology_key.pdf'},
+  {year:2022, key:'cet2022/biology_key.pdf'},
+];
+function renderKcetList(containerId, items){
+  const el = document.getElementById(containerId);
+  el.innerHTML = items.map(it => {
+    const links = [];
+    if(it.paper) links.push(`<a class="ch-link" href="https://kea.kar.nic.in/${it.paper}" target="_blank" rel="noopener">📄 Question Paper</a>`);
+    if(it.key) links.push(`<a class="ch-link exemplar" href="https://kea.kar.nic.in/${it.key}" target="_blank" rel="noopener">✅ Answer Key</a>`);
+    return `<div class="ch-row">
+      <div class="ch-num">${it.year}</div>
+      <div class="ch-body"><div class="ch-title">KCET ${it.year} &middot; Biology</div></div>
+      <div class="ch-links">${links.join('')}</div>
+    </div>`;
+  }).join('');
+}
+renderKcetList('kcetList', KCET_PAPERS);
+
+/* ---- PU Board Model Question Papers: individually confirmed against the real
+   DPUE/KSEAB published filenames (search-indexed, not guessed). ---- */
+const PU_BOARD_MQP = [
+  {label:'I', title:'PU-I Biology &middot; Model QP 2023&ndash;24',
+    mqp:'https://dpue-exam.karnataka.gov.in/MODEL_QP2023/websiteupload/I%20PUC-MODEL%20QP%20%20IN%20PDF%20FORMAT/36.%20BIOLOGY%20MODEL%20QP%20%20I%20PUC%202023-24%20PDF.pdf',
+    blueprint:'https://dpue-exam.karnataka.gov.in/MODEL_QP2023/websiteupload/I%20PUC-BLUE%20PRINT%20IN%20PDF%20FORMAT/36.%20BIOLOGY%20BLUE%20PRINT%20%20I%20PUC%202023-24%20PDF.pdf'},
+  {label:'II', title:'PU-II Biology &middot; Latest Model QP',
+    mqp:'https://dpue-pragathi.karnataka.gov.in/MQP/ModelQuestionPaper/36%20BIOLOGY%20II%20PUC%20MQP.pdf',
+    blueprint:'https://dpue-exam.karnataka.gov.in/MODEL_QP2023/websiteupload/blue%20print%20pdf/36.%20BIOLOGY%20BLUE%20PRINTII%20PU%202023%20-%202024.pdf'},
+];
+function renderPuBoardList(containerId, items){
+  const el = document.getElementById(containerId);
+  el.innerHTML = items.map(it => `<div class="ch-row">
+    <div class="ch-num">${it.label}</div>
+    <div class="ch-body"><div class="ch-title">${it.title}</div></div>
+    <div class="ch-links">
+      <a class="ch-link" href="${it.mqp}" target="_blank" rel="noopener">📄 Model QP</a>
+      <a class="ch-link exemplar" href="${it.blueprint}" target="_blank" rel="noopener">📐 Blue Print</a>
+    </div>
+  </div>`).join('');
+}
+renderPuBoardList('puBoardList', PU_BOARD_MQP);
+</script>
+
+<script>
+(function(){
+  const root = document.documentElement;
+  const btn = document.getElementById('themeToggle');
+  const isLight = root.getAttribute('data-theme') === 'light';
+  btn.textContent = isLight ? '🌙' : '☀️';
+  btn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    const now = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    if(now === 'light') root.setAttribute('data-theme', 'light');
+    else root.removeAttribute('data-theme');
+    btn.textContent = now === 'light' ? '🌙' : '☀️';
+    try{ localStorage.setItem('baio_theme', now); }catch(e){}
+  });
+})();
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  });
+}
+</script>
+</body>
+</html>

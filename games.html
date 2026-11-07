@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="BAIO">
+<title>Game Zone | BAIO Learning System</title>
+<meta name="description" content="Biology games by Narendra Sir — Puzzle of the Day, Who Am I? riddles, Genetics Lab, Cells & Trees, word puzzles and sequencing for I PUC and II PUC.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BAIO Learning System">
+<meta property="og:title" content="BAIO Game Zone — Biology games & riddles">
+<meta property="og:description" content="Puzzle of the Day, riddles, genetics games, crosswords and more — chapter by chapter for I PUC and II PUC.">
+<meta property="og:url" content="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/games.html">
+<script>
+// old shared riddle links (games.html#pu2-ch12) now open the riddle page
+(function(){ var h=location.hash.slice(1); if(/^pu[12]-ch\d+$/.test(h)) location.replace('games/who-am-i.html#'+h); })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="games/game.css?v=1">
+<style>
+.daily{border:2px solid var(--gold);background:linear-gradient(160deg,rgba(212,175,55,.10),transparent 60%),var(--panel)}
+.daily .top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.streak{font:800 13px Inter;color:var(--gold);padding:5px 10px;border-radius:999px;border:1px solid var(--gold)}
+.dq{font:700 16px/1.5 'Space Grotesk',Inter,sans-serif;margin-top:10px}
+.clue{padding:9px 12px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);font-size:14.5px;line-height:1.5;margin-top:6px;animation:pop .3s}
+.hl{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-top:12px;text-align:center}
+.hl .o{padding:14px 8px;border-radius:14px;background:var(--panel2);border:1px solid var(--line);font:800 15px 'Space Grotesk',sans-serif}
+.hl .o b{display:block;font-size:26px;color:var(--gold);margin-top:4px}
+.hl .vs{font:800 13px Inter;color:var(--ink-dim)}
+.done-list{display:grid;gap:5px;margin-top:10px}
+.done-list div{padding:8px 10px;border-radius:10px;background:rgba(47,191,113,.12);border:1px solid var(--ok);font:600 13.5px Inter}
+.pool{display:grid;gap:6px;margin-top:10px}
+.pool .opt{text-align:left;font-weight:600;font-size:13.5px}
+.games{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-top:16px}
+.g{display:flex;flex-direction:column;gap:6px;padding:16px;border-radius:18px;border:1px solid var(--line);background:var(--panel);color:var(--ink);text-decoration:none;min-height:150px;transition:border-color .2s,transform .2s}
+.g:hover{border-color:var(--gold);transform:translateY(-2px)}
+.g .e{font-size:30px}
+.g b{font:800 17px 'Space Grotesk',sans-serif}
+.g span{font-size:13px;color:var(--ink-dim);line-height:1.5}
+.g em{font-style:normal;font:700 11.5px Inter;color:var(--teal);margin-top:auto}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow" data-i18n="eyebrow">BAIO Learning System · Game Zone</div>
+    <h1 data-i18n-html="h1">🧩 Biology <span class="accent">Game Zone</span></h1>
+    <p data-i18n="intro">Learn with fun! Solve the Puzzle of the Day, then play riddles, genetics games, word puzzles and more — chapter by chapter.</p>
+  </section>
+  <div class="card daily" id="daily"></div>
+  <div class="games" id="games"></div>
+  <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
+</div>
+<script src="games/common.js?v=4"></script>
+<script src="games/riddles.js?v=2"></script>
+<script src="games/riddles-more.js?v=1"></script>
+<script src="games/sequences.js?v=2"></script>
+<script>
+GZ.nav({hub:true});
+GZ.i18n({
+ en:{eyebrow:'BAIO Learning System · Game Zone', h1:'🧩 Biology <span class="accent">Game Zone</span>', intro:'Learn with fun! Solve the Puzzle of the Day, then play riddles, genetics games, word puzzles and more — chapter by chapter.',
+  daily:'🗓️ Puzzle of the Day', streak:'🔥 Streak', back:'Come back tomorrow for a new puzzle!', play:'Play'},
+ kn:{eyebrow:'BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್ · ಗೇಮ್ ಝೋನ್', h1:'🧩 ಜೀವಶಾಸ್ತ್ರ <span class="accent">ಗೇಮ್ ಝೋನ್</span>', intro:'ಆಟದೊಂದಿಗೆ ಕಲಿಯಿರಿ! ದಿನದ ಒಗಟು ಬಿಡಿಸಿ, ನಂತರ ಒಗಟುಗಳು, ಜೆನೆಟಿಕ್ಸ್ ಆಟಗಳು, ಪದ ಒಗಟುಗಳು ಮತ್ತು ಇನ್ನಷ್ಟು ಆಡಿ.',
+  daily:'🗓️ ದಿನದ ಒಗಟು', streak:'🔥 ಸತತ ದಿನಗಳು', back:'ಹೊಸ ಒಗಟಿಗಾಗಿ ನಾಳೆ ಬನ್ನಿ!', play:'ಆಡಿ'},
+ hi:{eyebrow:'BAIO लर्निंग सिस्टम · गेम ज़ोन', h1:'🧩 बायोलॉजी <span class="accent">गेम ज़ोन</span>', intro:'खेल-खेल में सीखो! आज की पहेली हल करो, फिर पहेलियाँ, जेनेटिक्स गेम, शब्द पहेलियाँ और बहुत कुछ खेलो।',
+  daily:'🗓️ आज की पहेली', streak:'🔥 लगातार दिन', back:'नई पहेली के लिए कल आना!', play:'खेलो'}});
+const $=s=>document.querySelector(s);
+
+/* ---------- game cards ---------- */
+const GAMES=[
+ ['games/microscope.html','🔬','Phone Microscope','Turn your phone into a microscope — zoom, measure in µm, label and save your practical record.','zzz-none'],
+ ['stories.html','📚','Biology Storybooks','31 illustrated storybooks — every chapter, a Story 2 for 8 chapters and 4 bonus books. Listen, quiz, PDF.','story-'],
+ ['activities.html','🧪','Projects & Activities','2 hands-on activities + 1 digital simulator per chapter — record observations, print worksheets.','act-'],
+ ['assistant.html','🦉','BAIO AI Assistant','Ask how to use any part of BAIO — narrated slides in English, Kannada and Hindi.','zzz-none'],
+ ['podcasts.html','🎧','BAIO Podcasts','5-minute talks with Narendra Sir — exam traps, Biology stories and everyday Biology, with a quiz.','pod-'],
+ ['notes.html','📒','Illustrated Notes','Colourful notes slides with labelled diagrams — zoom, share as images or download the PDF.','zzz-none'],
+ ['flashcards.html','🧠','Flash Cards','114 chapter flash cards — definitions, terms, formulas and tables. Share as images or download.','zzz-none'],
+ ['games/lab3d.html','🧊','3D Biology Lab','15 interactive 3D models — rotate, slice open, tap to learn, then find the parts.','3d-'],
+ ['games/who-am-i.html','🕵️','Who Am I?','304 clue-by-clue riddles across 19 chapters — a fresh set every game.','riddles'],
+ ['games/genetics.html','🧬','Genetics Lab','DNA base pairs, Codon Decoder, Mutation Detective and Punnett squares.','gen-'],
+ ['games/cells.html','🔬','Cells & Trees','Cell Builder, Plant vs Animal, Classification Tree and Food-Web Builder.','cell-|tree-|foodweb'],
+ ['games/words.html','🔠','Word Puzzles','Crossword, word search and match-the-pairs for every chapter.','xw-|ws-|mp-'],
+ ['games/sequence.html','🔢','Put It in Order','Arrange the steps of 33 processes — sewage treatment, embryo sac, HIV, succession…','seq-']];
+function drawGames(){
+  let all={}; try{ all=JSON.parse(localStorage.getItem('baio_game_best')||'{}'); }catch(e){}
+  let rb={}; try{ rb=JSON.parse(localStorage.getItem('baio_riddle_best')||'{}'); }catch(e){}
+  $('#games').innerHTML=GAMES.map(([href,e,t,d,key])=>{
+    const n = key==='riddles' ? Object.keys(rb).length : Object.keys(all).filter(k=>new RegExp('^('+key+')').test(k)).length;
+    return `<a class="g" href="${href}"><span class="e">${e}</span><b>${t}</b><span>${d}</span><em>${n?`✅ ${n} played`:GZ.t('play')+' →'}</em></a>`; }).join('');
+}
+
+/* ---------- puzzle of the day ---------- */
+const today=new Date(), dkey=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+const day=Math.floor(new Date(dkey+'T00:00:00').getTime()/86400000);
+function rng(seed){ return ()=>{ seed|=0; seed=seed+0x6D2B79F5|0; let t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+const R=rng(day*977), rshuf=a=>{ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(R()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+let D={}; try{ D=JSON.parse(localStorage.getItem('baio_daily')||'{}'); }catch(e){}
+const saveD=()=>{ try{ localStorage.setItem('baio_daily',JSON.stringify(D)); }catch(e){} };
+function complete(score,max,line){
+  if(D.date!==dkey){ const y=new Date(today); y.setDate(y.getDate()-1); const ykey=y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+String(y.getDate()).padStart(2,'0');
+    D.streak = D.date===ykey ? (D.streak||0)+1 : 1; D.date=dkey; D.score=score; D.max=max; D.line=line; saveD(); }
+  dailyDone();
+}
+function dailyHead(kind){ return `<div class="top"><div><div class="eyebrow">${dkey}</div><h2>${GZ.t('daily')}</h2></div><span class="streak">${GZ.t('streak')}: ${D.streak||0}</span></div><div class="muted" style="margin-top:4px">${kind}</div>`; }
+function dailyDone(){
+  $('#daily').innerHTML=dailyHead('')+`<div class="verdict good"><b>${D.score} / ${D.max}</b> — ${D.line||''}</div><p class="muted" style="margin:10px 0 0">${GZ.t('back')}</p>
+   <div class="btns"><button class="btn teal" id="dshare">${GZ.c('share')}</button></div>`;
+  $('#dshare').onclick=()=>GZ.share(`🗓️ I solved today's BAIO Biology Puzzle of the Day (${D.score}/${D.max}) — 🔥 ${D.streak} day streak! Try it:`,'games.html',{icon:'🗓️',game:'Puzzle of the Day',sub:`🔥 ${D.streak} day streak`,score:D.score,max:D.max,color:['#e0a93a','#e05d5d']});
+}
+function dailyRiddle(){
+  const all=[]; RIDDLES.forEach(c=>c.r.forEach(r=>all.push([r,c])));
+  const [r,c]=all[(day*37)%all.length]; let shown=1, wrong=0; const opts=rshuf([r[0],...r[2]]);
+  const draw=(msg,doneFlag)=>{
+    $('#daily').innerHTML=dailyHead(`🕵️ Who am I? · ${c.pu===1?'I PUC':'II PUC'} Ch ${c.ch}`)+r[1].slice(0,doneFlag?3:shown).map(x=>`<div class="clue">${x}</div>`).join('')+
+     (doneFlag?'':`${shown<3?`<div class="btns"><button class="btn" id="more">🔍 Next clue</button></div>`:''}<div class="opts">${opts.map(o=>`<button class="opt" data-o="${GZ.esc(o)}">${o}</button>`).join('')}</div>`)+`<div id="dv">${msg||''}</div>`;
+    const m=$('#more'); if(m) m.onclick=()=>{ shown++; draw(); };
+    document.querySelectorAll('#daily .opt').forEach(b=>b.onclick=()=>{
+      if(b.dataset.o===r[0]){ const pts=Math.max(0,40-10*shown-5*wrong); complete(pts,30,`I am ${r[0]}!`); }
+      else { wrong++; b.classList.add('bad'); b.disabled=true; if(shown<3) shown++; draw(`<div class="verdict badv">${GZ.c('wrong')} Here's another clue.</div>`); }
+    });
+  };
+  draw();
+}
+function dailyHL(){
+  const list=rshuf(CHROMO).slice(0,6); let i=0, score=0;
+  const draw=(msg)=>{
+    if(i>=5) return complete(score,5,`${score} of 5 chromosome numbers right`);
+    const a=list[i], b=list[i+1];
+    $('#daily').innerHTML=dailyHead('⬆️⬇️ Higher or lower? Chromosome numbers (2n)')+`<div class="muted">Round ${i+1} / 5 · score ${score}</div>
+     <div class="hl"><div class="o">${a[0]}<b>${a[1]}</b></div><div class="vs">vs</div><div class="o">${b[0]}<b>?</b></div></div>
+     <div class="dq" style="text-align:center">Does the ${b[0].toLowerCase()} have more or fewer chromosomes?</div>
+     <div class="opts"><button class="opt" data-h="1">⬆️ Higher</button><button class="opt" data-h="0">⬇️ Lower</button></div><div id="dv">${msg||''}</div>`;
+    document.querySelectorAll('#daily [data-h]').forEach(x=>x.onclick=()=>{ const ok=(x.dataset.h==='1')===(b[1]>a[1]); if(ok) score++; i++;
+      draw(`<div class="verdict ${ok?'good':'badv'}">${ok?GZ.c('correct'):GZ.c('wrong')} ${b[0]}: <b>${b[1]}</b> (${a[0]}: ${a[1]})</div>`); });
+  };
+  draw();
+}
+function dailySeq(){
+  const S=SEQS[(day*7)%SEQS.length]; const pool=rshuf(S.s), done=[]; let miss=0;
+  const draw=(msg)=>{
+    $('#daily').innerHTML=dailyHead('🔢 Put it in order')+`<div class="dq">${S.t}</div><div class="done-list">${done.map((x,k)=>`<div>${k+1}. ${x}</div>`).join('')}</div>
+     <div class="pool">${pool.filter(x=>!done.includes(x)).map(x=>`<button class="opt" data-x="${GZ.esc(x)}">${x}</button>`).join('')}</div><div id="dv">${msg||''}</div>`;
+    document.querySelectorAll('#daily [data-x]').forEach(b=>b.onclick=()=>{
+      if(b.dataset.x===S.s[done.length]){ done.push(b.dataset.x); if(done.length===S.s.length) return complete(Math.max(2,10-2*miss),10,`${S.t} in order${miss?'':' — perfect!'}`); draw(); }
+      else { miss++; b.classList.add('bad'); setTimeout(()=>b.classList.remove('bad'),450); }
+    });
+  };
+  draw();
+}
+function daily(){ if(D.date===dkey) return dailyDone(); [dailyRiddle,dailyHL,dailySeq][day%3](); }
+GZ.onLang(()=>{ drawGames(); daily(); });
+GZ.startLang();
+</script>
+</body>
+</html>

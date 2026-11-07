@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script src="baio-speak.js?v=3"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0B1B14">
@@ -141,10 +142,10 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
   display:flex;align-items:center;justify-content:center;margin:6px 0;
 }
 .tab-scroll-btn:active{background:var(--panel2);}
-.tabbar{display:flex;overflow-x:auto;gap:6px;padding:10px 4px;border-bottom:none;position:static;z-index:auto;background:transparent;scrollbar-width:none;}
+.tabbar{display:flex;overflow-x:auto;gap:6px;padding:0 4px;border-bottom:none;position:static;z-index:auto;background:transparent;scrollbar-width:none;}
 .tabbar::-webkit-scrollbar{display:none;}
-.tab{flex:0 0 auto;min-width:84px;padding:9px 12px;border-radius:10px;font-size:11px;font-weight:600;color:var(--ink-dim);background:var(--panel2);border:1px solid var(--line);cursor:pointer;text-align:center;white-space:nowrap;line-height:1.25;}
-.tab.active{background:var(--gold);color:#1a1406;border-color:var(--gold);}
+.tab{flex:0 0 auto;min-width:84px;padding:9px 12px;border-radius:10px;font-family:'Fraunces',Georgia,serif;font-size:11px;font-weight:600;color:var(--ink-dim);background:var(--panel2);border:1px solid var(--line);cursor:pointer;text-align:center;white-space:nowrap;line-height:1.25;}
+.tab.active{background:linear-gradient(135deg, rgba(227,175,67,0.18), rgba(66,198,160,0.12));border-color:var(--gold);color:var(--gold2);box-shadow:0 4px 14px rgba(227,175,67,0.15);}
 .cat-dd-wrap{ position:relative; flex:0 0 auto; }
 .cat-dd-btn{
   display:flex; align-items:center; gap:5px; height:100%;
@@ -174,14 +175,25 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 .pillrow-wrap .pillrow{flex:1;}
 .pillrow{display:flex;overflow-x:auto;gap:8px;padding:12px 14px 4px;scrollbar-width:none;}
 .pillrow::-webkit-scrollbar{display:none;}
-.pill{flex:0 0 auto;padding:7px 13px;border-radius:16px;font-size:12px;font-weight:600;background:var(--panel);color:var(--ink-dim);border:1px solid var(--line);cursor:pointer;white-space:nowrap;}
-.pill.active{background:var(--teal2);color:#EFFFFA;border-color:var(--teal);}
+.pill{flex:0 0 auto;background:var(--panel2);border:1px solid var(--line);color:var(--ink-dim);padding:8px 12px;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.pill.active{background:var(--gold);color:#1A1406;border-color:var(--gold);font-weight:700;}
+
+/* Study Mode topic dropdown (replaces the pill row just for Study Mode,
+   since its topic names run long) */
+.study-dd{position:relative; margin-bottom:10px;}
+.study-dd-btn{width:100%; display:flex; align-items:center; justify-content:space-between; gap:8px; background:var(--panel2); border:1px solid var(--line); border-radius:10px; padding:11px 14px; font-size:13.5px; font-weight:600; color:var(--ink); cursor:pointer;}
+.study-dd-btn .study-dd-chevron{color:var(--ink-dim); font-size:11px; transition:transform .15s ease; flex:none;}
+.study-dd-btn.open .study-dd-chevron{transform:rotate(180deg);}
+.study-dd-menu{position:absolute; top:calc(100% + 6px); left:0; right:0; z-index:15; background:var(--panel); border:1px solid var(--line); border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,0.3); padding:6px; max-height:60vh; overflow-y:auto;}
+.study-dd-item{padding:10px 12px; border-radius:8px; font-size:13px; color:var(--ink); cursor:pointer;}
+.study-dd-item:hover{background:var(--panel2);}
+.study-dd-item.active{color:var(--teal); font-weight:700; background:var(--panel2);}
 
 .content{flex:1;padding:14px 16px 30px;}
 
 /* CHIPS */
 .chiprow{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 14px;}
-.chip{background:var(--gold);color:#1a1406;font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px;}
+.chip{background:rgba(227,175,67,0.1);border:1px solid rgba(227,175,67,0.35);color:var(--gold2);font-size:11px;font-weight:600;padding:4px 9px;border-radius:99px;}
 
 /* STUDY SECTIONS */
 .section{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 15px;margin-bottom:10px;overflow-wrap:break-word;word-break:break-word;}
@@ -339,9 +351,27 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 .tip-list.neet li{border-left-color:var(--gold);}
 .tip-head{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;margin-bottom:10px;color:var(--teal);}
 .tip-head.neet{color:var(--gold);}
-.marks-info{background:linear-gradient(135deg,var(--teal2),#0a4239);border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:12.5px;color:#EFFFFA;line-height:1.6;}
+.tip-example-btn{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:999px;border:1px solid var(--teal);background:transparent;color:var(--teal);font-size:11.5px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tip-example-btn:hover{background:rgba(66,198,160,0.12);}
+.tip-example-modal{max-width:620px;}
+.tip-example-modal h3{display:flex;align-items:center;gap:8px;}
+.tipex-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:4px;}
+.tipex-table th{background:var(--panel2);color:var(--gold2);text-align:left;padding:8px 9px;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--line);}
+.tipex-table td{padding:9px;vertical-align:top;line-height:1.55;border-bottom:1px solid var(--line);color:var(--ink);}
+.tipex-table tr:last-child td{border-bottom:none;}
+.tipex-table td.tipex-organ{font-weight:700;color:var(--teal);white-space:nowrap;}
+.tipex-note{font-size:11.5px;color:var(--ink-dim);line-height:1.55;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-top:10px;}
+.tipex-case{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 13px;margin-bottom:12px;}
+.tipex-case:last-child{margin-bottom:0;}
+.tipex-case-title{font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:8px;}
+.tipex-step{display:flex;gap:8px;font-size:12px;line-height:1.5;margin-bottom:6px;color:var(--ink-dim);}
+.tipex-step:last-of-type{margin-bottom:8px;}
+.tipex-step .tipex-q{color:var(--ink);min-width:20px;font-weight:700;color:var(--gold2);}
+.tipex-step .tipex-skip{opacity:0.55;font-style:italic;}
+.tipex-diagnosis{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:rgba(66,198,160,0.15);border:1px solid var(--teal);color:var(--teal);font-weight:700;font-size:12px;}
+.marks-info{background:#0F6653;border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:12.5px;color:#EFFFFA;line-height:1.6;}
 .marks-info b{color:var(--gold);}
-.whatsnew-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;font-size:12px;color:#EFFFFA;background:linear-gradient(135deg,var(--teal2),#0a4239);border-bottom:1px solid var(--line);line-height:1.5;}
+.whatsnew-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;margin-bottom:10px;font-size:12px;color:#EFFFFA;background:linear-gradient(135deg,var(--teal2),#0a4239);border-bottom:1px solid var(--line);line-height:1.5;}
 .whatsnew-banner b{color:var(--gold);}
 .whatsnew-banner button{flex:none;background:none;border:none;color:#EFFFFA;font-size:19px;line-height:1;cursor:pointer;padding:0 2px;opacity:0.8;}
 .whatsnew-banner button:hover{opacity:1;}
@@ -461,9 +491,11 @@ table.factbl tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
 footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14px;padding-top:14px;border-top:1px solid var(--line);}
 .footer-tagline{white-space:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;font-size:11px;}
 .footer-copy{margin-top:4px;font-size:11px;}
-.footer-social{margin-top:8px;display:flex;justify-content:center;gap:14px;flex-wrap:wrap;}
+.footer-social{margin-top:8px;display:flex;justify-content:center;align-items:center;gap:20px;flex-wrap:wrap;}
 .footer-social a{color:var(--teal2);text-decoration:none;font-weight:600;font-size:11.5px;cursor:pointer;}
 .footer-social a:hover{text-decoration:underline;}
+.footer-share-btn{background:none;border:none;padding:0;color:var(--teal2);font-weight:600;font-size:11.5px;font-family:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:4px;}
+.footer-share-btn:hover{text-decoration:underline;}
 @media(max-width:380px){ .footer-tagline{font-size:9.5px;} }
 
 /* STUDENT MODAL & GREET BAR */
@@ -474,7 +506,7 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
 .student-modal label{display:block;font-size:11.5px;color:var(--gold);text-transform:uppercase;letter-spacing:0.5px;margin:10px 0 4px;}
 .student-modal input[type="text"]{width:100%;padding:9px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font-size:14px;}
 .sm-save-btn{margin-top:16px;width:100%;padding:10px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;font-weight:700;font-size:14px;cursor:pointer;}
-.student-greet-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 18px;font-size:12.5px;color:var(--ink-dim);background:var(--panel2);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:19;}
+.student-greet-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 18px;margin-bottom:10px;font-size:12.5px;color:var(--ink-dim);background:var(--panel2);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:19;}
 .student-greet-bar b{color:var(--gold);}
 .sm-edit-btn{background:none;border:1px solid var(--line);color:var(--ink-dim);padding:3px 9px;border-radius:12px;font-size:11px;cursor:pointer;}
 
@@ -500,6 +532,45 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
 .board-page-wrap:fullscreen img,.board-page-wrap:-webkit-full-screen img{
   width:100%;max-width:none;height:auto;touch-action:pan-x pan-y;
 }
+
+/* ---- Class Presentation: PowerPoint-style slide viewer ---- */
+.ppt-slide-wrap{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0a0a0a;margin-bottom:10px;touch-action:pan-y;}
+.ppt-slide-wrap img{display:block;width:100%;height:auto;}
+.ppt-progress-track{height:4px;border-radius:2px;background:var(--line);overflow:hidden;margin-bottom:10px;}
+.ppt-progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--teal));transition:width .2s ease;}
+.ppt-nav{display:flex;gap:8px;margin-top:10px;}
+.ppt-nav button{flex:1;}
+.ppt-tap-zone{position:absolute;top:0;bottom:0;width:32%;cursor:pointer;}
+.ppt-tap-left{left:0;}
+.ppt-tap-right{right:0;}
+.ppt-thumbs{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;margin-bottom:4px;scrollbar-width:thin;}
+.ppt-thumb{flex:0 0 auto;width:64px;height:40px;border-radius:6px;overflow:hidden;border:2px solid transparent;opacity:.55;cursor:pointer;}
+.ppt-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.ppt-thumb.active{border-color:var(--gold);opacity:1;}
+.ppt-slide-wrap img,#pptImg{opacity:0;transition:opacity .25s ease;}
+.ppt-slide-wrap img.loaded,#pptImg.loaded{opacity:1;}
+
+/* Fullscreen overlay controls -- these live INSIDE the element that goes
+   fullscreen, so they stay visible/usable in fullscreen. */
+.fs-controls{position:absolute;inset:0;display:none;pointer-events:none;}
+:fullscreen .fs-controls,:-webkit-full-screen .fs-controls,.js-fullscreen .fs-controls{display:block;}
+.ppt-slide-wrap:fullscreen,.ppt-slide-wrap:-webkit-full-screen,.ppt-slide-wrap.js-fullscreen{
+  position:fixed !important;inset:0;width:100vw;height:100vh;z-index:9999;display:flex;align-items:center;justify-content:center;background:#000;border-radius:0;overflow:hidden;
+}
+.ppt-slide-wrap:fullscreen img,.ppt-slide-wrap:-webkit-full-screen img,.ppt-slide-wrap.js-fullscreen img{
+  width:auto;height:auto;max-width:100vw;max-height:100vh;object-fit:contain;transform-origin:center center;will-change:transform;touch-action:none;
+}
+.fs-btn{position:absolute;pointer-events:auto;background:rgba(20,20,20,.6);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:50%;width:46px;height:46px;font-size:20px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.fs-btn:active{background:rgba(20,20,20,.85);}
+.fs-prev{left:14px;top:50%;transform:translateY(-50%);}
+.fs-next{right:14px;top:50%;transform:translateY(-50%);}
+.fs-exit{top:14px;right:14px;}
+.fs-zoomrow{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:8px;}
+.fs-counter{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);background:rgba(20,20,20,.6);color:#fff;font-size:12px;padding:5px 12px;border-radius:14px;white-space:nowrap;}
+.ppt-coming-soon{text-align:center;padding:34px 16px;border:1px dashed var(--line);border-radius:12px;background:var(--panel2);}
+.ppt-coming-soon .icon{font-size:34px;margin-bottom:10px;}
+.ppt-coming-soon .t{font-size:15px;font-weight:700;color:var(--gold);margin-bottom:6px;}
+.ppt-coming-soon .d{font-size:12.5px;color:var(--ink-dim);line-height:1.6;max-width:420px;margin:0 auto;}
 
 /* ============ DESKTOP LAYOUT (>=1024px) ============ */
 @media(min-width:1024px){
@@ -566,9 +637,23 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
 .pacing-rest-item{font-size:12px;line-height:1.55;display:flex;gap:8px;}
 .pacing-rest-item .prtag{flex:0 0 auto;font-family:'Fraunces',Georgia,serif;font-size:9.5px;font-weight:700;color:var(--teal);background:rgba(66,198,160,0.13);border-radius:6px;padding:2px 7px;height:fit-content;}
 .pacing-note{margin-top:12px;padding:11px 13px;border-radius:10px;background:rgba(66,198,160,0.08);border:1px solid var(--teal2);font-size:11.5px;line-height:1.6;color:var(--ink);}
+/* ppt-dark-theme: in dark theme show the (white, text-only) slides as dark slides — lightness flipped, colours kept */
+html:not([data-theme="light"]) #pptImg,html:not([data-theme="light"]) .ppt-thumb img{filter:invert(.93) hue-rotate(180deg) saturate(1.15);}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="oneshot-study.js?v=1"></script>
+<style id="clgSwitchCss">
+.clg-deck-switch{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 10px}
+.clg-deck-switch button{flex:1 1 180px;font:700 14px Inter,sans-serif;border-radius:12px;padding:10px 12px;border:1px solid #d9d2c3;background:#ffffff;color:#13202e;cursor:pointer;text-align:center}
+html:not([data-theme="light"]) .clg-deck-switch button{background:#17251f;border-color:#3a4f45;color:#eef4f1}
+html .clg-deck-switch button.active{background:#0f7b6c;border-color:#0f7b6c;color:#fff}
+.clg-deck-switch button span{display:block;font-weight:500;font-size:12px;opacity:.75;margin-top:2px}
+.clg-deck-switch button.active{background:#0f7b6c;border-color:#0f7b6c;color:#fff}
+</style>
+<script src="class-large.js?v=2"></script>
+<script src="quick-card.js?v=1"></script>
+<script src="premium-sample.js"></script>
 </head>
 <body>
 <div class="app">
@@ -644,6 +729,18 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
         <span class="chapter-jump-icon">🧫</span>
         <span><b>Chapter 8</b><span class="chapter-jump-title">Cell: The Unit of Life</span></span>
       </a>
+      <a class="notif-modal-item chapter-jump-item" href="pu1-ch9.html">
+        <span class="chapter-jump-icon">🧪</span>
+        <span><b>Chapter 9</b><span class="chapter-jump-title">Biomolecules</span></span>
+      </a>
+      <a class="notif-modal-item chapter-jump-item" href="pu1-ch10.html">
+        <span class="chapter-jump-icon">🔄</span>
+        <span><b>Chapter 10</b><span class="chapter-jump-title">Cell Cycle and Cell Division</span></span>
+      </a>
+      <a class="notif-modal-item chapter-jump-item" href="pu1-ch11.html">
+        <span class="chapter-jump-icon">☀️</span>
+        <span><b>Chapter 11</b><span class="chapter-jump-title">Photosynthesis in Higher Plants</span></span>
+      </a>
       <div class="chapter-jump-group">PUC-2 &middot; Second Year</div>
       <a class="notif-modal-item chapter-jump-item" href="pu2-ch1.html">
         <span class="chapter-jump-icon">🌸</span>
@@ -709,6 +806,14 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
     </div>
   </div>
 
+  <div class="notif-modal-overlay" id="tipExampleOverlay" style="display:none;">
+    <div class="notif-modal tip-example-modal">
+      <h3 id="tipExampleTitle"></h3>
+      <div id="tipExampleBody"></div>
+      <button class="sm-save-btn" id="tipExampleCloseBtn">Close</button>
+    </div>
+  </div>
+
   <div class="student-greet-bar" id="studentGreetBar" style="display:none;"></div>
   <div class="whatsnew-banner" id="whatsNewBanner" style="display:none;">
     <span id="whatsNewText"></span>
@@ -730,13 +835,19 @@ footer{text-align:center;color:var(--ink-dim);font-size:11px;margin:22px 16px 14
   <footer>
     <div class="footer-tagline">Empowering future doctors. Crafted for PU BIOLOGY &amp; NEET Aspirants.</div>
     <div class="footer-copy">&copy; Narendra Sir - Lecturer in Biology</div>
-    <div class="footer-social">
-      <a href="https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X" rel="noopener noreferrer">WhatsApp Channel</a>
-      <a href="https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw" rel="noopener noreferrer">Instagram Channel</a>
-      <a href="https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0" rel="noopener noreferrer">YouTube Channel</a>
-      <a href="https://t.me/BAIO_Learning_System" rel="noopener noreferrer">Telegram Channel</a>
+    <div class="footer-social" style="row-gap:8px;">
+      <span class="follow-wrap" style="flex-basis:100%;display:flex;flex-direction:column;align-items:center;gap:6px;">
+        <span class="follow-us" style="font-weight:700;font-size:11.5px;opacity:.85;">Follow us on</span>
+        <span class="follow-icons" style="display:flex;justify-content:center;gap:16px;">
+          <a href="https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X" rel="noopener noreferrer" aria-label="WhatsApp" title="WhatsApp"><img class="soc-ic" src="assets/social/wa.png" alt="WhatsApp" style="width:30px;height:30px;display:block;border:0;"></a>
+          <a href="https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><img class="soc-ic" src="assets/social/ig.png" alt="Instagram" style="width:30px;height:30px;display:block;border:0;"></a>
+          <a href="https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0" rel="noopener noreferrer" aria-label="YouTube" title="YouTube"><img class="soc-ic" src="assets/social/yt.png" alt="YouTube" style="width:30px;height:30px;display:block;border:0;"></a>
+          <a href="https://t.me/BAIO_Learning_System" rel="noopener noreferrer" aria-label="Telegram" title="Telegram"><img class="soc-ic" src="assets/social/tg.png" alt="Telegram" style="width:30px;height:30px;display:block;border:0;"></a>
+        </span>
+      </span>
       <a href="https://wa.me/919008968389" rel="noopener noreferrer">📱 9008968389</a>
       <a href="mailto:bioguru102@gmail.com">✉️ bioguru102@gmail.com</a>
+      <button type="button" class="footer-share-btn" id="shareAllBtn" onclick="shareAllSocial()">&#128228; Share All Links</button>
     </div>
   </footer>
 </div>
@@ -867,6 +978,7 @@ const TABS = [
   {id:'badges', label:'Milestones'},
   {id:'progress', label:'Progress'},
   {id:'study', label:'Study Mode'},
+  {id:'oneshot', label:'One-Shot Revision'},
   {id:'podcast', label:'Audio Podcast'},
   {id:'studytips', label:'Study Tips'},
   {id:'pacing', label:'Pacing'},
@@ -878,6 +990,7 @@ const TABS = [
   {id:'writeit', label:'Answer Practice'},
   {id:'revision', label:'Revision'},
   {id:'mindmap', label:'Mind Map'},
+  {id:'classppt', label:'Class Presentation'},
   {id:'tree', label:'Tree Explorer'},
   {id:'compare', label:'Compare Matrix'},
   {id:'glossary', label:'Pronunciation'},
@@ -897,10 +1010,10 @@ function esc(s){ return (s===undefined||s===null)?'':String(s); }
 /* ---- Chapter tab bar: group the tabs into categories behind a dropdown,
    so the long tab list no longer needs one long scrolling row. ---- */
 const TAB_CATEGORIES = [
-  {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','concepts','podcast','studytips','boardimp','diagrams']},
+  {id:'learn', label:'Learn', icon:'\u{1F4D6}', tabs:['study','oneshot','concepts','podcast','studytips','boardimp','diagrams']},
   {id:'practice', label:'Practice', icon:'✍️', tabs:['flashcards','mcq','writeit','revision']},
   {id:'test', label:'Test Prep', icon:'\u{1F3AF}', tabs:['neet','kcet','papergen']},
-  {id:'explore', label:'Explore', icon:'\u{1F50D}', tabs:['tree','compare','mindmap','glossary']},
+  {id:'explore', label:'Explore', icon:'\u{1F50D}', tabs:['tree','compare','mindmap','classppt','glossary']},
   {id:'space', label:'My Space', icon:'\u{1F4CC}', tabs:['badges','progress','pacing','mynotes','feedback','downloads']}
 ];
 const TAB_CLUSTER_OF = {};
@@ -913,7 +1026,7 @@ function renderTabbar(){
   const cat = TAB_CATEGORIES.find(c => c.id === currentCategory) || TAB_CATEGORIES[0];
   bar.innerHTML = TABS.filter(t => cat.tabs.indexOf(t.id) !== -1).map(t => {
     const locked = PREMIUM_LOCKED_TABS.indexOf(t.id) !== -1 && !unlocked;
-    return `<div class="tab ${t.id===currentTab?'active':''}" onclick="switchTab('${t.id}')">${locked?'🔒 ':''}${t.label}</div>`;
+    return `<div class="tab ${t.id===currentTab?'active':''}" onclick="switchTab('${t.id}')">${locked?((window.BaioSample&&BaioSample.allow(t.id))?'🎁 ':'🔒 '):''}${t.label}</div>`;
   }).join('');
   const ddBtn = document.getElementById('catDdBtn');
   const ddMenu = document.getElementById('catDdMenu');
@@ -985,6 +1098,60 @@ function topicPills(activeId, onClickName){
 /* ---------------- STUDY MODE ---------------- */
 function selectStudyTopic(id){ currentTopic = id; renderContent(); }
 window.selectStudyTopic = selectStudyTopic;
+/* Study Mode topic picker: a dropdown (not the pill row used elsewhere)
+   since Study Mode topic names run long. */
+function studyTopicDropdownHtml(){
+  const current = DATA.topics.find(t=>t.id===currentTopic);
+  const label = current ? current.name : 'Choose a topic';
+  const items = DATA.topics.map(t=>`<div class="study-dd-item ${t.id===currentTopic?'active':''}" data-id="${t.id}">${t.name}</div>`).join('');
+  return `<div class="study-dd">
+    <button class="study-dd-btn" id="studyDropdownBtn" onclick="toggleStudyDropdown(event)">
+      <span id="studyDropdownLabel">&#128218; ${label}</span>
+      <span class="study-dd-chevron">&#9662;</span>
+    </button>
+    <div class="study-dd-menu" id="studyDropdownMenu" style="display:none;">${items}</div>
+  </div>`;
+}
+function toggleStudyDropdown(e){
+  if(e) e.stopPropagation();
+  const menu = document.getElementById('studyDropdownMenu');
+  const btn = document.getElementById('studyDropdownBtn');
+  if(!menu) return;
+  const isOpen = menu.style.display === 'block';
+  menu.style.display = isOpen ? 'none' : 'block';
+  if(btn) btn.classList.toggle('open', !isOpen);
+}
+window.toggleStudyDropdown = toggleStudyDropdown;
+function closeStudyDropdown(){
+  const menu = document.getElementById('studyDropdownMenu');
+  const btn = document.getElementById('studyDropdownBtn');
+  if(menu) menu.style.display = 'none';
+  if(btn) btn.classList.remove('open');
+}
+window.closeStudyDropdown = closeStudyDropdown;
+let studyDdGlobalInited = false;
+function initStudyDropdownGlobalHandlers(){
+  if(studyDdGlobalInited) return;
+  studyDdGlobalInited = true;
+  document.addEventListener('click', function(e){
+    const menu = document.getElementById('studyDropdownMenu');
+    if(menu && menu.style.display === 'block' && !e.target.closest('.study-dd')){
+      closeStudyDropdown();
+    }
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') closeStudyDropdown();
+  });
+}
+function wireStudyDropdownItems(){
+  document.querySelectorAll('#studyDropdownMenu .study-dd-item[data-id]').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      closeStudyDropdown();
+      selectStudyTopic(p.dataset.id);
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
+}
 
 const PODCASTS_CH4A = {
   en: {label:'English', url:'pu1-ch4-assets/podcast-english.mp3'},
@@ -1113,7 +1280,7 @@ function renderStudy(){
   const en = DATA.study[currentTopic];
   const trans = (currentLang!=='en') && STUDY_TRANSLATIONS_CH4[currentTopic] && STUDY_TRANSLATIONS_CH4[currentTopic][currentLang];
   const d = trans || en;
-  let html = topicPills(currentTopic, 'selectStudyTopic');
+  let html = studyTopicDropdownHtml();
   html += `<button class="study-fs-btn" onclick="toggleContentFullscreen(true)">&#10688; Full Screen Mode</button>`;
   html += `<div class="chiprow">${d.recap.map(c=>`<span class="chip">${c}</span>`).join('')}</div>`;
   d.sections.forEach(sec=>{
@@ -1127,6 +1294,8 @@ function renderStudy(){
   }
   html += nextStepNudge('study');
   document.getElementById('content').innerHTML = html;
+  initStudyDropdownGlobalHandlers();
+  wireStudyDropdownItems();
 }
 
 const CONCEPT_TRANSLATIONS_CH4 = {"basis_classification":{"kn":{"hook":"ವರ್ಗೀಕರಣದ ಆಧಾರ ಅನ್ನು ಹೋಲುವ ಪ್ರಾಣಿ ಗುಂಪಿನಿಂದ ಪ್ರತ್ಯೇಕಿಸಲು ಯಾವ ಒಂದೇ ಅವಲೋಕನ ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಮತ್ತು ಆ ಲಕ್ಷಣ ಕೇವಲ ಹೊರನೋಟಕ್ಕಿಂತ ಏಕೆ ಹೆಚ್ಚು ವಿಶ್ವಾಸಾರ್ಹವಾಗಿದೆ?","chain":["ಪ್ರಾಣಿ ವರ್ಗೀಕರಣವು ಸಂಘಟನೆಯ ಮಟ್ಟ, ಸಮಮಿತಿ, ಜನನಪದರಗಳು, ಸಿಲೋಮ್, ಖಂಡೀಕರಣ ಮತ್ತು ನೋಟೋಕೋರ್ಡ್ ಅನ್ನು ಬಳಸುತ್ತದೆ.","ಪೊರಿಫೆರಾ ಕೋಶೀಯ ಮಟ್ಟದ ಸಂಘಟನೆಯನ್ನು ತೋರಿಸುತ್ತದೆ.","ಸಿನಿಡೇರಿಯಾ ಮತ್ತು ಟೀನೋಫೋರಾ ಅಂಗಾಂಶ ಮಟ್ಟದ ಸಂಘಟನೆಯನ್ನು ತೋರಿಸುತ್ತವೆ.","ಪ್ಲಾಟಿಹೆಲ್ಮಿಂಥಸ್ ಅಂಗ ಮಟ್ಟದ ಸಂಘಟನೆಯನ್ನು ತೋರಿಸುತ್ತದೆ.","ಈ ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಒಟ್ಟಾಗಿ ವರ್ಗೀಕರಣದ ಆಧಾರ ಅನ್ನು ಗುರುತಿಸಲು ವಿಶ್ವಾಸಾರ್ಹ ಆಧಾರವನ್ನು ಒದಗಿಸುತ್ತವೆ."],"misconceptions":[{"wrong":"ವರ್ಗೀಕರಣದ ಆಧಾರ ಅನ್ನು ಕೇವಲ ಅದರ ಸಾಮಾನ್ಯ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ಬಾಹ್ಯ ಆಕಾರದಿಂದ ಮಾತ್ರ ಗುರುತಿಸಲಾಗುತ್ತದೆ.","right":"ವರ್ಗೀಕರಣವು ನಿರ್ಣಾಯಕ ಸಂಘಟನೆ, ದೇಹಯೋಜನೆ ಮತ್ತು ಶರೀರಕ್ರಿಯಾ ಲಕ್ಷಣಗಳನ್ನು ಅವಲಂಬಿಸಿದೆ; ಪ್ರಾಣಿ ವರ್ಗೀಕರಣವು ಸಂಘಟನೆಯ ಮಟ್ಟ, ಸಮಮಿತಿ, ಜನನಪದರಗಳು, ಸಿಲೋಮ್, ಖಂಡೀಕರಣ ಮತ್ತು ನೋಟೋಕೋರ್ಡ್ ಅನ್ನು ಬಳಸುತ್ತದೆ."},{"wrong":"ಒಂದೇ ಲಕ್ಷಣವು ವರ್ಗೀಕರಣದ ಆಧಾರದ ಸಂಪೂರ್ಣ ವಿಕಾಸಾತ್ಮಕ ಕಥೆಯನ್ನು ಹೇಳುತ್ತದೆ.","right":"ಸಂಘಟನೆ, ಸಮಮಿತಿ, ದೇಹಗುಹೆ, ರಕ್ತಪರಿಚಲನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಸಂಯೋಜನೆಯನ್ನು ಬಳಸಿ; ಪೊರಿಫೆರಾ ಕೋಶೀಯ ಮಟ್ಟದ ಸಂಘಟನೆಯನ್ನು ತೋರಿಸುತ್ತದೆ."}],"analogy":"ವರ್ಗೀಕರಣದ ಆಧಾರ ಅನ್ನು ಹಲವಾರು ಗುರುತು ಪರಿಶೀಲನೆಗಳುಳ್ಳ ಒಂದು ಪ್ರೊಫೈಲ್ ಎಂದು ಪರಿಗಣಿಸಿ: ಪ್ರತಿ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣವೂ ಒಂದು ಪರಿಶೀಲನಾ ಬಿಂದು, ಮತ್ತು ಸಂಪೂರ್ಣ ಗುಂಪು ತಪ್ಪಾದ ವರ್ಗೀಕರಣವನ್ನು ತಡೆಯುತ್ತದೆ.","analytical":[{"q":"ಒಂದು ನಮೂನೆಯು ವರ್ಗೀಕರಣದ ಆಧಾರಗೆ ಸೇರಿದೆ ಎಂದು ಪ್ರಸ್ತಾಪಿಸಲಾಗಿದೆ. ಈ ಹೇಳಿಕೆಯನ್ನು ಪರೀಕ್ಷಿಸಲು ನೀವು ಮೊದಲು ಯಾವ ಎರಡು ಅವಲೋಕನಗಳನ್ನು ಹುಡುಕುತ್ತೀರಿ?","a":"ಅತ್ಯಂತ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣಗಳಿಂದ ಪ್ರಾರಂಭಿಸಿ: ಪ್ರಾಣಿ ವರ್ಗೀಕರಣವು ಸಂಘಟನೆಯ ಮಟ್ಟ, ಸಮಮಿತಿ, ಜನನಪದರಗಳು, ಸಿಲೋಮ್, ಖಂಡೀಕರಣ ಮತ್ತು ನೋಟೋಕೋರ್ಡ್ ಅನ್ನು ಬಳಸುತ್ತದೆ. ನಂತರ ಸ್ವತಂತ್ರ ಲಕ್ಷಣವನ್ನು ಪರಿಶೀಲಿಸಿ: ಪೊರಿಫೆರಾ ಕೋಶೀಯ ಮಟ್ಟದ ಸಂಘಟನೆಯನ್ನು ತೋರಿಸುತ್ತದೆ. ಹೊಂದಿಕೆಯಾಗುವ ಅವಲೋಕನಗಳು ವರ್ಗೀಕರಣವನ್ನು ಸಮರ್ಥನೀಯಗೊಳಿಸುತ್ತವೆ."},{"q":"ಕೇವಲ ಒಂದು ಮೇಲ್ಮಟ್ಟದ ಲಕ್ಷಣವನ್ನು ಬಳಸಿ ಪ್ರಾಣಿಯನ್ನು ವರ್ಗೀಕರಿಸುವುದು ಏಕೆ ಅಪಾಯಕಾರಿ?","a":"ಸಂಬಂಧವಿಲ್ಲದ ಗುಂಪುಗಳು ಒಂದೇ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ವಿಶಾಲ ದೇಹಾಕಾರವನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು. ಸೂಕ್ತ ವರ್ಗೀಕರಣವು ಹಲವಾರು ರಚನಾತ್ಮಕ ಮತ್ತು ಕ್ರಿಯಾತ್ಮಕ ಲಕ್ಷಣಗಳನ್ನು ಹೋಲಿಸುತ್ತದೆ. ವರ್ಗೀಕರಣದ ಆಧಾರಗೆ, ಉಪಯುಕ್ತ ಸಾಕ್ಷ್ಯ ಇವುಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ಸಿನಿಡೇರಿಯಾ ಮತ್ತು ಟೀನೋಫೋರಾ ಅಂಗಾಂಶ ಮಟ್ಟದ ಸಂಘಟನೆಯನ್ನು ತೋರಿಸುತ್ತವೆ."}]},"hi":{"hook":"वर्गीकरण का आधार को सबसे मिलते-जुलते प्राणी समूह से अलग पहचानने के लिए कौन-सा एक अवलोकन आपकी मदद करेगा, और वह लक्षण केवल बाहरी रूप-रंग से अधिक विश्वसनीय क्यों है?","chain":["प्राणी वर्गीकरण संगठन स्तर, सममिति, जनन परतों, सीलोम, खंडीकरण और नोटोकॉर्ड का उपयोग करता है।","पोरिफेरा कोशिकीय स्तर का संगठन दर्शाता है।","सिनिडेरिया और टीनोफोरा ऊतक स्तर का संगठन दर्शाते हैं।","प्लेटीहेल्मिन्थीज अंग स्तर का संगठन दर्शाता है।","ये सभी लक्षण मिलकर वर्गीकरण का आधार को पहचानने के लिए एक विश्वसनीय आधार प्रदान करते हैं।"],"misconceptions":[{"wrong":"वर्गीकरण का आधार की पहचान केवल उसके सामान्य आवास या बाहरी आकार से होती है।","right":"वर्गीकरण निदानात्मक संगठन, शरीर-योजना और क्रियात्मक लक्षणों पर निर्भर करता है; प्राणी वर्गीकरण संगठन स्तर, सममिति, जनन परतों, सीलोम, खंडीकरण और नोटोकॉर्ड का उपयोग करता है।"},{"wrong":"केवल एक लक्षण वर्गीकरण का आधार की संपूर्ण विकासात्मक कहानी बता देता है।","right":"संगठन, सममिति, देहगुहा, परिसंचरण, जनन और उदाहरणों के संयोजन का उपयोग करें; पोरिफेरा कोशिकीय स्तर का संगठन दर्शाता है।"}],"analogy":"वर्गीकरण का आधार को कई पहचान-जाँचों वाली एक प्रोफ़ाइल की तरह समझें: प्रत्येक निदानात्मक लक्षण एक जाँच-बिंदु है, और पूरा समूह मिलकर गलत वर्गीकरण को रोकता है।","analytical":[{"q":"एक नमूने के बारे में प्रस्तावित किया गया है कि वह वर्गीकरण का आधार से संबंधित है। इस दावे की जाँच के लिए आप पहले कौन-से दो अवलोकन खोजेंगे?","a":"सबसे निदानात्मक लक्षणों से शुरू करें: प्राणी वर्गीकरण संगठन स्तर, सममिति, जनन परतों, सीलोम, खंडीकरण और नोटोकॉर्ड का उपयोग करता है। फिर एक स्वतंत्र लक्षण जाँचें: पोरिफेरा कोशिकीय स्तर का संगठन दर्शाता है। परस्पर मेल खाते अवलोकन वर्गीकरण को न्यायसंगत बनाते हैं।"},{"q":"किसी प्राणी को केवल एक सतही लक्षण के आधार पर वर्गीकृत करना जोखिम भरा क्यों है?","a":"असंबंधित समूह एक जैसा आवास या व्यापक शरीराकार साझा कर सकते हैं। एक ठोस वर्गीकरण कई संरचनात्मक और क्रियात्मक लक्षणों की तुलना करता है। वर्गीकरण का आधार के लिए, उपयोगी प्रमाण में शामिल है: सिनिडेरिया और टीनोफोरा ऊतक स्तर का संगठन दर्शाते हैं।"}]}},"body_symmetry_germ":{"kn":{"hook":"ದೇಹ ಸಮಮಿತಿ, ಜನನಪದರಗಳು ಮತ್ತು ಸಿಲೋಮ್ ಅನ್ನು ಹೋಲುವ ಪ್ರಾಣಿ ಗುಂಪಿನಿಂದ ಪ್ರತ್ಯೇಕಿಸಲು ಯಾವ ಒಂದೇ ಅವಲೋಕನ ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಮತ್ತು ಆ ಲಕ್ಷಣ ಕೇವಲ ಹೊರನೋಟಕ್ಕಿಂತ ಏಕೆ ಹೆಚ್ಚು ವಿಶ್ವಾಸಾರ್ಹವಾಗಿದೆ?","chain":["ರೇಡಿಯಲ್ ಸಮಮಿತಿಯು ಕೇಂದ್ರ ಅಕ್ಷದ ಮೂಲಕ ಹಾದುಹೋಗುವ ಅನೇಕ ಸಮತಲಗಳು ಒಂದೇ ರೀತಿಯ ಅರ್ಧಗಳನ್ನು ಉಂಟುಮಾಡಲು ಅನುಮತಿಸುತ್ತದೆ.","ದ್ವಿಪಾರ್ಶ್ವ ಸಮಮಿತಿಯಲ್ಲಿ ಕೇವಲ ಒಂದು ಸಮತಲವು ದೇಹವನ್ನು ಸಮಾನ ಎಡ ಮತ್ತು ಬಲ ಅರ್ಧಗಳಾಗಿ ವಿಭಜಿಸುತ್ತದೆ.","ನಿಡೇರಿಯನ್‌ಗಳು ದ್ವಿಜನನಪದರ ಪ್ರಾಣಿಗಳಾಗಿದ್ದು ಎಕ್ಟೋಡರ್ಮ್ ಮತ್ತು ಎಂಡೋಡರ್ಮ್ ಅನ್ನು ಹೊಂದಿದ್ದು ಇವು ಮೆಸೊಗ್ಲಿಯಾದಿಂದ ಬೇರ್ಪಟ್ಟಿರುತ್ತವೆ.","ಪ್ಲಾಟಿಹೆಲ್ಮಿಂಥಸ್‌ನಿಂದ ಕಾರ್ಡೇಟಾವರೆಗಿನ ಪ್ರಾಣಿಗಳು ತ್ರಿಜನನಪದರವಾಗಿವೆ.","ಈ ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಒಟ್ಟಾಗಿ ದೇಹ ಸಮಮಿತಿ, ಜನನಪದರಗಳು ಮತ್ತು ಸಿಲೋಮ್ ಅನ್ನು ಗುರುತಿಸಲು ವಿಶ್ವಾಸಾರ್ಹ ಆಧಾರವನ್ನು ಒದಗಿಸುತ್ತವೆ."],"misconceptions":[{"wrong":"ದೇಹ ಸಮಮಿತಿ, ಜನನಪದರಗಳು ಮತ್ತು ಸಿಲೋಮ್ ಅನ್ನು ಕೇವಲ ಅದರ ಸಾಮಾನ್ಯ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ಬಾಹ್ಯ ಆಕಾರದಿಂದ ಮಾತ್ರ ಗುರುತಿಸಲಾಗುತ್ತದೆ.","right":"ವರ್ಗೀಕರಣವು ನಿರ್ಣಾಯಕ ಸಂಘಟನೆ, ದೇಹಯೋಜನೆ ಮತ್ತು ಶರೀರಕ್ರಿಯಾ ಲಕ್ಷಣಗಳನ್ನು ಅವಲಂಬಿಸಿದೆ; ರೇಡಿಯಲ್ ಸಮಮಿತಿಯು ಕೇಂದ್ರ ಅಕ್ಷದ ಮೂಲಕ ಹಾದುಹೋಗುವ ಅನೇಕ ಸಮತಲಗಳು ಒಂದೇ ರೀತಿಯ ಅರ್ಧಗಳನ್ನು ಉಂಟುಮಾಡಲು ಅನುಮತಿಸುತ್ತದೆ."},{"wrong":"ಒಂದೇ ಲಕ್ಷಣವು ದೇಹ ಸಮಮಿತಿ, ಜನನಪದರಗಳು ಮತ್ತು ಸಿಲೋಮ್ದ ಸಂಪೂರ್ಣ ವಿಕಾಸಾತ್ಮಕ ಕಥೆಯನ್ನು ಹೇಳುತ್ತದೆ.","right":"ಸಂಘಟನೆ, ಸಮಮಿತಿ, ದೇಹಗುಹೆ, ರಕ್ತಪರಿಚಲನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಸಂಯೋಜನೆಯನ್ನು ಬಳಸಿ; ದ್ವಿಪಾರ್ಶ್ವ ಸಮಮಿತಿಯಲ್ಲಿ ಕೇವಲ ಒಂದು ಸಮತಲವು ದೇಹವನ್ನು ಸಮಾನ ಎಡ ಮತ್ತು ಬಲ ಅರ್ಧಗಳಾಗಿ ವಿಭಜಿಸುತ್ತದೆ."}],"analogy":"ದೇಹ ಸಮಮಿತಿ, ಜನನಪದರಗಳು ಮತ್ತು ಸಿಲೋಮ್ ಅನ್ನು ಹಲವಾರು ಗುರುತು ಪರಿಶೀಲನೆಗಳುಳ್ಳ ಒಂದು ಪ್ರೊಫೈಲ್ ಎಂದು ಪರಿಗಣಿಸಿ: ಪ್ರತಿ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣವೂ ಒಂದು ಪರಿಶೀಲನಾ ಬಿಂದು, ಮತ್ತು ಸಂಪೂರ್ಣ ಗುಂಪು ತಪ್ಪಾದ ವರ್ಗೀಕರಣವನ್ನು ತಡೆಯುತ್ತದೆ.","analytical":[{"q":"ಒಂದು ನಮೂನೆಯು ದೇಹ ಸಮಮಿತಿ, ಜನನಪದರಗಳು ಮತ್ತು ಸಿಲೋಮ್ಗೆ ಸೇರಿದೆ ಎಂದು ಪ್ರಸ್ತಾಪಿಸಲಾಗಿದೆ. ಈ ಹೇಳಿಕೆಯನ್ನು ಪರೀಕ್ಷಿಸಲು ನೀವು ಮೊದಲು ಯಾವ ಎರಡು ಅವಲೋಕನಗಳನ್ನು ಹುಡುಕುತ್ತೀರಿ?","a":"ಅತ್ಯಂತ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣಗಳಿಂದ ಪ್ರಾರಂಭಿಸಿ: ರೇಡಿಯಲ್ ಸಮಮಿತಿಯು ಕೇಂದ್ರ ಅಕ್ಷದ ಮೂಲಕ ಹಾದುಹೋಗುವ ಅನೇಕ ಸಮತಲಗಳು ಒಂದೇ ರೀತಿಯ ಅರ್ಧಗಳನ್ನು ಉಂಟುಮಾಡಲು ಅನುಮತಿಸುತ್ತದೆ. ನಂತರ ಸ್ವತಂತ್ರ ಲಕ್ಷಣವನ್ನು ಪರಿಶೀಲಿಸಿ: ದ್ವಿಪಾರ್ಶ್ವ ಸಮಮಿತಿಯಲ್ಲಿ ಕೇವಲ ಒಂದು ಸಮತಲವು ದೇಹವನ್ನು ಸಮಾನ ಎಡ ಮತ್ತು ಬಲ ಅರ್ಧಗಳಾಗಿ ವಿಭಜಿಸುತ್ತದೆ. ಹೊಂದಿಕೆಯಾಗುವ ಅವಲೋಕನಗಳು ವರ್ಗೀಕರಣವನ್ನು ಸಮರ್ಥನೀಯಗೊಳಿಸುತ್ತವೆ."},{"q":"ಕೇವಲ ಒಂದು ಮೇಲ್ಮಟ್ಟದ ಲಕ್ಷಣವನ್ನು ಬಳಸಿ ಪ್ರಾಣಿಯನ್ನು ವರ್ಗೀಕರಿಸುವುದು ಏಕೆ ಅಪಾಯಕಾರಿ?","a":"ಸಂಬಂಧವಿಲ್ಲದ ಗುಂಪುಗಳು ಒಂದೇ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ವಿಶಾಲ ದೇಹಾಕಾರವನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು. ಸೂಕ್ತ ವರ್ಗೀಕರಣವು ಹಲವಾರು ರಚನಾತ್ಮಕ ಮತ್ತು ಕ್ರಿಯಾತ್ಮಕ ಲಕ್ಷಣಗಳನ್ನು ಹೋಲಿಸುತ್ತದೆ. ದೇಹ ಸಮಮಿತಿ, ಜನನಪದರಗಳು ಮತ್ತು ಸಿಲೋಮ್ಗೆ, ಉಪಯುಕ್ತ ಸಾಕ್ಷ್ಯ ಇವುಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ನಿಡೇರಿಯನ್‌ಗಳು ದ್ವಿಜನನಪದರ ಪ್ರಾಣಿಗಳಾಗಿದ್ದು ಎಕ್ಟೋಡರ್ಮ್ ಮತ್ತು ಎಂಡೋಡರ್ಮ್ ಅನ್ನು ಹೊಂದಿದ್ದು ಇವು ಮೆಸೊಗ್ಲಿಯಾದಿಂದ ಬೇರ್ಪಟ್ಟಿರುತ್ತವೆ."}]},"hi":{"hook":"शरीर सममिति, जनन परतें और सीलोम को सबसे मिलते-जुलते प्राणी समूह से अलग पहचानने के लिए कौन-सा एक अवलोकन आपकी मदद करेगा, और वह लक्षण केवल बाहरी रूप-रंग से अधिक विश्वसनीय क्यों है?","chain":["रेडियल सममिति में केंद्रीय अक्ष से गुजरने वाले कई तल समान अर्ध भाग बनाते हैं।","द्विपार्श्व सममिति में केवल एक तल शरीर को समान बाएँ और दाएँ अर्धों में विभाजित करता है।","सीलेंटरेट (निडेरियन) द्विजनस्तरीय होते हैं और इनमें एक्टोडर्म तथा एंडोडर्म होते हैं जो मेसोग्लिया द्वारा अलग होते हैं।","प्लेटीहेल्मिन्थीज से लेकर कॉर्डेटा तक के प्राणी त्रिजनस्तरीय होते हैं।","ये सभी लक्षण मिलकर शरीर सममिति, जनन परतें और सीलोम को पहचानने के लिए एक विश्वसनीय आधार प्रदान करते हैं।"],"misconceptions":[{"wrong":"शरीर सममिति, जनन परतें और सीलोम की पहचान केवल उसके सामान्य आवास या बाहरी आकार से होती है।","right":"वर्गीकरण निदानात्मक संगठन, शरीर-योजना और क्रियात्मक लक्षणों पर निर्भर करता है; रेडियल सममिति में केंद्रीय अक्ष से गुजरने वाले कई तल समान अर्ध भाग बनाते हैं।"},{"wrong":"केवल एक लक्षण शरीर सममिति, जनन परतें और सीलोम की संपूर्ण विकासात्मक कहानी बता देता है।","right":"संगठन, सममिति, देहगुहा, परिसंचरण, जनन और उदाहरणों के संयोजन का उपयोग करें; द्विपार्श्व सममिति में केवल एक तल शरीर को समान बाएँ और दाएँ अर्धों में विभाजित करता है।"}],"analogy":"शरीर सममिति, जनन परतें और सीलोम को कई पहचान-जाँचों वाली एक प्रोफ़ाइल की तरह समझें: प्रत्येक निदानात्मक लक्षण एक जाँच-बिंदु है, और पूरा समूह मिलकर गलत वर्गीकरण को रोकता है।","analytical":[{"q":"एक नमूने के बारे में प्रस्तावित किया गया है कि वह शरीर सममिति, जनन परतें और सीलोम से संबंधित है। इस दावे की जाँच के लिए आप पहले कौन-से दो अवलोकन खोजेंगे?","a":"सबसे निदानात्मक लक्षणों से शुरू करें: रेडियल सममिति में केंद्रीय अक्ष से गुजरने वाले कई तल समान अर्ध भाग बनाते हैं। फिर एक स्वतंत्र लक्षण जाँचें: द्विपार्श्व सममिति में केवल एक तल शरीर को समान बाएँ और दाएँ अर्धों में विभाजित करता है। परस्पर मेल खाते अवलोकन वर्गीकरण को न्यायसंगत बनाते हैं।"},{"q":"किसी प्राणी को केवल एक सतही लक्षण के आधार पर वर्गीकृत करना जोखिम भरा क्यों है?","a":"असंबंधित समूह एक जैसा आवास या व्यापक शरीराकार साझा कर सकते हैं। एक ठोस वर्गीकरण कई संरचनात्मक और क्रियात्मक लक्षणों की तुलना करता है। शरीर सममिति, जनन परतें और सीलोम के लिए, उपयोगी प्रमाण में शामिल है: सीलेंटरेट (निडेरियन) द्विजनस्तरीय होते हैं और इनमें एक्टोडर्म तथा एंडोडर्म होते हैं जो मेसोग्लिया द्वारा अलग होते हैं।"}]}},"segmentation_notochord":{"kn":{"hook":"ಖಂಡೀಕರಣ ಮತ್ತು ನೋಟೋಕೋರ್ಡ್ ಅನ್ನು ಹೋಲುವ ಪ್ರಾಣಿ ಗುಂಪಿನಿಂದ ಪ್ರತ್ಯೇಕಿಸಲು ಯಾವ ಒಂದೇ ಅವಲೋಕನ ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಮತ್ತು ಆ ಲಕ್ಷಣ ಕೇವಲ ಹೊರನೋಟಕ್ಕಿಂತ ಏಕೆ ಹೆಚ್ಚು ವಿಶ್ವಾಸಾರ್ಹವಾಗಿದೆ?","chain":["ಮೆಟಾಮೆರಿಸಂ ಎಂದರೆ ಪುನರಾವರ್ತಿತ ಅಂಗಗಳೊಂದಿಗೆ ದೇಹ ಖಂಡಗಳ ಅನುಕ್ರಮ ಪುನರಾವರ್ತನೆ.","ಎರೆಹುಳು ಮೆಟಾಮೆರಿಕ್ ಖಂಡೀಕರಣವನ್ನು ಪ್ರದರ್ಶಿಸುತ್ತದೆ.","ನೋಟೋಕೋರ್ಡ್ ಎಂಬುದು ಭ್ರೂಣ ಬೆಳವಣಿಗೆಯ ಸಮಯದಲ್ಲಿ ಬೆನ್ನಿನ ಭಾಗದಲ್ಲಿ ರೂಪುಗೊಳ್ಳುವ ಮೆಸೋಡರ್ಮಲ್ ದಂಡ.","ಕಾರ್ಡೇಟ್‌ಗಳು ಜೀವನದ ಕನಿಷ್ಠ ಒಂದು ಹಂತದಲ್ಲಾದರೂ ನೋಟೋಕೋರ್ಡ್ ಅನ್ನು ಹೊಂದಿರುತ್ತವೆ.","ಈ ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಒಟ್ಟಾಗಿ ಖಂಡೀಕರಣ ಮತ್ತು ನೋಟೋಕೋರ್ಡ್ ಅನ್ನು ಗುರುತಿಸಲು ವಿಶ್ವಾಸಾರ್ಹ ಆಧಾರವನ್ನು ಒದಗಿಸುತ್ತವೆ."],"misconceptions":[{"wrong":"ಖಂಡೀಕರಣ ಮತ್ತು ನೋಟೋಕೋರ್ಡ್ ಅನ್ನು ಕೇವಲ ಅದರ ಸಾಮಾನ್ಯ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ಬಾಹ್ಯ ಆಕಾರದಿಂದ ಮಾತ್ರ ಗುರುತಿಸಲಾಗುತ್ತದೆ.","right":"ವರ್ಗೀಕರಣವು ನಿರ್ಣಾಯಕ ಸಂಘಟನೆ, ದೇಹಯೋಜನೆ ಮತ್ತು ಶರೀರಕ್ರಿಯಾ ಲಕ್ಷಣಗಳನ್ನು ಅವಲಂಬಿಸಿದೆ; ಮೆಟಾಮೆರಿಸಂ ಎಂದರೆ ಪುನರಾವರ್ತಿತ ಅಂಗಗಳೊಂದಿಗೆ ದೇಹ ಖಂಡಗಳ ಅನುಕ್ರಮ ಪುನರಾವರ್ತನೆ."},{"wrong":"ಒಂದೇ ಲಕ್ಷಣವು ಖಂಡೀಕರಣ ಮತ್ತು ನೋಟೋಕೋರ್ಡ್ದ ಸಂಪೂರ್ಣ ವಿಕಾಸಾತ್ಮಕ ಕಥೆಯನ್ನು ಹೇಳುತ್ತದೆ.","right":"ಸಂಘಟನೆ, ಸಮಮಿತಿ, ದೇಹಗುಹೆ, ರಕ್ತಪರಿಚಲನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಸಂಯೋಜನೆಯನ್ನು ಬಳಸಿ; ಎರೆಹುಳು ಮೆಟಾಮೆರಿಕ್ ಖಂಡೀಕರಣವನ್ನು ಪ್ರದರ್ಶಿಸುತ್ತದೆ."}],"analogy":"ಖಂಡೀಕರಣ ಮತ್ತು ನೋಟೋಕೋರ್ಡ್ ಅನ್ನು ಹಲವಾರು ಗುರುತು ಪರಿಶೀಲನೆಗಳುಳ್ಳ ಒಂದು ಪ್ರೊಫೈಲ್ ಎಂದು ಪರಿಗಣಿಸಿ: ಪ್ರತಿ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣವೂ ಒಂದು ಪರಿಶೀಲನಾ ಬಿಂದು, ಮತ್ತು ಸಂಪೂರ್ಣ ಗುಂಪು ತಪ್ಪಾದ ವರ್ಗೀಕರಣವನ್ನು ತಡೆಯುತ್ತದೆ.","analytical":[{"q":"ಒಂದು ನಮೂನೆಯು ಖಂಡೀಕರಣ ಮತ್ತು ನೋಟೋಕೋರ್ಡ್ಗೆ ಸೇರಿದೆ ಎಂದು ಪ್ರಸ್ತಾಪಿಸಲಾಗಿದೆ. ಈ ಹೇಳಿಕೆಯನ್ನು ಪರೀಕ್ಷಿಸಲು ನೀವು ಮೊದಲು ಯಾವ ಎರಡು ಅವಲೋಕನಗಳನ್ನು ಹುಡುಕುತ್ತೀರಿ?","a":"ಅತ್ಯಂತ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣಗಳಿಂದ ಪ್ರಾರಂಭಿಸಿ: ಮೆಟಾಮೆರಿಸಂ ಎಂದರೆ ಪುನರಾವರ್ತಿತ ಅಂಗಗಳೊಂದಿಗೆ ದೇಹ ಖಂಡಗಳ ಅನುಕ್ರಮ ಪುನರಾವರ್ತನೆ. ನಂತರ ಸ್ವತಂತ್ರ ಲಕ್ಷಣವನ್ನು ಪರಿಶೀಲಿಸಿ: ಎರೆಹುಳು ಮೆಟಾಮೆರಿಕ್ ಖಂಡೀಕರಣವನ್ನು ಪ್ರದರ್ಶಿಸುತ್ತದೆ. ಹೊಂದಿಕೆಯಾಗುವ ಅವಲೋಕನಗಳು ವರ್ಗೀಕರಣವನ್ನು ಸಮರ್ಥನೀಯಗೊಳಿಸುತ್ತವೆ."},{"q":"ಕೇವಲ ಒಂದು ಮೇಲ್ಮಟ್ಟದ ಲಕ್ಷಣವನ್ನು ಬಳಸಿ ಪ್ರಾಣಿಯನ್ನು ವರ್ಗೀಕರಿಸುವುದು ಏಕೆ ಅಪಾಯಕಾರಿ?","a":"ಸಂಬಂಧವಿಲ್ಲದ ಗುಂಪುಗಳು ಒಂದೇ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ವಿಶಾಲ ದೇಹಾಕಾರವನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು. ಸೂಕ್ತ ವರ್ಗೀಕರಣವು ಹಲವಾರು ರಚನಾತ್ಮಕ ಮತ್ತು ಕ್ರಿಯಾತ್ಮಕ ಲಕ್ಷಣಗಳನ್ನು ಹೋಲಿಸುತ್ತದೆ. ಖಂಡೀಕರಣ ಮತ್ತು ನೋಟೋಕೋರ್ಡ್ಗೆ, ಉಪಯುಕ್ತ ಸಾಕ್ಷ್ಯ ಇವುಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ನೋಟೋಕೋರ್ಡ್ ಎಂಬುದು ಭ್ರೂಣ ಬೆಳವಣಿಗೆಯ ಸಮಯದಲ್ಲಿ ಬೆನ್ನಿನ ಭಾಗದಲ್ಲಿ ರೂಪುಗೊಳ್ಳುವ ಮೆಸೋಡರ್ಮಲ್ ದಂಡ."}]},"hi":{"hook":"खंडीकरण और नोटोकॉर्ड को सबसे मिलते-जुलते प्राणी समूह से अलग पहचानने के लिए कौन-सा एक अवलोकन आपकी मदद करेगा, और वह लक्षण केवल बाहरी रूप-रंग से अधिक विश्वसनीय क्यों है?","chain":["मेटामेरिज्म का अर्थ है पुनरावृत्त अंगों के साथ शरीर खंडों की क्रमिक पुनरावृत्ति।","केंचुआ मेटामेरिक खंडीकरण प्रदर्शित करता है।","नोटोकॉर्ड भ्रूणीय परिवर्धन के दौरान पृष्ठ भाग में बनने वाली मेसोडर्मल छड़ है।","कॉर्डेट अपने जीवन के कम-से-कम किसी एक चरण में नोटोकॉर्ड रखते हैं।","ये सभी लक्षण मिलकर खंडीकरण और नोटोकॉर्ड को पहचानने के लिए एक विश्वसनीय आधार प्रदान करते हैं।"],"misconceptions":[{"wrong":"खंडीकरण और नोटोकॉर्ड की पहचान केवल उसके सामान्य आवास या बाहरी आकार से होती है।","right":"वर्गीकरण निदानात्मक संगठन, शरीर-योजना और क्रियात्मक लक्षणों पर निर्भर करता है; मेटामेरिज्म का अर्थ है पुनरावृत्त अंगों के साथ शरीर खंडों की क्रमिक पुनरावृत्ति।"},{"wrong":"केवल एक लक्षण खंडीकरण और नोटोकॉर्ड की संपूर्ण विकासात्मक कहानी बता देता है।","right":"संगठन, सममिति, देहगुहा, परिसंचरण, जनन और उदाहरणों के संयोजन का उपयोग करें; केंचुआ मेटामेरिक खंडीकरण प्रदर्शित करता है।"}],"analogy":"खंडीकरण और नोटोकॉर्ड को कई पहचान-जाँचों वाली एक प्रोफ़ाइल की तरह समझें: प्रत्येक निदानात्मक लक्षण एक जाँच-बिंदु है, और पूरा समूह मिलकर गलत वर्गीकरण को रोकता है।","analytical":[{"q":"एक नमूने के बारे में प्रस्तावित किया गया है कि वह खंडीकरण और नोटोकॉर्ड से संबंधित है। इस दावे की जाँच के लिए आप पहले कौन-से दो अवलोकन खोजेंगे?","a":"सबसे निदानात्मक लक्षणों से शुरू करें: मेटामेरिज्म का अर्थ है पुनरावृत्त अंगों के साथ शरीर खंडों की क्रमिक पुनरावृत्ति। फिर एक स्वतंत्र लक्षण जाँचें: केंचुआ मेटामेरिक खंडीकरण प्रदर्शित करता है। परस्पर मेल खाते अवलोकन वर्गीकरण को न्यायसंगत बनाते हैं।"},{"q":"किसी प्राणी को केवल एक सतही लक्षण के आधार पर वर्गीकृत करना जोखिम भरा क्यों है?","a":"असंबंधित समूह एक जैसा आवास या व्यापक शरीराकार साझा कर सकते हैं। एक ठोस वर्गीकरण कई संरचनात्मक और क्रियात्मक लक्षणों की तुलना करता है। खंडीकरण और नोटोकॉर्ड के लिए, उपयोगी प्रमाण में शामिल है: नोटोकॉर्ड भ्रूणीय परिवर्धन के दौरान पृष्ठ भाग में बनने वाली मेसोडर्मल छड़ है।"}]}},"phylum_porifera":{"kn":{"hook":"ಫೈಲಮ್ ಪೊರಿಫೆರಾ ಅನ್ನು ಹೋಲುವ ಪ್ರಾಣಿ ಗುಂಪಿನಿಂದ ಪ್ರತ್ಯೇಕಿಸಲು ಯಾವ ಒಂದೇ ಅವಲೋಕನ ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಮತ್ತು ಆ ಲಕ್ಷಣ ಕೇವಲ ಹೊರನೋಟಕ್ಕಿಂತ ಏಕೆ ಹೆಚ್ಚು ವಿಶ್ವಾಸಾರ್ಹವಾಗಿದೆ?","chain":["ಪೊರಿಫೆರನ್‌ಗಳು ಕೋಶೀಯ ಮಟ್ಟದ ಸಂಘಟನೆಯನ್ನು ಹೊಂದಿದ್ದು ಸಾಮಾನ್ಯವಾಗಿ ಅಸಮಮಿತವಾಗಿವೆ.","ನೀರು ಆಸ್ಟಿಯಾಗಳ ಮೂಲಕ ಸ್ಪಾಂಜ್ ಅನ್ನು ಪ್ರವೇಶಿಸಿ ಆಸ್ಕುಲಂ ಮೂಲಕ ಹೊರಹೋಗುತ್ತದೆ.","ಕೊವನೋಸೈಟ್‌ಗಳು ನೀರಿನ ಪ್ರವಾಹಗಳನ್ನು ಸೃಷ್ಟಿಸಿ ಆಹಾರ ಸಂಗ್ರಹಕ್ಕೆ ಸಹಾಯ ಮಾಡುತ್ತವೆ.","ಸ್ಪಾಂಜಿನ ಅಸ್ಥಿಕಟ್ಟು ಕ್ಯಾಲ್ಕೇರಿಯಸ್ ಅಥವಾ ಸಿಲಿಸಿಯಸ್ ಸ್ಪಿಕ್ಯೂಲ್‌ಗಳು ಅಥವಾ ಸ್ಪಾಂಜಿನ್ ನಾರುಗಳಿಂದ ಕೂಡಿರುತ್ತದೆ.","ಈ ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಒಟ್ಟಾಗಿ ಫೈಲಮ್ ಪೊರಿಫೆರಾ ಅನ್ನು ಗುರುತಿಸಲು ವಿಶ್ವಾಸಾರ್ಹ ಆಧಾರವನ್ನು ಒದಗಿಸುತ್ತವೆ."],"misconceptions":[{"wrong":"ಫೈಲಮ್ ಪೊರಿಫೆರಾ ಅನ್ನು ಕೇವಲ ಅದರ ಸಾಮಾನ್ಯ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ಬಾಹ್ಯ ಆಕಾರದಿಂದ ಮಾತ್ರ ಗುರುತಿಸಲಾಗುತ್ತದೆ.","right":"ವರ್ಗೀಕರಣವು ನಿರ್ಣಾಯಕ ಸಂಘಟನೆ, ದೇಹಯೋಜನೆ ಮತ್ತು ಶರೀರಕ್ರಿಯಾ ಲಕ್ಷಣಗಳನ್ನು ಅವಲಂಬಿಸಿದೆ; ಪೊರಿಫೆರನ್‌ಗಳು ಕೋಶೀಯ ಮಟ್ಟದ ಸಂಘಟನೆಯನ್ನು ಹೊಂದಿದ್ದು ಸಾಮಾನ್ಯವಾಗಿ ಅಸಮಮಿತವಾಗಿವೆ."},{"wrong":"ಒಂದೇ ಲಕ್ಷಣವು ಫೈಲಮ್ ಪೊರಿಫೆರಾದ ಸಂಪೂರ್ಣ ವಿಕಾಸಾತ್ಮಕ ಕಥೆಯನ್ನು ಹೇಳುತ್ತದೆ.","right":"ಸಂಘಟನೆ, ಸಮಮಿತಿ, ದೇಹಗುಹೆ, ರಕ್ತಪರಿಚಲನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಸಂಯೋಜನೆಯನ್ನು ಬಳಸಿ; ನೀರು ಆಸ್ಟಿಯಾಗಳ ಮೂಲಕ ಸ್ಪಾಂಜ್ ಅನ್ನು ಪ್ರವೇಶಿಸಿ ಆಸ್ಕುಲಂ ಮೂಲಕ ಹೊರಹೋಗುತ್ತದೆ."}],"analogy":"ಫೈಲಮ್ ಪೊರಿಫೆರಾ ಅನ್ನು ಹಲವಾರು ಗುರುತು ಪರಿಶೀಲನೆಗಳುಳ್ಳ ಒಂದು ಪ್ರೊಫೈಲ್ ಎಂದು ಪರಿಗಣಿಸಿ: ಪ್ರತಿ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣವೂ ಒಂದು ಪರಿಶೀಲನಾ ಬಿಂದು, ಮತ್ತು ಸಂಪೂರ್ಣ ಗುಂಪು ತಪ್ಪಾದ ವರ್ಗೀಕರಣವನ್ನು ತಡೆಯುತ್ತದೆ.","analytical":[{"q":"ಒಂದು ನಮೂನೆಯು ಫೈಲಮ್ ಪೊರಿಫೆರಾಗೆ ಸೇರಿದೆ ಎಂದು ಪ್ರಸ್ತಾಪಿಸಲಾಗಿದೆ. ಈ ಹೇಳಿಕೆಯನ್ನು ಪರೀಕ್ಷಿಸಲು ನೀವು ಮೊದಲು ಯಾವ ಎರಡು ಅವಲೋಕನಗಳನ್ನು ಹುಡುಕುತ್ತೀರಿ?","a":"ಅತ್ಯಂತ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣಗಳಿಂದ ಪ್ರಾರಂಭಿಸಿ: ಪೊರಿಫೆರನ್‌ಗಳು ಕೋಶೀಯ ಮಟ್ಟದ ಸಂಘಟನೆಯನ್ನು ಹೊಂದಿದ್ದು ಸಾಮಾನ್ಯವಾಗಿ ಅಸಮಮಿತವಾಗಿವೆ. ನಂತರ ಸ್ವತಂತ್ರ ಲಕ್ಷಣವನ್ನು ಪರಿಶೀಲಿಸಿ: ನೀರು ಆಸ್ಟಿಯಾಗಳ ಮೂಲಕ ಸ್ಪಾಂಜ್ ಅನ್ನು ಪ್ರವೇಶಿಸಿ ಆಸ್ಕುಲಂ ಮೂಲಕ ಹೊರಹೋಗುತ್ತದೆ. ಹೊಂದಿಕೆಯಾಗುವ ಅವಲೋಕನಗಳು ವರ್ಗೀಕರಣವನ್ನು ಸಮರ್ಥನೀಯಗೊಳಿಸುತ್ತವೆ."},{"q":"ಕೇವಲ ಒಂದು ಮೇಲ್ಮಟ್ಟದ ಲಕ್ಷಣವನ್ನು ಬಳಸಿ ಪ್ರಾಣಿಯನ್ನು ವರ್ಗೀಕರಿಸುವುದು ಏಕೆ ಅಪಾಯಕಾರಿ?","a":"ಸಂಬಂಧವಿಲ್ಲದ ಗುಂಪುಗಳು ಒಂದೇ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ವಿಶಾಲ ದೇಹಾಕಾರವನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು. ಸೂಕ್ತ ವರ್ಗೀಕರಣವು ಹಲವಾರು ರಚನಾತ್ಮಕ ಮತ್ತು ಕ್ರಿಯಾತ್ಮಕ ಲಕ್ಷಣಗಳನ್ನು ಹೋಲಿಸುತ್ತದೆ. ಫೈಲಮ್ ಪೊರಿಫೆರಾಗೆ, ಉಪಯುಕ್ತ ಸಾಕ್ಷ್ಯ ಇವುಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ಕೊವನೋಸೈಟ್‌ಗಳು ನೀರಿನ ಪ್ರವಾಹಗಳನ್ನು ಸೃಷ್ಟಿಸಿ ಆಹಾರ ಸಂಗ್ರಹಕ್ಕೆ ಸಹಾಯ ಮಾಡುತ್ತವೆ."}]},"hi":{"hook":"संघ पोरिफेरा को सबसे मिलते-जुलते प्राणी समूह से अलग पहचानने के लिए कौन-सा एक अवलोकन आपकी मदद करेगा, और वह लक्षण केवल बाहरी रूप-रंग से अधिक विश्वसनीय क्यों है?","chain":["पोरिफेरन्स में कोशिकीय स्तर का संगठन होता है और वे सामान्यतः असममित होते हैं।","जल ओस्टिया से स्पंज में प्रवेश करता है और ऑस्कुलम से बाहर निकलता है।","कोएनोसाइट्स जल धाराएँ बनाते हैं और भोजन ग्रहण में सहायता करते हैं।","स्पंज का कंकाल कैल्केरियस या सिलिसियस स्पिक्यूल अथवा स्पंजिन तंतुओं से बना होता है।","ये सभी लक्षण मिलकर संघ पोरिफेरा को पहचानने के लिए एक विश्वसनीय आधार प्रदान करते हैं।"],"misconceptions":[{"wrong":"संघ पोरिफेरा की पहचान केवल उसके सामान्य आवास या बाहरी आकार से होती है।","right":"वर्गीकरण निदानात्मक संगठन, शरीर-योजना और क्रियात्मक लक्षणों पर निर्भर करता है; पोरिफेरन्स में कोशिकीय स्तर का संगठन होता है और वे सामान्यतः असममित होते हैं।"},{"wrong":"केवल एक लक्षण संघ पोरिफेरा की संपूर्ण विकासात्मक कहानी बता देता है।","right":"संगठन, सममिति, देहगुहा, परिसंचरण, जनन और उदाहरणों के संयोजन का उपयोग करें; जल ओस्टिया से स्पंज में प्रवेश करता है और ऑस्कुलम से बाहर निकलता है।"}],"analogy":"संघ पोरिफेरा को कई पहचान-जाँचों वाली एक प्रोफ़ाइल की तरह समझें: प्रत्येक निदानात्मक लक्षण एक जाँच-बिंदु है, और पूरा समूह मिलकर गलत वर्गीकरण को रोकता है।","analytical":[{"q":"एक नमूने के बारे में प्रस्तावित किया गया है कि वह संघ पोरिफेरा से संबंधित है। इस दावे की जाँच के लिए आप पहले कौन-से दो अवलोकन खोजेंगे?","a":"सबसे निदानात्मक लक्षणों से शुरू करें: पोरिफेरन्स में कोशिकीय स्तर का संगठन होता है और वे सामान्यतः असममित होते हैं। फिर एक स्वतंत्र लक्षण जाँचें: जल ओस्टिया से स्पंज में प्रवेश करता है और ऑस्कुलम से बाहर निकलता है। परस्पर मेल खाते अवलोकन वर्गीकरण को न्यायसंगत बनाते हैं।"},{"q":"किसी प्राणी को केवल एक सतही लक्षण के आधार पर वर्गीकृत करना जोखिम भरा क्यों है?","a":"असंबंधित समूह एक जैसा आवास या व्यापक शरीराकार साझा कर सकते हैं। एक ठोस वर्गीकरण कई संरचनात्मक और क्रियात्मक लक्षणों की तुलना करता है। संघ पोरिफेरा के लिए, उपयोगी प्रमाण में शामिल है: कोएनोसाइट्स जल धाराएँ बनाते हैं और भोजन ग्रहण में सहायता करते हैं।"}]}},"phylum_coelenterata":{"kn":{"hook":"ಫೈಲಮ್ ಸಿಲೆಂಟರೇಟಾ (ನಿಡೇರಿಯಾ) ಅನ್ನು ಹೋಲುವ ಪ್ರಾಣಿ ಗುಂಪಿನಿಂದ ಪ್ರತ್ಯೇಕಿಸಲು ಯಾವ ಒಂದೇ ಅವಲೋಕನ ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಮತ್ತು ಆ ಲಕ್ಷಣ ಕೇವಲ ಹೊರನೋಟಕ್ಕಿಂತ ಏಕೆ ಹೆಚ್ಚು ವಿಶ್ವಾಸಾರ್ಹವಾಗಿದೆ?","chain":["ನಿಡೇರಿಯನ್‌ಗಳು ಅಂಗಾಂಶಮಟ್ಟದ ಸಂಘಟನೆ ಮತ್ತು ರೇಡಿಯಲ್ ಸಮಮಿತಿಯುಳ್ಳ ದ್ವಿಜನನಪದರ ಪ್ರಾಣಿಗಳಾಗಿವೆ.","ನಿಡೋಬ್ಲಾಸ್ಟ್‌ಗಳು ಆಶ್ರಯ, ರಕ್ಷಣೆ ಮತ್ತು ಬೇಟೆ ಹಿಡಿಯಲು ನೆಮಟೋಸಿಸ್ಟ್‌ಗಳನ್ನು ಹೊಂದಿರುತ್ತವೆ.","ಜಠರನಾಳೀಯ ಕುಹರವನ್ನು ಕೊಲೆಂಟೆರಾನ್ ಎನ್ನುತ್ತಾರೆ.","ನಿಡೇರಿಯನ್‌ಗಳು ಆಹಾರವನ್ನು ಬಾಹ್ಯಕೋಶೀಯವಾಗಿ ಮತ್ತು ಅಂತರ್ಕೋಶೀಯವಾಗಿ ಎರಡೂ ರೀತಿ ಜೀರ್ಣಿಸುತ್ತವೆ.","ಈ ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಒಟ್ಟಾಗಿ ಫೈಲಮ್ ಸಿಲೆಂಟರೇಟಾ (ನಿಡೇರಿಯಾ) ಅನ್ನು ಗುರುತಿಸಲು ವಿಶ್ವಾಸಾರ್ಹ ಆಧಾರವನ್ನು ಒದಗಿಸುತ್ತವೆ."],"misconceptions":[{"wrong":"ಫೈಲಮ್ ಸಿಲೆಂಟರೇಟಾ (ನಿಡೇರಿಯಾ) ಅನ್ನು ಕೇವಲ ಅದರ ಸಾಮಾನ್ಯ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ಬಾಹ್ಯ ಆಕಾರದಿಂದ ಮಾತ್ರ ಗುರುತಿಸಲಾಗುತ್ತದೆ.","right":"ವರ್ಗೀಕರಣವು ನಿರ್ಣಾಯಕ ಸಂಘಟನೆ, ದೇಹಯೋಜನೆ ಮತ್ತು ಶರೀರಕ್ರಿಯಾ ಲಕ್ಷಣಗಳನ್ನು ಅವಲಂಬಿಸಿದೆ; ನಿಡೇರಿಯನ್‌ಗಳು ಅಂಗಾಂಶಮಟ್ಟದ ಸಂಘಟನೆ ಮತ್ತು ರೇಡಿಯಲ್ ಸಮಮಿತಿಯುಳ್ಳ ದ್ವಿಜನನಪದರ ಪ್ರಾಣಿಗಳಾಗಿವೆ."},{"wrong":"ಒಂದೇ ಲಕ್ಷಣವು ಫೈಲಮ್ ಸಿಲೆಂಟರೇಟಾ (ನಿಡೇರಿಯಾ)ದ ಸಂಪೂರ್ಣ ವಿಕಾಸಾತ್ಮಕ ಕಥೆಯನ್ನು ಹೇಳುತ್ತದೆ.","right":"ಸಂಘಟನೆ, ಸಮಮಿತಿ, ದೇಹಗುಹೆ, ರಕ್ತಪರಿಚಲನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಸಂಯೋಜನೆಯನ್ನು ಬಳಸಿ; ನಿಡೋಬ್ಲಾಸ್ಟ್‌ಗಳು ಆಶ್ರಯ, ರಕ್ಷಣೆ ಮತ್ತು ಬೇಟೆ ಹಿಡಿಯಲು ನೆಮಟೋಸಿಸ್ಟ್‌ಗಳನ್ನು ಹೊಂದಿರುತ್ತವೆ."}],"analogy":"ಫೈಲಮ್ ಸಿಲೆಂಟರೇಟಾ (ನಿಡೇರಿಯಾ) ಅನ್ನು ಹಲವಾರು ಗುರುತು ಪರಿಶೀಲನೆಗಳುಳ್ಳ ಒಂದು ಪ್ರೊಫೈಲ್ ಎಂದು ಪರಿಗಣಿಸಿ: ಪ್ರತಿ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣವೂ ಒಂದು ಪರಿಶೀಲನಾ ಬಿಂದು, ಮತ್ತು ಸಂಪೂರ್ಣ ಗುಂಪು ತಪ್ಪಾದ ವರ್ಗೀಕರಣವನ್ನು ತಡೆಯುತ್ತದೆ.","analytical":[{"q":"ಒಂದು ನಮೂನೆಯು ಫೈಲಮ್ ಸಿಲೆಂಟರೇಟಾ (ನಿಡೇರಿಯಾ)ಗೆ ಸೇರಿದೆ ಎಂದು ಪ್ರಸ್ತಾಪಿಸಲಾಗಿದೆ. ಈ ಹೇಳಿಕೆಯನ್ನು ಪರೀಕ್ಷಿಸಲು ನೀವು ಮೊದಲು ಯಾವ ಎರಡು ಅವಲೋಕನಗಳನ್ನು ಹುಡುಕುತ್ತೀರಿ?","a":"ಅತ್ಯಂತ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣಗಳಿಂದ ಪ್ರಾರಂಭಿಸಿ: ನಿಡೇರಿಯನ್‌ಗಳು ಅಂಗಾಂಶಮಟ್ಟದ ಸಂಘಟನೆ ಮತ್ತು ರೇಡಿಯಲ್ ಸಮಮಿತಿಯುಳ್ಳ ದ್ವಿಜನನಪದರ ಪ್ರಾಣಿಗಳಾಗಿವೆ. ನಂತರ ಸ್ವತಂತ್ರ ಲಕ್ಷಣವನ್ನು ಪರಿಶೀಲಿಸಿ: ನಿಡೋಬ್ಲಾಸ್ಟ್‌ಗಳು ಆಶ್ರಯ, ರಕ್ಷಣೆ ಮತ್ತು ಬೇಟೆ ಹಿಡಿಯಲು ನೆಮಟೋಸಿಸ್ಟ್‌ಗಳನ್ನು ಹೊಂದಿರುತ್ತವೆ. ಹೊಂದಿಕೆಯಾಗುವ ಅವಲೋಕನಗಳು ವರ್ಗೀಕರಣವನ್ನು ಸಮರ್ಥನೀಯಗೊಳಿಸುತ್ತವೆ."},{"q":"ಕೇವಲ ಒಂದು ಮೇಲ್ಮಟ್ಟದ ಲಕ್ಷಣವನ್ನು ಬಳಸಿ ಪ್ರಾಣಿಯನ್ನು ವರ್ಗೀಕರಿಸುವುದು ಏಕೆ ಅಪಾಯಕಾರಿ?","a":"ಸಂಬಂಧವಿಲ್ಲದ ಗುಂಪುಗಳು ಒಂದೇ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ವಿಶಾಲ ದೇಹಾಕಾರವನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು. ಸೂಕ್ತ ವರ್ಗೀಕರಣವು ಹಲವಾರು ರಚನಾತ್ಮಕ ಮತ್ತು ಕ್ರಿಯಾತ್ಮಕ ಲಕ್ಷಣಗಳನ್ನು ಹೋಲಿಸುತ್ತದೆ. ಫೈಲಮ್ ಸಿಲೆಂಟರೇಟಾ (ನಿಡೇರಿಯಾ)ಗೆ, ಉಪಯುಕ್ತ ಸಾಕ್ಷ್ಯ ಇವುಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ಜಠರನಾಳೀಯ ಕುಹರವನ್ನು ಕೊಲೆಂಟೆರಾನ್ ಎನ್ನುತ್ತಾರೆ."}]},"hi":{"hook":"संघ सीलेंटरेटा (निडेरिया) को सबसे मिलते-जुलते प्राणी समूह से अलग पहचानने के लिए कौन-सा एक अवलोकन आपकी मदद करेगा, और वह लक्षण केवल बाहरी रूप-रंग से अधिक विश्वसनीय क्यों है?","chain":["सीलेंटरेट (निडेरियन) ऊतक स्तर के संगठन और रेडियल सममिति वाले द्विजनस्तरीय प्राणी हैं।","निडोब्लास्ट सहारा लेने, रक्षा करने और शिकार पकड़ने के लिए नेमेटोसिस्ट धारण करते हैं।","जठर-संवहनी गुहा को कोएलेंटेरॉन कहा जाता है।","सीलेंटरेट भोजन को बाह्यकोशिकीय और अंतःकोशिकीय दोनों प्रकार से पचाते हैं।","ये सभी लक्षण मिलकर संघ सीलेंटरेटा (निडेरिया) को पहचानने के लिए एक विश्वसनीय आधार प्रदान करते हैं।"],"misconceptions":[{"wrong":"संघ सीलेंटरेटा (निडेरिया) की पहचान केवल उसके सामान्य आवास या बाहरी आकार से होती है।","right":"वर्गीकरण निदानात्मक संगठन, शरीर-योजना और क्रियात्मक लक्षणों पर निर्भर करता है; सीलेंटरेट (निडेरियन) ऊतक स्तर के संगठन और रेडियल सममिति वाले द्विजनस्तरीय प्राणी हैं।"},{"wrong":"केवल एक लक्षण संघ सीलेंटरेटा (निडेरिया) की संपूर्ण विकासात्मक कहानी बता देता है।","right":"संगठन, सममिति, देहगुहा, परिसंचरण, जनन और उदाहरणों के संयोजन का उपयोग करें; निडोब्लास्ट सहारा लेने, रक्षा करने और शिकार पकड़ने के लिए नेमेटोसिस्ट धारण करते हैं।"}],"analogy":"संघ सीलेंटरेटा (निडेरिया) को कई पहचान-जाँचों वाली एक प्रोफ़ाइल की तरह समझें: प्रत्येक निदानात्मक लक्षण एक जाँच-बिंदु है, और पूरा समूह मिलकर गलत वर्गीकरण को रोकता है।","analytical":[{"q":"एक नमूने के बारे में प्रस्तावित किया गया है कि वह संघ सीलेंटरेटा (निडेरिया) से संबंधित है। इस दावे की जाँच के लिए आप पहले कौन-से दो अवलोकन खोजेंगे?","a":"सबसे निदानात्मक लक्षणों से शुरू करें: सीलेंटरेट (निडेरियन) ऊतक स्तर के संगठन और रेडियल सममिति वाले द्विजनस्तरीय प्राणी हैं। फिर एक स्वतंत्र लक्षण जाँचें: निडोब्लास्ट सहारा लेने, रक्षा करने और शिकार पकड़ने के लिए नेमेटोसिस्ट धारण करते हैं। परस्पर मेल खाते अवलोकन वर्गीकरण को न्यायसंगत बनाते हैं।"},{"q":"किसी प्राणी को केवल एक सतही लक्षण के आधार पर वर्गीकृत करना जोखिम भरा क्यों है?","a":"असंबंधित समूह एक जैसा आवास या व्यापक शरीराकार साझा कर सकते हैं। एक ठोस वर्गीकरण कई संरचनात्मक और क्रियात्मक लक्षणों की तुलना करता है। संघ सीलेंटरेटा (निडेरिया) के लिए, उपयोगी प्रमाण में शामिल है: जठर-संवहनी गुहा को कोएलेंटेरॉन कहा जाता है।"}]}},"phylum_ctenophora":{"kn":{"hook":"ಫೈಲಮ್ ಟೀನೋಫೋರಾ ಅನ್ನು ಹೋಲುವ ಪ್ರಾಣಿ ಗುಂಪಿನಿಂದ ಪ್ರತ್ಯೇಕಿಸಲು ಯಾವ ಒಂದೇ ಅವಲೋಕನ ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಮತ್ತು ಆ ಲಕ್ಷಣ ಕೇವಲ ಹೊರನೋಟಕ್ಕಿಂತ ಏಕೆ ಹೆಚ್ಚು ವಿಶ್ವಾಸಾರ್ಹವಾಗಿದೆ?","chain":["ಟೀನೋಫೋರ್‌ಗಳು ಸಂಪೂರ್ಣವಾಗಿ ಸಮುದ್ರವಾಸಿಗಳಾಗಿದ್ದು ಅಂಗಾಂಶಮಟ್ಟದ ಸಂಘಟನೆಯುಳ್ಳ ದ್ವಿಜನನಪದರ ಪ್ರಾಣಿಗಳಾಗಿವೆ.","ಎಂಟು ಬಾಹ್ಯ ಸಾಲುಗಳ ಸಿಲಿಯಾಯುಕ್ತ ಕಾಂಬ್ ಪ್ಲೇಟ್‌ಗಳು ಟೀನೋಫೋರ್‌ಗಳಿಗೆ ಈಜಲು ಸಹಾಯ ಮಾಡುತ್ತವೆ.","ಕೊಲೋಬ್ಲಾಸ್ಟ್‌ಗಳು ಟೀನೋಫೋರ್‌ಗಳಲ್ಲಿ ಬೇಟೆ ಹಿಡಿಯಲು ಬಳಸುವ ಅಂಟಿಕೊಳ್ಳುವ ಕೋಶಗಳಾಗಿವೆ.","ಟೀನೋಫೋರ್‌ಗಳು ಸಾಮಾನ್ಯವಾಗಿ ಜೈವಪ್ರಕಾಶವನ್ನು (ಬಯೋಲ್ಯುಮಿನೆಸೆನ್ಸ್) ತೋರಿಸುತ್ತವೆ.","ಈ ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಒಟ್ಟಾಗಿ ಫೈಲಮ್ ಟೀನೋಫೋರಾ ಅನ್ನು ಗುರುತಿಸಲು ವಿಶ್ವಾಸಾರ್ಹ ಆಧಾರವನ್ನು ಒದಗಿಸುತ್ತವೆ."],"misconceptions":[{"wrong":"ಫೈಲಮ್ ಟೀನೋಫೋರಾ ಅನ್ನು ಕೇವಲ ಅದರ ಸಾಮಾನ್ಯ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ಬಾಹ್ಯ ಆಕಾರದಿಂದ ಮಾತ್ರ ಗುರುತಿಸಲಾಗುತ್ತದೆ.","right":"ವರ್ಗೀಕರಣವು ನಿರ್ಣಾಯಕ ಸಂಘಟನೆ, ದೇಹಯೋಜನೆ ಮತ್ತು ಶರೀರಕ್ರಿಯಾ ಲಕ್ಷಣಗಳನ್ನು ಅವಲಂಬಿಸಿದೆ; ಟೀನೋಫೋರ್‌ಗಳು ಸಂಪೂರ್ಣವಾಗಿ ಸಮುದ್ರವಾಸಿಗಳಾಗಿದ್ದು ಅಂಗಾಂಶಮಟ್ಟದ ಸಂಘಟನೆಯುಳ್ಳ ದ್ವಿಜನನಪದರ ಪ್ರಾಣಿಗಳಾಗಿವೆ."},{"wrong":"ಒಂದೇ ಲಕ್ಷಣವು ಫೈಲಮ್ ಟೀನೋಫೋರಾದ ಸಂಪೂರ್ಣ ವಿಕಾಸಾತ್ಮಕ ಕಥೆಯನ್ನು ಹೇಳುತ್ತದೆ.","right":"ಸಂಘಟನೆ, ಸಮಮಿತಿ, ದೇಹಗುಹೆ, ರಕ್ತಪರಿಚಲನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಸಂಯೋಜನೆಯನ್ನು ಬಳಸಿ; ಎಂಟು ಬಾಹ್ಯ ಸಾಲುಗಳ ಸಿಲಿಯಾಯುಕ್ತ ಕಾಂಬ್ ಪ್ಲೇಟ್‌ಗಳು ಟೀನೋಫೋರ್‌ಗಳಿಗೆ ಈಜಲು ಸಹಾಯ ಮಾಡುತ್ತವೆ."}],"analogy":"ಫೈಲಮ್ ಟೀನೋಫೋರಾ ಅನ್ನು ಹಲವಾರು ಗುರುತು ಪರಿಶೀಲನೆಗಳುಳ್ಳ ಒಂದು ಪ್ರೊಫೈಲ್ ಎಂದು ಪರಿಗಣಿಸಿ: ಪ್ರತಿ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣವೂ ಒಂದು ಪರಿಶೀಲನಾ ಬಿಂದು, ಮತ್ತು ಸಂಪೂರ್ಣ ಗುಂಪು ತಪ್ಪಾದ ವರ್ಗೀಕರಣವನ್ನು ತಡೆಯುತ್ತದೆ.","analytical":[{"q":"ಒಂದು ನಮೂನೆಯು ಫೈಲಮ್ ಟೀನೋಫೋರಾಗೆ ಸೇರಿದೆ ಎಂದು ಪ್ರಸ್ತಾಪಿಸಲಾಗಿದೆ. ಈ ಹೇಳಿಕೆಯನ್ನು ಪರೀಕ್ಷಿಸಲು ನೀವು ಮೊದಲು ಯಾವ ಎರಡು ಅವಲೋಕನಗಳನ್ನು ಹುಡುಕುತ್ತೀರಿ?","a":"ಅತ್ಯಂತ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣಗಳಿಂದ ಪ್ರಾರಂಭಿಸಿ: ಟೀನೋಫೋರ್‌ಗಳು ಸಂಪೂರ್ಣವಾಗಿ ಸಮುದ್ರವಾಸಿಗಳಾಗಿದ್ದು ಅಂಗಾಂಶಮಟ್ಟದ ಸಂಘಟನೆಯುಳ್ಳ ದ್ವಿಜನನಪದರ ಪ್ರಾಣಿಗಳಾಗಿವೆ. ನಂತರ ಸ್ವತಂತ್ರ ಲಕ್ಷಣವನ್ನು ಪರಿಶೀಲಿಸಿ: ಎಂಟು ಬಾಹ್ಯ ಸಾಲುಗಳ ಸಿಲಿಯಾಯುಕ್ತ ಕಾಂಬ್ ಪ್ಲೇಟ್‌ಗಳು ಟೀನೋಫೋರ್‌ಗಳಿಗೆ ಈಜಲು ಸಹಾಯ ಮಾಡುತ್ತವೆ. ಹೊಂದಿಕೆಯಾಗುವ ಅವಲೋಕನಗಳು ವರ್ಗೀಕರಣವನ್ನು ಸಮರ್ಥನೀಯಗೊಳಿಸುತ್ತವೆ."},{"q":"ಕೇವಲ ಒಂದು ಮೇಲ್ಮಟ್ಟದ ಲಕ್ಷಣವನ್ನು ಬಳಸಿ ಪ್ರಾಣಿಯನ್ನು ವರ್ಗೀಕರಿಸುವುದು ಏಕೆ ಅಪಾಯಕಾರಿ?","a":"ಸಂಬಂಧವಿಲ್ಲದ ಗುಂಪುಗಳು ಒಂದೇ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ವಿಶಾಲ ದೇಹಾಕಾರವನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು. ಸೂಕ್ತ ವರ್ಗೀಕರಣವು ಹಲವಾರು ರಚನಾತ್ಮಕ ಮತ್ತು ಕ್ರಿಯಾತ್ಮಕ ಲಕ್ಷಣಗಳನ್ನು ಹೋಲಿಸುತ್ತದೆ. ಫೈಲಮ್ ಟೀನೋಫೋರಾಗೆ, ಉಪಯುಕ್ತ ಸಾಕ್ಷ್ಯ ಇವುಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ಕೊಲೋಬ್ಲಾಸ್ಟ್‌ಗಳು ಟೀನೋಫೋರ್‌ಗಳಲ್ಲಿ ಬೇಟೆ ಹಿಡಿಯಲು ಬಳಸುವ ಅಂಟಿಕೊಳ್ಳುವ ಕೋಶಗಳಾಗಿವೆ."}]},"hi":{"hook":"संघ टीनोफोरा को सबसे मिलते-जुलते प्राणी समूह से अलग पहचानने के लिए कौन-सा एक अवलोकन आपकी मदद करेगा, और वह लक्षण केवल बाहरी रूप-रंग से अधिक विश्वसनीय क्यों है?","chain":["टीनोफोर पूर्णतः समुद्री, ऊतक स्तर के संगठन वाले द्विजनस्तरीय प्राणी हैं।","पक्ष्माभी कॉम्ब प्लेटों की आठ बाह्य पंक्तियाँ टीनोफोर को तैरने में मदद करती हैं।","कोलोब्लास्ट टीनोफोर में शिकार पकड़ने के लिए प्रयुक्त चिपचिपी कोशिकाएँ हैं।","टीनोफोर प्रायः जैव-दीप्ति (बायोल्यूमिनेसेंस) दर्शाते हैं।","ये सभी लक्षण मिलकर संघ टीनोफोरा को पहचानने के लिए एक विश्वसनीय आधार प्रदान करते हैं।"],"misconceptions":[{"wrong":"संघ टीनोफोरा की पहचान केवल उसके सामान्य आवास या बाहरी आकार से होती है।","right":"वर्गीकरण निदानात्मक संगठन, शरीर-योजना और क्रियात्मक लक्षणों पर निर्भर करता है; टीनोफोर पूर्णतः समुद्री, ऊतक स्तर के संगठन वाले द्विजनस्तरीय प्राणी हैं।"},{"wrong":"केवल एक लक्षण संघ टीनोफोरा की संपूर्ण विकासात्मक कहानी बता देता है।","right":"संगठन, सममिति, देहगुहा, परिसंचरण, जनन और उदाहरणों के संयोजन का उपयोग करें; पक्ष्माभी कॉम्ब प्लेटों की आठ बाह्य पंक्तियाँ टीनोफोर को तैरने में मदद करती हैं।"}],"analogy":"संघ टीनोफोरा को कई पहचान-जाँचों वाली एक प्रोफ़ाइल की तरह समझें: प्रत्येक निदानात्मक लक्षण एक जाँच-बिंदु है, और पूरा समूह मिलकर गलत वर्गीकरण को रोकता है।","analytical":[{"q":"एक नमूने के बारे में प्रस्तावित किया गया है कि वह संघ टीनोफोरा से संबंधित है। इस दावे की जाँच के लिए आप पहले कौन-से दो अवलोकन खोजेंगे?","a":"सबसे निदानात्मक लक्षणों से शुरू करें: टीनोफोर पूर्णतः समुद्री, ऊतक स्तर के संगठन वाले द्विजनस्तरीय प्राणी हैं। फिर एक स्वतंत्र लक्षण जाँचें: पक्ष्माभी कॉम्ब प्लेटों की आठ बाह्य पंक्तियाँ टीनोफोर को तैरने में मदद करती हैं। परस्पर मेल खाते अवलोकन वर्गीकरण को न्यायसंगत बनाते हैं।"},{"q":"किसी प्राणी को केवल एक सतही लक्षण के आधार पर वर्गीकृत करना जोखिम भरा क्यों है?","a":"असंबंधित समूह एक जैसा आवास या व्यापक शरीराकार साझा कर सकते हैं। एक ठोस वर्गीकरण कई संरचनात्मक और क्रियात्मक लक्षणों की तुलना करता है। संघ टीनोफोरा के लिए, उपयोगी प्रमाण में शामिल है: कोलोब्लास्ट टीनोफोर में शिकार पकड़ने के लिए प्रयुक्त चिपचिपी कोशिकाएँ हैं।"}]}},"phylum_platyhelminthes":{"kn":{"hook":"ಫೈಲಮ್ ಪ್ಲಾಟಿಹೆಲ್ಮಿಂಥಸ್ ಅನ್ನು ಹೋಲುವ ಪ್ರಾಣಿ ಗುಂಪಿನಿಂದ ಪ್ರತ್ಯೇಕಿಸಲು ಯಾವ ಒಂದೇ ಅವಲೋಕನ ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಮತ್ತು ಆ ಲಕ್ಷಣ ಕೇವಲ ಹೊರನೋಟಕ್ಕಿಂತ ಏಕೆ ಹೆಚ್ಚು ವಿಶ್ವಾಸಾರ್ಹವಾಗಿದೆ?","chain":["ಪ್ಲಾಟಿಹೆಲ್ಮಿಂಥಸ್‌ಗಳು ಬೆನ್ನು-ಹೊಟ್ಟೆ ದಿಕ್ಕಿನಲ್ಲಿ ಚಪ್ಪಟೆಯಾಗಿರುವ, ದ್ವಿಪಾರ್ಶ್ವ ಸಮಮಿತಿಯುಳ್ಳ ತ್ರಿಜನನಪದರ ಪ್ರಾಣಿಗಳಾಗಿವೆ.","ಚಪ್ಪಟೆಹುಳುಗಳು ಅಸಿಲೋಮೇಟ್ ಆಗಿದ್ದು ಅಂಗಮಟ್ಟದ ಸಂಘಟನೆಯನ್ನು ತೋರಿಸುತ್ತವೆ.","ಜ್ವಾಲಾ ಕೋಶಗಳು ಚಪ್ಪಟೆಹುಳುಗಳಲ್ಲಿ ವಿಸರ್ಜನೆ ಮತ್ತು ಆಸ್ಮೋನಿಯಂತ್ರಣವನ್ನು ನಿರ್ವಹಿಸುತ್ತವೆ.","ಬಹುತೇಕ ಚಪ್ಪಟೆಹುಳುಗಳು ಅಪೂರ್ಣ ಜೀರ್ಣಾಂಗ ವ್ಯವಸ್ಥೆಯನ್ನು ಹೊಂದಿದ್ದರೆ, ಸೆಸ್ಟೋಡ್‌ಗಳಿಗೆ ಜೀರ್ಣಾಂಗ ವ್ಯವಸ್ಥೆಯೇ ಇರುವುದಿಲ್ಲ.","ಈ ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಒಟ್ಟಾಗಿ ಫೈಲಮ್ ಪ್ಲಾಟಿಹೆಲ್ಮಿಂಥಸ್ ಅನ್ನು ಗುರುತಿಸಲು ವಿಶ್ವಾಸಾರ್ಹ ಆಧಾರವನ್ನು ಒದಗಿಸುತ್ತವೆ."],"misconceptions":[{"wrong":"ಫೈಲಮ್ ಪ್ಲಾಟಿಹೆಲ್ಮಿಂಥಸ್ ಅನ್ನು ಕೇವಲ ಅದರ ಸಾಮಾನ್ಯ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ಬಾಹ್ಯ ಆಕಾರದಿಂದ ಮಾತ್ರ ಗುರುತಿಸಲಾಗುತ್ತದೆ.","right":"ವರ್ಗೀಕರಣವು ನಿರ್ಣಾಯಕ ಸಂಘಟನೆ, ದೇಹಯೋಜನೆ ಮತ್ತು ಶರೀರಕ್ರಿಯಾ ಲಕ್ಷಣಗಳನ್ನು ಅವಲಂಬಿಸಿದೆ; ಪ್ಲಾಟಿಹೆಲ್ಮಿಂಥಸ್‌ಗಳು ಬೆನ್ನು-ಹೊಟ್ಟೆ ದಿಕ್ಕಿನಲ್ಲಿ ಚಪ್ಪಟೆಯಾಗಿರುವ, ದ್ವಿಪಾರ್ಶ್ವ ಸಮಮಿತಿಯುಳ್ಳ ತ್ರಿಜನನಪದರ ಪ್ರಾಣಿಗಳಾಗಿವೆ."},{"wrong":"ಒಂದೇ ಲಕ್ಷಣವು ಫೈಲಮ್ ಪ್ಲಾಟಿಹೆಲ್ಮಿಂಥಸ್ದ ಸಂಪೂರ್ಣ ವಿಕಾಸಾತ್ಮಕ ಕಥೆಯನ್ನು ಹೇಳುತ್ತದೆ.","right":"ಸಂಘಟನೆ, ಸಮಮಿತಿ, ದೇಹಗುಹೆ, ರಕ್ತಪರಿಚಲನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಸಂಯೋಜನೆಯನ್ನು ಬಳಸಿ; ಚಪ್ಪಟೆಹುಳುಗಳು ಅಸಿಲೋಮೇಟ್ ಆಗಿದ್ದು ಅಂಗಮಟ್ಟದ ಸಂಘಟನೆಯನ್ನು ತೋರಿಸುತ್ತವೆ."}],"analogy":"ಫೈಲಮ್ ಪ್ಲಾಟಿಹೆಲ್ಮಿಂಥಸ್ ಅನ್ನು ಹಲವಾರು ಗುರುತು ಪರಿಶೀಲನೆಗಳುಳ್ಳ ಒಂದು ಪ್ರೊಫೈಲ್ ಎಂದು ಪರಿಗಣಿಸಿ: ಪ್ರತಿ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣವೂ ಒಂದು ಪರಿಶೀಲನಾ ಬಿಂದು, ಮತ್ತು ಸಂಪೂರ್ಣ ಗುಂಪು ತಪ್ಪಾದ ವರ್ಗೀಕರಣವನ್ನು ತಡೆಯುತ್ತದೆ.","analytical":[{"q":"ಒಂದು ನಮೂನೆಯು ಫೈಲಮ್ ಪ್ಲಾಟಿಹೆಲ್ಮಿಂಥಸ್ಗೆ ಸೇರಿದೆ ಎಂದು ಪ್ರಸ್ತಾಪಿಸಲಾಗಿದೆ. ಈ ಹೇಳಿಕೆಯನ್ನು ಪರೀಕ್ಷಿಸಲು ನೀವು ಮೊದಲು ಯಾವ ಎರಡು ಅವಲೋಕನಗಳನ್ನು ಹುಡುಕುತ್ತೀರಿ?","a":"ಅತ್ಯಂತ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣಗಳಿಂದ ಪ್ರಾರಂಭಿಸಿ: ಪ್ಲಾಟಿಹೆಲ್ಮಿಂಥಸ್‌ಗಳು ಬೆನ್ನು-ಹೊಟ್ಟೆ ದಿಕ್ಕಿನಲ್ಲಿ ಚಪ್ಪಟೆಯಾಗಿರುವ, ದ್ವಿಪಾರ್ಶ್ವ ಸಮಮಿತಿಯುಳ್ಳ ತ್ರಿಜನನಪದರ ಪ್ರಾಣಿಗಳಾಗಿವೆ. ನಂತರ ಸ್ವತಂತ್ರ ಲಕ್ಷಣವನ್ನು ಪರಿಶೀಲಿಸಿ: ಚಪ್ಪಟೆಹುಳುಗಳು ಅಸಿಲೋಮೇಟ್ ಆಗಿದ್ದು ಅಂಗಮಟ್ಟದ ಸಂಘಟನೆಯನ್ನು ತೋರಿಸುತ್ತವೆ. ಹೊಂದಿಕೆಯಾಗುವ ಅವಲೋಕನಗಳು ವರ್ಗೀಕರಣವನ್ನು ಸಮರ್ಥನೀಯಗೊಳಿಸುತ್ತವೆ."},{"q":"ಕೇವಲ ಒಂದು ಮೇಲ್ಮಟ್ಟದ ಲಕ್ಷಣವನ್ನು ಬಳಸಿ ಪ್ರಾಣಿಯನ್ನು ವರ್ಗೀಕರಿಸುವುದು ಏಕೆ ಅಪಾಯಕಾರಿ?","a":"ಸಂಬಂಧವಿಲ್ಲದ ಗುಂಪುಗಳು ಒಂದೇ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ವಿಶಾಲ ದೇಹಾಕಾರವನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು. ಸೂಕ್ತ ವರ್ಗೀಕರಣವು ಹಲವಾರು ರಚನಾತ್ಮಕ ಮತ್ತು ಕ್ರಿಯಾತ್ಮಕ ಲಕ್ಷಣಗಳನ್ನು ಹೋಲಿಸುತ್ತದೆ. ಫೈಲಮ್ ಪ್ಲಾಟಿಹೆಲ್ಮಿಂಥಸ್ಗೆ, ಉಪಯುಕ್ತ ಸಾಕ್ಷ್ಯ ಇವುಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ಜ್ವಾಲಾ ಕೋಶಗಳು ಚಪ್ಪಟೆಹುಳುಗಳಲ್ಲಿ ವಿಸರ್ಜನೆ ಮತ್ತು ಆಸ್ಮೋನಿಯಂತ್ರಣವನ್ನು ನಿರ್ವಹಿಸುತ್ತವೆ."}]},"hi":{"hook":"संघ प्लेटीहेल्मिन्थीज को सबसे मिलते-जुलते प्राणी समूह से अलग पहचानने के लिए कौन-सा एक अवलोकन आपकी मदद करेगा, और वह लक्षण केवल बाहरी रूप-रंग से अधिक विश्वसनीय क्यों है?","chain":["प्लेटीहेल्मिन्थीज पृष्ठ-अधर दिशा में चपटे, द्विपार्श्व सममिति वाले त्रिजनस्तरीय प्राणी हैं।","चपटे कृमि असीलोमेट होते हैं और अंग स्तर का संगठन दर्शाते हैं।","ज्वाला कोशिकाएँ चपटे कृमियों में उत्सर्जन और परासरण-नियमन करती हैं।","अधिकांश चपटे कृमियों में अपूर्ण पाचन तंत्र होता है, जबकि सेस्टोड में पाचन तंत्र होता ही नहीं।","ये सभी लक्षण मिलकर संघ प्लेटीहेल्मिन्थीज को पहचानने के लिए एक विश्वसनीय आधार प्रदान करते हैं।"],"misconceptions":[{"wrong":"संघ प्लेटीहेल्मिन्थीज की पहचान केवल उसके सामान्य आवास या बाहरी आकार से होती है।","right":"वर्गीकरण निदानात्मक संगठन, शरीर-योजना और क्रियात्मक लक्षणों पर निर्भर करता है; प्लेटीहेल्मिन्थीज पृष्ठ-अधर दिशा में चपटे, द्विपार्श्व सममिति वाले त्रिजनस्तरीय प्राणी हैं।"},{"wrong":"केवल एक लक्षण संघ प्लेटीहेल्मिन्थीज की संपूर्ण विकासात्मक कहानी बता देता है।","right":"संगठन, सममिति, देहगुहा, परिसंचरण, जनन और उदाहरणों के संयोजन का उपयोग करें; चपटे कृमि असीलोमेट होते हैं और अंग स्तर का संगठन दर्शाते हैं।"}],"analogy":"संघ प्लेटीहेल्मिन्थीज को कई पहचान-जाँचों वाली एक प्रोफ़ाइल की तरह समझें: प्रत्येक निदानात्मक लक्षण एक जाँच-बिंदु है, और पूरा समूह मिलकर गलत वर्गीकरण को रोकता है।","analytical":[{"q":"एक नमूने के बारे में प्रस्तावित किया गया है कि वह संघ प्लेटीहेल्मिन्थीज से संबंधित है। इस दावे की जाँच के लिए आप पहले कौन-से दो अवलोकन खोजेंगे?","a":"सबसे निदानात्मक लक्षणों से शुरू करें: प्लेटीहेल्मिन्थीज पृष्ठ-अधर दिशा में चपटे, द्विपार्श्व सममिति वाले त्रिजनस्तरीय प्राणी हैं। फिर एक स्वतंत्र लक्षण जाँचें: चपटे कृमि असीलोमेट होते हैं और अंग स्तर का संगठन दर्शाते हैं। परस्पर मेल खाते अवलोकन वर्गीकरण को न्यायसंगत बनाते हैं।"},{"q":"किसी प्राणी को केवल एक सतही लक्षण के आधार पर वर्गीकृत करना जोखिम भरा क्यों है?","a":"असंबंधित समूह एक जैसा आवास या व्यापक शरीराकार साझा कर सकते हैं। एक ठोस वर्गीकरण कई संरचनात्मक और क्रियात्मक लक्षणों की तुलना करता है। संघ प्लेटीहेल्मिन्थीज के लिए, उपयोगी प्रमाण में शामिल है: ज्वाला कोशिकाएँ चपटे कृमियों में उत्सर्जन और परासरण-नियमन करती हैं।"}]}},"phylum_aschelminthes":{"kn":{"hook":"ಫೈಲಮ್ ಅಸ್ಕೆಲ್ಮಿಂಥಸ್ ಅನ್ನು ಹೋಲುವ ಪ್ರಾಣಿ ಗುಂಪಿನಿಂದ ಪ್ರತ್ಯೇಕಿಸಲು ಯಾವ ಒಂದೇ ಅವಲೋಕನ ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಮತ್ತು ಆ ಲಕ್ಷಣ ಕೇವಲ ಹೊರನೋಟಕ್ಕಿಂತ ಏಕೆ ಹೆಚ್ಚು ವಿಶ್ವಾಸಾರ್ಹವಾಗಿದೆ?","chain":["ಅಸ್ಕೆಲ್ಮಿಂಥಸ್‌ಗಳು ದ್ವಿಪಾರ್ಶ್ವ ಸಮಮಿತಿಯುಳ್ಳ, ತ್ರಿಜನನಪದರ ಮತ್ತು ಸ್ಯೂಡೋಸಿಲೋಮೇಟ್ ಪ್ರಾಣಿಗಳಾಗಿವೆ.","ದುಂಡುಹುಳುಗಳು ಅಂಗವ್ಯವಸ್ಥೆ ಮಟ್ಟದ ಸಂಘಟನೆ ಮತ್ತು ಪೂರ್ಣ ಜೀರ್ಣಾಂಗ ವ್ಯವಸ್ಥೆಯನ್ನು ಹೊಂದಿವೆ.","ಅಸ್ಕೆಲ್ಮಿಂಥ್‌ನ ದೇಹವು ಅಡ್ಡಚ್ಛೇದದಲ್ಲಿ ವೃತ್ತಾಕಾರವಾಗಿದ್ದು ಗಟ್ಟಿಯಾದ ಕ್ಯುಟಿಕಲ್‌ನಿಂದ ಆವೃತವಾಗಿರುತ್ತದೆ.","ಅಸ್ಕೆಲ್ಮಿಂಥಸ್‌ಗಳಲ್ಲಿ ಲಿಂಗಗಳು ಪ್ರತ್ಯೇಕವಾಗಿದ್ದು ಲೈಂಗಿಕ ದ್ವಿರೂಪತೆ ಸಾಮಾನ್ಯವಾಗಿ ಸ್ಪಷ್ಟವಾಗಿರುತ್ತದೆ.","ಈ ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಒಟ್ಟಾಗಿ ಫೈಲಮ್ ಅಸ್ಕೆಲ್ಮಿಂಥಸ್ ಅನ್ನು ಗುರುತಿಸಲು ವಿಶ್ವಾಸಾರ್ಹ ಆಧಾರವನ್ನು ಒದಗಿಸುತ್ತವೆ."],"misconceptions":[{"wrong":"ಫೈಲಮ್ ಅಸ್ಕೆಲ್ಮಿಂಥಸ್ ಅನ್ನು ಕೇವಲ ಅದರ ಸಾಮಾನ್ಯ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ಬಾಹ್ಯ ಆಕಾರದಿಂದ ಮಾತ್ರ ಗುರುತಿಸಲಾಗುತ್ತದೆ.","right":"ವರ್ಗೀಕರಣವು ನಿರ್ಣಾಯಕ ಸಂಘಟನೆ, ದೇಹಯೋಜನೆ ಮತ್ತು ಶರೀರಕ್ರಿಯಾ ಲಕ್ಷಣಗಳನ್ನು ಅವಲಂಬಿಸಿದೆ; ಅಸ್ಕೆಲ್ಮಿಂಥಸ್‌ಗಳು ದ್ವಿಪಾರ್ಶ್ವ ಸಮಮಿತಿಯುಳ್ಳ, ತ್ರಿಜನನಪದರ ಮತ್ತು ಸ್ಯೂಡೋಸಿಲೋಮೇಟ್ ಪ್ರಾಣಿಗಳಾಗಿವೆ."},{"wrong":"ಒಂದೇ ಲಕ್ಷಣವು ಫೈಲಮ್ ಅಸ್ಕೆಲ್ಮಿಂಥಸ್ದ ಸಂಪೂರ್ಣ ವಿಕಾಸಾತ್ಮಕ ಕಥೆಯನ್ನು ಹೇಳುತ್ತದೆ.","right":"ಸಂಘಟನೆ, ಸಮಮಿತಿ, ದೇಹಗುಹೆ, ರಕ್ತಪರಿಚಲನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಸಂಯೋಜನೆಯನ್ನು ಬಳಸಿ; ದುಂಡುಹುಳುಗಳು ಅಂಗವ್ಯವಸ್ಥೆ ಮಟ್ಟದ ಸಂಘಟನೆ ಮತ್ತು ಪೂರ್ಣ ಜೀರ್ಣಾಂಗ ವ್ಯವಸ್ಥೆಯನ್ನು ಹೊಂದಿವೆ."}],"analogy":"ಫೈಲಮ್ ಅಸ್ಕೆಲ್ಮಿಂಥಸ್ ಅನ್ನು ಹಲವಾರು ಗುರುತು ಪರಿಶೀಲನೆಗಳುಳ್ಳ ಒಂದು ಪ್ರೊಫೈಲ್ ಎಂದು ಪರಿಗಣಿಸಿ: ಪ್ರತಿ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣವೂ ಒಂದು ಪರಿಶೀಲನಾ ಬಿಂದು, ಮತ್ತು ಸಂಪೂರ್ಣ ಗುಂಪು ತಪ್ಪಾದ ವರ್ಗೀಕರಣವನ್ನು ತಡೆಯುತ್ತದೆ.","analytical":[{"q":"ಒಂದು ನಮೂನೆಯು ಫೈಲಮ್ ಅಸ್ಕೆಲ್ಮಿಂಥಸ್ಗೆ ಸೇರಿದೆ ಎಂದು ಪ್ರಸ್ತಾಪಿಸಲಾಗಿದೆ. ಈ ಹೇಳಿಕೆಯನ್ನು ಪರೀಕ್ಷಿಸಲು ನೀವು ಮೊದಲು ಯಾವ ಎರಡು ಅವಲೋಕನಗಳನ್ನು ಹುಡುಕುತ್ತೀರಿ?","a":"ಅತ್ಯಂತ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣಗಳಿಂದ ಪ್ರಾರಂಭಿಸಿ: ಅಸ್ಕೆಲ್ಮಿಂಥಸ್‌ಗಳು ದ್ವಿಪಾರ್ಶ್ವ ಸಮಮಿತಿಯುಳ್ಳ, ತ್ರಿಜನನಪದರ ಮತ್ತು ಸ್ಯೂಡೋಸಿಲೋಮೇಟ್ ಪ್ರಾಣಿಗಳಾಗಿವೆ. ನಂತರ ಸ್ವತಂತ್ರ ಲಕ್ಷಣವನ್ನು ಪರಿಶೀಲಿಸಿ: ದುಂಡುಹುಳುಗಳು ಅಂಗವ್ಯವಸ್ಥೆ ಮಟ್ಟದ ಸಂಘಟನೆ ಮತ್ತು ಪೂರ್ಣ ಜೀರ್ಣಾಂಗ ವ್ಯವಸ್ಥೆಯನ್ನು ಹೊಂದಿವೆ. ಹೊಂದಿಕೆಯಾಗುವ ಅವಲೋಕನಗಳು ವರ್ಗೀಕರಣವನ್ನು ಸಮರ್ಥನೀಯಗೊಳಿಸುತ್ತವೆ."},{"q":"ಕೇವಲ ಒಂದು ಮೇಲ್ಮಟ್ಟದ ಲಕ್ಷಣವನ್ನು ಬಳಸಿ ಪ್ರಾಣಿಯನ್ನು ವರ್ಗೀಕರಿಸುವುದು ಏಕೆ ಅಪಾಯಕಾರಿ?","a":"ಸಂಬಂಧವಿಲ್ಲದ ಗುಂಪುಗಳು ಒಂದೇ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ವಿಶಾಲ ದೇಹಾಕಾರವನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು. ಸೂಕ್ತ ವರ್ಗೀಕರಣವು ಹಲವಾರು ರಚನಾತ್ಮಕ ಮತ್ತು ಕ್ರಿಯಾತ್ಮಕ ಲಕ್ಷಣಗಳನ್ನು ಹೋಲಿಸುತ್ತದೆ. ಫೈಲಮ್ ಅಸ್ಕೆಲ್ಮಿಂಥಸ್ಗೆ, ಉಪಯುಕ್ತ ಸಾಕ್ಷ್ಯ ಇವುಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ಅಸ್ಕೆಲ್ಮಿಂಥ್‌ನ ದೇಹವು ಅಡ್ಡಚ್ಛೇದದಲ್ಲಿ ವೃತ್ತಾಕಾರವಾಗಿದ್ದು ಗಟ್ಟಿಯಾದ ಕ್ಯುಟಿಕಲ್‌ನಿಂದ ಆವೃತವಾಗಿರುತ್ತದೆ."}]},"hi":{"hook":"संघ ऐस्केल्मिन्थीज को सबसे मिलते-जुलते प्राणी समूह से अलग पहचानने के लिए कौन-सा एक अवलोकन आपकी मदद करेगा, और वह लक्षण केवल बाहरी रूप-रंग से अधिक विश्वसनीय क्यों है?","chain":["ऐस्केल्मिन्थीज द्विपार्श्व सममिति युक्त, त्रिजनस्तरीय और छद्मसीलोमेट प्राणी हैं।","गोल कृमियों में अंग-तंत्र स्तर का संगठन और पूर्ण पाचन तंत्र होता है।","ऐस्केल्मिन्थ का शरीर अनुप्रस्थ काट में वृत्ताकार होता है और एक मजबूत क्यूटिकल से ढका होता है।","ऐस्केल्मिन्थीज में लिंग अलग-अलग होते हैं और लैंगिक द्विरूपता प्रायः स्पष्ट होती है।","ये सभी लक्षण मिलकर संघ ऐस्केल्मिन्थीज को पहचानने के लिए एक विश्वसनीय आधार प्रदान करते हैं।"],"misconceptions":[{"wrong":"संघ ऐस्केल्मिन्थीज की पहचान केवल उसके सामान्य आवास या बाहरी आकार से होती है।","right":"वर्गीकरण निदानात्मक संगठन, शरीर-योजना और क्रियात्मक लक्षणों पर निर्भर करता है; ऐस्केल्मिन्थीज द्विपार्श्व सममिति युक्त, त्रिजनस्तरीय और छद्मसीलोमेट प्राणी हैं।"},{"wrong":"केवल एक लक्षण संघ ऐस्केल्मिन्थीज की संपूर्ण विकासात्मक कहानी बता देता है।","right":"संगठन, सममिति, देहगुहा, परिसंचरण, जनन और उदाहरणों के संयोजन का उपयोग करें; गोल कृमियों में अंग-तंत्र स्तर का संगठन और पूर्ण पाचन तंत्र होता है।"}],"analogy":"संघ ऐस्केल्मिन्थीज को कई पहचान-जाँचों वाली एक प्रोफ़ाइल की तरह समझें: प्रत्येक निदानात्मक लक्षण एक जाँच-बिंदु है, और पूरा समूह मिलकर गलत वर्गीकरण को रोकता है।","analytical":[{"q":"एक नमूने के बारे में प्रस्तावित किया गया है कि वह संघ ऐस्केल्मिन्थीज से संबंधित है। इस दावे की जाँच के लिए आप पहले कौन-से दो अवलोकन खोजेंगे?","a":"सबसे निदानात्मक लक्षणों से शुरू करें: ऐस्केल्मिन्थीज द्विपार्श्व सममिति युक्त, त्रिजनस्तरीय और छद्मसीलोमेट प्राणी हैं। फिर एक स्वतंत्र लक्षण जाँचें: गोल कृमियों में अंग-तंत्र स्तर का संगठन और पूर्ण पाचन तंत्र होता है। परस्पर मेल खाते अवलोकन वर्गीकरण को न्यायसंगत बनाते हैं।"},{"q":"किसी प्राणी को केवल एक सतही लक्षण के आधार पर वर्गीकृत करना जोखिम भरा क्यों है?","a":"असंबंधित समूह एक जैसा आवास या व्यापक शरीराकार साझा कर सकते हैं। एक ठोस वर्गीकरण कई संरचनात्मक और क्रियात्मक लक्षणों की तुलना करता है। संघ ऐस्केल्मिन्थीज के लिए, उपयोगी प्रमाण में शामिल है: ऐस्केल्मिन्थ का शरीर अनुप्रस्थ काट में वृत्ताकार होता है और एक मजबूत क्यूटिकल से ढका होता है।"}]}},"phylum_annelida":{"kn":{"hook":"ಫೈಲಮ್ ಅನ್ನೆಲಿಡಾ ಅನ್ನು ಹೋಲುವ ಪ್ರಾಣಿ ಗುಂಪಿನಿಂದ ಪ್ರತ್ಯೇಕಿಸಲು ಯಾವ ಒಂದೇ ಅವಲೋಕನ ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಮತ್ತು ಆ ಲಕ್ಷಣ ಕೇವಲ ಹೊರನೋಟಕ್ಕಿಂತ ಏಕೆ ಹೆಚ್ಚು ವಿಶ್ವಾಸಾರ್ಹವಾಗಿದೆ?","chain":["ಅನ್ನೆಲಿಡ್‌ಗಳು ದ್ವಿಪಾರ್ಶ್ವ ಸಮಮಿತಿಯುಳ್ಳ, ತ್ರಿಜನನಪದರ ಮತ್ತು ನಿಜವಾದ ಸಿಲೋಮೇಟ್ ಪ್ರಾಣಿಗಳಾಗಿವೆ.","ಅನ್ನೆಲಿಡ್‌ನ ದೇಹವು ಬಾಹ್ಯವಾಗಿ ಮತ್ತು ಆಂತರಿಕವಾಗಿ ಮೆಟಾಮೇರ್‌ಗಳಾಗಿ ವಿಭಜಿಸಲ್ಪಟ್ಟಿರುತ್ತದೆ.","ಅನ್ನೆಲಿಡ್‌ಗಳು ಮುಚ್ಚಿದ ರಕ್ತಪರಿಚಲನಾ ವ್ಯವಸ್ಥೆಯೊಂದಿಗೆ ಅಂಗವ್ಯವಸ್ಥೆ ಮಟ್ಟದ ಸಂಘಟನೆಯನ್ನು ಹೊಂದಿವೆ.","ನೆಫ್ರಿಡಿಯಾಗಳು ಅನ್ನೆಲಿಡ್‌ಗಳ ವಿಸರ್ಜಕ ಅಂಗಗಳಾಗಿವೆ.","ಈ ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಒಟ್ಟಾಗಿ ಫೈಲಮ್ ಅನ್ನೆಲಿಡಾ ಅನ್ನು ಗುರುತಿಸಲು ವಿಶ್ವಾಸಾರ್ಹ ಆಧಾರವನ್ನು ಒದಗಿಸುತ್ತವೆ."],"misconceptions":[{"wrong":"ಫೈಲಮ್ ಅನ್ನೆಲಿಡಾ ಅನ್ನು ಕೇವಲ ಅದರ ಸಾಮಾನ್ಯ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ಬಾಹ್ಯ ಆಕಾರದಿಂದ ಮಾತ್ರ ಗುರುತಿಸಲಾಗುತ್ತದೆ.","right":"ವರ್ಗೀಕರಣವು ನಿರ್ಣಾಯಕ ಸಂಘಟನೆ, ದೇಹಯೋಜನೆ ಮತ್ತು ಶರೀರಕ್ರಿಯಾ ಲಕ್ಷಣಗಳನ್ನು ಅವಲಂಬಿಸಿದೆ; ಅನ್ನೆಲಿಡ್‌ಗಳು ದ್ವಿಪಾರ್ಶ್ವ ಸಮಮಿತಿಯುಳ್ಳ, ತ್ರಿಜನನಪದರ ಮತ್ತು ನಿಜವಾದ ಸಿಲೋಮೇಟ್ ಪ್ರಾಣಿಗಳಾಗಿವೆ."},{"wrong":"ಒಂದೇ ಲಕ್ಷಣವು ಫೈಲಮ್ ಅನ್ನೆಲಿಡಾದ ಸಂಪೂರ್ಣ ವಿಕಾಸಾತ್ಮಕ ಕಥೆಯನ್ನು ಹೇಳುತ್ತದೆ.","right":"ಸಂಘಟನೆ, ಸಮಮಿತಿ, ದೇಹಗುಹೆ, ರಕ್ತಪರಿಚಲನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಸಂಯೋಜನೆಯನ್ನು ಬಳಸಿ; ಅನ್ನೆಲಿಡ್‌ನ ದೇಹವು ಬಾಹ್ಯವಾಗಿ ಮತ್ತು ಆಂತರಿಕವಾಗಿ ಮೆಟಾಮೇರ್‌ಗಳಾಗಿ ವಿಭಜಿಸಲ್ಪಟ್ಟಿರುತ್ತದೆ."}],"analogy":"ಫೈಲಮ್ ಅನ್ನೆಲಿಡಾ ಅನ್ನು ಹಲವಾರು ಗುರುತು ಪರಿಶೀಲನೆಗಳುಳ್ಳ ಒಂದು ಪ್ರೊಫೈಲ್ ಎಂದು ಪರಿಗಣಿಸಿ: ಪ್ರತಿ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣವೂ ಒಂದು ಪರಿಶೀಲನಾ ಬಿಂದು, ಮತ್ತು ಸಂಪೂರ್ಣ ಗುಂಪು ತಪ್ಪಾದ ವರ್ಗೀಕರಣವನ್ನು ತಡೆಯುತ್ತದೆ.","analytical":[{"q":"ಒಂದು ನಮೂನೆಯು ಫೈಲಮ್ ಅನ್ನೆಲಿಡಾಗೆ ಸೇರಿದೆ ಎಂದು ಪ್ರಸ್ತಾಪಿಸಲಾಗಿದೆ. ಈ ಹೇಳಿಕೆಯನ್ನು ಪರೀಕ್ಷಿಸಲು ನೀವು ಮೊದಲು ಯಾವ ಎರಡು ಅವಲೋಕನಗಳನ್ನು ಹುಡುಕುತ್ತೀರಿ?","a":"ಅತ್ಯಂತ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣಗಳಿಂದ ಪ್ರಾರಂಭಿಸಿ: ಅನ್ನೆಲಿಡ್‌ಗಳು ದ್ವಿಪಾರ್ಶ್ವ ಸಮಮಿತಿಯುಳ್ಳ, ತ್ರಿಜನನಪದರ ಮತ್ತು ನಿಜವಾದ ಸಿಲೋಮೇಟ್ ಪ್ರಾಣಿಗಳಾಗಿವೆ. ನಂತರ ಸ್ವತಂತ್ರ ಲಕ್ಷಣವನ್ನು ಪರಿಶೀಲಿಸಿ: ಅನ್ನೆಲಿಡ್‌ನ ದೇಹವು ಬಾಹ್ಯವಾಗಿ ಮತ್ತು ಆಂತರಿಕವಾಗಿ ಮೆಟಾಮೇರ್‌ಗಳಾಗಿ ವಿಭಜಿಸಲ್ಪಟ್ಟಿರುತ್ತದೆ. ಹೊಂದಿಕೆಯಾಗುವ ಅವಲೋಕನಗಳು ವರ್ಗೀಕರಣವನ್ನು ಸಮರ್ಥನೀಯಗೊಳಿಸುತ್ತವೆ."},{"q":"ಕೇವಲ ಒಂದು ಮೇಲ್ಮಟ್ಟದ ಲಕ್ಷಣವನ್ನು ಬಳಸಿ ಪ್ರಾಣಿಯನ್ನು ವರ್ಗೀಕರಿಸುವುದು ಏಕೆ ಅಪಾಯಕಾರಿ?","a":"ಸಂಬಂಧವಿಲ್ಲದ ಗುಂಪುಗಳು ಒಂದೇ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ವಿಶಾಲ ದೇಹಾಕಾರವನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು. ಸೂಕ್ತ ವರ್ಗೀಕರಣವು ಹಲವಾರು ರಚನಾತ್ಮಕ ಮತ್ತು ಕ್ರಿಯಾತ್ಮಕ ಲಕ್ಷಣಗಳನ್ನು ಹೋಲಿಸುತ್ತದೆ. ಫೈಲಮ್ ಅನ್ನೆಲಿಡಾಗೆ, ಉಪಯುಕ್ತ ಸಾಕ್ಷ್ಯ ಇವುಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ಅನ್ನೆಲಿಡ್‌ಗಳು ಮುಚ್ಚಿದ ರಕ್ತಪರಿಚಲನಾ ವ್ಯವಸ್ಥೆಯೊಂದಿಗೆ ಅಂಗವ್ಯವಸ್ಥೆ ಮಟ್ಟದ ಸಂಘಟನೆಯನ್ನು ಹೊಂದಿವೆ."}]},"hi":{"hook":"संघ ऐनेलिडा को सबसे मिलते-जुलते प्राणी समूह से अलग पहचानने के लिए कौन-सा एक अवलोकन आपकी मदद करेगा, और वह लक्षण केवल बाहरी रूप-रंग से अधिक विश्वसनीय क्यों है?","chain":["ऐनेलिड द्विपार्श्व सममिति युक्त, त्रिजनस्तरीय और वास्तविक सीलोमेट प्राणी हैं।","ऐनेलिड का शरीर बाह्य और आंतरिक रूप से मेटामेयर में विभाजित होता है।","ऐनेलिड में बंद परिसंचरण तंत्र के साथ अंग-तंत्र स्तर का संगठन होता है।","नेफ्रिडिया ऐनेलिड के उत्सर्जी अंग हैं।","ये सभी लक्षण मिलकर संघ ऐनेलिडा को पहचानने के लिए एक विश्वसनीय आधार प्रदान करते हैं।"],"misconceptions":[{"wrong":"संघ ऐनेलिडा की पहचान केवल उसके सामान्य आवास या बाहरी आकार से होती है।","right":"वर्गीकरण निदानात्मक संगठन, शरीर-योजना और क्रियात्मक लक्षणों पर निर्भर करता है; ऐनेलिड द्विपार्श्व सममिति युक्त, त्रिजनस्तरीय और वास्तविक सीलोमेट प्राणी हैं।"},{"wrong":"केवल एक लक्षण संघ ऐनेलिडा की संपूर्ण विकासात्मक कहानी बता देता है।","right":"संगठन, सममिति, देहगुहा, परिसंचरण, जनन और उदाहरणों के संयोजन का उपयोग करें; ऐनेलिड का शरीर बाह्य और आंतरिक रूप से मेटामेयर में विभाजित होता है।"}],"analogy":"संघ ऐनेलिडा को कई पहचान-जाँचों वाली एक प्रोफ़ाइल की तरह समझें: प्रत्येक निदानात्मक लक्षण एक जाँच-बिंदु है, और पूरा समूह मिलकर गलत वर्गीकरण को रोकता है।","analytical":[{"q":"एक नमूने के बारे में प्रस्तावित किया गया है कि वह संघ ऐनेलिडा से संबंधित है। इस दावे की जाँच के लिए आप पहले कौन-से दो अवलोकन खोजेंगे?","a":"सबसे निदानात्मक लक्षणों से शुरू करें: ऐनेलिड द्विपार्श्व सममिति युक्त, त्रिजनस्तरीय और वास्तविक सीलोमेट प्राणी हैं। फिर एक स्वतंत्र लक्षण जाँचें: ऐनेलिड का शरीर बाह्य और आंतरिक रूप से मेटामेयर में विभाजित होता है। परस्पर मेल खाते अवलोकन वर्गीकरण को न्यायसंगत बनाते हैं।"},{"q":"किसी प्राणी को केवल एक सतही लक्षण के आधार पर वर्गीकृत करना जोखिम भरा क्यों है?","a":"असंबंधित समूह एक जैसा आवास या व्यापक शरीराकार साझा कर सकते हैं। एक ठोस वर्गीकरण कई संरचनात्मक और क्रियात्मक लक्षणों की तुलना करता है। संघ ऐनेलिडा के लिए, उपयोगी प्रमाण में शामिल है: ऐनेलिड में बंद परिसंचरण तंत्र के साथ अंग-तंत्र स्तर का संगठन होता है।"}]}},"phylum_arthropoda":{"kn":{"hook":"ಫೈಲಮ್ ಆರ್ಥ್ರೋಪೋಡಾ ಅನ್ನು ಹೋಲುವ ಪ್ರಾಣಿ ಗುಂಪಿನಿಂದ ಪ್ರತ್ಯೇಕಿಸಲು ಯಾವ ಒಂದೇ ಅವಲೋಕನ ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಮತ್ತು ಆ ಲಕ್ಷಣ ಕೇವಲ ಹೊರನೋಟಕ್ಕಿಂತ ಏಕೆ ಹೆಚ್ಚು ವಿಶ್ವಾಸಾರ್ಹವಾಗಿದೆ?","chain":["ಆರ್ಥ್ರೋಪೋಡಾ ಪ್ರಾಣಿ ಸಾಮ್ರಾಜ್ಯದ ಅತಿದೊಡ್ಡ ಫೈಲಮ್ ಆಗಿದೆ.","ಆರ್ಥ್ರೋಪೋಡ್‌ಗಳು ಖಂಡಿತ ದೇಹ, ಕೀಲಿತ ಉಪಾಂಗಗಳು ಮತ್ತು ಕೈಟಿನ್‌ಯುಕ್ತ ಬಹಿಃಕಂಕಾಲವನ್ನು ಹೊಂದಿವೆ.","ಆರ್ಥ್ರೋಪೋಡ್‌ಗಳ ದೇಹಗುಹೆ ಹೀಮೋಸಿಲ್ ಆಗಿದ್ದು ರಕ್ತಪರಿಚಲನಾ ವ್ಯವಸ್ಥೆ ತೆರೆದ ರೀತಿಯದ್ದಾಗಿದೆ.","ಆರ್ಥ್ರೋಪೋಡ್‌ಗಳಲ್ಲಿ ಶ್ವಸನಾಂಗಗಳು ಕಿವಿರುಗಳು, ಪುಸ್ತಕ ಕಿವಿರುಗಳು, ಪುಸ್ತಕ ಶ್ವಾಸಕೋಶಗಳು ಅಥವಾ ಶ್ವಾಸನಾಳಗಳಾಗಿರಬಹುದು.","ಈ ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಒಟ್ಟಾಗಿ ಫೈಲಮ್ ಆರ್ಥ್ರೋಪೋಡಾ ಅನ್ನು ಗುರುತಿಸಲು ವಿಶ್ವಾಸಾರ್ಹ ಆಧಾರವನ್ನು ಒದಗಿಸುತ್ತವೆ."],"misconceptions":[{"wrong":"ಫೈಲಮ್ ಆರ್ಥ್ರೋಪೋಡಾ ಅನ್ನು ಕೇವಲ ಅದರ ಸಾಮಾನ್ಯ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ಬಾಹ್ಯ ಆಕಾರದಿಂದ ಮಾತ್ರ ಗುರುತಿಸಲಾಗುತ್ತದೆ.","right":"ವರ್ಗೀಕರಣವು ನಿರ್ಣಾಯಕ ಸಂಘಟನೆ, ದೇಹಯೋಜನೆ ಮತ್ತು ಶರೀರಕ್ರಿಯಾ ಲಕ್ಷಣಗಳನ್ನು ಅವಲಂಬಿಸಿದೆ; ಆರ್ಥ್ರೋಪೋಡಾ ಪ್ರಾಣಿ ಸಾಮ್ರಾಜ್ಯದ ಅತಿದೊಡ್ಡ ಫೈಲಮ್ ಆಗಿದೆ."},{"wrong":"ಒಂದೇ ಲಕ್ಷಣವು ಫೈಲಮ್ ಆರ್ಥ್ರೋಪೋಡಾದ ಸಂಪೂರ್ಣ ವಿಕಾಸಾತ್ಮಕ ಕಥೆಯನ್ನು ಹೇಳುತ್ತದೆ.","right":"ಸಂಘಟನೆ, ಸಮಮಿತಿ, ದೇಹಗುಹೆ, ರಕ್ತಪರಿಚಲನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಸಂಯೋಜನೆಯನ್ನು ಬಳಸಿ; ಆರ್ಥ್ರೋಪೋಡ್‌ಗಳು ಖಂಡಿತ ದೇಹ, ಕೀಲಿತ ಉಪಾಂಗಗಳು ಮತ್ತು ಕೈಟಿನ್‌ಯುಕ್ತ ಬಹಿಃಕಂಕಾಲವನ್ನು ಹೊಂದಿವೆ."}],"analogy":"ಫೈಲಮ್ ಆರ್ಥ್ರೋಪೋಡಾ ಅನ್ನು ಹಲವಾರು ಗುರುತು ಪರಿಶೀಲನೆಗಳುಳ್ಳ ಒಂದು ಪ್ರೊಫೈಲ್ ಎಂದು ಪರಿಗಣಿಸಿ: ಪ್ರತಿ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣವೂ ಒಂದು ಪರಿಶೀಲನಾ ಬಿಂದು, ಮತ್ತು ಸಂಪೂರ್ಣ ಗುಂಪು ತಪ್ಪಾದ ವರ್ಗೀಕರಣವನ್ನು ತಡೆಯುತ್ತದೆ.","analytical":[{"q":"ಒಂದು ನಮೂನೆಯು ಫೈಲಮ್ ಆರ್ಥ್ರೋಪೋಡಾಗೆ ಸೇರಿದೆ ಎಂದು ಪ್ರಸ್ತಾಪಿಸಲಾಗಿದೆ. ಈ ಹೇಳಿಕೆಯನ್ನು ಪರೀಕ್ಷಿಸಲು ನೀವು ಮೊದಲು ಯಾವ ಎರಡು ಅವಲೋಕನಗಳನ್ನು ಹುಡುಕುತ್ತೀರಿ?","a":"ಅತ್ಯಂತ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣಗಳಿಂದ ಪ್ರಾರಂಭಿಸಿ: ಆರ್ಥ್ರೋಪೋಡಾ ಪ್ರಾಣಿ ಸಾಮ್ರಾಜ್ಯದ ಅತಿದೊಡ್ಡ ಫೈಲಮ್ ಆಗಿದೆ. ನಂತರ ಸ್ವತಂತ್ರ ಲಕ್ಷಣವನ್ನು ಪರಿಶೀಲಿಸಿ: ಆರ್ಥ್ರೋಪೋಡ್‌ಗಳು ಖಂಡಿತ ದೇಹ, ಕೀಲಿತ ಉಪಾಂಗಗಳು ಮತ್ತು ಕೈಟಿನ್‌ಯುಕ್ತ ಬಹಿಃಕಂಕಾಲವನ್ನು ಹೊಂದಿವೆ. ಹೊಂದಿಕೆಯಾಗುವ ಅವಲೋಕನಗಳು ವರ್ಗೀಕರಣವನ್ನು ಸಮರ್ಥನೀಯಗೊಳಿಸುತ್ತವೆ."},{"q":"ಕೇವಲ ಒಂದು ಮೇಲ್ಮಟ್ಟದ ಲಕ್ಷಣವನ್ನು ಬಳಸಿ ಪ್ರಾಣಿಯನ್ನು ವರ್ಗೀಕರಿಸುವುದು ಏಕೆ ಅಪಾಯಕಾರಿ?","a":"ಸಂಬಂಧವಿಲ್ಲದ ಗುಂಪುಗಳು ಒಂದೇ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ವಿಶಾಲ ದೇಹಾಕಾರವನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು. ಸೂಕ್ತ ವರ್ಗೀಕರಣವು ಹಲವಾರು ರಚನಾತ್ಮಕ ಮತ್ತು ಕ್ರಿಯಾತ್ಮಕ ಲಕ್ಷಣಗಳನ್ನು ಹೋಲಿಸುತ್ತದೆ. ಫೈಲಮ್ ಆರ್ಥ್ರೋಪೋಡಾಗೆ, ಉಪಯುಕ್ತ ಸಾಕ್ಷ್ಯ ಇವುಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ಆರ್ಥ್ರೋಪೋಡ್‌ಗಳ ದೇಹಗುಹೆ ಹೀಮೋಸಿಲ್ ಆಗಿದ್ದು ರಕ್ತಪರಿಚಲನಾ ವ್ಯವಸ್ಥೆ ತೆರೆದ ರೀತಿಯದ್ದಾಗಿದೆ."}]},"hi":{"hook":"संघ आर्थ्रोपोडा को सबसे मिलते-जुलते प्राणी समूह से अलग पहचानने के लिए कौन-सा एक अवलोकन आपकी मदद करेगा, और वह लक्षण केवल बाहरी रूप-रंग से अधिक विश्वसनीय क्यों है?","chain":["आर्थ्रोपोडा जगत एनिमेलिया का सबसे बड़ा संघ है।","आर्थ्रोपोड में खंडित शरीर, संधियुक्त उपांग और काइटिनयुक्त बाह्यकंकाल होता है।","आर्थ्रोपोड की देहगुहा हीमोसील होती है और परिसंचरण तंत्र खुला होता है।","आर्थ्रोपोड में श्वसन अंग क्लोम, बुक-गिल्स, बुक-लंग्स या श्वासनली हो सकते हैं।","ये सभी लक्षण मिलकर संघ आर्थ्रोपोडा को पहचानने के लिए एक विश्वसनीय आधार प्रदान करते हैं।"],"misconceptions":[{"wrong":"संघ आर्थ्रोपोडा की पहचान केवल उसके सामान्य आवास या बाहरी आकार से होती है।","right":"वर्गीकरण निदानात्मक संगठन, शरीर-योजना और क्रियात्मक लक्षणों पर निर्भर करता है; आर्थ्रोपोडा जगत एनिमेलिया का सबसे बड़ा संघ है।"},{"wrong":"केवल एक लक्षण संघ आर्थ्रोपोडा की संपूर्ण विकासात्मक कहानी बता देता है।","right":"संगठन, सममिति, देहगुहा, परिसंचरण, जनन और उदाहरणों के संयोजन का उपयोग करें; आर्थ्रोपोड में खंडित शरीर, संधियुक्त उपांग और काइटिनयुक्त बाह्यकंकाल होता है।"}],"analogy":"संघ आर्थ्रोपोडा को कई पहचान-जाँचों वाली एक प्रोफ़ाइल की तरह समझें: प्रत्येक निदानात्मक लक्षण एक जाँच-बिंदु है, और पूरा समूह मिलकर गलत वर्गीकरण को रोकता है।","analytical":[{"q":"एक नमूने के बारे में प्रस्तावित किया गया है कि वह संघ आर्थ्रोपोडा से संबंधित है। इस दावे की जाँच के लिए आप पहले कौन-से दो अवलोकन खोजेंगे?","a":"सबसे निदानात्मक लक्षणों से शुरू करें: आर्थ्रोपोडा जगत एनिमेलिया का सबसे बड़ा संघ है। फिर एक स्वतंत्र लक्षण जाँचें: आर्थ्रोपोड में खंडित शरीर, संधियुक्त उपांग और काइटिनयुक्त बाह्यकंकाल होता है। परस्पर मेल खाते अवलोकन वर्गीकरण को न्यायसंगत बनाते हैं।"},{"q":"किसी प्राणी को केवल एक सतही लक्षण के आधार पर वर्गीकृत करना जोखिम भरा क्यों है?","a":"असंबंधित समूह एक जैसा आवास या व्यापक शरीराकार साझा कर सकते हैं। एक ठोस वर्गीकरण कई संरचनात्मक और क्रियात्मक लक्षणों की तुलना करता है। संघ आर्थ्रोपोडा के लिए, उपयोगी प्रमाण में शामिल है: आर्थ्रोपोड की देहगुहा हीमोसील होती है और परिसंचरण तंत्र खुला होता है।"}]}},"phylum_mollusca":{"kn":{"hook":"ಫೈಲಮ್ ಮೊಲಸ್ಕಾ ಅನ್ನು ಹೋಲುವ ಪ್ರಾಣಿ ಗುಂಪಿನಿಂದ ಪ್ರತ್ಯೇಕಿಸಲು ಯಾವ ಒಂದೇ ಅವಲೋಕನ ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಮತ್ತು ಆ ಲಕ್ಷಣ ಕೇವಲ ಹೊರನೋಟಕ್ಕಿಂತ ಏಕೆ ಹೆಚ್ಚು ವಿಶ್ವಾಸಾರ್ಹವಾಗಿದೆ?","chain":["ಮೊಲಸ್ಕಾ ಪ್ರಾಣಿ ಸಾಮ್ರಾಜ್ಯದ ಎರಡನೇ ಅತಿದೊಡ್ಡ ಫೈಲಮ್ ಆಗಿದೆ.","ಒಂದು ವಿಶಿಷ್ಟ ಮೃದ್ವಂಗಿಯು ತಲೆ, ಸ್ನಾಯುಯುಕ್ತ ಪಾದ ಮತ್ತು ವಿಸರಲ್ ಹಂಪ್ ಅನ್ನು ಹೊಂದಿರುತ್ತದೆ.","ಮ್ಯಾಂಟಲ್ ವಿಸರಲ್ ಹಂಪ್ ಅನ್ನು ಆವರಿಸಿದ್ದು ಸಾಮಾನ್ಯವಾಗಿ ಕ್ಯಾಲ್ಕೇರಿಯಸ್ ಚಿಪ್ಪನ್ನು ಸ್ರವಿಸುತ್ತದೆ.","ರಾಡ್ಯುಲಾ ಬಹುತೇಕ ಮೃದ್ವಂಗಿಗಳಲ್ಲಿ ಕಂಡುಬರುವ ಕೆರೆದು ತಿನ್ನುವ ಆಹಾರಗ್ರಹಣ ಅಂಗವಾಗಿದೆ.","ಈ ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಒಟ್ಟಾಗಿ ಫೈಲಮ್ ಮೊಲಸ್ಕಾ ಅನ್ನು ಗುರುತಿಸಲು ವಿಶ್ವಾಸಾರ್ಹ ಆಧಾರವನ್ನು ಒದಗಿಸುತ್ತವೆ."],"misconceptions":[{"wrong":"ಫೈಲಮ್ ಮೊಲಸ್ಕಾ ಅನ್ನು ಕೇವಲ ಅದರ ಸಾಮಾನ್ಯ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ಬಾಹ್ಯ ಆಕಾರದಿಂದ ಮಾತ್ರ ಗುರುತಿಸಲಾಗುತ್ತದೆ.","right":"ವರ್ಗೀಕರಣವು ನಿರ್ಣಾಯಕ ಸಂಘಟನೆ, ದೇಹಯೋಜನೆ ಮತ್ತು ಶರೀರಕ್ರಿಯಾ ಲಕ್ಷಣಗಳನ್ನು ಅವಲಂಬಿಸಿದೆ; ಮೊಲಸ್ಕಾ ಪ್ರಾಣಿ ಸಾಮ್ರಾಜ್ಯದ ಎರಡನೇ ಅತಿದೊಡ್ಡ ಫೈಲಮ್ ಆಗಿದೆ."},{"wrong":"ಒಂದೇ ಲಕ್ಷಣವು ಫೈಲಮ್ ಮೊಲಸ್ಕಾದ ಸಂಪೂರ್ಣ ವಿಕಾಸಾತ್ಮಕ ಕಥೆಯನ್ನು ಹೇಳುತ್ತದೆ.","right":"ಸಂಘಟನೆ, ಸಮಮಿತಿ, ದೇಹಗುಹೆ, ರಕ್ತಪರಿಚಲನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಸಂಯೋಜನೆಯನ್ನು ಬಳಸಿ; ಒಂದು ವಿಶಿಷ್ಟ ಮೃದ್ವಂಗಿಯು ತಲೆ, ಸ್ನಾಯುಯುಕ್ತ ಪಾದ ಮತ್ತು ವಿಸರಲ್ ಹಂಪ್ ಅನ್ನು ಹೊಂದಿರುತ್ತದೆ."}],"analogy":"ಫೈಲಮ್ ಮೊಲಸ್ಕಾ ಅನ್ನು ಹಲವಾರು ಗುರುತು ಪರಿಶೀಲನೆಗಳುಳ್ಳ ಒಂದು ಪ್ರೊಫೈಲ್ ಎಂದು ಪರಿಗಣಿಸಿ: ಪ್ರತಿ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣವೂ ಒಂದು ಪರಿಶೀಲನಾ ಬಿಂದು, ಮತ್ತು ಸಂಪೂರ್ಣ ಗುಂಪು ತಪ್ಪಾದ ವರ್ಗೀಕರಣವನ್ನು ತಡೆಯುತ್ತದೆ.","analytical":[{"q":"ಒಂದು ನಮೂನೆಯು ಫೈಲಮ್ ಮೊಲಸ್ಕಾಗೆ ಸೇರಿದೆ ಎಂದು ಪ್ರಸ್ತಾಪಿಸಲಾಗಿದೆ. ಈ ಹೇಳಿಕೆಯನ್ನು ಪರೀಕ್ಷಿಸಲು ನೀವು ಮೊದಲು ಯಾವ ಎರಡು ಅವಲೋಕನಗಳನ್ನು ಹುಡುಕುತ್ತೀರಿ?","a":"ಅತ್ಯಂತ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣಗಳಿಂದ ಪ್ರಾರಂಭಿಸಿ: ಮೊಲಸ್ಕಾ ಪ್ರಾಣಿ ಸಾಮ್ರಾಜ್ಯದ ಎರಡನೇ ಅತಿದೊಡ್ಡ ಫೈಲಮ್ ಆಗಿದೆ. ನಂತರ ಸ್ವತಂತ್ರ ಲಕ್ಷಣವನ್ನು ಪರಿಶೀಲಿಸಿ: ಒಂದು ವಿಶಿಷ್ಟ ಮೃದ್ವಂಗಿಯು ತಲೆ, ಸ್ನಾಯುಯುಕ್ತ ಪಾದ ಮತ್ತು ವಿಸರಲ್ ಹಂಪ್ ಅನ್ನು ಹೊಂದಿರುತ್ತದೆ. ಹೊಂದಿಕೆಯಾಗುವ ಅವಲೋಕನಗಳು ವರ್ಗೀಕರಣವನ್ನು ಸಮರ್ಥನೀಯಗೊಳಿಸುತ್ತವೆ."},{"q":"ಕೇವಲ ಒಂದು ಮೇಲ್ಮಟ್ಟದ ಲಕ್ಷಣವನ್ನು ಬಳಸಿ ಪ್ರಾಣಿಯನ್ನು ವರ್ಗೀಕರಿಸುವುದು ಏಕೆ ಅಪಾಯಕಾರಿ?","a":"ಸಂಬಂಧವಿಲ್ಲದ ಗುಂಪುಗಳು ಒಂದೇ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ವಿಶಾಲ ದೇಹಾಕಾರವನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು. ಸೂಕ್ತ ವರ್ಗೀಕರಣವು ಹಲವಾರು ರಚನಾತ್ಮಕ ಮತ್ತು ಕ್ರಿಯಾತ್ಮಕ ಲಕ್ಷಣಗಳನ್ನು ಹೋಲಿಸುತ್ತದೆ. ಫೈಲಮ್ ಮೊಲಸ್ಕಾಗೆ, ಉಪಯುಕ್ತ ಸಾಕ್ಷ್ಯ ಇವುಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ಮ್ಯಾಂಟಲ್ ವಿಸರಲ್ ಹಂಪ್ ಅನ್ನು ಆವರಿಸಿದ್ದು ಸಾಮಾನ್ಯವಾಗಿ ಕ್ಯಾಲ್ಕೇರಿಯಸ್ ಚಿಪ್ಪನ್ನು ಸ್ರವಿಸುತ್ತದೆ."}]},"hi":{"hook":"संघ मोलस्का को सबसे मिलते-जुलते प्राणी समूह से अलग पहचानने के लिए कौन-सा एक अवलोकन आपकी मदद करेगा, और वह लक्षण केवल बाहरी रूप-रंग से अधिक विश्वसनीय क्यों है?","chain":["मोलस्का जगत एनिमेलिया का दूसरा सबसे बड़ा संघ है।","एक विशिष्ट मोलस्क में सिर, पेशीय पाद और विसरल हम्प होता है।","मैंटल विसरल हम्प को ढकता है और सामान्यतः एक कैल्केरियस कवच स्रावित करता है।","रेडुला अधिकांश मोलस्क में पाया जाने वाला रेती जैसा भोजन-ग्रहण अंग है।","ये सभी लक्षण मिलकर संघ मोलस्का को पहचानने के लिए एक विश्वसनीय आधार प्रदान करते हैं।"],"misconceptions":[{"wrong":"संघ मोलस्का की पहचान केवल उसके सामान्य आवास या बाहरी आकार से होती है।","right":"वर्गीकरण निदानात्मक संगठन, शरीर-योजना और क्रियात्मक लक्षणों पर निर्भर करता है; मोलस्का जगत एनिमेलिया का दूसरा सबसे बड़ा संघ है।"},{"wrong":"केवल एक लक्षण संघ मोलस्का की संपूर्ण विकासात्मक कहानी बता देता है।","right":"संगठन, सममिति, देहगुहा, परिसंचरण, जनन और उदाहरणों के संयोजन का उपयोग करें; एक विशिष्ट मोलस्क में सिर, पेशीय पाद और विसरल हम्प होता है।"}],"analogy":"संघ मोलस्का को कई पहचान-जाँचों वाली एक प्रोफ़ाइल की तरह समझें: प्रत्येक निदानात्मक लक्षण एक जाँच-बिंदु है, और पूरा समूह मिलकर गलत वर्गीकरण को रोकता है।","analytical":[{"q":"एक नमूने के बारे में प्रस्तावित किया गया है कि वह संघ मोलस्का से संबंधित है। इस दावे की जाँच के लिए आप पहले कौन-से दो अवलोकन खोजेंगे?","a":"सबसे निदानात्मक लक्षणों से शुरू करें: मोलस्का जगत एनिमेलिया का दूसरा सबसे बड़ा संघ है। फिर एक स्वतंत्र लक्षण जाँचें: एक विशिष्ट मोलस्क में सिर, पेशीय पाद और विसरल हम्प होता है। परस्पर मेल खाते अवलोकन वर्गीकरण को न्यायसंगत बनाते हैं।"},{"q":"किसी प्राणी को केवल एक सतही लक्षण के आधार पर वर्गीकृत करना जोखिम भरा क्यों है?","a":"असंबंधित समूह एक जैसा आवास या व्यापक शरीराकार साझा कर सकते हैं। एक ठोस वर्गीकरण कई संरचनात्मक और क्रियात्मक लक्षणों की तुलना करता है। संघ मोलस्का के लिए, उपयोगी प्रमाण में शामिल है: मैंटल विसरल हम्प को ढकता है और सामान्यतः एक कैल्केरियस कवच स्रावित करता है।"}]}},"phylum_echinodermata":{"kn":{"hook":"ಫೈಲಮ್ ಎಕೈನೋಡರ್ಮಟಾ ಅನ್ನು ಹೋಲುವ ಪ್ರಾಣಿ ಗುಂಪಿನಿಂದ ಪ್ರತ್ಯೇಕಿಸಲು ಯಾವ ಒಂದೇ ಅವಲೋಕನ ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಮತ್ತು ಆ ಲಕ್ಷಣ ಕೇವಲ ಹೊರನೋಟಕ್ಕಿಂತ ಏಕೆ ಹೆಚ್ಚು ವಿಶ್ವಾಸಾರ್ಹವಾಗಿದೆ?","chain":["ಎಕೈನೋಡರ್ಮ್‌ಗಳು ಸಂಪೂರ್ಣವಾಗಿ ಸಮುದ್ರವಾಸಿಗಳಾಗಿದ್ದು ಕ್ಯಾಲ್ಕೇರಿಯಸ್ ಅಂತಃಕಂಕಾಲವನ್ನು ಹೊಂದಿವೆ.","ಪ್ರೌಢ ಎಕೈನೋಡರ್ಮ್‌ಗಳು ರೇಡಿಯಲ್ ಸಮಮಿತಿಯುಳ್ಳವಾಗಿದ್ದರೆ, ಅವುಗಳ ಲಾರ್ವಾಗಳು ದ್ವಿಪಾರ್ಶ್ವ ಸಮಮಿತಿಯುಳ್ಳವಾಗಿರುತ್ತವೆ.","ಜಲವಾಹಿನಿ ವ್ಯವಸ್ಥೆಯು ಚಲನೆ, ಆಹಾರ ಸೇವನೆ ಮತ್ತು ಶ್ವಸನಕ್ಕೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ.","ಎಕೈನೋಡರ್ಮ್‌ಗಳು ಅಂಗವ್ಯವಸ್ಥೆ ಮಟ್ಟದ ಸಂಘಟನೆಯುಳ್ಳ ತ್ರಿಜನನಪದರ ಸಿಲೋಮೇಟ್‌ಗಳಾಗಿವೆ.","ಈ ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಒಟ್ಟಾಗಿ ಫೈಲಮ್ ಎಕೈನೋಡರ್ಮಟಾ ಅನ್ನು ಗುರುತಿಸಲು ವಿಶ್ವಾಸಾರ್ಹ ಆಧಾರವನ್ನು ಒದಗಿಸುತ್ತವೆ."],"misconceptions":[{"wrong":"ಫೈಲಮ್ ಎಕೈನೋಡರ್ಮಟಾ ಅನ್ನು ಕೇವಲ ಅದರ ಸಾಮಾನ್ಯ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ಬಾಹ್ಯ ಆಕಾರದಿಂದ ಮಾತ್ರ ಗುರುತಿಸಲಾಗುತ್ತದೆ.","right":"ವರ್ಗೀಕರಣವು ನಿರ್ಣಾಯಕ ಸಂಘಟನೆ, ದೇಹಯೋಜನೆ ಮತ್ತು ಶರೀರಕ್ರಿಯಾ ಲಕ್ಷಣಗಳನ್ನು ಅವಲಂಬಿಸಿದೆ; ಎಕೈನೋಡರ್ಮ್‌ಗಳು ಸಂಪೂರ್ಣವಾಗಿ ಸಮುದ್ರವಾಸಿಗಳಾಗಿದ್ದು ಕ್ಯಾಲ್ಕೇರಿಯಸ್ ಅಂತಃಕಂಕಾಲವನ್ನು ಹೊಂದಿವೆ."},{"wrong":"ಒಂದೇ ಲಕ್ಷಣವು ಫೈಲಮ್ ಎಕೈನೋಡರ್ಮಟಾದ ಸಂಪೂರ್ಣ ವಿಕಾಸಾತ್ಮಕ ಕಥೆಯನ್ನು ಹೇಳುತ್ತದೆ.","right":"ಸಂಘಟನೆ, ಸಮಮಿತಿ, ದೇಹಗುಹೆ, ರಕ್ತಪರಿಚಲನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಸಂಯೋಜನೆಯನ್ನು ಬಳಸಿ; ಪ್ರೌಢ ಎಕೈನೋಡರ್ಮ್‌ಗಳು ರೇಡಿಯಲ್ ಸಮಮಿತಿಯುಳ್ಳವಾಗಿದ್ದರೆ, ಅವುಗಳ ಲಾರ್ವಾಗಳು ದ್ವಿಪಾರ್ಶ್ವ ಸಮಮಿತಿಯುಳ್ಳವಾಗಿರುತ್ತವೆ."}],"analogy":"ಫೈಲಮ್ ಎಕೈನೋಡರ್ಮಟಾ ಅನ್ನು ಹಲವಾರು ಗುರುತು ಪರಿಶೀಲನೆಗಳುಳ್ಳ ಒಂದು ಪ್ರೊಫೈಲ್ ಎಂದು ಪರಿಗಣಿಸಿ: ಪ್ರತಿ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣವೂ ಒಂದು ಪರಿಶೀಲನಾ ಬಿಂದು, ಮತ್ತು ಸಂಪೂರ್ಣ ಗುಂಪು ತಪ್ಪಾದ ವರ್ಗೀಕರಣವನ್ನು ತಡೆಯುತ್ತದೆ.","analytical":[{"q":"ಒಂದು ನಮೂನೆಯು ಫೈಲಮ್ ಎಕೈನೋಡರ್ಮಟಾಗೆ ಸೇರಿದೆ ಎಂದು ಪ್ರಸ್ತಾಪಿಸಲಾಗಿದೆ. ಈ ಹೇಳಿಕೆಯನ್ನು ಪರೀಕ್ಷಿಸಲು ನೀವು ಮೊದಲು ಯಾವ ಎರಡು ಅವಲೋಕನಗಳನ್ನು ಹುಡುಕುತ್ತೀರಿ?","a":"ಅತ್ಯಂತ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣಗಳಿಂದ ಪ್ರಾರಂಭಿಸಿ: ಎಕೈನೋಡರ್ಮ್‌ಗಳು ಸಂಪೂರ್ಣವಾಗಿ ಸಮುದ್ರವಾಸಿಗಳಾಗಿದ್ದು ಕ್ಯಾಲ್ಕೇರಿಯಸ್ ಅಂತಃಕಂಕಾಲವನ್ನು ಹೊಂದಿವೆ. ನಂತರ ಸ್ವತಂತ್ರ ಲಕ್ಷಣವನ್ನು ಪರಿಶೀಲಿಸಿ: ಪ್ರೌಢ ಎಕೈನೋಡರ್ಮ್‌ಗಳು ರೇಡಿಯಲ್ ಸಮಮಿತಿಯುಳ್ಳವಾಗಿದ್ದರೆ, ಅವುಗಳ ಲಾರ್ವಾಗಳು ದ್ವಿಪಾರ್ಶ್ವ ಸಮಮಿತಿಯುಳ್ಳವಾಗಿರುತ್ತವೆ. ಹೊಂದಿಕೆಯಾಗುವ ಅವಲೋಕನಗಳು ವರ್ಗೀಕರಣವನ್ನು ಸಮರ್ಥನೀಯಗೊಳಿಸುತ್ತವೆ."},{"q":"ಕೇವಲ ಒಂದು ಮೇಲ್ಮಟ್ಟದ ಲಕ್ಷಣವನ್ನು ಬಳಸಿ ಪ್ರಾಣಿಯನ್ನು ವರ್ಗೀಕರಿಸುವುದು ಏಕೆ ಅಪಾಯಕಾರಿ?","a":"ಸಂಬಂಧವಿಲ್ಲದ ಗುಂಪುಗಳು ಒಂದೇ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ವಿಶಾಲ ದೇಹಾಕಾರವನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು. ಸೂಕ್ತ ವರ್ಗೀಕರಣವು ಹಲವಾರು ರಚನಾತ್ಮಕ ಮತ್ತು ಕ್ರಿಯಾತ್ಮಕ ಲಕ್ಷಣಗಳನ್ನು ಹೋಲಿಸುತ್ತದೆ. ಫೈಲಮ್ ಎಕೈನೋಡರ್ಮಟಾಗೆ, ಉಪಯುಕ್ತ ಸಾಕ್ಷ್ಯ ಇವುಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ಜಲವಾಹಿನಿ ವ್ಯವಸ್ಥೆಯು ಚಲನೆ, ಆಹಾರ ಸೇವನೆ ಮತ್ತು ಶ್ವಸನಕ್ಕೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ."}]},"hi":{"hook":"संघ इकाइनोडर्मेटा को सबसे मिलते-जुलते प्राणी समूह से अलग पहचानने के लिए कौन-सा एक अवलोकन आपकी मदद करेगा, और वह लक्षण केवल बाहरी रूप-रंग से अधिक विश्वसनीय क्यों है?","chain":["इकाइनोडर्म पूर्णतः समुद्री होते हैं और इनमें कैल्केरियस अंतःकंकाल होता है।","वयस्क इकाइनोडर्म रेडियल सममिति वाले होते हैं, जबकि उनके लार्वा द्विपार्श्व सममिति वाले होते हैं।","जल संवहनी तंत्र गमन, भोजन ग्रहण और श्वसन में सहायता करता है।","इकाइनोडर्म अंग-तंत्र स्तर के संगठन वाले त्रिजनस्तरीय सीलोमेट हैं।","ये सभी लक्षण मिलकर संघ इकाइनोडर्मेटा को पहचानने के लिए एक विश्वसनीय आधार प्रदान करते हैं।"],"misconceptions":[{"wrong":"संघ इकाइनोडर्मेटा की पहचान केवल उसके सामान्य आवास या बाहरी आकार से होती है।","right":"वर्गीकरण निदानात्मक संगठन, शरीर-योजना और क्रियात्मक लक्षणों पर निर्भर करता है; इकाइनोडर्म पूर्णतः समुद्री होते हैं और इनमें कैल्केरियस अंतःकंकाल होता है।"},{"wrong":"केवल एक लक्षण संघ इकाइनोडर्मेटा की संपूर्ण विकासात्मक कहानी बता देता है।","right":"संगठन, सममिति, देहगुहा, परिसंचरण, जनन और उदाहरणों के संयोजन का उपयोग करें; वयस्क इकाइनोडर्म रेडियल सममिति वाले होते हैं, जबकि उनके लार्वा द्विपार्श्व सममिति वाले होते हैं।"}],"analogy":"संघ इकाइनोडर्मेटा को कई पहचान-जाँचों वाली एक प्रोफ़ाइल की तरह समझें: प्रत्येक निदानात्मक लक्षण एक जाँच-बिंदु है, और पूरा समूह मिलकर गलत वर्गीकरण को रोकता है।","analytical":[{"q":"एक नमूने के बारे में प्रस्तावित किया गया है कि वह संघ इकाइनोडर्मेटा से संबंधित है। इस दावे की जाँच के लिए आप पहले कौन-से दो अवलोकन खोजेंगे?","a":"सबसे निदानात्मक लक्षणों से शुरू करें: इकाइनोडर्म पूर्णतः समुद्री होते हैं और इनमें कैल्केरियस अंतःकंकाल होता है। फिर एक स्वतंत्र लक्षण जाँचें: वयस्क इकाइनोडर्म रेडियल सममिति वाले होते हैं, जबकि उनके लार्वा द्विपार्श्व सममिति वाले होते हैं। परस्पर मेल खाते अवलोकन वर्गीकरण को न्यायसंगत बनाते हैं।"},{"q":"किसी प्राणी को केवल एक सतही लक्षण के आधार पर वर्गीकृत करना जोखिम भरा क्यों है?","a":"असंबंधित समूह एक जैसा आवास या व्यापक शरीराकार साझा कर सकते हैं। एक ठोस वर्गीकरण कई संरचनात्मक और क्रियात्मक लक्षणों की तुलना करता है। संघ इकाइनोडर्मेटा के लिए, उपयोगी प्रमाण में शामिल है: जल संवहनी तंत्र गमन, भोजन ग्रहण और श्वसन में सहायता करता है।"}]}},"phylum_hemichordata":{"kn":{"hook":"ಫೈಲಮ್ ಹೆಮಿಕಾರ್ಡೇಟಾ ಅನ್ನು ಹೋಲುವ ಪ್ರಾಣಿ ಗುಂಪಿನಿಂದ ಪ್ರತ್ಯೇಕಿಸಲು ಯಾವ ಒಂದೇ ಅವಲೋಕನ ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಮತ್ತು ಆ ಲಕ್ಷಣ ಕೇವಲ ಹೊರನೋಟಕ್ಕಿಂತ ಏಕೆ ಹೆಚ್ಚು ವಿಶ್ವಾಸಾರ್ಹವಾಗಿದೆ?","chain":["ಹೆಮಿಕಾರ್ಡೇಟ್‌ಗಳು ಅಂಗವ್ಯವಸ್ಥೆ ಮಟ್ಟದ ಸಂಘಟನೆಯುಳ್ಳ ಹುಳುಸದೃಶ ಸಮುದ್ರವಾಸಿ ಪ್ರಾಣಿಗಳಾಗಿವೆ.","ಹೆಮಿಕಾರ್ಡೇಟ್‌ನ ದೇಹವು ಪ್ರೊಬೋಸಿಸ್, ಕಾಲರ್ ಮತ್ತು ಟ್ರಂಕ್ ಎಂದು ವಿಭಜಿಸಲ್ಪಟ್ಟಿದೆ.","ಇವು ಗಂಟಲಿನ ಕಿವಿರು ಸೀಳುಗಳನ್ನು ಹೊಂದಿದ್ದರೂ ನಿಜವಾದ ನೋಟೋಕೋರ್ಡ್ ಇಲ್ಲ.","ಹೆಮಿಕಾರ್ಡೇಟಾವನ್ನು ಈ ಹಿಂದೆ ಕಾರ್ಡೇಟಾದ ಅಡಿಯಲ್ಲಿ ಇರಿಸಲಾಗಿತ್ತು ಆದರೆ ಈಗ ಪ್ರತ್ಯೇಕ ಫೈಲಮ್ ಎಂದು ಪರಿಗಣಿಸಲಾಗುತ್ತದೆ.","ಈ ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಒಟ್ಟಾಗಿ ಫೈಲಮ್ ಹೆಮಿಕಾರ್ಡೇಟಾ ಅನ್ನು ಗುರುತಿಸಲು ವಿಶ್ವಾಸಾರ್ಹ ಆಧಾರವನ್ನು ಒದಗಿಸುತ್ತವೆ."],"misconceptions":[{"wrong":"ಫೈಲಮ್ ಹೆಮಿಕಾರ್ಡೇಟಾ ಅನ್ನು ಕೇವಲ ಅದರ ಸಾಮಾನ್ಯ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ಬಾಹ್ಯ ಆಕಾರದಿಂದ ಮಾತ್ರ ಗುರುತಿಸಲಾಗುತ್ತದೆ.","right":"ವರ್ಗೀಕರಣವು ನಿರ್ಣಾಯಕ ಸಂಘಟನೆ, ದೇಹಯೋಜನೆ ಮತ್ತು ಶರೀರಕ್ರಿಯಾ ಲಕ್ಷಣಗಳನ್ನು ಅವಲಂಬಿಸಿದೆ; ಹೆಮಿಕಾರ್ಡೇಟ್‌ಗಳು ಅಂಗವ್ಯವಸ್ಥೆ ಮಟ್ಟದ ಸಂಘಟನೆಯುಳ್ಳ ಹುಳುಸದೃಶ ಸಮುದ್ರವಾಸಿ ಪ್ರಾಣಿಗಳಾಗಿವೆ."},{"wrong":"ಒಂದೇ ಲಕ್ಷಣವು ಫೈಲಮ್ ಹೆಮಿಕಾರ್ಡೇಟಾದ ಸಂಪೂರ್ಣ ವಿಕಾಸಾತ್ಮಕ ಕಥೆಯನ್ನು ಹೇಳುತ್ತದೆ.","right":"ಸಂಘಟನೆ, ಸಮಮಿತಿ, ದೇಹಗುಹೆ, ರಕ್ತಪರಿಚಲನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಸಂಯೋಜನೆಯನ್ನು ಬಳಸಿ; ಹೆಮಿಕಾರ್ಡೇಟ್‌ನ ದೇಹವು ಪ್ರೊಬೋಸಿಸ್, ಕಾಲರ್ ಮತ್ತು ಟ್ರಂಕ್ ಎಂದು ವಿಭಜಿಸಲ್ಪಟ್ಟಿದೆ."}],"analogy":"ಫೈಲಮ್ ಹೆಮಿಕಾರ್ಡೇಟಾ ಅನ್ನು ಹಲವಾರು ಗುರುತು ಪರಿಶೀಲನೆಗಳುಳ್ಳ ಒಂದು ಪ್ರೊಫೈಲ್ ಎಂದು ಪರಿಗಣಿಸಿ: ಪ್ರತಿ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣವೂ ಒಂದು ಪರಿಶೀಲನಾ ಬಿಂದು, ಮತ್ತು ಸಂಪೂರ್ಣ ಗುಂಪು ತಪ್ಪಾದ ವರ್ಗೀಕರಣವನ್ನು ತಡೆಯುತ್ತದೆ.","analytical":[{"q":"ಒಂದು ನಮೂನೆಯು ಫೈಲಮ್ ಹೆಮಿಕಾರ್ಡೇಟಾಗೆ ಸೇರಿದೆ ಎಂದು ಪ್ರಸ್ತಾಪಿಸಲಾಗಿದೆ. ಈ ಹೇಳಿಕೆಯನ್ನು ಪರೀಕ್ಷಿಸಲು ನೀವು ಮೊದಲು ಯಾವ ಎರಡು ಅವಲೋಕನಗಳನ್ನು ಹುಡುಕುತ್ತೀರಿ?","a":"ಅತ್ಯಂತ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣಗಳಿಂದ ಪ್ರಾರಂಭಿಸಿ: ಹೆಮಿಕಾರ್ಡೇಟ್‌ಗಳು ಅಂಗವ್ಯವಸ್ಥೆ ಮಟ್ಟದ ಸಂಘಟನೆಯುಳ್ಳ ಹುಳುಸದೃಶ ಸಮುದ್ರವಾಸಿ ಪ್ರಾಣಿಗಳಾಗಿವೆ. ನಂತರ ಸ್ವತಂತ್ರ ಲಕ್ಷಣವನ್ನು ಪರಿಶೀಲಿಸಿ: ಹೆಮಿಕಾರ್ಡೇಟ್‌ನ ದೇಹವು ಪ್ರೊಬೋಸಿಸ್, ಕಾಲರ್ ಮತ್ತು ಟ್ರಂಕ್ ಎಂದು ವಿಭಜಿಸಲ್ಪಟ್ಟಿದೆ. ಹೊಂದಿಕೆಯಾಗುವ ಅವಲೋಕನಗಳು ವರ್ಗೀಕರಣವನ್ನು ಸಮರ್ಥನೀಯಗೊಳಿಸುತ್ತವೆ."},{"q":"ಕೇವಲ ಒಂದು ಮೇಲ್ಮಟ್ಟದ ಲಕ್ಷಣವನ್ನು ಬಳಸಿ ಪ್ರಾಣಿಯನ್ನು ವರ್ಗೀಕರಿಸುವುದು ಏಕೆ ಅಪಾಯಕಾರಿ?","a":"ಸಂಬಂಧವಿಲ್ಲದ ಗುಂಪುಗಳು ಒಂದೇ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ವಿಶಾಲ ದೇಹಾಕಾರವನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು. ಸೂಕ್ತ ವರ್ಗೀಕರಣವು ಹಲವಾರು ರಚನಾತ್ಮಕ ಮತ್ತು ಕ್ರಿಯಾತ್ಮಕ ಲಕ್ಷಣಗಳನ್ನು ಹೋಲಿಸುತ್ತದೆ. ಫೈಲಮ್ ಹೆಮಿಕಾರ್ಡೇಟಾಗೆ, ಉಪಯುಕ್ತ ಸಾಕ್ಷ್ಯ ಇವುಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ಇವು ಗಂಟಲಿನ ಕಿವಿರು ಸೀಳುಗಳನ್ನು ಹೊಂದಿದ್ದರೂ ನಿಜವಾದ ನೋಟೋಕೋರ್ಡ್ ಇಲ್ಲ."}]},"hi":{"hook":"संघ हेमीकॉर्डेटा को सबसे मिलते-जुलते प्राणी समूह से अलग पहचानने के लिए कौन-सा एक अवलोकन आपकी मदद करेगा, और वह लक्षण केवल बाहरी रूप-रंग से अधिक विश्वसनीय क्यों है?","chain":["हेमीकॉर्डेट अंग-तंत्र स्तर के संगठन वाले कृमि जैसे समुद्री प्राणी हैं।","हेमीकॉर्डेट का शरीर प्रोबोसिस, कॉलर और ट्रंक में विभाजित होता है।","इनमें ग्रसनी क्लोम दरारें होती हैं परंतु वास्तविक नोटोकॉर्ड नहीं होता।","हेमीकॉर्डेटा को पहले कॉर्डेटा के अंतर्गत रखा जाता था परंतु अब इसे एक अलग संघ माना जाता है।","ये सभी लक्षण मिलकर संघ हेमीकॉर्डेटा को पहचानने के लिए एक विश्वसनीय आधार प्रदान करते हैं।"],"misconceptions":[{"wrong":"संघ हेमीकॉर्डेटा की पहचान केवल उसके सामान्य आवास या बाहरी आकार से होती है।","right":"वर्गीकरण निदानात्मक संगठन, शरीर-योजना और क्रियात्मक लक्षणों पर निर्भर करता है; हेमीकॉर्डेट अंग-तंत्र स्तर के संगठन वाले कृमि जैसे समुद्री प्राणी हैं।"},{"wrong":"केवल एक लक्षण संघ हेमीकॉर्डेटा की संपूर्ण विकासात्मक कहानी बता देता है।","right":"संगठन, सममिति, देहगुहा, परिसंचरण, जनन और उदाहरणों के संयोजन का उपयोग करें; हेमीकॉर्डेट का शरीर प्रोबोसिस, कॉलर और ट्रंक में विभाजित होता है।"}],"analogy":"संघ हेमीकॉर्डेटा को कई पहचान-जाँचों वाली एक प्रोफ़ाइल की तरह समझें: प्रत्येक निदानात्मक लक्षण एक जाँच-बिंदु है, और पूरा समूह मिलकर गलत वर्गीकरण को रोकता है।","analytical":[{"q":"एक नमूने के बारे में प्रस्तावित किया गया है कि वह संघ हेमीकॉर्डेटा से संबंधित है। इस दावे की जाँच के लिए आप पहले कौन-से दो अवलोकन खोजेंगे?","a":"सबसे निदानात्मक लक्षणों से शुरू करें: हेमीकॉर्डेट अंग-तंत्र स्तर के संगठन वाले कृमि जैसे समुद्री प्राणी हैं। फिर एक स्वतंत्र लक्षण जाँचें: हेमीकॉर्डेट का शरीर प्रोबोसिस, कॉलर और ट्रंक में विभाजित होता है। परस्पर मेल खाते अवलोकन वर्गीकरण को न्यायसंगत बनाते हैं।"},{"q":"किसी प्राणी को केवल एक सतही लक्षण के आधार पर वर्गीकृत करना जोखिम भरा क्यों है?","a":"असंबंधित समूह एक जैसा आवास या व्यापक शरीराकार साझा कर सकते हैं। एक ठोस वर्गीकरण कई संरचनात्मक और क्रियात्मक लक्षणों की तुलना करता है। संघ हेमीकॉर्डेटा के लिए, उपयोगी प्रमाण में शामिल है: इनमें ग्रसनी क्लोम दरारें होती हैं परंतु वास्तविक नोटोकॉर्ड नहीं होता।"}]}},"phylum_chordata":{"kn":{"hook":"ಫೈಲಮ್ ಕಾರ್ಡೇಟಾ ಅನ್ನು ಹೋಲುವ ಪ್ರಾಣಿ ಗುಂಪಿನಿಂದ ಪ್ರತ್ಯೇಕಿಸಲು ಯಾವ ಒಂದೇ ಅವಲೋಕನ ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಮತ್ತು ಆ ಲಕ್ಷಣ ಕೇವಲ ಹೊರನೋಟಕ್ಕಿಂತ ಏಕೆ ಹೆಚ್ಚು ವಿಶ್ವಾಸಾರ್ಹವಾಗಿದೆ?","chain":["ಕಾರ್ಡೇಟ್‌ಗಳು ಜೀವನದ ಯಾವುದೋ ಒಂದು ಹಂತದಲ್ಲಿ ನೋಟೋಕೋರ್ಡ್, ಬೆನ್ನಿನ ಟೊಳ್ಳು ನರರಜ್ಜು, ಗಂಟಲಿನ ಕಿವಿರು ಸೀಳುಗಳು ಮತ್ತು ಗುದಾನಂತರ ಬಾಲವನ್ನು ಹೊಂದಿರುತ್ತವೆ.","ಕಾರ್ಡೇಟ್‌ನ ನರರಜ್ಜು ಬೆನ್ನಿನ ಬದಿಯಲ್ಲಿ, ಟೊಳ್ಳಾಗಿ ಮತ್ತು ಏಕವಾಗಿರುತ್ತದೆ.","ಕಾರ್ಡೇಟ್‌ನ ಹೃದಯ ಕಿಬ್ಬೊಟ್ಟೆಯ ಬದಿಯಲ್ಲಿದ್ದು ರಕ್ತಪರಿಚಲನೆ ಮುಚ್ಚಿದ ರೀತಿಯದ್ದಾಗಿದೆ.","ಯುರೋಕಾರ್ಡೇಟಾದಲ್ಲಿ ನೋಟೋಕೋರ್ಡ್ ಕೇವಲ ಲಾರ್ವಾ ಬಾಲದಲ್ಲಿ ಮಾತ್ರ ಇರುತ್ತದೆ.","ಈ ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಒಟ್ಟಾಗಿ ಫೈಲಮ್ ಕಾರ್ಡೇಟಾ ಅನ್ನು ಗುರುತಿಸಲು ವಿಶ್ವಾಸಾರ್ಹ ಆಧಾರವನ್ನು ಒದಗಿಸುತ್ತವೆ."],"misconceptions":[{"wrong":"ಫೈಲಮ್ ಕಾರ್ಡೇಟಾ ಅನ್ನು ಕೇವಲ ಅದರ ಸಾಮಾನ್ಯ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ಬಾಹ್ಯ ಆಕಾರದಿಂದ ಮಾತ್ರ ಗುರುತಿಸಲಾಗುತ್ತದೆ.","right":"ವರ್ಗೀಕರಣವು ನಿರ್ಣಾಯಕ ಸಂಘಟನೆ, ದೇಹಯೋಜನೆ ಮತ್ತು ಶರೀರಕ್ರಿಯಾ ಲಕ್ಷಣಗಳನ್ನು ಅವಲಂಬಿಸಿದೆ; ಕಾರ್ಡೇಟ್‌ಗಳು ಜೀವನದ ಯಾವುದೋ ಒಂದು ಹಂತದಲ್ಲಿ ನೋಟೋಕೋರ್ಡ್, ಬೆನ್ನಿನ ಟೊಳ್ಳು ನರರಜ್ಜು, ಗಂಟಲಿನ ಕಿವಿರು ಸೀಳುಗಳು ಮತ್ತು ಗುದಾನಂತರ ಬಾಲವನ್ನು ಹೊಂದಿರುತ್ತವೆ."},{"wrong":"ಒಂದೇ ಲಕ್ಷಣವು ಫೈಲಮ್ ಕಾರ್ಡೇಟಾದ ಸಂಪೂರ್ಣ ವಿಕಾಸಾತ್ಮಕ ಕಥೆಯನ್ನು ಹೇಳುತ್ತದೆ.","right":"ಸಂಘಟನೆ, ಸಮಮಿತಿ, ದೇಹಗುಹೆ, ರಕ್ತಪರಿಚಲನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಸಂಯೋಜನೆಯನ್ನು ಬಳಸಿ; ಕಾರ್ಡೇಟ್‌ನ ನರರಜ್ಜು ಬೆನ್ನಿನ ಬದಿಯಲ್ಲಿ, ಟೊಳ್ಳಾಗಿ ಮತ್ತು ಏಕವಾಗಿರುತ್ತದೆ."}],"analogy":"ಫೈಲಮ್ ಕಾರ್ಡೇಟಾ ಅನ್ನು ಹಲವಾರು ಗುರುತು ಪರಿಶೀಲನೆಗಳುಳ್ಳ ಒಂದು ಪ್ರೊಫೈಲ್ ಎಂದು ಪರಿಗಣಿಸಿ: ಪ್ರತಿ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣವೂ ಒಂದು ಪರಿಶೀಲನಾ ಬಿಂದು, ಮತ್ತು ಸಂಪೂರ್ಣ ಗುಂಪು ತಪ್ಪಾದ ವರ್ಗೀಕರಣವನ್ನು ತಡೆಯುತ್ತದೆ.","analytical":[{"q":"ಒಂದು ನಮೂನೆಯು ಫೈಲಮ್ ಕಾರ್ಡೇಟಾಗೆ ಸೇರಿದೆ ಎಂದು ಪ್ರಸ್ತಾಪಿಸಲಾಗಿದೆ. ಈ ಹೇಳಿಕೆಯನ್ನು ಪರೀಕ್ಷಿಸಲು ನೀವು ಮೊದಲು ಯಾವ ಎರಡು ಅವಲೋಕನಗಳನ್ನು ಹುಡುಕುತ್ತೀರಿ?","a":"ಅತ್ಯಂತ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣಗಳಿಂದ ಪ್ರಾರಂಭಿಸಿ: ಕಾರ್ಡೇಟ್‌ಗಳು ಜೀವನದ ಯಾವುದೋ ಒಂದು ಹಂತದಲ್ಲಿ ನೋಟೋಕೋರ್ಡ್, ಬೆನ್ನಿನ ಟೊಳ್ಳು ನರರಜ್ಜು, ಗಂಟಲಿನ ಕಿವಿರು ಸೀಳುಗಳು ಮತ್ತು ಗುದಾನಂತರ ಬಾಲವನ್ನು ಹೊಂದಿರುತ್ತವೆ. ನಂತರ ಸ್ವತಂತ್ರ ಲಕ್ಷಣವನ್ನು ಪರಿಶೀಲಿಸಿ: ಕಾರ್ಡೇಟ್‌ನ ನರರಜ್ಜು ಬೆನ್ನಿನ ಬದಿಯಲ್ಲಿ, ಟೊಳ್ಳಾಗಿ ಮತ್ತು ಏಕವಾಗಿರುತ್ತದೆ. ಹೊಂದಿಕೆಯಾಗುವ ಅವಲೋಕನಗಳು ವರ್ಗೀಕರಣವನ್ನು ಸಮರ್ಥನೀಯಗೊಳಿಸುತ್ತವೆ."},{"q":"ಕೇವಲ ಒಂದು ಮೇಲ್ಮಟ್ಟದ ಲಕ್ಷಣವನ್ನು ಬಳಸಿ ಪ್ರಾಣಿಯನ್ನು ವರ್ಗೀಕರಿಸುವುದು ಏಕೆ ಅಪಾಯಕಾರಿ?","a":"ಸಂಬಂಧವಿಲ್ಲದ ಗುಂಪುಗಳು ಒಂದೇ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ವಿಶಾಲ ದೇಹಾಕಾರವನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು. ಸೂಕ್ತ ವರ್ಗೀಕರಣವು ಹಲವಾರು ರಚನಾತ್ಮಕ ಮತ್ತು ಕ್ರಿಯಾತ್ಮಕ ಲಕ್ಷಣಗಳನ್ನು ಹೋಲಿಸುತ್ತದೆ. ಫೈಲಮ್ ಕಾರ್ಡೇಟಾಗೆ, ಉಪಯುಕ್ತ ಸಾಕ್ಷ್ಯ ಇವುಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ಕಾರ್ಡೇಟ್‌ನ ಹೃದಯ ಕಿಬ್ಬೊಟ್ಟೆಯ ಬದಿಯಲ್ಲಿದ್ದು ರಕ್ತಪರಿಚಲನೆ ಮುಚ್ಚಿದ ರೀತಿಯದ್ದಾಗಿದೆ."}]},"hi":{"hook":"संघ कॉर्डेटा को सबसे मिलते-जुलते प्राणी समूह से अलग पहचानने के लिए कौन-सा एक अवलोकन आपकी मदद करेगा, और वह लक्षण केवल बाहरी रूप-रंग से अधिक विश्वसनीय क्यों है?","chain":["कॉर्डेट अपने जीवन के किसी चरण में नोटोकॉर्ड, पृष्ठीय खोखली तंत्रिका रज्जु, ग्रसनी क्लोम दरारें और गुदा-पश्च पूँछ रखते हैं।","कॉर्डेट की तंत्रिका रज्जु पृष्ठीय, खोखली और एकल होती है।","कॉर्डेट का हृदय अधर सतह पर होता है और परिसंचरण बंद प्रकार का होता है।","यूरोकॉर्डेटा में नोटोकॉर्ड केवल लार्वा की पूँछ में होता है।","ये सभी लक्षण मिलकर संघ कॉर्डेटा को पहचानने के लिए एक विश्वसनीय आधार प्रदान करते हैं।"],"misconceptions":[{"wrong":"संघ कॉर्डेटा की पहचान केवल उसके सामान्य आवास या बाहरी आकार से होती है।","right":"वर्गीकरण निदानात्मक संगठन, शरीर-योजना और क्रियात्मक लक्षणों पर निर्भर करता है; कॉर्डेट अपने जीवन के किसी चरण में नोटोकॉर्ड, पृष्ठीय खोखली तंत्रिका रज्जु, ग्रसनी क्लोम दरारें और गुदा-पश्च पूँछ रखते हैं।"},{"wrong":"केवल एक लक्षण संघ कॉर्डेटा की संपूर्ण विकासात्मक कहानी बता देता है।","right":"संगठन, सममिति, देहगुहा, परिसंचरण, जनन और उदाहरणों के संयोजन का उपयोग करें; कॉर्डेट की तंत्रिका रज्जु पृष्ठीय, खोखली और एकल होती है।"}],"analogy":"संघ कॉर्डेटा को कई पहचान-जाँचों वाली एक प्रोफ़ाइल की तरह समझें: प्रत्येक निदानात्मक लक्षण एक जाँच-बिंदु है, और पूरा समूह मिलकर गलत वर्गीकरण को रोकता है।","analytical":[{"q":"एक नमूने के बारे में प्रस्तावित किया गया है कि वह संघ कॉर्डेटा से संबंधित है। इस दावे की जाँच के लिए आप पहले कौन-से दो अवलोकन खोजेंगे?","a":"सबसे निदानात्मक लक्षणों से शुरू करें: कॉर्डेट अपने जीवन के किसी चरण में नोटोकॉर्ड, पृष्ठीय खोखली तंत्रिका रज्जु, ग्रसनी क्लोम दरारें और गुदा-पश्च पूँछ रखते हैं। फिर एक स्वतंत्र लक्षण जाँचें: कॉर्डेट की तंत्रिका रज्जु पृष्ठीय, खोखली और एकल होती है। परस्पर मेल खाते अवलोकन वर्गीकरण को न्यायसंगत बनाते हैं।"},{"q":"किसी प्राणी को केवल एक सतही लक्षण के आधार पर वर्गीकृत करना जोखिम भरा क्यों है?","a":"असंबंधित समूह एक जैसा आवास या व्यापक शरीराकार साझा कर सकते हैं। एक ठोस वर्गीकरण कई संरचनात्मक और क्रियात्मक लक्षणों की तुलना करता है। संघ कॉर्डेटा के लिए, उपयोगी प्रमाण में शामिल है: कॉर्डेट का हृदय अधर सतह पर होता है और परिसंचरण बंद प्रकार का होता है।"}]}},"class_cyclostomata":{"kn":{"hook":"ವರ್ಗ ಸೈಕ್ಲೋಸ್ಟೋಮಾಟಾ ಅನ್ನು ಹೋಲುವ ಪ್ರಾಣಿ ಗುಂಪಿನಿಂದ ಪ್ರತ್ಯೇಕಿಸಲು ಯಾವ ಒಂದೇ ಅವಲೋಕನ ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಮತ್ತು ಆ ಲಕ್ಷಣ ಕೇವಲ ಹೊರನೋಟಕ್ಕಿಂತ ಏಕೆ ಹೆಚ್ಚು ವಿಶ್ವಾಸಾರ್ಹವಾಗಿದೆ?","chain":["ಸೈಕ್ಲೋಸ್ಟೋಮ್‌ಗಳು ದವಡೆಗಳಿಲ್ಲದ, ಹೀರುವ ವೃತ್ತಾಕಾರದ ಬಾಯಿಯುಳ್ಳ ಬಹ್ಯಪರಾವಲಂಬಿ ಕಶೇರುಕಗಳಾಗಿವೆ.","ಇವುಗಳ ದೇಹದಲ್ಲಿ ಚಿಪ್ಪುಗಳು ಮತ್ತು ಜೋಡಿ ರೆಕ್ಕೆಗಳಿಲ್ಲ.","ಸೈಕ್ಲೋಸ್ಟೋಮ್‌ಗಳಿಗೆ ಶ್ವಸನಕ್ಕಾಗಿ ಆರರಿಂದ ಹದಿನೈದು ಜೋಡಿ ಕಿವಿರು ಸೀಳುಗಳಿವೆ.","ಇವು ಸಮುದ್ರವಾಸಿಗಳಾದರೂ ಮೊಟ್ಟೆಯಿಡಲು ಸಿಹಿನೀರಿಗೆ ವಲಸೆ ಹೋಗುತ್ತವೆ.","ಈ ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಒಟ್ಟಾಗಿ ವರ್ಗ ಸೈಕ್ಲೋಸ್ಟೋಮಾಟಾ ಅನ್ನು ಗುರುತಿಸಲು ವಿಶ್ವಾಸಾರ್ಹ ಆಧಾರವನ್ನು ಒದಗಿಸುತ್ತವೆ."],"misconceptions":[{"wrong":"ವರ್ಗ ಸೈಕ್ಲೋಸ್ಟೋಮಾಟಾ ಅನ್ನು ಕೇವಲ ಅದರ ಸಾಮಾನ್ಯ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ಬಾಹ್ಯ ಆಕಾರದಿಂದ ಮಾತ್ರ ಗುರುತಿಸಲಾಗುತ್ತದೆ.","right":"ವರ್ಗೀಕರಣವು ನಿರ್ಣಾಯಕ ಸಂಘಟನೆ, ದೇಹಯೋಜನೆ ಮತ್ತು ಶರೀರಕ್ರಿಯಾ ಲಕ್ಷಣಗಳನ್ನು ಅವಲಂಬಿಸಿದೆ; ಸೈಕ್ಲೋಸ್ಟೋಮ್‌ಗಳು ದವಡೆಗಳಿಲ್ಲದ, ಹೀರುವ ವೃತ್ತಾಕಾರದ ಬಾಯಿಯುಳ್ಳ ಬಹ್ಯಪರಾವಲಂಬಿ ಕಶೇರುಕಗಳಾಗಿವೆ."},{"wrong":"ಒಂದೇ ಲಕ್ಷಣವು ವರ್ಗ ಸೈಕ್ಲೋಸ್ಟೋಮಾಟಾದ ಸಂಪೂರ್ಣ ವಿಕಾಸಾತ್ಮಕ ಕಥೆಯನ್ನು ಹೇಳುತ್ತದೆ.","right":"ಸಂಘಟನೆ, ಸಮಮಿತಿ, ದೇಹಗುಹೆ, ರಕ್ತಪರಿಚಲನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಸಂಯೋಜನೆಯನ್ನು ಬಳಸಿ; ಇವುಗಳ ದೇಹದಲ್ಲಿ ಚಿಪ್ಪುಗಳು ಮತ್ತು ಜೋಡಿ ರೆಕ್ಕೆಗಳಿಲ್ಲ."}],"analogy":"ವರ್ಗ ಸೈಕ್ಲೋಸ್ಟೋಮಾಟಾ ಅನ್ನು ಹಲವಾರು ಗುರುತು ಪರಿಶೀಲನೆಗಳುಳ್ಳ ಒಂದು ಪ್ರೊಫೈಲ್ ಎಂದು ಪರಿಗಣಿಸಿ: ಪ್ರತಿ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣವೂ ಒಂದು ಪರಿಶೀಲನಾ ಬಿಂದು, ಮತ್ತು ಸಂಪೂರ್ಣ ಗುಂಪು ತಪ್ಪಾದ ವರ್ಗೀಕರಣವನ್ನು ತಡೆಯುತ್ತದೆ.","analytical":[{"q":"ಒಂದು ನಮೂನೆಯು ವರ್ಗ ಸೈಕ್ಲೋಸ್ಟೋಮಾಟಾಗೆ ಸೇರಿದೆ ಎಂದು ಪ್ರಸ್ತಾಪಿಸಲಾಗಿದೆ. ಈ ಹೇಳಿಕೆಯನ್ನು ಪರೀಕ್ಷಿಸಲು ನೀವು ಮೊದಲು ಯಾವ ಎರಡು ಅವಲೋಕನಗಳನ್ನು ಹುಡುಕುತ್ತೀರಿ?","a":"ಅತ್ಯಂತ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣಗಳಿಂದ ಪ್ರಾರಂಭಿಸಿ: ಸೈಕ್ಲೋಸ್ಟೋಮ್‌ಗಳು ದವಡೆಗಳಿಲ್ಲದ, ಹೀರುವ ವೃತ್ತಾಕಾರದ ಬಾಯಿಯುಳ್ಳ ಬಹ್ಯಪರಾವಲಂಬಿ ಕಶೇರುಕಗಳಾಗಿವೆ. ನಂತರ ಸ್ವತಂತ್ರ ಲಕ್ಷಣವನ್ನು ಪರಿಶೀಲಿಸಿ: ಇವುಗಳ ದೇಹದಲ್ಲಿ ಚಿಪ್ಪುಗಳು ಮತ್ತು ಜೋಡಿ ರೆಕ್ಕೆಗಳಿಲ್ಲ. ಹೊಂದಿಕೆಯಾಗುವ ಅವಲೋಕನಗಳು ವರ್ಗೀಕರಣವನ್ನು ಸಮರ್ಥನೀಯಗೊಳಿಸುತ್ತವೆ."},{"q":"ಕೇವಲ ಒಂದು ಮೇಲ್ಮಟ್ಟದ ಲಕ್ಷಣವನ್ನು ಬಳಸಿ ಪ್ರಾಣಿಯನ್ನು ವರ್ಗೀಕರಿಸುವುದು ಏಕೆ ಅಪಾಯಕಾರಿ?","a":"ಸಂಬಂಧವಿಲ್ಲದ ಗುಂಪುಗಳು ಒಂದೇ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ವಿಶಾಲ ದೇಹಾಕಾರವನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು. ಸೂಕ್ತ ವರ್ಗೀಕರಣವು ಹಲವಾರು ರಚನಾತ್ಮಕ ಮತ್ತು ಕ್ರಿಯಾತ್ಮಕ ಲಕ್ಷಣಗಳನ್ನು ಹೋಲಿಸುತ್ತದೆ. ವರ್ಗ ಸೈಕ್ಲೋಸ್ಟೋಮಾಟಾಗೆ, ಉಪಯುಕ್ತ ಸಾಕ್ಷ್ಯ ಇವುಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ಸೈಕ್ಲೋಸ್ಟೋಮ್‌ಗಳಿಗೆ ಶ್ವಸನಕ್ಕಾಗಿ ಆರರಿಂದ ಹದಿನೈದು ಜೋಡಿ ಕಿವಿರು ಸೀಳುಗಳಿವೆ."}]},"hi":{"hook":"वर्ग साइक्लोस्टोमेटा को सबसे मिलते-जुलते प्राणी समूह से अलग पहचानने के लिए कौन-सा एक अवलोकन आपकी मदद करेगा, और वह लक्षण केवल बाहरी रूप-रंग से अधिक विश्वसनीय क्यों है?","chain":["साइक्लोस्टोम जबड़ारहित, बाह्यपरजीवी कशेरुकी होते हैं जिनमें चूषक वृत्ताकार मुख होता है।","इनके शरीर पर शल्क और युग्मित पंख नहीं होते।","साइक्लोस्टोम में श्वसन के लिए छह से पंद्रह जोड़ी क्लोम दरारें होती हैं।","ये समुद्री होते हैं परंतु अंडे देने के लिए मीठे पानी में प्रवास करते हैं।","ये सभी लक्षण मिलकर वर्ग साइक्लोस्टोमेटा को पहचानने के लिए एक विश्वसनीय आधार प्रदान करते हैं।"],"misconceptions":[{"wrong":"वर्ग साइक्लोस्टोमेटा की पहचान केवल उसके सामान्य आवास या बाहरी आकार से होती है।","right":"वर्गीकरण निदानात्मक संगठन, शरीर-योजना और क्रियात्मक लक्षणों पर निर्भर करता है; साइक्लोस्टोम जबड़ारहित, बाह्यपरजीवी कशेरुकी होते हैं जिनमें चूषक वृत्ताकार मुख होता है।"},{"wrong":"केवल एक लक्षण वर्ग साइक्लोस्टोमेटा की संपूर्ण विकासात्मक कहानी बता देता है।","right":"संगठन, सममिति, देहगुहा, परिसंचरण, जनन और उदाहरणों के संयोजन का उपयोग करें; इनके शरीर पर शल्क और युग्मित पंख नहीं होते।"}],"analogy":"वर्ग साइक्लोस्टोमेटा को कई पहचान-जाँचों वाली एक प्रोफ़ाइल की तरह समझें: प्रत्येक निदानात्मक लक्षण एक जाँच-बिंदु है, और पूरा समूह मिलकर गलत वर्गीकरण को रोकता है।","analytical":[{"q":"एक नमूने के बारे में प्रस्तावित किया गया है कि वह वर्ग साइक्लोस्टोमेटा से संबंधित है। इस दावे की जाँच के लिए आप पहले कौन-से दो अवलोकन खोजेंगे?","a":"सबसे निदानात्मक लक्षणों से शुरू करें: साइक्लोस्टोम जबड़ारहित, बाह्यपरजीवी कशेरुकी होते हैं जिनमें चूषक वृत्ताकार मुख होता है। फिर एक स्वतंत्र लक्षण जाँचें: इनके शरीर पर शल्क और युग्मित पंख नहीं होते। परस्पर मेल खाते अवलोकन वर्गीकरण को न्यायसंगत बनाते हैं।"},{"q":"किसी प्राणी को केवल एक सतही लक्षण के आधार पर वर्गीकृत करना जोखिम भरा क्यों है?","a":"असंबंधित समूह एक जैसा आवास या व्यापक शरीराकार साझा कर सकते हैं। एक ठोस वर्गीकरण कई संरचनात्मक और क्रियात्मक लक्षणों की तुलना करता है। वर्ग साइक्लोस्टोमेटा के लिए, उपयोगी प्रमाण में शामिल है: साइक्लोस्टोम में श्वसन के लिए छह से पंद्रह जोड़ी क्लोम दरारें होती हैं।"}]}},"class_chondrichthyes":{"kn":{"hook":"ವರ್ಗ ಕಾಂಡ್ರಿಕ್ತೀಸ್ ಅನ್ನು ಹೋಲುವ ಪ್ರಾಣಿ ಗುಂಪಿನಿಂದ ಪ್ರತ್ಯೇಕಿಸಲು ಯಾವ ಒಂದೇ ಅವಲೋಕನ ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಮತ್ತು ಆ ಲಕ್ಷಣ ಕೇವಲ ಹೊರನೋಟಕ್ಕಿಂತ ಏಕೆ ಹೆಚ್ಚು ವಿಶ್ವಾಸಾರ್ಹವಾಗಿದೆ?","chain":["ಕಾಂಡ್ರಿಕ್ತೀಸ್‌ಗಳಿಗೆ ಕಾರ್ಟಿಲೇಜ್‌ನಿಂದ ಆದ ಅಂತಃಕಂಕಾಲವಿದೆ.","ಇವುಗಳ ಚರ್ಮ ಗಟ್ಟಿಯಾಗಿದ್ದು ಪ್ಲಾಕಾಯ್ಡ್ ಚಿಪ್ಪುಗಳನ್ನು ಹೊಂದಿದೆ.","ಕಾಂಡ್ರಿಕ್ತೀಸ್‌ಗಳಿಗೆ ಆಪರ್ಕ್ಯುಲಮ್ ಇಲ್ಲದ ಐದರಿಂದ ಏಳು ಜೋಡಿ ಕಿವಿರು ಸೀಳುಗಳಿವೆ.","ಇವುಗಳ ಬಾಯಿ ಕಿಬ್ಬೊಟ್ಟೆಯ ಬದಿಯಲ್ಲಿದ್ದು ಬಾಲ ಸಾಮಾನ್ಯವಾಗಿ ಹೆಟೆರೋಸೆರ್ಕಲ್ ಆಗಿರುತ್ತದೆ.","ಈ ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಒಟ್ಟಾಗಿ ವರ್ಗ ಕಾಂಡ್ರಿಕ್ತೀಸ್ ಅನ್ನು ಗುರುತಿಸಲು ವಿಶ್ವಾಸಾರ್ಹ ಆಧಾರವನ್ನು ಒದಗಿಸುತ್ತವೆ."],"misconceptions":[{"wrong":"ವರ್ಗ ಕಾಂಡ್ರಿಕ್ತೀಸ್ ಅನ್ನು ಕೇವಲ ಅದರ ಸಾಮಾನ್ಯ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ಬಾಹ್ಯ ಆಕಾರದಿಂದ ಮಾತ್ರ ಗುರುತಿಸಲಾಗುತ್ತದೆ.","right":"ವರ್ಗೀಕರಣವು ನಿರ್ಣಾಯಕ ಸಂಘಟನೆ, ದೇಹಯೋಜನೆ ಮತ್ತು ಶರೀರಕ್ರಿಯಾ ಲಕ್ಷಣಗಳನ್ನು ಅವಲಂಬಿಸಿದೆ; ಕಾಂಡ್ರಿಕ್ತೀಸ್‌ಗಳಿಗೆ ಕಾರ್ಟಿಲೇಜ್‌ನಿಂದ ಆದ ಅಂತಃಕಂಕಾಲವಿದೆ."},{"wrong":"ಒಂದೇ ಲಕ್ಷಣವು ವರ್ಗ ಕಾಂಡ್ರಿಕ್ತೀಸ್ದ ಸಂಪೂರ್ಣ ವಿಕಾಸಾತ್ಮಕ ಕಥೆಯನ್ನು ಹೇಳುತ್ತದೆ.","right":"ಸಂಘಟನೆ, ಸಮಮಿತಿ, ದೇಹಗುಹೆ, ರಕ್ತಪರಿಚಲನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಸಂಯೋಜನೆಯನ್ನು ಬಳಸಿ; ಇವುಗಳ ಚರ್ಮ ಗಟ್ಟಿಯಾಗಿದ್ದು ಪ್ಲಾಕಾಯ್ಡ್ ಚಿಪ್ಪುಗಳನ್ನು ಹೊಂದಿದೆ."}],"analogy":"ವರ್ಗ ಕಾಂಡ್ರಿಕ್ತೀಸ್ ಅನ್ನು ಹಲವಾರು ಗುರುತು ಪರಿಶೀಲನೆಗಳುಳ್ಳ ಒಂದು ಪ್ರೊಫೈಲ್ ಎಂದು ಪರಿಗಣಿಸಿ: ಪ್ರತಿ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣವೂ ಒಂದು ಪರಿಶೀಲನಾ ಬಿಂದು, ಮತ್ತು ಸಂಪೂರ್ಣ ಗುಂಪು ತಪ್ಪಾದ ವರ್ಗೀಕರಣವನ್ನು ತಡೆಯುತ್ತದೆ.","analytical":[{"q":"ಒಂದು ನಮೂನೆಯು ವರ್ಗ ಕಾಂಡ್ರಿಕ್ತೀಸ್ಗೆ ಸೇರಿದೆ ಎಂದು ಪ್ರಸ್ತಾಪಿಸಲಾಗಿದೆ. ಈ ಹೇಳಿಕೆಯನ್ನು ಪರೀಕ್ಷಿಸಲು ನೀವು ಮೊದಲು ಯಾವ ಎರಡು ಅವಲೋಕನಗಳನ್ನು ಹುಡುಕುತ್ತೀರಿ?","a":"ಅತ್ಯಂತ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣಗಳಿಂದ ಪ್ರಾರಂಭಿಸಿ: ಕಾಂಡ್ರಿಕ್ತೀಸ್‌ಗಳಿಗೆ ಕಾರ್ಟಿಲೇಜ್‌ನಿಂದ ಆದ ಅಂತಃಕಂಕಾಲವಿದೆ. ನಂತರ ಸ್ವತಂತ್ರ ಲಕ್ಷಣವನ್ನು ಪರಿಶೀಲಿಸಿ: ಇವುಗಳ ಚರ್ಮ ಗಟ್ಟಿಯಾಗಿದ್ದು ಪ್ಲಾಕಾಯ್ಡ್ ಚಿಪ್ಪುಗಳನ್ನು ಹೊಂದಿದೆ. ಹೊಂದಿಕೆಯಾಗುವ ಅವಲೋಕನಗಳು ವರ್ಗೀಕರಣವನ್ನು ಸಮರ್ಥನೀಯಗೊಳಿಸುತ್ತವೆ."},{"q":"ಕೇವಲ ಒಂದು ಮೇಲ್ಮಟ್ಟದ ಲಕ್ಷಣವನ್ನು ಬಳಸಿ ಪ್ರಾಣಿಯನ್ನು ವರ್ಗೀಕರಿಸುವುದು ಏಕೆ ಅಪಾಯಕಾರಿ?","a":"ಸಂಬಂಧವಿಲ್ಲದ ಗುಂಪುಗಳು ಒಂದೇ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ವಿಶಾಲ ದೇಹಾಕಾರವನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು. ಸೂಕ್ತ ವರ್ಗೀಕರಣವು ಹಲವಾರು ರಚನಾತ್ಮಕ ಮತ್ತು ಕ್ರಿಯಾತ್ಮಕ ಲಕ್ಷಣಗಳನ್ನು ಹೋಲಿಸುತ್ತದೆ. ವರ್ಗ ಕಾಂಡ್ರಿಕ್ತೀಸ್ಗೆ, ಉಪಯುಕ್ತ ಸಾಕ್ಷ್ಯ ಇವುಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ಕಾಂಡ್ರಿಕ್ತೀಸ್‌ಗಳಿಗೆ ಆಪರ್ಕ್ಯುಲಮ್ ಇಲ್ಲದ ಐದರಿಂದ ಏಳು ಜೋಡಿ ಕಿವಿರು ಸೀಳುಗಳಿವೆ."}]},"hi":{"hook":"वर्ग कॉन्ड्रिक्थीज को सबसे मिलते-जुलते प्राणी समूह से अलग पहचानने के लिए कौन-सा एक अवलोकन आपकी मदद करेगा, और वह लक्षण केवल बाहरी रूप-रंग से अधिक विश्वसनीय क्यों है?","chain":["कॉन्ड्रिक्थीज में उपास्थि से बना अंतःकंकाल होता है।","इनकी त्वचा मजबूत होती है और इसमें प्लेकॉइड शल्क होते हैं।","कॉन्ड्रिक्थीज में बिना ऑपरकुलम के पाँच से सात जोड़ी क्लोम दरारें होती हैं।","इनका मुख अधर सतह पर होता है और पूँछ सामान्यतः हेटेरोसर्कल होती है।","ये सभी लक्षण मिलकर वर्ग कॉन्ड्रिक्थीज को पहचानने के लिए एक विश्वसनीय आधार प्रदान करते हैं।"],"misconceptions":[{"wrong":"वर्ग कॉन्ड्रिक्थीज की पहचान केवल उसके सामान्य आवास या बाहरी आकार से होती है।","right":"वर्गीकरण निदानात्मक संगठन, शरीर-योजना और क्रियात्मक लक्षणों पर निर्भर करता है; कॉन्ड्रिक्थीज में उपास्थि से बना अंतःकंकाल होता है।"},{"wrong":"केवल एक लक्षण वर्ग कॉन्ड्रिक्थीज की संपूर्ण विकासात्मक कहानी बता देता है।","right":"संगठन, सममिति, देहगुहा, परिसंचरण, जनन और उदाहरणों के संयोजन का उपयोग करें; इनकी त्वचा मजबूत होती है और इसमें प्लेकॉइड शल्क होते हैं।"}],"analogy":"वर्ग कॉन्ड्रिक्थीज को कई पहचान-जाँचों वाली एक प्रोफ़ाइल की तरह समझें: प्रत्येक निदानात्मक लक्षण एक जाँच-बिंदु है, और पूरा समूह मिलकर गलत वर्गीकरण को रोकता है।","analytical":[{"q":"एक नमूने के बारे में प्रस्तावित किया गया है कि वह वर्ग कॉन्ड्रिक्थीज से संबंधित है। इस दावे की जाँच के लिए आप पहले कौन-से दो अवलोकन खोजेंगे?","a":"सबसे निदानात्मक लक्षणों से शुरू करें: कॉन्ड्रिक्थीज में उपास्थि से बना अंतःकंकाल होता है। फिर एक स्वतंत्र लक्षण जाँचें: इनकी त्वचा मजबूत होती है और इसमें प्लेकॉइड शल्क होते हैं। परस्पर मेल खाते अवलोकन वर्गीकरण को न्यायसंगत बनाते हैं।"},{"q":"किसी प्राणी को केवल एक सतही लक्षण के आधार पर वर्गीकृत करना जोखिम भरा क्यों है?","a":"असंबंधित समूह एक जैसा आवास या व्यापक शरीराकार साझा कर सकते हैं। एक ठोस वर्गीकरण कई संरचनात्मक और क्रियात्मक लक्षणों की तुलना करता है। वर्ग कॉन्ड्रिक्थीज के लिए, उपयोगी प्रमाण में शामिल है: कॉन्ड्रिक्थीज में बिना ऑपरकुलम के पाँच से सात जोड़ी क्लोम दरारें होती हैं।"}]}},"class_osteichthyes":{"kn":{"hook":"ವರ್ಗ ಆಸ್ಟಿಕ್ತೀಸ್ ಅನ್ನು ಹೋಲುವ ಪ್ರಾಣಿ ಗುಂಪಿನಿಂದ ಪ್ರತ್ಯೇಕಿಸಲು ಯಾವ ಒಂದೇ ಅವಲೋಕನ ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಮತ್ತು ಆ ಲಕ್ಷಣ ಕೇವಲ ಹೊರನೋಟಕ್ಕಿಂತ ಏಕೆ ಹೆಚ್ಚು ವಿಶ್ವಾಸಾರ್ಹವಾಗಿದೆ?","chain":["ಆಸ್ಟಿಕ್ತೀಸ್‌ಗಳಿಗೆ ಪ್ರಧಾನವಾಗಿ ಅಸ್ಥಿಯಿಂದ ಆದ ಅಂತಃಕಂಕಾಲವಿದೆ.","ಅಸ್ಥಿಮೀನುಗಳಿಗೆ ಆಪರ್ಕ್ಯುಲಮ್‌ನಿಂದ ಮುಚ್ಚಲ್ಪಟ್ಟ ನಾಲ್ಕು ಜೋಡಿ ಕಿವಿರುಗಳಿವೆ.","ವಾಯುಚೀಲವು ಬಹುತೇಕ ಆಸ್ಟಿಕ್ತೀಸ್‌ಗಳಲ್ಲಿ ತೇಲುವಿಕೆಯನ್ನು ನಿಯಂತ್ರಿಸುತ್ತದೆ.","ಇವುಗಳ ಬಾಯಿ ಸಾಮಾನ್ಯವಾಗಿ ತುದಿಯಲ್ಲಿದ್ದು ಚಿಪ್ಪುಗಳು ಸೈಕ್ಲಾಯ್ಡ್ ಅಥವಾ ಟೀನಾಯ್ಡ್ ಆಗಿರುತ್ತವೆ.","ಈ ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಒಟ್ಟಾಗಿ ವರ್ಗ ಆಸ್ಟಿಕ್ತೀಸ್ ಅನ್ನು ಗುರುತಿಸಲು ವಿಶ್ವಾಸಾರ್ಹ ಆಧಾರವನ್ನು ಒದಗಿಸುತ್ತವೆ."],"misconceptions":[{"wrong":"ವರ್ಗ ಆಸ್ಟಿಕ್ತೀಸ್ ಅನ್ನು ಕೇವಲ ಅದರ ಸಾಮಾನ್ಯ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ಬಾಹ್ಯ ಆಕಾರದಿಂದ ಮಾತ್ರ ಗುರುತಿಸಲಾಗುತ್ತದೆ.","right":"ವರ್ಗೀಕರಣವು ನಿರ್ಣಾಯಕ ಸಂಘಟನೆ, ದೇಹಯೋಜನೆ ಮತ್ತು ಶರೀರಕ್ರಿಯಾ ಲಕ್ಷಣಗಳನ್ನು ಅವಲಂಬಿಸಿದೆ; ಆಸ್ಟಿಕ್ತೀಸ್‌ಗಳಿಗೆ ಪ್ರಧಾನವಾಗಿ ಅಸ್ಥಿಯಿಂದ ಆದ ಅಂತಃಕಂಕಾಲವಿದೆ."},{"wrong":"ಒಂದೇ ಲಕ್ಷಣವು ವರ್ಗ ಆಸ್ಟಿಕ್ತೀಸ್ದ ಸಂಪೂರ್ಣ ವಿಕಾಸಾತ್ಮಕ ಕಥೆಯನ್ನು ಹೇಳುತ್ತದೆ.","right":"ಸಂಘಟನೆ, ಸಮಮಿತಿ, ದೇಹಗುಹೆ, ರಕ್ತಪರಿಚಲನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಸಂಯೋಜನೆಯನ್ನು ಬಳಸಿ; ಅಸ್ಥಿಮೀನುಗಳಿಗೆ ಆಪರ್ಕ್ಯುಲಮ್‌ನಿಂದ ಮುಚ್ಚಲ್ಪಟ್ಟ ನಾಲ್ಕು ಜೋಡಿ ಕಿವಿರುಗಳಿವೆ."}],"analogy":"ವರ್ಗ ಆಸ್ಟಿಕ್ತೀಸ್ ಅನ್ನು ಹಲವಾರು ಗುರುತು ಪರಿಶೀಲನೆಗಳುಳ್ಳ ಒಂದು ಪ್ರೊಫೈಲ್ ಎಂದು ಪರಿಗಣಿಸಿ: ಪ್ರತಿ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣವೂ ಒಂದು ಪರಿಶೀಲನಾ ಬಿಂದು, ಮತ್ತು ಸಂಪೂರ್ಣ ಗುಂಪು ತಪ್ಪಾದ ವರ್ಗೀಕರಣವನ್ನು ತಡೆಯುತ್ತದೆ.","analytical":[{"q":"ಒಂದು ನಮೂನೆಯು ವರ್ಗ ಆಸ್ಟಿಕ್ತೀಸ್ಗೆ ಸೇರಿದೆ ಎಂದು ಪ್ರಸ್ತಾಪಿಸಲಾಗಿದೆ. ಈ ಹೇಳಿಕೆಯನ್ನು ಪರೀಕ್ಷಿಸಲು ನೀವು ಮೊದಲು ಯಾವ ಎರಡು ಅವಲೋಕನಗಳನ್ನು ಹುಡುಕುತ್ತೀರಿ?","a":"ಅತ್ಯಂತ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣಗಳಿಂದ ಪ್ರಾರಂಭಿಸಿ: ಆಸ್ಟಿಕ್ತೀಸ್‌ಗಳಿಗೆ ಪ್ರಧಾನವಾಗಿ ಅಸ್ಥಿಯಿಂದ ಆದ ಅಂತಃಕಂಕಾಲವಿದೆ. ನಂತರ ಸ್ವತಂತ್ರ ಲಕ್ಷಣವನ್ನು ಪರಿಶೀಲಿಸಿ: ಅಸ್ಥಿಮೀನುಗಳಿಗೆ ಆಪರ್ಕ್ಯುಲಮ್‌ನಿಂದ ಮುಚ್ಚಲ್ಪಟ್ಟ ನಾಲ್ಕು ಜೋಡಿ ಕಿವಿರುಗಳಿವೆ. ಹೊಂದಿಕೆಯಾಗುವ ಅವಲೋಕನಗಳು ವರ್ಗೀಕರಣವನ್ನು ಸಮರ್ಥನೀಯಗೊಳಿಸುತ್ತವೆ."},{"q":"ಕೇವಲ ಒಂದು ಮೇಲ್ಮಟ್ಟದ ಲಕ್ಷಣವನ್ನು ಬಳಸಿ ಪ್ರಾಣಿಯನ್ನು ವರ್ಗೀಕರಿಸುವುದು ಏಕೆ ಅಪಾಯಕಾರಿ?","a":"ಸಂಬಂಧವಿಲ್ಲದ ಗುಂಪುಗಳು ಒಂದೇ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ವಿಶಾಲ ದೇಹಾಕಾರವನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು. ಸೂಕ್ತ ವರ್ಗೀಕರಣವು ಹಲವಾರು ರಚನಾತ್ಮಕ ಮತ್ತು ಕ್ರಿಯಾತ್ಮಕ ಲಕ್ಷಣಗಳನ್ನು ಹೋಲಿಸುತ್ತದೆ. ವರ್ಗ ಆಸ್ಟಿಕ್ತೀಸ್ಗೆ, ಉಪಯುಕ್ತ ಸಾಕ್ಷ್ಯ ಇವುಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ವಾಯುಚೀಲವು ಬಹುತೇಕ ಆಸ್ಟಿಕ್ತೀಸ್‌ಗಳಲ್ಲಿ ತೇಲುವಿಕೆಯನ್ನು ನಿಯಂತ್ರಿಸುತ್ತದೆ."}]},"hi":{"hook":"वर्ग ऑस्टिक्थीज को सबसे मिलते-जुलते प्राणी समूह से अलग पहचानने के लिए कौन-सा एक अवलोकन आपकी मदद करेगा, और वह लक्षण केवल बाहरी रूप-रंग से अधिक विश्वसनीय क्यों है?","chain":["ऑस्टिक्थीज में मुख्यतः अस्थि से बना अंतःकंकाल होता है।","अस्थिमय मछलियों में ऑपरकुलम से ढके चार जोड़ी क्लोम होते हैं।","वायु-थैली अधिकांश ऑस्टिक्थीज में उत्प्लावन को नियंत्रित करती है।","इनका मुख सामान्यतः अंतस्थ होता है और शल्क साइक्लॉइड या टीनॉइड होते हैं।","ये सभी लक्षण मिलकर वर्ग ऑस्टिक्थीज को पहचानने के लिए एक विश्वसनीय आधार प्रदान करते हैं।"],"misconceptions":[{"wrong":"वर्ग ऑस्टिक्थीज की पहचान केवल उसके सामान्य आवास या बाहरी आकार से होती है।","right":"वर्गीकरण निदानात्मक संगठन, शरीर-योजना और क्रियात्मक लक्षणों पर निर्भर करता है; ऑस्टिक्थीज में मुख्यतः अस्थि से बना अंतःकंकाल होता है।"},{"wrong":"केवल एक लक्षण वर्ग ऑस्टिक्थीज की संपूर्ण विकासात्मक कहानी बता देता है।","right":"संगठन, सममिति, देहगुहा, परिसंचरण, जनन और उदाहरणों के संयोजन का उपयोग करें; अस्थिमय मछलियों में ऑपरकुलम से ढके चार जोड़ी क्लोम होते हैं।"}],"analogy":"वर्ग ऑस्टिक्थीज को कई पहचान-जाँचों वाली एक प्रोफ़ाइल की तरह समझें: प्रत्येक निदानात्मक लक्षण एक जाँच-बिंदु है, और पूरा समूह मिलकर गलत वर्गीकरण को रोकता है।","analytical":[{"q":"एक नमूने के बारे में प्रस्तावित किया गया है कि वह वर्ग ऑस्टिक्थीज से संबंधित है। इस दावे की जाँच के लिए आप पहले कौन-से दो अवलोकन खोजेंगे?","a":"सबसे निदानात्मक लक्षणों से शुरू करें: ऑस्टिक्थीज में मुख्यतः अस्थि से बना अंतःकंकाल होता है। फिर एक स्वतंत्र लक्षण जाँचें: अस्थिमय मछलियों में ऑपरकुलम से ढके चार जोड़ी क्लोम होते हैं। परस्पर मेल खाते अवलोकन वर्गीकरण को न्यायसंगत बनाते हैं।"},{"q":"किसी प्राणी को केवल एक सतही लक्षण के आधार पर वर्गीकृत करना जोखिम भरा क्यों है?","a":"असंबंधित समूह एक जैसा आवास या व्यापक शरीराकार साझा कर सकते हैं। एक ठोस वर्गीकरण कई संरचनात्मक और क्रियात्मक लक्षणों की तुलना करता है। वर्ग ऑस्टिक्थीज के लिए, उपयोगी प्रमाण में शामिल है: वायु-थैली अधिकांश ऑस्टिक्थीज में उत्प्लावन को नियंत्रित करती है।"}]}},"class_amphibia":{"kn":{"hook":"ವರ್ಗ ಆಂಫಿಬಿಯಾ ಅನ್ನು ಹೋಲುವ ಪ್ರಾಣಿ ಗುಂಪಿನಿಂದ ಪ್ರತ್ಯೇಕಿಸಲು ಯಾವ ಒಂದೇ ಅವಲೋಕನ ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಮತ್ತು ಆ ಲಕ್ಷಣ ಕೇವಲ ಹೊರನೋಟಕ್ಕಿಂತ ಏಕೆ ಹೆಚ್ಚು ವಿಶ್ವಾಸಾರ್ಹವಾಗಿದೆ?","chain":["ಆಂಫಿಬಿಯನ್‌ಗಳು ನೀರಿನಲ್ಲಿ ಮತ್ತು ಭೂಮಿಯ ಮೇಲೆ ಎರಡರಲ್ಲೂ ಬದುಕಬಲ್ಲವು.","ಆಂಫಿಬಿಯನ್ ಚರ್ಮ ಒದ್ದೆಯಾಗಿದ್ದು ಚಿಪ್ಪುಗಳಿಲ್ಲ.","ಪ್ರೌಢ ಜೀವಿಗಳು ಕಿವಿರುಗಳು, ಶ್ವಾಸಕೋಶಗಳು ಮತ್ತು ಚರ್ಮದ ಮೂಲಕ ಶ್ವಸಿಸುತ್ತವೆ, ಆದರೆ ಲಾರ್ವಾಗಳು ಕಿವಿರುಗಳನ್ನು ಹೊಂದಿರುತ್ತವೆ.","ಆಂಫಿಬಿಯನ್‌ನ ಹೃದಯ ಮೂರು ಕೋಣೆಗಳನ್ನು ಹೊಂದಿದೆ.","ಈ ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಒಟ್ಟಾಗಿ ವರ್ಗ ಆಂಫಿಬಿಯಾ ಅನ್ನು ಗುರುತಿಸಲು ವಿಶ್ವಾಸಾರ್ಹ ಆಧಾರವನ್ನು ಒದಗಿಸುತ್ತವೆ."],"misconceptions":[{"wrong":"ವರ್ಗ ಆಂಫಿಬಿಯಾ ಅನ್ನು ಕೇವಲ ಅದರ ಸಾಮಾನ್ಯ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ಬಾಹ್ಯ ಆಕಾರದಿಂದ ಮಾತ್ರ ಗುರುತಿಸಲಾಗುತ್ತದೆ.","right":"ವರ್ಗೀಕರಣವು ನಿರ್ಣಾಯಕ ಸಂಘಟನೆ, ದೇಹಯೋಜನೆ ಮತ್ತು ಶರೀರಕ್ರಿಯಾ ಲಕ್ಷಣಗಳನ್ನು ಅವಲಂಬಿಸಿದೆ; ಆಂಫಿಬಿಯನ್‌ಗಳು ನೀರಿನಲ್ಲಿ ಮತ್ತು ಭೂಮಿಯ ಮೇಲೆ ಎರಡರಲ್ಲೂ ಬದುಕಬಲ್ಲವು."},{"wrong":"ಒಂದೇ ಲಕ್ಷಣವು ವರ್ಗ ಆಂಫಿಬಿಯಾದ ಸಂಪೂರ್ಣ ವಿಕಾಸಾತ್ಮಕ ಕಥೆಯನ್ನು ಹೇಳುತ್ತದೆ.","right":"ಸಂಘಟನೆ, ಸಮಮಿತಿ, ದೇಹಗುಹೆ, ರಕ್ತಪರಿಚಲನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಸಂಯೋಜನೆಯನ್ನು ಬಳಸಿ; ಆಂಫಿಬಿಯನ್ ಚರ್ಮ ಒದ್ದೆಯಾಗಿದ್ದು ಚಿಪ್ಪುಗಳಿಲ್ಲ."}],"analogy":"ವರ್ಗ ಆಂಫಿಬಿಯಾ ಅನ್ನು ಹಲವಾರು ಗುರುತು ಪರಿಶೀಲನೆಗಳುಳ್ಳ ಒಂದು ಪ್ರೊಫೈಲ್ ಎಂದು ಪರಿಗಣಿಸಿ: ಪ್ರತಿ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣವೂ ಒಂದು ಪರಿಶೀಲನಾ ಬಿಂದು, ಮತ್ತು ಸಂಪೂರ್ಣ ಗುಂಪು ತಪ್ಪಾದ ವರ್ಗೀಕರಣವನ್ನು ತಡೆಯುತ್ತದೆ.","analytical":[{"q":"ಒಂದು ನಮೂನೆಯು ವರ್ಗ ಆಂಫಿಬಿಯಾಗೆ ಸೇರಿದೆ ಎಂದು ಪ್ರಸ್ತಾಪಿಸಲಾಗಿದೆ. ಈ ಹೇಳಿಕೆಯನ್ನು ಪರೀಕ್ಷಿಸಲು ನೀವು ಮೊದಲು ಯಾವ ಎರಡು ಅವಲೋಕನಗಳನ್ನು ಹುಡುಕುತ್ತೀರಿ?","a":"ಅತ್ಯಂತ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣಗಳಿಂದ ಪ್ರಾರಂಭಿಸಿ: ಆಂಫಿಬಿಯನ್‌ಗಳು ನೀರಿನಲ್ಲಿ ಮತ್ತು ಭೂಮಿಯ ಮೇಲೆ ಎರಡರಲ್ಲೂ ಬದುಕಬಲ್ಲವು. ನಂತರ ಸ್ವತಂತ್ರ ಲಕ್ಷಣವನ್ನು ಪರಿಶೀಲಿಸಿ: ಆಂಫಿಬಿಯನ್ ಚರ್ಮ ಒದ್ದೆಯಾಗಿದ್ದು ಚಿಪ್ಪುಗಳಿಲ್ಲ. ಹೊಂದಿಕೆಯಾಗುವ ಅವಲೋಕನಗಳು ವರ್ಗೀಕರಣವನ್ನು ಸಮರ್ಥನೀಯಗೊಳಿಸುತ್ತವೆ."},{"q":"ಕೇವಲ ಒಂದು ಮೇಲ್ಮಟ್ಟದ ಲಕ್ಷಣವನ್ನು ಬಳಸಿ ಪ್ರಾಣಿಯನ್ನು ವರ್ಗೀಕರಿಸುವುದು ಏಕೆ ಅಪಾಯಕಾರಿ?","a":"ಸಂಬಂಧವಿಲ್ಲದ ಗುಂಪುಗಳು ಒಂದೇ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ವಿಶಾಲ ದೇಹಾಕಾರವನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು. ಸೂಕ್ತ ವರ್ಗೀಕರಣವು ಹಲವಾರು ರಚನಾತ್ಮಕ ಮತ್ತು ಕ್ರಿಯಾತ್ಮಕ ಲಕ್ಷಣಗಳನ್ನು ಹೋಲಿಸುತ್ತದೆ. ವರ್ಗ ಆಂಫಿಬಿಯಾಗೆ, ಉಪಯುಕ್ತ ಸಾಕ್ಷ್ಯ ಇವುಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ಪ್ರೌಢ ಜೀವಿಗಳು ಕಿವಿರುಗಳು, ಶ್ವಾಸಕೋಶಗಳು ಮತ್ತು ಚರ್ಮದ ಮೂಲಕ ಶ್ವಸಿಸುತ್ತವೆ, ಆದರೆ ಲಾರ್ವಾಗಳು ಕಿವಿರುಗಳನ್ನು ಹೊಂದಿರುತ್ತವೆ."}]},"hi":{"hook":"वर्ग एम्फिबिया को सबसे मिलते-जुलते प्राणी समूह से अलग पहचानने के लिए कौन-सा एक अवलोकन आपकी मदद करेगा, और वह लक्षण केवल बाहरी रूप-रंग से अधिक विश्वसनीय क्यों है?","chain":["एम्फिबिया जल और थल दोनों में रह सकते हैं।","एम्फिबिया की त्वचा नम होती है और उस पर शल्क नहीं होते।","वयस्क क्लोम, फेफड़ों और त्वचा द्वारा श्वसन करते हैं, जबकि लार्वा में क्लोम होते हैं।","एम्फिबिया के हृदय में तीन कक्ष होते हैं।","ये सभी लक्षण मिलकर वर्ग एम्फिबिया को पहचानने के लिए एक विश्वसनीय आधार प्रदान करते हैं।"],"misconceptions":[{"wrong":"वर्ग एम्फिबिया की पहचान केवल उसके सामान्य आवास या बाहरी आकार से होती है।","right":"वर्गीकरण निदानात्मक संगठन, शरीर-योजना और क्रियात्मक लक्षणों पर निर्भर करता है; एम्फिबिया जल और थल दोनों में रह सकते हैं।"},{"wrong":"केवल एक लक्षण वर्ग एम्फिबिया की संपूर्ण विकासात्मक कहानी बता देता है।","right":"संगठन, सममिति, देहगुहा, परिसंचरण, जनन और उदाहरणों के संयोजन का उपयोग करें; एम्फिबिया की त्वचा नम होती है और उस पर शल्क नहीं होते।"}],"analogy":"वर्ग एम्फिबिया को कई पहचान-जाँचों वाली एक प्रोफ़ाइल की तरह समझें: प्रत्येक निदानात्मक लक्षण एक जाँच-बिंदु है, और पूरा समूह मिलकर गलत वर्गीकरण को रोकता है।","analytical":[{"q":"एक नमूने के बारे में प्रस्तावित किया गया है कि वह वर्ग एम्फिबिया से संबंधित है। इस दावे की जाँच के लिए आप पहले कौन-से दो अवलोकन खोजेंगे?","a":"सबसे निदानात्मक लक्षणों से शुरू करें: एम्फिबिया जल और थल दोनों में रह सकते हैं। फिर एक स्वतंत्र लक्षण जाँचें: एम्फिबिया की त्वचा नम होती है और उस पर शल्क नहीं होते। परस्पर मेल खाते अवलोकन वर्गीकरण को न्यायसंगत बनाते हैं।"},{"q":"किसी प्राणी को केवल एक सतही लक्षण के आधार पर वर्गीकृत करना जोखिम भरा क्यों है?","a":"असंबंधित समूह एक जैसा आवास या व्यापक शरीराकार साझा कर सकते हैं। एक ठोस वर्गीकरण कई संरचनात्मक और क्रियात्मक लक्षणों की तुलना करता है। वर्ग एम्फिबिया के लिए, उपयोगी प्रमाण में शामिल है: वयस्क क्लोम, फेफड़ों और त्वचा द्वारा श्वसन करते हैं, जबकि लार्वा में क्लोम होते हैं।"}]}},"class_reptilia":{"kn":{"hook":"ವರ್ಗ ರೆಪ್ಟಿಲಿಯಾ ಅನ್ನು ಹೋಲುವ ಪ್ರಾಣಿ ಗುಂಪಿನಿಂದ ಪ್ರತ್ಯೇಕಿಸಲು ಯಾವ ಒಂದೇ ಅವಲೋಕನ ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಮತ್ತು ಆ ಲಕ್ಷಣ ಕೇವಲ ಹೊರನೋಟಕ್ಕಿಂತ ಏಕೆ ಹೆಚ್ಚು ವಿಶ್ವಾಸಾರ್ಹವಾಗಿದೆ?","chain":["ಸರೀಸೃಪಗಳಿಗೆ ಎಪಿಡರ್ಮಲ್ ಚಿಪ್ಪುಗಳು/ಸ್ಕ್ಯೂಟ್‌ಗಳುಳ್ಳ ಒಣ, ಕಾರ್ನಿಫೈಡ್ ಚರ್ಮವಿದೆ.","ಸರೀಸೃಪಗಳು ಶ್ವಾಸಕೋಶಗಳ ಮೂಲಕ ಉಸಿರಾಡುತ್ತವೆ ಮತ್ತು ಮೊಸಳೆಗಳನ್ನು ಹೊರತುಪಡಿಸಿ ಮೂರು ಕೋಣೆಗಳ ಹೃದಯವನ್ನು ಹೊಂದಿವೆ.","ಇವು ಪರಿಸರತಾಪಿಗಳಾಗಿದ್ದು ಆಂತರಿಕ ಫಲವತ್ತೀಕರಣವನ್ನು ಹೊಂದಿವೆ.","ಬಹುತೇಕ ಸರೀಸೃಪಗಳು ಅಂಡಜಗಳಾಗಿದ್ದು ಗಟ್ಟಿಯಾದ ಕ್ಯಾಲ್ಕೇರಿಯಸ್ ಚಿಪ್ಪಿನ ಮೊಟ್ಟೆಗಳನ್ನು ಇಡುತ್ತವೆ.","ಈ ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಒಟ್ಟಾಗಿ ವರ್ಗ ರೆಪ್ಟಿಲಿಯಾ ಅನ್ನು ಗುರುತಿಸಲು ವಿಶ್ವಾಸಾರ್ಹ ಆಧಾರವನ್ನು ಒದಗಿಸುತ್ತವೆ."],"misconceptions":[{"wrong":"ವರ್ಗ ರೆಪ್ಟಿಲಿಯಾ ಅನ್ನು ಕೇವಲ ಅದರ ಸಾಮಾನ್ಯ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ಬಾಹ್ಯ ಆಕಾರದಿಂದ ಮಾತ್ರ ಗುರುತಿಸಲಾಗುತ್ತದೆ.","right":"ವರ್ಗೀಕರಣವು ನಿರ್ಣಾಯಕ ಸಂಘಟನೆ, ದೇಹಯೋಜನೆ ಮತ್ತು ಶರೀರಕ್ರಿಯಾ ಲಕ್ಷಣಗಳನ್ನು ಅವಲಂಬಿಸಿದೆ; ಸರೀಸೃಪಗಳಿಗೆ ಎಪಿಡರ್ಮಲ್ ಚಿಪ್ಪುಗಳು/ಸ್ಕ್ಯೂಟ್‌ಗಳುಳ್ಳ ಒಣ, ಕಾರ್ನಿಫೈಡ್ ಚರ್ಮವಿದೆ."},{"wrong":"ಒಂದೇ ಲಕ್ಷಣವು ವರ್ಗ ರೆಪ್ಟಿಲಿಯಾದ ಸಂಪೂರ್ಣ ವಿಕಾಸಾತ್ಮಕ ಕಥೆಯನ್ನು ಹೇಳುತ್ತದೆ.","right":"ಸಂಘಟನೆ, ಸಮಮಿತಿ, ದೇಹಗುಹೆ, ರಕ್ತಪರಿಚಲನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಸಂಯೋಜನೆಯನ್ನು ಬಳಸಿ; ಸರೀಸೃಪಗಳು ಶ್ವಾಸಕೋಶಗಳ ಮೂಲಕ ಉಸಿರಾಡುತ್ತವೆ ಮತ್ತು ಮೊಸಳೆಗಳನ್ನು ಹೊರತುಪಡಿಸಿ ಮೂರು ಕೋಣೆಗಳ ಹೃದಯವನ್ನು ಹೊಂದಿವೆ."}],"analogy":"ವರ್ಗ ರೆಪ್ಟಿಲಿಯಾ ಅನ್ನು ಹಲವಾರು ಗುರುತು ಪರಿಶೀಲನೆಗಳುಳ್ಳ ಒಂದು ಪ್ರೊಫೈಲ್ ಎಂದು ಪರಿಗಣಿಸಿ: ಪ್ರತಿ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣವೂ ಒಂದು ಪರಿಶೀಲನಾ ಬಿಂದು, ಮತ್ತು ಸಂಪೂರ್ಣ ಗುಂಪು ತಪ್ಪಾದ ವರ್ಗೀಕರಣವನ್ನು ತಡೆಯುತ್ತದೆ.","analytical":[{"q":"ಒಂದು ನಮೂನೆಯು ವರ್ಗ ರೆಪ್ಟಿಲಿಯಾಗೆ ಸೇರಿದೆ ಎಂದು ಪ್ರಸ್ತಾಪಿಸಲಾಗಿದೆ. ಈ ಹೇಳಿಕೆಯನ್ನು ಪರೀಕ್ಷಿಸಲು ನೀವು ಮೊದಲು ಯಾವ ಎರಡು ಅವಲೋಕನಗಳನ್ನು ಹುಡುಕುತ್ತೀರಿ?","a":"ಅತ್ಯಂತ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣಗಳಿಂದ ಪ್ರಾರಂಭಿಸಿ: ಸರೀಸೃಪಗಳಿಗೆ ಎಪಿಡರ್ಮಲ್ ಚಿಪ್ಪುಗಳು/ಸ್ಕ್ಯೂಟ್‌ಗಳುಳ್ಳ ಒಣ, ಕಾರ್ನಿಫೈಡ್ ಚರ್ಮವಿದೆ. ನಂತರ ಸ್ವತಂತ್ರ ಲಕ್ಷಣವನ್ನು ಪರಿಶೀಲಿಸಿ: ಸರೀಸೃಪಗಳು ಶ್ವಾಸಕೋಶಗಳ ಮೂಲಕ ಉಸಿರಾಡುತ್ತವೆ ಮತ್ತು ಮೊಸಳೆಗಳನ್ನು ಹೊರತುಪಡಿಸಿ ಮೂರು ಕೋಣೆಗಳ ಹೃದಯವನ್ನು ಹೊಂದಿವೆ. ಹೊಂದಿಕೆಯಾಗುವ ಅವಲೋಕನಗಳು ವರ್ಗೀಕರಣವನ್ನು ಸಮರ್ಥನೀಯಗೊಳಿಸುತ್ತವೆ."},{"q":"ಕೇವಲ ಒಂದು ಮೇಲ್ಮಟ್ಟದ ಲಕ್ಷಣವನ್ನು ಬಳಸಿ ಪ್ರಾಣಿಯನ್ನು ವರ್ಗೀಕರಿಸುವುದು ಏಕೆ ಅಪಾಯಕಾರಿ?","a":"ಸಂಬಂಧವಿಲ್ಲದ ಗುಂಪುಗಳು ಒಂದೇ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ವಿಶಾಲ ದೇಹಾಕಾರವನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು. ಸೂಕ್ತ ವರ್ಗೀಕರಣವು ಹಲವಾರು ರಚನಾತ್ಮಕ ಮತ್ತು ಕ್ರಿಯಾತ್ಮಕ ಲಕ್ಷಣಗಳನ್ನು ಹೋಲಿಸುತ್ತದೆ. ವರ್ಗ ರೆಪ್ಟಿಲಿಯಾಗೆ, ಉಪಯುಕ್ತ ಸಾಕ್ಷ್ಯ ಇವುಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ಇವು ಪರಿಸರತಾಪಿಗಳಾಗಿದ್ದು ಆಂತರಿಕ ಫಲವತ್ತೀಕರಣವನ್ನು ಹೊಂದಿವೆ."}]},"hi":{"hook":"वर्ग रेप्टिलिया को सबसे मिलते-जुलते प्राणी समूह से अलग पहचानने के लिए कौन-सा एक अवलोकन आपकी मदद करेगा, और वह लक्षण केवल बाहरी रूप-रंग से अधिक विश्वसनीय क्यों है?","chain":["रेप्टिलिया में अधिचर्मी शल्क या स्कूट के साथ शुष्क, शृंगीभूत त्वचा होती है।","रेप्टिलिया फेफड़ों से श्वसन करते हैं और मगरमच्छों को छोड़कर उनका हृदय त्रिकक्षीय होता है।","ये असमतापी (परिवर्ती तापी) होते हैं और इनमें आंतरिक निषेचन होता है।","अधिकांश रेप्टिलिया अंडज होते हैं और मजबूत कैल्केरियस कवच वाले अंडे देते हैं।","ये सभी लक्षण मिलकर वर्ग रेप्टिलिया को पहचानने के लिए एक विश्वसनीय आधार प्रदान करते हैं।"],"misconceptions":[{"wrong":"वर्ग रेप्टिलिया की पहचान केवल उसके सामान्य आवास या बाहरी आकार से होती है।","right":"वर्गीकरण निदानात्मक संगठन, शरीर-योजना और क्रियात्मक लक्षणों पर निर्भर करता है; रेप्टिलिया में अधिचर्मी शल्क या स्कूट के साथ शुष्क, शृंगीभूत त्वचा होती है।"},{"wrong":"केवल एक लक्षण वर्ग रेप्टिलिया की संपूर्ण विकासात्मक कहानी बता देता है।","right":"संगठन, सममिति, देहगुहा, परिसंचरण, जनन और उदाहरणों के संयोजन का उपयोग करें; रेप्टिलिया फेफड़ों से श्वसन करते हैं और मगरमच्छों को छोड़कर उनका हृदय त्रिकक्षीय होता है।"}],"analogy":"वर्ग रेप्टिलिया को कई पहचान-जाँचों वाली एक प्रोफ़ाइल की तरह समझें: प्रत्येक निदानात्मक लक्षण एक जाँच-बिंदु है, और पूरा समूह मिलकर गलत वर्गीकरण को रोकता है।","analytical":[{"q":"एक नमूने के बारे में प्रस्तावित किया गया है कि वह वर्ग रेप्टिलिया से संबंधित है। इस दावे की जाँच के लिए आप पहले कौन-से दो अवलोकन खोजेंगे?","a":"सबसे निदानात्मक लक्षणों से शुरू करें: रेप्टिलिया में अधिचर्मी शल्क या स्कूट के साथ शुष्क, शृंगीभूत त्वचा होती है। फिर एक स्वतंत्र लक्षण जाँचें: रेप्टिलिया फेफड़ों से श्वसन करते हैं और मगरमच्छों को छोड़कर उनका हृदय त्रिकक्षीय होता है। परस्पर मेल खाते अवलोकन वर्गीकरण को न्यायसंगत बनाते हैं।"},{"q":"किसी प्राणी को केवल एक सतही लक्षण के आधार पर वर्गीकृत करना जोखिम भरा क्यों है?","a":"असंबंधित समूह एक जैसा आवास या व्यापक शरीराकार साझा कर सकते हैं। एक ठोस वर्गीकरण कई संरचनात्मक और क्रियात्मक लक्षणों की तुलना करता है। वर्ग रेप्टिलिया के लिए, उपयोगी प्रमाण में शामिल है: ये असमतापी (परिवर्ती तापी) होते हैं और इनमें आंतरिक निषेचन होता है।"}]}},"class_aves":{"kn":{"hook":"ವರ್ಗ ಏವ್ಸ್ ಅನ್ನು ಹೋಲುವ ಪ್ರಾಣಿ ಗುಂಪಿನಿಂದ ಪ್ರತ್ಯೇಕಿಸಲು ಯಾವ ಒಂದೇ ಅವಲೋಕನ ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಮತ್ತು ಆ ಲಕ್ಷಣ ಕೇವಲ ಹೊರನೋಟಕ್ಕಿಂತ ಏಕೆ ಹೆಚ್ಚು ವಿಶ್ವಾಸಾರ್ಹವಾಗಿದೆ?","chain":["ಪಕ್ಷಿಗಳು ನಾಲ್ಕು ಕೋಣೆಗಳ ಹೃದಯವುಳ್ಳ ಉಷ್ಣರಕ್ತ ಕಶೇರುಕಗಳಾಗಿವೆ.","ಪಕ್ಷಿಯ ದೇಹವು ಗರಿಗಳಿಂದ ಆವೃತವಾಗಿದ್ದು ಮುಂಗೈಗಳು ರೆಕ್ಕೆಗಳಾಗಿ ಮಾರ್ಪಟ್ಟಿವೆ.","ಪಕ್ಷಿಗಳ ಮೂಳೆಗಳು ವಾಯುಭರಿತವಾಗಿದ್ದು ಹಾರಾಟಕ್ಕಾಗಿ ದೇಹದ ತೂಕವನ್ನು ಕಡಿಮೆ ಮಾಡುತ್ತವೆ.","ಪಕ್ಷಿಗಳು ಅಂಡಜಗಳಾಗಿದ್ದು ಆಂತರಿಕ ಫಲವತ್ತೀಕರಣವನ್ನು ಹೊಂದಿವೆ.","ಈ ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಒಟ್ಟಾಗಿ ವರ್ಗ ಏವ್ಸ್ ಅನ್ನು ಗುರುತಿಸಲು ವಿಶ್ವಾಸಾರ್ಹ ಆಧಾರವನ್ನು ಒದಗಿಸುತ್ತವೆ."],"misconceptions":[{"wrong":"ವರ್ಗ ಏವ್ಸ್ ಅನ್ನು ಕೇವಲ ಅದರ ಸಾಮಾನ್ಯ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ಬಾಹ್ಯ ಆಕಾರದಿಂದ ಮಾತ್ರ ಗುರುತಿಸಲಾಗುತ್ತದೆ.","right":"ವರ್ಗೀಕರಣವು ನಿರ್ಣಾಯಕ ಸಂಘಟನೆ, ದೇಹಯೋಜನೆ ಮತ್ತು ಶರೀರಕ್ರಿಯಾ ಲಕ್ಷಣಗಳನ್ನು ಅವಲಂಬಿಸಿದೆ; ಪಕ್ಷಿಗಳು ನಾಲ್ಕು ಕೋಣೆಗಳ ಹೃದಯವುಳ್ಳ ಉಷ್ಣರಕ್ತ ಕಶೇರುಕಗಳಾಗಿವೆ."},{"wrong":"ಒಂದೇ ಲಕ್ಷಣವು ವರ್ಗ ಏವ್ಸ್ದ ಸಂಪೂರ್ಣ ವಿಕಾಸಾತ್ಮಕ ಕಥೆಯನ್ನು ಹೇಳುತ್ತದೆ.","right":"ಸಂಘಟನೆ, ಸಮಮಿತಿ, ದೇಹಗುಹೆ, ರಕ್ತಪರಿಚಲನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಸಂಯೋಜನೆಯನ್ನು ಬಳಸಿ; ಪಕ್ಷಿಯ ದೇಹವು ಗರಿಗಳಿಂದ ಆವೃತವಾಗಿದ್ದು ಮುಂಗೈಗಳು ರೆಕ್ಕೆಗಳಾಗಿ ಮಾರ್ಪಟ್ಟಿವೆ."}],"analogy":"ವರ್ಗ ಏವ್ಸ್ ಅನ್ನು ಹಲವಾರು ಗುರುತು ಪರಿಶೀಲನೆಗಳುಳ್ಳ ಒಂದು ಪ್ರೊಫೈಲ್ ಎಂದು ಪರಿಗಣಿಸಿ: ಪ್ರತಿ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣವೂ ಒಂದು ಪರಿಶೀಲನಾ ಬಿಂದು, ಮತ್ತು ಸಂಪೂರ್ಣ ಗುಂಪು ತಪ್ಪಾದ ವರ್ಗೀಕರಣವನ್ನು ತಡೆಯುತ್ತದೆ.","analytical":[{"q":"ಒಂದು ನಮೂನೆಯು ವರ್ಗ ಏವ್ಸ್ಗೆ ಸೇರಿದೆ ಎಂದು ಪ್ರಸ್ತಾಪಿಸಲಾಗಿದೆ. ಈ ಹೇಳಿಕೆಯನ್ನು ಪರೀಕ್ಷಿಸಲು ನೀವು ಮೊದಲು ಯಾವ ಎರಡು ಅವಲೋಕನಗಳನ್ನು ಹುಡುಕುತ್ತೀರಿ?","a":"ಅತ್ಯಂತ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣಗಳಿಂದ ಪ್ರಾರಂಭಿಸಿ: ಪಕ್ಷಿಗಳು ನಾಲ್ಕು ಕೋಣೆಗಳ ಹೃದಯವುಳ್ಳ ಉಷ್ಣರಕ್ತ ಕಶೇರುಕಗಳಾಗಿವೆ. ನಂತರ ಸ್ವತಂತ್ರ ಲಕ್ಷಣವನ್ನು ಪರಿಶೀಲಿಸಿ: ಪಕ್ಷಿಯ ದೇಹವು ಗರಿಗಳಿಂದ ಆವೃತವಾಗಿದ್ದು ಮುಂಗೈಗಳು ರೆಕ್ಕೆಗಳಾಗಿ ಮಾರ್ಪಟ್ಟಿವೆ. ಹೊಂದಿಕೆಯಾಗುವ ಅವಲೋಕನಗಳು ವರ್ಗೀಕರಣವನ್ನು ಸಮರ್ಥನೀಯಗೊಳಿಸುತ್ತವೆ."},{"q":"ಕೇವಲ ಒಂದು ಮೇಲ್ಮಟ್ಟದ ಲಕ್ಷಣವನ್ನು ಬಳಸಿ ಪ್ರಾಣಿಯನ್ನು ವರ್ಗೀಕರಿಸುವುದು ಏಕೆ ಅಪಾಯಕಾರಿ?","a":"ಸಂಬಂಧವಿಲ್ಲದ ಗುಂಪುಗಳು ಒಂದೇ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ವಿಶಾಲ ದೇಹಾಕಾರವನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು. ಸೂಕ್ತ ವರ್ಗೀಕರಣವು ಹಲವಾರು ರಚನಾತ್ಮಕ ಮತ್ತು ಕ್ರಿಯಾತ್ಮಕ ಲಕ್ಷಣಗಳನ್ನು ಹೋಲಿಸುತ್ತದೆ. ವರ್ಗ ಏವ್ಸ್ಗೆ, ಉಪಯುಕ್ತ ಸಾಕ್ಷ್ಯ ಇವುಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ಪಕ್ಷಿಗಳ ಮೂಳೆಗಳು ವಾಯುಭರಿತವಾಗಿದ್ದು ಹಾರಾಟಕ್ಕಾಗಿ ದೇಹದ ತೂಕವನ್ನು ಕಡಿಮೆ ಮಾಡುತ್ತವೆ."}]},"hi":{"hook":"वर्ग एवीज़ को सबसे मिलते-जुलते प्राणी समूह से अलग पहचानने के लिए कौन-सा एक अवलोकन आपकी मदद करेगा, और वह लक्षण केवल बाहरी रूप-रंग से अधिक विश्वसनीय क्यों है?","chain":["पक्षी चार-कक्षीय हृदय वाले गर्मरक्त कशेरुकी होते हैं।","पक्षी का शरीर पंखों से ढका होता है और अग्रपाद पंखों (डैनों) में रूपांतरित हो गए हैं।","पक्षियों की हड्डियाँ वायु-भरित होती हैं, जो उड़ान के लिए शरीर का भार कम करती हैं।","पक्षी अंडज होते हैं और इनमें आंतरिक निषेचन होता है।","ये सभी लक्षण मिलकर वर्ग एवीज़ को पहचानने के लिए एक विश्वसनीय आधार प्रदान करते हैं।"],"misconceptions":[{"wrong":"वर्ग एवीज़ की पहचान केवल उसके सामान्य आवास या बाहरी आकार से होती है।","right":"वर्गीकरण निदानात्मक संगठन, शरीर-योजना और क्रियात्मक लक्षणों पर निर्भर करता है; पक्षी चार-कक्षीय हृदय वाले गर्मरक्त कशेरुकी होते हैं।"},{"wrong":"केवल एक लक्षण वर्ग एवीज़ की संपूर्ण विकासात्मक कहानी बता देता है।","right":"संगठन, सममिति, देहगुहा, परिसंचरण, जनन और उदाहरणों के संयोजन का उपयोग करें; पक्षी का शरीर पंखों से ढका होता है और अग्रपाद पंखों (डैनों) में रूपांतरित हो गए हैं।"}],"analogy":"वर्ग एवीज़ को कई पहचान-जाँचों वाली एक प्रोफ़ाइल की तरह समझें: प्रत्येक निदानात्मक लक्षण एक जाँच-बिंदु है, और पूरा समूह मिलकर गलत वर्गीकरण को रोकता है।","analytical":[{"q":"एक नमूने के बारे में प्रस्तावित किया गया है कि वह वर्ग एवीज़ से संबंधित है। इस दावे की जाँच के लिए आप पहले कौन-से दो अवलोकन खोजेंगे?","a":"सबसे निदानात्मक लक्षणों से शुरू करें: पक्षी चार-कक्षीय हृदय वाले गर्मरक्त कशेरुकी होते हैं। फिर एक स्वतंत्र लक्षण जाँचें: पक्षी का शरीर पंखों से ढका होता है और अग्रपाद पंखों (डैनों) में रूपांतरित हो गए हैं। परस्पर मेल खाते अवलोकन वर्गीकरण को न्यायसंगत बनाते हैं।"},{"q":"किसी प्राणी को केवल एक सतही लक्षण के आधार पर वर्गीकृत करना जोखिम भरा क्यों है?","a":"असंबंधित समूह एक जैसा आवास या व्यापक शरीराकार साझा कर सकते हैं। एक ठोस वर्गीकरण कई संरचनात्मक और क्रियात्मक लक्षणों की तुलना करता है। वर्ग एवीज़ के लिए, उपयोगी प्रमाण में शामिल है: पक्षियों की हड्डियाँ वायु-भरित होती हैं, जो उड़ान के लिए शरीर का भार कम करती हैं।"}]}},"class_mammalia":{"kn":{"hook":"ವರ್ಗ ಮ್ಯಾಮೇಲಿಯಾ ಅನ್ನು ಹೋಲುವ ಪ್ರಾಣಿ ಗುಂಪಿನಿಂದ ಪ್ರತ್ಯೇಕಿಸಲು ಯಾವ ಒಂದೇ ಅವಲೋಕನ ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಮತ್ತು ಆ ಲಕ್ಷಣ ಕೇವಲ ಹೊರನೋಟಕ್ಕಿಂತ ಏಕೆ ಹೆಚ್ಚು ವಿಶ್ವಾಸಾರ್ಹವಾಗಿದೆ?","chain":["ಸಸ್ತನಿಗಳು ಮರಿಗಳಿಗಾಗಿ ಹಾಲನ್ನು ಉತ್ಪಾದಿಸುವ ಸ್ತನಗ್ರಂಥಿಗಳನ್ನು ಹೊಂದಿವೆ.","ಸಸ್ತನಿಗಳಿಗೆ ದೇಹದ ಮೇಲೆ ಕೂದಲು, ಬಾಹ್ಯ ಕಿವಿಗಳು ಮತ್ತು ನಾಲ್ಕು ಕೋಣೆಗಳ ಹೃದಯವಿದೆ.","ಸಸ್ತನಿಗಳು ಉಷ್ಣರಕ್ತ ಪ್ರಾಣಿಗಳಾಗಿದ್ದು ಸಾಮಾನ್ಯವಾಗಿ ಆಂತರಿಕ ಫಲವತ್ತೀಕರಣದೊಂದಿಗೆ ಜರಾಯುಜಗಳಾಗಿವೆ.","ಆರ್ನಿಥೋರಿಂಕಸ್‌ನಂತಹ ಮೊನೊಟ್ರೀಮ್‌ಗಳು ಮೊಟ್ಟೆಗಳನ್ನು ಇಡುತ್ತವೆ.","ಈ ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಒಟ್ಟಾಗಿ ವರ್ಗ ಮ್ಯಾಮೇಲಿಯಾ ಅನ್ನು ಗುರುತಿಸಲು ವಿಶ್ವಾಸಾರ್ಹ ಆಧಾರವನ್ನು ಒದಗಿಸುತ್ತವೆ."],"misconceptions":[{"wrong":"ವರ್ಗ ಮ್ಯಾಮೇಲಿಯಾ ಅನ್ನು ಕೇವಲ ಅದರ ಸಾಮಾನ್ಯ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ಬಾಹ್ಯ ಆಕಾರದಿಂದ ಮಾತ್ರ ಗುರುತಿಸಲಾಗುತ್ತದೆ.","right":"ವರ್ಗೀಕರಣವು ನಿರ್ಣಾಯಕ ಸಂಘಟನೆ, ದೇಹಯೋಜನೆ ಮತ್ತು ಶರೀರಕ್ರಿಯಾ ಲಕ್ಷಣಗಳನ್ನು ಅವಲಂಬಿಸಿದೆ; ಸಸ್ತನಿಗಳು ಮರಿಗಳಿಗಾಗಿ ಹಾಲನ್ನು ಉತ್ಪಾದಿಸುವ ಸ್ತನಗ್ರಂಥಿಗಳನ್ನು ಹೊಂದಿವೆ."},{"wrong":"ಒಂದೇ ಲಕ್ಷಣವು ವರ್ಗ ಮ್ಯಾಮೇಲಿಯಾದ ಸಂಪೂರ್ಣ ವಿಕಾಸಾತ್ಮಕ ಕಥೆಯನ್ನು ಹೇಳುತ್ತದೆ.","right":"ಸಂಘಟನೆ, ಸಮಮಿತಿ, ದೇಹಗುಹೆ, ರಕ್ತಪರಿಚಲನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಸಂಯೋಜನೆಯನ್ನು ಬಳಸಿ; ಸಸ್ತನಿಗಳಿಗೆ ದೇಹದ ಮೇಲೆ ಕೂದಲು, ಬಾಹ್ಯ ಕಿವಿಗಳು ಮತ್ತು ನಾಲ್ಕು ಕೋಣೆಗಳ ಹೃದಯವಿದೆ."}],"analogy":"ವರ್ಗ ಮ್ಯಾಮೇಲಿಯಾ ಅನ್ನು ಹಲವಾರು ಗುರುತು ಪರಿಶೀಲನೆಗಳುಳ್ಳ ಒಂದು ಪ್ರೊಫೈಲ್ ಎಂದು ಪರಿಗಣಿಸಿ: ಪ್ರತಿ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣವೂ ಒಂದು ಪರಿಶೀಲನಾ ಬಿಂದು, ಮತ್ತು ಸಂಪೂರ್ಣ ಗುಂಪು ತಪ್ಪಾದ ವರ್ಗೀಕರಣವನ್ನು ತಡೆಯುತ್ತದೆ.","analytical":[{"q":"ಒಂದು ನಮೂನೆಯು ವರ್ಗ ಮ್ಯಾಮೇಲಿಯಾಗೆ ಸೇರಿದೆ ಎಂದು ಪ್ರಸ್ತಾಪಿಸಲಾಗಿದೆ. ಈ ಹೇಳಿಕೆಯನ್ನು ಪರೀಕ್ಷಿಸಲು ನೀವು ಮೊದಲು ಯಾವ ಎರಡು ಅವಲೋಕನಗಳನ್ನು ಹುಡುಕುತ್ತೀರಿ?","a":"ಅತ್ಯಂತ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣಗಳಿಂದ ಪ್ರಾರಂಭಿಸಿ: ಸಸ್ತನಿಗಳು ಮರಿಗಳಿಗಾಗಿ ಹಾಲನ್ನು ಉತ್ಪಾದಿಸುವ ಸ್ತನಗ್ರಂಥಿಗಳನ್ನು ಹೊಂದಿವೆ. ನಂತರ ಸ್ವತಂತ್ರ ಲಕ್ಷಣವನ್ನು ಪರಿಶೀಲಿಸಿ: ಸಸ್ತನಿಗಳಿಗೆ ದೇಹದ ಮೇಲೆ ಕೂದಲು, ಬಾಹ್ಯ ಕಿವಿಗಳು ಮತ್ತು ನಾಲ್ಕು ಕೋಣೆಗಳ ಹೃದಯವಿದೆ. ಹೊಂದಿಕೆಯಾಗುವ ಅವಲೋಕನಗಳು ವರ್ಗೀಕರಣವನ್ನು ಸಮರ್ಥನೀಯಗೊಳಿಸುತ್ತವೆ."},{"q":"ಕೇವಲ ಒಂದು ಮೇಲ್ಮಟ್ಟದ ಲಕ್ಷಣವನ್ನು ಬಳಸಿ ಪ್ರಾಣಿಯನ್ನು ವರ್ಗೀಕರಿಸುವುದು ಏಕೆ ಅಪಾಯಕಾರಿ?","a":"ಸಂಬಂಧವಿಲ್ಲದ ಗುಂಪುಗಳು ಒಂದೇ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ವಿಶಾಲ ದೇಹಾಕಾರವನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು. ಸೂಕ್ತ ವರ್ಗೀಕರಣವು ಹಲವಾರು ರಚನಾತ್ಮಕ ಮತ್ತು ಕ್ರಿಯಾತ್ಮಕ ಲಕ್ಷಣಗಳನ್ನು ಹೋಲಿಸುತ್ತದೆ. ವರ್ಗ ಮ್ಯಾಮೇಲಿಯಾಗೆ, ಉಪಯುಕ್ತ ಸಾಕ್ಷ್ಯ ಇವುಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ಸಸ್ತನಿಗಳು ಉಷ್ಣರಕ್ತ ಪ್ರಾಣಿಗಳಾಗಿದ್ದು ಸಾಮಾನ್ಯವಾಗಿ ಆಂತರಿಕ ಫಲವತ್ತೀಕರಣದೊಂದಿಗೆ ಜರಾಯುಜಗಳಾಗಿವೆ."}]},"hi":{"hook":"वर्ग मैमेलिया को सबसे मिलते-जुलते प्राणी समूह से अलग पहचानने के लिए कौन-सा एक अवलोकन आपकी मदद करेगा, और वह लक्षण केवल बाहरी रूप-रंग से अधिक विश्वसनीय क्यों है?","chain":["स्तनधारियों में स्तन ग्रंथियाँ होती हैं जो शिशु के लिए दूध उत्पन्न करती हैं।","स्तनधारियों के शरीर पर बाल, बाह्य कान और चार-कक्षीय हृदय होता है।","स्तनधारी गर्मरक्त होते हैं और सामान्यतः आंतरिक निषेचन के साथ जरायुज होते हैं।","ऑर्निथोरिंकस जैसे मोनोट्रीम अंडे देते हैं।","ये सभी लक्षण मिलकर वर्ग मैमेलिया को पहचानने के लिए एक विश्वसनीय आधार प्रदान करते हैं।"],"misconceptions":[{"wrong":"वर्ग मैमेलिया की पहचान केवल उसके सामान्य आवास या बाहरी आकार से होती है।","right":"वर्गीकरण निदानात्मक संगठन, शरीर-योजना और क्रियात्मक लक्षणों पर निर्भर करता है; स्तनधारियों में स्तन ग्रंथियाँ होती हैं जो शिशु के लिए दूध उत्पन्न करती हैं।"},{"wrong":"केवल एक लक्षण वर्ग मैमेलिया की संपूर्ण विकासात्मक कहानी बता देता है।","right":"संगठन, सममिति, देहगुहा, परिसंचरण, जनन और उदाहरणों के संयोजन का उपयोग करें; स्तनधारियों के शरीर पर बाल, बाह्य कान और चार-कक्षीय हृदय होता है।"}],"analogy":"वर्ग मैमेलिया को कई पहचान-जाँचों वाली एक प्रोफ़ाइल की तरह समझें: प्रत्येक निदानात्मक लक्षण एक जाँच-बिंदु है, और पूरा समूह मिलकर गलत वर्गीकरण को रोकता है।","analytical":[{"q":"एक नमूने के बारे में प्रस्तावित किया गया है कि वह वर्ग मैमेलिया से संबंधित है। इस दावे की जाँच के लिए आप पहले कौन-से दो अवलोकन खोजेंगे?","a":"सबसे निदानात्मक लक्षणों से शुरू करें: स्तनधारियों में स्तन ग्रंथियाँ होती हैं जो शिशु के लिए दूध उत्पन्न करती हैं। फिर एक स्वतंत्र लक्षण जाँचें: स्तनधारियों के शरीर पर बाल, बाह्य कान और चार-कक्षीय हृदय होता है। परस्पर मेल खाते अवलोकन वर्गीकरण को न्यायसंगत बनाते हैं।"},{"q":"किसी प्राणी को केवल एक सतही लक्षण के आधार पर वर्गीकृत करना जोखिम भरा क्यों है?","a":"असंबंधित समूह एक जैसा आवास या व्यापक शरीराकार साझा कर सकते हैं। एक ठोस वर्गीकरण कई संरचनात्मक और क्रियात्मक लक्षणों की तुलना करता है। वर्ग मैमेलिया के लिए, उपयोगी प्रमाण में शामिल है: स्तनधारी गर्मरक्त होते हैं और सामान्यतः आंतरिक निषेचन के साथ जरायुज होते हैं।"}]}},"summary":{"kn":{"hook":"ಸಾರಾಂಶ — ಫೈಲಾಗಳ ಪ್ರಮುಖ ಲಕ್ಷಣಗಳು ಅನ್ನು ಹೋಲುವ ಪ್ರಾಣಿ ಗುಂಪಿನಿಂದ ಪ್ರತ್ಯೇಕಿಸಲು ಯಾವ ಒಂದೇ ಅವಲೋಕನ ನಿಮಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ, ಮತ್ತು ಆ ಲಕ್ಷಣ ಕೇವಲ ಹೊರನೋಟಕ್ಕಿಂತ ಏಕೆ ಹೆಚ್ಚು ವಿಶ್ವಾಸಾರ್ಹವಾಗಿದೆ?","chain":["ಪೊರಿಫೆರಾಗೆ ಕೋಶೀಯ ಮಟ್ಟದ ಸಂಘಟನೆ ಇದ್ದರೆ, ಸಿನಿಡೇರಿಯಾಗೆ ಅಂಗಾಂಶ ಮಟ್ಟದ ಸಂಘಟನೆ ಇದೆ.","ಪ್ಲಾಟಿಹೆಲ್ಮಿಂಥಸ್ ಅಸಿಲೋಮೇಟ್, ಅಸ್ಕೆಲ್ಮಿಂಥಸ್ ಸ್ಯೂಡೋಸಿಲೋಮೇಟ್ ಮತ್ತು ಅನ್ನೆಲಿಡಾ ಸಿಲೋಮೇಟ್ ಆಗಿದೆ.","ಅನ್ನೆಲಿಡಾಗೆ ಮುಚ್ಚಿದ ರಕ್ತಪರಿಚಲನೆ ಇದ್ದರೆ, ಆರ್ಥ್ರೋಪೋಡಾ ಮತ್ತು ಬಹುತೇಕ ಮೊಲಸ್ಕಾಗೆ ತೆರೆದ ರಕ್ತಪರಿಚಲನೆ ಇದೆ.","ನೋಟೋಕೋರ್ಡ್ ಕಾರ್ಡೇಟ್‌ಗಳಲ್ಲಿ ಇದ್ದು ಅಕಾರ್ಡೇಟ್‌ಗಳಲ್ಲಿ ಇರುವುದಿಲ್ಲ.","ಈ ಎಲ್ಲಾ ಲಕ್ಷಣಗಳು ಒಟ್ಟಾಗಿ ಸಾರಾಂಶ — ಫೈಲಾಗಳ ಪ್ರಮುಖ ಲಕ್ಷಣಗಳು ಅನ್ನು ಗುರುತಿಸಲು ವಿಶ್ವಾಸಾರ್ಹ ಆಧಾರವನ್ನು ಒದಗಿಸುತ್ತವೆ."],"misconceptions":[{"wrong":"ಸಾರಾಂಶ — ಫೈಲಾಗಳ ಪ್ರಮುಖ ಲಕ್ಷಣಗಳು ಅನ್ನು ಕೇವಲ ಅದರ ಸಾಮಾನ್ಯ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ಬಾಹ್ಯ ಆಕಾರದಿಂದ ಮಾತ್ರ ಗುರುತಿಸಲಾಗುತ್ತದೆ.","right":"ವರ್ಗೀಕರಣವು ನಿರ್ಣಾಯಕ ಸಂಘಟನೆ, ದೇಹಯೋಜನೆ ಮತ್ತು ಶರೀರಕ್ರಿಯಾ ಲಕ್ಷಣಗಳನ್ನು ಅವಲಂಬಿಸಿದೆ; ಪೊರಿಫೆರಾಗೆ ಕೋಶೀಯ ಮಟ್ಟದ ಸಂಘಟನೆ ಇದ್ದರೆ, ಸಿನಿಡೇರಿಯಾಗೆ ಅಂಗಾಂಶ ಮಟ್ಟದ ಸಂಘಟನೆ ಇದೆ."},{"wrong":"ಒಂದೇ ಲಕ್ಷಣವು ಸಾರಾಂಶ — ಫೈಲಾಗಳ ಪ್ರಮುಖ ಲಕ್ಷಣಗಳುದ ಸಂಪೂರ್ಣ ವಿಕಾಸಾತ್ಮಕ ಕಥೆಯನ್ನು ಹೇಳುತ್ತದೆ.","right":"ಸಂಘಟನೆ, ಸಮಮಿತಿ, ದೇಹಗುಹೆ, ರಕ್ತಪರಿಚಲನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಸಂಯೋಜನೆಯನ್ನು ಬಳಸಿ; ಪ್ಲಾಟಿಹೆಲ್ಮಿಂಥಸ್ ಅಸಿಲೋಮೇಟ್, ಅಸ್ಕೆಲ್ಮಿಂಥಸ್ ಸ್ಯೂಡೋಸಿಲೋಮೇಟ್ ಮತ್ತು ಅನ್ನೆಲಿಡಾ ಸಿಲೋಮೇಟ್ ಆಗಿದೆ."}],"analogy":"ಸಾರಾಂಶ — ಫೈಲಾಗಳ ಪ್ರಮುಖ ಲಕ್ಷಣಗಳು ಅನ್ನು ಹಲವಾರು ಗುರುತು ಪರಿಶೀಲನೆಗಳುಳ್ಳ ಒಂದು ಪ್ರೊಫೈಲ್ ಎಂದು ಪರಿಗಣಿಸಿ: ಪ್ರತಿ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣವೂ ಒಂದು ಪರಿಶೀಲನಾ ಬಿಂದು, ಮತ್ತು ಸಂಪೂರ್ಣ ಗುಂಪು ತಪ್ಪಾದ ವರ್ಗೀಕರಣವನ್ನು ತಡೆಯುತ್ತದೆ.","analytical":[{"q":"ಒಂದು ನಮೂನೆಯು ಸಾರಾಂಶ — ಫೈಲಾಗಳ ಪ್ರಮುಖ ಲಕ್ಷಣಗಳುಗೆ ಸೇರಿದೆ ಎಂದು ಪ್ರಸ್ತಾಪಿಸಲಾಗಿದೆ. ಈ ಹೇಳಿಕೆಯನ್ನು ಪರೀಕ್ಷಿಸಲು ನೀವು ಮೊದಲು ಯಾವ ಎರಡು ಅವಲೋಕನಗಳನ್ನು ಹುಡುಕುತ್ತೀರಿ?","a":"ಅತ್ಯಂತ ನಿರ್ಣಾಯಕ ಲಕ್ಷಣಗಳಿಂದ ಪ್ರಾರಂಭಿಸಿ: ಪೊರಿಫೆರಾಗೆ ಕೋಶೀಯ ಮಟ್ಟದ ಸಂಘಟನೆ ಇದ್ದರೆ, ಸಿನಿಡೇರಿಯಾಗೆ ಅಂಗಾಂಶ ಮಟ್ಟದ ಸಂಘಟನೆ ಇದೆ. ನಂತರ ಸ್ವತಂತ್ರ ಲಕ್ಷಣವನ್ನು ಪರಿಶೀಲಿಸಿ: ಪ್ಲಾಟಿಹೆಲ್ಮಿಂಥಸ್ ಅಸಿಲೋಮೇಟ್, ಅಸ್ಕೆಲ್ಮಿಂಥಸ್ ಸ್ಯೂಡೋಸಿಲೋಮೇಟ್ ಮತ್ತು ಅನ್ನೆಲಿಡಾ ಸಿಲೋಮೇಟ್ ಆಗಿದೆ. ಹೊಂದಿಕೆಯಾಗುವ ಅವಲೋಕನಗಳು ವರ್ಗೀಕರಣವನ್ನು ಸಮರ್ಥನೀಯಗೊಳಿಸುತ್ತವೆ."},{"q":"ಕೇವಲ ಒಂದು ಮೇಲ್ಮಟ್ಟದ ಲಕ್ಷಣವನ್ನು ಬಳಸಿ ಪ್ರಾಣಿಯನ್ನು ವರ್ಗೀಕರಿಸುವುದು ಏಕೆ ಅಪಾಯಕಾರಿ?","a":"ಸಂಬಂಧವಿಲ್ಲದ ಗುಂಪುಗಳು ಒಂದೇ ಆವಾಸಸ್ಥಾನ ಅಥವಾ ವಿಶಾಲ ದೇಹಾಕಾರವನ್ನು ಹಂಚಿಕೊಳ್ಳಬಹುದು. ಸೂಕ್ತ ವರ್ಗೀಕರಣವು ಹಲವಾರು ರಚನಾತ್ಮಕ ಮತ್ತು ಕ್ರಿಯಾತ್ಮಕ ಲಕ್ಷಣಗಳನ್ನು ಹೋಲಿಸುತ್ತದೆ. ಸಾರಾಂಶ — ಫೈಲಾಗಳ ಪ್ರಮುಖ ಲಕ್ಷಣಗಳುಗೆ, ಉಪಯುಕ್ತ ಸಾಕ್ಷ್ಯ ಇವುಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ಅನ್ನೆಲಿಡಾಗೆ ಮುಚ್ಚಿದ ರಕ್ತಪರಿಚಲನೆ ಇದ್ದರೆ, ಆರ್ಥ್ರೋಪೋಡಾ ಮತ್ತು ಬಹುತೇಕ ಮೊಲಸ್ಕಾಗೆ ತೆರೆದ ರಕ್ತಪರಿಚಲನೆ ಇದೆ."}]},"hi":{"hook":"सारांश — संघों के प्रमुख लक्षण को सबसे मिलते-जुलते प्राणी समूह से अलग पहचानने के लिए कौन-सा एक अवलोकन आपकी मदद करेगा, और वह लक्षण केवल बाहरी रूप-रंग से अधिक विश्वसनीय क्यों है?","chain":["पोरिफेरा में कोशिकीय स्तर का संगठन होता है जबकि सिनिडेरिया में ऊतक स्तर का संगठन होता है।","प्लेटीहेल्मिन्थीज असीलोमेट, ऐस्केल्मिन्थीज छद्मसीलोमेट और ऐनेलिडा सीलोमेट होता है।","ऐनेलिडा में बंद परिसंचरण होता है, जबकि आर्थ्रोपोडा और अधिकांश मोलस्का में खुला परिसंचरण होता है।","नोटोकॉर्ड कॉर्डेट में उपस्थित होता है और अकॉर्डेट में अनुपस्थित होता है।","ये सभी लक्षण मिलकर सारांश — संघों के प्रमुख लक्षण को पहचानने के लिए एक विश्वसनीय आधार प्रदान करते हैं।"],"misconceptions":[{"wrong":"सारांश — संघों के प्रमुख लक्षण की पहचान केवल उसके सामान्य आवास या बाहरी आकार से होती है।","right":"वर्गीकरण निदानात्मक संगठन, शरीर-योजना और क्रियात्मक लक्षणों पर निर्भर करता है; पोरिफेरा में कोशिकीय स्तर का संगठन होता है जबकि सिनिडेरिया में ऊतक स्तर का संगठन होता है।"},{"wrong":"केवल एक लक्षण सारांश — संघों के प्रमुख लक्षण की संपूर्ण विकासात्मक कहानी बता देता है।","right":"संगठन, सममिति, देहगुहा, परिसंचरण, जनन और उदाहरणों के संयोजन का उपयोग करें; प्लेटीहेल्मिन्थीज असीलोमेट, ऐस्केल्मिन्थीज छद्मसीलोमेट और ऐनेलिडा सीलोमेट होता है।"}],"analogy":"सारांश — संघों के प्रमुख लक्षण को कई पहचान-जाँचों वाली एक प्रोफ़ाइल की तरह समझें: प्रत्येक निदानात्मक लक्षण एक जाँच-बिंदु है, और पूरा समूह मिलकर गलत वर्गीकरण को रोकता है।","analytical":[{"q":"एक नमूने के बारे में प्रस्तावित किया गया है कि वह सारांश — संघों के प्रमुख लक्षण से संबंधित है। इस दावे की जाँच के लिए आप पहले कौन-से दो अवलोकन खोजेंगे?","a":"सबसे निदानात्मक लक्षणों से शुरू करें: पोरिफेरा में कोशिकीय स्तर का संगठन होता है जबकि सिनिडेरिया में ऊतक स्तर का संगठन होता है। फिर एक स्वतंत्र लक्षण जाँचें: प्लेटीहेल्मिन्थीज असीलोमेट, ऐस्केल्मिन्थीज छद्मसीलोमेट और ऐनेलिडा सीलोमेट होता है। परस्पर मेल खाते अवलोकन वर्गीकरण को न्यायसंगत बनाते हैं।"},{"q":"किसी प्राणी को केवल एक सतही लक्षण के आधार पर वर्गीकृत करना जोखिम भरा क्यों है?","a":"असंबंधित समूह एक जैसा आवास या व्यापक शरीराकार साझा कर सकते हैं। एक ठोस वर्गीकरण कई संरचनात्मक और क्रियात्मक लक्षणों की तुलना करता है। सारांश — संघों के प्रमुख लक्षण के लिए, उपयोगी प्रमाण में शामिल है: ऐनेलिडा में बंद परिसंचरण होता है, जबकि आर्थ्रोपोडा और अधिकांश मोलस्का में खुला परिसंचरण होता है।"}]}}};
@@ -1246,7 +1415,7 @@ function renderMcqSetup(){
     <div class="setup-label">Difficulty</div>
     <div class="opt-row">${['All','Easy','Medium','Hard'].map(v=>`<div class="opt-btn ${mcqSetup.difficulty===v?'sel':''}" onclick="mcqSetDiff('${v}')">${v}</div>`).join('')}</div>
     <div class="setup-label">Number of Questions</div>
-    <div class="opt-row">${['10','25','50','All'].map(v=>`<div class="opt-btn ${mcqSetup.count===v?'sel':''}" onclick="mcqSetCount('${v}')">${v==='All'?'All matching':v}</div>`).join('')}</div>
+    <div class="opt-row">${['10','25','50','90','All'].map(v=>`<div class="opt-btn ${mcqSetup.count===v?'sel':''}" onclick="mcqSetCount('${v}')">${v==='All'?'All matching':v}</div>`).join('')}</div>
     <button class="start-btn" onclick="mcqStart()">Start Quiz \u00b7 ${mcqSetup.count==='All' ? pool.length+' matching' : Math.min(parseInt(mcqSetup.count), pool.length)+' questions'}</button>
   </div>`;
   document.getElementById('content').innerHTML = html;
@@ -1394,10 +1563,10 @@ function buildReportCardHtml(r){
     <div style="border-top:1px solid rgba(212,175,55,0.35); padding-top:12px; text-align:center; font-size:10.5px; color:${textDim}; line-height:2;">
       Narendra Sir &ndash; Lecturer in Biology<br>
       <div style="margin-top:4px;">📱 <a href="https://wa.me/919008968389" target="_blank" rel="noopener" style="color:${teal};text-decoration:none;">9008968389</a> &nbsp;&middot;&nbsp; ✉️ <a href="mailto:bioguru102@gmail.com" style="color:${teal};text-decoration:none;">bioguru102@gmail.com</a></div>
-      <div style="margin-top:4px;">WhatsApp Channel: <a href="https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X" target="_blank" rel="noopener" style="color:${teal};text-decoration:none;">BioGuru Narendra Sir</a></div>
-      <div>Instagram Channel: <a href="https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw" target="_blank" rel="noopener" style="color:${teal};text-decoration:none;">@new_gen_bioguru</a></div>
-      <div>YouTube Channel: <a href="https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0" target="_blank" rel="noopener" style="color:${teal};text-decoration:none;">@biogurunarendrasir</a></div>
-      <div>Telegram Channel: <a href="https://t.me/BAIO_Learning_System" target="_blank" rel="noopener" style="color:${teal};text-decoration:none;">BAIO Learning System</a></div>
+      <div style="margin-top:4px;">WhatsApp Channel: <a href="https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X" target="_blank" rel="noopener" style="color:${teal};text-decoration:none;"><img class="soc-ic" src="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/assets/social/wa.png" alt="" style="width:1.15em;height:1.15em;vertical-align:-0.22em;margin-right:5px;border:0;">BioGuru Narendra Sir</a></div>
+      <div>Instagram Channel: <a href="https://www.instagram.com/new_gen_bioguru?igsh=YTMyMXB4YjA3OXhw" target="_blank" rel="noopener" style="color:${teal};text-decoration:none;"><img class="soc-ic" src="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/assets/social/ig.png" alt="" style="width:1.15em;height:1.15em;vertical-align:-0.22em;margin-right:5px;border:0;">@new_gen_bioguru</a></div>
+      <div>YouTube Channel: <a href="https://youtube.com/@biogurunarendrasir?si=sQXOrNWk3EnIL7Y0" target="_blank" rel="noopener" style="color:${teal};text-decoration:none;"><img class="soc-ic" src="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/assets/social/yt.png" alt="" style="width:1.15em;height:1.15em;vertical-align:-0.22em;margin-right:5px;border:0;">@biogurunarendrasir</a></div>
+      <div>Telegram Channel: <a href="https://t.me/BAIO_Learning_System" target="_blank" rel="noopener" style="color:${teal};text-decoration:none;"><img class="soc-ic" src="https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/assets/social/tg.png" alt="" style="width:1.15em;height:1.15em;vertical-align:-0.22em;margin-right:5px;border:0;">BAIO Learning System</a></div>
     </div>
   </div>`;
 }
@@ -1708,10 +1877,11 @@ function renderNeetQuestion(){
   }, 1000);
 }
 function neetStopTest(){
-  if(!confirm('Stop this test now and see your report card based on the questions you\'ve answered so far?')) return;
+  if(!confirm('Stop this test now and see your report card? Unanswered questions will count as 0 marks toward your selected total.')) return;
   neetClearTimer();
   const s = neetSession;
-  s.questions = s.questions.slice(0, s.idx);
+  const remaining = s.questions.length - s.idx;
+  if(remaining > 0) s.timeoutCount += remaining;
   renderNeetReport();
 }
 function neetGoBack(){
@@ -1864,6 +2034,115 @@ function pdfRow(key){
 }
 const STUDYTIPS_CH4_EN = {"title":"Study Tips – Animal Kingdom","intro":"A practical plan for mastering Animal Kingdom and scoring accurately in NEET/KCET.","theoryHead":"📘 Theory — How to Study This Chapter","neetHead":"🎯 NEET Strategy for This Chapter","theory":["Learn classification as a sequence of diagnostic features: level of organisation → symmetry → germ layers → coelom → segmentation → notochord. Do not memorise phyla as an unconnected list.","Make one comparison grid for every phylum: organisation, symmetry, coelom, segmentation, circulation, excretion, reproduction and examples. Revise the grid daily.","Draw and label the water canal system of a sponge, polyp and medusa forms, comb plates, flame cells, nephridia, a starfish water vascular system and the chordate body plan.","For vertebrates, compare endoskeleton, scales/skin, gills or lungs, heart chambers, fertilisation, development and examples; these columns solve most mixed questions.","Say scientific examples aloud with their group, such as Sycon–Porifera, Physalia–Cnidaria, Pleurobrachia–Ctenophora, Ascaris–Aschelminthes and Balanoglossus–Hemichordata."],"neet":["Read every NCERT exception carefully: adult echinoderms are radial but larvae bilateral; Ctenophora has colloblasts, not cnidoblasts; Hemichordata lacks a true notochord.","Expect matching questions on phylum–example, excretory structure–phylum, respiratory organ–class and symmetry–group. Revise both directions, not only the forward pair.","In assertion or statement questions, test each word: “all”, “only”, “always”, and “true coelom” often decide the answer.","For diagram questions, identify one decisive label before considering the whole figure: ostia, cnidoblast, comb plate, parapodium, jointed appendage, tube foot, operculum or mammary gland.","Use a 60-question timed KCET round after each revision. KCET has no negative marking, so practise selecting the best answer quickly and attempt every item."]};
 const STUDYTIPS_CH4_TRANSLATIONS = {"kn":{"title":"ಅಧ್ಯಯನ ಸಲಹೆಗಳು – ಪ್ರಾಣಿ ಸಾಮ್ರಾಜ್ಯ","intro":"ಪ್ರಾಣಿ ಸಾಮ್ರಾಜ್ಯವನ್ನು ದೃಢವಾಗಿ ಕಲಿತು NEET/KCET ನಲ್ಲಿ ನಿಖರವಾಗಿ ಉತ್ತರಿಸಲು ಪ್ರಾಯೋಗಿಕ ಯೋಜನೆ.","theoryHead":"📘 ಸಿದ್ಧಾಂತ — ಈ ಅಧ್ಯಾಯವನ್ನು ಹೇಗೆ ಓದುವುದು","neetHead":"🎯 ಈ ಅಧ್ಯಾಯಕ್ಕೆ NEET ತಂತ್ರ","theory":["ವರ್ಗೀಕರಣವನ್ನು ಲಕ್ಷಣಗಳ ಕ್ರಮವಾಗಿ ಕಲಿಯಿರಿ: ಸಂಘಟನೆಯ ಮಟ್ಟ → ಸಮಮಿತಿ → ಜನನಪದರಗಳು → ಸಿಲೋಮ್ → ಖಂಡೀಕರಣ → ನೋಟೋಕೋರ್ಡ್. ಫೈಲಮ್‌ಗಳನ್ನು ಸಂಬಂಧವಿಲ್ಲದ ಪಟ್ಟಿಯಾಗಿ ಕಂಠಪಾಠ ಮಾಡಬೇಡಿ.","ಪ್ರತಿ ಫೈಲಮ್‌ಗೆ ಸಂಘಟನೆಯ ಮಟ್ಟ, ಸಮಮಿತಿ, ಸಿಲೋಮ್, ಖಂಡೀಕರಣ, ರಕ್ತಪರಿಚಲನೆ, ವಿಸರ್ಜನೆ, ಸಂತಾನೋತ್ಪತ್ತಿ ಮತ್ತು ಉದಾಹರಣೆಗಳ ಹೋಲಿಕೆ ಕೋಷ್ಟಕವನ್ನು ತಯಾರಿಸಿ; ಪ್ರತಿದಿನ ಮರುಅಭ್ಯಾಸ ಮಾಡಿ.","ಸ್ಪಾಂಜಿನ ಜಲ ಕಾಲುವೆ ವ್ಯವಸ್ಥೆ, ಪಾಲಿಪ್–ಮೆಡುಸಾ ರೂಪಗಳು, ಕಾಂಬ್ ಪ್ಲೇಟ್‌ಗಳು, ಜ್ವಾಲಾ ಕೋಶಗಳು, ನೆಫ್ರಿಡಿಯಾ, ಸ್ಟಾರ್‌ಫಿಶ್‌ನ ಜಲವಾಹಿನಿ ವ್ಯವಸ್ಥೆ ಮತ್ತು ಕಾರ್ಡೇಟ್ ದೇಹಯೋಜನೆಯನ್ನು ಲೇಬಲ್‌ನೊಂದಿಗೆ ಬಿಡಿಸಿ.","ಕಶೇರುಕಿಗಳಲ್ಲಿ ಅಂತಃಕಂಕಾಲ, ಚಿಪ್ಪು/ಚರ್ಮ, ಕಿವಿರು ಅಥವಾ ಶ್ವಾಸಕೋಶ, ಹೃದಯದ ಕೊಠಡಿಗಳು, ಫಲವತ್ತೀಕರಣ, ಬೆಳವಣಿಗೆ ಮತ್ತು ಉದಾಹರಣೆಗಳನ್ನು ಹೋಲಿಸಿ; ಬಹುತೇಕ ಮಿಶ್ರ ಪ್ರಶ್ನೆಗಳಿಗೆ ಇದೇ ಉತ್ತರ.","ವೈಜ್ಞಾನಿಕ ಉದಾಹರಣೆಗಳನ್ನು ಗುಂಪಿನೊಂದಿಗೆ ಜೋರಾಗಿ ಹೇಳುವ ಅಭ್ಯಾಸ ಮಾಡಿ: Sycon–Porifera, Physalia–Cnidaria, Pleurobrachia–Ctenophora, Ascaris–Aschelminthes, Balanoglossus–Hemichordata."],"neet":["NCERT ಅಪವಾದಗಳನ್ನು ಎಚ್ಚರಿಕೆಯಿಂದ ಓದಿ: ವಯಸ್ಕ ಎಕೈನೋಡರ್ಮ್‌ಗಳಲ್ಲಿ ರೇಡಿಯಲ್ ಸಮಮಿತಿ ಆದರೆ ಲಾರ್ವಾಗಳಲ್ಲಿ ದ್ವಿಪಾರ್ಶ್ವ ಸಮಮಿತಿ; Ctenophora ಯಲ್ಲಿ ಕೊಲೋಬ್ಲಾಸ್ಟ್‌ಗಳಿವೆ, ನಿಡೋಬ್ಲಾಸ್ಟ್‌ಗಳಲ್ಲ; Hemichordata ಯಲ್ಲಿ ನಿಜ ನೋಟೋಕೋರ್ಡ್ ಇಲ್ಲ.","ಫೈಲಮ್–ಉದಾಹರಣೆ, ವಿಸರ್ಜಕ ರಚನೆ–ಫೈಲಮ್, ಶ್ವಸನಾಂಗ–ವರ್ಗ ಮತ್ತು ಸಮಮಿತಿ–ಗುಂಪಿನ ಹೊಂದಾಣಿಕೆ ಪ್ರಶ್ನೆಗಳನ್ನು ನಿರೀಕ್ಷಿಸಿ. ಜೋಡಿಗಳನ್ನು ಎರಡೂ ದಿಕ್ಕಿನಲ್ಲಿ ಮರುಅಭ್ಯಾಸ ಮಾಡಿ.","ಅಭಿಪ್ರಾಯ ಅಥವಾ ಹೇಳಿಕೆ ಪ್ರಶ್ನೆಗಳಲ್ಲಿ ಪ್ರತಿಯೊಂದು ಪದವನ್ನು ಪರಿಶೀಲಿಸಿ: “ಎಲ್ಲಾ”, “ಮಾತ್ರ”, “ಯಾವಾಗಲೂ” ಮತ್ತು “ನಿಜ ಸಿಲೋಮ್” ಉತ್ತರವನ್ನು ನಿರ್ಧರಿಸುತ್ತವೆ.","ಚಿತ್ರ ಪ್ರಶ್ನೆಗಳಲ್ಲಿ ಪೂರ್ಣ ಆಕೃತಿಗಿಂತ ಮೊದಲು ಒಂದು ನಿರ್ಣಾಯಕ ಲೇಬಲ್ ಗುರುತಿಸಿ: ostia, cnidoblast, comb plate, parapodium, jointed appendage, tube foot, operculum ಅಥವಾ mammary gland.","ಪ್ರತಿ ಮರುಅಭ್ಯಾಸದ ನಂತರ ಸಮಯಬದ್ಧ 60 KCET ಪ್ರಶ್ನೆಗಳನ್ನು ಮಾಡಿ. KCET ನಲ್ಲಿ ನಕಾರಾತ್ಮಕ ಅಂಕಗಳಿಲ್ಲ; ಆದ್ದರಿಂದ ಎಲ್ಲ ಪ್ರಶ್ನೆಗಳನ್ನು ಪ್ರಯತ್ನಿಸುವ ಅಭ್ಯಾಸ ಮಾಡಿ."]},"hi":{"title":"अध्ययन सुझाव – प्राणी जगत","intro":"प्राणी जगत को मजबूत बनाने और NEET/KCET में सटीक उत्तर देने की व्यावहारिक योजना।","theoryHead":"📘 सिद्धांत — इस अध्याय को कैसे पढ़ें","neetHead":"🎯 इस अध्याय के लिए NEET रणनीति","theory":["वर्गीकरण को लक्षणों के क्रम के रूप में सीखें: संगठन स्तर → सममिति → जनन परतें → सीलोम → खंडीकरण → नोटोकॉर्ड। संघों को असंबद्ध सूची की तरह याद न करें।","हर संघ के लिए संगठन, सममिति, सीलोम, खंडीकरण, परिसंचरण, उत्सर्जन, जनन और उदाहरणों की एक तुलना सारणी बनाकर प्रतिदिन दोहराएँ।","स्पंज की जल-नलिका प्रणाली, पॉलिप और मेडूसा, कॉम्ब प्लेट, ज्वाला कोशिका, नेफ्रिडिया, स्टारफिश की जल संवहनी प्रणाली और कॉर्डेट शरीर-योजना के चित्र बनाकर लेबल करें।","कशेरुकियों में अंतःकंकाल, त्वचा/शल्क, गलफड़े या फेफड़े, हृदय कक्ष, निषेचन, विकास और उदाहरणों की तुलना करें; अधिकांश मिश्रित प्रश्न इन्हीं स्तंभों से हल होते हैं।","वैज्ञानिक उदाहरणों को उनके समूह के साथ बोलकर याद करें: Sycon–Porifera, Physalia–Cnidaria, Pleurobrachia–Ctenophora, Ascaris–Aschelminthes, Balanoglossus–Hemichordata।"],"neet":["NCERT के अपवाद ध्यान से पढ़ें: वयस्क इकाइनोडर्म रेडियल होते हैं पर लार्वा द्विपार्श्वीय; Ctenophora में colloblast होते हैं, cnidoblast नहीं; Hemichordata में वास्तविक नोटोकॉर्ड नहीं होता।","संघ–उदाहरण, उत्सर्जी संरचना–संघ, श्वसन अंग–वर्ग और सममिति–समूह के मिलान वाले प्रश्नों की तैयारी करें। जोड़ियों को दोनों दिशाओं में दोहराएँ।","कथन प्रश्नों में हर शब्द जाँचें: “सभी”, “केवल”, “सदैव” और “वास्तविक सीलोम” अक्सर उत्तर तय करते हैं।","चित्र आधारित प्रश्न में पूरे चित्र से पहले एक निर्णायक लेबल पहचानें: ostia, cnidoblast, comb plate, parapodium, jointed appendage, tube foot, operculum या mammary gland।","हर पुनरावृत्ति के बाद समयबद्ध 60 प्रश्नों का KCET अभ्यास करें। KCET में ऋणात्मक अंकन नहीं है, इसलिए प्रत्येक प्रश्न का प्रयास करें।"]}};
+/* ---- Study Tips "View example" popovers: the phylum grid and the vertebrate
+   grid are both just instructions in the tip text ("make a comparison
+   grid...") with nothing to look at. These two buttons show the actual
+   filled-in artifact the tip is describing, built from this chapter's own
+   Compare Matrix (COMPARE_DATA, defined further down this same script) so
+   the facts always match the Summary tab - nothing is duplicated or
+   re-typed by hand. ---- */
+const TIP_EXAMPLE_INDEX = {1:'phylum-grid', 3:'vertebrate-grid'};
+const TIP_EXAMPLE_BTN_LABEL = {en:'View example', kn:'ಉದಾಹರಣೆ ನೋಡಿ', hi:'उदाहरण देखें'};
+/* Trilingual content below reuses the exact vetted Kannada/Hindi zoological
+   vocabulary already established in GLOSSARY_TRANSLATIONS_CH4 and
+   STUDYTIPS_CH4_TRANSLATIONS (symmetry, germ layers, coelom, segmentation,
+   notochord, etc.) so terminology stays consistent with the rest of the
+   chapter. Phylum/class names (Porifera, Mollusca, Chondrichthyes, ...) have
+   no vetted Kannada/Hindi word anywhere in this file - GLOSSARY_DATA itself
+   always keeps its own term keys in English/Latin - so they are kept
+   untranslated here too, same as every other tab. A handful of ordinary
+   English common names in the Example column (earthworm, cockroach, prawn,
+   scorpion, pigeon, crow, ostrich, human, bat, kangaroo) are translated with
+   everyday Kannada/Hindi words; "leech" has no equally certain word in either
+   language, so it is transliterated rather than guessed at. */
+const COMPARE_TR_CH4 = {
+  'Porifera': { organ:{kn:'ನಿರ್ಣಾಯಕ ಲಕ್ಷಣ: ಜಲ ಕಾಲುವೆ ವ್ಯವಸ್ಥೆ',hi:'निर्णायक लक्षण: जल-नलिका प्रणाली'}, structuralChange:{kn:'ದೇಹಗೋಡೆಯಲ್ಲಿ ಓಸ್ಟಿಯಾಗಳಿವೆ; ಕಾಲುವೆಗಳು/ಸ್ಪಾಂಜೋಸಿಲ್ ಓಸ್ಕುಲಂಗೆ ತೆರೆದುಕೊಳ್ಳುತ್ತವೆ',hi:'शरीर-भित्ति में ओस्टिया होते हैं; नलिकाएँ/स्पंजोसील ओस्कुलम में खुलती हैं'}, keyFeature:{kn:'ಕೋಶೀಯ ಮಟ್ಟದ ಸಂಘಟನೆ; ಕೋಯನೋಸೈಟ್‌ಗಳು; ಸ್ಪಿಕ್ಯುಲ್/ಸ್ಪಾಂಜಿನ್‌ಗಳ ಅಸ್ಥಿಪಂಜರ',hi:'कोशिकीय स्तर का संगठन; कोएनोसाइट; स्पिक्यूल/स्पंजिन का कंकाल'} },
+  'Coelenterata (Cnidaria)': { organ:{kn:'ನಿರ್ಣಾಯಕ ಲಕ್ಷಣ: ನಿಡೋಬ್ಲಾಸ್ಟ್‌ಗಳು ಮತ್ತು ಜಠರ-ನಾಳೀಯ ಕುಹರ',hi:'निर्णायक लक्षण: निडोब्लास्ट और जठर-संवहनी गुहा'}, structuralChange:{kn:'ಪಾಲಿಪ್ ಮತ್ತು/ಅಥವಾ ಮೆಡುಸಾ ರೂಪದ ಡಿಪ್ಲೊಬ್ಲಾಸ್ಟಿಕ್ ರೇಡಿಯಲ್ ದೇಹ',hi:'पॉलिप और/या मेडूसा रूप वाला द्विपरतीय अरीय शरीर'}, keyFeature:{kn:'ಅಂಗಾಂಶ ಮಟ್ಟ; ನೆಮಾಟೋಸಿಸ್ಟ್ ಹೊಂದಿರುವ ನಿಡೋಬ್ಲಾಸ್ಟ್‌ಗಳು',hi:'ऊतक स्तर; नेमेटोसिस्ट युक्त निडोब्लास्ट'} },
+  'Ctenophora': { organ:{kn:'ನಿರ್ಣಾಯಕ ಲಕ್ಷಣ: ಕಾಂಬ್ ಪ್ಲೇಟ್‌ಗಳು ಮತ್ತು ಕೊಲೋಬ್ಲಾಸ್ಟ್‌ಗಳು',hi:'निर्णायक लक्षण: कॉम्ब प्लेट और कोलोब्लास्ट'}, structuralChange:{kn:'ಬೆಸೆದ ಸಿಲಿಯಾದ ಎಂಟು ಹೊರ ಸಾಲುಗಳು; ಪಾರದರ್ಶಕ ಸಾಗರ ದೇಹ',hi:'जुड़े हुए सिलिया की आठ बाहरी पंक्तियाँ; पारदर्शी समुद्री शरीर'}, keyFeature:{kn:'ಕಾಂಬ್ ಜೆಲ್ಲಿಗಳು; ಜೈವ ಪ್ರಕಾಶ; ನಿಡೋಬ್ಲಾಸ್ಟ್ ಅಲ್ಲ, ಕೊಲೋಬ್ಲಾಸ್ಟ್‌ಗಳು',hi:'कॉम्ब जेली; जैव-दीप्ति; निडोब्लास्ट नहीं, कोलोब्लास्ट'} },
+  'Platyhelminthes': { organ:{kn:'ನಿರ್ಣಾಯಕ ಲಕ್ಷಣ: ಜ್ವಾಲಾ ಕೋಶಗಳು',hi:'निर्णायक लक्षण: ज्वाला कोशिकाएँ'}, structuralChange:{kn:'ಬೆನ್ನು-ಹೊಟ್ಟೆಯ ದಿಕ್ಕಿನಲ್ಲಿ ಚಪ್ಪಟೆಯಾದ, ಅಸಿಲೋಮೇಟ್ ದೇಹ',hi:'पृष्ठ-अधर दिशा में चपटा, असीलोमेट शरीर'}, keyFeature:{kn:'ಅಂಗ ಮಟ್ಟ; ದ್ವಿಪಾರ್ಶ್ವ ಸಮಮಿತಿ; ಟ್ರಿಪ್ಲೊಬ್ಲಾಸ್ಟಿಕ್; ಅನೇಕ ಪರೋಪಜೀವಿಗಳು',hi:'अंग स्तर; द्विपार्श्व सममिति; त्रिपरतीय; अनेक परजीवी'} },
+  'Aschelminthes': { organ:{kn:'ನಿರ್ಣಾಯಕ ಲಕ್ಷಣ: ಸ್ಯೂಡೋಸಿಲೋಮ್ ಮತ್ತು ಸಂಪೂರ್ಣ ಆಹಾರನಾಳ',hi:'निर्णायक लक्षण: छद्मगुहा और पूर्ण आंत्र'}, structuralChange:{kn:'ಎರಡೂ ತುದಿಗಳಲ್ಲಿ ಕಿರಿದಾಗುವ, ಖಂಡರಹಿತ ಸಿಲಿಂಡರಾಕಾರದ ದೇಹ',hi:'दोनों सिरों पर पतला होता हुआ, खंडरहित बेलनाकार शरीर'}, keyFeature:{kn:'ಸ್ಯೂಡೋಸಿಲೋಮೇಟ್ ಮತ್ತು ಡೈಯೀಷಿಯಸ್ (ಪ್ರತ್ಯೇಕ ಲಿಂಗ)',hi:'छद्मगुही और एकलिंगी (नर-मादा पृथक)'} },
+  'Annelida': { organ:{kn:'ನಿರ್ಣಾಯಕ ಲಕ್ಷಣ: ನೆಫ್ರಿಡಿಯಾ ಮತ್ತು ನಿಜ ಸಿಲೋಮ್',hi:'निर्णायक लक्षण: नेफ्रिडिया और वास्तविक देहगुहा'}, structuralChange:{kn:'ಮೆಟಾಮೆರಿಕ್ ಆಗಿ ಖಂಡಿತವಾದ ಹುಳುವಿನಂತಹ ದೇಹ',hi:'खंडयुक्त (मेटामेरिक), कृमि जैसा शरीर'}, keyFeature:{kn:'ಮುಚ್ಚಿದ ರಕ್ತಪರಿಚಲನೆ; ಸೀಟಾ ಅಥವಾ ಪ್ಯಾರಾಪೋಡಿಯಾ',hi:'बंद परिसंचरण; सीटा या पैरापोडिया'}, example:{kn:'ಎರೆಹುಳು, Nereis, ಲೀಚ್',hi:'केंचुआ, Nereis, लीच'} },
+  'Arthropoda': { organ:{kn:'ನಿರ್ಣಾಯಕ ಲಕ್ಷಣ: ಕೀಲು ಉಪಾಂಗಗಳು ಮತ್ತು ಕೈಟಿನ್ ಬಾಹ್ಯಕವಚ',hi:'निर्णायक लक्षण: संधियुक्त उपांग और काइटिनी बाह्यकंकाल'}, structuralChange:{kn:'ವಿಶೇಷೀಕೃತ ಉಪಾಂಗಗಳೊಂದಿಗೆ ಖಂಡಿತ ದೇಹ; ಹೀಮೋಸಿಲ್',hi:'विशेषीकृत उपांगों वाला खंडयुक्त शरीर; रक्तगुहा (हीमोसील)'}, keyFeature:{kn:'ಅತಿ ದೊಡ್ಡ ಫೈಲಮ್; ತೆರೆದ ರಕ್ತಪರಿಚಲನೆ',hi:'सबसे बड़ा संघ; खुला परिसंचरण'}, example:{kn:'ಜಿರಳೆ, ಸಿಗಡಿ, ಚೇಳು',hi:'तिलचट्टा, झींगा, बिच्छू'} },
+  'Mollusca': { organ:{kn:'ನಿರ್ಣಾಯಕ ಲಕ್ಷಣ: ಮ್ಯಾಂಟಲ್, ಸ್ನಾಯುಬದ್ಧ ಪಾದ ಮತ್ತು ವಿಸರಲ್ ಹಂಪ್',hi:'निर्णायक लक्षण: चादर (मैंटल), पेशीय पाद और विसरल हम्प'}, structuralChange:{kn:'ಮೃದುವಾದ, ಖಂಡರಹಿತ ದೇಹ, ಹೆಚ್ಚಾಗಿ ಚಿಪ್ಪಿನಲ್ಲಿ ಮುಚ್ಚಲ್ಪಟ್ಟಿದೆ',hi:'मुलायम, खंडरहित शरीर, प्रायः कवच में बंद'}, keyFeature:{kn:'ಎರಡನೇ ಅತಿ ದೊಡ್ಡ ಫೈಲಮ್; ಮ್ಯಾಂಟಲ್ ಕುಹರ',hi:'दूसरा सबसे बड़ा संघ; मैंटल गुहा'} },
+  'Echinodermata': { organ:{kn:'ನಿರ್ಣಾಯಕ ಲಕ್ಷಣ: ಜಲವಾಹಿನಿ ವ್ಯವಸ್ಥೆ ಮತ್ತು ಟ್ಯೂಬ್ ಫೀಟ್',hi:'निर्णायक लक्षण: जल-संवहनी प्रणाली और नलिका पाद'}, structuralChange:{kn:'ಮುಳ್ಳಿನ ಚರ್ಮದೊಂದಿಗೆ ಕ್ಯಾಲ್ಕೇರಿಯಸ್ ಅಂತಃಕಂಕಾಲ; ವಯಸ್ಕರಲ್ಲಿ ರೇಡಿಯಲ್ ಯೋಜನೆ',hi:'कंटीली त्वचा वाला चूर्णी (कैल्केरियस) अंतःकंकाल; वयस्क में अरीय योजना'}, keyFeature:{kn:'ಸಂಪೂರ್ಣವಾಗಿ ಸಾಗರ ಜೀವಿಗಳು; ಲಾರ್ವಾಗಳು ದ್ವಿಪಾರ್ಶ್ವ ಸಮಮಿತಿ',hi:'पूर्णतः समुद्री; लार्वा द्विपार्श्व सममित'} },
+  'Hemichordata': { organ:{kn:'ನಿರ್ಣಾಯಕ ಲಕ್ಷಣ: ಪ್ರೊಬೋಸಿಸ್, ಕಾಲರ್ ಮತ್ತು ಟ್ರಂಕ್',hi:'निर्णायक लक्षण: शुंड (प्रोबोसिस), कॉलर और धड़ (ट्रंक)'}, structuralChange:{kn:'ಮೂರು ಭಾಗಗಳಿರುವ ಹುಳುವಿನಂತಹ ಸಾಗರ ದೇಹ',hi:'तीन भागों वाला कृमि-सदृश समुद्री शरीर'}, keyFeature:{kn:'ನಿಜ ನೋಟೋಕೋರ್ಡ್ ಇಲ್ಲ; ವಿಸರ್ಜನೆಗೆ ಪ್ರೊಬೋಸಿಸ್ ಗ್ರಂಥಿ',hi:'वास्तविक नोटोकॉर्ड नहीं; उत्सर्जन हेतु प्रोबोसिस ग्रंथि'} },
+  'Cyclostomata': { organ:{kn:'ನಿರ್ಣಾಯಕ ಲಕ್ಷಣ: ವೃತ್ತಾಕಾರದ ಚೀಪುವ ದವಡೆರಹಿತ ಬಾಯಿ',hi:'निर्णायक लक्षण: वृत्ताकार चूषक जबड़ारहित मुख'}, structuralChange:{kn:'ಪರಿಮಾಣುಗಳು ಅಥವಾ ಜೋಡಿ ರೆಕ್ಕೆಗಳಿಲ್ಲದ ಉದ್ದವಾದ ದೇಹ',hi:'शल्क या युगल पक्षों (पंखों) के बिना लंबा शरीर'}, keyFeature:{kn:'6–15 ಜೋಡಿ ಕಿವಿರು ಸೀಳುಗಳು; ಮೊಟ್ಟೆಯಿಡಲು ಸಾಗರ ವಲಸೆ',hi:'6–15 जोड़ी गिल-छिद्र; प्रजनन हेतु समुद्री प्रवास'} },
+  'Chondrichthyes': { organ:{kn:'ನಿರ್ಣಾಯಕ ಲಕ್ಷಣ: ಕಾರ್ಟಿಲೇಜಿನ ಅಸ್ಥಿಪಂಜರ ಮತ್ತು ಪ್ಲಾಕಾಯ್ಡ್ ಸ್ಕೇಲ್‌ಗಳು',hi:'निर्णायक लक्षण: उपास्थिल कंकाल और प्लेकॉइड शल्क'}, structuralChange:{kn:'ಹೊಟ್ಟೆಯ ಭಾಗದ ಬಾಯಿ, ಹೆಟೆರೊಸರ್ಕಲ್ ಬಾಲ, ಆಪರ್ಕ್ಯುಲಂ/ಏರ್ ಬ್ಲಾಡರ್ ಇಲ್ಲ',hi:'अधर मुख, असमदली (हेटेरोसर्कल) पूँछ, ऑपरकुलम/वातकोष अनुपस्थित'}, keyFeature:{kn:'ಆಂತರಿಕ ಫಲವತ್ತೀಕರಣ; ಮುಳುಗದಂತೆ ಈಜುತ್ತಿರಬೇಕು',hi:'अंतः निषेचन; डूबने से बचने हेतु निरंतर तैरना आवश्यक'} },
+  'Osteichthyes': { organ:{kn:'ನಿರ್ಣಾಯಕ ಲಕ್ಷಣ: ಅಸ್ಥಿ ಅಸ್ಥಿಪಂಜರ, ಆಪರ್ಕ್ಯುಲಂ ಮತ್ತು ಏರ್ ಬ್ಲಾಡರ್',hi:'निर्णायक लक्षण: अस्थिल कंकाल, ऑपरकुलम और वातकोष'}, structuralChange:{kn:'ಸಾಮಾನ್ಯವಾಗಿ ತುದಿಯ ಬಾಯಿ, ಸೈಕ್ಲಾಯ್ಡ್/ಟೀನಾಯ್ಡ್ ಸ್ಕೇಲ್‌ಗಳು',hi:'सामान्यतः अग्रस्थ (टर्मिनल) मुख, साइक्लॉइड/टीनॉइड शल्क'}, keyFeature:{kn:'ಆಪರ್ಕ್ಯುಲಂನಿಂದ ಮುಚ್ಚಲ್ಪಟ್ಟ ನಾಲ್ಕು ಜೋಡಿ ಕಿವಿರುಗಳು',hi:'ऑपरकुलम से ढके चार जोड़ी गलफड़े'} },
+  'Amphibia': { organ:{kn:'ನಿರ್ಣಾಯಕ ಲಕ್ಷಣ: ಒದ್ದೆಯಾದ ಗ್ರಂಥಿಯುಕ್ತ ಚರ್ಮ ಮತ್ತು ಕ್ಲೋಯಾಕಾ',hi:'निर्णायक लक्षण: नम ग्रंथिल त्वचा और अवस्कर (क्लोएका)'}, structuralChange:{kn:'ಎರಡು ಜೋಡಿ ಅಂಗಗಳು; ಲಾರ್ವಾದಿಂದ ವಯಸ್ಕಕ್ಕೆ ರೂಪಾಂತರ',hi:'दो जोड़ी अंग; लार्वा से वयस्क में कायांतरण'}, keyFeature:{kn:'ಮೂರು-ಕೋಣೆಗಳ ಹೃದಯ; ಜಲಚರ ಲಾರ್ವಾ',hi:'त्रि-कक्षीय हृदय; जलीय लार्वा'} },
+  'Reptilia': { organ:{kn:'ನಿರ್ಣಾಯಕ ಲಕ್ಷಣ: ಸ್ಕೇಲ್‌ಗಳು/ಸ್ಕ್ಯೂಟ್‌ಗಳಿರುವ ಒಣ ಕಾರ್ನಿಫೈಡ್ ಚರ್ಮ',hi:'निर्णायक लक्षण: शल्क/स्कूट वाली शुष्क श्रृंगितयुक्त त्वचा'}, structuralChange:{kn:'ಶ್ವಾಸಕೋಶಗಳು ಮತ್ತು ಚಿಪ್ಪಿನ ಮೊಟ್ಟೆಗಳು; ಹಾವುಗಳಲ್ಲಿ ಅಂಗಗಳು ಕ್ಷೀಣಿಸಿವೆ/ಇಲ್ಲ',hi:'फेफड़े और कवचयुक्त अंडे; सर्पों में अंग ह्रासित/अनुपस्थित'}, keyFeature:{kn:'ಆಂತರಿಕ ಫಲವತ್ತೀಕರಣ; ಮೊಸಳೆಗೆ ನಾಲ್ಕು-ಕೋಣೆಗಳ ಹೃದಯ',hi:'अंतः निषेचन; मगरमच्छ में चतुष्कक्षीय हृदय'} },
+  'Aves': { organ:{kn:'ನಿರ್ಣಾಯಕ ಲಕ್ಷಣ: ಗರಿಗಳು, ರೆಕ್ಕೆಗಳು ಮತ್ತು ನ್ಯೂಮ್ಯಾಟಿಕ್ ಮೂಳೆಗಳು',hi:'निर्णायक लक्षण: पंख, पक्ष और वातिल अस्थियाँ'}, structuralChange:{kn:'ಮುಂಗಾಲುಗಳು ರೆಕ್ಕೆಗಳಾಗುತ್ತವೆ; ಸ್ಟರ್ನಮ್ ಸಾಮಾನ್ಯವಾಗಿ ಕೀಲ್ಡ್ ಆಗಿದೆ',hi:'अग्रपाद पंखों में बदल जाते हैं; उरोस्थि सामान्यतः कील-युक्त'}, keyFeature:{kn:'ಹೋಮಿಯೋಥರ್ಮಸ್; ನಾಲ್ಕು-ಕೋಣೆಗಳ ಹೃದಯ; ಮೊಟ್ಟೆ ಇಡುವ',hi:'समतापी; चतुष्कक्षीय हृदय; अंडजनक'}, example:{kn:'ಪಾರಿವಾಳ, ಕಾಗೆ, ಆಸ್ಟ್ರಿಚ್',hi:'कबूतर, कौआ, शुतुरमुर्ग'} },
+  'Mammalia': { organ:{kn:'ನಿರ್ಣಾಯಕ ಲಕ್ಷಣ: ಸ್ತನ ಗ್ರಂಥಿಗಳು, ಕೂದಲು ಮತ್ತು ಡಯಾಫ್ರಾಮ್',hi:'निर्णायक लक्षण: स्तन ग्रंथियाँ, बाल और डायाफ्राम'}, structuralChange:{kn:'ಬಾಹ್ಯ ಕಿವಿ ಪಿನ್ನಾಗಳು; ವಿಶೇಷೀಕೃತ ಹಲ್ಲುಗಳು; ಹೆಚ್ಚಾಗಿ ಜರಾಯುಜ',hi:'बाह्य कर्ण पिन्नी; विशेषीकृत दाँत; अधिकांशतः जरायुज'}, keyFeature:{kn:'ಹೋಮಿಯೋಥರ್ಮಸ್; ನಾಲ್ಕು-ಕೋಣೆಗಳ ಹೃದಯ',hi:'समतापी; चतुष्कक्षीय हृदय'}, example:{kn:'ಮಾನವ, ಬಾವಲಿ, ಕಾಂಗರೂ',hi:'मानव, चमगादड़, कंगारू'} }
+};
+function compareRowTr(r, lang){
+  if(lang==='en') return r;
+  const t = COMPARE_TR_CH4[r.name];
+  if(!t) return r;
+  return { name:r.name, organ:(t.organ&&t.organ[lang])||r.organ, structuralChange:(t.structuralChange&&t.structuralChange[lang])||r.structuralChange, keyFeature:(t.keyFeature&&t.keyFeature[lang])||r.keyFeature, example:(t.example&&t.example[lang])||r.example };
+}
+const TIP_EXAMPLES = {
+  'phylum-grid': {
+    title: {
+      en: '📊 Sample Comparison Grid — Invertebrate Phyla',
+      kn: '📊 ಮಾದರಿ ಹೋಲಿಕೆ ಗ್ರಿಡ್ — ಅಕಶೇರುಕ ಫೈಲಮ್‌ಗಳು',
+      hi: '📊 नमूना तुलना ग्रिड — अकशेरुकी संघ'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"This is exactly the grid the tip describes — one row per phylum, built from this chapter's own Compare Matrix.", th:['Phylum','Defining Feature &amp; Body Plan','Example'], note:"Full detail (purpose, every feature) for every row is in the <b>Summary</b> tab's Compare Matrix — this is the condensed version worth memorising first." },
+        kn: { intro:'ಇದು ಸಲಹೆ ವಿವರಿಸುವ ನಿಖರವಾದ ಗ್ರಿಡ್ — ಪ್ರತಿ ಫೈಲಮ್‌ಗೂ ಒಂದು ಸಾಲು, ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Compare Matrix ನಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ.', th:['ಫೈಲಮ್','ನಿರ್ಣಾಯಕ ಲಕ್ಷಣ ಮತ್ತು ದೇಹಯೋಜನೆ','ಉದಾಹರಣೆ'], note:'ಪ್ರತಿ ಸಾಲಿನ ಪೂರ್ಣ ವಿವರ (ಉದ್ದೇಶ, ಪ್ರತಿ ಲಕ್ಷಣ) <b>Summary</b> ಟ್ಯಾಬ್‌ನ Compare Matrix ನಲ್ಲಿದೆ — ಇದು ಮೊದಲು ಕಂಠಪಾಠ ಮಾಡಲು ಯೋಗ್ಯವಾದ ಸಂಕ್ಷಿಪ್ತ ಆವೃತ್ತಿ.' },
+        hi: { intro:'यह ठीक वही ग्रिड है जिसका वर्णन यह सुझाव करता है — प्रत्येक संघ के लिए एक पंक्ति, इस अध्याय के अपने Compare Matrix से बनाई गई।', th:['संघ','निर्णायक लक्षण और शरीर-योजना','उदाहरण'], note:'हर पंक्ति का पूरा विवरण (उद्देश्य, हर लक्षण) <b>Summary</b> टैब के Compare Matrix में है — यह पहले याद करने योग्य संक्षिप्त संस्करण है।' }
+      };
+      const l = L[lang] || L.en;
+      const rows = COMPARE_DATA.slice(0, 10).map(r=>compareRowTr(r, lang));
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${l.th[1]}</th><th>${l.th[2]}</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td><b>${r.organ}</b><br>${r.structuralChange}<br><i>${r.keyFeature}</i></td><td>${r.example}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">${l.note}</div>`;
+    }
+  },
+  'vertebrate-grid': {
+    title: {
+      en: '📊 Sample Comparison Grid — Vertebrate Classes',
+      kn: '📊 ಮಾದರಿ ಹೋಲಿಕೆ ಗ್ರಿಡ್ — ಕಶೇರುಕ ವರ್ಗಗಳು',
+      hi: '📊 नमूना तुलना ग्रिड — कशेरुकी वर्ग'
+    },
+    render: function(lang){
+      const L = {
+        en: { intro:"The same kind of grid, applied to the seven vertebrate classes — built from this chapter's own Compare Matrix.", th:['Class','Defining Feature &amp; Key Trait','Example'], note:"Full detail (purpose, every feature) for every row is in the <b>Summary</b> tab's Compare Matrix — this is the condensed version worth memorising first." },
+        kn: { intro:'ಅದೇ ಬಗೆಯ ಗ್ರಿಡ್, ಏಳು ಕಶೇರುಕ ವರ್ಗಗಳಿಗೆ ಅನ್ವಯಿಸಲಾಗಿದೆ — ಈ ಅಧ್ಯಾಯದ ಸ್ವಂತ Compare Matrix ನಿಂದ ನಿರ್ಮಿಸಲಾಗಿದೆ.', th:['ವರ್ಗ','ನಿರ್ಣಾಯಕ ಲಕ್ಷಣ ಮತ್ತು ಪ್ರಮುಖ ಗುಣ','ಉದಾಹರಣೆ'], note:'ಪ್ರತಿ ಸಾಲಿನ ಪೂರ್ಣ ವಿವರ (ಉದ್ದೇಶ, ಪ್ರತಿ ಲಕ್ಷಣ) <b>Summary</b> ಟ್ಯಾಬ್‌ನ Compare Matrix ನಲ್ಲಿದೆ — ಇದು ಮೊದಲು ಕಂಠಪಾಠ ಮಾಡಲು ಯೋಗ್ಯವಾದ ಸಂಕ್ಷಿಪ್ತ ಆವೃತ್ತಿ.' },
+        hi: { intro:'वैसा ही ग्रिड, सात कशेरुकी वर्गों पर लागू — इस अध्याय के अपने Compare Matrix से बनाई गई।', th:['वर्ग','निर्णायक लक्षण और प्रमुख विशेषता','उदाहरण'], note:'हर पंक्ति का पूरा विवरण (उद्देश्य, हर लक्षण) <b>Summary</b> टैब के Compare Matrix में है — यह पहले याद करने योग्य संक्षिप्त संस्करण है।' }
+      };
+      const l = L[lang] || L.en;
+      const rows = COMPARE_DATA.slice(10, 17).map(r=>compareRowTr(r, lang));
+      return `<div style="font-size:12px;color:var(--ink-dim);margin-bottom:10px;">${l.intro}</div>
+        <div style="overflow-x:auto;"><table class="tipex-table"><thead><tr><th>${l.th[0]}</th><th>${l.th[1]}</th><th>${l.th[2]}</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td class="tipex-organ">${r.name}</td><td><b>${r.organ}</b><br>${r.structuralChange}<br><i>${r.keyFeature}</i></td><td>${r.example}</td></tr>`).join('')}
+        </tbody></table></div>
+        <div class="tipex-note">${l.note}</div>`;
+    }
+  }
+};
+function openTipExample(key){
+  const ex = TIP_EXAMPLES[key];
+  if(!ex) return;
+  const lang = (typeof currentLang!=='undefined' && ex.title[currentLang]) ? currentLang : 'en';
+  document.getElementById('tipExampleTitle').textContent = ex.title[lang];
+  document.getElementById('tipExampleBody').innerHTML = ex.render(lang);
+  document.getElementById('tipExampleOverlay').style.display = 'flex';
+}
+function closeTipExample(){
+  const overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.style.display = 'none';
+}
+window.openTipExample = openTipExample;
+(function(){
+  var closeBtn = document.getElementById('tipExampleCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click', closeTipExample);
+  var overlay = document.getElementById('tipExampleOverlay');
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeTipExample(); });
+})();
 function renderStudyTips(){
   const en = STUDYTIPS_CH4_EN;
   const tr = (currentLang !== 'en') && STUDYTIPS_CH4_TRANSLATIONS[currentLang];
@@ -1872,7 +2151,7 @@ function renderStudyTips(){
     <h3 style="color:var(--gold);margin-bottom:4px;">${d.title}</h3>
     <div style="color:var(--ink-dim);font-size:12px;margin-bottom:16px;">${d.intro}</div>
     <div class="tip-head">${d.theoryHead}</div>
-    <ul class="tip-list">${d.theory.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <ul class="tip-list">${d.theory.map((t,i)=>`<li>${t}${TIP_EXAMPLE_INDEX[i]?`<br><button type="button" class="tip-example-btn" onclick="openTipExample('${TIP_EXAMPLE_INDEX[i]}')">\u{1F441}️ ${TIP_EXAMPLE_BTN_LABEL[currentLang]||TIP_EXAMPLE_BTN_LABEL.en}</button>`:''}</li>`).join('')}</ul>
     <div class="tip-head neet">${d.neetHead}</div>
     <ul class="tip-list neet">${d.neet.map(t=>`<li>${t}</li>`).join('')}</ul>
   </div>`;
@@ -2086,7 +2365,15 @@ const HW_MASTER_CODE = 'NS-MASTER-2027';
 const HW_UNLOCK_LOOKUP = {};
 function getHwUnlock(){ try{ return JSON.parse(localStorage.getItem(HW_UNLOCK_KEY) || 'null'); }catch(e){ return null; } }
 function setHwUnlock(method, extra){ try{ localStorage.setItem(HW_UNLOCK_KEY, JSON.stringify(Object.assign({unlocked:true, method:method, ts:Date.now()}, extra||{}))); }catch(e){} }
-function hwQualifies(){ const u=getHwUnlock(); return !!(u && u.unlocked); }
+function hwQualifies(){
+  const u = getHwUnlock();
+  if(!u || !u.unlocked) return false;
+  if(u.method === 'code' && studentCodeExpired(u)){
+    try{ localStorage.removeItem(HW_UNLOCK_KEY); }catch(e){}
+    return false;
+  }
+  return true;
+}
 function reLockHw(){ try{ localStorage.removeItem(HW_UNLOCK_KEY); }catch(e){} renderDownloads(); }
 window.reLockHw = reLockHw;
 function hwUnlockLookupKey(section,roll){ return (String(section).trim()+'_'+String(roll).trim()).toUpperCase(); }
@@ -2102,7 +2389,7 @@ function hwSubmitUnlock(){
   const entry=HW_UNLOCK_LOOKUP[hwUnlockLookupKey(section,roll)];
   if(entry && entry.code.toUpperCase()===code){ setHwUnlock('code',{roll,section}); renderDownloads(); return; }
   if(name.trim() && computeStudentCode(name,roll,section,'CH4-PU1-HWNOTES')===code){ setHwUnlock('code',{roll,section,name:name.trim()}); renderDownloads(); return; }
-  msgEl.textContent='That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir.'; msgEl.className='hw-msg bad';
+  msgEl.textContent='That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir, or note that student unlock codes expire on 25 Oct 2026 and may need to be renewed.'; msgEl.className='hw-msg bad';
 }
 window.hwSubmitUnlock=hwSubmitUnlock;
 function hwToggleCodeVisibility(){ const input=document.getElementById('hwCodeInput'), toggle=document.getElementById('hwCodeShowToggle'); if(input&&toggle) input.style.filter=toggle.checked?'none':'blur(4px)'; }
@@ -2281,10 +2568,11 @@ function kcetAnswer(i){
 }
 function kcetNext(){ kcetSession.idx++; kcetSession.answered=false; renderKcetQuestion(); }
 function kcetStopTest(){
-  if(!confirm('Stop this test now and see your report card based on the questions you\'ve answered so far?')) return;
+  if(!confirm('Stop this test now and see your report card? Unanswered questions will count as 0 marks toward your selected total.')) return;
   kcetClearTimer();
   const s = kcetSession;
-  s.questions = s.questions.slice(0, s.idx);
+  const remaining = s.questions.length - s.idx;
+  if(remaining > 0) s.timeoutCount += remaining;
   renderKcetReport();
 }
 function kcetGoBack(){
@@ -2899,8 +3187,8 @@ const PREMIUM_UNLOCK_LOOKUP = {};
 const PREMIUM_PRICE_RUPEES = 1999;
 const PREMIUM_PRICE_ORIGINAL = 3000;
 const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/uRI9JGg';
-const PREMIUM_LOCKED_TABS = ['mindmap','mcq','neet','kcet','papergen','boardimp','podcast'];
-const PREMIUM_TAB_LABELS = {mindmap:'Mind Map', mcq:'MCQ Quiz', neet:'NEET Practice', kcet:'KCET Practice', papergen:'Paper Generator', boardimp:'Board Important', podcast:'Audio Podcast'};
+const PREMIUM_LOCKED_TABS = ['oneshot','mindmap','classppt','mcq','neet','kcet','papergen','boardimp','podcast'];
+const PREMIUM_TAB_LABELS = {oneshot:'One-Shot Revision', mindmap:'Mind Map', classppt:'Class Presentation', mcq:'MCQ Quiz', neet:'NEET Practice', kcet:'KCET Practice', papergen:'Paper Generator', boardimp:'Board Important', podcast:'Audio Podcast'};
 
 function getPremiumUnlock(){ try{ return JSON.parse(localStorage.getItem(PREMIUM_KEY) || 'null'); }catch(e){ return null; } }
 function setPremiumUnlock(method, extra){
@@ -2910,6 +3198,10 @@ function premiumQualifies(){
   const u = getPremiumUnlock();
   if(!u || !u.unlocked) return false;
   if((u.method === 'demo' || u.method === 'masterdemo') && (!u.ts || (Date.now() - u.ts) > PREMIUM_DEMO_DURATION_MS)){
+    try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){}
+    return false;
+  }
+  if(u.method === 'code' && studentCodeExpired(u)){
     try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){}
     return false;
   }
@@ -2931,6 +3223,21 @@ function premiumStatusRow(){
 function premiumUnlockKey(section, roll){ return (section||'').trim().toUpperCase()+'_'+(roll||'').trim().toUpperCase(); }
 /* ---------------- Student-locked unlock code (must match code_generator.html exactly) ---------------- */
 const CODE_SALT = 'BAIO-STUDENT-LOCK-2026';
+/* Student-entered unlock codes (not the master code) stop granting access after this
+   date - Narendra Sir can renew access for everyone by moving this one date forward. */
+const STUDENT_CODE_EXPIRY = new Date('2026-10-25T23:59:59+05:30').getTime();
+/* Per-student renewals: a code-unlock for these SECTION_ROLL keys stays active
+   until the date given here, even after STUDENT_CODE_EXPIRY has passed. */
+const STUDENT_CODE_RENEWALS = {
+  'SPARK_26MPU0077': '2027-03-31T23:59:59+05:30'  /* Akshata (I PUC) */
+};
+function studentCodeExpired(u){
+  const now = Date.now();
+  if(now <= STUDENT_CODE_EXPIRY) return false;
+  const k = ((u && u.section)||'').toString().trim().toUpperCase() + '_' + ((u && u.roll)||'').toString().trim().toUpperCase();
+  const until = STUDENT_CODE_RENEWALS[k];
+  return !(until && now <= new Date(until).getTime());
+}
 const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 function normalizeField(s){ return (s || '').toString().trim().toUpperCase().replace(/\s+/g, ' '); }
 function fnv1aHash(str){
@@ -2974,7 +3281,7 @@ function premiumSubmitUnlock(){
   if(entry && entry.code.toUpperCase() === code){ setPremiumUnlock('code', {roll:roll, section:section}); renderContent(); renderTabbar(); return; }
   if(name && (computeStudentCode(name, roll, section, 'CH4-PU1-PREMIUM') === code || computeStudentCode(name, roll, section) === code)){ setPremiumUnlock('code', {roll:roll, section:section, name:name}); renderContent(); renderTabbar(); return; }
   if(!name){ msgEl.textContent = 'That roll number / code combination was not recognized. If Narendra Sir gave you a new-style code, please also enter your full name above.'; }
-  else { msgEl.textContent = 'That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir.'; }
+  else { msgEl.textContent = 'That name / roll number / section / code combination was not recognized. Double-check with Narendra Sir, or note that student unlock codes expire on 25 Oct 2026 and may need to be renewed.'; }
   msgEl.className='hw-msg bad';
 }
 window.premiumSubmitUnlock = premiumSubmitUnlock;
@@ -3062,14 +3369,66 @@ function injectDemoAccessBanner(){
   tick();
   demoBannerInterval = setInterval(tick, 1000);
 }
-function renderContent(){
-  if(PREMIUM_LOCKED_TABS.indexOf(currentTab) !== -1 && !premiumQualifies()){
-    renderPremiumLock(currentTab);
+
+/* ---------------- ONE-SHOT REVISION (Study Mode notes, narrated: oneshot-study.js) ---------------- */
+const ONESHOT_TOPIC_NAMES = {"basis_classification": {"kn": "ವರ್ಗೀಕರಣದ ಆಧಾರ", "hi": "वर्गीकरण का आधार"}, "body_symmetry_germ": {"kn": "ದೇಹ ಸಮಮಿತಿ, ಭ್ರೂಣ ಪದರಗಳು ಮತ್ತು ದೇಹಕುಹರ", "hi": "शारीरिक सममिति, जनन स्तर और देहगुहा"}, "segmentation_notochord": {"kn": "ಖಂಡೀಕರಣ ಮತ್ತು ನೋಟೋಕಾರ್ಡ್", "hi": "खंडीभवन और पृष्ठरज्जु"}, "phylum_porifera": {"kn": "ವಂಶ ಪೊರಿಫೆರಾ", "hi": "संघ पोरीफेरा"}, "phylum_coelenterata": {"kn": "ವಂಶ ಸೀಲೆಂಟರೇಟಾ (ನಿಡೇರಿಯಾ)", "hi": "संघ सीलेंटरेटा (निडेरिया)"}, "phylum_ctenophora": {"kn": "ವಂಶ ಟೀನೋಫೋರಾ", "hi": "संघ टीनोफोरा"}, "phylum_platyhelminthes": {"kn": "ವಂಶ ಪ್ಲಾಟಿಹೆಲ್ಮಿಂಥಿಸ್", "hi": "संघ प्लेटिहेल्मिंथीज़"}, "phylum_aschelminthes": {"kn": "ವಂಶ ಆಸ್ಕೆಲ್ಮಿಂಥಿಸ್", "hi": "संघ एस्केल्मिंथीज़"}, "phylum_annelida": {"kn": "ವಂಶ ಆನೆಲಿಡಾ", "hi": "संघ एनेलिडा"}, "phylum_arthropoda": {"kn": "ವಂಶ ಆರ್ತ್ರೋಪೋಡಾ", "hi": "संघ आर्थ्रोपोडा"}, "phylum_mollusca": {"kn": "ವಂಶ ಮೊಲಸ್ಕಾ", "hi": "संघ मोलस्का"}, "phylum_echinodermata": {"kn": "ವಂಶ ಎಕೈನೋಡರ್ಮೇಟಾ", "hi": "संघ इकाइनोडर्मेटा"}, "phylum_hemichordata": {"kn": "ವಂಶ ಹೆಮಿಕಾರ್ಡೇಟಾ", "hi": "संघ हेमीकॉर्डेटा"}, "phylum_chordata": {"kn": "ವಂಶ ಕಾರ್ಡೇಟಾ — ಸಾಮಾನ್ಯ ಲಕ್ಷಣಗಳು ಮತ್ತು ಉಪವಂಶಗಳು", "hi": "संघ कॉर्डेटा — सामान्य लक्षण और उपसंघ"}, "class_cyclostomata": {"kn": "ವರ್ಗ ಸೈಕ್ಲೋಸ್ಟೋಮೇಟಾ", "hi": "वर्ग साइक्लोस्टोमेटा"}, "class_chondrichthyes": {"kn": "ವರ್ಗ ಕಾಂಡ್ರಿಕ್ತಿಸ್", "hi": "वर्ग कॉन्ड्रिक्थीज़"}, "class_osteichthyes": {"kn": "ವರ್ಗ ಆಸ್ಟಿಕ್ತಿಸ್", "hi": "वर्ग ऑस्टिक्थीज़"}, "class_amphibia": {"kn": "ವರ್ಗ ಆಂಫಿಬಿಯಾ", "hi": "वर्ग एम्फ़ीबिया"}, "class_reptilia": {"kn": "ವರ್ಗ ರೆಪ್ಟೀಲಿಯಾ", "hi": "वर्ग रेप्टीलिया"}, "class_aves": {"kn": "ವರ್ಗ ಏವ್ಸ್", "hi": "वर्ग एवीज़"}, "class_mammalia": {"kn": "ವರ್ಗ ಮ್ಯಾಮೇಲಿಯಾ", "hi": "वर्ग मैमेलिया"}, "summary": {"kn": "ಸಾರಾಂಶ — ವಂಶಗಳ ಪ್ರಮುಖ ಲಕ್ಷಣಗಳು", "hi": "सारांश — संघों के मुख्य लक्षण"}};
+function renderOneShotStudy(){
+  if(!window.OneShotStudy){ document.getElementById('content').innerHTML = '<div class="setup-card">Loading One-Shot Revision…</div>'; setTimeout(()=>{ if(currentTab==='oneshot') renderOneShotStudy(); }, 400); return; }
+  OneShotStudy.render({
+    key:'pu1ch4', chapterNo:4, cls:'PU-I',
+    chapterName:{"en": "Animal Kingdom", "kn": "ಪ್ರಾಣಿ ಸಾಮ್ರಾಜ್ಯ", "hi": "प्राणी जगत"},
+    topics: DATA.topics.map(t=>({id:t.id, name:Object.assign({en:t.name}, ONESHOT_TOPIC_NAMES[t.id]||{})})),
+    getStudy:(id, l)=> l==='en' ? DATA.study[id] : ((typeof STUDY_TRANSLATIONS_CH4!=='undefined' && STUDY_TRANSLATIONS_CH4[id] && STUDY_TRANSLATIONS_CH4[id][l]) || null),
+    container:()=>document.getElementById('content'),
+    lang:()=>(typeof currentLang!=='undefined' ? currentLang : 'en')
+  });
+}
+
+/* ---------------- CLASS PRESENTATION · Large Text (projector) deck (class-large.js) ---------------- */
+let clgDeck = (function(){ try{ return localStorage.getItem('pu1ch4_ppt_deck') || ''; }catch(e){ return ''; } })();
+function clgSetDeck(d){ clgDeck = d; try{ localStorage.setItem('pu1ch4_ppt_deck', d); }catch(e){} renderClassPpt(); }
+function clgSwitchHtml(active){
+  return `<div class="clg-deck-switch"><button type="button" class="${active==='std'?'active':''}" onclick="clgSetDeck('std')">🖼️ Standard <span>${CLASS_SLIDES.length} slides</span></button><button type="button" class="${active==='large'?'active':''}" onclick="clgSetDeck('large')">🔠 Large Text · Projector <span>light &amp; dark · EN / ಕ / हि</span></button></div>`;
+}
+const _clgStdRenderClassPpt = renderClassPpt;
+renderClassPpt = function(){
+  if(window.ClassLarge) ClassLarge.unmount();
+  const deck = CLASS_SLIDES.length ? (clgDeck==='large' ? 'large' : 'std') : 'large';
+  if(deck==='std'){
+    _clgStdRenderClassPpt();
+    const h = document.querySelector('#content .setup-card h3');
+    if(h) h.insertAdjacentHTML('afterend', clgSwitchHtml('std'));
     return;
+  }
+  document.getElementById('content').innerHTML = `<div class="setup-card"><h3 style="color:var(--gold);margin-bottom:8px;">Class Presentation</h3>${CLASS_SLIDES.length ? clgSwitchHtml('large') : ''}<div id="clgHost"></div></div>`;
+  if(!window.ClassLarge){ document.getElementById('clgHost').innerHTML = '<div style="padding:20px;text-align:center">Loading slides…</div>'; setTimeout(()=>{ if(currentTab==='classppt') renderClassPpt(); }, 400); return; }
+  ClassLarge.mount(document.getElementById('clgHost'), {
+    key:'pu1ch4', chapterNo:4, cls:'PU-I',
+    chapterName:{"en": "Animal Kingdom", "kn": "ಪ್ರಾಣಿ ಸಾಮ್ರಾಜ್ಯ", "hi": "प्राणी जगत"},
+    topics: DATA.topics.map(t=>({id:t.id, name:Object.assign({en:t.name}, (typeof ONESHOT_TOPIC_NAMES!=='undefined' && ONESHOT_TOPIC_NAMES[t.id])||{})})),
+    getStudy:(id, l)=> l==='en' ? DATA.study[id] : ((typeof STUDY_TRANSLATIONS_CH4!=='undefined' && STUDY_TRANSLATIONS_CH4[id] && STUDY_TRANSLATIONS_CH4[id][l]) || null),
+    lang:()=>(typeof currentLang!=='undefined' ? currentLang : 'en')
+  });
+};
+
+function renderContent(){
+  if(currentTab !== 'classppt' && window.ClassLarge) ClassLarge.unmount();
+  if(currentTab !== 'oneshot' && window.OneShotStudy) OneShotStudy.stop();
+  if(window.BaioSample) BaioSample.clear();
+  if(PREMIUM_LOCKED_TABS.indexOf(currentTab) !== -1 && !premiumQualifies()){
+    if(window.BaioSample && BaioSample.allow(currentTab)){
+      const __sampleTab = currentTab;
+      setTimeout(function(){ if(currentTab === __sampleTab) BaioSample.start(__sampleTab, document.getElementById('content'), function(t){ renderPremiumLock(t); }, null, {single:true}); }, 0);
+    } else {
+      renderPremiumLock(currentTab);
+      if(window.BaioSample) BaioSample.notice(currentTab, document.getElementById('content'));
+      return;
+    }
   }
   if(currentTab==='badges') renderBadgesCard();
   else if(currentTab==='progress') renderProgress();
   else if(currentTab==='study') renderStudy();
+  else if(currentTab==='oneshot') renderOneShotStudy();
   else if(currentTab==='podcast') renderPodcast();
   else if(currentTab==='studytips') renderStudyTips();
   else if(currentTab==='pacing') renderPacing();
@@ -3081,6 +3440,7 @@ function renderContent(){
   else if(currentTab==='writeit') renderWriteIt();
   else if(currentTab==='revision') renderRevision();
   else if(currentTab==='mindmap') renderMindmap();
+  else if(currentTab==='classppt') renderClassPpt();
   else if(currentTab==='tree') renderTree();
   else if(currentTab==='compare') renderCompare();
   else if(currentTab==='glossary') renderGlossary();
@@ -3385,6 +3745,210 @@ function renderMindmap(){
   }, 50);
 }
 
+/* ---- Class Presentation: PowerPoint-style slide viewer ----
+   Narendra Sir's actual classroom slide deck for this chapter, exported to
+   JPGs in pu1-ch4-assets/. ---- */
+const CLASS_SLIDES = ["pu1-ch4-assets/slide-01.jpg", "pu1-ch4-assets/slide-02.jpg", "pu1-ch4-assets/slide-03.jpg", "pu1-ch4-assets/slide-04.jpg", "pu1-ch4-assets/slide-05.jpg", "pu1-ch4-assets/slide-06.jpg", "pu1-ch4-assets/slide-07.jpg", "pu1-ch4-assets/slide-08.jpg", "pu1-ch4-assets/slide-09.jpg", "pu1-ch4-assets/slide-10.jpg", "pu1-ch4-assets/slide-11.jpg", "pu1-ch4-assets/slide-12.jpg", "pu1-ch4-assets/slide-13.jpg", "pu1-ch4-assets/slide-14.jpg", "pu1-ch4-assets/slide-15.jpg", "pu1-ch4-assets/slide-16.jpg", "pu1-ch4-assets/slide-17.jpg", "pu1-ch4-assets/slide-18.jpg", "pu1-ch4-assets/slide-19.jpg", "pu1-ch4-assets/slide-20.jpg", "pu1-ch4-assets/slide-21.jpg", "pu1-ch4-assets/slide-22.jpg", "pu1-ch4-assets/slide-23.jpg"];
+
+/* Custom fullscreen system: some in-app browsers/WebViews implement the
+   native Fullscreen API unreliably (silently failing, or leaving the page
+   scrollable behind the "fullscreen" element). This manual system is the
+   primary mechanism -- it always works -- with native fullscreen attempted
+   as a best-effort bonus (for hardware back-button support on devices that
+   do support it properly). */
+let customFsEl = null;
+let customFsPrevOverflow = null;
+function isWrapFullscreen(el){
+  return customFsEl === el || document.fullscreenElement === el || document.webkitFullscreenElement === el;
+}
+function enterCustomFullscreen(el){
+  if(!el || customFsEl === el) return;
+  customFsEl = el;
+  customFsPrevOverflow = document.body.style.overflow;
+  document.body.style.overflow = 'hidden';
+  el.classList.add('js-fullscreen');
+  try{
+    if(el.requestFullscreen) el.requestFullscreen().catch(()=>{});
+    else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  }catch(e){}
+}
+function exitCustomFullscreen(){
+  if(!customFsEl) return;
+  customFsEl.classList.remove('js-fullscreen');
+  document.body.style.overflow = customFsPrevOverflow || '';
+  customFsEl = null;
+  try{
+    if(document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(()=>{});
+    else if(document.webkitFullscreenElement && document.webkitExitFullscreen) document.webkitExitFullscreen();
+  }catch(e){}
+}
+document.addEventListener('fullscreenchange', ()=>{
+  if(!document.fullscreenElement && customFsEl){
+    customFsEl.classList.remove('js-fullscreen');
+    document.body.style.overflow = customFsPrevOverflow || '';
+    customFsEl = null;
+  }
+});
+window.exitCustomFullscreen = exitCustomFullscreen;
+
+function applyPanZoomTransform(imgEl, state){
+  imgEl.style.transform = 'translate(' + state.tx + 'px, ' + state.ty + 'px) scale(' + state.scale + ')';
+}
+function clampPan(wrapEl, state){
+  const rect = wrapEl.getBoundingClientRect();
+  const maxX = Math.max(0, (state.scale - 1) * rect.width / 2);
+  const maxY = Math.max(0, (state.scale - 1) * rect.height / 2);
+  state.tx = Math.min(Math.max(state.tx, -maxX), maxX);
+  state.ty = Math.min(Math.max(state.ty, -maxY), maxY);
+}
+function attachPinchZoom(wrapEl, imgEl, state){
+  state.tx = state.tx || 0; state.ty = state.ty || 0;
+  let startDist = 0, startScale = 1;
+  let dragging = false, dragStartX = 0, dragStartY = 0, dragStartTx = 0, dragStartTy = 0;
+  function dist(t){ return Math.hypot(t[0].clientX-t[1].clientX, t[0].clientY-t[1].clientY); }
+  wrapEl.addEventListener('touchstart', (e)=>{
+    if(!isWrapFullscreen(wrapEl)) return;
+    if(e.touches.length===2){
+      dragging = false;
+      startDist = dist(e.touches); startScale = state.scale;
+    } else if(e.touches.length===1 && state.scale > 1){
+      dragging = true;
+      dragStartX = e.touches[0].clientX; dragStartY = e.touches[0].clientY;
+      dragStartTx = state.tx; dragStartTy = state.ty;
+    }
+  }, {passive:true});
+  wrapEl.addEventListener('touchmove', (e)=>{
+    if(!isWrapFullscreen(wrapEl)) return;
+    if(e.touches.length===2){
+      e.preventDefault();
+      const scale = Math.min(Math.max(startScale*(dist(e.touches)/startDist), 1), 4);
+      state.scale = scale;
+      clampPan(wrapEl, state);
+      applyPanZoomTransform(imgEl, state);
+    } else if(e.touches.length===1 && dragging){
+      e.preventDefault();
+      state.tx = dragStartTx + (e.touches[0].clientX - dragStartX);
+      state.ty = dragStartTy + (e.touches[0].clientY - dragStartY);
+      clampPan(wrapEl, state);
+      applyPanZoomTransform(imgEl, state);
+    }
+  }, {passive:false});
+  wrapEl.addEventListener('touchend', (e)=>{
+    if(e.touches.length===0) dragging = false;
+  }, {passive:true});
+  /* Mouse drag-to-pan, for testing on desktop browsers */
+  let mouseDragging = false;
+  wrapEl.addEventListener('mousedown', (e)=>{
+    if(!isWrapFullscreen(wrapEl) || state.scale<=1) return;
+    mouseDragging = true;
+    dragStartX = e.clientX; dragStartY = e.clientY;
+    dragStartTx = state.tx; dragStartTy = state.ty;
+  });
+  window.addEventListener('mousemove', (e)=>{
+    if(!mouseDragging) return;
+    state.tx = dragStartTx + (e.clientX - dragStartX);
+    state.ty = dragStartTy + (e.clientY - dragStartY);
+    clampPan(wrapEl, state);
+    applyPanZoomTransform(imgEl, state);
+  });
+  window.addEventListener('mouseup', ()=>{ mouseDragging = false; });
+}
+
+let pptIdx = 0;
+let pptFsState = {scale:1};
+function renderClassPpt(){
+  if(!CLASS_SLIDES.length){
+    document.getElementById('content').innerHTML = `<div class="setup-card">
+      <h3 style="color:var(--gold);margin-bottom:8px;">Class Presentation</h3>
+      <div class="ppt-coming-soon">
+        <div class="icon">📽️</div>
+        <div class="t">Coming Soon</div>
+        <div class="d">Narendra Sir's classroom slide deck for this chapter hasn't been uploaded yet. Once it's ready, it'll appear here automatically — with the same swipe/tap navigation, thumbnail strip and fullscreen viewer as every other chapter.</div>
+      </div>
+    </div>`;
+    return;
+  }
+  document.getElementById('content').innerHTML = `<div class="setup-card">
+    <h3 style="color:var(--gold);margin-bottom:8px;">Class Presentation</h3>
+    <div class="ppt-progress-track"><div class="ppt-progress-fill" id="pptProgressFill"></div></div>
+    <div class="ppt-thumbs" id="pptThumbs"></div>
+    <div class="ppt-slide-wrap" id="pptWrap">
+      <img id="pptImg" src="" onload="this.classList.add('loaded')">
+      <div class="ppt-tap-zone ppt-tap-left" onclick="pptPrev()" title="Previous slide"></div>
+      <div class="ppt-tap-zone ppt-tap-right" onclick="pptNext()" title="Next slide"></div>
+      <div class="fs-controls">
+        <button class="fs-btn fs-prev" onclick="pptPrev()">&#10094;</button>
+        <button class="fs-btn fs-next" onclick="pptNext()">&#10095;</button>
+        <button class="fs-btn fs-exit" onclick="pptExitFullscreen()">&#10005;</button>
+      </div>
+    </div>
+    <div class="ppt-nav">
+      <button class="opt-btn" onclick="pptPrev()">&larr; Prev</button>
+      <button class="opt-btn" onclick="pptFullscreen()">&#9974; Fullscreen</button>
+      <button class="opt-btn" onclick="pptNext()">Next &rarr;</button>
+    </div>
+  </div>`;
+  pptIdx = 0;
+  pptFsState.scale = 1;
+  pptBuildThumbs();
+  pptAttachSwipe();
+  const wrap = document.getElementById('pptWrap'), img = document.getElementById('pptImg');
+  if(wrap && img) attachPinchZoom(wrap, img, pptFsState);
+  pptRender();
+}
+function pptSlideSrc(i){ return CLASS_SLIDES[i]; }
+function pptBuildThumbs(){
+  const thumbs = document.getElementById('pptThumbs');
+  if(!thumbs) return;
+  thumbs.innerHTML = CLASS_SLIDES.map((s,i)=>`<div class="ppt-thumb" id="pptThumb${i}" onclick="pptGoTo(${i})"><img loading="lazy" src="${pptSlideSrc(i)}" alt="Slide ${i+1}"></div>`).join('');
+}
+function pptRender(){
+  const img = document.getElementById('pptImg');
+  if(!img) return;
+  img.style.transform = '';
+  pptFsState.scale = 1; pptFsState.tx = 0; pptFsState.ty = 0;
+  img.classList.remove('loaded');
+  img.src = pptSlideSrc(pptIdx);
+  const fill = document.getElementById('pptProgressFill');
+  if(fill) fill.style.width = (((pptIdx+1)/CLASS_SLIDES.length)*100)+'%';
+  document.querySelectorAll('.ppt-thumb').forEach((t,i)=>t.classList.toggle('active', i===pptIdx));
+  const activeThumb = document.getElementById('pptThumb'+pptIdx);
+  if(activeThumb) activeThumb.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+}
+function pptGoTo(i){ if(!CLASS_SLIDES.length) return; pptIdx = ((i % CLASS_SLIDES.length) + CLASS_SLIDES.length) % CLASS_SLIDES.length; pptRender(); }
+function pptNext(){ pptGoTo(pptIdx+1); }
+function pptPrev(){ pptGoTo(pptIdx-1); }
+function pptFullscreen(){
+  const wrap = document.getElementById('pptWrap');
+  if(!wrap) return;
+  enterCustomFullscreen(wrap);
+}
+function pptExitFullscreen(){
+  exitCustomFullscreen();
+  pptFsState.scale = 1; pptFsState.tx = 0; pptFsState.ty = 0;
+  const img = document.getElementById('pptImg');
+  if(img) img.style.transform = '';
+}
+function pptAttachSwipe(){
+  const wrap = document.getElementById('pptWrap');
+  if(!wrap) return;
+  let startX = null;
+  wrap.addEventListener('touchstart', (e)=>{ if(e.touches.length===1) startX = e.touches[0].clientX; else startX = null; }, {passive:true});
+  wrap.addEventListener('touchend', (e)=>{
+    if(startX === null) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    if(Math.abs(dx) > 40){ dx < 0 ? pptNext() : pptPrev(); }
+    startX = null;
+  }, {passive:true});
+}
+window.pptGoTo=pptGoTo; window.pptNext=pptNext; window.pptPrev=pptPrev; window.pptFullscreen=pptFullscreen; window.pptExitFullscreen=pptExitFullscreen;
+document.addEventListener('keydown', (e)=>{
+  if(currentTab !== 'classppt') return;
+  if(e.key === 'ArrowRight') pptNext();
+  if(e.key === 'ArrowLeft') pptPrev();
+  if(e.key === 'Escape') pptExitFullscreen();
+});
+
 /* ---- Tree Explorer ---- */
 const TREE_DATA = [{"kingdom":"Kingdom Animalia","groups":[{"name":"Basis of classification","detail":"<b>Core criteria:</b> level of organisation, symmetry, germ layers, coelom, segmentation and notochord. These build the Animal Kingdom classification framework."},{"name":"Porifera","detail":"<b>Cellular level; generally asymmetrical; aquatic.</b> Water canal system with ostia, choanocytes and osculum; skeleton of spicules/spongin. <b>Examples:</b> Sycon, Spongilla, Euspongia."},{"name":"Coelenterata (Cnidaria)","detail":"<b>Tissue level; radial; diploblastic.</b> Cnidoblasts with nematocysts; polyp and medusa forms; gastrovascular cavity. <b>Examples:</b> Hydra, Obelia, Aurelia, Physalia."},{"name":"Ctenophora","detail":"<b>Marine, radial, diploblastic.</b> Eight rows of ciliary comb plates; adhesive colloblasts; often bioluminescent. <b>Examples:</b> Pleurobrachia, Ctenoplana."},{"name":"Platyhelminthes","detail":"<b>Organ level; bilateral; triploblastic; acoelomate.</b> Dorsoventrally flattened; flame cells; many parasitic. <b>Examples:</b> Planaria, Fasciola, Taenia."},{"name":"Aschelminthes (Nematoda)","detail":"<b>Organ-system level; bilateral; triploblastic; pseudocoelomate.</b> Cylindrical, unsegmented; complete digestive tract; sexes generally separate. <b>Examples:</b> Ascaris, Wuchereria, Ancylostoma."},{"name":"Annelida","detail":"<b>True coelom; metameric segmentation; closed circulation.</b> Nephridia for excretion; setae/parapodia for movement. <b>Examples:</b> Nereis, earthworm, leech."},{"name":"Arthropoda","detail":"<b>Largest phylum.</b> Segmented body, jointed appendages, chitinous exoskeleton and open circulation. <b>Examples:</b> cockroach, prawn, scorpion, honeybee."},{"name":"Mollusca","detail":"<b>Soft unsegmented body.</b> Head, muscular foot and visceral hump; mantle and mantle cavity; radula in most. <b>Examples:</b> Pila, Unio, Octopus, Aplysia."},{"name":"Echinodermata","detail":"<b>Exclusively marine; adults radial, larvae bilateral.</b> Calcareous endoskeleton and water vascular system with tube feet. <b>Examples:</b> Asterias, Echinus, Ophiura, Antedon."},{"name":"Hemichordata","detail":"<b>Marine worm-like animals.</b> Body divided into proboscis, collar and trunk; pharyngeal gill slits but no true notochord. <b>Examples:</b> Balanoglossus, Saccoglossus."},{"name":"Chordata — general and subphyla","detail":"<b>Defining characters:</b> notochord, dorsal hollow nerve cord, pharyngeal gill slits and post-anal tail. <b>Urochordata:</b> Herdmania (notochord in larval tail). <b>Cephalochordata:</b> Branchiostoma (notochord from head to tail). <b>Vertebrata:</b> cranium and vertebral column."},{"name":"Vertebrata — Cyclostomata","detail":"<b>Jawless, circular sucking mouth; ectoparasitic.</b> No scales or paired fins; 6–15 pairs of gill slits. <b>Examples:</b> Petromyzon, Myxine."},{"name":"Vertebrata — Chondrichthyes","detail":"<b>Cartilaginous fishes.</b> Placoid scales, 5–7 gill slits without operculum, no air bladder; internal fertilisation. <b>Examples:</b> Scoliodon, Pristis, Carcharodon, Trygon, Torpedo."},{"name":"Vertebrata — Osteichthyes","detail":"<b>Bony fishes.</b> Four pairs of gills covered by operculum; air bladder usually present; cycloid/ctenoid scales. <b>Examples:</b> Rohu, Catla, Clarias, Hippocampus, Exocoetus."},{"name":"Vertebrata — Amphibia","detail":"<b>Life in water and on land.</b> Moist glandular skin, three-chambered heart, cloaca; larvae with gills. <b>Examples:</b> Rana, Bufo, Hyla, Salamandra."},{"name":"Vertebrata — Reptilia","detail":"<b>Terrestrial amniotes.</b> Dry cornified skin with scales/scutes; lungs; internal fertilisation; shelled eggs. <b>Examples:</b> Chelone, Testudo, Chameleon, Calotes, Crocodilus, Naja."},{"name":"Vertebrata — Aves","detail":"<b>Feathered, warm-blooded vertebrates.</b> Wings, pneumatic bones, four-chambered heart; hard-shelled eggs. <b>Examples:</b> Corvus, Columba, Psittacula, Struthio, Pavo."},{"name":"Vertebrata — Mammalia","detail":"<b>Hair and mammary glands.</b> External ear pinnae, diaphragm and four-chambered heart; mostly viviparous. <b>Examples:</b> Ornithorhynchus, Macropus, Pteropus, Camelus, Homo sapiens."}]}];
 function renderTree(){
@@ -3673,7 +4237,8 @@ var WHATSNEW_ITEMS = [
   {key:'pu1ch4_whatsnew_launch_v1', html:'🦋 <b>Chapter 4: Animal Kingdom is live!</b> Full practice sets, NEET/KCET question banks, and premium content now available.'},
   {key:'pu1ch4_whatsnew_pacing_v1', html:'🗓️ <b>New: Pacing tab!</b> Get your own week-by-week, hour-by-hour study plan for this chapter — sized to how much content each topic actually has. Benefits: 📖 every topic split into focused 1-hour blocks (40 min reading + 20 min practice) • ⏱️ paced at 1 hr/day, 5 days/week, so it never feels rushed • 🔁 a revision plan built in after every weekend • ✅ tick off each hour as you go — your progress saves right on your device. Open the <b>Pacing</b> tab above to start.'},
   {key:'pu1ch4_whatsnew_diagram_marks_v1', html:'📊 <b>Important Diagrams now show mark weightage!</b> Every figure in the Important Diagrams tab shows a "3 M" / "2–3 M" badge next to its priority rating, so you know exactly how many marks it\'s worth in the board exam — plus a downloadable reference guide PDF right at the top of the tab.'},
-  {key:'pu1ch4_whatsnew_podcast_v1', html:'🎧 <b>New: Audio Podcast, in English, Kannada &amp; Hindi!</b> Listen to a full audio walkthrough of this chapter right inside the app — great for revising every phylum from Porifera to Chordata on the go. Open the <b>Audio Podcast</b> tab above to try it. (Part of Premium Content.)'}
+  {key:'pu1ch4_whatsnew_podcast_v1', html:'🎧 <b>New: Audio Podcast, in English, Kannada &amp; Hindi!</b> Listen to a full audio walkthrough of this chapter right inside the app — great for revising every phylum from Porifera to Chordata on the go. Open the <b>Audio Podcast</b> tab above to try it. (Part of Premium Content.)'},
+  {key:'pu1ch4_whatsnew_classppt_v1', html:'🎞️ <b>New: Narendra Sir\'s Class Presentation!</b> The exact slides used in class, now in your pocket — high-quality, exam-focused, and built to make revision fast. Swipe through, zoom into any diagram in fullscreen, or jump straight to a slide from the thumbnail strip. Open the <b>Class Presentation</b> tab above to try it. (Part of Premium Content.)'}
 ];
 function showNextWhatsNew(){
   var el = document.getElementById('whatsNewBanner');
@@ -3918,6 +4483,36 @@ window.chapterHardRefresh = chapterHardRefresh;
   if(document.readyState === 'complete' || document.readyState === 'interactive'){ checkConnectivity(); }
   else { document.addEventListener('DOMContentLoaded', checkConnectivity); }
 })();
+</script>
+<script>
+async function shareAllSocial(){
+  const text = '\u{1F4DA} BAIO Learning System \u2014 by Narendra Sir\nBiology All In One, for PU-I/PU-II & NEET/KCET aspirants.\n\n'
+    + '\u{1F310} App: https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/\n\n'
+    + '\u{1F4AC} WhatsApp Channel: https://whatsapp.com/channel/0029Vb6CCEO5vKADDySvN90X\n\n'
+    + '\u{1F4F8} Instagram: https://www.instagram.com/new_gen_bioguru\n\n'
+    + '\u25B6\uFE0F YouTube: https://youtube.com/@biogurunarendrasir\n\n'
+    + '\u{1F4E2} Telegram: https://t.me/BAIO_Learning_System';
+  /* Share sheet: picture size + links only / picture only / picture + links (assets/social/share-sheet.js). */
+  if(!window.BAIOShare){
+    await new Promise(function(ok){ const sc = document.createElement('script'); sc.src = 'assets/social/share-sheet.js?v=1'; sc.onload = ok; sc.onerror = ok; document.head.appendChild(sc); });
+  }
+  if(window.BAIOShare){ window.BAIOShare.open(text, 'assets/social/'); return; }
+  if(navigator.share){
+    try{ await navigator.share({ title:'BAIO Learning System \u2014 by Narendra Sir', text }); return; }catch(e){ if(e && e.name === 'AbortError') return; }
+  }
+  try{
+    await navigator.clipboard.writeText(text);
+    alert('All links copied! Paste anywhere to share.');
+  }catch(e){
+    window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank', 'noopener,noreferrer');
+  }
+}
+window.shareAllSocial = shareAllSocial;
+</script>
+<script>
+/* Chapter Quick Card at the top of the Board Important tab (quick-card.js) */
+(function(){ if(typeof renderBoardImportant!=='function') return; const _rbi=renderBoardImportant;
+  renderBoardImportant=function(){ const r=_rbi.apply(this,arguments); if(window.QuickCard) QuickCard.mount(document.getElementById('content'), {id:'pu1-ch4', base:'', title:'Animal Kingdom', cls:'I PUC', ch:4}); return r; }; })();
 </script>
 </body>
 </html>

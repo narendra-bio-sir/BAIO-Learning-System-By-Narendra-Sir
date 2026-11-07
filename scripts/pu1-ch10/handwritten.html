@@ -1,0 +1,54 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="../../notes/src/draw.js"></script><script src="cc-draw.js"></script><script src="diagrams.js"></script><script src="vis.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1240px;height:1754px;overflow:hidden;font-family:'Kalam','Patrick Hand',cursive;color:#1d2b6b;
+ background:#fffef6 repeating-linear-gradient(transparent 0 52px,#c9dbf2 52px 54px);background-position:0 120px;position:relative}
+body:before{content:'';position:absolute;left:110px;top:0;bottom:0;width:3px;background:#f2a1a1}
+.pg{position:absolute;left:140px;right:60px;top:40px;bottom:60px}
+h1{font:700 80px/1.1 'Kalam';color:#c62828;text-decoration:underline wavy #f2b705 4px;text-underline-offset:10px;margin-bottom:12px}
+h2{font:700 48px/1.3 'Kalam';color:#0d6e5c;margin:16px 0 4px}
+h2 u{text-decoration-color:#0d6e5c}
+p,li{font:400 35px/54px 'Patrick Hand','Kalam';color:#1d2b6b}
+li{margin-left:34px}
+b{color:#b71c1c;font-weight:400;background:linear-gradient(transparent 55%,#fff27a 55%)}
+.star{color:#e65100;font-weight:700}
+.box{border:3px solid #1d2b6b;border-radius:14px;padding:6px 16px;margin:10px 0;background:rgba(255,255,255,.75);transform:rotate(-.4deg)}
+.pic{display:flex;justify-content:center;margin:8px 0}
+.pic svg{width:78%;height:auto;max-height:var(--ph,560px)}.pic img{max-width:92%;max-height:var(--ph,560px)}
+table{border-collapse:collapse;margin:8px 0;background:rgba(255,255,255,.8)}
+td,th{border:2px solid #1d2b6b;padding:4px 16px;font:400 32px/44px 'Patrick Hand'}
+th{color:#c62828}
+.foot{position:absolute;left:140px;right:60px;bottom:16px;display:flex;justify-content:space-between;font:400 20px 'Patrick Hand';color:#6b6b9a}
+.cover{text-align:center;padding-top:200px}
+.cover h1{font-size:96px;text-decoration:none}
+.cover p{font-size:36px;line-height:60px}
+</style></head><body><div class="pg" id="pg"></div><div class="foot"><span>Narendra Sir · Lecturer in Biology · BAIO Learning System</span><span id="pn"></span></div>
+<script>
+const st = '<span class="star">★</span>';
+const P = [
+ `<div class="cover"><h1>Cell Cycle &amp;<br>Cell Division</h1><p>PU-I Biology · Chapter 10<br>Handwritten notes by <b>Narendra Sir</b><br>Lecturer in Biology · Founder/CEO, BAIO Learning System</p><div class="pic" style="margin-top:50px">${V.mitosisRow()}</div><p>★ = very important for exams</p></div>`,
+ `<h1>1. The Cell Cycle</h1><ul><li>${st} <b>Cell cycle</b> = sequence of events: cell duplicates its genome, makes other cell parts and divides into <b>2 daughter cells</b>.</li><li>Events are under <b>genetic control</b>. Cell growth is continuous but <b>DNA synthesis only in S phase</b>.</li><li>${st} Duration: human cell ≈ <b>24 h</b>, yeast ≈ <b>90 min</b>.</li></ul>
+  <h2><u>Two phases</u></h2><ul><li><b>Interphase</b> — preparation, <b>&gt; 95%</b> of the cycle ("resting" but very active!)</li><li><b>M phase</b> — about 1 h: <b>karyokinesis</b> (P → M → A → T) + <b>cytokinesis</b></li></ul><div class="pic">${V.wheel()}</div>`,
+ `<h1>2. Interphase</h1><ul><li><b>G₁</b> — between mitosis &amp; DNA replication; cell grows, <u>no</u> DNA replication.</li><li>${st} <b>S</b> — DNA replication: <b>2C → 4C</b> but chromosome no. stays <b>2n</b>. Centriole duplicates (animal cells).</li><li><b>G₂</b> — proteins for mitosis are made; growth continues.</li><li>${st} <b>G₀ (quiescent)</b> — cells exit G₁, active but not dividing (e.g. heart cells).</li></ul>
+  <div class="pic">${V.dna()}</div><table><tr><th>Stage</th><th>Chromosomes</th><th>DNA</th></tr><tr><td>G₁</td><td>2n</td><td>2C</td></tr><tr><td>G₂</td><td>2n</td><td>4C</td></tr><tr><td>after mitosis</td><td>2n</td><td>2C</td></tr><tr><td>after meiosis I</td><td>n</td><td>2C</td></tr><tr><td>after meiosis II</td><td>n</td><td>C</td></tr></table><p>Animals: mitosis only in diploid somatic cells · plants: haploid &amp; diploid cells.</p>`,
+ `<h1>3. Prophase &amp; Metaphase</h1><p>${st} Mitosis = <b>equational division</b> (same chromosome no.). Strasburger (1870, plants), <b>Flemming</b> (1879, animals, coined "mitosis").</p>
+  <h2><u>Prophase</u></h2><ul><li>Chromatin condenses → chromosomes with <b>2 chromatids</b> joined at centromere.</li><li>Centrosomes move to opposite poles; <b>asters</b> + spindle = <b>mitotic apparatus</b>.</li><li>Golgi, ER, nucleolus, nuclear envelope disappear.</li></ul>
+  <h2><u>Metaphase</u></h2><ul><li>Nuclear envelope fully gone; condensation complete.</li><li>${st} <b>Kinetochores</b> (discs on centromeres) attach spindle fibres.</li><li>${st} Chromosomes line up on the <b>metaphase plate</b> — best stage to study chromosomes.</li></ul><div class="pic"><img src="../../pu1-ch10-assets/diag-chromosome.jpg"></div>`,
+ `<h1>4. Anaphase &amp; Telophase</h1><h2><u>Anaphase</u></h2><ul><li>${st} <b>Centromeres split</b>; chromatids move to <b>opposite poles</b>.</li><li>Centromere leads, arms trail behind (V / J shapes).</li></ul><div class="pic">${V.anaphase()}</div>
+  <h2><u>Telophase</u></h2><ul><li>Chromosomes reach poles, <b>decondense</b>, lose individuality.</li><li>Nuclear envelope forms → <b>2 daughter nuclei</b>; nucleolus, Golgi, ER reform.</li><li>${st} Telophase = <b>reverse of prophase</b>.</li></ul><div class="pic">${V.telophase()}</div>`,
+ `<h1>5. Cytokinesis</h1><ul><li>Animal cell: <b>furrow</b> deepens &amp; joins in the centre (outside → in).</li><li>${st} Plant cell: <b>cell plate</b> forms in the centre and grows outwards; cell plate = <b>middle lamella</b>.</li><li>${st} No cytokinesis after karyokinesis → <b>syncytium</b> (coconut liquid endosperm).</li></ul><div class="pic">${V.furrow()}</div><div class="pic" style="--ph:260px">${V.plate()}</div>
+  <h2><u>Significance of mitosis</u></h2><ul><li>Diploid, identical daughter cells · growth · repair (epidermis, gut lining, blood cells)</li><li>Restores <b>nucleo-cytoplasmic ratio</b> · apical &amp; lateral meristems · vegetative reproduction</li></ul>`,
+ `<h1>6. Meiosis &amp; Prophase I</h1><ul><li>${st} <b>Reductional division</b>: 2 divisions, <b>1 DNA replication</b> → <b>4 haploid</b> cells.</li><li>Pairing of homologues + crossing over between non-sister chromatids.</li></ul>
+  <div class="box"><p>"<b>L</b>azy <b>Z</b>ebras <b>P</b>lay <b>D</b>uring <b>D</b>ay"</p><ul><li>Leptotene — chromosomes visible</li><li>${st} Zygotene — <b>synapsis</b>, synaptonemal complex, bivalent</li><li>${st} Pachytene — <b>crossing over</b> by <b>recombinase</b></li><li>${st} Diplotene — complex dissolves, <b>chiasmata</b> (months/years in oocytes)</li><li>Diakinesis — <b>terminalisation</b>; nucleolus &amp; envelope vanish</li></ul></div><div class="pic"><img src="../../pu1-ch10-assets/diag-prophase1.jpg"></div>`,
+ `<h1>7. Meiosis I</h1><ul><li>Metaphase I — <b>bivalents</b> on the equatorial plate.</li><li>${st} Anaphase I — <b>homologues separate</b>, sister chromatids stay joined → 2n becomes n.</li><li>Telophase I — envelope &amp; nucleolus reappear → <b>dyad</b>.</li><li>${st} Interkinesis — short, <b>no DNA replication</b>.</li></ul><div class="pic"><img src="../../pu1-ch10-assets/diag-meiosis1.jpg"></div>
+  <table><tr><th></th><th>Mitotic anaphase</th><th>Anaphase I</th></tr><tr><td>Separates</td><td>sister chromatids</td><td>homologues</td></tr><tr><td>Centromere</td><td>splits</td><td>does not split</td></tr><tr><td>Type</td><td>equational</td><td>reductional</td></tr></table>`,
+ `<h1>8. Meiosis II &amp; Significance</h1><ul><li>Meiosis II <b>resembles mitosis</b> (equational).</li><li>Metaphase II — fibres to kinetochores of sister chromatids.</li><li>${st} Anaphase II — <b>centromeres split</b>.</li><li>Telophase II — <b>tetrad</b> = 4 haploid cells.</li></ul><div class="pic"><img src="../../pu1-ch10-assets/diag-meiosis2.jpg"></div>
+  <h2><u>Significance of meiosis</u></h2><ul><li>${st} Keeps <b>chromosome number constant</b> across generations.</li><li>Crossing over → <b>variation</b> → raw material for <b>evolution</b>.</li></ul>`,
+ `<h1>★ Exam Corner</h1><table><tr><th>Feature</th><th>Mitosis</th><th>Meiosis</th></tr><tr><td>Divisions</td><td>1</td><td>2</td></tr><tr><td>Daughter cells</td><td>2, diploid</td><td>4, haploid</td></tr><tr><td>Crossing over</td><td>no</td><td>yes</td></tr><tr><td>Type</td><td>equational</td><td>reductional + equational</td></tr><tr><td>Where</td><td>somatic cells</td><td>gametogenesis</td></tr></table>
+  <h2><u>NEET numbers</u></h2><ul><li>100 pollen → 25 meioses · 100 seeds → 125 meioses</li><li>2n = 20 → 10 bivalents → 40 chromatids in pachytene</li><li>46 chromosomes at metaphase → 92 chromatids</li></ul><div class="pic"><img src="../../pu1-ch10-assets/diag-mitosis-vs-meiosis.jpg"></div>`
+];
+const n = +new URLSearchParams(location.search).get('p') || 1;
+document.getElementById('pg').innerHTML = P[n - 1]; document.getElementById('pn').textContent = n + ' / ' + P.length; window.NP = P.length;
+window.FIT = () => { let ph = 560; const pg = document.getElementById('pg'); for (let k = 0; k < 30 && pg.scrollHeight > pg.clientHeight; k++){ ph *= .92; document.documentElement.style.setProperty('--ph', ph + 'px'); } return pg.scrollHeight > pg.clientHeight; };
+</script></body></html>

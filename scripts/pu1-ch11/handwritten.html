@@ -1,0 +1,53 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script src="../../notes/src/draw.js"></script><script src="ps-draw.js"></script><script src="diagrams.js"></script><script src="vis.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1240px;height:1754px;overflow:hidden;font-family:'Kalam','Patrick Hand',cursive;color:#1d2b6b;
+ background:#fffef6 repeating-linear-gradient(transparent 0 52px,#c9dbf2 52px 54px);background-position:0 120px;position:relative}
+body:before{content:'';position:absolute;left:110px;top:0;bottom:0;width:3px;background:#f2a1a1}
+.pg{position:absolute;left:140px;right:60px;top:40px;bottom:60px}
+h1{font:700 80px/1.1 'Kalam';color:#c62828;text-decoration:underline wavy #f2b705 4px;text-underline-offset:10px;margin-bottom:12px}
+h2{font:700 48px/1.3 'Kalam';color:#0d6e5c;margin:16px 0 4px}
+h2 u{text-decoration-color:#0d6e5c}
+p,li{font:400 35px/54px 'Patrick Hand','Kalam';color:#1d2b6b}
+li{margin-left:34px}
+b{color:#b71c1c;font-weight:400;background:linear-gradient(transparent 55%,#fff27a 55%)}
+.star{color:#e65100;font-weight:700}
+.box{border:3px solid #1d2b6b;border-radius:14px;padding:6px 16px;margin:10px 0;background:rgba(255,255,255,.75);transform:rotate(-.4deg)}
+.pic{display:flex;justify-content:center;margin:8px 0}
+.pic svg{width:78%;height:auto;max-height:var(--ph,560px)}.pic img{max-width:92%;max-height:var(--ph,560px)}
+table{border-collapse:collapse;margin:8px 0;background:rgba(255,255,255,.8)}
+td,th{border:2px solid #1d2b6b;padding:4px 16px;font:400 32px/44px 'Patrick Hand'}
+th{color:#c62828}
+.foot{position:absolute;left:140px;right:60px;bottom:16px;display:flex;justify-content:space-between;font:400 20px 'Patrick Hand';color:#6b6b9a}
+.cover{text-align:center;padding-top:200px}
+.cover h1{font-size:96px;text-decoration:none}
+.cover p{font-size:36px;line-height:60px}
+</style></head><body><div class="pg" id="pg"></div><div class="foot"><span>Narendra Sir · Lecturer in Biology · BAIO Learning System</span><span id="pn"></span></div>
+<script>
+const st = '<span class="star">★</span>';
+const PG = [
+ `<div class="cover"><h1>Photosynthesis in<br>Higher Plants</h1><p>PU-I Biology · Chapter 11<br>Handwritten notes by <b>Narendra Sir</b><br>Lecturer in Biology · Founder/CEO, BAIO Learning System</p><div class="pic">${V.leafSun()}</div></div>`,
+ `<h1>1. Early Experiments</h1><ul><li>${st} Photosynthesis = <b>physico-chemical process</b>; light energy → organic compounds. Source of all <b>food</b> &amp; <b>O₂</b>.</li><li><b>Priestley</b> (1770): mint plant restores air fouled by candle / mouse.</li><li><b>Ingenhousz</b>: needs <b>sunlight</b>; only <b>green parts</b> give O₂.</li><li><b>Sachs</b> (1854): glucose → <b>starch</b>; chlorophyll in chloroplasts.</li><li>${st} <b>Engelmann</b>: <i>Cladophora</i> + aerobic bacteria → <b>first action spectrum</b> (blue &amp; red).</li></ul>
+  <div class="pic">${V.belljar()}</div>`,
+ `<h1>1b. Oxygen comes from Water</h1><ul><li>${st} <b>van Niel</b> (purple &amp; green bacteria): 2H₂A + CO₂ → 2A + CH₂O + H₂O</li><li>Sulphur bacteria use <b>H₂S</b> → give <b>sulphur</b>, not O₂ ⇒ in plants O₂ comes from <b>H₂O</b>.</li><li>Proved with <b>¹⁸O</b> (Ruben &amp; Kamen).</li></ul>
+  <div class="box"><p>${st} <b>6CO₂ + 12H₂O → C₆H₁₂O₆ + 6H₂O + 6O₂</b></p></div><ul><li>Half-leaf expt: KOH absorbs CO₂ → <b>no starch</b> there.</li></ul><div class="pic">${V.halfLeaf()}</div>`,
+ `<h1>2. Chloroplast &amp; Pigments</h1><div class="pic">${V.chloroplast()}</div><ul><li>${st} <b>Grana / thylakoids</b> → light reaction → <b>ATP + NADPH</b>.</li><li><b>Stroma</b> → enzymes fix CO₂ → sugar ("dark" reaction — not directly light driven).</li></ul>
+  <table><tr><th>Pigment</th><th>Colour</th></tr><tr><td>Chl a</td><td>blue-green (chief)</td></tr><tr><td>Chl b</td><td>yellow-green</td></tr><tr><td>Xanthophyll</td><td>yellow</td></tr><tr><td>Carotenoid</td><td>yellow-orange</td></tr></table><p>${st} Max absorption &amp; photosynthesis in <b>blue &amp; red</b>.</p>`,
+ `<h1>3. Light Reaction</h1><ul><li>Light absorption, <b>water splitting</b>, O₂ release, <b>ATP + NADPH</b>.</li><li>${st} <b>LHC</b> = antenna pigments + one chl a <b>reaction centre</b>.</li><li>${st} <b>PS I → P700</b> · <b>PS II → P680</b> (named in order of discovery).</li></ul><div class="pic">${V.lhc()}</div>
+  <div class="box"><p>${st} Photolysis: <b>2H₂O → 4H⁺ + O₂ + 4e⁻</b> — with PS II, needs <b>Mn, Cl</b>.</p></div><p>Hill reaction (1939): isolated chloroplasts + acceptor → O₂ without CO₂.</p>`,
+ `<h1>4. Z Scheme</h1><div class="pic"><img src="../../pu1-ch11-assets/diag-z-scheme.jpg"></div><ul><li>${st} H₂O → <b>P680</b> → acceptor → <b>ETS</b> → <b>P700</b> → acceptor → <b>NADP reductase</b> → NADPH</li><li>Gives <b>ATP + NADPH + O₂</b> = non-cyclic photophosphorylation.</li></ul>
+  <h2><u>Cyclic</u></h2><ul><li>${st} <b>PS I only</b>, stroma lamellae, light &gt; 680 nm → <b>only ATP</b> (no NADPH, no O₂).</li></ul>`,
+ `<h1>5. Chemiosmosis</h1><p>${st} <b>Peter Mitchell (1961)</b>: ATP made by a <b>proton gradient</b>.</p><div class="pic"><img src="../../pu1-ch11-assets/diag-chemiosmosis.jpg"></div>
+  <ul><li>H⁺ high in <b>lumen</b>: water splitting · H carrier · NADP reductase takes H⁺ from stroma.</li><li>${st} H⁺ return through <b>CF₀</b>; <b>CF₁</b> changes shape → <b>ATP</b>. ~<b>3 H⁺ = 1 ATP</b>.</li></ul>`,
+ `<h1>6. Calvin Cycle</h1><div class="pic"><img src="../../pu1-ch11-assets/diag-calvin.jpg"></div><ul><li>${st} Calvin, <b>¹⁴C</b> · acceptor <b>RuBP (5C)</b> · enzyme <b>RuBisCO</b> · 1st product <b>3-PGA</b>.</li><li>Carboxylation → Reduction → Regeneration.</li><li>${st} Per CO₂: <b>3 ATP + 2 NADPH</b>; glucose: <b>18 ATP + 12 NADPH</b>, 6 turns.</li></ul>`,
+ `<h1>7. C₄ Pathway</h1><div class="pic"><img src="../../pu1-ch11-assets/diag-c4.jpg"></div><ul><li>${st} Hatch &amp; Slack · maize, sugarcane · <b>Kranz anatomy</b> (wreath of bundle sheath cells).</li><li>Mesophyll: <b>PEP + CO₂ → OAA</b> (PEPcase; no RuBisCO).</li><li>Bundle sheath: C₄ acid → CO₂ → <b>Calvin cycle</b>; C₃ acid returns → PEP.</li></ul>`,
+ `<h1>8. Photorespiration</h1><ul><li>${st} RuBisCO binds <b>O₂</b>: RuBP → 1 PGA + 1 <b>phosphoglycolate (2C)</b> → <b>C₂ pathway</b>.</li><li>No sugar, no ATP; ATP used, CO₂ released → <b>wasteful</b>.</li><li>${st} <b>Absent in C₄</b> — high CO₂ near RuBisCO.</li></ul><div class="pic">${V.photoresp()}</div>
+  <table><tr><th></th><th>C₃</th><th>C₄</th></tr><tr><td>Acceptor</td><td>RuBP</td><td>PEP</td></tr><tr><td>1st product</td><td>3-PGA</td><td>OAA</td></tr><tr><td>Photorespiration</td><td>yes</td><td>no</td></tr><tr><td>Opt. temp</td><td>10–25 °C</td><td>30–45 °C</td></tr></table>`,
+ `<h1>9. Factors</h1><div class="box"><p>${st} <b>Blackman (1905)</b>: rate is set by the factor <b>nearest its minimum</b>.</p></div><div class="pic">${V.lightgraph()}</div>
+  <ul><li>Light: saturation at ~<b>10%</b> sunlight · too much → solarisation.</li><li>${st} CO₂ (0.03–0.04%) = <b>major limiting factor</b>; C₃ crops (tomato, capsicum) gain in CO₂-rich greenhouses.</li><li>Temperature controls dark reactions · water stress closes stomata.</li></ul>`
+];
+const n = +new URLSearchParams(location.search).get('p') || 1;
+document.getElementById('pg').innerHTML = PG[n - 1]; document.getElementById('pn').textContent = n + ' / ' + PG.length; window.NP = PG.length;
+window.FIT = () => { let ph = 560; const pg = document.getElementById('pg'); for (let k = 0; k < 30 && pg.scrollHeight > pg.clientHeight; k++){ ph *= .92; document.documentElement.style.setProperty('--ph', ph + 'px'); } return pg.scrollHeight > pg.clientHeight; };
+</script></body></html>

@@ -1,0 +1,195 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<title>Ch11 launch banner</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#03140c}
+body{font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;color:#fff}
+#c{position:relative;width:1080px;height:1350px;overflow:hidden;
+  background:
+   radial-gradient(900px 700px at 88% 6%, rgba(255,214,102,.55), rgba(255,190,60,.18) 35%, transparent 62%),
+   radial-gradient(800px 700px at 0% 100%, rgba(34,197,94,.30), transparent 60%),
+   radial-gradient(700px 500px at 100% 70%, rgba(16,185,129,.18), transparent 60%),
+   linear-gradient(165deg,#062a1a 0%,#04190f 55%,#020d08 100%);}
+.story #c{height:1920px}
+/* sun rays */
+.rays{position:absolute;right:-575px;top:-575px;width:1300px;height:1300px;border-radius:50%;
+  background:repeating-conic-gradient(from 200deg, rgba(255,228,140,.16) 0deg 4deg, transparent 4deg 13deg);
+  -webkit-mask:radial-gradient(circle, #000 18%, transparent 68%);mask:radial-gradient(circle,#000 18%,transparent 68%);}
+.sun{position:absolute;right:-40px;top:-40px;width:230px;height:230px;border-radius:50%;
+  background:radial-gradient(circle at 40% 38%,#fffbe0 0%,#ffe48a 35%,#ffbf3c 70%,#f59e0b 100%);
+  box-shadow:0 0 80px 30px rgba(255,200,70,.55),0 0 200px 80px rgba(255,180,40,.25)}
+.grain{position:absolute;inset:0;opacity:.07;background-image:radial-gradient(#fff 1px,transparent 1.2px);background-size:22px 22px}
+.bub{position:absolute;border-radius:50%;border:2px solid rgba(190,255,210,.45);background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.55),rgba(170,255,200,.08) 45%,transparent 70%)}
+.bub b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 15px Inter;color:rgba(220,255,230,.85)}
+.leaf{position:absolute;opacity:.9}
+
+.wrap{position:relative;padding:46px 64px 0;height:100%;display:flex;flex-direction:column}
+.wrap>*{flex-shrink:0}
+.top{display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:16px}
+.logo{width:62px;height:62px;border-radius:16px;background:linear-gradient(145deg,#ffe07a,#f2b632);color:#06200f;font:900 36px 'Inter Display',Inter;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(242,182,50,.35)}
+.brand h1{font:700 30px 'Inter Display',Inter;letter-spacing:-.3px}
+.brand p{font:500 18px Inter;color:#a7d8b8;margin-top:2px}
+.live{display:flex;align-items:center;gap:10px;padding:13px 24px;border-radius:999px;background:rgba(6,32,18,.72);border:1.5px solid rgba(255,220,110,.75);color:#ffe28a;font:800 19px Inter;letter-spacing:2.5px;backdrop-filter:blur(6px);margin-right:150px}
+.live i{width:12px;height:12px;border-radius:50%;background:#4ade80;box-shadow:0 0 0 5px rgba(74,222,128,.25),0 0 16px #4ade80}
+
+.eyebrow{margin-top:34px;font:800 22px Inter;letter-spacing:5px;color:#7ee2a2}
+.t1{margin-top:8px;font:900 124px/1 'Inter Display',Inter;letter-spacing:-4px;
+  background:linear-gradient(100deg,#c6f76d 0%,#7ee787 35%,#fde68a 75%,#fbbf24 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 6px 30px rgba(134,239,172,.25))}
+.t2{font:800 66px/1.05 'Inter Display',Inter;letter-spacing:-1.5px;color:#f4fff7;margin-top:6px}
+.t2 span{color:#fde68a}
+.sub{margin-top:16px;font:500 24px/1.4 Inter;color:#cfe9d8;max-width:900px}
+.sub b{color:#fff;font-weight:700}
+
+.eq{margin-top:18px;align-self:flex-start;padding:10px 20px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);font:600 22px Inter;color:#e7fbe9;letter-spacing:.3px}
+.eq em{font-style:normal;color:#fde68a}
+
+/* card fan */
+.fan{position:relative;height:340px;margin-top:20px}
+.card{position:absolute;border-radius:18px;overflow:hidden;background:#fff;
+  box-shadow:0 30px 60px rgba(0,0,0,.55),0 0 0 3px rgba(255,255,255,.9),0 0 50px rgba(190,242,100,.18)}
+.card img{display:block;width:100%;height:100%;object-fit:cover;object-position:top}
+.tag{position:absolute;padding:8px 16px;border-radius:999px;font:800 16px Inter;letter-spacing:.6px;color:#06200f;box-shadow:0 10px 24px rgba(0,0,0,.4);white-space:nowrap}
+.c1{left:0;top:44px;width:370px;height:230px;transform:rotate(-8deg)}
+.c2{right:0;top:44px;width:370px;height:240px;transform:rotate(8deg)}
+.c3{left:271px;top:14px;width:410px;height:231px;transform:rotate(0deg);z-index:3}
+.c4{left:346px;top:178px;width:260px;height:168px;transform:rotate(-2deg);z-index:4}
+.t-a{left:36px;top:262px;background:#86efac;transform:rotate(-8deg);z-index:6}
+.t-b{right:44px;top:276px;background:#fde68a;transform:rotate(7deg);z-index:6}
+.t-c{left:410px;top:-6px;background:#fff;z-index:6}
+
+/* features */
+.feat{margin-top:26px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.f{padding:13px 10px 12px;border-radius:18px;background:linear-gradient(160deg,rgba(255,255,255,.10),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.14);text-align:center}
+.f .i{font-size:30px;line-height:1}
+.f h4{margin-top:7px;font:700 18px/1.15 Inter;color:#fff}
+.f p{margin-top:3px;font:500 14px/1.2 Inter;color:#a9d6b9}
+
+.cta{margin-top:20px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:19px 28px;border-radius:24px;
+  background:linear-gradient(100deg,#fde68a,#fbbf24 60%,#f59e0b);color:#062012;box-shadow:0 18px 40px rgba(245,158,11,.28)}
+.cta h3{font:800 31px 'Inter Display',Inter;letter-spacing:-.3px}
+.cta p{font:600 18px Inter;margin-top:4px;color:#3b2a05}
+.go{flex:none;padding:15px 22px;border-radius:16px;background:#062012;color:#fde68a;font:900 20px/1.1 Inter;letter-spacing:1.5px;text-align:center}
+.foot{margin-top:16px;display:flex;align-items:center;justify-content:space-between;font:500 19px Inter;color:#a7d8b8}
+.foot b{color:#fff}
+.lang{padding:9px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.25);color:#fff;font-weight:600}
+
+/* story layout */
+.story .wrap{padding-top:96px}
+.story .live{margin-right:150px}
+
+.story .eyebrow{margin-top:80px;font-size:24px}
+.story .t1{font-size:124px}
+.story .t2{font-size:70px}
+.story .sub{font-size:27px}
+.story .fan{height:400px;margin-top:60px;transform:scale(1.08);transform-origin:top center}
+.story .feat{margin-top:90px;grid-template-columns:repeat(4,1fr);gap:14px}
+.story .f{padding:20px 12px 18px}
+.story .f .i{font-size:34px}
+.story .f h4{font-size:20px}
+.story .f p{font-size:15px}
+.story .cta{margin-top:60px}
+.story #lf1{top:1180px!important}.story #lf2{top:1150px!important}.story #b4{top:1130px!important}.story #b3{top:640px!important}
+.story .foot{margin-top:30px}
+
+/* ---------- light theme ---------- */
+.light #c{background:
+   radial-gradient(900px 700px at 92% 2%, rgba(255,200,60,.55), rgba(255,215,110,.22) 35%, transparent 62%),
+   radial-gradient(800px 700px at 0% 100%, rgba(134,239,172,.55), transparent 60%),
+   radial-gradient(700px 500px at 100% 72%, rgba(187,247,208,.6), transparent 60%),
+   linear-gradient(165deg,#fffdf3 0%,#f3fbef 55%,#e6f6e6 100%);}
+.light .rays{background:repeating-conic-gradient(from 200deg, rgba(245,170,30,.16) 0deg 4deg, transparent 4deg 13deg)}
+.light .grain{opacity:.35;background-image:radial-gradient(rgba(21,128,61,.18) 1px,transparent 1.2px)}
+.light .sun{box-shadow:0 0 80px 30px rgba(255,190,60,.45),0 0 200px 80px rgba(255,200,80,.25)}
+.light .bub{border-color:rgba(21,128,61,.35);background:radial-gradient(circle at 32% 30%,#fff,rgba(220,252,231,.6) 45%,rgba(187,247,208,.2) 70%)}
+.light .bub b{color:#15803d}
+.light .brand h1{color:#052e1a}
+.light .brand p{color:#3f7a57}
+.light .live{background:#fff;border-color:#16a34a;color:#15803d;box-shadow:0 6px 18px rgba(21,128,61,.15)}
+.light .eyebrow{color:#16a34a}
+.light .t1{background:linear-gradient(100deg,#15803d 0%,#22a34a 38%,#ca8a04 78%,#d97706 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 6px 20px rgba(34,197,94,.18))}
+.light .t2{color:#052e1a}
+.light .t2 span{color:#d97706}
+.light .sub{color:#36574a}
+.light .sub b{color:#052e1a}
+.light .eq{background:#fff;border-color:rgba(21,128,61,.25);color:#14532d;box-shadow:0 6px 16px rgba(21,128,61,.08)}
+.light .eq em{color:#d97706}
+.light .card{box-shadow:0 26px 50px rgba(20,83,45,.25),0 0 0 3px #fff,0 0 0 4px rgba(21,128,61,.15)}
+.light .t-c{background:#052e1a;color:#fde68a}
+.light .f{background:#fff;border-color:rgba(21,128,61,.16);box-shadow:0 8px 20px rgba(20,83,45,.07)}
+.light .f h4{color:#052e1a}
+.light .f p{color:#4d7a60}
+.light .cta{background:linear-gradient(100deg,#14532d,#166534 55%,#15803d);color:#fff;box-shadow:0 18px 40px rgba(21,128,61,.28)}
+.light .cta p{color:#bbf7d0}
+.light .go{background:#fde68a;color:#052e1a}
+.light .foot{color:#3f7a57}
+.light .foot b{color:#052e1a}
+.light .lang{border-color:rgba(21,128,61,.3);color:#052e1a;background:#fff}
+.light .leaf{opacity:.55}
+</style></head>
+<body>
+<div id="c">
+  <div class="rays"></div><div class="grain"></div><div class="sun"></div>
+
+  <!-- decorative leaves -->
+  <svg id="lf1" class="leaf" style="left:-70px;top:470px;width:220px;transform:rotate(30deg)" viewBox="0 0 200 300"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4ade80"/><stop offset="1" stop-color="#14532d"/></linearGradient></defs><path d="M100 10 C190 80 190 220 100 290 C10 220 10 80 100 10Z" fill="url(#lg)" opacity=".55"/><path d="M100 20 V285 M100 90 L150 60 M100 140 L160 105 M100 190 L155 160 M100 90 L50 60 M100 140 L40 105 M100 190 L45 160" stroke="#bbf7d0" stroke-width="3" fill="none" opacity=".45"/></svg>
+  <svg id="lf2" class="leaf" style="right:-60px;top:700px;width:180px;transform:rotate(-35deg)" viewBox="0 0 200 300"><path d="M100 10 C190 80 190 220 100 290 C10 220 10 80 100 10Z" fill="url(#lg)" opacity=".45"/><path d="M100 20 V285 M100 90 L150 60 M100 140 L160 105 M100 190 L155 160 M100 90 L50 60 M100 140 L40 105 M100 190 L45 160" stroke="#bbf7d0" stroke-width="3" fill="none" opacity=".4"/></svg>
+
+  <div class="bub" style="left:930px;top:420px;width:64px;height:64px"><b>O₂</b></div>
+  <div class="bub" style="left:990px;top:340px;width:34px;height:34px"></div>
+  <div id="b3" class="bub" style="left:880px;top:515px;width:24px;height:24px"></div>
+  <div id="b4" class="bub" style="left:22px;top:300px;width:46px;height:46px"></div>
+
+  <div class="wrap">
+    <div class="top">
+      <div class="brand"><div class="logo">B</div><div><h1>BAIO Learning System</h1><p>by Narendra Sir</p></div></div>
+      <div class="live"><i></i>NOW LIVE</div>
+    </div>
+
+    <div class="eyebrow">PU-I BIOLOGY · CHAPTER 11</div>
+    <div class="t1">Photosynthesis</div>
+    <div class="t2">in Higher Plants <span>is here.</span></div>
+    <div class="sub">The complete chapter app is ready, with <b>every feature</b>: slides, notes, diagrams, practice, podcasts and reels in <b>English, ಕನ್ನಡ &amp; हिंदी</b>.</div>
+    <div class="eq">6CO₂ + 12H₂O <em>—light→</em> C₆H₁₂O₆ + 6H₂O + 6O₂</div>
+
+    <div class="fan">
+      <div class="card c1"><img src="../../pu1-ch11-assets/diag-z-scheme.jpg"></div>
+      <div class="card c2"><img src="../../pu1-ch11-assets/colour-notes/page-01.jpg"></div>
+      <div class="card c3"><img src="../../pu1-ch11-assets/slide-01.jpg"></div>
+      <div class="card c4"><img src="../../pu1-ch11-assets/diag-calvin.jpg" style="object-position:center"></div>
+      <div class="tag t-a">🧭 Z Scheme</div>
+      <div class="tag t-b">🎨 Colour Notes</div>
+      <div class="tag t-c">🎞️ Class Slides</div>
+    </div>
+
+    <div class="feat">
+      <div class="f"><div class="i">🎞️</div><h4>Class slides</h4><p>62 slides + animated</p></div>
+      <div class="f"><div class="i">🧭</div><h4>10 diagrams</h4><p>Labelled, exam-ready</p></div>
+      <div class="f"><div class="i">🎨</div><h4>Colour notes</h4><p>8 full-colour pages</p></div>
+      <div class="f"><div class="i">✍️</div><h4>Handwritten</h4><p>11-page notes</p></div>
+      <div class="f"><div class="i">🎯</div><h4>MCQ · NEET · KCET</h4><p>With explanations</p></div>
+      <div class="f"><div class="i">🎧</div><h4>Podcasts</h4><p>5 languages</p></div>
+      <div class="f"><div class="i">🎬</div><h4>Reels</h4><p>Comedy &amp; shayari</p></div>
+      <div class="f"><div class="i">🃏</div><h4>Flash cards</h4><p>Quick revision</p></div>
+      <div class="f extra"><div class="i">🗺️</div><h4>Mind map</h4><p>Whole chapter, one page</p></div>
+      <div class="f extra"><div class="i">📝</div><h4>Paper generator</h4><p>Board-style tests</p></div>
+      <div class="f extra"><div class="i">⭐</div><h4>Board important</h4><p>1, 2, 3 &amp; 5 marks</p></div>
+      <div class="f extra"><div class="i">🎮</div><h4>Games</h4><p>Learn by playing</p></div>
+    </div>
+
+    <div class="cta">
+      <div><h3>BAIO app → PU-I Biology → Ch 11</h3><p>narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir</p></div>
+      <div class="go">OPEN<br>NOW</div>
+    </div>
+    <div class="foot"><div><b>Narendra Sir</b> · Founder &amp; CEO, BAIO Learning System</div><div class="lang">English · ಕನ್ನಡ · हिंदी</div></div>
+  </div>
+</div>
+<script>
+const f=new URLSearchParams(location.search).get('f');
+if(new URLSearchParams(location.search).get('t')==='light') document.body.classList.add('light');
+if(f==='story') document.body.classList.add('story');
+else document.querySelectorAll('.f.extra').forEach(e=>e.remove());
+</script>
+</body></html>
