@@ -194,6 +194,10 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
   <div class="pu-subhead">📄 Unit Test 1 &middot; Model Question Paper <span class="yr">LBA 2026-27</span></div>
   <div class="ch-list" id="puBoardMqpList"></div>
 
+  <div class="pu-subhead">🗓️ Unit Test Calendar &middot; All 10 Units <span class="yr">LBA 2026-27</span></div>
+  <div class="section-sub" style="margin-top:-4px;">Chapter-wise coverage, content percentage and approximate test date for every Unit Test across the year</div>
+  <div class="ch-list" id="puBoardLbaCalendarList"></div>
+
   <div class="more-row">New Model QPs, Question Banks, and syllabus updates get published here before this page can be updated to match. Check the official sources: <a href="https://dpue-pragathi.karnataka.gov.in/BluePrint_2627/" target="_blank" rel="noopener">Blue Print 2026&ndash;27 &rarr;</a> &middot; <a href="https://dpue-pragathi.karnataka.gov.in/question_bank/mqp.html" target="_blank" rel="noopener">Model Question Papers &rarr;</a> &middot; <a href="https://pue.karnataka.gov.in/new-page/Recent%20Circulars/en" target="_blank" rel="noopener">Circulars &amp; Notifications &rarr;</a></div>
 
   <div class="section-label" id="electronics">🔌 Electronics Textbook</div>
@@ -362,6 +366,23 @@ const PU_BOARD_MQP = [
     i:'exam-corner/pu-board-2026-27/maths-i-puc-unittest1-mqp.pdf',
     ii:'exam-corner/pu-board-2026-27/maths-ii-puc-unittest1-mqp.pdf'},
 ];
+const PU_BOARD_LBA_CALENDAR = [
+  {code:'36', subject:'Biology',
+    i:'exam-corner/pu-board-2026-27/biology-i-puc-lba-calendar.pdf',
+    ii:'exam-corner/pu-board-2026-27/biology-ii-puc-lba-calendar.pdf'},
+  {code:'33', subject:'Physics',
+    i:'exam-corner/pu-board-2026-27/physics-i-puc-lba-calendar.pdf',
+    ii:'exam-corner/pu-board-2026-27/physics-ii-puc-lba-calendar.pdf'},
+  {code:'34', subject:'Chemistry',
+    i:'exam-corner/pu-board-2026-27/chemistry-i-puc-lba-calendar.pdf',
+    ii:'exam-corner/pu-board-2026-27/chemistry-ii-puc-lba-calendar.pdf'},
+  {code:'35', subject:'Mathematics',
+    i:'exam-corner/pu-board-2026-27/maths-i-puc-lba-calendar.pdf',
+    ii:'exam-corner/pu-board-2026-27/maths-ii-puc-lba-calendar.pdf'},
+  {code:'40', subject:'Electronics',
+    i:'exam-corner/pu-board-2026-27/electronics-i-puc-lba-calendar.pdf',
+    ii:'exam-corner/pu-board-2026-27/electronics-ii-puc-lba-calendar.pdf'},
+];
 function renderPuBlueprintList(containerId, items){
   const el = document.getElementById(containerId);
   el.innerHTML = items.map(it => `<div class="ch-row">
@@ -372,11 +393,11 @@ function renderPuBlueprintList(containerId, items){
     </div>
   </div>`).join('');
 }
-function renderPuMqpList(containerId, items){
+function renderPuMqpList(containerId, items, subtitle){
   const el = document.getElementById(containerId);
   el.innerHTML = items.map(it => `<div class="ch-row">
     <div class="ch-num">${it.code}</div>
-    <div class="ch-body"><div class="ch-title">${it.subject} &middot; 30 marks, 60 mins</div></div>
+    <div class="ch-body"><div class="ch-title">${it.subject} &middot; ${subtitle}</div></div>
     <div class="ch-links">
       <a class="ch-link outline" href="${it.i}" target="_blank" rel="noopener">📄 I PUC</a>
       <a class="ch-link outline" href="${it.ii}" target="_blank" rel="noopener">📄 II PUC</a>
@@ -385,7 +406,8 @@ function renderPuMqpList(containerId, items){
   </div>`).join('');
 }
 renderPuBlueprintList('puBoardBlueprintList', PU_BOARD_BLUEPRINTS);
-renderPuMqpList('puBoardMqpList', PU_BOARD_MQP);
+renderPuMqpList('puBoardMqpList', PU_BOARD_MQP, '30 marks, 60 mins');
+renderPuMqpList('puBoardLbaCalendarList', PU_BOARD_LBA_CALENDAR, 'all 10 Unit Tests');
 
 /* ---- Electronics textbook: official PUE-hosted PDFs, linked directly (not
    mirrored here — the files run well over 10MB each). ---- */
