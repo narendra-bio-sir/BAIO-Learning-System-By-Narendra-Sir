@@ -350,7 +350,8 @@ const PU_BOARD_BLUEPRINTS = [
 const PU_BOARD_MQP = [
   {code:'36', subject:'Biology',
     i:'exam-corner/pu-board-2026-27/biology-i-puc-unittest1-mqp.pdf',
-    ii:'exam-corner/pu-board-2026-27/biology-ii-puc-unittest1-mqp.pdf'},
+    ii:'exam-corner/pu-board-2026-27/biology-ii-puc-unittest1-mqp.pdf',
+    qbI:'https://dpue-pragathi.karnataka.gov.in/QP2526/Biology/36%20BIOLOGY%20I%20PUC.pdf'},
   {code:'33', subject:'Physics',
     i:'exam-corner/pu-board-2026-27/physics-i-puc-unittest1-mqp.pdf',
     ii:'exam-corner/pu-board-2026-27/physics-ii-puc-unittest1-mqp.pdf'},
@@ -379,6 +380,7 @@ function renderPuMqpList(containerId, items){
     <div class="ch-links">
       <a class="ch-link outline" href="${it.i}" target="_blank" rel="noopener">📄 I PUC</a>
       <a class="ch-link outline" href="${it.ii}" target="_blank" rel="noopener">📄 II PUC</a>
+      ${it.qbI ? `<a class="ch-link outline" href="${it.qbI}" target="_blank" rel="noopener">📄 I PUC Question Bank</a>` : ''}
     </div>
   </div>`).join('');
 }
