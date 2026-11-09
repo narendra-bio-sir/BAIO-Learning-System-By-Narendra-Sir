@@ -194,7 +194,11 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
   <div class="pu-subhead">📄 Unit Test 1 &middot; Model Question Paper <span class="yr">LBA 2026-27</span></div>
   <div class="ch-list" id="puBoardMqpList"></div>
 
-  <div class="more-row">New Model QPs, Question Banks, and syllabus updates get published here before this page can be updated to match. <a href="https://pue.karnataka.gov.in/new-page/Recent%20Circulars/en" target="_blank" rel="noopener">Check PUE's Official Circulars &amp; Notifications &rarr;</a></div>
+  <div class="more-row">New Model QPs, Question Banks, and syllabus updates get published here before this page can be updated to match. Check the official sources: <a href="https://dpue-pragathi.karnataka.gov.in/BluePrint_2627/" target="_blank" rel="noopener">Blue Print 2026&ndash;27 &rarr;</a> &middot; <a href="https://dpue-pragathi.karnataka.gov.in/question_bank/mqp.html" target="_blank" rel="noopener">Model Question Papers &rarr;</a> &middot; <a href="https://pue.karnataka.gov.in/new-page/Recent%20Circulars/en" target="_blank" rel="noopener">Circulars &amp; Notifications &rarr;</a></div>
+
+  <div class="section-label" id="electronics">🔌 Electronics Textbook</div>
+  <div class="section-sub">Official Karnataka State Board textbook (PDF), direct from the Department of School Education (PU) — large files, so linked straight to the source rather than mirrored here</div>
+  <div class="ch-list" id="electronicsTextbookList"></div>
 
   <div class="back-row"><a href="index.html">&larr; Back to BAIO Learning System</a></div>
 
@@ -380,6 +384,26 @@ function renderPuMqpList(containerId, items){
 }
 renderPuBlueprintList('puBoardBlueprintList', PU_BOARD_BLUEPRINTS);
 renderPuMqpList('puBoardMqpList', PU_BOARD_MQP);
+
+/* ---- Electronics textbook: official PUE-hosted PDFs, linked directly (not
+   mirrored here — the files run well over 10MB each). ---- */
+const ELECTRONICS_TEXTBOOKS = [
+  {label:'I', title:'I PUC Electronics Textbook',
+    url:'https://pue.karnataka.gov.in/storage/pdf-files/41-I%20PUC%20Electronics%20Textbook.pdf'},
+  {label:'II', title:'II PUC Electronics Textbook',
+    url:'https://pue.karnataka.gov.in/storage/pdf-files/100-2%20PUC%20Electronics%20TB.pdf'},
+];
+function renderElectronicsTextbookList(containerId, items){
+  const el = document.getElementById(containerId);
+  el.innerHTML = items.map(it => `<div class="ch-row">
+    <div class="ch-num">${it.label}</div>
+    <div class="ch-body"><div class="ch-title">${it.title}</div></div>
+    <div class="ch-links">
+      <a class="ch-link" href="${it.url}" target="_blank" rel="noopener">📄 Textbook (PDF)</a>
+    </div>
+  </div>`).join('');
+}
+renderElectronicsTextbookList('electronicsTextbookList', ELECTRONICS_TEXTBOOKS);
 </script>
 
 <script>
