@@ -184,12 +184,15 @@ const OS_IO = {
 rep('12 topics · step by step', (man.animTopics || 12) + ' topics · step by step', true);
 rep("pu1-ch9-assets/animated.html?lang=${pptLang}&v=5", "pu1-ch9-assets/animated.html?lang=${pptLang}&v=1");
 
-/* Podcasts: Narendra Sir's recorded episodes. The tab is shown only once the MP3s are in the assets folder. */
+/* Podcasts: Narendra Sir's recorded episodes. The MP3s are hosted in the separate baio-podcasts repo
+   (kept out of this site so GitHub Pages stays under its size limit). The tab is shown once they exist there. */
+const PODCAST_BASE = 'https://narendra-bio-sir.github.io/baio-podcasts/';
+const PODCAST_REPO = path.join(ROOT, '..', 'baio-podcasts');
 const PODS = [['en','English','english'],['kn','Kannada','kannada'],['hi','Hindi','hindi'],['mr','Marathi','marathi'],['ur','Urdu','urdu']]
-  .filter(([, , f]) => fs.existsSync(path.join(ROOT, A, 'podcast-' + f + '.mp3')));
+  .filter(([, , f]) => ['', PODCAST_REPO].some(r => fs.existsSync(path.join(r || ROOT, A, 'podcast-' + f + '.mp3'))));
 if (PODS.length) {
   cut('const PODCASTS_CH9 = {', 'function renderPodcast(){',
-    'const PODCASTS_CH9 = {\n' + PODS.map(([k, l, f]) => `  ${k}: {label:'${l}', url:'pu1-ch9-assets/podcast-${f}.mp3?v=1'}`).join(',\n') + '\n};\n' +
+    'const PODCASTS_CH9 = {\n' + PODS.map(([k, l, f]) => `  ${k}: {label:'${l}', url:'${PODCAST_BASE}pu1-ch9-assets/podcast-${f}.mp3?v=1'}`).join(',\n') + '\n};\n' +
     "let podcastLang = 'en';\nlet podcastSpeed = 1;\nfunction podcastSetLang(lang){ podcastLang = lang; renderContent(); }\nwindow.podcastSetLang = podcastSetLang;\n");
 } else {
   rep("  {id:'podcast', label:'Audio Podcast'},\n", '');
