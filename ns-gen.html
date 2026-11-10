@@ -711,12 +711,26 @@ function shareCard(cardId){
     });
   }
 }
+/* Renders "Name: X · Roll No: Y · Section: Z" as a name line with roll/section beneath,
+   so it doesn't wrap mid-label on narrow cards. Falls back to the plain text otherwise. */
+function metaHeaderHtml(meta, nameColor, dimColor, inkColor, lineColor){
+  const m = /^Name: (.*) · Roll No: (.*) · Section: (.*)$/.exec(meta || '');
+  if(!m){
+    return '<div style="font-family:Space Grotesk,sans-serif; font-weight:700; color:' + nameColor + '; margin-bottom:10px; font-size:14px;">' + escapeHtml(meta) + '</div>';
+  }
+  const field = (k, v) => '<span style="display:inline-block; margin-right:16px; white-space:nowrap;">' + k + ': <b style="color:' + inkColor + ';">' + escapeHtml(v) + '</b></span>';
+  return '<div style="padding-bottom:10px; margin-bottom:12px; border-bottom:1px solid ' + lineColor + ';">' +
+    '<div style="font-family:Space Grotesk,sans-serif; font-weight:700; font-size:17px; line-height:1.3; color:' + nameColor + ';">' +
+      '<span style="font-size:12px; font-weight:600; color:' + dimColor + ';">Name:</span> ' + escapeHtml(m[1]) + '</div>' +
+    '<div style="margin-top:4px; font-size:12.5px; color:' + dimColor + ';">' + field('Roll No', m[2]) + field('Section', m[3]) + '</div>' +
+  '</div>';
+}
 function buildSnapshotNode(meta, selected){
   const div = document.createElement('div');
   div.className = 'snapshot';
   div.style.color = getComputedStyle(document.body).color;
   div.style.background = getComputedStyle(document.querySelector('.panel2, body')).backgroundColor || '#0E211A';
-  let inner = '<div style="font-family:Space Grotesk,sans-serif; font-weight:700; color:var(--gold); margin-bottom:10px; font-size:14px;">' + escapeHtml(meta) + '</div>';
+  let inner = metaHeaderHtml(meta, 'var(--gold)', 'var(--ink-dim)', 'var(--ink)', 'var(--line)');
   let lastGroup = null;
   selected.forEach(s=>{
     const group = puGroupOf(s.label);
@@ -770,7 +784,7 @@ function printCard(cardId){
   const w = window.open('', '_blank');
   let rows = selected.map(s=>'<tr><td style="padding:8px;border-bottom:1px solid #ccc;">' + escapeHtml(s.label) + '</td><td style="padding:8px;border-bottom:1px solid #ccc;font-family:\'JetBrains Mono\',monospace;font-weight:700;">' + codeHtml(s.code, '#127566', '#8A5F00') + '</td></tr>').join('');
   w.document.write('<html><head><title>Unlock Codes</title><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet"></head><body style="font-family:sans-serif; padding:24px;">' +
-    '<h2>' + escapeHtml(meta) + '</h2><table style="border-collapse:collapse; width:100%;">' + rows + '</table>' +
+    metaHeaderHtml(meta, '#1E2A22', '#5C6E63', '#1E2A22', '#ccc') + '<table style="border-collapse:collapse; width:100%;">' + rows + '</table>' +
     '<div style="margin-top:20px; padding-top:14px; border-top:1px solid #ccc; font-size:13px; line-height:1.6; font-style:italic;">' + escapeHtml(FOUNDER_QUOTE) + '</div>' +
     '<div style="margin-top:6px; font-size:12px; font-weight:700;">' + escapeHtml(FOUNDER_SIGN) + '</div>' +
     '</body></html>');
