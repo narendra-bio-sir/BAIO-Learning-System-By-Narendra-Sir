@@ -76,6 +76,14 @@ textarea{min-height:140px; font-family:'Space Mono', monospace; font-size:12.5px
 .result-box.show{display:block;}
 .result-code{font-family:'JetBrains Mono',monospace; font-size:24px; font-weight:700; color:var(--teal); letter-spacing:2px; margin:6px 0;}
 .result-meta{font-size:12px; color:var(--ink-dim);}
+.stu-head{padding-bottom:10px; border-bottom:1px solid var(--line);}
+.stu-name{font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:700; color:var(--gold); line-height:1.3; overflow-wrap:anywhere;}
+.stu-name span{font-size:12px; font-weight:600; color:var(--ink-dim);}
+.stu-sub{display:flex; flex-wrap:wrap; gap:4px 16px; margin-top:4px; font-size:12px; color:var(--ink-dim);}
+.stu-sub b{color:var(--ink); font-weight:700; white-space:nowrap;}
+.stu-saved{margin-top:4px; font-size:11px; color:var(--teal);}
+.stu-head + .table-wrap{margin-top:10px;}
+.table-wrap > table{margin-top:0;}
 .copy-btn{margin-top:10px; padding:7px 16px; border-radius:10px; border:1px solid var(--teal2); background:transparent; color:var(--teal); font-size:12px; cursor:pointer;}
 
 table{width:100%; border-collapse:collapse; margin-top:14px; font-size:12.5px;}
@@ -633,9 +641,11 @@ function runLookup(){
     lookupResultCounter++;
     const cardId = 'stu_' + lookupResultCounter;
     html += '<div class="result-box show" style="text-align:left;" id="' + cardId + '">';
-    html += '<div class="result-meta" style="font-size:13px; color:var(--gold); font-weight:700; margin-bottom:8px;">' +
-      'Name: ' + escapeHtml(s.name) + ' &middot; Roll No: ' + escapeHtml(s.roll) + ' &middot; Section: ' + escapeHtml(s.section) +
-      (s.__saved ? ' <span style="color:var(--teal); font-weight:400; font-size:11px;">(saved on this device)</span>' : '') + '</div>';
+    const metaText = 'Name: ' + s.name + ' · Roll No: ' + s.roll + ' · Section: ' + s.section;
+    html += '<div class="result-meta stu-head" data-meta="' + escapeHtml(metaText).replace(/&/g,'&amp;').replace(/"/g,'&quot;') + '">' +
+      '<div class="stu-name"><span>Name:</span> ' + escapeHtml(s.name) + '</div>' +
+      '<div class="stu-sub"><span>Roll No: <b>' + escapeHtml(s.roll) + '</b></span><span>Section: <b>' + escapeHtml(s.section) + '</b></span></div>' +
+      (s.__saved ? '<div class="stu-saved">(saved on this device)</div>' : '') + '</div>';
     const labels = Object.keys(s.codes).sort(compareCodeLabels);
     if(!labels.length){
       html += '<div class="hint">No codes on file for this student.</div>';
@@ -673,7 +683,8 @@ function toggleAllInCard(cardId, checked){
 }
 function getSelectedFromCard(cardId){
   const card = document.getElementById(cardId);
-  const meta = card.querySelector('.result-meta').textContent;
+  const head = card.querySelector('.result-meta');
+  const meta = head.dataset.meta || head.textContent;
   const selected = Array.from(card.querySelectorAll('.code-check:checked')).map(cb=>({
     label: cb.getAttribute('data-label'), code: cb.getAttribute('data-code')
   }));
