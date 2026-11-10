@@ -778,7 +778,7 @@ function generateSingle(){
   if(!name || !roll || !section){ alert('Please fill in name, roll number, and section.'); return; }
   const code = computeStudentCode(name, roll, section);
   lastSingleCode = code;
-  lastSingleMeta = name + ' · ' + roll + ' · ' + section;
+  lastSingleMeta = 'Name: ' + name + ' · Roll No: ' + roll + ' · Section: ' + section;
   document.getElementById('singleMeta').textContent = lastSingleMeta;
   document.getElementById('singleCode').innerHTML = codeHtml(code);
   document.getElementById('singleResult').classList.add('show');
@@ -1104,7 +1104,7 @@ function saveGeneratedStudent(){
   const msgEl = document.getElementById('saveStudentMsg');
   const rows = window.__lastExistingRows || [];
   if(!rows.length || !lastSingleMeta){ msgEl.textContent = 'Generate a code first.'; return; }
-  const parts = lastSingleMeta.split(' · ');
+  const parts = lastSingleMeta.split(' · ').map(function(p){ return p.replace(/^(Name|Roll No|Section):\s*/, ''); });
   const name = parts[0] || '', roll = parts[1] || '', section = parts[2] || '';
   const codes = {};
   rows.forEach(r=>{ codes[r.label] = r.code; });
