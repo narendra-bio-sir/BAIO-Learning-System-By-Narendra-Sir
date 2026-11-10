@@ -2976,6 +2976,15 @@ window.indexHardRefresh = indexHardRefresh;
     document.getElementById('hzFShare').onclick=function(){ if(window.baioFactShare) baioFactShare(f); }; }
   /* exam countdown + today's plan */
   var cls=Z.cls||0, DEF={2:'2027-03-15'};
+  /* when a student's own exam date happens to match a known upcoming test, show that
+     test's actual name instead of the generic "Biology exam" label — e.g. setting
+     12 Nov 2026 (the I PUC KCET cumulative test date) reads as "KCET Mock Test", not
+     a misleading "Biology exam". Any other date still works as a plain countdown. */
+  var KNOWN_DATES = {
+    1: {
+      '2026-11-12': {en:'I PUC KCET Biology Mock Test', kn:'I PUC KCET ಜೀವಶಾಸ್ತ್ರ ಮಾಕ್ ಟೆಸ್ಟ್', hi:'I PUC KCET बायोलॉजी मॉक टेस्ट'}
+    }
+  };
   /* exam date is saved per class (I PUC / II PUC); move the old single date to the current class */
   (function(){ var old=store.get('baio_exam_date'); if(old && cls && !store.get('baio_exam_date_'+cls)) store.set('baio_exam_date_'+cls, old); })();
   function myDate(){ return store.get('baio_exam_date_'+cls); }
@@ -3005,8 +3014,10 @@ window.indexHardRefresh = indexHardRefresh;
     var list=chs(), st=Z.chap||{}, weak=null;
     list.forEach(function(c){ var v=st[c[0]]; if(v&&v.t>=3){ var a=v.c/v.t; if(!weak||a<weak.a) weak={c:c,a:a}; } });
     var focus=weak&&weak.a<0.7?weak.c:list[Math.floor(Date.now()/864e5)%list.length];
-    window.__hzCd={cls:cls, days:daysLeft, chap:focus[2], provisional:cls===2&&!myDate()};
-    plan.innerHTML='<div class="hz-cls" role="group" aria-label="Your class"><button type="button" data-c="1"'+(cls===1?' class="on" aria-pressed="true"':' aria-pressed="false"')+'>I PUC</button><button type="button" data-c="2"'+(cls===2?' class="on" aria-pressed="true"':' aria-pressed="false"')+'>II PUC</button></div>'+(date?'<b>'+(cls===1?'I PUC':'II PUC')+' Biology exam</b>'+(cls===2&&!myDate()?' (15 Mar 2027, provisional)':'')+'<br>':'<b>Set your exam date</b> with ✏️<br>')+
+    var knownExam = date && KNOWN_DATES[cls] && KNOWN_DATES[cls][date];
+    var examLabelText = knownExam ? knownExam.en : (cls===1?'I PUC':'II PUC')+' Biology exam';
+    window.__hzCd={cls:cls, days:daysLeft, chap:focus[2], provisional:cls===2&&!myDate(), examName:knownExam||null};
+    plan.innerHTML='<div class="hz-cls" role="group" aria-label="Your class"><button type="button" data-c="1"'+(cls===1?' class="on" aria-pressed="true"':' aria-pressed="false"')+'>I PUC</button><button type="button" data-c="2"'+(cls===2?' class="on" aria-pressed="true"':' aria-pressed="false"')+'>II PUC</button></div>'+(date?'<b>'+examLabelText+'</b>'+(cls===2&&!myDate()?' (15 Mar 2027, provisional)':'')+'<br>':'<b>Set your exam date</b> with ✏️<br>')+
       'Today: '+(weak&&weak.a<0.7?'revise your weak chapter ':'revise ')+'<a href="'+focus[1]+'">'+focus[2]+'</a> → <a href="zone.html#daily">Daily 5</a> → <a href="important-cards.html#'+focus[0]+'">Quick card</a>';
     if(cls===1 && Date.now()<Date.parse('2026-10-30T00:00:00+05:30')) plan.innerHTML+='<br>📝 <a href="midterm-practice.html"><b>Mid-term practice paper</b></a> (Biology on 29 Oct)';
     if(cls===1 && Date.now()<Date.parse('2026-11-13T00:00:00+05:30')) plan.innerHTML+='<br>📝 <a href="kcet-mock-12nov.html"><b>KCET mock test</b></a> (60 Q · 60 min, test on 12 Nov)';

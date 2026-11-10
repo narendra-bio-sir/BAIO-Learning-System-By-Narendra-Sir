@@ -22,7 +22,7 @@
       feats:[['Picks your weak chapter',' from your Daily 5 scores'],['7 pm reminder',' so you never miss a day'],['Daily 5 + Quick card',': 3 minutes a day'],['Chapter tests',', Guess It & Memes']],
       free:'Free on the BAIO app', how:'Open the app → Home → Exam Countdown', sir:'Narendra Sir', role:'Biology Lecturer · Founder & CEO, BAIO',
       sIn:'BIOLOGY EXAM IN', sQ:['Is your plan','ready?'], steps:['Set your exam date',"Follow today's plan: chapter → Daily 5 → Quick card",'Turn on the 7 pm reminder'],
-      cap:function(s){ return (s.days!=null?'📅 '+s.days+' days to my '+(s.cls===2?'II PUC':'I PUC')+' Biology exam, and I have a plan for every day!':'📅 Biology exam coming up? Get a plan for every day!')+
+      cap:function(s){ return (s.days!=null?'📅 '+s.days+' days to my '+((s.examName&&s.examName.en)?s.examName.en:(s.cls===2?'II PUC':'I PUC')+' Biology exam')+', and I have a plan for every day!':'📅 Biology exam coming up? Get a plan for every day!')+
         ' BAIO\'s Exam Countdown picks my weak chapter → Daily 5 → Quick card, with a 7 pm reminder. Free for all I PUC & II PUC students. Try it 👇\n'+APP_URL+'\n— Narendra Sir, BAIO Learning System'; },
       ui:{title:'📤 Share your exam countdown', post:'Post', status:'Status', caption:'Caption (you can edit it)', share:'Share picture + caption', save:'⬇ Save picture', copy:'📋 Copy caption', wa:'💬 WhatsApp text', copied:'✅ Caption copied', making:'Making your picture…', light:'Light', dark:'Dark'} },
     kn: { label:'ಕನ್ನಡ', tag:'ಹೊಸತು', h1:['ಪರೀಕ್ಷೆಗೆ ದಿನಾಂಕ ಇದೆ.','ಈಗ ಯೋಜನೆಯೂ ಇದೆ.'], h1b:['ಬೋರ್ಡ್ ಪರೀಕ್ಷೆ ಬರುತ್ತಿದೆ.','ಇಂದೇ ಕೌಂಟ್‌ಡೌನ್ ಆರಂಭಿಸಿ.'],
@@ -32,7 +32,7 @@
       feats:[['ದುರ್ಬಲ ಅಧ್ಯಾಯ','ವನ್ನು ನಿಮ್ಮ Daily 5 ಅಂಕಗಳಿಂದ ಆರಿಸುತ್ತದೆ'],['ಸಂಜೆ 7 ಗಂಟೆಗೆ ನೆನಪೋಲೆ',': ಒಂದು ದಿನವೂ ತಪ್ಪದು'],['Daily 5 + Quick card',': ದಿನಕ್ಕೆ ಕೇವಲ 3 ನಿಮಿಷ'],['ಅಧ್ಯಾಯ ಪರೀಕ್ಷೆಗಳು',', Guess It ಮತ್ತು Memes']],
       free:'BAIO ಆ್ಯಪ್‌ನಲ್ಲಿ ಉಚಿತ', how:'ಆ್ಯಪ್ ತೆರೆಯಿರಿ → Home → Exam Countdown', sir:'ನರೇಂದ್ರ ಸರ್', role:'ಜೀವಶಾಸ್ತ್ರ ಉಪನ್ಯಾಸಕರು · Founder & CEO, BAIO',
       sIn:'ಜೀವಶಾಸ್ತ್ರ ಪರೀಕ್ಷೆಗೆ', sQ:['ನಿಮ್ಮ ಯೋಜನೆ','ಸಿದ್ಧವೇ?'], steps:['ಪರೀಕ್ಷೆಯ ದಿನಾಂಕ ಆರಿಸಿ','ಇಂದಿನ ಯೋಜನೆ: ಅಧ್ಯಾಯ → Daily 5 → Quick card','ಸಂಜೆ 7 ಗಂಟೆಯ ನೆನಪೋಲೆ ಆನ್ ಮಾಡಿ'],
-      cap:function(s){ return (s.days!=null?'📅 ನನ್ನ '+(s.cls===2?'II PUC':'I PUC')+' ಜೀವಶಾಸ್ತ್ರ ಪರೀಕ್ಷೆಗೆ ಇನ್ನು '+s.days+' ದಿನ, ಪ್ರತಿದಿನಕ್ಕೂ ಯೋಜನೆ ಸಿದ್ಧ!':'📅 ಜೀವಶಾಸ್ತ್ರ ಪರೀಕ್ಷೆ ಹತ್ತಿರವಿದೆಯೇ? ಪ್ರತಿದಿನಕ್ಕೂ ಯೋಜನೆ ಪಡೆಯಿರಿ!')+
+      cap:function(s){ return (s.days!=null?'📅 '+((s.examName&&s.examName.kn)?s.examName.kn+'ಗೆ':'ನನ್ನ '+(s.cls===2?'II PUC':'I PUC')+' ಜೀವಶಾಸ್ತ್ರ ಪರೀಕ್ಷೆಗೆ')+' ಇನ್ನು '+s.days+' ದಿನ, ಪ್ರತಿದಿನಕ್ಕೂ ಯೋಜನೆ ಸಿದ್ಧ!':'📅 ಜೀವಶಾಸ್ತ್ರ ಪರೀಕ್ಷೆ ಹತ್ತಿರವಿದೆಯೇ? ಪ್ರತಿದಿನಕ್ಕೂ ಯೋಜನೆ ಪಡೆಯಿರಿ!')+
         ' BAIO ಆ್ಯಪ್‌ನ Exam Countdown ದುರ್ಬಲ ಅಧ್ಯಾಯ → Daily 5 → Quick card ತೋರಿಸುತ್ತದೆ, ಜೊತೆಗೆ ಸಂಜೆ 7 ಗಂಟೆಗೆ ನೆನಪೋಲೆ. ಎಲ್ಲಾ I PUC ಮತ್ತು II PUC ವಿದ್ಯಾರ್ಥಿಗಳಿಗೆ ಉಚಿತ. ಪ್ರಯತ್ನಿಸಿ 👇\n'+APP_URL+'\n— ನರೇಂದ್ರ ಸರ್, BAIO Learning System'; },
       ui:{title:'📤 ನಿಮ್ಮ ಪರೀಕ್ಷೆ ಕೌಂಟ್‌ಡೌನ್ ಹಂಚಿ', post:'ಪೋಸ್ಟ್', status:'ಸ್ಟೇಟಸ್', caption:'ಶೀರ್ಷಿಕೆ (ಬದಲಾಯಿಸಬಹುದು)', share:'ಚಿತ್ರ + ಶೀರ್ಷಿಕೆ ಹಂಚಿ', save:'⬇ ಚಿತ್ರ ಉಳಿಸಿ', copy:'📋 ಶೀರ್ಷಿಕೆ ಕಾಪಿ', wa:'💬 WhatsApp ಸಂದೇಶ', copied:'✅ ಕಾಪಿ ಆಯಿತು', making:'ಚಿತ್ರ ತಯಾರಾಗುತ್ತಿದೆ…', light:'ಬೆಳಕು', dark:'ಗಾಢ'} },
     hi: { label:'हिंदी', tag:'नया', h1:['परीक्षा की तारीख़ तय है।','अब प्लान भी तैयार है।'], h1b:['बोर्ड परीक्षा आ रही है।','आज से काउंटडाउन शुरू करो।'],
@@ -42,7 +42,7 @@
       feats:[['कमज़ोर अध्याय',' तुम्हारे Daily 5 स्कोर से चुनता है'],['शाम 7 बजे रिमाइंडर',': एक भी दिन मत छोड़ो'],['Daily 5 + Quick card',': रोज़ सिर्फ़ 3 मिनट'],['अध्याय टेस्ट',', Guess It और Memes']],
       free:'BAIO ऐप पर मुफ़्त', how:'ऐप खोलो → Home → Exam Countdown', sir:'नरेंद्र सर', role:'बायोलॉजी लेक्चरर · Founder & CEO, BAIO',
       sIn:'बायोलॉजी परीक्षा में', sQ:['तुम्हारा प्लान','तैयार है?'], steps:['अपनी परीक्षा की तारीख़ चुनो','आज का प्लान: अध्याय → Daily 5 → Quick card','शाम 7 बजे का रिमाइंडर चालू करो'],
-      cap:function(s){ return (s.days!=null?'📅 मेरी '+(s.cls===2?'II PUC':'I PUC')+' बायोलॉजी परीक्षा में '+s.days+' दिन बाकी हैं, और हर दिन का प्लान तैयार है!':'📅 बायोलॉजी परीक्षा नज़दीक है? हर दिन का प्लान पाओ!')+
+      cap:function(s){ return (s.days!=null?'📅 '+((s.examName&&s.examName.hi)?s.examName.hi:'मेरी '+(s.cls===2?'II PUC':'I PUC')+' बायोलॉजी परीक्षा')+' में '+s.days+' दिन बाकी हैं, और हर दिन का प्लान तैयार है!':'📅 बायोलॉजी परीक्षा नज़दीक है? हर दिन का प्लान पाओ!')+
         ' BAIO ऐप का Exam Countdown कमज़ोर अध्याय → Daily 5 → Quick card बताता है, साथ में शाम 7 बजे रिमाइंडर। सभी I PUC और II PUC छात्रों के लिए मुफ़्त। आज़माओ 👇\n'+APP_URL+'\n— नरेंद्र सर, BAIO Learning System'; },
       ui:{title:'📤 अपना परीक्षा काउंटडाउन शेयर करो', post:'पोस्ट', status:'स्टेटस', caption:'कैप्शन (बदल सकते हो)', share:'चित्र + कैप्शन शेयर करो', save:'⬇ चित्र सेव करो', copy:'📋 कैप्शन कॉपी', wa:'💬 WhatsApp संदेश', copied:'✅ कॉपी हुआ', making:'चित्र बन रहा है…', light:'लाइट', dark:'डार्क'} }
   };
@@ -106,7 +106,8 @@
     else { icon(x,'cal',tx+tW/2-36,ty+40,72,NAVY); x.font='700 28px '+fam; x.fillText(t.noDays,tx+tW/2,ty+168); }
     x.textAlign='left';
     var px=tx+tW+36, pw=R-40-px, py=ty+20;
-    fitFont(x,t.exam[s.cls||0],700,34,22,fam,pw); x.fillStyle=P.ink; x.fillText(t.exam[s.cls||0],px,py+30); py+=48;
+    var examText = (s.examName && s.examName[lang]) ? s.examName[lang] : t.exam[s.cls||0];
+    fitFont(x,examText,700,34,22,fam,pw); x.fillStyle=P.ink; x.fillText(examText,px,py+30); py+=48;
     if(s.provisional){ x.font='500 22px '+fam; x.fillStyle=P.dim; x.fillText(t.prov,px,py+18); py+=36; }
     if(s.chap){ var line=t.plan[0]+s.chap+t.plan[1]; x.font='500 28px '+fam; var pl=wrap(x,line,pw); var z=28; while(pl.length>3&&z>20){ z-=2; x.font='500 '+z+'px '+fam; pl=wrap(x,line,pw); } x.fillStyle=P.ink3; pl.slice(0,3).forEach(function(l,i){ x.fillText(l,px,py+z+i*z*1.45); }); }
     /* features */
