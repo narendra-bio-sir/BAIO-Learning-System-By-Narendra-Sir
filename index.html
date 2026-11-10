@@ -3025,8 +3025,10 @@ window.indexHardRefresh = indexHardRefresh;
     plan.querySelectorAll('.hz-cls [data-c]').forEach(function(b){ b.onclick=function(){ if(+b.dataset.c!==cls) setCls(+b.dataset.c); }; });
   }
   document.getElementById('hzCdShare').onclick=function(){ if(window.baioCountdownShare) baioCountdownShare(window.__hzCd||{cls:cls}); };
-  document.getElementById('hzEdit').onclick=function(){ if(!cls){ paint(); return; } var cur=myDate()||DEF[cls]||''; var v=prompt((cls===1?'I PUC':'II PUC')+' Biology exam date (YYYY-MM-DD):', cur); if(v===null) return; v=v.trim();
-    if(/^\d{4}-\d{2}-\d{2}$/.test(v)) store.set('baio_exam_date_'+cls,v); else if(!v) { try{ localStorage.removeItem('baio_exam_date_'+cls); localStorage.removeItem('baio_exam_date'); }catch(e){} } paint(); };
+  document.getElementById('hzEdit').onclick=function(){ if(!cls){ paint(); return; } var curIso=myDate()||DEF[cls]||''; var curDisp=curIso?curIso.split('-').reverse().join('-'):'';
+    var v=prompt((cls===1?'I PUC':'II PUC')+' Biology exam date (DD-MM-YYYY):', curDisp); if(v===null) return; v=v.trim();
+    var m=v.match(/^(\d{2})-(\d{2})-(\d{4})$/);
+    if(m) store.set('baio_exam_date_'+cls, m[3]+'-'+m[2]+'-'+m[1]); else if(!v) { try{ localStorage.removeItem('baio_exam_date_'+cls); localStorage.removeItem('baio_exam_date'); }catch(e){} } paint(); };
   paint();
 
   /* invite links: remember ?ref=CODE once, then report it to the BAIO server */
