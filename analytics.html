@@ -316,13 +316,21 @@ MiniChart.prototype._render = function(force){
         ctx.fillStyle = color;
         roundRectTop(ctx, gx, by, barW, h, ds.borderRadius||4);
         ctx.fill();
-        // value label
+        // value label — a dataset may supply valueLabelLines(v,i) returning
+        // [mainLine, subLine] (e.g. a percentage plus the absolute marks
+        // underneath) instead of the default single formatted value.
         if(v>0){
           ctx.fillStyle = xTickColor;
           ctx.textAlign = 'center';
+          const lines = typeof ds.valueLabelLines === 'function'
+            ? ds.valueLabelLines(v, i)
+            : [v>=100 ? fmtNum(v) : (Number.isInteger(v)?String(v):v.toFixed(1))];
           ctx.font = '10px Inter, sans-serif';
-          const label = v>=100 ? fmtNum(v) : (Number.isInteger(v)?String(v):v.toFixed(1));
-          ctx.fillText(label, gx+barW/2, by-8);
+          ctx.fillText(lines[0], gx+barW/2, by-8-(lines[1]?9:0));
+          if(lines[1]){
+            ctx.font = '8px Inter, sans-serif';
+            ctx.fillText(lines[1], gx+barW/2, by-8);
+          }
         }
       });
     });
@@ -5132,10 +5140,13 @@ function buildMidtermOverview(pu){
   const highChip = el('HighSubjChip'); if(highChip) highChip.textContent = `Score 87.5%+ (varies by subject)`;
   const highDesc = el('HighSubjDesc'); if(highDesc) highDesc.textContent = `Number of students scoring 87.5% or above, out of ${midtermRoster(pu).length} students on roster`;
 
+  const avgChartRaws = [sw.avgRaw.BIO, sw.avgRaw.CHE, sw.avgRaw.PHY, sw.avgRaw.MAT];
+  const avgChartMaxes = [MIDTERM_SUBJ_MAX.BIO, MIDTERM_SUBJ_MAX.CHE, MIDTERM_SUBJ_MAX.PHY, MIDTERM_SUBJ_MAX.MAT];
   midtermSetChart(pu, 'avg', new Chart(el('AvgChart'), {
     type:'bar',
     data:{ labels:['Biology','Chemistry','Physics','Mathematics'],
-      datasets:[{ data:[sw.avgPctCoreSTEM.BIO, sw.avgPctCoreSTEM.CHE, sw.avgPctCoreSTEM.PHY, sw.avgPctCoreSTEM.MAT], backgroundColor:['#2bb3a3','#d4af37','#8ecae6','#e0685f'], borderRadius:8, maxBarThickness:70 }]},
+      datasets:[{ data:[sw.avgPctCoreSTEM.BIO, sw.avgPctCoreSTEM.CHE, sw.avgPctCoreSTEM.PHY, sw.avgPctCoreSTEM.MAT], backgroundColor:['#2bb3a3','#d4af37','#8ecae6','#e0685f'], borderRadius:8, maxBarThickness:70,
+        valueLabelLines:(v,i)=>[v+'%', `(${avgChartRaws[i]}/${avgChartMaxes[i]})`] }]},
     options:{ responsive:true, plugins:{legend:{display:false}}, scales:{
       x:{ticks:{color:chartMuted()}, grid:{color:chartGridSoft()}},
       y:{beginAtZero:true, max:100, ticks:{color:chartMuted()}, grid:{color:chartGrid()}}
