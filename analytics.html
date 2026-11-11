@@ -5092,7 +5092,7 @@ function computeMidtermSubjectWide(pu){
   const names = {BIO:'Biology',KAN:'Kannada',ENG:'English',MAT:'Mathematics',PHY:'Physics',CHE:'Chemistry',HIN:'Hindi',ELE:'Electronics'};
   const colors = {BIO:'#2bb3a3',KAN:'#d4af37',ENG:'#8ecae6',MAT:'#e0685f',PHY:'#8ecae6',CHE:'#e0685f',HIN:'#d4af37',ELE:'#a78bfa'};
   const arr = midtermRoster(pu);
-  const avgPctCoreSTEM = {}, highPerformers = {}, failures = {}, appeared = {}, avgPct = {}, sdPct = {};
+  const avgPctCoreSTEM = {}, highPerformers = {}, failures = {}, appeared = {}, avgPct = {}, avgRaw = {}, sdPct = {};
   const seen = new Set();
   order.forEach(subj=>{
     const max = MIDTERM_SUBJ_MAX[subj];
@@ -5106,11 +5106,12 @@ function computeMidtermSubjectWide(pu){
     failures[subj] = vals.filter(v=>v<passMark).length;
     appeared[subj] = vals.length;
     const st = computeStats(vals);
+    avgRaw[subj] = vals.length ? Math.round(st.mean*10)/10 : 0;
     avgPct[subj] = vals.length ? Math.round((st.mean/max*100)*10)/10 : 0;
     sdPct[subj] = vals.length ? Math.round((st.sd/max*100)*10)/10 : 0;
     if(['BIO','PHY','CHE','MAT'].includes(subj)) avgPctCoreSTEM[subj] = avgPct[subj];
   });
-  return { order, names, colors, avgPctCoreSTEM, avgPct, sdPct, highPerformers, failures, appeared, totalStudents: seen.size, subjectsTaught: order.filter(k=>appeared[k]>0).length };
+  return { order, names, colors, avgPctCoreSTEM, avgPct, avgRaw, sdPct, highPerformers, failures, appeared, totalStudents: seen.size, subjectsTaught: order.filter(k=>appeared[k]>0).length };
 }
 
 function buildMidtermOverview(pu){
@@ -5121,7 +5122,7 @@ function buildMidtermOverview(pu){
   Object.keys(rivals).forEach(k=>{ if(sw.failures[k] > worstVal){ worstVal = sw.failures[k]; worstName = rivals[k]; } });
 
   el('OverviewKpis').innerHTML = `
-    <div class="kpi hero"><div class="kpi-label">Biology Avg Score</div><div class="kpi-value">${sw.avgPctCoreSTEM.BIO}%</div><div class="kpi-note up">Midterm Exam 2026</div></div>
+    <div class="kpi hero"><div class="kpi-label">Biology Avg Score</div><div class="kpi-value">${sw.avgPctCoreSTEM.BIO}%</div><div class="kpi-note up">${sw.avgRaw.BIO}/${MIDTERM_SUBJ_MAX.BIO} marks &middot; Midterm Exam 2026</div></div>
     <div class="kpi gold"><div class="kpi-label">Biology High-Performers (87.5%+)</div><div class="kpi-value">${sw.highPerformers.BIO}</div><div class="kpi-note">out of ${sw.appeared.BIO} who appeared</div></div>
     <div class="kpi"><div class="kpi-label">Biology Failures</div><div class="kpi-value">${sw.failures.BIO}</div><div class="kpi-note">Below 30% (${midtermPassMark('BIO')}/${MIDTERM_SUBJ_MAX.BIO})</div></div>
     <div class="kpi warn"><div class="kpi-label">${worstName} Failures</div><div class="kpi-value">${worstVal<0?0:worstVal}</div><div class="kpi-note down">~${sw.totalStudents} students appeared</div></div>
@@ -5160,6 +5161,16 @@ function buildMidtermOverview(pu){
       y:{beginAtZero:true, ticks:{color:chartMuted()}, grid:{color:chartGrid()}}
     }}
   }));
+}
+
+/* Mean of a list of {marks, max} — the absolute average (each student's own total max
+   isn't uniform for the Midterm, so this averages the raw marks and, separately, each
+   student's own percentage) and its percentage equivalent, for the "Class Average" KPI. */
+function midtermAvgOf(list){
+  if(!list.length) return { avgMarks:null, avgPct:null };
+  const avgMarks = Math.round((list.reduce((a,b)=>a+b.marks,0)/list.length)*10)/10;
+  const avgPct = Math.round((list.reduce((a,b)=>a+(b.max>0?b.marks/b.max*100:0),0)/list.length)*10)/10;
+  return { avgMarks, avgPct };
 }
 
 /* ---------- MIDTERM — OVERALL (PCMB) TOPPERS & FAILURES ---------- */
@@ -5202,8 +5213,10 @@ function renderMidtermOverallToppers(pu, scope){
   const combinedTop = midtermOverallTopperList(pu,'combined')[0];
   const sec0Top = midtermOverallTopperList(pu, sections[0])[0];
   const sec1Top = midtermOverallTopperList(pu, sections[1])[0];
+  const classAvg = midtermAvgOf(list);
   el('OverallTopperKpis').innerHTML = `
     <div class="kpi hero"><div class="kpi-label">PCMB Overall Topper</div><div class="kpi-value">${combinedTop?combinedTop.marks:'—'}</div><div class="kpi-note up">${combinedTop?combinedTop.name+' ('+combinedTop.section+')':'—'}</div></div>
+    <div class="kpi gold"><div class="kpi-label">Class Average (Total)</div><div class="kpi-value">${classAvg.avgMarks!==null?classAvg.avgMarks:'—'}</div><div class="kpi-note">${classAvg.avgPct!==null?classAvg.avgPct+'%':'—'}</div></div>
     <div class="kpi"><div class="kpi-label">${sections[0]} Topper</div><div class="kpi-value">${sec0Top?sec0Top.marks:'—'}</div><div class="kpi-note">${sec0Top?sec0Top.name:'—'}</div></div>
     <div class="kpi"><div class="kpi-label">${sections[1]} Topper</div><div class="kpi-value">${sec1Top?sec1Top.marks:'—'}</div><div class="kpi-note">${sec1Top?sec1Top.name:'—'}</div></div>`;
 }
@@ -5290,8 +5303,10 @@ function buildMidtermElectronicsToppers(pu){
     : '<tr><td colspan="4">No students below 30% — great news!</td></tr>';
 
   const roster = pu===2 ? computePU2ElectronicsRoster() : computeElectronicsRoster();
+  const classAvg = midtermAvgOf(list);
   el('EleTopperKpis').innerHTML = `
     <div class="kpi hero"><div class="kpi-label">PCME Topper</div><div class="kpi-value">${list[0]?list[0].marks:'—'}</div><div class="kpi-note up">${list[0]?list[0].name:'—'}</div></div>
+    <div class="kpi gold"><div class="kpi-label">Class Average (Total)</div><div class="kpi-value">${classAvg.avgMarks!==null?classAvg.avgMarks:'—'}</div><div class="kpi-note">${classAvg.avgPct!==null?classAvg.avgPct+'%':'—'}</div></div>
     <div class="kpi"><div class="kpi-label">Section Size</div><div class="kpi-value">${roster.length}</div><div class="kpi-note">Electronics students</div></div>
     <div class="kpi warn"><div class="kpi-label">Below 30%</div><div class="kpi-value">${failList.length}</div><div class="kpi-note down">students need support</div></div>`;
 }
