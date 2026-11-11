@@ -3632,10 +3632,12 @@ function buildSlipD(){
       const average = appeared ? vals.reduce((a,b)=>a+b,0)/appeared : 0;
       const toppers = vals.filter(v=>v>15).length;
       const failed = vals.filter(v=>v<7).length;
+      const sd = appeared ? computeStats(vals).sd : 0;
       out[subj] = {
         appeared, average: round(average,2), avg_pct: round(average/20*100,2),
         toppers, topper_pct: appeared ? round(toppers/appeared*100,2) : 0,
-        failed, fail_pct: appeared ? round(failed/appeared*100,2) : 0
+        failed, fail_pct: appeared ? round(failed/appeared*100,2) : 0,
+        sd, sd_pct: round(sd/20*100,2)
       };
     });
     return out;
@@ -3652,10 +3654,12 @@ function buildSlipD(){
       const average = appeared ? perStudent.reduce((a,b)=>a+b,0)/appeared : 0;
       const toppers = perStudent.filter(v=>v>15).length;
       const failed = perStudent.filter(v=>v<7).length;
+      const sd = appeared ? computeStats(perStudent).sd : 0;
       out[subj] = {
         appeared, average: round(average,2), avg_pct: round(average/20*100,2),
         toppers, topper_pct: appeared ? round(toppers/appeared*100,2) : 0,
-        failed, fail_pct: appeared ? round(failed/appeared*100,2) : 0
+        failed, fail_pct: appeared ? round(failed/appeared*100,2) : 0,
+        sd, sd_pct: round(sd/20*100,2)
       };
     });
     return out;
@@ -6595,12 +6599,17 @@ function buildBvo(){
     <div class="kpi hero"><div class="kpi-label">Biology Avg % &mdash; ${pu1MonthLabel}</div><div class="kpi-value">${pu1sw.avgPctCoreSTEM.BIO}%</div><div class="kpi-note ${bioStanding.cls}">${bioStanding.text}</div></div>
     <div class="kpi gold"><div class="kpi-label">Topper Density &mdash; Slip Tests</div><div class="kpi-value">${D.subjects.combined.BIO.topper_pct}%</div><div class="kpi-note">&gt;15/20, combined</div></div>
     <div class="kpi gold"><div class="kpi-label">High-Performers &mdash; ${pu1MonthLabel}</div><div class="kpi-value">${pu1sw.highPerformers.BIO}</div><div class="kpi-note">${bioHighPerformerStandingNote(pu1sw).text}</div></div>
+    ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">Biology Spread (SD) &mdash; Slip Tests</div><div class="kpi-value">${D.subjects.combined.BIO.sd_pct}%</div><div class="kpi-note">${sdLabel(D.subjects.combined.BIO.sd_pct,100)}</div></div>`:''}
+    ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">Biology Spread (SD) &mdash; ${pu1MonthLabel}</div><div class="kpi-value">${pu1sw.sdPct.BIO}%</div><div class="kpi-note">${sdLabel(pu1sw.sdPct.BIO,100)}</div></div>`:''}
   `;
+
+  const defaultBarLabel = v => v>=100 ? String(Math.round(v)) : (Number.isInteger(v)?String(v):v.toFixed(1));
 
   if(bvoSlipChart) bvoSlipChart.destroy();
   bvoSlipChart = new Chart(document.getElementById('bvoSlipCanvas'), {
     type:'bar',
-    data:{ labels:SUBJECTS.map(s=>NAMES[s]), datasets:[{ data:SUBJECTS.map(s=>D.subjects.combined[s].avg_pct), backgroundColor:SUBJECTS.map(s=>COLORS[s]), borderRadius:8 }]},
+    data:{ labels:SUBJECTS.map(s=>NAMES[s]), datasets:[{ data:SUBJECTS.map(s=>D.subjects.combined[s].avg_pct), backgroundColor:SUBJECTS.map(s=>COLORS[s]), borderRadius:8,
+      ...(sdOptions.subject?{valueLabelLines:(v,i)=>[defaultBarLabel(v), `±${D.subjects.combined[SUBJECTS[i]].sd_pct}`]}:{}) }]},
     options:{ responsive:true, plugins:{legend:{display:false}}, scales:{
       x:{ticks:{color:chartMuted()}, grid:{color:chartGridSoft()}},
       y:{beginAtZero:true, max:100, ticks:{color:chartMuted()}, grid:{color:chartGrid()}}
@@ -6608,9 +6617,11 @@ function buildBvo(){
   });
 
   if(bvoMonthlyChart) bvoMonthlyChart.destroy();
+  const bvoMonthlyOrder = ['BIO','CHE','PHY','MAT'];
   bvoMonthlyChart = new Chart(document.getElementById('bvoMonthlyCanvas'), {
     type:'bar',
-    data:{ labels:['Biology','Chemistry','Physics','Mathematics'], datasets:[{ data:[pu1sw.avgPctCoreSTEM.BIO, pu1sw.avgPctCoreSTEM.CHE, pu1sw.avgPctCoreSTEM.PHY, pu1sw.avgPctCoreSTEM.MAT], backgroundColor:['#2bb3a3','#d4af37','#8ecae6','#e0685f'], borderRadius:8 }]},
+    data:{ labels:['Biology','Chemistry','Physics','Mathematics'], datasets:[{ data:[pu1sw.avgPctCoreSTEM.BIO, pu1sw.avgPctCoreSTEM.CHE, pu1sw.avgPctCoreSTEM.PHY, pu1sw.avgPctCoreSTEM.MAT], backgroundColor:['#2bb3a3','#d4af37','#8ecae6','#e0685f'], borderRadius:8,
+      ...(sdOptions.subject?{valueLabelLines:(v,i)=>[defaultBarLabel(v), `±${pu1sw.sdPct[bvoMonthlyOrder[i]]}`]}:{}) }]},
     options:{ responsive:true, plugins:{legend:{display:false}}, scales:{
       x:{ticks:{color:chartMuted()}, grid:{color:chartGridSoft()}},
       y:{beginAtZero:true, max:100, ticks:{color:chartMuted()}, grid:{color:chartGrid()}}
@@ -6631,6 +6642,7 @@ function buildBvo(){
     <tr><td>Fail Rate</td><td>${D.subjects.combined.BIO.fail_pct}%</td><td>${pu1sw.failures.BIO} students (~${pu1sw.totalStudents} total)</td></tr>
     <tr><td>Topper / High-Performer Count</td><td>${D.subjects.combined.BIO.topper_pct}% (&gt;15/20)</td><td>${pu1sw.highPerformers.BIO} students (${pu1sw.hiLabel})</td></tr>
     <tr><td>Rank vs Other Subjects</td><td>${rankChipHtml(slipRank)}</td><td>${rankChipHtml(mtRank)}</td></tr>
+    ${sdOptions.subject?`<tr><td>Spread (SD)</td><td>${D.subjects.combined.BIO.sd_pct}%</td><td>${pu1sw.sdPct.BIO}%</td></tr>`:''}
   `;
   bvoBuilt = true;
 }
@@ -11336,16 +11348,21 @@ function buildPU2Bvo(){
   const subjLabels = ['PHY','CHE','MAT','BIO'];
   const subjNice = {PHY:'Physics',CHE:'Chemistry',MAT:'Maths',BIO:'Biology'};
 
-  // Test-series (all PU2_TESTS) combined average per subject
-  const testSeriesAvg = {};
+  // Test-series (all PU2_TESTS) combined average + spread per subject
+  const testSeriesAvg = {}, testSeriesSD = {};
   subjLabels.forEach(s=>{
     const vals = PU2_TESTS.map(t=>pu2ClassAvgPct(t,s)).filter(v=>v!==null);
+    const st = computeStats(vals);
     testSeriesAvg[s] = vals.length ? Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)*10)/10 : null;
+    testSeriesSD[s] = vals.length ? st.sd : null;
   });
-  // Monthly-test (June) average + spread per subject
+  // Monthly-test (whichever month(s) are currently selected elsewhere in the
+  // app \u2014 defaults to the Pre-Midterm Exam, the latest PU-II assessment on
+  // file \u2014 not hardcoded to June) average + spread per subject
+  const pu2BvoMonthLabel = pu2CurrentMonthLabel();
   const monthlyAvg = {}, monthlySD = {};
   subjLabels.forEach(s=>{
-    const vals = PU2_STUDENTS.map(st=>pu2MonthSubjPct(st,'june',s,40)).filter(v=>v!==null);
+    const vals = PU2_STUDENTS.map(st=>pu2MonthSubjPct(st,pu2MonthCurrent,s,40)).filter(v=>v!==null);
     const st = computeStats(vals);
     monthlyAvg[s] = vals.length ? st.mean : null;
     monthlySD[s] = vals.length ? st.sd : null;
@@ -11354,24 +11371,31 @@ function buildPU2Bvo(){
   const bioTestSeries = testSeriesAvg.BIO, bioMonthly = monthlyAvg.BIO;
   document.getElementById('pu2BvoKpis').innerHTML = `
     <div class="kpi hero"><div class="kpi-label">Biology Avg % \u2014 Test Series (all OBTs)</div><div class="kpi-value">${bioTestSeries!==null?bioTestSeries+'%':'\u2014'}</div><div class="kpi-note">Combined across ${PU2_TESTS.length} tests</div></div>
-    <div class="kpi gold"><div class="kpi-label">Biology Avg % \u2014 June Monthly Test</div><div class="kpi-value">${bioMonthly!==null?bioMonthly+'%':'\u2014'}</div></div>`;
+    <div class="kpi gold"><div class="kpi-label">Biology Avg % \u2014 ${pu2BvoMonthLabel}</div><div class="kpi-value">${bioMonthly!==null?bioMonthly+'%':'\u2014'}</div></div>
+    ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">Biology Spread (SD) \u2014 Test Series</div><div class="kpi-value">${testSeriesSD.BIO!==null?testSeriesSD.BIO+'%':'\u2014'}</div><div class="kpi-note">${testSeriesSD.BIO!==null?sdLabel(testSeriesSD.BIO,100):''}</div></div>`:''}
+    ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">Biology Spread (SD) \u2014 ${pu2BvoMonthLabel}</div><div class="kpi-value">${monthlySD.BIO!==null?monthlySD.BIO+'%':'\u2014'}</div><div class="kpi-note">${monthlySD.BIO!==null?sdLabel(monthlySD.BIO,100):''}</div></div>`:''}`;
 
+  const defaultBarLabel = v => v>=100 ? String(Math.round(v)) : (Number.isInteger(v)?String(v):v.toFixed(1));
   if(pu2BvoTestChartInst) pu2BvoTestChartInst.destroy();
   pu2BvoTestChartInst = new Chart(document.getElementById('pu2BvoTestChart'), {
     type:'bar',
-    data:{ labels: subjLabels.map(s=>subjNice[s]), datasets:[{ data: subjLabels.map(s=>testSeriesAvg[s]||0), backgroundColor: subjLabels.map(s=>s==='BIO'?'#2bb3a3':'#8ecae6') }] },
+    data:{ labels: subjLabels.map(s=>subjNice[s]), datasets:[{ data: subjLabels.map(s=>testSeriesAvg[s]||0), backgroundColor: subjLabels.map(s=>s==='BIO'?'#2bb3a3':'#8ecae6'),
+      ...(sdOptions.subject?{valueLabelLines:(v,i)=>[defaultBarLabel(v), testSeriesSD[subjLabels[i]]!==null?`\u00b1${testSeriesSD[subjLabels[i]]}`:'']}:{}) }] },
     options:{ scales:{ y:{ max:100 } } }
   });
   if(pu2BvoMonthChartInst) pu2BvoMonthChartInst.destroy();
   pu2BvoMonthChartInst = new Chart(document.getElementById('pu2BvoMonthChart'), {
     type:'bar',
-    data:{ labels: subjLabels.map(s=>subjNice[s]), datasets:[{ data: subjLabels.map(s=>monthlyAvg[s]||0), backgroundColor: subjLabels.map(s=>s==='BIO'?'#2bb3a3':'#d4af37') }] },
+    data:{ labels: subjLabels.map(s=>subjNice[s]), datasets:[{ data: subjLabels.map(s=>monthlyAvg[s]||0), backgroundColor: subjLabels.map(s=>s==='BIO'?'#2bb3a3':'#d4af37'),
+      ...(sdOptions.subject?{valueLabelLines:(v,i)=>[defaultBarLabel(v), monthlySD[subjLabels[i]]!==null?`\u00b1${monthlySD[subjLabels[i]]}`:'']}:{}) }] },
     options:{ scales:{ y:{ max:100 } } }
   });
+  const pu2BvoMonthDescEl = document.querySelector('#pu2BvoMonthChart')?.closest('.panel')?.querySelector('.desc');
+  if(pu2BvoMonthDescEl) pu2BvoMonthDescEl.textContent = `${pu2BvoMonthLabel}, overall percentage score by subject`;
 
-  const rows = subjLabels.map(s=>[subjNice[s], testSeriesAvg[s]!==null?testSeriesAvg[s]+'%':'\u2014', monthlyAvg[s]!==null?monthlyAvg[s]+'%':'\u2014', monthlySD[s]!==null?monthlySD[s]+'%':'\u2014']);
-  document.querySelector('#pu2BvoTable thead tr').innerHTML = '<th>Metric</th><th>Test Series (Combined)</th><th>Monthly Test</th>'+(sdOptions.subject?'<th>Monthly Spread (SD)</th>':'');
-  document.querySelector('#pu2BvoTable tbody').innerHTML = rows.map(r=>`<tr${r[0]==='Biology'?' class="bio-row"':''}><td>${r[0]}</td><td><b>${r[1]}</b></td><td>${r[2]}</td>${sdOptions.subject?`<td>${r[3]}</td>`:''}</tr>`).join('');
+  const rows = subjLabels.map(s=>[subjNice[s], testSeriesAvg[s]!==null?testSeriesAvg[s]+'%':'\u2014', monthlyAvg[s]!==null?monthlyAvg[s]+'%':'\u2014', testSeriesSD[s]!==null?testSeriesSD[s]+'%':'\u2014', monthlySD[s]!==null?monthlySD[s]+'%':'\u2014']);
+  document.querySelector('#pu2BvoTable thead tr').innerHTML = '<th>Metric</th><th>Test Series (Combined)</th><th>Monthly Test</th>'+(sdOptions.subject?'<th>Test Series Spread (SD)</th><th>Monthly Spread (SD)</th>':'');
+  document.querySelector('#pu2BvoTable tbody').innerHTML = rows.map(r=>`<tr${r[0]==='Biology'?' class="bio-row"':''}><td>${r[0]}</td><td><b>${r[1]}</b></td><td>${r[2]}</td>${sdOptions.subject?`<td>${r[3]}</td><td>${r[4]}</td>`:''}</tr>`).join('');
 
   // Data-driven bullet points (computed, not fabricated)
   const others = ['PHY','CHE','MAT'];
@@ -11381,7 +11405,7 @@ function buildPU2Bvo(){
   const leadMonth = bioMonthly!==null ? Math.round((bioMonthly-bestOtherMonth)*10)/10 : null;
   document.getElementById('pu2BvoBullets').innerHTML = `
     <li><span class="action-num">1</span><span>Biology's average across the full test series is <b>${bioTestSeries!==null?bioTestSeries+'%':'\u2014'}</b>, ${leadTest!==null?(leadTest>=0?`${leadTest} points ahead of`:`${Math.abs(leadTest)} points behind`)+' the best of Physics/Chemistry/Maths':''}.</span></li>
-    <li><span class="action-num">2</span><span>In the June Monthly Test, Biology averaged <b>${bioMonthly!==null?bioMonthly+'%':'\u2014'}</b>, ${leadMonth!==null?(leadMonth>=0?`${leadMonth} points ahead of`:`${Math.abs(leadMonth)} points behind`)+' the best of Physics/Chemistry/Maths':''}.</span></li>`;
+    <li><span class="action-num">2</span><span>In the ${pu2BvoMonthLabel}, Biology averaged <b>${bioMonthly!==null?bioMonthly+'%':'\u2014'}</b>, ${leadMonth!==null?(leadMonth>=0?`${leadMonth} points ahead of`:`${Math.abs(leadMonth)} points behind`)+' the best of Physics/Chemistry/Maths':''}.</span></li>`;
 }
 
 /* ============================================================
