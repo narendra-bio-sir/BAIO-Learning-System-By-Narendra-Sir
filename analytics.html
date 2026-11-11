@@ -9995,6 +9995,10 @@ function studentPerformanceCategories(student, pu){
       }
     }
   }
+  if(student.midterm && student.midterm.TOTAL!==null && student.midterm.TOTAL!==undefined){
+    const midtermMax = midtermTotalMaxFor(student, pu);
+    if(midtermMax>0) cats.push({label:'Midterm Exam', pct: Math.round((student.midterm.TOTAL/midtermMax)*1000)/10});
+  }
   // Track-relevant competitive exams only: a Biology student is never going to sit
   // JEE (no Biology paper), so it's not something to "bring the same focus to";
   // KCET (PCB stream) is used for Biology students instead of the PCM stream, since
@@ -11891,6 +11895,10 @@ function getPU1BioHistory(student){
     const avg = classVals.length ? classVals.reduce((a,b)=>a+b,0)/classVals.length : null;
     hist.push({label:'Slip Test 4', score:student.t4.BIO, outOf:20, pct:Math.round(student.t4.BIO/20*1000)/10, classAvg: avg!==null?Math.round(avg/20*1000)/10:null, date:'2026-10-05'});
   }
+  if(student.midterm && student.midterm.BIO!==null && student.midterm.BIO!==undefined){
+    const avg = midtermClassAvgRaw('BIO', 1);
+    hist.push({label:'Midterm Exam', score:student.midterm.BIO, outOf:70, pct:Math.round(student.midterm.BIO/70*1000)/10, classAvg: avg!==null?Math.round(avg/70*1000)/10:null, date:'2026-10-20'});
+  }
   const neetRec = (typeof NEET_BY_CODE!=='undefined') ? NEET_BY_CODE[student.code] : null;
   if(neetRec){
     NEET_TESTS.forEach((test,i)=>{
@@ -11960,6 +11968,10 @@ function getPU2BioHistory(student){
       hist.push({label: PU2_MONTH_LABELS[mk], score:student[mk].BIO, outOf:40, pct:Math.round(student[mk].BIO/40*1000)/10, classAvg: classAvg!==null?Math.round(classAvg/40*1000)/10:null, date:PU2_MONTH_APPROX_DATE[mk]});
     }
   });
+  if(student.midterm && student.midterm.BIO!==null && student.midterm.BIO!==undefined){
+    const avg = midtermClassAvgRaw('BIO', 2);
+    hist.push({label:'Midterm Exam', score:student.midterm.BIO, outOf:70, pct:Math.round(student.midterm.BIO/70*1000)/10, classAvg: avg!==null?Math.round(avg/70*1000)/10:null, date:'2026-10-20'});
+  }
   hist.sort((a,b)=> (a.date||'').localeCompare(b.date||''));
   return hist;
 }
@@ -12018,6 +12030,15 @@ function getPU1ElectronicsHistory(student){
     const avg = pu1MonthClassAvgRaw('september','ELE');
     hist.push({label:'September Monthly Test', score:student.september.ELE, outOf:20, pct:Math.round(student.september.ELE/20*1000)/10, classAvg: avg!==null?Math.round(avg/20*1000)/10:null, date:PU1_MONTH_APPROX_DATE.september});
   }
+  if(student.t4 && student.t4.ELE!==null && student.t4.ELE!==undefined){
+    const classVals = STUDENTS.map(s=>s.t4 && s.t4.ELE).filter(v=>v!==null&&v!==undefined);
+    const avg = classVals.length ? classVals.reduce((a,b)=>a+b,0)/classVals.length : null;
+    hist.push({label:'Slip Test 4', score:student.t4.ELE, outOf:20, pct:Math.round(student.t4.ELE/20*1000)/10, classAvg: avg!==null?Math.round(avg/20*1000)/10:null, date:'2026-10-05'});
+  }
+  if(student.midterm && student.midterm.ELE!==null && student.midterm.ELE!==undefined){
+    const avg = midtermClassAvgRaw('ELE', 1);
+    hist.push({label:'Midterm Exam', score:student.midterm.ELE, outOf:70, pct:Math.round(student.midterm.ELE/70*1000)/10, classAvg: avg!==null?Math.round(avg/70*1000)/10:null, date:'2026-10-20'});
+  }
   hist.sort((a,b)=> (a.date||'').localeCompare(b.date||''));
   return hist;
 }
@@ -12038,6 +12059,10 @@ function getPU2ElectronicsHistory(student){
       hist.push({label: PU2_MONTH_LABELS[mk], score:student[mk].ELE, outOf:40, pct:Math.round(student[mk].ELE/40*1000)/10, classAvg: classAvg!==null?Math.round(classAvg/40*1000)/10:null, date:PU2_MONTH_APPROX_DATE[mk]});
     }
   });
+  if(student.midterm && student.midterm.ELE!==null && student.midterm.ELE!==undefined){
+    const avg = midtermClassAvgRaw('ELE', 2);
+    hist.push({label:'Midterm Exam', score:student.midterm.ELE, outOf:70, pct:Math.round(student.midterm.ELE/70*1000)/10, classAvg: avg!==null?Math.round(avg/70*1000)/10:null, date:'2026-10-20'});
+  }
   hist.sort((a,b)=> (a.date||'').localeCompare(b.date||''));
   return hist;
 }
