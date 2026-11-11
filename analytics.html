@@ -1473,7 +1473,7 @@ window.addEventListener('afterprint', function(){
     <div class="grid2">
       <div class="panel">
         <h2>Failures by Subject <span class="chip down" id="midtermFailSubjChip">All subjects</span></h2>
-        <div class="desc">Number of students failing (below 35% in that subject)</div>
+        <div class="desc">Number of students failing (below the passing mark for that subject &mdash; 33% for PCMBE, 35% for languages)</div>
         <canvas id="midtermFailChart" data-h="260"></canvas>
       </div>
       <div class="panel">
@@ -2172,7 +2172,7 @@ window.addEventListener('afterprint', function(){
     <div class="grid2">
       <div class="panel">
         <h2>Failures by Subject <span class="chip down" id="pu2MidtermFailSubjChip">All subjects</span></h2>
-        <div class="desc">Number of students failing (below 35% in that subject)</div>
+        <div class="desc">Number of students failing (below the passing mark for that subject &mdash; 33% for PCMBE, 35% for languages)</div>
         <canvas id="pu2MidtermFailChart" data-h="260"></canvas>
       </div>
       <div class="panel">
@@ -3579,6 +3579,7 @@ function resizeAllCharts(){
    typeof leadChart!=='undefined'?leadChart:null,
    noAvgChartInst, noDistChartInst, noSectionTotalChartInst, noSectionBioChartInst
   ].forEach(c=>{ if(c) c.resize(); });
+  if(typeof midtermCharts!=='undefined') Object.values(midtermCharts).forEach(c=>{ if(c) c.resize(); });
 }
 
 const SUBJECTS = ["BIO","PHY","CHE","MAT"]; // core 4, used for lead calc & overview
