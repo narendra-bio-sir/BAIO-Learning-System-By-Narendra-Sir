@@ -8372,8 +8372,8 @@ function computeClassPercentileTrend(student, pu){
   const roster = pu===2 ? (typeof PU2_STUDENTS!=='undefined' ? PU2_STUDENTS : null) : STUDENTS;
   if(!roster) return null;
   const testDefs = pu===2
-    ? [['march','March Monthly'],['april','April Monthly'],['may','May Monthly'],['june','June Monthly'],['july','July Monthly'],['premid','Pre-Midterm']]
-    : [['t1','Slip Test 1'],['june','June Monthly'],['t2','Slip Test 2'],['mt','July Monthly'],['august','August Monthly'],['t3','Slip Test 3'],['september','September Monthly'],['t4','Slip Test 4']];
+    ? [['march','March Monthly'],['april','April Monthly'],['may','May Monthly'],['june','June Monthly'],['july','July Monthly'],['premid','Pre-Midterm'],['midterm','Midterm Exam']]
+    : [['t1','Slip Test 1'],['june','June Monthly'],['t2','Slip Test 2'],['mt','July Monthly'],['august','August Monthly'],['t3','Slip Test 3'],['september','September Monthly'],['t4','Slip Test 4'],['midterm','Midterm Exam']];
   const points = [];
   testDefs.forEach(([key,label])=>{
     const rec = student[key];

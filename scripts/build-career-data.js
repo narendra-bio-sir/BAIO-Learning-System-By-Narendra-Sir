@@ -39,12 +39,14 @@ function serve(){
                sub: (r.latestSubjects || []).filter(x => x.score != null).map(x => [x.label, x.score, x.max]) };
     }
     function subjects(s, pu){
-      // Average % per subject over the monthly / mid-term theory tests (each subject out of 40; Sept I PUC out of 20).
-      const keys = pu === 2 ? ['march','april','may','june','july','premid'] : ['june','mt','august','september'];
-      const max = k => (pu === 1 && k === 'september') ? 20 : 40;
+      // Average % per subject over the monthly / mid-term theory tests (each subject out of 40;
+      // Sept I PUC out of 20; the Midterm Exam has its own per-subject max — PHY/CHE/BIO/ELE 70, MAT 80).
+      const MIDTERM_MAX = { PHY: 70, CHE: 70, BIO: 70, MAT: 80, ELE: 70 };
+      const keys = pu === 2 ? ['march','april','may','june','july','premid','midterm'] : ['june','mt','august','september','midterm'];
+      const max = (k, sb) => k === 'midterm' ? MIDTERM_MAX[sb] : (pu === 1 && k === 'september') ? 20 : 40;
       const acc = {};
       keys.forEach(k => { const t = s[k]; if(!t) return; ['PHY','CHE','BIO','MAT','ELE'].forEach(sb => {
-        const v = t[sb]; if(v == null || isNaN(v)) return; (acc[sb] = acc[sb] || []).push(100 * v / max(k)); }); });
+        const v = t[sb]; if(v == null || isNaN(v)) return; (acc[sb] = acc[sb] || []).push(100 * v / max(k, sb)); }); });
       const o = {}; Object.keys(acc).forEach(sb => { o[sb] = r1(acc[sb].reduce((a, b) => a + b, 0) / acc[sb].length); });
       return o;
     }
