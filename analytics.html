@@ -1142,12 +1142,12 @@ window.addEventListener('afterprint', function(){
     <div class="grid2">
       <div class="panel">
         <h2>Biggest Overall Decline <span class="chip down">&#9660; Watch List</span></h2>
-        <div class="desc">Top 5 drops in average % score, Test 1 &rarr; Test 2</div>
+        <div class="desc">Top 5 drops in average % score, earliest to latest Slip Test attempted</div>
         <div id="declineList"></div>
       </div>
       <div class="panel">
         <h2>Biggest Overall Improvement <span class="chip up">&#9650; Rising</span></h2>
-        <div class="desc">Top 5 gains in average % score, Test 1 &rarr; Test 2</div>
+        <div class="desc">Top 5 gains in average % score, earliest to latest Slip Test attempted</div>
         <div id="improveList"></div>
       </div>
     </div>
@@ -1816,12 +1816,12 @@ window.addEventListener('afterprint', function(){
     <div class="grid2">
       <div class="panel">
         <h2>ELECTRONICS &mdash; Average Score by Subject</h2>
-        <div class="desc">Test 1 vs Test 2 vs Test 3 &middot; Physics, Chemistry, Mathematics, Electronics</div>
+        <div class="desc">Test 1 vs Test 2 vs Test 3 vs Test 4 &middot; Physics, Chemistry, Mathematics, Electronics</div>
         <canvas id="electronicsSecAvgChart" data-h="230"></canvas>
       </div>
       <div class="panel">
         <h2>ELECTRONICS &mdash; Pass Rate by Subject</h2>
-        <div class="desc">&ge;35% (7/20), Test 1 vs Test 2 vs Test 3</div>
+        <div class="desc">&ge;35% (7/20), Test 1 vs Test 2 vs Test 3 vs Test 4</div>
         <canvas id="electronicsSecPassChart" data-h="230"></canvas>
       </div>
     </div>
@@ -1831,7 +1831,8 @@ window.addEventListener('afterprint', function(){
         <button class="subtab-btn active" data-ele-top="t1">Slip Test 1</button>
         <button class="subtab-btn" data-ele-top="t2">Slip Test 2</button>
         <button class="subtab-btn" data-ele-top="t3">Slip Test 3</button>
-        <button class="subtab-btn" data-ele-top="combined">Test 1-3 (Avg)</button>
+        <button class="subtab-btn" data-ele-top="t4">Slip Test 4</button>
+        <button class="subtab-btn" data-ele-top="combined">Test 1-4 (Avg)</button>
       </div>
       <div id="electronicsTopList"></div>
       <div class="topper-share-bar" id="electronicsTopShareBar"></div>
@@ -1842,6 +1843,7 @@ window.addEventListener('afterprint', function(){
         <button class="subtab-btn active" data-ele-fail="t1">Slip Test 1</button>
         <button class="subtab-btn" data-ele-fail="t2">Slip Test 2</button>
         <button class="subtab-btn" data-ele-fail="t3">Slip Test 3</button>
+        <button class="subtab-btn" data-ele-fail="t4">Slip Test 4</button>
       </div>
       <div class="table-wrap"><table id="electronicsFailSecTable"><thead><tr><th>Name</th><th>Enroll Code</th><th>Section</th><th>Subjects Failed</th><th>Total /80</th></tr></thead><tbody></tbody></table></div>
     </div>
@@ -6024,10 +6026,10 @@ function computeElectronicsTop(roster, testKey){
 
 function computeElectronicsCombinedTop(roster){
   return roster
-    .filter(s=> (s.t1 && s.t1.TOTAL!==null && s.t1.TOTAL!==undefined) || (s.t2 && s.t2.TOTAL!==null && s.t2.TOTAL!==undefined) || (s.t3 && s.t3.TOTAL!==null && s.t3.TOTAL!==undefined))
+    .filter(s=> ['t1','t2','t3','t4'].some(tk=> s[tk] && s[tk].TOTAL!==null && s[tk].TOTAL!==undefined))
     .map(s=>{
-      const vals = [s.t1 && s.t1.TOTAL, s.t2 && s.t2.TOTAL, s.t3 && s.t3.TOTAL].filter(v=>v!==null && v!==undefined);
-      return {Name:s.name, EnrollCode:s.code, Section:s.section||'\u2014', avg_total: Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)*10)/10, TOTAL_t1:s.t1 && s.t1.TOTAL!==undefined ? s.t1.TOTAL : null, TOTAL_t2:s.t2 && s.t2.TOTAL!==undefined ? s.t2.TOTAL : null, TOTAL_t3:s.t3 && s.t3.TOTAL!==undefined ? s.t3.TOTAL : null};
+      const vals = ['t1','t2','t3','t4'].map(tk=> s[tk] && s[tk].TOTAL).filter(v=>v!==null && v!==undefined);
+      return {Name:s.name, EnrollCode:s.code, Section:s.section||'\u2014', avg_total: Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)*10)/10, TOTAL_t1:s.t1 && s.t1.TOTAL!==undefined ? s.t1.TOTAL : null, TOTAL_t2:s.t2 && s.t2.TOTAL!==undefined ? s.t2.TOTAL : null, TOTAL_t3:s.t3 && s.t3.TOTAL!==undefined ? s.t3.TOTAL : null, TOTAL_t4:s.t4 && s.t4.TOTAL!==undefined ? s.t4.TOTAL : null};
     })
     .sort((a,b)=>b.avg_total-a.avg_total)
     .slice(0,5);
@@ -6052,7 +6054,7 @@ function renderElectronicsTopList(list, scoreKey){
   list.forEach((s,i)=>{
     const row = document.createElement('div');
     row.className='rest-row';
-    const subLine = scoreKey==='avg_total' ? `T1: ${s.TOTAL_t1??'—'} · T2: ${s.TOTAL_t2??'—'}` + (s.TOTAL_t3!=null ? ` · T3: ${s.TOTAL_t3}` : '') : `PHY ${s.PHY!=null?s.PHY:'—'} · CHE ${s.CHE!=null?s.CHE:'—'} · MAT ${s.MAT!=null?s.MAT:'—'} · ELE ${s.ELE!=null?s.ELE:'—'}`;
+    const subLine = scoreKey==='avg_total' ? `T1: ${s.TOTAL_t1??'—'} · T2: ${s.TOTAL_t2??'—'}` + (s.TOTAL_t3!=null ? ` · T3: ${s.TOTAL_t3}` : '') + (s.TOTAL_t4!=null ? ` · T4: ${s.TOTAL_t4}` : '') : `PHY ${s.PHY!=null?s.PHY:'—'} · CHE ${s.CHE!=null?s.CHE:'—'} · MAT ${s.MAT!=null?s.MAT:'—'} · ELE ${s.ELE!=null?s.ELE:'—'}`;
     row.innerHTML = `<div><span class="name">#${i+1} ${s.Name}</span><span class="code">${s.EnrollCode} · ${s.Section}</span><div style="font-size:11px;color:var(--muted);margin-top:2px;">${subLine}</div></div>
                       <div><span class="score">${s[scoreKey]}</span></div>`;
     el.appendChild(row);
@@ -6074,15 +6076,27 @@ function buildElectronicsSection(){
   const t1Stats = computeElectronicsSubjectStats(roster, 't1');
   const t2Stats = computeElectronicsSubjectStats(roster, 't2');
   const t3Stats = computeElectronicsSubjectStats(roster, 't3');
-  const eleAvg1 = t1Stats.ELE.avg_pct, eleAvg2 = t2Stats.ELE.avg_pct;
-  const cheFailT2 = Math.round((100 - t2Stats.CHE.pass_rate_pct)*10)/10;
+  const t4Stats = computeElectronicsSubjectStats(roster, 't4');
+  const allStats = {t1:t1Stats, t2:t2Stats, t3:t3Stats, t4:t4Stats};
+  /* Anchor the single-test KPIs to the latest Slip Test that actually has
+     Electronics marks on file, not just the highest test number — Slip Test
+     3/4 are often administered to Biology students well before Electronics
+     students' papers are entered, and a KPI reading "0%"/"100% failing" for
+     a test nobody has taken yet would misread as a real result. */
+  const eleTestOrder = ['t4','t3','t2','t1'];
+  const latestKey = eleTestOrder.find(tk=> roster.some(s=> s[tk] && s[tk].ELE!==null && s[tk].ELE!==undefined)) || 't1';
+  const latestLabel = {t1:'Test 1', t2:'Test 2', t3:'Test 3', t4:'Test 4'}[latestKey];
+  const latestShort = {t1:'T1', t2:'T2', t3:'T3', t4:'T4'}[latestKey];
+  const latestStats = allStats[latestKey];
+  const eleAvg1 = t1Stats.ELE.avg_pct, eleAvgLatest = latestStats.ELE.avg_pct;
+  const cheFailLatest = Math.round((100 - latestStats.CHE.pass_rate_pct)*10)/10;
 
   document.getElementById('electronicsSecKpis').innerHTML = `
-    <div class="kpi hero"><div class="kpi-label">ELECTRONICS Avg (T1&rarr;T2)</div><div class="kpi-value">${eleAvg1}% &rarr; ${eleAvg2}%</div><div class="kpi-note">Electronics subject only</div></div>
-    <div class="kpi gold"><div class="kpi-label">ELECTRONICS Topper Density</div><div class="kpi-value">${t1Stats.ELE.topper_pct}%</div><div class="kpi-note">&gt;15/20 in Test 1</div></div>
+    <div class="kpi hero"><div class="kpi-label">ELECTRONICS Avg (T1&rarr;${latestShort})</div><div class="kpi-value">${eleAvg1}% &rarr; ${eleAvgLatest}%</div><div class="kpi-note">Electronics subject only</div></div>
+    <div class="kpi gold"><div class="kpi-label">ELECTRONICS Topper Density</div><div class="kpi-value">${latestStats.ELE.topper_pct}%</div><div class="kpi-note">&gt;15/20 in ${latestLabel}</div></div>
     <div class="kpi"><div class="kpi-label">Section Size</div><div class="kpi-value">${roster.length}</div><div class="kpi-note">Students in Electronics stream</div></div>
-    <div class="kpi warn"><div class="kpi-label">Chemistry Fail Rate (T2)</div><div class="kpi-value">${cheFailT2}%</div><div class="kpi-note down">Below 7/20</div></div>
-    ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">Electronics Spread (SD, T2)</div><div class="kpi-value">${t2Stats.ELE.sd_pct}%</div><div class="kpi-note">${sdLabel(t2Stats.ELE.sd_pct,100)}</div></div>`:''}
+    <div class="kpi warn"><div class="kpi-label">Chemistry Fail Rate (${latestKey.toUpperCase()})</div><div class="kpi-value">${cheFailLatest}%</div><div class="kpi-note down">Below 7/20</div></div>
+    ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">Electronics Spread (SD, ${latestKey.toUpperCase()})</div><div class="kpi-value">${latestStats.ELE.sd_pct}%</div><div class="kpi-note">${sdLabel(latestStats.ELE.sd_pct,100)}</div></div>`:''}
   `;
   document.getElementById('electronicsRosterChip').textContent = roster.length+' students';
 
@@ -6092,7 +6106,8 @@ function buildElectronicsSection(){
     data:{ labels:ELE_SUBJECTS.map(s=>NAMES[s]), datasets:[
       {label:'Test 1', data:ELE_SUBJECTS.map(s=>t1Stats[s].avg_pct), backgroundColor:'#8ecae6', borderRadius:6},
       {label:'Test 2', data:ELE_SUBJECTS.map(s=>t2Stats[s].avg_pct), backgroundColor:'#f4a261', borderRadius:6},
-      {label:'Test 3', data:ELE_SUBJECTS.map(s=>t3Stats[s].avg_pct), backgroundColor:'#2bb3a3', borderRadius:6}
+      {label:'Test 3', data:ELE_SUBJECTS.map(s=>t3Stats[s].avg_pct), backgroundColor:'#2bb3a3', borderRadius:6},
+      {label:'Test 4', data:ELE_SUBJECTS.map(s=>t4Stats[s].avg_pct), backgroundColor:'#e0685f', borderRadius:6}
     ]},
     options:{ plugins:{legend:{labels:{color:chartText()}}}, scales:{
       x:{ticks:{color:chartMuted()}, grid:{color:chartGridSoft()}},
@@ -6105,7 +6120,8 @@ function buildElectronicsSection(){
     data:{ labels:ELE_SUBJECTS.map(s=>NAMES[s]), datasets:[
       {label:'Test 1', data:ELE_SUBJECTS.map(s=>t1Stats[s].pass_rate_pct), backgroundColor:'#8ecae6', borderRadius:6},
       {label:'Test 2', data:ELE_SUBJECTS.map(s=>t2Stats[s].pass_rate_pct), backgroundColor:'#d4af37', borderRadius:6},
-      {label:'Test 3', data:ELE_SUBJECTS.map(s=>t3Stats[s].pass_rate_pct), backgroundColor:'#2bb3a3', borderRadius:6}
+      {label:'Test 3', data:ELE_SUBJECTS.map(s=>t3Stats[s].pass_rate_pct), backgroundColor:'#2bb3a3', borderRadius:6},
+      {label:'Test 4', data:ELE_SUBJECTS.map(s=>t4Stats[s].pass_rate_pct), backgroundColor:'#e0685f', borderRadius:6}
     ]},
     options:{ plugins:{legend:{labels:{color:chartText()}}}, scales:{
       x:{ticks:{color:chartMuted()}, grid:{color:chartGridSoft()}},
@@ -10642,10 +10658,11 @@ function generatePU1Report(){
   }
   if(inc.sections){
     const rows = ['SPARK','PRIME'].map(sec=>{
-      const bio1 = SEC.subjects[sec].test1.BIO.avg_pct, bio2 = SEC.subjects[sec].test2.BIO.avg_pct;
-      return [sec, SEC.rosterSize[sec], bio1+'%', bio2+'%'];
+      const bio1 = SEC.subjects[sec].test1.BIO.avg_pct, bio2 = SEC.subjects[sec].test2.BIO.avg_pct,
+            bio3 = SEC.subjects[sec].test3.BIO.avg_pct, bio4 = SEC.subjects[sec].test4.BIO.avg_pct;
+      return [sec, SEC.rosterSize[sec], bio1+'%', bio2+'%', bio3+'%', bio4+'%'];
     });
-    html += rpSection('Section Analysis <span style="font-weight:400;font-size:12px;color:var(--muted);">(SPARK vs PRIME, Biology subject only)</span>', rpTable(['Section','Students','Biology Test 1 Avg','Biology Test 2 Avg'], rows) +
+    html += rpSection('Section Analysis <span style="font-weight:400;font-size:12px;color:var(--muted);">(SPARK vs PRIME, Biology subject only)</span>', rpTable(['Section','Students','Biology Test 1 Avg','Biology Test 2 Avg','Biology Test 3 Avg','Biology Test 4 Avg'], rows) +
       '<div class="rp-callout"><b>Note:</b> These averages are for Biology specifically, not the overall class average shown at the top of this report.</div>');
   }
   if(inc.bvo){
@@ -13942,7 +13959,8 @@ function initElectronicsReportTab(){
     const roster = computeElectronicsRoster();
     const list = which==='combined' ? computeElectronicsCombinedTop(roster) : computeElectronicsTop(roster, which);
     const scoreKey = which==='combined' ? 'avg_total' : 'TOTAL';
-    const label = which==='combined' ? 'Both Tests (Avg)' : which==='t1' ? 'Slip Test 1' : 'Slip Test 2';
+    const ELE_TOP_LABELS = {t1:'Slip Test 1', t2:'Slip Test 2', t3:'Slip Test 3', t4:'Slip Test 4'};
+    const label = which==='combined' ? 'Test 1-4 (Avg)' : (ELE_TOP_LABELS[which] || which);
     return {
       title: 'Electronics \u2014 Top Performers',
       subtitle: 'PU-I Electronics \u2014 '+label,
