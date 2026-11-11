@@ -187,11 +187,11 @@ rep("pu1-ch9-assets/animated.html?lang=${pptLang}&v=5", "pu1-ch9-assets/animated
 /* Podcasts: Narendra Sir's recorded episodes in 5 languages */
 cut('const PODCASTS_CH9 = {', 'function renderPodcast(){',
 `const PODCASTS_CH9 = {
-  en: {label:'English', url:'pu1-ch9-assets/podcast-english.mp3?v=2'},
-  kn: {label:'Kannada', url:'pu1-ch9-assets/podcast-kannada.mp3?v=2'},
-  hi: {label:'Hindi', url:'pu1-ch9-assets/podcast-hindi.mp3?v=2'},
-  mr: {label:'Marathi', url:'pu1-ch9-assets/podcast-marathi.mp3?v=2'},
-  ur: {label:'Urdu', url:'pu1-ch9-assets/podcast-urdu.mp3?v=2'}
+  en: {label:'English', url:'https://narendra-bio-sir.github.io/baio-podcasts/pu1-ch9-assets/podcast-english.mp3?v=2'},
+  kn: {label:'Kannada', url:'https://narendra-bio-sir.github.io/baio-podcasts/pu1-ch9-assets/podcast-kannada.mp3?v=2'},
+  hi: {label:'Hindi', url:'https://narendra-bio-sir.github.io/baio-podcasts/pu1-ch9-assets/podcast-hindi.mp3?v=2'},
+  mr: {label:'Marathi', url:'https://narendra-bio-sir.github.io/baio-podcasts/pu1-ch9-assets/podcast-marathi.mp3?v=2'},
+  ur: {label:'Urdu', url:'https://narendra-bio-sir.github.io/baio-podcasts/pu1-ch9-assets/podcast-urdu.mp3?v=2'}
 };
 let podcastLang = 'en';
 let podcastSpeed = 1;
