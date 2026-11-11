@@ -11356,10 +11356,13 @@ function buildPU2Bvo(){
     testSeriesAvg[s] = vals.length ? Math.round((vals.reduce((a,b)=>a+b,0)/vals.length)*10)/10 : null;
     testSeriesSD[s] = vals.length ? st.sd : null;
   });
-  // Monthly-test (June) average + spread per subject
+  // Monthly-test (whichever month(s) are currently selected elsewhere in the
+  // app \u2014 defaults to the Pre-Midterm Exam, the latest PU-II assessment on
+  // file \u2014 not hardcoded to June) average + spread per subject
+  const pu2BvoMonthLabel = pu2CurrentMonthLabel();
   const monthlyAvg = {}, monthlySD = {};
   subjLabels.forEach(s=>{
-    const vals = PU2_STUDENTS.map(st=>pu2MonthSubjPct(st,'june',s,40)).filter(v=>v!==null);
+    const vals = PU2_STUDENTS.map(st=>pu2MonthSubjPct(st,pu2MonthCurrent,s,40)).filter(v=>v!==null);
     const st = computeStats(vals);
     monthlyAvg[s] = vals.length ? st.mean : null;
     monthlySD[s] = vals.length ? st.sd : null;
@@ -11368,9 +11371,9 @@ function buildPU2Bvo(){
   const bioTestSeries = testSeriesAvg.BIO, bioMonthly = monthlyAvg.BIO;
   document.getElementById('pu2BvoKpis').innerHTML = `
     <div class="kpi hero"><div class="kpi-label">Biology Avg % \u2014 Test Series (all OBTs)</div><div class="kpi-value">${bioTestSeries!==null?bioTestSeries+'%':'\u2014'}</div><div class="kpi-note">Combined across ${PU2_TESTS.length} tests</div></div>
-    <div class="kpi gold"><div class="kpi-label">Biology Avg % \u2014 June Monthly Test</div><div class="kpi-value">${bioMonthly!==null?bioMonthly+'%':'\u2014'}</div></div>
+    <div class="kpi gold"><div class="kpi-label">Biology Avg % \u2014 ${pu2BvoMonthLabel}</div><div class="kpi-value">${bioMonthly!==null?bioMonthly+'%':'\u2014'}</div></div>
     ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">Biology Spread (SD) \u2014 Test Series</div><div class="kpi-value">${testSeriesSD.BIO!==null?testSeriesSD.BIO+'%':'\u2014'}</div><div class="kpi-note">${testSeriesSD.BIO!==null?sdLabel(testSeriesSD.BIO,100):''}</div></div>`:''}
-    ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">Biology Spread (SD) \u2014 June Monthly Test</div><div class="kpi-value">${monthlySD.BIO!==null?monthlySD.BIO+'%':'\u2014'}</div><div class="kpi-note">${monthlySD.BIO!==null?sdLabel(monthlySD.BIO,100):''}</div></div>`:''}`;
+    ${sdOptions.subject?`<div class="kpi"><div class="kpi-label">Biology Spread (SD) \u2014 ${pu2BvoMonthLabel}</div><div class="kpi-value">${monthlySD.BIO!==null?monthlySD.BIO+'%':'\u2014'}</div><div class="kpi-note">${monthlySD.BIO!==null?sdLabel(monthlySD.BIO,100):''}</div></div>`:''}`;
 
   const defaultBarLabel = v => v>=100 ? String(Math.round(v)) : (Number.isInteger(v)?String(v):v.toFixed(1));
   if(pu2BvoTestChartInst) pu2BvoTestChartInst.destroy();
@@ -11387,6 +11390,8 @@ function buildPU2Bvo(){
       ...(sdOptions.subject?{valueLabelLines:(v,i)=>[defaultBarLabel(v), monthlySD[subjLabels[i]]!==null?`\u00b1${monthlySD[subjLabels[i]]}`:'']}:{}) }] },
     options:{ scales:{ y:{ max:100 } } }
   });
+  const pu2BvoMonthDescEl = document.querySelector('#pu2BvoMonthChart')?.closest('.panel')?.querySelector('.desc');
+  if(pu2BvoMonthDescEl) pu2BvoMonthDescEl.textContent = `${pu2BvoMonthLabel}, overall percentage score by subject`;
 
   const rows = subjLabels.map(s=>[subjNice[s], testSeriesAvg[s]!==null?testSeriesAvg[s]+'%':'\u2014', monthlyAvg[s]!==null?monthlyAvg[s]+'%':'\u2014', testSeriesSD[s]!==null?testSeriesSD[s]+'%':'\u2014', monthlySD[s]!==null?monthlySD[s]+'%':'\u2014']);
   document.querySelector('#pu2BvoTable thead tr').innerHTML = '<th>Metric</th><th>Test Series (Combined)</th><th>Monthly Test</th>'+(sdOptions.subject?'<th>Test Series Spread (SD)</th><th>Monthly Spread (SD)</th>':'');
@@ -11400,7 +11405,7 @@ function buildPU2Bvo(){
   const leadMonth = bioMonthly!==null ? Math.round((bioMonthly-bestOtherMonth)*10)/10 : null;
   document.getElementById('pu2BvoBullets').innerHTML = `
     <li><span class="action-num">1</span><span>Biology's average across the full test series is <b>${bioTestSeries!==null?bioTestSeries+'%':'\u2014'}</b>, ${leadTest!==null?(leadTest>=0?`${leadTest} points ahead of`:`${Math.abs(leadTest)} points behind`)+' the best of Physics/Chemistry/Maths':''}.</span></li>
-    <li><span class="action-num">2</span><span>In the June Monthly Test, Biology averaged <b>${bioMonthly!==null?bioMonthly+'%':'\u2014'}</b>, ${leadMonth!==null?(leadMonth>=0?`${leadMonth} points ahead of`:`${Math.abs(leadMonth)} points behind`)+' the best of Physics/Chemistry/Maths':''}.</span></li>`;
+    <li><span class="action-num">2</span><span>In the ${pu2BvoMonthLabel}, Biology averaged <b>${bioMonthly!==null?bioMonthly+'%':'\u2014'}</b>, ${leadMonth!==null?(leadMonth>=0?`${leadMonth} points ahead of`:`${Math.abs(leadMonth)} points behind`)+' the best of Physics/Chemistry/Maths':''}.</span></li>`;
 }
 
 /* ============================================================
