@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BAIO">
+<title>I PUC Biology — Unit Test 1 Prep — BAIO Learning System</title>
+<script>
+(function(){
+  try{
+    var t = localStorage.getItem('baio_theme') || 'light';
+    if(t === 'light'){
+      document.documentElement.setAttribute('data-theme','light');
+      var m = document.querySelector('meta[name="theme-color"]');
+      if(m) m.setAttribute('content', '#F7F5EE');
+    }
+  }catch(e){}
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B1B14; --navy2:#0F2419; --panel:#13281E; --panel2:#0E211A;
+  --gold:#D4AF37; --gold2:#B8912A; --teal:#2EE6C5; --teal2:#127566;
+  --ink:#EAF3EE; --ink-dim:#9FC4B6; --line:rgba(212,175,55,0.22);
+}
+[data-theme="light"]{
+  --navy:#F7F5EE; --navy2:#EFEBDD; --panel:#FFFFFF; --panel2:#F3F0E6;
+  --gold:#B8912A; --gold2:#8A6A1A; --teal:#0F8F7A; --teal2:#0B6F5E;
+  --ink:#1E2A22; --ink-dim:#5C6E63; --line:rgba(184,145,42,0.25);
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:
+    radial-gradient(circle at 15% 8%, rgba(46,230,197,0.05), transparent 40%),
+    radial-gradient(circle at 85% 92%, rgba(212,175,55,0.06), transparent 45%),
+    var(--navy);
+  color:var(--ink); font-family:'Inter',-apple-system,sans-serif; -webkit-font-smoothing:antialiased;
+  transition:background-color .2s ease, color .2s ease;
+}
+h1,h2,h3{font-family:'Space Grotesk',sans-serif; margin:0;}
+.wrap{max-width:760px; margin:0 auto; padding:0 18px 60px;}
+
+header{padding:30px 0 18px; text-align:center; position:relative;}
+.eyebrow{font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--teal); font-weight:600;}
+h1{font-size:22px; font-weight:700; margin-top:8px; letter-spacing:-0.3px; line-height:1.3;}
+.tag{font-size:13px; color:var(--ink-dim); margin-top:8px; line-height:1.6; max-width:560px; margin-left:auto; margin-right:auto;}
+.theme-toggle-btn{
+  position:absolute; top:6px; right:0; width:34px; height:34px; border-radius:50%;
+  border:1px solid var(--line); background:var(--panel2); font-size:15px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+}
+
+.jump-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:22px;}
+.jump-btn{
+  flex:1 1 calc(33.333% - 6px); min-width:100px; text-align:center; padding:11px 10px; border-radius:12px;
+  border:1px solid var(--gold); background:transparent; color:var(--gold);
+  font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12px;
+  text-decoration:none; cursor:pointer; transition:background .15s ease;
+}
+.jump-btn:hover{background:rgba(212,175,55,0.08);}
+
+.section-label{
+  font-size:16px; letter-spacing:0.5px; color:var(--gold); font-weight:800;
+  margin:30px 0 12px; display:flex; align-items:center; gap:10px;
+}
+.section-label:after{content:''; flex:1; height:2px; background:var(--line);}
+.section-sub{font-size:11.5px; color:var(--ink-dim); margin-top:-6px; margin-bottom:12px; line-height:1.55;}
+
+.fmt-table{width:100%; border-collapse:collapse; font-size:12px; margin:10px 0 4px;}
+.fmt-table th, .fmt-table td{text-align:left; padding:7px 8px; border-bottom:1px solid var(--line);}
+.fmt-table th{color:var(--gold); font-size:10.5px; text-transform:uppercase; letter-spacing:.03em;}
+.fmt-table td.m{text-align:right; font-weight:700; color:var(--teal);}
+.fmt-table tr.total td{font-weight:800; color:var(--ink); border-bottom:none; border-top:2px solid var(--line);}
+
+details.topic{
+  border:1px solid var(--line); border-radius:12px; background:var(--panel);
+  margin-bottom:8px; overflow:hidden;
+}
+details.topic summary{
+  padding:12px 14px; cursor:pointer; font-weight:700; font-size:13px; color:var(--ink);
+  list-style:none; display:flex; align-items:center; gap:8px;
+}
+details.topic summary::-webkit-details-marker{display:none;}
+details.topic summary .chevron{font-size:11px; color:var(--teal); transition:transform .15s ease; margin-left:auto;}
+details.topic[open] summary .chevron{transform:rotate(90deg);}
+details.topic .topic-body{padding:0 16px 16px; font-size:13px; line-height:1.65; color:var(--ink);}
+details.topic .topic-body p{margin:0 0 10px;}
+details.topic .topic-body ul{margin:0 0 10px; padding-left:20px;}
+details.topic .topic-body li{margin-bottom:6px;}
+details.topic .topic-body strong{color:var(--teal);}
+.chip-row{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:4px;}
+.chip{font-size:9.5px; font-weight:700; padding:3px 8px; border-radius:100px; background:var(--panel2); color:var(--ink-dim); border:1px solid var(--line);}
+.chip.full{color:var(--teal); border-color:var(--teal2);}
+.link-out{color:var(--teal); text-decoration:none; font-weight:600; font-size:12px;}
+.link-out:hover{text-decoration:underline;}
+
+details.paper{
+  border:1px solid var(--line); border-radius:14px; background:var(--panel);
+  margin-bottom:14px; overflow:hidden;
+}
+details.paper summary{
+  padding:14px 16px; cursor:pointer; list-style:none; display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+}
+details.paper summary::-webkit-details-marker{display:none;}
+.paper-num{
+  flex:0 0 auto; width:30px; height:30px; border-radius:8px; background:var(--panel2);
+  display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif;
+  font-weight:700; font-size:13px; color:var(--gold);
+}
+.paper-title{font-weight:700; font-size:14px; color:var(--ink);}
+.paper-meta{font-size:10.5px; color:var(--ink-dim); margin-top:1px;}
+.paper-chevron{margin-left:auto; font-size:11px; color:var(--teal); transition:transform .15s ease;}
+details.paper[open] .paper-chevron{transform:rotate(90deg);}
+.paper-body{padding:4px 18px 20px;}
+.print-btn{
+  display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700;
+  color:var(--teal); background:var(--panel2); border:1px solid var(--teal2); border-radius:9px;
+  padding:7px 11px; cursor:pointer; margin-bottom:14px;
+}
+.print-btn:hover{opacity:.85;}
+.qsection{font-weight:700; font-size:12.5px; color:var(--teal); margin:16px 0 8px;}
+.qsection .marks{color:var(--ink-dim); font-weight:600; font-size:11px;}
+ol.q{margin:0; padding-left:20px; font-size:13px; line-height:1.55;}
+ol.q li{margin-bottom:9px;}
+.optrow{display:flex; gap:12px; flex-wrap:wrap; font-size:12px; color:var(--ink-dim); margin:2px 0 0;}
+.bank{font-style:italic; color:var(--ink-dim); font-size:12px; margin-bottom:8px;}
+details.akey{margin-top:8px;}
+details.akey summary{
+  font-size:11px; font-weight:700; color:var(--gold); cursor:pointer; list-style:none; display:inline-flex; gap:5px;
+}
+details.akey summary::-webkit-details-marker{display:none;}
+.akey-box{font-size:12px; color:var(--ink-dim); background:var(--panel2); border:1px solid var(--line); border-radius:9px; padding:9px 11px; margin-top:6px;}
+
+.more-row{
+  text-align:center; font-size:11.5px; color:var(--ink-dim); font-style:italic; padding:12px 14px;
+  border:1px dashed var(--line); border-radius:12px;
+}
+.back-row{margin-top:36px; text-align:center;}
+.back-row a{color:var(--ink-dim); text-decoration:none; font-size:12.5px; margin:0 8px;}
+.back-row a:hover{color:var(--gold);}
+footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px; padding-top:16px; border-top:1px solid var(--line);}
+
+@media print{
+  .theme-toggle-btn, .jump-row, .print-btn, .back-row, footer, #notesSection{display:none !important;}
+  details.paper{border:none; break-inside:avoid;}
+  details.paper summary{pointer-events:none;}
+  body{background:#fff; color:#000;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <button class="theme-toggle-btn" id="themeToggle">🌙</button>
+    <div class="eyebrow">BAIO Learning System</div>
+    <h1>I PUC Biology · Unit Test 1 Prep</h1>
+    <p class="tag">Chapters 1&ndash;3 — The Living World, Biological Classification, Plant Kingdom — in the exact Unit Test 1 pattern (LBA 2026&ndash;27): revision notes plus three full practice papers, none repeating a question.</p>
+  </header>
+
+  <div class="jump-row">
+    <a class="jump-btn" href="#notesSection">📝 Notes</a>
+    <a class="jump-btn" href="#papersSection">📄 Papers</a>
+    <a class="jump-btn" href="ncert-library.html#pu-board">📋 Official MQP</a>
+  </div>
+
+  <div class="section-label">📐 Exam Pattern</div>
+  <div class="section-sub">Biology (code 36), I PUC &middot; 30 marks &middot; 60 minutes &mdash; matches the official Unit Test 1 Model Question Paper exactly</div>
+  <table class="fmt-table">
+    <thead><tr><th>Part</th><th>Question type</th><th>Marks</th></tr></thead>
+    <tbody>
+      <tr><td>I</td><td>7 MCQs, 1 mark each</td><td class="m">07</td></tr>
+      <tr><td>II</td><td>3 fill-in-the-blanks, 1 mark each</td><td class="m">03</td></tr>
+      <tr><td>III</td><td>Answer any 2 of 4, in 3&ndash;5 sentences</td><td class="m">04</td></tr>
+      <tr><td>IV</td><td>Answer any 2 of 4, in 40&ndash;80 words</td><td class="m">06</td></tr>
+      <tr><td>V</td><td>Answer any 1 of 2, in 200&ndash;250 words</td><td class="m">05</td></tr>
+      <tr><td>VI</td><td>Answer any 1 of 2, in 200&ndash;250 words</td><td class="m">05</td></tr>
+      <tr class="total"><td colspan="2">Total</td><td class="m">30</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-label" id="notesSection">📝 Revision Notes</div>
+  <div class="section-sub">Chapter 1 has no chapter page in the app yet, so its notes here are complete. Chapters 2 and 3 already have full interactive chapters — the notes below are a compact exam-focused recap; open the full chapter for diagrams and practice.</div>
+
+  <div class="chip-row" style="margin-top:10px;"><span class="chip">Chapter 1 &middot; The Living World</span><span class="chip">No chapter page yet &mdash; full notes below</span></div>
+
+  <details class="topic" open>
+    <summary>1.1 What Is Living? <span class="chevron">▸</span></summary>
+    <div class="topic-body">
+      <p>No single feature defines life on its own — each commonly cited property has an exception, except one.</p>
+      <ul>
+        <li><strong>Growth</strong> — increase in cell number and mass. In plants it is <strong>indeterminate</strong> (continues throughout life via meristems); in most animals it stops at maturity. In unicellular organisms, growth and reproduction are the same event — one cell dividing into two. Non-living crystals also &ldquo;grow&rdquo; by deposition, so growth alone cannot define life.</li>
+        <li><strong>Reproduction</strong> — production of progeny. Not universal either: mules, sterile worker bees, and infertile human couples are alive but do not reproduce.</li>
+        <li><strong>Metabolism</strong> — the sum of all chemical reactions in the body. Present in every living organism without exception, which is why many call it the defining feature. But isolated metabolic reactions can be demonstrated outside the body too, in a cell-free system — those reactions are not &ldquo;alive&rdquo;, so metabolism alone is necessary but not sufficient.</li>
+        <li><strong>Consciousness</strong> — the ability to sense the environment (physical, chemical or biological stimuli) and respond — through behavioural, physiological or other responses. Seen in every living organism without a single exception, from one bacterium to a human. This is the property the chapter ultimately settles on as the most reliable indicator of life, taken together with the others.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="topic">
+    <summary>1.2 Diversity in the Living World <span class="chevron">▸</span></summary>
+    <div class="topic-body">
+      <p>About 1.7&ndash;1.8 million species have been described so far. To study and compare them, every organism needs one scientific name, agreed upon everywhere.</p>
+      <ul>
+        <li><strong>Binomial nomenclature</strong>, given by Carolus Linnaeus — each organism gets two names: Genus (capitalised) + species (lowercase), both Latinised and italicised (or underlined when handwritten). E.g. <em>Mangifera indica</em> (mango), <em>Homo sapiens</em> (man).</li>
+        <li>Governed by international codes — <strong>ICBN</strong> for plants, <strong>ICZN</strong> for animals — fixed rules so the same name means the same organism anywhere in the world.</li>
+        <li><strong>Taxonomy</strong> — the process of classification, identification and naming, based on characteristics. <strong>Systematics</strong> (Latin <em>systema</em> = systematic arrangement) is the wider study that also brings in diversity and evolutionary relationships between organisms.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="topic">
+    <summary>1.3 Taxonomic Categories <span class="chevron">▸</span></summary>
+    <div class="topic-body">
+      <p>Classification is hierarchical — each rank is called a <strong>taxon</strong>. From lowest to highest:</p>
+      <ul>
+        <li><strong>Species</strong> — the most fundamental unit; a group of individuals with basic similarities that can interbreed. E.g. <em>Mangifera indica</em>.</li>
+        <li><strong>Genus</strong> — related species sharing more characters with each other than with species of other genera. E.g. <em>Panthera leo</em> (lion) and <em>Panthera tigris</em> (tiger) share genus <em>Panthera</em>.</li>
+        <li><strong>Family</strong> — related genera with still fewer shared characters. E.g. Solanaceae (potato, brinjal, tomato); Felidae (lion, tiger, leopard).</li>
+        <li><strong>Order</strong> — families with a few characters in common, e.g. based on floral features.</li>
+        <li><strong>Class</strong> — orders with common characteristics grouped together, e.g. Primata and Carnivora under class Mammalia.</li>
+        <li><strong>Phylum</strong> (animals) / <strong>Division</strong> (plants) — classes with common characters, e.g. Mammalia, Aves, Reptilia under phylum Chordata.</li>
+        <li><strong>Kingdom</strong> — the highest and broadest category, e.g. Kingdom Animalia, Kingdom Plantae.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="topic">
+    <summary>1.4 Taxonomical Aids <span class="chevron">▸</span></summary>
+    <div class="topic-body">
+      <ul>
+        <li><strong>Herbarium</strong> — dried, pressed plant specimens mounted on sheets, labelled with name, family, date, place and collector — a quick reference store for taxonomic study.</li>
+        <li><strong>Botanical gardens</strong> — places that grow living plants for reference and identification, each labelled with its scientific name and family. Famous examples: the Indian Botanical Garden, Howrah, and the National Botanical Research Institute, Lucknow.</li>
+        <li><strong>Museums</strong> — preserve plant and animal specimens for study, in preservative solutions or dried; insects are pinned, larger animals are stuffed (taxidermy); skeletons are also kept.</li>
+        <li><strong>Zoological parks</strong> — zoos where wild animals are kept in a protected, semi-natural setting so their food habits and behaviour can be studied.</li>
+        <li><strong>Taxonomic key</strong> — used to identify specimens using contrasting character pairs (a &ldquo;lead&rdquo;); accepting one option and rejecting the other repeatedly narrows down to the correct taxon. A separate key is prepared for each taxonomic category. Related aids: Flora, Manuals, Monographs and Catalogues.</li>
+      </ul>
+    </div>
+  </details>
+
+  <div class="chip-row" style="margin-top:18px;"><span class="chip full">Chapter 2 &middot; Biological Classification</span><a class="link-out" href="ch2/" style="margin-left:4px;">Open the full chapter &rarr;</a></div>
+
+  <details class="topic">
+    <summary>2.1 Five Kingdom Classification &amp; Kingdom Monera <span class="chevron">▸</span></summary>
+    <div class="topic-body">
+      <p>Proposed by <strong>R.H. Whittaker (1969)</strong>, based on cell structure, body organisation, mode of nutrition, reproduction and phylogenetic relationships: <strong>Monera, Protista, Fungi, Plantae, Animalia</strong>. Viruses, viroids and lichens are left out of all five.</p>
+      <ul>
+        <li><strong>Monera</strong> — prokaryotic, unicellular. <strong>Archaebacteria</strong> survive in extreme habitats (methanogens in marshy areas and ruminant guts; halophiles in extreme salt; thermoacidophiles in hot acidic springs) due to a different cell wall structure. <strong>Eubacteria</strong> (true bacteria) are grouped by nutrition — photosynthetic autotrophs (cyanobacteria / BGA, e.g. <em>Nostoc</em>, <em>Anabaena</em>, some fix atmospheric N<sub>2</sub>), chemosynthetic autotrophs (oxidise inorganic substances), and heterotrophs (most bacteria — decomposers, a few pathogenic, e.g. citrus canker). <strong>Mycoplasma</strong> lack a cell wall entirely — the smallest living cells known, many pathogenic.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="topic">
+    <summary>2.2 Kingdom Protista <span class="chevron">▸</span></summary>
+    <div class="topic-body">
+      <p>Single-celled eukaryotes, mostly aquatic, with a defined nucleus and membrane-bound organelles.</p>
+      <ul>
+        <li><strong>Chrysophytes</strong> — diatoms and golden algae; photosynthetic; cell walls form indestructible pits (diatomaceous earth).</li>
+        <li><strong>Dinoflagellates</strong> — mostly marine, photosynthetic, two flagella (one longitudinal, one transverse), stiff cellulose cell wall plates. The red species <em>Gonyaulax</em> multiplies rapidly to cause <strong>red tides</strong>, releasing toxins that can kill marine animals.</li>
+        <li><strong>Euglenoids</strong> — freshwater, no cell wall (a flexible protein-rich <strong>pellicle</strong> instead), two flagella. Photosynthetic in sunlight but behave as heterotrophs (predators) when sunlight is unavailable. E.g. <em>Euglena</em>.</li>
+        <li><strong>Slime moulds</strong> — saprophytic; the body (plasmodium) creeps over decaying matter engulfing organic material; under adverse conditions forms fruiting bodies with resistant spores dispersed by air.</li>
+        <li><strong>Protozoans</strong> — heterotrophic predators or parasites: Amoeboid (<em>Amoeba</em>), Flagellated (<em>Trypanosoma</em> — sleeping sickness), Ciliated (<em>Paramecium</em>), Sporozoans (<em>Plasmodium</em> — malaria).</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="topic">
+    <summary>2.3 Kingdom Fungi <span class="chevron">▸</span></summary>
+    <div class="topic-body">
+      <p>Heterotrophic (saprophytic or parasitic), chitin cell wall, mostly multicellular filaments (hypha, network = mycelium) except unicellular yeast.</p>
+      <ul>
+        <li><strong>Phycomycetes</strong> — aseptate, coenocytic mycelium; asexual spores in a sporangium; sexual fusion forms a thick-walled <strong>zygospore</strong>. E.g. <em>Mucor</em>, <em>Rhizopus</em> (bread mould).</li>
+        <li><strong>Ascomycetes</strong> — septate mycelium; asexual <strong>conidia</strong>; sexual <strong>ascospores</strong> inside sac-like asci. Includes <em>Saccharomyces</em> (yeast) and <em>Penicillium</em> (antibiotics).</li>
+        <li><strong>Basidiomycetes</strong> — mushrooms, rusts, smuts; sex organs absent, but fusion of two somatic cells gives a <strong>dikaryon</strong>, which forms basidia bearing 4 <strong>basidiospores</strong> each. E.g. <em>Agaricus</em>, <em>Puccinia</em>.</li>
+        <li><strong>Deuteromycetes</strong> — &ldquo;imperfect fungi&rdquo;; only asexual conidia known; decomposers important in mineral cycling. E.g. <em>Alternaria</em>, <em>Trichoderma</em>.</li>
+        <li><strong>Lichens</strong> — a symbiosis of algae (food, via photosynthesis) and fungi (shelter, water/mineral absorption); sensitive indicators of SO<sub>2</sub> pollution.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="topic">
+    <summary>2.4 Viruses &amp; Viroids <span class="chevron">▸</span></summary>
+    <div class="topic-body">
+      <ul>
+        <li><strong>Viruses</strong> — sub-microscopic, non-cellular; genetic material (usually RNA) wrapped in a protein coat (<strong>capsid</strong>, made of <strong>capsomeres</strong>); obligate parasites, not alive outside a host cell. E.g. TMV (tobacco mosaic virus).</li>
+        <li><strong>Viroids</strong> — discovered by T.O. Diener (1971); smaller than viruses; only free low-molecular-weight RNA, no protein coat. Caused potato spindle tuber disease.</li>
+      </ul>
+    </div>
+  </details>
+
+  <div class="chip-row" style="margin-top:18px;"><span class="chip full">Chapter 3 &middot; Plant Kingdom</span><a class="link-out" href="ch3/" style="margin-left:4px;">Open the full chapter &rarr;</a></div>
+
+  <details class="topic">
+    <summary>3.1 Algae <span class="chevron">▸</span></summary>
+    <div class="topic-body">
+      <p>Chlorophyll-bearing, simple, thalloid, autotrophic, mostly aquatic — unicellular (<em>Chlamydomonas</em>) to colonial (<em>Volvox</em>) to filamentous (<em>Spirogyra</em>). Three classes, by pigment:</p>
+      <ul>
+        <li><strong>Chlorophyceae</strong> (green) — grass-green (Chl a &amp; b), fresh water, cellulose wall, starch stored. E.g. <em>Chlamydomonas</em>, <em>Ulothrix</em>, <em>Chara</em>.</li>
+        <li><strong>Phaeophyceae</strong> (brown) — marine, fucoxanthin pigment, mannitol/laminarin stored, cellulose+algin wall, gas-filled floats (pneumatocysts). E.g. <em>Fucus</em>, <em>Laminaria</em>, <em>Sargassum</em>.</li>
+        <li><strong>Rhodophyceae</strong> (red) — r-phycoerythrin pigment, mostly marine (some at greater depths), floridean starch stored, some encrusted with calcium carbonate (reef builders). E.g. <em>Polysiphonia</em>, <em>Gelidium</em>.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="topic">
+    <summary>3.2 Bryophytes <span class="chevron">▸</span></summary>
+    <div class="topic-body">
+      <p>&ldquo;Amphibians of the plant kingdom&rdquo; — live on land but need water for sexual reproduction. No true roots, stem or leaves; attached by <strong>rhizoids</strong>.</p>
+      <ul>
+        <li>The dominant plant body is the haploid <strong>gametophyte</strong>; multicellular sex organs — male <strong>antheridium</strong> (biflagellate antherozoids), female <strong>archegonium</strong> (one egg).</li>
+        <li>Fertilisation gives a zygote that grows into a dependent <strong>sporophyte</strong> (not free-living), which produces spores by meiosis; spores germinate into a new gametophyte — this cycling between phases is <strong>alternation of generations</strong>.</li>
+        <li><strong>Liverworts</strong> (e.g. <em>Marchantia</em>) — thalloid body; asexual reproduction by gemmae in gemma cups.</li>
+        <li><strong>Mosses</strong> (e.g. <em>Funaria</em>, <em>Sphagnum</em>) — spore germinates into a <strong>protonema</strong> first, which develops the upright leafy gametophore; <em>Sphagnum</em> (peat moss) is used as fuel, packing material and a soil conditioner.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="topic">
+    <summary>3.3 Pteridophytes <span class="chevron">▸</span></summary>
+    <div class="topic-body">
+      <p>The first terrestrial plants with true vascular tissue and a differentiated root-stem-leaf body; the <strong>sporophyte</strong> is dominant (unlike bryophytes).</p>
+      <ul>
+        <li>Spore-bearing leaves are <strong>sporophylls</strong>. <strong>Homosporous</strong> types (e.g. <em>Equisetum</em>) produce one kind of spore; <strong>heterosporous</strong> types (e.g. <em>Selaginella</em>, <em>Salvinia</em>) produce microspores and megaspores — retaining the female gametophyte on the parent sporophyte here is the evolutionary lead-in to the <strong>seed habit</strong> seen in gymnosperms and angiosperms.</li>
+        <li>The spore grows into a small, free-living gametophyte called the <strong>prothallus</strong>, which still needs water for fertilisation.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="topic">
+    <summary>3.4 Gymnosperms &amp; Angiosperms <span class="chevron">▸</span></summary>
+    <div class="topic-body">
+      <ul>
+        <li><strong>Gymnosperms</strong> — &ldquo;naked seed&rdquo; plants; ovules are not enclosed by an ovary. Heterosporous; microsporophylls and megasporophylls are compacted into <strong>cones/strobili</strong>. Monoecious (both cones on one plant, e.g. <em>Pinus</em>) or dioecious (<em>Cycas</em>). Roots may show mycorrhiza (<em>Pinus</em>) or N<sub>2</sub>-fixing <strong>coralloid roots</strong> (<em>Cycas</em>).</li>
+        <li><strong>Angiosperms</strong> — flowering plants; seeds enclosed within a fruit. Stamen produces pollen (male gametophyte); pistil's ovary encloses ovules (female gametophyte/embryo sac). <strong>Double fertilisation</strong> is unique to this group — one male gamete fertilises the egg (zygote), the other fuses with the secondary nucleus to form the triploid endosperm. Classified by cotyledon number into <strong>Dicotyledonae</strong> (2) and <strong>Monocotyledonae</strong> (1).</li>
+      </ul>
+    </div>
+  </details>
+
+  <div class="section-label" id="papersSection">📄 Practice Papers</div>
+  <div class="section-sub">Three original full-length papers, same official pattern as the Model QP, covering Chapters 1&ndash;3 — no two papers repeat a question. Objective answer keys are revealed on tap; the subjective sections are for self-check against the notes above.</div>
+
+  <!-- ============ PAPER 1 ============ -->
+  <details class="paper" id="paper1">
+    <summary>
+      <span class="paper-num">1</span>
+      <span><span class="paper-title">Practice Paper 1</span><div class="paper-meta">30 marks &middot; 60 minutes &middot; Ch 1&ndash;3</div></span>
+      <span class="paper-chevron">▸</span>
+    </summary>
+    <div class="paper-body">
+      <button class="print-btn" onclick="window.print()">🖨️ Print this paper</button>
+
+      <div class="qsection">I. Select the correct alternative. <span class="marks">1&times;7 = 07</span></div>
+      <ol class="q">
+        <li>The five kingdom classification of living organisms was proposed by:<br><span class="optrow"><span>A) Linnaeus</span><span>B) R.H. Whittaker</span><span>C) Carl Woese</span><span>D) Robert Hooke</span></span></li>
+        <li>Alternation of generation is a characteristic feature of:<br><span class="optrow"><span>A) Algae only</span><span>B) Bryophytes only</span><span>C) Both algae and bryophytes</span><span>D) Angiosperms only</span></span></li>
+        <li>The term &lsquo;systematics&rsquo; comes from the Latin word &lsquo;systema&rsquo;, meaning:<br><span class="optrow"><span>A) Diversity of organisms</span><span>B) Systematic arrangement of organisms</span><span>C) Nomenclature of organisms</span><span>D) Classification by habitat</span></span></li>
+        <li><em>Nostoc</em> and <em>Anabaena</em> belong to which group?<br><span class="optrow"><span>A) Chrysophytes</span><span>B) Cyanobacteria</span><span>C) Dinoflagellates</span><span>D) Euglenoids</span></span></li>
+        <li>Which of these is NOT a characteristic of Bryophytes?<br><span class="optrow"><span>A) Amphibians of the plant kingdom</span><span>B) Presence of true roots</span><span>C) Gametophyte is the dominant phase</span><span>D) Sex organs are multicellular</span></span></li>
+        <li>A taxonomic key is used for:<br><span class="optrow"><span>A) Preserving plant specimens</span><span>B) Growing reference plants</span><span>C) Identifying specimens by similarities/dissimilarities</span><span>D) Displaying stuffed animals</span></span></li>
+        <li>Viroids differ from viruses in that they:<br><span class="optrow"><span>A) Have a protein coat but no nucleic acid</span><span>B) Are low molecular weight RNA with no protein coat</span><span>C) Are much larger than viruses</span><span>D) Carry out independent metabolism</span></span></li>
+      </ol>
+
+      <div class="qsection">II. Fill in the blanks using the words given. <span class="marks">1&times;3 = 03</span></div>
+      <div class="bank">(Whittaker, Rhizoids, Herbarium, Chlorophyceae)</div>
+      <ol class="q" start="8">
+        <li>The five kingdom classification was proposed by _______________.</li>
+        <li>Bryophytes absorb water and minerals through root-like structures called _______________.</li>
+        <li>A collection of dried, pressed plant specimens mounted on sheets for reference is called a _______________.</li>
+      </ol>
+
+      <details class="akey">
+        <summary>✅ Show answer key (Parts I &amp; II)</summary>
+        <div class="akey-box"><strong>Part I:</strong> 1-B, 2-C, 3-B, 4-B, 5-B, 6-C, 7-B &nbsp;&middot;&nbsp; <strong>Part II:</strong> 8-Whittaker, 9-Rhizoids, 10-Herbarium</div>
+      </details>
+
+      <div class="qsection">III. Answer any Two in 3&ndash;5 sentences. <span class="marks">2&times;2 = 04</span></div>
+      <ol class="q" start="11">
+        <li>Why are viruses considered non-living outside a host cell?</li>
+        <li>Mention any two differences between gymnosperms and angiosperms.</li>
+        <li>What is a botanical garden? Name one well-known botanical garden in India.</li>
+        <li>Differentiate between a herbarium and a museum as taxonomical aids.</li>
+      </ol>
+
+      <div class="qsection">IV. Answer any Two in 40&ndash;80 words. <span class="marks">2&times;3 = 06</span></div>
+      <ol class="q" start="15">
+        <li>Explain why fungi are classified separately from plants despite being non-motile.</li>
+        <li>Describe the key differences between archaebacteria and eubacteria.</li>
+        <li>Explain the term &ldquo;alternation of generation&rdquo; with reference to bryophytes.</li>
+        <li>What are the distinguishing features of Kingdom Protista?</li>
+      </ol>
+
+      <div class="qsection">V. Answer any One in 200&ndash;250 words. <span class="marks">1&times;5 = 05</span></div>
+      <ol class="q" start="19">
+        <li>Describe the salient features of Kingdom Monera with suitable examples.</li>
+        <li>Explain the classification of algae into three major classes with their characteristic features.</li>
+      </ol>
+
+      <div class="qsection">VI. Answer any One in 200&ndash;250 words. <span class="marks">1&times;5 = 05</span></div>
+      <ol class="q" start="21">
+        <li>Describe the general characteristics and classification of Kingdom Fungi.</li>
+        <li>Explain the characteristic features of Bryophytes, Pteridophytes and Gymnosperms, bringing out points of distinction.</li>
+      </ol>
+    </div>
+  </details>
+
+  <!-- ============ PAPER 2 ============ -->
+  <details class="paper" id="paper2">
+    <summary>
+      <span class="paper-num">2</span>
+      <span><span class="paper-title">Practice Paper 2</span><div class="paper-meta">30 marks &middot; 60 minutes &middot; Ch 1&ndash;3</div></span>
+      <span class="paper-chevron">▸</span>
+    </summary>
+    <div class="paper-body">
+      <button class="print-btn" onclick="window.print()">🖨️ Print this paper</button>
+
+      <div class="qsection">I. Select the correct alternative. <span class="marks">1&times;7 = 07</span></div>
+      <ol class="q">
+        <li>Binomial nomenclature was given by:<br><span class="optrow"><span>A) Carl Woese</span><span>B) Carolus Linnaeus</span><span>C) R.H. Whittaker</span><span>D) Robert Hooke</span></span></li>
+        <li>The scientific name of mango is correctly written as:<br><span class="optrow"><span>A) mangifera indica</span><span>B) Mangifera Indica</span><span>C) <em>Mangifera indica</em></span><span>D) MANGIFERA INDICA</span></span></li>
+        <li>Diatoms belong to which group of Protista?<br><span class="optrow"><span>A) Dinoflagellates</span><span>B) Chrysophytes</span><span>C) Euglenoids</span><span>D) Slime moulds</span></span></li>
+        <li>Which class of fungi includes mushrooms?<br><span class="optrow"><span>A) Phycomycetes</span><span>B) Ascomycetes</span><span>C) Basidiomycetes</span><span>D) Deuteromycetes</span></span></li>
+        <li>The dominant phase in the life cycle of a fern is the:<br><span class="optrow"><span>A) Gametophyte</span><span>B) Sporophyte</span><span>C) Protonema</span><span>D) Prothallus</span></span></li>
+        <li>Double fertilisation is a unique feature of:<br><span class="optrow"><span>A) Gymnosperms</span><span>B) Pteridophytes</span><span>C) Angiosperms</span><span>D) Bryophytes</span></span></li>
+        <li>Red tides in the sea are caused by the rapid multiplication of:<br><span class="optrow"><span>A) Diatoms</span><span>B) Dinoflagellates</span><span>C) Euglenoids</span><span>D) Slime moulds</span></span></li>
+      </ol>
+
+      <div class="qsection">II. Fill in the blanks using the words given. <span class="marks">1&times;3 = 03</span></div>
+      <div class="bank">(Taxon, Protonema, Sporophylls, Archegonium)</div>
+      <ol class="q" start="8">
+        <li>Each category/rank used in classification is called a _______________.</li>
+        <li>In mosses, the spore germinates to first form a stage called the _______________.</li>
+        <li>In pteridophytes, the spore-producing sporangia are borne on leaf-like structures called _______________.</li>
+      </ol>
+
+      <details class="akey">
+        <summary>✅ Show answer key (Parts I &amp; II)</summary>
+        <div class="akey-box"><strong>Part I:</strong> 1-B, 2-C, 3-B, 4-C, 5-B, 6-C, 7-B &nbsp;&middot;&nbsp; <strong>Part II:</strong> 8-Taxon, 9-Protonema, 10-Sporophylls</div>
+      </details>
+
+      <div class="qsection">III. Answer any Two in 3&ndash;5 sentences. <span class="marks">2&times;2 = 04</span></div>
+      <ol class="q" start="11">
+        <li>What is meant by &ldquo;heterosporous&rdquo;? Give one example.</li>
+        <li>Mention two features that distinguish the five kingdom classification from earlier systems.</li>
+        <li>Why are <em>Mycoplasma</em> considered unique among bacteria?</li>
+        <li>Give two differences between liverworts and mosses.</li>
+      </ol>
+
+      <div class="qsection">IV. Answer any Two in 40&ndash;80 words. <span class="marks">2&times;3 = 06</span></div>
+      <ol class="q" start="15">
+        <li>Explain the taxonomic hierarchy from Species to Kingdom with one example.</li>
+        <li>Describe the structure and significance of lichens.</li>
+        <li>Explain why algae are economically important, with examples.</li>
+        <li>Distinguish between homosporous and heterosporous pteridophytes.</li>
+      </ol>
+
+      <div class="qsection">V. Answer any One in 200&ndash;250 words. <span class="marks">1&times;5 = 05</span></div>
+      <ol class="q" start="19">
+        <li>Explain the classification of Kingdom Protista with examples of each group.</li>
+        <li>Describe the taxonomic categories in detail, giving one example that passes through each category.</li>
+      </ol>
+
+      <div class="qsection">VI. Answer any One in 200&ndash;250 words. <span class="marks">1&times;5 = 05</span></div>
+      <ol class="q" start="21">
+        <li>Describe the general characteristics of gymnosperms with suitable examples.</li>
+        <li>Explain the life cycle of a moss, bringing out the concept of alternation of generations.</li>
+      </ol>
+    </div>
+  </details>
+
+  <!-- ============ PAPER 3 ============ -->
+  <details class="paper" id="paper3">
+    <summary>
+      <span class="paper-num">3</span>
+      <span><span class="paper-title">Practice Paper 3</span><div class="paper-meta">30 marks &middot; 60 minutes &middot; Ch 1&ndash;3</div></span>
+      <span class="paper-chevron">▸</span>
+    </summary>
+    <div class="paper-body">
+      <button class="print-btn" onclick="window.print()">🖨️ Print this paper</button>
+
+      <div class="qsection">I. Select the correct alternative. <span class="marks">1&times;7 = 07</span></div>
+      <ol class="q">
+        <li>A taxon that groups related genera is called:<br><span class="optrow"><span>A) Family</span><span>B) Order</span><span>C) Class</span><span>D) Phylum</span></span></li>
+        <li>Which of these is the correct taxonomic hierarchy, lowest to highest?<br><span class="optrow"><span>A) Species-Genus-Family-Order-Class-Phylum-Kingdom</span><span>B) Species-Family-Genus-Order-Class-Phylum-Kingdom</span><span>C) Genus-Species-Family-Order-Class-Phylum-Kingdom</span><span>D) Species-Genus-Order-Family-Class-Phylum-Kingdom</span></span></li>
+        <li>Which group of Protista behaves as a heterotroph in the absence of sunlight?<br><span class="optrow"><span>A) Dinoflagellates</span><span>B) Chrysophytes</span><span>C) Euglenoids</span><span>D) Protozoans</span></span></li>
+        <li>Zygospore formation is characteristic of which class of fungi?<br><span class="optrow"><span>A) Phycomycetes</span><span>B) Ascomycetes</span><span>C) Basidiomycetes</span><span>D) Deuteromycetes</span></span></li>
+        <li>The gametophyte of pteridophytes is called the:<br><span class="optrow"><span>A) Protonema</span><span>B) Prothallus</span><span>C) Thallus</span><span>D) Mycelium</span></span></li>
+        <li>Pneumatocysts (gas-filled floats) are found in which group of algae?<br><span class="optrow"><span>A) Chlorophyceae</span><span>B) Phaeophyceae</span><span>C) Rhodophyceae</span><span>D) Cyanophyceae</span></span></li>
+        <li>The protein-rich flexible layer covering the body of <em>Euglena</em> is called the:<br><span class="optrow"><span>A) Cell wall</span><span>B) Pellicle</span><span>C) Capsid</span><span>D) Mycelium</span></span></li>
+      </ol>
+
+      <div class="qsection">II. Fill in the blanks using the words given. <span class="marks">1&times;3 = 03</span></div>
+      <div class="bank">(Capsomeres, Coralloid, Dikaryon, Pericarp)</div>
+      <ol class="q" start="8">
+        <li>The protein subunits that make up the protein coat of a virus are called _______________.</li>
+        <li>Specialised roots in <em>Cycas</em> associated with nitrogen-fixing cyanobacteria are called _______________ roots.</li>
+        <li>After fertilisation in angiosperms, the ovary wall develops into a protective covering of the fruit called the _______________.</li>
+      </ol>
+
+      <details class="akey">
+        <summary>✅ Show answer key (Parts I &amp; II)</summary>
+        <div class="akey-box"><strong>Part I:</strong> 1-A, 2-A, 3-C, 4-A, 5-B, 6-B, 7-B &nbsp;&middot;&nbsp; <strong>Part II:</strong> 8-Capsomeres, 9-Coralloid, 10-Pericarp</div>
+      </details>
+
+      <div class="qsection">III. Answer any Two in 3&ndash;5 sentences. <span class="marks">2&times;2 = 04</span></div>
+      <ol class="q" start="11">
+        <li>Why are viroids considered simpler than viruses?</li>
+        <li>What is a coralloid root? In which plant is it found?</li>
+        <li>Mention two economic uses of <em>Sphagnum</em> (peat moss).</li>
+        <li>Give two points of difference between microspores and megaspores.</li>
+      </ol>
+
+      <div class="qsection">IV. Answer any Two in 40&ndash;80 words. <span class="marks">2&times;3 = 06</span></div>
+      <ol class="q" start="15">
+        <li>Explain the three classes of algae based on the pigments they contain.</li>
+        <li>Describe the monoecious and dioecious condition in gymnosperms, with examples.</li>
+        <li>Explain the significance of the seed habit that first appears in heterosporous pteridophytes.</li>
+        <li>Describe the structure of a bacterial cell wall and its role in classifying Eubacteria.</li>
+      </ol>
+
+      <div class="qsection">V. Answer any One in 200&ndash;250 words. <span class="marks">1&times;5 = 05</span></div>
+      <ol class="q" start="19">
+        <li>Describe the classification of Kingdom Fungi into four classes, with their characteristic features.</li>
+        <li>Explain the process of double fertilisation in angiosperms and its significance.</li>
+      </ol>
+
+      <div class="qsection">VI. Answer any One in 200&ndash;250 words. <span class="marks">1&times;5 = 05</span></div>
+      <ol class="q" start="21">
+        <li>Describe the structure and reproduction of bryophytes, bringing out the concept of alternation of generations.</li>
+        <li>Explain the salient features of pteridophytes with reference to vascular tissue, sporophylls and heterospory.</li>
+      </ol>
+    </div>
+  </details>
+
+  <div class="more-row">More practice papers for Unit Tests 2&ndash;10 (covering the rest of the NCERT syllabus through January) will be added here the same way, unit by unit, as each one approaches.</div>
+
+  <div class="back-row"><a href="ncert-library.html">&larr; NCERT Library</a> &middot; <a href="index.html">Home</a></div>
+
+  <footer>
+    Biology All In One (BAIO) Learning System &middot; Narendra Sir &mdash; Lecturer in Biology
+  </footer>
+</div>
+
+<script>
+(function(){
+  const root = document.documentElement;
+  const btn = document.getElementById('themeToggle');
+  const isLight = root.getAttribute('data-theme') === 'light';
+  btn.textContent = isLight ? '🌙' : '☀️';
+  btn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    const now = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    if(now === 'light') root.setAttribute('data-theme', 'light');
+    else root.removeAttribute('data-theme');
+    btn.textContent = now === 'light' ? '🌙' : '☀️';
+    try{ localStorage.setItem('baio_theme', now); }catch(e){}
+  });
+})();
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  });
+}
+</script>
+</body>
+</html>
