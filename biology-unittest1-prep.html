@@ -140,6 +140,21 @@ details.akey summary{
 details.akey summary::-webkit-details-marker{display:none;}
 .akey-box{font-size:12px; color:var(--ink-dim); background:var(--panel2); border:1px solid var(--line); border-radius:9px; padding:9px 11px; margin-top:6px;}
 
+details.bprint{margin-top:8px;}
+details.bprint summary{font-size:11px; font-weight:700; color:var(--teal); cursor:pointer; list-style:none; display:inline-flex; gap:5px;}
+details.bprint summary::-webkit-details-marker{display:none;}
+.bp-box{margin-top:6px; overflow-x:auto; border:1px solid var(--line); border-radius:9px; background:var(--panel2);}
+.bp-table{width:100%; border-collapse:collapse; font-size:11.5px; color:var(--ink);}
+.bp-table th, .bp-table td{border-bottom:1px solid var(--line); padding:6px 7px; text-align:center; vertical-align:top;}
+.bp-table thead th{font-size:11px; color:var(--teal); white-space:nowrap;}
+.bp-table thead th span{display:block; font-weight:500; color:var(--ink-dim); font-size:9.5px; line-height:1.3;}
+.bp-table tbody th, .bp-table tfoot th{text-align:left; font-weight:600;}
+.bp-table td small, .bp-table tbody th small{display:block; font-size:9.5px; color:var(--ink-dim); font-weight:400;}
+.bp-table tbody th{min-width:96px;}
+.bp-table td.z{color:var(--ink-dim);}
+.bp-table td.t{font-weight:700; color:var(--gold);}
+.bp-table tfoot td, .bp-table tfoot th{font-size:10.5px; color:var(--ink-dim); border-bottom:none;}
+
 .unit-nav{display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 20px;}
 .unit-nav a{
   width:30px; height:30px; border-radius:8px; border:1px solid var(--line); background:var(--panel);
@@ -211,6 +226,17 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
   }
   details.akey summary::-webkit-details-marker{ display:none; }
   .akey-box{ background:none !important; border:none !important; color:#000 !important; font-size:13px; padding:0; }
+
+  details.bprint{ margin-top:8mm; }
+  details.bprint summary{ pointer-events:none; font-size:0; }
+  details.bprint summary::before{
+    content:"BLUEPRINT — Chapter-wise weightage"; display:block; font-size:13px; font-weight:700;
+    color:#000; margin-bottom:3mm; font-family:'Inter',sans-serif; letter-spacing:.04em;
+  }
+  details.bprint summary::-webkit-details-marker{ display:none; }
+  .bp-box{ border:none !important; background:none !important; overflow:visible; }
+  .bp-table, .bp-table th, .bp-table td, .bp-table td small, .bp-table thead th span{ color:#000 !important; }
+  .bp-table th, .bp-table td{ border:1px solid #000 !important; }
 
   /* "Print this paper" isolates just the clicked paper */
   body.print-one details.paper{ display:none !important; }
@@ -1477,6 +1503,10 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
         <summary>✅ Show answer key (Parts I &amp; II)</summary>
         <div class="akey-box"><strong>Part I:</strong> 1-B, 2-A, 3-B, 4-B, 5-B, 6-C, 7-B &nbsp;&middot;&nbsp; <strong>Part II:</strong> 8-Whittaker, 9-Rhizoids, 10-Epithet</div>
       </details>
+      <details class="bprint">
+        <summary>📊 Show blueprint (chapter-wise weightage)</summary>
+        <div class="bp-box"><table class="bp-table"><thead><tr><th>Chapter</th><th>I<span>MCQ<br>1 mark</span></th><th>II<span>Fill in<br>1 mark</span></th><th>III<span>Short<br>2 marks</span></th><th>IV<span>Short<br>3 marks</span></th><th>V&ndash;VI<span>Long<br>5 marks</span></th><th>Marks set</th></tr></thead><tbody><tr><th>Chapter 1<small>The Living World</small></th><td>2<small>Q3, 6</small></td><td>1<small>Q10</small></td><td>2<small>Q13, 14</small></td><td>1<small>Q17</small></td><td class="z">&ndash;</td><td class="t">10<small>20%</small></td></tr><tr><th>Chapter 2<small>Biological Classification</small></th><td>3<small>Q1, 4, 7</small></td><td>1<small>Q8</small></td><td>1<small>Q11</small></td><td>3<small>Q15, 16, 18</small></td><td>2<small>Q19, 21</small></td><td class="t">25<small>50%</small></td></tr><tr><th>Chapter 3<small>Plant Kingdom</small></th><td>2<small>Q2, 5</small></td><td>1<small>Q9</small></td><td>1<small>Q12</small></td><td class="z">&ndash;</td><td>2<small>Q20, 22</small></td><td class="t">15<small>30%</small></td></tr></tbody><tfoot><tr><th>Questions set</th><td>7 &times; 1 = 7</td><td>3 &times; 1 = 3</td><td>4 &times; 2 = 8</td><td>4 &times; 3 = 12</td><td>4 &times; 5 = 20</td><td class="t">50</td></tr><tr><th>To answer</th><td>7</td><td>3</td><td>2 of 4</td><td>2 of 4</td><td>1 of 2 + 1 of 2</td><td class="t">30</td></tr></tfoot></table></div>
+      </details>
     </div>
   </details>
 
@@ -1548,6 +1578,10 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
         <summary>✅ Show answer key (Parts I &amp; II)</summary>
         <div class="akey-box"><strong>Part I:</strong> 1-B, 2-C, 3-B, 4-C, 5-B, 6-B, 7-B &nbsp;&middot;&nbsp; <strong>Part II:</strong> 8-Taxon, 9-Protonema, 10-Sporophylls</div>
       </details>
+      <details class="bprint">
+        <summary>📊 Show blueprint (chapter-wise weightage)</summary>
+        <div class="bp-box"><table class="bp-table"><thead><tr><th>Chapter</th><th>I<span>MCQ<br>1 mark</span></th><th>II<span>Fill in<br>1 mark</span></th><th>III<span>Short<br>2 marks</span></th><th>IV<span>Short<br>3 marks</span></th><th>V&ndash;VI<span>Long<br>5 marks</span></th><th>Marks set</th></tr></thead><tbody><tr><th>Chapter 1<small>The Living World</small></th><td>2<small>Q1, 2</small></td><td>1<small>Q8</small></td><td class="z">&ndash;</td><td>1<small>Q15</small></td><td>1<small>Q20</small></td><td class="t">11<small>22%</small></td></tr><tr><th>Chapter 2<small>Biological Classification</small></th><td>3<small>Q3, 4, 7</small></td><td class="z">&ndash;</td><td>2<small>Q12, 13</small></td><td>1<small>Q16</small></td><td>1<small>Q19</small></td><td class="t">15<small>30%</small></td></tr><tr><th>Chapter 3<small>Plant Kingdom</small></th><td>2<small>Q5, 6</small></td><td>2<small>Q9, 10</small></td><td>2<small>Q11, 14</small></td><td>2<small>Q17, 18</small></td><td>2<small>Q21, 22</small></td><td class="t">24<small>48%</small></td></tr></tbody><tfoot><tr><th>Questions set</th><td>7 &times; 1 = 7</td><td>3 &times; 1 = 3</td><td>4 &times; 2 = 8</td><td>4 &times; 3 = 12</td><td>4 &times; 5 = 20</td><td class="t">50</td></tr><tr><th>To answer</th><td>7</td><td>3</td><td>2 of 4</td><td>2 of 4</td><td>1 of 2 + 1 of 2</td><td class="t">30</td></tr></tfoot></table></div>
+      </details>
     </div>
   </details>
 
@@ -1618,6 +1652,10 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
       <details class="akey">
         <summary>✅ Show answer key (Parts I &amp; II)</summary>
         <div class="akey-box"><strong>Part I:</strong> 1-A, 2-A, 3-C, 4-A, 5-B, 6-B, 7-B &nbsp;&middot;&nbsp; <strong>Part II:</strong> 8-Capsomeres, 9-Coralloid, 10-Diatomaceous</div>
+      </details>
+      <details class="bprint">
+        <summary>📊 Show blueprint (chapter-wise weightage)</summary>
+        <div class="bp-box"><table class="bp-table"><thead><tr><th>Chapter</th><th>I<span>MCQ<br>1 mark</span></th><th>II<span>Fill in<br>1 mark</span></th><th>III<span>Short<br>2 marks</span></th><th>IV<span>Short<br>3 marks</span></th><th>V&ndash;VI<span>Long<br>5 marks</span></th><th>Marks set</th></tr></thead><tbody><tr><th>Chapter 1<small>The Living World</small></th><td>2<small>Q1, 2</small></td><td class="z">&ndash;</td><td class="z">&ndash;</td><td class="z">&ndash;</td><td class="z">&ndash;</td><td class="t">2<small>4%</small></td></tr><tr><th>Chapter 2<small>Biological Classification</small></th><td>3<small>Q3, 4, 7</small></td><td>2<small>Q8, 10</small></td><td>1<small>Q11</small></td><td>1<small>Q18</small></td><td>2<small>Q19, 20</small></td><td class="t">20<small>40%</small></td></tr><tr><th>Chapter 3<small>Plant Kingdom</small></th><td>2<small>Q5, 6</small></td><td>1<small>Q9</small></td><td>3<small>Q12, 13, 14</small></td><td>3<small>Q15, 16, 17</small></td><td>2<small>Q21, 22</small></td><td class="t">28<small>56%</small></td></tr></tbody><tfoot><tr><th>Questions set</th><td>7 &times; 1 = 7</td><td>3 &times; 1 = 3</td><td>4 &times; 2 = 8</td><td>4 &times; 3 = 12</td><td>4 &times; 5 = 20</td><td class="t">50</td></tr><tr><th>To answer</th><td>7</td><td>3</td><td>2 of 4</td><td>2 of 4</td><td>1 of 2 + 1 of 2</td><td class="t">30</td></tr></tfoot></table></div>
       </details>
     </div>
   </details>
@@ -1694,6 +1732,10 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
         <summary>✅ Show answer key (Parts I &amp; II)</summary>
         <div class="akey-box"><strong>Part I:</strong> 1-B, 2-A, 3-B, 4-B, 5-C, 6-B, 7-B &nbsp;&middot;&nbsp; <strong>Part II:</strong> 8-Metamerism, 9-Radula, 10-Choanocytes</div>
       </details>
+      <details class="bprint">
+        <summary>📊 Show blueprint (chapter-wise weightage)</summary>
+        <div class="bp-box"><table class="bp-table"><thead><tr><th>Chapter</th><th>I<span>MCQ<br>1 mark</span></th><th>II<span>Fill in<br>1 mark</span></th><th>III<span>Short<br>2 marks</span></th><th>IV<span>Short<br>3 marks</span></th><th>V&ndash;VI<span>Long<br>5 marks</span></th><th>Marks set</th></tr></thead><tbody><tr><th>Chapter 4<small>Animal Kingdom</small></th><td>4<small>Q1, 2, 3, 4</small></td><td>3<small>Q8, 9, 10</small></td><td>2<small>Q11, 13</small></td><td>2<small>Q15, 17</small></td><td>2<small>Q19, 21</small></td><td class="t">27<small>54%</small></td></tr><tr><th>Chapter 5<small>Morphology of Flowering Plants</small></th><td>3<small>Q5, 6, 7</small></td><td class="z">&ndash;</td><td>2<small>Q12, 14</small></td><td>2<small>Q16, 18</small></td><td>2<small>Q20, 22</small></td><td class="t">23<small>46%</small></td></tr></tbody><tfoot><tr><th>Questions set</th><td>7 &times; 1 = 7</td><td>3 &times; 1 = 3</td><td>4 &times; 2 = 8</td><td>4 &times; 3 = 12</td><td>4 &times; 5 = 20</td><td class="t">50</td></tr><tr><th>To answer</th><td>7</td><td>3</td><td>2 of 4</td><td>2 of 4</td><td>1 of 2 + 1 of 2</td><td class="t">30</td></tr></tfoot></table></div>
+      </details>
     </div>
   </details>
 
@@ -1768,6 +1810,10 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
       <details class="akey">
         <summary>✅ Show answer key (Parts I &amp; II)</summary>
         <div class="akey-box"><strong>Part I:</strong> 1-A, 2-B, 3-B, 4-B, 5-D, 6-C, 7-B &nbsp;&middot;&nbsp; <strong>Part II:</strong> 8-Nictitating, 9-Bidder&rsquo;s, 10-Conjunctive</div>
+      </details>
+      <details class="bprint">
+        <summary>📊 Show blueprint (chapter-wise weightage)</summary>
+        <div class="bp-box"><table class="bp-table"><thead><tr><th>Chapter</th><th>I<span>MCQ<br>1 mark</span></th><th>II<span>Fill in<br>1 mark</span></th><th>III<span>Short<br>2 marks</span></th><th>IV<span>Short<br>3 marks</span></th><th>V&ndash;VI<span>Long<br>5 marks</span></th><th>Marks set</th></tr></thead><tbody><tr><th>Chapter 6<small>Anatomy of Flowering Plants</small></th><td>4<small>Q1, 2, 3, 4</small></td><td>1<small>Q10</small></td><td>3<small>Q11, 12, 14</small></td><td>2<small>Q15, 16</small></td><td>2<small>Q19, 21</small></td><td class="t">27<small>54%</small></td></tr><tr><th>Chapter 7<small>Structural Organisation in Animals</small></th><td>3<small>Q5, 6, 7</small></td><td>2<small>Q8, 9</small></td><td>1<small>Q13</small></td><td>2<small>Q17, 18</small></td><td>2<small>Q20, 22</small></td><td class="t">23<small>46%</small></td></tr></tbody><tfoot><tr><th>Questions set</th><td>7 &times; 1 = 7</td><td>3 &times; 1 = 3</td><td>4 &times; 2 = 8</td><td>4 &times; 3 = 12</td><td>4 &times; 5 = 20</td><td class="t">50</td></tr><tr><th>To answer</th><td>7</td><td>3</td><td>2 of 4</td><td>2 of 4</td><td>1 of 2 + 1 of 2</td><td class="t">30</td></tr></tfoot></table></div>
       </details>
     </div>
   </details>
@@ -1844,6 +1890,10 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
         <summary>✅ Show answer key (Parts I &amp; II)</summary>
         <div class="akey-box"><strong>Part I:</strong> 1-C, 2-B, 3-C, 4-B, 5-D, 6-C, 7-C &nbsp;&middot;&nbsp; <strong>Part II:</strong> 8-Tonoplast, 9-Cristae, 10-Active site</div>
       </details>
+      <details class="bprint">
+        <summary>📊 Show blueprint (chapter-wise weightage)</summary>
+        <div class="bp-box"><table class="bp-table"><thead><tr><th>Chapter</th><th>I<span>MCQ<br>1 mark</span></th><th>II<span>Fill in<br>1 mark</span></th><th>III<span>Short<br>2 marks</span></th><th>IV<span>Short<br>3 marks</span></th><th>V&ndash;VI<span>Long<br>5 marks</span></th><th>Marks set</th></tr></thead><tbody><tr><th>Chapter 8<small>The Cell: Unit of Life</small></th><td>4<small>Q1, 2, 3, 4</small></td><td>2<small>Q8, 9</small></td><td>3<small>Q11, 12, 14</small></td><td>1<small>Q15</small></td><td>2<small>Q19, 21</small></td><td class="t">25<small>50%</small></td></tr><tr><th>Chapter 9<small>Biomolecules</small></th><td>3<small>Q5, 6, 7</small></td><td>1<small>Q10</small></td><td>1<small>Q13</small></td><td>3<small>Q16, 17, 18</small></td><td>2<small>Q20, 22</small></td><td class="t">25<small>50%</small></td></tr></tbody><tfoot><tr><th>Questions set</th><td>7 &times; 1 = 7</td><td>3 &times; 1 = 3</td><td>4 &times; 2 = 8</td><td>4 &times; 3 = 12</td><td>4 &times; 5 = 20</td><td class="t">50</td></tr><tr><th>To answer</th><td>7</td><td>3</td><td>2 of 4</td><td>2 of 4</td><td>1 of 2 + 1 of 2</td><td class="t">30</td></tr></tfoot></table></div>
+      </details>
     </div>
   </details>
 
@@ -1918,6 +1968,10 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
       <details class="akey">
         <summary>✅ Show answer key (Parts I &amp; II)</summary>
         <div class="akey-box"><strong>Part I:</strong> 1-B, 2-C, 3-B, 4-B, 5-B, 6-B, 7-B &nbsp;&middot;&nbsp; <strong>Part II:</strong> 8-Synapsis, 9-Cell plate, 10-Photolysis</div>
+      </details>
+      <details class="bprint">
+        <summary>📊 Show blueprint (chapter-wise weightage)</summary>
+        <div class="bp-box"><table class="bp-table"><thead><tr><th>Chapter</th><th>I<span>MCQ<br>1 mark</span></th><th>II<span>Fill in<br>1 mark</span></th><th>III<span>Short<br>2 marks</span></th><th>IV<span>Short<br>3 marks</span></th><th>V&ndash;VI<span>Long<br>5 marks</span></th><th>Marks set</th></tr></thead><tbody><tr><th>Chapter 10<small>Cell Cycle and Cell Division</small></th><td>4<small>Q1, 2, 3, 4</small></td><td>2<small>Q8, 9</small></td><td>2<small>Q11, 13</small></td><td>2<small>Q15, 16</small></td><td>2<small>Q19, 21</small></td><td class="t">26<small>52%</small></td></tr><tr><th>Chapter 11<small>Photosynthesis in Higher Plants</small></th><td>3<small>Q5, 6, 7</small></td><td>1<small>Q10</small></td><td>2<small>Q12, 14</small></td><td>2<small>Q17, 18</small></td><td>2<small>Q20, 22</small></td><td class="t">24<small>48%</small></td></tr></tbody><tfoot><tr><th>Questions set</th><td>7 &times; 1 = 7</td><td>3 &times; 1 = 3</td><td>4 &times; 2 = 8</td><td>4 &times; 3 = 12</td><td>4 &times; 5 = 20</td><td class="t">50</td></tr><tr><th>To answer</th><td>7</td><td>3</td><td>2 of 4</td><td>2 of 4</td><td>1 of 2 + 1 of 2</td><td class="t">30</td></tr></tfoot></table></div>
       </details>
     </div>
   </details>
@@ -1994,6 +2048,10 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
         <summary>✅ Show answer key (Parts I &amp; II)</summary>
         <div class="akey-box"><strong>Part I:</strong> 1-B, 2-A, 3-B, 4-C, 5-B, 6-C, 7-B &nbsp;&middot;&nbsp; <strong>Part II:</strong> 8-Fermentation, 9-Amphibolic, 10-Chemiosmotic</div>
       </details>
+      <details class="bprint">
+        <summary>📊 Show blueprint (chapter-wise weightage)</summary>
+        <div class="bp-box"><table class="bp-table"><thead><tr><th>Chapter</th><th>I<span>MCQ<br>1 mark</span></th><th>II<span>Fill in<br>1 mark</span></th><th>III<span>Short<br>2 marks</span></th><th>IV<span>Short<br>3 marks</span></th><th>V&ndash;VI<span>Long<br>5 marks</span></th><th>Marks set</th></tr></thead><tbody><tr><th>Chapter 12<small>Respiration in Plants</small></th><td>7<small>Q1, 2, 3, 4, 5, 6, 7</small></td><td>3<small>Q8, 9, 10</small></td><td>4<small>Q11, 12, 13, 14</small></td><td>4<small>Q15, 16, 17, 18</small></td><td>4<small>Q19, 20, 21, 22</small></td><td class="t">50<small>100%</small></td></tr></tbody><tfoot><tr><th>Questions set</th><td>7 &times; 1 = 7</td><td>3 &times; 1 = 3</td><td>4 &times; 2 = 8</td><td>4 &times; 3 = 12</td><td>4 &times; 5 = 20</td><td class="t">50</td></tr><tr><th>To answer</th><td>7</td><td>3</td><td>2 of 4</td><td>2 of 4</td><td>1 of 2 + 1 of 2</td><td class="t">30</td></tr></tfoot></table></div>
+      </details>
     </div>
   </details>
 
@@ -2068,6 +2126,10 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
       <details class="akey">
         <summary>✅ Show answer key (Parts I &amp; II)</summary>
         <div class="akey-box"><strong>Part I:</strong> 1-B, 2-B, 3-B, 4-B, 5-C, 6-B, 7-B &nbsp;&middot;&nbsp; <strong>Part II:</strong> 8-Kinetin, 9-Abscisic acid, 10-Tidal volume</div>
+      </details>
+      <details class="bprint">
+        <summary>📊 Show blueprint (chapter-wise weightage)</summary>
+        <div class="bp-box"><table class="bp-table"><thead><tr><th>Chapter</th><th>I<span>MCQ<br>1 mark</span></th><th>II<span>Fill in<br>1 mark</span></th><th>III<span>Short<br>2 marks</span></th><th>IV<span>Short<br>3 marks</span></th><th>V&ndash;VI<span>Long<br>5 marks</span></th><th>Marks set</th></tr></thead><tbody><tr><th>Chapter 13<small>Plant Growth and Development</small></th><td>4<small>Q1, 2, 3, 4</small></td><td>2<small>Q8, 9</small></td><td>2<small>Q11, 13</small></td><td>2<small>Q15, 16</small></td><td>2<small>Q19, 21</small></td><td class="t">26<small>52%</small></td></tr><tr><th>Chapter 14<small>Breathing and Exchange of Gases</small></th><td>3<small>Q5, 6, 7</small></td><td>1<small>Q10</small></td><td>2<small>Q12, 14</small></td><td>2<small>Q17, 18</small></td><td>2<small>Q20, 22</small></td><td class="t">24<small>48%</small></td></tr></tbody><tfoot><tr><th>Questions set</th><td>7 &times; 1 = 7</td><td>3 &times; 1 = 3</td><td>4 &times; 2 = 8</td><td>4 &times; 3 = 12</td><td>4 &times; 5 = 20</td><td class="t">50</td></tr><tr><th>To answer</th><td>7</td><td>3</td><td>2 of 4</td><td>2 of 4</td><td>1 of 2 + 1 of 2</td><td class="t">30</td></tr></tfoot></table></div>
       </details>
     </div>
   </details>
@@ -2144,6 +2206,10 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
         <summary>✅ Show answer key (Parts I &amp; II)</summary>
         <div class="akey-box"><strong>Part I:</strong> 1-D, 2-C, 3-B, 4-C, 5-C, 6-A, 7-C &nbsp;&middot;&nbsp; <strong>Part II:</strong> 8-Fibrinogen, 9-Lymph, 10-Hemodialysis</div>
       </details>
+      <details class="bprint">
+        <summary>📊 Show blueprint (chapter-wise weightage)</summary>
+        <div class="bp-box"><table class="bp-table"><thead><tr><th>Chapter</th><th>I<span>MCQ<br>1 mark</span></th><th>II<span>Fill in<br>1 mark</span></th><th>III<span>Short<br>2 marks</span></th><th>IV<span>Short<br>3 marks</span></th><th>V&ndash;VI<span>Long<br>5 marks</span></th><th>Marks set</th></tr></thead><tbody><tr><th>Chapter 15<small>Body Fluids and Circulation</small></th><td>4<small>Q1, 2, 3, 4</small></td><td>2<small>Q8, 9</small></td><td>3<small>Q11, 12, 14</small></td><td>2<small>Q15, 16</small></td><td>2<small>Q19, 22</small></td><td class="t">28<small>56%</small></td></tr><tr><th>Chapter 16<small>Excretory Products and their Elimination</small></th><td>3<small>Q5, 6, 7</small></td><td>1<small>Q10</small></td><td>1<small>Q13</small></td><td>2<small>Q17, 18</small></td><td>2<small>Q20, 21</small></td><td class="t">22<small>44%</small></td></tr></tbody><tfoot><tr><th>Questions set</th><td>7 &times; 1 = 7</td><td>3 &times; 1 = 3</td><td>4 &times; 2 = 8</td><td>4 &times; 3 = 12</td><td>4 &times; 5 = 20</td><td class="t">50</td></tr><tr><th>To answer</th><td>7</td><td>3</td><td>2 of 4</td><td>2 of 4</td><td>1 of 2 + 1 of 2</td><td class="t">30</td></tr></tfoot></table></div>
+      </details>
     </div>
   </details>
 
@@ -2218,6 +2284,10 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
       <details class="akey">
         <summary>✅ Show answer key (Parts I &amp; II)</summary>
         <div class="akey-box"><strong>Part I:</strong> 1-B, 2-B, 3-C, 4-B, 5-A, 6-C, 7-B &nbsp;&middot;&nbsp; <strong>Part II:</strong> 8-Troponin, 9-Meninges, 10-Callosum</div>
+      </details>
+      <details class="bprint">
+        <summary>📊 Show blueprint (chapter-wise weightage)</summary>
+        <div class="bp-box"><table class="bp-table"><thead><tr><th>Chapter</th><th>I<span>MCQ<br>1 mark</span></th><th>II<span>Fill in<br>1 mark</span></th><th>III<span>Short<br>2 marks</span></th><th>IV<span>Short<br>3 marks</span></th><th>V&ndash;VI<span>Long<br>5 marks</span></th><th>Marks set</th></tr></thead><tbody><tr><th>Chapter 17<small>Locomotion and Movement</small></th><td>5<small>Q1, 2, 3, 4, 7</small></td><td>1<small>Q8</small></td><td>2<small>Q12, 13</small></td><td>2<small>Q17, 18</small></td><td>2<small>Q19, 20</small></td><td class="t">26<small>52%</small></td></tr><tr><th>Chapter 18<small>Neural Control and Coordination</small></th><td>2<small>Q5, 6</small></td><td>2<small>Q9, 10</small></td><td>2<small>Q11, 14</small></td><td>2<small>Q15, 16</small></td><td>2<small>Q21, 22</small></td><td class="t">24<small>48%</small></td></tr></tbody><tfoot><tr><th>Questions set</th><td>7 &times; 1 = 7</td><td>3 &times; 1 = 3</td><td>4 &times; 2 = 8</td><td>4 &times; 3 = 12</td><td>4 &times; 5 = 20</td><td class="t">50</td></tr><tr><th>To answer</th><td>7</td><td>3</td><td>2 of 4</td><td>2 of 4</td><td>1 of 2 + 1 of 2</td><td class="t">30</td></tr></tfoot></table></div>
       </details>
     </div>
   </details>
@@ -2294,6 +2364,10 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
         <summary>✅ Show answer key (Parts I &amp; II)</summary>
         <div class="akey-box"><strong>Part I:</strong> 1-B, 2-B, 3-B, 4-B, 5-B, 6-B, 7-B &nbsp;&middot;&nbsp; <strong>Part II:</strong> 8-Melatonin, 9-Thymosin, 10-Cretinism</div>
       </details>
+      <details class="bprint">
+        <summary>📊 Show blueprint (chapter-wise weightage)</summary>
+        <div class="bp-box"><table class="bp-table"><thead><tr><th>Chapter</th><th>I<span>MCQ<br>1 mark</span></th><th>II<span>Fill in<br>1 mark</span></th><th>III<span>Short<br>2 marks</span></th><th>IV<span>Short<br>3 marks</span></th><th>V&ndash;VI<span>Long<br>5 marks</span></th><th>Marks set</th></tr></thead><tbody><tr><th>Chapter 19<small>Chemical Coordination and Integration</small></th><td>7<small>Q1, 2, 3, 4, 5, 6, 7</small></td><td>3<small>Q8, 9, 10</small></td><td>4<small>Q11, 12, 13, 14</small></td><td>4<small>Q15, 16, 17, 18</small></td><td>4<small>Q19, 20, 21, 22</small></td><td class="t">50<small>100%</small></td></tr></tbody><tfoot><tr><th>Questions set</th><td>7 &times; 1 = 7</td><td>3 &times; 1 = 3</td><td>4 &times; 2 = 8</td><td>4 &times; 3 = 12</td><td>4 &times; 5 = 20</td><td class="t">50</td></tr><tr><th>To answer</th><td>7</td><td>3</td><td>2 of 4</td><td>2 of 4</td><td>1 of 2 + 1 of 2</td><td class="t">30</td></tr></tfoot></table></div>
+      </details>
     </div>
   </details>
 
@@ -2331,7 +2405,7 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
   let restore = [];
   window.addEventListener('beforeprint', function(){
     restore = [];
-    document.querySelectorAll('details.paper, details.akey').forEach(function(d){
+    document.querySelectorAll('details.paper, details.akey, details.bprint').forEach(function(d){
       restore.push([d, d.open]);
       d.open = true;
     });
