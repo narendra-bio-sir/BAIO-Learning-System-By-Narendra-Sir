@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="manifest.json">
+<meta name="robots" content="noindex">
 <meta name="theme-color" content="#0B1B14">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>Biology Unit Test Prep Books — ₹50 | BAIO</title>
@@ -78,6 +79,17 @@ h2{font-size:15px; font-weight:800; margin:22px 0 8px; color:var(--teal);}
 .upi{display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;}
 .upi span{font-size:11px; font-weight:700; border:1px solid var(--line); border-radius:999px; padding:3px 9px; color:var(--ink-dim);}
 
+.pay{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:14px; margin:4px 0 10px; text-align:center;}
+.pay .qr{width:210px; max-width:70%; height:auto; background:#fff; padding:10px; border-radius:12px; border:1px solid var(--line); image-rendering:pixelated; display:block; margin:0 auto;}
+.pay .amt{font-size:13px; color:var(--ink-dim); margin-top:8px;}
+.pay .amt b{color:var(--gold); font-size:16px;}
+.pay .upiid{display:inline-flex; align-items:center; gap:8px; margin-top:8px; font-size:13px; font-weight:700; background:var(--panel2); border:1px solid var(--line); border-radius:10px; padding:7px 10px;}
+.pay .upiid button{border:1px solid var(--line); background:var(--panel); color:var(--teal); font:inherit; font-size:11.5px; font-weight:800; border-radius:8px; padding:4px 9px; cursor:pointer;}
+.pay .acts{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:10px;}
+.pay .acts a{text-decoration:none; font-size:13px; font-weight:800; border-radius:10px; padding:10px 14px;}
+.pay .acts .upi-btn{background:var(--teal2); color:#fff;}
+.pay .acts .save{border:1px solid var(--line); color:var(--ink);}
+.pay .hint{font-size:11px; color:var(--ink-dim); margin-top:8px; line-height:1.5;}
 .form{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:12px 14px; margin-top:8px;}
 .form label{display:block; font-size:11px; font-weight:700; color:var(--ink-dim); margin:8px 0 4px; letter-spacing:.3px;}
 .form input{width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--line); background:var(--panel2); color:var(--ink); font-size:14px; font-family:inherit;}
@@ -197,11 +209,23 @@ h2{font-size:15px; font-weight:800; margin:22px 0 8px; color:var(--teal);}
 
   <h2>How to buy</h2>
   <ol class="steps">
-    <li>Choose your book above and tap <b>Buy on WhatsApp</b>. It opens a ready message to Narendra Sir.</li>
-    <li>Narendra Sir sends you the <b>UPI QR / payment details</b>. Pay &#8377;50 from any UPI app.
+    <li>Choose your book above (I PUC or II PUC).</li>
+    <li>Pay <b>&#8377;50</b> by UPI: scan the QR below, or tap <b>Pay with UPI app</b> on your phone.
       <div class="upi"><span>PhonePe</span><span>Google Pay</span><span>Paytm</span><span>BHIM</span><span>Any UPI app</span></div></li>
-    <li>Send the payment screenshot. You get <b>both PDFs</b> (colour and print-friendly black-and-white) on WhatsApp.</li>
+    <li>Tap <b>Buy on WhatsApp</b> and send Narendra Sir the payment screenshot.</li>
+    <li>You get <b>both PDFs</b> (colour and print-friendly black-and-white) on WhatsApp.</li>
   </ol>
+
+  <div class="pay" id="pay">
+    <img class="qr" src="prep-books-assets/upi-qr.png" alt="UPI QR code to pay Narendra Sir" width="788" height="788">
+    <div class="amt">Pay <b>&#8377;50</b> for the <span id="payWhich">I PUC Book</span></div>
+    <div class="upiid"><span>UPI ID: <span id="upiId">paytm.s4qa42a@pty</span></span><button type="button" id="copyUpi">Copy</button></div>
+    <div class="acts">
+      <a class="upi-btn" id="upiPay" href="#">Pay with UPI app</a>
+      <a class="save" href="prep-books-assets/upi-qr.png" download="BAIO-UPI-QR.png">Save QR</a>
+    </div>
+    <div class="hint">On the same phone? Tap <b>Save QR</b>, then open your UPI app &rarr; Scan &rarr; choose the QR from your gallery.</div>
+  </div>
 
   <div class="form">
     <label for="bkName">YOUR NAME</label>
@@ -215,7 +239,7 @@ h2{font-size:15px; font-weight:800; margin:22px 0 8px; color:var(--teal);}
     <div><b>Narendra Sir</b><span>Founder &amp; CEO, BAIO Learning System<br>Lecturer in Biology &middot; M.Sc Biochemistry &middot; B.Ed &middot; KSET (Life Science)</span></div>
   </div>
 
-  <p class="note">Payment isn't collected on this page. It only prepares your WhatsApp message; Narendra Sir sends the UPI payment details and the book. The PDF is for your own study &mdash; please don't forward it.</p>
+  <p class="note">Your payment goes directly to Narendra Sir by UPI. The WhatsApp button only prepares your message; Narendra Sir checks the payment and sends the book. The PDF is for your own study &mdash; please don't forward it.</p>
 
   <div class="back-row"><a href="ncert-library.html#pu-board">&larr; PU Board papers</a> &middot; <a href="index.html">Home</a></div>
 </div>
@@ -238,6 +262,7 @@ h2{font-size:15px; font-weight:800; margin:22px 0 8px; color:var(--teal);}
     sync();
   });
 
+  var UPI_ID = 'paytm.s4qa42a@pty';
   var BOOKS = { pu1: 'I PUC Biology Unit Test Prep Book', pu2: 'II PUC Biology Unit Test Prep Book' };
   var current = 'pu1';
   function choose(b, scroll){
@@ -245,12 +270,20 @@ h2{font-size:15px; font-weight:800; margin:22px 0 8px; color:var(--teal);}
     document.querySelectorAll('.tabs button').forEach(function(t){ t.setAttribute('aria-selected', t.dataset.book === b ? 'true' : 'false'); });
     document.getElementById('book-pu1').hidden = b !== 'pu1';
     document.getElementById('book-pu2').hidden = b !== 'pu2';
-    document.getElementById('buyWhich').textContent = (b === 'pu1' ? 'I PUC' : 'II PUC') + ' Book · PDF';
+    var label = b === 'pu1' ? 'I PUC' : 'II PUC';
+    document.getElementById('buyWhich').textContent = label + ' Book · PDF';
+    document.getElementById('payWhich').textContent = label + ' Book';
+    document.getElementById('upiPay').href = 'upi://pay?pa=' + UPI_ID + '&pn=' + encodeURIComponent('Narendra Sir') + '&am=50&cu=INR&tn=' + encodeURIComponent(label + ' Biology Prep Book');
     if(history.replaceState) history.replaceState(null, '', '#' + b);
     if(scroll) document.querySelector('.tabs').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
   document.querySelectorAll('.tabs button').forEach(function(t){ t.addEventListener('click', function(){ choose(t.dataset.book, false); }); });
-  if(location.hash === '#pu2') choose('pu2', false);
+  choose(location.hash === '#pu2' ? 'pu2' : 'pu1', false);
+  document.getElementById('copyUpi').addEventListener('click', function(){
+    var btn = this, done = function(){ btn.textContent = 'Copied'; setTimeout(function(){ btn.textContent = 'Copy'; }, 1500); };
+    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(UPI_ID).then(done, function(){});
+    else{ var r = document.createRange(); r.selectNodeContents(document.getElementById('upiId')); var s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+  });
 
   var nameEl = document.getElementById('bkName'), collegeEl = document.getElementById('bkCollege');
   try{
@@ -264,7 +297,7 @@ h2{font-size:15px; font-weight:800; margin:22px 0 8px; color:var(--teal);}
     var msg = 'Hi Narendra Sir, I\'d like to buy the ' + BOOKS[current] + ' (PDF) for ₹50.\n\n'
       + 'Name: ' + (nameEl.value.trim() || '(please add my name)') + '\n'
       + 'College & Section: ' + (collegeEl.value.trim() || '(please add my college and section)') + '\n\n'
-      + 'Please send me the UPI payment details.';
+      + 'I have paid ₹50 by UPI. I am sending the payment screenshot here.';
     window.open('https://wa.me/919008968389?text=' + encodeURIComponent(msg), '_blank');
   });
 })();
