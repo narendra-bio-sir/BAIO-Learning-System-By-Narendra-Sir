@@ -188,11 +188,15 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
   <div class="section-label" id="pu-board">📋 PU Board Model Question Papers &amp; Blue Prints</div>
   <div class="section-sub">Karnataka Department of School Education (PU) official papers, for board exam pattern practice &mdash; updated for the new 2026-27 Lesson Based Evaluation cycle</div>
 
-  <div class="pu-subhead">📐 Blue Print &middot; Annual Exam <span class="yr">I PUC 2026-27</span></div>
+  <div class="pu-subhead">📐 Blue Print &middot; Annual Exam <span class="yr">I &amp; II PUC 2026-27</span></div>
   <div class="ch-list" id="puBoardBlueprintList"></div>
 
   <div class="pu-subhead">📄 Unit Test 1 &middot; Model Question Paper <span class="yr">LBA 2026-27</span></div>
   <div class="ch-list" id="puBoardMqpList"></div>
+
+  <div class="pu-subhead" id="bio-exam-papers">🧾 Biology &middot; Exam Blueprints &amp; Model Papers <span class="yr">2026-27</span></div>
+  <div class="section-sub" style="margin-top:-4px;">Mid-Term, II Test and Annual blueprints with model papers for I PUC, and the KSEAB annual Model Question Papers 1&ndash;5 and practical scheme for II PUC</div>
+  <div class="ch-list" id="bioExamPaperList"></div>
 
   <div class="pu-subhead">✍️ Unit Test Prep &middot; Practice Papers &amp; Notes <span class="yr">Biology, all 10 units</span></div>
   <div class="section-sub" style="margin-top:-4px;">Revision notes, worked solutions and original full-length practice papers for every Unit Test across the year, in the exact official pattern &mdash; I PUC and II PUC</div>
@@ -209,6 +213,13 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:34px;
       <div class="ch-body"><div class="ch-title">Biology &middot; II PUC, all 13 chapters</div></div>
       <div class="ch-links">
         <a class="ch-link outline" href="biology-ii-puc-prep.html">📝 Open prep material</a>
+      </div>
+    </div>
+    <div class="ch-row">
+      <div class="ch-num">📗</div>
+      <div class="ch-body"><div class="ch-title">Prep Books (PDF) &middot; I PUC &amp; II PUC &middot; &#8377;50 each</div></div>
+      <div class="ch-links">
+        <a class="ch-link" href="biology-prep-books.html">📗 Get the book</a>
       </div>
     </div>
   </div>
@@ -364,7 +375,7 @@ renderKcetList('kcetList', KCET_PAPERS);
    and (b) a Unit Test 1 Model QP (I & II PUC) under the new LBA pattern. Hosted
    locally since these are freshly released PDFs without stable public URLs yet. ---- */
 const PU_BOARD_BLUEPRINTS = [
-  {code:'36', subject:'Biology', file:'exam-corner/pu-board-2026-27/biology-i-puc-blueprint.pdf'},
+  {code:'36', subject:'Biology', file:'exam-corner/pu-board-2026-27/biology-i-puc-blueprint.pdf', ii:'exam-corner/pu-board-2026-27/biology-ii-puc-blueprint.pdf'},
   {code:'33', subject:'Physics', file:'exam-corner/pu-board-2026-27/physics-i-puc-blueprint.pdf'},
   {code:'34', subject:'Chemistry', file:'exam-corner/pu-board-2026-27/chemistry-i-puc-blueprint.pdf'},
   {code:'35', subject:'Mathematics', file:'exam-corner/pu-board-2026-27/maths-i-puc-blueprint.pdf'},
@@ -405,9 +416,10 @@ function renderPuBlueprintList(containerId, items){
   const el = document.getElementById(containerId);
   el.innerHTML = items.map(it => `<div class="ch-row">
     <div class="ch-num">${it.code}</div>
-    <div class="ch-body"><div class="ch-title">${it.subject} &middot; I PUC, 105 marks</div></div>
+    <div class="ch-body"><div class="ch-title">${it.subject} &middot; ${it.ii ? 'I PUC &amp; II PUC' : 'I PUC'}, 105 marks</div></div>
     <div class="ch-links">
-      <a class="ch-link" href="${it.file}" target="_blank" rel="noopener">📐 Blue Print</a>
+      <a class="ch-link" href="${it.file}" target="_blank" rel="noopener">📐 ${it.ii ? 'I PUC' : 'Blue Print'}</a>${it.ii ? `
+      <a class="ch-link" href="${it.ii}" target="_blank" rel="noopener">📐 II PUC</a>` : ''}
     </div>
   </div>`).join('');
 }
@@ -423,6 +435,20 @@ function renderPuMqpList(containerId, items, subtitle){
   </div>`).join('');
 }
 renderPuBlueprintList('puBoardBlueprintList', PU_BOARD_BLUEPRINTS);
+/* Biology exam papers beyond Unit Test 1: I PUC Mid-Term / II Test / Annual (blueprint + model paper),
+   II PUC KSEAB annual Model Question Papers 1-5 and the practical examination scheme. */
+const BIO_EXAM_PAPERS = [
+  {cls:'I', title:'Mid-Term Exam &middot; blueprint &amp; model paper', sub:'Chapters 1&ndash;10 &middot; 105 marks', file:'biology-i-puc-midterm-blueprint-mqp.pdf'},
+  {cls:'I', title:'II Test &middot; blueprint &amp; model paper', sub:'Chapters 11&ndash;17 &middot; 55 marks', file:'biology-i-puc-second-test-blueprint-mqp.pdf'},
+  {cls:'I', title:'Annual Exam &middot; blueprint &amp; model paper', sub:'All 19 chapters &middot; 105 marks', file:'biology-i-puc-annual-blueprint-mqp.pdf'},
+  ...[1, 2, 3, 4, 5].map(n => ({cls:'II', title:`KSEAB Model Question Paper ${n}`, sub:'Annual exam &middot; 70 marks &middot; 3 hours', file:`biology-ii-puc-annual-mqp-${n}.pdf`})),
+  {cls:'II', title:'Practical Exam &middot; Scheme of Evaluation', sub:'2025&ndash;26 &middot; 30 marks &middot; 2 hours', file:'biology-ii-puc-practical-scheme.pdf'},
+];
+document.getElementById('bioExamPaperList').innerHTML = BIO_EXAM_PAPERS.map(it => `<div class="ch-row">
+  <div class="ch-num">${it.cls}</div>
+  <div class="ch-body"><div class="ch-title">${it.cls} PUC &middot; ${it.title}</div><div class="ch-sub" style="font-size:11px;color:var(--ink-dim);margin-top:2px;">${it.sub}</div></div>
+  <div class="ch-links"><a class="ch-link outline" href="exam-corner/pu-board-2026-27/${it.file}" target="_blank" rel="noopener">📄 Open PDF</a></div>
+</div>`).join('');
 renderPuMqpList('puBoardMqpList', PU_BOARD_MQP, '30 marks, 60 mins');
 renderPuMqpList('puBoardLbaCalendarList', PU_BOARD_LBA_CALENDAR, 'all 10 Unit Tests');
 
