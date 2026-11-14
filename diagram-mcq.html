@@ -242,6 +242,19 @@ var QUESTIONS = [{"id":"1-2-6-m","type":"match","q":"Identify the parts labelled
   }
   updateCount();
   try{ var h = location.hash.replace('#', ''); if(h === 'xi' || h === 'xii'){ $('segCls').querySelectorAll('button')[h === 'xi' ? 1 : 2].click(); } }catch(e){}
+  // Deep link from a chapter page: diagram-mcq.html?c=<class>-<chapter>, e.g. ?c=1-15
+  try{
+    var c = new URLSearchParams(location.search).get('c'), m = c && /^([12])-(\d{1,2})$/.exec(c);
+    if(m && QUESTIONS.some(function(q){ return q.cls === +m[1] && q.ch === +m[2]; })){
+      $('segCls').querySelectorAll('button')[+m[1]].click();
+      $('selCh').value = c; st.ch = c; updateCount();
+      var q0 = QUESTIONS.filter(function(q){ return q.cls === +m[1] && q.ch === +m[2]; })[0];
+      var note = document.createElement('div');
+      note.className = 'count'; note.style.cssText = 'color:var(--gold);font-weight:700;margin-top:0;margin-bottom:6px;';
+      note.textContent = 'From your chapter page: ' + (q0.cls === 1 ? 'Class XI' : 'Class XII') + ' · Chapter ' + q0.ch + ' · ' + q0.chTitle;
+      $('setup').insertBefore(note, $('setup').firstChild);
+    }
+  }catch(e){}
 
   // ---- quiz ----
   var run = null, tick = null;
