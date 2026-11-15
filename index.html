@@ -590,6 +590,33 @@ body{background:var(--bh-bg);}
 .bh-nav a em{font-style:normal;font-size:20px;}
 .bh-nav .bh-fab{width:58px;height:58px;border-radius:50%;margin-top:-34px;background:linear-gradient(135deg,#5B2EE0,#A47BFF);display:grid;place-items:center;font-size:27px;box-shadow:0 10px 22px rgba(91,46,224,.45);border:5px solid var(--bh-bg);}
 @media(min-width:760px){.bh-grid{grid-template-columns:repeat(4,1fr);}.bh-hero{min-height:230px;padding:30px 32px;}.bh-hero h1{font-size:36px;}.bh-hero svg{width:250px;height:250px;right:20px;top:-10px;}.bh-cls{display:grid;grid-template-columns:repeat(3,1fr);}}
+
+button.bh-tile{border:0;text-align:left;font:inherit;cursor:pointer;width:100%;}
+.bh-sheet{position:fixed;inset:0;z-index:2147482000;background:rgba(12,6,40,.55);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
+.bh-sheet.open{opacity:1;pointer-events:auto;}
+.bh-sbox{width:100%;max-width:560px;max-height:82vh;background:var(--bh-bg);color:var(--bh-ink);border-radius:26px 26px 0 0;padding:10px 18px calc(22px + env(safe-area-inset-bottom));font-family:'Poppins','Inter',sans-serif;transform:translateY(30px);transition:transform .25s;display:flex;flex-direction:column;}
+.bh-sheet.open .bh-sbox{transform:none;}
+.bh-grab{width:44px;height:5px;border-radius:9px;background:rgba(124,77,255,.3);margin:0 auto 10px;}
+.bh-shead{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.bh-shead b{font-size:18px;font-weight:700;flex:1;}
+.bh-shead button{width:38px;height:38px;border-radius:12px;border:0;background:var(--bh-card);color:var(--bh-ink);font-size:17px;cursor:pointer;box-shadow:0 3px 10px var(--bh-sh);}
+.bh-shead .bk{display:none;}
+.bh-sheet.list .bh-shead .bk{display:block;}
+.bh-opts{display:grid;gap:12px;}
+.bh-opt{display:flex;align-items:center;gap:14px;border:0;width:100%;text-align:left;font:inherit;cursor:pointer;border-radius:22px;padding:16px;color:#1E1B4B;box-shadow:0 8px 20px var(--bh-sh);}
+.bh-opt .ic{width:58px;height:58px;border-radius:18px;background:rgba(255,255,255,.75);display:grid;place-items:center;font-size:30px;flex:none;}
+.bh-opt b{display:block;font-size:17px;font-weight:700;}
+.bh-opt small{display:block;font-size:12px;color:rgba(30,27,75,.7);}
+.bh-opt .ar{margin-left:auto;font-size:22px;font-weight:700;color:#5B2EE0;}
+.bh-sheet.list .bh-opts{display:none;}
+.bh-chs{display:none;overflow-y:auto;gap:8px;flex-direction:column;padding-bottom:4px;}
+.bh-sheet.list .bh-chs{display:flex;}
+.bh-ch{display:flex;align-items:center;gap:12px;background:var(--bh-card);border-radius:16px;padding:11px 12px;box-shadow:0 3px 10px var(--bh-sh);color:var(--bh-ink) !important;text-decoration:none;}
+.bh-ch .e{width:40px;height:40px;border-radius:12px;background:rgba(124,77,255,.12);display:grid;place-items:center;font-size:20px;flex:none;}
+.bh-ch .t{flex:1;min-width:0;}.bh-ch .t small{display:block;font-size:10.5px;color:var(--bh-muted);font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
+.bh-ch .t b{display:block;font-size:14px;font-weight:600;line-height:1.25;}
+.bh-ch .st{font-size:11px;font-weight:700;color:#1F9D6C;white-space:nowrap;}
+.bh-ch.soon{opacity:.5;pointer-events:none;}.bh-ch.soon .st{color:var(--bh-muted);}
 body{padding-bottom:96px;}
 .faq-chat-btn{bottom:94px;}
 .faq-chat-panel{bottom:140px;}
@@ -636,7 +663,7 @@ body{padding-bottom:96px;}
 
     <div class="bh-sec"><h2>Study</h2><a href="#bhTools">See all</a></div>
     <div class="bh-grid">
-      <a class="bh-tile bh-y" href="notes.html"><div class="ic">📒</div><b>Notes</b><span>Illustrated, chapter-wise</span></a>
+      <button type="button" class="bh-tile bh-y" id="bhMyClass" aria-haspopup="dialog"><div class="ic">🎓</div><b>My Classes</b><span>I PUC · II PUC</span></button>
       <a class="bh-tile bh-pk" href="podcasts.html"><div class="ic">🎧</div><b>Podcasts</b><span>Listen &amp; revise</span></a>
       <a class="bh-tile bh-g" href="flashcards.html"><div class="ic">🧠</div><b>Flash Cards</b><span>Quick recall</span></a>
       <a class="bh-tile bh-v" href="exam-corner.html"><div class="ic">📝</div><b>Mock Tests</b><span>NEET · KCET · Board</span></a>
@@ -644,6 +671,7 @@ body{padding-bottom:96px;}
 
     <div class="bh-sec"><h2>More tools</h2><a href="#bhTools">All 30+</a></div>
     <div class="bh-chips">
+      <a class="bh-chip" href="notes.html"><i style="background:#FFF1C9">📒</i><span>Notes</span></a>
       <a class="bh-chip" href="assistant.html"><i style="background:#EDE6FF">🦉</i><span>AI Assistant</span></a>
       <a class="bh-chip" href="diagram-mcq.html"><i style="background:#E3F7EE">🔬</i><span>Diagram MCQs</span></a>
       <a class="bh-chip" href="important-cards.html"><i style="background:#FFF1D6">🃏</i><span>Quick Cards</span></a>
@@ -3327,6 +3355,52 @@ window.indexHardRefresh = indexHardRefresh;
   }
   if(document.readyState==='complete') sync(); else window.addEventListener('load',sync);
   setTimeout(sync,1500);
+})();
+</script>
+
+<div class="bh-sheet" id="bhClassSheet" role="dialog" aria-modal="true" aria-label="My Classes" aria-hidden="true">
+  <div class="bh-sbox">
+    <div class="bh-grab"></div>
+    <div class="bh-shead">
+      <button type="button" class="bk" id="bhSheetBack" aria-label="Back">←</button>
+      <b id="bhSheetTitle">Choose your class</b>
+      <button type="button" id="bhSheetClose" aria-label="Close">✕</button>
+    </div>
+    <div class="bh-opts">
+      <button type="button" class="bh-opt bh-v" data-puc="PUC-1"><span class="ic">🌱</span><span><b>I PUC Biology</b><small class="bh-optsub">19 chapters</small></span><span class="ar">›</span></button>
+      <button type="button" class="bh-opt bh-pk" data-puc="PUC-2"><span class="ic">🧬</span><span><b>II PUC Biology</b><small class="bh-optsub">13 chapters</small></span><span class="ar">›</span></button>
+    </div>
+    <div class="bh-chs" id="bhChList"></div>
+  </div>
+</div>
+<script>
+(function(){
+  var sh=document.getElementById('bhClassSheet'), list=document.getElementById('bhChList'), title=document.getElementById('bhSheetTitle');
+  function chs(puc){ return (typeof CHAPTERS!=='undefined'?CHAPTERS:[]).filter(function(c){return c.puc===puc;}); }
+  function started(c){ try{ return !!(c.progressKey && readProgress(c.progressKey)); }catch(e){ return false; } }
+  function esc(t){ var d=document.createElement('div'); d.textContent=t==null?'':String(t); return d.innerHTML; }
+  function home(){ sh.classList.remove('list'); title.textContent='Choose your class';
+    sh.querySelectorAll('.bh-opt').forEach(function(o){ var a=chs(o.getAttribute('data-puc')); var live=a.filter(function(c){return c.live;}).length;
+      o.querySelector('.bh-optsub').textContent=a.length+' chapters · '+live+' live · '+a.filter(started).length+' started'; }); }
+  function open(){ home(); sh.classList.add('open'); sh.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+  function close(){ sh.classList.remove('open'); sh.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+  function show(puc){
+    list.innerHTML='';
+    chs(puc).forEach(function(c){
+      var a=document.createElement('a'); a.className='bh-ch'+(c.live?'':' soon');
+      if(c.live) a.href=c.href; else a.setAttribute('aria-disabled','true');
+      a.innerHTML='<span class="e">'+esc(c.icon||'📘')+'</span><span class="t"><small>'+esc(c.num)+'</small><b>'+esc(c.title)+'</b></span><span class="st">'+(c.live?(started(c)?'● Started':'Open ›'):'Soon')+'</span>';
+      list.appendChild(a);
+    });
+    title.textContent=(puc==='PUC-1'?'I PUC':'II PUC')+' Biology'; sh.classList.add('list'); list.scrollTop=0;
+  }
+  document.getElementById('bhMyClass').addEventListener('click',open);
+  document.getElementById('bhSheetClose').addEventListener('click',close);
+  document.getElementById('bhSheetBack').addEventListener('click',home);
+  sh.addEventListener('click',function(e){ if(e.target===sh) close(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&sh.classList.contains('open')) close(); });
+  sh.querySelectorAll('.bh-opt').forEach(function(o){ o.addEventListener('click',function(){ show(o.getAttribute('data-puc')); }); });
+  document.querySelectorAll('.bh-c[data-puc]').forEach(function(card){ card.addEventListener('click',function(e){ e.preventDefault(); open(); show(card.getAttribute('data-puc')); }); });
 })();
 </script>
 </body>
