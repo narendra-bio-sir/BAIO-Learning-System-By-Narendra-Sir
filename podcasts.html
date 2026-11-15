@@ -109,7 +109,9 @@ body.print #printArea{display:block}
 <script src="games/common.js?v=4"></script>
 <script src="podcasts/eps.js?v=2"></script>
 <script>
-const PRINT=/[?&]print=1/.test(location.search);
+/* Scripts are for Narendra Sir only: shown only on a device unlocked with the analytics master code. */
+const OWNER=(()=>{ try{ return localStorage.getItem('baio_analytics_unlock')==='true'; }catch(e){ return false; } })();
+const PRINT=OWNER&&/[?&]print=1/.test(location.search);
 if(!PRINT) GZ.nav();
 GZ.i18n({
  en:{eyebrow:'BAIO Learning System · Listen & learn', h1:'🎧 BAIO <span class="accent">Podcasts</span>', intro:'Five-minute Biology talks with Narendra Sir and Priya — exam traps, stories of scientists and Biology in everyday life. Listen with captions, then take the quiz.',
@@ -138,7 +140,7 @@ const mins=e=>Math.max(2,Math.round(words(e)/140));
 const doneKey='baio_pod_done'; const getDone=()=>{ try{ return JSON.parse(localStorage.getItem(doneKey)||'{}'); }catch(e){ return {}; } };
 
 /* ---------- shelf ---------- */
-function drawShelf(){ $('#allScripts').textContent=T('script')+' · PDF'; $('#allScripts').href=`podcasts/scripts/BAIO_Podcast_Scripts_${GZ.lang}.pdf`; let best={}; try{ best=JSON.parse(localStorage.getItem('baio_game_best')||'{}'); }catch(e){} const dn=getDone();
+function drawShelf(){ $('#allScripts').style.display=OWNER?'':'none'; $('#allScripts').textContent=T('script')+' · PDF'; $('#allScripts').href=`podcasts/scripts/BAIO_Podcast_Scripts_${GZ.lang}.pdf`; let best={}; try{ best=JSON.parse(localStorage.getItem('baio_game_best')||'{}'); }catch(e){} const dn=getDone();
   $('#shelf').innerHTML=SERIES.map(([s,c1,c2])=>`<div class="series"><h3>${T('s_'+s)}</h3><p class="d">${T('d_'+s)}</p><div class="eps">${PODS.filter(e=>e.s===s).map(e0=>{ const e=loc(e0);
     return `<button class="ep" data-id="${e.id}">${dn[e.id]?`<span class="ok">${best['pod-'+e.id]!=null?'🧠 '+best['pod-'+e.id]+'/3':'✓'}</span>`:''}<span class="art" style="background:linear-gradient(150deg,${c1},${c2})">${e.ic}</span><span><b>${esc(e.t)}</b><small>${esc(e.ch.replace(/^I+ PUC · /,''))} · ~${mins(e)} ${T('min')}</small></span></button>`; }).join('')}</div></div>`).join('');
   $('#shelf').querySelectorAll('.ep').forEach(b=>b.onclick=()=>openEp(b.dataset.id)); }
@@ -164,7 +166,7 @@ function openEp(id,startLine){ stop(); E0=PODS.find(e=>e.id===id); if(!E0) retur
     const who=s==='R'?E.r:T(s), av=s==='R'?E.ic:AV[s]; return `<div class="ln ${s}" data-i="${i}"><div class="av">${av}</div><div class="bx"><div class="who">${esc(who)}</div><div class="tx">${esc(x[1])}</div></div></div>`; }).join('');
   $('#tr').querySelectorAll('.ln').forEach(d=>d.onclick=()=>{ li=+d.dataset.i; if(playing) play(); else mark(); });
   $('#openCh').textContent=T('chapter'); $('#openCh').hidden=!E.page; $('#openCh').href=E.page||'#';
-  $('#shareEp').textContent=T('share'); $('#script').textContent=T('script'); $('#script').href=`podcasts.html?print=1&lang=${GZ.lang}#${E.id}`;
+  $('#shareEp').textContent=T('share'); $('#script').style.display=OWNER?'':'none'; $('#script').textContent=T('script'); $('#script').href=`podcasts.html?print=1&lang=${GZ.lang}#${E.id}`;
   $('#tAll').textContent=`~${mins(E)} ${T('min')}`; setupAudio(); drawQuiz(); $('#quiz').hidden=true; mark(); pickVoices(); window.scrollTo(0,0);
   try{ history.replaceState(null,'','#'+E.id); }catch(e){} }
 function mark(){ $('#tr').querySelectorAll('.ln').forEach(d=>{ const i=+d.dataset.i; d.classList.toggle('on',i===li); d.classList.toggle('done',i<li); });
