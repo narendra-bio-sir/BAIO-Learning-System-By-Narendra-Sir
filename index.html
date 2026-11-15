@@ -5,8 +5,9 @@
 <script src="baio-speak.js?v=3"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0B1B14">
+<meta name="theme-color" content="#120D2B">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="BAIO">
@@ -18,7 +19,7 @@
     if(t === 'light'){
       document.documentElement.setAttribute('data-theme','light');
       var m = document.querySelector('meta[name="theme-color"]');
-      if(m) m.setAttribute('content', '#F7F5EE');
+      if(m) m.setAttribute('content', '#F5F3FF');
     }
   }catch(e){}
 })();
@@ -527,12 +528,142 @@ footer{text-align:center; color:var(--ink-dim); font-size:11px; margin-top:40px;
   .catalog{grid-template-columns:1fr 1fr 1fr;}
   .qr-corner-widget{display:block;}
 }
+
+/* ============ NEW HOME (bh-*) ============ */
+:root{--navy:#120D2B;--navy2:#17113A;--panel:#1E1742;--panel2:#181236;}
+[data-theme="light"]{--navy:#F5F3FF;--navy2:#ECE8FB;--panel:#FFFFFF;--panel2:#F7F5FF;}
+:root{--bh-bg:#120D2B;--bh-ink:#F1EEFF;--bh-muted:#A9A3CF;--bh-card:#1E1742;--bh-line:rgba(124,77,255,.22);--bh-p1:#7C4DFF;--bh-p3:#B39BFF;--bh-sh:rgba(0,0,0,.35);}
+[data-theme="light"]{--bh-bg:#F5F3FF;--bh-ink:#1E1B4B;--bh-muted:#6B6890;--bh-card:#FFFFFF;--bh-line:rgba(91,46,224,.10);--bh-p1:#5B2EE0;--bh-p3:#A47BFF;--bh-sh:rgba(30,27,75,.08);}
+body{background:var(--bh-bg);}
+.hexbg{display:none;}
+.wrap > header{display:none;}
+.hero > h1, .hero > p{display:none;}
+.bh{font-family:'Poppins','Inter',-apple-system,sans-serif;color:var(--bh-ink);margin:0 -2px;}
+.bh a{color:inherit;text-decoration:none;}
+.bh-top{display:flex;align-items:center;justify-content:space-between;padding:18px 2px 4px;}
+.bh-hi small{display:block;font-size:12px;color:var(--bh-muted);font-weight:500;}
+.bh-hi b{font-size:19px;font-weight:700;}
+.bh-ibs{display:flex;gap:10px;}
+.bh-ib{width:42px;height:42px;border-radius:14px;background:var(--bh-card);display:grid;place-items:center;box-shadow:0 4px 14px var(--bh-sh);position:relative;font-size:18px;border:0;cursor:pointer;color:var(--bh-ink);}
+.bh-ib i{position:absolute;top:9px;right:10px;width:8px;height:8px;border-radius:50%;background:#FF4D7E;border:2px solid var(--bh-card);display:none;}
+.bh-ib.dot i{display:block;}
+.bh-hero{margin-top:12px;border-radius:26px;padding:22px 20px 20px;color:#fff;position:relative;overflow:hidden;min-height:200px;
+ background:radial-gradient(circle at 85% 30%,rgba(255,120,200,.55),transparent 45%),linear-gradient(135deg,#4A1FD1 0%,#6E3BF0 50%,#9B6BFF 100%);box-shadow:0 18px 36px rgba(91,46,224,.35);}
+.bh-hero .bh-tag{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.18);padding:4px 10px;border-radius:99px;font-family:inherit;}
+.bh-hero h1{font-family:inherit;font-size:27px;line-height:1.08;font-weight:800;margin:10px 0 0;max-width:58%;color:#fff;}
+.bh-hero p{font-size:12px;opacity:.88;margin:6px 0 0;max-width:55%;color:#fff;}
+.bh-go{display:inline-flex;align-items:center;gap:6px;margin-top:14px;background:#FFC93C;color:#3A2600 !important;font-weight:700;font-size:13px;padding:9px 16px;border-radius:99px;box-shadow:0 6px 14px rgba(0,0,0,.18);position:relative;z-index:1;}
+.bh-hero svg{position:absolute;right:-18px;top:18px;width:200px;height:200px;filter:drop-shadow(0 12px 18px rgba(40,0,90,.4));animation:bhFloat 6s ease-in-out infinite;}
+@keyframes bhFloat{50%{transform:translateY(-6px) rotate(4deg);}}
+@media (prefers-reduced-motion:reduce){.bh-hero svg{animation:none;}}
+.bh-sec{display:flex;justify-content:space-between;align-items:baseline;padding:22px 2px 10px;}
+.bh-sec h2{font-family:inherit;font-size:17px;font-weight:700;margin:0;color:var(--bh-ink);}
+.bh-sec a{font-size:12.5px;color:var(--bh-p3);font-weight:600;}
+[data-theme="light"] .bh-sec a{color:var(--bh-p1);}
+.bh-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.bh-tile{border-radius:22px;padding:16px 14px 14px;position:relative;overflow:hidden;min-height:132px;box-shadow:0 8px 20px var(--bh-sh);color:#1E1B4B !important;}
+.bh-tile .ic{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;font-size:28px;background:rgba(255,255,255,.75);}
+.bh-tile b{display:block;font-size:15.5px;font-weight:700;margin-top:12px;}
+.bh-tile span{display:block;font-size:11.5px;color:rgba(30,27,75,.68);margin-top:1px;}
+.bh-tile:after{content:'';position:absolute;right:-26px;bottom:-26px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.35);}
+.bh-y{background:linear-gradient(145deg,#FFE9A8,#FFD166);}.bh-pk{background:linear-gradient(145deg,#FFD6EC,#F7A8D8);}
+.bh-g{background:linear-gradient(145deg,#C9F2D9,#7FDCA6);}.bh-v{background:linear-gradient(145deg,#E3D9FF,#B9A3FF);}
+.bh-chips{display:flex;gap:10px;overflow-x:auto;padding:0 2px 6px;scrollbar-width:none;}
+.bh-chips::-webkit-scrollbar{display:none;}
+.bh-chip{flex:none;background:var(--bh-card);border-radius:18px;padding:12px;width:94px;text-align:center;box-shadow:0 4px 14px var(--bh-sh);}
+.bh-chip i{font-style:normal;display:grid;place-items:center;width:42px;height:42px;margin:0 auto;border-radius:14px;font-size:21px;}
+.bh-chip span{display:block;font-size:11px;font-weight:600;margin-top:7px;line-height:1.25;}
+.bh-daily{margin-top:18px;border-radius:22px;padding:16px 18px;display:flex;align-items:center;gap:14px;color:#fff !important;background:linear-gradient(120deg,#FF7A59,#FF4D7E);box-shadow:0 10px 24px rgba(255,77,126,.28);}
+.bh-daily b{font-size:15px;display:block;}.bh-daily small{font-size:11.5px;opacity:.92;}
+.bh-daily .pl{white-space:nowrap;flex:none;margin-left:auto;background:#fff;color:#FF4D7E;font-weight:700;font-size:12.5px;padding:8px 14px;border-radius:99px;}
+.bh-cls{display:flex;flex-direction:column;gap:12px;}
+.bh-c{background:var(--bh-card);border-radius:20px;padding:14px;display:flex;gap:14px;align-items:center;box-shadow:0 6px 18px var(--bh-sh);}
+.bh-c .th{width:60px;height:60px;border-radius:18px;display:grid;place-items:center;font-size:29px;flex:none;}
+.bh-c .tx{flex:1;min-width:0;}.bh-c .tx b{font-size:15px;font-weight:700;display:block;}.bh-c .tx small{font-size:11.5px;color:var(--bh-muted);}
+.bh-bar{height:7px;border-radius:9px;background:rgba(124,77,255,.15);margin-top:8px;overflow:hidden;}.bh-bar i{display:block;height:100%;width:0;border-radius:9px;background:linear-gradient(90deg,var(--bh-p1),var(--bh-p3));transition:width .6s ease;}
+.bh-c .pc{font-size:12px;font-weight:700;color:var(--bh-p3);white-space:nowrap;}
+[data-theme="light"] .bh-c .pc{color:var(--bh-p1);}
+.bh-more{margin:22px 2px 6px;font-size:12px;color:var(--bh-muted);text-align:center;}
+.bh-nav{position:fixed;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));height:66px;max-width:520px;margin:0 auto;background:var(--bh-card);border-radius:24px;display:flex;align-items:center;justify-content:space-around;box-shadow:0 10px 30px rgba(0,0,0,.22);z-index:600;font-family:'Poppins','Inter',sans-serif;}
+.bh-nav a{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;font-weight:600;color:var(--bh-muted);width:58px;text-decoration:none;}
+.bh-nav a.on{color:var(--bh-p3);}[data-theme="light"] .bh-nav a.on{color:var(--bh-p1);}
+.bh-nav a em{font-style:normal;font-size:20px;}
+.bh-nav .bh-fab{width:58px;height:58px;border-radius:50%;margin-top:-34px;background:linear-gradient(135deg,#5B2EE0,#A47BFF);display:grid;place-items:center;font-size:27px;box-shadow:0 10px 22px rgba(91,46,224,.45);border:5px solid var(--bh-bg);}
+@media(min-width:760px){.bh-grid{grid-template-columns:repeat(4,1fr);}.bh-hero{min-height:230px;padding:30px 32px;}.bh-hero h1{font-size:36px;}.bh-hero svg{width:250px;height:250px;right:20px;top:-10px;}.bh-cls{display:grid;grid-template-columns:repeat(3,1fr);}}
+body{padding-bottom:96px;}
+.faq-chat-btn{bottom:94px;}
+.faq-chat-panel{bottom:140px;}
+.qr-corner-widget{bottom:94px;}
 </style>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_CLOUDFLARE_TOKEN_HERE"}'></script>
 </head>
 <body>
 <div class="hexbg"></div>
 <div class="wrap">
+
+  <section class="bh" id="bhHome" aria-label="Home">
+    <div class="bh-top">
+      <div class="bh-hi"><small id="bhGreet">Welcome 👋</small><b id="bhName">Hi, Future Doctor</b></div>
+      <div class="bh-ibs">
+        <button type="button" class="bh-ib" id="bhTheme" aria-label="Switch light or dark theme">🌗</button>
+        <a class="bh-ib" id="bhBell" href="announcements.html" aria-label="Announcements">🔔<i></i></a>
+      </div>
+    </div>
+    <div class="bh-hero">
+      <span class="bh-tag">PU Biology · NEET · KCET</span>
+      <h1>BAIO Learning System</h1>
+      <p>Biology All In One by Narendra Sir</p>
+      <a class="bh-go" id="bhGo" href="#catalogSections">Continue learning →</a>
+      <svg viewBox="0 0 200 200" aria-hidden="true">
+        <defs>
+          <radialGradient id="bhCy" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#FFD3EE"/><stop offset=".55" stop-color="#F58BD0"/><stop offset="1" stop-color="#B23CA8"/></radialGradient>
+          <radialGradient id="bhNu" cx="35%" cy="30%" r="70%"><stop offset="0" stop-color="#C9B6FF"/><stop offset=".6" stop-color="#7B4DFF"/><stop offset="1" stop-color="#3E1A9E"/></radialGradient>
+          <radialGradient id="bhMi" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#FFE7A3"/><stop offset="1" stop-color="#F29A2E"/></radialGradient>
+          <radialGradient id="bhVe" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#B8FFE0"/><stop offset="1" stop-color="#21B47A"/></radialGradient>
+        </defs>
+        <circle cx="100" cy="100" r="78" fill="url(#bhCy)"/>
+        <circle cx="100" cy="100" r="78" fill="none" stroke="#FFE3F4" stroke-opacity=".7" stroke-width="5"/>
+        <path d="M42 120c20-8 30 10 52 2s28-22 56-8" fill="none" stroke="#E86BBF" stroke-width="4" stroke-linecap="round" opacity=".8"/>
+        <path d="M50 78c18 6 22-10 40-4" fill="none" stroke="#E86BBF" stroke-width="4" stroke-linecap="round" opacity=".7"/>
+        <circle cx="96" cy="94" r="30" fill="url(#bhNu)"/><circle cx="104" cy="88" r="9" fill="#2A0F78" opacity=".55"/>
+        <ellipse cx="146" cy="120" rx="16" ry="9" transform="rotate(-30 146 120)" fill="url(#bhMi)"/>
+        <ellipse cx="62" cy="140" rx="14" ry="8" transform="rotate(25 62 140)" fill="url(#bhMi)"/>
+        <circle cx="140" cy="70" r="9" fill="url(#bhVe)"/><circle cx="62" cy="58" r="6" fill="url(#bhVe)"/><circle cx="118" cy="148" r="7" fill="url(#bhVe)"/>
+        <circle cx="72" cy="104" r="3" fill="#fff" opacity=".8"/><circle cx="130" cy="98" r="3" fill="#fff" opacity=".8"/><circle cx="88" cy="140" r="3" fill="#fff" opacity=".8"/>
+        <ellipse cx="74" cy="60" rx="22" ry="10" transform="rotate(-30 74 60)" fill="#fff" opacity=".35"/>
+      </svg>
+    </div>
+
+    <div class="bh-sec"><h2>Study</h2><a href="#bhTools">See all</a></div>
+    <div class="bh-grid">
+      <a class="bh-tile bh-y" href="notes.html"><div class="ic">📒</div><b>Notes</b><span>Illustrated, chapter-wise</span></a>
+      <a class="bh-tile bh-pk" href="podcasts.html"><div class="ic">🎧</div><b>Podcasts</b><span>Listen &amp; revise</span></a>
+      <a class="bh-tile bh-g" href="flashcards.html"><div class="ic">🧠</div><b>Flash Cards</b><span>Quick recall</span></a>
+      <a class="bh-tile bh-v" href="exam-corner.html"><div class="ic">📝</div><b>Mock Tests</b><span>NEET · KCET · Board</span></a>
+    </div>
+
+    <div class="bh-sec"><h2>More tools</h2><a href="#bhTools">All 30+</a></div>
+    <div class="bh-chips">
+      <a class="bh-chip" href="assistant.html"><i style="background:#EDE6FF">🦉</i><span>AI Assistant</span></a>
+      <a class="bh-chip" href="diagram-mcq.html"><i style="background:#E3F7EE">🔬</i><span>Diagram MCQs</span></a>
+      <a class="bh-chip" href="important-cards.html"><i style="background:#FFF1D6">🃏</i><span>Quick Cards</span></a>
+      <a class="bh-chip" href="reels.html"><i style="background:#FFE3EF">🎬</i><span>Revision Reels</span></a>
+      <a class="bh-chip" href="ncert-library.html#bio-exam-papers"><i style="background:#E8F0FF">🧾</i><span>Model Papers</span></a>
+      <a class="bh-chip" href="tricks.html"><i style="background:#FFF4D6">✍️</i><span>Short Notes</span></a>
+      <a class="bh-chip" href="games.html"><i style="background:#E0F0FF">🧩</i><span>Game Zone</span></a>
+      <a class="bh-chip" href="careers.html"><i style="background:#E6F7F0">🎓</i><span>Career Guidance</span></a>
+    </div>
+
+    <a class="bh-daily" href="zone.html#daily"><div style="font-size:30px">🔥</div><div><b>Daily Bio Challenge</b><small>5 questions · 3 minutes</small></div><span class="pl">Play ▶</span></a>
+
+    <div class="bh-sec"><h2>My Classes</h2><a href="#catalogSections">View all</a></div>
+    <div class="bh-cls">
+      <a class="bh-c" href="#catalogSections" data-puc="PUC-1"><div class="th" style="background:#EDE6FF">🌱</div><div class="tx"><b>I PUC Biology</b><small class="bh-sub">19 chapters · Notes, MCQs, Podcasts</small><div class="bh-bar"><i></i></div></div><span class="pc">0%</span></a>
+      <a class="bh-c" href="#catalogSections" data-puc="PUC-2"><div class="th" style="background:#FFE3EF">🧬</div><div class="tx"><b>II PUC Biology</b><small class="bh-sub">13 chapters · Board, NEET &amp; KCET</small><div class="bh-bar"><i></i></div></div><span class="pc">0%</span></a>
+      <a class="bh-c" href="pcm.html"><div class="th" style="background:#E0F0FF">⚛️</div><div class="tx"><b>PCM</b><small>Physics, Chemistry &amp; Maths</small></div><span class="pc">Open →</span></a>
+    </div>
+    <div class="bh-more">Scroll down for your daily plan, announcements and every tool ↓</div>
+  </section>
 
   <header>
     <div class="eyebrow">PU Biology &middot; NEET / KCET Aligned</div>
@@ -2537,8 +2668,8 @@ if(stripRows){
   var btn = document.getElementById('themeToggleBtn');
   function applyTheme(t){
     var m = document.querySelector('meta[name="theme-color"]');
-    if(t === 'light'){ document.documentElement.setAttribute('data-theme','light'); if(btn) btn.innerHTML = '&#9728;\uFE0F'; if(m) m.setAttribute('content', '#F7F5EE'); }
-    else { document.documentElement.removeAttribute('data-theme'); if(btn) btn.innerHTML = '&#127769;'; if(m) m.setAttribute('content', '#0B1B14'); }
+    if(t === 'light'){ document.documentElement.setAttribute('data-theme','light'); if(btn) btn.innerHTML = '&#9728;\uFE0F'; if(m) m.setAttribute('content', '#F5F3FF'); }
+    else { document.documentElement.removeAttribute('data-theme'); if(btn) btn.innerHTML = '&#127769;'; if(m) m.setAttribute('content', '#120D2B'); }
   }
   var saved = null;
   try{ saved = localStorage.getItem(THEME_KEY); }catch(e){}
@@ -3155,6 +3286,48 @@ window.indexHardRefresh = indexHardRefresh;
   var T='🎯 Prepare for NEET in 3 simple steps — Learn · Practise · Revise, every day. Watch this 4-min guide to the BAIO app by Narendra Sir 👇';
   a.addEventListener('click',function(e){ if(navigator.share){ e.preventDefault(); navigator.share({title:'Prepare for NEET in 3 simple steps',text:T,url:U}).catch(function(){}); } });
 }catch(e){}})();
+</script>
+
+<nav class="bh-nav" aria-label="Main">
+  <a class="on" href="#" id="bhNavHome"><em>🏠</em>Home</a>
+  <a href="#catalogSections"><em>📚</em>Chapters</a>
+  <a class="bh-fab" href="assistant.html" aria-label="BAIO AI Assistant">🦉</a>
+  <a href="exam-corner.html"><em>📝</em>Tests</a>
+  <a href="#bhTools"><em>☰</em>More</a>
+</nav>
+<script>
+(function(){
+  try{
+    var h=new Date().getHours();
+    document.getElementById('bhGreet').textContent=(h<12?'Good morning':h<17?'Good afternoon':'Good evening')+' 👋';
+    var pr=null; try{pr=JSON.parse(localStorage.getItem('baio_student')||'null');}catch(e){}
+    if(pr&&pr.name){document.getElementById('bhName').textContent='Hi, '+String(pr.name).trim().split(/\s+/)[0];}
+  }catch(e){}
+  var qa=document.querySelector('.quick-actions-row'); if(qa&&!qa.id) qa.id='bhTools';
+  document.getElementById('bhTheme').addEventListener('click',function(){var b=document.getElementById('themeToggleBtn'); if(b) b.click();});
+  document.getElementById('bhNavHome').addEventListener('click',function(e){e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'});});
+  function sync(){
+    try{
+      var ab=document.getElementById('announcementBanner');
+      document.getElementById('bhBell').classList.toggle('dot', !!(ab && ab.style.display!=='none'));
+      var cw=document.getElementById('continueWidget'), cb=document.getElementById('cwBtn');
+      if(cw&&cw.classList.contains('show')&&cb&&cb.getAttribute('href')) document.getElementById('bhGo').setAttribute('href',cb.getAttribute('href'));
+      if(typeof CHAPTERS!=='undefined'){
+        document.querySelectorAll('.bh-c[data-puc]').forEach(function(card){
+          var puc=card.getAttribute('data-puc'), all=CHAPTERS.filter(function(c){return c.puc===puc;});
+          var started=all.filter(function(c){try{return c.progressKey&&readProgress(c.progressKey);}catch(e){return false;}}).length;
+          var live=all.filter(function(c){return c.live;}).length;
+          var pct=all.length?Math.round(started*100/all.length):0;
+          card.querySelector('.bh-bar i').style.width=pct+'%';
+          card.querySelector('.pc').textContent=pct+'%';
+          card.querySelector('.bh-sub').textContent=all.length+' chapters · '+live+' live · '+started+' started';
+        });
+      }
+    }catch(e){}
+  }
+  if(document.readyState==='complete') sync(); else window.addEventListener('load',sync);
+  setTimeout(sync,1500);
+})();
 </script>
 </body>
 </html>
