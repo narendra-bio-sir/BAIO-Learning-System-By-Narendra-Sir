@@ -3395,6 +3395,7 @@ window.indexHardRefresh = indexHardRefresh;
     <div class="bh-opts">
       <button type="button" class="bh-opt bh-v" data-puc="PUC-1"><span class="ic">🌱</span><span><b>I PUC Biology</b><small class="bh-optsub">19 chapters</small></span><span class="ar">›</span></button>
       <button type="button" class="bh-opt bh-pk" data-puc="PUC-2"><span class="ic">🧬</span><span><b>II PUC Biology</b><small class="bh-optsub">13 chapters</small></span><span class="ar">›</span></button>
+      <a class="bh-opt bh-g" href="rapid-revision.html" style="text-decoration:none"><span class="ic">⚡</span><span><b>II PUC Rapid Revision</b><small>SMART &amp; CHAMPIONS · slides, handouts, test blueprints</small></span><span class="ar">›</span></a>
     </div>
     <div class="bh-chs" id="bhChList"></div>
   </div>
@@ -3406,7 +3407,7 @@ window.indexHardRefresh = indexHardRefresh;
   function started(c){ try{ return !!(c.progressKey && readProgress(c.progressKey)); }catch(e){ return false; } }
   function esc(t){ var d=document.createElement('div'); d.textContent=t==null?'':String(t); return d.innerHTML; }
   function home(){ sh.classList.remove('list'); title.textContent='Choose your class';
-    sh.querySelectorAll('.bh-opt').forEach(function(o){ var a=chs(o.getAttribute('data-puc')); var live=a.filter(function(c){return c.live;}).length;
+    sh.querySelectorAll('.bh-opt[data-puc]').forEach(function(o){ var a=chs(o.getAttribute('data-puc')); var live=a.filter(function(c){return c.live;}).length;
       o.querySelector('.bh-optsub').textContent=a.length+' chapters · '+live+' live · '+a.filter(started).length+' started'; }); }
   function open(){ home(); sh.classList.add('open'); sh.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
   function close(){ sh.classList.remove('open'); sh.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
@@ -3425,7 +3426,7 @@ window.indexHardRefresh = indexHardRefresh;
   document.getElementById('bhSheetBack').addEventListener('click',home);
   sh.addEventListener('click',function(e){ if(e.target===sh) close(); });
   document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&sh.classList.contains('open')) close(); });
-  sh.querySelectorAll('.bh-opt').forEach(function(o){ o.addEventListener('click',function(){ show(o.getAttribute('data-puc')); }); });
+  sh.querySelectorAll('.bh-opt[data-puc]').forEach(function(o){ o.addEventListener('click',function(){ show(o.getAttribute('data-puc')); }); });
   document.querySelectorAll('.bh-c[data-puc]').forEach(function(card){ card.addEventListener('click',function(e){ e.preventDefault(); open(); show(card.getAttribute('data-puc')); }); });
 })();
 </script>
