@@ -434,14 +434,17 @@ const BIO_EXAM_PAPERS = [
   {cls:'I', title:'Mid-Term Exam &middot; blueprint &amp; model paper', sub:'Chapters 1&ndash;10 &middot; 105 marks', file:'biology-i-puc-midterm-blueprint-mqp.pdf'},
   {cls:'I', title:'II Test &middot; blueprint &amp; model paper', sub:'Chapters 11&ndash;17 &middot; 55 marks', file:'biology-i-puc-second-test-blueprint-mqp.pdf'},
   {cls:'I', title:'Annual Exam &middot; blueprint &amp; model paper', sub:'All 19 chapters &middot; 105 marks', file:'biology-i-puc-annual-blueprint-mqp.pdf'},
+  {cls:'I', title:'Slip Test &middot; Cell: The Unit of Life + Cell Cycle and Cell Division', sub:'Ch 8 (except 8.4 Prokaryotic Cells) &amp; Ch 10 &middot; 20 marks &middot; 45 min &middot; questions from the official Question Bank', file:'biology-i-puc-slip-test-cell-and-cell-cycle-20m.pdf', key:'biology-i-puc-slip-test-cell-and-cell-cycle-20m-answer-key.pdf'},
   ...[1, 2, 3, 4, 5].map(n => ({cls:'II', title:`KSEAB Model Question Paper ${n}`, sub:'Annual exam &middot; 70 marks &middot; 3 hours', file:`biology-ii-puc-annual-mqp-${n}.pdf`})),
   {cls:'II', title:'Revised Question Bank 2025&ndash;26', sub:'Official, all 13 chapters &middot; 154 pages', file:'biology-ii-puc-question-bank-2025-26.pdf'},
   {cls:'II', title:'Practical Exam &middot; Scheme of Evaluation', sub:'2025&ndash;26 &middot; 30 marks &middot; 2 hours', file:'biology-ii-puc-practical-scheme.pdf'},
 ];
+/* Answer keys (teacher's copies) are shown only on Narendra Sir's device, unlocked with the analytics master code. */
+const BAIO_OWNER = (()=>{ try{ return localStorage.getItem('baio_analytics_unlock')==='true'; }catch(e){ return false; } })();
 document.getElementById('bioExamPaperList').innerHTML = BIO_EXAM_PAPERS.map(it => `<div class="ch-row">
   <div class="ch-num">${it.cls}</div>
   <div class="ch-body"><div class="ch-title">${it.cls} PUC &middot; ${it.title}</div><div class="ch-sub" style="font-size:11px;color:var(--ink-dim);margin-top:2px;">${it.sub}</div></div>
-  <div class="ch-links"><a class="ch-link outline" href="exam-corner/pu-board-2026-27/${it.file}" target="_blank" rel="noopener">📄 Open PDF</a></div>
+  <div class="ch-links"><a class="ch-link outline" href="exam-corner/pu-board-2026-27/${it.file}" target="_blank" rel="noopener">📄 Open PDF</a>${it.key && BAIO_OWNER ? `<a class="ch-link outline" href="exam-corner/pu-board-2026-27/${it.key}" target="_blank" rel="noopener">🔑 Answer key</a>` : ''}</div>
 </div>`).join('');
 renderPuMqpList('puBoardMqpList', PU_BOARD_MQP, '30 marks, 60 mins');
 renderPuMqpList('puBoardLbaCalendarList', PU_BOARD_LBA_CALENDAR, 'all 10 Unit Tests');
