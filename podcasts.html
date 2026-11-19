@@ -88,7 +88,6 @@ body.print #printArea{display:block}
     <div class="eyebrow" data-i18n="eyebrow">BAIO Learning System · Listen &amp; learn</div>
     <h1 data-i18n-html="h1">🎧 BAIO <span class="accent">Podcasts</span></h1>
     <p data-i18n="intro">Five-minute Biology talks with Narendra Sir and Priya — exam traps, stories of scientists and Biology in everyday life. Listen with captions, then take the quiz.</p>
-    <div class="acts"><a class="tbtn" id="allScripts" download></a></div>
   </section>
   <section id="shelf"></section>
   <section id="player" hidden>
@@ -140,7 +139,7 @@ const mins=e=>Math.max(2,Math.round(words(e)/140));
 const doneKey='baio_pod_done'; const getDone=()=>{ try{ return JSON.parse(localStorage.getItem(doneKey)||'{}'); }catch(e){ return {}; } };
 
 /* ---------- shelf ---------- */
-function drawShelf(){ $('#allScripts').style.display=OWNER?'':'none'; $('#allScripts').textContent=T('script')+' · PDF'; $('#allScripts').href=`podcasts/scripts/BAIO_Podcast_Scripts_${GZ.lang}.pdf`; let best={}; try{ best=JSON.parse(localStorage.getItem('baio_game_best')||'{}'); }catch(e){} const dn=getDone();
+function drawShelf(){ let best={}; try{ best=JSON.parse(localStorage.getItem('baio_game_best')||'{}'); }catch(e){} const dn=getDone();
   $('#shelf').innerHTML=SERIES.map(([s,c1,c2])=>`<div class="series"><h3>${T('s_'+s)}</h3><p class="d">${T('d_'+s)}</p><div class="eps">${PODS.filter(e=>e.s===s).map(e0=>{ const e=loc(e0);
     return `<button class="ep" data-id="${e.id}">${dn[e.id]?`<span class="ok">${best['pod-'+e.id]!=null?'🧠 '+best['pod-'+e.id]+'/3':'✓'}</span>`:''}<span class="art" style="background:linear-gradient(150deg,${c1},${c2})">${e.ic}</span><span><b>${esc(e.t)}</b><small>${esc(e.ch.replace(/^I+ PUC · /,''))} · ~${mins(e)} ${T('min')}</small></span></button>`; }).join('')}</div></div>`).join('');
   $('#shelf').querySelectorAll('.ep').forEach(b=>b.onclick=()=>openEp(b.dataset.id)); }
