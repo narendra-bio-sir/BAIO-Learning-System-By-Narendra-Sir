@@ -3144,7 +3144,7 @@ window.indexHardRefresh = indexHardRefresh;
 <script src="assistant/home-tour.js?v=1"></script>
 <script src="zone/content.js?v=1"></script>
 <script src="zone/fact-card.js?v=5" defer></script>
-<script src="zone/countdown-card.js?v=2" defer></script>
+<script src="zone/countdown-card.js?v=3" defer></script>
 <script>
 /* Daily Bio Zone on the home screen: streak, Fact of the Day, exam countdown + today's plan,
    7 pm reminder opt-in, and invite links (?ref=CODE). */
@@ -3162,14 +3162,15 @@ window.indexHardRefresh = indexHardRefresh;
     document.getElementById('hzFact').innerHTML=f.t;
     document.getElementById('hzFShare').onclick=function(){ if(window.baioFactShare) baioFactShare(f); }; }
   /* exam countdown + today's plan */
-  var cls=Z.cls||0, DEF={2:'2027-03-15'};
+  var cls=Z.cls||0, DEF={1:'2027-02-22', 2:'2027-03-15'}; /* Biology papers: I PUC annual exam (Mon 22 Feb 2027), II PUC board Exam 1 (Mon 15 Mar 2027) */
   /* when a student's own exam date happens to match a known upcoming test, show that
      test's actual name instead of the generic "Biology exam" label — e.g. setting
      12 Nov 2026 (the I PUC KCET cumulative test date) reads as "KCET Mock Test", not
      a misleading "Biology exam". Any other date still works as a plain countdown. */
   var KNOWN_DATES = {
     1: {
-      '2026-11-12': {en:'I PUC KCET Biology Mock Test', kn:'I PUC KCET ಜೀವಶಾಸ್ತ್ರ ಮಾಕ್ ಟೆಸ್ಟ್', hi:'I PUC KCET बायोलॉजी मॉक टेस्ट'}
+      '2026-11-12': {en:'I PUC KCET Biology Mock Test', kn:'I PUC KCET ಜೀವಶಾಸ್ತ್ರ ಮಾಕ್ ಟೆಸ್ಟ್', hi:'I PUC KCET बायोलॉजी मॉक टेस्ट'},
+      '2027-02-22': {en:'I PUC Biology annual exam', kn:'ಪ್ರಥಮ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ ವಾರ್ಷಿಕ ಪರೀಕ್ಷೆ', hi:'प्रथम पीयूसी जीव विज्ञान वार्षिक परीक्षा'}
     }
   };
   /* exam date is saved per class (I PUC / II PUC); move the old single date to the current class */
@@ -3203,11 +3204,12 @@ window.indexHardRefresh = indexHardRefresh;
     var focus=weak&&weak.a<0.7?weak.c:list[Math.floor(Date.now()/864e5)%list.length];
     var knownExam = date && KNOWN_DATES[cls] && KNOWN_DATES[cls][date];
     var examLabelText = knownExam ? knownExam.en : (cls===1?'I PUC':'II PUC')+' Biology exam';
-    window.__hzCd={cls:cls, days:daysLeft, chap:focus[2], provisional:cls===2&&!myDate(), examName:knownExam||null};
+    window.__hzCd={cls:cls, days:daysLeft, chap:focus[2], provisional:!myDate()&&!!DEF[cls], examName:knownExam||null};
     plan.innerHTML='<div class="hz-cls" role="group" aria-label="Your class"><button type="button" data-c="1"'+(cls===1?' class="on" aria-pressed="true"':' aria-pressed="false"')+'>I PUC</button><button type="button" data-c="2"'+(cls===2?' class="on" aria-pressed="true"':' aria-pressed="false"')+'>II PUC</button></div>'+(date?'<b>'+examLabelText+'</b>'+(cls===2&&!myDate()?' (15 Mar 2027, provisional)':'')+'<br>':'<b>Set your exam date</b> with ✏️<br>')+
       'Today: '+(weak&&weak.a<0.7?'revise your weak chapter ':'revise ')+'<a href="'+focus[1]+'">'+focus[2]+'</a> → <a href="zone.html#daily">Daily 5</a> → <a href="important-cards.html#'+focus[0]+'">Quick card</a>';
     if(cls===1 && Date.now()<Date.parse('2026-10-30T00:00:00+05:30')) plan.innerHTML+='<br>📝 <a href="midterm-practice.html"><b>Mid-term practice paper</b></a> (Biology on 29 Oct)';
     if(cls===1 && Date.now()<Date.parse('2026-11-13T00:00:00+05:30')) plan.innerHTML+='<br>📝 <a href="kcet-mock-12nov.html"><b>KCET mock test</b></a> (60 Q · 60 min, test on 12 Nov)';
+    if(cls===1) plan.innerHTML+='<br>🗓️ <a href="exam-corner.html#i-puc-timetable"><b>Your I PUC annual exam timetable</b></a> — 10 – 22 Feb 2027, Biology on Mon 22 Feb';
     if(cls===2) plan.innerHTML+='<br>🗓️ <a href="exam-corner.html#my-exam-planner"><b>Your II PUC exam planner</b></a> — a study plan to your last paper<br>🎯 <a href="exam-scorer.html"><b>Biology Exam Scorer</b></a> — sure marks across all 13 chapters';
     plan.querySelectorAll('.hz-cls [data-c]').forEach(function(b){ b.onclick=function(){ if(+b.dataset.c!==cls) setCls(+b.dataset.c); }; });
   }

@@ -3,7 +3,7 @@
    Status 1080x1920) and a language (English / ಕನ್ನಡ / हिंदी). The picture is drawn live with THEIR
    days left, class and today's chapter, and shared together with a ready caption and the app link
    (Web Share with files), or saved / sent as text on WhatsApp / caption copied.
-   s = {cls: 1|2|0, days: number|null, chap: 'Biomolecules', provisional: bool} */
+   s = {cls: 1|2|0, days: number|null, chap: 'Biomolecules', provisional: bool (true = the class's official default date, shown under the count)} */
 (function(){
   var APP_URL = 'https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/';
   var LOGO_SRC = 'zone/baio-logo.png?v=2';
@@ -17,7 +17,7 @@
   var TX = {
     en: { label:'English', tag:'NEW ON HOME', h1:['Your exam has a date.','Now you have a plan.'], h1b:['Boards are coming.','Start the countdown today.'],
       cd:'EXAM COUNTDOWN', set:'Set your date', left:'days left', noDays:'Set date',
-      exam:['Biology exam','I PUC Biology exam','II PUC Biology exam'], prov:'15 Mar 2027 (provisional)',
+      exam:['Biology exam','I PUC Biology exam','II PUC Biology exam'], prov:['','Mon 22 Feb 2027 · official timetable','Mon 15 Mar 2027 · official timetable'],
       plan:['Today: revise ',' → Daily 5 → Quick card'],
       feats:[['Picks your weak chapter',' from your Daily 5 scores'],['7 pm reminder',' so you never miss a day'],['Daily 5 + Quick card',': 3 minutes a day'],['Chapter tests',', Guess It & Memes']],
       free:'Free on the BAIO app', how:'Open the app → Home → Exam Countdown', sir:'Narendra Sir', role:'Biology Lecturer · Founder & CEO, BAIO',
@@ -27,7 +27,7 @@
       ui:{title:'📤 Share your exam countdown', post:'Post', status:'Status', caption:'Caption (you can edit it)', share:'Share picture + caption', save:'⬇ Save picture', copy:'📋 Copy caption', wa:'💬 WhatsApp text', copied:'✅ Caption copied', making:'Making your picture…', light:'Light', dark:'Dark'} },
     kn: { label:'ಕನ್ನಡ', tag:'ಹೊಸತು', h1:['ಪರೀಕ್ಷೆಗೆ ದಿನಾಂಕ ಇದೆ.','ಈಗ ಯೋಜನೆಯೂ ಇದೆ.'], h1b:['ಬೋರ್ಡ್ ಪರೀಕ್ಷೆ ಬರುತ್ತಿದೆ.','ಇಂದೇ ಕೌಂಟ್‌ಡೌನ್ ಆರಂಭಿಸಿ.'],
       cd:'ಪರೀಕ್ಷೆ ಕೌಂಟ್‌ಡೌನ್', set:'ದಿನಾಂಕ ಆರಿಸಿ', left:'ದಿನ ಬಾಕಿ', noDays:'ದಿನಾಂಕ',
-      exam:['ಜೀವಶಾಸ್ತ್ರ ಪರೀಕ್ಷೆ','ಪ್ರಥಮ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ ಪರೀಕ್ಷೆ','ದ್ವಿತೀಯ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ ಪರೀಕ್ಷೆ'], prov:'15 ಮಾರ್ಚ್ 2027 (ತಾತ್ಕಾಲಿಕ)',
+      exam:['ಜೀವಶಾಸ್ತ್ರ ಪರೀಕ್ಷೆ','ಪ್ರಥಮ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ ಪರೀಕ್ಷೆ','ದ್ವಿತೀಯ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ ಪರೀಕ್ಷೆ'], prov:['','ಸೋಮ 22 ಫೆಬ್ರ 2027 · ಅಧಿಕೃತ ವೇಳಾಪಟ್ಟಿ','ಸೋಮ 15 ಮಾರ್ಚ್ 2027 · ಅಧಿಕೃತ ವೇಳಾಪಟ್ಟಿ'],
       plan:['ಇಂದು: ',' ಪುನರಾವರ್ತಿಸಿ → Daily 5 → Quick card'],
       feats:[['ದುರ್ಬಲ ಅಧ್ಯಾಯ','ವನ್ನು ನಿಮ್ಮ Daily 5 ಅಂಕಗಳಿಂದ ಆರಿಸುತ್ತದೆ'],['ಸಂಜೆ 7 ಗಂಟೆಗೆ ನೆನಪೋಲೆ',': ಒಂದು ದಿನವೂ ತಪ್ಪದು'],['Daily 5 + Quick card',': ದಿನಕ್ಕೆ ಕೇವಲ 3 ನಿಮಿಷ'],['ಅಧ್ಯಾಯ ಪರೀಕ್ಷೆಗಳು',', Guess It ಮತ್ತು Memes']],
       free:'BAIO ಆ್ಯಪ್‌ನಲ್ಲಿ ಉಚಿತ', how:'ಆ್ಯಪ್ ತೆರೆಯಿರಿ → Home → Exam Countdown', sir:'ನರೇಂದ್ರ ಸರ್', role:'ಜೀವಶಾಸ್ತ್ರ ಉಪನ್ಯಾಸಕರು · Founder & CEO, BAIO',
@@ -37,7 +37,7 @@
       ui:{title:'📤 ನಿಮ್ಮ ಪರೀಕ್ಷೆ ಕೌಂಟ್‌ಡೌನ್ ಹಂಚಿ', post:'ಪೋಸ್ಟ್', status:'ಸ್ಟೇಟಸ್', caption:'ಶೀರ್ಷಿಕೆ (ಬದಲಾಯಿಸಬಹುದು)', share:'ಚಿತ್ರ + ಶೀರ್ಷಿಕೆ ಹಂಚಿ', save:'⬇ ಚಿತ್ರ ಉಳಿಸಿ', copy:'📋 ಶೀರ್ಷಿಕೆ ಕಾಪಿ', wa:'💬 WhatsApp ಸಂದೇಶ', copied:'✅ ಕಾಪಿ ಆಯಿತು', making:'ಚಿತ್ರ ತಯಾರಾಗುತ್ತಿದೆ…', light:'ಬೆಳಕು', dark:'ಗಾಢ'} },
     hi: { label:'हिंदी', tag:'नया', h1:['परीक्षा की तारीख़ तय है।','अब प्लान भी तैयार है।'], h1b:['बोर्ड परीक्षा आ रही है।','आज से काउंटडाउन शुरू करो।'],
       cd:'परीक्षा काउंटडाउन', set:'अपनी तारीख़ चुनो', left:'दिन बाकी', noDays:'तारीख़',
-      exam:['बायोलॉजी परीक्षा','I PUC बायोलॉजी परीक्षा','II PUC बायोलॉजी परीक्षा'], prov:'15 मार्च 2027 (अस्थायी)',
+      exam:['बायोलॉजी परीक्षा','I PUC बायोलॉजी परीक्षा','II PUC बायोलॉजी परीक्षा'], prov:['','सोम 22 फ़र 2027 · आधिकारिक समय-सारिणी','सोम 15 मार्च 2027 · आधिकारिक समय-सारिणी'],
       plan:['आज: ',' दोहराओ → Daily 5 → Quick card'],
       feats:[['कमज़ोर अध्याय',' तुम्हारे Daily 5 स्कोर से चुनता है'],['शाम 7 बजे रिमाइंडर',': एक भी दिन मत छोड़ो'],['Daily 5 + Quick card',': रोज़ सिर्फ़ 3 मिनट'],['अध्याय टेस्ट',', Guess It और Memes']],
       free:'BAIO ऐप पर मुफ़्त', how:'ऐप खोलो → Home → Exam Countdown', sir:'नरेंद्र सर', role:'बायोलॉजी लेक्चरर · Founder & CEO, BAIO',
@@ -108,7 +108,7 @@
     var px=tx+tW+36, pw=R-40-px, py=ty+20;
     var examText = (s.examName && s.examName[lang]) ? s.examName[lang] : t.exam[s.cls||0];
     fitFont(x,examText,700,34,22,fam,pw); x.fillStyle=P.ink; x.fillText(examText,px,py+30); py+=48;
-    if(s.provisional){ x.font='500 22px '+fam; x.fillStyle=P.dim; x.fillText(t.prov,px,py+18); py+=36; }
+    var pv=Array.isArray(t.prov)?t.prov[s.cls||0]:t.prov; if(s.provisional&&pv){ x.font='500 22px '+fam; x.fillStyle=P.dim; x.fillText(pv,px,py+18); py+=36; }
     if(s.chap){ var line=t.plan[0]+s.chap+t.plan[1]; x.font='500 28px '+fam; var pl=wrap(x,line,pw); var z=28; while(pl.length>3&&z>20){ z-=2; x.font='500 '+z+'px '+fam; pl=wrap(x,line,pw); } x.fillStyle=P.ink3; pl.slice(0,3).forEach(function(l,i){ x.fillText(l,px,py+z+i*z*1.45); }); }
     /* features */
     var fy=cy+ch+40, fw=(R-L-22)/2, fh=140, icons=['target','bell','bolt','check'];
