@@ -216,6 +216,16 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
   body.tt-print .topnav, body.tt-print .hero, body.tt-print .wrap > section:not(#ii-puc-timetable), body.tt-print .soon, body.tt-print footer, body.tt-print .tt-ctl, body.tt-print .tt-tabs, body.tt-print #ttActions{display:none!important}
   body.tt-print{background:#fff;color:#000} body.tt-print .card{border:0}
 }
+@media print{
+  body.tt1-print .topnav, body.tt1-print .hero, body.tt1-print .wrap > section:not(#i-puc-timetable), body.tt1-print .soon, body.tt1-print footer, body.tt1-print #t1Ctl, body.tt1-print #t1Actions, body.tt1-print .tt-count{display:none!important}
+  body.tt1-print .pr-only{display:block!important}
+  body.tt1-print, body.tt1-print *{color:#111!important;background:transparent!important;box-shadow:none!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body.tt1-print{background:#fff!important} body.tt1-print .card{border:0}
+  body.tt1-print .tt-item{break-inside:avoid;border-color:#ccc!important}
+}
+.t1-pr-head{border-bottom:2px solid #0E1B33;padding-bottom:8px;margin-bottom:10px}
+.t1-pr-head b{display:block;font:700 18px 'Space Grotesk'}
+.t1-pr-head span{font-size:12.5px}
 
 /* ---- Printed / PDF timetable: brand, credentials, marks, remarks, BAIO tips ---- */
 .pr-only{display:none}
@@ -302,6 +312,23 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
     <h2 data-i18n-html="ep_title">Your <em>study plan</em> from today to the last paper</h2>
     <p data-i18n="ep_desc">Made for your subjects. Change your language or 4th subject, and Exam 1 or Exam 2, in the timetable above.</p>
     <div id="epBody"></div>
+  </section>
+
+  <section class="card" id="i-puc-timetable" style="border-color:var(--teal)">
+    <div class="card-head"><span class="pill" data-i18n="t1_pill">I PUC · Annual Exam 2027</span><span class="new" data-i18n="new">NEW</span></div>
+    <h2 data-i18n-html="t1_title">Your personal <em>I PUC annual exam timetable</em></h2>
+    <p data-i18n="t1_desc">Only your papers, with how many study days you get before each one. Choose your language and fourth subject.</p>
+    <div class="pr-only t1-pr-head" id="t1PrintHead"></div>
+    <div class="tt-ctl" id="t1Ctl">
+      <div class="tt-row"><span class="tt-lbl" data-i18n="tt_lang_l">Language</span><span id="t1Lang"></span></div>
+      <div class="tt-row"><span class="tt-lbl" data-i18n="tt_opt_l">4th subject</span><span id="t1Opt"></span></div>
+    </div>
+    <div id="t1Body"></div>
+    <div class="actions" id="t1Actions">
+      <button class="act primary" id="t1Print" data-i18n="tt_print">🖨 Print / save my timetable</button>
+      <a class="act" href="exam-corner/i-puc-2027-annual-exam-official-timetable.pdf" target="_blank" rel="noopener" data-i18n="t1_official">📄 Official timetable (PDF)</a>
+    </div>
+    <p class="tt-note" data-i18n="t1_note">Source: Department of School Education (Pre-University), 2027 First PUC Annual Exam Time Table. Every paper is 10:00 AM – 1:00 PM (3 hours). Physics, Chemistry, Biology, Electronics and Computer Science are 70 marks; the languages and Mathematics are 80.</p>
   </section>
 
   <section class="card" id="slip-test-cell" style="border-color:var(--gold)">
@@ -425,6 +452,10 @@ footer{text-align:center;color:var(--ink-dim);font-size:11.5px;margin-top:30px}
 /* Language — English / ಕನ್ನಡ / ಹಿಂದಿ; also switches the presentation's narration */
 const I18N = {
   kn: {
+    t1_pill:'ಪ್ರಥಮ ಪಿಯುಸಿ · ವಾರ್ಷಿಕ ಪರೀಕ್ಷೆ 2027', t1_title:'ನಿಮ್ಮ ವೈಯಕ್ತಿಕ <em>ಪ್ರಥಮ ಪಿಯುಸಿ ವಾರ್ಷಿಕ ಪರೀಕ್ಷೆ ವೇಳಾಪಟ್ಟಿ</em>',
+    t1_desc:'ನಿಮ್ಮ ಪತ್ರಿಕೆಗಳು ಮಾತ್ರ, ಪ್ರತಿ ಪತ್ರಿಕೆಗೆ ಮುನ್ನ ಎಷ್ಟು ಓದುವ ದಿನಗಳು ಸಿಗುತ್ತವೆ ಎಂಬುದರೊಂದಿಗೆ. ನಿಮ್ಮ ಭಾಷೆ ಮತ್ತು 4ನೇ ವಿಷಯವನ್ನು ಆರಿಸಿ.',
+    t1_official:'📄 ಅಧಿಕೃತ ವೇಳಾಪಟ್ಟಿ (PDF)',
+    t1_note:'ಮೂಲ: ಶಾಲಾ ಶಿಕ್ಷಣ ಇಲಾಖೆ (ಪದವಿ ಪೂರ್ವ), 2027ರ ಪ್ರಥಮ ಪಿಯುಸಿ ವಾರ್ಷಿಕ ಪರೀಕ್ಷೆ ವೇಳಾಪಟ್ಟಿ. ಪ್ರತಿ ಪತ್ರಿಕೆ ಬೆಳಿಗ್ಗೆ 10:00 – ಮಧ್ಯಾಹ್ನ 1:00 (3 ಗಂಟೆ). ಭೌತಶಾಸ್ತ್ರ, ರಸಾಯನಶಾಸ್ತ್ರ, ಜೀವಶಾಸ್ತ್ರ, ವಿದ್ಯುನ್ಮಾನಶಾಸ್ತ್ರ ಮತ್ತು ಗಣಕ ವಿಜ್ಞಾನ 70 ಅಂಕ; ಭಾಷೆಗಳು ಮತ್ತು ಗಣಿತ 80 ಅಂಕ.',
     es_pill:'ದ್ವಿತೀಯ ಪಿಯುಸಿ ಜೀವಶಾಸ್ತ್ರ · ಎಕ್ಸಾಮ್ ಸ್ಕೋರರ್', es_title:'ಜೀವಶಾಸ್ತ್ರದಲ್ಲಿ <em>ಖಚಿತ ಅಂಕ</em> — ಎಲ್ಲಾ 13 ಅಧ್ಯಾಯಗಳು', es_desc:'ನರೇಂದ್ರ ಸರ್ ಅವರ ಪಾಸ್-ಮೊದಲು ಸಾಮಗ್ರಿ: ಮತ್ತೆ ಮತ್ತೆ ಬರುವ ಪ್ರಶ್ನೆಗಳು, ಅಂಶರೂಪದ ಕಿರು ಉತ್ತರಗಳು, ಕಡ್ಡಾಯ ಚಿತ್ರಗಳು, ಒಂದು ಅಂಕದ ಸಂಗತಿಗಳು ಮತ್ತು ನೆನಪಿನ ಸೂತ್ರಗಳು. ಇಂಗ್ಲಿಷ್ ಉತ್ತರಗಳು, ಕನ್ನಡ ಮತ್ತು ಹಿಂದಿ ಸಹಾಯದೊಂದಿಗೆ.', es_open:'🎯 ಎಕ್ಸಾಮ್ ಸ್ಕೋರರ್ ತೆರೆಯಿರಿ',
     ep_pill:'ದ್ವಿತೀಯ ಪಿಯುಸಿ · ಪರೀಕ್ಷಾ ಯೋಜಕ', ep_title:'ಇಂದಿನಿಂದ ಕೊನೆಯ ಪತ್ರಿಕೆಯವರೆಗೆ ನಿಮ್ಮ <em>ಓದುವ ಯೋಜನೆ</em>', ep_desc:'ನಿಮ್ಮ ವಿಷಯಗಳಿಗೆ ತಕ್ಕಂತೆ ಮಾಡಲಾಗಿದೆ. ಭಾಷೆ, 4ನೇ ವಿಷಯ ಮತ್ತು ಪರೀಕ್ಷೆ 1 / 2 ಅನ್ನು ಮೇಲಿನ ವೇಳಾಪಟ್ಟಿಯಲ್ಲಿ ಬದಲಿಸಿ.',
     tt_pill:'ದ್ವಿತೀಯ ಪಿಯುಸಿ · ಬೋರ್ಡ್ ಪರೀಕ್ಷೆ 2027', tt_title:'ನಿಮ್ಮ ವೈಯಕ್ತಿಕ <em>ದ್ವಿತೀಯ ಪಿಯುಸಿ ಪರೀಕ್ಷಾ ವೇಳಾಪಟ್ಟಿ</em>',
@@ -452,6 +483,10 @@ const I18N = {
     soon:'ಪ್ರತಿ ಪರೀಕ್ಷೆಗೆ ಮುನ್ನ ಇನ್ನಷ್ಟು ಸಾಮಗ್ರಿಗಳು ಇಲ್ಲಿ ಬರುತ್ತವೆ. 🔔 ಪ್ರಕಟಣೆಗಳ ಗಂಟೆಯನ್ನು ಗಮನಿಸಿ.'
   },
   hi: {
+    t1_pill:'प्रथम पीयूसी · वार्षिक परीक्षा 2027', t1_title:'आपकी अपनी <em>प्रथम पीयूसी वार्षिक परीक्षा समय-सारिणी</em>',
+    t1_desc:'सिर्फ़ आपके पेपर, और हर पेपर से पहले पढ़ाई के कितने दिन मिलेंगे। अपनी भाषा और चौथा विषय चुनें।',
+    t1_official:'📄 आधिकारिक समय-सारिणी (PDF)',
+    t1_note:'स्रोत: स्कूल शिक्षा विभाग (पदवी पूर्व), 2027 प्रथम पीयूसी वार्षिक परीक्षा समय-सारिणी। हर पेपर सुबह 10:00 – दोपहर 1:00 (3 घंटे)। भौतिकी, रसायन विज्ञान, जीव विज्ञान, इलेक्ट्रॉनिक्स और कंप्यूटर विज्ञान 70 अंक के; भाषाएँ और गणित 80 अंक के।',
     es_pill:'द्वितीय पीयूसी जीव विज्ञान · एग्ज़ाम स्कोरर', es_title:'जीव विज्ञान में <em>पक्के अंक</em> — सभी 13 अध्याय', es_desc:'नरेंद्र सर की पास-पहले सामग्री: बार-बार आने वाले प्रश्न, बिंदुओं में छोटे उत्तर, ज़रूरी चित्र, एक अंक के तथ्य और याद करने की ट्रिक। अंग्रेज़ी उत्तर, कन्नड़ और हिंदी सहायता के साथ।', es_open:'🎯 एग्ज़ाम स्कोरर खोलें',
     ep_pill:'द्वितीय पीयूसी · परीक्षा प्लानर', ep_title:'आज से आखिरी पेपर तक आपकी <em>पढ़ाई की योजना</em>', ep_desc:'आपके विषयों के अनुसार बनाई गई। भाषा, चौथा विषय और परीक्षा 1 / 2 ऊपर की समय-सारिणी में बदलिए।',
     tt_pill:'द्वितीय पीयूसी · बोर्ड परीक्षा 2027', tt_title:'आपकी अपनी <em>द्वितीय पीयूसी परीक्षा समय-सारिणी</em>',
@@ -779,6 +814,75 @@ setLang(['en','kn','hi'].includes(startLang)?startLang:'en', false);
   try{ var pr = JSON.parse(localStorage.getItem('baio_student') || 'null'); if(pr && pr.roll && /^25MPU\d{4}$/i.test(pr.roll) && !document.getElementById('ttCode').value){ document.getElementById('ttCode').value = pr.roll.toUpperCase(); lookup(); } }catch(e){}
   if(document.getElementById('ttCode').value && !q) lookup();
   var _setLang = setLang; setLang = function(l, f){ _setLang(l, f); render(); var m = document.getElementById('ttMsg'); if(m.textContent) lookup(); };
+  render();
+})();
+
+/* ---- I PUC personal annual exam timetable (2027 First PUC Annual Exam Time Table, Dept. of School Education (PU)) ---- */
+(function(){
+  var PAPERS = [['2027-02-10','KAN','01',80],['2027-02-11','HIN','03',80],['2027-02-12','ENG','02',80],['2027-02-15','PHY','33',70],['2027-02-16','CS','41',70],
+                ['2027-02-17','CHE','34',70],['2027-02-19','MAT','35',80],['2027-02-20','ELE','40',70],['2027-02-22','BIO','36',70]];
+  var HOL = ['2027-02-14','2027-02-21'];
+  var ICON = {KAN:'📗',HIN:'📙',ENG:'📘',PHY:'⚛️',CHE:'⚗️',MAT:'📐',BIO:'🧬',ELE:'🔌',CS:'💻'};
+  var L = {
+    en:{ sub:{KAN:'Kannada',HIN:'Hindi',ENG:'English',PHY:'Physics',CHE:'Chemistry',MAT:'Mathematics',BIO:'Biology',ELE:'Electronics',CS:'Computer Science'},
+         wd:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], mo:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+         time:'10:00 AM – 1:00 PM · 3 hrs', marks:'marks', code:'Code', first:'First paper', gap:function(n){ return n===1?'1 study day':n+' study days'; }, nogap:'Next day!',
+         days:'days', left:function(sub,date){ return 'until your first paper — <b>'+sub+'</b>, '+date+'. Start revising now.'; },
+         today:'Your exam is <b>today</b>. All the best! 💪', done:'Your annual exam is over. Well done!', running:function(sub,date){ return 'Exam is on. Next paper: <b>'+sub+'</b>, '+date+'.'; },
+         sun:'Holiday (Sunday)', head:'Personal I PUC Annual Exam Timetable 2027', subj:'Subjects' },
+    kn:{ sub:{KAN:'ಕನ್ನಡ',HIN:'ಹಿಂದಿ',ENG:'ಇಂಗ್ಲಿಷ್',PHY:'ಭೌತಶಾಸ್ತ್ರ',CHE:'ರಸಾಯನಶಾಸ್ತ್ರ',MAT:'ಗಣಿತ',BIO:'ಜೀವಶಾಸ್ತ್ರ',ELE:'ವಿದ್ಯುನ್ಮಾನಶಾಸ್ತ್ರ',CS:'ಗಣಕ ವಿಜ್ಞಾನ'},
+         wd:['ಭಾನು','ಸೋಮ','ಮಂಗಳ','ಬುಧ','ಗುರು','ಶುಕ್ರ','ಶನಿ'], mo:['ಜನ','ಫೆಬ್ರ','ಮಾರ್ಚ್','ಏಪ್ರಿ','ಮೇ','ಜೂನ್','ಜುಲೈ','ಆಗ','ಸೆಪ್ಟೆ','ಅಕ್ಟೋ','ನವೆಂ','ಡಿಸೆಂ'],
+         time:'ಬೆಳಿಗ್ಗೆ 10:00 – ಮಧ್ಯಾಹ್ನ 1:00 · 3 ಗಂಟೆ', marks:'ಅಂಕ', code:'ಸಂಕೇತ', first:'ಮೊದಲ ಪತ್ರಿಕೆ', gap:function(n){ return n+' ಓದುವ ದಿನ'; }, nogap:'ಮರುದಿನವೇ!',
+         days:'ದಿನಗಳು', left:function(sub,date){ return 'ನಿಮ್ಮ ಮೊದಲ ಪತ್ರಿಕೆ — <b>'+sub+'</b>, '+date+'. ಈಗಲೇ ಪುನರಾವರ್ತನೆ ಆರಂಭಿಸಿ.'; },
+         today:'ಇಂದು ನಿಮ್ಮ ಪರೀಕ್ಷೆ. ಶುಭವಾಗಲಿ! 💪', done:'ನಿಮ್ಮ ವಾರ್ಷಿಕ ಪರೀಕ್ಷೆ ಮುಗಿದಿದೆ. ಉತ್ತಮ ಕೆಲಸ!', running:function(sub,date){ return 'ಪರೀಕ್ಷೆ ನಡೆಯುತ್ತಿದೆ. ಮುಂದಿನ ಪತ್ರಿಕೆ: <b>'+sub+'</b>, '+date+'.'; },
+         sun:'ರಜಾ ದಿನ (ಭಾನುವಾರ)', head:'ಪ್ರಥಮ ಪಿಯುಸಿ ವಾರ್ಷಿಕ ಪರೀಕ್ಷೆ 2027 · ನನ್ನ ವೇಳಾಪಟ್ಟಿ', subj:'ವಿಷಯಗಳು' },
+    hi:{ sub:{KAN:'कन्नड़',HIN:'हिंदी',ENG:'अंग्रेज़ी',PHY:'भौतिकी',CHE:'रसायन विज्ञान',MAT:'गणित',BIO:'जीव विज्ञान',ELE:'इलेक्ट्रॉनिक्स',CS:'कंप्यूटर विज्ञान'},
+         wd:['रवि','सोम','मंगल','बुध','गुरु','शुक्र','शनि'], mo:['जन','फ़र','मार्च','अप्रै','मई','जून','जुला','अग','सित','अक्टू','नव','दिस'],
+         time:'सुबह 10:00 – दोपहर 1:00 · 3 घंटे', marks:'अंक', code:'कोड', first:'पहला पेपर', gap:function(n){ return 'पढ़ाई के '+n+' दिन'; }, nogap:'अगले ही दिन!',
+         days:'दिन', left:function(sub,date){ return 'आपके पहले पेपर तक — <b>'+sub+'</b>, '+date+'। अभी से दोहराना शुरू करें।'; },
+         today:'आज आपकी परीक्षा है। शुभकामनाएँ! 💪', done:'आपकी वार्षिक परीक्षा पूरी हो गई। बहुत बढ़िया!', running:function(sub,date){ return 'परीक्षा चल रही है। अगला पेपर: <b>'+sub+'</b>, '+date+'।'; },
+         sun:'छुट्टी (रविवार)', head:'प्रथम पीयूसी वार्षिक परीक्षा 2027 · मेरी समय-सारिणी', subj:'विषय' }
+  };
+  var st = { lang:'KAN', opt:'BIO' };
+  try{ var sv = JSON.parse(localStorage.getItem('baio_tt_puc1') || 'null'); if(sv){ if(sv.lang) st.lang = sv.lang; if(sv.opt) st.opt = sv.opt; } }catch(e){}
+  function ui(){ return L[document.documentElement.lang] || L.en; }
+  function d(s){ var p = s.split('-'); return new Date(+p[0], +p[1]-1, +p[2]); }
+  function today(){ var n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); }
+  function fmt(s){ var t = ui(), x = d(s); return t.wd[x.getDay()] + ', ' + x.getDate() + ' ' + t.mo[x.getMonth()]; }
+  function mine(){ var keep = {ENG:1,PHY:1,CHE:1,MAT:1}; keep[st.lang] = 1; keep[st.opt] = 1; return PAPERS.filter(function(p){ return keep[p[1]]; }); }
+  function chips(id, opts, key){
+    var t = ui(), el = document.getElementById(id);
+    el.innerHTML = opts.map(function(o){ return '<button class="tt-chip'+(st[key]===o?' on':'')+'" data-v="'+o+'">'+ICON[o]+' '+t.sub[o]+'</button>'; }).join('');
+    el.onclick = function(e){ var b = e.target.closest('button'); if(!b) return; st[key] = b.dataset.v; try{ localStorage.setItem('baio_tt_puc1', JSON.stringify(st)); }catch(err){} render(); };
+  }
+  function render(){
+    var t = ui();
+    chips('t1Lang', ['KAN','HIN'], 'lang'); chips('t1Opt', ['BIO','ELE','CS'], 'opt');
+    var ps = mine(), now = today(), html = '';
+    var next = ps.find(function(p){ return d(p[0]) >= now; });
+    if(!next) html += '<div class="tt-count"><div class="n">✓</div><div class="t">'+t.done+'</div></div>';
+    else {
+      var nd = Math.round((d(next[0]) - now) / 864e5);
+      if(nd === 0) html += '<div class="tt-count"><div class="n">🎯</div><div class="t">'+t.today+' — <b>'+t.sub[next[1]]+'</b></div></div>';
+      else if(d(ps[0][0]) < now) html += '<div class="tt-count"><div class="n">'+nd+'<small>'+t.days+'</small></div><div class="t">'+t.running(t.sub[next[1]], fmt(next[0]))+'</div></div>';
+      else html += '<div class="tt-count"><div class="n">'+nd+'<small>'+t.days+'</small></div><div class="t">'+t.left(t.sub[next[1]], fmt(next[0]))+'</div></div>';
+    }
+    html += '<ol class="tt-list">';
+    ps.forEach(function(p, i){
+      if(i) HOL.filter(function(h){ return h > ps[i-1][0] && h < p[0]; }).forEach(function(h){ html += '<li class="tt-hol">🌴 '+fmt(h)+' · '+t.sun+'</li>'; });
+      var x = d(p[0]), gap = i ? Math.round((x - d(ps[i-1][0])) / 864e5) - 1 : null;
+      var chip = i===0 ? '<span class="tt-gap">'+t.first+'</span>' : (gap<=0 ? '<span class="tt-gap tight">'+t.nogap+'</span>' : '<span class="tt-gap'+(gap<=1?' tight':'')+'">'+t.gap(gap)+'</span>');
+      html += '<li class="tt-item'+(p[1]==='BIO'?' bio':'')+(x < now?' past':'')+'">'
+        + '<div class="tt-date"><div class="m">'+t.mo[x.getMonth()]+'</div><div class="d">'+x.getDate()+'</div><div class="w">'+t.wd[x.getDay()]+'</div></div>'
+        + '<div><div class="tt-sub">'+ICON[p[1]]+' '+t.sub[p[1]]+'</div><div class="tt-meta">'+t.time+' · '+p[3]+' '+t.marks+' · '+t.code+' '+p[2]+'</div></div>'
+        + chip + '</li>';
+    });
+    html += '</ol>';
+    document.getElementById('t1Body').innerHTML = html;
+    document.getElementById('t1PrintHead').innerHTML = '<b>BAIO Learning System · '+t.head+'</b><span>'+t.subj+': '+[st.lang,'ENG','PHY','CHE','MAT',st.opt].map(function(k){ return t.sub[k]; }).join(', ')+'</span>';
+  }
+  document.getElementById('t1Print').addEventListener('click', function(){ render(); document.body.classList.add('tt1-print'); window.print(); setTimeout(function(){ document.body.classList.remove('tt1-print'); }, 600); });
+  var _setLang = setLang; setLang = function(l, f){ _setLang(l, f); render(); };
   render();
 })();
 
