@@ -7014,7 +7014,8 @@ const NT_UNLOCK_KEY = 'pu2ch4_neettricks_unlock';
 const NT_UPI_ID = 'paytm.s4qa42a@pty';
 const NT_RAZORPAY_LINK = ''; /* add a ₹99 Razorpay link here to show a "Pay online" button too */
 function ntOwnUnlocked(){
-  try{ const u = JSON.parse(localStorage.getItem(NT_UNLOCK_KEY) || 'null'); return !!(u && u.unlocked && (u.method === 'code' || u.method === 'master')); }catch(e){ return false; }
+  try{ const u = JSON.parse(localStorage.getItem(NT_UNLOCK_KEY) || 'null'); if(u && u.unlocked && (u.method === 'code' || u.method === 'master')) return true; }catch(e){}
+  try{ const p = JSON.parse(localStorage.getItem('baio_neettricks_unlock') || '{}') || {}; return !!(p['*'] || p['pu2-ch4']); }catch(e){ return false; }  /* unlocked on neet-tricks.html */
 }
 function codeOnlyTabOpen(tabId){
   return premiumCodeQualifies() || (tabId === 'neettricks' && ntOwnUnlocked());
@@ -7226,6 +7227,7 @@ function renderNeetTricksBuy(overlay){
     + '<button class="btn" style="margin-top:4px;" onclick="ntSubmit()">🔓 Unlock NEET Tricks</button>'
     + '</div>'
     + '<div class="ntb-note">Already have this chapter\u2019s Premium or the PU-II bundle code? Enter it here. It opens NEET Tricks too. NEET Tricks is not part of the free sample or the 1-day trial.</div>'
+    + '<div class="ntb-note" style="margin-top:10px;"><a href="neet-tricks.html" style="color:var(--teal);font-weight:700;">🎯 NEET Tricks for every I PUC &amp; II PUC chapter →</a></div>'
     + '</div>';
   overlay.classList.add('show');
   const wa = document.getElementById('ntWaBtn');
@@ -7241,7 +7243,10 @@ function ntSubmit(){
   const name = v('ntName'), section = v('ntSection'), roll = v('ntRoll'), code = v('ntCode').toUpperCase(), msg = document.getElementById('ntMsg');
   const bad = function(t){ msg.textContent = t; msg.className = 'hw-msg bad'; };
   if(!code){ bad('Please enter your unlock code.'); return; }
-  const save = function(method){ try{ localStorage.setItem(NT_UNLOCK_KEY, JSON.stringify({unlocked:true, method:method, ts:Date.now(), name:name, roll:roll, section:section})); }catch(e){} applyPremiumGates(); };
+  const save = function(method){
+    try{ localStorage.setItem(NT_UNLOCK_KEY, JSON.stringify({unlocked:true, method:method, ts:Date.now(), name:name, roll:roll, section:section})); }catch(e){}
+    try{ const p = JSON.parse(localStorage.getItem('baio_neettricks_unlock') || '{}') || {}; p[method === 'master' ? '*' : 'pu2-ch4'] = {method:method, ts:Date.now(), name:name, roll:roll, section:section}; localStorage.setItem('baio_neettricks_unlock', JSON.stringify(p)); }catch(e){}
+    applyPremiumGates(); };
   if(code === PREMIUM_MASTER_CODE.toUpperCase() || code === PREMIUM_MASTER_CODE_PU2_ALL.toUpperCase()){ save('master'); return; }
   if(!name || !section || !roll){ bad('Please fill in your name, section and roll number exactly as you sent them to Narendra Sir.'); return; }
   if(computeStudentCode(name, roll, section, NT_CONTENT_KEY) === code){ save('code'); return; }

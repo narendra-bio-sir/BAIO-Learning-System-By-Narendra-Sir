@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>NEET Tricks &amp; Tips | BAIO Learning System</title>
+<meta name="description" content="NEET Biology tricks and tips for every I PUC and II PUC chapter: shortcuts, memory tables, NEET traps and practice questions. ₹99 per chapter. By Narendra Sir.">
+<meta property="og:title" content="BAIO NEET Tricks &amp; Tips">
+<meta property="og:description" content="Chapter-wise NEET Biology shortcuts, memory tables, traps and practice questions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="games/game.css?v=1">
+<style>
+body{font-family:Inter,sans-serif}
+.lang-switcher{display:none}
+.shelf h3{font-size:15px;color:var(--gold);margin-top:18px}
+.chs{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:10px}
+.chc{display:flex;gap:12px;align-items:center;text-align:left;padding:12px;border-radius:16px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;font:inherit;position:relative}
+.chc .ic{flex:0 0 52px;height:52px;border-radius:14px;display:grid;place-items:center;font-size:26px}
+.chc b{display:block;font:700 15px/1.25 'Space Grotesk',sans-serif}
+.chc small{display:block;color:var(--ink-dim);font-size:11.5px;margin-top:2px}
+.chc>span:nth-child(2){padding-right:54px}
+.chc .st{position:absolute;top:8px;right:10px;font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:99px;background:var(--panel2);color:var(--gold)}
+.chc .st.ok{color:var(--teal)}
+.nt-head{display:flex;gap:12px;align-items:center;margin-top:12px;padding:14px;border-radius:18px;border:1px solid var(--line);background:var(--panel)}
+.nt-head .ic{flex:0 0 60px;height:60px;border-radius:18px;display:grid;place-items:center;font-size:32px}
+.nt-head .k{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--teal)}
+.nt-head h2{margin:2px 0 4px;font:700 20px/1.2 'Space Grotesk',sans-serif;color:var(--ink)}
+.nt-head p{margin:0;color:var(--ink-dim);font-size:13px;line-height:1.5}
+.trk{margin-top:12px;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--panel)}
+.trk .n{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:99px;background:var(--gold);color:#1B1300}
+.trk h4{margin:6px 0 8px;font:700 17px/1.3 'Space Grotesk',sans-serif;color:var(--gold)}
+.trk p,.trk li{font-size:14px;line-height:1.6;color:var(--ink)}
+.trk p{margin:6px 0}
+.trk ul,.trk ol{margin:6px 0;padding-left:20px}
+.trk b{color:var(--ink)}
+.tb{overflow-x:auto;margin:8px 0}
+.tb table{border-collapse:collapse;width:100%;font-size:13px;min-width:280px}
+.tb th,.tb td{border:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+.tb th{background:var(--panel2);color:var(--gold);font-size:12px}
+.mt{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:8px 0;font-size:14.5px;line-height:1.9;overflow-x:auto}
+.traps{margin-top:12px;padding:14px;border-radius:16px;border:1.5px solid var(--bad);background:var(--panel)}
+.traps h4{margin:0 0 8px;font:700 16px 'Space Grotesk',sans-serif;color:var(--bad)}
+.traps li{font-size:13.5px;line-height:1.6;margin:4px 0;color:var(--ink)}
+.qz{margin-top:12px;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--panel)}
+.qz h4{margin:0 0 4px;font:700 17px 'Space Grotesk',sans-serif;color:var(--gold)}
+.qz .sc{display:inline-block;font-weight:800;font-size:13px;padding:4px 10px;border-radius:99px;background:var(--panel2);color:var(--teal);margin:4px 0}
+.q{border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px;background:var(--panel2)}
+.q .qt{font-weight:700;font-size:14px;line-height:1.5;color:var(--ink)}
+.q .os{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.q button{font:600 13.5px Inter,sans-serif;text-align:left;padding:9px 10px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+.q button.ok{border-color:var(--ok);background:rgba(47,191,113,.18)}
+.q button.no{border-color:var(--bad);background:rgba(231,105,91,.16)}
+.q button:disabled{cursor:default}
+.q .ex{display:none;margin-top:8px;font-size:13px;line-height:1.55;padding:8px 10px;border-radius:8px;background:var(--panel);border-left:3px solid var(--gold);color:var(--ink)}
+.q.done .ex{display:block}
+.inside{margin-top:12px;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--panel)}
+.inside h4{margin:0 0 8px;font:700 16px 'Space Grotesk',sans-serif;color:var(--ink)}
+.inside li{font-size:13.5px;line-height:1.6;color:var(--ink);list-style:none;padding:3px 0}
+.inside ul{margin:0;padding:0}
+.buy{margin-top:12px;padding:16px;border:1.5px dashed var(--gold);border-radius:18px;background:var(--panel)}
+.buy .price{display:flex;align-items:baseline;justify-content:center;gap:8px}
+.buy .price b{font:800 32px 'Space Grotesk',sans-serif;color:var(--gold)}
+.buy .price span{font-size:12px;color:var(--ink-dim)}
+.buy .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:12px 0}
+.buy .steps div{font-size:11.5px;font-weight:700;text-align:center;padding:8px 4px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);color:var(--ink)}
+.buy .steps i{display:block;font-style:normal;width:22px;height:22px;line-height:22px;margin:0 auto 4px;border-radius:99px;background:var(--gold);color:#1B1300;font-size:12px}
+.buy .col{display:flex;flex-direction:column;gap:8px}
+.buy .col .btn{text-align:center;text-decoration:none}
+.buy .upi{font-size:12px;color:var(--ink-dim);text-align:center;margin-top:8px}
+.buy .upi button{font:700 11px Inter,sans-serif;margin-left:6px;padding:3px 9px;border-radius:99px;border:1px solid var(--teal);background:transparent;color:var(--teal);cursor:pointer}
+.buy form{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.buy input{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:500 14px Inter,sans-serif}
+.buy .msg{color:var(--bad);font-size:12.5px;min-height:1em}
+.buy .note{font-size:11.5px;color:var(--ink-dim);text-align:center;line-height:1.5;margin-top:8px}
+.okbar{margin-top:12px;padding:10px 14px;border-radius:14px;border:1.5px solid var(--teal);background:var(--panel);color:var(--teal);font-weight:700;font-size:13px}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center}
+@media(max-width:400px){.q .os{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero" id="hero">
+    <div class="eyebrow">BAIO Learning System · NEET special</div>
+    <h1>🎯 NEET <span class="accent">Tricks &amp; Tips</span></h1>
+    <p>Shortcuts, memory tables and NEET traps for every chapter, with practice questions that show the shortcut. ₹99 per chapter.</p>
+  </section>
+  <section id="library"></section>
+  <section id="chapter" hidden>
+    <div class="rhead" style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px"><button class="tbtn btn" id="back">← All chapters</button><span class="muted" id="cch"></span></div>
+    <div id="body"></div>
+  </section>
+  <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
+</div>
+<script src="games/common.js?v=4"></script>
+<script src="neet-tricks/nt-pu1.js?v=1"></script>
+<script src="neet-tricks/nt-pu2.js?v=1"></script>
+<script>
+GZ.nav();
+(function(){
+const $ = s => document.querySelector(s);
+const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const NT = window.NT || {};
+const ids = Object.keys(NT);
+
+/* ---------- ₹99 per chapter ----------
+   Codes come from ns-gen.html, content key NT-<PU>-<CH> (e.g. NT-PU1-CH10), same formula as every student code.
+   Also accepted: the chapter's Premium code, the PU-II bundle code (PU-II chapters) and the master codes.
+   Not opened by the free sample, the demo code, the 1-day trial or the master demo code. */
+const PRICE = 99;
+const UPI_ID = 'paytm.s4qa42a@pty';
+const RZP_LINK = ''; /* add a ₹99 Razorpay link to show a "Pay online" button */
+const STORE = 'baio_neettricks_unlock';
+const MASTER_CODES = ['NS-PREMIUM-2027', 'NS-PU2-ALL-2027', 'NS-MASTER-2027'];
+const PREMIUM = { /* chapter → [premium unlock key, premium content key] */
+  'pu1-ch2':['ch2_premium_unlock','CH2-PREMIUM'], 'pu1-ch3':['ch3_premium_unlock','CH3-PREMIUM'],
+  'pu1-ch4':['pu1ch4_premium_unlock','CH4-PU1-PREMIUM'], 'pu1-ch5':['pu1ch5_premium_unlock','CH5-PREMIUM'],
+  'pu1-ch6':['pu1ch6_premium_unlock','CH6-PREMIUM'], 'pu1-ch8':['pu1ch8_premium_unlock','CH8-PREMIUM'],
+  'pu1-ch9':['pu1ch9_premium_unlock','CH9-PU1-PREMIUM'], 'pu1-ch10':['pu1ch10_premium_unlock','CH10-PU1-PREMIUM'],
+  'pu1-ch11':['pu1ch11_premium_unlock','CH11-PU1-PREMIUM'],
+  'pu2-ch1':['pu2ch1_premium_unlock','CH1-PU2-PREMIUM'], 'pu2-ch2':['pu2ch2_premium_unlock','CH2-PU2-PREMIUM'],
+  'pu2-ch3':['pu2ch3_premium_unlock','CH3-PU2-PREMIUM'], 'pu2-ch4':['pu2ch4_premium_unlock','CH4-PREMIUM'],
+  'pu2-ch5':['pu2ch5_premium_unlock','CH5-PU2-PREMIUM'], 'pu2-ch6':['pu2ch6_premium_unlock','CH6-PU2-PREMIUM'],
+  'pu2-ch7':['pu2ch7_premium_unlock','CH7-PU2-PREMIUM'], 'pu2-ch8':['pu2ch8_premium_unlock','CH8-PU2-PREMIUM'],
+  'pu2-ch9':['ch9_premium_unlock','CH9-PREMIUM'], 'pu2-ch10':['pu2ch10_premium_unlock','CH10-PU2-PREMIUM'],
+  'pu2-ch11':['pu2ch11_premium_unlock','CH11-PU2-PREMIUM'], 'pu2-ch12':['pu2ch12_premium_unlock','CH12-PU2-PREMIUM'],
+  'pu2-ch13':['pu2ch13_premium_unlock','CH13-PU2-PREMIUM']
+};
+const ntKey = id => 'NT-' + id.toUpperCase();
+const CODE_SALT = 'BAIO-STUDENT-LOCK-2026', CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+const norm = s => (s || '').toString().trim().toUpperCase().replace(/\s+/g, ' ');
+function fnv(str){ let h = 0x811c9dc5; for(let i = 0; i < str.length; i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); } return h >>> 0; }
+function code(name, roll, section, ck){
+  const key = CODE_SALT + '|' + norm(name) + '|' + norm(roll) + '|' + norm(section) + (ck ? '|' + norm(ck) : '');
+  let n = (BigInt(fnv(key)) << 32n) | BigInt(fnv(key.split('').reverse().join('') + CODE_SALT));
+  const base = BigInt(CODE_CHARS.length); let c = '';
+  for(let i = 0; i < 8; i++){ c += CODE_CHARS[Number(n % base)]; n = n / base; }
+  return c.slice(0, 4) + '-' + c.slice(4, 8);
+}
+function store(){ try{ return JSON.parse(localStorage.getItem(STORE) || '{}') || {}; }catch(e){ return {}; } }
+function save(id, o){ try{ const s = store(); s[id] = Object.assign({ts: Date.now()}, o); localStorage.setItem(STORE, JSON.stringify(s)); }catch(e){} }
+function readJSON(k){ try{ return JSON.parse(localStorage.getItem(k) || 'null'); }catch(e){ return null; } }
+function unlocked(id){
+  const s = store();
+  if(s['*'] || s[id]) return true;
+  if(id === 'pu2-ch4'){ const u = readJSON('pu2ch4_neettricks_unlock'); if(u && u.unlocked) return true; }
+  const p = PREMIUM[id], u = p && readJSON(p[0]);   /* chapter Premium bought with a real code (not demo / trial) */
+  return !!(u && u.unlocked && (u.method === 'code' || u.method === 'master'));
+}
+function profile(){ return readJSON('baio_student') || {}; }
+
+/* ---------- library ---------- */
+function drawLibrary(){
+  $('#library').innerHTML = [[1,'I PUC'],[2,'II PUC']].map(([n, lbl]) => `<div class="shelf"><h3>${lbl}</h3><div class="chs">${ids.filter(id => id.startsWith('pu' + n + '-')).map(id => { const A = NT[id], ok = unlocked(id);
+    return `<button class="chc" data-id="${id}"><span class="ic" style="background:linear-gradient(150deg,${A.color},#0b1b14)">${A.icon}</span><span><b>${esc(A.title)}</b><small>${esc(A.ch.replace(/^I+ PUC · /,''))} · ${A.tricks.length} tricks · ${A.quiz.length} questions</small></span><span class="st ${ok ? 'ok' : ''}">${ok ? '✅ Open' : '🔒 ₹' + PRICE}</span></button>`; }).join('')}</div></div>`).join('');
+  $('#library').querySelectorAll('.chc').forEach(c => c.onclick = () => { location.hash = c.dataset.id; });
+}
+
+/* ---------- chapter ---------- */
+function openCh(id){
+  const A = NT[id]; if(!A){ showLibrary(); return; }
+  $('#hero').hidden = true; $('#library').hidden = true; $('#chapter').hidden = false;
+  $('#cch').textContent = A.ch;
+  const head = `<div class="nt-head"><span class="ic" style="background:linear-gradient(150deg,${A.color},#0b1b14)">${A.icon}</span><div><div class="k">🎯 NEET Tricks &amp; Tips · ${esc(A.ch)}</div><h2>${esc(A.title)}</h2><p>${A.intro}</p></div></div>`;
+  $('#body').innerHTML = head + (unlocked(id) ? full(id) : locked(id));
+  if(unlocked(id)) wireQuiz(id); else wireBuy(id);
+  window.scrollTo(0, 0);
+}
+function full(id){
+  const A = NT[id];
+  return `<div class="okbar">✅ Unlocked on this phone</div>`
+    + A.tricks.map((t, i) => `<div class="trk"><span class="n">Trick ${i + 1}</span><h4>${esc(t.t)}</h4>${t.h}</div>`).join('')
+    + `<div class="traps"><h4>⚠️ NEET traps</h4><ul>${A.traps.map(x => `<li>${x}</li>`).join('')}</ul></div>`
+    + `<div class="qz" id="qz"><h4>🎯 Practice: use the shortcuts</h4><div class="sc" id="qsc"></div><div id="qs"></div><div class="acts"><button class="btn" id="qreset">↺ Try again</button><a class="btn teal" href="${A.href}">📘 Open chapter</a></div></div>`;
+}
+function wireQuiz(id){
+  const A = NT[id]; let right = 0, done = 0;
+  const sc = () => { $('#qsc').textContent = right + ' / ' + A.quiz.length + ' correct' + (done === A.quiz.length ? (right === A.quiz.length ? ' · 🏆 Shortcut master!' : ' · tap Try again') : ''); };
+  const render = () => { right = 0; done = 0;
+    $('#qs').innerHTML = A.quiz.map((q, i) => `<div class="q" data-i="${i}"><div class="qt">${i + 1}. ${q.q}</div><div class="os">${q.o.map((o, k) => `<button type="button" data-k="${k}">${'ABCD'[k]}. ${o}</button>`).join('')}</div><div class="ex">⚡ ${q.x}</div></div>`).join('');
+    sc(); };
+  $('#qs').addEventListener('click', e => { const b = e.target.closest('button'); if(!b) return; const card = b.closest('.q'); if(card.classList.contains('done')) return;
+    const q = A.quiz[+card.dataset.i], k = +b.dataset.k; card.classList.add('done'); done++;
+    const bs = card.querySelectorAll('button'); bs.forEach(x => x.disabled = true); bs[q.a].classList.add('ok');
+    if(k === q.a) right++; else b.classList.add('no'); sc(); });
+  $('#qreset').onclick = () => { render(); $('#qz').scrollIntoView({behavior:'smooth', block:'start'}); };
+  render();
+}
+function locked(id){
+  const A = NT[id], p = profile();
+  return `<div class="inside"><h4>📦 What's inside</h4><ul>${A.tricks.map(t => `<li>✅ ${esc(t.t)}</li>`).join('')}<li>⚠️ ${A.traps.length} NEET traps to avoid</li><li>🎯 ${A.quiz.length} NEET-style practice questions, each with its shortcut</li></ul></div>`
+    + `<div class="buy"><div class="price"><b>₹${PRICE}</b><span>one-time · this chapter · yours to keep</span></div>`
+    + `<div class="steps"><div><i>1</i>Pay ₹${PRICE}</div><div><i>2</i>Send the screenshot</div><div><i>3</i>Enter your code</div></div>`
+    + `<div class="col"><a class="btn primary" id="payUpi" href="${upiLink(id)}">📲 Pay ₹${PRICE} with UPI app</a>${RZP_LINK ? `<a class="btn" href="${RZP_LINK}" target="_blank" rel="noopener">💳 Pay online</a>` : ''}<a class="btn teal" id="payWa" href="#" target="_blank" rel="noopener">📤 Send screenshot on WhatsApp</a></div>`
+    + `<div class="upi">UPI ID: <b>${UPI_ID}</b> <button type="button" id="copyUpi">Copy</button></div>`
+    + `<form id="ntForm" autocomplete="off"><div class="msg" id="ntMsg"></div><input id="ntName" placeholder="Full name (e.g. Vishwapal)" value="${esc(p.name)}"><input id="ntSection" placeholder="Section (e.g. Spark)" value="${esc(p.section)}"><input id="ntRoll" placeholder="Roll number (e.g. 25MPU0087)" value="${esc(p.roll)}"><input id="ntCode" placeholder="NEET Tricks unlock code" autocapitalize="characters"><button class="btn primary" type="submit">🔓 Unlock this chapter</button></form>`
+    + `<div class="note">Already bought this chapter's Premium${id.startsWith('pu2') ? ' or the PU-II bundle' : ''}? Enter that code here — it opens NEET Tricks too. Not part of the free sample or the 1-day trial.</div></div>`;
+}
+function upiLink(id){ return 'upi://pay?pa=' + UPI_ID + '&pn=' + encodeURIComponent('Narendra Sir') + '&am=' + PRICE + '&cu=INR&tn=' + encodeURIComponent('NEET Tricks ' + id.toUpperCase()); }
+function waLink(id){
+  const A = NT[id], v = k => (($('#' + k) || {}).value || '').trim();
+  const msg = 'Hi Narendra Sir, I paid ₹' + PRICE + ' for NEET Tricks (' + A.ch + ': ' + A.title + ').\n\nName: ' + v('ntName') + '\nSection: ' + v('ntSection') + '\nRoll number: ' + v('ntRoll') + '\n\n(Attaching my payment screenshot.) Please send my NEET Tricks unlock code.';
+  return 'https://wa.me/919008968389?text=' + encodeURIComponent(msg);
+}
+function wireBuy(id){
+  const wa = $('#payWa'); wa.href = waLink(id); wa.addEventListener('click', () => { wa.href = waLink(id); });
+  $('#copyUpi').onclick = () => { const b = $('#copyUpi'), done = () => { b.textContent = 'Copied ✓'; setTimeout(() => b.textContent = 'Copy', 1800); };
+    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(UPI_ID).then(done, () => {}); else done(); };
+  $('#ntForm').onsubmit = e => { e.preventDefault();
+    const v = k => ($('#' + k).value || '').trim(), name = v('ntName'), section = v('ntSection'), roll = v('ntRoll'), c = v('ntCode').toUpperCase(), m = $('#ntMsg');
+    if(!c){ m.textContent = 'Please enter your unlock code.'; return; }
+    if(MASTER_CODES.some(x => x.toUpperCase() === c)){ save('*', {method:'master'}); openCh(id); return; }
+    if(!name || !section || !roll){ m.textContent = 'Please fill in your name, section and roll number exactly as you sent them to Narendra Sir.'; return; }
+    const ok = [ntKey(id), PREMIUM[id] && PREMIUM[id][1]].filter(Boolean).some(k => code(name, roll, section, k) === c)
+      || (id.startsWith('pu2') && code(name, roll, section, 'PU2-ALL-PREMIUM') === c)
+      || (id === 'pu2-ch4' && code(name, roll, section) === c);
+    if(ok){ save(id, {method:'code', name, roll, section}); openCh(id); return; }
+    m.textContent = 'That name / section / roll number / code combination was not recognised. Check the spelling, or ask Narendra Sir.'; };
+}
+
+function showLibrary(){ $('#hero').hidden = false; $('#library').hidden = false; $('#chapter').hidden = true; drawLibrary(); }
+function route(){ const h = decodeURIComponent(location.hash.slice(1)); if(NT[h]) openCh(h); else showLibrary(); }
+$('#back').onclick = () => { location.hash = ''; };
+window.addEventListener('hashchange', route);
+route();
+})();
+</script>
+</body>
+</html>
