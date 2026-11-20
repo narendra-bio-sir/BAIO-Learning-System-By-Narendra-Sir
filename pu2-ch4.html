@@ -1256,7 +1256,7 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
   </div>
   <script>
     var WHATSNEW_ITEMS = [
-      {key:'pu2ch4_whatsnew_neettricks_v1', html:'&#127919; <b>New premium tab: NEET Tricks!</b> 9 genetics shortcuts from Narendra Sir&rsquo;s class notes &mdash; 2<sup>n</sup> gametes, binomial (ax + by)&sup2;, the n-formula table and the product rule &mdash; plus 12 practice questions. Open the <b>NEET Tricks</b> tab under Test Prep.'},
+      {key:'pu2ch4_whatsnew_neettricks_v1', html:'&#127919; <b>New premium tab: NEET Tricks!</b> Opens with your premium unlock code. 9 genetics shortcuts from Narendra Sir&rsquo;s class notes &mdash; 2<sup>n</sup> gametes, binomial (ax + by)&sup2;, the n-formula table and the product rule &mdash; plus 12 practice questions. Open the <b>NEET Tricks</b> tab under Test Prep.'},
       {key:'pu2_all13_complete_v1', html:'&#127881; <b>All 13 PU-II chapters are now complete!</b> Every chapter now has full Study Notes, MCQ/NEET/KCET Practice, Board Important Q&amp;A with labelled diagrams (NCERT page references included), Audio Podcasts in 5 languages, and printable Topic-wise Worksheets.'},
       {key:'pu2ch4_whatsnew_redesign_v1', html:'&#127807; <b>New look!</b> Cleaner typography and calmer colors across the app &mdash; same content, easier on the eyes.'},
       {key:'pu2ch4_whatsnew_fullscreen_v1', html:'&#128421;&#65039; <b>Full Screen Mode</b> is here! Tap the button on MCQ Quiz, NEET Practice, KCET Practice, or Study Mode to focus distraction-free.'},
@@ -6915,6 +6915,12 @@ const PU2_BUNDLE_RAZORPAY_LINK = 'https://rzp.io/rzp/AEFNemg9';
 const PREMIUM_UNLOCK_LOOKUP = {};
 const PREMIUM_LOCKED_TABS = ['mindmap', 'classppt', 'quiz', 'adv', 'neettricks', 'kcet', 'writeit', 'papergen', 'boardimp', 'podcast'];
 const PREMIUM_TAB_LABELS = {mindmap:'Mind Map', classppt:'Class Presentation', revision:'Revision', quiz:'MCQ Quiz', adv:'NEET Practice', neettricks:'NEET Tricks', kcet:'KCET Practice', writeit:'Answer Practice', papergen:'Paper Generator', boardimp:'Board Important', podcast:'Audio Podcast'};
+/* Lock screen: list exactly the tabs that are premium-locked in this chapter */
+function premiumBundleLabelList(){
+  var names = PREMIUM_LOCKED_TABS.map(function(id){ return PREMIUM_TAB_LABELS[id] || id; });
+  if(names.length <= 1) return names.join('');
+  return names.slice(0, -1).join(', ') + ' &amp; ' + names[names.length - 1];
+}
 
 const PODCASTS_CH4 = {
   en: {label:'English', url:'https://narendra-bio-sir.github.io/baio-podcasts/pu2-ch4-assets/podcast-english.mp3?v=2'},
@@ -6972,6 +6978,17 @@ function premiumQualifies(){
     return false;
   }
   return true;
+}
+/* Code-only premium tabs: no free sample and no demo / 1-day trial access.
+   They open only with a student unlock code or Narendra Sir's master codes. */
+const CODE_ONLY_TABS = ['neettricks'];
+function premiumCodeQualifies(){
+  if(!premiumQualifies()) return false;
+  const u = getPremiumUnlock();
+  return !!u && (u.method === 'code' || u.method === 'master');
+}
+function premiumTabUnlocked(tabId){
+  return CODE_ONLY_TABS.indexOf(tabId) !== -1 ? premiumCodeQualifies() : premiumQualifies();
 }
 function reLockPremium(){
   try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){}
@@ -7125,7 +7142,7 @@ function premiumInjectBundlePaymentButton(tabId){
   container.innerHTML = '<a href="' + PU2_BUNDLE_RAZORPAY_LINK + '" target="_blank" rel="noopener" class="btn" style="display:inline-block; text-decoration:none; background:linear-gradient(135deg,#0F8F7A,#0B6F5E); border:none; color:#fff;">🎁 Pay ₹' + PU2_BUNDLE_PRICE_RUPEES + ' to Unlock All 13 PU-II Chapters</a>';
 }
 function backFromPremiumLockCh2(){
-  const unlocked = premiumQualifies();
+  const unlocked = premiumTabUnlocked(previousTab);
   const target = (PREMIUM_LOCKED_TABS.indexOf(previousTab) === -1 || unlocked) ? previousTab : 'study';
   goToTab(target);
 }
@@ -7141,11 +7158,12 @@ function renderPremiumLockScreenCh2(tabId){
     + '<div style="text-align:center; margin-bottom:14px;">'
     + '<div style="font-size:38px;">\uD83D\uDD12</div>'
     + '<h3 style="color:var(--gold-2); margin:6px 0 2px; font-size:17px;">' + label + ' is Premium Content</h3>'
-    + '<div style="color:var(--text-dim); font-size:12px;">Part of the Premium bundle: Mind Map, Class Presentation, MCQ Quiz, NEET Practice, NEET Tricks, KCET Practice, Answer Practice, Paper Generator, Board Important &amp; Audio Podcast</div>'
+    + (CODE_ONLY_TABS.indexOf(tabId) !== -1 ? '<div style="font-size:12px; font-weight:700; color:var(--text); background:var(--panel-2); border:1px solid var(--border); border-radius:10px; padding:8px 10px; margin:8px 0;">\uD83D\uDD11 ' + label + ' opens only with your premium unlock code. It is not part of the free sample or the 1-day trial.</div>' : '')
+    + '<div style="color:var(--text-dim); font-size:12px;">Part of the Premium bundle: ' + premiumBundleLabelList() + '</div>'
     + '</div>'
     + '<div style="text-align:center; margin-bottom:16px;">'
     + '<span style="color:var(--gold-2); font-size:22px; font-weight:800;">\u20B9' + PREMIUM_PRICE_RUPEES + '</span>'
-    + '<div style="color:var(--text-dim); font-size:11px; margin-top:2px;">one-time unlock &middot; covers every premium feature in this chapter</div>'
+    + '<div style="color:var(--text-dim); font-size:11px; margin-top:2px;">one-time unlock &middot; covers all ' + PREMIUM_LOCKED_TABS.length + ' premium features in this chapter</div>'
     + '</div>'
     + '<div style="color:var(--text-dim); font-size:12px; text-align:center; margin-bottom:14px;">'
     + 'Pay below to get instant help unlocking Premium Content, or enter your unlock code if you already have one.'
@@ -7244,6 +7262,11 @@ function applyPremiumGates(){
   PREMIUM_LOCKED_TABS.forEach(function(tabId){
     const overlay = document.getElementById('premLock_' + tabId);
     if(!overlay) return;
+    if(CODE_ONLY_TABS.indexOf(tabId) !== -1){
+      if(premiumCodeQualifies()){ overlay.classList.remove('show'); overlay.innerHTML = ''; premiumToggleSiblings(tabId, false); }
+      else { renderPremiumLockScreenCh2(tabId); premiumToggleSiblings(tabId, true); }
+      return;
+    }
     if(unlocked){ overlay.classList.remove('show'); overlay.innerHTML = ''; premiumToggleSiblings(tabId, false); }
     else if(window.BaioSample && BaioSample.allow(tabId)){ overlay.classList.remove('show'); overlay.innerHTML = ''; premiumToggleSiblings(tabId, false);
       BaioSample.start(tabId, overlay.parentElement, function(t){ renderPremiumLockScreenCh2(t); premiumToggleSiblings(t, true); }, null, {noticeEl: function(){ return overlay; }}); }
@@ -7267,11 +7290,13 @@ function applyPremiumGates(){
   document.querySelectorAll('.tab-btn').forEach(function(btn){
     const tabId = btn.dataset.tab;
     const isPremium = PREMIUM_LOCKED_TABS.indexOf(tabId) !== -1;
+    const codeOnly = CODE_ONLY_TABS.indexOf(tabId) !== -1;
+    const tabOpen = codeOnly ? premiumCodeQualifies() : unlocked;
     const alreadyMarked = btn.getAttribute('data-lock-marked') === '1';
-    if(isPremium && !unlocked && !alreadyMarked){
-      btn.innerHTML = ((window.BaioSample&&BaioSample.allow(tabId))?'🎁 ':'🔒 ') + btn.innerHTML;
+    if(isPremium && !tabOpen && !alreadyMarked){
+      btn.innerHTML = ((!codeOnly && window.BaioSample && BaioSample.allow(tabId))?'🎁 ':'🔒 ') + btn.innerHTML;
       btn.setAttribute('data-lock-marked', '1');
-    } else if((!isPremium || unlocked) && alreadyMarked){
+    } else if((!isPremium || tabOpen) && alreadyMarked){
       btn.innerHTML = btn.innerHTML.replace('🎁 ', '').replace('🔒 ', '');
       btn.removeAttribute('data-lock-marked');
     }
@@ -9217,7 +9242,7 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
   var targetTab = null;
   try{ targetTab = localStorage.getItem(LAST_TAB_KEY); }catch(e){}
   if(!targetTab) targetTab = 'badges';
-  if(PREMIUM_LOCKED_TABS.indexOf(targetTab) !== -1 && !premiumQualifies()) targetTab = 'study';
+  if(PREMIUM_LOCKED_TABS.indexOf(targetTab) !== -1 && !premiumTabUnlocked(targetTab)) targetTab = 'study';
   var targetBtn = document.querySelector('.tab-btn[data-tab="'+targetTab+'"]');
   var targetPanel = document.getElementById('panel-'+targetTab);
   if(targetBtn && targetPanel){
