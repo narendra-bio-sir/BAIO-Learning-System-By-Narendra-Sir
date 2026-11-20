@@ -564,6 +564,26 @@ body{background:var(--bh-bg);}
 .bh-promo-dots button{width:8px;height:8px;border-radius:99px;border:0;padding:0;background:rgba(124,77,255,.28);cursor:pointer;transition:width .25s,background .25s}
 .bh-promo-dots button[aria-selected="true"]{width:22px;background:var(--bh-p1,#5B2EE0)}
 :root:not([data-theme="light"]) .bh-promo-dots button[aria-selected="true"]{background:#B39BFF}
+.bh-fc{position:relative;display:block;border-radius:24px;padding:16px 16px 14px 136px;overflow:hidden;color:#fff;font-family:inherit;
+ background:radial-gradient(circle at 92% 8%,rgba(255,158,207,.45),transparent 50%),linear-gradient(135deg,#5B2EE0,#8A4FE8 55%,#D45BB3);box-shadow:0 10px 26px rgba(91,46,224,.3)}
+.bh-fc a{text-decoration:none}
+.bh-fc .cvs{position:absolute;left:8px;top:16px;width:124px;height:200px;display:block}
+.bh-fc .cd{position:absolute;width:78px;border-radius:8px;box-shadow:0 10px 20px rgba(30,0,70,.4)}
+.bh-fc .c1{left:2px;top:4px;transform:rotate(-8deg);z-index:3}
+.bh-fc .c2{left:42px;top:40px;transform:rotate(6deg);z-index:2}
+.bh-fc .c3{left:14px;top:84px;transform:rotate(-2deg);z-index:1}
+.bh-fc .tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.08em;padding:3px 9px;border-radius:99px;background:#FFC93C;color:#3A2600}
+.bh-fc b{display:block;font-size:17px;font-weight:800;line-height:1.2;margin-top:8px}
+.bh-fc .bl{list-style:none;margin:6px 0 0;padding:0;font-size:11.5px;line-height:1.4;opacity:.95}
+.bh-fc .bl li{margin-top:3px}
+.bh-fc .row{display:flex;align-items:center;margin-top:9px}
+.bh-fc .pr{font-size:23px;font-weight:900;color:#FFE27A;line-height:1}
+.bh-fc .pr small{font-size:12px;font-weight:700;color:#fff;opacity:.9}
+.bh-fc .btns{display:block;margin:12px 0 0 -120px}
+.bh-fc .go{display:block;text-align:center;font-weight:800;font-size:14px;padding:11px 8px;border-radius:99px;background:#FFC93C;color:#3A2600;box-shadow:0 6px 14px rgba(0,0,0,.2)}
+.bh-fc .nt{display:block;font-size:10.8px;opacity:.85;margin:8px 0 0 -120px;text-align:center}
+:root:not([data-theme="light"]) .bh-fc{background:radial-gradient(circle at 92% 8%,rgba(255,158,207,.22),transparent 50%),linear-gradient(135deg,#2A1670,#43217F 55%,#6B2D6E);border:1px solid rgba(179,155,255,.3);box-shadow:0 14px 30px rgba(0,0,0,.4)}
+@media(max-width:370px){.bh-fc{padding-left:120px}.bh-fc .cvs{width:112px}.bh-fc .cd{width:66px}.bh-fc .c2{left:36px;top:36px}.bh-fc .c3{left:12px;top:74px}.bh-fc .btns,.bh-fc .nt{margin-left:-104px}}
 .bh-bundle{position:relative;display:block;border-radius:24px;padding:16px 16px 14px;overflow:hidden;color:#fff;font-family:inherit;
  background:radial-gradient(circle at 90% 10%,rgba(255,201,60,.35),transparent 50%),linear-gradient(135deg,#0B6F5E,#0F8F7A 55%,#12B58F);box-shadow:0 10px 26px rgba(15,143,122,.3)}
 .bh-bundle a{text-decoration:none}
@@ -754,7 +774,7 @@ body{padding-bottom:96px;}
 
     <div class="bh-promo" id="bhPromo" role="region" aria-roledescription="carousel" aria-label="BAIO books and chapter bundles">
      <div class="bh-promo-track" id="bhPromoTrack">
-    <div class="bh-book bh-slide" id="bhBook" role="group" aria-roledescription="slide" aria-label="1 of 2: Exam Scorer e-books">
+    <div class="bh-book bh-slide" id="bhBook" role="group" aria-roledescription="slide" aria-label="1 of 3: Exam Scorer e-books">
       <a class="cvs" id="bhBookCvs" href="biology-prep-books.html" aria-label="I PUC and II PUC Biology Exam Scorer books">
         <img class="cv" id="bhBookCv1" src="prep-books-assets/pu1/cover.jpg" alt="I PUC Biology Exam Scorer cover" loading="lazy">
         <img class="cv" id="bhBookCv2" src="prep-books-assets/pu2/cover.jpg" alt="II PUC Biology Exam Scorer cover" loading="lazy">
@@ -772,7 +792,7 @@ body{padding-bottom:96px;}
         <a class="go" id="bhBookGo2" href="biology-prep-books.html#pu2">📗 II PUC Book →</a>
       </span>
     </div>
-    <div class="bh-bundle bh-slide" id="bhBundle" role="group" aria-roledescription="slide" aria-label="2 of 2: all 13 PU-II chapters in one payment">
+    <div class="bh-bundle bh-slide" id="bhBundle" role="group" aria-roledescription="slide" aria-label="2 of 3: all 13 PU-II chapters in one payment">
       <span class="gift" aria-hidden="true">🎁</span>
       <span class="tag">🎓 II PUC · ONE PAYMENT</span>
       <b>Get All 13 PU-II Chapters</b>
@@ -788,8 +808,25 @@ body{padding-bottom:96px;}
       </span>
       <small class="nt">One unlock code for every PU-II chapter · WhatsApp Narendra Sir after paying</small>
     </div>
+    <div class="bh-fc bh-slide" id="bhFc" role="group" aria-roledescription="slide" aria-label="3 of 3: Biology flash cards">
+      <a class="cvs" href="flashcards.html" aria-label="Biology flash cards">
+        <img class="cd c1" src="flashcards/promo/card-1.jpg" alt="Flash card: Mendel's Laws" loading="lazy">
+        <img class="cd c2" src="flashcards/promo/card-2.jpg" alt="Flash card: Beyond Mendel" loading="lazy">
+        <img class="cd c3" src="flashcards/promo/card-3.jpg" alt="Flash card: Chromosomal Theory and Linkage" loading="lazy">
+      </a>
+      <span class="tag">🧠 NEW · FLASH CARDS</span>
+      <b>Biology Flash Cards</b>
+      <ul class="bl">
+        <li>6 cards per chapter: definitions, key terms, formulas &amp; tables</li>
+        <li>I PUC &amp; II PUC · English, ಕನ್ನಡ, हिंदी</li>
+        <li>Download &amp; share as images on WhatsApp &amp; Instagram</li>
+      </ul>
+      <span class="row"><span class="pr">₹50 <small>per chapter</small></span></span>
+      <span class="btns"><a class="go on" href="flashcards.html">🃏 Get Flash Cards →</a></span>
+      <small class="nt">Pick your chapter, then tap 🔒 Download &amp; share to unlock it</small>
+    </div>
      </div>
-     <div class="bh-promo-dots" id="bhPromoDots" role="tablist" aria-label="Choose a slide"><button type="button" role="tab" aria-label="Exam Scorer e-books" aria-selected="true"></button><button type="button" role="tab" aria-label="All 13 PU-II chapters" aria-selected="false"></button></div>
+     <div class="bh-promo-dots" id="bhPromoDots" role="tablist" aria-label="Choose a slide"><button type="button" role="tab" aria-label="Exam Scorer e-books" aria-selected="true"></button><button type="button" role="tab" aria-label="All 13 PU-II chapters" aria-selected="false"></button><button type="button" role="tab" aria-label="Biology flash cards" aria-selected="false"></button></div>
     </div>
     <button type="button" class="bh-new" id="bhNewUiWatch" aria-haspopup="dialog" aria-label="Watch the video: what's new in the BAIO app">
       <img src="reels/baio-new-ui-promo-cover.jpg" alt="" loading="lazy">
