@@ -1,4 +1,4 @@
-/* BAIO · "NEET Tricks for this chapter" banner on every chapter page.
+/* BAIO · promo strip on every chapter page: NEET Tricks for this chapter + the class Exam Scorer e-book.
    Usage: <script src="neet-tricks/nt-link.js?v=1" data-ch="pu1-ch10" defer></script>
    (pages in a sub-folder use "../neet-tricks/nt-link.js"). It sits between the chapter header and the tab bar,
    shows ₹99 or "✅ Open" and links to neet-tricks.html#<chapter>. On a page that has its own NEET Tricks tab
@@ -10,6 +10,10 @@
   if(!id) return;
   var page;
   try{ page = new URL('../neet-tricks.html', me.src).href; }catch(e){ page = 'neet-tricks.html'; }
+  var cls = id.indexOf('pu1-') === 0 ? 'pu1' : 'pu2';
+  var bookPage, coverSrc;
+  try{ bookPage = new URL('../biology-prep-books.html#' + cls, me.src).href; }catch(e){ bookPage = 'biology-prep-books.html#' + cls; }
+  try{ coverSrc = new URL('../prep-books-assets/' + cls + '/cover.jpg', me.src).href; }catch(e){ coverSrc = 'prep-books-assets/' + cls + '/cover.jpg'; }
 
   function owned(){
     try{
@@ -25,22 +29,35 @@
   }
 
   function build(){
-    if(document.getElementById('ntLinkBanner')) return;
+    if(document.getElementById('ntPromo')) return;
     var anchor = document.querySelector('.desktop-row') || document.querySelector('.tabbar-wrap');
     if(!anchor || !anchor.parentNode) return;
     var css = document.createElement('style');
     css.textContent =
-      '#ntLinkBanner{display:flex;align-items:center;gap:12px;margin:10px 0 12px;padding:11px 14px;border-radius:16px;text-decoration:none;color:inherit;'
-      + 'border:1.5px solid rgba(212,175,55,.65);background:linear-gradient(120deg,rgba(212,175,55,.16),rgba(46,198,160,.10));font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}'
-      + '#ntLinkBanner .nti{flex:none;width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:24px;background:rgba(212,175,55,.22)}'
-      + '#ntLinkBanner .ntt{flex:1;min-width:0}'
-      + '#ntLinkBanner b{display:block;font-size:14.5px;font-weight:800;line-height:1.25}'
-      + '#ntLinkBanner small{display:block;font-size:11.5px;opacity:.78;margin-top:2px;line-height:1.35}'
-      + '#ntLinkBanner .ntp{flex:none;font-size:12.5px;font-weight:800;padding:7px 12px;border-radius:99px;background:#D4AF37;color:#2A1F00;white-space:nowrap}'
-      + '#ntLinkBanner .ntp.ok{background:#1E8E52;color:#fff}';
+      '#ntPromo{margin:10px 0 12px}'
+      + '#ntPromo .trk{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;-webkit-overflow-scrolling:touch}'
+      + '#ntPromo .trk::-webkit-scrollbar{display:none}'
+      + '#ntPromo .sl{flex:0 0 100%;box-sizing:border-box;scroll-snap-align:center;scroll-snap-stop:always;display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:16px;text-decoration:none;color:inherit;font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;min-height:68px}'
+      + '#ntLinkBanner{border:1.5px solid rgba(212,175,55,.65);background:linear-gradient(120deg,rgba(212,175,55,.16),rgba(46,198,160,.10))}'
+      + '#ebkBanner{border:1.5px solid rgba(200,90,70,.55);background:linear-gradient(120deg,rgba(255,214,130,.20),rgba(200,90,70,.10))}'
+      + '#ntPromo .nti{flex:none;width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:24px;background:rgba(212,175,55,.22)}'
+      + '#ntPromo .cv{flex:none;width:38px;height:50px;object-fit:cover;border-radius:4px 7px 7px 4px;box-shadow:0 4px 10px rgba(0,0,0,.25);transform:rotate(-4deg)}'
+      + '#ntPromo .ntt{flex:1;min-width:0}'
+      + '#ntPromo b{display:block;font-size:14.5px;font-weight:800;line-height:1.25}'
+      + '#ntPromo small{display:block;font-size:11.5px;opacity:.78;margin-top:2px;line-height:1.35}'
+      + '#ntPromo .ntp{flex:none;font-size:12.5px;font-weight:800;padding:7px 12px;border-radius:99px;background:#D4AF37;color:#2A1F00;white-space:nowrap}'
+      + '#ntPromo .ntp.ok{background:#1E8E52;color:#fff}'
+      + '#ntPromo .dots{display:flex;justify-content:center;gap:6px;margin-top:6px}'
+      + '#ntPromo .dots button{width:7px;height:7px;padding:0;border:0;border-radius:99px;background:rgba(150,150,150,.4);cursor:pointer;transition:width .25s}'
+      + '#ntPromo .dots button[aria-selected="true"]{width:18px;background:#D4AF37}';
     document.head.appendChild(css);
+    var wrap = document.createElement('div');
+    wrap.id = 'ntPromo';
+    wrap.setAttribute('role', 'region'); wrap.setAttribute('aria-roledescription', 'carousel'); wrap.setAttribute('aria-label', 'NEET Tricks and e-book');
+    var trk = document.createElement('div'); trk.className = 'trk';
+    /* slide 1: NEET Tricks */
     var a = document.createElement('a');
-    a.id = 'ntLinkBanner';
+    a.id = 'ntLinkBanner'; a.className = 'sl';
     a.href = page + '#' + id;
     var ok = owned();
     a.innerHTML = '<span class="nti" aria-hidden="true">🎯</span>'
@@ -51,16 +68,35 @@
       a.href = '#';
       a.addEventListener('click', function(e){ e.preventDefault(); window.goToTab('neettricks'); });
     }
-    anchor.parentNode.insertBefore(a, anchor);
+    /* slide 2: Exam Scorer e-book of this class */
+    var e = document.createElement('a');
+    e.id = 'ebkBanner'; e.className = 'sl';
+    e.href = bookPage;
+    e.innerHTML = '<img class="cv" src="' + coverSrc + '" alt="" loading="lazy">'
+      + '<span class="ntt"><b>' + (cls === 'pu1' ? 'I PUC' : 'II PUC') + ' Biology Exam Scorer e-book</b><small>Revision notes for every chapter · NCERT diagram practice · ' + (cls === 'pu1' ? '12' : '10') + ' practice papers with solutions</small></span>'
+      + '<span class="ntp">₹50 →</span>';
+    trk.appendChild(a); trk.appendChild(e);
+    var dots = document.createElement('div'); dots.className = 'dots'; dots.setAttribute('role', 'tablist');
+    ['NEET Tricks', 'E-book'].forEach(function(l, i){ var d = document.createElement('button'); d.type = 'button'; d.setAttribute('role', 'tab'); d.setAttribute('aria-label', l); d.setAttribute('aria-selected', i ? 'false' : 'true'); dots.appendChild(d); });
+    wrap.appendChild(trk); wrap.appendChild(dots);
+    anchor.parentNode.insertBefore(wrap, anchor);
+    /* swipe, dots and gentle auto-advance (pauses while touched, off for reduced motion) */
+    var slides = trk.children, btns = dots.children, cur = 0, paused = false;
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function mark(i){ cur = i; for(var k = 0; k < btns.length; k++) btns[k].setAttribute('aria-selected', k === i ? 'true' : 'false'); }
+    function go(i){ i = (i + slides.length) % slides.length; trk.scrollTo({left: slides[i].offsetLeft - trk.offsetLeft, behavior: reduce ? 'auto' : 'smooth'}); mark(i); }
+    function nearest(){ var L = trk.scrollLeft, best = 0, d = Infinity; for(var k = 0; k < slides.length; k++){ var dd = Math.abs((slides[k].offsetLeft - trk.offsetLeft) - L); if(dd < d){ d = dd; best = k; } } return best; }
+    var raf = 0; trk.addEventListener('scroll', function(){ if(!raf) raf = requestAnimationFrame(function(){ raf = 0; var k = nearest(); if(k !== cur) mark(k); }); }, {passive:true});
+    for(var k = 0; k < btns.length; k++) (function(k){ btns[k].addEventListener('click', function(){ go(k); }); })(k);
+    ['touchstart', 'pointerdown', 'mouseenter', 'focusin'].forEach(function(ev){ trk.addEventListener(ev, function(){ paused = true; }, {passive:true}); });
+    ['touchend', 'touchcancel', 'mouseleave', 'focusout'].forEach(function(ev){ trk.addEventListener(ev, function(){ paused = false; }, {passive:true}); });
+    if(!reduce) setInterval(function(){ if(!paused && !document.hidden && trk.offsetParent) go(cur + 1); }, 6000);
   }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build); else build();
   /* ---------- Downloads tab: revision notes come from the ₹50 Exam Scorer e-book ----------
      Chapters that already have their own Revision Notes PDF keep it (free); for the others the
      page's Revision Notes row (which points to a missing PDF) is hidden and the e-book row shown instead. */
   var OWN_NOTES = ['pu1-ch2', 'pu2-ch4', 'pu2-ch5', 'pu2-ch6', 'pu2-ch7'];
-  var cls = id.indexOf('pu1-') === 0 ? 'pu1' : 'pu2';
-  var bookPage;
-  try{ bookPage = new URL('../biology-prep-books.html#' + cls, me.src).href; }catch(e){ bookPage = 'biology-prep-books.html#' + cls; }
   function ebookRow(){
     var r = document.createElement('a');
     r.id = 'ebkNotesRow';
