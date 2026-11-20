@@ -73,7 +73,7 @@
     e.id = 'ebkBanner'; e.className = 'sl';
     e.href = bookPage;
     e.innerHTML = '<img class="cv" src="' + coverSrc + '" alt="" loading="lazy">'
-      + '<span class="ntt"><b>' + (cls === 'pu1' ? 'I PUC' : 'II PUC') + ' Biology Exam Scorer e-book</b><small>Revision notes for every chapter · NCERT diagram practice · ' + (cls === 'pu1' ? '12' : '10') + ' practice papers with solutions</small></span>'
+      + '<span class="ntt"><b>' + (cls === 'pu1' ? 'I PUC' : 'II PUC') + ' Biology Exam Scorer e&#8209;book</b><small>NCERT diagram practice · ' + (cls === 'pu1' ? '12' : '10') + ' practice papers with solutions</small></span>'
       + '<span class="ntp">₹50 →</span>';
     trk.appendChild(a); trk.appendChild(e);
     var dots = document.createElement('div'); dots.className = 'dots'; dots.setAttribute('role', 'tablist');
@@ -93,7 +93,7 @@
     if(!reduce) setInterval(function(){ if(!paused && !document.hidden && trk.offsetParent) go(cur + 1); }, 6000);
   }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build); else build();
-  /* ---------- Downloads tab: revision notes come from the ₹50 Exam Scorer e-book ----------
+  /* ---------- Downloads tab: link to the ₹50 Exam Scorer e-book ----------
      Chapters that already have their own Revision Notes PDF keep it (free); for the others the
      page's Revision Notes row (which points to a missing PDF) is hidden and the e-book row shown instead. */
   var OWN_NOTES = ['pu1-ch2', 'pu2-ch4', 'pu2-ch5', 'pu2-ch6', 'pu2-ch7'];
@@ -101,8 +101,8 @@
     var r = document.createElement('a');
     r.id = 'ebkNotesRow';
     r.href = bookPage;
-    r.innerHTML = '<span class="ebi" aria-hidden="true">📕</span><span class="ebt"><b>Revision notes for this chapter</b>'
-      + '<small>In the ' + (cls === 'pu1' ? 'I PUC' : 'II PUC') + ' Exam Scorer e-book · every chapter’s notes, NCERT diagram practice &amp; practice papers with solutions</small></span>'
+    r.innerHTML = '<span class="ebi" aria-hidden="true">📕</span><span class="ebt"><b>' + (cls === 'pu1' ? 'I PUC' : 'II PUC') + ' Biology Exam Scorer e&#8209;book</b>'
+      + '<small>NCERT diagram practice · practice papers with worked solutions</small></span>'
       + '<span class="ebp">₹50 →</span>';
     return r;
   }
