@@ -125,6 +125,8 @@ const ids = Object.keys(NT);
    Not opened by the free sample, the demo code, the 1-day trial or the master demo code. */
 const PRICE = 99;
 const FREE_TRICKS = 2, FREE_QS = 3; /* free preview in every locked chapter */
+const NO_PREVIEW = ['pu2-ch4']; /* Narendra Sir's own genetics notes: never in the free trial */
+const hasPreview = id => NO_PREVIEW.indexOf(id) === -1;
 const OWNER_LOCK = 'baio_nt_owner_locked'; /* owner pressed "Lock again": ignore master unlocks on this phone */
 /* class bundles: every chapter of one class in one payment (codes from ns-gen: NT-PU1-ALL, NT-PU2-ALL) */
 const BUNDLES = {
@@ -168,7 +170,7 @@ function unlocked(id){
   const s = store();
   if(s['*'] || s[id]) return true;
   if(NT[id] && s[bundleOf(id)]) return true;
-  if(id === 'pu2-ch4'){ const u = readJSON('pu2ch4_neettricks_unlock'); if(u && u.unlocked) return true; }
+  if(id === 'pu2-ch4'){ const u = readJSON('pu2ch4_neettricks_unlock'); if(u && u.unlocked && !(u.method === 'master' && ownerLocked())) return true; }
   const p = PREMIUM[id], u = p && readJSON(p[0]);   /* chapter Premium bought with a real code (not demo / trial) */
   return !!(u && u.unlocked && (u.method === 'code' || (u.method === 'master' && !ownerLocked())));
 }
@@ -178,6 +180,7 @@ function ownerLocked(){ try{ return localStorage.getItem(OWNER_LOCK) === '1'; }c
 function isOwner(){ /* a master code is saved on this phone (on this page, or a chapter's Premium master) */
   if(store()['*']) return true;
   if(ownerLocked()) return false;
+  const c4 = readJSON('pu2ch4_neettricks_unlock'); if(c4 && c4.unlocked && c4.method === 'master') return true;
   return Object.keys(PREMIUM).some(id => { const u = readJSON(PREMIUM[id][0]); return !!(u && u.unlocked && u.method === 'master'); });
 }
 function ownerBar(){
@@ -194,7 +197,7 @@ function bundleBanner(b){
 }
 function drawLibrary(){
   $('#library').innerHTML = ownerBar() + [[1,'I PUC'],[2,'II PUC']].map(([n, lbl]) => `<div class="shelf"><h3>${lbl}</h3>${bundleBanner('pu' + n + '-all')}<div class="chs">${ids.filter(id => id.startsWith('pu' + n + '-')).map(id => { const A = NT[id], ok = unlocked(id);
-    return `<button class="chc" data-id="${id}"><span class="ic" style="background:linear-gradient(150deg,${A.color},#0b1b14)">${A.icon}</span><span><b>${esc(A.title)}</b><small>${esc(A.ch.replace(/^I+ PUC · /,''))} · ${A.tricks.length} tricks · ${A.quiz.length} questions</small></span><span class="st ${ok ? 'ok' : ''}">${ok ? '✅ Open' : '👀 Try · ₹' + PRICE}</span></button>`; }).join('')}</div></div>`).join('');
+    return `<button class="chc" data-id="${id}"><span class="ic" style="background:linear-gradient(150deg,${A.color},#0b1b14)">${A.icon}</span><span><b>${esc(A.title)}</b><small>${esc(A.ch.replace(/^I+ PUC · /,''))} · ${A.tricks.length} tricks · ${A.quiz.length} questions</small></span><span class="st ${ok ? 'ok' : ''}">${ok ? '✅ Open' : (hasPreview(id) ? '👀 Try · ₹' : '🔒 ₹') + PRICE}</span></button>`; }).join('')}</div></div>`).join('');
   $('#library').querySelectorAll('.chc').forEach(c => c.onclick = () => { location.hash = c.dataset.id; });
   const ol = $('#ownerLock'); if(ol) ol.onclick = () => {
     try{ const s = store(); delete s['*']; localStorage.setItem(STORE, JSON.stringify(s)); localStorage.setItem(OWNER_LOCK, '1'); }catch(e){}
@@ -227,7 +230,7 @@ function openCh(id){
   $('#cch').textContent = A.ch;
   const head = `<div class="nt-head"><span class="ic" style="background:linear-gradient(150deg,${A.color},#0b1b14)">${A.icon}</span><div><div class="k">🎯 NEET Tricks &amp; Tips · ${esc(A.ch)}</div><h2>${esc(A.title)}</h2><p>${A.intro}</p></div></div>`;
   $('#body').innerHTML = head + (unlocked(id) ? full(id) : locked(id));
-  if(unlocked(id)) wireQuiz(id); else { wireQuiz(id, FREE_QS); wireBuy(id); }
+  if(unlocked(id)) wireQuiz(id); else { if(hasPreview(id)) wireQuiz(id, FREE_QS); wireBuy(id); }
   window.scrollTo(0, 0);
 }
 function full(id){
@@ -252,6 +255,10 @@ function wireQuiz(id, limit){
 }
 function locked(id){
   const A = NT[id], p = profile();
+  if(!hasPreview(id)) return `<div class="pv">🔒 <b>No free preview for this chapter</b> — these are Narendra Sir's own genetics shortcuts. Unlock all ${A.tricks.length} tricks, ${A.traps.length} NEET traps and ${A.quiz.length} practice questions for ₹${PRICE}.</div>`
+    + `<div class="inside lockd"><h4>🔒 What's inside</h4><ul>${A.tricks.map((t, i) => `<li>🔒 Trick ${i + 1}: ${esc(t.t)}</li>`).join('')}<li>🔒 ${A.traps.length} NEET traps to avoid</li><li>🔒 ${A.quiz.length} NEET-style questions, each with its shortcut</li></ul></div>`
+    + buyBox(id, PRICE, '', 'one-time · this chapter · yours to keep', `Already bought this chapter's Premium or the PU-II bundle? Enter that code here — it opens NEET Tricks too.`)
+    + (() => { const b = bundleOf(id), B = BUNDLES[b], n = bIds(b).length; return bundleOwned(b) ? '' : `<a class="bndlink" href="#${b}">🎁 Or get all ${n} ${B.short} chapters for ₹${B.price} (instead of ₹${n * PRICE}) →</a>`; })();
   return `<div class="pv">👀 <b>Free preview</b> — ${FREE_TRICKS} of ${A.tricks.length} tricks and ${FREE_QS} of ${A.quiz.length} practice questions. Unlock the rest for ₹${PRICE}.</div>`
     + A.tricks.slice(0, FREE_TRICKS).map((t, i) => `<div class="trk"><span class="n">Trick ${i + 1} · free</span><h4>${esc(t.t)}</h4>${t.h}</div>`).join('')
     + `<div class="qz" id="qz"><h4>🎯 Try ${FREE_QS} questions free</h4><div class="sc" id="qsc"></div><div id="qs"></div></div>`
