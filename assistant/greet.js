@@ -1,6 +1,6 @@
 /* BAIO home greeting.
    - First open: a welcome sheet asks the student's name (stored in localStorage 'baio_user_name').
-   - Every time the app opens (once per browser session): a greeting card, e.g. "Good morning, Priya! 👋".
+   - The home header shows "Hi, <name>". There is no greeting pop-up (switched off at Narendra Sir's request).
    - Tapping the name in the home header lets the student change it.
    A name already saved on a chapter page ('baio_student') is used as-is, so those students are never asked twice.
    'baio_student' is only updated when it already exists, because chapter pages treat that profile as complete. */
@@ -22,7 +22,9 @@
          tap:'शुरू करने के लिए कहीं भी टैप करें', say:function(g, n){ return g + ', ' + n + '! BAIO में आपका स्वागत है।'; } }
   }[LANG];
 
-  var NAME_KEY = 'baio_user_name', SEEN_KEY = 'baio_greeted';
+  var NAME_KEY = 'baio_user_name', SEEN_KEY = 'baio_greeted', DAY_KEY = 'baio_greeted_day';
+  function today(){ var d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+  function markDay(){ try { sessionStorage.setItem(SEEN_KEY, '1'); localStorage.setItem(DAY_KEY, today()); } catch (e) {} }
   function clean(s){ return String(s || '').replace(/\s+/g, ' ').trim().slice(0, 30); }
   function first(s){ var w = clean(s).split(' ')[0] || ''; return w.charAt(0).toUpperCase() + w.slice(1); }
   function profile(){ try { return JSON.parse(localStorage.getItem('baio_student') || 'null'); } catch (e) { return null; } }
@@ -89,7 +91,7 @@
 
   function greet(isNew){
     var n = first(getName()); if (!n) return;
-    try { sessionStorage.setItem(SEEN_KEY, '1'); } catch (e) {}
+    markDay();
     var o = overlay();
     o.ov.setAttribute('aria-label', partOfDay() + ', ' + n);
     o.card.appendChild(el('div', 'bg-wave', '👋'));
@@ -121,14 +123,13 @@
     function submit(){
       var n = clean(inp.value); if (!n) { inp.focus(); return; }
       setName(n); updateHeader();
-      o.close(function(){ greet(!opts.edit); });
-      speak(T.say(partOfDay(), first(n)));
+      o.close();
     }
     go.addEventListener('click', submit);
     inp.addEventListener('keydown', function(e){ if (e.key === 'Enter') { e.preventDefault(); submit(); } });
     if (!opts.edit) {
       var later = el('button', 'bg-later', T.later); later.type = 'button';
-      later.onclick = function(){ try { sessionStorage.setItem(SEEN_KEY, '1'); } catch (e) {} o.close(); };
+      later.onclick = function(){ markDay(); o.close(); };
       o.card.appendChild(later);
     }
     setTimeout(function(){ try { inp.focus({ preventScroll: true }); } catch (e) {} }, 350);
@@ -143,9 +144,10 @@
       b.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); edit(); } });
     }
     if (location.hash === '#baio-tour') return;
-    var seen = false; try { seen = sessionStorage.getItem(SEEN_KEY) === '1'; } catch (e) {}
-    if (seen) return;
-    if (getName()) greet(false); else ask();
+    /* no greeting pop-up; only a student with no name yet is asked for it (at most once a day) */
+    if (getName()) return;
+    var seen = false; try { seen = sessionStorage.getItem(SEEN_KEY) === '1' || localStorage.getItem(DAY_KEY) === today(); } catch (e) {}
+    if (!seen) ask();
   }
   window.BAIOGreet = { ask: function(){ ask({ edit: !!getName() }); }, greet: function(){ greet(false); } };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
