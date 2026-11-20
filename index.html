@@ -603,6 +603,31 @@ body{background:var(--bh-bg);}
 .bh-fc .nt{display:block;font-size:10.8px;opacity:.85;margin:8px 0 0 -120px;text-align:center}
 :root:not([data-theme="light"]) .bh-fc{background:radial-gradient(circle at 92% 8%,rgba(255,158,207,.22),transparent 50%),linear-gradient(135deg,#2A1670,#43217F 55%,#6B2D6E);border:1px solid rgba(179,155,255,.3);box-shadow:0 14px 30px rgba(0,0,0,.4)}
 @media(max-width:370px){.bh-fc{padding-left:120px}.bh-fc .cvs{width:112px}.bh-fc .cd{width:66px}.bh-fc .c2{left:36px;top:36px}.bh-fc .c3{left:12px;top:74px}.bh-fc .btns,.bh-fc .nt{margin-left:-104px}}
+.bh-dp,.bh-dc{position:relative;display:block;border-radius:24px;padding:16px 16px 14px;overflow:hidden;color:#fff;font-family:inherit}
+.bh-dp{background:radial-gradient(circle at 92% 8%,rgba(120,220,255,.45),transparent 50%),linear-gradient(135deg,#0B3FA8,#1565D8 55%,#0097B2);box-shadow:0 10px 26px rgba(11,63,168,.3)}
+.bh-dc{background:radial-gradient(circle at 92% 8%,rgba(255,226,122,.5),transparent 50%),linear-gradient(135deg,#E8430C,#F26419 50%,#E0245E);box-shadow:0 10px 26px rgba(232,67,12,.3)}
+.bh-dp a,.bh-dc a{text-decoration:none}
+.bh-dp .deco,.bh-dc .deco{position:absolute;right:14px;top:8px;font-size:46px;transform:rotate(12deg);filter:drop-shadow(0 6px 10px rgba(0,0,0,.25))}
+.bh-dp .tag,.bh-dc .tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.08em;padding:3px 9px;border-radius:99px;background:#fff}
+.bh-dp .tag{color:#0B3FA8}.bh-dc .tag{color:#C2341A}
+.bh-dp b,.bh-dc b{display:block;font-size:18px;font-weight:800;line-height:1.2;margin-top:8px;max-width:80%}
+.bh-dp .bl,.bh-dc .bl{list-style:none;margin:8px 0 0;padding:0;font-size:12px;line-height:1.45;opacity:.96}
+.bh-dp .bl li,.bh-dc .bl li{margin-top:2px}
+.bh-dp .bl li.ok{text-decoration:line-through;opacity:.75}
+.bh-dp .bl li.ok::after{content:" ✓";text-decoration:none;display:inline-block;margin-left:4px;color:#B9FFD8;font-weight:800}
+.bh-dp .row,.bh-dc .row{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.bh-dp .pr,.bh-dc .pr{font-size:17px;font-weight:900;color:#FFE27A;line-height:1.1}
+.bh-dp .bar{flex:1;min-width:70px;height:8px;border-radius:99px;background:rgba(255,255,255,.25);overflow:hidden}
+.bh-dp .bar i{display:block;height:100%;width:0;border-radius:99px;background:#FFE27A;transition:width .4s}
+.bh-dc .sub{font-size:12px;font-weight:700;opacity:.92}
+.bh-dp .btns,.bh-dc .btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.bh-dp .go,.bh-dc .go{display:block;text-align:center;font-family:inherit;font-weight:800;font-size:13px;line-height:1.2;padding:10px 6px;border-radius:99px;white-space:nowrap;border:2px solid rgba(255,255,255,.85);color:#fff;background:transparent;cursor:pointer}
+.bh-dp .go.on{background:#fff;border-color:#fff;color:#0B3FA8;box-shadow:0 6px 14px rgba(0,0,0,.2)}
+.bh-dc .go.on{background:#fff;border-color:#fff;color:#C2341A;box-shadow:0 6px 14px rgba(0,0,0,.2)}
+.bh-dp .nt,.bh-dc .nt{display:block;font-size:10.8px;opacity:.88;margin-top:9px;text-align:center}
+:root:not([data-theme="light"]) .bh-dp{background:radial-gradient(circle at 92% 8%,rgba(120,220,255,.18),transparent 50%),linear-gradient(135deg,#0A2456,#0D3A7A 55%,#0B4E5E);border:1px solid rgba(120,200,255,.28);box-shadow:0 14px 30px rgba(0,0,0,.4)}
+:root:not([data-theme="light"]) .bh-dc{background:radial-gradient(circle at 92% 8%,rgba(255,201,60,.18),transparent 50%),linear-gradient(135deg,#5A1F0A,#7A2A10 55%,#6E1638);border:1px solid rgba(255,150,90,.3);box-shadow:0 14px 30px rgba(0,0,0,.4)}
+@media(max-width:370px){.bh-dp b,.bh-dc b{font-size:16.5px}.bh-dp .go,.bh-dc .go{font-size:12px}}
 .bh-bundle{position:relative;display:block;border-radius:24px;padding:16px 16px 14px;overflow:hidden;color:#fff;font-family:inherit;
  background:radial-gradient(circle at 90% 10%,rgba(255,201,60,.35),transparent 50%),linear-gradient(135deg,#0B6F5E,#0F8F7A 55%,#12B58F);box-shadow:0 10px 26px rgba(15,143,122,.3)}
 .bh-bundle a{text-decoration:none}
@@ -807,9 +832,9 @@ body{padding-bottom:96px;}
     </div>
 
     <a class="bh-daily" href="zone.html#daily"><div style="font-size:30px">🔥</div><div><b>Daily Bio Challenge</b><small>5 questions · 3 minutes</small></div><span class="pl">Play ▶</span></a>
-    <div class="bh-promo" id="bhPromo" role="region" aria-roledescription="carousel" aria-label="BAIO books and chapter bundles">
+    <div class="bh-promo" id="bhPromo" role="region" aria-roledescription="carousel" aria-label="BAIO daily plan, challenge, books and chapter bundles">
      <div class="bh-promo-track" id="bhPromoTrack">
-    <div class="bh-trial bh-slide" id="bhTrial" role="group" aria-roledescription="slide" aria-label="1 of 4: one-day free trial of premium content">
+    <div class="bh-trial bh-slide" id="bhTrial" role="group" aria-roledescription="slide" aria-label="1 of 6: one-day free trial of premium content">
       <span class="crown" aria-hidden="true">👑</span>
       <span class="tag" id="bhTrialTag">⏳ 1-DAY FREE TRIAL</span>
       <b id="bhTrialT">Try Premium free for 24 hours</b>
@@ -822,7 +847,39 @@ body{padding-bottom:96px;}
       <span class="btns" id="bhTrialBtns"><button type="button" class="go on" id="bhTrialGo">🚀 Start my free trial</button></span>
       <small class="nt" id="bhTrialNote">One trial per phone · ends by itself after 24 hours · paid unlocks stay as they are</small>
     </div>
-    <div class="bh-book bh-slide" id="bhBook" role="group" aria-roledescription="slide" aria-label="2 of 4: Exam Scorer e-books">
+    <div class="bh-dp bh-slide" id="bhPlan" role="group" aria-roledescription="slide" aria-label="2 of 6: daily NEET plan">
+      <span class="deco" aria-hidden="true">🚀</span>
+      <span class="tag">🚀 DAILY NEET PLAN</span>
+      <b>Your 3 steps every day</b>
+      <ul class="bl" id="bhPlanList">
+        <li data-step="1">📘 Learn · 45 min · Study Mode or One-Shot Revision</li>
+        <li data-step="2">🎯 Practise · 15 min · 10 timed NEET questions</li>
+        <li data-step="3">🔥 Revise · 5 min · today's 5 Daily Bio Zone questions</li>
+      </ul>
+      <span class="row"><span class="pr" id="bhPlanCount">0 / 3 today</span><span class="bar" aria-hidden="true"><i id="bhPlanBar"></i></span></span>
+      <span class="btns">
+        <a class="go on" id="bhPlanGo" href="#start3">▶ Start today's plan</a>
+        <button type="button" class="go" id="bhPlanWatch">🎬 Watch how</button>
+      </span>
+      <small class="nt">About 65 minutes a day · Sunday: 50-question NEET mock</small>
+    </div>
+    <div class="bh-dc bh-slide" id="bhChal" role="group" aria-roledescription="slide" aria-label="3 of 6: daily Biology challenge">
+      <span class="deco" aria-hidden="true">🔥</span>
+      <span class="tag">🔥 DAILY BIOLOGY CHALLENGE</span>
+      <b id="bhChalT">Today's 5 questions</b>
+      <ul class="bl">
+        <li>⏱ Just 3 minutes · new questions every day</li>
+        <li>🧬 I PUC &amp; II PUC · play daily to build your streak</li>
+        <li>🏆 Earn certificates · share your score</li>
+      </ul>
+      <span class="row"><span class="pr" id="bhChalStreak">🔥 Start your streak today</span><span class="sub" id="bhChalBest"></span></span>
+      <span class="btns">
+        <a class="go on" id="bhChalGo" href="zone.html#daily">▶ Play today's 5</a>
+        <a class="go" href="zone.html#guess">🧩 Guess-It puzzles</a>
+      </span>
+      <small class="nt" id="bhChalNote">Miss a day and the streak starts again from 1</small>
+    </div>
+    <div class="bh-book bh-slide" id="bhBook" role="group" aria-roledescription="slide" aria-label="4 of 6: Exam Scorer e-books">
       <a class="cvs" id="bhBookCvs" href="biology-prep-books.html" aria-label="I PUC and II PUC Biology Exam Scorer books">
         <img class="cv" id="bhBookCv1" src="prep-books-assets/pu1/cover.jpg" alt="I PUC Biology Exam Scorer cover" loading="lazy">
         <img class="cv" id="bhBookCv2" src="prep-books-assets/pu2/cover.jpg" alt="II PUC Biology Exam Scorer cover" loading="lazy">
@@ -840,7 +897,7 @@ body{padding-bottom:96px;}
         <a class="go" id="bhBookGo2" href="biology-prep-books.html#pu2">📗 II PUC Book →</a>
       </span>
     </div>
-    <div class="bh-bundle bh-slide" id="bhBundle" role="group" aria-roledescription="slide" aria-label="3 of 4: all 13 PU-II chapters in one payment">
+    <div class="bh-bundle bh-slide" id="bhBundle" role="group" aria-roledescription="slide" aria-label="5 of 6: all 13 PU-II chapters in one payment">
       <span class="gift" aria-hidden="true">🎁</span>
       <span class="tag">🎓 II PUC · ONE PAYMENT</span>
       <b>Get All 13 PU-II Chapters</b>
@@ -856,7 +913,7 @@ body{padding-bottom:96px;}
       </span>
       <small class="nt">One unlock code for every PU-II chapter · WhatsApp Narendra Sir after paying</small>
     </div>
-    <div class="bh-fc bh-slide" id="bhFc" role="group" aria-roledescription="slide" aria-label="4 of 4: Biology flash cards">
+    <div class="bh-fc bh-slide" id="bhFc" role="group" aria-roledescription="slide" aria-label="6 of 6: Biology flash cards">
       <a class="cvs" href="flashcards.html" aria-label="Biology flash cards">
         <img class="cd c1" src="flashcards/promo/card-1.jpg" alt="Flash card: Mendel's Laws" loading="lazy">
         <img class="cd c2" src="flashcards/promo/card-2.jpg" alt="Flash card: Beyond Mendel" loading="lazy">
@@ -874,7 +931,7 @@ body{padding-bottom:96px;}
       <small class="nt">Pick your chapter, then tap 🔒 Download &amp; share to unlock it</small>
     </div>
      </div>
-     <div class="bh-promo-dots" id="bhPromoDots" role="tablist" aria-label="Choose a slide"><button type="button" role="tab" aria-label="One-day free trial" aria-selected="true"></button><button type="button" role="tab" aria-label="Exam Scorer e-books" aria-selected="false"></button><button type="button" role="tab" aria-label="All 13 PU-II chapters" aria-selected="false"></button><button type="button" role="tab" aria-label="Biology flash cards" aria-selected="false"></button></div>
+     <div class="bh-promo-dots" id="bhPromoDots" role="tablist" aria-label="Choose a slide"><button type="button" role="tab" aria-label="One-day free trial" aria-selected="true"></button><button type="button" role="tab" aria-label="Daily NEET plan" aria-selected="false"></button><button type="button" role="tab" aria-label="Daily Biology challenge" aria-selected="false"></button><button type="button" role="tab" aria-label="Exam Scorer e-books" aria-selected="false"></button><button type="button" role="tab" aria-label="All 13 PU-II chapters" aria-selected="false"></button><button type="button" role="tab" aria-label="Biology flash cards" aria-selected="false"></button></div>
     </div>
 
     <div class="bh-sec"><h2>My Classes</h2><a href="#catalogSections">View all</a></div>
@@ -3517,6 +3574,39 @@ window.indexHardRefresh = indexHardRefresh;
   go.addEventListener('click',start);
   paint(); setInterval(paint,60000);
   document.addEventListener('visibilitychange',function(){ if(!document.hidden) paint(); });
+}catch(e){}})();
+</script>
+<script>
+/* ---- Home carousel: Daily NEET plan (progress from the 3-steps card) + Daily Biology challenge (streak from Daily Bio Zone) ---- */
+(function(){try{
+  function g(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  function plan(){
+    var d=(g('baio_3steps_'+new Date().toDateString())||'').split(',').filter(Boolean), n=Math.min(d.length,3);
+    document.querySelectorAll('#bhPlanList li').forEach(function(li){ li.classList.toggle('ok',d.indexOf(li.getAttribute('data-step'))>=0); });
+    var c=document.getElementById('bhPlanCount'); if(c) c.textContent=n>=3?'🎉 All 3 done today':n+' / 3 done today';
+    var b=document.getElementById('bhPlanBar'); if(b) b.style.width=(n/3*100)+'%';
+    var go=document.getElementById('bhPlanGo'); if(go) go.textContent=n>=3?'✅ Done · see plan':(n?'▶ Continue today\'s plan':'▶ Start today\'s plan');
+  }
+  function dk(t){ var d=new Date(t); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  function chal(){
+    var z={}; try{ z=JSON.parse(g('baio_zone')||'{}')||{}; }catch(e){}
+    var today=dk(Date.now()), yday=dk(Date.now()-864e5), st=+z.streak||0, best=+z.best||0, hist=z.hist||{};
+    if(z.last&&z.last!==today&&z.last!==yday) st=0;
+    var played=hist[today]!=null;
+    var s=document.getElementById('bhChalStreak'), b=document.getElementById('bhChalBest'), t=document.getElementById('bhChalT'), go=document.getElementById('bhChalGo'), nt=document.getElementById('bhChalNote');
+    if(s) s.textContent=st?('🔥 '+st+'-day streak'):'🔥 Start your streak today';
+    if(b) b.textContent=best?('🏆 Best '+best):'';
+    if(played){ if(t) t.textContent='Done today: '+hist[today]+' / 5 ✅'; if(go) go.textContent='📊 See my score'; if(nt) nt.textContent='Come back tomorrow for 5 new questions'; }
+    else if(st){ if(nt) nt.textContent='Play today to keep your '+st+'-day streak alive'; }
+  }
+  var w=document.getElementById('bhPlanWatch');
+  if(w) w.addEventListener('click',function(){ var v=document.getElementById('start3Watch'); if(v) v.click(); else location.href='neet-3-steps.html'; });
+  var pg=document.getElementById('bhPlanGo');
+  if(pg) pg.addEventListener('click',function(e){ var t=document.getElementById('start3'); if(t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth',block:'start'}); } });
+  plan(); chal();
+  window.addEventListener('pageshow',function(){ plan(); chal(); });
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden){ plan(); chal(); } });
+  document.addEventListener('click',function(e){ if(e.target.closest&&e.target.closest('.start3-go')) setTimeout(plan,50); });
 }catch(e){}})();
 </script>
 <script>
