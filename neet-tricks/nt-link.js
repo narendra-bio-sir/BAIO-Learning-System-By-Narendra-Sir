@@ -1,4 +1,4 @@
-/* BAIO · promo strip on every chapter page: NEET Tricks for this chapter + the class Exam Scorer e-book.
+/* BAIO · promo strip on every chapter page: NEET Tricks for this chapter + the class Exam Scorer e-book + free KCET PYQs.
    Usage: <script src="neet-tricks/nt-link.js?v=1" data-ch="pu1-ch10" defer></script>
    (pages in a sub-folder use "../neet-tricks/nt-link.js"). It sits between the chapter header and the tab bar,
    shows ₹99 or "✅ Open" and links to neet-tricks.html#<chapter>. On a page that has its own NEET Tricks tab
@@ -14,6 +14,10 @@
   var bookPage, coverSrc;
   try{ bookPage = new URL('../biology-prep-books.html#' + cls, me.src).href; }catch(e){ bookPage = 'biology-prep-books.html#' + cls; }
   try{ coverSrc = new URL('../prep-books-assets/' + cls + '/cover.jpg', me.src).href; }catch(e){ coverSrc = 'prep-books-assets/' + cls + '/cover.jpg'; }
+  /* free KCET PYQs per chapter (pyq.html); counts match pyq/pyq-kcet.js */
+  var PYQ_N = {'pu1-ch1':3,'pu1-ch10':4,'pu1-ch11':8,'pu1-ch12':9,'pu1-ch13':4,'pu1-ch14':2,'pu1-ch15':8,'pu1-ch16':1,'pu1-ch17':2,'pu1-ch18':1,'pu1-ch19':7,'pu1-ch2':6,'pu1-ch3':5,'pu1-ch4':4,'pu1-ch5':5,'pu1-ch6':4,'pu1-ch7':4,'pu1-ch8':7,'pu1-ch9':6,'pu2-ch1':27,'pu2-ch10':12,'pu2-ch11':20,'pu2-ch12':9,'pu2-ch13':13,'pu2-ch2':23,'pu2-ch3':13,'pu2-ch4':29,'pu2-ch5':42,'pu2-ch6':12,'pu2-ch7':28,'pu2-ch8':17,'pu2-ch9':21};
+  var pyqPage;
+  try{ pyqPage = new URL('../pyq.html#' + id, me.src).href; }catch(e){ pyqPage = 'pyq.html#' + id; }
 
   function owned(){
     try{
@@ -40,6 +44,8 @@
       + '#ntPromo .sl{flex:0 0 100%;box-sizing:border-box;scroll-snap-align:center;scroll-snap-stop:always;display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:16px;text-decoration:none;color:inherit;font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;min-height:68px}'
       + '#ntLinkBanner{border:1.5px solid rgba(212,175,55,.65);background:linear-gradient(120deg,rgba(212,175,55,.16),rgba(46,198,160,.10))}'
       + '#ebkBanner{border:1.5px solid rgba(200,90,70,.55);background:linear-gradient(120deg,rgba(255,214,130,.20),rgba(200,90,70,.10))}'
+      + '#pyqBanner{border:1.5px solid rgba(46,150,200,.55);background:linear-gradient(120deg,rgba(46,150,200,.16),rgba(46,198,160,.10))}'
+      + '#ntPromo .nti.pq{background:rgba(46,150,200,.22)}'
       + '#ntPromo .nti{flex:none;width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:24px;background:rgba(212,175,55,.22)}'
       + '#ntPromo .cv{flex:none;width:38px;height:50px;object-fit:cover;border-radius:4px 7px 7px 4px;box-shadow:0 4px 10px rgba(0,0,0,.25);transform:rotate(-4deg)}'
       + '#ntPromo .ntt{flex:1;min-width:0}'
@@ -53,7 +59,7 @@
     document.head.appendChild(css);
     var wrap = document.createElement('div');
     wrap.id = 'ntPromo';
-    wrap.setAttribute('role', 'region'); wrap.setAttribute('aria-roledescription', 'carousel'); wrap.setAttribute('aria-label', 'NEET Tricks and e-book');
+    wrap.setAttribute('role', 'region'); wrap.setAttribute('aria-roledescription', 'carousel'); wrap.setAttribute('aria-label', 'NEET Tricks, e-book and PYQs');
     var trk = document.createElement('div'); trk.className = 'trk';
     /* slide 1: NEET Tricks */
     var a = document.createElement('a');
@@ -76,8 +82,19 @@
       + '<span class="ntt"><b>' + (cls === 'pu1' ? 'I PUC' : 'II PUC') + ' Biology Exam Scorer e&#8209;book</b><small>NCERT diagram practice · ' + (cls === 'pu1' ? '12' : '10') + ' practice papers with solutions</small></span>'
       + '<span class="ntp">₹50 →</span>';
     trk.appendChild(a); trk.appendChild(e);
+    /* slide 3: free KCET previous year questions of this chapter */
+    var labels = ['NEET Tricks', 'E-book'];
+    if(PYQ_N[id]){
+      var pq = document.createElement('a');
+      pq.id = 'pyqBanner'; pq.className = 'sl';
+      pq.href = pyqPage;
+      pq.innerHTML = '<span class="nti pq" aria-hidden="true">📝</span>'
+        + '<span class="ntt"><b>KCET PYQs of this chapter</b><small>' + PYQ_N[id] + ' previous year question' + (PYQ_N[id] > 1 ? 's' : '') + ' (2015–2021) with official answers</small></span>'
+        + '<span class="ntp ok">Free →</span>';
+      trk.appendChild(pq); labels.push('KCET PYQs');
+    }
     var dots = document.createElement('div'); dots.className = 'dots'; dots.setAttribute('role', 'tablist');
-    ['NEET Tricks', 'E-book'].forEach(function(l, i){ var d = document.createElement('button'); d.type = 'button'; d.setAttribute('role', 'tab'); d.setAttribute('aria-label', l); d.setAttribute('aria-selected', i ? 'false' : 'true'); dots.appendChild(d); });
+    labels.forEach(function(l, i){ var d = document.createElement('button'); d.type = 'button'; d.setAttribute('role', 'tab'); d.setAttribute('aria-label', l); d.setAttribute('aria-selected', i ? 'false' : 'true'); dots.appendChild(d); });
     wrap.appendChild(trk); wrap.appendChild(dots);
     anchor.parentNode.insertBefore(wrap, anchor);
     /* swipe, dots and gentle auto-advance (pauses while touched, off for reduced motion) */
