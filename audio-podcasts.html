@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Chapter Audio Podcasts | BAIO Learning System</title>
+<meta name="description" content="Full-chapter Biology audio podcasts for every I PUC and II PUC chapter in English, Kannada, Hindi, Marathi and Urdu. First 2 minutes free; ₹299 per chapter. By Narendra Sir.">
+<meta property="og:title" content="BAIO Chapter Audio Podcasts">
+<meta property="og:description" content="Listen to every Biology chapter in 5 languages. First 2 minutes free.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="games/game.css?v=1">
+<style>
+body{font-family:Inter,sans-serif}
+.lang-switcher{display:none}
+.shelf h3{font-size:15px;color:var(--gold);margin-top:18px}
+.chs{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:10px}
+.chc{display:flex;gap:12px;align-items:center;text-align:left;padding:12px;border-radius:16px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;font:inherit;position:relative}
+.chc>span:nth-child(2){padding-right:92px}
+.chc .ic{flex:0 0 52px;height:52px;border-radius:14px;display:grid;place-items:center;font-size:26px}
+.chc b{display:block;font:700 15px/1.25 'Space Grotesk',sans-serif}
+.chc small{display:block;color:var(--ink-dim);font-size:11.5px;margin-top:2px}
+.chc .st{position:absolute;top:8px;right:10px;font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:99px;background:var(--panel2);color:var(--gold)}
+.chc .st.ok{color:var(--teal)}
+.bnd{display:flex;gap:12px;align-items:center;width:100%;margin-top:10px;padding:12px 14px;border-radius:16px;border:1.5px solid var(--gold);background:linear-gradient(120deg,rgba(212,175,55,.18),rgba(46,230,197,.10)),var(--panel);color:var(--ink);cursor:pointer;font:inherit;text-align:left}
+.bnd .ic{flex:0 0 46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:26px;background:var(--panel2)}
+.bnd b{display:block;font:700 15px/1.25 'Space Grotesk',sans-serif}
+.bnd small{display:block;color:var(--ink-dim);font-size:11.5px;margin-top:2px}
+.bnd .pr{margin-left:auto;text-align:right;white-space:nowrap}
+.bnd .pr s{display:block;font-size:11.5px;color:var(--ink-dim)}
+.bnd .pr b{font:800 20px 'Space Grotesk',sans-serif;color:var(--gold)}
+.hd{display:flex;gap:12px;align-items:center;margin-top:12px;padding:14px;border-radius:18px;border:1px solid var(--line);background:var(--panel)}
+.hd .ic{flex:0 0 60px;height:60px;border-radius:18px;display:grid;place-items:center;font-size:32px}
+.hd .k{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--teal)}
+.hd h2{margin:2px 0 4px;font:700 20px/1.2 'Space Grotesk',sans-serif;color:var(--ink)}
+.hd p{margin:0;color:var(--ink-dim);font-size:13px;line-height:1.5}
+.pl{margin-top:12px;padding:14px;border-radius:18px;border:1px solid var(--line);background:var(--panel)}
+.langs{display:flex;flex-wrap:wrap;gap:6px}
+.langs button{font:700 13px Inter,sans-serif;padding:7px 12px;border-radius:99px;border:1.5px solid var(--line);background:var(--panel2);color:var(--ink);cursor:pointer}
+.langs button.on{border-color:var(--gold);background:var(--gold);color:#1B1300}
+.pl audio{width:100%;margin-top:12px}
+.pl .tr{margin-top:8px;font-size:12.5px;color:var(--ink-dim);text-align:center}
+.pl .tr.end{color:var(--gold);font-weight:800}
+.pv{margin-top:12px;padding:10px 14px;border-radius:14px;border:1.5px solid var(--teal);background:var(--panel);color:var(--ink);font-size:13px;line-height:1.5}
+.okbar{margin-top:12px;padding:10px 14px;border-radius:14px;border:1.5px solid var(--teal);background:var(--panel);color:var(--teal);font-weight:700;font-size:13px}
+.inside{margin-top:12px;padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--panel)}
+.inside h4{margin:0 0 8px;font:700 16px 'Space Grotesk',sans-serif;color:var(--ink)}
+.inside li{font-size:13.5px;line-height:1.6;color:var(--ink);list-style:none;padding:3px 0}
+.inside ul{margin:0;padding:0}
+.buy{margin-top:12px;padding:16px;border:1.5px dashed var(--gold);border-radius:18px;background:var(--panel)}
+.buy .price{display:flex;align-items:baseline;justify-content:center;gap:8px;flex-wrap:wrap}
+.buy .price b{font:800 32px 'Space Grotesk',sans-serif;color:var(--gold)}
+.buy .price span{font-size:12px;color:var(--ink-dim)}
+.buy .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:12px 0}
+.buy .steps div{font-size:11.5px;font-weight:700;text-align:center;padding:8px 4px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);color:var(--ink)}
+.buy .steps i{display:block;font-style:normal;width:22px;height:22px;line-height:22px;margin:0 auto 4px;border-radius:99px;background:var(--gold);color:#1B1300;font-size:12px}
+.buy .col{display:flex;flex-direction:column;gap:8px}
+.buy .col .btn{text-align:center;text-decoration:none}
+.buy .upi{font-size:12px;color:var(--ink-dim);text-align:center;margin-top:8px}
+.buy .upi button{font:700 11px Inter,sans-serif;margin-left:6px;padding:3px 9px;border-radius:99px;border:1px solid var(--teal);background:transparent;color:var(--teal);cursor:pointer}
+.buy form{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.buy input{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:500 14px Inter,sans-serif}
+.buy .msg{color:var(--bad);font-size:12.5px;min-height:1em}
+.buy .note{font-size:11.5px;color:var(--ink-dim);text-align:center;line-height:1.5;margin-top:8px}
+.bndlink{display:block;margin-top:10px;padding:11px 12px;border-radius:14px;border:1.5px solid var(--gold);background:var(--panel);color:var(--gold);font-weight:800;font-size:13px;text-align:center;text-decoration:none}
+.owner{display:flex;flex-direction:column;gap:8px;margin-top:14px;padding:12px 14px;border-radius:14px;border:1.5px solid var(--teal);background:var(--panel);font-size:12.5px;line-height:1.5;color:var(--ink)}
+.owner .btn{align-self:flex-start}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero" id="hero">
+    <div class="eyebrow">BAIO Learning System · Listen &amp; learn</div>
+    <h1>🎧 Chapter <span class="accent">Audio Podcasts</span></h1>
+    <p>A full audio walkthrough of every Biology chapter in English, ಕನ್ನಡ, हिंदी, मराठी and اردو. The first 2 minutes of every chapter are free. ₹299 per chapter.</p>
+  </section>
+  <section id="library"></section>
+  <section id="chapter" hidden>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px"><button class="btn" id="back">← All chapters</button><span class="muted" id="cch"></span></div>
+    <div id="body"></div>
+  </section>
+  <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
+</div>
+<script src="games/common.js?v=4"></script>
+<script>
+GZ.nav();
+(function(){
+const $ = s => document.querySelector(s);
+const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+/* ---------- chapter podcasts (audio in the baio-podcasts repo) ---------- */
+const POD = {"pu1-ch2":{"t":"Biological Classification","ch":"I PUC · Chapter 2","ic":"🌳","c":"#2E9E4F","href":"ch2/","base":"ch2/assets/","langs":["english","hindi","kannada"]},
+  "pu1-ch3":{"t":"Plant Kingdom","ch":"I PUC · Chapter 3","ic":"🌿","c":"#3B8C3A","href":"ch3/","base":"ch3/assets/","langs":["english","hindi","kannada"]},
+  "pu1-ch4":{"t":"Animal Kingdom","ch":"I PUC · Chapter 4","ic":"🐾","c":"#B5651D","href":"pu1-ch4.html","base":"pu1-ch4-assets/","langs":["english","hindi","kannada"]},
+  "pu1-ch5":{"t":"Morphology of Flowering Plants","ch":"I PUC · Chapter 5","ic":"🌸","c":"#C2185B","href":"pu1-ch5.html","base":"pu1-ch5-assets/","langs":["english","hindi","kannada","marathi","urdu"]},
+  "pu1-ch6":{"t":"Anatomy of Flowering Plants","ch":"I PUC · Chapter 6","ic":"🔬","c":"#00897B","href":"pu1-ch6.html","base":"pu1-ch6-assets/","langs":["english","hindi","kannada","marathi","urdu"]},
+  "pu1-ch8":{"t":"Cell: The Unit of Life","ch":"I PUC · Chapter 8","ic":"🧫","c":"#6A1B9A","href":"pu1-ch8.html","base":"pu1-ch8-assets/","langs":["english","hindi","kannada","marathi","urdu"]},
+  "pu1-ch9":{"t":"Biomolecules","ch":"I PUC · Chapter 9","ic":"🧪","c":"#E65100","href":"pu1-ch9.html","base":"pu1-ch9-assets/","langs":["english","hindi","kannada","marathi","urdu"]},
+  "pu1-ch10":{"t":"Cell Cycle and Cell Division","ch":"I PUC · Chapter 10","ic":"🔄","c":"#1565C0","href":"pu1-ch10.html","base":"pu1-ch10-assets/","langs":["english","hindi","kannada","marathi","urdu"]},
+  "pu1-ch11":{"t":"Photosynthesis in Higher Plants","ch":"I PUC · Chapter 11","ic":"☀️","c":"#2E7D32","href":"pu1-ch11.html","base":"pu1-ch11-assets/","langs":["english","hindi","kannada","marathi","urdu"]},
+  "pu2-ch1":{"t":"Sexual Reproduction in Flowering Plants","ch":"II PUC · Chapter 1","ic":"🌸","c":"#AD1457","href":"pu2-ch1.html","base":"pu2-ch1-assets/","langs":["english","hindi","kannada","marathi","urdu"]},
+  "pu2-ch2":{"t":"Human Reproduction","ch":"II PUC · Chapter 2","ic":"👶","c":"#C62828","href":"pu2-ch2.html","base":"pu2-ch2-assets/","langs":["english","hindi","kannada","marathi","urdu"]},
+  "pu2-ch3":{"t":"Reproductive Health","ch":"II PUC · Chapter 3","ic":"🏥","c":"#00838F","href":"pu2-ch3.html","base":"pu2-ch3-assets/","langs":["english","hindi","kannada","marathi","urdu"]},
+  "pu2-ch4":{"t":"Principles of Inheritance and Variation","ch":"II PUC · Chapter 4","ic":"🧬","c":"#7B1FA2","href":"pu2-ch4.html","base":"pu2-ch4-assets/","langs":["english","hindi","kannada","marathi","urdu"]},
+  "pu2-ch5":{"t":"Molecular Basis of Inheritance","ch":"II PUC · Chapter 5","ic":"🔬","c":"#283593","href":"pu2-ch5.html","base":"pu2-ch5-assets/","langs":["english","hindi","kannada","marathi","urdu"]},
+  "pu2-ch6":{"t":"Evolution","ch":"II PUC · Chapter 6","ic":"🐒","c":"#6D4C41","href":"pu2-ch6.html","base":"pu2-ch6-assets/","langs":["english","hindi","kannada","marathi","urdu"]},
+  "pu2-ch7":{"t":"Human Health and Disease","ch":"II PUC · Chapter 7","ic":"🦠","c":"#D84315","href":"pu2-ch7.html","base":"pu2-ch7-assets/","langs":["english","hindi","kannada","marathi","urdu"]},
+  "pu2-ch8":{"t":"Microbes in Human Welfare","ch":"II PUC · Chapter 8","ic":"🧫","c":"#558B2F","href":"pu2-ch8.html","base":"pu2-ch8-assets/","langs":["english","hindi","kannada","marathi","urdu"]},
+  "pu2-ch9":{"t":"Biotechnology: Principles and Processes","ch":"II PUC · Chapter 9","ic":"🧬","c":"#0277BD","href":"ch9/","base":"ch9/assets/","langs":["english","hindi","kannada","marathi","urdu"]},
+  "pu2-ch10":{"t":"Biotechnology and its Applications","ch":"II PUC · Chapter 10","ic":"💉","c":"#00695C","href":"pu2-ch10.html","base":"pu2-ch10-assets/","langs":["english","hindi","kannada","marathi","urdu"]},
+  "pu2-ch11":{"t":"Organisms and Populations","ch":"II PUC · Chapter 11","ic":"🦁","c":"#EF6C00","href":"pu2-ch11.html","base":"pu2-ch11-assets/","langs":["english","hindi","kannada","marathi","urdu"]},
+  "pu2-ch12":{"t":"Ecosystem","ch":"II PUC · Chapter 12","ic":"🌳","c":"#33691E","href":"pu2-ch12.html","base":"pu2-ch12-assets/","langs":["english","hindi","kannada","marathi","urdu"]},
+  "pu2-ch13":{"t":"Biodiversity and Conservation","ch":"II PUC · Chapter 13","ic":"🦋","c":"#1B5E20","href":"pu2-ch13.html","base":"pu2-ch13-assets/","langs":["english","hindi","kannada","marathi","urdu"]}};
+const AUDIO_ROOT = 'https://narendra-bio-sir.github.io/baio-podcasts/';
+const LANG = {english:'English', kannada:'ಕನ್ನಡ', hindi:'हिंदी', marathi:'मराठी', urdu:'اردو'};
+const ORDER = ['english','kannada','hindi','marathi','urdu'];
+Object.values(POD).forEach(A => A.langs.sort((x, y) => ORDER.indexOf(x) - ORDER.indexOf(y)));
+const ids = Object.keys(POD);
+
+/* ---------- ₹299 per chapter + class bundles ----------
+   Codes come from ns-gen.html: POD-<PU>-<CH> (e.g. POD-PU2-CH5), POD-PU1-ALL, POD-PU2-ALL; same formula as every student code.
+   Also accepted: the chapter's Premium code (Premium includes the Audio Podcast), the PU-II Premium bundle code and the master codes.
+   Not opened by the demo code, the 1-day trial or the master demo code; everyone gets the 2-minute free preview. */
+const PRICE = 299, TRIAL_SEC = 120;
+const BUNDLES = {
+  'pu1-all': {price:1799, key:'POD-PU1-ALL', prefix:'pu1-', cls:'I PUC', short:'PU-I', also:[]},
+  'pu2-all': {price:2499, key:'POD-PU2-ALL', prefix:'pu2-', cls:'II PUC', short:'PU-II', also:['PU2-ALL-PREMIUM']}
+};
+const bundleOf = id => id.startsWith('pu1-') ? 'pu1-all' : 'pu2-all';
+const UPI_ID = 'paytm.s4qa42a@pty';
+const RZP_LINK = ''; /* add a Razorpay link to show a "Pay online" button */
+const STORE = 'baio_pod_unlock', OWNER_LOCK = 'baio_pod_owner_locked';
+const MASTER_CODES = ['NS-PREMIUM-2027', 'NS-PU2-ALL-2027', 'NS-MASTER-2027'];
+const PREMIUM = { /* chapter → [premium unlock key, premium content key] */
+  'pu1-ch2':['ch2_premium_unlock','CH2-PREMIUM'], 'pu1-ch3':['ch3_premium_unlock','CH3-PREMIUM'],
+  'pu1-ch4':['pu1ch4_premium_unlock','CH4-PU1-PREMIUM'], 'pu1-ch5':['pu1ch5_premium_unlock','CH5-PREMIUM'],
+  'pu1-ch6':['pu1ch6_premium_unlock','CH6-PREMIUM'], 'pu1-ch8':['pu1ch8_premium_unlock','CH8-PREMIUM'],
+  'pu1-ch9':['pu1ch9_premium_unlock','CH9-PU1-PREMIUM'], 'pu1-ch10':['pu1ch10_premium_unlock','CH10-PU1-PREMIUM'],
+  'pu1-ch11':['pu1ch11_premium_unlock','CH11-PU1-PREMIUM'],
+  'pu2-ch1':['pu2ch1_premium_unlock','CH1-PU2-PREMIUM'], 'pu2-ch2':['pu2ch2_premium_unlock','CH2-PU2-PREMIUM'],
+  'pu2-ch3':['pu2ch3_premium_unlock','CH3-PU2-PREMIUM'], 'pu2-ch4':['pu2ch4_premium_unlock','CH4-PREMIUM'],
+  'pu2-ch5':['pu2ch5_premium_unlock','CH5-PU2-PREMIUM'], 'pu2-ch6':['pu2ch6_premium_unlock','CH6-PU2-PREMIUM'],
+  'pu2-ch7':['pu2ch7_premium_unlock','CH7-PU2-PREMIUM'], 'pu2-ch8':['pu2ch8_premium_unlock','CH8-PU2-PREMIUM'],
+  'pu2-ch9':['ch9_premium_unlock','CH9-PREMIUM'], 'pu2-ch10':['pu2ch10_premium_unlock','CH10-PU2-PREMIUM'],
+  'pu2-ch11':['pu2ch11_premium_unlock','CH11-PU2-PREMIUM'], 'pu2-ch12':['pu2ch12_premium_unlock','CH12-PU2-PREMIUM'],
+  'pu2-ch13':['pu2ch13_premium_unlock','CH13-PU2-PREMIUM']
+};
+const podKey = id => 'POD-' + id.toUpperCase();
+const CODE_SALT = 'BAIO-STUDENT-LOCK-2026', CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+const norm = s => (s || '').toString().trim().toUpperCase().replace(/\s+/g, ' ');
+function fnv(str){ let h = 0x811c9dc5; for(let i = 0; i < str.length; i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); } return h >>> 0; }
+function code(name, roll, section, ck){
+  const key = CODE_SALT + '|' + norm(name) + '|' + norm(roll) + '|' + norm(section) + (ck ? '|' + norm(ck) : '');
+  let n = (BigInt(fnv(key)) << 32n) | BigInt(fnv(key.split('').reverse().join('') + CODE_SALT));
+  const base = BigInt(CODE_CHARS.length); let c = '';
+  for(let i = 0; i < 8; i++){ c += CODE_CHARS[Number(n % base)]; n = n / base; }
+  return c.slice(0, 4) + '-' + c.slice(4, 8);
+}
+function store(){ try{ return JSON.parse(localStorage.getItem(STORE) || '{}') || {}; }catch(e){ return {}; } }
+function save(id, o){ try{ const s = store(); s[id] = Object.assign({ts: Date.now()}, o); localStorage.setItem(STORE, JSON.stringify(s)); }catch(e){} }
+function readJSON(k){ try{ return JSON.parse(localStorage.getItem(k) || 'null'); }catch(e){ return null; } }
+function ownerLocked(){ try{ return localStorage.getItem(OWNER_LOCK) === '1'; }catch(e){ return false; } }
+function unlocked(id){
+  const s = store();
+  if(s['*'] || s[id] || (POD[id] && s[bundleOf(id)])) return true;
+  const p = PREMIUM[id], u = p && readJSON(p[0]);   /* chapter Premium bought with a real code (not demo / trial) */
+  return !!(u && u.unlocked && (u.method === 'code' || (u.method === 'master' && !ownerLocked())));
+}
+function bIds(b){ return ids.filter(id => id.startsWith(BUNDLES[b].prefix)); }
+function bundleOwned(b){ return bIds(b).every(unlocked); }
+function isOwner(){
+  if(store()['*']) return true;
+  if(ownerLocked()) return false;
+  return Object.keys(PREMIUM).some(id => { const u = readJSON(PREMIUM[id][0]); return !!(u && u.unlocked && u.method === 'master'); });
+}
+function profile(){ return readJSON('baio_student') || {}; }
+
+/* ---------- library ---------- */
+function ownerBar(){
+  if(!isOwner()) return '';
+  return `<div class="owner"><span>👤 <b>Owner view</b> — your master code is saved on this phone, so every podcast is open. Students hear the first 2 minutes free.</span><button type="button" class="btn" id="ownerLock">🔒 Lock again on this phone</button></div>`;
+}
+function bundleBanner(b){
+  if(bundleOwned(b)) return '';
+  const B = BUNDLES[b], n = bIds(b).length;
+  return `<button class="bnd" data-b="${b}"><span class="ic">🎁</span><span><b>All ${n} ${B.short} podcasts · one payment</b><small>Every ${B.cls} chapter in all its languages, one code</small></span><span class="pr"><s>₹${n * PRICE}</s><b>₹${B.price}</b></span></button>`;
+}
+function drawLibrary(){
+  $('#library').innerHTML = ownerBar() + [[1,'I PUC'],[2,'II PUC']].map(([n, lbl]) => `<div class="shelf"><h3>${lbl}</h3>${bundleBanner('pu' + n + '-all')}<div class="chs">${ids.filter(id => id.startsWith('pu' + n + '-')).map(id => { const A = POD[id], ok = unlocked(id);
+    return `<button class="chc" data-id="${id}"><span class="ic" style="background:linear-gradient(150deg,${A.c},#0b1b14)">${A.ic}</span><span><b>${esc(A.t)}</b><small>${esc(A.ch.replace(/^I+ PUC · /,''))} · 🎧 ${A.langs.length} languages</small></span><span class="st ${ok ? 'ok' : ''}">${ok ? '✅ Open' : '🎧 Try · ₹' + PRICE}</span></button>`; }).join('')}</div></div>`).join('');
+  $('#library').querySelectorAll('.chc').forEach(c => c.onclick = () => { location.hash = c.dataset.id; });
+  $('#library').querySelectorAll('.bnd').forEach(x => x.onclick = () => { location.hash = x.dataset.b; });
+  const ol = $('#ownerLock'); if(ol) ol.onclick = () => {
+    try{ const s = store(); delete s['*']; localStorage.setItem(STORE, JSON.stringify(s)); localStorage.setItem(OWNER_LOCK, '1'); }catch(e){}
+    drawLibrary(); };
+}
+
+/* ---------- chapter player ---------- */
+let audio = null;
+function stopAudio(){ if(audio){ try{ audio.pause(); }catch(e){} } audio = null; }
+function openCh(id){
+  const A = POD[id]; if(!A){ showLibrary(); return; }
+  stopAudio();
+  $('#hero').hidden = true; $('#library').hidden = true; $('#chapter').hidden = false;
+  $('#cch').textContent = A.ch;
+  const ok = unlocked(id);
+  const head = `<div class="hd"><span class="ic" style="background:linear-gradient(150deg,${A.c},#0b1b14)">🎧</span><div><div class="k">🎧 Audio Podcast · ${esc(A.ch)}</div><h2>${esc(A.t)}</h2><p>A full audio walkthrough of the chapter by Narendra Sir — revise on the bus, at home or before the exam.</p></div></div>`;
+  const player = `<div class="pl"><div class="langs" id="langs">${A.langs.map((l, i) => `<button type="button" data-l="${l}" class="${i ? '' : 'on'}">${LANG[l] || l}</button>`).join('')}</div>`
+    + `<audio id="au" controls preload="metadata" controlsList="nodownload" oncontextmenu="return false"></audio><div class="tr" id="tr"></div></div>`;
+  $('#body').innerHTML = head + (ok ? `<div class="okbar">✅ Unlocked on this phone · every language</div>` : `<div class="pv">🎧 <b>Free preview</b> — the first 2 minutes in any language. Unlock the full podcast for ₹${PRICE}.</div>`)
+    + player
+    + (ok ? `<div class="acts"><a class="btn teal" href="${A.href}">📘 Open chapter</a></div>` : locked(id));
+  wirePlayer(id, ok);
+  if(!ok) wireBuy(id);
+  window.scrollTo(0, 0);
+}
+function wirePlayer(id, ok){
+  const A = POD[id], au = $('#au'), tr = $('#tr');
+  audio = au;
+  const fmt = t => { t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); };
+  const setLang = l => { au.src = AUDIO_ROOT + A.base + 'podcast-' + l + '.mp3'; au.load(); $('#langs').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.l === l)); tr.className = 'tr'; tr.textContent = ok ? '' : 'Free preview: first 2:00'; };
+  $('#langs').onclick = e => { const b = e.target.closest('button'); if(b) setLang(b.dataset.l); };
+  au.addEventListener('loadedmetadata', () => { if(ok) tr.textContent = 'Length ' + fmt(au.duration); else tr.textContent = 'Free preview: first 2:00 of ' + fmt(au.duration); });
+  if(!ok){
+    const cap = () => { if(au.currentTime >= TRIAL_SEC){ au.pause(); au.currentTime = TRIAL_SEC - 0.3; tr.className = 'tr end'; tr.textContent = '⏸ Free preview ended — unlock the full podcast below for ₹' + PRICE; } };
+    au.addEventListener('timeupdate', cap); au.addEventListener('seeking', cap); au.addEventListener('play', cap);
+  }
+  if('mediaSession' in navigator) try{ navigator.mediaSession.metadata = new MediaMetadata({title: A.t, artist: 'Narendra Sir · BAIO', album: A.ch, artwork: [{src:'icon-512.png', sizes:'512x512', type:'image/png'}]}); }catch(e){}
+  setLang(A.langs[0]);
+}
+function locked(id){
+  const A = POD[id], b = bundleOf(id), B = BUNDLES[b], n = bIds(b).length;
+  return `<div class="inside"><h4>🔒 Unlock the full podcast</h4><ul><li>🎧 The complete chapter, start to end</li><li>🌐 All ${A.langs.length} languages: ${A.langs.map(l => LANG[l] || l).join(' · ')}</li><li>⏩ Change speed, pause and replay any time</li><li>♾️ Yours to keep on this phone</li></ul></div>`
+    + buyBox(id, PRICE, '', 'one-time · this chapter · all languages', `Already bought this chapter's Premium${id.startsWith('pu2') ? ' or the PU-II bundle' : ''}? Enter that code here — it includes the Audio Podcast.`)
+    + (bundleOwned(b) ? '' : `<a class="bndlink" href="#${b}">🎁 Or get all ${n} ${B.short} podcasts for ₹${B.price} (instead of ₹${n * PRICE}) →</a>`);
+}
+function openBundle(b){
+  stopAudio();
+  const B = BUNDLES[b], list = bIds(b), n = list.length;
+  $('#hero').hidden = true; $('#library').hidden = true; $('#chapter').hidden = false;
+  $('#cch').textContent = B.cls + ' · all chapters';
+  const head = `<div class="hd"><span class="ic" style="background:linear-gradient(150deg,#C79A2A,#0b1b14)">🎁</span><div><div class="k">🎧 Audio Podcasts · bundle</div><h2>All ${n} ${B.short} podcasts</h2><p>One payment, one code: every ${B.cls} chapter's full podcast in all its languages.</p></div></div>`;
+  if(bundleOwned(b)){
+    $('#body').innerHTML = head + `<div class="okbar">✅ All ${n} ${B.short} podcasts are unlocked on this phone</div><div class="acts"><button class="btn primary" id="bndBack">🎧 Open the podcasts</button></div>`;
+    $('#bndBack').onclick = () => { location.hash = ''; };
+    window.scrollTo(0, 0); return;
+  }
+  $('#body').innerHTML = head
+    + `<div class="inside"><h4>📦 What's inside</h4><ul>${list.map(id => `<li>${POD[id].ic} ${esc(POD[id].t)}${unlocked(id) ? ' <small style="color:var(--teal)">(already yours)</small>' : ''}</li>`).join('')}</ul></div>`
+    + buyBox(b, B.price, `<s style="color:var(--ink-dim);font-size:15px;margin-right:6px">₹${n * PRICE}</s>`, 'one-time · all ' + n + ' ' + B.short + ' podcasts', B.also.length ? 'Already have the PU-II Premium bundle code? Enter it here — it opens every PU-II podcast too.' : 'One code opens every I PUC podcast.');
+  wireBuy(b);
+  window.scrollTo(0, 0);
+}
+function buyBox(id, price, was, sub, note){
+  const p = profile();
+  return `<div class="buy"><div class="price">${was}<b>₹${price}</b><span>${sub}</span></div>`
+    + `<div class="steps"><div><i>1</i>Pay ₹${price}</div><div><i>2</i>Send the screenshot</div><div><i>3</i>Enter your code</div></div>`
+    + `<div class="col"><a class="btn primary" id="payUpi" href="${upiLink(id)}">📲 Pay ₹${price} with UPI app</a>${RZP_LINK ? `<a class="btn" href="${RZP_LINK}" target="_blank" rel="noopener">💳 Pay online</a>` : ''}<a class="btn teal" id="payWa" href="#" target="_blank" rel="noopener">📤 Send screenshot on WhatsApp</a></div>`
+    + `<div class="upi">UPI ID: <b>${UPI_ID}</b> <button type="button" id="copyUpi">Copy</button></div>`
+    + `<form id="pdForm" autocomplete="off"><div class="msg" id="pdMsg"></div><input id="pdName" placeholder="Full name (e.g. Vishwapal)" value="${esc(p.name)}"><input id="pdSection" placeholder="Section (e.g. Spark)" value="${esc(p.section)}"><input id="pdRoll" placeholder="Roll number (e.g. 25MPU0087)" value="${esc(p.roll)}"><input id="pdCode" placeholder="Podcast unlock code" autocapitalize="characters"><button class="btn primary" type="submit">🔓 Unlock</button></form>`
+    + `<div class="note">${note} Not opened by the demo code or the 1-day trial.</div></div>`;
+}
+function upiLink(id){ const B = BUNDLES[id]; return 'upi://pay?pa=' + UPI_ID + '&pn=' + encodeURIComponent('Narendra Sir') + '&am=' + (B ? B.price : PRICE) + '&cu=INR&tn=' + encodeURIComponent(B ? 'Podcasts ' + B.short + ' all chapters' : 'Podcast ' + id.toUpperCase()); }
+function waLink(id){
+  const B = BUNDLES[id], A = POD[id], v = k => (($('#' + k) || {}).value || '').trim();
+  const what = B ? 'all ' + bIds(id).length + ' ' + B.short + ' chapter podcasts, bundle' : A.ch + ': ' + A.t;
+  const msg = 'Hi Narendra Sir, I paid ₹' + (B ? B.price : PRICE) + ' for the Audio Podcast (' + what + ').\n\nName: ' + v('pdName') + '\nSection: ' + v('pdSection') + '\nRoll number: ' + v('pdRoll') + '\n\n(Attaching my payment screenshot.) Please send my podcast unlock code.';
+  return 'https://wa.me/919008968389?text=' + encodeURIComponent(msg);
+}
+function wireBuy(id){
+  const wa = $('#payWa'); wa.href = waLink(id); wa.addEventListener('click', () => { wa.href = waLink(id); });
+  $('#copyUpi').onclick = () => { const b = $('#copyUpi'), done = () => { b.textContent = 'Copied ✓'; setTimeout(() => b.textContent = 'Copy', 1800); };
+    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(UPI_ID).then(done, () => {}); else done(); };
+  $('#pdForm').onsubmit = e => { e.preventDefault();
+    const v = k => ($('#' + k).value || '').trim(), name = v('pdName'), section = v('pdSection'), roll = v('pdRoll'), c = v('pdCode').toUpperCase(), m = $('#pdMsg');
+    if(!c){ m.textContent = 'Please enter your unlock code.'; return; }
+    if(MASTER_CODES.some(x => x.toUpperCase() === c)){ try{ localStorage.removeItem(OWNER_LOCK); }catch(e){} save('*', {method:'master'}); route(); return; }
+    if(!name || !section || !roll){ m.textContent = 'Please fill in your name, section and roll number exactly as you sent them to Narendra Sir.'; return; }
+    const b = BUNDLES[id] ? id : bundleOf(id), B = BUNDLES[b];
+    if([B.key].concat(B.also).some(k => code(name, roll, section, k) === c)){ save(b, {method:'code', name, roll, section}); route(); return; }
+    const ok = !BUNDLES[id] && ([podKey(id), PREMIUM[id] && PREMIUM[id][1]].filter(Boolean).some(k => code(name, roll, section, k) === c)
+      || (id === 'pu2-ch4' && code(name, roll, section) === c));
+    if(ok){ save(id, {method:'code', name, roll, section}); route(); return; }
+    m.textContent = 'That name / section / roll number / code combination was not recognised. Check the spelling, or ask Narendra Sir.'; };
+}
+
+function showLibrary(){ stopAudio(); $('#hero').hidden = false; $('#library').hidden = false; $('#chapter').hidden = true; drawLibrary(); }
+function route(){ const h = decodeURIComponent(location.hash.slice(1)); if(BUNDLES[h]) openBundle(h); else if(POD[h]) openCh(h); else showLibrary(); }
+$('#back').onclick = () => { location.hash = ''; };
+window.addEventListener('hashchange', route);
+route();
+})();
+</script>
+</body>
+</html>
