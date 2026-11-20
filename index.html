@@ -3744,9 +3744,15 @@ window.indexHardRefresh = indexHardRefresh;
   function start(){ stop(); if(reduce||n<2) return; timer=setInterval(function(){ if(!paused&&!document.hidden) go(cur+1); },5000); }
   function stop(){ if(timer){ clearInterval(timer); timer=null; } }
   btns.forEach(function(b,k){ b.addEventListener('click',function(){ go(k); start(); }); });
-  var st=null; track.addEventListener('scroll',function(){ clearTimeout(st); st=setTimeout(function(){ var w=track.clientWidth||1; mark(Math.round(track.scrollLeft/(w+12))); },80); },{passive:true});
-  ['touchstart','pointerdown','mouseenter','focusin'].forEach(function(e){ track.addEventListener(e,function(){ paused=true; },{passive:true}); });
-  ['touchend','mouseleave','focusout'].forEach(function(e){ track.addEventListener(e,function(){ paused=false; start(); },{passive:true}); });
+  /* keep the dots in step with the slide on screen — live while swiping, and again when the swipe settles.
+     Some Android browsers / installed apps skip the last scroll event after a snap, so several signals are used. */
+  function nearest(){ var L=track.scrollLeft, best=0, d=Infinity; for(var k=0;k<n;k++){ var dd=Math.abs((slides[k].offsetLeft-track.offsetLeft)-L); if(dd<d){ d=dd; best=k; } } return best; }
+  var raf=0, st=null; function sync(){ raf=0; var k=nearest(); if(k!==cur) mark(k); }
+  track.addEventListener('scroll',function(){ if(!raf) raf=requestAnimationFrame(sync); clearTimeout(st); st=setTimeout(sync,120); },{passive:true});
+  track.addEventListener('scrollend',sync,{passive:true});
+  if('IntersectionObserver' in window){ var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting&&e.intersectionRatio>=0.6){ var k=Array.prototype.indexOf.call(slides,e.target); if(k>=0&&k!==cur) mark(k); } }); },{root:track,threshold:[0.6]}); slides.forEach(function(sl){ io.observe(sl); }); }
+  ['touchstart','pointerdown','mouseenter','focusin'].forEach(function(e){ track.addEventListener(e,function(){ paused=true; stop(); },{passive:true}); });
+  ['touchend','touchcancel','mouseleave','focusout'].forEach(function(e){ track.addEventListener(e,function(){ setTimeout(sync,350); paused=false; start(); },{passive:true}); });
   start();
 }catch(e){}})();
 </script>
