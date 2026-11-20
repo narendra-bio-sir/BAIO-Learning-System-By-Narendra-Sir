@@ -652,14 +652,6 @@ body{background:var(--bh-bg);}
 @media(max-width:370px){.bh-book{padding-left:118px}.bh-book .cvs{width:112px}.bh-book .cv{width:70px}.bh-book #bhBookCv2{left:32px;top:96px}.bh-book .btns{margin-left:-102px}.bh-book .go{font-size:12px}}
 .bh-chip{position:relative}
 .bh-chip em.nw{position:absolute;top:5px;right:5px;font-style:normal;background:#FF4D7E;color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:99px}
-.bh-new{display:flex;align-items:center;gap:14px;width:100%;margin-top:14px;padding:10px 14px 10px 10px;border-radius:22px;border:1px solid var(--bh-line);background:var(--bh-card);box-shadow:0 8px 20px var(--bh-sh);cursor:pointer;text-align:left;font-family:inherit;color:var(--bh-ink);}
-.bh-new img{width:58px;height:103px;object-fit:cover;border-radius:14px;flex:none;box-shadow:0 6px 14px rgba(40,0,90,.3);}
-.bh-new .tx{flex:1;min-width:0;}
-.bh-new .k{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:99px;background:linear-gradient(90deg,#FFD25A,#FFAA45);color:#3A2600;}
-.bh-new b{display:block;font-size:15px;font-weight:700;margin-top:6px;line-height:1.25;}
-.bh-new small{display:block;font-size:11.5px;color:var(--bh-muted);margin-top:3px;line-height:1.35;}
-.bh-new .pl{flex:none;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:18px;color:#fff;background:linear-gradient(135deg,#5B2EE0,#A47BFF);box-shadow:0 8px 18px rgba(91,46,224,.4);}
-.bh-vshare{display:block;width:100%;margin-top:10px;padding:11px;border:0;border-radius:12px;background:linear-gradient(135deg,#5B2EE0,#A47BFF);color:#fff;font:700 13.5px 'Poppins','Inter',sans-serif;cursor:pointer;}
 .bh-sec{display:flex;justify-content:space-between;align-items:baseline;padding:22px 2px 10px;}
 .bh-sec h2{font-family:inherit;font-size:17px;font-weight:700;margin:0;color:var(--bh-ink);}
 .bh-sec a{font-size:12.5px;color:var(--bh-p3);font-weight:600;}
@@ -791,18 +783,6 @@ body{padding-bottom:96px;}
       </svg>
     </div>
 
-    <button type="button" class="bh-new" id="bhNewUiWatch" aria-haspopup="dialog" aria-label="Watch the video: what's new in the BAIO app">
-      <img src="reels/baio-new-ui-promo-cover.jpg" alt="" loading="lazy">
-      <span class="tx"><span class="k">✨ New UI · 2-min video</span><b>See what's new in BAIO</b><small>Mock tests, Exam Scorer, analytics, games, podcasts, careers and more</small></span>
-      <span class="pl" aria-hidden="true">▶</span>
-    </button>
-    <div class="start3-vmodal" id="bhNewUiModal" role="dialog" aria-modal="true" aria-label="What's new in the BAIO app" hidden>
-      <div class="start3-vbox">
-        <button type="button" class="start3-vclose" id="bhNewUiClose" aria-label="Close video">✕</button>
-        <video id="bhNewUiVideo" controls playsinline preload="none" poster="reels/baio-new-ui-promo-cover.jpg"><source src="https://narendra-bio-sir.github.io/baio-podcasts/videos/baio-new-ui-promo.mp4" type="video/mp4"></video>
-        <button type="button" class="bh-vshare" id="bhNewUiShare">📤 Share this video with friends</button>
-      </div>
-    </div>
 
     <div class="bh-sec"><h2>Study</h2><a href="#bhTools">See all</a></div>
     <div class="bh-grid">
@@ -3580,25 +3560,6 @@ window.indexHardRefresh = indexHardRefresh;
   /* the countdown card's I PUC / II PUC switch changes the class: follow it */
   document.addEventListener('click',function(){ setTimeout(paint,250); });
   document.addEventListener('visibilitychange',function(){ if(!document.hidden) paint(); });
-}catch(e){}})();
-</script>
-<script>
-/* ---- Home: "What's new" video (file hosted in the baio-podcasts repo) ---- */
-(function(){try{
-  var m=document.getElementById('bhNewUiModal'),v=document.getElementById('bhNewUiVideo'),b=document.getElementById('bhNewUiWatch'),sh=document.getElementById('bhNewUiShare');
-  if(!m||!v||!b)return;
-  document.body.appendChild(m);
-  function close(){try{v.pause();}catch(e){}m.hidden=true;document.body.style.overflow='';}
-  b.addEventListener('click',function(){m.hidden=false;document.body.style.overflow='hidden';try{var p=v.play();if(p&&p.catch)p.catch(function(){});}catch(e){}});
-  document.getElementById('bhNewUiClose').addEventListener('click',close);
-  m.addEventListener('click',function(e){if(e.target===m)close();});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!m.hidden)close();});
-  if(sh)sh.addEventListener('click',function(){
-    var url='https://narendra-bio-sir.github.io/baio-podcasts/videos/baio-new-ui-promo.mp4',
-        txt='See the new BAIO app: mock tests, Exam Scorer, analytics, Game Zone, podcasts and career guidance for Board, NEET and KCET. Open the app: https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/';
-    if(navigator.share){navigator.share({title:"What's new in BAIO",text:txt,url:url}).catch(function(){});}
-    else{window.open('https://wa.me/?text='+encodeURIComponent(txt+'\n\nWatch: '+url),'_blank','noopener');}
-  });
 }catch(e){}})();
 </script>
 <script>
