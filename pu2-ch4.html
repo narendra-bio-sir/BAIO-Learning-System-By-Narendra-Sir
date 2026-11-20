@@ -252,6 +252,24 @@ h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif; font-weight:600; margin:0;}
 #panel-neettricks .nt-q button.o:disabled{cursor:default}
 #panel-neettricks .nt-q .ex{display:none;margin-top:8px;font-size:13px;line-height:1.55;padding:8px 10px;border-radius:8px;background:var(--panel);border-left:3px solid var(--gold-2)}
 #panel-neettricks .nt-q.done .ex{display:block}
+#panel-neettricks .ntb-hero{display:flex;gap:12px;align-items:center;margin-bottom:10px}
+#panel-neettricks .ntb-ic{flex:none;width:58px;height:58px;border-radius:18px;display:grid;place-items:center;font-size:32px;background:linear-gradient(135deg,rgba(227,175,67,.3),rgba(66,198,160,.25));border:1px solid var(--gold)}
+#panel-neettricks .ntb-k{font-size:10.5px;font-weight:800;letter-spacing:.08em;color:var(--teal)}
+#panel-neettricks .ntb h3{font-size:19px;margin:2px 0}
+#panel-neettricks .ntb-sub{font-size:12.5px;color:var(--text-dim)}
+#panel-neettricks .ntb-list{list-style:none;margin:8px 0 12px;padding:0;font-size:13px;line-height:1.55}
+#panel-neettricks .ntb-list li{padding:3px 0}
+#panel-neettricks .ntb-price{display:flex;align-items:baseline;justify-content:center;gap:8px;margin:6px 0 10px}
+#panel-neettricks .ntb-price b{font-size:30px;font-weight:800;color:var(--gold-2)}
+#panel-neettricks .ntb-price span{font-size:12px;color:var(--text-dim)}
+#panel-neettricks .ntb-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+#panel-neettricks .ntb-st{font-size:11.5px;font-weight:700;text-align:center;padding:8px 4px;border-radius:10px;background:var(--panel-2);border:1px solid var(--border)}
+#panel-neettricks .ntb-st i{display:block;font-style:normal;width:22px;height:22px;line-height:22px;margin:0 auto 4px;border-radius:99px;background:var(--gold);color:#1B1300;font-size:12px}
+#panel-neettricks .ntb-btns{display:flex;flex-direction:column;gap:8px}
+#panel-neettricks .ntb-btns .btn{display:block;text-align:center;text-decoration:none}
+#panel-neettricks .ntb-upi{font-size:12px;color:var(--text-dim);text-align:center;margin-top:8px}
+#panel-neettricks .ntb-upi button{font:700 11px 'Work Sans',sans-serif;margin-left:6px;padding:3px 9px;border-radius:99px;border:1px solid var(--teal);background:transparent;color:var(--teal);cursor:pointer}
+#panel-neettricks .ntb-note{font-size:11.5px;color:var(--text-dim);text-align:center;line-height:1.5;margin-top:4px}
 #panel-neettricks .nt-reset{margin-top:12px;font:700 13px 'Work Sans',sans-serif;padding:8px 14px;border-radius:99px;border:1px solid var(--teal);background:transparent;color:var(--teal);cursor:pointer}
 @media(max-width:400px){#panel-neettricks .nt-ps4 span{font-size:10.5px;padding:9px 0}#panel-neettricks .nt-q .os{grid-template-columns:1fr}}
 .tip-example-modal{max-width:620px;}
@@ -1256,7 +1274,7 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
   </div>
   <script>
     var WHATSNEW_ITEMS = [
-      {key:'pu2ch4_whatsnew_neettricks_v1', html:'&#127919; <b>New premium tab: NEET Tricks!</b> Opens with your premium unlock code. 9 genetics shortcuts from Narendra Sir&rsquo;s class notes &mdash; 2<sup>n</sup> gametes, binomial (ax + by)&sup2;, the n-formula table and the product rule &mdash; plus 12 practice questions. Open the <b>NEET Tricks</b> tab under Test Prep.'},
+      {key:'pu2ch4_whatsnew_neettricks_v1', html:'&#127919; <b>New: NEET Tricks, \u20B999!</b> 9 genetics shortcuts from Narendra Sir&rsquo;s class notes &mdash; 2<sup>n</sup> gametes, binomial (ax + by)&sup2;, the n-formula table and the product rule &mdash; plus 12 practice questions. Open the <b>NEET Tricks</b> tab under Test Prep.'},
       {key:'pu2_all13_complete_v1', html:'&#127881; <b>All 13 PU-II chapters are now complete!</b> Every chapter now has full Study Notes, MCQ/NEET/KCET Practice, Board Important Q&amp;A with labelled diagrams (NCERT page references included), Audio Podcasts in 5 languages, and printable Topic-wise Worksheets.'},
       {key:'pu2ch4_whatsnew_redesign_v1', html:'&#127807; <b>New look!</b> Cleaner typography and calmer colors across the app &mdash; same content, easier on the eyes.'},
       {key:'pu2ch4_whatsnew_fullscreen_v1', html:'&#128421;&#65039; <b>Full Screen Mode</b> is here! Tap the button on MCQ Quiz, NEET Practice, KCET Practice, or Study Mode to focus distraction-free.'},
@@ -6987,8 +7005,22 @@ function premiumCodeQualifies(){
   const u = getPremiumUnlock();
   return !!u && (u.method === 'code' || u.method === 'master');
 }
+/* ---- NEET Tricks sold on its own: ₹99 for this chapter ----
+   Codes come from ns-gen.html, content key NT-PU2-CH4 (same formula as every other student code).
+   The chapter Premium code, the PU-II bundle code and the master codes open it too. */
+const NT_PRICE = 99;
+const NT_CONTENT_KEY = 'NT-PU2-CH4';
+const NT_UNLOCK_KEY = 'pu2ch4_neettricks_unlock';
+const NT_UPI_ID = 'paytm.s4qa42a@pty';
+const NT_RAZORPAY_LINK = ''; /* add a ₹99 Razorpay link here to show a "Pay online" button too */
+function ntOwnUnlocked(){
+  try{ const u = JSON.parse(localStorage.getItem(NT_UNLOCK_KEY) || 'null'); return !!(u && u.unlocked && (u.method === 'code' || u.method === 'master')); }catch(e){ return false; }
+}
+function codeOnlyTabOpen(tabId){
+  return premiumCodeQualifies() || (tabId === 'neettricks' && ntOwnUnlocked());
+}
 function premiumTabUnlocked(tabId){
-  return CODE_ONLY_TABS.indexOf(tabId) !== -1 ? premiumCodeQualifies() : premiumQualifies();
+  return CODE_ONLY_TABS.indexOf(tabId) !== -1 ? codeOnlyTabOpen(tabId) : premiumQualifies();
 }
 function reLockPremium(){
   try{ localStorage.removeItem(PREMIUM_KEY); }catch(e){}
@@ -7147,9 +7179,89 @@ function backFromPremiumLockCh2(){
   goToTab(target);
 }
 window.backFromPremiumLockCh2 = backFromPremiumLockCh2;
+function ntProfile(){
+  let p = null;
+  try{ p = JSON.parse(localStorage.getItem('baio_student') || 'null'); }catch(e){}
+  return p || {};
+}
+function ntEsc(t){ return String(t == null ? '' : t).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function ntWaLink(){
+  const f = function(id){ const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+  const pr = ntProfile();
+  const msg = 'Hi Narendra Sir, I paid \u20B9' + NT_PRICE + ' for NEET Tricks (PU-II Chapter 4: Principles of Inheritance and Variation).\n\n'
+    + 'Name: ' + (f('ntName') || pr.name || '') + '\nSection: ' + (f('ntSection') || pr.section || '') + '\nRoll number: ' + (f('ntRoll') || pr.roll || '')
+    + '\n\n(Attaching my payment screenshot.) Please send my NEET Tricks unlock code.';
+  return 'https://wa.me/919008968389?text=' + encodeURIComponent(msg);
+}
+function ntUpiLink(){
+  return 'upi://pay?pa=' + NT_UPI_ID + '&pn=' + encodeURIComponent('Narendra Sir') + '&am=' + NT_PRICE + '&cu=INR&tn=' + encodeURIComponent('NEET Tricks PU2 Ch4');
+}
+function renderNeetTricksBuy(overlay){
+  const pr = ntProfile();
+  overlay.innerHTML = '<div class="setup-card ntb">'
+    + '<button class="btn secondary" style="margin-bottom:14px;" onclick="backFromPremiumLockCh2()">&#8592; Back</button>'
+    + '<div class="ntb-hero"><div class="ntb-ic">🎯</div><div><div class="ntb-k">NEW · NEET TRICKS</div><h3>Genetics shortcuts for NEET</h3>'
+    + '<div class="ntb-sub">Solve cross questions in seconds, without big Punnett squares.</div></div></div>'
+    + '<ul class="ntb-list">'
+    + '<li>✅ 9 shortcuts: 2ⁿ gametes, binomial (ax + by)², n-formula table, product rule, test cross</li>'
+    + '<li>✅ Colour-coded Punnett squares: monohybrid and dihybrid</li>'
+    + '<li>✅ Trihybrid ratios without a 64-box square</li>'
+    + '<li>✅ 12 NEET-style practice questions with the shortcut for each</li>'
+    + '<li>✅ NEET traps: linkage, incomplete dominance, codominance</li>'
+    + '</ul>'
+    + '<div class="ntb-price"><b>\u20B9' + NT_PRICE + '</b><span>one-time · this chapter · yours to keep</span></div>'
+    + '<div class="ntb-steps"><div class="ntb-st"><i>1</i>Pay \u20B9' + NT_PRICE + '</div><div class="ntb-st"><i>2</i>Send the screenshot</div><div class="ntb-st"><i>3</i>Enter your code</div></div>'
+    + '<div class="ntb-btns">'
+    + '<a class="btn" id="ntUpiBtn" href="' + ntUpiLink() + '">📲 Pay \u20B9' + NT_PRICE + ' with UPI app</a>'
+    + (NT_RAZORPAY_LINK ? '<a class="btn secondary" href="' + NT_RAZORPAY_LINK + '" target="_blank" rel="noopener">💳 Pay online</a>' : '')
+    + '<a class="btn secondary" id="ntWaBtn" href="#" target="_blank" rel="noopener">📤 Send screenshot on WhatsApp</a>'
+    + '</div>'
+    + '<div class="ntb-upi">UPI ID: <b>' + NT_UPI_ID + '</b> <button type="button" id="ntCopyUpi">Copy</button></div>'
+    + '<div class="hw-unlock-form" style="margin-top:14px;">'
+    + '<div class="hw-msg" id="ntMsg"></div>'
+    + '<input type="text" id="ntName" placeholder="Full name (e.g. Vishwapal)" value="' + ntEsc(pr.name) + '">'
+    + '<input type="text" id="ntSection" placeholder="Section (e.g. Spark)" value="' + ntEsc(pr.section) + '">'
+    + '<input type="text" id="ntRoll" placeholder="Roll number (e.g. 25MPU0087)" value="' + ntEsc(pr.roll) + '">'
+    + '<input type="text" id="ntCode" placeholder="NEET Tricks unlock code" autocomplete="off" autocapitalize="characters">'
+    + '<button class="btn" style="margin-top:4px;" onclick="ntSubmit()">🔓 Unlock NEET Tricks</button>'
+    + '</div>'
+    + '<div class="ntb-note">Already have this chapter\u2019s Premium or the PU-II bundle code? Enter it here. It opens NEET Tricks too. NEET Tricks is not part of the free sample or the 1-day trial.</div>'
+    + '</div>';
+  overlay.classList.add('show');
+  const wa = document.getElementById('ntWaBtn');
+  if(wa){ wa.href = ntWaLink(); wa.addEventListener('click', function(){ wa.href = ntWaLink(); }); }
+  const cp = document.getElementById('ntCopyUpi');
+  if(cp) cp.addEventListener('click', function(){
+    const done = function(){ cp.textContent = 'Copied ✓'; setTimeout(function(){ cp.textContent = 'Copy'; }, 1800); };
+    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(NT_UPI_ID).then(done, function(){}); else done();
+  });
+}
+function ntSubmit(){
+  const v = function(id){ const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+  const name = v('ntName'), section = v('ntSection'), roll = v('ntRoll'), code = v('ntCode').toUpperCase(), msg = document.getElementById('ntMsg');
+  const bad = function(t){ msg.textContent = t; msg.className = 'hw-msg bad'; };
+  if(!code){ bad('Please enter your unlock code.'); return; }
+  const save = function(method){ try{ localStorage.setItem(NT_UNLOCK_KEY, JSON.stringify({unlocked:true, method:method, ts:Date.now(), name:name, roll:roll, section:section})); }catch(e){} applyPremiumGates(); };
+  if(code === PREMIUM_MASTER_CODE.toUpperCase() || code === PREMIUM_MASTER_CODE_PU2_ALL.toUpperCase()){ save('master'); return; }
+  if(!name || !section || !roll){ bad('Please fill in your name, section and roll number exactly as you sent them to Narendra Sir.'); return; }
+  if(computeStudentCode(name, roll, section, NT_CONTENT_KEY) === code){ save('code'); return; }
+  if(computeStudentCode(name, roll, section, 'CH4-PREMIUM') === code || computeStudentCode(name, roll, section) === code){
+    setPremiumUnlock('code', {roll:roll, section:section, name:name}); applyPremiumGates();
+    if(!codeOnlyTabOpen('neettricks')) bad('This chapter Premium code has expired. Please ask Narendra Sir to renew it.');
+    return;
+  }
+  if(computeStudentCode(name, roll, section, 'PU2-ALL-PREMIUM') === code){
+    unlockAllPu2Premium('code', {roll:roll, section:section, name:name}); applyPremiumGates();
+    if(!codeOnlyTabOpen('neettricks')) bad('This PU-II bundle code has expired. Please ask Narendra Sir to renew it.');
+    return;
+  }
+  bad('That name / section / roll number / code combination was not recognised. Check the spelling, or ask Narendra Sir.');
+}
+window.ntSubmit = ntSubmit;
 function renderPremiumLockScreenCh2(tabId){
   const overlay = document.getElementById('premLock_' + tabId);
   if(!overlay) return;
+  if(tabId === 'neettricks'){ renderNeetTricksBuy(overlay); return; }
   const label = PREMIUM_TAB_LABELS[tabId] || 'This feature';
   let profile = null;
   try{ profile = JSON.parse(localStorage.getItem('baio_student') || 'null'); }catch(e){}
@@ -7263,7 +7375,7 @@ function applyPremiumGates(){
     const overlay = document.getElementById('premLock_' + tabId);
     if(!overlay) return;
     if(CODE_ONLY_TABS.indexOf(tabId) !== -1){
-      if(premiumCodeQualifies()){ overlay.classList.remove('show'); overlay.innerHTML = ''; premiumToggleSiblings(tabId, false); }
+      if(codeOnlyTabOpen(tabId)){ overlay.classList.remove('show'); overlay.innerHTML = ''; premiumToggleSiblings(tabId, false); }
       else { renderPremiumLockScreenCh2(tabId); premiumToggleSiblings(tabId, true); }
       return;
     }
@@ -7291,7 +7403,7 @@ function applyPremiumGates(){
     const tabId = btn.dataset.tab;
     const isPremium = PREMIUM_LOCKED_TABS.indexOf(tabId) !== -1;
     const codeOnly = CODE_ONLY_TABS.indexOf(tabId) !== -1;
-    const tabOpen = codeOnly ? premiumCodeQualifies() : unlocked;
+    const tabOpen = codeOnly ? codeOnlyTabOpen(tabId) : unlocked;
     const alreadyMarked = btn.getAttribute('data-lock-marked') === '1';
     if(isPremium && !tabOpen && !alreadyMarked){
       btn.innerHTML = ((!codeOnly && window.BaioSample && BaioSample.allow(tabId))?'🎁 ':'🔒 ') + btn.innerHTML;
@@ -9242,7 +9354,9 @@ window.openShareCardCH2 = openShareCardCH2; window.closeShareCardCH2 = closeShar
   var targetTab = null;
   try{ targetTab = localStorage.getItem(LAST_TAB_KEY); }catch(e){}
   if(!targetTab) targetTab = 'badges';
-  if(PREMIUM_LOCKED_TABS.indexOf(targetTab) !== -1 && !premiumTabUnlocked(targetTab)) targetTab = 'study';
+  var linkTab = (location.search.match(/[?&]tab=([a-z0-9]+)/) || location.hash.match(/^#tab=([a-z0-9]+)/) || [])[1];
+  if(linkTab && document.querySelector('.tab-btn[data-tab="'+linkTab+'"]')) targetTab = linkTab;
+  if(PREMIUM_LOCKED_TABS.indexOf(targetTab) !== -1 && CODE_ONLY_TABS.indexOf(targetTab) === -1 && !premiumTabUnlocked(targetTab)) targetTab = 'study';
   var targetBtn = document.querySelector('.tab-btn[data-tab="'+targetTab+'"]');
   var targetPanel = document.getElementById('panel-'+targetTab);
   if(targetBtn && targetPanel){
