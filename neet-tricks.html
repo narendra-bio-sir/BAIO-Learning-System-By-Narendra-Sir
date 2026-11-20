@@ -117,10 +117,15 @@ const ids = Object.keys(NT);
 
 /* ---------- ₹99 per chapter ----------
    Codes come from ns-gen.html, content key NT-<PU>-<CH> (e.g. NT-PU1-CH10), same formula as every student code.
-   Also accepted: the chapter's Premium code, the PU-II bundle code (PU-II chapters) and the master codes.
+   Also accepted: the chapter's Premium code, the class bundle codes (NT-PU1-ALL, NT-PU2-ALL), the PU-II Premium bundle code and the master codes.
    Not opened by the free sample, the demo code, the 1-day trial or the master demo code. */
 const PRICE = 99;
-const BUNDLE_PRICE = 799, BUNDLE_ID = 'pu2-all', BUNDLE_KEY = 'NT-PU2-ALL'; /* all 13 PU-II chapters in one payment */
+/* class bundles: every chapter of one class in one payment (codes from ns-gen: NT-PU1-ALL, NT-PU2-ALL) */
+const BUNDLES = {
+  'pu1-all': {price:549, key:'NT-PU1-ALL', prefix:'pu1-', cls:'I PUC', short:'PU-I', also:[]},
+  'pu2-all': {price:799, key:'NT-PU2-ALL', prefix:'pu2-', cls:'II PUC', short:'PU-II', also:['PU2-ALL-PREMIUM']}
+};
+const bundleOf = id => id.startsWith('pu1-') ? 'pu1-all' : 'pu2-all';
 const UPI_ID = 'paytm.s4qa42a@pty';
 const RZP_LINK = ''; /* add a ₹99 Razorpay link to show a "Pay online" button */
 const STORE = 'baio_neettricks_unlock';
@@ -156,44 +161,45 @@ function readJSON(k){ try{ return JSON.parse(localStorage.getItem(k) || 'null');
 function unlocked(id){
   const s = store();
   if(s['*'] || s[id]) return true;
-  if(id.startsWith('pu2-') && s[BUNDLE_ID]) return true;
+  if(NT[id] && s[bundleOf(id)]) return true;
   if(id === 'pu2-ch4'){ const u = readJSON('pu2ch4_neettricks_unlock'); if(u && u.unlocked) return true; }
   const p = PREMIUM[id], u = p && readJSON(p[0]);   /* chapter Premium bought with a real code (not demo / trial) */
   return !!(u && u.unlocked && (u.method === 'code' || u.method === 'master'));
 }
-function pu2Ids(){ return ids.filter(id => id.startsWith('pu2-')); }
-function bundleOwned(){ return pu2Ids().every(unlocked); }
+function bIds(b){ return ids.filter(id => id.startsWith(BUNDLES[b].prefix)); }
+function bundleOwned(b){ return bIds(b).every(unlocked); }
 function profile(){ return readJSON('baio_student') || {}; }
 
 /* ---------- library ---------- */
-function bundleBanner(){
-  if(bundleOwned()) return '';
-  const n = pu2Ids().length;
-  return `<button class="bnd" id="bndOpen"><span class="ic">🎁</span><span><b>All ${n} PU-II chapters · one payment</b><small>Every II PUC chapter's NEET Tricks &amp; Tips with one code</small></span><span class="pr"><s>₹${n * PRICE}</s><b>₹${BUNDLE_PRICE}</b></span></button>`;
+function bundleBanner(b){
+  if(bundleOwned(b)) return '';
+  const B = BUNDLES[b], n = bIds(b).length;
+  return `<button class="bnd" data-b="${b}"><span class="ic">🎁</span><span><b>All ${n} ${B.short} chapters · one payment</b><small>Every ${B.cls} chapter's NEET Tricks &amp; Tips with one code</small></span><span class="pr"><s>₹${n * PRICE}</s><b>₹${B.price}</b></span></button>`;
 }
 function drawLibrary(){
-  $('#library').innerHTML = [[1,'I PUC'],[2,'II PUC']].map(([n, lbl]) => `<div class="shelf"><h3>${lbl}</h3>${n === 2 ? bundleBanner() : ''}<div class="chs">${ids.filter(id => id.startsWith('pu' + n + '-')).map(id => { const A = NT[id], ok = unlocked(id);
+  $('#library').innerHTML = [[1,'I PUC'],[2,'II PUC']].map(([n, lbl]) => `<div class="shelf"><h3>${lbl}</h3>${bundleBanner('pu' + n + '-all')}<div class="chs">${ids.filter(id => id.startsWith('pu' + n + '-')).map(id => { const A = NT[id], ok = unlocked(id);
     return `<button class="chc" data-id="${id}"><span class="ic" style="background:linear-gradient(150deg,${A.color},#0b1b14)">${A.icon}</span><span><b>${esc(A.title)}</b><small>${esc(A.ch.replace(/^I+ PUC · /,''))} · ${A.tricks.length} tricks · ${A.quiz.length} questions</small></span><span class="st ${ok ? 'ok' : ''}">${ok ? '✅ Open' : '🔒 ₹' + PRICE}</span></button>`; }).join('')}</div></div>`).join('');
   $('#library').querySelectorAll('.chc').forEach(c => c.onclick = () => { location.hash = c.dataset.id; });
-  const bo = $('#bndOpen'); if(bo) bo.onclick = () => { location.hash = BUNDLE_ID; };
+  $('#library').querySelectorAll('.bnd').forEach(x => x.onclick = () => { location.hash = x.dataset.b; });
 }
 
 /* ---------- chapter ---------- */
-function openBundle(){
+function openBundle(b){
+  const B = BUNDLES[b];
   $('#hero').hidden = true; $('#library').hidden = true; $('#chapter').hidden = false;
-  $('#cch').textContent = 'II PUC · all chapters';
-  const list = pu2Ids(), n = list.length;
-  const head = `<div class="nt-head"><span class="ic" style="background:linear-gradient(150deg,#C79A2A,#0b1b14)">🎁</span><div><div class="k">🎯 NEET Tricks &amp; Tips · bundle</div><h2>All ${n} PU-II chapters</h2><p>One payment, one code: tricks, traps and practice questions for every II PUC chapter.</p></div></div>`;
-  if(bundleOwned()){
-    $('#body').innerHTML = head + `<div class="okbar">✅ All ${n} PU-II chapters are unlocked on this phone</div><div class="acts"><button class="btn primary" id="bndBack">📚 Open the chapters</button></div>`;
+  $('#cch').textContent = B.cls + ' · all chapters';
+  const list = bIds(b), n = list.length;
+  const head = `<div class="nt-head"><span class="ic" style="background:linear-gradient(150deg,#C79A2A,#0b1b14)">🎁</span><div><div class="k">🎯 NEET Tricks &amp; Tips · bundle</div><h2>All ${n} ${B.short} chapters</h2><p>One payment, one code: tricks, traps and practice questions for every ${B.cls} chapter.</p></div></div>`;
+  if(bundleOwned(b)){
+    $('#body').innerHTML = head + `<div class="okbar">✅ All ${n} ${B.short} chapters are unlocked on this phone</div><div class="acts"><button class="btn primary" id="bndBack">📚 Open the chapters</button></div>`;
     $('#bndBack').onclick = () => { location.hash = ''; };
     window.scrollTo(0, 0); return;
   }
   const q = list.reduce((a, id) => a + NT[id].quiz.length, 0);
   $('#body').innerHTML = head
     + `<div class="inside"><h4>📦 What's inside</h4><ul>${list.map(id => `<li>${NT[id].icon} ${esc(NT[id].title)}${unlocked(id) ? ' <small style="color:var(--teal)">(already yours)</small>' : ''}</li>`).join('')}<li>🎯 ${q} NEET-style practice questions in all</li></ul></div>`
-    + buyBox(BUNDLE_ID, BUNDLE_PRICE, `<s style="color:var(--ink-dim);font-size:15px;margin-right:6px">₹${n * PRICE}</s>`, 'one-time · all ' + n + ' PU-II chapters · yours to keep', 'Already have the PU-II Premium bundle code? Enter it here — it opens every PU-II chapter too.');
-  wireBuy(BUNDLE_ID);
+    + buyBox(b, B.price, `<s style="color:var(--ink-dim);font-size:15px;margin-right:6px">₹${n * PRICE}</s>`, 'one-time · all ' + n + ' ' + B.short + ' chapters · yours to keep', B.also.length ? 'Already have the PU-II Premium bundle code? Enter it here — it opens every PU-II chapter too.' : 'One code opens every I PUC chapter.');
+  wireBuy(b);
   window.scrollTo(0, 0);
 }
 function openCh(id){
@@ -229,7 +235,7 @@ function locked(id){
   const A = NT[id], p = profile();
   return `<div class="inside"><h4>📦 What's inside</h4><ul>${A.tricks.map(t => `<li>✅ ${esc(t.t)}</li>`).join('')}<li>⚠️ ${A.traps.length} NEET traps to avoid</li><li>🎯 ${A.quiz.length} NEET-style practice questions, each with its shortcut</li></ul></div>`
     + buyBox(id, PRICE, '', 'one-time · this chapter · yours to keep', `Already bought this chapter's Premium${id.startsWith('pu2') ? ' or the PU-II bundle' : ''}? Enter that code here — it opens NEET Tricks too.`)
-    + (id.startsWith('pu2-') && !bundleOwned() ? `<a class="bndlink" href="#${BUNDLE_ID}">🎁 Or get all ${pu2Ids().length} PU-II chapters for ₹${BUNDLE_PRICE} (instead of ₹${pu2Ids().length * PRICE}) →</a>` : '');
+    + (() => { const b = bundleOf(id), B = BUNDLES[b], n = bIds(b).length; return bundleOwned(b) ? '' : `<a class="bndlink" href="#${b}">🎁 Or get all ${n} ${B.short} chapters for ₹${B.price} (instead of ₹${n * PRICE}) →</a>`; })();
 }
 function buyBox(id, price, was, sub, note){
   const p = profile();
@@ -240,11 +246,11 @@ function buyBox(id, price, was, sub, note){
     + `<form id="ntForm" autocomplete="off"><div class="msg" id="ntMsg"></div><input id="ntName" placeholder="Full name (e.g. Vishwapal)" value="${esc(p.name)}"><input id="ntSection" placeholder="Section (e.g. Spark)" value="${esc(p.section)}"><input id="ntRoll" placeholder="Roll number (e.g. 25MPU0087)" value="${esc(p.roll)}"><input id="ntCode" placeholder="NEET Tricks unlock code" autocapitalize="characters"><button class="btn primary" type="submit">🔓 Unlock</button></form>`
     + `<div class="note">${note} Not part of the free sample or the 1-day trial.</div></div>`;
 }
-function upiLink(id){ const b = id === BUNDLE_ID; return 'upi://pay?pa=' + UPI_ID + '&pn=' + encodeURIComponent('Narendra Sir') + '&am=' + (b ? BUNDLE_PRICE : PRICE) + '&cu=INR&tn=' + encodeURIComponent(b ? 'NEET Tricks PU2 all chapters' : 'NEET Tricks ' + id.toUpperCase()); }
+function upiLink(id){ const B = BUNDLES[id]; return 'upi://pay?pa=' + UPI_ID + '&pn=' + encodeURIComponent('Narendra Sir') + '&am=' + (B ? B.price : PRICE) + '&cu=INR&tn=' + encodeURIComponent(B ? 'NEET Tricks ' + B.short + ' all chapters' : 'NEET Tricks ' + id.toUpperCase()); }
 function waLink(id){
-  const b = id === BUNDLE_ID, A = NT[id], v = k => (($('#' + k) || {}).value || '').trim();
-  const what = b ? 'all ' + pu2Ids().length + ' PU-II chapters, bundle' : A.ch + ': ' + A.title;
-  const msg = 'Hi Narendra Sir, I paid ₹' + (b ? BUNDLE_PRICE : PRICE) + ' for NEET Tricks (' + what + ').\n\nName: ' + v('ntName') + '\nSection: ' + v('ntSection') + '\nRoll number: ' + v('ntRoll') + '\n\n(Attaching my payment screenshot.) Please send my NEET Tricks unlock code.';
+  const B = BUNDLES[id], A = NT[id], v = k => (($('#' + k) || {}).value || '').trim();
+  const what = B ? 'all ' + bIds(id).length + ' ' + B.short + ' chapters, bundle' : A.ch + ': ' + A.title;
+  const msg = 'Hi Narendra Sir, I paid ₹' + (B ? B.price : PRICE) + ' for NEET Tricks (' + what + ').\n\nName: ' + v('ntName') + '\nSection: ' + v('ntSection') + '\nRoll number: ' + v('ntRoll') + '\n\n(Attaching my payment screenshot.) Please send my NEET Tricks unlock code.';
   return 'https://wa.me/919008968389?text=' + encodeURIComponent(msg);
 }
 function wireBuy(id){
@@ -257,16 +263,16 @@ function wireBuy(id){
     const reopen = () => route();
     if(MASTER_CODES.some(x => x.toUpperCase() === c)){ save('*', {method:'master'}); reopen(); return; }
     if(!name || !section || !roll){ m.textContent = 'Please fill in your name, section and roll number exactly as you sent them to Narendra Sir.'; return; }
-    const pu2 = id === BUNDLE_ID || id.startsWith('pu2-');
-    if(pu2 && [BUNDLE_KEY, 'PU2-ALL-PREMIUM'].some(k => code(name, roll, section, k) === c)){ save(BUNDLE_ID, {method:'code', name, roll, section}); reopen(); return; }
-    const ok = id !== BUNDLE_ID && ([ntKey(id), PREMIUM[id] && PREMIUM[id][1]].filter(Boolean).some(k => code(name, roll, section, k) === c)
+    const b = BUNDLES[id] ? id : bundleOf(id), B = BUNDLES[b];
+    if([B.key].concat(B.also).some(k => code(name, roll, section, k) === c)){ save(b, {method:'code', name, roll, section}); reopen(); return; }
+    const ok = !BUNDLES[id] && ([ntKey(id), PREMIUM[id] && PREMIUM[id][1]].filter(Boolean).some(k => code(name, roll, section, k) === c)
       || (id === 'pu2-ch4' && code(name, roll, section) === c));
     if(ok){ save(id, {method:'code', name, roll, section}); reopen(); return; }
     m.textContent = 'That name / section / roll number / code combination was not recognised. Check the spelling, or ask Narendra Sir.'; };
 }
 
 function showLibrary(){ $('#hero').hidden = false; $('#library').hidden = false; $('#chapter').hidden = true; drawLibrary(); }
-function route(){ const h = decodeURIComponent(location.hash.slice(1)); if(h === BUNDLE_ID) openBundle(); else if(NT[h]) openCh(h); else showLibrary(); }
+function route(){ const h = decodeURIComponent(location.hash.slice(1)); if(BUNDLES[h]) openBundle(h); else if(NT[h]) openCh(h); else showLibrary(); }
 $('#back').onclick = () => { location.hash = ''; };
 window.addEventListener('hashchange', route);
 route();
