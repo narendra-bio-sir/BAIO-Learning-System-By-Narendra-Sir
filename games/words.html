@@ -44,6 +44,31 @@
 .mp .opt{font-size:13px;text-align:left;min-height:56px}
 .mp .opt.term{font-family:'Space Grotesk',sans-serif;font-size:13.5px;text-align:center;letter-spacing:.5px}
 .mp .opt.done{background:rgba(47,191,113,.15);border-color:var(--ok);color:var(--ink);cursor:default}
+/* chapter picker (same look as the home page chapter sheet) */
+.cpick{display:flex;align-items:center;gap:12px;width:100%;margin-top:12px;padding:10px 14px 10px 10px;border-radius:16px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;text-align:left;font-family:inherit}
+.cpick .ic,.copt .ic{flex:0 0 auto;width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:24px;background:linear-gradient(135deg,rgba(212,175,55,.18),rgba(45,212,191,.16))}
+.cpick .tx,.copt .tx{flex:1;min-width:0}
+.cpick small,.copt small{display:block;font-size:10.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--gold);font-weight:800;font-family:Inter,sans-serif}
+.cpick b{display:block;font:700 16px/1.3 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;margin-top:1px}
+.cpick .chev{flex:0 0 auto;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--panel2);border:1px solid var(--line);color:var(--ink-dim);font-size:13px}
+.csheet{position:fixed;inset:0;z-index:2000;background:rgba(5,10,20,.55);display:flex;align-items:flex-end;justify-content:center}
+.csheet[hidden]{display:none}
+.csheet-box{width:min(520px,100%);max-height:80vh;display:flex;flex-direction:column;background:var(--navy);border:1px solid var(--line);border-bottom:0;border-radius:22px 22px 0 0;padding:14px 14px calc(12px + env(safe-area-inset-bottom));box-shadow:0 -10px 30px rgba(0,0,0,.3);animation:cUp .22s ease}
+@keyframes cUp{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.csheet-box{animation:none}}
+.csheet-head{display:flex;align-items:center;justify-content:space-between;padding:2px 4px 10px}
+.csheet-head b{font:700 17px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;color:var(--ink)}
+.csheet-head button{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:15px;cursor:pointer}
+.csheet-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:4px;border-radius:12px;background:var(--panel);border:1px solid var(--line);margin-bottom:10px}
+.csheet-tabs button{border:0;border-radius:9px;padding:9px;background:transparent;color:var(--ink-dim);font:700 13px 'Space Grotesk',sans-serif;cursor:pointer}
+.csheet-tabs button.on{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406}
+.csheet-list{overflow-y:auto;display:grid;gap:8px;padding:2px 2px 4px}
+.copt{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;text-align:left;font-family:inherit}
+.copt .ic{width:42px;height:42px;font-size:22px;border-radius:12px}
+.copt b{display:block;font-size:14px;line-height:1.3;font-weight:700}
+.copt .ck{flex:0 0 auto;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-size:13px;color:transparent}
+.copt.on{border-color:var(--teal);box-shadow:0 0 0 1px var(--teal) inset}
+.copt.on .ck{background:var(--teal);border-color:var(--teal);color:#fff}
 </style>
 </head>
 <body>
@@ -53,7 +78,15 @@
     <h1 data-i18n-html="h1">🔠 Word <span class="accent">Puzzles</span></h1>
     <p data-i18n="intro">Crossword, word search and match-the-pairs built from the key terms of each chapter.</p>
   </section>
-  <select class="pick" id="chap" aria-label="Chapter"></select>
+  <select id="chap" aria-hidden="true" tabindex="-1" hidden></select>
+  <button type="button" class="cpick" id="chapBtn" aria-haspopup="dialog" aria-expanded="false"><span class="ic" id="chapIc">📘</span><span class="tx"><small id="chapK"></small><b id="chapT"></b></span><span class="chev" aria-hidden="true">▾</span></button>
+  <div class="csheet" id="chapSheet" role="dialog" aria-modal="true" aria-labelledby="chapSheetT" hidden>
+    <div class="csheet-box">
+      <div class="csheet-head"><b id="chapSheetT">Choose your chapter</b><button type="button" id="chapSheetX" aria-label="Close">✕</button></div>
+      <div class="csheet-tabs" role="tablist"><button type="button" role="tab" data-pu="1">I PUC</button><button type="button" role="tab" data-pu="2">II PUC</button></div>
+      <div class="csheet-list" id="chapList"></div>
+    </div>
+  </div>
   <div class="tabs" id="tabs">
     <button class="tab on" data-g="xw">✏️ Crossword</button>
     <button class="tab" data-g="ws">🔍 Word Search</button>
@@ -240,9 +273,39 @@ function mpRound(){
   draw();
 }
 
+
+/* ---------- chapter picker: icon + name, bottom sheet with I PUC / II PUC tabs (same icons as the home page) ---------- */
+const CH_ICON={'pu1-ch1':'🌍','pu1-ch2':'🌳','pu1-ch3':'🌿','pu1-ch4':'🐾','pu1-ch5':'🌸','pu1-ch6':'🔬','pu1-ch7':'🐛','pu1-ch8':'🧫','pu1-ch9':'🧪','pu1-ch10':'🔄','pu1-ch11':'☀️','pu1-ch12':'💨','pu1-ch13':'🌱','pu1-ch14':'🫁','pu1-ch15':'❤️','pu1-ch16':'💧','pu1-ch17':'🦴','pu1-ch18':'🧠','pu1-ch19':'⚗️',
+ 'pu2-ch1':'🌸','pu2-ch2':'👶','pu2-ch3':'🏥','pu2-ch4':'🧬','pu2-ch5':'🔬','pu2-ch6':'🐒','pu2-ch7':'🦠','pu2-ch8':'🧫','pu2-ch9':'🧪','pu2-ch10':'💉','pu2-ch11':'🦁','pu2-ch12':'🌳','pu2-ch13':'🦋'};
+const CP_T={en:{choose:'Choose your chapter',ch:'Chapter'},kn:{choose:'ನಿಮ್ಮ ಅಧ್ಯಾಯ ಆರಿಸಿ',ch:'ಅಧ್ಯಾಯ'},hi:{choose:'अपना अध्याय चुनें',ch:'अध्याय'}};
+const cpT=k=>(CP_T[GZ.lang]||CP_T.en)[k];
+const cpBtn=$('#chapBtn'), cpSheet=$('#chapSheet'), cpList=$('#chapList');
+let cpPu=1;
+function cpPaint(){
+  const c=RIDDLES.find(x=>x.id===chap); if(!c) return;
+  $('#chapIc').textContent=CH_ICON[c.id]||'📘';
+  $('#chapK').textContent=`${c.pu===1?'I PUC':'II PUC'} · ${cpT('ch')} ${c.ch}`;
+  $('#chapT').textContent=c.t;
+  cpBtn.setAttribute('aria-label',`${c.pu===1?'I PUC':'II PUC'} ${cpT('ch')} ${c.ch}: ${c.t}`);
+  $('#chapSheetT').textContent=cpT('choose');
+}
+function cpRender(){
+  cpSheet.querySelectorAll('.csheet-tabs button').forEach(b=>{ const on=+b.dataset.pu===cpPu; b.classList.toggle('on',on); b.setAttribute('aria-selected',on); });
+  cpList.innerHTML=RIDDLES.filter(c=>c.pu===cpPu).map(c=>`<button type="button" class="copt${c.id===chap?' on':''}" data-id="${c.id}"><span class="ic">${CH_ICON[c.id]||'📘'}</span><span class="tx"><small>${cpT('ch')} ${c.ch}</small><b>${c.t}</b></span><span class="ck">✓</span></button>`).join('');
+}
+function cpOpen(){ const c=RIDDLES.find(x=>x.id===chap); cpPu=c?c.pu:1; cpRender(); cpSheet.hidden=false; cpBtn.setAttribute('aria-expanded','true'); document.body.style.overflow='hidden'; const on=cpList.querySelector('.copt.on'); if(on) on.scrollIntoView({block:'center'}); }
+function cpClose(){ cpSheet.hidden=true; cpBtn.setAttribute('aria-expanded','false'); document.body.style.overflow=''; cpBtn.focus({preventScroll:true}); }
+cpBtn.addEventListener('click',cpOpen);
+$('#chapSheetX').addEventListener('click',cpClose);
+cpSheet.addEventListener('click',e=>{ if(e.target===cpSheet) cpClose(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!cpSheet.hidden) cpClose(); });
+cpSheet.querySelector('.csheet-tabs').addEventListener('click',e=>{ const b=e.target.closest('button[data-pu]'); if(b){ cpPu=+b.dataset.pu; cpRender(); } });
+cpList.addEventListener('click',e=>{ const o=e.target.closest('.copt'); if(!o) return; cpClose(); if(o.dataset.id!==chap){ sel.value=o.dataset.id; sel.onchange(); } });
+GZ.onLang(()=>{ cpPaint(); if(!cpSheet.hidden) cpRender(); });
+
 /* ---------- wiring ---------- */
 const STARTS={xw:xwStart,ws:wsStart,mp:mpStart};
-function start(g){ game=g; document.querySelectorAll('#tabs .tab').forEach(t=>t.classList.toggle('on',t.dataset.g===g)); try{ history.replaceState(null,'','#'+g+'-'+chap); }catch(e){} STARTS[g](); }
+function start(g){ game=g; document.querySelectorAll('#tabs .tab').forEach(t=>t.classList.toggle('on',t.dataset.g===g)); try{ history.replaceState(null,'','#'+g+'-'+chap); }catch(e){} STARTS[g](); cpPaint(); }
 document.getElementById('tabs').addEventListener('click',e=>{ const t=e.target.closest('.tab'); if(t) start(t.dataset.g); });
 sel.onchange=()=>{ chap=sel.value; try{ localStorage.setItem('baio_words_ch',chap); }catch(e){} start(game); };
 GZ.startLang();
