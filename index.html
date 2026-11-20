@@ -556,6 +556,32 @@ body{background:var(--bh-bg);}
 .bh-hero svg{position:absolute;right:-18px;top:18px;width:200px;height:200px;filter:drop-shadow(0 12px 18px rgba(40,0,90,.4));animation:bhFloat 6s ease-in-out infinite;}
 @keyframes bhFloat{50%{transform:translateY(-6px) rotate(4deg);}}
 @media (prefers-reduced-motion:reduce){.bh-hero svg{animation:none;}}
+.bh-promo{position:relative;margin-top:14px}
+.bh-promo-track{display:flex;gap:12px;padding:2px 0 12px;margin-bottom:-6px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;-webkit-overflow-scrolling:touch;align-items:stretch}
+.bh-promo-track::-webkit-scrollbar{display:none}
+.bh-promo .bh-slide{flex:0 0 100%;scroll-snap-align:center;scroll-snap-stop:always;margin-top:0 !important;box-sizing:border-box}
+.bh-promo-dots{display:flex;justify-content:center;gap:7px;margin-top:9px}
+.bh-promo-dots button{width:8px;height:8px;border-radius:99px;border:0;padding:0;background:rgba(124,77,255,.28);cursor:pointer;transition:width .25s,background .25s}
+.bh-promo-dots button[aria-selected="true"]{width:22px;background:var(--bh-p1,#5B2EE0)}
+:root:not([data-theme="light"]) .bh-promo-dots button[aria-selected="true"]{background:#B39BFF}
+.bh-bundle{position:relative;display:block;border-radius:24px;padding:16px 16px 14px;overflow:hidden;color:#fff;font-family:inherit;
+ background:radial-gradient(circle at 90% 10%,rgba(255,201,60,.35),transparent 50%),linear-gradient(135deg,#0B6F5E,#0F8F7A 55%,#12B58F);box-shadow:0 10px 26px rgba(15,143,122,.3)}
+.bh-bundle a{text-decoration:none}
+.bh-bundle .gift{position:absolute;right:14px;top:10px;font-size:46px;transform:rotate(12deg);filter:drop-shadow(0 6px 10px rgba(0,0,0,.25))}
+.bh-bundle .tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.08em;padding:3px 9px;border-radius:99px;background:#FFC93C;color:#3A2600}
+.bh-bundle b{display:block;font-size:18px;font-weight:800;line-height:1.2;margin-top:8px;max-width:78%}
+.bh-bundle .bl{list-style:none;margin:8px 0 0;padding:0;font-size:12px;line-height:1.45;opacity:.95}
+.bh-bundle .bl li{margin-top:2px}
+.bh-bundle .row{display:flex;gap:8px;align-items:center;margin-top:10px}
+.bh-bundle s{font-size:13px;opacity:.75}
+.bh-bundle .pr{font-size:24px;font-weight:900;color:#FFE27A;line-height:1}
+.bh-bundle .off{font-size:10.5px;font-weight:800;padding:3px 8px;border-radius:7px;background:#FFC93C;color:#3A2600}
+.bh-bundle .btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.bh-bundle .go{display:block;text-align:center;font-weight:800;font-size:13px;padding:10px 8px;border-radius:99px;white-space:nowrap;border:2px solid rgba(255,255,255,.85);color:#fff}
+.bh-bundle .go.on{background:#FFC93C;border-color:#FFC93C;color:#3A2600;box-shadow:0 6px 14px rgba(0,0,0,.2)}
+.bh-bundle .nt{display:block;font-size:10.8px;opacity:.85;margin-top:9px;text-align:center}
+:root:not([data-theme="light"]) .bh-bundle{background:radial-gradient(circle at 90% 10%,rgba(255,201,60,.18),transparent 50%),linear-gradient(135deg,#0A3F37,#0B5A4D 55%,#0E6E5E);border:1px solid rgba(46,230,197,.25);box-shadow:0 14px 30px rgba(0,0,0,.4)}
+@media(max-width:370px){.bh-bundle .go{font-size:12px}.bh-bundle b{font-size:16.5px}}
 .bh-book{position:relative;display:block;margin-top:14px;border-radius:24px;padding:16px 16px 14px 134px;overflow:hidden;color:#3A2600;
  background:radial-gradient(circle at 92% 8%,rgba(255,210,90,.6),transparent 52%),linear-gradient(135deg,#FFF6DA,#FFE3A0);box-shadow:0 10px 26px rgba(170,120,0,.22);font-family:inherit}
 .bh-book a{text-decoration:none}
@@ -726,7 +752,9 @@ body{padding-bottom:96px;}
       </svg>
     </div>
 
-    <div class="bh-book" id="bhBook">
+    <div class="bh-promo" id="bhPromo" role="region" aria-roledescription="carousel" aria-label="BAIO books and chapter bundles">
+     <div class="bh-promo-track" id="bhPromoTrack">
+    <div class="bh-book bh-slide" id="bhBook" role="group" aria-roledescription="slide" aria-label="1 of 2: Exam Scorer e-books">
       <a class="cvs" id="bhBookCvs" href="biology-prep-books.html" aria-label="I PUC and II PUC Biology Exam Scorer books">
         <img class="cv" id="bhBookCv1" src="prep-books-assets/pu1/cover.jpg" alt="I PUC Biology Exam Scorer cover" loading="lazy">
         <img class="cv" id="bhBookCv2" src="prep-books-assets/pu2/cover.jpg" alt="II PUC Biology Exam Scorer cover" loading="lazy">
@@ -743,6 +771,25 @@ body{padding-bottom:96px;}
         <a class="go" id="bhBookGo1" href="biology-prep-books.html#pu1">📘 I PUC Book →</a>
         <a class="go" id="bhBookGo2" href="biology-prep-books.html#pu2">📗 II PUC Book →</a>
       </span>
+    </div>
+    <div class="bh-bundle bh-slide" id="bhBundle" role="group" aria-roledescription="slide" aria-label="2 of 2: all 13 PU-II chapters in one payment">
+      <span class="gift" aria-hidden="true">🎁</span>
+      <span class="tag">🎓 II PUC · ONE PAYMENT</span>
+      <b>Get All 13 PU-II Chapters</b>
+      <ul class="bl">
+        <li>🧠 Mind Map · Class Presentation · MCQ Quiz</li>
+        <li>🎯 NEET &amp; KCET Practice · Answer Practice</li>
+        <li>📝 Paper Generator · Board Important · Audio Podcast</li>
+      </ul>
+      <span class="row"><s>₹39000</s><span class="pr">₹33150</span><span class="off">15% OFF</span></span>
+      <span class="btns">
+        <a class="go on" href="https://rzp.io/rzp/AEFNemg9" target="_blank" rel="noopener">💳 Pay ₹33150</a>
+        <a class="go" href="pu2-cart.html">🛒 Build your bundle</a>
+      </span>
+      <small class="nt">One unlock code for every PU-II chapter · WhatsApp Narendra Sir after paying</small>
+    </div>
+     </div>
+     <div class="bh-promo-dots" id="bhPromoDots" role="tablist" aria-label="Choose a slide"><button type="button" role="tab" aria-label="Exam Scorer e-books" aria-selected="true"></button><button type="button" role="tab" aria-label="All 13 PU-II chapters" aria-selected="false"></button></div>
     </div>
     <button type="button" class="bh-new" id="bhNewUiWatch" aria-haspopup="dialog" aria-label="Watch the video: what's new in the BAIO app">
       <img src="reels/baio-new-ui-promo-cover.jpg" alt="" loading="lazy">
@@ -3372,6 +3419,23 @@ window.indexHardRefresh = indexHardRefresh;
   document.getElementById('start3VClose').addEventListener('click',close);
   m.addEventListener('click',function(e){if(e.target===m)close();});
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!m.hidden)close();});
+}catch(e){}})();
+</script>
+<script>
+/* ---- Home: promo carousel (e-books, PU-II chapter bundle) — swipe, dots, auto-advance every 5 s ---- */
+(function(){try{
+  var track=document.getElementById('bhPromoTrack'), dots=document.getElementById('bhPromoDots'); if(!track||!dots) return;
+  var slides=track.querySelectorAll('.bh-slide'), btns=dots.querySelectorAll('button'), cur=0, timer=null, paused=false, n=slides.length;
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function mark(i){ cur=i; btns.forEach(function(b,k){ b.setAttribute('aria-selected',k===i?'true':'false'); }); }
+  function go(i){ i=(i+n)%n; track.scrollTo({left:slides[i].offsetLeft-track.offsetLeft,behavior:reduce?'auto':'smooth'}); mark(i); }
+  function start(){ stop(); if(reduce||n<2) return; timer=setInterval(function(){ if(!paused&&!document.hidden) go(cur+1); },5000); }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; } }
+  btns.forEach(function(b,k){ b.addEventListener('click',function(){ go(k); start(); }); });
+  var st=null; track.addEventListener('scroll',function(){ clearTimeout(st); st=setTimeout(function(){ var w=track.clientWidth||1; mark(Math.round(track.scrollLeft/(w+12))); },80); },{passive:true});
+  ['touchstart','pointerdown','mouseenter','focusin'].forEach(function(e){ track.addEventListener(e,function(){ paused=true; },{passive:true}); });
+  ['touchend','mouseleave','focusout'].forEach(function(e){ track.addEventListener(e,function(){ paused=false; start(); },{passive:true}); });
+  start();
 }catch(e){}})();
 </script>
 <script>
