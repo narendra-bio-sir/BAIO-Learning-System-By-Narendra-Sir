@@ -15,7 +15,7 @@
   try{ bookPage = new URL('../biology-prep-books.html#' + cls, me.src).href; }catch(e){ bookPage = 'biology-prep-books.html#' + cls; }
   try{ coverSrc = new URL('../prep-books-assets/' + cls + '/cover.jpg', me.src).href; }catch(e){ coverSrc = 'prep-books-assets/' + cls + '/cover.jpg'; }
   /* free KCET PYQs per chapter (pyq.html); counts match pyq/pyq-kcet.js */
-  var PYQ_N = {'pu1-ch1':3,'pu1-ch10':4,'pu1-ch11':7,'pu1-ch12':6,'pu1-ch13':3,'pu1-ch14':2,'pu1-ch15':7,'pu1-ch16':1,'pu1-ch17':1,'pu1-ch18':1,'pu1-ch19':6,'pu1-ch2':5,'pu1-ch3':5,'pu1-ch4':4,'pu1-ch5':5,'pu1-ch6':4,'pu1-ch7':4,'pu1-ch8':5,'pu1-ch9':6,'pu2-ch1':24,'pu2-ch10':12,'pu2-ch11':20,'pu2-ch12':7,'pu2-ch13':9,'pu2-ch2':20,'pu2-ch3':11,'pu2-ch4':24,'pu2-ch5':35,'pu2-ch6':10,'pu2-ch7':25,'pu2-ch8':14,'pu2-ch9':18};
+  var PYQ_N = {'pu1-ch1':3,'pu1-ch10':4,'pu1-ch11':8,'pu1-ch12':9,'pu1-ch13':4,'pu1-ch14':2,'pu1-ch15':8,'pu1-ch16':1,'pu1-ch17':2,'pu1-ch18':1,'pu1-ch19':7,'pu1-ch2':6,'pu1-ch3':5,'pu1-ch4':4,'pu1-ch5':5,'pu1-ch6':4,'pu1-ch7':4,'pu1-ch8':7,'pu1-ch9':6,'pu2-ch1':27,'pu2-ch10':12,'pu2-ch11':20,'pu2-ch12':9,'pu2-ch13':13,'pu2-ch2':23,'pu2-ch3':13,'pu2-ch4':29,'pu2-ch5':42,'pu2-ch6':12,'pu2-ch7':28,'pu2-ch8':17,'pu2-ch9':21};
   var pyqPage;
   try{ pyqPage = new URL('../pyq.html#' + id, me.src).href; }catch(e){ pyqPage = 'pyq.html#' + id; }
 
@@ -89,7 +89,7 @@
       pq.id = 'pyqBanner'; pq.className = 'sl';
       pq.href = pyqPage;
       pq.innerHTML = '<span class="nti pq" aria-hidden="true">📝</span>'
-        + '<span class="ntt"><b>KCET PYQs of this chapter</b><small>' + PYQ_N[id] + ' previous year question' + (PYQ_N[id] > 1 ? 's' : '') + ' (2016–2021) with official answers</small></span>'
+        + '<span class="ntt"><b>KCET PYQs of this chapter</b><small>' + PYQ_N[id] + ' previous year question' + (PYQ_N[id] > 1 ? 's' : '') + ' (2015–2021) with official answers</small></span>'
         + '<span class="ntp ok">Free →</span>';
       trk.appendChild(pq); labels.push('KCET PYQs');
     }
