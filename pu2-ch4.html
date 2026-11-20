@@ -1256,7 +1256,7 @@ setTimeout(function(){ if(!window.__baioReady) { document.body.classList.add('ap
   </div>
   <script>
     var WHATSNEW_ITEMS = [
-      {key:'pu2ch4_whatsnew_neettricks_v1', html:'&#127919; <b>New: NEET Tricks!</b> 9 genetics shortcuts from Narendra Sir&rsquo;s class notes &mdash; 2<sup>n</sup> gametes, binomial (ax + by)&sup2;, the n-formula table and the product rule &mdash; plus 12 practice questions. Open the <b>NEET Tricks</b> tab under Test Prep.'},
+      {key:'pu2ch4_whatsnew_neettricks_v1', html:'&#127919; <b>New premium tab: NEET Tricks!</b> 9 genetics shortcuts from Narendra Sir&rsquo;s class notes &mdash; 2<sup>n</sup> gametes, binomial (ax + by)&sup2;, the n-formula table and the product rule &mdash; plus 12 practice questions. Open the <b>NEET Tricks</b> tab under Test Prep.'},
       {key:'pu2_all13_complete_v1', html:'&#127881; <b>All 13 PU-II chapters are now complete!</b> Every chapter now has full Study Notes, MCQ/NEET/KCET Practice, Board Important Q&amp;A with labelled diagrams (NCERT page references included), Audio Podcasts in 5 languages, and printable Topic-wise Worksheets.'},
       {key:'pu2ch4_whatsnew_redesign_v1', html:'&#127807; <b>New look!</b> Cleaner typography and calmer colors across the app &mdash; same content, easier on the eyes.'},
       {key:'pu2ch4_whatsnew_fullscreen_v1', html:'&#128421;&#65039; <b>Full Screen Mode</b> is here! Tap the button on MCQ Quiz, NEET Practice, KCET Practice, or Study Mode to focus distraction-free.'},
@@ -1838,6 +1838,7 @@ document.addEventListener('DOMContentLoaded', function(){
       <div id="ntQuiz"></div>
       <button type="button" class="nt-reset" id="ntReset">↺ Try again</button>
     </div>
+    <div class="premium-lock-overlay" id="premLock_neettricks"></div>
   </div>
 
   <div class="panel" id="panel-adv">
@@ -6912,8 +6913,8 @@ const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/gXmNPqF';
 const PU2_BUNDLE_PRICE_RUPEES = 33150;
 const PU2_BUNDLE_RAZORPAY_LINK = 'https://rzp.io/rzp/AEFNemg9';
 const PREMIUM_UNLOCK_LOOKUP = {};
-const PREMIUM_LOCKED_TABS = ['mindmap', 'classppt', 'quiz', 'adv', 'kcet', 'writeit', 'papergen', 'boardimp', 'podcast'];
-const PREMIUM_TAB_LABELS = {mindmap:'Mind Map', classppt:'Class Presentation', revision:'Revision', quiz:'MCQ Quiz', adv:'NEET Practice', kcet:'KCET Practice', writeit:'Answer Practice', papergen:'Paper Generator', boardimp:'Board Important', podcast:'Audio Podcast'};
+const PREMIUM_LOCKED_TABS = ['mindmap', 'classppt', 'quiz', 'adv', 'neettricks', 'kcet', 'writeit', 'papergen', 'boardimp', 'podcast'];
+const PREMIUM_TAB_LABELS = {mindmap:'Mind Map', classppt:'Class Presentation', revision:'Revision', quiz:'MCQ Quiz', adv:'NEET Practice', neettricks:'NEET Tricks', kcet:'KCET Practice', writeit:'Answer Practice', papergen:'Paper Generator', boardimp:'Board Important', podcast:'Audio Podcast'};
 
 const PODCASTS_CH4 = {
   en: {label:'English', url:'https://narendra-bio-sir.github.io/baio-podcasts/pu2-ch4-assets/podcast-english.mp3?v=2'},
@@ -7140,11 +7141,11 @@ function renderPremiumLockScreenCh2(tabId){
     + '<div style="text-align:center; margin-bottom:14px;">'
     + '<div style="font-size:38px;">\uD83D\uDD12</div>'
     + '<h3 style="color:var(--gold-2); margin:6px 0 2px; font-size:17px;">' + label + ' is Premium Content</h3>'
-    + '<div style="color:var(--text-dim); font-size:12px;">Part of the Premium bundle: Mind Map, Class Presentation, Revision, MCQ Quiz, NEET Practice &amp; Audio Podcast</div>'
+    + '<div style="color:var(--text-dim); font-size:12px;">Part of the Premium bundle: Mind Map, Class Presentation, MCQ Quiz, NEET Practice, NEET Tricks, KCET Practice, Answer Practice, Paper Generator, Board Important &amp; Audio Podcast</div>'
     + '</div>'
     + '<div style="text-align:center; margin-bottom:16px;">'
     + '<span style="color:var(--gold-2); font-size:22px; font-weight:800;">\u20B9' + PREMIUM_PRICE_RUPEES + '</span>'
-    + '<div style="color:var(--text-dim); font-size:11px; margin-top:2px;">one-time unlock &middot; covers all 5 premium features in this chapter</div>'
+    + '<div style="color:var(--text-dim); font-size:11px; margin-top:2px;">one-time unlock &middot; covers every premium feature in this chapter</div>'
     + '</div>'
     + '<div style="color:var(--text-dim); font-size:12px; text-align:center; margin-bottom:14px;">'
     + 'Pay below to get instant help unlocking Premium Content, or enter your unlock code if you already have one.'
@@ -8268,7 +8269,7 @@ try{ renderMnemonics(); }catch(e){ console.error('renderMnemonics failed:', e); 
 const LANG_STRINGS = {
   en: {
     badges:'Milestones', progress:'Progress', study:'Study Mode', concept:'Concepts',
-    flash:'Flashcards', quiz:'MCQ Quiz', adv:'NEET Practice', revision:'Revision',
+    flash:'Flashcards', quiz:'MCQ Quiz', adv:'NEET Practice', neettricks:'NEET Tricks', revision:'Revision',
     mindmap:'Mind Map', classppt:'Class Presentation', tree:'Tree Explorer',
     compare:'Compare Matrix', glossary:'Pronunciation', papergen:'Paper Generator',
     mynotes:'My Notes', dl:'Downloads',
@@ -8277,7 +8278,7 @@ const LANG_STRINGS = {
   },
   kn: {
     badges:'ಮೈಲಿಗಲ್ಲುಗಳು', progress:'ಪ್ರಗತಿ', study:'ಅಧ್ಯಯನ ವಿಧಾನ', concept:'ಪರಿಕಲ್ಪನೆಗಳು',
-    flash:'ಫ್ಲ್ಯಾಶ್\u200cಕಾರ್ಡ್\u200cಗಳು', quiz:'MCQ ರಸಪ್ರಶ್ನೆ', adv:'NEET ಅಭ್ಯಾಸ', revision:'ಪುನರಾವಲೋಕನ',
+    flash:'ಫ್ಲ್ಯಾಶ್\u200cಕಾರ್ಡ್\u200cಗಳು', quiz:'MCQ ರಸಪ್ರಶ್ನೆ', adv:'NEET ಅಭ್ಯಾಸ', neettricks:'NEET ತಂತ್ರಗಳು', revision:'ಪುನರಾವಲೋಕನ',
     mindmap:'ಮೈಂಡ್ ಮ್ಯಾಪ್', classppt:'ತರಗತಿ ಪ್ರಸ್ತುತಿ', tree:'ಟ್ರೀ ಎಕ್ಸ್\u200cಪ್ಲೋರರ್',
     compare:'ಹೋಲಿಕೆ ಪಟ್ಟಿ', glossary:'ಉಚ್ಚಾರಣೆ', papergen:'ಪ್ರಶ್ನೆಪತ್ರಿಕೆ ರಚನೆ',
     mynotes:'ನನ್ನ ಟಿಪ್ಪಣಿಗಳು', dl:'ಡೌನ್\u200cಲೋಡ್\u200cಗಳು',
@@ -8286,7 +8287,7 @@ const LANG_STRINGS = {
   },
   hi: {
     badges:'उपलब्धियाँ', progress:'प्रगति', study:'अध्ययन मोड', concept:'अवधारणाएँ',
-    flash:'फ़्लैशकार्ड', quiz:'MCQ क्विज़', adv:'NEET अभ्यास', revision:'पुनरावृत्ति',
+    flash:'फ़्लैशकार्ड', quiz:'MCQ क्विज़', adv:'NEET अभ्यास', neettricks:'NEET ट्रिक्स', revision:'पुनरावृत्ति',
     mindmap:'माइंड मैप', classppt:'कक्षा प्रस्तुति', tree:'ट्री एक्सप्लोरर',
     compare:'तुलना तालिका', glossary:'उच्चारण', papergen:'प्रश्नपत्र जनरेटर',
     mynotes:'मेरे नोट्स', dl:'डाउनलोड',
