@@ -1,6 +1,6 @@
 /* BAIO home greeting.
    - First open: a welcome sheet asks the student's name (stored in localStorage 'baio_user_name').
-   - Once a day, on the first open of the day: a greeting card, e.g. "Good morning, Priya! 👋".
+   - The home header shows "Hi, <name>". There is no greeting pop-up (switched off at Narendra Sir's request).
    - Tapping the name in the home header lets the student change it.
    A name already saved on a chapter page ('baio_student') is used as-is, so those students are never asked twice.
    'baio_student' is only updated when it already exists, because chapter pages treat that profile as complete. */
@@ -123,8 +123,7 @@
     function submit(){
       var n = clean(inp.value); if (!n) { inp.focus(); return; }
       setName(n); updateHeader();
-      o.close(function(){ greet(!opts.edit); });
-      speak(T.say(partOfDay(), first(n)));
+      o.close();
     }
     go.addEventListener('click', submit);
     inp.addEventListener('keydown', function(e){ if (e.key === 'Enter') { e.preventDefault(); submit(); } });
@@ -145,10 +144,10 @@
       b.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); edit(); } });
     }
     if (location.hash === '#baio-tour') return;
-    /* greet (or ask the name) at most once a day */
+    /* no greeting pop-up; only a student with no name yet is asked for it (at most once a day) */
+    if (getName()) return;
     var seen = false; try { seen = sessionStorage.getItem(SEEN_KEY) === '1' || localStorage.getItem(DAY_KEY) === today(); } catch (e) {}
-    if (seen) return;
-    if (getName()) greet(false); else ask();
+    if (!seen) ask();
   }
   window.BAIOGreet = { ask: function(){ ask({ edit: !!getName() }); }, greet: function(){ greet(false); } };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
