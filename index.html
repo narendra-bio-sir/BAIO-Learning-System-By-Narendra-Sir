@@ -564,6 +564,25 @@ body{background:var(--bh-bg);}
 .bh-promo-dots button{width:8px;height:8px;border-radius:99px;border:0;padding:0;background:rgba(124,77,255,.28);cursor:pointer;transition:width .25s,background .25s}
 .bh-promo-dots button[aria-selected="true"]{width:22px;background:var(--bh-p1,#5B2EE0)}
 :root:not([data-theme="light"]) .bh-promo-dots button[aria-selected="true"]{background:#B39BFF}
+.bh-trial{position:relative;display:block;border-radius:24px;padding:16px 16px 14px;overflow:hidden;color:#fff;font-family:inherit;
+ background:radial-gradient(circle at 92% 6%,rgba(255,226,122,.55),transparent 48%),linear-gradient(135deg,#FF7A59,#FF4D7E 55%,#B23CA8);box-shadow:0 10px 26px rgba(255,77,126,.3)}
+.bh-trial .crown{position:absolute;right:14px;top:8px;font-size:46px;transform:rotate(14deg);filter:drop-shadow(0 6px 10px rgba(0,0,0,.25))}
+.bh-trial .tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.08em;padding:3px 9px;border-radius:99px;background:#fff;color:#C2185B}
+.bh-trial b{display:block;font-size:18px;font-weight:800;line-height:1.2;margin-top:8px;max-width:80%}
+.bh-trial .bl{list-style:none;margin:8px 0 0;padding:0;font-size:12px;line-height:1.45;opacity:.96}
+.bh-trial .bl li{margin-top:2px}
+.bh-trial .row{display:flex;gap:8px;align-items:baseline;margin-top:10px;flex-wrap:wrap}
+.bh-trial .pr{font-size:17px;font-weight:900;color:#FFE27A}
+.bh-trial .sub{font-size:12px;font-weight:700;opacity:.9}
+.bh-trial .btns{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
+.bh-trial .btns.two{grid-template-columns:1fr 1fr}
+.bh-trial .go{display:block;text-align:center;font-family:inherit;font-weight:800;font-size:14px;line-height:1.2;padding:11px 8px;border-radius:99px;white-space:nowrap;border:2px solid rgba(255,255,255,.9);color:#fff;background:transparent;cursor:pointer;text-decoration:none}
+.bh-trial .btns.two .go{font-size:12.5px;padding:11px 4px}
+.bh-trial .go.on{background:#fff;color:#C2185B;border-color:#fff;box-shadow:0 6px 14px rgba(0,0,0,.2)}
+.bh-trial .nt{display:block;font-size:10.8px;opacity:.88;margin-top:9px;text-align:center}
+:root:not([data-theme="light"]) .bh-trial{background:radial-gradient(circle at 92% 6%,rgba(255,226,122,.2),transparent 48%),linear-gradient(135deg,#6E2A2A,#7A1F45 55%,#5A1E66);border:1px solid rgba(255,126,179,.3);box-shadow:0 14px 30px rgba(0,0,0,.4)}
+:root:not([data-theme="light"]) .bh-trial .tag{background:#FFE3EF}
+@media(max-width:370px){.bh-trial b{font-size:16.5px}.bh-trial .go{font-size:12.5px}}
 .bh-fc{position:relative;display:block;border-radius:24px;padding:16px 16px 14px 136px;overflow:hidden;color:#fff;font-family:inherit;
  background:radial-gradient(circle at 92% 8%,rgba(255,158,207,.45),transparent 50%),linear-gradient(135deg,#5B2EE0,#8A4FE8 55%,#D45BB3);box-shadow:0 10px 26px rgba(91,46,224,.3)}
 .bh-fc a{text-decoration:none}
@@ -810,7 +829,20 @@ body{padding-bottom:96px;}
     <a class="bh-daily" href="zone.html#daily"><div style="font-size:30px">🔥</div><div><b>Daily Bio Challenge</b><small>5 questions · 3 minutes</small></div><span class="pl">Play ▶</span></a>
     <div class="bh-promo" id="bhPromo" role="region" aria-roledescription="carousel" aria-label="BAIO books and chapter bundles">
      <div class="bh-promo-track" id="bhPromoTrack">
-    <div class="bh-book bh-slide" id="bhBook" role="group" aria-roledescription="slide" aria-label="1 of 3: Exam Scorer e-books">
+    <div class="bh-trial bh-slide" id="bhTrial" role="group" aria-roledescription="slide" aria-label="1 of 4: one-day free trial of premium content">
+      <span class="crown" aria-hidden="true">👑</span>
+      <span class="tag" id="bhTrialTag">⏳ 1-DAY FREE TRIAL</span>
+      <b id="bhTrialT">Try Premium free for 24 hours</b>
+      <ul class="bl">
+        <li>🧠 Mind Map · Class Presentation · MCQ Quiz</li>
+        <li>🎯 NEET &amp; KCET Practice · Answer Practice</li>
+        <li>📝 Paper Generator · Board Important · Audio Podcast</li>
+      </ul>
+      <span class="row" id="bhTrialRow"><span class="pr">Every live chapter</span><span class="sub">I PUC &amp; II PUC</span></span>
+      <span class="btns" id="bhTrialBtns"><button type="button" class="go on" id="bhTrialGo">🚀 Start my free trial</button></span>
+      <small class="nt" id="bhTrialNote">One trial per phone · ends by itself after 24 hours · paid unlocks stay as they are</small>
+    </div>
+    <div class="bh-book bh-slide" id="bhBook" role="group" aria-roledescription="slide" aria-label="2 of 4: Exam Scorer e-books">
       <a class="cvs" id="bhBookCvs" href="biology-prep-books.html" aria-label="I PUC and II PUC Biology Exam Scorer books">
         <img class="cv" id="bhBookCv1" src="prep-books-assets/pu1/cover.jpg" alt="I PUC Biology Exam Scorer cover" loading="lazy">
         <img class="cv" id="bhBookCv2" src="prep-books-assets/pu2/cover.jpg" alt="II PUC Biology Exam Scorer cover" loading="lazy">
@@ -828,7 +860,7 @@ body{padding-bottom:96px;}
         <a class="go" id="bhBookGo2" href="biology-prep-books.html#pu2">📗 II PUC Book →</a>
       </span>
     </div>
-    <div class="bh-bundle bh-slide" id="bhBundle" role="group" aria-roledescription="slide" aria-label="2 of 3: all 13 PU-II chapters in one payment">
+    <div class="bh-bundle bh-slide" id="bhBundle" role="group" aria-roledescription="slide" aria-label="3 of 4: all 13 PU-II chapters in one payment">
       <span class="gift" aria-hidden="true">🎁</span>
       <span class="tag">🎓 II PUC · ONE PAYMENT</span>
       <b>Get All 13 PU-II Chapters</b>
@@ -844,7 +876,7 @@ body{padding-bottom:96px;}
       </span>
       <small class="nt">One unlock code for every PU-II chapter · WhatsApp Narendra Sir after paying</small>
     </div>
-    <div class="bh-fc bh-slide" id="bhFc" role="group" aria-roledescription="slide" aria-label="3 of 3: Biology flash cards">
+    <div class="bh-fc bh-slide" id="bhFc" role="group" aria-roledescription="slide" aria-label="4 of 4: Biology flash cards">
       <a class="cvs" href="flashcards.html" aria-label="Biology flash cards">
         <img class="cd c1" src="flashcards/promo/card-1.jpg" alt="Flash card: Mendel's Laws" loading="lazy">
         <img class="cd c2" src="flashcards/promo/card-2.jpg" alt="Flash card: Beyond Mendel" loading="lazy">
@@ -862,7 +894,7 @@ body{padding-bottom:96px;}
       <small class="nt">Pick your chapter, then tap 🔒 Download &amp; share to unlock it</small>
     </div>
      </div>
-     <div class="bh-promo-dots" id="bhPromoDots" role="tablist" aria-label="Choose a slide"><button type="button" role="tab" aria-label="Exam Scorer e-books" aria-selected="true"></button><button type="button" role="tab" aria-label="All 13 PU-II chapters" aria-selected="false"></button><button type="button" role="tab" aria-label="Biology flash cards" aria-selected="false"></button></div>
+     <div class="bh-promo-dots" id="bhPromoDots" role="tablist" aria-label="Choose a slide"><button type="button" role="tab" aria-label="One-day free trial" aria-selected="true"></button><button type="button" role="tab" aria-label="Exam Scorer e-books" aria-selected="false"></button><button type="button" role="tab" aria-label="All 13 PU-II chapters" aria-selected="false"></button><button type="button" role="tab" aria-label="Biology flash cards" aria-selected="false"></button></div>
     </div>
 
     <div class="bh-sec"><h2>My Classes</h2><a href="#catalogSections">View all</a></div>
@@ -3456,6 +3488,55 @@ window.indexHardRefresh = indexHardRefresh;
   document.getElementById('start3VClose').addEventListener('click',close);
   m.addEventListener('click',function(e){if(e.target===m)close();});
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!m.hidden)close();});
+}catch(e){}})();
+</script>
+<script>
+/* ---- Home: 1-day premium trial. Writes the chapters' own 24-hour "demo" unlock
+   ({unlocked:true, method:'demo', ts}) into every premium chapter, the same record the
+   BAIO-DEMO code creates on a chapter page, so each page shows its demo banner and
+   locks again by itself after 24 h. Paid / code / master unlocks are never touched.
+   One trial per device (baio_premium_trial). ---- */
+(function(){try{
+  var go=document.getElementById('bhTrialGo'); if(!go) return;
+  var DAY=24*60*60*1000, TRIAL='baio_premium_trial';
+  var KEYS=['ch2_premium_unlock','ch3_premium_unlock','pu1ch4_premium_unlock','pu1ch5_premium_unlock','pu1ch6_premium_unlock','pu1ch8_premium_unlock','pu1ch9_premium_unlock','pu1ch10_premium_unlock','pu1ch11_premium_unlock',
+    'pu2ch1_premium_unlock','pu2ch2_premium_unlock','pu2ch3_premium_unlock','pu2ch4_premium_unlock','pu2ch5_premium_unlock','pu2ch6_premium_unlock','pu2ch7_premium_unlock','pu2ch8_premium_unlock','ch9_premium_unlock','pu2ch10_premium_unlock','pu2ch11_premium_unlock','pu2ch12_premium_unlock','pu2ch13_premium_unlock'];
+  function get(k){ try{ return JSON.parse(localStorage.getItem(k)||'null'); }catch(e){ return null; } }
+  function started(){ var t=get(TRIAL); return t&&t.ts ? t.ts : 0; }
+  function start(){
+    var now=Date.now(), n=0;
+    KEYS.forEach(function(k){
+      var u=get(k);
+      if(u && u.unlocked && u.method!=='demo' && u.method!=='masterdemo') return; /* paid / code / master: keep */
+      try{ localStorage.setItem(k, JSON.stringify({unlocked:true, method:'demo', ts:now, roll:'home-trial'})); n++; }catch(e){}
+    });
+    try{ localStorage.setItem(TRIAL, JSON.stringify({ts:now, chapters:n})); }catch(e){}
+    paint();
+  }
+  function left(ms){ var h=Math.floor(ms/3600000), m=Math.floor(ms%3600000/60000); return h+'h '+m+'m'; }
+  function paint(){
+    var ts=started(), $=function(id){ return document.getElementById(id); };
+    var btns=$('bhTrialBtns');
+    if(!ts){ return; }
+    var ms=ts+DAY-Date.now();
+    if(ms>0){
+      $('bhTrialTag').textContent='✅ TRIAL ACTIVE';
+      $('bhTrialT').textContent='Premium unlocked · '+left(ms)+' left';
+      $('bhTrialRow').innerHTML='<span class="pr">Every live chapter</span><span class="sub">open any chapter and try the premium tabs</span>';
+      btns.className='btns'; btns.innerHTML='<button type="button" class="go on" id="bhTrialOpen">📚 Open a chapter →</button>';
+      document.getElementById('bhTrialOpen').onclick=function(){ var b=document.getElementById('bhMyClass'); if(b) b.click(); else location.href='#catalogSections'; };
+      $('bhTrialNote').textContent='Ends by itself after 24 hours · liked it? unlock your chapters to keep them';
+    } else {
+      $('bhTrialTag').textContent='⌛ TRIAL ENDED';
+      $('bhTrialT').textContent='Your 1-day trial is over';
+      $('bhTrialRow').innerHTML='<span class="pr">Keep learning with Premium</span>';
+      btns.className='btns two'; btns.innerHTML='<a class="go on" href="https://rzp.io/rzp/AEFNemg9" target="_blank" rel="noopener">🎁 All PU-II ₹33150</a><a class="go" href="#catalogSections">📚 Unlock a chapter</a>';
+      $('bhTrialNote').textContent='One trial per phone · ask Narendra Sir for your unlock code after paying';
+    }
+  }
+  go.addEventListener('click',start);
+  paint(); setInterval(paint,60000);
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden) paint(); });
 }catch(e){}})();
 </script>
 <script>
