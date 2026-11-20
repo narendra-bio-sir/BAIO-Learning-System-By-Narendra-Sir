@@ -106,7 +106,16 @@ h2{font-size:15px; font-weight:800; margin:22px 0 8px; color:var(--teal);}
 .buybar .in{max-width:640px; margin:0 auto; display:flex; align-items:center; gap:12px;}
 .buybar .p{font-size:20px; font-weight:800; color:var(--gold); flex:none;}
 .buybar .p small{display:block; font-size:10.5px; color:var(--ink-dim); font-weight:600;}
-.buybar button{flex:1; border:none; border-radius:12px; padding:13px 14px; font-size:15px; font-weight:800; font-family:inherit; color:#fff; background:#1FA855; cursor:pointer;}
+.buybar button,.buybar .bb-upi{flex:1; border:none; border-radius:12px; padding:13px 14px; font-size:15px; font-weight:800; font-family:inherit; color:#fff; background:#1FA855; cursor:pointer; text-align:center; text-decoration:none; white-space:nowrap;}
+.buybar .bb-upi{background:var(--teal2); display:flex; align-items:center; justify-content:center; gap:6px;}
+.buybar #buyBtn{flex:none; padding:13px 12px; display:flex; align-items:center; justify-content:center; gap:6px;}
+.buybar #buyBtn svg{width:20px; height:20px; flex:none;}
+.buybar .bb-l{display:none;}
+.buybar.paid #buyBtn{flex:1; min-width:0;}
+.buybar.paid #buyBtn .bb-s{display:none;}
+.buybar.paid #buyBtn .bb-l{display:inline;}
+.buybar.paid .bb-upi{flex:none; padding:13px 12px; font-size:13px;}
+@media(max-width:360px){.buybar .in{gap:8px;} .buybar .p{font-size:18px;} .buybar .bb-upi{font-size:14px; padding:13px 10px;}}
 [hidden]{display:none !important;}
 </style>
 </head>
@@ -212,7 +221,7 @@ h2{font-size:15px; font-weight:800; margin:22px 0 8px; color:var(--teal);}
     <li>Choose your book above (I PUC or II PUC).</li>
     <li>Pay <b>&#8377;50</b> by UPI: scan the QR below, or tap <b>Pay with UPI app</b> on your phone.
       <div class="upi"><span>PhonePe</span><span>Google Pay</span><span>Paytm</span><span>BHIM</span><span>Any UPI app</span></div></li>
-    <li>Tap <b>Buy on WhatsApp</b> and send Narendra Sir the payment screenshot.</li>
+    <li>Tap the green <b>WhatsApp</b> button at the bottom and send Narendra Sir the payment screenshot.</li>
     <li>You get <b>both PDFs</b> (colour and print-friendly black-and-white) on WhatsApp.</li>
   </ol>
 
@@ -246,7 +255,8 @@ h2{font-size:15px; font-weight:800; margin:22px 0 8px; color:var(--teal);}
 
 <div class="buybar"><div class="in">
   <div class="p">&#8377;50<small id="buyWhich">I PUC Book &middot; PDF</small></div>
-  <button id="buyBtn" type="button">Buy on WhatsApp</button>
+  <a class="bb-upi" id="bbUpi" href="#">Pay with UPI app</a>
+  <button id="buyBtn" type="button" aria-label="Send the payment screenshot on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2a9.8 9.8 0 0 0-8.4 14.8L2.3 21.8l4.9-1.3A9.8 9.8 0 1 0 12 2.2z" fill="none" stroke="#fff" stroke-width="2"/><path d="M8.6 7.3c.2-.4.5-.5.8-.5h.6c.2 0 .4 0 .6.5l.8 1.9c.1.3 0 .5-.1.7l-.6.7c-.2.2-.2.4-.1.6.8 1.4 1.9 2.4 3.4 3.1.2.1.5.1.6-.1l.8-.9c.2-.2.4-.3.7-.2l1.9.9c.3.1.4.3.4.6 0 .9-.6 1.7-1.4 2-.9.3-2.4.2-4.3-.8-2.4-1.3-4-3.4-4.5-5-.4-1.3-.2-2.4.4-3.5z" fill="#fff"/></svg><span class="bb-s">Send</span><span class="bb-l">Send screenshot</span></button>
 </div></div>
 
 <script>
@@ -273,7 +283,9 @@ h2{font-size:15px; font-weight:800; margin:22px 0 8px; color:var(--teal);}
     var label = b === 'pu1' ? 'I PUC' : 'II PUC';
     document.getElementById('buyWhich').textContent = label + ' Book · PDF';
     document.getElementById('payWhich').textContent = label + ' Book';
-    document.getElementById('upiPay').href = 'upi://pay?pa=' + UPI_ID + '&pn=' + encodeURIComponent('Narendra Sir') + '&am=50&cu=INR&tn=' + encodeURIComponent(label + ' Biology Prep Book');
+    var upi = 'upi://pay?pa=' + UPI_ID + '&pn=' + encodeURIComponent('Narendra Sir') + '&am=50&cu=INR&tn=' + encodeURIComponent(label + ' Biology Prep Book');
+    document.getElementById('upiPay').href = upi;
+    document.getElementById('bbUpi').href = upi;
     if(history.replaceState) history.replaceState(null, '', '#' + b);
     if(scroll) document.querySelector('.tabs').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
@@ -293,6 +305,11 @@ h2{font-size:15px; font-weight:800; margin:22px 0 8px; color:var(--teal);}
       if(profile.section) collegeEl.value = profile.section;
     }
   }catch(e){}
+  /* After a UPI payment is started, the bottom bar leads with "Send screenshot on WhatsApp". */
+  var bar = document.querySelector('.buybar');
+  function markPaid(){ bar.classList.add('paid'); document.getElementById('bbUpi').textContent = 'Pay again'; }
+  ['upiPay', 'bbUpi'].forEach(function(id){ document.getElementById(id).addEventListener('click', function(){ try{ sessionStorage.setItem('baio_book_upi', '1'); }catch(e){} setTimeout(markPaid, 600); }); });
+  try{ if(sessionStorage.getItem('baio_book_upi') === '1') markPaid(); }catch(e){}
   document.getElementById('buyBtn').addEventListener('click', function(){
     var msg = 'Hi Narendra Sir, I\'d like to buy the ' + BOOKS[current] + ' (PDF) for ₹50.\n\n'
       + 'Name: ' + (nameEl.value.trim() || '(please add my name)') + '\n'
