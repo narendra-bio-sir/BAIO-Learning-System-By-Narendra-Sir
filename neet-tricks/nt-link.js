@@ -19,7 +19,8 @@
     if(id === 'pu2-ch4'){ try{ var u = JSON.parse(localStorage.getItem('pu2ch4_neettricks_unlock') || 'null'); if(u && u.unlocked) return true; }catch(e){} }
     /* chapter Premium bought with a real code also includes NEET Tricks (not demo / trial) */
     var pk = {'pu1-ch2':'ch2','pu1-ch3':'ch3','pu2-ch9':'ch9'}[id] || id.replace('-', '');
-    try{ var p = JSON.parse(localStorage.getItem(pk + '_premium_unlock') || 'null'); if(p && p.unlocked && (p.method === 'code' || p.method === 'master')) return true; }catch(e){}
+    try{ var p = JSON.parse(localStorage.getItem(pk + '_premium_unlock') || 'null'); var ol = false; try{ ol = localStorage.getItem('baio_nt_owner_locked') === '1'; }catch(e){}
+    if(p && p.unlocked && (p.method === 'code' || (p.method === 'master' && !ol))) return true; }catch(e){}
     return false;
   }
 
