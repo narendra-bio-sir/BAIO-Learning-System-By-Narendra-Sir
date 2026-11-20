@@ -33,7 +33,7 @@ PACKS = [
              'pu2-phy-ch1.html', 'pu2-che-ch1.html', 'pu2-mat-ch1.html',
              'pu2-phy-ch2.html', 'pu2-che-ch2.html', 'pu2-mat-ch2.html',
              'pu2-phy-ch3.html', 'pu2-che-ch3.html', 'pu2-mat-ch3.html', 'pu2-phy-ch4.html', 'pu2-che-ch4.html', 'pu2-mat-ch4.html', 'pu2-phy-ch5.html', 'pu2-che-ch5.html', 'pu2-mat-ch5.html', 'pu2-maths-colour-notes.html']),
-    ('extras', ['flashcards.html', 'neet-tricks.html', 'neet-tricks/nt-pu1.js', 'neet-tricks/nt-pu2.js', 'neet-tricks/nt-link.js', 'audio-podcasts.html', 'pyq.html', 'pyq/pyq-kcet.js', 'notes.html', 'ncert-library.html', 'genetic-cross-simulator.html',
+    ('extras', ['flashcards.html', 'neet-tricks.html', 'neet-tricks/nt-pu1.js', 'neet-tricks/nt-pu2.js', 'neet-tricks/nt-link.js', 'audio-podcasts.html', 'pyq.html', 'pyq/pyq-kcet.js', 'pyq/pyq-neet.js', 'notes.html', 'ncert-library.html', 'genetic-cross-simulator.html',
                 'practical-benedict-test.html', 'practical-biuret-test.html', 'practical-pigment-extraction.html',
                 'practical-plasmolysis.html', 'practical-ts-stem.html', 'activities.html']),
 ]

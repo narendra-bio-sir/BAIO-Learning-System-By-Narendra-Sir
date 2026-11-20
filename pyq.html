@@ -6,10 +6,10 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0B1B14">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<title>KCET Biology PYQs | BAIO Learning System</title>
-<meta name="description" content="KCET Biology previous year questions 2015–2021, chapter-wise for every I PUC and II PUC chapter, with official KEA answers and short explanations. Free. By Narendra Sir.">
-<meta property="og:title" content="BAIO PYQs · KCET Biology chapter-wise">
-<meta property="og:description" content="KCET Biology previous year questions, chapter-wise, with official answers and explanations.">
+<title>KCET &amp; NEET Biology PYQs | BAIO Learning System</title>
+<meta name="description" content="KCET (2015–2021) and NEET/AIPMT (2013–2016) Biology previous year questions, chapter-wise for every I PUC and II PUC chapter, with answers and short explanations. Free. By Narendra Sir.">
+<meta property="og:title" content="BAIO PYQs · KCET &amp; NEET Biology chapter-wise">
+<meta property="og:description" content="KCET and NEET Biology previous year questions, chapter-wise, with answers and explanations.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -75,14 +75,14 @@ body{font-family:Inter,sans-serif}
 <div class="wrap">
   <section class="hero" id="hero">
     <div class="eyebrow">BAIO Learning System · Free practice</div>
-    <h1>📝 KCET <span class="accent">PYQs</span></h1>
-    <p>KCET Biology previous year questions from 2015–2021, sorted chapter by chapter, with the official KEA answers and a short explanation for each. Free for every student.</p>
+    <h1>📝 KCET &amp; NEET <span class="accent">PYQs</span></h1>
+    <p>KCET (2015–2021) and NEET/AIPMT (2013–2016) Biology previous year questions, sorted chapter by chapter, with answers and a short explanation for each. Free for every student.</p>
   </section>
   <section id="home">
-    <div class="modes" role="group" aria-label="Practice mode"><button type="button" id="mCh" aria-pressed="true">📚 By chapter</button><button type="button" id="mYr" aria-pressed="false">📅 By year</button></div>
+    <div class="modes" role="group" aria-label="Practice mode"><button type="button" id="mCh" aria-pressed="true">📚 By chapter</button><button type="button" id="mYr" aria-pressed="false">📅 By paper</button></div>
     <div class="stats" id="stats"></div>
     <div id="list"></div>
-    <p class="src">Questions are from the official KCET Biology question papers and answers from KEA's answer keys (final keys for 2015–2020; KEA's published provisional key for 2021). Questions on topics no longer in the current NCERT syllabus, and questions KEA gave grace marks for, are left out. Full papers: <a href="ncert-library.html#kcet">KCET papers &amp; keys</a>.</p>
+    <p class="src"><b>KCET:</b> questions from the official KEA question papers; answers from KEA's answer keys (final keys for 2015–2020, KEA's published provisional key for 2021). <b>NEET / AIPMT 2013–2016:</b> no official answer keys are available for these years, so answers are worked out by BAIO from NCERT and marked “BAIO answer”. Questions on topics no longer in the current NCERT syllabus, and questions KEA gave grace marks for, are left out. Full KCET papers: <a href="ncert-library.html#kcet">KCET papers &amp; keys</a>.</p>
   </section>
   <section id="view" hidden>
     <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px"><button class="tbtn btn" id="back">← All PYQs</button><span class="muted" id="vcount"></span></div>
@@ -92,12 +92,15 @@ body{font-family:Inter,sans-serif}
 </div>
 <script src="games/common.js?v=4"></script>
 <script src="pyq/pyq-kcet.js?v=3"></script>
+<script src="pyq/pyq-neet.js?v=1"></script>
 <script>
 GZ.nav();
 (function(){
 const $ = s => document.querySelector(s);
 const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const Q = (window.PYQ || []).slice().sort((a, b) => a.y - b.y || a.n - b.n);
+const Q = (window.PYQ || []).map(q => Object.assign({pk: 'k' + q.y, pl: (q.ex || 'KCET') + ' ' + q.y, ex: 'KCET'}, q));
+const EX_ORDER = {KCET: 0, NEET: 1};
+Q.sort((a, b) => (EX_ORDER[a.ex] - EX_ORDER[b.ex]) || a.y - b.y || (a.pk < b.pk ? -1 : a.pk > b.pk ? 1 : 0) || a.n - b.n);
 /* chapter list: NCERT XI (I PUC) and XII (II PUC). href = the chapter page in this app, where one exists */
 const CH = {
  'pu1-ch1':['The Living World','🌍','#2E7D32'], 'pu1-ch2':['Biological Classification','🌳','#2E9E4F','ch2/'], 'pu1-ch3':['Plant Kingdom','🌿','#3B8C3A','ch3/'],
@@ -115,7 +118,10 @@ const CH = {
 };
 const chNo = id => id.split('-ch')[1];
 const clsName = id => id.startsWith('pu1-') ? 'I PUC' : 'II PUC';
-const YEARS = [...new Set(Q.map(q => q.y))];
+const PAPERS = []; const PIDX = {};
+Q.forEach(q => { if(!(q.pk in PIDX)){ PIDX[q.pk] = PAPERS.length; PAPERS.push({pk: q.pk, pl: q.pl, ex: q.ex, y: q.y}); } });
+const EXAMS = [...new Set(Q.map(q => q.ex))];
+const yRange = ex => { const ys = Q.filter(q => q.ex === ex).map(q => q.y); return Math.min(...ys) + '–' + Math.max(...ys); };
 const byCh = {}; Q.forEach(q => { (byCh[q.ch] = byCh[q.ch] || []).push(q); });
 
 /* progress: {id: 1 right | 0 wrong} on this phone */
@@ -131,7 +137,7 @@ try{ if(localStorage.getItem('baio_pyq_mode') === 'yr') mode = 'yr'; }catch(e){}
 function renderHome(){
   $('#mCh').setAttribute('aria-pressed', mode === 'ch'); $('#mYr').setAttribute('aria-pressed', mode === 'yr');
   const t = tally(Q);
-  $('#stats').innerHTML = '<span><b>' + Q.length + '</b> questions</span><span><b>' + YEARS.length + '</b> years (' + YEARS[0] + '–' + YEARS[YEARS.length - 1] + ')</span>'
+  $('#stats').innerHTML = '<span><b>' + Q.length + '</b> questions</span>' + EXAMS.map(ex => '<span><b>' + ex + '</b> ' + yRange(ex) + '</span>').join('')
     + '<span><b>' + t.a + '</b> attempted · <b>' + t.r + '</b> correct</span>';
   let h = '';
   if(mode === 'ch'){
@@ -141,14 +147,18 @@ function renderHome(){
         const m = CH[id], list = byCh[id] || [], tt = tally(list);
         const pct = list.length ? Math.round(100 * tt.a / list.length) : 0;
         h += '<button type="button" class="chc" data-ch="' + id + '"' + (list.length ? '' : ' disabled') + '><span class="ic" style="background:' + m[2] + '22">' + m[1] + '</span><span style="flex:1;min-width:0"><b>' + esc(m[0]) + '</b>'
-          + '<small>Ch ' + chNo(id) + ' · ' + (list.length ? list.length + ' PYQ' + (list.length > 1 ? 's' : '') + (tt.a ? ' · ' + tt.r + '/' + tt.a + ' correct' : '') : 'no KCET PYQs yet') + '</small>'
+          + '<small>Ch ' + chNo(id) + ' · ' + (list.length ? list.length + ' PYQ' + (list.length > 1 ? 's' : '') + (tt.a ? ' · ' + tt.r + '/' + tt.a + ' correct' : '') : 'no PYQs yet') + '</small>'
           + (list.length ? '<span class="bar"><i style="width:' + pct + '%"></i></span>' : '') + '</span></button>';
       });
       h += '</div></div>';
     });
   } else {
-    h += '<div class="yrs">' + YEARS.map(y => { const list = Q.filter(q => q.y === y), tt = tally(list);
-      return '<button type="button" class="yrc" data-yr="' + y + '"><b>' + y + '</b><small>KCET Biology · ' + list.length + ' questions</small><small>' + (tt.a ? tt.r + '/' + tt.a + ' correct' : 'Not started') + '</small></button>'; }).join('') + '</div>';
+    EXAMS.forEach(ex => {
+      h += '<div class="shelf"><h3>' + (ex === 'KCET' ? 'KCET Biology · official KEA keys' : 'NEET / AIPMT Biology · BAIO answers') + '</h3><div class="yrs">';
+      h += PAPERS.filter(p => p.ex === ex).map(p => { const list = Q.filter(q => q.pk === p.pk), tt = tally(list);
+        return '<button type="button" class="yrc" data-pk="' + p.pk + '"><b>' + esc(ex === 'KCET' ? p.pl.replace(/^KCET /, '') : p.pl) + '</b><small>' + list.length + ' questions</small><small>' + (tt.a ? tt.r + '/' + tt.a + ' correct' : 'Not started') + '</small></button>'; }).join('');
+      h += '</div></div>';
+    });
   }
   $('#list').innerHTML = h;
 }
@@ -158,31 +168,32 @@ function qCard(q, showCh){
   const m = CH[q.ch] || ['', '', ''];
   const st = q.id in done;
   const short = q.o.every(o => o.replace(/<[^>]+>/g, '').length < 24);
-  let h = '<div class="q' + (st ? ' done' : '') + '" data-id="' + q.id + '"><div class="tg"><span>KCET ' + q.y + ' · Q' + q.n + '</span>';
+  let h = '<div class="q' + (st ? ' done' : '') + '" data-id="' + q.id + '"><div class="tg"><span>' + esc(q.pl) + ' · Q' + q.n + '</span>';
   if(showCh) h += '<a href="#' + q.ch + '">' + clsName(q.ch) + ' Ch ' + chNo(q.ch) + ' · ' + esc(m[0]) + '</a>';
   h += '</div><div class="qt">' + q.q + '</div>';
-  if(q.img) h += '<figure><img src="' + q.img + '" alt="Diagram for KCET ' + q.y + ' question ' + q.n + '" loading="lazy"></figure>';
+  if(q.img) h += '<figure><img src="' + q.img + '" alt="Diagram for ' + esc(q.pl) + ' question ' + q.n + '" loading="lazy"></figure>';
   h += '<div class="os' + (short ? ' two' : '') + '">' + q.o.map((o, i) => {
     let c = '';
     if(st){ if(q.a.indexOf(i) > -1) c = 'ok'; else if(done[q.id + ':p'] === i) c = 'no'; }
     return '<button type="button" data-i="' + i + '" class="' + c + '"' + (st ? ' disabled' : '') + '><i>' + 'ABCD'[i] + '</i><span>' + o + '</span></button>';
   }).join('') + '</div>';
-  h += '<div class="ex"><b>Answer: ' + q.a.map(i => '(' + 'ABCD'[i] + ')').join(' and ') + '</b>' + (q.a.length > 1 ? ' (KEA accepted both)' : '') + ' — ' + q.x + '</div></div>';
+  h += '<div class="ex"><b>' + (q.src === 'baio' ? 'BAIO answer' : 'Answer') + ': ' + q.a.map(i => '(' + 'ABCD'[i] + ')').join(' and ') + '</b>' + (q.a.length > 1 ? ' (KEA accepted both)' : '') + ' — ' + q.x + '</div></div>';
   return h;
 }
 function renderView(){
   let list, head;
   if(cur.ch){
     const m = CH[cur.ch]; list = byCh[cur.ch] || [];
-    const yrs = [...new Set(list.map(q => q.y))];
-    if(yf && yrs.indexOf(yf) === -1) yf = 0;
+    const exs = [...new Set(list.map(q => q.ex))];
+    if(yf && exs.indexOf(yf) === -1) yf = 0;
     head = '<div class="ph"><span class="ic" style="background:' + m[2] + '22">' + m[1] + '</span><span><span class="k">' + clsName(cur.ch) + ' · Chapter ' + chNo(cur.ch) + '</span><h2>' + esc(m[0]) + '</h2>'
-      + '<p>' + list.length + ' KCET question' + (list.length > 1 ? 's' : '') + ' from ' + yrs.join(', ') + (m[3] ? ' · <a href="' + m[3] + '">Open chapter →</a>' : '') + '</p></span></div>';
-    if(yrs.length > 1) head += '<div class="chips" role="group" aria-label="Filter by year"><button type="button" data-y="0" aria-pressed="' + (!yf) + '">All years</button>' + yrs.map(y => '<button type="button" data-y="' + y + '" aria-pressed="' + (yf === y) + '">' + y + '</button>').join('') + '</div>';
-    if(yf) list = list.filter(q => q.y === yf);
+      + '<p>' + exs.map(ex => { const n = list.filter(q => q.ex === ex).length; return n + ' ' + ex; }).join(' + ') + ' question' + (list.length > 1 ? 's' : '') + (m[3] ? ' · <a href="' + m[3] + '">Open chapter →</a>' : '') + '</p></span></div>';
+    if(exs.length > 1) head += '<div class="chips" role="group" aria-label="Filter by exam"><button type="button" data-y="0" aria-pressed="' + (!yf) + '">All</button>' + exs.map(ex => '<button type="button" data-y="' + ex + '" aria-pressed="' + (yf === ex) + '">' + ex + '</button>').join('') + '</div>';
+    if(yf) list = list.filter(q => q.ex === yf);
   } else {
-    list = Q.filter(q => q.y === cur.y);
-    head = '<div class="ph"><span class="ic" style="background:rgba(212,175,55,.2)">📅</span><span><span class="k">KCET Biology</span><h2>KCET ' + cur.y + '</h2><p>' + list.length + ' questions in paper order, each tagged with its chapter.</p></span></div>';
+    const P = PAPERS[PIDX[cur.pk]];
+    list = Q.filter(q => q.pk === cur.pk);
+    head = '<div class="ph"><span class="ic" style="background:rgba(212,175,55,.2)">📅</span><span><span class="k">' + P.ex + ' Biology</span><h2>' + esc(P.pl) + '</h2><p>' + list.length + ' questions in paper order, each tagged with its chapter.' + (P.ex === 'NEET' ? ' Answers worked out by BAIO from NCERT (no official key for this year).' : '') + '</p></span></div>';
   }
   const t = tally(list);
   head += '<div class="sc"><span><b>' + t.r + '</b> correct of <b>' + t.a + '</b> attempted · ' + t.n + ' total</span>' + (t.a ? '<button type="button" id="reset">↺ Try again</button>' : '') + '</div>';
@@ -200,7 +211,8 @@ function home(){
 function route(){
   const h = decodeURIComponent(location.hash.slice(1));
   if(CH[h] && byCh[h]) open({ch: h});
-  else if(/^y\d{4}$/.test(h) && YEARS.indexOf(+h.slice(1)) > -1) open({y: +h.slice(1)});
+  else if(/^y\d{4}$/.test(h) && ('k' + h.slice(1)) in PIDX) open({pk: 'k' + h.slice(1)});
+  else if(h.indexOf('p-') === 0 && h.slice(2) in PIDX) open({pk: h.slice(2)});
   else home();
 }
 
@@ -208,14 +220,14 @@ $('#mCh').addEventListener('click', () => { mode = 'ch'; try{ localStorage.setIt
 $('#mYr').addEventListener('click', () => { mode = 'yr'; try{ localStorage.setItem('baio_pyq_mode', mode); }catch(e){} renderHome(); });
 $('#list').addEventListener('click', e => {
   const c = e.target.closest('[data-ch]'); if(c && !c.disabled){ location.hash = c.dataset.ch; return; }
-  const y = e.target.closest('[data-yr]'); if(y) location.hash = 'y' + y.dataset.yr;
+  const y = e.target.closest('[data-pk]'); if(y) location.hash = 'p-' + y.dataset.pk;
 });
 $('#back').addEventListener('click', () => { if(history.length > 1 && location.hash) history.back(); else { location.hash = ''; } });
 $('#vbody').addEventListener('click', e => {
   const yb = e.target.closest('[data-y]');
-  if(yb){ yf = +yb.dataset.y; renderView(); return; }
+  if(yb){ yf = yb.dataset.y === '0' ? 0 : yb.dataset.y; renderView(); return; }
   if(e.target.closest('#reset')){
-    const ids = cur.ch ? (byCh[cur.ch] || []).filter(q => !yf || q.y === yf).map(q => q.id) : Q.filter(q => q.y === cur.y).map(q => q.id);
+    const ids = cur.ch ? (byCh[cur.ch] || []).filter(q => !yf || q.ex === yf).map(q => q.id) : Q.filter(q => q.pk === cur.pk).map(q => q.id);
     ids.forEach(id => { delete done[id]; delete done[id + ':p']; }); save(); renderView(); return;
   }
   const b = e.target.closest('.os button'); if(!b || b.disabled) return;
@@ -225,7 +237,7 @@ $('#vbody').addEventListener('click', e => {
   card.querySelectorAll('.os button').forEach((x, k) => { x.disabled = true; if(q.a.indexOf(k) > -1) x.classList.add('ok'); });
   if(!right) b.classList.add('no');
   card.classList.add('done');
-  const t = tally(cur.ch ? (byCh[cur.ch] || []).filter(x => !yf || x.y === yf) : Q.filter(x => x.y === cur.y));
+  const t = tally(cur.ch ? (byCh[cur.ch] || []).filter(x => !yf || x.ex === yf) : Q.filter(x => x.pk === cur.pk));
   const sc = $('#vbody .sc span'); if(sc) sc.innerHTML = '<b>' + t.r + '</b> correct of <b>' + t.a + '</b> attempted · ' + t.n + ' total';
 });
 window.addEventListener('hashchange', route);
