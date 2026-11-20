@@ -15,7 +15,7 @@
   try{ bookPage = new URL('../biology-prep-books.html#' + cls, me.src).href; }catch(e){ bookPage = 'biology-prep-books.html#' + cls; }
   try{ coverSrc = new URL('../prep-books-assets/' + cls + '/cover.jpg', me.src).href; }catch(e){ coverSrc = 'prep-books-assets/' + cls + '/cover.jpg'; }
   /* free KCET PYQs per chapter (pyq.html); counts match pyq/pyq-kcet.js */
-  var PYQ_N = {'pu1-ch1':3,'pu1-ch10':4,'pu1-ch11':8,'pu1-ch12':9,'pu1-ch13':4,'pu1-ch14':2,'pu1-ch15':8,'pu1-ch16':1,'pu1-ch17':2,'pu1-ch18':1,'pu1-ch19':7,'pu1-ch2':6,'pu1-ch3':5,'pu1-ch4':4,'pu1-ch5':5,'pu1-ch6':4,'pu1-ch7':4,'pu1-ch8':7,'pu1-ch9':6,'pu2-ch1':27,'pu2-ch10':12,'pu2-ch11':20,'pu2-ch12':9,'pu2-ch13':13,'pu2-ch2':23,'pu2-ch3':13,'pu2-ch4':29,'pu2-ch5':42,'pu2-ch6':12,'pu2-ch7':28,'pu2-ch8':17,'pu2-ch9':21};
+  var PYQ_N = {'pu1-ch1':7,'pu1-ch10':19,'pu1-ch11':13,'pu1-ch12':13,'pu1-ch13':11,'pu1-ch14':9,'pu1-ch15':18,'pu1-ch16':7,'pu1-ch17':11,'pu1-ch18':7,'pu1-ch19':19,'pu1-ch2':21,'pu1-ch3':20,'pu1-ch4':19,'pu1-ch5':23,'pu1-ch6':12,'pu1-ch7':12,'pu1-ch8':27,'pu1-ch9':16,'pu2-ch1':50,'pu2-ch10':22,'pu2-ch11':29,'pu2-ch12':17,'pu2-ch13':25,'pu2-ch2':37,'pu2-ch3':27,'pu2-ch4':48,'pu2-ch5':62,'pu2-ch6':30,'pu2-ch7':39,'pu2-ch8':24,'pu2-ch9':32};
   var pyqPage;
   try{ pyqPage = new URL('../pyq.html#' + id, me.src).href; }catch(e){ pyqPage = 'pyq.html#' + id; }
 
@@ -82,16 +82,16 @@
       + '<span class="ntt"><b>' + (cls === 'pu1' ? 'I PUC' : 'II PUC') + ' Biology Exam Scorer e&#8209;book</b><small>NCERT diagram practice · ' + (cls === 'pu1' ? '12' : '10') + ' practice papers with solutions</small></span>'
       + '<span class="ntp">₹50 →</span>';
     trk.appendChild(a); trk.appendChild(e);
-    /* slide 3: free KCET previous year questions of this chapter */
+    /* slide 3: free KCET + NEET previous year questions of this chapter */
     var labels = ['NEET Tricks', 'E-book'];
     if(PYQ_N[id]){
       var pq = document.createElement('a');
       pq.id = 'pyqBanner'; pq.className = 'sl';
       pq.href = pyqPage;
       pq.innerHTML = '<span class="nti pq" aria-hidden="true">📝</span>'
-        + '<span class="ntt"><b>KCET PYQs of this chapter</b><small>' + PYQ_N[id] + ' previous year question' + (PYQ_N[id] > 1 ? 's' : '') + ' (2015–2021) with official answers</small></span>'
+        + '<span class="ntt"><b>KCET &amp; NEET PYQs of this chapter</b><small>' + PYQ_N[id] + ' previous year question' + (PYQ_N[id] > 1 ? 's' : '') + ' · KCET 2015–21 · NEET 2013–16</small></span>'
         + '<span class="ntp ok">Free →</span>';
-      trk.appendChild(pq); labels.push('KCET PYQs');
+      trk.appendChild(pq); labels.push('KCET and NEET PYQs');
     }
     var dots = document.createElement('div'); dots.className = 'dots'; dots.setAttribute('role', 'tablist');
     labels.forEach(function(l, i){ var d = document.createElement('button'); d.type = 'button'; d.setAttribute('role', 'tab'); d.setAttribute('aria-label', l); d.setAttribute('aria-selected', i ? 'false' : 'true'); dots.appendChild(d); });
