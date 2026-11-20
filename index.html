@@ -629,6 +629,23 @@ body{background:var(--bh-bg);}
 :root:not([data-theme="light"]) .bh-dp{background:radial-gradient(circle at 92% 8%,rgba(120,220,255,.18),transparent 50%),linear-gradient(135deg,#0A2456,#0D3A7A 55%,#0B4E5E);border:1px solid rgba(120,200,255,.28);box-shadow:0 14px 30px rgba(0,0,0,.4)}
 :root:not([data-theme="light"]) .bh-dc{background:radial-gradient(circle at 92% 8%,rgba(255,201,60,.18),transparent 50%),linear-gradient(135deg,#5A1F0A,#7A2A10 55%,#6E1638);border:1px solid rgba(255,150,90,.3);box-shadow:0 14px 30px rgba(0,0,0,.4)}
 @media(max-width:370px){.bh-dp b,.bh-dc b{font-size:16.5px}.bh-dp .go,.bh-dc .go{font-size:12px}}
+.bh-cg{position:relative;display:block;border-radius:24px;padding:16px 16px 14px;overflow:hidden;color:#fff;font-family:inherit;
+ background:radial-gradient(circle at 92% 8%,rgba(255,201,60,.4),transparent 50%),linear-gradient(135deg,#1C2541,#2B3A67 55%,#3A5A80)}
+.bh-cg a{text-decoration:none}
+.bh-cg .deco{position:absolute;right:14px;top:8px;font-size:46px;transform:rotate(-10deg);filter:drop-shadow(0 6px 10px rgba(0,0,0,.3))}
+.bh-cg .tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.08em;padding:3px 9px;border-radius:99px;background:#FFC93C;color:#3A2600}
+.bh-cg b{display:block;font-size:18px;font-weight:800;line-height:1.2;margin-top:8px;max-width:80%}
+.bh-cg .bl{list-style:none;margin:8px 0 0;padding:0;font-size:12px;line-height:1.45;opacity:.96}
+.bh-cg .bl li{margin-top:2px}
+.bh-cg .row{display:flex;gap:8px;align-items:baseline;margin-top:10px;flex-wrap:wrap}
+.bh-cg .pr{font-size:20px;font-weight:900;color:#FFE27A;line-height:1.1}
+.bh-cg .sub{font-size:12px;font-weight:700;opacity:.9}
+.bh-cg .btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.bh-cg .go{display:block;text-align:center;font-weight:800;font-size:13px;line-height:1.2;padding:10px 6px;border-radius:99px;white-space:nowrap;border:2px solid rgba(255,255,255,.85);color:#fff}
+.bh-cg .go.on{background:#FFC93C;border-color:#FFC93C;color:#3A2600;box-shadow:0 6px 14px rgba(0,0,0,.2)}
+.bh-cg .nt{display:block;font-size:10.8px;opacity:.85;margin-top:9px;text-align:center}
+:root:not([data-theme="light"]) .bh-cg{background:radial-gradient(circle at 92% 8%,rgba(255,201,60,.16),transparent 50%),linear-gradient(135deg,#141B33,#1E2A4D 55%,#26405E);border:1px solid rgba(255,201,60,.28)}
+@media(max-width:370px){.bh-cg b{font-size:16.5px}.bh-cg .go{font-size:12px}}
 .bh-bundle{position:relative;display:block;border-radius:24px;padding:16px 16px 14px;overflow:hidden;color:#fff;font-family:inherit;
  background:radial-gradient(circle at 90% 10%,rgba(255,201,60,.35),transparent 50%),linear-gradient(135deg,#0B6F5E,#0F8F7A 55%,#12B58F);box-shadow:0 10px 26px rgba(15,143,122,.3)}
 .bh-bundle a{text-decoration:none}
@@ -833,9 +850,9 @@ body{padding-bottom:96px;}
     </div>
 
     <a class="bh-daily" href="zone.html#daily"><div style="font-size:30px">🔥</div><div><b>Daily Bio Challenge</b><small>5 questions · 3 minutes</small></div><span class="pl">Play ▶</span></a>
-    <div class="bh-promo" id="bhPromo" role="region" aria-roledescription="carousel" aria-label="BAIO daily plan, challenge, books and chapter bundles">
+    <div class="bh-promo" id="bhPromo" role="region" aria-roledescription="carousel" aria-label="BAIO premium trial, books, chapter bundles, career guidance and daily plan">
      <div class="bh-promo-track" id="bhPromoTrack">
-    <div class="bh-trial bh-slide" id="bhTrial" role="group" aria-roledescription="slide" aria-label="1 of 6: one-day free trial of premium content">
+    <div class="bh-trial bh-slide" id="bhTrial" role="group" aria-roledescription="slide" aria-label="1 of 7: one-day free trial of premium content">
       <span class="crown" aria-hidden="true">👑</span>
       <span class="tag" id="bhTrialTag">⏳ 1-DAY FREE TRIAL</span>
       <b id="bhTrialT">Try Premium free for 24 hours</b>
@@ -848,39 +865,7 @@ body{padding-bottom:96px;}
       <span class="btns" id="bhTrialBtns"><button type="button" class="go on" id="bhTrialGo">🚀 Start my free trial</button></span>
       <small class="nt" id="bhTrialNote">One trial per phone · ends by itself after 24 hours · paid unlocks stay as they are</small>
     </div>
-    <div class="bh-dp bh-slide" id="bhPlan" role="group" aria-roledescription="slide" aria-label="2 of 6: daily NEET plan">
-      <span class="deco" aria-hidden="true">🚀</span>
-      <span class="tag">🚀 DAILY NEET PLAN</span>
-      <b>Your 3 steps every day</b>
-      <ul class="bl" id="bhPlanList">
-        <li data-step="1">📘 Learn · 45 min · Study Mode or One-Shot Revision</li>
-        <li data-step="2">🎯 Practise · 15 min · 10 timed NEET questions</li>
-        <li data-step="3">🔥 Revise · 5 min · today's 5 Daily Bio Zone questions</li>
-      </ul>
-      <span class="row"><span class="pr" id="bhPlanCount">0 / 3 today</span><span class="bar" aria-hidden="true"><i id="bhPlanBar"></i></span></span>
-      <span class="btns">
-        <a class="go on" id="bhPlanGo" href="#start3">▶ Start today's plan</a>
-        <button type="button" class="go" id="bhPlanWatch">🎬 Watch how</button>
-      </span>
-      <small class="nt">About 65 minutes a day · Sunday: 50-question NEET mock</small>
-    </div>
-    <div class="bh-dc bh-slide" id="bhChal" role="group" aria-roledescription="slide" aria-label="3 of 6: daily Biology challenge">
-      <span class="deco" aria-hidden="true">🔥</span>
-      <span class="tag">🔥 DAILY BIOLOGY CHALLENGE</span>
-      <b id="bhChalT">Today's 5 questions</b>
-      <ul class="bl">
-        <li>⏱ Just 3 minutes · new questions every day</li>
-        <li>🧬 I PUC &amp; II PUC · play daily to build your streak</li>
-        <li>🏆 Earn certificates · share your score</li>
-      </ul>
-      <span class="row"><span class="pr" id="bhChalStreak">🔥 Start your streak today</span><span class="sub" id="bhChalBest"></span></span>
-      <span class="btns">
-        <a class="go on" id="bhChalGo" href="zone.html#daily">▶ Play today's 5</a>
-        <a class="go" href="zone.html#guess">🧩 Guess-It puzzles</a>
-      </span>
-      <small class="nt" id="bhChalNote">Miss a day and the streak starts again from 1</small>
-    </div>
-    <div class="bh-book bh-slide" id="bhBook" role="group" aria-roledescription="slide" aria-label="4 of 6: Exam Scorer e-books">
+    <div class="bh-book bh-slide" id="bhBook" role="group" aria-roledescription="slide" aria-label="2 of 7: Exam Scorer e-books">
       <a class="cvs" id="bhBookCvs" href="biology-prep-books.html" aria-label="I PUC and II PUC Biology Exam Scorer books">
         <img class="cv" id="bhBookCv1" src="prep-books-assets/pu1/cover.jpg" alt="I PUC Biology Exam Scorer cover" loading="lazy">
         <img class="cv" id="bhBookCv2" src="prep-books-assets/pu2/cover.jpg" alt="II PUC Biology Exam Scorer cover" loading="lazy">
@@ -898,7 +883,7 @@ body{padding-bottom:96px;}
         <a class="go" id="bhBookGo2" href="biology-prep-books.html#pu2">📗 II PUC Book →</a>
       </span>
     </div>
-    <div class="bh-bundle bh-slide" id="bhBundle" role="group" aria-roledescription="slide" aria-label="5 of 6: all 13 PU-II chapters in one payment">
+    <div class="bh-bundle bh-slide" id="bhBundle" role="group" aria-roledescription="slide" aria-label="3 of 7: all 13 PU-II chapters in one payment">
       <span class="gift" aria-hidden="true">🎁</span>
       <span class="tag">🎓 II PUC · ONE PAYMENT</span>
       <b>Get All 13 PU-II Chapters</b>
@@ -914,7 +899,7 @@ body{padding-bottom:96px;}
       </span>
       <small class="nt">One unlock code for every PU-II chapter · WhatsApp Narendra Sir after paying</small>
     </div>
-    <div class="bh-fc bh-slide" id="bhFc" role="group" aria-roledescription="slide" aria-label="6 of 6: Biology flash cards">
+    <div class="bh-fc bh-slide" id="bhFc" role="group" aria-roledescription="slide" aria-label="4 of 7: Biology flash cards">
       <a class="cvs" href="flashcards.html" aria-label="Biology flash cards">
         <img class="cd c1" src="flashcards/promo/card-1.jpg" alt="Flash card: Mendel's Laws" loading="lazy">
         <img class="cd c2" src="flashcards/promo/card-2.jpg" alt="Flash card: Beyond Mendel" loading="lazy">
@@ -931,8 +916,56 @@ body{padding-bottom:96px;}
       <span class="btns"><a class="go on" href="flashcards.html">🃏 Get Flash Cards →</a></span>
       <small class="nt">Pick your chapter, then tap 🔒 Download &amp; share to unlock it</small>
     </div>
+    <div class="bh-cg bh-slide" id="bhCareer" role="group" aria-roledescription="slide" aria-label="5 of 7: career guidance">
+      <span class="deco" aria-hidden="true">🎓</span>
+      <span class="tag">🎓 CAREER GUIDANCE</span>
+      <b>What after PU Science?</b>
+      <ul class="bl">
+        <li>🩺 Medical · ⚙️ Engineering · 🎨 Other · 🛠️ Skills</li>
+        <li>🧭 Career quiz: 10 questions to find careers that suit you</li>
+        <li>🎯 My career report built from your test results</li>
+      </ul>
+      <span class="row"><span class="pr">66 careers</span><span class="sub">exams · eligibility · fees · pay</span></span>
+      <span class="btns">
+        <a class="go on" href="careers.html#myReport">🎯 My career report</a>
+        <a class="go" href="careers.html#quiz">🧭 Take the quiz</a>
+      </span>
+      <small class="nt">For PCB, PCM &amp; PCME students · English, ಕನ್ನಡ, हिंदी</small>
+    </div>
+    <div class="bh-dp bh-slide" id="bhPlan" role="group" aria-roledescription="slide" aria-label="6 of 7: daily NEET plan">
+      <span class="deco" aria-hidden="true">🚀</span>
+      <span class="tag">🚀 DAILY NEET PLAN</span>
+      <b>Your 3 steps every day</b>
+      <ul class="bl" id="bhPlanList">
+        <li data-step="1">📘 Learn · 45 min · Study Mode or One-Shot Revision</li>
+        <li data-step="2">🎯 Practise · 15 min · 10 timed NEET questions</li>
+        <li data-step="3">🔥 Revise · 5 min · today's 5 Daily Bio Zone questions</li>
+      </ul>
+      <span class="row"><span class="pr" id="bhPlanCount">0 / 3 today</span><span class="bar" aria-hidden="true"><i id="bhPlanBar"></i></span></span>
+      <span class="btns">
+        <a class="go on" id="bhPlanGo" href="#start3">▶ Start today's plan</a>
+        <button type="button" class="go" id="bhPlanWatch">🎬 Watch how</button>
+      </span>
+      <small class="nt">About 65 minutes a day · Sunday: 50-question NEET mock</small>
+    </div>
+    <div class="bh-dc bh-slide" id="bhChal" role="group" aria-roledescription="slide" aria-label="7 of 7: daily Biology challenge">
+      <span class="deco" aria-hidden="true">🔥</span>
+      <span class="tag">🔥 DAILY BIOLOGY CHALLENGE</span>
+      <b id="bhChalT">Today's 5 questions</b>
+      <ul class="bl">
+        <li>⏱ Just 3 minutes · new questions every day</li>
+        <li>🧬 I PUC &amp; II PUC · play daily to build your streak</li>
+        <li>🏆 Earn certificates · share your score</li>
+      </ul>
+      <span class="row"><span class="pr" id="bhChalStreak">🔥 Start your streak today</span><span class="sub" id="bhChalBest"></span></span>
+      <span class="btns">
+        <a class="go on" id="bhChalGo" href="zone.html#daily">▶ Play today's 5</a>
+        <a class="go" href="zone.html#guess">🧩 Guess-It puzzles</a>
+      </span>
+      <small class="nt" id="bhChalNote">Miss a day and the streak starts again from 1</small>
+    </div>
      </div>
-     <div class="bh-promo-dots" id="bhPromoDots" role="tablist" aria-label="Choose a slide"><button type="button" role="tab" aria-label="One-day free trial" aria-selected="true"></button><button type="button" role="tab" aria-label="Daily NEET plan" aria-selected="false"></button><button type="button" role="tab" aria-label="Daily Biology challenge" aria-selected="false"></button><button type="button" role="tab" aria-label="Exam Scorer e-books" aria-selected="false"></button><button type="button" role="tab" aria-label="All 13 PU-II chapters" aria-selected="false"></button><button type="button" role="tab" aria-label="Biology flash cards" aria-selected="false"></button></div>
+     <div class="bh-promo-dots" id="bhPromoDots" role="tablist" aria-label="Choose a slide"><button type="button" role="tab" aria-label="One-day free trial" aria-selected="true"></button><button type="button" role="tab" aria-label="Exam Scorer e-books" aria-selected="false"></button><button type="button" role="tab" aria-label="All 13 PU-II chapters" aria-selected="false"></button><button type="button" role="tab" aria-label="Biology flash cards" aria-selected="false"></button><button type="button" role="tab" aria-label="Career guidance" aria-selected="false"></button><button type="button" role="tab" aria-label="Daily NEET plan" aria-selected="false"></button><button type="button" role="tab" aria-label="Daily Biology challenge" aria-selected="false"></button></div>
     </div>
 
     <div class="bh-sec"><h2>My Classes</h2><a href="#catalogSections">View all</a></div>
