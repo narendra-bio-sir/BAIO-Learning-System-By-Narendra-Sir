@@ -89,9 +89,9 @@
       pq.id = 'pyqBanner'; pq.className = 'sl';
       pq.href = pyqPage;
       pq.innerHTML = '<span class="nti pq" aria-hidden="true">📝</span>'
-        + '<span class="ntt"><b>KCET &amp; NEET PYQs of this chapter</b><small>' + PYQ_N[id] + ' previous year question' + (PYQ_N[id] > 1 ? 's' : '') + ' · KCET 2015–21 · NEET 2013–16</small></span>'
+        + '<span class="ntt"><b>NEET &amp; KCET PYQs of this chapter</b><small>' + PYQ_N[id] + ' previous year question' + (PYQ_N[id] > 1 ? 's' : '') + ' · KCET 2015–21 · NEET 2013–16</small></span>'
         + '<span class="ntp ok">Free →</span>';
-      trk.appendChild(pq); labels.push('KCET and NEET PYQs');
+      trk.appendChild(pq); labels.push('NEET and KCET PYQs');
     }
     var dots = document.createElement('div'); dots.className = 'dots'; dots.setAttribute('role', 'tablist');
     labels.forEach(function(l, i){ var d = document.createElement('button'); d.type = 'button'; d.setAttribute('role', 'tab'); d.setAttribute('aria-label', l); d.setAttribute('aria-selected', i ? 'false' : 'true'); dots.appendChild(d); });
