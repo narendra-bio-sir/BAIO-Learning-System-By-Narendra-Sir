@@ -1,0 +1,38 @@
+/* BAIO · how many Biology questions each NCERT chapter had in past NEET, AIPMT, KCET and COMEDK papers.
+   n = [NEET, AIPMT, KCET, COMEDK] question counts (current-syllabus questions only), app = PYQs of that chapter in pyq.html.
+   Papers: NEET 2013, NEET-I 2016, NEET-II 2016 · AIPMT 2014, 2015 · KCET 2014-2021 · COMEDK 2014, 2015. */
+window.PYQ_W={
+ ex:[{k:'NEET',p:3,yrs:'2013, 2016 (I & II)'},{k:'AIPMT',p:2,yrs:'2014, 2015'},{k:'KCET',p:8,yrs:'2014-2021'},{k:'COMEDK',p:2,yrs:'2014, 2015'}],
+ ch:{"pu1-ch1":{"t":"The Living World","i":"🌍","c":"#2E7D32","h":"","n":[4,0,3,2],"app":7},
+ "pu1-ch2":{"t":"Biological Classification","i":"🌳","c":"#2E9E4F","h":"ch2/","n":[10,5,6,3],"app":21},
+ "pu1-ch3":{"t":"Plant Kingdom","i":"🌿","c":"#3B8C3A","h":"ch3/","n":[7,8,7,1],"app":20},
+ "pu1-ch4":{"t":"Animal Kingdom","i":"🐾","c":"#B5651D","h":"pu1-ch4.html","n":[7,8,5,0],"app":19},
+ "pu1-ch5":{"t":"Morphology of Flowering Plants","i":"🌸","c":"#C2185B","h":"pu1-ch5.html","n":[10,8,7,1],"app":23},
+ "pu1-ch6":{"t":"Anatomy of Flowering Plants","i":"🔬","c":"#00897B","h":"pu1-ch6.html","n":[4,4,4,2],"app":12},
+ "pu1-ch7":{"t":"Structural Organisation in Animals","i":"🐸","c":"#558B2F","h":"","n":[5,3,5,3],"app":12},
+ "pu1-ch8":{"t":"Cell: The Unit of Life","i":"🧫","c":"#6A1B9A","h":"pu1-ch8.html","n":[10,10,8,3],"app":27},
+ "pu1-ch9":{"t":"Biomolecules","i":"🧪","c":"#E65100","h":"pu1-ch9.html","n":[8,2,7,5],"app":16},
+ "pu1-ch10":{"t":"Cell Cycle and Cell Division","i":"🔄","c":"#1565C0","h":"pu1-ch10.html","n":[10,5,5,1],"app":19},
+ "pu1-ch11":{"t":"Photosynthesis in Higher Plants","i":"☀️","c":"#2E7D32","h":"pu1-ch11.html","n":[5,0,10,2],"app":13},
+ "pu1-ch12":{"t":"Respiration in Plants","i":"💨","c":"#00838F","h":"","n":[2,2,9,1],"app":13},
+ "pu1-ch13":{"t":"Plant Growth and Development","i":"🌱","c":"#689F38","h":"","n":[4,3,4,2],"app":11},
+ "pu1-ch14":{"t":"Breathing and Exchange of Gases","i":"🫁","c":"#0277BD","h":"","n":[5,2,3,0],"app":9},
+ "pu1-ch15":{"t":"Body Fluids and Circulation","i":"❤️","c":"#C62828","h":"","n":[5,5,8,1],"app":18},
+ "pu1-ch16":{"t":"Excretory Products and their Elimination","i":"💧","c":"#00695C","h":"","n":[3,3,1,3],"app":7},
+ "pu1-ch17":{"t":"Locomotion and Movement","i":"🦴","c":"#6D4C41","h":"","n":[5,4,4,2],"app":11},
+ "pu1-ch18":{"t":"Neural Control and Coordination","i":"🧠","c":"#7B1FA2","h":"","n":[3,3,1,1],"app":7},
+ "pu1-ch19":{"t":"Chemical Coordination and Integration","i":"⚗️","c":"#AD1457","h":"","n":[9,3,8,2],"app":19},
+ "pu2-ch1":{"t":"Sexual Reproduction in Flowering Plants","i":"🌸","c":"#AD1457","h":"pu2-ch1.html","n":[14,9,31,8],"app":50},
+ "pu2-ch2":{"t":"Human Reproduction","i":"👶","c":"#C62828","h":"pu2-ch2.html","n":[8,6,26,3],"app":37},
+ "pu2-ch3":{"t":"Reproductive Health","i":"🏥","c":"#00838F","h":"pu2-ch3.html","n":[8,6,15,3],"app":27},
+ "pu2-ch4":{"t":"Principles of Inheritance and Variation","i":"🧬","c":"#7B1FA2","h":"pu2-ch4.html","n":[11,8,33,3],"app":48},
+ "pu2-ch5":{"t":"Molecular Basis of Inheritance","i":"🔬","c":"#283593","h":"pu2-ch5.html","n":[13,7,46,7],"app":62},
+ "pu2-ch6":{"t":"Evolution","i":"🐒","c":"#6D4C41","h":"pu2-ch6.html","n":[12,6,14,9],"app":30},
+ "pu2-ch7":{"t":"Human Health and Disease","i":"🦠","c":"#D84315","h":"pu2-ch7.html","n":[7,4,32,8],"app":39},
+ "pu2-ch8":{"t":"Microbes in Human Welfare","i":"🧫","c":"#558B2F","h":"pu2-ch8.html","n":[4,3,20,2],"app":24},
+ "pu2-ch9":{"t":"Biotechnology: Principles and Processes","i":"🧬","c":"#0277BD","h":"ch9/","n":[9,2,24,6],"app":32},
+ "pu2-ch10":{"t":"Biotechnology and its Applications","i":"💉","c":"#00695C","h":"pu2-ch10.html","n":[5,5,14,6],"app":22},
+ "pu2-ch11":{"t":"Organisms and Populations","i":"🦁","c":"#EF6C00","h":"pu2-ch11.html","n":[7,2,23,2],"app":29},
+ "pu2-ch12":{"t":"Ecosystem","i":"🌳","c":"#33691E","h":"pu2-ch12.html","n":[5,3,11,4],"app":17},
+ "pu2-ch13":{"t":"Biodiversity and Conservation","i":"🦋","c":"#1B5E20","h":"pu2-ch13.html","n":[6,6,15,4],"app":25}}
+};

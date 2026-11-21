@@ -775,6 +775,25 @@ body{background:var(--bh-bg);}
 .bh-tile:after{content:'';position:absolute;right:-26px;bottom:-26px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.35);}
 .bh-y{background:linear-gradient(145deg,#FFE9A8,#FFD166);}.bh-pk{background:linear-gradient(145deg,#FFD6EC,#F7A8D8);}
 .bh-g{background:linear-gradient(145deg,#C9F2D9,#7FDCA6);}.bh-v{background:linear-gradient(145deg,#E3D9FF,#B9A3FF);}
+.bh-wt{position:relative;display:block;border-radius:24px;padding:16px 16px 14px;overflow:hidden;color:#fff;font-family:inherit;
+ background:radial-gradient(circle at 92% 8%,rgba(190,160,255,.42),transparent 48%),linear-gradient(135deg,#251A5C,#3B2C8F 55%,#1F6E8C)}
+.bh-wt a{text-decoration:none;color:#fff}
+.bh-wt .deco{position:absolute;right:14px;top:8px;font-size:46px;transform:rotate(-8deg);filter:drop-shadow(0 6px 10px rgba(0,0,0,.3))}
+.bh-wt .tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.08em;padding:3px 9px;border-radius:99px;background:#FFD45E;color:#3A2600}
+.bh-wt b{display:block;font-size:18px;font-weight:800;line-height:1.2;margin-top:8px;max-width:80%}
+.bh-wt .wl{display:flex;flex-direction:column;gap:6px;margin-top:9px}
+.bh-wt .r{display:grid;grid-template-columns:1fr auto;gap:2px 8px;font-size:11.5px;font-weight:700;line-height:1.2}
+.bh-wt .r .n{font-weight:900;color:#FFE79A}
+.bh-wt .sb{grid-column:1/-1;display:flex;height:8px;border-radius:99px;overflow:hidden;background:rgba(255,255,255,.14)}
+.bh-wt .sb i{display:block;height:100%}
+.bh-wt .lg{display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:8px;font-size:10.5px;font-weight:700;opacity:.92}
+.bh-wt .lg i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.bh-wt .btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px}
+.bh-wt .go{display:block;text-align:center;font-weight:800;font-size:13px;line-height:1.2;padding:10px 6px;border-radius:99px;white-space:nowrap;border:2px solid rgba(255,255,255,.85);color:#fff}
+.bh-wt .go.on{background:#FFD45E;border-color:#FFD45E;color:#3A2600;box-shadow:0 6px 14px rgba(0,0,0,.2)}
+.bh-wt .nt{display:block;font-size:10.8px;opacity:.88;margin-top:9px;text-align:center}
+:root:not([data-theme="light"]) .bh-wt{background:radial-gradient(circle at 92% 8%,rgba(190,160,255,.16),transparent 48%),linear-gradient(135deg,#140F33,#221A55 55%,#123C4F);border:1px solid rgba(190,160,255,.3)}
+@media(max-width:370px){.bh-wt b{font-size:16.5px}.bh-wt .go{font-size:12px}}
 .bh-chips{display:flex;gap:10px;overflow-x:auto;padding:0 0 2px;scrollbar-width:none;}
 .bh-chips::-webkit-scrollbar{display:none;}
 .bh-chip{flex:none;background:var(--bh-card);border-radius:18px;padding:12px;width:94px;text-align:center;border:1px solid rgba(124,77,255,.12);}
@@ -909,6 +928,7 @@ body{padding-bottom:96px;}
       <a class="bh-chip" href="neet-tricks.html" id="bhNtChip"><i style="background:#FFF1D6">🎯</i><span>NEET Tricks</span><em class="nw">NEW</em></a>
       <a class="bh-chip" href="pyq.html" id="bhPyqChip"><i style="background:#D9F7EE">📝</i><span>NEET &amp; KCET PYQs</span><em class="nw">NEW</em></a>
       <a class="bh-chip" href="diagram-mcq.html"><i style="background:#E3F7EE">🔬</i><span>Diagram MCQs</span></a>
+      <a class="bh-chip" href="pyq-insights.html" id="bhArtChip"><i style="background:#ECE6FF">📊</i><span>Article</span><em class="nw">NEW</em></a>
       <a class="bh-chip" href="assistant.html"><i style="background:#EDE6FF">🦉</i><span>AI Assistant</span></a>
       <a class="bh-chip" href="ncert-library.html#bio-exam-papers" id="bhQbChip" role="button" aria-haspopup="dialog" aria-controls="bhQbSheet"><i style="background:#FFF1C9">📚</i><span>PU Question Bank</span></a>
       <a class="bh-chip" href="ncert-library.html#bio-exam-papers"><i style="background:#E8F0FF">🧾</i><span>Model Papers</span></a>
@@ -920,9 +940,9 @@ body{padding-bottom:96px;}
     </div>
 
     <a class="bh-daily" href="zone.html#daily"><div style="font-size:30px">🔥</div><div><b>Daily Bio Challenge</b><small>5 questions · 3 minutes</small></div><span class="pl">Play ▶</span></a>
-    <div class="bh-promo" id="bhPromo" role="region" aria-roledescription="carousel" aria-label="BAIO premium trial, books, chapter bundles, NEET Tricks, audio podcasts, career guidance, fact of the day and daily plan">
+    <div class="bh-promo" id="bhPromo" role="region" aria-roledescription="carousel" aria-label="BAIO premium trial, books, chapter bundles, NEET Tricks, audio podcasts, PYQs, chapter weightage article, career guidance, fact of the day and daily plan">
      <div class="bh-promo-track" id="bhPromoTrack">
-    <div class="bh-trial bh-slide" id="bhTrial" role="group" aria-roledescription="slide" aria-label="1 of 11: one-day free trial of premium content">
+    <div class="bh-trial bh-slide" id="bhTrial" role="group" aria-roledescription="slide" aria-label="1 of 12: one-day free trial of premium content">
       <span class="crown" aria-hidden="true">👑</span>
       <span class="tag" id="bhTrialTag">⏳ 1-DAY FREE TRIAL</span>
       <b id="bhTrialT">Try Premium free for 24 hours</b>
@@ -935,7 +955,7 @@ body{padding-bottom:96px;}
       <span class="btns" id="bhTrialBtns"><button type="button" class="go on" id="bhTrialGo">🚀 Start my free trial</button></span>
       <small class="nt" id="bhTrialNote">One trial per phone · ends by itself after 24 hours · paid unlocks stay as they are</small>
     </div>
-    <div class="bh-book bh-slide" id="bhBook" role="group" aria-roledescription="slide" aria-label="2 of 11: Exam Scorer e-books">
+    <div class="bh-book bh-slide" id="bhBook" role="group" aria-roledescription="slide" aria-label="2 of 12: Exam Scorer e-books">
       <a class="cvs" id="bhBookCvs" href="biology-prep-books.html" aria-label="I PUC and II PUC Biology Exam Scorer books">
         <img class="cv" id="bhBookCv1" src="prep-books-assets/pu1/cover.jpg" alt="I PUC Biology Exam Scorer cover" loading="lazy">
         <img class="cv" id="bhBookCv2" src="prep-books-assets/pu2/cover.jpg" alt="II PUC Biology Exam Scorer cover" loading="lazy">
@@ -953,7 +973,7 @@ body{padding-bottom:96px;}
         <a class="go" id="bhBookGo2" href="biology-prep-books.html#pu2">📗 II PUC Book →</a>
       </span>
     </div>
-    <div class="bh-bundle bh-slide" id="bhBundle" role="group" aria-roledescription="slide" aria-label="3 of 11: all 13 PU-II chapters in one payment">
+    <div class="bh-bundle bh-slide" id="bhBundle" role="group" aria-roledescription="slide" aria-label="3 of 12: all 13 PU-II chapters in one payment">
       <span class="gift" aria-hidden="true">🎁</span>
       <span class="tag">🎓 II PUC · ONE PAYMENT</span>
       <b>Get All 13 PU-II Chapters</b>
@@ -969,7 +989,7 @@ body{padding-bottom:96px;}
       </span>
       <small class="nt">One unlock code for every PU-II chapter · WhatsApp Narendra Sir after paying</small>
     </div>
-    <div class="bh-fc bh-slide" id="bhFc" role="group" aria-roledescription="slide" aria-label="4 of 11: Biology flash cards">
+    <div class="bh-fc bh-slide" id="bhFc" role="group" aria-roledescription="slide" aria-label="4 of 12: Biology flash cards">
       <a class="cvs" href="flashcards.html" aria-label="Biology flash cards">
         <img class="cd c1" src="flashcards/promo/card-1.jpg?v=2" alt="Flash card: Mendel's Laws" loading="lazy">
         <img class="cd c2" src="flashcards/promo/card-2.jpg?v=2" alt="Flash card: Beyond Mendel" loading="lazy">
@@ -986,7 +1006,7 @@ body{padding-bottom:96px;}
       <span class="btns"><a class="go on" href="flashcards.html">🃏 Get Flash Cards →</a></span>
       <small class="nt">Pick your chapter, then tap 🔒 Download &amp; share to unlock it</small>
     </div>
-    <div class="bh-nt bh-slide" id="bhNt" role="group" aria-roledescription="slide" aria-label="5 of 11: NEET Tricks and Tips for every chapter">
+    <div class="bh-nt bh-slide" id="bhNt" role="group" aria-roledescription="slide" aria-label="5 of 12: NEET Tricks and Tips for every chapter">
       <span class="deco" aria-hidden="true">🎯</span>
       <span class="tag">🎯 NEW · NEET TRICKS</span>
       <b>NEET Tricks &amp; Tips</b>
@@ -999,7 +1019,7 @@ body{padding-bottom:96px;}
       <span class="btns"><a class="go on" id="bhNtTry" href="neet-tricks.html#pu2-ch5">👀 Try free</a><a class="go" href="neet-tricks.html">🎯 All chapters →</a></span>
       <small class="nt">2 tricks + 3 questions free in every chapter · then ₹99 by UPI</small>
     </div>
-    <div class="bh-pd bh-slide" id="bhPod" role="group" aria-roledescription="slide" aria-label="6 of 11: chapter audio podcasts">
+    <div class="bh-pd bh-slide" id="bhPod" role="group" aria-roledescription="slide" aria-label="6 of 12: chapter audio podcasts">
       <span class="deco" aria-hidden="true">🎧</span>
       <span class="tag">🎧 NEW · AUDIO PODCASTS</span>
       <b>Listen to every chapter</b>
@@ -1012,7 +1032,7 @@ body{padding-bottom:96px;}
       <span class="btns"><a class="go on" id="bhPodTry" href="audio-podcasts.html#pu2-ch4">🎧 Listen free</a><a class="go" href="audio-podcasts.html">All podcasts →</a></span>
       <small class="nt">First 2 minutes free in every chapter · then pay by UPI</small>
     </div>
-    <div class="bh-pq bh-slide" id="bhPyq" role="group" aria-roledescription="slide" aria-label="7 of 11: NEET and KCET previous year questions">
+    <div class="bh-pq bh-slide" id="bhPyq" role="group" aria-roledescription="slide" aria-label="7 of 12: NEET and KCET previous year questions">
       <span class="deco" aria-hidden="true">📝</span>
       <span class="tag">📝 NEW · NEET &amp; KCET PYQs</span>
       <b>NEET &amp; KCET Biology PYQs, chapter-wise</b>
@@ -1024,7 +1044,22 @@ body{padding-bottom:96px;}
       <span class="row"><span class="pr">FREE</span><span class="sub">for every I PUC &amp; II PUC student</span></span>
       <span class="btns"><a class="go on" href="pyq.html">📚 By chapter</a><a class="go" href="pyq.html#p-n2016b">📅 NEET 2016 →</a></span>
     </div>
-    <div class="bh-cg bh-slide" id="bhCareer" role="group" aria-roledescription="slide" aria-label="8 of 11: career guidance">
+    <div class="bh-wt bh-slide" id="bhWt" role="group" aria-roledescription="slide" aria-label="8 of 12: which chapters past papers asked most">
+      <span class="deco" aria-hidden="true">📊</span>
+      <span class="tag">📊 NEW · ARTICLE</span>
+      <b>Which chapters get asked most?</b>
+      <div class="wl">
+        <a class="r" href="pyq-insights.html#pu2-ch5" aria-label="Molecular Basis of Inheritance · NEET 13 · AIPMT 7 · KCET 46 · COMEDK 7"><span class="nm">Molecular Basis of Inheritance</span><span class="n">73</span><span class="sb" aria-hidden="true"><i style="width:17.8%;background:#7CF2D2"></i><i style="width:9.6%;background:#A9C8FF"></i><i style="width:63.0%;background:#FFD45E"></i><i style="width:9.6%;background:#FF9D8F"></i></span></a>
+        <a class="r" href="pyq-insights.html#pu2-ch1" aria-label="Sexual Reproduction in Plants · NEET 14 · AIPMT 9 · KCET 31 · COMEDK 8"><span class="nm">Sexual Reproduction in Plants</span><span class="n">62</span><span class="sb" aria-hidden="true"><i style="width:19.2%;background:#7CF2D2"></i><i style="width:12.3%;background:#A9C8FF"></i><i style="width:42.5%;background:#FFD45E"></i><i style="width:11.0%;background:#FF9D8F"></i></span></a>
+        <a class="r" href="pyq-insights.html#pu2-ch4" aria-label="Principles of Inheritance · NEET 11 · AIPMT 8 · KCET 33 · COMEDK 3"><span class="nm">Principles of Inheritance</span><span class="n">55</span><span class="sb" aria-hidden="true"><i style="width:15.1%;background:#7CF2D2"></i><i style="width:11.0%;background:#A9C8FF"></i><i style="width:45.2%;background:#FFD45E"></i><i style="width:4.1%;background:#FF9D8F"></i></span></a>
+        <a class="r" href="pyq-insights.html#pu2-ch7" aria-label="Human Health and Disease · NEET 7 · AIPMT 4 · KCET 32 · COMEDK 8"><span class="nm">Human Health and Disease</span><span class="n">51</span><span class="sb" aria-hidden="true"><i style="width:9.6%;background:#7CF2D2"></i><i style="width:5.5%;background:#A9C8FF"></i><i style="width:43.8%;background:#FFD45E"></i><i style="width:11.0%;background:#FF9D8F"></i></span></a>
+        <a class="r" href="pyq-insights.html#pu2-ch2" aria-label="Human Reproduction · NEET 8 · AIPMT 6 · KCET 26 · COMEDK 3"><span class="nm">Human Reproduction</span><span class="n">43</span><span class="sb" aria-hidden="true"><i style="width:11.0%;background:#7CF2D2"></i><i style="width:8.2%;background:#A9C8FF"></i><i style="width:35.6%;background:#FFD45E"></i><i style="width:4.1%;background:#FF9D8F"></i></span></a>
+      </div>
+      <span class="lg"><span><i style="background:#7CF2D2"></i>NEET</span><span><i style="background:#A9C8FF"></i>AIPMT</span><span><i style="background:#FFD45E"></i>KCET</span><span><i style="background:#FF9D8F"></i>COMEDK</span></span>
+      <span class="btns"><a class="go on" href="pyq-insights.html">📖 Read article</a><a class="go" href="pyq-insights.html#chapters">All 32 chapters →</a></span>
+      <small class="nt">Questions per chapter in 15 past NEET, AIPMT, KCET &amp; COMEDK papers</small>
+    </div>
+    <div class="bh-cg bh-slide" id="bhCareer" role="group" aria-roledescription="slide" aria-label="9 of 12: career guidance">
       <span class="deco" aria-hidden="true">🎓</span>
       <span class="tag">🎓 CAREER GUIDANCE</span>
       <b>What after PU Science?</b>
@@ -1040,7 +1075,7 @@ body{padding-bottom:96px;}
       </span>
       <small class="nt">For PCB, PCM &amp; PCME students · English, ಕನ್ನಡ, हिंदी</small>
     </div>
-    <div class="bh-ft bh-slide" id="bhFact" role="group" aria-roledescription="slide" aria-label="9 of 11: Bio fact of the day">
+    <div class="bh-ft bh-slide" id="bhFact" role="group" aria-roledescription="slide" aria-label="10 of 12: Bio fact of the day">
       <span class="tag">💡 BIO FACT OF THE DAY</span>
       <button type="button" class="nx" id="bhFactNext" aria-label="Show another fact">🔀 Another</button>
       <span class="bd"><span class="ic" id="bhFactIc" aria-hidden="true">🧬</span><span class="tx" id="bhFactT">About 99.9% of DNA bases are exactly the same in all humans.</span></span>
@@ -1050,7 +1085,7 @@ body{padding-bottom:96px;}
         <a class="go" id="bhFactGo" href="zone.html#daily">📖 Open chapter</a>
       </span>
     </div>
-    <div class="bh-dp bh-slide" id="bhPlan" role="group" aria-roledescription="slide" aria-label="10 of 11: daily NEET plan">
+    <div class="bh-dp bh-slide" id="bhPlan" role="group" aria-roledescription="slide" aria-label="11 of 12: daily NEET plan">
       <span class="deco" aria-hidden="true">🚀</span>
       <span class="tag">🚀 DAILY NEET PLAN</span>
       <b>Your 3 steps every day</b>
@@ -1066,7 +1101,7 @@ body{padding-bottom:96px;}
       </span>
       <small class="nt">About 65 minutes a day · Sunday: 50-question NEET mock</small>
     </div>
-    <div class="bh-dc bh-slide" id="bhChal" role="group" aria-roledescription="slide" aria-label="11 of 11: daily Biology challenge">
+    <div class="bh-dc bh-slide" id="bhChal" role="group" aria-roledescription="slide" aria-label="12 of 12: daily Biology challenge">
       <span class="deco" aria-hidden="true">🔥</span>
       <span class="tag">🔥 DAILY BIOLOGY CHALLENGE</span>
       <b id="bhChalT">Today's 5 questions</b>
@@ -1083,7 +1118,7 @@ body{padding-bottom:96px;}
       <small class="nt" id="bhChalNote">Miss a day and the streak starts again from 1</small>
     </div>
      </div>
-     <div class="bh-promo-dots" id="bhPromoDots" role="tablist" aria-label="Choose a slide"><button type="button" role="tab" aria-label="One-day free trial" aria-selected="true"></button><button type="button" role="tab" aria-label="Exam Scorer e-books" aria-selected="false"></button><button type="button" role="tab" aria-label="All 13 PU-II chapters" aria-selected="false"></button><button type="button" role="tab" aria-label="Biology flash cards" aria-selected="false"></button><button type="button" role="tab" aria-label="NEET Tricks" aria-selected="false"></button><button type="button" role="tab" aria-label="Chapter audio podcasts" aria-selected="false"></button><button type="button" role="tab" aria-label="NEET and KCET PYQs" aria-selected="false"></button><button type="button" role="tab" aria-label="Career guidance" aria-selected="false"></button><button type="button" role="tab" aria-label="Bio fact of the day" aria-selected="false"></button><button type="button" role="tab" aria-label="Daily NEET plan" aria-selected="false"></button><button type="button" role="tab" aria-label="Daily Biology challenge" aria-selected="false"></button></div>
+     <div class="bh-promo-dots" id="bhPromoDots" role="tablist" aria-label="Choose a slide"><button type="button" role="tab" aria-label="One-day free trial" aria-selected="true"></button><button type="button" role="tab" aria-label="Exam Scorer e-books" aria-selected="false"></button><button type="button" role="tab" aria-label="All 13 PU-II chapters" aria-selected="false"></button><button type="button" role="tab" aria-label="Biology flash cards" aria-selected="false"></button><button type="button" role="tab" aria-label="NEET Tricks" aria-selected="false"></button><button type="button" role="tab" aria-label="Chapter audio podcasts" aria-selected="false"></button><button type="button" role="tab" aria-label="NEET and KCET PYQs" aria-selected="false"></button><button type="button" role="tab" aria-label="Which chapters get asked most" aria-selected="false"></button><button type="button" role="tab" aria-label="Career guidance" aria-selected="false"></button><button type="button" role="tab" aria-label="Bio fact of the day" aria-selected="false"></button><button type="button" role="tab" aria-label="Daily NEET plan" aria-selected="false"></button><button type="button" role="tab" aria-label="Daily Biology challenge" aria-selected="false"></button></div>
     </div>
 
     <div class="bh-sec"><h2>My Classes</h2><a href="#catalogSections">View all</a></div>

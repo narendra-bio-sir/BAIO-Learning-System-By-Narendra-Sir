@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>PYQ Chapter Weightage | BAIO Learning System</title>
+<meta name="description" content="Which Biology chapters NEET, AIPMT, KCET and COMEDK asked most: 879 past questions from 15 papers, sorted by NCERT chapter, with a study plan for I PUC and II PUC students. By Narendra Sir.">
+<meta property="og:title" content="Which chapters do NEET &amp; KCET really ask? · BAIO">
+<meta property="og:description" content="879 past Biology questions from NEET, AIPMT, KCET and COMEDK, sorted chapter by chapter, and what that means for how you study.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="games/game.css?v=1">
+<style>
+:root{--cN:#2EE6C5;--cA:#8AB4FF;--cK:#F2C14E;--cC:#FF8A7A;--track:rgba(255,255,255,.07)}
+[data-theme="light"]{--cN:#0F8F7A;--cA:#3D6FD1;--cK:#B07A00;--cC:#D0533F;--track:rgba(30,42,34,.08)}
+body{font-family:Inter,sans-serif}
+.lang-switcher{display:none}
+.by{margin-top:10px;font-size:12px;color:var(--ink-dim)}
+.art{font-size:15px;line-height:1.7;color:var(--ink)}
+.art h2{scroll-margin-top:64px;font:700 21px/1.25 'Space Grotesk',sans-serif;margin:30px 0 8px;color:var(--ink)}
+.art h2 .n{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:9px;margin-right:8px;background:var(--panel2);border:1px solid var(--line);color:var(--gold);font-size:14px;vertical-align:2px}
+.art p{margin:8px 0}
+.art a{color:var(--teal);font-weight:700}
+.art b{color:var(--ink)}
+.lede{font-size:16px;color:var(--ink-dim)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.tile{padding:14px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}
+.tile b{display:block;font:800 26px/1.05 'Space Grotesk',sans-serif;color:var(--gold)}
+.tile span{display:block;font-size:12.5px;line-height:1.45;color:var(--ink-dim);margin-top:6px}
+.tile span strong{color:var(--ink)}
+/* chapter carousel */
+.ctl{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.ctl button{font:700 12px Inter,sans-serif;padding:7px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+.ctl button[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#1B1300}
+.ctl .lb{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-dim);align-self:center;margin-right:2px}
+.lg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px;font-size:12px;color:var(--ink-dim)}
+.lg i{display:inline-block;width:12px;height:12px;border-radius:4px;vertical-align:-1px;margin-right:5px}
+.car{position:relative;margin:12px -16px 0}
+.trk{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 16px 10px;scroll-padding:0 16px;scrollbar-width:none;overscroll-behavior-x:contain}
+.trk::-webkit-scrollbar{display:none}
+.cc{flex:0 0 min(86%,340px);scroll-snap-align:start;border-radius:20px;padding:14px;background:var(--panel);border:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.cc .hd{display:flex;gap:10px;align-items:center}
+.cc .ic{flex:0 0 46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:23px}
+.cc .hd small{display:block;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-dim)}
+.cc .hd b{display:block;font:700 15.5px/1.25 'Space Grotesk',sans-serif;color:var(--ink)}
+.cc .rk{margin-left:auto;flex:none;align-self:flex-start;font:800 12px 'Space Grotesk',sans-serif;padding:4px 9px;border-radius:99px;background:var(--panel2);color:var(--gold);border:1px solid var(--line)}
+.cc .tot{font-size:13px;color:var(--ink-dim)}
+.cc .tot strong{font:800 24px 'Space Grotesk',sans-serif;color:var(--ink);margin-right:4px}
+.bars{display:grid;grid-template-columns:62px 1fr 26px;gap:7px 8px;align-items:center;font-size:12px}
+.bars .k{font-weight:800;color:var(--ink-dim)}
+.bars .t{height:14px;border-radius:99px;background:var(--track);overflow:hidden}
+.bars .t i{display:block;height:100%;border-radius:99px;min-width:3px;transition:width .5s ease}
+.bars .v{font-weight:800;text-align:right;color:var(--ink)}
+.cc .sh{font-size:12px;color:var(--ink-dim);line-height:1.5;margin:0}
+.cc .sh strong{color:var(--ink)}
+.cc .gap{font-size:11.5px;font-weight:700;padding:6px 10px;border-radius:10px;background:rgba(231,105,91,.14);color:var(--ink)}
+.cc .act{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:auto}
+.cc .act a{display:block;text-align:center;font:700 12.5px/1.2 Inter,sans-serif;padding:10px 6px;border-radius:12px;text-decoration:none;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+.cc .act a.on{background:var(--teal);border-color:var(--teal);color:#06231C}
+.cc .act a.off{opacity:.55;pointer-events:none}
+.nav2{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:4px}
+.nav2 button{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:18px;cursor:pointer}
+.nav2 button:disabled{opacity:.4;cursor:default}
+.nav2 span{font:700 13px Inter,sans-serif;color:var(--ink-dim);min-width:70px;text-align:center}
+.note{font-size:12.5px;color:var(--ink-dim);line-height:1.55;padding:10px 12px;border-radius:12px;background:var(--panel2);border-left:3px solid var(--gold);margin-top:10px}
+.tops{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.top{padding:12px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}
+.top h3{font-size:14px;margin:0 0 6px}
+.top ol{margin:0;padding-left:20px;font-size:12.5px;line-height:1.55;color:var(--ink)}
+.top ol a{color:var(--ink);font-weight:600;text-decoration:none}
+.top ol em{font-style:normal;font-weight:800;color:var(--ink-dim)}
+.box{padding:14px;border-radius:16px;background:var(--panel);border:1px solid var(--line);margin-top:12px}
+.box h3{font-size:15px;margin:0 0 4px}
+.box p{font-size:13.5px;line-height:1.6;margin:4px 0;color:var(--ink-dim)}
+.box p b{color:var(--ink)}
+.gaps{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.gaps a{font-size:12px;font-weight:700;padding:5px 10px;border-radius:99px;background:var(--panel2);border:1px solid var(--line);color:var(--ink);text-decoration:none}
+.steps{list-style:none;counter-reset:s;margin:12px 0 0;padding:0}
+.steps li{counter-increment:s;position:relative;padding:12px 12px 12px 52px;margin-top:8px;border-radius:16px;background:var(--panel);border:1px solid var(--line);font-size:14px;line-height:1.55}
+.steps li::before{content:counter(s);position:absolute;left:12px;top:12px;width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:var(--gold);color:#1B1300;font:800 14px 'Space Grotesk',sans-serif}
+.steps li b{display:block;font-size:14.5px}
+.steps li span{color:var(--ink-dim);font-size:13px}
+.honest{list-style:none;margin:10px 0 0;padding:0}
+.honest li{position:relative;padding-left:22px;margin-top:8px;font-size:14px;line-height:1.6}
+.honest li::before{content:'⚠️';position:absolute;left:0;top:0;font-size:13px}
+.src{margin-top:22px;font-size:11.5px;line-height:1.6;color:var(--ink-dim)}
+.cta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.cta a{display:block;text-align:center;padding:13px 8px;border-radius:14px;font:800 14px Inter,sans-serif;text-decoration:none;border:1px solid var(--line);background:var(--panel);color:var(--ink)}
+.cta a.on{background:var(--gold);border-color:var(--gold);color:#1B1300}
+@media(max-width:420px){.tops{grid-template-columns:1fr}.tile b{font-size:23px}}
+@media(prefers-reduced-motion:reduce){.bars .t i{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow">BAIO Learning System · For students</div>
+    <h1>📊 Which chapters do NEET &amp; KCET <span class="accent">really ask?</span></h1>
+    <p>We read 1,050 Biology questions from 15 past papers (NEET, AIPMT, KCET and COMEDK) and sorted each one into its NCERT chapter. Here is what that means for how you study.</p>
+    <div class="by">By Narendra Sir · 6 min read</div>
+  </section>
+
+  <article class="art">
+    <h2><span class="n">1</span>The short version</h2>
+    <div class="tiles">
+      <div class="tile"><b>360 / 720</b><span>Biology is <strong>half of NEET</strong>: 90 questions, 4 marks each. It decides your medical seat more than any other subject.</span></div>
+      <div class="tile"><b>52%</b><span>of past NEET &amp; AIPMT Biology questions came from <strong>I PUC</strong> chapters. Don't leave I PUC for later.</span></div>
+      <div class="tile"><b>74%</b><span>of past KCET Biology questions came from <strong>II PUC</strong> chapters. The two genetics chapters alone gave 1 in 5.</span></div>
+      <div class="tile"><b>3 in 4</b><span>past questions from chapters with a BAIO page tested a fact <strong>you already practise in the app</strong>.</span></div>
+    </div>
+
+    <h2 id="chapters"><span class="n">2</span>Chapter by chapter</h2>
+    <p>Swipe through the chapters. Each bar shows how many Biology questions that chapter had in past papers of each exam. Sort by your exam to see where the marks are.</p>
+    <div class="ctl" role="group" aria-label="Sort chapters"><span class="lb">Sort</span>
+      <button type="button" data-s="all" aria-pressed="true">Most asked</button>
+      <button type="button" data-s="neet" aria-pressed="false">NEET + AIPMT</button>
+      <button type="button" data-s="kcet" aria-pressed="false">KCET</button>
+      <button type="button" data-s="ord" aria-pressed="false">Chapter order</button>
+    </div>
+    <div class="ctl" role="group" aria-label="Show class"><span class="lb">Class</span>
+      <button type="button" data-c="" aria-pressed="true">Both</button>
+      <button type="button" data-c="pu1" aria-pressed="false">I PUC</button>
+      <button type="button" data-c="pu2" aria-pressed="false">II PUC</button>
+    </div>
+    <div class="lg" id="lg"></div>
+    <div class="car" role="region" aria-roledescription="carousel" aria-label="Past-paper questions per chapter">
+      <div class="trk" id="trk"></div>
+    </div>
+    <div class="nav2"><button type="button" id="prev" aria-label="Previous chapter">‹</button><span id="pos" aria-live="polite"></span><button type="button" id="next" aria-label="Next chapter">›</button></div>
+    <p class="note">The papers counted: <b>NEET</b> 2013, 2016 (phase I &amp; II) · <b>AIPMT</b> 2014, 2015 · <b>KCET</b> 2014–2021 · <b>COMEDK</b> 2014, 2015. KCET has 8 papers here and NEET only 3, so compare chapters <b>within one exam</b>, not the exams with each other.</p>
+
+    <div class="tops">
+      <div class="top"><h3>🩺 Top 8 for NEET + AIPMT</h3><ol id="topN"></ol></div>
+      <div class="top"><h3>🎓 Top 8 for KCET</h3><ol id="topK"></ol></div>
+    </div>
+
+    <h2><span class="n">3</span>Which exam decides what?</h2>
+    <p><b>NEET</b> fills MBBS and BDS seats in Karnataka, including government seats through KEA counselling. If you want a medical seat, the NEET bars are the ones to follow.</p>
+    <p><b>KCET</b> Biology counts for agriculture, veterinary, pharmacy and allied courses. It leans heavily on II PUC, so a strong II PUC base pays off here.</p>
+    <p><b>COMEDK</b> used to have Biology for medical seats and is now an engineering test. Its old Biology questions are still good practice, because they test the same NCERT facts.</p>
+
+    <h2><span class="n">4</span>How many marks do you need?</h2>
+    <div class="box">
+      <h3>🎯 The numbers to aim for</h3>
+      <p>In 2025 the NEET <b>qualifying</b> mark for the general category was reported as <b>144 out of 720</b>. Qualifying is not the same as getting a seat.</p>
+      <p>Government MBBS seats in Karnataka closed much higher. News reports put <b>Bangalore Medical College near 650</b> and <b>KIMS near 606</b> out of 720 for the 2025 general category. Check the official KEA lists at kea.kar.nic.in for your category.</p>
+      <p>For a government seat, aim for about <b>85–90% in Biology</b>. That is roughly <b>77–81 right answers out of 90</b>, with very few wrong ones, because every wrong answer costs a mark.</p>
+    </div>
+
+    <h2><span class="n">5</span>How your BAIO practice lines up</h2>
+    <p>We checked 80 past questions by hand against the BAIO app's practice questions. In chapters that have a full BAIO chapter page, <b>45 of 61</b> past questions tested the same fact as a BAIO practice question, and <b>56 of 61</b> had at least a closely related one. So if you finish a BAIO chapter properly, you have already practised most of what the past papers asked from it.</p>
+    <p>Ten I PUC chapters do not have a full BAIO page yet. Together they carried about <b>1 in 5</b> past NEET Biology questions, and none of the 19 we checked from them matched a BAIO practice question. For these chapters, read the NCERT textbook line by line and do their PYQs here:</p>
+    <div class="gaps" id="gaps"></div>
+
+    <h2><span class="n">6</span>A study plan that follows the data</h2>
+    <ol class="steps">
+      <li><b>Pick your next chapter from the bars</b><span>Sort the carousel by your exam. Start with the tallest bars you have not finished yet.</span></li>
+      <li><b>Learn it from the chapter page</b><span>Read the BAIO chapter page, then that chapter's <a href="neet-tricks.html">NEET Tricks</a> for the traps examiners like.</span></li>
+      <li><b>Drill it</b><span>Do the chapter MCQs, <a href="flashcards.html">flash cards</a> and <a href="diagram-mcq.html">Diagram MCQs</a> until you get most of them right.</span></li>
+      <li><b>Test yourself on its PYQs</b><span>Open the chapter in <a href="pyq.html">NEET &amp; KCET PYQs</a>. Aim for 8 out of 10 right before you move on.</span></li>
+      <li><b>Do one full past paper every week</b><span>In PYQs, switch to “By paper” and do one paper in one sitting, without looking at the answers.</span></li>
+      <li><b>Fix every mistake</b><span>Read the explanation and find the NCERT line it came from. Mark it, because that line can come again in a new question.</span></li>
+    </ol>
+
+    <h2><span class="n">7</span>Read this before you trust the bars</h2>
+    <ul class="honest">
+      <li>Past papers show what examiners have liked. They <b>do not promise</b> what comes next. Any NCERT line can be asked, so don't skip a chapter because its bar is short.</li>
+      <li>These are 15 papers, most of them from 2013–2021. The pattern of newer NEET papers can be different.</li>
+      <li>Questions on topics removed from the current NCERT syllabus are <b>not counted</b>, so every bar is about what you study today.</li>
+      <li>No app or past paper can guarantee a score or a seat. Regular NCERT reading and honest practice do the work. The app helps you practise the right things.</li>
+    </ul>
+
+    <div class="cta"><a class="on" href="pyq.html">📝 Practise PYQs</a><a href="exam-corner.html">🧪 Take a mock test</a></div>
+
+    <p class="src"><b>How this was counted.</b> Every Biology question in the 15 papers was tagged to one NCERT chapter by hand. 171 questions were left out: topics dropped from the rationalised NCERT (for example reproduction in organisms, mineral nutrition, transport in plants, digestion, animal husbandry and ecological succession), KCET questions that KEA gave grace marks for, and a few unreadable lines in a scanned paper. That leaves 879 questions: NEET 225, AIPMT 145, KCET 409 and COMEDK 100. 726 of them are in the app as free PYQ practice (KCET 2015–2021 and NEET/AIPMT 2013–2016). The “3 in 4” and “45 of 61” figures come from 80 randomly chosen past questions that were checked by hand against the app's practice questions.</p>
+  </article>
+  <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
+</div>
+<script src="games/common.js?v=4"></script>
+<script src="pyq/pyq-weightage.js?v=1"></script>
+<script>
+GZ.nav();
+(function(){
+const W = window.PYQ_W; if(!W) return;
+const $ = s => document.querySelector(s);
+const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const EX = [['NEET','--cN'],['AIPMT','--cA'],['KCET','--cK'],['COMEDK','--cC']];
+const IDS = Object.keys(W.ch);
+const ord = id => (id.startsWith('pu1') ? 0 : 100) + +id.split('-ch')[1];
+const sum = a => a.reduce((x, y) => x + y, 0);
+const TOT = [0,0,0,0]; IDS.forEach(id => W.ch[id].n.forEach((v, i) => TOT[i] += v));
+const MAX = Math.max(...IDS.map(id => Math.max(...W.ch[id].n)));
+const KEY = {all: c => sum(c.n), neet: c => c.n[0] + c.n[1], kcet: c => c.n[2], ord: null};
+const pct = (a, b) => b ? Math.round(100 * a / b) : 0;
+const cls = id => id.startsWith('pu1') ? 'I PUC' : 'II PUC';
+const chNo = id => id.split('-ch')[1];
+
+$('#lg').innerHTML = EX.map((e, i) => '<span><i style="background:var(' + e[1] + ')"></i>' + e[0] + ' · ' + W.ex[i].p + ' papers</span>').join('');
+
+let sortBy = 'all', only = '', list = [], cur = 0;
+function rankOf(id, k){ if(!KEY[k]) return 0; const f = KEY[k]; const v = f(W.ch[id]); return 1 + IDS.filter(x => f(W.ch[x]) > v).length; }
+function card(id){
+  const c = W.ch[id], t = sum(c.n), na = c.n[0] + c.n[1];
+  const rk = sortBy === 'ord' ? '' : '<span class="rk" title="Rank among all 32 chapters">#' + rankOf(id, sortBy) + '</span>';
+  const bars = EX.map((e, i) => '<span class="k">' + e[0] + '</span><span class="t" role="img" aria-label="' + e[0] + ': ' + c.n[i] + ' questions"><i style="width:' + (100 * c.n[i] / MAX).toFixed(1) + '%;background:var(' + e[1] + ')"></i></span><span class="v">' + c.n[i] + '</span>').join('');
+  const page = c.h ? '<a href="' + esc(c.h) + '">📖 Chapter page</a>' : '<a class="off" aria-disabled="true">📖 No page yet</a>';
+  return '<article class="cc" id="c-' + id + '" aria-label="' + esc(cls(id) + ' chapter ' + chNo(id) + ': ' + c.t) + '">' +
+    '<div class="hd"><span class="ic" style="background:' + c.c + '26">' + c.i + '</span><div><small>' + cls(id) + ' · Ch ' + chNo(id) + '</small><b>' + esc(c.t) + '</b></div>' + rk + '</div>' +
+    '<div class="tot"><strong>' + t + '</strong>questions in 15 papers</div>' +
+    '<div class="bars">' + bars + '</div>' +
+    '<p class="sh">That is <strong>' + pct(na, TOT[0] + TOT[1]) + '%</strong> of NEET + AIPMT and <strong>' + pct(c.n[2], TOT[2]) + '%</strong> of KCET Biology questions.</p>' +
+    (c.h ? '' : '<div class="gap">No BAIO chapter page yet · study this one from NCERT</div>') +
+    '<div class="act"><a class="on" href="pyq.html#' + id + '">📝 ' + c.app + ' PYQs in app</a>' + page + '</div></article>';
+}
+function render(keep){
+  list = IDS.filter(id => !only || id.startsWith(only));
+  if(KEY[sortBy]){ const f = KEY[sortBy]; list.sort((a, b) => f(W.ch[b]) - f(W.ch[a]) || ord(a) - ord(b)); }
+  else list.sort((a, b) => ord(a) - ord(b));
+  $('#trk').innerHTML = list.map(card).join('');
+  cur = 0; if(keep){ const k = list.indexOf(keep); if(k >= 0) cur = k; }
+  go(cur, true);
+}
+const trk = $('#trk');
+function cards(){ return trk.querySelectorAll('.cc'); }
+function mark(i){ cur = i; $('#pos').textContent = (i + 1) + ' / ' + list.length; $('#prev').disabled = i <= 0; $('#next').disabled = i >= list.length - 1; }
+function go(i, instant){ const cs = cards(); if(!cs.length) return; i = Math.max(0, Math.min(cs.length - 1, i)); trk.scrollTo({left: cs[i].offsetLeft - trk.offsetLeft - 16, behavior: instant ? 'auto' : 'smooth'}); mark(i); }
+function nearest(){ const cs = cards(), L = trk.scrollLeft; let b = 0, d = Infinity; cs.forEach((c, k) => { const dd = Math.abs(c.offsetLeft - trk.offsetLeft - 16 - L); if(dd < d){ d = dd; b = k; } }); return b; }
+let st = null; trk.addEventListener('scroll', () => { clearTimeout(st); st = setTimeout(() => mark(nearest()), 90); }, {passive: true});
+$('#prev').addEventListener('click', () => go(cur - 1));
+$('#next').addEventListener('click', () => go(cur + 1));
+trk.addEventListener('keydown', e => { if(e.key === 'ArrowRight'){ go(cur + 1); e.preventDefault(); } if(e.key === 'ArrowLeft'){ go(cur - 1); e.preventDefault(); } });
+trk.tabIndex = 0;
+document.querySelectorAll('[data-s]').forEach(b => b.addEventListener('click', () => {
+  sortBy = b.dataset.s; document.querySelectorAll('[data-s]').forEach(x => x.setAttribute('aria-pressed', x === b)); render();
+}));
+document.querySelectorAll('[data-c]').forEach(b => b.addEventListener('click', () => {
+  only = b.dataset.c; document.querySelectorAll('[data-c]').forEach(x => x.setAttribute('aria-pressed', x === b)); render();
+}));
+
+function top(el, f){
+  $(el).innerHTML = IDS.slice().sort((a, b) => f(W.ch[b]) - f(W.ch[a]) || ord(a) - ord(b)).slice(0, 8)
+    .map(id => '<li><a href="#c-' + id + '" data-go="' + id + '">' + esc(W.ch[id].t) + '</a> <em>' + f(W.ch[id]) + '</em></li>').join('');
+}
+top('#topN', KEY.neet); top('#topK', KEY.kcet);
+$('#gaps').innerHTML = IDS.filter(id => !W.ch[id].h).sort((a, b) => ord(a) - ord(b))
+  .map(id => '<a href="pyq.html#' + id + '">' + W.ch[id].i + ' ' + esc(W.ch[id].t) + ' · ' + (W.ch[id].n[0] + W.ch[id].n[1]) + ' NEET</a>').join('');
+
+function focus(id){
+  if(!W.ch[id]) return false;
+  if(only && !id.startsWith(only)){ only = ''; document.querySelectorAll('[data-c]').forEach(x => x.setAttribute('aria-pressed', x.dataset.c === '')); render(id); }
+  const k = list.indexOf(id); if(k < 0) return false;
+  document.getElementById('chapters').scrollIntoView({behavior: 'smooth', block: 'start'});
+  setTimeout(() => go(k), 250);
+  return true;
+}
+document.addEventListener('click', e => { const a = e.target.closest('[data-go]'); if(a){ e.preventDefault(); focus(a.dataset.go); } });
+
+render();
+function fromHash(){
+  const h = decodeURIComponent(location.hash.slice(1)).replace(/^c-/, '');
+  if(h === 'chapters') document.getElementById('chapters').scrollIntoView();
+  else if(h) setTimeout(() => focus(h), 60);
+}
+fromHash(); window.addEventListener('hashchange', fromHash);
+})();
+</script>
+</body>
+</html>
