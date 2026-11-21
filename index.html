@@ -910,7 +910,7 @@ body{padding-bottom:96px;}
       <a class="bh-chip" href="pyq.html" id="bhPyqChip"><i style="background:#D9F7EE">📝</i><span>NEET &amp; KCET PYQs</span><em class="nw">NEW</em></a>
       <a class="bh-chip" href="diagram-mcq.html"><i style="background:#E3F7EE">🔬</i><span>Diagram MCQs</span></a>
       <a class="bh-chip" href="assistant.html"><i style="background:#EDE6FF">🦉</i><span>AI Assistant</span></a>
-      <a class="bh-chip" href="ncert-library.html#bio-exam-papers" id="bhQbChip"><i style="background:#FFF1C9">📚</i><span>PU Question Bank</span></a>
+      <a class="bh-chip" href="ncert-library.html#bio-exam-papers" id="bhQbChip" role="button" aria-haspopup="dialog" aria-controls="bhQbSheet"><i style="background:#FFF1C9">📚</i><span>PU Question Bank</span></a>
       <a class="bh-chip" href="ncert-library.html#bio-exam-papers"><i style="background:#E8F0FF">🧾</i><span>Model Papers</span></a>
       <a class="bh-chip" href="podcasts.html"><i style="background:#FFE3EF">🎧</i><span>Podcasts</span></a>
       <a class="bh-chip" href="important-cards.html"><i style="background:#FFF1D6">🃏</i><span>Quick Cards</span></a>
@@ -3771,9 +3771,41 @@ window.indexHardRefresh = indexHardRefresh;
     if(y){ if(/II|PU-?2|PUC-?2|2ND|12/.test(y)) c=2; else if(/I|PU-?1|PUC-?1|1ST|11/.test(y)) c=1; } }catch(e){} }
   a.href='neet-tricks.html#'+(c===1?'pu1-ch10':'pu2-ch5');   /* Cell Cycle (I PUC) · Molecular Basis of Inheritance (II PUC); Ch 4 has no free preview */
   var pd=document.getElementById('bhPodTry'); if(pd) pd.href='audio-podcasts.html#'+(c===1?'pu1-ch10':'pu2-ch4');
-  /* More tools: PU Question Bank opens the student's own class question bank (same PDFs as the Quick Actions dropdown) */
-  var qb=document.getElementById('bhQbChip');
-  if(qb && c){ qb.href=c===1?'https://dpue-pragathi.karnataka.gov.in/QP2526/Biology/36%20BIOLOGY%20I%20PUC.pdf':'exam-corner/pu-board-2026-27/biology-ii-puc-question-bank-2025-26.pdf'; qb.target='_blank'; qb.rel='noopener'; }
+}catch(e){}})();
+/* ---- More tools: PU Question Bank chip opens a small sheet with PU-I / PU-II (same PDFs as the Quick Actions dropdown) ---- */
+(function(){try{
+  var chip=document.getElementById('bhQbChip'); if(!chip) return;
+  var css=document.createElement('style');
+  css.textContent='#bhQbSheet{position:fixed;inset:0;z-index:9000;display:none;align-items:flex-end;justify-content:center;background:rgba(10,8,30,.45)}'
+   +'#bhQbSheet.on{display:flex}'
+   +'#bhQbSheet .sh{width:100%;max-width:480px;box-sizing:border-box;background:var(--bh-card,#fff);color:var(--bh-ink,#1E1B4B);border-radius:22px 22px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -10px 30px rgba(0,0,0,.25);font-family:Poppins,Inter,sans-serif;animation:bhQbUp .22s ease-out}'
+   +'@keyframes bhQbUp{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}'
+   +'#bhQbSheet .hd{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}'
+   +'#bhQbSheet .hd b{font-size:16px;font-weight:800}'
+   +'#bhQbSheet .hd button{border:0;background:transparent;color:inherit;font-size:22px;line-height:1;cursor:pointer;padding:4px 8px}'
+   +'#bhQbSheet a.op{display:flex;align-items:center;gap:12px;padding:13px 14px;margin-top:10px;border-radius:16px;border:1.5px solid var(--bh-line,rgba(91,46,224,.15));text-decoration:none;color:inherit}'
+   +'#bhQbSheet a.op i{font-style:normal;flex:none;width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:21px;background:#FFF1C9}'
+   +'#bhQbSheet a.op span{flex:1;min-width:0}'
+   +'#bhQbSheet a.op strong{display:block;font-size:14.5px;font-weight:800}'
+   +'#bhQbSheet a.op small{display:block;font-size:11.5px;opacity:.75;margin-top:2px}'
+   +'#bhQbSheet a.op em{font-style:normal;font-size:12px;font-weight:800;color:var(--bh-p1,#5B2EE0)}'
+   +'#bhQbSheet a.op.me{border-color:var(--bh-p1,#5B2EE0);background:rgba(124,77,255,.08)}';
+  document.head.appendChild(css);
+  var c=0;
+  try{ var z=JSON.parse(localStorage.getItem('baio_zone')||'{}'); if(z.cls===1||z.cls===2) c=z.cls; }catch(e){}
+  if(!c){ try{ var p=JSON.parse(localStorage.getItem('baio_student')||'null'), y=p&&String(p.year||'').toUpperCase().replace(/\s+/g,'');
+    if(y){ if(/II|PU-?2|PUC-?2|2ND|12/.test(y)) c=2; else if(/I|PU-?1|PUC-?1|1ST|11/.test(y)) c=1; } }catch(e){} }
+  var opts=[
+    {k:1,ic:'📘',t:'PU-I Question Bank',s:'I PUC Biology · official DPUE question bank',u:'https://dpue-pragathi.karnataka.gov.in/QP2526/Biology/36%20BIOLOGY%20I%20PUC.pdf'},
+    {k:2,ic:'📗',t:'PU-II Question Bank',s:'II PUC Biology · revised 2025-26 · all 13 chapters',u:'exam-corner/pu-board-2026-27/biology-ii-puc-question-bank-2025-26.pdf'}];
+  var sh=document.createElement('div'); sh.id='bhQbSheet'; sh.setAttribute('role','dialog'); sh.setAttribute('aria-modal','true'); sh.setAttribute('aria-labelledby','bhQbT');
+  sh.innerHTML='<div class="sh"><div class="hd"><b id="bhQbT">📚 PU Question Bank</b><button type="button" aria-label="Close">×</button></div>'
+    +opts.map(function(o){ return '<a class="op'+(o.k===c?' me':'')+'" id="bhQb'+o.k+'" href="'+o.u+'" target="_blank" rel="noopener"><i aria-hidden="true">'+o.ic+'</i><span><strong>'+o.t+'</strong><small>'+o.s+'</small></span><em>'+(o.k===c?'Your class →':'Open →')+'</em></a>'; }).join('')+'</div>';
+  document.body.appendChild(sh);
+  function close(){ sh.classList.remove('on'); chip.focus(); }
+  chip.addEventListener('click',function(e){ e.preventDefault(); sh.classList.add('on'); var f=document.getElementById('bhQb'+(c||1)); if(f) f.focus(); });
+  sh.addEventListener('click',function(e){ if(e.target===sh || e.target.closest('.hd button')) close(); else if(e.target.closest('a.op')) sh.classList.remove('on'); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape' && sh.classList.contains('on')) close(); });
 }catch(e){}})();
 </script>
 <script>
