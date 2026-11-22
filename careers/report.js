@@ -344,7 +344,8 @@
     if(b.dataset.goal){ if(me){ if(b.dataset.goal === 'eng') GOAL[me] = 'eng'; else delete GOAL[me]; try{ localStorage.setItem(GKEY, JSON.stringify(GOAL)); }catch(x){} } paint(); return; }
     if(b.dataset.go){ goFn(b.dataset.go); return; }
     if(b.dataset.tk){ me = b.dataset.tk; paint(); box.scrollIntoView({ block:'start' }); return; }
-    if(b.dataset.rp === 'tback'){ me = null; paint(); box.scrollIntoView({ block:'start' }); var i = document.getElementById('cpT'); if(i) i.focus({ preventScroll:true }); return; }
+    /* All students: clear the search so the full list shows (no keyboard popping up over it) */
+    if(b.dataset.rp === 'tback'){ me = null; tq = ''; paint(); box.scrollIntoView({ block:'start' }); return; }
     if(b.dataset.rp === 'tlock'){ TLIST = null; me = null; tq = ''; try{ localStorage.removeItem(TKEY); }catch(x){} paint(); return; }
     var a = b.dataset.rp;
     if(a === 'go'){
