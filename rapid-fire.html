@@ -689,14 +689,25 @@ $('shSave').addEventListener('click', function(){ if(!cardBlob) return; var a = 
 $('shWa').addEventListener('click', function(){ window.open('https://wa.me/?text=' + encodeURIComponent(shareText()), '_blank', 'noopener'); });
 
 /* boot: chapter from #pu2-ch4, else the last one played */
-fetch(BASE + 'index.json').then(function(r){ return r.json(); }).then(function(ix){
-  INDEX = ix.sort(function(a, b){ return a.id.slice(0, 3) === b.id.slice(0, 3) ? chNum(a.id) - chNum(b.id) : a.id < b.id ? -1 : 1; });
+/* chapter list: draw at once from the copy saved on this phone, then refresh it from the network quietly */
+var booted = false;
+function bootWith(ix){
+  INDEX = ix.slice().sort(function(a, b){ return a.id.slice(0, 3) === b.id.slice(0, 3) ? chNum(a.id) - chNum(b.id) : a.id < b.id ? -1 : 1; });
+  if(booted){ if($('setup').style.display !== 'none') renderChapters(); return; }
+  booted = true;
   var h = (location.hash || '').slice(1), last = store.get('rf_last', null), valid = function(v){ return !!v && (/^all-pu[12]$/.test(v) || INDEX.some(function(c){ return c.id === v; })); }, want = valid(h) ? h : (valid(last) ? last : null);
   if(want){ chSel = want; cls = want.replace('all-', '').slice(0, 3); }
   else { try{ var st = JSON.parse(localStorage.getItem('baio_student') || 'null'); if(st && /II|2/.test(st.year || '')) cls = 'pu2'; }catch(e){} }
   renderChapters(); paintMyStats();
   if(location.hash === '#progress') openDash();
-}).catch(function(){ $('chs').innerHTML = '<div class="empty">⚠️ Could not load the chapter list. Check your connection and reload.</div>'; });
+}
+var cachedIx = store.get('rf_index', null);
+if(Array.isArray(cachedIx) && cachedIx.length) bootWith(cachedIx);
+fetch(BASE + 'index.json').then(function(r){ return r.json(); }).then(function(ix){
+  var same = JSON.stringify(ix) === JSON.stringify(cachedIx);
+  store.set('rf_index', ix);
+  if(!booted || !same) bootWith(ix);
+}).catch(function(){ if(!booted) $('chs').innerHTML = '<div class="empty">⚠️ Could not load the chapter list. Check your connection and reload.</div>'; });
 })();
 </script>
 </body>

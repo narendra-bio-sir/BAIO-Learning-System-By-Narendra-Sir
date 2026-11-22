@@ -62,5 +62,8 @@
       document.getElementById('hsNavCh').addEventListener('click', function(){ var j = document.getElementById('chapterJumpBtn'); if(j) j.click(); else location.href = ROOT + 'index.html#catalogSections'; });
     }
   }
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build); else build();
+  /* show the page once it is complete: after build() and every other DOMContentLoaded handler, two frames later */
+  function reveal(){ requestAnimationFrame(function(){ requestAnimationFrame(function(){ document.documentElement.classList.remove('hs-wait'); }); }); }
+  function boot(){ try{ build(); }catch(e){} reveal(); }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
