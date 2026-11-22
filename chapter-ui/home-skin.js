@@ -52,6 +52,17 @@
       anchor.parentNode.insertBefore(w, anchor);
       w.addEventListener('click', function(e){ var b = e.target.closest('[data-hs]'); if(b) go(b.getAttribute('data-hs')); });
     }
+    /* greeting: a small pill inside the hero instead of a separate white bar; roll, section and year stay in Edit */
+    var gb = document.getElementById('studentGreetBar');
+    if(gb && gb.parentNode !== header){
+      header.appendChild(gb); gb.classList.add('hs-greet');
+      var trim = function(){
+        var w = document.createTreeWalker(gb, NodeFilter.SHOW_TEXT, null), t;
+        while((t = w.nextNode())){ if(/\(Roll/.test(t.data)) t.data = t.data.replace(/\s*\(Roll[^)]*\)?\s*/, ''); }
+      };
+      trim();
+      if(window.MutationObserver) new MutationObserver(trim).observe(gb, {childList: true, subtree: true, characterData: true});
+    }
     if(!document.querySelector('.hs-nav')){
       var n = document.createElement('nav'); n.className = 'hs-nav'; n.setAttribute('aria-label', 'BAIO');
       n.innerHTML = '<a href="' + ROOT + 'index.html"><em>🏠</em>Home</a>' +
