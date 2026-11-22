@@ -88,10 +88,10 @@ body{font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',system-ui,sans
 .frm{display:grid;gap:9px}
 .frm label{display:grid;gap:4px;font:700 12.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari';color:var(--dim)}
 .frm input{font:600 16px Inter;padding:11px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--panel2);color:var(--ink);text-transform:uppercase}
-.frm .pwrap{position:relative;display:block}
-.frm .pwrap input{width:100%;box-sizing:border-box;padding-right:50px}
-.frm input.mask{-webkit-text-security:disc;text-security:disc;letter-spacing:.12em}
-.frm .pw-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:38px;height:38px;border:0;border-radius:10px;background:transparent;font-size:18px;cursor:pointer;color:var(--ink)}
+/* hidden code: dots are blurred too, so nothing readable is on screen; clears when 'Show password' is ticked */
+.frm input#cpPass[type="password"]{color:transparent;text-shadow:0 0 7px var(--ink);caret-color:var(--ink);letter-spacing:.1em}
+.frm label.pw-show{display:flex;align-items:center;gap:8px;font-weight:600;color:var(--dim);margin-top:-3px;cursor:pointer}
+.frm label.pw-show input{width:18px;height:18px;padding:0;margin:0;accent-color:var(--teal);cursor:pointer}
 .rep .err{color:#D0544B;font-size:13.5px;margin:8px 0 0}
 .rhead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-top:6px}
 .rhead b{display:block;font:700 17px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari'}
@@ -167,7 +167,7 @@ ol.stp{margin:0;padding-left:20px;font-size:14.5px;line-height:1.55}ol.stp li{ma
 <script src="careers/data-more.js?v=1"></script>
 <script src="careers/data-skills.js?v=1"></script>
 <script src="careers/data-ele.js?v=1"></script>
-<script src="careers/report.js?v=10"></script>
+<script src="careers/report.js?v=12"></script>
 <script src="careers/share-card.js?v=2" defer></script>
 <script>
 (function(){
