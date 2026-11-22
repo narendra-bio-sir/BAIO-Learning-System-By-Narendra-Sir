@@ -167,3 +167,14 @@ html[data-theme="light"]{--navy:#F5F3FF; --navy2:#EFEBFF; --panel2:#F1EDFF; --go
 .qz-timer-badge, .timer-badge{white-space:nowrap !important; flex:none; display:inline-flex !important; align-items:center; gap:4px; line-height:1.2}
 .quiz-top-right{flex:none; margin-left:auto}
 .qz-fs-btn, .fs-btn{white-space:nowrap}
+
+/* tab pills: same height everywhere and the label centred. The tab row used to stretch every tab to the
+   tallest one (an emoji label), which left plain labels sitting at the top of the pill. */
+.tabbar, .tabbar-wrap .tabs, .tabbar-wrap{align-items:center !important}
+.tabbar .tab, .tab-btn{line-height:20px !important; padding-top:9px !important; padding-bottom:9px !important; vertical-align:middle}
+.tab-scroll-btn, .cat-dd-btn{align-self:center !important; line-height:20px !important}
+.tab-scroll-btn{display:inline-flex; align-items:center; justify-content:center}
+
+/* first paint: hidden until home-skin.js has built the page (class set in <head>, removed after DOMContentLoaded) */
+html.hs-wait .app, html.hs-wait .hs-nav{opacity:0 !important}
+.app{transition:opacity .18s ease-out}
