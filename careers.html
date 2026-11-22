@@ -88,6 +88,8 @@ body{font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',system-ui,sans
 .frm{display:grid;gap:9px}
 .frm label{display:grid;gap:4px;font:700 12.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari';color:var(--dim)}
 .frm input{font:600 16px Inter;padding:11px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--panel2);color:var(--ink);text-transform:uppercase}
+/* hidden code: dots are blurred too, so nothing readable is on screen; clears when 'Show password' is ticked */
+.frm input#cpPass[type="password"]{color:transparent;text-shadow:0 0 7px var(--ink);caret-color:var(--ink);letter-spacing:.1em}
 .frm label.pw-show{display:flex;align-items:center;gap:8px;font-weight:600;color:var(--dim);margin-top:-3px;cursor:pointer}
 .frm label.pw-show input{width:18px;height:18px;padding:0;margin:0;accent-color:var(--teal);cursor:pointer}
 .rep .err{color:#D0544B;font-size:13.5px;margin:8px 0 0}
