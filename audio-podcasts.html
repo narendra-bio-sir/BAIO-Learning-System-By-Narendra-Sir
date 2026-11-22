@@ -116,6 +116,8 @@ const POD = {"pu1-ch2":{"t":"Biological Classification","ch":"I PUC · Chapter 2
   "pu2-ch12":{"t":"Ecosystem","ch":"II PUC · Chapter 12","ic":"🌳","c":"#33691E","href":"pu2-ch12.html","base":"pu2-ch12-assets/","langs":["english","hindi","kannada","marathi","urdu"]},
   "pu2-ch13":{"t":"Biodiversity and Conservation","ch":"II PUC · Chapter 13","ic":"🦋","c":"#1B5E20","href":"pu2-ch13.html","base":"pu2-ch13-assets/","langs":["english","hindi","kannada","marathi","urdu"]}};
 const AUDIO_ROOT = 'https://narendra-bio-sir.github.io/baio-podcasts/';
+/* bump when an episode file is replaced, so phones fetch the new audio instead of a cached copy */
+const AUDIO_VER = {'pu2-ch4/english': 3};
 const LANG = {english:'English', kannada:'ಕನ್ನಡ', hindi:'हिंदी', marathi:'मराठी', urdu:'اردو'};
 const ORDER = ['english','kannada','hindi','marathi','urdu'];
 Object.values(POD).forEach(A => A.langs.sort((x, y) => ORDER.indexOf(x) - ORDER.indexOf(y)));
@@ -222,7 +224,7 @@ function wirePlayer(id, ok){
   const A = POD[id], au = $('#au'), tr = $('#tr');
   audio = au;
   const fmt = t => { t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); };
-  const setLang = l => { au.src = AUDIO_ROOT + A.base + 'podcast-' + l + '.mp3'; au.load(); $('#langs').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.l === l)); tr.className = 'tr'; tr.textContent = ok ? '' : 'Free preview: first 2:00'; };
+  const setLang = l => { au.src = AUDIO_ROOT + A.base + 'podcast-' + l + '.mp3' + (AUDIO_VER[id + '/' + l] ? '?v=' + AUDIO_VER[id + '/' + l] : ''); au.load(); $('#langs').querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.l === l)); tr.className = 'tr'; tr.textContent = ok ? '' : 'Free preview: first 2:00'; };
   $('#langs').onclick = e => { const b = e.target.closest('button'); if(b) setLang(b.dataset.l); };
   au.addEventListener('loadedmetadata', () => { if(ok) tr.textContent = 'Length ' + fmt(au.duration); else tr.textContent = 'Free preview: first 2:00 of ' + fmt(au.duration); });
   if(!ok){
