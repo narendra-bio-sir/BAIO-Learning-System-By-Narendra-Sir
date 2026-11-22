@@ -65,6 +65,21 @@
   }
   /* show the page once it is complete: after build() and every other DOMContentLoaded handler, two frames later */
   function reveal(){ requestAnimationFrame(function(){ requestAnimationFrame(function(){ document.documentElement.classList.remove('hs-wait'); }); }); }
-  function boot(){ try{ build(); }catch(e){} reveal(); }
+  /* The chapter scripts call window.scrollTo(top 0) after a topic pick (Study Mode dropdown, recommended
+     topic) or a tab switch. With the big hero and tiles on top, that threw students to the very top of the
+     page. After load, "scroll to top" now means "scroll to where the tab bar starts", and only if they are
+     below it, so the new content begins right under the tabs and nothing jumps up. */
+  var hsReady = false, nativeScrollTo = window.scrollTo.bind(window);
+  window.scrollTo = function(a, b){
+    var toTop = (a && typeof a === 'object') ? (Number(a.top || 0) === 0 && !a.left) : (Number(a) === 0 && Number(b || 0) === 0);
+    var q = hsReady && toTop && document.getElementById('hsQuick');
+    if(q){
+      var y = Math.max(0, Math.round(q.getBoundingClientRect().bottom + window.pageYOffset - 2));
+      if(window.pageYOffset <= y) return;
+      return nativeScrollTo({top: y, behavior: (a && typeof a === 'object' && a.behavior) || 'auto'});
+    }
+    return nativeScrollTo.apply(window, arguments);
+  };
+  function boot(){ try{ build(); }catch(e){} reveal(); setTimeout(function(){ hsReady = true; }, 600); }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
