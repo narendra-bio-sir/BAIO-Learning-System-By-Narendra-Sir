@@ -127,6 +127,21 @@ button{font-family:inherit;color:inherit}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .row2 .go{margin-top:12px;font-size:14px;padding:13px}
 .empty{color:var(--muted);font-size:13px;padding:8px 2px}
+.sh{position:fixed;inset:0;z-index:60;display:none;align-items:flex-end;justify-content:center;background:rgba(18,13,43,.6)}
+.sh.on{display:flex}
+.shc{width:100%;max-width:560px;max-height:94vh;overflow:auto;background:var(--bg);border-radius:26px 26px 0 0;padding:14px 16px 20px;box-shadow:0 -10px 30px rgba(0,0,0,.3)}
+.shh{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.shh b{font-size:16px;font-weight:800}
+.shh button{width:38px;height:38px;border-radius:12px;border:0;background:var(--card);box-shadow:0 4px 12px var(--sh);font-size:16px;cursor:pointer}
+.fmt{display:flex;gap:6px;margin:12px 0 10px;flex-wrap:wrap}
+.fmt button{border:1.5px solid var(--line);background:var(--card);border-radius:99px;padding:7px 13px;font-size:12.5px;font-weight:700;cursor:pointer;color:var(--ink)}
+.fmt button[aria-pressed="true"]{background:linear-gradient(135deg,#5B2EE0,#A47BFF);color:#fff;border-color:transparent}
+.shp{display:flex;justify-content:center;background:var(--card2);border-radius:18px;padding:10px;min-height:200px;align-items:center}
+.shp img{max-width:100%;max-height:52vh;border-radius:12px;box-shadow:0 8px 22px rgba(0,0,0,.25)}
+.sha{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.sha .go{margin-top:0;font-size:14px;padding:13px}
+.sha .go.full{grid-column:1/-1}
+.shn{font-size:11.5px;color:var(--muted);text-align:center;margin-top:10px}
 </style>
 </head>
 <body>
@@ -178,12 +193,21 @@ button{font-family:inherit;color:inherit}
     </div>
     <div class="cats"><b style="font-size:14px">By question type</b><div id="rCats"></div></div>
     <div class="row2"><button class="go" id="againBtn" type="button">⚡ Play again</button><button class="go alt" id="changeBtn" type="button">📚 Change chapter</button></div>
-    <button class="go alt" id="shareBtn" type="button">💬 Share score on WhatsApp</button>
+    <button class="go alt" id="shareBtn" type="button">📤 Share my score card</button>
     <div class="sec"><h2>Review missed questions</h2><span id="rMissN"></span></div>
     <div id="rReview"></div>
   </section>
 </div>
 <div class="count" id="count"><span id="countN">3</span></div>
+<div class="sh" id="sh" role="dialog" aria-modal="true" aria-label="Share your score card">
+  <div class="shc">
+    <div class="shh"><b>📤 Share your score card</b><button type="button" id="shX" aria-label="Close">✕</button></div>
+    <div class="fmt" role="group" aria-label="Size"><button type="button" data-f="post" aria-pressed="true">📱 Post 4:5</button><button type="button" data-f="story" aria-pressed="false">📲 Status 9:16</button><button type="button" data-f="square" aria-pressed="false">⬛ Square 1:1</button></div>
+    <div class="shp"><img id="shImg" alt="Your Rapid Fire score card"></div>
+    <div class="sha"><button class="go full" id="shGo" type="button">📤 Share picture</button><button class="go alt" id="shSave" type="button">⬇ Save picture</button><button class="go alt" id="shWa" type="button">💬 WhatsApp</button></div>
+    <div class="shn">Works for WhatsApp, Instagram, Facebook, Telegram and status. Post 4:5 fits most feeds.</div>
+  </div>
+</div>
 
 <script>
 (function(){
@@ -356,6 +380,7 @@ function finish(){
   $('rTitle').textContent = S.label;
   $('rScore').textContent = S.score;
   $('rBadge').textContent = isBest ? '🏆 New best score!' : acc >= 80 ? '🌟 Excellent speed!' : acc >= 50 ? '👍 Good, keep going' : '💪 Revise and try again';
+  S.res = {acc:acc, avg:avg, isBest:isBest, badge:$('rBadge').textContent, ty:tySel};
   $('rAcc').textContent = acc + '%'; $('rRight').textContent = S.right + '/' + n; $('rAvg').textContent = avg.toFixed(1) + ' s';
   var per = {};
   S.log.forEach(function(l){ var c = l.q[0]; per[c] = per[c] || {r:0, n:0}; per[c].n++; if(l.ok) per[c].r++; });
@@ -363,6 +388,7 @@ function finish(){
     var p = Math.round(per[c].r / per[c].n * 100);
     return '<div class="cr"><span>' + TYPES.filter(function(t){ return t.id === c; })[0].e + ' ' + CAT[c] + '</span><span class="tr"><i style="width:' + p + '%;background:' + CATC[c] + '"></i></span><em>' + per[c].r + '/' + per[c].n + '</em></div>';
   }).join('');
+  S.res.per = per;
   var miss = S.log.filter(function(l){ return !l.ok; });
   $('rMissN').textContent = miss.length ? miss.length + ' to revise' : 'none';
   var box = $('rReview'); box.innerHTML = '';
@@ -379,11 +405,107 @@ function finish(){
 }
 $('againBtn').addEventListener('click', start);
 $('changeBtn').addEventListener('click', function(){ S = null; show('setup'); renderChapters(); });
-$('shareBtn').addEventListener('click', function(){
-  if(!S) return;
-  var t = '⚡ I scored ' + S.score + ' points (' + S.right + '/' + S.log.length + ' correct) in BAIO Rapid Fire: ' + S.label + '. 10 seconds per question! Try it: ' + location.href.split('#')[0];
-  window.open('https://wa.me/?text=' + encodeURIComponent(t), '_blank', 'noopener');
+/* ---------- share: a score-card picture in the app's purple look (follows light / dark) ---------- */
+var FMT = {post:[1080, 1350], story:[1080, 1920], square:[1080, 1080]}, fmt = 'post', cardBlob = null, renderN = 0;
+var FONT = "'Poppins','Noto Color Emoji','Apple Color Emoji','Segoe UI Emoji',sans-serif";
+var LOGO = new Image(); LOGO.src = 'zone/baio-logo.png?v=2';
+function siteUrl(){ return location.href.split('#')[0].split('?')[0]; }
+function firstName(){
+  var n = '';
+  try{ var p = JSON.parse(localStorage.getItem('baio_student') || 'null'); if(p && p.name) n = String(p.name); }catch(e){}
+  if(!n){ try{ n = String(localStorage.getItem('baio_user_name') || ''); }catch(e){} }
+  n = n.replace(/\s+/g, ' ').trim().split(' ')[0] || '';
+  return n ? n.charAt(0).toUpperCase() + n.slice(1).toLowerCase() : '';
+}
+function rr(x, X, y, w, h, r){ x.beginPath(); x.moveTo(X + r, y); x.arcTo(X + w, y, X + w, y + h, r); x.arcTo(X + w, y + h, X, y + h, r); x.arcTo(X, y + h, X, y, r); x.arcTo(X, y, X + w, y, r); x.closePath(); }
+function fitText(x, t, max, size, weight){ var s = size; do{ x.font = weight + ' ' + s + 'px ' + FONT; s -= 2; }while(x.measureText(t).width > max && s > 14); return x.font; }
+function wrap(x, t, max){ var w = t.split(' '), out = [], line = ''; w.forEach(function(k){ var tt = line ? line + ' ' + k : k; if(x.measureText(tt).width > max && line){ out.push(line); line = k; } else line = tt; }); if(line) out.push(line); return out; }
+function drawCard(){
+  var W = FMT[fmt][0], H = FMT[fmt][1], dark = document.documentElement.getAttribute('data-theme') !== 'light';
+  var c = document.createElement('canvas'); c.width = W; c.height = H; var x = c.getContext('2d');
+  var bg = x.createLinearGradient(0, 0, W, H);
+  if(dark){ bg.addColorStop(0, '#120D2B'); bg.addColorStop(1, '#241A5C'); } else { bg.addColorStop(0, '#F5F3FF'); bg.addColorStop(1, '#E9E1FF'); }
+  x.fillStyle = bg; x.fillRect(0, 0, W, H);
+  [[W * .92, H * .06, 260, dark ? 'rgba(255,140,90,.20)' : 'rgba(255,150,100,.28)'], [W * .05, H * .55, 300, dark ? 'rgba(124,77,255,.28)' : 'rgba(164,123,255,.25)'], [W * .85, H * .95, 280, dark ? 'rgba(46,230,197,.14)' : 'rgba(127,220,166,.30)']].forEach(function(b){
+    var g = x.createRadialGradient(b[0], b[1], 0, b[0], b[1], b[2]); g.addColorStop(0, b[3]); g.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(0, 0, W, H); });
+  var ink = dark ? '#F1EEFF' : '#1E1B4B', mut = dark ? '#A9A3CF' : '#6B6890', card = dark ? '#1E1742' : '#FFFFFF', R = S.res || {};
+  var square = fmt === 'square', story = fmt === 'story';
+  var topH = 116, heroH = 600, typH = 296, footH = 140;
+  var blocks = square ? topH + heroH + footH : topH + heroH + typH + footH, ng = square ? 2 : 3;
+  var gap = Math.min(70, Math.max(22, (H - 100 - blocks) / ng)), y = Math.max(40, (H - blocks - gap * ng) / 2);
+  /* top: logo + brand + pill */
+  x.save(); rr(x, 60, y, 96, 96, 26); x.clip();
+  if(LOGO.complete && LOGO.naturalWidth){ x.drawImage(LOGO, 60, y, 96, 96); } else { x.fillStyle = '#14203A'; x.fillRect(60, y, 96, 96); x.fillStyle = '#D4AF37'; x.font = '800 56px ' + FONT; x.textAlign = 'center'; x.fillText('B', 108, y + 68); x.textAlign = 'left'; }
+  x.restore();
+  x.fillStyle = ink; x.font = '800 38px ' + FONT; x.fillText('BAIO Learning System', 178, y + 44);
+  x.fillStyle = mut; x.font = '500 26px ' + FONT; x.fillText('Biology by Narendra Sir', 178, y + 82);
+  x.font = '800 26px ' + FONT; var pt = '⚡ RAPID FIRE', pw = x.measureText(pt).width + 44;
+  rr(x, W - 60 - pw, y + 24, pw, 54, 27); x.fillStyle = '#FFC93C'; x.fill(); x.fillStyle = '#3A2600'; x.fillText(pt, W - 60 - pw + 22, y + 61);
+  y += topH + gap;
+  /* hero card */
+  var hx = 60, hw = W - 120;
+  x.save(); x.shadowColor = 'rgba(91,46,224,.45)'; x.shadowBlur = 50; x.shadowOffsetY = 18; rr(x, hx, y, hw, heroH, 48);
+  var hg = x.createLinearGradient(hx, y, hx + hw, y + heroH); hg.addColorStop(0, '#4A1FD1'); hg.addColorStop(.5, '#6E3BF0'); hg.addColorStop(1, '#9B6BFF'); x.fillStyle = hg; x.fill(); x.restore();
+  x.save(); rr(x, hx, y, hw, heroH, 48); x.clip(); var og = x.createRadialGradient(hx + hw * .85, y + 90, 0, hx + hw * .85, y + 90, 320); og.addColorStop(0, 'rgba(255,160,80,.55)'); og.addColorStop(1, 'rgba(255,160,80,0)'); x.fillStyle = og; x.fillRect(hx, y, hw, heroH); x.restore();
+  x.textAlign = 'center'; var cx = W / 2;
+  var cls = chSel && chSel.indexOf('pu2') >= 0 ? 'II PUC' : 'I PUC';
+  var sub = chSel && chSel.indexOf('all-') === 0 ? cls + ' · All chapters' : cls + ' · Chapter ' + chNum(chSel || 'x-ch0');
+  var tyName = (TYPES.filter(function(t){ return t.id === (R.ty || 'all'); })[0] || TYPES[0]).t;
+  x.fillStyle = 'rgba(255,255,255,.85)'; x.font = '600 26px ' + FONT; x.fillText(sub + ' · ' + tyName, cx, y + 64);
+  x.fillStyle = '#fff'; fitText(x, S.label, hw - 80, 44, '700'); x.fillText(S.label, cx, y + 118);
+  x.font = '800 190px ' + FONT; x.fillText(String(S.score), cx, y + 300);
+  x.font = '600 32px ' + FONT; x.fillStyle = 'rgba(255,255,255,.92)'; x.fillText('points', cx, y + 348);
+  var badge = R.badge || ''; x.font = '800 28px ' + FONT; var bw = x.measureText(badge).width + 56;
+  if(badge){ rr(x, cx - bw / 2, y + 372, bw, 56, 28); x.fillStyle = '#FFC93C'; x.fill(); x.fillStyle = '#3A2600'; x.fillText(badge, cx, y + 410); }
+  var stats = [[R.acc + '%', 'Accuracy'], [S.right + '/' + S.log.length, 'Correct'], [(R.avg || 0).toFixed(1) + ' s', 'Avg answer time']];
+  var tw = (hw - 80 - 32) / 3;
+  stats.forEach(function(st, k){ var tx = hx + 40 + k * (tw + 16), ty = y + heroH - 150; rr(x, tx, ty, tw, 116, 26); x.fillStyle = 'rgba(255,255,255,.17)'; x.fill();
+    x.fillStyle = '#fff'; x.font = '800 44px ' + FONT; x.fillText(st[0], tx + tw / 2, ty + 58); x.font = '500 22px ' + FONT; x.fillStyle = 'rgba(255,255,255,.9)'; x.fillText(st[1], tx + tw / 2, ty + 94); });
+  x.textAlign = 'left'; y += heroH + gap;
+  /* by type */
+  if(!square){
+    x.save(); x.shadowColor = dark ? 'rgba(0,0,0,.35)' : 'rgba(30,27,75,.10)'; x.shadowBlur = 30; x.shadowOffsetY = 10; rr(x, 60, y, W - 120, typH, 40); x.fillStyle = card; x.fill(); x.restore();
+    x.fillStyle = ink; x.font = '700 32px ' + FONT; x.fillText('By question type', 104, y + 64);
+    var rows = ['m', 'k', 's', 'b'].filter(function(k){ return R.per && R.per[k]; }), ry = y + 116, rh = rows.length > 3 ? 52 : 62;
+    rows.forEach(function(k){ var p = R.per[k], f = p.n ? p.r / p.n : 0, e = TYPES.filter(function(t){ return t.id === k; })[0].e;
+      x.fillStyle = ink; x.font = '600 28px ' + FONT; x.fillText(e + ' ' + CAT[k], 104, ry + 10);
+      var bx = 390, bw2 = W - 120 - 330 - 140; rr(x, bx, ry - 12, bw2, 22, 11); x.fillStyle = dark ? '#271F55' : '#F1EDFF'; x.fill();
+      if(f > 0){ rr(x, bx, ry - 12, Math.max(22, bw2 * f), 22, 11); x.fillStyle = CATC[k]; x.fill(); }
+      x.fillStyle = mut; x.font = '700 28px ' + FONT; x.textAlign = 'right'; x.fillText(p.r + '/' + p.n, W - 104, ry + 10); x.textAlign = 'left'; ry += rh; });
+    y += typH + gap;
+  }
+  /* footer */
+  x.textAlign = 'center'; var nm = firstName();
+  x.fillStyle = ink; x.font = '800 40px ' + FONT; x.fillText(nm ? nm + ' scored ' + S.score + '! Can you beat it? ⚡' : 'Can you beat my score? ⚡', cx, y + 40);
+  x.fillStyle = mut; x.font = '500 26px ' + FONT; x.fillText('Rapid Fire · 10 seconds a question · 20 questions · new set every round', cx, y + 82);
+  x.fillStyle = dark ? '#B39BFF' : '#5B2EE0'; x.font = '600 24px ' + FONT;
+  var u = siteUrl().replace(/^https?:\/\//, ''); fitText(x, u, W - 120, 24, '600'); x.fillText(u, cx, y + 120);
+  x.textAlign = 'left';
+  return c;
+}
+function renderCard(){
+  var my = ++renderN;
+  var go = function(){ if(my !== renderN) return; var c = drawCard(); c.toBlob(function(b){ if(my !== renderN) return; cardBlob = b; var img = $('shImg'); if(img.dataset.u) URL.revokeObjectURL(img.dataset.u); var u = URL.createObjectURL(b); img.dataset.u = u; img.src = u; }, 'image/png'); };
+  var waits = [];
+  try{ if(document.fonts && document.fonts.load){ waits.push(document.fonts.load('800 40px Poppins')); waits.push(document.fonts.load('600 26px Poppins')); } }catch(e){}
+  if(!(LOGO.complete && LOGO.naturalWidth)) waits.push(new Promise(function(res){ LOGO.onload = LOGO.onerror = res; setTimeout(res, 1500); }));
+  Promise.all(waits).then(go, go);
+}
+function shareText(){ return '⚡ I scored ' + S.score + ' points (' + S.right + '/' + S.log.length + ' correct) in BAIO Rapid Fire: ' + S.label + '. 10 seconds per question! Can you beat me? ' + siteUrl(); }
+$('shareBtn').addEventListener('click', function(){ if(!S || !S.res) return; $('sh').classList.add('on'); renderCard(); });
+$('shX').addEventListener('click', function(){ $('sh').classList.remove('on'); });
+$('sh').addEventListener('click', function(e){ if(e.target === $('sh')) $('sh').classList.remove('on'); });
+document.querySelector('.fmt').addEventListener('click', function(e){ var b = e.target.closest('[data-f]'); if(!b) return; fmt = b.getAttribute('data-f');
+  document.querySelectorAll('.fmt button').forEach(function(k){ k.setAttribute('aria-pressed', k === b ? 'true' : 'false'); }); renderCard(); });
+$('shGo').addEventListener('click', function(){
+  if(!cardBlob) return;
+  var file = new File([cardBlob], 'baio-rapid-fire-score.png', {type:'image/png'});
+  if(navigator.canShare && navigator.canShare({files:[file]})){ navigator.share({files:[file], title:'My BAIO Rapid Fire score', text:shareText()}).catch(function(){}); }
+  else if(navigator.share){ navigator.share({title:'My BAIO Rapid Fire score', text:shareText()}).catch(function(){}); }
+  else { $('shSave').click(); }
 });
+$('shSave').addEventListener('click', function(){ if(!cardBlob) return; var a = document.createElement('a'); a.href = URL.createObjectURL(cardBlob); a.download = 'baio-rapid-fire-score.png'; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1500); });
+$('shWa').addEventListener('click', function(){ window.open('https://wa.me/?text=' + encodeURIComponent(shareText()), '_blank', 'noopener'); });
 
 /* boot: chapter from #pu2-ch4, else the last one played */
 fetch(BASE + 'index.json').then(function(r){ return r.json(); }).then(function(ix){
