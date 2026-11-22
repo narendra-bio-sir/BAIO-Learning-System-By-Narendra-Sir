@@ -57,7 +57,7 @@ button{font-family:inherit;color:inherit}
 .ch.all small{color:rgba(255,255,255,.85)}
 .c0{background:linear-gradient(145deg,#FFE9A8,#FFD166)}.c1{background:linear-gradient(145deg,#FFD6EC,#F7A8D8)}.c2{background:linear-gradient(145deg,#C9F2D9,#7FDCA6)}
 .c3{background:linear-gradient(145deg,#E3D9FF,#B9A3FF)}.c4{background:linear-gradient(145deg,#D3E8FF,#8EC5FF)}.c5{background:linear-gradient(145deg,#FFE0CC,#FFAB7A)}
-.types{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.types{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
 @media(max-width:520px){.types{grid-template-columns:repeat(3,1fr)}}
 .ty{border:1.5px solid var(--line);background:var(--card);border-radius:16px;padding:10px 6px;cursor:pointer;text-align:center;box-shadow:0 4px 12px var(--sh)}
 .ty .e{font-size:22px;display:block}
@@ -107,8 +107,8 @@ button{font-family:inherit;color:inherit}
 #result{display:none}
 #dash{display:none}
 /* categorical colours for the 4 question types (validated: CVD-safe on light #fff and dark #1E1742) */
-:root{--c-m:#3987e5;--c-k:#d95926;--c-s:#199e70;--c-b:#c98500;--good:#3DDC97;--badc:#FF6B81}
-[data-theme="light"]{--c-m:#2a78d6;--c-k:#eb6834;--c-s:#1baf7a;--c-b:#eda100;--good:#0a7d0a;--badc:#c02d2d}
+:root{--c-m:#3987e5;--c-k:#d95926;--c-s:#199e70;--c-b:#c98500;--c-a:#d55181;--good:#3DDC97;--badc:#FF6B81}
+[data-theme="light"]{--c-m:#2a78d6;--c-k:#eb6834;--c-s:#1baf7a;--c-b:#eda100;--c-a:#e87ba4;--good:#0a7d0a;--badc:#c02d2d}
 .ibs{display:flex;gap:10px}
 .cmp{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 .cmp div{background:rgba(255,255,255,.16);border-radius:14px;padding:8px 6px;font-size:11.5px}
@@ -202,7 +202,7 @@ button{font-family:inherit;color:inherit}
       <span class="tag">⚡ New · Speed revision</span>
       <h1>Rapid Fire, 10 seconds a question</h1>
       <p>20 quick questions per round from any chapter. A new set every time you play.</p>
-      <div class="pills"><span class="y">⏱ 10 s each</span><span>🧠 Memory</span><span>💡 Knowledge</span><span>🛠️ Skill</span><span>📝 Board</span></div>
+      <div class="pills"><span class="y">⏱ 10 s each</span><span>🧠 Memory</span><span>💡 Knowledge</span><span>🛠️ Skill</span><span>🌍 Application</span><span>📝 Board</span></div>
       <span class="art" aria-hidden="true">⚡</span>
     </div>
 
@@ -274,9 +274,10 @@ var TYPES = [
   {id:'m', e:'🧠', t:'Memory', d:'Facts, names, terms'},
   {id:'k', e:'💡', t:'Knowledge', d:'Concepts & functions'},
   {id:'s', e:'🛠️', t:'Skill', d:'Apply, calculate, predict'},
+  {id:'a', e:'🌍', t:'Application', d:'Real-life situations'},
   {id:'b', e:'📝', t:'Board', d:'1-mark exam style'}
 ];
-var CAT = {m:'Memory', k:'Knowledge', s:'Skill', b:'Board'}, CATC = {m:'var(--c-m)', k:'var(--c-k)', s:'var(--c-s)', b:'var(--c-b)'};
+var CAT = {m:'Memory', k:'Knowledge', s:'Skill', a:'Application', b:'Board'}, CATC = {m:'var(--c-m)', k:'var(--c-k)', s:'var(--c-s)', a:'var(--c-a)', b:'var(--c-b)'};
 function catHex(k){ var v = getComputedStyle(document.documentElement).getPropertyValue('--c-' + k).trim(); return v || '#2a78d6'; }
 var store = {get:function(k,d){ try{ var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); }catch(e){ return d; } },
              set:function(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }};
@@ -297,7 +298,7 @@ paintTheme();
 function chNum(id){ return +id.split('-ch')[1]; }
 function chapters(){ return INDEX.filter(function(c){ return c.id.indexOf(cls + '-') === 0; }); }
 function selectedSet(){ return chSel === 'all-' + cls ? chapters() : INDEX.filter(function(c){ return c.id === chSel; }); }
-function countFor(list, t){ return list.reduce(function(s, c){ return s + (t === 'all' ? c.n : c[t]); }, 0); }
+function countFor(list, t){ return list.reduce(function(s, c){ return s + ((t === 'all' ? c.n : c[t]) || 0); }, 0); }
 
 function renderChapters(){
   var L = chapters(), h = '';
@@ -347,10 +348,10 @@ function pick(datas){
   shuffle(fresh);
   var out = [];
   if(tySel === 'all'){
-    var by = {m:[], k:[], s:[], b:[]};
+    var by = {m:[], k:[], s:[], a:[], b:[]};
     fresh.forEach(function(x){ (by[x.q[0]] || by.k).push(x); });
-    var order = ['m', 'k', 's', 'b'], i = 0;
-    while(out.length < ROUND && (by.m.length + by.k.length + by.s.length + by.b.length)){ var c = order[i++ % 4]; if(by[c].length) out.push(by[c].shift()); }
+    var order = ['m', 'k', 's', 'a', 'b'], i = 0;
+    while(out.length < ROUND && (by.m.length + by.k.length + by.s.length + by.a.length + by.b.length)){ var c = order[i++ % 5]; if(by[c].length) out.push(by[c].shift()); }
     shuffle(out);
   } else out = fresh.slice(0, ROUND);
   out.forEach(function(x){ seen.push(key(x.q)); });
@@ -441,7 +442,7 @@ function finish(){
   $('rAcc').textContent = acc + '%'; $('rRight').textContent = S.right + '/' + n; $('rAvg').textContent = avg.toFixed(1) + ' s';
   var per = {};
   S.log.forEach(function(l){ var c = l.q[0]; per[c] = per[c] || {r:0, n:0}; per[c].n++; if(l.ok) per[c].r++; });
-  $('rCats').innerHTML = ['m', 'k', 's', 'b'].filter(function(c){ return per[c]; }).map(function(c){
+  $('rCats').innerHTML = ['m', 'k', 's', 'a', 'b'].filter(function(c){ return per[c]; }).map(function(c){
     var p = Math.round(per[c].r / per[c].n * 100);
     return '<div class="cr"><span>' + TYPES.filter(function(t){ return t.id === c; })[0].e + ' ' + CAT[c] + '</span><span class="tr"><i style="width:' + p + '%;background:' + CATC[c] + '"></i></span><em>' + per[c].r + '/' + per[c].n + '</em></div>';
   }).join('');
@@ -549,9 +550,9 @@ function paintDash(){
   var T = H.slice(-30);
   o += '<div class="dcard"><h3>🎯 Accuracy, round by round</h3><div class="hint">Last ' + T.length + ' round' + (T.length > 1 ? 's' : '') + ' · tap a point for details</div><div class="chart" id="dTrend">' + trendSvg(T) + '</div></div>';
   /* by question type */
-  var ty = {m:[0, 0], k:[0, 0], s:[0, 0], b:[0, 0]};
+  var ty = {m:[0, 0], k:[0, 0], s:[0, 0], a:[0, 0], b:[0, 0]};
   H.forEach(function(h){ Object.keys(h.p || {}).forEach(function(c){ if(ty[c]){ ty[c][0] += h.p[c][0]; ty[c][1] += h.p[c][1]; } }); });
-  var tl = ['m', 'k', 's', 'b'].filter(function(c){ return ty[c][1]; }), tp = function(c){ return Math.round(ty[c][0] / ty[c][1] * 100); };
+  var tl = ['m', 'k', 's', 'a', 'b'].filter(function(c){ return ty[c][1]; }), tp = function(c){ return Math.round(ty[c][0] / ty[c][1] * 100); };
   if(tl.length){
     var srt = tl.slice().sort(function(a, b){ return tp(b) - tp(a); });
     o += '<div class="dcard"><h3>🧩 Which question type is my strength?</h3><div class="hint">' + (srt.length > 1 ? '💪 Strongest: <b>' + CAT[srt[0]] + '</b> · 🎯 Practise more: <b>' + CAT[srt[srt.length - 1]] + '</b>' : 'Accuracy by type') + '</div>' +
@@ -578,9 +579,9 @@ $('dBody').addEventListener('click', function(e){ var b = e.target.closest('[dat
 $('dPlay').addEventListener('click', function(){ S = null; show('setup'); renderChapters(); paintMyStats(); });
 $('dCsv').addEventListener('click', function(){
   var H = history(); if(!H.length) return;
-  var rows = [['Date', 'Time', 'Class', 'Chapter', 'Type', 'Score', 'Correct', 'Questions', 'Accuracy %', 'Avg answer s', 'Memory', 'Knowledge', 'Skill', 'Board']];
+  var rows = [['Date', 'Time', 'Class', 'Chapter', 'Type', 'Score', 'Correct', 'Questions', 'Accuracy %', 'Avg answer s', 'Memory', 'Knowledge', 'Skill', 'Application', 'Board']];
   H.forEach(function(h){ var d = new Date(h.t), pp = function(c){ return h.p && h.p[c] ? h.p[c][0] + '/' + h.p[c][1] : ''; };
-    rows.push([d.toLocaleDateString(), d.toLocaleTimeString(), clsOf(h.ch) === 'pu2' ? 'II PUC' : 'I PUC', chName(h.ch), h.ty === 'all' ? 'Mixed' : CAT[h.ty] || '', h.sc, h.r, h.n, h.acc, h.avg, pp('m'), pp('k'), pp('s'), pp('b')]); });
+    rows.push([d.toLocaleDateString(), d.toLocaleTimeString(), clsOf(h.ch) === 'pu2' ? 'II PUC' : 'I PUC', chName(h.ch), h.ty === 'all' ? 'Mixed' : CAT[h.ty] || '', h.sc, h.r, h.n, h.acc, h.avg, pp('m'), pp('k'), pp('s'), pp('a'), pp('b')]); });
   var csv = rows.map(function(r){ return r.map(function(v){ v = String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }).join(','); }).join('\n');
   var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + csv], {type:'text/csv'})); a.download = 'baio-rapid-fire-scores.csv'; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
 });
@@ -647,7 +648,7 @@ function drawCard(){
   if(!square){
     x.save(); x.shadowColor = dark ? 'rgba(0,0,0,.35)' : 'rgba(30,27,75,.10)'; x.shadowBlur = 30; x.shadowOffsetY = 10; rr(x, 60, y, W - 120, typH, 40); x.fillStyle = card; x.fill(); x.restore();
     x.fillStyle = ink; x.font = '700 32px ' + FONT; x.fillText('By question type', 104, y + 64);
-    var rows = ['m', 'k', 's', 'b'].filter(function(k){ return R.per && R.per[k]; }), ry = y + 116, rh = rows.length > 3 ? 52 : 62;
+    var rows = ['m', 'k', 's', 'a', 'b'].filter(function(k){ return R.per && R.per[k]; }), ry = y + 112, rh = rows.length > 4 ? 42 : rows.length > 3 ? 50 : 60;
     rows.forEach(function(k){ var p = R.per[k], f = p.n ? p.r / p.n : 0, e = TYPES.filter(function(t){ return t.id === k; })[0].e;
       x.fillStyle = ink; x.font = '600 28px ' + FONT; x.fillText(e + ' ' + CAT[k], 104, ry + 10);
       var bx = 390, bw2 = W - 120 - 330 - 140; rr(x, bx, ry - 12, bw2, 22, 11); x.fillStyle = dark ? '#271F55' : '#F1EDFF'; x.fill();
