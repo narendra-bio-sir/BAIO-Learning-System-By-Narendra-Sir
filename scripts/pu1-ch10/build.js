@@ -211,6 +211,10 @@ rep("const CN_RAZORPAY_LINK = 'https://rzp.io/rzp/PzZQP9K'; /* Biomolecules Colo
 rep("const RAZORPAY_PREMIUM_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=1999&cu=INR&tn=PU-I%20Ch%209%20Premium';", "const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/DRVyP7MF';");
 rep("const HW_RAZORPAY_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=100&cu=INR&tn=PU-I%20Ch%209%20Handwritten%20Notes';", "const HW_RAZORPAY_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=100&cu=INR&tn=PU-I%20Ch%2010%20Handwritten%20Notes';");
 
+/* the home-screen look is on Biomolecules only for now: keep it off the generated chapter */
+rep("\n<!-- home-screen look (chapter-ui/home-skin.*) -->\n<link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap\" rel=\"stylesheet\">\n<link rel=\"stylesheet\" href=\"chapter-ui/home-skin.css?v=1\">", '');
+rep("<script src=\"chapter-ui/home-skin.js?v=1\" data-icon=\"🧪\" data-ch=\"pu1-ch9\"></script>\n", '');
+
 /* Header, titles, jump list */
 rep('<title>Chapter 9: Biomolecules — PU-I Biology | Narendra Sir</title>', '<title>Chapter 10: Cell Cycle and Cell Division — PU-I Biology | Narendra Sir</title>');
 rep('<div class="chapter-title">Chapter 9: Biomolecules</div>', '<div class="chapter-title">Chapter 10: Cell Cycle and Cell Division</div>');

@@ -217,6 +217,10 @@ rep('Short Notes &amp; Tricks – Biomolecules', 'Short Notes &amp; Tricks – P
 rep('tricks.html#pu1-ch9', 'tricks.html#pu1-ch11', true);
 rep('10-page handwritten-style notes', (man.hwPages || 11) + '-page handwritten-style notes');
 
+/* the home-screen look is on Biomolecules only for now: keep it off the generated chapter */
+rep("\n<!-- home-screen look (chapter-ui/home-skin.*) -->\n<link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap\" rel=\"stylesheet\">\n<link rel=\"stylesheet\" href=\"chapter-ui/home-skin.css?v=1\">", '');
+rep("<script src=\"chapter-ui/home-skin.js?v=1\" data-icon=\"🧪\" data-ch=\"pu1-ch9\"></script>\n", '');
+
 /* Header, titles, jump list */
 rep('<title>Chapter 9: Biomolecules — PU-I Biology | Narendra Sir</title>', '<title>Chapter 11: Photosynthesis in Higher Plants — PU-I Biology | Narendra Sir</title>');
 rep('<div class="chapter-title">Chapter 9: Biomolecules</div>', '<div class="chapter-title">Chapter 11: Photosynthesis in Higher Plants</div>');
