@@ -6917,13 +6917,13 @@ const HW_MASTER_CODE = 'NS-MASTER-2027';
    This is a plain link (not a script widget), so it can never fail to "load" the way the
    old embedded button could -- it just opens Razorpay's secure payment page directly. */
 const HW_UNLOCK_PRICE_RUPEES = 100; // just for the on-screen label; the real price is set on the Razorpay link itself
-const RAZORPAY_PAYMENT_LINK = 'https://razorpay.me/@narendrabiosir?amount=ZFm4ghdmeB6pF5PK8Ki64w%3D%3D';
+const RAZORPAY_PAYMENT_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=100&cu=INR&tn=PU-II%20Ch%205%20Handwritten%20Notes';
 
 function hwInjectPaymentButton(){
   var container = document.getElementById('rzpButtonContainer');
   if(!container) return;
   if(RAZORPAY_PAYMENT_LINK.indexOf('YOUR_LINK_HERE') !== -1){
-    container.innerHTML = '<div style="font-size:11px; color:var(--text-dim);">Payment isn\u2019t set up yet \u2014 Narendra Sir needs to add his Razorpay payment link here.</div>';
+    container.innerHTML = '<div style="font-size:11px; color:var(--text-dim);">Payment isn\u2019t set up yet \u2014 Narendra Sir needs to set up payment here.</div>';
     return;
   }
   container.innerHTML = '<a href="' + RAZORPAY_PAYMENT_LINK + '" target="_blank" rel="noopener" class="btn" style="display:inline-block; text-decoration:none; background:linear-gradient(135deg,#0F8F7A,#0B6F5E); border:none; color:#fff;">\uD83D\uDCB3 Pay \u20B9' + HW_UNLOCK_PRICE_RUPEES + ' to Unlock</a>';
@@ -7012,9 +7012,9 @@ function unlockAllPu2Premium(method, extra){
 const PREMIUM_DEMO_DURATION_MS = 24 * 60 * 60 * 1000;
 const PREMIUM_PRICE_RUPEES = 3000;
 const PREMIUM_PRICE_ORIGINAL = 3000;
-const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/r269lMD';
+const RAZORPAY_PREMIUM_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=3000&cu=INR&tn=PU-II%20Ch%205%20Premium';
 const PU2_BUNDLE_PRICE_RUPEES = 33150;
-const PU2_BUNDLE_RAZORPAY_LINK = 'https://rzp.io/rzp/AEFNemg9';
+const PU2_BUNDLE_RAZORPAY_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=33150&cu=INR&tn=All%2013%20PU-II%20chapters%20Premium';
 const PREMIUM_UNLOCK_LOOKUP = {};
 const PREMIUM_LOCKED_TABS = ['mindmap', 'classppt', 'quiz', 'adv', 'kcet', 'writeit', 'papergen', 'boardimp', 'podcast'];
 const PREMIUM_TAB_LABELS = {mindmap:'Mind Map', classppt:'Class Presentation', revision:'Revision', quiz:'MCQ Quiz', adv:'NEET Practice', kcet:'KCET Practice', writeit:'Answer Practice', papergen:'Paper Generator', boardimp:'Board Important', podcast:'Audio Podcast'};
@@ -7222,7 +7222,7 @@ function premiumInjectPaymentButton(tabId){
   const container = document.getElementById('premRzpContainer' + suffix);
   if(!container) return;
   if(RAZORPAY_PREMIUM_LINK.indexOf('YOUR_PREMIUM_LINK_HERE') !== -1){
-    container.innerHTML = '<div style="font-size:11px; color:var(--text-dim);">Payment isn\u2019t set up yet \u2014 Narendra Sir needs to add his Razorpay premium payment link here.</div>';
+    container.innerHTML = '<div style="font-size:11px; color:var(--text-dim);">Payment isn\u2019t set up yet \u2014 Narendra Sir needs to set up payment here.</div>';
     return;
   }
   container.innerHTML = '<a href="' + RAZORPAY_PREMIUM_LINK + '" target="_blank" rel="noopener" class="btn" style="display:inline-block; text-decoration:none; background:linear-gradient(135deg,#0F8F7A,#0B6F5E); border:none; color:#fff;">\uD83D\uDCB3 Pay \u20B9' + PREMIUM_PRICE_RUPEES + ' to Unlock Premium</a>';
@@ -9878,5 +9878,6 @@ window.chapterHardRefresh = chapterHardRefresh;
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go(); })();
 </script>
 <script src="neet-tricks/nt-link.js?v=9" data-ch="pu2-ch5" defer></script>
+<script src="pay/upi.js?v=1"></script>
 </body>
 </html>

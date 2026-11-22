@@ -192,9 +192,8 @@ function drawLibrary(){
 /* ---------- ₹50 per chapter: download & share unlock ----------
    Codes come from ns-gen.html (content key FC-<CHAPTER ID>, e.g. FC-PU1-CH10), same formula as the chapter pages. */
 const FC_PRICE = 50;
-const FC_RAZORPAY_LINK = 'https://rzp.io/rzp/cfFaVLoE'; /* one ₹50 Razorpay link for every chapter's flash cards */
-const FC_RAZORPAY_LINKS = {'pu1-ch11':'https://rzp.io/rzp/hDpfP67'}; /* chapters with their own ₹50 link */
-function fcPayLink(){ return FC_RAZORPAY_LINKS[cid] || FC_RAZORPAY_LINK; }
+/* UPI pay link (opens the BAIO UPI sheet: QR, pay button, UPI ID) — ₹FC_PRICE for this chapter's flash cards */
+function fcPayLink(){ return 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=' + FC_PRICE + '&cu=INR&tn=' + encodeURIComponent('Flash cards' + (cid ? ' ' + String(cid).toUpperCase() : '')); }
 const FC_MASTER_CODE = 'NS-MASTER-2027';
 const FC_UNLOCK_KEY = 'baio_flashcards_unlock';
 const CODE_SALT = 'BAIO-STUDENT-LOCK-2026', CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -298,5 +297,6 @@ GZ.startLang();
 GZ.onLang(l=>needLang(l,()=>{ if(!$('#chapter').hidden&&cid){ const v=!$('#viewer').hidden?cur:null; openCh(cid,v); } else drawLibrary(); }));
 needLang(GZ.lang,()=>{ const [id,n]=location.hash.slice(1).split('/'); drawLibrary(); if(FC[id]) openCh(id,n?Math.max(0,+n-1):null); });
 </script>
+<script src="pay/upi.js?v=1"></script>
 </body>
 </html>

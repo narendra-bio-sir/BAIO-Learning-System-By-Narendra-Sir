@@ -4187,7 +4187,7 @@ const HW_UNLOCK_KEY = 'pu1ch11_hw_unlock';
 const HW_MASTER_CODE = 'NS-MASTER-2027';
 const HW_UNLOCK_LOOKUP = {};
 const HW_UNLOCK_PRICE_RUPEES = 100;
-const HW_RAZORPAY_LINK = 'https://rzp.io/rzp/xCJhowtA';
+const HW_RAZORPAY_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=100&cu=INR&tn=PU-I%20Ch%2011%20Handwritten%20Notes';
 function hwPaymentWaLink(){
   const msg = 'Hi Narendra Sir, here\'s my payment confirmation for Handwritten Notes unlock (Chapter 11: Photosynthesis in Higher Plants).\n\nAmount Paid: ₹'+HW_UNLOCK_PRICE_RUPEES+'\n\n(Attaching my payment screenshot below)';
   return 'https://wa.me/919008968389?text=' + encodeURIComponent(msg);
@@ -4253,7 +4253,7 @@ const COLOUR_NOTES_PAGES = 8;
 const CN_UNLOCK_KEY = 'pu1ch11_colour_notes_unlock';
 const CN_CONTENT_KEY = 'CH11-PU1-COLOURNOTES';
 const CN_PRICE_RUPEES = 100;
-const CN_RAZORPAY_LINK = 'https://rzp.io/rzp/xWUwnHU'; /* Photosynthesis Colour Notes ₹100 payment link */
+const CN_RAZORPAY_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=100&cu=INR&tn=PU-I%20Ch%2011%20Colour%20Notes'; /* Photosynthesis Colour Notes ₹100 payment link */
 function cnPageSrc(i){ return `pu1-ch11-assets/colour-notes/page-${String(i).padStart(2,'0')}.jpg?v=1`; }
 function cnStudent(){ try{ return JSON.parse(localStorage.getItem(STUDENT_KEY)||'null')||{}; }catch(e){ return {}; } }
 function cnGetUnlock(){ try{ return JSON.parse(localStorage.getItem(CN_UNLOCK_KEY)||'null'); }catch(e){ return null; } }
@@ -5207,7 +5207,7 @@ const PREMIUM_DEMO_DURATION_MS = 24 * 60 * 60 * 1000;
 const PREMIUM_UNLOCK_LOOKUP = {};
 const PREMIUM_PRICE_RUPEES = 1999;
 const PREMIUM_PRICE_ORIGINAL = 3000;
-const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/kFobyadb';
+const RAZORPAY_PREMIUM_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=1999&cu=INR&tn=PU-I%20Ch%2011%20Premium';
 const PREMIUM_LOCKED_TABS = ['mindmap','classppt','oneshot','mcq','neet','kcet','papergen','boardimp','podcast'];
 const PREMIUM_TAB_LABELS = {mindmap:'Mind Map', classppt:'Class Presentation', oneshot:'One-Shot Revision', mcq:'MCQ Quiz', neet:'NEET Practice', kcet:'KCET Practice', papergen:'Paper Generator', boardimp:'Board Important', podcast:'Audio Podcast'};
 /* Lock screen: list exactly the tabs that are premium-locked in this chapter */
@@ -5346,7 +5346,7 @@ function renderPremiumLock(tabId){
       <button class="start-btn" onclick="premiumSubmitUnlock()">Unlock with Code</button>
       <div style="text-align:center;font-size:11px;color:var(--ink-dim);margin:10px 0 4px;">&mdash; or pay ₹${PREMIUM_PRICE_RUPEES} for instant help getting a code &mdash;</div>
       ${paymentNotSetUp
-        ? `<div style="font-size:11px;color:var(--ink-dim);text-align:center;">Payment isn't set up yet &mdash; Narendra Sir needs to add his Chapter 11 Razorpay payment link here.</div>`
+        ? `<div style="font-size:11px;color:var(--ink-dim);text-align:center;">Payment isn't set up yet &mdash; Narendra Sir needs to set up Chapter 11 payment here.</div>`
         : `<a href="${RAZORPAY_PREMIUM_LINK}" target="_blank" rel="noopener" class="opt-btn" style="display:block;text-align:center;text-decoration:none;">💳 Pay ₹${PREMIUM_PRICE_RUPEES} to Unlock Premium</a>`}
       <div style="font-size:10.5px;color:var(--ink-dim);text-align:center;margin-top:6px;">After paying, send your payment confirmation with your section &amp; roll number to <a href="${premiumPaymentWaLink()}" target="_blank" rel="noopener" style="color:var(--teal);font-weight:700;text-decoration:none;">Narendra Sir on WhatsApp</a> &mdash; he'll send your unlock code right away.</div>
     </div>
@@ -6237,5 +6237,6 @@ window.shareAllSocial = shareAllSocial;
   renderBoardImportant=function(){ const r=_rbi.apply(this,arguments); if(window.QuickCard) QuickCard.mount(document.getElementById('content'), {id:'pu1-ch11', base:'', title:'Photosynthesis in Higher Plants', cls:'I PUC', ch:11}); return r; }; })();
 </script>
 <script src="neet-tricks/nt-link.js?v=9" data-ch="pu1-ch11" defer></script>
+<script src="pay/upi.js?v=1"></script>
 </body>
 </html>

@@ -4367,7 +4367,7 @@ const COLOUR_NOTES_PAGES = 12;
 const CN_UNLOCK_KEY = 'pu1ch9_colour_notes_unlock';
 const CN_CONTENT_KEY = 'CH9-PU1-COLOURNOTES';
 const CN_PRICE_RUPEES = 100;
-const CN_RAZORPAY_LINK = 'https://rzp.io/rzp/PzZQP9K'; /* Biomolecules Colour Notes ₹100 payment link */
+const CN_RAZORPAY_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=100&cu=INR&tn=PU-I%20Ch%209%20Colour%20Notes'; /* Biomolecules Colour Notes ₹100 payment link */
 function cnPageSrc(i){ return `pu1-ch9-assets/colour-notes/page-${String(i).padStart(2,'0')}.jpg?v=1`; }
 function cnStudent(){ try{ return JSON.parse(localStorage.getItem(STUDENT_KEY)||'null')||{}; }catch(e){ return {}; } }
 function cnGetUnlock(){ try{ return JSON.parse(localStorage.getItem(CN_UNLOCK_KEY)||'null'); }catch(e){ return null; } }
@@ -5460,7 +5460,7 @@ function renderPremiumLock(tabId){
       <button class="start-btn" onclick="premiumSubmitUnlock()">Unlock with Code</button>
       <div style="text-align:center;font-size:11px;color:var(--ink-dim);margin:10px 0 4px;">&mdash; or pay ₹${PREMIUM_PRICE_RUPEES} for instant help getting a code &mdash;</div>
       ${paymentNotSetUp
-        ? `<div style="font-size:11px;color:var(--ink-dim);text-align:center;">Payment isn't set up yet &mdash; Narendra Sir needs to add his Chapter 9 Razorpay payment link here.</div>`
+        ? `<div style="font-size:11px;color:var(--ink-dim);text-align:center;">Payment isn't set up yet &mdash; Narendra Sir needs to set up Chapter 9 payment here.</div>`
         : `<a href="${RAZORPAY_PREMIUM_LINK}" target="_blank" rel="noopener" class="opt-btn" style="display:block;text-align:center;text-decoration:none;">💳 Pay ₹${PREMIUM_PRICE_RUPEES} to Unlock Premium</a>`}
       <div style="font-size:10.5px;color:var(--ink-dim);text-align:center;margin-top:6px;">After paying, send your payment confirmation with your section &amp; roll number to <a href="${premiumPaymentWaLink()}" target="_blank" rel="noopener" style="color:var(--teal);font-weight:700;text-decoration:none;">Narendra Sir on WhatsApp</a> &mdash; he'll send your unlock code right away.</div>
     </div>
@@ -6351,5 +6351,6 @@ window.shareAllSocial = shareAllSocial;
   renderBoardImportant=function(){ const r=_rbi.apply(this,arguments); if(window.QuickCard) QuickCard.mount(document.getElementById('content'), {id:'pu1-ch9', base:'', title:'Biomolecules', cls:'I PUC', ch:9}); return r; }; })();
 </script>
 <script src="neet-tricks/nt-link.js?v=9" data-ch="pu1-ch9" defer></script>
+<script src="pay/upi.js?v=1"></script>
 </body>
 </html>

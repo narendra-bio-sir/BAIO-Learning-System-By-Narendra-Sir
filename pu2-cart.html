@@ -83,6 +83,9 @@ a.back-link{display:inline-block; margin-top:12px; font-size:12px; color:var(--t
   background:linear-gradient(135deg,#0F8F7A,#0B6F5E); color:#fff; white-space:nowrap;
 }
 .summary-bar button:disabled{opacity:0.4; cursor:not-allowed;}
+.summary-bar .sb-btns{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;}
+.summary-bar button.upi{background:linear-gradient(135deg,#D4AF37,#B8912A); color:#1B1300;}
+@media(max-width:420px){.summary-bar button{padding:10px 12px; font-size:12px;}}
 .footnote{font-size:10.5px; color:var(--ink-dim); text-align:center; margin-top:14px; line-height:1.6;}
 </style>
 </head>
@@ -91,7 +94,7 @@ a.back-link{display:inline-block; margin-top:12px; font-size:12px; color:var(--t
   <header>
     <div class="eyebrow">PU-II Biology &middot; Premium Content</div>
     <div class="brand">🛒 Build Your Own Bundle</div>
-    <div class="tag">Pick exactly the chapters you want — ₹3000 each, or select all 13 for the 15% bundle discount. Share your selection with Narendra Sir on WhatsApp and he'll send you a payment link for the total.</div>
+    <div class="tag">Pick exactly the chapters you want — ₹3000 each, or select all 13 for the 15% bundle discount. Pay the total by UPI, then share your selection and payment screenshot with Narendra Sir on WhatsApp.</div>
     <a href="index.html" class="back-link">&larr; Back to Home</a>
   </header>
 
@@ -109,7 +112,7 @@ a.back-link{display:inline-block; margin-top:12px; font-size:12px; color:var(--t
 
   <div id="chapterList"></div>
 
-  <div class="footnote">Payment isn't collected here &mdash; this just builds your order summary. After you share it, Narendra Sir will send a Razorpay link for the exact total, and issue your unlock code(s) once you've paid.</div>
+  <div class="footnote">Tap <b>Pay by UPI</b> to pay the exact total (scan the QR or pay from this phone), then <b>Share on WhatsApp</b> with your payment screenshot. Narendra Sir will send your unlock code(s) once he sees the payment.</div>
 </div>
 
 <div class="summary-bar">
@@ -117,7 +120,7 @@ a.back-link{display:inline-block; margin-top:12px; font-size:12px; color:var(--t
     <div class="count" id="summaryCount">0 chapters selected</div>
     <div class="price-line" id="summaryPrice">₹0</div>
   </div>
-  <button id="checkoutBtn" disabled>💬 Share on WhatsApp</button>
+  <div class="sb-btns"><button id="upiBtn" class="upi" disabled>📲 Pay by UPI</button><button id="checkoutBtn" disabled>💬 Share on WhatsApp</button></div>
 </div>
 
 <script>
@@ -173,9 +176,11 @@ function updateSummary(){
     countEl.textContent = '0 chapters selected';
     priceEl.textContent = '₹0';
     btn.disabled = true;
+    document.getElementById('upiBtn').disabled = true;
     return;
   }
   btn.disabled = false;
+  document.getElementById('upiBtn').disabled = false;
   if(count === CHAPTERS.length){
     countEl.textContent = 'All 13 chapters selected';
     priceEl.innerHTML = '<span class="strike">₹' + (PRICE_PER_CHAPTER * 13) + '</span>₹' + BUNDLE_PRICE + '<span class="badge">15% OFF</span>';
@@ -197,6 +202,15 @@ document.getElementById('selectAllBox').addEventListener('change', function(){
   updateSummary();
 });
 
+function cartTotal(){
+  var chosen = CHAPTERS.filter(function(ch){ return selected[ch.num]; });
+  return {n: chosen.length, total: chosen.length === CHAPTERS.length ? BUNDLE_PRICE : chosen.length * PRICE_PER_CHAPTER, nums: chosen.map(function(ch){ return ch.num; })};
+}
+document.getElementById('upiBtn').addEventListener('click', function(){
+  var t = cartTotal(); if(!t.n || !window.BAIO_UPI) return;
+  BAIO_UPI.open({amount: t.total, note: t.n === CHAPTERS.length ? 'All 13 PU-II chapters Premium' : 'PU-II Premium Ch ' + t.nums.join(', ')});
+});
+
 document.getElementById('checkoutBtn').addEventListener('click', function(){
   var chosenNums = CHAPTERS.filter(function(ch){ return selected[ch.num]; }).map(function(ch){ return ch.num; });
   if(chosenNums.length === 0) return;
@@ -213,7 +227,7 @@ document.getElementById('checkoutBtn').addEventListener('click', function(){
     + 'Name: ' + (name || '(please add my name)') + '\n'
     + 'Roll Number: ' + (roll || '(please add my roll number)') + '\n'
     + 'Section: ' + (section || '(please add my section)') + '\n\n'
-    + 'Could you please send me a payment link for this amount?';
+    + 'I am paying this amount by UPI and attaching my payment screenshot.';
   window.open('https://wa.me/919008968389?text=' + encodeURIComponent(msg), '_blank');
 });
 
@@ -230,5 +244,6 @@ document.getElementById('checkoutBtn').addEventListener('click', function(){
   updateSummary();
 })();
 </script>
+<script src="pay/upi.js?v=1"></script>
 </body>
 </html>
