@@ -36,6 +36,7 @@
     RENDERED = !document.querySelector('.tab-btn[data-tab]') && typeof window.switchTab === 'function';
     var app = document.querySelector('.app');
     if(app && parseFloat(getComputedStyle(app).paddingLeft) < 4) document.documentElement.classList.add('hs-pad');
+    if(RENDERED) document.documentElement.classList.add('hs-rendered');
     var tiles = [
       ['study', '📖', 'Study Notes', 'Topic by topic', 'hs-y'],
       [RENDERED ? 'mcq' : 'quiz', '📝', 'MCQ Quiz', 'Test yourself', 'hs-pk'],
