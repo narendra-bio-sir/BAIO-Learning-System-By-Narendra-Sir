@@ -297,11 +297,16 @@
     h += '<p class="note">'+u.note+'</p>';
     return h;
   }
+  /* Codes start hidden. A plain password box lets Android flash each typed letter, so where the browser can
+     draw dots itself (-webkit-text-security) the box is a text field masked from the first keystroke, with
+     keyboard suggestions off; elsewhere it stays a password box. 👁 shows or hides it. */
+  var MASK = !!(window.CSS && CSS.supports && CSS.supports('-webkit-text-security', 'disc'));
   function formHtml(lang, err){
     var u = T[lang] || T.en, roll = '';
     try{ var p = JSON.parse(localStorage.getItem('baio_student') || 'null'); if(p && p.roll && /^2[56]MPU\d{4}$/i.test(p.roll)) roll = p.roll.toUpperCase(); }catch(e){}
     return '<p class="sub">'+u.s+'</p><div class="frm"><label>'+u.roll+'<input id="cpRoll" autocomplete="username" placeholder="26MPU0001" value="'+roll+'" autocapitalize="characters"></label>'
-      + '<label>'+u.pass+'<input id="cpPass" type="password" autocomplete="current-password"></label>'
+      + '<label>'+u.pass+'<span class="pwrap"><input id="cpPass" '+(MASK ? 'type="text" class="mask" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false"' : 'type="password" autocomplete="current-password"')+'>'
+      + '<button type="button" class="pw-eye" data-rp="eye" aria-label="Show or hide" aria-pressed="false">👁</button></span></label>'
       + '<button type="button" class="btn" data-rp="go">'+(loading ? u.busy : u.go)+'</button></div>' + (err ? '<p class="err">'+err+'</p>' : '');
   }
   var lastErr = '', curLang = 'en', box = null, goFn = null, D = null;
@@ -331,6 +336,11 @@
     if(b.dataset.rp === 'tback'){ me = null; paint(); box.scrollIntoView({ block:'start' }); var i = document.getElementById('cpT'); if(i) i.focus({ preventScroll:true }); return; }
     if(b.dataset.rp === 'tlock'){ TLIST = null; me = null; tq = ''; try{ localStorage.removeItem(TKEY); }catch(x){} paint(); return; }
     var a = b.dataset.rp;
+    if(a === 'eye'){
+      var pi = document.getElementById('cpPass'); if(!pi) return;
+      var shown = MASK ? pi.classList.toggle('mask') === false : (pi.type = pi.type === 'password' ? 'text' : 'password') === 'text';
+      b.setAttribute('aria-pressed', shown ? 'true' : 'false'); b.textContent = shown ? '🙈' : '👁'; pi.focus({ preventScroll:true }); return;
+    }
     if(a === 'go'){
       var roll = (document.getElementById('cpRoll').value || '').trim().toUpperCase().replace(/\s+/g, '');
       var pw = (document.getElementById('cpPass').value || '').trim().toUpperCase();
