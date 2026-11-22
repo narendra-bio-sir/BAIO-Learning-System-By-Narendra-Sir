@@ -3982,7 +3982,7 @@ function premiumInjectPaymentButton(tabId){
   const container = document.getElementById('premRzpContainer' + suffix);
   if(!container) return;
   if(RAZORPAY_PREMIUM_LINK.indexOf('YOUR_PREMIUM_LINK_HERE') !== -1){
-    container.innerHTML = '<div style="font-size:11px; color:var(--text-dim);">Payment isn’t set up yet — Narendra Sir needs to add his Razorpay premium payment link here.</div>';
+    container.innerHTML = '<div style="font-size:11px; color:var(--text-dim);">Payment isn’t set up yet — Narendra Sir needs to set up payment here.</div>';
     return;
   }
   container.innerHTML = '<a href="' + RAZORPAY_PREMIUM_LINK + '" target="_blank" rel="noopener" class="btn" style="display:inline-block; text-decoration:none; background:linear-gradient(135deg,#0F8F7A,#0B6F5E); border:none; color:#fff;">💳 Pay ₹' + PREMIUM_PRICE_RUPEES + ' to Unlock Premium</a>';
@@ -4195,7 +4195,7 @@ function hwInjectPaymentButton(){
   var container = document.getElementById('rzpButtonContainer');
   if(!container) return;
   if(RAZORPAY_PAYMENT_LINK.indexOf('YOUR_LINK_HERE') !== -1){
-    container.innerHTML = '<div style="font-size:11px; color:var(--text-dim);">Payment isn’t set up yet — Narendra Sir needs to add his Razorpay payment link here.</div>';
+    container.innerHTML = '<div style="font-size:11px; color:var(--text-dim);">Payment isn’t set up yet — Narendra Sir needs to set up payment here.</div>';
     return;
   }
   container.innerHTML = '<a href="' + RAZORPAY_PAYMENT_LINK + '" target="_blank" rel="noopener" class="btn" style="display:inline-block; text-decoration:none; background:linear-gradient(135deg,#0F8F7A,#0B6F5E); border:none; color:#fff;">💳 Pay ₹' + HW_UNLOCK_PRICE_RUPEES + ' to Unlock</a>';
@@ -6207,5 +6207,6 @@ window.chapterHardRefresh = chapterHardRefresh;
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else go(); })();
 </script>
 <script src="neet-tricks/nt-link.js?v=9" data-ch="pu2-ch2" defer></script>
+<script src="pay/upi.js?v=1"></script>
 </body>
 </html>

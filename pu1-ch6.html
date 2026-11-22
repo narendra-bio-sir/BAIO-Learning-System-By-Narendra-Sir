@@ -3913,7 +3913,7 @@ function renderPremiumLock(tabId){
       <button class="start-btn" onclick="premiumSubmitUnlock()">Unlock with Code</button>
       <div style="text-align:center;font-size:11px;color:var(--ink-dim);margin:10px 0 4px;">&mdash; or pay ₹${PREMIUM_PRICE_RUPEES} for instant help getting a code &mdash;</div>
       ${paymentNotSetUp
-        ? `<div style="font-size:11px;color:var(--ink-dim);text-align:center;">Payment isn't set up yet &mdash; Narendra Sir needs to add his Chapter 6 Razorpay payment link here.</div>`
+        ? `<div style="font-size:11px;color:var(--ink-dim);text-align:center;">Payment isn't set up yet &mdash; Narendra Sir needs to set up Chapter 6 payment here.</div>`
         : `<a href="${RAZORPAY_PREMIUM_LINK}" target="_blank" rel="noopener" class="opt-btn" style="display:block;text-align:center;text-decoration:none;">💳 Pay ₹${PREMIUM_PRICE_RUPEES} to Unlock Premium</a>`}
       <div style="font-size:10.5px;color:var(--ink-dim);text-align:center;margin-top:6px;">After paying, send your payment confirmation with your section &amp; roll number to <a href="${premiumPaymentWaLink()}" target="_blank" rel="noopener" style="color:var(--teal);font-weight:700;text-decoration:none;">Narendra Sir on WhatsApp</a> &mdash; he'll send your unlock code right away.</div>
     </div>
@@ -4924,5 +4924,6 @@ window.shareAllSocial = shareAllSocial;
   renderBoardImportant=function(){ const r=_rbi.apply(this,arguments); if(window.QuickCard) QuickCard.mount(document.getElementById('content'), {id:'pu1-ch6', base:'', title:'Anatomy of Flowering Plants', cls:'I PUC', ch:6}); return r; }; })();
 </script>
 <script src="neet-tricks/nt-link.js?v=9" data-ch="pu1-ch6" defer></script>
+<script src="pay/upi.js?v=1"></script>
 </body>
 </html>

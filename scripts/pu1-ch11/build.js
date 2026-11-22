@@ -208,8 +208,8 @@ rep('draggable="false" width="1100" height="1450"', 'draggable="false" width="11
 /* Razorpay links for Ch11 */
 rep("const CN_RAZORPAY_LINK = 'https://rzp.io/rzp/PzZQP9K'; /* Biomolecules Colour Notes ₹100 payment link */",
     "const CN_RAZORPAY_LINK = 'https://rzp.io/rzp/xWUwnHU'; /* Photosynthesis Colour Notes ₹100 payment link */");
-rep("const RAZORPAY_PREMIUM_LINK = 'YOUR_CHAPTER9_PREMIUM_LINK_HERE';", "const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/kFobyadb';");
-rep("const HW_RAZORPAY_LINK = 'YOUR_CHAPTER9_HW_PREMIUM_LINK_HERE';", "const HW_RAZORPAY_LINK = 'https://rzp.io/rzp/xCJhowtA';");
+rep("const RAZORPAY_PREMIUM_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=1999&cu=INR&tn=PU-I%20Ch%209%20Premium';", "const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/kFobyadb';");
+rep("const HW_RAZORPAY_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=100&cu=INR&tn=PU-I%20Ch%209%20Handwritten%20Notes';", "const HW_RAZORPAY_LINK = 'https://rzp.io/rzp/xCJhowtA';");
 
 rep('All 8 topics, condensed', 'All ' + topics.length + ' topics, condensed');
 rep('12 full-colour pages', (man.cnPages || 8) + ' full-colour pages');

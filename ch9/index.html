@@ -2539,7 +2539,7 @@ function hwInjectPaymentButton(){
   const container = document.getElementById('rzpButtonContainer');
   if(!container) return;
   if(RAZORPAY_PAYMENT_LINK.indexOf('YOUR_LINK_HERE') !== -1){
-    container.innerHTML = '<div style="font-size:11px; color:var(--ink-dim);">Payment isn\u2019t set up yet \u2014 Narendra Sir needs to add his Razorpay payment link here.</div>';
+    container.innerHTML = '<div style="font-size:11px; color:var(--ink-dim);">Payment isn\u2019t set up yet \u2014 Narendra Sir needs to set up payment here.</div>';
     return;
   }
   container.innerHTML = '<a href="' + RAZORPAY_PAYMENT_LINK + '" target="_blank" rel="noopener" class="fc-btn primary" style="display:inline-block; text-decoration:none; background:linear-gradient(135deg,#0F8F7A,#0B6F5E); border:none; color:#fff;">\uD83D\uDCB3 Pay \u20B9' + HW_UNLOCK_PRICE_RUPEES + ' to Unlock</a>';
@@ -2779,7 +2779,7 @@ function premiumInjectPaymentButton(){
   const container = document.getElementById('premRzpContainer');
   if(!container) return;
   if(RAZORPAY_PREMIUM_LINK.indexOf('YOUR_PREMIUM_LINK_HERE') !== -1){
-    container.innerHTML = '<div style="font-size:11px; color:var(--ink-dim);">Payment isn\u2019t set up yet \u2014 Narendra Sir needs to add his Razorpay premium payment link here.</div>';
+    container.innerHTML = '<div style="font-size:11px; color:var(--ink-dim);">Payment isn\u2019t set up yet \u2014 Narendra Sir needs to set up payment here.</div>';
     return;
   }
   container.innerHTML = '<a href="' + RAZORPAY_PREMIUM_LINK + '" target="_blank" rel="noopener" class="fc-btn primary" style="display:inline-block; text-decoration:none; background:linear-gradient(135deg,#0F8F7A,#0B6F5E); border:none; color:#fff;">\uD83D\uDCB3 Pay \u20B9' + PREMIUM_PRICE_RUPEES + ' to Unlock Premium</a>';
@@ -6314,5 +6314,6 @@ async function shareAllSocial(){
 window.shareAllSocial = shareAllSocial;
 </script>
 <script src="../neet-tricks/nt-link.js?v=9" data-ch="pu2-ch9" defer></script>
+<script src="../pay/upi.js?v=1"></script>
 </body>
 </html>
