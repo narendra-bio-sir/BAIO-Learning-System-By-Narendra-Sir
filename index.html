@@ -709,6 +709,8 @@ body{background:var(--bh-bg);}
 .bh-pa .go{display:block;text-align:center;font-weight:800;font-size:13px;line-height:1.2;padding:10px 6px;border-radius:99px;white-space:nowrap;border:2px solid rgba(255,255,255,.85);color:#fff}
 .bh-pa .go.on{background:#FFC93C;border-color:#FFC93C;color:#3A2600;box-shadow:0 6px 14px rgba(0,0,0,.2)}
 @media(max-width:370px){.bh-pa b{font-size:16.5px}.bh-pa .go{font-size:12px}}
+.bh-pa.bh-mm{background:radial-gradient(circle at 90% 10%,rgba(255,214,120,.5),transparent 46%),linear-gradient(135deg,#123B7A,#1F5FB8 52%,#0F8F7A)}
+:root:not([data-theme="light"]) .bh-pa.bh-mm{background:radial-gradient(circle at 90% 10%,rgba(255,214,120,.2),transparent 46%),linear-gradient(135deg,#0B1F45,#123E7A 55%,#0B5E52);border:1px solid rgba(160,200,255,.25)}
 .bh-pd{position:relative;display:block;border-radius:24px;padding:16px 16px 14px;overflow:hidden;color:#fff;font-family:inherit;
  background:radial-gradient(circle at 92% 8%,rgba(255,180,120,.5),transparent 48%),linear-gradient(135deg,#3E1F47,#7B2D5E 55%,#D9572F)}
 .bh-pd a{text-decoration:none}
@@ -993,6 +995,7 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
     <div class="bh-sec"><h2>More tools</h2><a href="#bhTools">All 30+</a></div>
     <div class="bh-chips">
       <a class="bh-chip" href="store.html" id="bhStoreChip"><i style="background:#FFE0EC">🛍️</i><span>BAIO Store</span><em class="nw">NEW</em></a>
+      <a class="bh-chip" href="mind-maps.html" id="bhMmChip"><i style="background:#DDEBFF">🗺️</i><span>Mind Maps</span><em class="nw">NEW</em></a>
       <a class="bh-chip" href="rapid-fire.html" id="bhRfChip"><i style="background:#FFE3D3">⚡</i><span>Rapid Fire</span><em class="nw">NEW</em></a>
       <a class="bh-chip" href="activities.html" id="bhPaChip"><i style="background:#DDF5E8">🧪</i><span>Projects &amp; Activities</span><em class="nw">NEW</em></a>
       <a class="bh-chip" href="lecturers.html" id="bhLecChip"><i style="background:#E8F0FF">👩‍🏫</i><span>For Lecturers</span><em class="nw">NEW</em></a>
@@ -1014,7 +1017,7 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
     <a class="bh-daily" href="zone.html#daily"><div style="font-size:30px">🔥</div><div><b>Daily Bio Challenge</b><small>5 questions · 3 minutes</small></div><span class="pl">Play ▶</span></a>
     <div class="bh-promo" id="bhPromo" role="region" aria-roledescription="carousel" aria-label="BAIO premium trial, BAIO Store, books, chapter bundles, NEET Tricks, audio podcasts, PYQs, chapter weightage article, career guidance, fact of the day and daily plan">
      <div class="bh-promo-track" id="bhPromoTrack">
-    <div class="bh-st bh-slide" id="bhStore" role="group" aria-roledescription="slide" aria-label="1 of 15: BAIO Store">
+    <div class="bh-st bh-slide" id="bhStore" role="group" aria-roledescription="slide" aria-label="1 of 16: BAIO Store">
       <span class="deco" aria-hidden="true">🛍️</span>
       <span class="tag">🛍️ NEW · BAIO STORE</span>
       <b>Everything to score more, in one store</b>
@@ -1026,7 +1029,7 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
       <span class="btns"><a class="go on" href="store.html">🛍️ Open store</a><a class="go" href="store.html#deals">🔥 Bundles →</a></span>
       <small class="nt">Pay online or by UPI · unlock code on WhatsApp</small>
     </div>
-    <div class="bh-trial bh-slide" id="bhTrial" role="group" aria-roledescription="slide" aria-label="2 of 15: one-day free trial of premium content">
+    <div class="bh-trial bh-slide" id="bhTrial" role="group" aria-roledescription="slide" aria-label="2 of 16: one-day free trial of premium content">
       <span class="crown" aria-hidden="true">👑</span>
       <span class="tag" id="bhTrialTag">⏳ 1-DAY FREE TRIAL</span>
       <b id="bhTrialT">Try Premium free for 24 hours</b>
@@ -1039,7 +1042,7 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
       <span class="btns" id="bhTrialBtns"><button type="button" class="go on" id="bhTrialGo">🚀 Start my free trial</button></span>
       <small class="nt" id="bhTrialNote">One trial per phone · ends by itself after 24 hours · paid unlocks stay as they are</small>
     </div>
-    <div class="bh-rf bh-slide" id="bhRf" role="group" aria-roledescription="slide" aria-label="3 of 15: Rapid Fire quiz">
+    <div class="bh-rf bh-slide" id="bhRf" role="group" aria-roledescription="slide" aria-label="3 of 16: Rapid Fire quiz">
       <span class="deco" aria-hidden="true">⚡</span>
       <span class="tag">⚡ NEW · RAPID FIRE</span>
       <b>10 seconds a question. Ready?</b>
@@ -1051,7 +1054,7 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
       <span class="btns"><a class="go on" href="rapid-fire.html#all-pu1">⚡ I PUC</a><a class="go on" href="rapid-fire.html#all-pu2">⚡ II PUC</a></span>
       <small class="nt">Free for everyone · pick any chapter inside</small>
     </div>
-    <div class="bh-pa bh-slide" id="bhPa" role="group" aria-roledescription="slide" aria-label="4 of 15: Projects and Activities">
+    <div class="bh-pa bh-slide" id="bhPa" role="group" aria-roledescription="slide" aria-label="4 of 16: Projects and Activities">
       <span class="deco" aria-hidden="true">🧪</span>
       <span class="tag">🧪 NEW · PROJECTS &amp; ACTIVITIES</span>
       <b>Hands-on Biology projects for every chapter</b>
@@ -1063,7 +1066,19 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
       </ul>
       <span class="btns"><a class="go on" href="activities.html">🧪 Explore projects</a><a class="go" href="activities.html#pu1-ch8">🔬 Try one now</a></span>
     </div>
-    <div class="bh-book bh-slide" id="bhBook" role="group" aria-roledescription="slide" aria-label="5 of 15: Exam Scorer e-books">
+    <div class="bh-pa bh-mm bh-slide" id="bhMm" role="group" aria-roledescription="slide" aria-label="5 of 16: chapter mind maps">
+      <span class="deco" aria-hidden="true">🗺️</span>
+      <span class="tag">🗺️ NEW · MIND MAPS</span>
+      <b>The whole chapter on one HD page</b>
+      <span class="ty"><span>🔍 HD zoom</span><span>⬇ Save &amp; print</span><span>💸 ₹49 a chapter</span></span>
+      <ul class="bl">
+        <li>🗺️ 22 chapters · I PUC &amp; II PUC</li>
+        <li>🎁 Every chapter in one bundle: ₹599 (save 44%)</li>
+        <li>✍️ Made by Narendra Sir for quick revision</li>
+      </ul>
+      <span class="btns"><a class="go on" href="mind-maps.html">🗺️ See mind maps</a><a class="go" href="mind-maps.html#all">🎁 Bundle ₹599</a></span>
+    </div>
+    <div class="bh-book bh-slide" id="bhBook" role="group" aria-roledescription="slide" aria-label="6 of 16: Exam Scorer e-books">
       <a class="cvs" id="bhBookCvs" href="biology-prep-books.html" aria-label="I PUC and II PUC Biology Exam Scorer books">
         <img class="cv" id="bhBookCv1" src="prep-books-assets/pu1/cover.jpg" alt="I PUC Biology Exam Scorer cover" loading="lazy">
         <img class="cv" id="bhBookCv2" src="prep-books-assets/pu2/cover.jpg" alt="II PUC Biology Exam Scorer cover" loading="lazy">
@@ -1081,7 +1096,7 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
         <a class="go" id="bhBookGo2" href="biology-prep-books.html#pu2">📗 II PUC Book →</a>
       </span>
     </div>
-    <div class="bh-bundle bh-slide" id="bhBundle" role="group" aria-roledescription="slide" aria-label="6 of 15: all 13 PU-II chapters in one payment">
+    <div class="bh-bundle bh-slide" id="bhBundle" role="group" aria-roledescription="slide" aria-label="7 of 16: all 13 PU-II chapters in one payment">
       <span class="gift" aria-hidden="true">🎁</span>
       <span class="tag">🎓 II PUC · ONE PAYMENT</span>
       <b>Get All 13 PU-II Chapters</b>
@@ -1097,7 +1112,7 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
       </span>
       <small class="nt">One unlock code for every PU-II chapter · WhatsApp Narendra Sir after paying</small>
     </div>
-    <div class="bh-fc bh-slide" id="bhFc" role="group" aria-roledescription="slide" aria-label="7 of 15: Biology flash cards">
+    <div class="bh-fc bh-slide" id="bhFc" role="group" aria-roledescription="slide" aria-label="8 of 16: Biology flash cards">
       <a class="cvs" href="flashcards.html" aria-label="Biology flash cards">
         <img class="cd c1" src="flashcards/promo/card-1.jpg?v=2" alt="Flash card: Mendel's Laws" loading="lazy">
         <img class="cd c2" src="flashcards/promo/card-2.jpg?v=2" alt="Flash card: Beyond Mendel" loading="lazy">
@@ -1114,7 +1129,7 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
       <span class="btns"><a class="go on" href="flashcards.html">🃏 Get Flash Cards →</a></span>
       <small class="nt">Pick your chapter, then tap 🔒 Download &amp; share to unlock it</small>
     </div>
-    <div class="bh-nt bh-slide" id="bhNt" role="group" aria-roledescription="slide" aria-label="8 of 15: NEET Tricks and Tips for every chapter">
+    <div class="bh-nt bh-slide" id="bhNt" role="group" aria-roledescription="slide" aria-label="9 of 16: NEET Tricks and Tips for every chapter">
       <span class="deco" aria-hidden="true">🎯</span>
       <span class="tag">🎯 NEW · NEET TRICKS</span>
       <b>NEET Tricks &amp; Tips</b>
@@ -1127,7 +1142,7 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
       <span class="btns"><a class="go on" id="bhNtTry" href="neet-tricks.html#pu2-ch5">👀 Try free</a><a class="go" href="neet-tricks.html">🎯 All chapters →</a></span>
       <small class="nt">2 tricks + 3 questions free in every chapter · then ₹99 by UPI</small>
     </div>
-    <div class="bh-pd bh-slide" id="bhPod" role="group" aria-roledescription="slide" aria-label="9 of 15: chapter audio podcasts">
+    <div class="bh-pd bh-slide" id="bhPod" role="group" aria-roledescription="slide" aria-label="10 of 16: chapter audio podcasts">
       <span class="deco" aria-hidden="true">🎧</span>
       <span class="tag">🎧 NEW · AUDIO PODCASTS</span>
       <b>Listen to every chapter</b>
@@ -1140,7 +1155,7 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
       <span class="btns"><a class="go on" id="bhPodTry" href="audio-podcasts.html#pu2-ch4">🎧 Listen free</a><a class="go" href="audio-podcasts.html">All podcasts →</a></span>
       <small class="nt">First 2 minutes free in every chapter · then pay by UPI</small>
     </div>
-    <div class="bh-pq bh-slide" id="bhPyq" role="group" aria-roledescription="slide" aria-label="10 of 15: NEET and KCET previous year questions">
+    <div class="bh-pq bh-slide" id="bhPyq" role="group" aria-roledescription="slide" aria-label="11 of 16: NEET and KCET previous year questions">
       <span class="deco" aria-hidden="true">📝</span>
       <span class="tag">📝 NEW · NEET &amp; KCET PYQs</span>
       <b>NEET &amp; KCET Biology PYQs, chapter-wise</b>
@@ -1152,7 +1167,7 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
       <span class="row"><span class="pr">FREE</span><span class="sub">for every I PUC &amp; II PUC student</span></span>
       <span class="btns"><a class="go on" href="pyq.html">📚 By chapter</a><a class="go" href="pyq.html#p-n2016b">📅 NEET 2016 →</a></span>
     </div>
-    <div class="bh-wt bh-slide" id="bhWt" role="group" aria-roledescription="slide" aria-label="11 of 15: which chapters past papers asked most">
+    <div class="bh-wt bh-slide" id="bhWt" role="group" aria-roledescription="slide" aria-label="12 of 16: which chapters past papers asked most">
       <span class="deco" aria-hidden="true">📊</span>
       <span class="tag">📊 NEW · ARTICLE</span>
       <b>Which chapters get asked most?</b>
@@ -1167,7 +1182,7 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
       <span class="btns"><a class="go on" href="pyq-insights.html">📖 Read article</a><a class="go" href="pyq-insights.html#chapters">All 32 chapters →</a></span>
       <small class="nt">Questions per chapter in 15 past NEET, AIPMT, KCET &amp; COMEDK papers</small>
     </div>
-    <div class="bh-cg bh-slide" id="bhCareer" role="group" aria-roledescription="slide" aria-label="12 of 15: career guidance">
+    <div class="bh-cg bh-slide" id="bhCareer" role="group" aria-roledescription="slide" aria-label="13 of 16: career guidance">
       <span class="deco" aria-hidden="true">🎓</span>
       <span class="tag">🎓 CAREER GUIDANCE</span>
       <b>What after PU Science?</b>
@@ -1183,7 +1198,7 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
       </span>
       <small class="nt">For PCB, PCM &amp; PCME students · English, ಕನ್ನಡ, हिंदी</small>
     </div>
-    <div class="bh-ft bh-slide" id="bhFact" role="group" aria-roledescription="slide" aria-label="13 of 15: Bio fact of the day">
+    <div class="bh-ft bh-slide" id="bhFact" role="group" aria-roledescription="slide" aria-label="14 of 16: Bio fact of the day">
       <span class="tag">💡 BIO FACT OF THE DAY</span>
       <button type="button" class="nx" id="bhFactNext" aria-label="Show another fact">🔀 Another</button>
       <span class="bd"><span class="ic" id="bhFactIc" aria-hidden="true">🧬</span><span class="tx" id="bhFactT">About 99.9% of DNA bases are exactly the same in all humans.</span></span>
@@ -1193,7 +1208,7 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
         <a class="go" id="bhFactGo" href="zone.html#daily">📖 Open chapter</a>
       </span>
     </div>
-    <div class="bh-dp bh-slide" id="bhPlan" role="group" aria-roledescription="slide" aria-label="14 of 15: daily NEET plan">
+    <div class="bh-dp bh-slide" id="bhPlan" role="group" aria-roledescription="slide" aria-label="15 of 16: daily NEET plan">
       <span class="deco" aria-hidden="true">🚀</span>
       <span class="tag">🚀 DAILY NEET PLAN</span>
       <b>Your 3 steps every day</b>
@@ -1209,7 +1224,7 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
       </span>
       <small class="nt">About 65 minutes a day · Sunday: 50-question NEET mock</small>
     </div>
-    <div class="bh-dc bh-slide" id="bhChal" role="group" aria-roledescription="slide" aria-label="15 of 15: daily Biology challenge">
+    <div class="bh-dc bh-slide" id="bhChal" role="group" aria-roledescription="slide" aria-label="16 of 16: daily Biology challenge">
       <span class="deco" aria-hidden="true">🔥</span>
       <span class="tag">🔥 DAILY BIOLOGY CHALLENGE</span>
       <b id="bhChalT">Today's 5 questions</b>
@@ -1226,7 +1241,7 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
       <small class="nt" id="bhChalNote">Miss a day and the streak starts again from 1</small>
     </div>
      </div>
-     <div class="bh-promo-dots" id="bhPromoDots" role="tablist" aria-label="Choose a slide"><button type="button" role="tab" aria-label="BAIO Store" aria-selected="true"></button><button type="button" role="tab" aria-label="One-day free trial" aria-selected="false"></button><button type="button" role="tab" aria-label="Rapid Fire" aria-selected="false"></button><button type="button" role="tab" aria-label="Projects and Activities" aria-selected="false"></button><button type="button" role="tab" aria-label="Exam Scorer e-books" aria-selected="false"></button><button type="button" role="tab" aria-label="All 13 PU-II chapters" aria-selected="false"></button><button type="button" role="tab" aria-label="Biology flash cards" aria-selected="false"></button><button type="button" role="tab" aria-label="NEET Tricks" aria-selected="false"></button><button type="button" role="tab" aria-label="Chapter audio podcasts" aria-selected="false"></button><button type="button" role="tab" aria-label="NEET and KCET PYQs" aria-selected="false"></button><button type="button" role="tab" aria-label="Which chapters get asked most" aria-selected="false"></button><button type="button" role="tab" aria-label="Career guidance" aria-selected="false"></button><button type="button" role="tab" aria-label="Bio fact of the day" aria-selected="false"></button><button type="button" role="tab" aria-label="Daily NEET plan" aria-selected="false"></button><button type="button" role="tab" aria-label="Daily Biology challenge" aria-selected="false"></button></div>
+     <div class="bh-promo-dots" id="bhPromoDots" role="tablist" aria-label="Choose a slide"><button type="button" role="tab" aria-label="BAIO Store" aria-selected="true"></button><button type="button" role="tab" aria-label="One-day free trial" aria-selected="false"></button><button type="button" role="tab" aria-label="Rapid Fire" aria-selected="false"></button><button type="button" role="tab" aria-label="Projects and Activities" aria-selected="false"></button><button type="button" role="tab" aria-label="Chapter Mind Maps" aria-selected="false"></button><button type="button" role="tab" aria-label="Exam Scorer e-books" aria-selected="false"></button><button type="button" role="tab" aria-label="All 13 PU-II chapters" aria-selected="false"></button><button type="button" role="tab" aria-label="Biology flash cards" aria-selected="false"></button><button type="button" role="tab" aria-label="NEET Tricks" aria-selected="false"></button><button type="button" role="tab" aria-label="Chapter audio podcasts" aria-selected="false"></button><button type="button" role="tab" aria-label="NEET and KCET PYQs" aria-selected="false"></button><button type="button" role="tab" aria-label="Which chapters get asked most" aria-selected="false"></button><button type="button" role="tab" aria-label="Career guidance" aria-selected="false"></button><button type="button" role="tab" aria-label="Bio fact of the day" aria-selected="false"></button><button type="button" role="tab" aria-label="Daily NEET plan" aria-selected="false"></button><button type="button" role="tab" aria-label="Daily Biology challenge" aria-selected="false"></button></div>
     </div>
 
     <div class="bh-sec"><h2>My Classes</h2><a href="#catalogSections">View all</a></div>
@@ -1411,6 +1426,7 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
 
   <div class="quick-actions-row">
     <a href="store.html" class="quick-action-btn exam-corner-btn">🛍️ BAIO Store · Premium, e-books, notes <span class="qa-new">NEW</span></a>
+    <a href="mind-maps.html" class="quick-action-btn exam-corner-btn">🗺️ Chapter Mind Maps · ₹49 a chapter <span class="qa-new">NEW</span></a>
     <a href="rapid-fire.html" class="quick-action-btn exam-corner-btn">⚡ Rapid Fire · 10 seconds a question <span class="qa-new">NEW</span></a>
     <a href="activities.html" class="quick-action-btn exam-corner-btn">🧪 Projects &amp; Activities · every chapter <span class="qa-new">NEW</span></a>
     <a href="lecturers.html" class="quick-action-btn exam-corner-btn">👩‍🏫 For Lecturers · Teach with BAIO <span class="qa-new">NEW</span></a>
