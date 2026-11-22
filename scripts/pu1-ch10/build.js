@@ -208,7 +208,8 @@ rep("colour-notes/page-${String(i).padStart(2,'0')}.jpg?v=1`", "colour-notes/pag
 rep('draggable="false" width="1100" height="1450"', 'draggable="false" width="1100" height="1556"');
 rep("const CN_RAZORPAY_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=100&cu=INR&tn=PU-I%20Ch%209%20Colour%20Notes'; /* Biomolecules Colour Notes ₹100 payment link */",
     "const CN_RAZORPAY_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=100&cu=INR&tn=PU-I%20Ch%2010%20Colour%20Notes'; /* Cell Cycle Colour Notes ₹100 payment link */");
-rep("const RAZORPAY_PREMIUM_LINK = 'YOUR_CHAPTER9_PREMIUM_LINK_HERE';", "const RAZORPAY_PREMIUM_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=1999&cu=INR&tn=PU-I%20Ch%2010%20Premium';");
+rep("const RAZORPAY_PREMIUM_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=1999&cu=INR&tn=PU-I%20Ch%209%20Premium';", "const RAZORPAY_PREMIUM_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=1999&cu=INR&tn=PU-I%20Ch%2010%20Premium';");
+rep("const HW_RAZORPAY_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=100&cu=INR&tn=PU-I%20Ch%209%20Handwritten%20Notes';", "const HW_RAZORPAY_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=100&cu=INR&tn=PU-I%20Ch%2010%20Handwritten%20Notes';");
 
 /* Header, titles, jump list */
 rep('<title>Chapter 9: Biomolecules — PU-I Biology | Narendra Sir</title>', '<title>Chapter 10: Cell Cycle and Cell Division — PU-I Biology | Narendra Sir</title>');
