@@ -6,7 +6,7 @@
   var KEY = 'baio_career_me';
   var T = {
     en:{ h:'🎯 My personal career report', s:'Enter your roll number and report-card password to see where you stand in all your tests, which careers fit your results, and how BAIO can help.',
-      roll:'Roll number', pass:'Report-card password', go:'Show my report', busy:'Checking…', bad:'Roll number or password does not match. Use the same password as your report card. Forgot it? Ask Narendra Sir.',
+      roll:'Roll number', pass:'Report-card password', show:'Show password',  go:'Show my report', busy:'Checking…', bad:'Roll number or password does not match. Use the same password as your report card. Forgot it? Ask Narendra Sir.',
       nodata:'Your results could not be loaded. Please check your internet and try again.',
       hi:'Hi', puc:['','I PUC','II PUC'], out:'Not you? Sign out', print:'🖨️ Save as PDF', share:'📤 Share my report',
       stand:'📊 Where you stand', theory:'Board / theory tests', neet:'NEET mock tests', kpcb:'KCET (PCB) mock tests', kpcm:'KCET (PCM) mock tests', jee:'JEE mock tests',
@@ -20,7 +20,7 @@
       note:'This report is a guide based on your class tests so far, not a final prediction. Hard work in the coming months can change everything. Talk to Narendra Sir before you decide.',
       sub:{PHY:'Physics',CHE:'Chemistry',BIO:'Biology',MAT:'Maths',ELE:'Electronics'} },
     kn:{ h:'🎯 ನನ್ನ ವೈಯಕ್ತಿಕ ವೃತ್ತಿ ವರದಿ', s:'ಎಲ್ಲಾ ಪರೀಕ್ಷೆಗಳಲ್ಲಿ ನೀವು ಎಲ್ಲಿದ್ದೀರಿ, ಯಾವ ವೃತ್ತಿಗಳು ನಿಮ್ಮ ಫಲಿತಾಂಶಕ್ಕೆ ಹೊಂದುತ್ತವೆ ಮತ್ತು BAIO ಹೇಗೆ ಸಹಾಯ ಮಾಡುತ್ತದೆ ಎಂದು ನೋಡಲು ರೋಲ್ ಸಂಖ್ಯೆ ಮತ್ತು ರಿಪೋರ್ಟ್ ಕಾರ್ಡ್ ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ.',
-      roll:'ರೋಲ್ ಸಂಖ್ಯೆ', pass:'ರಿಪೋರ್ಟ್ ಕಾರ್ಡ್ ಪಾಸ್‌ವರ್ಡ್', go:'ನನ್ನ ವರದಿ ತೋರಿಸಿ', busy:'ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ…', bad:'ರೋಲ್ ಸಂಖ್ಯೆ ಅಥವಾ ಪಾಸ್‌ವರ್ಡ್ ಹೊಂದುತ್ತಿಲ್ಲ. ರಿಪೋರ್ಟ್ ಕಾರ್ಡ್‌ನ ಅದೇ ಪಾಸ್‌ವರ್ಡ್ ಬಳಸಿ. ಮರೆತಿದ್ದರೆ ನರೇಂದ್ರ ಸರ್ ಅವರನ್ನು ಕೇಳಿ.',
+      roll:'ರೋಲ್ ಸಂಖ್ಯೆ', pass:'ರಿಪೋರ್ಟ್ ಕಾರ್ಡ್ ಪಾಸ್‌ವರ್ಡ್', show:'ಪಾಸ್‌ವರ್ಡ್ ತೋರಿಸಿ',  go:'ನನ್ನ ವರದಿ ತೋರಿಸಿ', busy:'ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ…', bad:'ರೋಲ್ ಸಂಖ್ಯೆ ಅಥವಾ ಪಾಸ್‌ವರ್ಡ್ ಹೊಂದುತ್ತಿಲ್ಲ. ರಿಪೋರ್ಟ್ ಕಾರ್ಡ್‌ನ ಅದೇ ಪಾಸ್‌ವರ್ಡ್ ಬಳಸಿ. ಮರೆತಿದ್ದರೆ ನರೇಂದ್ರ ಸರ್ ಅವರನ್ನು ಕೇಳಿ.',
       nodata:'ಫಲಿತಾಂಶ ಲೋಡ್ ಆಗಲಿಲ್ಲ. ಇಂಟರ್ನೆಟ್ ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
       hi:'ನಮಸ್ಕಾರ', puc:['','ಪ್ರಥಮ ಪಿಯುಸಿ','ದ್ವಿತೀಯ ಪಿಯುಸಿ'], out:'ನೀವಲ್ಲವೇ? ಸೈನ್ ಔಟ್', print:'🖨️ PDF ಆಗಿ ಉಳಿಸಿ', share:'📤 ನನ್ನ ವರದಿ ಹಂಚಿಕೊಳ್ಳಿ',
       stand:'📊 ನೀವು ಎಲ್ಲಿದ್ದೀರಿ', theory:'ಬೋರ್ಡ್ / ಥಿಯರಿ ಪರೀಕ್ಷೆಗಳು', neet:'NEET ಮಾಕ್ ಟೆಸ್ಟ್‌ಗಳು', kpcb:'KCET (PCB) ಮಾಕ್ ಟೆಸ್ಟ್‌ಗಳು', kpcm:'KCET (PCM) ಮಾಕ್ ಟೆಸ್ಟ್‌ಗಳು', jee:'JEE ಮಾಕ್ ಟೆಸ್ಟ್‌ಗಳು',
@@ -34,7 +34,7 @@
       note:'ಈ ವರದಿ ಇದುವರೆಗಿನ ತರಗತಿ ಪರೀಕ್ಷೆಗಳ ಆಧಾರದ ಮಾರ್ಗದರ್ಶಿ, ಅಂತಿಮ ಭವಿಷ್ಯವಾಣಿ ಅಲ್ಲ. ಮುಂದಿನ ತಿಂಗಳುಗಳ ಶ್ರಮ ಎಲ್ಲವನ್ನೂ ಬದಲಾಯಿಸಬಹುದು. ನಿರ್ಧರಿಸುವ ಮೊದಲು ನರೇಂದ್ರ ಸರ್ ಜೊತೆ ಮಾತನಾಡಿ.',
       sub:{PHY:'ಭೌತಶಾಸ್ತ್ರ',CHE:'ರಸಾಯನಶಾಸ್ತ್ರ',BIO:'ಜೀವಶಾಸ್ತ್ರ',MAT:'ಗಣಿತ',ELE:'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್'} },
     hi:{ h:'🎯 मेरी पर्सनल करियर रिपोर्ट', s:'अपना रोल नंबर और रिपोर्ट कार्ड पासवर्ड डालें और देखें कि सभी टेस्ट में आप कहाँ हैं, कौन-से करियर आपके नतीजों के अनुसार सही हैं, और BAIO कैसे मदद करेगा।',
-      roll:'रोल नंबर', pass:'रिपोर्ट कार्ड पासवर्ड', go:'मेरी रिपोर्ट दिखाएँ', busy:'जाँच हो रही है…', bad:'रोल नंबर या पासवर्ड मेल नहीं खाता। रिपोर्ट कार्ड वाला ही पासवर्ड डालें। भूल गए? नरेंद्र सर से पूछें।',
+      roll:'रोल नंबर', pass:'रिपोर्ट कार्ड पासवर्ड', show:'पासवर्ड दिखाएँ',  go:'मेरी रिपोर्ट दिखाएँ', busy:'जाँच हो रही है…', bad:'रोल नंबर या पासवर्ड मेल नहीं खाता। रिपोर्ट कार्ड वाला ही पासवर्ड डालें। भूल गए? नरेंद्र सर से पूछें।',
       nodata:'नतीजे लोड नहीं हुए। इंटरनेट जाँचें और फिर कोशिश करें।',
       hi:'नमस्ते', puc:['','प्रथम पीयूसी','द्वितीय पीयूसी'], out:'आप नहीं? साइन आउट', print:'🖨️ PDF सेव करें', share:'📤 मेरी रिपोर्ट शेयर करें',
       stand:'📊 आप कहाँ हैं', theory:'बोर्ड / थ्योरी टेस्ट', neet:'NEET मॉक टेस्ट', kpcb:'KCET (PCB) मॉक टेस्ट', kpcm:'KCET (PCM) मॉक टेस्ट', jee:'JEE मॉक टेस्ट',
@@ -297,16 +297,27 @@
     h += '<p class="note">'+u.note+'</p>';
     return h;
   }
-  /* Codes start hidden. A plain password box lets Android flash each typed letter, so where the browser can
-     draw dots itself (-webkit-text-security) the box is a text field masked from the first keystroke, with
-     keyboard suggestions off; elsewhere it stays a password box. 👁 shows or hides it. */
-  var MASK = !!(window.CSS && CSS.supports && CSS.supports('-webkit-text-security', 'disc'));
+  /* The code never sits in the box as real letters: the box holds only dots and the code is kept in REAL.
+     Phones that briefly echo each typed character (Android 'show passwords') can then only ever echo a dot,
+     and as a password box keyboards give no suggestions. 'Show password' (off by default) shows the code. */
+  var REAL = '', DOT = '\u2022';
+  function onCode(el){
+    if(el.type === 'text'){ REAL = el.value; return; }
+    var v = el.value, ins = '', at = -1;
+    for(var k = 0; k < v.length; k++){ if(v[k] !== DOT){ if(at < 0) at = k; ins += v[k]; } }
+    var gone = REAL.length - (v.length - ins.length); if(gone < 0) gone = 0;
+    if(at < 0) at = Math.min(el.selectionStart || 0, REAL.length);
+    REAL = REAL.slice(0, at) + ins + REAL.slice(at + gone);
+    el.value = new Array(REAL.length + 1).join(DOT);
+    try{ el.setSelectionRange(at + ins.length, at + ins.length); }catch(x){}
+  }
   function formHtml(lang, err){
     var u = T[lang] || T.en, roll = '';
+    REAL = '';
     try{ var p = JSON.parse(localStorage.getItem('baio_student') || 'null'); if(p && p.roll && /^2[56]MPU\d{4}$/i.test(p.roll)) roll = p.roll.toUpperCase(); }catch(e){}
     return '<p class="sub">'+u.s+'</p><div class="frm"><label>'+u.roll+'<input id="cpRoll" autocomplete="username" placeholder="26MPU0001" value="'+roll+'" autocapitalize="characters"></label>'
-      + '<label>'+u.pass+'<span class="pwrap"><input id="cpPass" '+(MASK ? 'type="text" class="mask" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false"' : 'type="password" autocomplete="current-password"')+'>'
-      + '<button type="button" class="pw-eye" data-rp="eye" aria-label="Show or hide" aria-pressed="false">👁</button></span></label>'
+      + '<label>'+u.pass+'<input id="cpPass" type="password" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></label>'
+      + '<label class="pw-show"><input type="checkbox" id="cpShow"> '+u.show+'</label>'
       + '<button type="button" class="btn" data-rp="go">'+(loading ? u.busy : u.go)+'</button></div>' + (err ? '<p class="err">'+err+'</p>' : '');
   }
   var lastErr = '', curLang = 'en', box = null, goFn = null, D = null;
@@ -336,14 +347,9 @@
     if(b.dataset.rp === 'tback'){ me = null; paint(); box.scrollIntoView({ block:'start' }); var i = document.getElementById('cpT'); if(i) i.focus({ preventScroll:true }); return; }
     if(b.dataset.rp === 'tlock'){ TLIST = null; me = null; tq = ''; try{ localStorage.removeItem(TKEY); }catch(x){} paint(); return; }
     var a = b.dataset.rp;
-    if(a === 'eye'){
-      var pi = document.getElementById('cpPass'); if(!pi) return;
-      var shown = MASK ? pi.classList.toggle('mask') === false : (pi.type = pi.type === 'password' ? 'text' : 'password') === 'text';
-      b.setAttribute('aria-pressed', shown ? 'true' : 'false'); b.textContent = shown ? '🙈' : '👁'; pi.focus({ preventScroll:true }); return;
-    }
     if(a === 'go'){
       var roll = (document.getElementById('cpRoll').value || '').trim().toUpperCase().replace(/\s+/g, '');
-      var pw = (document.getElementById('cpPass').value || '').trim().toUpperCase();
+      var pw = REAL.trim().toUpperCase();
       if(!pw){ lastErr = T[curLang].bad; paint(); return; }
       loading = true; lastErr = ''; paint();
       loadData(function(ok){
@@ -380,6 +386,13 @@
       var first = !box; box = el; curLang = lang; goFn = go; D = data;
       if(first){
         box.addEventListener('click', onClick);
+        box.addEventListener('input', function(e){ if(e.target.id === 'cpPass') onCode(e.target); });
+        box.addEventListener('change', function(e){
+          if(e.target.id !== 'cpShow') return;
+          var pi = document.getElementById('cpPass'); if(!pi) return;
+          if(e.target.checked){ pi.type = 'text'; pi.value = REAL; }
+          else { pi.type = 'password'; pi.value = new Array(REAL.length + 1).join(DOT); }
+        });
         box.addEventListener('keydown', function(e){ if(e.key === 'Enter' && e.target.id === 'cpPass'){ var g = box.querySelector('[data-rp="go"]'); if(g) g.click(); } });
         box.addEventListener('input', function(e){ if(e.target.id === 'cpT'){ tq = e.target.value; var l = document.getElementById('cpTL'); if(l) l.innerHTML = teacherList(); } });
         var tcode = null; try{ tcode = localStorage.getItem(TKEY); }catch(x){}
