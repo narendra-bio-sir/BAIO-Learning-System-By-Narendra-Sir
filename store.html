@@ -4,93 +4,160 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0B1B14">
+<meta name="theme-color" content="#F5F3FF">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>BAIO Store | BAIO Learning System</title>
 <meta name="description" content="BAIO Store: Premium chapter content, Exam Scorer e-books, handwritten and colour notes PDFs, audio podcasts, flash cards and NEET Tricks for I PUC and II PUC Biology. Pay online or by UPI. By Narendra Sir.">
+<script>
+(function(){ try{ var t = localStorage.getItem('baio_theme') || 'light'; if(t === 'light'){ document.documentElement.setAttribute('data-theme', 'light'); } else { var m = document.querySelector('meta[name="theme-color"]'); if(m) m.setAttribute('content', '#120D2B'); } }catch(e){ document.documentElement.setAttribute('data-theme', 'light'); } })();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="games/game.css?v=1">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-body{font-family:Inter,sans-serif}
-.lang-switcher{display:none}
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
-.steps div{padding:10px;border-radius:14px;background:var(--panel);border:1px solid var(--line);font-size:11.5px;line-height:1.4;color:var(--ink-dim);text-align:center}
-.steps b{display:block;font-size:20px;margin-bottom:2px}
-.steps strong{color:var(--ink)}
-.sbar{position:sticky;top:51px;z-index:20;background:var(--navy);padding:10px 0 8px;margin:6px -16px 0;padding-left:16px;padding-right:16px;border-bottom:1px solid var(--line)}
-.cats{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+:root{--bg:#120D2B;--ink:#F1EEFF;--muted:#A9A3CF;--card:#1E1742;--card2:#271F55;--line:rgba(124,77,255,.22);--p1:#7C4DFF;--p3:#B39BFF;--sh:rgba(0,0,0,.35);--ok:#3DDC97}
+[data-theme="light"]{--bg:#F5F3FF;--ink:#1E1B4B;--muted:#6B6890;--card:#FFFFFF;--card2:#F1EDFF;--line:rgba(91,46,224,.12);--p1:#5B2EE0;--p3:#A47BFF;--sh:rgba(30,27,75,.09);--ok:#16A36B}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Poppins','Inter',-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 110px}
+/* top bar */
+.top{display:flex;align-items:center;justify-content:space-between;padding:16px 0 4px}
+.top .t{display:flex;align-items:center;gap:10px}
+.top .t small{display:block;font-size:12px;color:var(--muted);font-weight:500}
+.top .t b{font-size:19px;font-weight:700}
+.ib{width:42px;height:42px;border-radius:14px;background:var(--card);display:grid;place-items:center;box-shadow:0 4px 14px var(--sh);font-size:18px;border:0;cursor:pointer;color:var(--ink)}
+.ibs{display:flex;gap:10px}
+/* hero */
+.hero{margin-top:12px;border-radius:26px;padding:22px 20px 20px;color:#fff;position:relative;overflow:hidden;min-height:190px;
+ background:radial-gradient(circle at 85% 30%,rgba(255,120,200,.55),transparent 45%),linear-gradient(135deg,#4A1FD1 0%,#6E3BF0 50%,#9B6BFF 100%);box-shadow:0 18px 36px rgba(91,46,224,.35)}
+.hero .tag{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.18);padding:4px 10px;border-radius:99px}
+.hero h1{font-size:26px;line-height:1.1;font-weight:800;margin:10px 0 0;max-width:64%}
+.hero p{font-size:12px;opacity:.9;margin:6px 0 0;max-width:60%;line-height:1.5}
+.hero .pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;position:relative;z-index:1}
+.hero .pills span{font-size:11px;font-weight:700;padding:5px 10px;border-radius:99px;background:rgba(255,255,255,.2)}
+.hero .pills span.y{background:#FFC93C;color:#3A2600}
+.hero .art{position:absolute;right:-6px;top:26px;font-size:96px;line-height:1;filter:drop-shadow(0 12px 18px rgba(40,0,90,.45));animation:float 6s ease-in-out infinite}
+.hero .art i{position:absolute;font-style:normal;font-size:30px}
+.hero .art i.a{left:-18px;top:-10px}.hero .art i.b{right:22px;top:76px}.hero .art i.c{left:-26px;top:70px;font-size:24px}
+@keyframes float{50%{transform:translateY(-6px) rotate(4deg)}}
+@media(prefers-reduced-motion:reduce){.hero .art{animation:none}}
+/* section heads */
+.sec{display:flex;flex-wrap:wrap;gap:2px 10px;justify-content:space-between;align-items:baseline;padding:22px 2px 10px}
+.sec h2{font-size:17px;font-weight:700;margin:0}
+.sec span{font-size:12px;color:var(--muted);font-weight:500}
+/* category tiles */
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tile{border:0;text-align:left;cursor:pointer;border-radius:20px;padding:12px 11px 11px;position:relative;overflow:hidden;min-height:112px;box-shadow:0 8px 20px var(--sh);color:#1E1B4B;font-family:inherit}
+.tile .ic{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;font-size:22px;background:rgba(255,255,255,.75)}
+.tile b{display:block;font-size:13.5px;font-weight:700;margin-top:9px;line-height:1.2}
+.tile small{display:block;font-size:10.5px;color:rgba(30,27,75,.7);margin-top:1px}
+.tile:after{content:'';position:absolute;right:-22px;bottom:-22px;width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,.35)}
+.tile[aria-pressed="true"]{outline:3px solid var(--p1);outline-offset:2px}
+.g-prem{background:linear-gradient(145deg,#FFE9A8,#FFD166)}.g-book{background:linear-gradient(145deg,#FFD6EC,#F7A8D8)}
+.g-pdf{background:linear-gradient(145deg,#C9F2D9,#7FDCA6)}.g-pod{background:linear-gradient(145deg,#E3D9FF,#B9A3FF)}
+.g-fc{background:linear-gradient(145deg,#D3E8FF,#8EC5FF)}.g-nt{background:linear-gradient(145deg,#FFE0CC,#FFAB7A)}
+.g-all{background:linear-gradient(145deg,#F0E9FF,#D9C9FF)}
+/* how it works */
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.how div{border-radius:18px;padding:12px 8px;text-align:center;background:var(--card);box-shadow:0 6px 16px var(--sh);font-size:11px;line-height:1.4;color:var(--muted)}
+.how b{display:grid;place-items:center;width:38px;height:38px;margin:0 auto 6px;border-radius:13px;font-size:19px}
+.how strong{display:block;color:var(--ink);font-size:12.5px}
+/* sticky filter bar */
+.fbar{position:sticky;top:0;z-index:30;background:var(--bg);margin:14px -16px 0;padding:10px 16px 8px;box-shadow:0 6px 12px -10px var(--sh)}
+.cats{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
 .cats::-webkit-scrollbar{display:none}
-.cats button,.cls button{flex:none;font:700 12.5px Inter,sans-serif;padding:7px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;white-space:nowrap}
-.cats button[aria-pressed="true"],.cls button[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#1B1300}
-.cls{display:flex;gap:6px;margin-top:7px}
-.cls button{padding:5px 11px;font-size:11.5px}
-h2.sec{font:700 18px/1.25 'Space Grotesk',sans-serif;margin:22px 0 2px;display:flex;align-items:center;gap:8px}
-.sec-sub{font-size:12.5px;color:var(--ink-dim);margin:2px 0 10px;line-height:1.5}
-.deals{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:2px 16px 8px;scrollbar-width:none}
+.cats button,.cls button{flex:none;font-weight:600;font-size:12.5px;padding:8px 13px;border-radius:99px;border:0;background:var(--card);color:var(--ink);cursor:pointer;white-space:nowrap;box-shadow:0 3px 10px var(--sh)}
+.cats button[aria-pressed="true"],.cls button[aria-pressed="true"]{background:linear-gradient(135deg,#5B2EE0,#A47BFF);color:#fff}
+.cls{display:flex;gap:6px;margin-top:8px}
+.cls button{padding:5px 12px;font-size:11.5px}
+/* deals */
+.deals{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:2px 16px 12px;scrollbar-width:none}
 .deals::-webkit-scrollbar{display:none}
-.deal{flex:0 0 min(78%,290px);scroll-snap-align:start;border-radius:18px;padding:14px;color:#fff;position:relative;overflow:hidden;display:flex;flex-direction:column;gap:6px}
-.deal .ic{position:absolute;right:10px;top:8px;font-size:38px;opacity:.9}
-.deal .tg{align-self:flex-start;font-size:10px;font-weight:800;letter-spacing:.07em;padding:3px 8px;border-radius:99px;background:rgba(255,255,255,.22)}
-.deal b{font:800 17px/1.2 'Space Grotesk',sans-serif;max-width:82%}
-.deal small{font-size:12px;opacity:.92;line-height:1.4}
-.deal .pr{font:900 22px 'Space Grotesk',sans-serif;margin-top:auto}
+.deal{flex:0 0 min(80%,300px);scroll-snap-align:start;border-radius:24px;padding:16px;color:#fff;position:relative;overflow:hidden;display:flex;flex-direction:column;gap:5px;box-shadow:0 12px 24px var(--sh)}
+.deal .ic{position:absolute;right:12px;top:10px;font-size:44px;transform:rotate(-8deg);filter:drop-shadow(0 6px 10px rgba(0,0,0,.3))}
+.deal .tg{align-self:flex-start;font-size:10px;font-weight:800;letter-spacing:.07em;padding:3px 9px;border-radius:99px;background:#FFC93C;color:#3A2600}
+.deal b{font-size:18px;font-weight:800;line-height:1.2;max-width:78%;margin-top:4px}
+.deal small{font-size:12px;opacity:.92}
+.deal .pr{font-size:24px;font-weight:900;margin-top:auto;padding-top:6px}
 .deal .pr s{font-size:13px;font-weight:600;opacity:.75;margin-right:6px}
-.deal button{font:800 13px Inter,sans-serif;padding:10px;border-radius:99px;border:none;background:#fff;color:#1B1300;cursor:pointer;margin-top:4px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
-.it{display:flex;gap:10px;align-items:center;padding:11px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}
-.it .ic{flex:0 0 44px;height:44px;border-radius:13px;display:grid;place-items:center;font-size:22px;overflow:hidden}
+.deal .sv{display:inline-block;font-size:10.5px;font-weight:800;padding:2px 7px;border-radius:6px;background:rgba(255,255,255,.25);margin-left:6px;vertical-align:4px}
+.deal button{font-weight:800;font-size:13.5px;padding:11px;border-radius:99px;border:0;background:#fff;color:#3B1FA8;cursor:pointer;margin-top:6px;box-shadow:0 6px 14px rgba(0,0,0,.2)}
+/* product cards */
+.grp{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--muted);margin:14px 2px 8px}
+.grp:after{content:'';flex:1;height:1px;background:var(--line)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.it{display:flex;gap:11px;align-items:center;padding:11px;border-radius:20px;background:var(--card);box-shadow:0 6px 16px var(--sh)}
+.it .ic{flex:0 0 50px;height:50px;border-radius:16px;display:grid;place-items:center;font-size:24px;overflow:hidden;position:relative}
 .it .ic img{width:100%;height:100%;object-fit:cover}
 .it .tx{flex:1;min-width:0}
-.it .tx small{display:block;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-dim)}
-.it .tx b{display:block;font:700 14px/1.25 'Space Grotesk',sans-serif;color:var(--ink)}
-.it .tx em{display:block;font-style:normal;font-size:11.5px;color:var(--ink-dim);margin-top:2px;line-height:1.35}
-.it .rt{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:5px}
-.it .p{font:800 15px 'Space Grotesk',sans-serif;color:var(--gold)}
-.it .p s{font-size:11px;font-weight:600;color:var(--ink-dim);margin-right:3px}
-.it button.buy{font:800 12px Inter,sans-serif;padding:7px 13px;border-radius:99px;border:none;background:var(--teal);color:#06231C;cursor:pointer}
-.it a.own{font:800 11.5px Inter,sans-serif;padding:6px 11px;border-radius:99px;border:1px solid var(--ok);color:var(--ok);text-decoration:none}
-.grp{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin:14px 0 8px}
-.empty{padding:16px;border-radius:14px;border:1px dashed var(--line);color:var(--ink-dim);font-size:13px;text-align:center}
-.note{font-size:12px;line-height:1.6;color:var(--ink-dim);margin-top:22px;padding:12px;border-radius:12px;background:var(--panel2);border-left:3px solid var(--gold)}
-.note a{color:var(--teal);font-weight:700}
+.it .tx small{display:block;font-size:10.5px;font-weight:600;color:var(--muted)}
+.it .tx b{display:block;font-size:13.5px;font-weight:700;line-height:1.25}
+.it .rt{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.it .p{font-size:15px;font-weight:800;color:var(--p1)}
+[data-theme="light"] .it .p{color:#5B2EE0}
+:root:not([data-theme="light"]) .it .p{color:#C8B6FF}
+.it .p s{font-size:10.5px;font-weight:500;color:var(--muted);margin-right:3px}
+.it .buy{font-weight:700;font-size:12px;padding:7px 15px;border-radius:99px;border:0;background:linear-gradient(135deg,#5B2EE0,#A47BFF);color:#fff;cursor:pointer;box-shadow:0 5px 12px rgba(91,46,224,.3)}
+.it .own{font-weight:700;font-size:11.5px;padding:6px 11px;border-radius:99px;background:rgba(22,163,107,.14);color:var(--ok)}
+.empty{padding:18px;border-radius:18px;background:var(--card);color:var(--muted);font-size:13px;text-align:center}
+.note{font-size:12px;line-height:1.6;color:var(--muted);margin-top:22px;padding:14px;border-radius:18px;background:var(--card);box-shadow:0 6px 16px var(--sh)}
+.note a{color:var(--p3);font-weight:700}
+[data-theme="light"] .note a{color:var(--p1)}
+.foot{margin:22px 2px 0;font-size:12px;color:var(--muted);text-align:center}
 /* buy sheet */
-.sbg{position:fixed;inset:0;z-index:9000;background:rgba(5,12,9,.6);display:flex;align-items:flex-end;justify-content:center}
-.sh{width:100%;max-width:460px;max-height:92vh;overflow:auto;background:var(--panel);color:var(--ink);border-radius:22px 22px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom));border:1px solid var(--line);box-shadow:0 -10px 40px rgba(0,0,0,.35)}
-@media(min-width:600px){.sbg{align-items:center}.sh{border-radius:22px}}
-.sh .x{float:right;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font-size:16px;cursor:pointer}
-.sh .hd{display:flex;gap:12px;align-items:center;clear:none}
-.sh .hd .ic{flex:0 0 54px;height:54px;border-radius:16px;display:grid;place-items:center;font-size:28px;overflow:hidden}
-.sh .hd .ic img{width:100%;height:100%;object-fit:cover}
-.sh .hd small{display:block;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--teal)}
-.sh .hd b{display:block;font:700 18px/1.25 'Space Grotesk',sans-serif}
-.sh .inc{font-size:13px;line-height:1.55;color:var(--ink-dim);margin:12px 0 0}
-.sh .price{font:900 28px 'Space Grotesk',sans-serif;color:var(--gold);margin-top:10px}
-.sh .price s{font-size:15px;font-weight:600;color:var(--ink-dim);margin-right:8px}
-.sh .pay{display:block;text-align:center;margin-top:12px;padding:14px;border-radius:14px;font:800 15px Inter,sans-serif;text-decoration:none;background:linear-gradient(135deg,#0F8F7A,#0B6F5E);color:#fff;border:none;width:100%;cursor:pointer}
+.sbg{position:fixed;inset:0;z-index:9000;background:rgba(18,13,43,.55);display:flex;align-items:flex-end;justify-content:center}
+.sh{width:100%;max-width:480px;max-height:92vh;overflow:auto;background:var(--card);color:var(--ink);border-radius:26px 26px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -10px 40px rgba(0,0,0,.3);animation:up .22s ease-out}
+@keyframes up{from{transform:translateY(30px);opacity:.6}}
+@media(min-width:600px){.sbg{align-items:center}.sh{border-radius:26px}}
+.sh .x{float:right;width:36px;height:36px;border-radius:12px;border:0;background:var(--card2);color:var(--ink);font-size:16px;cursor:pointer}
+.sh .band{border-radius:20px;padding:14px;display:flex;gap:12px;align-items:center;color:#1E1B4B;margin-top:4px}
+.sh .band .ic{flex:0 0 56px;height:56px;border-radius:18px;display:grid;place-items:center;font-size:28px;background:rgba(255,255,255,.75);overflow:hidden}
+.sh .band .ic img{width:100%;height:100%;object-fit:cover}
+.sh .band small{display:block;font-size:11px;font-weight:600;color:rgba(30,27,75,.7)}
+.sh .band b{display:block;font-size:17px;font-weight:800;line-height:1.25}
+.sh .inc{font-size:13px;line-height:1.6;color:var(--muted);margin:12px 2px 0}
+.sh .price{font-size:30px;font-weight:900;margin:8px 2px 0;color:var(--ink)}
+.sh .price s{font-size:15px;font-weight:500;color:var(--muted);margin-right:8px}
+.sh .pay{display:block;text-align:center;margin-top:12px;padding:14px;border-radius:16px;font-weight:800;font-size:15px;background:linear-gradient(135deg,#5B2EE0,#A47BFF);color:#fff;box-shadow:0 10px 20px rgba(91,46,224,.35)}
 .sh .bupi-alt{margin-top:10px}
 .sh .row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-.sh .row a{display:block;text-align:center;padding:11px 6px;border-radius:12px;font:700 13px Inter,sans-serif;text-decoration:none;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
-.sh .row a.wa{background:#1FA855;border-color:#1FA855;color:#fff}
-.sh ol{font-size:12.5px;line-height:1.55;color:var(--ink-dim);margin:14px 0 0;padding-left:20px}
-@media(max-width:380px){.steps div{font-size:10.5px;padding:8px}.it .tx b{font-size:13.5px}}
+.sh .row a{display:block;text-align:center;padding:12px 6px;border-radius:14px;font-weight:700;font-size:13px;background:var(--card2);color:var(--ink)}
+.sh .row a.wa{background:#1FA855;color:#fff}
+.sh ol{font-size:12.5px;line-height:1.6;color:var(--muted);margin:14px 0 0;padding-left:20px}
+@media(max-width:380px){.tiles{gap:8px}.tile b{font-size:12.5px}.hero h1{font-size:23px}.hero .art{font-size:80px}.how div{font-size:10.5px}}
+@media(min-width:620px){.tiles{grid-template-columns:repeat(6,1fr)}}
 </style>
 </head>
 <body>
 <div class="wrap">
+  <header class="top">
+    <a class="ib" href="index.html" aria-label="Back to BAIO home">🏠</a>
+    <div class="t" style="flex:1;margin-left:12px"><div><small>BAIO Learning System</small><b>BAIO Store</b></div></div>
+    <div class="ibs"><button type="button" class="ib" id="theme" aria-label="Toggle dark or light theme"></button></div>
+  </header>
+
   <section class="hero">
-    <div class="eyebrow">BAIO Learning System · Narendra Sir</div>
-    <h1>🛍️ BAIO <span class="accent">Store</span></h1>
-    <p>Premium chapter content, Exam Scorer e-books, PDF notes, audio podcasts, flash cards and NEET Tricks for I PUC and II PUC Biology, all in one place.</p>
+    <span class="tag">🛍️ BAIO Store · Narendra Sir</span>
+    <h1>Everything you need to score more</h1>
+    <p>Premium chapters, e-books, PDF notes, podcasts, flash cards and NEET Tricks for I PUC and II PUC Biology.</p>
+    <div class="pills"><span class="y" id="nItems"></span><span>💳 Pay online or UPI</span></div>
+    <span class="art" aria-hidden="true">🛍️<i class="a">⭐</i><i class="b">🎧</i><i class="c">📕</i></span>
   </section>
-  <div class="steps" aria-label="How buying works">
-    <div><b>💳</b><strong>Pay</strong> online, or by UPI with the QR</div>
-    <div><b>💬</b><strong>Send</strong> the payment screenshot on WhatsApp</div>
-    <div><b>🔓</b><strong>Unlock</strong> with the code Narendra Sir sends you</div>
+
+  <div class="sec"><h2>Shop by category</h2><span id="catNote"></span></div>
+  <div class="tiles" id="tiles"></div>
+
+  <div class="sec"><h2>How buying works</h2></div>
+  <div class="how">
+    <div><b class="g-prem">💳</b><strong>Pay</strong>online or by UPI with the QR</div>
+    <div><b class="g-pdf">💬</b><strong>Send</strong>the payment screenshot on WhatsApp</div>
+    <div><b class="g-pod">🔓</b><strong>Unlock</strong>with the code Narendra Sir sends</div>
   </div>
 
-  <div class="sbar">
+  <div class="fbar" id="fbar">
     <div class="cats" role="group" aria-label="Category" id="cats"></div>
     <div class="cls" role="group" aria-label="Class" id="cls"></div>
   </div>
@@ -98,13 +165,11 @@ h2.sec{font:700 18px/1.25 'Space Grotesk',sans-serif;margin:22px 0 2px;display:f
   <div id="deals"></div>
   <div id="list"></div>
 
-  <p class="note">Every item unlocks on the phone where you enter your code. Already paid and got a code? Tap <b>Buy</b> on that item, then <b>Enter my code</b>. Questions about an order? <a href="https://wa.me/919008968389" target="_blank" rel="noopener">Message Narendra Sir on WhatsApp</a>.</p>
-  <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
+  <p class="note">🔓 Every item unlocks on the phone where you enter your code. Already paid and got a code? Tap <b>Buy</b> on that item, then <b>Enter my code</b>. Questions about an order? <a href="https://wa.me/919008968389" target="_blank" rel="noopener">Message Narendra Sir on WhatsApp</a>.</p>
+  <p class="foot">Narendra Sir · Biology Lecturer · BAIO Learning System</p>
 </div>
-<script src="games/common.js?v=4"></script>
 <script src="store/store-data.js?v=1"></script>
 <script>
-GZ.nav();
 (function(){
 const D = window.STORE_DATA; if(!D) return;
 const $ = s => document.querySelector(s);
@@ -120,6 +185,12 @@ const bought = k => { const u = k && readJSON(k); return !!(u && u.unlocked && [
 const inStore = (k, id, b) => { const s = readJSON(k) || {}; return !!(s['*'] || s[id] || (b && s[b])); };
 const bOf = id => id.startsWith('pu1') ? 'pu1-all' : 'pu2-all';
 const PREMIUM_INC = 'Mind Map, Class Presentation, MCQ Quiz, NEET & KCET Practice, Answer Practice, Paper Generator, Board Important and the chapter Audio Podcast.';
+
+/* theme toggle (same key as the home page; light by default) */
+const root = document.documentElement, tb = $('#theme');
+const paintT = () => { tb.textContent = root.getAttribute('data-theme') === 'light' ? '🌙' : '☀️'; };
+tb.addEventListener('click', () => { const l = root.getAttribute('data-theme') !== 'light'; if(l) root.setAttribute('data-theme', 'light'); else root.removeAttribute('data-theme'); try{ localStorage.setItem('baio_theme', l ? 'light' : 'dark'); }catch(e){} paintT(); });
+paintT();
 
 /* catalogue: {id, cat, c (class key), ic, img, k (kicker), t, inc, p, was, pay (Razorpay or upi link), open (where the code is entered), own} */
 const P = [];
@@ -143,37 +214,52 @@ const B = [
   {id: 'b-nt2', cat: 'nt', c: 'pu2', ic: '🎯', grad: 'linear-gradient(135deg,#7A2E0E,#C2571F)', tag: 'ALL II PUC NEET TRICKS', k: 'II PUC · every chapter', t: 'All PU-II NEET Tricks', inc: 'NEET Tricks for all 13 II PUC chapters, one payment.', p: D.ntB['pu2-all'], was: D.nt.filter(i => i.startsWith('pu2')).length * D.ntPrice, pay: '', open: 'neet-tricks.html#pu2-all', own: () => inStore('baio_neettricks_unlock', 'pu2-all'), note: 'NEET Tricks PU-II all chapters'}
 ];
 const ALL = {}; P.concat(B).forEach(x => { ALL[x.id] = x; });
-const CATS = [['all', '🛍️ All'], ['prem', '⭐ Premium'], ['book', '📕 E-Books'], ['pdf', '📄 PDFs'], ['pod', '🎧 Podcasts'], ['fc', '🧠 Flash Cards'], ['nt', '🎯 NEET Tricks']];
-const CNAME = {prem: ['⭐ Premium chapter content', 'Unlock every Premium tab of a chapter page. One payment per chapter, or the whole of II PUC at 15% off.'], book: ['📕 E-Books', 'Board Exam Scorer revision e-books for I PUC and II PUC.'], pdf: ['📄 PDFs', 'Handwritten notes and colour notes to download and keep.'], pod: ['🎧 Audio Podcasts', 'Listen to every chapter, explained by Narendra Sir.'], fc: ['🧠 Flash Cards', 'Every flash card of a chapter for quick recall.'], nt: ['🎯 NEET Tricks', 'Memory tricks and examiner traps for NEET, chapter by chapter.']};
+const CAT = {
+  prem: {n: 'Premium', e: '⭐', g: 'g-prem', d: ['⭐ Premium chapters', 'Unlock every Premium tab of a chapter page.']},
+  book: {n: 'E-Books', e: '📕', g: 'g-book', d: ['📕 E-Books', 'Board Exam Scorer revision e-books.']},
+  pdf: {n: 'PDF Notes', e: '📄', g: 'g-pdf', d: ['📄 PDF Notes', 'Handwritten and colour notes to keep.']},
+  pod: {n: 'Podcasts', e: '🎧', g: 'g-pod', d: ['🎧 Audio Podcasts', 'Every chapter, explained by Narendra Sir.']},
+  fc: {n: 'Flash Cards', e: '🧠', g: 'g-fc', d: ['🧠 Flash Cards', 'Quick recall, chapter by chapter.']},
+  nt: {n: 'NEET Tricks', e: '🎯', g: 'g-nt', d: ['🎯 NEET Tricks', 'Memory tricks and examiner traps.']}
+};
+const ORDER = ['prem', 'book', 'pdf', 'pod', 'fc', 'nt'];
+const GRAD = {prem: 'linear-gradient(145deg,#FFE9A8,#FFD166)', book: 'linear-gradient(145deg,#FFD6EC,#F7A8D8)', pdf: 'linear-gradient(145deg,#C9F2D9,#7FDCA6)', pod: 'linear-gradient(145deg,#E3D9FF,#B9A3FF)', fc: 'linear-gradient(145deg,#D3E8FF,#8EC5FF)', nt: 'linear-gradient(145deg,#FFE0CC,#FFAB7A)'};
+const SOFT = {prem: '#FFF1C9', book: '#FFE3F1', pdf: '#DDF6E7', pod: '#ECE6FF', fc: '#E1EFFF', nt: '#FFE8DA'};
+const DEALG = {'b-prem2': 'radial-gradient(circle at 90% 10%,rgba(255,220,120,.45),transparent 50%),linear-gradient(135deg,#0F6E5C,#13977F)', 'b-pod1': 'radial-gradient(circle at 90% 10%,rgba(255,150,210,.45),transparent 50%),linear-gradient(135deg,#7A1E5A,#C2407F)', 'b-pod2': 'radial-gradient(circle at 90% 10%,rgba(190,160,255,.5),transparent 50%),linear-gradient(135deg,#3B1FA8,#7C4DFF)', 'b-nt1': 'radial-gradient(circle at 90% 10%,rgba(255,230,140,.45),transparent 50%),linear-gradient(135deg,#B85C00,#F08A24)', 'b-nt2': 'radial-gradient(circle at 90% 10%,rgba(255,180,140,.45),transparent 50%),linear-gradient(135deg,#A3361A,#E8612F)'};
 
 let cat = 'all', only = '';
 try{ const z = JSON.parse(localStorage.getItem('baio_zone') || '{}'); if(z.cls === 1) only = 'pu1'; else if(z.cls === 2) only = 'pu2'; }catch(e){}
-const h0 = location.hash.slice(1); if(CNAME[h0]) cat = h0;
+const h0 = location.hash.slice(1); if(CAT[h0]) cat = h0;
+$('#nItems').textContent = '🛒 ' + P.length + ' items · ' + B.length + ' bundles';
 
+function minPrice(k){ const L = P.filter(x => x.cat === k); return L.length ? Math.min.apply(null, L.map(x => x.p)) : 0; }
 function chips(){
-  $('#cats').innerHTML = CATS.map(([k, n]) => '<button type="button" data-c="' + k + '" aria-pressed="' + (k === cat) + '">' + n + '</button>').join('');
+  $('#tiles').innerHTML = ORDER.map(k => '<button type="button" class="tile ' + CAT[k].g + '" data-c="' + k + '" aria-pressed="' + (k === cat) + '"><span class="ic">' + CAT[k].e + '</span><b>' + CAT[k].n + '</b><small>' + P.filter(x => x.cat === k).length + ' items · from ₹' + minPrice(k) + '</small></button>').join('');
+  $('#cats').innerHTML = [['all', '🛍️ All']].concat(ORDER.map(k => [k, CAT[k].e + ' ' + CAT[k].n])).map(([k, n]) => '<button type="button" data-c="' + k + '" aria-pressed="' + (k === cat) + '">' + n + '</button>').join('');
   $('#cls').innerHTML = [['', 'Both classes'], ['pu1', 'I PUC'], ['pu2', 'II PUC']].map(([k, n]) => '<button type="button" data-k="' + k + '" aria-pressed="' + (k === only) + '">' + n + '</button>').join('');
+  $('#catNote').textContent = cat === 'all' ? 'Tap to filter' : CAT[cat].n;
 }
 const price = x => (x.was ? '<s>₹' + x.was + '</s>' : '') + '₹' + x.p;
 function row(x){
   const ic = x.img ? '<img src="' + x.img + '" alt="" loading="lazy">' : x.ic;
   const r = x.own() ? '<a class="own" href="' + esc(x.open) + '">✓ Unlocked</a>' : '<button type="button" class="buy" data-b="' + x.id + '">Buy</button>';
-  return '<div class="it"><span class="ic" style="background:' + x.col + '26">' + ic + '</span><div class="tx"><small>' + esc(x.k) + '</small><b>' + esc(x.t) + '</b></div><div class="rt"><span class="p">' + price(x) + '</span>' + r + '</div></div>';
+  return '<div class="it"><span class="ic" style="background:' + GRAD[x.cat] + '">' + ic + '</span><div class="tx"><small>' + esc(x.k) + '</small><b>' + esc(x.t) + '</b></div><div class="rt"><span class="p">' + price(x) + '</span>' + r + '</div></div>';
 }
 function deal(x){
-  return '<div class="deal" style="background:' + x.grad + '"><span class="ic" aria-hidden="true">' + x.ic + '</span><span class="tg">' + esc(x.tag) + '</span><b>' + esc(x.t) + '</b><small>' + esc(x.k) + '</small><span class="pr">' + price(x) + '</span>' +
-    (x.own() ? '<button type="button" onclick="location.href=\'' + esc(x.open) + '\'">✓ Unlocked · Open</button>' : '<button type="button" data-b="' + x.id + '">Buy now</button>') + '</div>';
+  const save = x.was ? Math.round(100 * (x.was - x.p) / x.was) : 0;
+  return '<div class="deal" style="background:' + (DEALG[x.id] || 'linear-gradient(135deg,#4A1FD1,#9B6BFF)') + '"><span class="ic" aria-hidden="true">' + x.ic + '</span><span class="tg">' + esc(x.tag) + '</span><b>' + esc(x.t) + '</b><small>' + esc(x.k) + '</small><span class="pr">' + price(x) + (save ? '<span class="sv">SAVE ' + save + '%</span>' : '') + '</span>' +
+    (x.own() ? '<button type="button" data-open="' + esc(x.open) + '">✓ Unlocked · Open</button>' : '<button type="button" data-b="' + x.id + '">Buy now</button>') + '</div>';
 }
 function render(){
   chips();
   const fit = x => (cat === 'all' || x.cat === cat) && (!only || x.c === only);
   const ds = B.filter(fit);
-  $('#deals').innerHTML = ds.length ? '<h2 class="sec">🔥 Best value</h2><p class="sec-sub">Whole-class bundles: one payment, one unlock code.</p><div class="deals">' + ds.map(deal).join('') + '</div>' : '';
-  const cats = cat === 'all' ? ['prem', 'book', 'pdf', 'pod', 'fc', 'nt'] : [cat];
+  $('#deals').innerHTML = ds.length ? '<div class="sec"><h2>🔥 Best value bundles</h2><span>one payment · one code</span></div><div class="deals">' + ds.map(deal).join('') + '</div>' : '';
+  const cats = cat === 'all' ? ORDER : [cat];
   let h = '';
   cats.forEach(k => {
     const L = P.filter(x => x.cat === k && fit(x)); if(!L.length) return;
-    h += '<h2 class="sec" id="s-' + k + '">' + CNAME[k][0] + '</h2><p class="sec-sub">' + esc(CNAME[k][1]) + '</p>';
+    h += '<div class="sec" id="s-' + k + '"><h2>' + CAT[k].d[0] + '</h2><span>' + L.length + ' items</span></div>';
     [['pu1', 'I PUC'], ['pu2', 'II PUC']].forEach(([c, n]) => {
       const M = L.filter(x => x.c === c); if(!M.length) return;
       if(!only) h += '<div class="grp">' + n + '</div>';
@@ -182,17 +268,19 @@ function render(){
   });
   $('#list').innerHTML = h || '<div class="empty">Nothing here for this class yet.</div>';
 }
+function pick(c){ cat = c; history.replaceState(null, '', cat === 'all' ? location.pathname : '#' + cat); render(); }
 document.addEventListener('click', e => {
-  const c = e.target.closest('[data-c]'); if(c && c.closest('#cats')){ cat = c.dataset.c; history.replaceState(null, '', cat === 'all' ? location.pathname : '#' + cat); render(); return; }
+  const t = e.target.closest('.tile[data-c]'); if(t){ pick(t.dataset.c === cat ? 'all' : t.dataset.c); $('#fbar').scrollIntoView({behavior: 'smooth', block: 'start'}); return; }
+  const c = e.target.closest('#cats [data-c]'); if(c){ pick(c.dataset.c); return; }
   const k = e.target.closest('[data-k]'); if(k){ only = k.dataset.k; render(); return; }
+  const o = e.target.closest('[data-open]'); if(o){ location.href = o.dataset.open; return; }
   const b = e.target.closest('[data-b]'); if(b && ALL[b.dataset.b]) buy(ALL[b.dataset.b]);
 });
 
 /* buy sheet: Razorpay first where it exists, UPI second (pay/upi.js adds "Or pay by UPI" under a Razorpay link) */
-function profile(){ return readJSON('baio_student') || {}; }
 function buy(x){
   close();
-  const st = profile();
+  const st = readJSON('baio_student') || {};
   const msg = 'Hi Narendra Sir, I bought ' + x.note + ' (₹' + x.p + ') from the BAIO Store.\n\nName: ' + (st.name || '') + '\nRoll Number: ' + (st.roll || '') + '\nSection: ' + (st.section || '') + '\n\n(Attaching my payment screenshot below)';
   const wa = 'https://wa.me/919008968389?text=' + encodeURIComponent(msg);
   const upi = window.BAIO_UPI ? BAIO_UPI.link(x.p, x.note) : '';
@@ -202,7 +290,7 @@ function buy(x){
   const ic = x.img ? '<img src="' + x.img + '" alt="">' : x.ic;
   const bg = document.createElement('div'); bg.className = 'sbg'; bg.id = 'sbg';
   bg.innerHTML = '<div class="sh" role="dialog" aria-modal="true" aria-labelledby="shT"><button type="button" class="x" aria-label="Close">✕</button>' +
-    '<div class="hd"><span class="ic" style="background:' + (x.col || '#7A5CFF') + '26">' + ic + '</span><div><small>' + esc(x.k) + '</small><b id="shT">' + esc(x.t) + '</b></div></div>' +
+    '<div style="clear:both"></div><div class="band" style="background:' + (DEALG[x.id] ? DEALG[x.id] + ';color:#fff' : GRAD[x.cat]) + '"><span class="ic">' + ic + '</span><div><small' + (DEALG[x.id] ? ' style="color:rgba(255,255,255,.85)"' : '') + '>' + esc(x.k) + '</small><b id="shT">' + esc(x.t) + '</b></div></div>' +
     '<p class="inc">' + esc(x.inc) + '</p><div class="price">' + price(x) + '</div>' + payBtn +
     '<div class="row"><a class="wa" href="' + wa + '" target="_blank" rel="noopener">💬 Send screenshot</a><a href="' + esc(x.open) + '">🔓 Enter my code</a></div>' +
     '<ol><li>Pay ₹' + x.p + (rzp ? ' online, or by UPI with the QR.' : ' by UPI: scan the QR or tap Pay.') + '</li><li>Send the payment screenshot to Narendra Sir on WhatsApp.</li><li>He sends your unlock code. Tap <b>Enter my code</b> and type it in.</li></ol></div>';
@@ -214,6 +302,7 @@ function close(){ const b = document.getElementById('sbg'); if(b) b.remove(); }
 document.addEventListener('keydown', e => { if(e.key === 'Escape') close(); });
 window.addEventListener('pageshow', render);
 render();
+if(h0 === 'deals') setTimeout(() => { const d = document.getElementById('deals'); if(d) d.scrollIntoView({block: 'start'}); }, 50);
 })();
 </script>
 <script src="pay/upi.js?v=2"></script>
