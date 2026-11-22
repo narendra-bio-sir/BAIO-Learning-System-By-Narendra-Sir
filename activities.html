@@ -150,6 +150,23 @@ html[lang=kn] .ws h3,html[lang=hi] .ws h3{letter-spacing:0;text-transform:none}
 .ws .whyp{background:#faf6ea;border:1px dashed #b8912a;padding:6px 8px}
 .ws .tm span{display:inline-block;background:#ffe9a8;padding:1px 7px;border-radius:9px;margin:2px 3px 0 0;font-weight:700}
 .ws .foot{margin-top:10px;font-size:9.5px;color:#777;text-align:center}
+/* share sheet: social-media banner of the activity */
+.sh{position:fixed;inset:0;z-index:9000;display:none;align-items:flex-end;justify-content:center;background:rgba(4,12,8,.66)}
+.sh.on{display:flex}
+.shc{width:100%;max-width:560px;max-height:94vh;overflow:auto;background:var(--navy);color:var(--ink);border:1px solid var(--line);border-bottom:0;border-radius:26px 26px 0 0;padding:14px 16px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -10px 30px rgba(0,0,0,.35)}
+.shh{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.shh b{font:800 16px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari',sans-serif}
+.shh button{flex:0 0 38px;width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:16px;cursor:pointer}
+.fmt{display:flex;gap:6px;margin:12px 0 10px;flex-wrap:wrap}
+.fmt button{display:inline-flex;align-items:center;justify-content:center;border:1.5px solid var(--line);background:var(--panel2);border-radius:999px;padding:8px 13px;font:700 12.5px/1 Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;cursor:pointer;color:var(--ink);min-height:36px}
+.fmt button[aria-pressed="true"]{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;border-color:var(--gold)}
+.shp{display:flex;justify-content:center;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:18px;padding:10px;min-height:220px}
+.shp img{max-width:100%;max-height:52vh;border-radius:12px;box-shadow:0 8px 22px rgba(0,0,0,.3)}
+.shp img:not([src]){visibility:hidden}
+.sha{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.sha .btn{min-height:46px;font-size:14px}
+.sha .btn.full{grid-column:1/-1}
+.shn{font-size:11.5px;color:var(--ink-dim);text-align:center;margin-top:10px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -168,6 +185,15 @@ html[lang=kn] .ws h3,html[lang=hi] .ws h3{letter-spacing:0;text-transform:none}
   </section>
   <div id="printArea"></div>
   <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
+</div>
+<div class="sh" id="sh" role="dialog" aria-modal="true" aria-labelledby="shT">
+  <div class="shc">
+    <div class="shh"><b id="shT"></b><button type="button" id="shX" aria-label="Close">✕</button></div>
+    <div class="fmt" role="group"><button type="button" data-f="post" aria-pressed="true"></button><button type="button" data-f="story" aria-pressed="false"></button><button type="button" data-f="square" aria-pressed="false"></button></div>
+    <div class="shp"><img id="shImg" alt=""></div>
+    <div class="sha"><button class="btn primary full" id="shGo" type="button"></button><button class="btn" id="shSave" type="button"></button><button class="btn teal" id="shWa" type="button"></button></div>
+    <div class="shn" id="shN"></div>
+  </div>
 </div>
 <script src="games/common.js?v=4"></script>
 <script src="activities/acts-pu1.js?v=1"></script>
@@ -228,7 +254,7 @@ function drawCh(){
   $('#tabs').innerHTML=[0,1,2].map(i=>`<button class="tab ${i===tab?'on':''}" data-t="${i}">${i<2?`${A.hands[i].icon} ${T('act',{n:i+1})}`:T('dig')}${(i<2?d['h'+i]:d.d)?'<span class="ok">✅</span>':''}</button>`).join('');
   $('#tabs').querySelectorAll('.tab').forEach(b=>b.onclick=()=>{ tab=+b.dataset.t; drawCh(); });
   $('#ctools').innerHTML=`<a class="tbtn" href="activities/pdf/${GZ.lang==='en'?'':GZ.lang+'/'}${cid}.pdf" download>${T('pdf')}</a><a class="tbtn" href="${A.page}">${T('chapter')}</a><button class="tbtn" id="tShare">${T('share')}</button>`;
-  $('#tShare').onclick=()=>GZ.share(T('shareMsg',{t:A.title,c:A.ch}),'activities.html#'+cid);
+  $('#tShare').onclick=openShare;
   if(tab<2) drawHands(tab); else drawDigital();
   try{ history.replaceState(null,'','#'+cid+'/'+tab); }catch(e){}
 }
@@ -486,6 +512,148 @@ function sheetHtml(id,opt){
 function printSheet(id,opt){ $('#printArea').innerHTML=sheetHtml(id,opt); setTimeout(()=>window.print(),150); }
 
 /* ---------- start ---------- */
+/* ---------- share: a social-media banner of this activity (Post 4:5 · Status 9:16 · Square 1:1, follows light / dark) ---------- */
+const SB={
+ en:{sheet:'📤 Share this activity', post:'📱 Post 4:5', story:'📲 Status 9:16', square:'⬛ Square 1:1', go:'📤 Share picture', save:'⬇ Save picture', wa:'💬 WhatsApp', note:'Works for WhatsApp, Instagram, Facebook, Telegram and status. Post 4:5 fits most feeds.',
+  eye:'🧪 PROJECTS & ACTIVITIES', now:'▶ THIS ACTIVITY', list:'In this chapter', prog:'{n} of 3 done', learn:'💡 YOU WILL LEARN', nm:'{n} is doing this activity. Try it too! 🔬', anon:'Learn Biology by doing! 🔬', sub:'Free · step-by-step guide, observation table & worksheet', dig:'💻 Digital activity', done:'Done'},
+ kn:{sheet:'📤 ಈ ಚಟುವಟಿಕೆ ಹಂಚಿಕೊಳ್ಳಿ', post:'📱 ಪೋಸ್ಟ್ 4:5', story:'📲 ಸ್ಟೇಟಸ್ 9:16', square:'⬛ ಚೌಕ 1:1', go:'📤 ಚಿತ್ರ ಹಂಚಿಕೊಳ್ಳಿ', save:'⬇ ಚಿತ್ರ ಉಳಿಸಿ', wa:'💬 WhatsApp', note:'WhatsApp, Instagram, Facebook, Telegram ಮತ್ತು ಸ್ಟೇಟಸ್‌ಗೆ ಸೂಕ್ತ. ಹೆಚ್ಚಿನ ಫೀಡ್‌ಗಳಿಗೆ ಪೋಸ್ಟ್ 4:5 ಸರಿಹೊಂದುತ್ತದೆ.',
+  eye:'🧪 ಪ್ರಾಜೆಕ್ಟ್‌ಗಳು ಮತ್ತು ಚಟುವಟಿಕೆಗಳು', now:'▶ ಈ ಚಟುವಟಿಕೆ', list:'ಈ ಅಧ್ಯಾಯದಲ್ಲಿ', prog:'3 ರಲ್ಲಿ {n} ಮುಗಿದಿದೆ', learn:'💡 ನೀವು ಕಲಿಯುವುದು', nm:'{n} ಈ ಚಟುವಟಿಕೆ ಮಾಡುತ್ತಿದ್ದಾರೆ. ನೀವೂ ಪ್ರಯತ್ನಿಸಿ! 🔬', anon:'ಮಾಡಿ ಜೀವಶಾಸ್ತ್ರ ಕಲಿಯಿರಿ! 🔬', sub:'ಉಚಿತ · ಹಂತ ಹಂತದ ಮಾರ್ಗದರ್ಶಿ, ವೀಕ್ಷಣಾ ಕೋಷ್ಟಕ ಮತ್ತು ವರ್ಕ್‌ಶೀಟ್', dig:'💻 ಡಿಜಿಟಲ್ ಚಟುವಟಿಕೆ', done:'ಮುಗಿದಿದೆ'},
+ hi:{sheet:'📤 यह गतिविधि शेयर करो', post:'📱 पोस्ट 4:5', story:'📲 स्टेटस 9:16', square:'⬛ चौकोर 1:1', go:'📤 तस्वीर शेयर करो', save:'⬇ तस्वीर सेव करो', wa:'💬 WhatsApp', note:'WhatsApp, Instagram, Facebook, Telegram और स्टेटस के लिए। ज़्यादातर फ़ीड में पोस्ट 4:5 सही बैठता है।',
+  eye:'🧪 प्रोजेक्ट और गतिविधियाँ', now:'▶ यह गतिविधि', list:'इस अध्याय में', prog:'3 में से {n} पूरी', learn:'💡 तुम सीखोगे', nm:'{n} यह गतिविधि कर रहे हैं। तुम भी करो! 🔬', anon:'करके बायोलॉजी सीखो! 🔬', sub:'मुफ़्त · चरण-दर-चरण गाइड, अवलोकन तालिका और वर्कशीट', dig:'💻 डिजिटल गतिविधि', done:'पूरा'}};
+const sb=(k,o)=>{ let v=(SB[GZ.lang]||SB.en)[k]||SB.en[k]; if(o) Object.keys(o).forEach(x=>v=v.split('{'+x+'}').join(o[x])); return v; };
+const BFMT={post:[1080,1350], story:[1080,1920], square:[1080,1080]};
+let bfmt='post', bBlob=null, bN=0;
+const BF="'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari',Inter,'Noto Color Emoji','Apple Color Emoji','Segoe UI Emoji',sans-serif";
+const BI="Inter,'Noto Sans Kannada','Noto Sans Devanagari','Noto Color Emoji','Apple Color Emoji','Segoe UI Emoji',sans-serif";
+const BLOGO=new Image(); BLOGO.src='zone/baio-logo.png?v=2';
+function bUrl(){ return GZ.BASE+'activities.html#'+cid+'/'+tab; }
+function bName(){ let n='';
+  try{ const p=JSON.parse(localStorage.getItem('baio_student')||'null'); if(p&&p.name) n=String(p.name); }catch(e){}
+  if(!n){ try{ n=String(localStorage.getItem('baio_user_name')||''); }catch(e){} }
+  n=n.replace(/\s+/g,' ').trim().split(' ')[0]||''; return n?n.charAt(0).toUpperCase()+n.slice(1).toLowerCase():''; }
+function brr(x,X,y,w,h,r){ x.beginPath(); x.moveTo(X+r,y); x.arcTo(X+w,y,X+w,y+h,r); x.arcTo(X+w,y+h,X,y+h,r); x.arcTo(X,y+h,X,y,r); x.arcTo(X,y,X+w,y,r); x.closePath(); }
+function bfit(x,t,max,size,weight,fam,min){ let s=size; do{ x.font=weight+' '+s+'px '+(fam||BF); s-=2; }while(x.measureText(t).width>max&&s>(min||16)); return s+2; }
+/* wrap into at most n lines; the last one gets … if the text is longer */
+function bwrap(x,t,max,n){ const w=String(t).split(' '), out=[]; let line='', i=0;
+  for(; i<w.length; i++){ const tt=line?line+' '+w[i]:w[i]; if(x.measureText(tt).width>max&&line){ out.push(line); line=w[i]; if(out.length===n) break; } else line=tt; }
+  if(out.length<n&&line){ out.push(line); line=''; i=w.length; }
+  if(i<w.length||line){ let l=out[n-1]; while(l&&x.measureText(l+'…').width>max) l=l.replace(/\s*\S+$/,''); out[n-1]=(l||out[n-1])+'…'; }
+  return out; }
+function bTitleFit(x,t,max,size,lines,weight,min){ let s=size; for(; s>min; s-=2){ x.font=weight+' '+s+'px '+BF; if(bwrap(x,t,max,99).length<=lines) break; } x.font=weight+' '+s+'px '+BF; return {s, L:bwrap(x,t,max,lines)}; }
+function bPill(x,t,X,y,h,fill,col,font){ x.font=font; const w=x.measureText(t).width+h*.8; brr(x,X,y,w,h,h/2); x.fillStyle=fill; x.fill(); x.fillStyle=col; x.textBaseline='middle'; x.fillText(t,X+h*.4,y+h/2+1); x.textBaseline='alphabetic'; return w; }
+function drawBanner(){
+  const W=BFMT[bfmt][0], H=BFMT[bfmt][1], dark=document.documentElement.getAttribute('data-theme')!=='light';
+  const c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
+  const gold=dark?'#D4AF37':'#B8912A', teal=dark?'#2EE6C5':'#0F8F7A', ink=dark?'#EAF3EE':'#1E2A22', mut=dark?'#9FC4B6':'#5C6E63', card=dark?'#13281E':'#FFFFFF', line=dark?'rgba(212,175,55,.28)':'rgba(184,145,42,.30)';
+  let bg=x.createLinearGradient(0,0,W,H); if(dark){ bg.addColorStop(0,'#0B1B14'); bg.addColorStop(1,'#132A1F'); } else { bg.addColorStop(0,'#FBF8F0'); bg.addColorStop(1,'#EFE8D3'); }
+  x.fillStyle=bg; x.fillRect(0,0,W,H);
+  [[W*.95,H*.04,300,dark?'rgba(212,175,55,.20)':'rgba(212,175,55,.26)'],[W*.02,H*.6,320,dark?'rgba(46,230,197,.13)':'rgba(15,143,122,.12)'],[W*.9,H*.97,300,dark?'rgba(46,158,79,.20)':'rgba(46,158,79,.14)']].forEach(b=>{
+    const g=x.createRadialGradient(b[0],b[1],0,b[0],b[1],b[2]); g.addColorStop(0,b[3]); g.addColorStop(1,'rgba(0,0,0,0)'); x.fillStyle=g; x.fillRect(0,0,W,H); });
+  x.fillStyle=dark?'rgba(212,175,55,.07)':'rgba(184,145,42,.09)'; for(let yy=24; yy<H; yy+=36) for(let xx=18; xx<W; xx+=36){ x.beginPath(); x.arc(xx,yy,2,0,7); x.fill(); }
+  const isD=tab===2, h=isD?null:A.hands[tab], D=A.digital, dn=DONE()[cid]||{}, doneNow=isD?dn.d:dn['h'+tab];
+  const actT=isD?D.t:h.t, actI=isD?'💻':h.icon, concept=isD?D.learn:h.concept;
+  const square=bfmt==='square', story=bfmt==='story';
+  x.font='500 32px '+BI; const LL=bwrap(x,concept,W-208,4);
+  const topH=110, heroH=square?560:540, learnH=110+LL.length*46, listH=344, footH=150;
+  const parts=square?['hero']:story?['hero','learn','list']:['hero','list'];
+  const blocks=topH+footH+parts.reduce((s,p)=>s+({hero:heroH,learn:learnH,list:listH})[p],0), ng=parts.length+1;
+  const gap=Math.min(story?80:64,Math.max(20,(H-96-blocks)/ng)); let y=Math.max(40,(H-blocks-gap*ng)/2);
+  /* top: logo + brand + pill */
+  x.save(); brr(x,60,y,96,96,26); x.clip();
+  if(BLOGO.complete&&BLOGO.naturalWidth) x.drawImage(BLOGO,60,y,96,96); else { x.fillStyle='#14203A'; x.fillRect(60,y,96,96); x.fillStyle='#D4AF37'; x.font='800 56px '+BF; x.textAlign='center'; x.fillText('B',108,y+68); x.textAlign='left'; }
+  x.restore();
+  x.fillStyle=ink; x.font='700 38px '+BF; x.fillText('BAIO Learning System',178,y+44);
+  x.fillStyle=mut; x.font='500 26px '+BI; x.fillText('Biology by Narendra Sir',178,y+82);
+  const cls=cid.startsWith('pu2')?'II PUC':'I PUC';
+  x.font='800 26px '+BI; const pw=x.measureText(cls).width+44; brr(x,W-60-pw,y+22,pw,54,27); x.fillStyle=gold; x.fill(); x.fillStyle='#1a1406'; x.fillText(cls,W-60-pw+22,y+59);
+  y+=topH+gap;
+  /* hero: chapter + this activity, in the chapter's colour */
+  const hx=60, hw=W-120;
+  x.save(); x.shadowColor=dark?'rgba(0,0,0,.45)':'rgba(30,60,40,.25)'; x.shadowBlur=46; x.shadowOffsetY=16; brr(x,hx,y,hw,heroH,46);
+  let hg=x.createLinearGradient(hx,y,hx+hw,y+heroH); hg.addColorStop(0,A.color||'#2e9e4f'); hg.addColorStop(1,'#0B1F16'); x.fillStyle=hg; x.fill(); x.restore();
+  x.save(); brr(x,hx,y,hw,heroH,46); x.clip();
+  let og=x.createRadialGradient(hx+hw*.88,y+70,0,hx+hw*.88,y+70,340); og.addColorStop(0,'rgba(212,175,55,.42)'); og.addColorStop(1,'rgba(212,175,55,0)'); x.fillStyle=og; x.fillRect(hx,y,hw,heroH);
+  x.strokeStyle='rgba(255,255,255,.08)'; x.lineWidth=2; for(let r=90; r<420; r+=60){ x.beginPath(); x.arc(hx+hw-40,y+heroH-30,r,0,7); x.stroke(); }
+  x.restore();
+  x.strokeStyle='rgba(212,175,55,.55)'; x.lineWidth=2; brr(x,hx+1,y+1,hw-2,heroH-2,45); x.stroke();
+  const ix=hx+44, iy=y+44; brr(x,ix,iy,140,140,36); x.fillStyle='rgba(255,255,255,.16)'; x.fill(); x.strokeStyle='rgba(255,255,255,.28)'; x.lineWidth=2; x.stroke();
+  x.textAlign='center'; x.textBaseline='middle'; x.fillStyle='#000'; x.font="84px 'Noto Color Emoji','Apple Color Emoji','Segoe UI Emoji',sans-serif"; x.fillText(A.cover||'🧪',ix+70,iy+74); x.textAlign='left'; x.textBaseline='alphabetic';
+  const tx=ix+140+32, tw=hx+hw-44-tx;
+  x.fillStyle='#FFE08A'; bfit(x,sb('eye'),tw,24,'800',BI,16); x.fillText(sb('eye'),tx,iy+28);
+  x.fillStyle='rgba(255,255,255,.86)'; const chl=A.ch.replace(/^I+ PUC · /,''); bfit(x,chl,tw,26,'600',BI,16); x.fillText(chl,tx,iy+66);
+  x.fillStyle='#fff'; let TT=bTitleFit(x,A.title,tw,54,1,'700',46); if(TT.L.length>1||x.measureText(A.title).width>tw) TT=bTitleFit(x,A.title,tw,44,2,'700',28); TT.L.forEach((l,i)=>x.fillText(l,tx,iy+66+TT.s*1.12*(i+1)));
+  let ay=y+250; x.fillStyle='rgba(255,255,255,.18)'; x.fillRect(hx+44,ay,hw-88,2);
+  ay+=50; x.fillStyle='#FFE08A'; x.font='800 24px '+BI; x.fillText(sb('now'),hx+44,ay);
+  x.font="56px 'Noto Color Emoji','Apple Color Emoji','Segoe UI Emoji',sans-serif"; x.fillStyle='#000'; x.fillText(actI,hx+44,ay+76);
+  x.fillStyle='#fff'; let AT=bTitleFit(x,actT,hw-88-84,44,1,'700',40); if(x.measureText(actT).width>hw-88-84) AT=bTitleFit(x,actT,hw-88-84,38,2,'700',26); AT.L.forEach((l,i)=>x.fillText(l,hx+44+84,ay+62+AT.s*1.15*i));
+  const by=y+heroH-44-54; let bx=hx+44;
+  const bads=isD?[sb('dig')]:[T('w_'+h.where),'⏱ '+h.time]; if(doneNow) bads.push('✅ '+sb('done'));
+  bads.forEach(t=>{ x.font='700 25px '+BI; const max=hx+hw-44-bx; if(max<120) return; let tt=t; while(x.measureText(tt).width+40>max&&tt.length>4) tt=tt.slice(0,-2); if(tt!==t) tt=tt.replace(/\s*$/,'')+'…';
+    bx+=bPill(x,tt,bx,by,54,'rgba(255,255,255,.17)','#fff','700 25px '+BI)+12; });
+  y+=heroH+gap;
+  /* what you will learn */
+  if(parts.includes('learn')){
+    brr(x,60,y,W-120,learnH,36); x.fillStyle=dark?'rgba(46,230,197,.10)':'rgba(15,143,122,.08)'; x.fill(); x.strokeStyle=teal; x.lineWidth=2.5; x.stroke();
+    x.fillStyle=teal; x.font='800 26px '+BI; x.fillText(sb('learn'),104,y+60);
+    x.fillStyle=ink; x.font='500 32px '+BI; LL.forEach((l,i)=>x.fillText(l,104,y+116+i*46));
+    y+=learnH+gap;
+  }
+  /* all three activities of the chapter */
+  if(parts.includes('list')){
+    x.save(); x.shadowColor=dark?'rgba(0,0,0,.35)':'rgba(30,42,34,.10)'; x.shadowBlur=30; x.shadowOffsetY=10; brr(x,60,y,W-120,listH,36); x.fillStyle=card; x.fill(); x.restore();
+    x.strokeStyle=line; x.lineWidth=2; brr(x,61,y+1,W-122,listH-2,35); x.stroke();
+    const nd=(dn.h0?1:0)+(dn.h1?1:0)+(dn.d?1:0);
+    x.fillStyle=ink; x.font='700 32px '+BF; x.fillText(sb('list'),104,y+62);
+    x.textAlign='right'; x.fillStyle=nd?(dark?'#2FBF71':'#1E8E52'):mut; x.font='800 26px '+BI; x.fillText(sb('prog',{n:nd}),W-104,y+62); x.textAlign='left';
+    const rows=[[A.hands[0].icon,A.hands[0].t,T('w_'+A.hands[0].where),dn.h0],[A.hands[1].icon,A.hands[1].t,T('w_'+A.hands[1].where),dn.h1],['💻',D.t,sb('dig'),dn.d]];
+    rows.forEach((r,k)=>{ const ry=y+92+k*80, on=k===tab;
+      brr(x,84,ry,W-168,70,20); x.fillStyle=on?(dark?'rgba(212,175,55,.16)':'rgba(212,175,55,.16)'):(dark?'#0E211A':'#F3F0E6'); x.fill(); if(on){ x.strokeStyle=gold; x.lineWidth=2.5; x.stroke(); }
+      x.font="36px 'Noto Color Emoji','Apple Color Emoji','Segoe UI Emoji',sans-serif"; x.fillStyle='#000'; x.textBaseline='middle'; x.fillText(r[0],104,ry+37);
+      x.fillStyle=ink; bfit(x,r[1],W-168-170-60,28,'700',BI,18); x.fillText(r[1],160,ry+36);
+      x.textAlign='center'; if(r[3]){ x.beginPath(); x.arc(W-128,ry+35,20,0,7); x.fillStyle=dark?'#2FBF71':'#1E8E52'; x.fill(); x.fillStyle='#fff'; x.font='800 24px '+BI; x.fillText('✓',W-128,ry+36); }
+      else { x.beginPath(); x.arc(W-128,ry+35,18,0,7); x.strokeStyle=line; x.lineWidth=3; x.stroke(); x.fillStyle=mut; x.font='800 20px '+BI; x.fillText(String(k+1),W-128,ry+36); }
+      x.textAlign='left'; x.textBaseline='alphabetic'; });
+    y+=listH+gap;
+  }
+  /* footer: invite + link */
+  x.textAlign='center'; const cx=W/2, nm=bName(), hl=nm?sb('nm',{n:nm}):sb('anon');
+  x.fillStyle=ink; bfit(x,hl,W-120,40,'800',BF,22); x.fillText(hl,cx,y+42);
+  x.fillStyle=mut; bfit(x,sb('sub'),W-120,26,'500',BI,16); x.fillText(sb('sub'),cx,y+84);
+  const u=bUrl().replace(/^https?:\/\//,''); x.fillStyle=gold; bfit(x,u,W-120,24,'600',BI,14); x.fillText(u,cx,y+122);
+  x.textAlign='left';
+  return c;
+}
+function renderBanner(){
+  const my=++bN, img=$('#shImg');
+  const go=()=>{ if(my!==bN) return; drawBanner().toBlob(b=>{ if(my!==bN||!b) return; bBlob=b; if(img.dataset.u) URL.revokeObjectURL(img.dataset.u); const u=URL.createObjectURL(b); img.dataset.u=u; img.src=u; },'image/png'); };
+  const waits=[];
+  try{ if(document.fonts&&document.fonts.load){ ['700 40px "Space Grotesk"','500 26px Inter','800 26px Inter'].forEach(f=>waits.push(document.fonts.load(f)));
+    if(GZ.lang==='kn') waits.push(document.fonts.load('700 30px "Noto Sans Kannada"'),document.fonts.load('500 30px "Noto Sans Kannada"'));
+    if(GZ.lang==='hi') waits.push(document.fonts.load('700 30px "Noto Sans Devanagari"'),document.fonts.load('500 30px "Noto Sans Devanagari"')); } }catch(e){}
+  if(!(BLOGO.complete&&BLOGO.naturalWidth)) waits.push(new Promise(r=>{ BLOGO.onload=BLOGO.onerror=r; setTimeout(r,1500); }));
+  Promise.race([Promise.all(waits),new Promise(r=>setTimeout(r,2500))]).then(go,go);
+}
+function bText(){ return T('shareMsg',{t:A.title,c:A.ch})+' '+bUrl(); }
+function bFile(){ return 'baio-activity-'+cid+'-'+(tab+1)+'.png'; }
+function openShare(){
+  $('#shT').textContent=sb('sheet'); $('#shX').setAttribute('aria-label',GZ.lang==='kn'?'ಮುಚ್ಚಿ':GZ.lang==='hi'?'बंद करो':'Close');
+  document.querySelectorAll('#sh .fmt button').forEach(b=>{ b.textContent=sb(b.dataset.f); b.setAttribute('aria-pressed',b.dataset.f===bfmt?'true':'false'); });
+  $('#shGo').textContent=sb('go'); $('#shSave').textContent=sb('save'); $('#shWa').textContent=sb('wa'); $('#shN').textContent=sb('note');
+  $('#shImg').alt=A.title; bBlob=null; $('#sh').classList.add('on'); renderBanner();
+}
+const closeShare=()=>$('#sh').classList.remove('on');
+$('#shX').onclick=closeShare;
+$('#sh').addEventListener('click',e=>{ if(e.target===$('#sh')) closeShare(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&$('#sh').classList.contains('on')) closeShare(); });
+$('#sh .fmt').addEventListener('click',e=>{ const b=e.target.closest('[data-f]'); if(!b) return; bfmt=b.dataset.f;
+  document.querySelectorAll('#sh .fmt button').forEach(k=>k.setAttribute('aria-pressed',k===b?'true':'false')); renderBanner(); });
+$('#shGo').onclick=()=>{ if(!bBlob) return; const f=new File([bBlob],bFile(),{type:'image/png'});
+  if(navigator.canShare&&navigator.canShare({files:[f]})) navigator.share({files:[f],title:A.title,text:bText()}).catch(()=>{});
+  else if(navigator.share) navigator.share({title:A.title,text:bText()}).catch(()=>{});
+  else $('#shSave').click(); };
+$('#shSave').onclick=()=>{ if(!bBlob) return; const a=document.createElement('a'); a.href=URL.createObjectURL(bBlob); a.download=bFile(); document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1500); };
+$('#shWa').onclick=()=>window.open('https://wa.me/?text='+encodeURIComponent(bText()),'_blank','noopener');
+
 $('#back').onclick=()=>{ $('#chapter').hidden=true; $('#library').hidden=false; $('#hero').hidden=false; drawLibrary(); try{ history.replaceState(null,'',location.pathname); }catch(e){} };
 const QL=(location.search.match(/[?&]lang=(kn|hi|en)/)||[])[1];
 if(QL){ try{ localStorage.setItem('baio_lang',QL); }catch(e){} }
