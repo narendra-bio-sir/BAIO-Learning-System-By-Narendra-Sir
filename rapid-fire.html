@@ -105,6 +105,52 @@ button{font-family:inherit;color:inherit}
 .keys{font-size:11px;color:var(--muted);text-align:center;margin-top:10px}
 /* result */
 #result{display:none}
+#dash{display:none}
+/* categorical colours for the 4 question types (validated: CVD-safe on light #fff and dark #1E1742) */
+:root{--c-m:#3987e5;--c-k:#d95926;--c-s:#199e70;--c-b:#c98500;--good:#3DDC97;--badc:#FF6B81}
+[data-theme="light"]{--c-m:#2a78d6;--c-k:#eb6834;--c-s:#1baf7a;--c-b:#eda100;--good:#0a7d0a;--badc:#c02d2d}
+.ibs{display:flex;gap:10px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.cmp div{background:rgba(255,255,255,.16);border-radius:14px;padding:8px 6px;font-size:11.5px}
+.cmp b{display:block;font-size:14px}
+.myst{display:flex;align-items:center;gap:12px;margin-top:14px;background:var(--card);border-radius:18px;padding:12px 14px;box-shadow:0 4px 14px var(--sh);cursor:pointer;border:0;width:100%;text-align:left}
+.myst .e{font-size:26px}
+.myst b{display:block;font-size:14px}
+.myst small{display:block;font-size:12px;color:var(--muted)}
+.myst em{margin-left:auto;font-style:normal;font-weight:800;color:var(--p1)}
+.dfil{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.dfil button{border:1.5px solid var(--line);background:var(--card);border-radius:99px;padding:7px 14px;font-size:12.5px;font-weight:700;cursor:pointer;color:var(--ink)}
+.dfil button[aria-pressed="true"]{background:linear-gradient(135deg,#5B2EE0,#A47BFF);color:#fff;border-color:transparent}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+@media(min-width:560px){.kpis{grid-template-columns:repeat(4,1fr)}}
+.kpi{background:var(--card);border-radius:18px;padding:12px 14px;box-shadow:0 4px 14px var(--sh)}
+.kpi small{display:block;font-size:11.5px;color:var(--muted);font-weight:600}
+.kpi b{display:block;font-size:26px;font-weight:800;line-height:1.15;margin-top:2px}
+.kpi i{display:block;font-style:normal;font-size:11.5px;color:var(--muted)}
+.dcard{background:var(--card);border-radius:20px;padding:14px;margin-top:12px;box-shadow:0 6px 16px var(--sh)}
+.dcard h3{margin:0 0 2px;font-size:15px}
+.dcard .hint{font-size:11.5px;color:var(--muted);margin-bottom:8px}
+.up{color:var(--good);font-weight:800}.dn{color:var(--badc);font-weight:800}.eq{color:var(--muted);font-weight:800}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.vs div{background:var(--card2);border-radius:14px;padding:10px}
+.vs small{display:block;font-size:11px;color:var(--muted);font-weight:600}
+.vs b{display:block;font-size:14px;margin-top:2px}
+.vs span{font-size:12px}
+.chart{position:relative}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:11.5px;line-height:1.35;padding:6px 9px;border-radius:10px;white-space:nowrap;transform:translate(-50%,-110%);display:none;box-shadow:0 6px 16px rgba(0,0,0,.25);z-index:2}
+.hb{display:grid;grid-template-columns:minmax(90px,38%) 1fr auto;gap:8px;align-items:center;margin:9px 0;font-size:12.5px;font-weight:600}
+.hb .tr{height:12px;border-radius:99px;background:var(--card2);overflow:hidden}
+.hb .tr i{display:block;height:100%;border-radius:0 4px 4px 0}
+.hb em{font-style:normal;color:var(--muted);font-size:12px;text-align:right;white-space:nowrap}
+.hb .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hb.tap{cursor:pointer}
+.htab{width:100%;border-collapse:collapse;font-size:12px}
+.htab th{text-align:left;color:var(--muted);font-weight:600;padding:6px 4px;border-bottom:1px solid var(--line)}
+.htab td{padding:7px 4px;border-bottom:1px solid var(--line)}
+.htab td.n{text-align:right;font-variant-numeric:tabular-nums}
+.dact{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.dact .go{margin-top:0;font-size:13px;padding:12px}
 .res{margin-top:14px;border-radius:26px;padding:22px 20px;color:#fff;text-align:center;
  background:radial-gradient(circle at 85% 20%,rgba(255,160,80,.55),transparent 45%),linear-gradient(135deg,#4A1FD1,#6E3BF0 50%,#9B6BFF);box-shadow:0 18px 36px rgba(91,46,224,.35)}
 .res .big{font-size:52px;font-weight:800;line-height:1}
@@ -148,7 +194,7 @@ button{font-family:inherit;color:inherit}
 <div class="wrap">
   <div class="top">
     <div class="t"><a class="ib" href="index.html" aria-label="Home">🏠</a><div><small>BAIO · More tools</small><b>Rapid Fire</b></div></div>
-    <button class="ib" id="themeBtn" type="button" aria-label="Switch theme">🌙</button>
+    <div class="ibs"><button class="ib" id="dashBtn" type="button" aria-label="My performance">📊</button><button class="ib" id="themeBtn" type="button" aria-label="Switch theme">🌙</button></div>
   </div>
 
   <section id="setup">
@@ -169,6 +215,7 @@ button{font-family:inherit;color:inherit}
 
     <div class="how"><b>How it works:</b> each question gives you <b>10 seconds</b>. Tap the right answer fast. Correct = 10 points + up to 5 speed bonus. Questions you have already seen are kept aside, so every round brings <b>new questions</b>.</div>
     <button class="go" id="startBtn" type="button" disabled>⚡ Pick a chapter to start</button>
+    <button class="myst" id="myStats" type="button" style="display:none"><span class="e">📊</span><span><b>My performance</b><small id="myStatsT"></small></span><em>View →</em></button>
   </section>
 
   <section id="game" aria-live="polite">
@@ -190,12 +237,21 @@ button{font-family:inherit;color:inherit}
       <div class="sub">points</div>
       <span class="badge" id="rBadge"></span>
       <div class="stats"><div><b id="rAcc">0%</b><small>Accuracy</small></div><div><b id="rRight">0/20</b><small>Correct</small></div><div><b id="rAvg">0.0 s</b><small>Avg answer time</small></div></div>
+      <div class="cmp" id="rCmp"></div>
     </div>
     <div class="cats"><b style="font-size:14px">By question type</b><div id="rCats"></div></div>
     <div class="row2"><button class="go" id="againBtn" type="button">⚡ Play again</button><button class="go alt" id="changeBtn" type="button">📚 Change chapter</button></div>
-    <button class="go alt" id="shareBtn" type="button">📤 Share my score card</button>
+    <div class="row2"><button class="go alt" id="shareBtn" type="button">📤 Share score card</button><button class="go alt" id="progBtn" type="button">📊 My progress</button></div>
     <div class="sec"><h2>Review missed questions</h2><span id="rMissN"></span></div>
     <div id="rReview"></div>
+  </section>
+
+  <section id="dash" aria-labelledby="dashH">
+    <div class="sec" style="padding-top:14px"><h2 id="dashH">📊 My performance</h2><span>Saved on this phone</span></div>
+    <div class="dfil" role="group" aria-label="Class"><button type="button" data-dc="all" aria-pressed="true">All</button><button type="button" data-dc="pu1" aria-pressed="false">I PUC</button><button type="button" data-dc="pu2" aria-pressed="false">II PUC</button></div>
+    <div id="dBody"></div>
+    <div class="dact"><button class="go alt" id="dCsv" type="button">⬇ Download my scores</button><button class="go alt" id="dClear" type="button">🗑 Clear history</button></div>
+    <button class="go" id="dPlay" type="button">⚡ Play Rapid Fire</button>
   </section>
 </div>
 <div class="count" id="count"><span id="countN">3</span></div>
@@ -220,7 +276,8 @@ var TYPES = [
   {id:'s', e:'🛠️', t:'Skill', d:'Apply, calculate, predict'},
   {id:'b', e:'📝', t:'Board', d:'1-mark exam style'}
 ];
-var CAT = {m:'Memory', k:'Knowledge', s:'Skill', b:'Board'}, CATC = {m:'#7C4DFF', k:'#16A36B', s:'#FF7A59', b:'#2E8BFF'};
+var CAT = {m:'Memory', k:'Knowledge', s:'Skill', b:'Board'}, CATC = {m:'var(--c-m)', k:'var(--c-k)', s:'var(--c-s)', b:'var(--c-b)'};
+function catHex(k){ var v = getComputedStyle(document.documentElement).getPropertyValue('--c-' + k).trim(); return v || '#2a78d6'; }
 var store = {get:function(k,d){ try{ var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); }catch(e){ return d; } },
              set:function(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }};
 var $ = function(id){ return document.getElementById(id); };
@@ -301,7 +358,7 @@ function pick(datas){
   return out;
 }
 
-function show(id){ ['setup', 'game', 'result'].forEach(function(s){ $(s).style.display = s === id ? 'block' : 'none'; }); window.scrollTo(0, 0); }
+function show(id){ ['setup', 'game', 'result', 'dash'].forEach(function(s){ $(s).style.display = s === id ? 'block' : 'none'; }); window.scrollTo(0, 0); }
 
 function start(){
   var list = selectedSet(); if(!list.length) return;
@@ -389,6 +446,19 @@ function finish(){
     return '<div class="cr"><span>' + TYPES.filter(function(t){ return t.id === c; })[0].e + ' ' + CAT[c] + '</span><span class="tr"><i style="width:' + p + '%;background:' + CATC[c] + '"></i></span><em>' + per[c].r + '/' + per[c].n + '</em></div>';
   }).join('');
   S.res.per = per;
+  /* compare with this student's earlier rounds, then save this round on the phone */
+  var H0 = history(), past = H0.filter(function(h){ return h.ch === chSel; }), pool = past.length ? past : H0;
+  var cmpH = '';
+  if(pool.length){
+    var aS = pool.reduce(function(a, h){ return a + h.sc; }, 0) / pool.length, aA = pool.reduce(function(a, h){ return a + h.acc; }, 0) / pool.length;
+    var dS = Math.round(S.score - aS), dA = Math.round(acc - aA);
+    var arr = function(d, u){ return d > 0 ? '▲ ' + d + u + ' better' : d < 0 ? '▼ ' + (-d) + u + ' lower' : '● same'; };
+    cmpH = '<div><b>' + arr(dS, '') + '</b>score vs your avg ' + Math.round(aS) + (past.length ? ' here' : '') + '</div><div><b>' + arr(dA, '%') + '</b>accuracy vs avg ' + Math.round(aA) + '%</div>';
+  } else cmpH = '<div style="grid-column:1/-1"><b>📌 First round saved</b>Play more to see how you improve</div>';
+  $('rCmp').innerHTML = cmpH;
+  var rec = {t:Date.now(), ch:chSel, l:S.label, ty:tySel, sc:S.score, r:S.right, n:n, acc:acc, avg:Math.round(avg * 100) / 100, p:{}};
+  Object.keys(per).forEach(function(k){ rec.p[k] = [per[k].r, per[k].n]; });
+  H0.push(rec); store.set(HKEY, H0.slice(-500));
   var miss = S.log.filter(function(l){ return !l.ok; });
   $('rMissN').textContent = miss.length ? miss.length + ' to revise' : 'none';
   var box = $('rReview'); box.innerHTML = '';
@@ -404,7 +474,118 @@ function finish(){
   S.cur = null; show('result');
 }
 $('againBtn').addEventListener('click', start);
-$('changeBtn').addEventListener('click', function(){ S = null; show('setup'); renderChapters(); });
+
+/* ---------- saved scores + performance dashboard (all on this phone, localStorage) ---------- */
+var HKEY = 'rf_history', dCls = 'all';
+function history(){ var h = store.get(HKEY, []); return Array.isArray(h) ? h : []; }
+function esc(t){ return String(t).replace(/[&<>"]/g, function(c){ return {'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;'}[c]; }); }
+function chName(id){ if(!id) return '—'; if(id.indexOf('all-') === 0) return 'All ' + (id === 'all-pu1' ? 'I' : 'II') + ' PUC chapters'; var c = INDEX.filter(function(x){ return x.id === id; })[0]; return c ? c.t : id; }
+function clsOf(id){ return id && id.indexOf('pu2') >= 0 ? 'pu2' : 'pu1'; }
+function dayStr(t){ var d = new Date(t); return d.getDate() + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]; }
+function delta(d, unit){ return d > 0 ? '<span class="up">▲ ' + d + unit + '</span>' : d < 0 ? '<span class="dn">▼ ' + (-d) + unit + '</span>' : '<span class="eq">● 0' + unit + '</span>'; }
+function paintMyStats(){
+  var H = history(), b = $('myStats'); if(!b) return;
+  if(!H.length){ b.style.display = 'none'; return; }
+  var best = Math.max.apply(null, H.map(function(h){ return h.sc; }));
+  $('myStatsT').textContent = H.length + ' round' + (H.length > 1 ? 's' : '') + ' played · best ' + best + ' · last ' + dayStr(H[H.length - 1].t);
+  b.style.display = 'flex';
+}
+var TG = {W:360, H:190, l:34, r:10, t:14, b:26};
+function trendSvg(L){
+  var W = TG.W, Hh = TG.H, l = TG.l, r = TG.r, t = TG.t, bt = TG.b, n = L.length, iw = W - l - r, ih = Hh - t - bt;
+  var X = function(i){ return l + (n === 1 ? iw / 2 : iw * i / (n - 1)); }, Y = function(v){ return t + ih * (1 - v / 100); };
+  var avg = L.reduce(function(a, h){ return a + h.acc; }, 0) / n;
+  var g = [0, 50, 100].map(function(v){ return '<line x1="' + l + '" x2="' + (W - r) + '" y1="' + Y(v) + '" y2="' + Y(v) + '" stroke="var(--line)" stroke-width="1"/><text x="' + (l - 6) + '" y="' + (Y(v) + 4) + '" text-anchor="end" font-size="11" fill="var(--muted)">' + v + '%</text>'; }).join('');
+  var path = L.map(function(h, i){ return (i ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(h.acc).toFixed(1); }).join(' ');
+  var dots = L.map(function(h, i){ return '<circle cx="' + X(i).toFixed(1) + '" cy="' + Y(h.acc).toFixed(1) + '" r="4" fill="var(--p1)" stroke="var(--card)" stroke-width="2"/>'; }).join('');
+  var lab = n > 1 ? '<text x="' + l + '" y="' + (Hh - 8) + '" font-size="11" fill="var(--muted)">' + dayStr(L[0].t) + '</text><text x="' + (W - r) + '" y="' + (Hh - 8) + '" text-anchor="end" font-size="11" fill="var(--muted)">' + dayStr(L[n - 1].t) + '</text>' : '';
+  return '<svg viewBox="0 0 ' + W + ' ' + Hh + '" role="img" aria-label="Accuracy in your last ' + n + ' rounds, average ' + Math.round(avg) + ' percent">' + g +
+    '<line x1="' + l + '" x2="' + (W - r) + '" y1="' + Y(avg) + '" y2="' + Y(avg) + '" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 5"/>' +
+    '<text x="' + (W - r) + '" y="' + (Y(avg) - 6) + '" text-anchor="end" font-size="11" font-weight="700" fill="var(--muted)">your average ' + Math.round(avg) + '%</text>' +
+    '<path d="' + path + '" fill="none" stroke="var(--p1)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>' + dots + lab +
+    '<line id="tx" x1="0" x2="0" y1="' + t + '" y2="' + (t + ih) + '" stroke="var(--muted)" stroke-width="1" style="display:none"/>' +
+    '<rect id="thit" x="' + l + '" y="0" width="' + iw + '" height="' + Hh + '" fill="transparent"/></svg><div class="tip" id="ttip"></div>';
+}
+function hookTrend(L){
+  var box = $('dTrend'); if(!box) return; var svg = box.querySelector('svg'), hit = box.querySelector('#thit'), tip = box.querySelector('#ttip'), cx = box.querySelector('#tx');
+  var n = L.length, W = TG.W, l = TG.l, r = TG.r, iw = W - l - r, ih = TG.H - TG.t - TG.b;
+  function at(e){
+    var rc = svg.getBoundingClientRect(), px = (e.clientX - rc.left) * W / rc.width, i = n === 1 ? 0 : Math.round((px - l) / iw * (n - 1)); i = Math.max(0, Math.min(n - 1, i));
+    var h = L[i], xx = l + (n === 1 ? iw / 2 : iw * i / (n - 1));
+    cx.setAttribute('x1', xx); cx.setAttribute('x2', xx); cx.style.display = '';
+    tip.innerHTML = '<b>' + h.acc + '%</b> · ' + h.sc + ' pts<br>' + esc(chName(h.ch)) + '<br>' + dayStr(h.t) + ' · ' + (CAT[h.ty] || 'Mixed');
+    tip.style.left = (xx / W * rc.width) + 'px'; tip.style.top = ((TG.t + ih * (1 - h.acc / 100)) / TG.H * rc.height) + 'px'; tip.style.display = 'block';
+  }
+  ['pointermove', 'pointerdown'].forEach(function(ev){ hit.addEventListener(ev, at); });
+  hit.addEventListener('pointerleave', function(){ tip.style.display = 'none'; cx.style.display = 'none'; });
+}
+function paintDash(){
+  var all = history(), H = dCls === 'all' ? all : all.filter(function(h){ return clsOf(h.ch) === dCls; });
+  document.querySelectorAll('[data-dc]').forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-dc') === dCls ? 'true' : 'false'); });
+  $('dCsv').disabled = $('dClear').disabled = !all.length;
+  if(!H.length){ $('dBody').innerHTML = '<div class="dcard"><h3>No rounds yet</h3><div class="hint">' + (all.length ? 'You have not played this class yet.' : 'Every Rapid Fire round you finish is saved here automatically: scores, accuracy, chapters and question types.') + '</div></div>'; return; }
+  var q = H.reduce(function(a, h){ return a + h.n; }, 0), rt = H.reduce(function(a, h){ return a + h.r; }, 0);
+  var best = H.reduce(function(a, h){ return h.sc > a.sc ? h : a; }, H[0]);
+  var tm = H.filter(function(h){ return h.avg > 0; }), avgT = tm.length ? tm.reduce(function(a, h){ return a + h.avg; }, 0) / tm.length : 0;
+  var days = {}; H.forEach(function(h){ days[new Date(h.t).toDateString()] = 1; });
+  var o = '<div class="kpis">' +
+    '<div class="kpi"><small>Rounds played</small><b>' + H.length + '</b><i>' + Object.keys(days).length + ' day' + (Object.keys(days).length > 1 ? 's' : '') + ' · ' + q + ' questions</i></div>' +
+    '<div class="kpi"><small>Overall accuracy</small><b>' + Math.round(rt / q * 100) + '%</b><i>' + rt + ' of ' + q + ' correct</i></div>' +
+    '<div class="kpi"><small>Best score</small><b>' + best.sc + '</b><i>' + esc(chName(best.ch)) + '</i></div>' +
+    '<div class="kpi"><small>Avg answer time</small><b>' + avgT.toFixed(1) + ' s</b><i>for correct answers</i></div></div>';
+  /* comparison: recent vs earlier, last round vs average */
+  var last = H[H.length - 1], k = Math.min(5, Math.floor(H.length / 2));
+  var mean = function(a, f){ return a.reduce(function(s, h){ return s + f(h); }, 0) / a.length; };
+  o += '<div class="dcard"><h3>📈 Am I improving?</h3><div class="hint">Comparisons with your own earlier rounds</div><div class="vs">';
+  if(k >= 1){
+    var rec = H.slice(-k), prev = H.slice(-2 * k, -k), dA = Math.round(mean(rec, function(h){ return h.acc; }) - mean(prev, function(h){ return h.acc; })), dS = Math.round(mean(rec, function(h){ return h.sc; }) - mean(prev, function(h){ return h.sc; }));
+    o += '<div><small>Last ' + k + ' vs previous ' + k + ' rounds</small><b>' + Math.round(mean(rec, function(h){ return h.acc; })) + '% accuracy</b><span>' + delta(dA, '%') + '</span></div>';
+    o += '<div><small>Score, last ' + k + ' vs previous ' + k + '</small><b>' + Math.round(mean(rec, function(h){ return h.sc; })) + ' pts avg</b><span>' + delta(dS, ' pts') + '</span></div>';
+  } else o += '<div style="grid-column:1/-1"><small>Recent vs earlier</small><b>Play 2 or more rounds</b><span class="eq">to compare</span></div>';
+  var aAll = Math.round(mean(H, function(h){ return h.acc; })), aSc = Math.round(mean(H, function(h){ return h.sc; }));
+  o += '<div><small>Last round vs your average</small><b>' + last.acc + '% accuracy</b><span>' + delta(last.acc - aAll, '%') + ' vs ' + aAll + '%</span></div>';
+  o += '<div><small>Last round score vs average</small><b>' + last.sc + ' pts</b><span>' + delta(last.sc - aSc, ' pts') + ' vs ' + aSc + '</span></div></div></div>';
+  /* trend */
+  var T = H.slice(-30);
+  o += '<div class="dcard"><h3>🎯 Accuracy, round by round</h3><div class="hint">Last ' + T.length + ' round' + (T.length > 1 ? 's' : '') + ' · tap a point for details</div><div class="chart" id="dTrend">' + trendSvg(T) + '</div></div>';
+  /* by question type */
+  var ty = {m:[0, 0], k:[0, 0], s:[0, 0], b:[0, 0]};
+  H.forEach(function(h){ Object.keys(h.p || {}).forEach(function(c){ if(ty[c]){ ty[c][0] += h.p[c][0]; ty[c][1] += h.p[c][1]; } }); });
+  var tl = ['m', 'k', 's', 'b'].filter(function(c){ return ty[c][1]; }), tp = function(c){ return Math.round(ty[c][0] / ty[c][1] * 100); };
+  if(tl.length){
+    var srt = tl.slice().sort(function(a, b){ return tp(b) - tp(a); });
+    o += '<div class="dcard"><h3>🧩 Which question type is my strength?</h3><div class="hint">' + (srt.length > 1 ? '💪 Strongest: <b>' + CAT[srt[0]] + '</b> · 🎯 Practise more: <b>' + CAT[srt[srt.length - 1]] + '</b>' : 'Accuracy by type') + '</div>' +
+      tl.map(function(c){ var p = tp(c), e = TYPES.filter(function(t){ return t.id === c; })[0].e; return '<div class="hb"><span class="nm">' + e + ' ' + CAT[c] + '</span><span class="tr"><i style="width:' + Math.max(p, 2) + '%;background:' + CATC[c] + '"></i></span><em>' + p + '% · ' + ty[c][0] + '/' + ty[c][1] + '</em></div>'; }).join('') + '</div>';
+  }
+  /* by chapter */
+  var ch = {};
+  H.forEach(function(h){ var c = ch[h.ch] = ch[h.ch] || {r:0, n:0, k:0, best:0}; c.r += h.r; c.n += h.n; c.k++; c.best = Math.max(c.best, h.sc); });
+  var cl = Object.keys(ch).sort(function(a, b){ return ch[b].r / ch[b].n - ch[a].r / ch[a].n; });
+  o += '<div class="dcard"><h3>📚 Chapter comparison</h3><div class="hint">' + (cl.length > 1 ? 'Strongest first · tap a chapter to play it again' : 'Tap to play again') + '</div>' +
+    cl.map(function(id){ var c = ch[id], p = Math.round(c.r / c.n * 100); return '<div class="hb tap" data-go="' + esc(id) + '" role="button" tabindex="0"><span class="nm">' + esc(chName(id)) + '</span><span class="tr"><i style="width:' + Math.max(p, 2) + '%;background:var(--p1)"></i></span><em>' + p + '% · best ' + c.best + ' · ' + c.k + '×</em></div>'; }).join('') + '</div>';
+  /* recent rounds (also the table view of the chart) */
+  var R = H.slice(-12).reverse();
+  o += '<div class="dcard"><h3>🕘 Recent rounds</h3><table class="htab"><thead><tr><th>Date</th><th>Chapter</th><th class="n">Score</th><th class="n">Correct</th></tr></thead><tbody>' +
+    R.map(function(h){ return '<tr><td>' + dayStr(h.t) + '</td><td>' + esc(chName(h.ch)) + (h.ty && h.ty !== 'all' ? ' · ' + CAT[h.ty] : '') + '</td><td class="n"><b>' + h.sc + '</b></td><td class="n">' + h.r + '/' + h.n + ' (' + h.acc + '%)</td></tr>'; }).join('') + '</tbody></table></div>';
+  $('dBody').innerHTML = o; hookTrend(T);
+}
+function openDash(){ if(S && S.cur && !S.cur.done) return; paintDash(); show('dash'); }
+$('dashBtn').addEventListener('click', openDash);
+$('myStats').addEventListener('click', openDash);
+$('progBtn').addEventListener('click', openDash);
+document.querySelector('.dfil').addEventListener('click', function(e){ var b = e.target.closest('[data-dc]'); if(!b) return; dCls = b.getAttribute('data-dc'); paintDash(); });
+$('dBody').addEventListener('click', function(e){ var b = e.target.closest('[data-go]'); if(!b) return; chSel = b.getAttribute('data-go'); cls = clsOf(chSel); store.set('rf_last', chSel); S = null; show('setup'); renderChapters(); paintMyStats(); });
+$('dPlay').addEventListener('click', function(){ S = null; show('setup'); renderChapters(); paintMyStats(); });
+$('dCsv').addEventListener('click', function(){
+  var H = history(); if(!H.length) return;
+  var rows = [['Date', 'Time', 'Class', 'Chapter', 'Type', 'Score', 'Correct', 'Questions', 'Accuracy %', 'Avg answer s', 'Memory', 'Knowledge', 'Skill', 'Board']];
+  H.forEach(function(h){ var d = new Date(h.t), pp = function(c){ return h.p && h.p[c] ? h.p[c][0] + '/' + h.p[c][1] : ''; };
+    rows.push([d.toLocaleDateString(), d.toLocaleTimeString(), clsOf(h.ch) === 'pu2' ? 'II PUC' : 'I PUC', chName(h.ch), h.ty === 'all' ? 'Mixed' : CAT[h.ty] || '', h.sc, h.r, h.n, h.acc, h.avg, pp('m'), pp('k'), pp('s'), pp('b')]); });
+  var csv = rows.map(function(r){ return r.map(function(v){ v = String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }).join(','); }).join('\n');
+  var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + csv], {type:'text/csv'})); a.download = 'baio-rapid-fire-scores.csv'; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+});
+$('dClear').addEventListener('click', function(){ if(!confirm('Delete all saved Rapid Fire scores on this phone? Best scores are kept.')) return; store.set(HKEY, []); paintDash(); paintMyStats(); });
+$('changeBtn').addEventListener('click', function(){ S = null; show('setup'); renderChapters(); paintMyStats(); });
 /* ---------- share: a score-card picture in the app's purple look (follows light / dark) ---------- */
 var FMT = {post:[1080, 1350], story:[1080, 1920], square:[1080, 1080]}, fmt = 'post', cardBlob = null, renderN = 0;
 var FONT = "'Poppins','Noto Color Emoji','Apple Color Emoji','Segoe UI Emoji',sans-serif";
@@ -470,7 +651,7 @@ function drawCard(){
     rows.forEach(function(k){ var p = R.per[k], f = p.n ? p.r / p.n : 0, e = TYPES.filter(function(t){ return t.id === k; })[0].e;
       x.fillStyle = ink; x.font = '600 28px ' + FONT; x.fillText(e + ' ' + CAT[k], 104, ry + 10);
       var bx = 390, bw2 = W - 120 - 330 - 140; rr(x, bx, ry - 12, bw2, 22, 11); x.fillStyle = dark ? '#271F55' : '#F1EDFF'; x.fill();
-      if(f > 0){ rr(x, bx, ry - 12, Math.max(22, bw2 * f), 22, 11); x.fillStyle = CATC[k]; x.fill(); }
+      if(f > 0){ rr(x, bx, ry - 12, Math.max(22, bw2 * f), 22, 11); x.fillStyle = catHex(k); x.fill(); }
       x.fillStyle = mut; x.font = '700 28px ' + FONT; x.textAlign = 'right'; x.fillText(p.r + '/' + p.n, W - 104, ry + 10); x.textAlign = 'left'; ry += rh; });
     y += typH + gap;
   }
@@ -513,7 +694,8 @@ fetch(BASE + 'index.json').then(function(r){ return r.json(); }).then(function(i
   var h = (location.hash || '').slice(1), last = store.get('rf_last', null), valid = function(v){ return !!v && (/^all-pu[12]$/.test(v) || INDEX.some(function(c){ return c.id === v; })); }, want = valid(h) ? h : (valid(last) ? last : null);
   if(want){ chSel = want; cls = want.replace('all-', '').slice(0, 3); }
   else { try{ var st = JSON.parse(localStorage.getItem('baio_student') || 'null'); if(st && /II|2/.test(st.year || '')) cls = 'pu2'; }catch(e){} }
-  renderChapters();
+  renderChapters(); paintMyStats();
+  if(location.hash === '#progress') openDash();
 }).catch(function(){ $('chs').innerHTML = '<div class="empty">⚠️ Could not load the chapter list. Check your connection and reload.</div>'; });
 })();
 </script>
