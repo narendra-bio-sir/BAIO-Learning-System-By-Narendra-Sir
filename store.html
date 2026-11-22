@@ -58,7 +58,7 @@ button{font-family:inherit}
 .tile[aria-pressed="true"]{outline:3px solid var(--p1);outline-offset:2px}
 .g-prem{background:linear-gradient(145deg,#FFE9A8,#FFD166)}.g-book{background:linear-gradient(145deg,#FFD6EC,#F7A8D8)}
 .g-pdf{background:linear-gradient(145deg,#C9F2D9,#7FDCA6)}.g-pod{background:linear-gradient(145deg,#E3D9FF,#B9A3FF)}
-.g-fc{background:linear-gradient(145deg,#D3E8FF,#8EC5FF)}.g-nt{background:linear-gradient(145deg,#FFE0CC,#FFAB7A)}
+.g-fc{background:linear-gradient(145deg,#D3E8FF,#8EC5FF)}.g-mm{background:linear-gradient(145deg,#D6F5EC,#7FD9BF)}.g-nt{background:linear-gradient(145deg,#FFE0CC,#FFAB7A)}
 .g-all{background:linear-gradient(145deg,#F0E9FF,#D9C9FF)}
 /* how it works */
 .how{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
@@ -128,7 +128,8 @@ button{font-family:inherit}
 .sh .row a.wa{background:#1FA855;color:#fff}
 .sh ol{font-size:12.5px;line-height:1.6;color:var(--muted);margin:14px 0 0;padding-left:20px}
 @media(max-width:380px){.tiles{gap:8px}.tile b{font-size:12.5px}.hero h1{font-size:23px}.hero .art{font-size:80px}.how div{font-size:10.5px}}
-@media(min-width:620px){.tiles{grid-template-columns:repeat(6,1fr)}}
+@media(max-width:619px){.tiles .tile:last-child:nth-child(3n+1){grid-column:1/-1;min-height:84px}}
+@media(min-width:620px){.tiles{grid-template-columns:repeat(7,1fr)}}
 </style>
 </head>
 <body>
@@ -168,7 +169,7 @@ button{font-family:inherit}
   <p class="note">🔓 Every item unlocks on the phone where you enter your code. Already paid and got a code? Tap <b>Buy</b> on that item, then <b>Enter my code</b>. Questions about an order? <a href="https://wa.me/919008968389" target="_blank" rel="noopener">Message Narendra Sir on WhatsApp</a>.</p>
   <p class="foot">Narendra Sir · Biology Lecturer · BAIO Learning System</p>
 </div>
-<script src="store/store-data.js?v=1"></script>
+<script src="store/store-data.js?v=2"></script>
 <script>
 (function(){
 const D = window.STORE_DATA; if(!D) return;
@@ -205,13 +206,17 @@ P.push({id: 'cn-maths', cat: 'pdf', c: 'pu2', ic: '📐', col: '#3D6FD1', k: 'II
 D.pod.slice().sort((a, b) => ord(a) - ord(b)).forEach(id => { const c = D.ch[id]; P.push({id: 'pod-' + id, cat: 'pod', c: id.slice(0, 3), ic: '🎧', col: c.c, k: cls(id) + ' · Ch ' + chNo(id), t: c.t + ' Podcast', inc: 'Full chapter audio by Narendra Sir in English, Kannada and Hindi (more languages in some chapters). First 2 minutes free.', p: D.podPrice, pay: '', open: 'audio-podcasts.html#' + id, own: () => inStore('baio_pod_unlock', id, bOf(id)), note: short(id) + ' Podcast'}); });
 D.fc.slice().sort((a, b) => ord(a) - ord(b)).forEach(id => { const c = D.ch[id]; P.push({id: 'fc-' + id, cat: 'fc', c: id.slice(0, 3), ic: '🧠', col: c.c, k: cls(id) + ' · Ch ' + chNo(id), t: c.t + ' Flash Cards', inc: 'Every flash card for the chapter, for quick recall before tests.', p: D.fcPrice, pay: D.fcLinks[id] || D.fcLink, open: 'flashcards.html#' + id, own: () => inStore('baio_flashcards_unlock', id), note: 'Flash cards ' + id.toUpperCase()}); });
 D.nt.slice().sort((a, b) => ord(a) - ord(b)).forEach(id => { const c = D.ch[id]; P.push({id: 'nt-' + id, cat: 'nt', c: id.slice(0, 3), ic: '🎯', col: c.c, k: cls(id) + ' · Ch ' + chNo(id), t: c.t + ' NEET Tricks', inc: 'Memory tricks, examiner traps and a quick quiz for the chapter. Free preview in every chapter.', p: D.ntPrice, pay: '', open: 'neet-tricks.html#' + id, own: () => inStore('baio_neettricks_unlock', id, bOf(id)), note: 'NEET Tricks ' + short(id)}); });
+(D.mm || []).slice().sort((a, b) => ord(a) - ord(b)).forEach(id => { const c = D.ch[id]; P.push({id: 'mm-' + id, cat: 'mm', c: id.slice(0, 3), ic: '🗺️', col: c.c, k: cls(id) + ' · Ch ' + chNo(id), t: c.t + ' Mind Map', inc: 'HD mind map of the whole chapter by Narendra Sir: zoom in, save to your phone and print. Blurred preview free.', p: D.mmPrice, pay: '', open: 'mind-maps.html#' + id, own: () => inStore('baio_mindmap_unlock', id, bOf(id)), note: short(id) + ' Mind Map'}); });
 /* bundles (best value) */
 const B = [
   {id: 'b-prem2', cat: 'prem', c: 'pu2', ic: '🎁', grad: 'linear-gradient(135deg,#0F6E5C,#13977F)', tag: 'BEST VALUE · 15% OFF', k: 'II PUC · All 13 chapters', t: 'All PU-II Premium', inc: 'Premium for all 13 II PUC chapters with one unlock code. ' + PREMIUM_INC, p: D.bundle[0], was: D.bundle[2], pay: D.bundle[1], open: 'pu2-cart.html', own: () => false, note: 'All 13 PU-II chapters Premium'},
   {id: 'b-pod1', cat: 'pod', c: 'pu1', ic: '🎧', grad: 'linear-gradient(135deg,#5A1E4A,#9C3A6B)', tag: 'ALL I PUC PODCASTS', k: 'I PUC · every chapter', t: 'All PU-I Podcasts', inc: 'Audio podcasts for every I PUC chapter in the app, one payment.', p: D.podB['pu1-all'], was: D.pod.filter(i => i.startsWith('pu1')).length * D.podPrice, pay: '', open: 'audio-podcasts.html#pu1-all', own: () => inStore('baio_pod_unlock', 'pu1-all'), note: 'Podcasts PU-I all chapters'},
   {id: 'b-pod2', cat: 'pod', c: 'pu2', ic: '🎧', grad: 'linear-gradient(135deg,#3B1F6E,#6A3FB5)', tag: 'ALL II PUC PODCASTS', k: 'II PUC · every chapter', t: 'All PU-II Podcasts', inc: 'Audio podcasts for all 13 II PUC chapters, one payment.', p: D.podB['pu2-all'], was: D.pod.filter(i => i.startsWith('pu2')).length * D.podPrice, pay: '', open: 'audio-podcasts.html#pu2-all', own: () => inStore('baio_pod_unlock', 'pu2-all'), note: 'Podcasts PU-II all chapters'},
   {id: 'b-nt1', cat: 'nt', c: 'pu1', ic: '🎯', grad: 'linear-gradient(135deg,#7A4A00,#C07A12)', tag: 'ALL I PUC NEET TRICKS', k: 'I PUC · every chapter', t: 'All PU-I NEET Tricks', inc: 'NEET Tricks for every I PUC chapter in the app, one payment.', p: D.ntB['pu1-all'], was: D.nt.filter(i => i.startsWith('pu1')).length * D.ntPrice, pay: '', open: 'neet-tricks.html#pu1-all', own: () => inStore('baio_neettricks_unlock', 'pu1-all'), note: 'NEET Tricks PU-I all chapters'},
-  {id: 'b-nt2', cat: 'nt', c: 'pu2', ic: '🎯', grad: 'linear-gradient(135deg,#7A2E0E,#C2571F)', tag: 'ALL II PUC NEET TRICKS', k: 'II PUC · every chapter', t: 'All PU-II NEET Tricks', inc: 'NEET Tricks for all 13 II PUC chapters, one payment.', p: D.ntB['pu2-all'], was: D.nt.filter(i => i.startsWith('pu2')).length * D.ntPrice, pay: '', open: 'neet-tricks.html#pu2-all', own: () => inStore('baio_neettricks_unlock', 'pu2-all'), note: 'NEET Tricks PU-II all chapters'}
+  {id: 'b-nt2', cat: 'nt', c: 'pu2', ic: '🎯', grad: 'linear-gradient(135deg,#7A2E0E,#C2571F)', tag: 'ALL II PUC NEET TRICKS', k: 'II PUC · every chapter', t: 'All PU-II NEET Tricks', inc: 'NEET Tricks for all 13 II PUC chapters, one payment.', p: D.ntB['pu2-all'], was: D.nt.filter(i => i.startsWith('pu2')).length * D.ntPrice, pay: '', open: 'neet-tricks.html#pu2-all', own: () => inStore('baio_neettricks_unlock', 'pu2-all'), note: 'NEET Tricks PU-II all chapters'},
+  {id: 'b-mm1', cat: 'mm', c: 'pu1', ic: '🗺️', tag: 'ALL I PUC MIND MAPS', k: 'I PUC · every chapter', t: 'All PU-I Mind Maps', inc: 'HD mind maps for every I PUC chapter in the app, one payment and one code.', p: (D.mmB || {})['pu1-all'], was: (D.mm || []).filter(i => i.startsWith('pu1')).length * D.mmPrice, pay: '', open: 'mind-maps.html#pu1-all', own: () => inStore('baio_mindmap_unlock', 'pu1-all'), note: 'All PU-I Mind Maps'},
+  {id: 'b-mm2', cat: 'mm', c: 'pu2', ic: '🗺️', tag: 'ALL II PUC MIND MAPS', k: 'II PUC · every chapter', t: 'All PU-II Mind Maps', inc: 'HD mind maps for all 13 II PUC chapters, one payment and one code.', p: (D.mmB || {})['pu2-all'], was: (D.mm || []).filter(i => i.startsWith('pu2')).length * D.mmPrice, pay: '', open: 'mind-maps.html#pu2-all', own: () => inStore('baio_mindmap_unlock', 'pu2-all'), note: 'All PU-II Mind Maps'},
+  {id: 'b-mmall', cat: 'mm', c: '', ic: '🗺️', tag: 'EVERY MIND MAP · BOTH CLASSES', k: 'I PUC + II PUC · ' + (D.mm || []).length + ' chapters', t: 'Every Mind Map', inc: 'HD mind maps for every I PUC and II PUC chapter in the app, one payment and one code.', p: (D.mmB || {})['all'], was: (D.mm || []).length * D.mmPrice, pay: '', open: 'mind-maps.html#all', own: () => inStore('baio_mindmap_unlock', 'all'), note: 'Every Mind Map (both classes)'}
 ];
 const ALL = {}; P.concat(B).forEach(x => { ALL[x.id] = x; });
 const CAT = {
@@ -220,12 +225,13 @@ const CAT = {
   pdf: {n: 'PDF Notes', e: '📄', g: 'g-pdf', d: ['📄 PDF Notes', 'Handwritten and colour notes to keep.']},
   pod: {n: 'Podcasts', e: '🎧', g: 'g-pod', d: ['🎧 Audio Podcasts', 'Every chapter, explained by Narendra Sir.']},
   fc: {n: 'Flash Cards', e: '🧠', g: 'g-fc', d: ['🧠 Flash Cards', 'Quick recall, chapter by chapter.']},
-  nt: {n: 'NEET Tricks', e: '🎯', g: 'g-nt', d: ['🎯 NEET Tricks', 'Memory tricks and examiner traps.']}
+  nt: {n: 'NEET Tricks', e: '🎯', g: 'g-nt', d: ['🎯 NEET Tricks', 'Memory tricks and examiner traps.']},
+  mm: {n: 'Mind Maps', e: '🗺️', g: 'g-mm', d: ['🗺️ Mind Maps', 'The whole chapter on one HD page.']}
 };
-const ORDER = ['prem', 'book', 'pdf', 'pod', 'fc', 'nt'];
-const GRAD = {prem: 'linear-gradient(145deg,#FFE9A8,#FFD166)', book: 'linear-gradient(145deg,#FFD6EC,#F7A8D8)', pdf: 'linear-gradient(145deg,#C9F2D9,#7FDCA6)', pod: 'linear-gradient(145deg,#E3D9FF,#B9A3FF)', fc: 'linear-gradient(145deg,#D3E8FF,#8EC5FF)', nt: 'linear-gradient(145deg,#FFE0CC,#FFAB7A)'};
-const SOFT = {prem: '#FFF1C9', book: '#FFE3F1', pdf: '#DDF6E7', pod: '#ECE6FF', fc: '#E1EFFF', nt: '#FFE8DA'};
-const DEALG = {'b-prem2': 'radial-gradient(circle at 90% 10%,rgba(255,220,120,.45),transparent 50%),linear-gradient(135deg,#0F6E5C,#13977F)', 'b-pod1': 'radial-gradient(circle at 90% 10%,rgba(255,150,210,.45),transparent 50%),linear-gradient(135deg,#7A1E5A,#C2407F)', 'b-pod2': 'radial-gradient(circle at 90% 10%,rgba(190,160,255,.5),transparent 50%),linear-gradient(135deg,#3B1FA8,#7C4DFF)', 'b-nt1': 'radial-gradient(circle at 90% 10%,rgba(255,230,140,.45),transparent 50%),linear-gradient(135deg,#B85C00,#F08A24)', 'b-nt2': 'radial-gradient(circle at 90% 10%,rgba(255,180,140,.45),transparent 50%),linear-gradient(135deg,#A3361A,#E8612F)'};
+const ORDER = ['prem', 'mm', 'book', 'pdf', 'pod', 'fc', 'nt'];
+const GRAD = {prem: 'linear-gradient(145deg,#FFE9A8,#FFD166)', book: 'linear-gradient(145deg,#FFD6EC,#F7A8D8)', pdf: 'linear-gradient(145deg,#C9F2D9,#7FDCA6)', pod: 'linear-gradient(145deg,#E3D9FF,#B9A3FF)', fc: 'linear-gradient(145deg,#D3E8FF,#8EC5FF)', nt: 'linear-gradient(145deg,#FFE0CC,#FFAB7A)', mm: 'linear-gradient(145deg,#D6F5EC,#7FD9BF)'};
+const SOFT = {prem: '#FFF1C9', book: '#FFE3F1', pdf: '#DDF6E7', pod: '#ECE6FF', fc: '#E1EFFF', nt: '#FFE8DA', mm: '#DDF5EE'};
+const DEALG = {'b-mm1': 'radial-gradient(circle at 90% 10%,rgba(255,220,120,.45),transparent 50%),linear-gradient(135deg,#0F6E5C,#13977F)', 'b-mm2': 'radial-gradient(circle at 90% 10%,rgba(190,160,255,.5),transparent 50%),linear-gradient(135deg,#1F4FA8,#3F7DE0)', 'b-mmall': 'radial-gradient(circle at 90% 10%,rgba(255,200,120,.5),transparent 50%),linear-gradient(135deg,#0B5D4B,#C79A2A)', 'b-prem2': 'radial-gradient(circle at 90% 10%,rgba(255,220,120,.45),transparent 50%),linear-gradient(135deg,#0F6E5C,#13977F)', 'b-pod1': 'radial-gradient(circle at 90% 10%,rgba(255,150,210,.45),transparent 50%),linear-gradient(135deg,#7A1E5A,#C2407F)', 'b-pod2': 'radial-gradient(circle at 90% 10%,rgba(190,160,255,.5),transparent 50%),linear-gradient(135deg,#3B1FA8,#7C4DFF)', 'b-nt1': 'radial-gradient(circle at 90% 10%,rgba(255,230,140,.45),transparent 50%),linear-gradient(135deg,#B85C00,#F08A24)', 'b-nt2': 'radial-gradient(circle at 90% 10%,rgba(255,180,140,.45),transparent 50%),linear-gradient(135deg,#A3361A,#E8612F)'};
 
 let cat = 'all', only = '';
 try{ const z = JSON.parse(localStorage.getItem('baio_zone') || '{}'); if(z.cls === 1) only = 'pu1'; else if(z.cls === 2) only = 'pu2'; }catch(e){}
@@ -252,7 +258,7 @@ function deal(x){
 }
 function render(){
   chips();
-  const fit = x => (cat === 'all' || x.cat === cat) && (!only || x.c === only);
+  const fit = x => (cat === 'all' || x.cat === cat) && (!only || !x.c || x.c === only);
   const ds = B.filter(fit);
   $('#deals').innerHTML = ds.length ? '<div class="sec"><h2>🔥 Best value bundles</h2><span>one payment · one code</span></div><div class="deals">' + ds.map(deal).join('') + '</div>' : '';
   const cats = cat === 'all' ? ORDER : [cat];

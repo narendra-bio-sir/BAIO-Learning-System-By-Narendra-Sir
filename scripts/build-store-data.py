@@ -1,5 +1,5 @@
 """Builds store/store-data.js for store.html (the BAIO Store) from the app's own pages and data.
-Run after changing a price, a payment link, or adding a chapter page / podcast / flash cards / NEET Tricks chapter."""
+Run after changing a price, a payment link, or adding a chapter page / podcast / flash cards / NEET Tricks chapter / mind map."""
 import json, re, os
 R = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/'
 def rd(f): return open(R + f, encoding='utf-8').read()
@@ -24,6 +24,8 @@ pod = rd('audio-podcasts.html'); i = pod.index('const POD = '); out['pod'] = re.
 out['podPrice'] = const(pod, 'PRICE'); out['podB'] = {k: int(v) for k, v in re.findall(r"'(pu[12]-all)': \{price:(\d+)", pod)}
 nt = rd('neet-tricks.html'); out['ntPrice'] = const(nt, 'PRICE'); out['ntB'] = {k: int(v) for k, v in re.findall(r"'(pu[12]-all)': \{price:(\d+)", nt)}
 for f in ['neet-tricks/nt-pu1.js', 'neet-tricks/nt-pu2.js']: out['nt'] += re.findall(r"^\s*(?:NT\[)?'(pu[12]-ch\d+)'\]?\s*[:=]", rd(f), re.M)
+mm = rd('mind-maps.html'); out['mmPrice'] = const(mm, 'PRICE'); out['mmB'] = {k: int(v) for k, v in re.findall(r"'((?:pu[12]-)?all)': \{price:(\d+)", mm)}
+out['mm'] = re.findall(r'"(pu[12]-ch\d+)":\[', rd('mind-maps/mm-data.js'))
 fc = rd('flashcards.html'); out['fcPrice'] = const(fc, 'FC_PRICE')
 out['fcLink'] = const(fc, 'FC_RAZORPAY_LINK'); out['fcLinks'] = json.loads(re.search(r"const FC_RAZORPAY_LINKS = (\{[^}]*\})", fc).group(1).replace("'", '"'))
 for f in ['flashcards/fc-pu1.js', 'flashcards/fc-pu2.js']: out['fc'] += re.findall(r"FC\['(pu[12]-ch\d+)'\]\s*=", rd(f))
@@ -32,4 +34,4 @@ mcn = rd('pu2-maths-colour-notes.html'); out['mathsCn'] = [const(mcn, 'CN_PRICE_
 js = '/* BAIO Store data: built by scripts/build-store-data.py from the app pages. Do not edit by hand. */\nwindow.STORE_DATA = ' + json.dumps(out, ensure_ascii=False, separators=(',', ':')).replace('},"', '},\n"') + ';\n'
 open(R + 'store/store-data.js', 'w', encoding='utf-8').write(js)
 print('chapters', len(out['ch']), 'premium', sum('prem' in e for e in out['ch'].values()), 'hw', sum('hw' in e for e in out['ch'].values()), 'cn', sum('cn' in e for e in out['ch'].values()),
-      'pod', len(out['pod']), 'nt', len(out['nt']), 'fc', len(out['fc']), out['podB'], out['ntB'], out['bundle'], out['mathsCn'][0], out['fcLinks'])
+      'pod', len(out['pod']), 'nt', len(out['nt']), 'fc', len(out['fc']), 'mm', len(out['mm']), out['mmB'], out['podB'], out['ntB'], out['bundle'], out['mathsCn'][0], out['fcLinks'])
