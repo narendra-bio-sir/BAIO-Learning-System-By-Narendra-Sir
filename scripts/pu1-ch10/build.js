@@ -212,7 +212,7 @@ rep("const RAZORPAY_PREMIUM_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%2
 rep("const HW_RAZORPAY_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=100&cu=INR&tn=PU-I%20Ch%209%20Handwritten%20Notes';", "const HW_RAZORPAY_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=100&cu=INR&tn=PU-I%20Ch%2010%20Handwritten%20Notes';");
 
 /* the home-screen look is on Biomolecules only for now: keep it off the generated chapter */
-rep("\n<!-- home-screen look (chapter-ui/home-skin.*) -->\n<link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap\" rel=\"stylesheet\">\n<link rel=\"stylesheet\" href=\"chapter-ui/home-skin.css?v=1\">", '');
+rep("\n<!-- home-screen look (chapter-ui/home-skin.*) -->\n<link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap\" rel=\"stylesheet\">\n<link rel=\"stylesheet\" href=\"chapter-ui/home-skin.css?v=2\">", '');
 rep("<script src=\"chapter-ui/home-skin.js?v=1\" data-icon=\"🧪\" data-ch=\"pu1-ch9\"></script>\n", '');
 
 /* Header, titles, jump list */
