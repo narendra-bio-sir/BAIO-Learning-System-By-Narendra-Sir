@@ -103,7 +103,7 @@
       var m = (a.textContent || '').match(/₹\s*([\d,]+)/);
       var am = m ? +m[1].replace(/,/g, '') : (info ? info[0] : 0);
       var kind = info ? info[1] : 'Premium';
-      var note = /^All 13/.test(kind) ? kind : ((chap() ? chap() + ' ' : '') + kind);
+      var note = a.getAttribute('data-upi-note') || (/^All 13/.test(kind) ? kind : ((chap() ? chap() + ' ' : '') + kind));
       var p = a.parentElement, ds = p ? getComputedStyle(p).display : '';
       var after = /flex|grid/.test(ds) ? p : a;
       var nx = after.nextElementSibling, h = link(am, note);

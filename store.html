@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>BAIO Store | BAIO Learning System</title>
+<meta name="description" content="BAIO Store: Premium chapter content, Exam Scorer e-books, handwritten and colour notes PDFs, audio podcasts, flash cards and NEET Tricks for I PUC and II PUC Biology. Pay online or by UPI. By Narendra Sir.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="games/game.css?v=1">
+<style>
+body{font-family:Inter,sans-serif}
+.lang-switcher{display:none}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.steps div{padding:10px;border-radius:14px;background:var(--panel);border:1px solid var(--line);font-size:11.5px;line-height:1.4;color:var(--ink-dim);text-align:center}
+.steps b{display:block;font-size:20px;margin-bottom:2px}
+.steps strong{color:var(--ink)}
+.sbar{position:sticky;top:51px;z-index:20;background:var(--navy);padding:10px 0 8px;margin:6px -16px 0;padding-left:16px;padding-right:16px;border-bottom:1px solid var(--line)}
+.cats{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.cats::-webkit-scrollbar{display:none}
+.cats button,.cls button{flex:none;font:700 12.5px Inter,sans-serif;padding:7px 12px;border-radius:99px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;white-space:nowrap}
+.cats button[aria-pressed="true"],.cls button[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#1B1300}
+.cls{display:flex;gap:6px;margin-top:7px}
+.cls button{padding:5px 11px;font-size:11.5px}
+h2.sec{font:700 18px/1.25 'Space Grotesk',sans-serif;margin:22px 0 2px;display:flex;align-items:center;gap:8px}
+.sec-sub{font-size:12.5px;color:var(--ink-dim);margin:2px 0 10px;line-height:1.5}
+.deals{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:2px 16px 8px;scrollbar-width:none}
+.deals::-webkit-scrollbar{display:none}
+.deal{flex:0 0 min(78%,290px);scroll-snap-align:start;border-radius:18px;padding:14px;color:#fff;position:relative;overflow:hidden;display:flex;flex-direction:column;gap:6px}
+.deal .ic{position:absolute;right:10px;top:8px;font-size:38px;opacity:.9}
+.deal .tg{align-self:flex-start;font-size:10px;font-weight:800;letter-spacing:.07em;padding:3px 8px;border-radius:99px;background:rgba(255,255,255,.22)}
+.deal b{font:800 17px/1.2 'Space Grotesk',sans-serif;max-width:82%}
+.deal small{font-size:12px;opacity:.92;line-height:1.4}
+.deal .pr{font:900 22px 'Space Grotesk',sans-serif;margin-top:auto}
+.deal .pr s{font-size:13px;font-weight:600;opacity:.75;margin-right:6px}
+.deal button{font:800 13px Inter,sans-serif;padding:10px;border-radius:99px;border:none;background:#fff;color:#1B1300;cursor:pointer;margin-top:4px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.it{display:flex;gap:10px;align-items:center;padding:11px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}
+.it .ic{flex:0 0 44px;height:44px;border-radius:13px;display:grid;place-items:center;font-size:22px;overflow:hidden}
+.it .ic img{width:100%;height:100%;object-fit:cover}
+.it .tx{flex:1;min-width:0}
+.it .tx small{display:block;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-dim)}
+.it .tx b{display:block;font:700 14px/1.25 'Space Grotesk',sans-serif;color:var(--ink)}
+.it .tx em{display:block;font-style:normal;font-size:11.5px;color:var(--ink-dim);margin-top:2px;line-height:1.35}
+.it .rt{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.it .p{font:800 15px 'Space Grotesk',sans-serif;color:var(--gold)}
+.it .p s{font-size:11px;font-weight:600;color:var(--ink-dim);margin-right:3px}
+.it button.buy{font:800 12px Inter,sans-serif;padding:7px 13px;border-radius:99px;border:none;background:var(--teal);color:#06231C;cursor:pointer}
+.it a.own{font:800 11.5px Inter,sans-serif;padding:6px 11px;border-radius:99px;border:1px solid var(--ok);color:var(--ok);text-decoration:none}
+.grp{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin:14px 0 8px}
+.empty{padding:16px;border-radius:14px;border:1px dashed var(--line);color:var(--ink-dim);font-size:13px;text-align:center}
+.note{font-size:12px;line-height:1.6;color:var(--ink-dim);margin-top:22px;padding:12px;border-radius:12px;background:var(--panel2);border-left:3px solid var(--gold)}
+.note a{color:var(--teal);font-weight:700}
+/* buy sheet */
+.sbg{position:fixed;inset:0;z-index:9000;background:rgba(5,12,9,.6);display:flex;align-items:flex-end;justify-content:center}
+.sh{width:100%;max-width:460px;max-height:92vh;overflow:auto;background:var(--panel);color:var(--ink);border-radius:22px 22px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom));border:1px solid var(--line);box-shadow:0 -10px 40px rgba(0,0,0,.35)}
+@media(min-width:600px){.sbg{align-items:center}.sh{border-radius:22px}}
+.sh .x{float:right;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font-size:16px;cursor:pointer}
+.sh .hd{display:flex;gap:12px;align-items:center;clear:none}
+.sh .hd .ic{flex:0 0 54px;height:54px;border-radius:16px;display:grid;place-items:center;font-size:28px;overflow:hidden}
+.sh .hd .ic img{width:100%;height:100%;object-fit:cover}
+.sh .hd small{display:block;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--teal)}
+.sh .hd b{display:block;font:700 18px/1.25 'Space Grotesk',sans-serif}
+.sh .inc{font-size:13px;line-height:1.55;color:var(--ink-dim);margin:12px 0 0}
+.sh .price{font:900 28px 'Space Grotesk',sans-serif;color:var(--gold);margin-top:10px}
+.sh .price s{font-size:15px;font-weight:600;color:var(--ink-dim);margin-right:8px}
+.sh .pay{display:block;text-align:center;margin-top:12px;padding:14px;border-radius:14px;font:800 15px Inter,sans-serif;text-decoration:none;background:linear-gradient(135deg,#0F8F7A,#0B6F5E);color:#fff;border:none;width:100%;cursor:pointer}
+.sh .bupi-alt{margin-top:10px}
+.sh .row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.sh .row a{display:block;text-align:center;padding:11px 6px;border-radius:12px;font:700 13px Inter,sans-serif;text-decoration:none;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+.sh .row a.wa{background:#1FA855;border-color:#1FA855;color:#fff}
+.sh ol{font-size:12.5px;line-height:1.55;color:var(--ink-dim);margin:14px 0 0;padding-left:20px}
+@media(max-width:380px){.steps div{font-size:10.5px;padding:8px}.it .tx b{font-size:13.5px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow">BAIO Learning System · Narendra Sir</div>
+    <h1>🛍️ BAIO <span class="accent">Store</span></h1>
+    <p>Premium chapter content, Exam Scorer e-books, PDF notes, audio podcasts, flash cards and NEET Tricks for I PUC and II PUC Biology, all in one place.</p>
+  </section>
+  <div class="steps" aria-label="How buying works">
+    <div><b>💳</b><strong>Pay</strong> online, or by UPI with the QR</div>
+    <div><b>💬</b><strong>Send</strong> the payment screenshot on WhatsApp</div>
+    <div><b>🔓</b><strong>Unlock</strong> with the code Narendra Sir sends you</div>
+  </div>
+
+  <div class="sbar">
+    <div class="cats" role="group" aria-label="Category" id="cats"></div>
+    <div class="cls" role="group" aria-label="Class" id="cls"></div>
+  </div>
+
+  <div id="deals"></div>
+  <div id="list"></div>
+
+  <p class="note">Every item unlocks on the phone where you enter your code. Already paid and got a code? Tap <b>Buy</b> on that item, then <b>Enter my code</b>. Questions about an order? <a href="https://wa.me/919008968389" target="_blank" rel="noopener">Message Narendra Sir on WhatsApp</a>.</p>
+  <footer>Narendra Sir · Biology Lecturer · BAIO Learning System</footer>
+</div>
+<script src="games/common.js?v=4"></script>
+<script src="store/store-data.js?v=1"></script>
+<script>
+GZ.nav();
+(function(){
+const D = window.STORE_DATA; if(!D) return;
+const $ = s => document.querySelector(s);
+const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const IDS = Object.keys(D.ch);
+const ord = id => (id.startsWith('pu1') ? 0 : 100) + +id.split('-ch')[1];
+const cls = id => id.startsWith('pu1') ? 'I PUC' : 'II PUC';
+const chNo = id => id.split('-ch')[1];
+const short = id => (id.startsWith('pu1') ? 'PU-I' : 'PU-II') + ' Ch ' + chNo(id);
+const page = id => D.ch[id].h || '';
+const readJSON = k => { try{ return JSON.parse(localStorage.getItem(k) || 'null'); }catch(e){ return null; } };
+const bought = k => { const u = k && readJSON(k); return !!(u && u.unlocked && ['demo', 'masterdemo', 'trial'].indexOf(u.method) === -1); };
+const inStore = (k, id, b) => { const s = readJSON(k) || {}; return !!(s['*'] || s[id] || (b && s[b])); };
+const bOf = id => id.startsWith('pu1') ? 'pu1-all' : 'pu2-all';
+const PREMIUM_INC = 'Mind Map, Class Presentation, MCQ Quiz, NEET & KCET Practice, Answer Practice, Paper Generator, Board Important and the chapter Audio Podcast.';
+
+/* catalogue: {id, cat, c (class key), ic, img, k (kicker), t, inc, p, was, pay (Razorpay or upi link), open (where the code is entered), own} */
+const P = [];
+IDS.slice().sort((a, b) => ord(a) - ord(b)).forEach(id => {
+  const c = D.ch[id], k = id.slice(0, 3);
+  if(c.prem) P.push({id: 'prem-' + id, cat: 'prem', c: k, ic: c.i, col: c.c, k: cls(id) + ' · Ch ' + chNo(id), t: c.t + ' Premium', inc: PREMIUM_INC, p: c.prem[0], was: c.prem[2] > c.prem[0] ? c.prem[2] : 0, pay: c.prem[1], open: page(id), own: () => bought(c.prem[3]), note: short(id) + ' Premium'});
+  if(c.hw) P.push({id: 'hw-' + id, cat: 'pdf', c: k, ic: '✍️', col: c.c, k: cls(id) + ' · Ch ' + chNo(id) + ' · PDF', t: c.t + ' Handwritten Notes', inc: 'Narendra Sir\'s handwritten-style notes for the full chapter, as a PDF to keep.', p: c.hw[0], pay: c.hw[1], open: page(id), own: () => bought(c.hw[2]), note: short(id) + ' Handwritten Notes'});
+  if(c.cn) P.push({id: 'cn-' + id, cat: 'pdf', c: k, ic: '🎨', col: c.c, k: cls(id) + ' · Ch ' + chNo(id) + ' · PDF', t: c.t + ' Colour Notes', inc: 'Narendra Sir\'s colour notes for the chapter, as a PDF to keep.', p: c.cn[0], pay: c.cn[1], open: page(id), own: () => bought(c.cn[2]), note: short(id) + ' Colour Notes'});
+});
+P.push({id: 'cn-maths', cat: 'pdf', c: 'pu2', ic: '📐', col: '#3D6FD1', k: 'II PUC · Maths · PDF', t: 'II PUC Maths Colour Notes', inc: 'Colour notes for all 13 II PUC Maths chapters (28 pages), as a PDF to keep. Reading in the app is free.', p: D.mathsCn[0], pay: D.mathsCn[1], open: 'pu2-maths-colour-notes.html', own: () => false, note: 'II PUC Maths Colour Notes'});
+[['pu1', 'I PUC'], ['pu2', 'II PUC']].forEach(([k, n]) => P.push({id: 'book-' + k, cat: 'book', c: k, img: 'prep-books-assets/' + k + '/cover.jpg', ic: '📕', col: '#E8833A', k: n + ' · E-Book', t: n + ' Biology Board Exam Scorer', inc: 'Chapter-wise revision e-book with model question paper answers and important diagrams, for the board exam.', p: 50, pay: '', open: 'biology-prep-books.html#' + k, own: () => false, note: n + ' Biology Board Exam Scorer e-book'}));
+D.pod.slice().sort((a, b) => ord(a) - ord(b)).forEach(id => { const c = D.ch[id]; P.push({id: 'pod-' + id, cat: 'pod', c: id.slice(0, 3), ic: '🎧', col: c.c, k: cls(id) + ' · Ch ' + chNo(id), t: c.t + ' Podcast', inc: 'Full chapter audio by Narendra Sir in English, Kannada and Hindi (more languages in some chapters). First 2 minutes free.', p: D.podPrice, pay: '', open: 'audio-podcasts.html#' + id, own: () => inStore('baio_pod_unlock', id, bOf(id)), note: short(id) + ' Podcast'}); });
+D.fc.slice().sort((a, b) => ord(a) - ord(b)).forEach(id => { const c = D.ch[id]; P.push({id: 'fc-' + id, cat: 'fc', c: id.slice(0, 3), ic: '🧠', col: c.c, k: cls(id) + ' · Ch ' + chNo(id), t: c.t + ' Flash Cards', inc: 'Every flash card for the chapter, for quick recall before tests.', p: D.fcPrice, pay: D.fcLinks[id] || D.fcLink, open: 'flashcards.html#' + id, own: () => inStore('baio_flashcards_unlock', id), note: 'Flash cards ' + id.toUpperCase()}); });
+D.nt.slice().sort((a, b) => ord(a) - ord(b)).forEach(id => { const c = D.ch[id]; P.push({id: 'nt-' + id, cat: 'nt', c: id.slice(0, 3), ic: '🎯', col: c.c, k: cls(id) + ' · Ch ' + chNo(id), t: c.t + ' NEET Tricks', inc: 'Memory tricks, examiner traps and a quick quiz for the chapter. Free preview in every chapter.', p: D.ntPrice, pay: '', open: 'neet-tricks.html#' + id, own: () => inStore('baio_neettricks_unlock', id, bOf(id)), note: 'NEET Tricks ' + short(id)}); });
+/* bundles (best value) */
+const B = [
+  {id: 'b-prem2', cat: 'prem', c: 'pu2', ic: '🎁', grad: 'linear-gradient(135deg,#0F6E5C,#13977F)', tag: 'BEST VALUE · 15% OFF', k: 'II PUC · All 13 chapters', t: 'All PU-II Premium', inc: 'Premium for all 13 II PUC chapters with one unlock code. ' + PREMIUM_INC, p: D.bundle[0], was: D.bundle[2], pay: D.bundle[1], open: 'pu2-cart.html', own: () => false, note: 'All 13 PU-II chapters Premium'},
+  {id: 'b-pod1', cat: 'pod', c: 'pu1', ic: '🎧', grad: 'linear-gradient(135deg,#5A1E4A,#9C3A6B)', tag: 'ALL I PUC PODCASTS', k: 'I PUC · every chapter', t: 'All PU-I Podcasts', inc: 'Audio podcasts for every I PUC chapter in the app, one payment.', p: D.podB['pu1-all'], was: D.pod.filter(i => i.startsWith('pu1')).length * D.podPrice, pay: '', open: 'audio-podcasts.html#pu1-all', own: () => inStore('baio_pod_unlock', 'pu1-all'), note: 'Podcasts PU-I all chapters'},
+  {id: 'b-pod2', cat: 'pod', c: 'pu2', ic: '🎧', grad: 'linear-gradient(135deg,#3B1F6E,#6A3FB5)', tag: 'ALL II PUC PODCASTS', k: 'II PUC · every chapter', t: 'All PU-II Podcasts', inc: 'Audio podcasts for all 13 II PUC chapters, one payment.', p: D.podB['pu2-all'], was: D.pod.filter(i => i.startsWith('pu2')).length * D.podPrice, pay: '', open: 'audio-podcasts.html#pu2-all', own: () => inStore('baio_pod_unlock', 'pu2-all'), note: 'Podcasts PU-II all chapters'},
+  {id: 'b-nt1', cat: 'nt', c: 'pu1', ic: '🎯', grad: 'linear-gradient(135deg,#7A4A00,#C07A12)', tag: 'ALL I PUC NEET TRICKS', k: 'I PUC · every chapter', t: 'All PU-I NEET Tricks', inc: 'NEET Tricks for every I PUC chapter in the app, one payment.', p: D.ntB['pu1-all'], was: D.nt.filter(i => i.startsWith('pu1')).length * D.ntPrice, pay: '', open: 'neet-tricks.html#pu1-all', own: () => inStore('baio_neettricks_unlock', 'pu1-all'), note: 'NEET Tricks PU-I all chapters'},
+  {id: 'b-nt2', cat: 'nt', c: 'pu2', ic: '🎯', grad: 'linear-gradient(135deg,#7A2E0E,#C2571F)', tag: 'ALL II PUC NEET TRICKS', k: 'II PUC · every chapter', t: 'All PU-II NEET Tricks', inc: 'NEET Tricks for all 13 II PUC chapters, one payment.', p: D.ntB['pu2-all'], was: D.nt.filter(i => i.startsWith('pu2')).length * D.ntPrice, pay: '', open: 'neet-tricks.html#pu2-all', own: () => inStore('baio_neettricks_unlock', 'pu2-all'), note: 'NEET Tricks PU-II all chapters'}
+];
+const ALL = {}; P.concat(B).forEach(x => { ALL[x.id] = x; });
+const CATS = [['all', '🛍️ All'], ['prem', '⭐ Premium'], ['book', '📕 E-Books'], ['pdf', '📄 PDFs'], ['pod', '🎧 Podcasts'], ['fc', '🧠 Flash Cards'], ['nt', '🎯 NEET Tricks']];
+const CNAME = {prem: ['⭐ Premium chapter content', 'Unlock every Premium tab of a chapter page. One payment per chapter, or the whole of II PUC at 15% off.'], book: ['📕 E-Books', 'Board Exam Scorer revision e-books for I PUC and II PUC.'], pdf: ['📄 PDFs', 'Handwritten notes and colour notes to download and keep.'], pod: ['🎧 Audio Podcasts', 'Listen to every chapter, explained by Narendra Sir.'], fc: ['🧠 Flash Cards', 'Every flash card of a chapter for quick recall.'], nt: ['🎯 NEET Tricks', 'Memory tricks and examiner traps for NEET, chapter by chapter.']};
+
+let cat = 'all', only = '';
+try{ const z = JSON.parse(localStorage.getItem('baio_zone') || '{}'); if(z.cls === 1) only = 'pu1'; else if(z.cls === 2) only = 'pu2'; }catch(e){}
+const h0 = location.hash.slice(1); if(CNAME[h0]) cat = h0;
+
+function chips(){
+  $('#cats').innerHTML = CATS.map(([k, n]) => '<button type="button" data-c="' + k + '" aria-pressed="' + (k === cat) + '">' + n + '</button>').join('');
+  $('#cls').innerHTML = [['', 'Both classes'], ['pu1', 'I PUC'], ['pu2', 'II PUC']].map(([k, n]) => '<button type="button" data-k="' + k + '" aria-pressed="' + (k === only) + '">' + n + '</button>').join('');
+}
+const price = x => (x.was ? '<s>₹' + x.was + '</s>' : '') + '₹' + x.p;
+function row(x){
+  const ic = x.img ? '<img src="' + x.img + '" alt="" loading="lazy">' : x.ic;
+  const r = x.own() ? '<a class="own" href="' + esc(x.open) + '">✓ Unlocked</a>' : '<button type="button" class="buy" data-b="' + x.id + '">Buy</button>';
+  return '<div class="it"><span class="ic" style="background:' + x.col + '26">' + ic + '</span><div class="tx"><small>' + esc(x.k) + '</small><b>' + esc(x.t) + '</b></div><div class="rt"><span class="p">' + price(x) + '</span>' + r + '</div></div>';
+}
+function deal(x){
+  return '<div class="deal" style="background:' + x.grad + '"><span class="ic" aria-hidden="true">' + x.ic + '</span><span class="tg">' + esc(x.tag) + '</span><b>' + esc(x.t) + '</b><small>' + esc(x.k) + '</small><span class="pr">' + price(x) + '</span>' +
+    (x.own() ? '<button type="button" onclick="location.href=\'' + esc(x.open) + '\'">✓ Unlocked · Open</button>' : '<button type="button" data-b="' + x.id + '">Buy now</button>') + '</div>';
+}
+function render(){
+  chips();
+  const fit = x => (cat === 'all' || x.cat === cat) && (!only || x.c === only);
+  const ds = B.filter(fit);
+  $('#deals').innerHTML = ds.length ? '<h2 class="sec">🔥 Best value</h2><p class="sec-sub">Whole-class bundles: one payment, one unlock code.</p><div class="deals">' + ds.map(deal).join('') + '</div>' : '';
+  const cats = cat === 'all' ? ['prem', 'book', 'pdf', 'pod', 'fc', 'nt'] : [cat];
+  let h = '';
+  cats.forEach(k => {
+    const L = P.filter(x => x.cat === k && fit(x)); if(!L.length) return;
+    h += '<h2 class="sec" id="s-' + k + '">' + CNAME[k][0] + '</h2><p class="sec-sub">' + esc(CNAME[k][1]) + '</p>';
+    [['pu1', 'I PUC'], ['pu2', 'II PUC']].forEach(([c, n]) => {
+      const M = L.filter(x => x.c === c); if(!M.length) return;
+      if(!only) h += '<div class="grp">' + n + '</div>';
+      h += '<div class="grid">' + M.map(row).join('') + '</div>';
+    });
+  });
+  $('#list').innerHTML = h || '<div class="empty">Nothing here for this class yet.</div>';
+}
+document.addEventListener('click', e => {
+  const c = e.target.closest('[data-c]'); if(c && c.closest('#cats')){ cat = c.dataset.c; history.replaceState(null, '', cat === 'all' ? location.pathname : '#' + cat); render(); return; }
+  const k = e.target.closest('[data-k]'); if(k){ only = k.dataset.k; render(); return; }
+  const b = e.target.closest('[data-b]'); if(b && ALL[b.dataset.b]) buy(ALL[b.dataset.b]);
+});
+
+/* buy sheet: Razorpay first where it exists, UPI second (pay/upi.js adds "Or pay by UPI" under a Razorpay link) */
+function profile(){ return readJSON('baio_student') || {}; }
+function buy(x){
+  close();
+  const st = profile();
+  const msg = 'Hi Narendra Sir, I bought ' + x.note + ' (₹' + x.p + ') from the BAIO Store.\n\nName: ' + (st.name || '') + '\nRoll Number: ' + (st.roll || '') + '\nSection: ' + (st.section || '') + '\n\n(Attaching my payment screenshot below)';
+  const wa = 'https://wa.me/919008968389?text=' + encodeURIComponent(msg);
+  const upi = window.BAIO_UPI ? BAIO_UPI.link(x.p, x.note) : '';
+  const rzp = /^https:\/\//.test(x.pay);
+  const payBtn = rzp ? '<a class="pay" href="' + esc(x.pay) + '" data-upi-note="' + esc(x.note) + '" target="_blank" rel="noopener">💳 Pay ₹' + x.p + ' online</a>'
+    : '<a class="pay" href="' + esc(upi || x.pay) + '">📲 Pay ₹' + x.p + ' by UPI · scan QR</a>';
+  const ic = x.img ? '<img src="' + x.img + '" alt="">' : x.ic;
+  const bg = document.createElement('div'); bg.className = 'sbg'; bg.id = 'sbg';
+  bg.innerHTML = '<div class="sh" role="dialog" aria-modal="true" aria-labelledby="shT"><button type="button" class="x" aria-label="Close">✕</button>' +
+    '<div class="hd"><span class="ic" style="background:' + (x.col || '#7A5CFF') + '26">' + ic + '</span><div><small>' + esc(x.k) + '</small><b id="shT">' + esc(x.t) + '</b></div></div>' +
+    '<p class="inc">' + esc(x.inc) + '</p><div class="price">' + price(x) + '</div>' + payBtn +
+    '<div class="row"><a class="wa" href="' + wa + '" target="_blank" rel="noopener">💬 Send screenshot</a><a href="' + esc(x.open) + '">🔓 Enter my code</a></div>' +
+    '<ol><li>Pay ₹' + x.p + (rzp ? ' online, or by UPI with the QR.' : ' by UPI: scan the QR or tap Pay.') + '</li><li>Send the payment screenshot to Narendra Sir on WhatsApp.</li><li>He sends your unlock code. Tap <b>Enter my code</b> and type it in.</li></ol></div>';
+  document.body.appendChild(bg);
+  bg.addEventListener('click', ev => { if(ev.target === bg || ev.target.closest('.x')) close(); });
+  bg.querySelector('.x').focus();
+}
+function close(){ const b = document.getElementById('sbg'); if(b) b.remove(); }
+document.addEventListener('keydown', e => { if(e.key === 'Escape') close(); });
+window.addEventListener('pageshow', render);
+render();
+})();
+</script>
+<script src="pay/upi.js?v=2"></script>
+</body>
+</html>
