@@ -1,0 +1,76 @@
+/* BAIO Game Zone: home-screen look (purple / lavender, Poppins, pastel tiles, white rounded cards).
+   Loaded after games/game.css on the Game Zone hub and every game page; only colours, fonts and shapes change. */
+:root:not([data-theme="light"]){
+  --navy:#120D2B; --panel:#1E1742; --panel2:#271F55;
+  --gold:#FFC93C; --gold2:#F5A623; --teal:#B39BFF;
+  --ink:#F1EEFF; --ink-dim:#A9A3CF; --line:rgba(124,77,255,.24);
+  --sel:rgba(124,77,255,.22);
+  --gzp1:#7C4DFF; --gzp3:#B39BFF; --gzsh:rgba(0,0,0,.35);
+}
+html[data-theme="light"]{
+  --navy:#F5F3FF; --panel:#FFFFFF; --panel2:#F1EDFF;
+  --gold:#5B2EE0; --gold2:#4A1FD1; --teal:#7C4DFF;
+  --ink:#1E1B4B; --ink-dim:#6B6890; --line:rgba(91,46,224,.14);
+  --sel:rgba(124,77,255,.14);
+  --gzp1:#5B2EE0; --gzp3:#A47BFF; --gzsh:rgba(30,27,75,.09);
+}
+body{background:var(--navy) !important}
+body, body *:not(svg):not(svg *):not(code):not(pre):not(.seq):not(.base):not(.key){font-family:'Poppins','Noto Sans Kannada','Noto Sans Devanagari',system-ui,sans-serif !important}
+
+/* top bar: white, like the home header */
+.topnav{background:var(--panel) !important; border-bottom:0 !important; box-shadow:0 6px 16px var(--gzsh); backdrop-filter:none !important}
+:root:not([data-theme="light"]) .topnav{background:rgba(30,23,66,.96) !important}
+.brand{font-weight:700 !important}
+.lang-btn{border-radius:99px !important; border:1.5px solid var(--line) !important; background:var(--panel) !important; color:var(--ink) !important; font-weight:600 !important}
+.lang-btn.active{background:linear-gradient(135deg,#5B2EE0,#A47BFF) !important; color:#fff !important; border-color:transparent !important}
+.icon-btn{border-radius:14px !important; border:0 !important; background:var(--panel2) !important}
+
+/* hero: purple card like the home hero */
+.hero{margin-top:14px; padding:22px 20px 20px !important; border-radius:26px; text-align:left !important; color:#fff; position:relative; overflow:hidden;
+  background:radial-gradient(circle at 88% 20%,rgba(255,120,200,.55),transparent 45%),linear-gradient(135deg,#4A1FD1 0%,#6E3BF0 50%,#9B6BFF 100%);
+  box-shadow:0 18px 36px rgba(91,46,224,.32)}
+.hero .eyebrow{display:inline-block; color:#fff !important; background:rgba(255,255,255,.18); padding:4px 10px; border-radius:99px; letter-spacing:.08em !important; font-size:10.5px !important; font-weight:600 !important}
+.hero h1{color:#fff !important; font-weight:800 !important; font-size:26px !important; line-height:1.15 !important}
+.hero h1 .accent{color:#FFE27A !important}
+.hero p{color:rgba(255,255,255,.9) !important; margin-left:0 !important; text-align:left; font-size:13px !important}
+
+/* cards and buttons */
+.card{border:0 !important; border-radius:24px !important; box-shadow:0 8px 22px var(--gzsh)}
+.card h2{color:var(--ink) !important; font-weight:700 !important}
+.btn{border-radius:99px !important; font-weight:700 !important; border:1.5px solid var(--line) !important; background:var(--panel) !important; color:var(--gzp1) !important}
+:root:not([data-theme="light"]) .btn{color:#CBB8FF !important}
+.btn.primary{background:linear-gradient(135deg,#5B2EE0,#A47BFF) !important; color:#fff !important; border-color:transparent !important; box-shadow:0 6px 14px rgba(91,46,224,.28)}
+.btn.teal{color:var(--gzp1) !important; border-color:rgba(124,77,255,.4) !important}
+.tab{border-radius:99px !important; border:1.5px solid var(--line) !important; background:var(--panel) !important; font-weight:600 !important}
+.tab.on{background:linear-gradient(135deg,#5B2EE0,#A47BFF) !important; color:#fff !important; border-color:transparent !important}
+.opt{border-radius:18px !important; border:1.5px solid var(--line) !important; background:var(--panel) !important; font-weight:600 !important}
+.opt.sel{border-color:var(--gzp1) !important; background:var(--sel) !important}
+.opt.ok{background:#16A36B !important; border-color:#16A36B !important; color:#fff !important}
+.prog i{background:linear-gradient(90deg,#5B2EE0,#A47BFF) !important}
+.verdict{border-radius:18px !important}
+.score, .big{color:var(--gzp1) !important}
+:root:not([data-theme="light"]) .score, :root:not([data-theme="light"]) .big{color:#FFD86B !important}
+
+/* ---------- Game Zone hub (games.html) ---------- */
+.daily{border:0 !important; background:var(--panel) !important; box-shadow:0 10px 26px rgba(91,46,224,.18) !important; position:relative; overflow:hidden}
+.daily::before{content:''; position:absolute; left:0; right:0; top:0; height:6px; background:linear-gradient(90deg,#FF7A59,#FF4D7E,#A47BFF)}
+.daily .eyebrow{color:var(--gzp1) !important}
+.streak{border:0 !important; color:#fff !important; background:linear-gradient(120deg,#FF7A59,#FF4D7E) !important; box-shadow:0 6px 14px rgba(255,77,126,.28)}
+.clue{border:0 !important; background:var(--panel2) !important; border-radius:16px !important}
+.hl .o{border:0 !important; border-radius:18px !important; box-shadow:0 4px 12px var(--gzsh)}
+.hl .o b{color:var(--gzp1) !important}
+.games{gap:12px !important}
+.g{border:0 !important; border-radius:22px !important; color:#1E1B4B !important; position:relative; overflow:hidden; box-shadow:0 8px 20px var(--gzsh); min-height:150px}
+.g:after{content:''; position:absolute; right:-26px; bottom:-26px; width:90px; height:90px; border-radius:50%; background:rgba(255,255,255,.35)}
+.g:hover{transform:translateY(-2px)}
+.g .e{width:52px; height:52px; border-radius:16px; display:grid; place-items:center; font-size:27px !important; background:rgba(255,255,255,.75)}
+.g b{color:#1E1B4B !important; font-weight:700 !important; font-size:16px !important}
+.g span:not(.e){color:rgba(30,27,75,.72) !important; font-size:12.5px !important}
+.g em{color:#4A1FD1 !important; font-weight:700 !important; position:relative; z-index:1}
+.g:nth-child(6n+1){background:linear-gradient(145deg,#FFE9A8,#FFD166)}
+.g:nth-child(6n+2){background:linear-gradient(145deg,#FFD6EC,#F7A8D8)}
+.g:nth-child(6n+3){background:linear-gradient(145deg,#C9F2D9,#7FDCA6)}
+.g:nth-child(6n+4){background:linear-gradient(145deg,#E3D9FF,#B9A3FF)}
+.g:nth-child(6n+5){background:linear-gradient(145deg,#D3E8FF,#8EC5FF)}
+.g:nth-child(6n+6){background:linear-gradient(145deg,#FFE0CC,#FFAB7A)}
+footer{color:var(--ink-dim) !important}
