@@ -19,7 +19,7 @@ html[data-theme="light"]{
   --hs-ink:#1E1B4B; --hs-muted:#6B6890; --hs-card:#FFFFFF; --hs-sh:rgba(30,27,75,.09); --hs-p1:#5B2EE0; --hs-p3:#A47BFF;
 }
 html body{background:var(--bg-0) !important}
-.app, .app *:not(svg):not(svg *){font-family:'Poppins','Noto Sans Kannada','Noto Sans Devanagari',system-ui,sans-serif !important}
+body, body *:not(svg):not(svg *):not(code):not(pre){font-family:'Poppins','Noto Sans Kannada','Noto Sans Devanagari',system-ui,sans-serif !important}
 .app{padding-bottom:110px !important}
 
 /* ---------- hero header (like the home hero card) ---------- */
@@ -109,3 +109,32 @@ html[data-theme="light"] .card h3[style*="gold"], html[data-theme="light"] .card
 .app > .header .lang-switcher-btn{font-size:10.5px !important; padding:0 8px !important; gap:3px !important}
 .app > .header .baio-brand{max-width:68%}
 .hs-art{top:42px; font-size:76px}
+
+/* ======================================================================
+   I PUC chapter pages (pu1-ch*.html) use other colour names and a
+   rendered tab bar (.tabbar .tab, switchTab()); map them to the same look.
+   ====================================================================== */
+:root:not([data-theme="light"]){--navy:#120D2B; --navy2:#160F36; --panel2:#271F55; --gold2:#FFD86B; --teal2:#7C4DFF; --ink:#F1EEFF; --ink-dim:#A9A3CF; --line:rgba(124,77,255,.22)}
+html[data-theme="light"]{--navy:#F5F3FF; --navy2:#EFEBFF; --panel2:#F1EDFF; --gold2:#4A1FD1; --teal2:#5B2EE0; --ink:#1E1B4B; --ink-dim:#6B6890; --line:rgba(91,46,224,.12)}
+.app > .header .chapter-title{color:#fff !important; font-size:24px !important; font-weight:800 !important; line-height:1.15 !important; margin:4px 0 0 !important; max-width:72%; position:relative; z-index:1}
+.app > .header .topic-sub, .app > .header .credit{color:rgba(255,255,255,.9) !important}
+.tabbar-wrap{border-bottom:0 !important}
+.tabbar .tab{background:var(--hs-card) !important; border:0 !important; color:var(--hs-ink) !important; border-radius:99px !important; padding:9px 14px !important;
+  font-size:12px !important; font-weight:600 !important; box-shadow:0 3px 10px var(--hs-sh) !important}
+.tabbar .tab.active{background:linear-gradient(135deg,#5B2EE0,#A47BFF) !important; color:#fff !important; box-shadow:0 6px 14px rgba(91,46,224,.35) !important}
+.tabbar{gap:8px !important; padding:2px 2px 6px !important}
+.section, .setup-card{border:0 !important; border-radius:20px !important; box-shadow:0 6px 18px var(--hs-sh) !important}
+.start-btn, .fc-btn.primary, .qz-next{background:linear-gradient(135deg,#5B2EE0,#A47BFF) !important; color:#fff !important; border:0 !important; border-radius:99px !important; box-shadow:0 6px 14px rgba(91,46,224,.28)}
+.opt-btn{border-radius:99px !important}
+.opt-btn.sel{background:linear-gradient(135deg,#5B2EE0,#A47BFF) !important; color:#fff !important; border-color:transparent !important}
+.fc-btn{border-radius:99px !important}
+.stat-box{border-radius:16px !important}
+/* pages whose .app has no side padding: keep the cards off the screen edge */
+.hs-pad .app > .header{margin:12px 12px 14px !important}
+.hs-pad #hsQuick{margin:0 12px}
+.hs-pad .student-greet-bar, .hs-pad .whatsnew-banner{margin-left:12px !important; margin-right:12px !important}
+.hs-pad .tabbar-wrap{padding-left:6px !important; padding-right:6px !important}
+.hs-pad #ntPromo{margin-left:12px !important; margin-right:12px !important}
+#ntPromo .sl{border-radius:20px !important}
+.marks-info{background:linear-gradient(135deg,#4A1FD1,#7C4DFF) !important; color:#fff !important; border-radius:18px !important}
+.marks-info b{color:#FFE27A !important}
