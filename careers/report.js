@@ -317,7 +317,7 @@
     try{ var p = JSON.parse(localStorage.getItem('baio_student') || 'null'); if(p && p.roll && /^2[56]MPU\d{4}$/i.test(p.roll)) roll = p.roll.toUpperCase(); }catch(e){}
     return '<p class="sub">'+u.s+'</p><div class="frm"><label>'+u.roll+'<input id="cpRoll" autocomplete="username" placeholder="26MPU0001" value="'+roll+'" autocapitalize="characters"></label>'
       + '<label>'+u.pass+'<input id="cpPass" type="password" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></label>'
-      + '<label class="pw-show"><input type="checkbox" id="cpShow"> '+u.show+'</label>'
+      + '<label class="pw-show"><input type="checkbox" id="cpShow" autocomplete="off"> '+u.show+'</label>'
       + '<button type="button" class="btn" data-rp="go">'+(loading ? u.busy : u.go)+'</button></div>' + (err ? '<p class="err">'+err+'</p>' : '');
   }
   var lastErr = '', curLang = 'en', box = null, goFn = null, D = null;
@@ -387,6 +387,12 @@
       if(first){
         box.addEventListener('click', onClick);
         box.addEventListener('input', function(e){ if(e.target.id === 'cpPass') onCode(e.target); });
+        /* 'Show password' is always unticked again when the student leaves the page or comes back to it */
+        var hideCode = function(){ var cb = document.getElementById('cpShow'), pi = document.getElementById('cpPass');
+          if(cb) cb.checked = false; if(pi && pi.type !== 'password'){ pi.type = 'password'; pi.value = new Array(REAL.length + 1).join(DOT); } };
+        document.addEventListener('visibilitychange', function(){ if(document.hidden) hideCode(); });
+        window.addEventListener('pagehide', hideCode);
+        window.addEventListener('pageshow', hideCode);
         box.addEventListener('change', function(e){
           if(e.target.id !== 'cpShow') return;
           var pi = document.getElementById('cpPass'); if(!pi) return;
