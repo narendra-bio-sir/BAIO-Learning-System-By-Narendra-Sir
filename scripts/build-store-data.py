@@ -24,6 +24,10 @@ pod = rd('audio-podcasts.html'); i = pod.index('const POD = '); out['pod'] = re.
 out['podPrice'] = const(pod, 'PRICE'); out['podB'] = {k: int(v) for k, v in re.findall(r"'(pu[12]-all)': \{price:(\d+)", pod)}
 nt = rd('neet-tricks.html'); out['ntPrice'] = const(nt, 'PRICE'); out['ntB'] = {k: int(v) for k, v in re.findall(r"'(pu[12]-all)': \{price:(\d+)", nt)}
 for f in ['neet-tricks/nt-pu1.js', 'neet-tricks/nt-pu2.js']: out['nt'] += re.findall(r"^\s*(?:NT\[)?'(pu[12]-ch\d+)'\]?\s*[:=]", rd(f), re.M)
+hwp = rd('handwritten-notes.html'); hwd = json.loads(re.search(r'window\.HWN = (\{.*\});', rd('handwritten-notes/hw-data.js'), re.S).group(1))
+out['hwn'] = {k: v['uk'] for k, v in hwd.items()}; out['hwnPrice'] = const(hwp, 'PRICE')
+n1 = sum(k.startswith('pu1') for k in hwd); n2 = len(hwd) - n1   # a bundle is sold only with 2+ chapters (same rule as the page)
+out['hwnB'] = {k: int(v) for k, v in re.findall(r"'((?:pu[12]-)?all)': \{price:(\d+)", hwp) if (k == 'pu1-all' and n1 >= 2) or (k == 'pu2-all' and n2 >= 2) or (k == 'all' and len(hwd) > max(n1, n2) and len(hwd) >= 2)}
 mm = rd('mind-maps.html'); out['mmPrice'] = const(mm, 'PRICE'); out['mmB'] = {k: int(v) for k, v in re.findall(r"'((?:pu[12]-)?all)': \{price:(\d+)", mm)}
 out['mm'] = re.findall(r'"(pu[12]-ch\d+)":\[', rd('mind-maps/mm-data.js'))
 fc = rd('flashcards.html'); out['fcPrice'] = const(fc, 'FC_PRICE')
@@ -34,4 +38,4 @@ mcn = rd('pu2-maths-colour-notes.html'); out['mathsCn'] = [const(mcn, 'CN_PRICE_
 js = '/* BAIO Store data: built by scripts/build-store-data.py from the app pages. Do not edit by hand. */\nwindow.STORE_DATA = ' + json.dumps(out, ensure_ascii=False, separators=(',', ':')).replace('},"', '},\n"') + ';\n'
 open(R + 'store/store-data.js', 'w', encoding='utf-8').write(js)
 print('chapters', len(out['ch']), 'premium', sum('prem' in e for e in out['ch'].values()), 'hw', sum('hw' in e for e in out['ch'].values()), 'cn', sum('cn' in e for e in out['ch'].values()),
-      'pod', len(out['pod']), 'nt', len(out['nt']), 'fc', len(out['fc']), 'mm', len(out['mm']), out['mmB'], out['podB'], out['ntB'], out['bundle'], out['mathsCn'][0], out['fcLinks'])
+      'pod', len(out['pod']), 'nt', len(out['nt']), 'fc', len(out['fc']), 'mm', len(out['mm']), out['mmB'], 'hwn', len(out['hwn']), out['hwnB'], out['podB'], out['ntB'], out['bundle'], out['mathsCn'][0], out['fcLinks'])

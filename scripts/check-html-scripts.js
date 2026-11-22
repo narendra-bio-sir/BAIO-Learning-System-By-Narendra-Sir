@@ -38,6 +38,7 @@ const HTML_FILES = [
   'lecturers.html',
   'mind-maps.html',
   'store.html',
+  'handwritten-notes.html',
 ].filter(f => fs.existsSync(path.join(ROOT, f)));
 
 const PLAIN_JS_FILES = ['sw.js'].filter(f => fs.existsSync(path.join(ROOT, f)));

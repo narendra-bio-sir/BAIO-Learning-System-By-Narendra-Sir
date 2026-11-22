@@ -3,19 +3,23 @@
    (scripts/pu1-ch10/mindmap.html).
 
    Input : scripts/mind-maps/pu2-boxes.json  (made by extract.js from the chapter pages)
-   Output: mind-maps/pu2-ch<N>.jpg
+           scripts/mind-maps/authored-boxes.json (II PUC Ch 4 and Ch 9, written from NCERT)
+   Output: mind-maps/pu2-ch<N>.jpg (Ch 4 and Ch 9: over the old map in the chapter's own assets)
 
    Run:  NODE_PATH=<global node_modules with playwright> node scripts/mind-maps/build.js [pu2-ch1 ...]
 */
 const {chromium} = require('playwright');
 const fs = require('fs'), path = require('path');
 const ROOT = path.join(__dirname, '..', '..');
-const DATA = JSON.parse(fs.readFileSync(path.join(__dirname, 'pu2-boxes.json'), 'utf8'));
+const DATA = Object.assign(JSON.parse(fs.readFileSync(path.join(__dirname, 'pu2-boxes.json'), 'utf8')),
+  JSON.parse(fs.readFileSync(path.join(__dirname, 'authored-boxes.json'), 'utf8')));   /* written from NCERT for chapters whose old map was hand-drawn */
+/* these replace the old hand-drawn map at the same path, so the chapter page, the PPT generator and mind-maps.html all pick them up */
+const OUT = {'pu2-ch4': 'pu2-ch4-assets/mindmap.jpg', 'pu2-ch9': 'ch9/assets/mindmap.jpg'};
 const CH = {
   'pu2-ch1': ['Sexual Reproduction in Flowering Plants', '🌸'], 'pu2-ch2': ['Human Reproduction', '👶'],
-  'pu2-ch3': ['Reproductive Health', '🏥'], 'pu2-ch5': ['Molecular Basis of Inheritance', '🧬'],
+  'pu2-ch3': ['Reproductive Health', '🏥'], 'pu2-ch4': ['Principles of Inheritance and Variation', '🧬'], 'pu2-ch5': ['Molecular Basis of Inheritance', '🧬'],
   'pu2-ch6': ['Evolution', '🐒'], 'pu2-ch7': ['Human Health and Disease', '🦠'],
-  'pu2-ch8': ['Microbes in Human Welfare', '🧫'], 'pu2-ch10': ['Biotechnology and its Applications', '💉'],
+  'pu2-ch8': ['Microbes in Human Welfare', '🧫'], 'pu2-ch9': ['Biotechnology: Principles and Processes', '✂️'], 'pu2-ch10': ['Biotechnology and its Applications', '💉'],
   'pu2-ch11': ['Organisms and Populations', '🦁'], 'pu2-ch12': ['Ecosystem', '🌳'],
   'pu2-ch13': ['Biodiversity and Conservation', '🦋']
 };
@@ -103,7 +107,7 @@ svg.innerHTML=s;
     const p = await b.newPage({viewport: {width: 2400, height: 1200}, deviceScaleFactor: 1});
     await p.setContent(page(id), {waitUntil: 'networkidle'});
     await p.evaluate(() => document.fonts.ready); await p.waitForTimeout(200); await p.evaluate(() => draw()); await p.waitForTimeout(100);
-    const out = path.join(ROOT, 'mind-maps', id + '.jpg');
+    const out = path.join(ROOT, OUT[id] || path.join('mind-maps', id + '.jpg'));
     await p.screenshot({path: out, fullPage: true, type: 'jpeg', quality: 86});
     const h = await p.evaluate(() => document.documentElement.scrollHeight);
     console.log(id, '2400x' + h, Math.round(fs.statSync(out).size / 1024) + ' KB'); await p.close();

@@ -836,7 +836,7 @@ async function buildPresentation(chapter, opts, onStatus){
 
   if(opts.mindmap){
     onStatus('Adding the mind map…');
-    const mindmapCandidates = ['mindmap.jpg','mindmap-01.jpg','mindmap-02.jpg','mindmap-03.jpg','mindmap.png'].map(f => chapter.assetsBase + f);
+    const mindmapCandidates = ['mindmap-quick.jpg','mindmap.jpg','mindmap-01.jpg','mindmap-02.jpg','mindmap-03.jpg','mindmap.png'].map(f => chapter.assetsBase + f);
     const found = await probeFirst(mindmapCandidates);
     for(let i = 0; i < found.length; i++){
       await addImageSlide(pptx, 'Mind Map' + (found.length > 1 ? ' (' + (i + 1) + '/' + found.length + ')' : ''), found[i], chapter.title, '🧠');
