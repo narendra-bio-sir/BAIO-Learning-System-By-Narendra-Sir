@@ -206,9 +206,9 @@ setConst('COLOUR_NOTES_PAGES', String(man.cnPages || 4));
 /* Pages are Narendra Sir's own 4-page Colour Notes PDF, as 1100x1556 JPGs (render-cn.js is no longer used). */
 rep("colour-notes/page-${String(i).padStart(2,'0')}.jpg?v=1`", "colour-notes/page-${String(i).padStart(2,'0')}.jpg?v=2`");
 rep('draggable="false" width="1100" height="1450"', 'draggable="false" width="1100" height="1556"');
-rep("const CN_RAZORPAY_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=100&cu=INR&tn=PU-I%20Ch%209%20Colour%20Notes'; /* Biomolecules Colour Notes ₹100 payment link */",
-    "const CN_RAZORPAY_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=100&cu=INR&tn=PU-I%20Ch%2010%20Colour%20Notes'; /* Cell Cycle Colour Notes ₹100 payment link */");
-rep("const RAZORPAY_PREMIUM_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=1999&cu=INR&tn=PU-I%20Ch%209%20Premium';", "const RAZORPAY_PREMIUM_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=1999&cu=INR&tn=PU-I%20Ch%2010%20Premium';");
+rep("const CN_RAZORPAY_LINK = 'https://rzp.io/rzp/PzZQP9K'; /* Biomolecules Colour Notes ₹100 payment link */",
+    "const CN_RAZORPAY_LINK = 'https://rzp.io/rzp/rV09xlyo'; /* Cell Cycle Colour Notes ₹100 payment link */");
+rep("const RAZORPAY_PREMIUM_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=1999&cu=INR&tn=PU-I%20Ch%209%20Premium';", "const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/DRVyP7MF';");
 rep("const HW_RAZORPAY_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=100&cu=INR&tn=PU-I%20Ch%209%20Handwritten%20Notes';", "const HW_RAZORPAY_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=100&cu=INR&tn=PU-I%20Ch%2010%20Handwritten%20Notes';");
 
 /* Header, titles, jump list */

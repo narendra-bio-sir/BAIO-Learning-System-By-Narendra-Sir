@@ -1,5 +1,6 @@
-/* BAIO · UPI payments (replaces the old Razorpay links).
-   Any link to a "upi://pay?..." address on a page that loads this file opens a payment sheet with:
+/* BAIO · UPI payments (second option next to the Razorpay links).
+   - Every Razorpay Pay button gets a small "Or pay by UPI" button under it (same amount).
+   - Any link to a "upi://pay?..." address on a page that loads this file opens a payment sheet with:
    - Narendra Sir's UPI QR code (scan it from another phone, or save it and pick it in your UPI app),
    - a "Pay ₹X with UPI app" button (opens PhonePe / Google Pay / Paytm / BHIM with the amount filled in),
    - the UPI ID with a Copy button,
@@ -81,5 +82,40 @@
     var p = parse(a.getAttribute('href'));
     open({amount: p.amount, note: p.note});
   }, true);
+
+  /* Razorpay stays the main Pay button; a UPI option is added under each one */
+  var RZ = {"https://razorpay.me/@narendrabiosir?amount=ZFm4ghdmeB6pF5PK8Ki64w%3D%3D":[100,"Handwritten Notes"],"https://rzp.io/rzp/j2zWhMQ7":[1999,"Premium"],"https://rzp.io/rzp/3WXDfYoj":[1999,"Premium"],"https://rzp.io/rzp/ZFZzLN9e":[100,"Handwritten Notes"],"https://rzp.io/rzp/Ewi6A61":[1999,"Premium"],"https://rzp.io/rzp/AEFNemg9":[33150,"All 13 PU-II chapters Premium"],"https://rzp.io/rzp/rV09xlyo":[100,"Colour Notes"],"https://rzp.io/rzp/DRVyP7MF":[1999,"Premium"],"https://rzp.io/rzp/xCJhowtA":[100,"Handwritten Notes"],"https://rzp.io/rzp/xWUwnHU":[100,"Colour Notes"],"https://rzp.io/rzp/kFobyadb":[1999,"Premium"],"https://rzp.io/rzp/uRI9JGg":[1999,"Premium"],"https://rzp.io/rzp/3wLzPds":[1999,"Premium"],"https://rzp.io/rzp/DNgk5a4":[1999,"Premium"],"https://rzp.io/rzp/PzZQP9K":[100,"Colour Notes"],"https://rzp.io/rzp/60EJfbT":[1999,"Premium"],"https://rzp.io/rzp/tUAbuqQ":[1999,"Premium"],"https://rzp.io/rzp/8n4U8JD":[1999,"Premium"],"https://rzp.io/rzp/aG8fm6f":[1999,"Premium"],"https://rzp.io/rzp/Apl2qHpf":[1999,"Premium"],"https://rzp.io/rzp/antheLX":[1999,"Premium"],"https://rzp.io/rzp/DKcZH50":[1999,"Premium"],"https://rzp.io/rzp/gXmNPqF":[1999,"Premium"],"https://rzp.io/rzp/r269lMD":[1999,"Premium"],"https://rzp.io/rzp/UvcH8hcW":[1999,"Premium"],"https://rzp.io/rzp/5fwSJBu9":[1999,"Premium"],"https://rzp.io/rzp/AmIiixI":[1999,"Premium"],"https://rzp.io/rzp/cfFaVLoE":[50,"Flash cards"],"https://rzp.io/rzp/hDpfP67":[50,"Flash cards"]};
+  function chap(){
+    var p = location.pathname, m = p.match(/(pu[12])-ch(\d+)\.html/);
+    if(m) return (m[1] === 'pu1' ? 'PU-I' : 'PU-II') + ' Ch ' + m[2];
+    m = p.match(/\/ch(\d+)\/(index\.html)?$/); if(m) return (m[1] === '9' ? 'PU-II' : 'PU-I') + ' Ch ' + m[1];
+    return '';
+  }
+  var ALT_CSS = '.bupi-alt{display:block;width:max-content;max-width:100%;margin:8px auto 0;padding:7px 14px;border-radius:99px;border:1.5px dashed currentColor;color:inherit;font:inherit;font-size:12.5px;font-weight:700;line-height:1.3;text-align:center;text-decoration:none!important;opacity:.92;cursor:pointer;box-sizing:border-box}'
+    + '.bupi-alt:hover{opacity:1}.bh-slide .bupi-alt{margin-top:7px;padding:5px 12px;font-size:11.5px}';
+  var altStyled = false;
+  function decorate(){
+    var as = document.querySelectorAll('a[href^="https://rzp.io/"],a[href^="https://razorpay.me/"]');
+    if(!as.length) return;
+    if(!altStyled){ var st = document.createElement('style'); st.textContent = ALT_CSS; document.head.appendChild(st); altStyled = true; }
+    for(var i = 0; i < as.length; i++){
+      var a = as[i], href = a.getAttribute('href'), info = RZ[href] || null;
+      var m = (a.textContent || '').match(/₹\s*([\d,]+)/);
+      var am = m ? +m[1].replace(/,/g, '') : (info ? info[0] : 0);
+      var kind = info ? info[1] : 'Premium';
+      var note = /^All 13/.test(kind) ? kind : ((chap() ? chap() + ' ' : '') + kind);
+      var p = a.parentElement, ds = p ? getComputedStyle(p).display : '';
+      var after = /flex|grid/.test(ds) ? p : a;
+      var nx = after.nextElementSibling, h = link(am, note);
+      if(nx && nx.classList && nx.classList.contains('bupi-alt')){ if(nx.getAttribute('href') !== h) nx.setAttribute('href', h); continue; }
+      var b = document.createElement('a'); b.className = 'bupi-alt'; b.href = h;
+      b.textContent = '📲 Or pay ' + (am ? '₹' + am + ' ' : '') + 'by UPI · scan QR';
+      after.insertAdjacentElement('afterend', b);
+    }
+  }
+  var q = 0;
+  function later(){ if(!q) q = (window.requestAnimationFrame || setTimeout)(function(){ q = 0; decorate(); }); }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', decorate); else decorate();
+  if('MutationObserver' in window) new MutationObserver(later).observe(document.documentElement, {childList: true, subtree: true});
   window.BAIO_UPI = {ID: UPI_ID, QR: QR, link: link, open: open, close: close};
 })();

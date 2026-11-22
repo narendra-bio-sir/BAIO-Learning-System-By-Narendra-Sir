@@ -84,7 +84,7 @@ a.back-link{display:inline-block; margin-top:12px; font-size:12px; color:var(--t
 }
 .summary-bar button:disabled{opacity:0.4; cursor:not-allowed;}
 .summary-bar .sb-btns{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;}
-.summary-bar button.upi{background:linear-gradient(135deg,#D4AF37,#B8912A); color:#1B1300;}
+.summary-bar button.upi{background:transparent; color:var(--ink); border:1.5px dashed var(--line);}
 @media(max-width:420px){.summary-bar button{padding:10px 12px; font-size:12px;}}
 .footnote{font-size:10.5px; color:var(--ink-dim); text-align:center; margin-top:14px; line-height:1.6;}
 </style>
@@ -94,7 +94,7 @@ a.back-link{display:inline-block; margin-top:12px; font-size:12px; color:var(--t
   <header>
     <div class="eyebrow">PU-II Biology &middot; Premium Content</div>
     <div class="brand">🛒 Build Your Own Bundle</div>
-    <div class="tag">Pick exactly the chapters you want — ₹3000 each, or select all 13 for the 15% bundle discount. Pay the total by UPI, then share your selection and payment screenshot with Narendra Sir on WhatsApp.</div>
+    <div class="tag">Pick exactly the chapters you want — ₹3000 each, or select all 13 for the 15% bundle discount. Share your selection with Narendra Sir on WhatsApp and he'll send you a payment link for the total, or pay it now by UPI.</div>
     <a href="index.html" class="back-link">&larr; Back to Home</a>
   </header>
 
@@ -112,7 +112,7 @@ a.back-link{display:inline-block; margin-top:12px; font-size:12px; color:var(--t
 
   <div id="chapterList"></div>
 
-  <div class="footnote">Tap <b>Pay by UPI</b> to pay the exact total (scan the QR or pay from this phone), then <b>Share on WhatsApp</b> with your payment screenshot. Narendra Sir will send your unlock code(s) once he sees the payment.</div>
+  <div class="footnote">Payment isn't collected here &mdash; this just builds your order summary. After you share it, Narendra Sir will send a Razorpay link for the exact total, and issue your unlock code(s) once you've paid. You can also pay the total straight away with <b>Or pay by UPI</b> and send the screenshot.</div>
 </div>
 
 <div class="summary-bar">
@@ -120,7 +120,7 @@ a.back-link{display:inline-block; margin-top:12px; font-size:12px; color:var(--t
     <div class="count" id="summaryCount">0 chapters selected</div>
     <div class="price-line" id="summaryPrice">₹0</div>
   </div>
-  <div class="sb-btns"><button id="upiBtn" class="upi" disabled>📲 Pay by UPI</button><button id="checkoutBtn" disabled>💬 Share on WhatsApp</button></div>
+  <div class="sb-btns"><button id="checkoutBtn" disabled>💬 Share on WhatsApp</button><button id="upiBtn" class="upi" disabled>📲 Or pay by UPI</button></div>
 </div>
 
 <script>
@@ -227,7 +227,7 @@ document.getElementById('checkoutBtn').addEventListener('click', function(){
     + 'Name: ' + (name || '(please add my name)') + '\n'
     + 'Roll Number: ' + (roll || '(please add my roll number)') + '\n'
     + 'Section: ' + (section || '(please add my section)') + '\n\n'
-    + 'I am paying this amount by UPI and attaching my payment screenshot.';
+    + 'Could you please send me a payment link for this amount?';
   window.open('https://wa.me/919008968389?text=' + encodeURIComponent(msg), '_blank');
 });
 
