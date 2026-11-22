@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F3FF">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>Rapid Fire | BAIO Learning System</title>
-<meta name="description" content="Rapid Fire: 3 seconds per question, 20 questions a round, a fresh set every time. Memory, knowledge, skill and board-exam style questions for every I PUC and II PUC Biology chapter.">
+<meta name="description" content="Rapid Fire: 10 seconds per question, 20 questions a round, a fresh set every time. Memory, knowledge, skill and board-exam style questions for every I PUC and II PUC Biology chapter.">
 <script>
 (function(){ try{ var t = localStorage.getItem('baio_theme') || 'light'; if(t === 'light'){ document.documentElement.setAttribute('data-theme', 'light'); } else { var m = document.querySelector('meta[name="theme-color"]'); if(m) m.setAttribute('content', '#120D2B'); } }catch(e){ document.documentElement.setAttribute('data-theme', 'light'); } })();
 </script>
@@ -82,12 +82,14 @@ button{font-family:inherit;color:inherit}
 .qcard{margin-top:14px;background:var(--card);border-radius:24px;padding:16px 16px 18px;box-shadow:0 10px 26px var(--sh);position:relative;overflow:hidden}
 .tm{display:flex;align-items:center;gap:10px}
 .tm .ring{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:18px;color:#fff;flex:none;background:conic-gradient(var(--c,#16A36B) calc(var(--f,1)*360deg),rgba(124,77,255,.15) 0)}
-.tm .ring span{width:36px;height:36px;border-radius:50%;background:var(--card);display:grid;place-items:center;color:var(--ink)}
+.tm .ring span{width:36px;height:36px;font-size:16px;border-radius:50%;background:var(--card);display:grid;place-items:center;color:var(--ink)}
 .tm .cat{font-size:11px;font-weight:800;letter-spacing:.05em;padding:4px 10px;border-radius:99px;background:var(--card2);color:var(--p1);text-transform:uppercase}
 :root:not([data-theme="light"]) .tm .cat{color:#CBB8FF}
 .tm .chn{font-size:11px;color:var(--muted);font-weight:600;margin-left:auto;text-align:right;max-width:45%;line-height:1.3}
 .q{font-size:18px;font-weight:700;line-height:1.35;margin:14px 2px 14px;min-height:50px}
 .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opts.one{grid-template-columns:1fr}
+.opts.one .op{min-height:50px;text-align:left;padding:12px 14px}
 .op{border:1.5px solid var(--line);background:var(--card2);border-radius:16px;padding:14px 10px;min-height:62px;font-size:14.5px;font-weight:600;cursor:pointer;line-height:1.25;text-align:center;transition:transform .08s}
 .op:active{transform:scale(.97)}
 .op.ok{background:var(--ok);border-color:var(--ok);color:#fff}
@@ -137,9 +139,9 @@ button{font-family:inherit;color:inherit}
   <section id="setup">
     <div class="hero">
       <span class="tag">⚡ New · Speed revision</span>
-      <h1>Rapid Fire, 3 seconds a question</h1>
+      <h1>Rapid Fire, 10 seconds a question</h1>
       <p>20 quick questions per round from any chapter. A new set every time you play.</p>
-      <div class="pills"><span class="y">⏱ 3 s each</span><span>🧠 Memory</span><span>💡 Knowledge</span><span>🛠️ Skill</span><span>📝 Board</span></div>
+      <div class="pills"><span class="y">⏱ 10 s each</span><span>🧠 Memory</span><span>💡 Knowledge</span><span>🛠️ Skill</span><span>📝 Board</span></div>
       <span class="art" aria-hidden="true">⚡</span>
     </div>
 
@@ -150,7 +152,7 @@ button{font-family:inherit;color:inherit}
     <div class="sec"><h2>2. Question type</h2><span id="tyHint">Mixed is best for revision</span></div>
     <div class="types" id="types"></div>
 
-    <div class="how"><b>How it works:</b> each question gives you <b>3 seconds</b>. Tap the right answer fast. Correct = 10 points + up to 5 speed bonus. Questions you have already seen are kept aside, so every round brings <b>new questions</b>.</div>
+    <div class="how"><b>How it works:</b> each question gives you <b>10 seconds</b>. Tap the right answer fast. Correct = 10 points + up to 5 speed bonus. Questions you have already seen are kept aside, so every round brings <b>new questions</b>.</div>
     <button class="go" id="startBtn" type="button" disabled>⚡ Pick a chapter to start</button>
   </section>
 
@@ -158,7 +160,7 @@ button{font-family:inherit;color:inherit}
     <div class="bar"><button class="x" id="quitBtn" type="button" aria-label="Stop">✕</button><div class="st"><span id="gNum">1/20</span><span id="gScore">⭐ 0</span><span id="gStreak">🔥 0</span></div></div>
     <div class="prog"><i id="gProg"></i></div>
     <div class="qcard">
-      <div class="tm"><div class="ring" id="ring"><span id="ringN">3</span></div><span class="cat" id="gCat">Memory</span><span class="chn" id="gCh"></span></div>
+      <div class="tm"><div class="ring" id="ring"><span id="ringN">10</span></div><span class="cat" id="gCat">Memory</span><span class="chn" id="gCh"></span></div>
       <div class="q" id="gQ"></div>
       <div class="opts" id="gO"></div>
       <div class="flash" id="flash"></div>
@@ -186,7 +188,7 @@ button{font-family:inherit;color:inherit}
 <script>
 (function(){
 'use strict';
-var ROUND = 20, SECS = 3, BASE = 'rapid-fire/q/';
+var ROUND = 20, SECS = 10, BASE = 'rapid-fire/q/';
 var TYPES = [
   {id:'all', e:'🎲', t:'Mixed', d:'All types'},
   {id:'m', e:'🧠', t:'Memory', d:'Facts, names, terms'},
@@ -307,6 +309,7 @@ function ask(){
   $('gCat').textContent = CAT[q[0]];
   $('gCh').textContent = chSel && chSel.indexOf('all-') === 0 ? 'Ch ' + chNum(x.ch) + ' · ' + x.t : '';
   $('gQ').textContent = q[1];
+  $('gO').className = 'opts' + (opts.some(function(o){ return o.o.length > 24; }) ? ' one' : '');
   $('gO').innerHTML = opts.map(function(o, i){ return '<button type="button" class="op" data-i="' + i + '"></button>'; }).join('');
   Array.prototype.forEach.call($('gO').children, function(b, i){ b.textContent = opts[i].o; });
   runTimer();
@@ -378,7 +381,7 @@ $('againBtn').addEventListener('click', start);
 $('changeBtn').addEventListener('click', function(){ S = null; show('setup'); renderChapters(); });
 $('shareBtn').addEventListener('click', function(){
   if(!S) return;
-  var t = '⚡ I scored ' + S.score + ' points (' + S.right + '/' + S.log.length + ' correct) in BAIO Rapid Fire: ' + S.label + '. 3 seconds per question! Try it: ' + location.href.split('#')[0];
+  var t = '⚡ I scored ' + S.score + ' points (' + S.right + '/' + S.log.length + ' correct) in BAIO Rapid Fire: ' + S.label + '. 10 seconds per question! Try it: ' + location.href.split('#')[0];
   window.open('https://wa.me/?text=' + encodeURIComponent(t), '_blank', 'noopener');
 });
 

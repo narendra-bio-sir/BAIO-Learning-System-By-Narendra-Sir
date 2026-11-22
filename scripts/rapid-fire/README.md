@@ -5,7 +5,7 @@
 with type `m` memory, `k` knowledge, `s` skill, `b` board (KSEAB 1-mark style).
 
 Sources:
-- short MCQs taken from each chapter page (question ≤ 95 characters, every option ≤ 30),
+- short MCQs taken from each chapter page (question ≤ 150 characters, every option ≤ 48, readable in the 10-second limit),
   typed by their `format` / `difficulty`; 1-mark board Q&A with short answers; NEET Tricks quizzes;
 - hand-written items in `authored-pu1.txt` and `authored-pu2.txt`
   (`cat|question|correct|wrong|wrong|wrong`, correct answer first; options are shuffled in the app).

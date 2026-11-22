@@ -3,7 +3,7 @@ R='/home/user/BAIO-Learning-System-By-Narendra-Sir/'
 PAGES={'pu1-ch2':'ch2/index.html','pu1-ch3':'ch3/index.html','pu2-ch9':'ch9/index.html'}
 for n in [4,5,6,8,9,10,11]: PAGES['pu1-ch%d'%n]='pu1-ch%d.html'%n
 for n in [1,2,3,4,5,6,7,8,10,11,12,13]: PAGES['pu2-ch%d'%n]='pu2-ch%d.html'%n
-QMAX, OMAX = 95, 30
+QMAX, OMAX = 150, 48   # readable in 10 seconds
 def clean(t):
     t=html.unescape(re.sub(r'<[^>]+>','',str(t))); t=t.replace(' ',' ')
     return re.sub(r'\s+',' ',t).strip()
