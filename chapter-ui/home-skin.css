@@ -178,3 +178,17 @@ html[data-theme="light"]{--navy:#F5F3FF; --navy2:#EFEBFF; --panel2:#F1EDFF; --go
 /* first paint: hidden until home-skin.js has built the page (class set in <head>, removed after DOMContentLoaded) */
 html.hs-wait .app, html.hs-wait .hs-nav{opacity:0 !important}
 .app{transition:opacity .18s ease-out}
+
+/* phones/tablets: content starts right under the tab row (no stacked padding gap), and the tab row
+   only scrolls sideways, so a finger can't nudge the pills up and clip them */
+@media(max-width:1023px){
+  .tabbar, .tabbar-wrap .tabs{overflow-y:hidden !important}
+  .tabbar-wrap{margin-bottom:6px !important}
+  .hs-rendered .desktop-row > .content{padding-top:0 !important}
+  .hs-rendered .pillrow-wrap .pillrow{padding-top:0 !important}
+  .hs-rendered .content > .pillrow-wrap:first-child{margin-top:0 !important}
+}
+/* topic pills (Concepts, Flashcards... on I PUC pages): same height, label centred */
+.pillrow{align-items:center !important}
+.pillrow .pill{line-height:20px !important; padding-top:8px !important; padding-bottom:8px !important}
+.pillrow .pill.active{color:#fff !important}
