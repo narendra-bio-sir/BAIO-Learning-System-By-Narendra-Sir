@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B1B14">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>For Lecturers | BAIO Learning System</title>
+<meta name="description" content="Teach Biology with BAIO: a getting-started guide for lecturers, ready 40 and 60 minute class plans for every I PUC and II PUC chapter, the teaching toolkit, messages for your class group and FAQs. Free.">
+<meta property="og:title" content="Teach with BAIO — for Biology lecturers">
+<meta property="og:description" content="Class plans, activities with worksheets, Rapid Fire quizzes, question paper and PPT generators — everything a PU Biology lecturer needs, in one place.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Kannada:wght@500;700&family=Noto+Sans+Devanagari:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="games/game.css?v=1">
+<style>
+body{font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif}
+.topnav .brand{text-decoration:none}
+.lead{font-size:15px;line-height:1.65;color:var(--ink-dim);margin:10px 0 0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.chips span{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);font:700 12px/1 Inter,sans-serif;color:var(--ink)}
+.jump{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:16px}
+.jump a{display:flex;align-items:center;justify-content:center;gap:6px;min-height:46px;padding:10px 12px;border-radius:14px;border:1.5px solid var(--line);background:var(--panel);color:var(--ink);text-decoration:none;font:700 13px/1.2 Inter,sans-serif;text-align:center}
+.jump a:hover{border-color:var(--gold)}
+section.blk{margin-top:28px;scroll-margin-top:70px}
+section.blk>h2{font:700 21px/1.25 'Space Grotesk',sans-serif;display:flex;align-items:center;gap:8px}
+section.blk>p.sub{color:var(--ink-dim);font-size:14px;line-height:1.6;margin:6px 0 12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px}
+/* getting started */
+.pgr{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.pgr .bar{flex:1;height:12px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);overflow:hidden}
+.pgr .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--gold));transition:width .3s}
+.pgr b{font:800 14px Inter,sans-serif;white-space:nowrap}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.step{display:grid;grid-template-columns:34px 1fr auto;gap:12px;align-items:center;padding:12px;border-radius:14px;background:var(--panel2);border:1px solid var(--line)}
+.step .n{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--panel);border:2px solid var(--gold);color:var(--gold);font:800 14px Inter,sans-serif;cursor:pointer;padding:0}
+.step.ok .n{background:var(--ok);border-color:var(--ok);color:#fff}
+.step b{display:block;font:700 15px/1.3 'Space Grotesk',sans-serif}
+.step small{display:block;color:var(--ink-dim);font-size:12.5px;line-height:1.45;margin-top:2px}
+.step .go{white-space:nowrap}
+@media(max-width:480px){.step{grid-template-columns:34px 1fr}.step .go{grid-column:2;justify-self:start}}
+.cert{margin-top:12px;padding:14px;border-radius:14px;border:1.5px dashed var(--gold);background:rgba(212,175,55,.08)}
+.cert.on{border-style:solid}
+.cert h3{font:700 16px 'Space Grotesk',sans-serif}
+.cert p{font-size:13.5px;line-height:1.55;color:var(--ink-dim);margin:4px 0 10px}
+.frm{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:520px){.frm{grid-template-columns:1fr}}
+.frm input,.frm select,.sel{width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);font:600 14px Inter,sans-serif;min-height:46px}
+.frm label,.lbl{display:block;font:700 12px Inter,sans-serif;color:var(--ink-dim);margin-bottom:4px}
+/* planner */
+.pform{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pform .wide{grid-column:1/-1}
+@media(max-width:520px){.pform{grid-template-columns:1fr}}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{flex:1 1 auto;min-height:44px;padding:9px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--panel2);color:var(--ink);font:700 13px Inter,sans-serif;cursor:pointer}
+.seg button[aria-pressed="true"]{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1406;border-color:var(--gold)}
+.plan{margin-top:14px;border-radius:18px;border:1px solid var(--line);background:var(--panel2);overflow:hidden}
+.plan .ph{padding:14px 16px;background:linear-gradient(135deg,var(--pc,#2e9e4f),#0B1F16);color:#fff}
+.plan .ph small{display:block;font:700 11.5px Inter,sans-serif;letter-spacing:.5px;opacity:.85;text-transform:uppercase}
+.plan .ph b{display:block;font:700 19px/1.3 'Space Grotesk',sans-serif;margin-top:3px}
+.plan .ph span{display:block;font-size:13px;opacity:.9;margin-top:3px}
+.tl{list-style:none;margin:0;padding:6px 16px 4px}
+.tl>li{display:grid;grid-template-columns:66px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.tl>li:last-child{border-bottom:0}
+.tl .t{font:800 12.5px Inter,sans-serif;color:var(--gold);padding-top:2px}
+.tl .t em{display:block;font-style:normal;font-weight:600;color:var(--ink-dim);font-size:11px;margin-top:2px}
+.tl h4{font:700 15px/1.35 'Space Grotesk',sans-serif;margin:0}
+.tl p{margin:4px 0 0;font-size:13.5px;line-height:1.55}
+.tl ul{margin:6px 0 0;padding-left:18px;font-size:13px;line-height:1.5;color:var(--ink-dim)}
+.tl .lk{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.lk a{display:inline-flex;align-items:center;gap:5px;padding:7px 11px;border-radius:999px;border:1.5px solid var(--teal);color:var(--teal);text-decoration:none;font:700 12.5px Inter,sans-serif;min-height:34px}
+.lk a.g{border-color:var(--gold);color:var(--gold)}
+.pacts{display:flex;flex-wrap:wrap;gap:8px;padding:12px 16px 16px}
+/* toolkit */
+.tk{display:grid;gap:14px}
+.tk h3{font:700 15px 'Space Grotesk',sans-serif;color:var(--gold);margin:0 0 8px}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.tool{display:flex;gap:12px;align-items:flex-start;padding:12px;border-radius:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);text-decoration:none}
+.tool:hover{border-color:var(--gold)}
+.tool .ic{flex:0 0 42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:var(--panel2);border:1px solid var(--line)}
+.tool b{display:block;font:700 14px/1.3 'Space Grotesk',sans-serif}
+.tool small{display:block;color:var(--ink-dim);font-size:12.5px;line-height:1.45;margin-top:3px}
+/* engage */
+.msgs{display:grid;gap:10px}
+.msg{padding:14px;border-radius:14px;background:var(--panel2);border:1px solid var(--line)}
+.msg b{display:block;font:700 14px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari',sans-serif;margin-bottom:6px}
+.msg pre{white-space:pre-wrap;word-break:break-word;margin:0;font:500 13.5px/1.6 Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;color:var(--ink)}
+.msg .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.ideas{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.ideas li{padding:12px;border-radius:14px;background:var(--panel);border:1px solid var(--line);font-size:13.5px;line-height:1.55}
+.ideas li b{display:block;font:700 14px 'Space Grotesk',sans-serif;margin-bottom:3px}
+/* faq */
+details{border:1px solid var(--line);border-radius:14px;background:var(--panel);margin-top:8px}
+summary{cursor:pointer;padding:13px 14px;font:700 14.5px/1.4 'Space Grotesk',sans-serif;list-style:none;display:flex;justify-content:space-between;gap:10px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'+';color:var(--gold);font-size:18px;line-height:1}
+details[open] summary::after{content:'–'}
+details p{margin:0;padding:0 14px 14px;font-size:14px;line-height:1.6;color:var(--ink-dim)}
+details p a{color:var(--teal)}
+.contact{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.contact .t{flex:1 1 260px}
+.contact b{font:700 17px 'Space Grotesk',sans-serif}
+.contact p{margin:4px 0 0;font-size:13.5px;color:var(--ink-dim);line-height:1.55}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;background:var(--ink);color:var(--navy);padding:10px 16px;border-radius:999px;font:700 13px Inter,sans-serif;transition:.25s;z-index:9999}
+.toast.on{opacity:1;transform:translateX(-50%)}
+/* print: only the class plan */
+@media print{
+  @page{size:A4;margin:12mm}
+  body{background:#fff!important;color:#111!important}
+  .topnav,.toast,footer,.wrap>*:not(#plan),#plan>*:not(#planBlk),#planBlk>*:not(#planOut),.pacts{display:none!important}
+  #plan{margin:0!important}
+  .plan{border:1px solid #999!important;background:#fff!important}
+  .plan .ph{background:#f3ead2!important;color:#111!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .tl>li{border-color:#ccc!important;break-inside:avoid}
+  .tl .t{color:#8a6a1a!important}.tl p,.tl h4{color:#111!important}.tl ul{color:#333!important}
+  .tl .lk{display:block}
+  .lk a{display:block;border:0!important;padding:2px 0;min-height:0;color:#111!important}
+  .lk a::after{content:' (' attr(data-u) ')';font-weight:500;font-size:10px}
+}
+</style>
+</head>
+<body>
+<nav class="topnav"><div class="topnav-inner"><a class="brand" href="index.html"><div class="b">B</div><span>BAIO · For Lecturers</span></a>
+  <div class="tools"><a href="index.html" class="icon-btn" title="BAIO home" aria-label="BAIO home">🏠</a><button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle dark or light theme"></button></div></div></nav>
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow">BAIO Learning System · For Biology lecturers</div>
+    <h1>👩‍🏫 Teach with <span class="accent">BAIO</span></h1>
+    <p class="lead">Everything you need to use BAIO with your I PUC and II PUC students: a short getting-started guide, a ready class plan for every chapter, the teaching toolkit and messages for your class group. Free, and it works on any phone, laptop or classroom projector.</p>
+    <div class="chips"><span>📚 I &amp; II PUC Biology</span><span>🧪 <i id="nActs" style="font-style:normal">60+</i> activities</span><span>⚡ Rapid Fire quizzes</span><span>🗣️ English · ಕನ್ನಡ · हिंदी</span><span>📥 Works offline</span></div>
+    <div class="jump">
+      <a href="#start">🚀 Get started</a><a href="#plan">🗓️ Plan a class</a><a href="#toolkit">🧰 Toolkit</a><a href="#engage">💬 Engage students</a><a href="#faq">❓ FAQ</a>
+    </div>
+  </section>
+
+  <!-- 1. getting started -->
+  <section class="blk" id="start">
+    <h2>🚀 Get started in 6 steps</h2>
+    <p class="sub">About 20 minutes. Each step opens the tool. Tick it when you have tried it. Your ticks are saved on this device.</p>
+    <div class="card">
+      <div class="pgr"><div class="bar"><i id="pBar"></i></div><b id="pTxt">0 of 6</b></div>
+      <ol class="steps" id="steps"></ol>
+      <div class="cert" id="cert"></div>
+    </div>
+  </section>
+
+  <!-- 2. class planner -->
+  <section class="blk" id="plan">
+    <h2>🗓️ Plan a class in one minute</h2>
+    <p class="sub">Pick a chapter and the length of your period. You get a ready plan with a warm-up, teaching, a hands-on or digital activity, a recall check and homework. Each step links to what you'll project.</p>
+    <div id="planBlk">
+    <div class="card">
+      <div class="pform">
+        <div><span class="lbl">Class</span><div class="seg" id="pCls"><button type="button" data-v="pu1" aria-pressed="true">I PUC</button><button type="button" data-v="pu2" aria-pressed="false">II PUC</button></div></div>
+        <div><span class="lbl">Period</span><div class="seg" id="pLen"><button type="button" data-v="40" aria-pressed="true">40 min</button><button type="button" data-v="60" aria-pressed="false">60 min</button></div></div>
+        <div class="wide"><label class="lbl" for="pCh">Chapter</label><select class="sel" id="pCh"></select></div>
+        <div class="wide"><span class="lbl">Activity for this class</span><div class="seg" id="pAct"></div></div>
+      </div>
+    </div>
+    <div class="plan" id="planOut"></div>
+    </div>
+  </section>
+
+  <!-- 3. toolkit -->
+  <section class="blk" id="toolkit">
+    <h2>🧰 Your teaching toolkit</h2>
+    <p class="sub">The BAIO tools that help most in class, grouped by what you're doing.</p>
+    <div class="tk" id="tk"></div>
+  </section>
+
+  <!-- 4. engage -->
+  <section class="blk" id="engage">
+    <h2>💬 Get your students engaged</h2>
+    <p class="sub">Messages ready to post in your class WhatsApp group. Pick a language, then copy or send.</p>
+    <div class="card">
+      <div class="seg" id="mLang" style="margin-bottom:12px"><button type="button" data-v="en" aria-pressed="true">English</button><button type="button" data-v="kn" aria-pressed="false">ಕನ್ನಡ</button><button type="button" data-v="hi" aria-pressed="false">हिंदी</button></div>
+      <div class="msgs" id="msgs"></div>
+    </div>
+    <ul class="ideas">
+      <li><b>⚡ Friday Rapid Fire</b>Project one chapter's round in the last 10 minutes. Students then play their own round at home and post their score card in the group. Each round has new questions.</li>
+      <li><b>🧪 Activity of the week</b>Start one hands-on activity in class. Students finish the observation table on their phones and share the activity banner. Collect the printed worksheet on Monday.</li>
+      <li><b>🃏 Card of the day</b>Post one flash card as your WhatsApp status each morning. It's a two-minute recall before class.</li>
+      <li><b>📝 PYQ Monday</b>Open the chapter's KCET/NEET questions on the projector and let the class vote before you show the answer.</li>
+      <li><b>📥 No internet? No problem</b>Ask students to save chapters for offline use once on Wi-Fi. They then open without data, in the bus or at home.</li>
+      <li><b>🏆 Celebrate progress</b>Students' scores stay on their own phones. Ask them to show their Rapid Fire dashboard, and praise improvement, not just toppers.</li>
+    </ul>
+  </section>
+
+  <!-- 5. faq -->
+  <section class="blk" id="faq">
+    <h2>❓ Questions lecturers ask</h2>
+    <details><summary>Is BAIO free for my students?</summary><p>Yes. Rapid Fire, Projects &amp; Activities with worksheet PDFs, previous year questions, Diagram MCQs, flash cards, games, podcasts and the question paper tools are free. Some premium notes and books are in the <a href="store.html">BAIO Store</a>. Some chapter pages open with an unlock code; message Narendra Sir to get codes for your class.</p></details>
+    <details><summary>Do students or lecturers need an account?</summary><p>No sign-up is needed. Open the link and start. Rapid Fire scores, activity records and game scores are saved only on the student's own phone.</p></details>
+    <details><summary>Can I use it on the classroom projector?</summary><p>Yes. BAIO runs in any browser on a laptop or smart board. Rapid Fire, Diagram MCQs, the activity simulators and the narrated Exam Corner slides work well on a big screen. Use the 🌙/☀️ button for a light theme in a bright room.</p></details>
+    <details><summary>Which languages are supported?</summary><p>Projects &amp; Activities (with worksheet PDFs), flash cards and games are in English, Kannada and Hindi. The Exam Corner slides are narrated in all three languages. Science terms stay in English, as in the board exam.</p></details>
+    <details><summary>Will it work where the internet is weak?</summary><p>Yes. Install BAIO on the phone (<a href="install-guide.html">install guide</a>) and use <a href="offline.html">Use BAIO Offline</a> to save chapters. They then open without internet.</p></details>
+    <details><summary>Does BAIO follow the PU board syllabus?</summary><p>Yes. Content follows the NCERT textbooks used for the Karnataka PU board, chapter by chapter, with board blueprints, model papers and KCET/NEET previous year questions.</p></details>
+    <details><summary>I found a mistake or want a feature for my class.</summary><p>Please tell us. Message Narendra Sir on WhatsApp using the button below with the page and what you'd like changed. Lecturers' suggestions are how BAIO improves.</p></details>
+  </section>
+
+  <section class="blk">
+    <div class="card contact">
+      <div class="t"><b>🤝 Bring BAIO to your college</b><p>Want codes for your class, a demo for your department, or a tool you need? Message Narendra Sir directly.</p></div>
+      <div class="btns" style="margin-top:0"><a class="btn primary" id="waSir" href="https://wa.me/919008968389" target="_blank" rel="noopener">💬 WhatsApp Narendra Sir</a><a class="btn" href="call-whatsapp-help.html">📞 Help desk</a></div>
+    </div>
+  </section>
+  <footer>Narendra Sir · Biology Lecturer · Founder &amp; CEO, BAIO Learning System</footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="activities/acts-pu1.js?v=1"></script>
+<script src="activities/acts-pu2.js?v=1"></script>
+<script>
+(function(){
+const $=s=>document.querySelector(s), root=document.documentElement;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const SITE='https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/';
+const getJ=(k,d)=>{ try{ const v=JSON.parse(localStorage.getItem(k)||'null'); return v==null?d:v; }catch(e){ return d; } };
+const setJ=(k,v)=>{ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} };
+const toast=t=>{ const el=$('#toast'); el.textContent=t; el.classList.add('on'); clearTimeout(toast.h); toast.h=setTimeout(()=>el.classList.remove('on'),1800); };
+async function copy(t){ try{ await navigator.clipboard.writeText(t); }catch(e){ const a=document.createElement('textarea'); a.value=t; a.style.position='fixed'; a.style.opacity='0'; document.body.appendChild(a); a.select(); try{ document.execCommand('copy'); }catch(_){} a.remove(); } toast('✅ Copied'); }
+const wa=t=>window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank','noopener');
+
+/* theme */
+const tb=$('#themeToggle'), paint=()=>{ tb.textContent=root.getAttribute('data-theme')==='light'?'☀️':'🌙'; };
+try{ if(localStorage.getItem('baio_theme')==='light') root.setAttribute('data-theme','light'); }catch(e){}
+paint(); tb.onclick=()=>{ const n=root.getAttribute('data-theme')==='light'?'dark':'light'; if(n==='light') root.setAttribute('data-theme','light'); else root.removeAttribute('data-theme'); try{ localStorage.setItem('baio_theme',n); }catch(e){} paint(); };
+
+const IDS=Object.keys(window.ACTS||{});
+$('#nActs').textContent=IDS.reduce((s,id)=>s+ACTS[id].hands.length+1,0);
+
+/* ---------- 1. getting started ---------- */
+const STEPS=[
+ {id:'install', t:'Install BAIO on your phone', d:'Add it to your home screen so it opens like an app, even offline.', href:'install-guide.html', go:'📲 Install guide'},
+ {id:'tour', t:'Take the app tour', d:'A quick walk through what students see on the home page and in a chapter.', href:'app-walkthrough.html', go:'🧭 Open tour'},
+ {id:'rapid', t:'Play one Rapid Fire round', d:'20 questions, 10 seconds each, new every round. Imagine it on your projector.', href:'rapid-fire.html', go:'⚡ Play'},
+ {id:'act', t:'Open an activity and its worksheet', d:'Two hands-on activities and one digital activity for every chapter, with printable worksheets.', href:'activities.html', go:'🧪 Activities'},
+ {id:'paper', t:'Make a question paper', d:'Choose chapters and marks, then print or save a board-style paper in minutes.', href:'custom-question-paper-generator.html', go:'📝 Generator'},
+ {id:'share', t:'Share BAIO with your class group', d:'Send the welcome message from the "Engage students" section to your students.', href:'#engage', go:'💬 Share now'}];
+let done=getJ('baio_lec_steps',{});
+function drawSteps(){
+  const n=STEPS.filter(s=>done[s.id]).length;
+  $('#pBar').style.width=(n/STEPS.length*100)+'%'; $('#pTxt').textContent=n+' of '+STEPS.length;
+  $('#steps').innerHTML=STEPS.map((s,i)=>`<li class="step ${done[s.id]?'ok':''}"><button type="button" class="n" data-tick="${s.id}" aria-label="${done[s.id]?'Untick':'Tick'} step ${i+1}" aria-pressed="${done[s.id]?'true':'false'}">${done[s.id]?'✓':i+1}</button><div><b>${esc(s.t)}</b><small>${esc(s.d)}</small></div><a class="btn go ${done[s.id]?'':'teal'}" data-go="${s.id}" href="${s.href}">${s.go}</a></li>`).join('');
+  drawCert(n===STEPS.length);
+}
+$('#steps').addEventListener('click',e=>{
+  const t=e.target.closest('[data-tick]'); if(t){ done[t.dataset.tick]=!done[t.dataset.tick]; setJ('baio_lec_steps',done); drawSteps(); return; }
+  const g=e.target.closest('[data-go]'); if(g){ done[g.dataset.go]=true; setJ('baio_lec_steps',done); if(g.dataset.go==='share'){ e.preventDefault(); drawSteps(); location.hash='engage'; } else drawSteps(); }
+});
+
+/* certificate: drawn on a canvas and saved as a picture */
+let prof=getJ('baio_lec_profile',{});
+function drawCert(all){
+  const c=$('#cert'); c.classList.toggle('on',all);
+  if(!all){ c.innerHTML=`<h3>🏅 BAIO Teaching Partner certificate</h3><p>Finish all six steps to unlock a certificate with your name and college that you can save and share.</p>`; return; }
+  c.innerHTML=`<h3>🏅 You're a BAIO Teaching Partner!</h3><p>Add your name and college to make your certificate.</p>
+   <div class="frm"><div><label for="cName">Your name</label><input id="cName" maxlength="40" autocomplete="name" placeholder="e.g. Prof. Anita Rao" value="${esc(prof.name||'')}"></div><div><label for="cCol">College</label><input id="cCol" maxlength="60" placeholder="e.g. Govt PU College, Mysuru" value="${esc(prof.col||'')}"></div></div>
+   <div class="btns" style="justify-content:flex-start"><button class="btn primary" id="cMake" type="button">⬇ Save certificate</button><button class="btn teal" id="cShare" type="button">📤 Share</button></div>`;
+  const save=()=>{ prof={name:$('#cName').value.trim(), col:$('#cCol').value.trim()}; setJ('baio_lec_profile',prof); };
+  $('#cName').oninput=save; $('#cCol').oninput=save;
+  $('#cMake').onclick=async()=>{ save(); if(!prof.name){ $('#cName').focus(); toast('Please add your name'); return; } const b=await certBlob(); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='BAIO-Teaching-Partner.png'; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1500); };
+  $('#cShare').onclick=async()=>{ save(); if(!prof.name){ $('#cName').focus(); toast('Please add your name'); return; } const b=await certBlob(), f=new File([b],'BAIO-Teaching-Partner.png',{type:'image/png'}), txt='I now teach Biology with BAIO Learning System 🌿 Free class plans, activities, Rapid Fire quizzes and more for PU lecturers: '+SITE+'lecturers.html';
+    if(navigator.canShare&&navigator.canShare({files:[f]})) navigator.share({files:[f],title:'BAIO Teaching Partner',text:txt}).catch(()=>{}); else wa(txt); };
+}
+const LOGO=new Image(); LOGO.src='zone/baio-logo.png?v=2';
+function rr(x,X,y,w,h,r){ x.beginPath(); x.moveTo(X+r,y); x.arcTo(X+w,y,X+w,y+h,r); x.arcTo(X+w,y+h,X,y+h,r); x.arcTo(X,y+h,X,y,r); x.arcTo(X,y,X+w,y,r); x.closePath(); }
+function fit(x,t,max,size,font){ let s=size; do{ x.font=font.replace('{s}',s); s-=2; }while(x.measureText(t).width>max&&s>14); }
+async function certBlob(){
+  try{ await Promise.race([Promise.all([document.fonts.load('700 60px "Space Grotesk"'),document.fonts.load('600 30px Inter'),LOGO.decode?LOGO.decode().catch(()=>{}):0]),new Promise(r=>setTimeout(r,2500))]); }catch(e){}
+  const W=1600,H=1130,c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
+  let g=x.createLinearGradient(0,0,W,H); g.addColorStop(0,'#FBF8F0'); g.addColorStop(1,'#F1EAD5'); x.fillStyle=g; x.fillRect(0,0,W,H);
+  x.fillStyle='rgba(184,145,42,.08)'; for(let yy=30; yy<H; yy+=40) for(let xx=30; xx<W; xx+=40){ x.beginPath(); x.arc(xx,yy,2,0,7); x.fill(); }
+  x.strokeStyle='#B8912A'; x.lineWidth=10; rr(x,34,34,W-68,H-68,30); x.stroke(); x.lineWidth=2; rr(x,56,56,W-112,H-112,22); x.stroke();
+  g=x.createLinearGradient(0,0,W,0); g.addColorStop(0,'#0B3B26'); g.addColorStop(1,'#14532D'); x.fillStyle=g; rr(x,56,56,W-112,170,22); x.fill(); x.fillRect(56,150,W-112,76);
+  if(LOGO.complete&&LOGO.naturalWidth){ x.save(); rr(x,96,86,110,110,26); x.clip(); x.drawImage(LOGO,96,86,110,110); x.restore(); }
+  x.fillStyle='#fff'; x.font='700 46px "Space Grotesk",Inter,sans-serif'; x.fillText('BAIO Learning System',236,138);
+  x.fillStyle='#E8D18A'; x.font='600 26px Inter,sans-serif'; x.fillText('Biology by Narendra Sir',236,180);
+  x.textAlign='center'; const cx=W/2;
+  x.fillStyle='#8A6A1A'; x.font='800 28px Inter,sans-serif'; x.fillText('C E R T I F I C A T E   O F   O N B O A R D I N G',cx,320);
+  x.fillStyle='#14203A'; x.font='700 76px "Space Grotesk",Inter,sans-serif'; x.fillText('BAIO Teaching Partner',cx,410);
+  x.fillStyle='#5C6E63'; x.font='500 28px Inter,sans-serif'; x.fillText('This is presented to',cx,490);
+  x.fillStyle='#0B3B26'; fit(x,prof.name,W-300,72,'700 {s}px "Space Grotesk",Inter,sans-serif'); x.fillText(prof.name,cx,580);
+  x.strokeStyle='#B8912A'; x.lineWidth=3; x.beginPath(); x.moveTo(cx-360,606); x.lineTo(cx+360,606); x.stroke();
+  if(prof.col){ x.fillStyle='#3a4a40'; fit(x,prof.col,W-300,32,'600 {s}px Inter,sans-serif'); x.fillText(prof.col,cx,656); }
+  x.fillStyle='#3a4a40'; x.font='500 27px Inter,sans-serif';
+  ['for completing the BAIO lecturer onboarding: installing the app, running a','Rapid Fire round, using a project activity and worksheet, making a question paper','and sharing BAIO with students — to teach Biology by doing.'].forEach((l,i)=>x.fillText(l,cx,730+i*42));
+  const d=new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
+  x.textAlign='left'; x.fillStyle='#14203A'; x.font='700 28px Inter,sans-serif'; x.fillText(d,150,970); x.fillStyle='#5C6E63'; x.font='500 22px Inter,sans-serif'; x.fillText('Date',150,1004);
+  x.strokeStyle='#B8912A'; x.lineWidth=2; x.beginPath(); x.moveTo(150,940); x.lineTo(470,940); x.stroke();
+  x.textAlign='right'; x.fillStyle='#14203A'; x.font='700 28px Inter,sans-serif'; x.fillText('Narendra Sir',W-150,970); x.fillStyle='#5C6E63'; x.font='500 22px Inter,sans-serif'; x.fillText('Founder & CEO, BAIO Learning System',W-150,1004);
+  x.beginPath(); x.moveTo(W-560,940); x.lineTo(W-150,940); x.stroke();
+  x.textAlign='center'; x.fillStyle='#B8912A'; x.beginPath(); x.arc(cx,975,62,0,7); x.fill(); x.fillStyle='#FBF8F0'; x.beginPath(); x.arc(cx,975,50,0,7); x.fill();
+  x.fillStyle='#B8912A'; x.font='800 22px Inter,sans-serif'; x.fillText('BAIO',cx,968); x.font='700 15px Inter,sans-serif'; x.fillText('PARTNER',cx,992);
+  x.fillStyle='#8a8f86'; x.font='500 18px Inter,sans-serif'; x.fillText(SITE.replace(/^https:\/\//,'')+'lecturers.html',cx,H-74);
+  return new Promise(r=>c.toBlob(r,'image/png'));
+}
+drawSteps();
+
+/* ---------- 2. class planner ---------- */
+const PL=getJ('baio_lec_plan',{cls:'pu1',len:40,ch:'',act:0});
+const chNo=id=>+id.split('-ch')[1];
+const short=a=>a.ch.replace(/^I+ PUC · /,'');
+function seg(sel,val){ document.querySelectorAll(sel+' button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===String(val)?'true':'false')); }
+function fillCh(){
+  const list=IDS.filter(id=>id.startsWith(PL.cls)).sort((a,b)=>chNo(a)-chNo(b));
+  if(!list.includes(PL.ch)) PL.ch=list[0];
+  $('#pCh').innerHTML=list.map(id=>`<option value="${id}" ${id===PL.ch?'selected':''}>${esc(short(ACTS[id]))} — ${esc(ACTS[id].title)}</option>`).join('');
+}
+function drawPlan(){
+  setJ('baio_lec_plan',PL); seg('#pCls',PL.cls); seg('#pLen',PL.len);
+  const A=ACTS[PL.ch], acts=[...A.hands.map((h,i)=>({i,icon:h.icon,t:h.t,h})),{i:2,icon:'💻',t:A.digital.t,d:A.digital}];
+  $('#pAct').innerHTML=acts.map(a=>`<button type="button" data-v="${a.i}" aria-pressed="${a.i===PL.act?'true':'false'}">${a.icon} ${esc(a.t)}</button>`).join('');
+  const act=acts[PL.act]||acts[0], L=PL.len===60, T=L?[5,25,20,10]:[5,20,10,5];
+  let s=0; const slot=m=>{ const a=s; s+=m; return `${a}–${s}<em>${m} min</em>`; };
+  const cls=PL.cls==='pu1'?'I PUC':'II PUC', pdf=`activities/pdf/${PL.ch}.pdf`, actUrl=`activities.html#${PL.ch}/${act.i}`;
+  const L2=(href,txt,g)=>`<a ${g?'class="g" ':''}href="${href}" data-u="${(href.startsWith('http')?'':SITE)+href}" target="_blank" rel="noopener">${txt}</a>`;
+  let doStep;
+  if(act.h){ const h=act.h, long=/day|week|night/i.test(h.time);
+    doStep=`<h4>${h.icon} Do: ${esc(h.t)}</h4><p>${esc(h.concept)}</p>
+     <p><b>Where:</b> ${({home:'at home',lab:'in the lab',outdoor:'outdoors',class:'in class'})[h.where]||h.where} · <b>Time:</b> ${esc(h.time)}${long?' — set it up together in class; students observe and fill the table at home.':''}</p>
+     <ul>${h.need.slice(0,5).map(n=>`<li>${esc(n)}</li>`).join('')}${h.need.length>5?`<li>…and ${h.need.length-5} more (see the activity)</li>`:''}</ul>
+     ${h.safety&&h.safety!=='—'?`<p>⚠️ ${esc(h.safety)}</p>`:''}`; }
+  else doStep=`<h4>💻 Do: ${esc(act.t)}</h4><p>${esc(act.d.intro||'')}</p><p>Project it and let students come up one by one, or run it in pairs on their phones.</p>`;
+  $('#planOut').style.setProperty('--pc',A.color||'#2e9e4f');
+  $('#planOut').innerHTML=`<div class="ph"><small>${cls} · ${PL.len}-minute class plan</small><b>${A.cover} ${esc(short(A))}</b><span>Theme: ${esc(A.title)}</span></div>
+  <ol class="tl">
+   <li><div class="t">${slot(T[0])}</div><div><h4>⚡ Warm-up: Rapid Fire</h4><p>Project a Rapid Fire round on this chapter. The class calls out answers; 10 seconds per question. It brings back the previous class and wakes everyone up.</p><div class="lk">${L2('rapid-fire.html#'+PL.ch,'⚡ Rapid Fire · this chapter')}</div></div></li>
+   <li><div class="t">${slot(T[1])}</div><div><h4>📘 Teach the core idea</h4><p>Teach from the chapter page on the projector: topic notes and diagrams. ${L?'Use the extra time for one worked board question. ':''}Short on slides? Make a deck for today's topic in a minute with the PPT generator.</p><div class="lk">${L2(A.page,'📘 Open chapter')}${L2('ppt-generator.html','🖥️ PPT generator')}</div></div></li>
+   <li><div class="t">${slot(T[2])}</div><div>${doStep}<div class="lk">${L2(actUrl,'🧪 Open activity')}${L2(pdf,'⬇ Worksheet PDF',1)}</div></div></li>
+   <li><div class="t">${slot(T[3])}</div><div><h4>🃏 Check: quick recall</h4><p>Flip through the chapter's flash cards; students answer before you reveal. ${L?'Then do three diagram MCQs from the same chapter.':'Note the two cards most students missed and start the next class with them.'}</p><div class="lk">${L2('flashcards.html#'+PL.ch,'🃏 Flash cards')}${L?L2('diagram-mcq.html#'+(PL.cls==='pu1'?'xi':'xii'),'🔬 Diagram MCQs'):''}</div></div></li>
+   <li><div class="t">Home<em>work</em></div><div><h4>🏠 Homework</h4><p>Finish the activity's observation table and questions (on the phone or the printed worksheet). Then try the chapter's KCET/NEET previous year questions.</p><div class="lk">${L2(pdf,'⬇ Worksheet PDF',1)}${L2('pyq.html#'+PL.ch,'📝 Chapter PYQs')}</div></div></li>
+  </ol>
+  <div class="pacts"><button class="btn primary" id="pPrint" type="button">🖨️ Print plan</button><button class="btn" id="pCopy" type="button">📋 Copy as text</button><button class="btn teal" id="pHw" type="button">💬 Send homework to class</button></div>`;
+  const text=()=>{ const lines=[`${cls} · ${short(A)} — ${PL.len}-minute class plan (BAIO)`]; s=0;
+    const st=m=>{ const a=s; s+=m; return `${a}–${s} min`; };
+    lines.push(`${st(T[0])}: Warm-up — Rapid Fire on this chapter: ${SITE}rapid-fire.html#${PL.ch}`);
+    lines.push(`${st(T[1])}: Teach the core idea — chapter page: ${SITE}${A.page}`);
+    lines.push(`${st(T[2])}: Do — ${act.t}: ${SITE}${actUrl}`);
+    lines.push(`${st(T[3])}: Check — flash cards: ${SITE}flashcards.html#${PL.ch}`);
+    lines.push(`Homework: worksheet ${SITE}${pdf} and PYQs ${SITE}pyq.html#${PL.ch}`); return lines.join('\n'); };
+  $('#pPrint').onclick=()=>window.print();
+  $('#pCopy').onclick=()=>copy(text());
+  $('#pHw').onclick=()=>wa(`📚 ${cls} Biology · ${short(A)}\n\nHomework:\n1️⃣ Finish the activity "${act.t}" — observation table and questions: ${SITE}${actUrl}\n2️⃣ Worksheet (print or write in your book): ${SITE}${pdf}\n3️⃣ Practise the chapter's KCET/NEET questions: ${SITE}pyq.html#${PL.ch}\n\n⚡ Bonus: beat the class in Rapid Fire! ${SITE}rapid-fire.html#${PL.ch}`);
+}
+$('#pCls').onclick=e=>{ const b=e.target.closest('[data-v]'); if(!b) return; PL.cls=b.dataset.v; PL.act=0; fillCh(); drawPlan(); };
+$('#pLen').onclick=e=>{ const b=e.target.closest('[data-v]'); if(!b) return; PL.len=+b.dataset.v; drawPlan(); };
+$('#pCh').onchange=()=>{ PL.ch=$('#pCh').value; PL.act=0; drawPlan(); };
+$('#pAct').onclick=e=>{ const b=e.target.closest('[data-v]'); if(!b) return; PL.act=+b.dataset.v; drawPlan(); };
+if(IDS.length){ fillCh(); drawPlan(); } else $('#planOut').innerHTML='<p style="padding:14px">Could not load the chapter list. Please check your connection and reload.</p>';
+
+/* ---------- 3. toolkit ---------- */
+const TK=[
+ ['📝 Plan & prepare',[
+  ['custom-question-paper-generator.html','📝','Question Paper Generator','Pick chapters and marks; print a board-style paper with answers.'],
+  ['board-question-assignment-builder.html','📚','Question Bank Builder','Build assignments from I & II PUC board questions, chapter-wise.'],
+  ['ppt-generator.html','🖥️','Instant PPT Generator','Make a clean slide deck for a topic in a minute.'],
+  ['ncert-library.html#bio-exam-papers','🧾','Blueprints & Model Papers','PU board blueprints, model papers and the question bank.'],
+  ['ncert-library.html','📖','NCERT Library','Textbook chapters for quick reference in class.'],
+  ['bio-planner.html','🗓️','Exam Planner','A day-by-day revision plan to share with your class.']]],
+ ['🎓 Teach in class',[
+  ['exam-corner.html','🎙️','Exam Corner slides','Narrated slides in English, Kannada and Hindi: topics, must-draw diagrams, tips.'],
+  ['diagram-mcq.html','🔬','Diagram MCQs','NCERT figures with labelled parts. Great for the projector.'],
+  ['flashcards.html','🃏','Flash cards','Key definitions and tables, chapter-wise, in three languages.'],
+  ['important-cards.html','📌','Quick Cards','One-look summaries of the most-asked facts.'],
+  ['podcasts.html','🎧','Podcasts','Chapter podcasts students can listen to on the way home.'],
+  ['reels.html','🎬','Revision Reels','Short videos for a quick recap at the end of class.']]],
+ ['🧪 Activities & practicals',[
+  ['activities.html','🧪','Projects & Activities','2 hands-on + 1 digital activity per chapter, with worksheet PDFs.'],
+  ['games/microscope.html','🔍','Phone Microscope','Turn a phone into a magnifier for slides and specimens.'],
+  ['genetic-cross-simulator.html','🧬','Genetic Cross Simulator','Monohybrid and dihybrid crosses with Punnett squares.'],
+  ['practical-plasmolysis.html','🫧','Practical: Plasmolysis','Step-by-step practical with observations.'],
+  ['practical-pigment-extraction.html','🍃','Practical: Pigment extraction','Paper chromatography of leaf pigments.'],
+  ['practical-benedict-test.html','🧫','Practical: Food tests','Benedict\'s, biuret and more lab tests.']]],
+ ['🏆 Test, revise & engage',[
+  ['rapid-fire.html','⚡','Rapid Fire','20 new questions a round, 10 seconds each. A class favourite.'],
+  ['pyq.html','📝','KCET & NEET PYQs','Previous year questions for every chapter, with answers.'],
+  ['games.html','🧩','Game Zone','Biology puzzles, riddles and sequencing games.'],
+  ['tricks.html','✍️','Short Notes & Tricks','Memory tricks to share before tests.'],
+  ['neet-tricks.html','🎯','NEET Tricks','Chapter-wise NEET tricks for toppers.'],
+  ['offline.html','📥','Use BAIO Offline','Save chapters so they open without internet.']]]];
+$('#tk').innerHTML=TK.map(([h,list])=>`<div><h3>${h}</h3><div class="tgrid">${list.map(([u,i,t,d])=>`<a class="tool" href="${u}"><span class="ic">${i}</span><span><b>${esc(t)}</b><small>${esc(d)}</small></span></a>`).join('')}</div></div>`).join('');
+
+/* ---------- 4. engage: class-group messages ---------- */
+const U=SITE, MS={
+ en:[['👋 Welcome your class',`Dear students 🌿\nOur Biology class now uses the BAIO Learning System — notes, diagrams, activities and quizzes for every chapter, free on your phone.\n\n👉 Open: ${U}\n📲 Tap "Add to Home screen" to install it like an app.\n\nTry one Rapid Fire round today and tell me your score!`],
+  ['⚡ Rapid Fire challenge',`⚡ RAPID FIRE CHALLENGE ⚡\n20 questions · 10 seconds each · new questions every round.\nPlay a round, then share your score card in this group. Highest score by Sunday gets a shout-out in class! 🏆\n👉 ${U}rapid-fire.html`],
+  ['🧪 Activity of the week',`🧪 Activity of the week\nPick any hands-on activity for our current chapter, do it at home and fill the observation table on your phone. Bring the printed worksheet on Monday.\n👉 ${U}activities.html`],
+  ['📝 Exam practice',`📝 Exams are coming — practise smart:\n• KCET/NEET previous year questions: ${U}pyq.html\n• Diagram MCQs: ${U}diagram-mcq.html\n• Board model papers: ${U}ncert-library.html#bio-exam-papers\nDo 10 questions a day. Small steps, big marks! 💪`]],
+ kn:[['👋 ತರಗತಿಗೆ ಸ್ವಾಗತ',`ಪ್ರಿಯ ವಿದ್ಯಾರ್ಥಿಗಳೇ 🌿\nನಮ್ಮ ಜೀವಶಾಸ್ತ್ರ ತರಗತಿ ಈಗ BAIO Learning System ಬಳಸುತ್ತದೆ — ಪ್ರತಿ ಅಧ್ಯಾಯಕ್ಕೆ ನೋಟ್ಸ್, ಚಿತ್ರಗಳು, ಚಟುವಟಿಕೆಗಳು ಮತ್ತು ಕ್ವಿಜ್‌ಗಳು, ನಿಮ್ಮ ಫೋನ್‌ನಲ್ಲಿ ಉಚಿತವಾಗಿ.\n\n👉 ತೆರೆಯಿರಿ: ${U}\n📲 ಆ್ಯಪ್‌ನಂತೆ ಬಳಸಲು "Add to Home screen" ಒತ್ತಿ.\n\nಇಂದು ಒಂದು Rapid Fire ಸುತ್ತು ಆಡಿ, ನಿಮ್ಮ ಅಂಕ ತಿಳಿಸಿ!`],
+  ['⚡ Rapid Fire ಸವಾಲು',`⚡ RAPID FIRE ಸವಾಲು ⚡\n20 ಪ್ರಶ್ನೆಗಳು · ಪ್ರತಿಯೊಂದಕ್ಕೆ 10 ಸೆಕೆಂಡ್ · ಪ್ರತಿ ಸುತ್ತಿನಲ್ಲಿ ಹೊಸ ಪ್ರಶ್ನೆಗಳು.\nಒಂದು ಸುತ್ತು ಆಡಿ, ನಿಮ್ಮ ಸ್ಕೋರ್ ಕಾರ್ಡ್ ಈ ಗುಂಪಿನಲ್ಲಿ ಹಂಚಿ. ಭಾನುವಾರದೊಳಗೆ ಅತಿ ಹೆಚ್ಚು ಅಂಕ ಪಡೆದವರಿಗೆ ತರಗತಿಯಲ್ಲಿ ಮೆಚ್ಚುಗೆ! 🏆\n👉 ${U}rapid-fire.html`],
+  ['🧪 ವಾರದ ಚಟುವಟಿಕೆ',`🧪 ಈ ವಾರದ ಚಟುವಟಿಕೆ\nಈಗಿನ ಅಧ್ಯಾಯದ ಯಾವುದಾದರೂ ಒಂದು ಪ್ರಾಯೋಗಿಕ ಚಟುವಟಿಕೆಯನ್ನು ಮನೆಯಲ್ಲಿ ಮಾಡಿ, ವೀಕ್ಷಣಾ ಕೋಷ್ಟಕವನ್ನು ಫೋನ್‌ನಲ್ಲಿ ತುಂಬಿ. ಮುದ್ರಿಸಿದ ವರ್ಕ್‌ಶೀಟ್ ಸೋಮವಾರ ತನ್ನಿ.\n👉 ${U}activities.html`],
+  ['📝 ಪರೀಕ್ಷಾ ಅಭ್ಯಾಸ',`📝 ಪರೀಕ್ಷೆ ಹತ್ತಿರ ಬರುತ್ತಿದೆ — ಜಾಣತನದಿಂದ ಅಭ್ಯಾಸ ಮಾಡಿ:\n• KCET/NEET ಹಿಂದಿನ ವರ್ಷದ ಪ್ರಶ್ನೆಗಳು: ${U}pyq.html\n• ಚಿತ್ರ ಆಧಾರಿತ MCQ: ${U}diagram-mcq.html\n• ಬೋರ್ಡ್ ಮಾದರಿ ಪತ್ರಿಕೆಗಳು: ${U}ncert-library.html#bio-exam-papers\nದಿನಕ್ಕೆ 10 ಪ್ರಶ್ನೆ ಮಾಡಿ. ಸಣ್ಣ ಹೆಜ್ಜೆ, ದೊಡ್ಡ ಅಂಕ! 💪`]],
+ hi:[['👋 कक्षा का स्वागत',`प्रिय विद्यार्थियो 🌿\nहमारी बायोलॉजी कक्षा अब BAIO Learning System का उपयोग करती है — हर अध्याय के नोट्स, चित्र, गतिविधियाँ और क्विज़, आपके फ़ोन पर मुफ़्त।\n\n👉 खोलो: ${U}\n📲 ऐप की तरह इस्तेमाल करने के लिए "Add to Home screen" दबाओ।\n\nआज एक Rapid Fire राउंड खेलो और अपना स्कोर बताओ!`],
+  ['⚡ Rapid Fire चुनौती',`⚡ RAPID FIRE चुनौती ⚡\n20 प्रश्न · हर प्रश्न 10 सेकंड · हर राउंड में नए प्रश्न।\nएक राउंड खेलो, फिर अपना स्कोर कार्ड इस ग्रुप में शेयर करो। रविवार तक सबसे ज़्यादा स्कोर वाले की कक्षा में तारीफ़ होगी! 🏆\n👉 ${U}rapid-fire.html`],
+  ['🧪 हफ़्ते की गतिविधि',`🧪 इस हफ़्ते की गतिविधि\nअभी के अध्याय की कोई एक प्रायोगिक गतिविधि घर पर करो और अवलोकन तालिका फ़ोन पर भरो। प्रिंट की हुई वर्कशीट सोमवार को लाओ।\n👉 ${U}activities.html`],
+  ['📝 परीक्षा अभ्यास',`📝 परीक्षा पास है — समझदारी से अभ्यास करो:\n• KCET/NEET पिछले वर्षों के प्रश्न: ${U}pyq.html\n• चित्र आधारित MCQ: ${U}diagram-mcq.html\n• बोर्ड मॉडल पेपर: ${U}ncert-library.html#bio-exam-papers\nरोज़ 10 प्रश्न करो। छोटे कदम, बड़े अंक! 💪`]]};
+let ml=getJ('baio_lec_mlang','en'); if(!MS[ml]) ml='en';
+function drawMsgs(){ seg('#mLang',ml); setJ('baio_lec_mlang',ml);
+  $('#msgs').innerHTML=MS[ml].map(([t,m],i)=>`<div class="msg" lang="${ml}"><b>${esc(t)}</b><pre>${esc(m)}</pre><div class="row"><button class="btn" type="button" data-cp="${i}">📋 Copy</button><button class="btn teal" type="button" data-wa="${i}">💬 Send on WhatsApp</button></div></div>`).join(''); }
+$('#mLang').onclick=e=>{ const b=e.target.closest('[data-v]'); if(!b) return; ml=b.dataset.v; drawMsgs(); };
+$('#msgs').addEventListener('click',e=>{ const c=e.target.closest('[data-cp]'), w=e.target.closest('[data-wa]'); const k=c?+c.dataset.cp:w?+w.dataset.wa:-1; if(k<0) return;
+  const m=MS[ml][k][1]; if(c) copy(m); else wa(m); if(k===0&&!done.share){ done.share=true; setJ('baio_lec_steps',done); drawSteps(); } });
+drawMsgs();
+
+$('#waSir').href='https://wa.me/919008968389?text='+encodeURIComponent('Hello Narendra Sir, I am a Biology lecturer and would like to use BAIO with my students.');
+})();
+</script>
+</body>
+</html>

@@ -33,6 +33,9 @@ const HTML_FILES = [
   'ch2/index.html',
   'ch3/index.html',
   'ch9/index.html',
+  'activities.html',
+  'rapid-fire.html',
+  'lecturers.html',
 ].filter(f => fs.existsSync(path.join(ROOT, f)));
 
 const PLAIN_JS_FILES = ['sw.js'].filter(f => fs.existsSync(path.join(ROOT, f)));
