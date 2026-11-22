@@ -1,7 +1,7 @@
 import json, re, collections, os
 exec(open('extract.py').read().split("print(stat)")[0])   # rebuilds `items` with the same filters
-CAT={'m':'memory','k':'knowledge','s':'skill','b':'board'}
-for fn in ['authored-pu1.txt','authored-pu2.txt']:
+CAT={'m':'memory','k':'knowledge','s':'skill','b':'board','a':'application'}
+for fn in ['authored-pu1.txt','authored-pu2.txt','/home/user/BAIO-Learning-System-By-Narendra-Sir/scripts/rapid-fire/authored-app.txt']:
     ch=None
     for line in open(fn, encoding='utf-8'):
         line=line.rstrip('\n')
@@ -22,7 +22,7 @@ order=sorted(out, key=lambda x:(x[:3], int(x.split('ch')[1])))
 for ch in order:
     L=out[ch]; c=collections.Counter(x[0] for x in L)
     json.dump({'id':ch,'t':titles.get(ch,ch),'q':L}, open(f'{OUTD}/{ch}.json','w',encoding='utf-8'), ensure_ascii=False, separators=(',',':'))
-    index.append({'id':ch,'t':titles.get(ch,ch),'n':len(L),'m':c['m'],'k':c['k'],'s':c['s'],'b':c['b']})
+    index.append({'id':ch,'t':titles.get(ch,ch),'n':len(L),'m':c['m'],'k':c['k'],'s':c['s'],'b':c['b'],'a':c['a']})
     print(ch, titles.get(ch), len(L), dict(c))
 json.dump(index, open(f'{OUTD}/index.json','w',encoding='utf-8'), ensure_ascii=False, separators=(',',':'))
 print('total', sum(x['n'] for x in index))

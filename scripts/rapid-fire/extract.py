@@ -28,7 +28,8 @@ def category(o):
     if o.get('img') or o.get('steps') or o.get('colA'): return None
     if f in ('fib',): return 'board'
     if f in ('recall',): return 'memory'
-    if f in ('numerical','application','reasoning','neet'): return 'skill'
+    if f in ('application','case'): return 'application'
+    if f in ('numerical','reasoning','neet'): return 'skill'
     if f in ('statement','conceptual'): return 'knowledge'
     if d.startswith('hard'): return 'skill'
     if d.startswith('easy'): return 'memory'
