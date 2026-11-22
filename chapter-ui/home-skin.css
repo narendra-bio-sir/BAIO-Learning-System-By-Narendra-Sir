@@ -1,0 +1,111 @@
+/* BAIO chapter pages: home-screen look (purple / lavender, Poppins, pastel tiles, white rounded cards).
+   Loaded after a chapter page's own styles; only colours, fonts, shapes and spacing change, never content. */
+:root:not([data-theme="light"]){
+  --bg-0:#120D2B; --bg-1:#120D2B; --bg-2:#160F36;
+  --panel:#1E1742; --panel-2:#271F55; --border:rgba(124,77,255,.22);
+  --text:#F1EEFF; --text-dim:#A9A3CF;
+  --gold:#FFC93C; --gold-2:#FFD86B; --teal:#B39BFF; --teal-2:#CBB8FF;
+  --fc-back-1:#2A2160; --fc-back-2:#211A4E; --fc-back-text:#CBB8FF;
+  --shadow:0 10px 26px rgba(0,0,0,.35);
+  --hs-ink:#F1EEFF; --hs-muted:#A9A3CF; --hs-card:#1E1742; --hs-sh:rgba(0,0,0,.35); --hs-p1:#7C4DFF; --hs-p3:#B39BFF;
+}
+html[data-theme="light"]{
+  --bg-0:#F5F3FF; --bg-1:#F5F3FF; --bg-2:#EFEBFF;
+  --panel:#FFFFFF; --panel-2:#F1EDFF; --border:rgba(91,46,224,.12);
+  --text:#1E1B4B; --text-dim:#6B6890;
+  --gold:#5B2EE0; --gold-2:#4A1FD1; --teal:#7C4DFF; --teal-2:#5B2EE0;
+  --fc-back-1:#EDE6FF; --fc-back-2:#E3D9FF; --fc-back-text:#4A1FD1;
+  --shadow:0 8px 22px rgba(30,27,75,.09);
+  --hs-ink:#1E1B4B; --hs-muted:#6B6890; --hs-card:#FFFFFF; --hs-sh:rgba(30,27,75,.09); --hs-p1:#5B2EE0; --hs-p3:#A47BFF;
+}
+html body{background:var(--bg-0) !important}
+.app, .app *:not(svg):not(svg *){font-family:'Poppins','Noto Sans Kannada','Noto Sans Devanagari',system-ui,sans-serif !important}
+.app{padding-bottom:110px !important}
+
+/* ---------- hero header (like the home hero card) ---------- */
+.app > .header{
+  position:relative !important; top:auto !important; z-index:2;
+  margin:12px 0 14px !important; padding:20px 18px 16px !important;
+  border:0 !important; border-radius:26px !important; overflow:hidden;
+  color:#fff !important;
+  background:radial-gradient(circle at 85% 25%,rgba(255,120,200,.55),transparent 45%),linear-gradient(135deg,#4A1FD1 0%,#6E3BF0 50%,#9B6BFF 100%) !important;
+  box-shadow:0 18px 36px rgba(91,46,224,.35) !important;
+}
+.app > .header::before{display:none !important}
+.app > .header .eyebrow{display:inline-block; font-size:10.5px !important; font-weight:600 !important; letter-spacing:.08em !important; color:#fff !important;
+  background:rgba(255,255,255,.18); padding:4px 10px; border-radius:99px; margin-bottom:8px !important}
+.app > .header .baio-brand{color:rgba(255,255,255,.85) !important; font-size:11px !important; font-weight:500 !important}
+.app > .header h1{color:#fff !important; font-size:24px !important; font-weight:800 !important; line-height:1.15 !important; margin:4px 0 0 !important; max-width:72%; position:relative; z-index:1}
+.app > .header .sub, .app > .header .credentials, .app > .header .credentials .role{color:rgba(255,255,255,.9) !important}
+.app > .header .header-details-toggle{background:rgba(255,255,255,.18) !important; color:#fff !important; border:0 !important; border-radius:99px !important; padding:5px 12px !important; font-size:11.5px !important; font-weight:600 !important; margin-top:10px !important}
+.app > .header .header-actions-row{gap:8px !important; margin-top:14px !important; position:relative; z-index:1}
+.app > .header .theme-toggle-btn, .app > .header .notif-btn, .app > .header .home-btn, .app > .header .lang-switcher-btn{
+  background:rgba(255,255,255,.2) !important; border:0 !important; color:#fff !important;
+  border-radius:14px !important; min-width:40px; height:40px; padding:0 10px !important;
+  display:inline-flex !important; align-items:center; justify-content:center; font-size:16px !important; box-shadow:none !important}
+.app > .header .lang-switcher-btn{font-size:12.5px !important; font-weight:700 !important}
+.hs-art{position:absolute; right:-6px; top:16px; font-size:84px; line-height:1; z-index:0; pointer-events:none;
+  filter:drop-shadow(0 12px 18px rgba(40,0,90,.4)); animation:hsFloat 6s ease-in-out infinite}
+@keyframes hsFloat{50%{transform:translateY(-6px) rotate(4deg)}}
+@media (prefers-reduced-motion:reduce){.hs-art{animation:none}}
+
+/* ---------- greeting bar ---------- */
+.student-greet-bar{position:relative !important; top:auto !important; background:var(--hs-card) !important; border:0 !important;
+  border-radius:18px !important; padding:12px 14px !important; box-shadow:0 6px 16px var(--hs-sh); font-size:13px !important; font-weight:600}
+.student-greet-bar .btn{border-radius:99px !important}
+
+/* ---------- quick-start tiles (like the home "My Classes / Game Zone" grid) ---------- */
+.hs-sec{display:flex; justify-content:space-between; align-items:baseline; padding:8px 2px 10px}
+.hs-sec h2{font-size:17px; font-weight:700; margin:0; color:var(--hs-ink)}
+.hs-sec span{font-size:12px; color:var(--hs-p3); font-weight:600}
+.hs-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px}
+.hs-tile{position:relative; overflow:hidden; border:0; text-align:left; cursor:pointer; border-radius:22px; padding:14px 13px 13px; min-height:118px;
+  box-shadow:0 8px 20px var(--hs-sh); color:#1E1B4B !important; font:inherit}
+.hs-tile .ic{width:48px; height:48px; border-radius:16px; display:grid; place-items:center; font-size:25px; background:rgba(255,255,255,.75)}
+.hs-tile b{display:block; font-size:14.5px; font-weight:700; margin-top:10px; line-height:1.2}
+.hs-tile small{display:block; font-size:11px; color:rgba(30,27,75,.68); margin-top:1px}
+.hs-tile:after{content:''; position:absolute; right:-24px; bottom:-24px; width:80px; height:80px; border-radius:50%; background:rgba(255,255,255,.35)}
+.hs-tile .lk{position:absolute; top:10px; right:10px; font-size:10px; font-weight:800; padding:2px 7px; border-radius:99px; background:rgba(255,255,255,.8); color:#5B2EE0}
+.hs-y{background:linear-gradient(145deg,#FFE9A8,#FFD166)} .hs-pk{background:linear-gradient(145deg,#FFD6EC,#F7A8D8)}
+.hs-g{background:linear-gradient(145deg,#C9F2D9,#7FDCA6)} .hs-v{background:linear-gradient(145deg,#E3D9FF,#B9A3FF)}
+.hs-b{background:linear-gradient(145deg,#D3E8FF,#8EC5FF)} .hs-o{background:linear-gradient(145deg,#FFE0CC,#FFAB7A)}
+
+/* ---------- tab bar ---------- */
+.tabbar-wrap{top:0 !important; background:var(--bg-0) !important; padding:8px 0 6px; margin-bottom:12px !important}
+.tab-btn, .cat-dd-btn, .tab-scroll-btn{background:var(--hs-card) !important; border:0 !important; color:var(--hs-ink) !important;
+  border-radius:99px !important; padding:9px 14px !important; font-size:12px !important; font-weight:600 !important; box-shadow:0 3px 10px var(--hs-sh) !important}
+.tab-btn.active{background:linear-gradient(135deg,#5B2EE0,#A47BFF) !important; color:#fff !important; box-shadow:0 6px 14px rgba(91,46,224,.35) !important}
+.tabs{gap:8px !important; padding:2px 2px 6px !important}
+
+/* ---------- cards, headings, buttons ---------- */
+.card{border:0 !important; border-radius:22px !important; box-shadow:0 8px 22px var(--hs-sh) !important}
+.card h2, .card h3, .panel h2, .panel h3{color:var(--hs-ink) !important; font-weight:700 !important}
+html[data-theme="light"] .card h3[style*="gold"], html[data-theme="light"] .card h2[style*="gold"]{color:#5B2EE0 !important}
+.btn{background:linear-gradient(135deg,#5B2EE0,#A47BFF) !important; color:#fff !important; border:0 !important; border-radius:99px !important;
+  font-weight:700 !important; box-shadow:0 6px 14px rgba(91,46,224,.28)}
+.btn.secondary{background:var(--hs-card) !important; color:var(--hs-p1) !important; border:1.5px solid rgba(124,77,255,.35) !important; box-shadow:none}
+:root:not([data-theme="light"]) .btn.secondary{color:#CBB8FF !important}
+.study-dd-btn, .opt-btn{border-radius:16px !important}
+
+/* ---------- bottom nav (same as home) ---------- */
+.hs-nav{position:fixed; left:12px; right:12px; bottom:max(12px,env(safe-area-inset-bottom)); height:62px; max-width:520px; margin:0 auto; background:var(--hs-card);
+  border-radius:22px; display:flex; align-items:center; justify-content:space-around; box-shadow:0 10px 30px rgba(0,0,0,.22); z-index:60; font-family:'Poppins',sans-serif}
+.hs-nav a, .hs-nav button{display:flex; flex-direction:column; align-items:center; gap:1px; font-size:10.5px; font-weight:600; color:var(--hs-muted); width:62px;
+  text-decoration:none; background:none; border:0; cursor:pointer; font-family:inherit}
+.hs-nav em{font-style:normal; font-size:19px}
+.hs-nav .on{color:var(--hs-p1)}
+:root:not([data-theme="light"]) .hs-nav .on{color:var(--hs-p3)}
+
+/* ---------- notices and links, home colours ---------- */
+.whatsnew-banner{background:linear-gradient(120deg,#FF7A59,#FF4D7E) !important; color:#fff !important; border:0 !important; border-radius:20px !important;
+  box-shadow:0 10px 24px rgba(255,77,126,.28) !important}
+.whatsnew-banner b, .whatsnew-banner strong{color:#FFF3B0 !important}
+.whatsnew-banner button{color:#fff !important}
+.dmcq-chapter-link{background:var(--hs-card) !important; border:0 !important; border-radius:20px !important; box-shadow:0 6px 16px var(--hs-sh)}
+
+/* ---------- header tweaks: one row of icon buttons ---------- */
+.app > .header .header-actions-row{flex-wrap:wrap !important; gap:5px !important}
+.app > .header .theme-toggle-btn, .app > .header .notif-btn, .app > .header .home-btn, .app > .header .lang-switcher-btn{min-width:34px; height:34px; flex:none; padding:0 6px !important; font-size:14px !important; border-radius:12px !important}
+.app > .header .lang-switcher-btn{font-size:10.5px !important; padding:0 8px !important; gap:3px !important}
+.app > .header .baio-brand{max-width:68%}
+.hs-art{top:42px; font-size:76px}
