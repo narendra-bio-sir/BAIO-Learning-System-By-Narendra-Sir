@@ -938,6 +938,27 @@ button.bh-tile{border:0;text-align:left;font:inherit;cursor:pointer;width:100%;}
 .bh-ch.locked .st{color:var(--bh-muted);}
 .bh-mfoot{display:block;text-align:center;font-weight:700;font-size:13.5px;color:#5B2EE0 !important;padding:12px 0 2px;text-decoration:none;}
 .bh-ch.soon{opacity:.5;pointer-events:none;}.bh-ch.soon .st{color:var(--bh-muted);}
+/* Free Notes: downloads pill + chapter list with download pills */
+button.bh-chip{font:inherit;color:inherit;cursor:pointer}
+.bh-dlpill{display:flex;align-items:center;gap:12px;width:100%;margin-top:12px;border:0;cursor:pointer;font:inherit;text-align:left;border-radius:99px;padding:9px 16px 9px 9px;color:#fff;background:linear-gradient(120deg,#0E9F6E,#14B8A6 55%,#3B82F6);box-shadow:0 8px 20px rgba(14,159,110,.28)}
+.bh-dlpill .ic{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.22);display:grid;place-items:center;font-size:21px;flex:none}
+.bh-dlpill .tx{flex:1;min-width:0}.bh-dlpill b{display:block;font-size:15px;font-weight:700;line-height:1.2}.bh-dlpill small{display:block;font-size:11.5px;opacity:.9}
+.bh-dlpill .fr{font-size:10px;font-weight:800;letter-spacing:.06em;background:#FFD23F;color:#3A2600;border-radius:99px;padding:3px 8px}
+.bh-dlpill .ar{font-size:22px;font-weight:700}
+.bh-nch{background:var(--bh-card);border-radius:16px;padding:11px 12px;box-shadow:0 3px 10px var(--bh-sh)}
+.bh-nch .hd{display:flex;align-items:center;gap:10px}
+.bh-nch .no{width:34px;height:34px;border-radius:11px;background:rgba(20,184,166,.14);color:#0E8F7E;display:grid;place-items:center;font-weight:800;font-size:13px;flex:none}
+.bh-nch .nm{flex:1;min-width:0;font-size:14px;font-weight:600;line-height:1.25}
+.bh-nch .op{font-size:11px;font-weight:700;color:#5B2EE0 !important;text-decoration:none;white-space:nowrap}
+.bh-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.bh-pills a{display:inline-flex;align-items:center;gap:5px;padding:7px 11px;border-radius:99px;font-size:12px;font-weight:700;line-height:1.1;text-decoration:none;border:1.5px solid rgba(20,184,166,.45);color:#0B7A6C !important;background:rgba(20,184,166,.08)}
+.bh-pills a.pri{background:linear-gradient(120deg,#0E9F6E,#14B8A6);border-color:transparent;color:#fff !important}
+.bh-pills a small{font-size:10.5px;font-weight:600;opacity:.8}
+:root:not([data-theme="light"]) .bh-pills a{color:#7FE3D2 !important;border-color:rgba(127,227,210,.4);background:rgba(127,227,210,.08)}
+:root:not([data-theme="light"]) .bh-pills a.pri{color:#fff !important;background:linear-gradient(120deg,#0E9F6E,#14B8A6);border-color:transparent}
+:root:not([data-theme="light"]) .bh-nch .no{color:#7FE3D2}
+:root:not([data-theme="light"]) .bh-nch .op{color:#B39BFF !important}
+.bh-nnote{font-size:12px;color:var(--bh-muted);margin:0 2px 2px;line-height:1.45}
 body{padding-bottom:96px;}
 .faq-chat-btn{bottom:94px;}
 .faq-chat-panel{bottom:140px;}
@@ -1007,10 +1028,12 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
       <a class="bh-tile bh-g" href="flashcards.html"><div class="ic">🧠</div><b>Flash Cards</b><span>Quick recall</span></a>
       <button type="button" class="bh-tile bh-v" id="bhMockTests" aria-haspopup="dialog"><div class="ic">📝</div><b>Mock Tests</b><span>Annual exam · new tests</span></button>
     </div>
+    <button type="button" class="bh-dlpill" id="bhFreeNotes" aria-haspopup="dialog"><span class="ic">⬇️</span><span class="tx"><b>Free Notes · Downloads</b><small>Every chapter · I PUC &amp; II PUC · PDF</small></span><span class="fr">FREE</span><span class="ar">›</span></button>
 
     <div class="bh-sec"><h2>More tools</h2><a href="#bhTools">All 30+</a></div>
     <div class="bh-chips">
       <a class="bh-chip" href="store.html" id="bhStoreChip"><i style="background:#FFE0EC">🛍️</i><span>BAIO Store</span><em class="nw">NEW</em></a>
+      <button type="button" class="bh-chip" id="bhFreeNotesChip" aria-haspopup="dialog"><i style="background:#D9F7E8">⬇️</i><span>Free Notes</span><em class="nw">NEW</em></button>
       <a class="bh-chip" href="mind-maps.html" id="bhMmChip"><i style="background:#DDEBFF">🗺️</i><span>Mind Maps</span><em class="nw">NEW</em></a>
       <a class="bh-chip" href="handwritten-notes.html" id="bhHwChip"><i style="background:#FFE6CC">✍️</i><span>Handwritten Notes</span><em class="nw">NEW</em></a>
       <a class="bh-chip" href="rapid-fire.html" id="bhRfChip"><i style="background:#FFE3D3">⚡</i><span>Rapid Fire</span><em class="nw">NEW</em></a>
@@ -4296,6 +4319,67 @@ window.indexHardRefresh = indexHardRefresh;
   sh.addEventListener('click',function(e){ if(e.target===sh) close(); });
   document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&sh.classList.contains('open')) close(); });
   sh.querySelectorAll('.bh-opt[data-mpuc]').forEach(function(o){ o.addEventListener('click',function(){ show(o.getAttribute('data-mpuc')); }); });
+})();
+</script>
+<div class="bh-sheet" id="bhNotesSheet" role="dialog" aria-modal="true" aria-label="Free Notes" aria-hidden="true">
+  <div class="bh-sbox">
+    <div class="bh-grab"></div>
+    <div class="bh-shead">
+      <button type="button" class="bk" id="bhNotesBack" aria-label="Back">←</button>
+      <b id="bhNotesTitle">Free Notes · Downloads</b>
+      <button type="button" id="bhNotesClose" aria-label="Close">✕</button>
+    </div>
+    <div class="bh-opts">
+      <button type="button" class="bh-opt bh-g" data-npuc="1"><span class="ic">🌱</span><span><b>I PUC Biology</b><small>19 chapters · free PDF notes</small></span><span class="ar">›</span></button>
+      <button type="button" class="bh-opt bh-pk" data-npuc="2"><span class="ic">🧬</span><span><b>II PUC Biology</b><small>13 chapters · free PDF notes</small></span><span class="ar">›</span></button>
+      <a class="bh-mfoot" href="download-notes-guide.html">How to download notes →</a>
+    </div>
+    <div class="bh-chs" id="bhNotesList"></div>
+  </div>
+</div>
+<script>
+/* Free Notes sheet: I PUC / II PUC → chapter list → download pills.
+   Data: notes/free/free-notes.js (built by scripts/free-notes/build-free-notes.js), loaded on first open. */
+(function(){
+  var sh=document.getElementById('bhNotesSheet'), list=document.getElementById('bhNotesList'), title=document.getElementById('bhNotesTitle'), V='?v=20261126', want=null;
+  function esc(t){ var d=document.createElement('div'); d.textContent=t==null?'':String(t); return d.innerHTML; }
+  function load(cb){
+    if(window.FREE_NOTES) return cb();
+    var s=document.createElement('script'); s.src='notes/free/free-notes.js'+V; s.onload=cb;
+    s.onerror=function(){ list.innerHTML='<p class="bh-nnote">Could not load the notes list. Check your internet connection and try again.</p>'; };
+    document.head.appendChild(s);
+  }
+  function fname(h,cls,n,t){ var ext=(h.split('?')[0].match(/\.\w+$/)||['.pdf'])[0]; return ('BAIO '+cls+' Ch '+n+' '+t).replace(/[^A-Za-z0-9]+/g,'-').replace(/-+$/,'')+ext; }
+  function home(){ sh.classList.remove('list'); title.textContent='Free Notes · Downloads'; }
+  function open(){ home(); sh.classList.add('open'); sh.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+  function close(){ sh.classList.remove('open'); sh.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+  function show(k){
+    title.textContent=(k==='1'?'I PUC':'II PUC')+' · Free Notes'; sh.classList.add('list');
+    list.innerHTML='<p class="bh-nnote">Loading chapters…</p>';
+    want=k;
+    load(function(){
+      if(want!==k) return;
+      var c=window.FREE_NOTES[k]; list.innerHTML='';
+      var note=document.createElement('p'); note.className='bh-nnote'; note.textContent='Tap a pill to download. All notes are free · '+c.ch.length+' chapters.'; list.appendChild(note);
+      c.ch.forEach(function(ch){
+        var d=document.createElement('div'); d.className='bh-nch';
+        d.innerHTML='<div class="hd"><span class="no">'+ch.n+'</span><span class="nm">'+esc(ch.t)+'</span>'+(ch.page?'<a class="op" href="'+esc(ch.page)+'">Open ›</a>':'')+'</div>'
+          +'<div class="bh-pills">'+ch.files.map(function(f,i){
+            var h=f.h+(f.h.indexOf('?')<0&&i===0?V:'');
+            return '<a'+(i===0?' class="pri"':'')+' href="'+esc(h)+'" download="'+esc(fname(f.h,c.t,ch.n,f.t))+'" target="_blank" rel="noopener">'+esc(f.e)+' '+esc(f.t)+(f.pg?' <small>'+f.pg+' pp</small>':'')+' ⬇</a>';
+          }).join('')+'</div>';
+        list.appendChild(d);
+      });
+      var f=document.createElement('a'); f.className='bh-mfoot'; f.href=c.prep; f.textContent='Read all notes online →'; list.appendChild(f);
+      list.scrollTop=0;
+    });
+  }
+  ['bhFreeNotes','bhFreeNotesChip'].forEach(function(id){ var b=document.getElementById(id); if(b) b.addEventListener('click',open); });
+  document.getElementById('bhNotesClose').addEventListener('click',close);
+  document.getElementById('bhNotesBack').addEventListener('click',home);
+  sh.addEventListener('click',function(e){ if(e.target===sh) close(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&sh.classList.contains('open')) close(); });
+  sh.querySelectorAll('.bh-opt[data-npuc]').forEach(function(o){ o.addEventListener('click',function(){ show(o.getAttribute('data-npuc')); }); });
 })();
 </script>
 <script src="pay/upi.js?v=2"></script>
