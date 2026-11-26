@@ -68,8 +68,8 @@ ${header('Question Paper')}
 <div class="sec"><span>I. Select the correct alternative from the choices given below.</span><span class="mk">5 × 1 = 5</span></div>
 <div class="q"><span class="n">1.</span><div class="b">The most abundant protein in the whole biosphere is
 <div class="op"><span>a) Collagen</span><span>b) Chitin</span><span>c) RuBisCO</span><span>d) Insulin</span></div></div></div>
-<div class="q"><span class="n">2.</span><div class="b">Which of the following is a neutral amino acid?
-<div class="op"><span>a) Glutamic acid</span><span>b) Lysine</span><span>c) Aspartic acid</span><span>d) Valine</span></div></div></div>
+<div class="q"><span class="n">2.</span><div class="b">Fatty acid and glycerol react to form lipids. The chemical reaction involved is called
+<div class="op"><span>a) Neutralization</span><span>b) Reduction</span><span>c) Oxidation</span><span>d) Esterification</span></div></div></div>
 <div class="q"><span class="n">3.</span><div class="b">When the enzyme succinic dehydrogenase is added to a mixture of the substrates malonate and succinate, the rate of enzyme activity declines because of
 <div class="op w"><span>a) Increase in pH</span><span>b) Decrease in pH</span><span>c) Decrease in concentration of substrate</span><span>d) Competitive inhibition</span></div></div></div>
 <div class="q"><span class="n">4.</span><div class="b">What is the percentage of O<sub>2</sub> transported by RBCs in the blood?
@@ -78,18 +78,18 @@ ${header('Question Paper')}
 <div class="op"><span>a) Alveolar walls</span><span>b) Bronchi</span><span>c) Bronchioles</span><span>d) Pleural membrane</span></div></div></div>
 
 <div class="sec"><span>II. Fill in the blanks by choosing the appropriate word given below.</span><span class="mk">3 × 1 = 3</span></div>
-<div class="wb">( Alveoli, &nbsp;Larynx, &nbsp;Ribozyme, &nbsp;Tidal volume )</div>
-<div class="q"><span class="n">6.</span><div class="b">A non-proteinaceous enzyme is ____________.</div></div>
+<div class="wb">( Alveoli, &nbsp;Cellulose, &nbsp;Larynx, &nbsp;Tidal volume )</div>
+<div class="q"><span class="n">6.</span><div class="b">Chemically, the cotton fibre is composed of ____________.</div></div>
 <div class="q"><span class="n">7.</span><div class="b">____________ are the primary sites of exchange of gases.</div></div>
 <div class="q"><span class="n">8.</span><div class="b">The volume of air inspired or expired during a normal respiration is ____________.</div></div>
 
 <div class="sec"><span>III. Answer any TWO of the following in 3–5 sentences.</span><span class="mk">2 × 2 = 4</span></div>
 <div class="q"><span class="n">9.</span><div class="b">Proteins are regarded as heteropolymers. Substantiate.</div></div>
-<div class="q"><span class="n">10.</span><div class="b">How does temperature affect the enzyme activity?</div></div>
+<div class="q"><span class="n">10.</span><div class="b">Differentiate between primary and secondary metabolites with examples.</div></div>
 <div class="q"><span class="n">11.</span><div class="b">Differentiate between vital capacity and total lung capacity.</div></div>
 
 <div class="sec"><span>IV. Answer any ONE of the following in 40–80 words.</span><span class="mk">1 × 3 = 3</span></div>
-<div class="q"><span class="n">12.</span><div class="b">Mention the three types of co-factors associated with enzymes, with an example each.</div></div>
+<div class="q"><span class="n">12.</span><div class="b">What are nucleotides? Mention the 5 types of nucleotides that make nucleic acids.</div></div>
 <div class="q"><span class="n">13.</span><div class="b">Explain the mechanism of breathing.</div></div>
 
 <div class="sec"><span>V. Answer any ONE of the following in 200–250 words.</span><span class="mk">1 × 5 = 5</span></div>
@@ -115,11 +115,11 @@ const pts = (n) => `<span class="pts">${n}</span>`;
 const QB = (r) => `Ch 9 · ${r}`, NC = (r) => `Ch 14 · ${r}`;
 const src = [
   [1, QB('Part A I · Q14'), 'Easy', 110], [9, QB('Part B III · Q3'), 'Average', 109],
-  [2, QB('Part A I · Q6'), 'Easy', 106], [10, QB('Part B III · Q12'), 'Average', 116],
+  [2, QB('Part A I · Q7'), 'Easy', 106], [10, QB('Part B III · Q4'), 'Average', 108],
   [3, QB('Part A I · Q24'), 'Average', 117], [11, NC('Part B III · Q11'), 'Average', 187],
-  [4, NC('Part A I · Q15'), 'Easy', 189], [12, QB('Part C IV · Q4'), 'Easy', 118],
+  [4, NC('Part A I · Q15'), 'Easy', 189], [12, QB('Part C IV · Q1'), 'Easy', 106],
   [5, NC('Part A I · Q20'), 'Easy', 190], [13, NC('Part C IV · Q2'), 'Easy', '185, 186'],
-  [6, QB('Part A II · Q4'), 'Difficult', 119], [14, QB('Part D V · Q1'), 'Easy', 117],
+  [6, QB('Part A II · Q9'), 'Easy', 111], [14, QB('Part D V · Q1'), 'Easy', 117],
   [7, NC('Part A II · Q5'), 'Easy', 187], [15, NC('Part D V · Q2'), 'Easy', 184],
   [8, NC('Part A II · Q11'), 'Easy', 186]];
 const srcRows = []; for(let i = 0; i < src.length; i += 2){ const a = src[i], b = src[i + 1] || ['', '', '', ''];
@@ -142,27 +142,27 @@ ${srcRows.join('\n')}
 <div style="break-inside:avoid"><h2>Part I &amp; II: Answer key</h2>
 <table>
 <tr><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>Q5</th><th>Q6</th><th>Q7</th><th>Q8</th></tr>
-<tr><td>c) RuBisCO</td><td>d) Valine</td><td>d) Competitive inhibition</td><td>d) 97%</td><td>a) Alveolar walls</td><td>Ribozyme</td><td>Alveoli</td><td>Tidal volume</td></tr>
+<tr><td>c) RuBisCO</td><td>d) Esterification</td><td>d) Competitive inhibition</td><td>d) 97%</td><td>a) Alveolar walls</td><td>Cellulose</td><td>Alveoli</td><td>Tidal volume</td></tr>
 </table>
-<p class="note">1 mark each. Q3: malonate closely resembles the substrate succinate in structure and competes with it for the substrate-binding site.</p></div>
+<p class="note">1 mark each. Q2: in lipids the fatty acids are found esterified with glycerol (mono-, di- and triglycerides). Q6: cotton fibre is cellulosic. Q3: malonate closely resembles the substrate succinate in structure and competes with it for the substrate-binding site.</p></div>
 
 <h2>Part III: 2 marks each (any two)</h2>
 <div class="ka"><span class="qq">9. Proteins are heteropolymers</span>
 <ul><li>Each protein is a polymer of amino acids, and there are <b>20 types of amino acids</b> (e.g. alanine, cysteine, proline, tryptophan, lysine), so a protein is made of different kinds of monomers: a heteropolymer. ${pts('1')}</li>
 <li>A <b>homopolymer</b> has only one type of monomer repeating ‘n’ number of times (e.g. cellulose, made only of glucose); proteins are therefore heteropolymers and not homopolymers. ${pts('1')}</li></ul></div>
-<div class="ka"><span class="qq">10. Effect of temperature on enzyme activity</span>
-<ul><li>Enzymes function in a narrow range of temperature; each enzyme shows its highest activity at a particular temperature called the <b>optimum temperature</b>, and activity declines both below and above it. ${pts('1')}</li>
-<li><b>Low temperature</b> preserves the enzyme in a temporarily inactive state, whereas <b>high temperature</b> destroys enzymatic activity because proteins are denatured by heat. ${pts('1')}</li></ul></div>
+<div class="ka"><span class="qq">10. Primary vs secondary metabolites</span>
+<ul><li><b>Primary metabolites</b> are found in all living tissues, including animal tissues; they have identifiable functions and play known roles in normal physiological processes, e.g. amino acids, sugars, fatty acids, nucleotides. ${pts('1')}</li>
+<li><b>Secondary metabolites</b> are found mainly in plant, fungal and microbial cells; the roles of all of them in the host are not yet understood, but many are useful to human welfare, e.g. alkaloids (morphine, codeine), pigments (carotenoids, anthocyanins), essential oils (lemon grass oil), drugs (vinblastin, curcumin), toxins (abrin, ricin), lectins (concanavalin A), rubber and gums. ${pts('1')}</li></ul>
+<p class="note">Award the mark for each type only with at least one correct example.</p></div>
 <div class="ka"><span class="qq">11. Vital capacity vs total lung capacity</span>
 <ul><li><b>Vital capacity (VC):</b> the maximum volume of air a person can breathe in after a forced expiration, or breathe out after a forced inspiration; it includes ERV, TV and IRV (VC = ERV + TV + IRV) and does not include the residual volume. ${pts('1')}</li>
 <li><b>Total lung capacity (TLC):</b> the total volume of air accommodated in the lungs at the end of a forced inspiration; it includes RV, ERV, TV and IRV, i.e. TLC = vital capacity + residual volume. ${pts('1')}</li></ul></div>
 
 <h2>Part IV: 3 marks (any one)</h2>
-<div class="ka"><span class="qq">12. Three types of co-factors</span> (1 mark each: name with its feature or example)
-<ul><li><b>Prosthetic groups:</b> organic compounds tightly bound to the apoenzyme, e.g. <b>haem</b> in peroxidase and catalase.</li>
-<li><b>Co-enzymes:</b> organic compounds whose association with the apoenzyme is only transient, during catalysis; many contain vitamins, e.g. <b>NAD and NADP</b> contain the vitamin niacin.</li>
-<li><b>Metal ions:</b> form coordination bonds with side chains at the active site and with the substrate, e.g. <b>zinc</b> for the proteolytic enzyme carboxypeptidase.</li></ul>
-<p class="note">Award ½ mark for each correct name without its feature or example.</p></div>
+<div class="ka"><span class="qq">12. Nucleotides</span>
+<ul><li><b>Definition:</b> when a nitrogen base (adenine, guanine, cytosine, uracil or thymine) is attached to a sugar it is a nucleoside; if a <b>phosphate group</b> is also esterified to the sugar, it is a <b>nucleotide</b> (nitrogen base + pentose sugar + phosphate). Nucleic acids like DNA and RNA consist of nucleotides only. ${pts('1')}</li>
+<li><b>Five types:</b> adenylic acid, guanylic acid, cytidylic acid, thymidylic acid and uridylic acid. ${pts('2')}</li></ul>
+<p class="note">Five types: award ½ mark each for any four correct names (maximum 2 marks).</p></div>
 <div class="ka"><span class="qq">13. Mechanism of breathing</span>
 <ul><li>Breathing has two stages, <b>inspiration</b> and <b>expiration</b>, brought about by a pressure gradient between the lungs and the atmosphere: inspiration when the intra-pulmonary pressure is <b>less</b> than the atmospheric pressure, expiration when it is <b>higher</b>. The diaphragm and the external and internal intercostal muscles generate these gradients. ${pts('1')}</li>
 <li><b>Inspiration:</b> the diaphragm contracts (volume of the thoracic chamber increases in the antero-posterior axis) and the external intercostal muscles contract, lifting the ribs and sternum (volume increases in the dorso-ventral axis); pulmonary volume increases, intra-pulmonary pressure falls below atmospheric and air moves into the lungs. ${pts('1')}</li>
@@ -206,7 +206,7 @@ ${weightTable(false)}
 <tr><td class="l">Ch 9 Biomolecules</td><td>6</td><td>16</td><td>a little over half</td></tr>
 <tr><td class="l">Ch 14 Breathing and Exchange of Gases</td><td>5</td><td>14</td><td>a little under half</td></tr>
 </table>
-<p class="note" style="margin-top:10px"><b>How to prepare:</b> revise both chapters from the NCERT text and the question bank: enzymes (classes, co-factors, factors affecting activity, inhibition), proteins and amino acids; respiratory volumes and capacities, exchange and transport of gases and regulation of respiration. Practise the labelled diagram of the human respiratory system.</p>`);
+<p class="note" style="margin-top:10px"><b>How to prepare:</b> revise both chapters from the NCERT text and the question bank: proteins, lipids, carbohydrates, nucleotides and nucleic acids, primary and secondary metabolites, and enzymes (classes, inhibition); respiratory volumes and capacities, exchange and transport of gases and regulation of respiration. Practise the labelled diagram of the human respiratory system.</p>`);
 
 (async () => {
   const b = await chromium.launch();
