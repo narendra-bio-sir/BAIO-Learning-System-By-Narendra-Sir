@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#0B1B14">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>Career Guidance | BAIO Learning System</title>
-<meta name="description" content="Career guidance for PU Science (PCB, PCM, PCME) students: medical, engineering, electronics, other streams and skills, with exams, eligibility, fees, pay and a career quiz. By Narendra Sir.">
+<meta name="description" content="Career guidance for PU Science (PCB, PCM, PCME) students: medical, engineering, electronics, other streams and skills, with exams, eligibility, fees, pay, scholarships and a career quiz. By Narendra Sir.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="subject-apps/app.css?v=2">
@@ -130,7 +130,19 @@ ol.stp{margin:0;padding-left:20px;font-size:14.5px;line-height:1.55}ol.stp li{ma
   body.print-report #myReport{border:0;padding:0}
   body.print-report #myReport .qact,body.print-report #myReport .lnk,body.print-report #myReport .sg .op{display:none!important}
   html,body{background:#fff!important;color:#111!important}}
-#myReport,#quiz{scroll-margin-top:64px}
+#myReport,#quiz,#sch{scroll-margin-top:64px}
+/* scholarships */
+.qcard.sch-btn{border-color:var(--gold2)}.qcard.sch-btn small{display:block;line-height:1.4;margin-top:2px}
+.schf{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 2px}
+.schf button{border:1.5px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:999px;padding:6px 11px;font:700 13px Inter,'Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer;-webkit-tap-highlight-color:transparent}
+.schf button.on{background:linear-gradient(135deg,var(--gold2),#E9C45A);border-color:var(--gold2);color:#1a1406}
+.sch-list{display:grid;gap:8px;margin-top:10px}
+.sch-list .car{background:var(--panel2)}
+.gtag{display:inline-block;margin-left:6px;vertical-align:2px;font:700 10.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari';color:#fff;background:#C2477F;border-radius:999px;padding:2px 7px}
+.row .v a{color:var(--teal);font-weight:700;word-break:break-all}
+.box h4{margin:16px 0 4px;font:700 15px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari'}
+.box .sub{margin:0;color:var(--dim);font-size:13.5px;line-height:1.5}
+ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{margin:4px 0}
 </style>
 <script>/* apply the saved theme before the first paint (the page script below does the same later); avoids a light/dark flash on refresh */(function(){var t='light';try{t=localStorage.getItem('baio_theme')||'light';}catch(e){}document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');})();</script>
 </head>
@@ -155,10 +167,12 @@ ol.stp{margin:0;padding-left:20px;font-size:14.5px;line-height:1.55}ol.stp li{ma
   <div class="tip" id="tip"></div>
   <button class="qcard" id="qOpen" type="button"><span class="e">🧭</span><span><b id="qT"></b><small id="qS"></small></span></button>
   <div id="quiz" hidden></div>
+  <button class="qcard sch-btn" id="schOpen" type="button"><span class="e">💰</span><span><b id="schT"></b><small id="schS"></small></span></button>
   <div class="seg2" id="streams" role="tablist"></div>
   <div class="groups" id="groups" role="tablist"></div>
   <div class="cards" id="cards"></div>
   <div class="box" id="exams"></div>
+  <section class="box" id="sch" aria-labelledby="schH"></section>
   <p class="note" id="note"></p>
   <footer>BAIO Learning System · Narendra Sir</footer>
 </main>
@@ -168,6 +182,7 @@ ol.stp{margin:0;padding-left:20px;font-size:14.5px;line-height:1.55}ol.stp li{ma
 <script src="careers/data-more.js?v=1"></script>
 <script src="careers/data-skills.js?v=1"></script>
 <script src="careers/data-ele.js?v=1"></script>
+<script src="careers/data-sch.js?v=1"></script>
 <script src="careers/report.js?v=13"></script>
 <script src="careers/share-card.js?v=2" defer></script>
 <script>
@@ -211,6 +226,7 @@ ol.stp{margin:0;padding-left:20px;font-size:14.5px;line-height:1.55}ol.stp li{ma
   var th = 'light'; try{ th = localStorage.getItem('baio_theme') || 'light'; }catch(e){} theme(th);
   tb.onclick = function(){ var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; theme(n); try{ localStorage.setItem('baio_theme', n); }catch(e){} };
 
+  var S = window.SCHOLARSHIPS, schCat = 'all', schOpen = {};
   var grp = 'neet', open = {}, ans = {}, showRes = false, quizOpen = false, stream = 'pcb';
   function stOf(gid){ var g = D.groups.filter(function(x){ return x.id === gid; })[0]; return (g && g.st) || 'pcb'; }
   function firstGroup(st){ return D.groups.filter(function(g){ return (g.st || 'pcb') === st; })[0].id; }
@@ -231,6 +247,7 @@ ol.stp{margin:0;padding-left:20px;font-size:14.5px;line-height:1.55}ol.stp li{ma
   else if(h === 'beyond' || h === 'other'){ stream = 'beyond'; }
   else if(h === 'skills' || h === 'diploma'){ stream = 'skills'; }
   else if(h === 'quiz') quizOpen = true;
+  else if(h.indexOf('sch') === 0 && S){ var hs = S.list.filter(function(x){ return 'sch-' + x.id === h; })[0]; if(hs) schOpen[hs.id] = true; }
   if(stOf(grp) !== stream) grp = firstGroup(stream);
   loadAns();
 
@@ -271,6 +288,24 @@ ol.stp{margin:0;padding-left:20px;font-size:14.5px;line-height:1.55}ol.stp li{ma
     }
     q.innerHTML = html + '</div>';
   }
+  function renderSch(){
+    if(!S) return;
+    var u = S.ui[lang] || S.ui.en;
+    $('schT').textContent = u.btnT; $('schS').textContent = u.btnS;
+    function row(k, lab, v){ return '<div class="row"><span class="k">'+k+'</span><div class="v"><b>'+lab+'</b>'+v+'</div></div>'; }
+    var list = S.list.filter(function(x){ return schCat === 'all' || (schCat === 'girls' ? x.girls : x.cat === schCat); });
+    $('sch').innerHTML = '<h3 id="schH">'+u.h+'</h3><p class="sub">'+esc(u.sub)+'</p>'
+      + '<div class="schf" role="tablist">' + S.cats.map(function(c){ return '<button type="button" role="tab" aria-selected="'+(c.id===schCat)+'" class="'+(c.id===schCat?'on':'')+'" data-sc="'+c.id+'">'+c.ic+' '+esc(L(c.t))+'</button>'; }).join('') + '</div>'
+      + '<div class="sch-list">' + list.map(function(x){
+          var host = x.url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+          return '<article class="car'+(schOpen[x.id]?' open':'')+'" id="sch-'+x.id+'"><button class="ch" type="button" data-sid="'+x.id+'" aria-expanded="'+!!schOpen[x.id]+'"><span class="e">'+x.ic+'</span><span><h3>'+esc(x.name)+(x.girls?'<span class="gtag">'+esc(u.girls)+'</span>':'')+'</h3><small>'+esc(x.by)+'</small></span><span class="ar">›</span></button>'
+            + '<div class="cb">' + row('✅', u.who, esc(L(x.who))) + row('💰', u.amt, esc(L(x.amt))) + row('📝', u.when, esc(L(x.when)))
+            + row('🔗', u.site, '<a href="'+x.url+'" target="_blank" rel="noopener">'+esc(host)+'</a>') + '</div></article>';
+        }).join('') + '</div>'
+      + '<h4>'+u.docsT+'</h4><ul class="dl">' + u.docs.map(function(d){ return '<li>'+esc(d)+'</li>'; }).join('') + '</ul>'
+      + '<h4>'+u.rulesT+'</h4><ul class="dl">' + u.rules.map(function(d){ return '<li>'+d+'</li>'; }).join('') + '</ul>'
+      + '<p class="note">'+esc(u.note)+'</p>';
+  }
   function render(){
     var u = UI[lang];
     document.documentElement.lang = lang;
@@ -284,6 +319,7 @@ ol.stp{margin:0;padding-left:20px;font-size:14.5px;line-height:1.55}ol.stp li{ma
     $('cards').innerHTML = D.list.filter(function(c){ return inGroup(c, grp); }).sort(function(a, b){ return (a.g === grp ? 0 : 1) - (b.g === grp ? 0 : 1); }).map(card).join('');
     $('exams').innerHTML = '<h3>'+u.exT+'</h3>' + D.exams.filter(function(x){ return (x.st || 'pcb') === stream; }).map(function(x){ return '<div class="ex"><span class="n">'+esc(x.n)+'</span><span class="by">'+esc(x.by)+'</span><div>'+esc(L(x.m))+'</div><div class="f">'+esc(L(x.f))+'</div></div>'; }).join('');
     renderQuiz();
+    renderSch();
   }
   function go(id){
     var c = D.list.filter(function(x){ return x.id === id; })[0]; if(!c) return;
@@ -327,8 +363,19 @@ ol.stp{margin:0;padding-left:20px;font-size:14.5px;line-height:1.55}ol.stp li{ma
     if(e.target.id === 'qClose'){ quizOpen = false; showRes = false; renderQuiz(); return; }
     var g = e.target.closest('[data-go]'); if(g) go(g.dataset.go);
   });
+  $('schOpen').onclick = function(){ $('sch').scrollIntoView({ behavior:'smooth', block:'start' }); try{ history.replaceState(null, '', '#scholarships'); }catch(x){} };
+  $('sch').addEventListener('click', function(e){
+    var c = e.target.closest('[data-sc]');
+    if(c){ schCat = c.dataset.sc; schOpen = {}; renderSch(); return; }
+    var b = e.target.closest('[data-sid]'); if(!b) return;
+    var id = b.dataset.sid; schOpen[id] = !schOpen[id];
+    b.closest('.car').classList.toggle('open', !!schOpen[id]); b.setAttribute('aria-expanded', !!schOpen[id]);
+    if(schOpen[id]) try{ history.replaceState(null, '', '#sch-' + id); }catch(x){}
+  });
+  if(!S){ $('schOpen').hidden = true; $('sch').hidden = true; }
   render();
   if(hc) setTimeout(function(){ go(hc.id); }, 200);
+  else if(S && h.indexOf('sch') === 0) setTimeout(function(){ var el = $(h === 'scholarships' ? 'sch' : h) || $('sch'); el.scrollIntoView({ behavior:'smooth', block:'start' }); }, 200);
 })();
 </script>
 </body>
