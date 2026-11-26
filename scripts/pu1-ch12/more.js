@@ -11,8 +11,8 @@ const kcet = {
     ['matching',M,'Match Column I with Column II:',['A-ii, B-i','A-i, B-ii','Both i','Both ii'],'Lenticels in bark; stomata in leaves.',['A. Lenticels','B. Stomata'],['i. Openings in leaf epidermis','ii. Openings in bark of woody stems']],
     ['statement',H,'Which of the following is/are correct?\n(i) Plants respire at rates lower than animals\n(ii) Interior cells of woody stems are living\n(iii) Each plant part handles its own gas exchange',['(i) and (iii) only','(ii) only','(i), (ii) and (iii)','(ii) and (iii) only'],'Interior cells are dead.'],
     ['recall',M,'Complete combustion of glucose releases energy mostly as:',['Heat','ATP','NADH','Light'],'Hence step-wise oxidation in cells.'],
-    ['diagram',M,'In a woody stem, the living cells that respire are found:',['In thin layers beneath the bark','At the centre of the stem','In dead xylem','In the pith only'],'Near lenticels.'],
-    ['diagram',M,'In a leaf, the network of air spaces is formed by:',['Loosely packed parenchyma','Compact epidermis','Xylem vessels','Cuticle'],'Spongy parenchyma.']
+    ['diagram',M,'In this T.S. of a woody stem, the living cells that respire lie in the region marked ?. They are found:',['In thin layers beneath the bark','At the centre of the stem','In the dead wood','In the pith only'],'Only a thin layer of living cells lies under the bark, close to the air.'],
+    ['recall',M,'In leaves, stems and roots, the interconnected network of air spaces is formed by:',['Loosely packed parenchyma','Compact epidermis','Xylem vessels','Cuticle'],'Loose parenchyma.']
   ],
   'glycolysis': [
     ['recall',E,'Glycolysis takes place in the:',['Cytoplasm','Mitochondrial matrix','Chloroplast','Nucleus'],'Cytoplasmic pathway.'],
@@ -21,8 +21,8 @@ const kcet = {
     ['matching',M,'Match Column I with Column II:',['A-ii, B-i','A-i, B-ii','Both i','Both ii'],'Hexokinase phosphorylates glucose; invertase splits sucrose.',['A. Hexokinase','B. Invertase'],['i. Sucrose &rarr; glucose + fructose','ii. Glucose &rarr; glucose-6-phosphate']],
     ['statement',H,'Which of the following is/are correct about glycolysis?\n(i) It has 10 reactions\n(ii) It releases CO<sub>2</sub>\n(iii) NADH is formed when PGAL &rarr; BPGA',['(i) and (iii) only','(ii) only','(i), (ii) and (iii)','(i) and (ii) only'],'No CO<sub>2</sub> is released in glycolysis.'],
     ['recall',M,'ATP is formed in glycolysis during conversion of:',['PEP to pyruvic acid','Glucose to glucose-6-phosphate','F-6-P to F-1,6-BP','PGAL to BPGA'],'Substrate-level phosphorylation.'],
-    ['diagram',M,'In the glycolysis flow chart, the 6C sugar that splits into two 3C sugars is:',['Fructose 1,6-bisphosphate','Glucose-6-phosphate','Fructose-6-phosphate','PEP'],'Splitting step.'],
-    ['diagram',H,'In the glycolysis diagram, H<sub>2</sub>O is shown leaving at the step:',['2-phosphoglycerate &rarr; PEP','PGAL &rarr; BPGA','Glucose &rarr; G-6-P','PEP &rarr; pyruvate'],'Dehydration.']
+    ['diagram',M,'In this part of NCERT Fig. 12.1 (glycolysis), the 6C sugar marked ? splits into two 3C sugars. It is:',['Fructose 1,6-bisphosphate','Glucose-6-phosphate','Fructose-6-phosphate','Phosphoenolpyruvate'],'Fructose 1,6-bisphosphate splits into DHAP and PGAL.'],
+    ['diagram',H,'In this part of NCERT Fig. 12.1, the molecule marked ? is removed when 2-phosphoglycerate becomes phosphoenolpyruvate. It is:',['H<sub>2</sub>O','CO<sub>2</sub>','ATP','NADH + H<sup>+</sup>'],'Dehydration: water is removed.']
   ],
   'fermentation': [
     ['recall',E,'Products of alcoholic fermentation:',['Ethanol and CO<sub>2</sub>','Lactic acid','Acetyl CoA and CO<sub>2</sub>','Water and CO<sub>2</sub>'],'Yeast.'],
@@ -31,8 +31,8 @@ const kcet = {
     ['matching',M,'Match Column I with Column II:',['A-ii, B-i','A-i, B-ii','Both i','Both ii'],'Yeast: alcohol; muscle: lactic acid.',['A. Yeast','B. Muscle cells'],['i. Lactic acid','ii. Ethanol + CO<sub>2</sub>']],
     ['statement',H,'Which of the following is/are correct?\n(i) Fermentation releases less than 7% of glucose energy\n(ii) Lactic acid fermentation releases CO<sub>2</sub>\n(iii) NADH is reoxidised to NAD<sup>+</sup> in fermentation',['(i) and (iii) only','(ii) only','(i), (ii) and (iii)','(ii) and (iii) only'],'No CO<sub>2</sub> in lactic acid fermentation.'],
     ['recall',M,'Net ATP per glucose in fermentation:',['2','36','38','4'],'From glycolysis.'],
-    ['diagram',M,'In the NCERT figure of anaerobic pathways, the branch giving ethanol also releases:',['CO<sub>2</sub>','O<sub>2</sub>','Lactic acid','ATP'],'Decarboxylation.'],
-    ['diagram',M,'In the same figure, NADH + H<sup>+</sup> is converted to NAD<sup>+</sup> when pyruvic acid forms:',['Lactic acid or ethanol','Acetyl CoA','Citric acid','Glucose'],'Both branches.']
+    ['diagram',M,'In NCERT Fig. 12.2, the products marked ? are formed from pyruvic acid by yeast. They are:',['Ethanol + CO<sub>2</sub>','Lactic acid','Ethanol only','Acetyl CoA + CO<sub>2</sub>'],'Decarboxylation, then reduction by alcohol dehydrogenase.'],
+    ['diagram',M,'In NCERT Fig. 12.2, the product marked ? forms in muscle cells without releasing CO<sub>2</sub>. It is:',['Lactic acid','Ethanol','Acetaldehyde','Oxaloacetic acid'],'Lactate dehydrogenase; NADH + H<sup>+</sup> becomes NAD<sup>+</sup>.']
   ],
   'krebs': [
     ['recall',E,'The Krebs&rsquo; cycle occurs in the:',['Mitochondrial matrix','Cytoplasm','Inner membrane','Chloroplast'],'Matrix.'],
@@ -41,8 +41,8 @@ const kcet = {
     ['matching',M,'Match Column I with Column II:',['A-ii, B-i','A-i, B-ii','Both i','Both ii'],'Citric acid is 6C; &alpha;-ketoglutaric acid is 5C.',['A. Citric acid','B. &alpha;-Ketoglutaric acid'],['i. 5 carbon','ii. 6 carbon']],
     ['statement',H,'Which of the following is/are correct?\n(i) 3 NADH are formed per turn\n(ii) O<sub>2</sub> is used directly in the cycle\n(iii) 1 FADH<sub>2</sub> is formed per turn',['(i) and (iii) only','(ii) only','(i), (ii) and (iii)','(i) and (ii) only'],'O<sub>2</sub> is used only in the ETS.'],
     ['recall',M,'Pyruvate dehydrogenase needs:',['NAD<sup>+</sup>, CoA and Mg<sup>2+</sup>','NADP<sup>+</sup> and light','FAD only','O<sub>2</sub> only'],'Link reaction.'],
-    ['diagram',M,'In the citric acid cycle diagram, CO<sub>2</sub> is shown leaving after:',['Citric acid and &alpha;-ketoglutaric acid','Malic acid and OAA','Succinic acid and malic acid','OAA only'],'Two decarboxylations.'],
-    ['diagram',H,'In the citric acid cycle diagram, FADH<sub>2</sub> is shown forming between:',['Succinic acid and malic acid','Citric acid and &alpha;-ketoglutaric acid','Pyruvate and acetyl CoA','Malic acid and OAA'],'Succinate oxidation.']
+    ['diagram',M,'In NCERT Fig. 12.3, the 5-carbon acid marked ? forms from citric acid with the release of CO<sub>2</sub>. It is:',['&alpha;-Ketoglutaric acid','Succinic acid','Malic acid','Oxaloacetic acid'],'Oxidative decarboxylation; NADH is also formed.'],
+    ['diagram',H,'In NCERT Fig. 12.3, the reduced coenzyme marked ? forms when succinic acid is converted to malic acid. It is:',['FADH<sub>2</sub>','NADH + H<sup>+</sup>','GTP','NADPH'],'Succinate dehydrogenase uses FAD.']
   ],
   'ets': [
     ['recall',E,'The ETS is present in the:',['Inner mitochondrial membrane','Matrix','Outer membrane','Cytoplasm'],'NCERT.'],
@@ -51,8 +51,8 @@ const kcet = {
     ['matching',M,'Match Column I with Column II:',['A-ii, B-i','A-i, B-ii','Both i','Both ii'],'Complex I: NADH dehydrogenase; Complex IV: cytochrome c oxidase.',['A. Complex I','B. Complex IV'],['i. Cytochrome c oxidase','ii. NADH dehydrogenase']],
     ['statement',H,'Which of the following is/are correct?\n(i) Cytochrome c is a mobile carrier\n(ii) F<sub>0</sub> is the ATP-making headpiece\n(iii) 4H<sup>+</sup> pass through F<sub>0</sub> per ATP',['(i) and (iii) only','(ii) only','(i), (ii) and (iii)','(ii) and (iii) only'],'F<sub>1</sub> is the headpiece.'],
     ['recall',M,'Complex V of the ETS is:',['ATP synthase','Cytochrome bc<sub>1</sub>','Ubiquinone','NADH dehydrogenase'],'NCERT.'],
-    ['diagram',M,'In the ETS diagram, H<sup>+</sup> flows back into the matrix through:',['F<sub>0</sub> of ATP synthase','Complex I','Cytochrome c','Ubiquinone'],'Proton channel.'],
-    ['diagram',H,'In the ETS diagram, succinate &rarr; fumarate is shown at:',['Complex II','Complex I','Complex III','Complex IV'],'Succinate dehydrogenase.']
+    ['diagram',M,'In NCERT Fig. 12.4, protons flow back into the matrix through the part of ATP synthase marked ?. It is:',['F<sub>0</sub>','F<sub>1</sub>','Cytochrome c','Ubiquinone'],'F<sub>0</sub> is the proton channel; F<sub>1</sub> makes ATP.'],
+    ['diagram',H,'In NCERT Fig. 12.4, the complex marked ? oxidises succinate to fumarate. It is:',['Complex II (succinate dehydrogenase)','Complex I (NADH dehydrogenase)','Complex III (cytochrome bc<sub>1</sub>)','Complex IV (cytochrome c oxidase)'],'FADH<sub>2</sub> electrons enter at complex II.']
   ],
   'balance': [
     ['recall',E,'Net ATP per glucose in aerobic respiration (NCERT):',['38','36','2','12'],'NCERT.'],
@@ -61,8 +61,8 @@ const kcet = {
     ['matching',M,'Match Column I with Column II:',['A-ii, B-i','A-i, B-ii','Both i','Both ii'],'Glycolysis 8 ATP; Krebs&rsquo; 24 ATP (with coenzymes).',['A. Glycolysis','B. Krebs&rsquo; cycle'],['i. 24 ATP','ii. 8 ATP']],
     ['statement',H,'Which of the following is/are correct?\n(i) Balance sheet is theoretical\n(ii) Fermentation gives 38 ATP\n(iii) NADH oxidation is vigorous in aerobic respiration',['(i) and (iii) only','(ii) only','(i), (ii) and (iii)','(ii) and (iii) only'],'Fermentation gives 2.'],
     ['recall',M,'Total NADH formed per glucose:',['10','8','6','2'],'2 + 2 + 6.'],
-    ['diagram',M,'In an ATP balance table, the stage giving 6 ATP is:',['Link reaction','Glycolysis','Krebs&rsquo; cycle','ETS'],'2 NADH.'],
-    ['diagram',H,'In an ATP balance table, the total of the ETS column is:',['34','30','4','38'],'30 (NADH) + 4 (FADH<sub>2</sub>).']
+    ['diagram',M,'In this respiratory balance sheet, the stage marked ? gives 6 ATP from 2 NADH. It is:',['Link reaction','Glycolysis','Krebs&rsquo; cycle','Fermentation'],'2 NADH &times; 3 = 6 ATP.'],
+    ['diagram',H,'In this respiratory balance sheet, the total marked ? in the &ldquo;ATP via ETS&rdquo; column is:',['34','30','4','38'],'6 + 6 + 22 = 34; with 4 direct ATP the total is 38.']
   ],
   'amphibolic': [
     ['recall',E,'Glycerol enters respiration as:',['PGAL','Acetyl CoA','OAA','Glucose'],'NCERT.'],
@@ -71,8 +71,8 @@ const kcet = {
     ['matching',M,'Match Column I with Column II:',['A-ii, B-i','A-i, B-ii','Both i','Both ii'],'Catabolism breaks; anabolism builds.',['A. Catabolism','B. Anabolism'],['i. Synthesis','ii. Breakdown']],
     ['statement',H,'Which of the following is/are correct?\n(i) Amino acids are deaminated before entering respiration\n(ii) Fats enter at the first step of glycolysis\n(iii) Acetyl CoA is withdrawn for fatty acid synthesis',['(i) and (iii) only','(ii) only','(i), (ii) and (iii)','(i) and (ii) only'],'Fats enter as PGAL and acetyl CoA.'],
     ['recall',M,'Proteins are broken into amino acids by:',['Proteases','Lipases','Amylases','Invertase'],'NCERT.'],
-    ['diagram',M,'In NCERT Fig. 12.6, fatty acids join the pathway at:',['Acetyl CoA','Glucose-6-phosphate','PGAL','Pyruvic acid'],'Interrelationship figure.'],
-    ['diagram',H,'In NCERT Fig. 12.6, amino acids join the pathway at:',['Pyruvic acid / acetyl CoA / Krebs&rsquo; cycle','Glucose only','PGAL only','Fructose 1,6-bisphosphate'],'Depends on structure.']
+    ['diagram',M,'In NCERT Fig. 12.6, fatty acids enter the respiratory pathway at the point marked ?. It is:',['Acetyl CoA','Glucose 6-phosphate','Pyruvic acid','Fructose 1,6-bisphosphate'],'Glycerol enters as PGAL; fatty acids as acetyl CoA.'],
+    ['diagram',H,'In NCERT Fig. 12.6, amino acids from proteins enter at the 3-carbon compound marked ?. It is:',['Pyruvic acid','Acetyl CoA','Glucose 6-phosphate','Glycerol'],'After deamination; some also enter as acetyl CoA or Krebs&rsquo; cycle acids.']
   ],
   'rq': [
     ['recall',E,'RQ of carbohydrates:',['1','0.7','0.9','0'],'6/6.'],
@@ -81,8 +81,8 @@ const kcet = {
     ['matching',M,'Match Column I with Column II:',['A-ii, B-i','A-i, B-ii','Both i','Both ii'],'Glucose 1.0; tripalmitin 0.7.',['A. Glucose','B. Tripalmitin'],['i. 0.7','ii. 1.0']],
     ['statement',H,'Which of the following is/are correct?\n(i) RQ = CO<sub>2</sub> evolved / O<sub>2</sub> consumed\n(ii) RQ of fats is more than 1\n(iii) RQ depends on the substrate',['(i) and (iii) only','(ii) only','(i), (ii) and (iii)','(i) and (ii) only'],'Fats: less than 1.'],
     ['recall',H,'In tripalmitin oxidation, O<sub>2</sub> consumed and CO<sub>2</sub> evolved are:',['145 and 102','102 and 145','6 and 6','98 and 102'],'2(C<sub>51</sub>H<sub>98</sub>O<sub>6</sub>) + 145O<sub>2</sub> &rarr; 102CO<sub>2</sub> + 98H<sub>2</sub>O.'],
-    ['diagram',M,'A respirometer shows 10 mL O<sub>2</sub> used and 10 mL CO<sub>2</sub> released. The substrate is likely:',['Carbohydrate','Fat','Protein','None'],'RQ = 1.'],
-    ['diagram',H,'A respirometer shows 10 mL O<sub>2</sub> used and 7 mL CO<sub>2</sub> released. The substrate is likely:',['Fat','Carbohydrate','Protein','Organic acid'],'RQ = 0.7.']
+    ['recall',M,'A respirometer shows 10 mL O<sub>2</sub> used and 10 mL CO<sub>2</sub> released. The substrate is likely:',['Carbohydrate','Fat','Protein','None'],'RQ = 1.'],
+    ['recall',H,'A respirometer shows 10 mL O<sub>2</sub> used and 7 mL CO<sub>2</sub> released. The substrate is likely:',['Fat','Carbohydrate','Protein','Organic acid'],'RQ = 0.7.']
   ]
 };
 

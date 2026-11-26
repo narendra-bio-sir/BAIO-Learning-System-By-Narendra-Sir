@@ -92,6 +92,16 @@ const MORE = {
   ['Blackman',['I gave a law in 1905.','I spoke of limiting factors.','My rule: the factor nearest its minimum decides.'],['Mitchell','Hill','van Niel']],
   ['Carotenoids',['I am yellow to yellow-orange.','I am an accessory pigment.','I protect chlorophyll a from photo-oxidation.'],['Chlorophyll a','Chlorophyll b','RuBisCO']],
  ],
+ 'pu1-ch12':[
+  ['Pyruvic acid',['I have three carbons.','I am the end product of glycolysis.','My fate depends on oxygen.'],['Acetyl CoA','Citric acid','Ethanol']],
+  ['Lactic acid',['I form in tired muscles.','I am made without releasing CO₂.','Lactate dehydrogenase makes me.'],['Ethanol','Pyruvic acid','Citric acid']],
+  ['FADH₂',['I am a reduced coenzyme.','I form when succinic acid is oxidised.','I give 2 ATP in the ETS.'],['NADH','GTP','NAD⁺']],
+  ['Cytochrome c',['I am a small protein.','I am mobile.','I carry electrons from complex III to IV.'],['Ubiquinone','ATP synthase','Complex I']],
+  ['Ubiquinone',['I move inside the inner membrane.','I take electrons from complexes I and II.','I pass them to complex III.'],['Cytochrome c','Oxygen','NADH']],
+  ['Hexokinase',['I am an enzyme.','I use ATP.','I turn glucose into glucose-6-phosphate.'],['Invertase','Pyruvate dehydrogenase','Lactate dehydrogenase']],
+  ['Amphibolic pathway',['I break molecules down.','I also build them up.','Respiration is my best example.'],['Catabolic pathway','C₂ pathway','Z scheme']],
+  ['Tripalmitin',['I am a fat.','I need 145 O₂ to burn.','I give 102 CO₂, so my RQ is 0.7.'],['Glucose','Sucrose','Protein']],
+ ],
  'pu2-ch1':[
   ['Endothecium',['I am a wall layer of the microsporangium.','I lie just below the epidermis.','I help the anther split open.'],['Tapetum','Middle layer','Epidermis']],
   ['Megaspore mother cell',['I am a large cell in the nucellus.','I have dense cytoplasm and a big nucleus.','I divide by meiosis to form four megaspores.'],['Microspore mother cell','Functional megaspore','Egg cell']],

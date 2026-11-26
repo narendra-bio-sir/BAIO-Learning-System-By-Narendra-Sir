@@ -92,6 +92,16 @@ window.RIDDLES = [
   ['Chlorophyll a',['I am blue-green on a chromatogram.','I am the chief pigment.','I sit in the reaction centre.'],['Chlorophyll b','Xanthophyll','Carotene']],
   ['Cyclic photophosphorylation',['I use PS I only.','I happen in the stroma lamellae.','I give ATP but no NADPH.'],['Z scheme','Photolysis','Calvin cycle']],
  ]},
+ {id:'pu1-ch12', pu:1, ch:12, t:'Respiration in Plants', page:'pu1-ch12.html', r:[
+  ['Glycolysis',['I happen in the cytoplasm.','I have ten steps.','I split glucose into two pyruvic acids.'],['Krebs cycle','Photolysis','ETS']],
+  ['Acetyl CoA',['I have two carbons.','I am made from pyruvic acid in the matrix.','I join OAA to start the Krebs cycle.'],['Citric acid','PEP','Lactic acid']],
+  ['Oxygen',['I am a gas.','I wait at the end of the ETS.','I accept electrons and become water.'],['Carbon dioxide','NAD⁺','Ubiquinone']],
+  ['ATP synthase',['I am complex V.','I have F₀ and F₁ parts.','Protons flow through me to make ATP.'],['Cytochrome c','RuBisCO','Hexokinase']],
+  ['Yeast',['I am a fungus.','I make bread rise.','Without oxygen I make ethanol and CO₂.'],['Muscle','Chlorella','Lactobacillus']],
+  ['Lenticels',['I am found in bark.','I am a small opening.','Woody stems exchange gases through me.'],['Stomata','Hydathodes','Xylem']],
+  ['Citric acid',['I have six carbons.','I am the first product of the Krebs cycle.','I form from acetyl CoA and OAA.'],['Malic acid','Succinic acid','Pyruvic acid']],
+  ['Respiratory quotient',['I am a ratio.','I am CO₂ released divided by O₂ used.','I am 0.7 for fats.'],['Balance sheet','Amphibolic pathway','Action spectrum']],
+ ]},
  {id:'pu2-ch1', pu:2, ch:1, t:'Sexual Reproduction in Flowering Plants', page:'pu2-ch1.html', r:[
   ['Tapetum',['I am the innermost wall layer of the microsporangium.','My cells often have more than one nucleus.','I nourish the developing pollen grains.'],['Endothecium','Epidermis','Middle layer']],
   ['Sporopollenin',['I am found in the exine of pollen.','Strong acids, alkalis and high heat cannot destroy me.','I am the most resistant organic material known.'],['Pectin','Cellulose','Lignin']],
