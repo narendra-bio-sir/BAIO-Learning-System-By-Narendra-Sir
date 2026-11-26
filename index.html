@@ -923,6 +923,13 @@ button.bh-tile{border:0;text-align:left;font:inherit;cursor:pointer;width:100%;}
 .bh-ch .t{flex:1;min-width:0;}.bh-ch .t small{display:block;font-size:10.5px;color:var(--bh-muted);font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
 .bh-ch .t b{display:block;font-size:14px;font-weight:600;line-height:1.25;}
 .bh-ch .st{font-size:11px;font-weight:700;color:#1F9D6C;white-space:nowrap;}
+/* Mock Tests sheet: group headings, NEW tag and locked rows */
+.bh-grp{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bh-muted);margin:8px 2px 0;}
+.bh-grp:first-child{margin-top:0;}
+.bh-ch .nw{font-size:9.5px;font-weight:800;letter-spacing:.05em;color:#fff;background:#E7417A;border-radius:6px;padding:2px 5px;margin-left:6px;vertical-align:2px;}
+.bh-ch.locked{opacity:.62;cursor:default;}
+.bh-ch.locked .st{color:var(--bh-muted);}
+.bh-mfoot{display:block;text-align:center;font-weight:700;font-size:13.5px;color:#5B2EE0 !important;padding:12px 0 2px;text-decoration:none;}
 .bh-ch.soon{opacity:.5;pointer-events:none;}.bh-ch.soon .st{color:var(--bh-muted);}
 body{padding-bottom:96px;}
 .faq-chat-btn{bottom:94px;}
@@ -991,7 +998,7 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
       <button type="button" class="bh-tile bh-y" id="bhMyClass" aria-haspopup="dialog"><div class="ic">🎓</div><b>My Classes</b><span>I PUC · II PUC</span></button>
       <a class="bh-tile bh-pk" href="games.html"><div class="ic">🧩</div><b>Game Zone</b><span>Learn by playing</span></a>
       <a class="bh-tile bh-g" href="flashcards.html"><div class="ic">🧠</div><b>Flash Cards</b><span>Quick recall</span></a>
-      <a class="bh-tile bh-v" href="exam-corner.html"><div class="ic">📝</div><b>Mock Tests</b><span>NEET · KCET · Board</span></a>
+      <button type="button" class="bh-tile bh-v" id="bhMockTests" aria-haspopup="dialog"><div class="ic">📝</div><b>Mock Tests</b><span>Annual exam · new tests</span></button>
     </div>
 
     <div class="bh-sec"><h2>More tools</h2><a href="#bhTools">All 30+</a></div>
@@ -4185,6 +4192,91 @@ window.indexHardRefresh = indexHardRefresh;
   document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&sh.classList.contains('open')) close(); });
   sh.querySelectorAll('.bh-opt[data-puc]').forEach(function(o){ o.addEventListener('click',function(){ show(o.getAttribute('data-puc')); }); });
   document.querySelectorAll('.bh-c[data-puc]').forEach(function(card){ card.addEventListener('click',function(e){ e.preventDefault(); open(); show(card.getAttribute('data-puc')); }); });
+})();
+</script>
+<div class="bh-sheet" id="bhMockSheet" role="dialog" aria-modal="true" aria-label="Mock Tests" aria-hidden="true">
+  <div class="bh-sbox">
+    <div class="bh-grab"></div>
+    <div class="bh-shead">
+      <button type="button" class="bk" id="bhMockBack" aria-label="Back">←</button>
+      <b id="bhMockTitle">Mock Tests</b>
+      <button type="button" id="bhMockClose" aria-label="Close">✕</button>
+    </div>
+    <div class="bh-opts">
+      <button type="button" class="bh-opt bh-v" data-mpuc="1"><span class="ic">🌱</span><span><b>I PUC Biology</b><small>Annual exam · new tests</small></span><span class="ar">›</span></button>
+      <button type="button" class="bh-opt bh-pk" data-mpuc="2"><span class="ic">🧬</span><span><b>II PUC Biology</b><small>Annual exam · new tests</small></span><span class="ar">›</span></button>
+      <a class="bh-mfoot" href="exam-corner.html">All tests in Exam Corner →</a>
+    </div>
+    <div class="bh-chs" id="bhMockList"></div>
+  </div>
+</div>
+<script>
+/* Mock Tests sheet: for each class, the main annual exam and the new tests.
+   Monthly test rows unlock for students at their release time (owner sees them early, like Exam Corner). */
+(function(){
+  var sh=document.getElementById('bhMockSheet'), list=document.getElementById('bhMockList'), title=document.getElementById('bhMockTitle');
+  var P='exam-corner/pu-board-2026-27/', V='?v=20261126';
+  var owner=false; try{ owner=localStorage.getItem('baio_analytics_unlock')==='true'; }catch(e){}
+  var MOCK={
+    '1':{t:'I PUC Biology', groups:[
+      ['🎓 Main annual exam',[
+        {e:'📅',s:'Timetable',b:'I PUC annual exam timetable',h:'exam-corner.html#i-puc-timetable'},
+        {e:'📐',s:'Blueprint & model paper · 70 marks',b:'Annual exam blueprint and model question paper',h:P+'biology-i-puc-annual-blueprint-mqp.pdf'},
+        {e:'📘',s:'Official · DSE (PU) 2026-27',b:'Official I PUC Biology Blue Print',h:P+'biology-i-puc-blueprint.pdf'},
+        {e:'📝',s:'Practice paper · 70 marks',b:'Full practice paper (mid-term pattern)',h:'midterm-practice.html'}
+      ]],
+      ['🆕 New tests',[
+        {e:'🧪',s:'Mock test · 30 marks',b:'Biomolecules + Breathing and Exchange of Gases',h:'biomolecules-breathing-mock-practice.html',n:1},
+        {e:'🗓️',s:'Monthly test · 20 marks · 60 min',b:'Biomolecules + Breathing: paper, blueprint and key',h:'exam-corner.html#monthly-test-bio-breathing',from:'2026-11-30T12:00:00+05:30',n:1},
+        {e:'🔬',s:'Mock test · 40 marks',b:'Cell + Cell Cycle (slip test practice)',h:'cell-mock-practice.html'},
+        {e:'⏱️',s:'KCET mock · 60 Q in 60 min',b:'KCET mock test (12 Nov)',h:'kcet-mock-12nov.html'},
+        {e:'📚',s:'Unit tests · LBA 2026-27',b:'Unit test prep: practice papers and notes',h:'biology-unittest1-prep.html'}
+      ]]
+    ]},
+    '2':{t:'II PUC Biology', groups:[
+      ['🎓 Main annual exam',[
+        {e:'📅',s:'Timetable',b:'II PUC annual exam timetable',h:'exam-corner.html#ii-puc-timetable'},
+        {e:'🎯',s:'All 13 chapters',b:'Exam Scorer: score sure marks in Biology',h:'exam-scorer.html'},
+        {e:'📄',s:'KSEAB · 70 marks · 3 hours',b:'Model Question Papers 1–5',h:'ncert-library.html#bio-exam-papers'},
+        {e:'📘',s:'Official · KSEAB 2026-27',b:'Official II PUC Biology Blue Print',h:P+'biology-ii-puc-blueprint.pdf'}
+      ]],
+      ['🆕 New tests',[
+        {e:'📐',s:'Part Test · 20 marks · blueprint',b:'Human Health + Microbes + Biotechnology',h:P+'biology-ii-puc-part-test-health-microbes-biotech-20m-blueprint.pdf'+V,n:1},
+        {e:'🔒',s:'Part Test · question paper and key',b:'Part Test paper (only you)',h:P+'biology-ii-puc-part-test-health-microbes-biotech-20m.pdf'+V,ownerOnly:1},
+        {e:'📚',s:'Unit tests · LBA 2026-27',b:'Unit test prep and Unit Test 1 model paper',h:'biology-ii-puc-prep.html'},
+        {e:'⚡',s:'SMART & CHAMPIONS',b:'Rapid revision: slides, handouts, test blueprints',h:'rapid-revision.html'}
+      ]]
+    ]}
+  };
+  function esc(t){ var d=document.createElement('div'); d.textContent=t==null?'':String(t); return d.innerHTML; }
+  function relLabel(t){ try{ return new Date(t).toLocaleString('en-IN',{weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit',timeZone:'Asia/Kolkata'}); }catch(e){ return t; } }
+  function home(){ sh.classList.remove('list'); title.textContent='Mock Tests'; }
+  function open(){ home(); sh.classList.add('open'); sh.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+  function close(){ sh.classList.remove('open'); sh.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+  function show(k){
+    var c=MOCK[k]; list.innerHTML='';
+    c.groups.forEach(function(g){
+      var h=document.createElement('div'); h.className='bh-grp'; h.textContent=g[0]; list.appendChild(h);
+      g[1].forEach(function(it){
+        if(it.ownerOnly && !owner) return;
+        var out=!it.from || Date.now()>=Date.parse(it.from), locked=!out && !owner;
+        var a=document.createElement('a'); a.className='bh-ch'+(locked?' locked':'');
+        if(!locked){ a.href=it.h; if(/\.pdf(\?|$)/.test(it.h)){ a.target='_blank'; a.rel='noopener'; } } else a.setAttribute('aria-disabled','true');
+        var st=locked?'🔒':(!out?'🔒 Only you':(/\.pdf(\?|$)/.test(it.h)?'PDF ›':'Open ›'));
+        var sub=locked?('Opens '+relLabel(it.from)):it.s;
+        a.innerHTML='<span class="e">'+esc(it.e)+'</span><span class="t"><small>'+esc(sub)+'</small><b>'+esc(it.b)+(it.n&&!locked?'<span class="nw">NEW</span>':'')+'</b></span><span class="st">'+esc(st)+'</span>';
+        list.appendChild(a);
+      });
+    });
+    var f=document.createElement('a'); f.className='bh-mfoot'; f.href='exam-corner.html'; f.textContent='All tests in Exam Corner →'; list.appendChild(f);
+    title.textContent=c.t+' · Mock Tests'; sh.classList.add('list'); list.scrollTop=0;
+  }
+  document.getElementById('bhMockTests').addEventListener('click',open);
+  document.getElementById('bhMockClose').addEventListener('click',close);
+  document.getElementById('bhMockBack').addEventListener('click',home);
+  sh.addEventListener('click',function(e){ if(e.target===sh) close(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&sh.classList.contains('open')) close(); });
+  sh.querySelectorAll('.bh-opt[data-mpuc]').forEach(function(o){ o.addEventListener('click',function(){ show(o.getAttribute('data-mpuc')); }); });
 })();
 </script>
 <script src="pay/upi.js?v=2"></script>
