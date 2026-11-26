@@ -1,4 +1,4 @@
-// II PUC Biology · Class test (20 marks, 60 min): Ch 7 Human Health and Disease, Ch 8 Microbes in Human Welfare,
+// II PUC Biology · Part Test (20 marks, 60 min): Ch 7 Human Health and Disease, Ch 8 Microbes in Human Welfare,
 // Ch 9 Biotechnology: Principles and Processes.
 //
 // Layout is the DSE (PU) LBA 2026-27 Unit Test 1 Model Question Paper (biology-ii-puc-unittest1-mqp.pdf) scaled to 20 marks:
@@ -10,11 +10,11 @@
 // Every question is from the II PUC Biology Question Bank (biology-ii-puc-question-bank-2025-26.pdf); answers follow
 // the current NCERT Class XII text.
 // Builds 3 PDFs into exam-corner/pu-board-2026-27/: …-20m.pdf (question paper), …-20m-answer-key.pdf, …-20m-blueprint.pdf
-// Run: NODE_PATH=<global node_modules with playwright> node scripts/class-tests/pu2-class-test-health-microbes-biotech.js
+// Run: NODE_PATH=<global node_modules with playwright> node scripts/class-tests/pu2-part-test-health-microbes-biotech.js
 const fs = require('fs'), path = require('path');
 const ROOT = path.join(__dirname, '..', '..');
 const OUT = path.join(ROOT, 'exam-corner', 'pu-board-2026-27');
-const BASE = 'biology-ii-puc-class-test-health-microbes-biotech-20m';
+const BASE = 'biology-ii-puc-part-test-health-microbes-biotech-20m';
 const img = (f) => 'data:image/jpeg;base64,' + fs.readFileSync(path.join(ROOT, 'pu2-unittest-prep-assets', f)).toString('base64');
 const CHN = {7: 'Human Health and Disease', 8: 'Microbes in Human Welfare', 9: 'Biotechnology: Principles and Processes'};
 
@@ -118,7 +118,7 @@ table.dt td{text-align:left;vertical-align:top}
 `;
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const CHAP = 'Ch 7: Human Health and Disease &nbsp;·&nbsp; Ch 8: Microbes in Human Welfare &nbsp;·&nbsp; Ch 9: Biotechnology: Principles and Processes';
-const header = (sub) => `<div class="hd"><div class="t0">2026-27 · PRACTICE PAPER</div><div class="t1">CLASS TEST · II PUC BIOLOGY (36)</div><div class="t2">${sub}</div><div class="t3">${CHAP}</div></div>
+const header = (sub) => `<div class="hd"><div class="t0">2026-27 · PRACTICE PAPER</div><div class="t1">PART TEST · II PUC BIOLOGY (36)</div><div class="t2">${sub}</div><div class="t3">${CHAP}</div></div>
 <div class="meta"><span>Time: 60 minutes</span><span>Max. Marks: 20</span></div>`;
 const doc = (body, extra = '') => `<!doctype html><html><head><meta charset="utf-8"><style>${css}${extra}</style></head><body>${body}</body></html>`;
 /* the paper and blueprint are tightened a little so each stays on one page */
@@ -163,7 +163,7 @@ const official = `<table>
 <tr><td class="l">8. Microbes in human welfare</td><td>8</td><td>7</td><td>2</td><td>1</td><td>1</td><td>–</td><td class="l">1, 2 and 3 marks</td></tr>
 <tr><td class="l">9. Biotechnology: Principles and Processes</td><td>8</td><td>7</td><td>2</td><td>–</td><td>–</td><td>1</td><td class="l">1 and 5 marks</td></tr>
 </table>`;
-const NOTE = `This class test is the <b>DSE (PU) LBA 2026-27 Unit Test 1 Model Question Paper</b> layout scaled to <b>20 marks</b> (60 minutes: 5 MCQs, 2 fill-ups, any 1 of 2 two-markers, any 2 of 3 three-markers and any 1 of 2 five-markers), in the chapter pattern of the official <b>2026-27 II PUC Blue Print</b>: each chapter gives only the question types it has in the annual paper, so the <b>2-mark</b> questions are from Microbes in Human Welfare, the <b>3-mark</b> questions from Human Health and Disease and Microbes in Human Welfare, and the <b>5-mark</b> questions from Human Health and Disease and Biotechnology. The 7 one-mark questions split 3 : 2 : 2, exactly as in the blueprint, and the marks set (${setBy(7)} : ${setBy(8)} : ${setBy(9)}) are close to the blueprint weightage 11 : 7 : 7.`;
+const NOTE = `This part test is the <b>DSE (PU) LBA 2026-27 Unit Test 1 Model Question Paper</b> layout scaled to <b>20 marks</b> (60 minutes: 5 MCQs, 2 fill-ups, any 1 of 2 two-markers, any 2 of 3 three-markers and any 1 of 2 five-markers), in the chapter pattern of the official <b>2026-27 II PUC Blue Print</b>: each chapter gives only the question types it has in the annual paper, so the <b>2-mark</b> questions are from Microbes in Human Welfare, the <b>3-mark</b> questions from Human Health and Disease and Microbes in Human Welfare, and the <b>5-mark</b> questions from Human Health and Disease and Biotechnology. The 7 one-mark questions split 3 : 2 : 2, exactly as in the blueprint, and the marks set (${setBy(7)} : ${setBy(8)} : ${setBy(9)}) are close to the blueprint weightage 11 : 7 : 7.`;
 
 /* answer key */
 const srcRows = []; const half = Math.ceil(ALL.length / 2);
