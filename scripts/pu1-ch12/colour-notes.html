@@ -1,0 +1,90 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<script src="../../notes/src/draw.js"></script><script src="../pu1-ch11/ps-draw.js"></script><script src="diagrams.js"></script><script src="vis.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1100px;height:1448px;overflow:hidden;font-family:Inter,'Noto Color Emoji',sans-serif;color:#1b2333;background:#fffdf6}
+.hero{height:250px;position:relative;background:linear-gradient(120deg,#0b3d2e,#1b7a4f 55%,#4fa83d);overflow:hidden;color:#fff}
+.hero:before{content:'';position:absolute;right:-80px;top:-120px;width:420px;height:420px;border-radius:50%;background:rgba(255,255,255,.08)}
+.logo{position:absolute;left:26px;top:26px;width:118px;height:118px;border-radius:50%;background:#fff;color:#0b3d2e;display:flex;flex-direction:column;align-items:center;justify-content:center;font:900 30px Inter;border:5px solid #d8b04a}
+.logo small{font:700 11px Inter;color:#555}
+.who{position:absolute;left:165px;top:22px;font:italic 800 40px 'Kalam',cursive;color:#fff}
+.who span{display:inline-block;background:#f2d24b;color:#1b2a12;font:700 17px Inter;padding:4px 14px;border-radius:6px;margin-left:10px;transform:rotate(-2deg)}
+.cls{position:absolute;right:24px;top:22px;background:#0d1a33;color:#fff;border-radius:12px;padding:8px 16px;text-align:center;font:900 26px Inter;line-height:1.05;border:2px solid #f2d24b}
+.cls small{display:block;font:700 12px Inter;color:#f2d24b;letter-spacing:1px;margin-top:4px}
+.h1{position:absolute;left:165px;top:80px;right:200px;font:900 50px/1 Inter;letter-spacing:-1px;text-transform:uppercase;color:#fff;text-shadow:0 4px 0 #0b2a1e}
+.h1 em{font-style:normal;color:#f7d046;display:block}
+.tag{position:absolute;left:165px;bottom:14px;background:rgba(255,255,255,.92);color:#0b3d2e;font:700 19px Inter;padding:6px 18px;border-radius:30px}
+.wrap{padding:16px 22px 0;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sec{border:3px solid var(--c);border-radius:18px;overflow:hidden;background:#fff}
+.sec.full{grid-column:1/3}
+.sh{background:var(--c);color:#fff;font:800 24px Inter;display:flex;align-items:center;gap:12px;padding:8px 14px;text-transform:uppercase;letter-spacing:.5px}
+.sh b{background:#fff;color:var(--c);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:900 21px Inter}
+.sb{padding:10px 14px;font:500 18.5px/1.42 Inter}
+.sb b{color:#0b3d2e}.sb li{margin:3px 0 3px 20px}
+.sb .hl{background:#fff3c4;border-radius:6px;padding:0 4px;font-weight:700}
+.sb img{width:100%;max-height:var(--ih,460px);object-fit:contain;display:block;border-radius:10px;margin-top:6px}
+.sb svg{width:100%;height:auto;max-height:var(--sh,230px);display:block;margin-top:4px}
+.sb{font-size:var(--fs,18.5px)!important}
+table{width:100%;border-collapse:collapse;font:500 17px Inter;margin-top:4px}
+th{background:var(--c);color:#fff;padding:6px 8px;text-align:left}
+td{padding:5px 8px;border-bottom:1px solid #eee}
+tr:nth-child(even) td{background:#f8f6ef}
+.note{margin-top:8px;background:#fff7d6;border:2px dashed #e0b82e;border-radius:12px;padding:8px 12px;font:600 17.5px/1.4 Inter}
+.ft{position:absolute;left:0;right:0;bottom:0;height:118px;background:#0d1a33;color:#fff}
+.ft .row{display:flex;justify-content:space-around;padding:12px 30px 6px;font:800 16px Inter;letter-spacing:1px;border-bottom:1px solid rgba(255,255,255,.15)}
+.ft .sig{text-align:center;font:italic 800 26px 'Kalam',cursive;color:#f2d24b;margin-top:8px}
+.ft .sig span{font:800 22px Inter;color:#fff;font-style:normal;margin-left:10px}
+.pg{position:absolute;right:20px;bottom:10px;font:700 14px Inter;color:#9aa5b8}
+</style></head><body><div id="p"></div>
+<script>
+const R = '#d63c3c', G = '#1f8a4c', Bl = '#1f6fb0', Pu = '#6c48d6', O = '#d9761e', T = '#0d7f70';
+const img = n => `<img src="../../pu1-ch12-assets/${n}.jpg">`;
+const PAGES = [
+ { t1: 'Respiration', t2: 'Do Plants Breathe?', tag: 'Energy from food', secs: [
+  [G, 'What is respiration?', `<ul><li>Breaking of <b>C–C bonds</b> of complex compounds by <b>oxidation</b> inside cells, releasing energy.</li><li>Compounds oxidised = <span class="hl">respiratory substrates</span> (usually carbohydrates; also proteins, fats, organic acids).</li><li>Energy released in <b>slow, enzyme-controlled steps</b> and trapped as <b>ATP</b> — the <span class="hl">energy currency</span>.</li></ul>`],
+  [O, 'Where does the food come from?', `All food respired ultimately comes from <b>photosynthesis</b>; non-green parts get food by translocation.${V.energyFlow()}`],
+  [Bl, 'Do plants breathe?', `<ul><li>Yes: they take in <b>O₂</b> and give out <b>CO₂</b>, through <b>stomata</b> and <b>lenticels</b>.</li><li><b>No respiratory organs</b> because: (i) each part handles its own gas exchange; (ii) <b>low demand</b>; (iii) every living cell is <b>close to the surface</b>.</li><li>Loose <b>parenchyma</b> → network of air spaces.</li></ul>`],
+  [R, 'Woody stem', `Living cells lie in <b>thin layers under the bark</b>; interior cells are <span class="hl">dead</span>.${V.woodyStem()}`],
+  [Pu, 'Combustion vs respiration', `<table><tr><th>Combustion</th><th>Cellular respiration</th></tr><tr><td>One step</td><td>Many small steps</td></tr><tr><td>No enzymes</td><td>Enzyme-controlled</td></tr><tr><td>Energy as heat</td><td>Energy trapped as ATP</td></tr></table><div class="note">C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + Energy</div>`, 'full']]},
+ { t1: 'Glycolysis', t2: 'EMP Pathway', tag: 'Glucose to pyruvic acid', secs: [
+  [G, 'Steps of glycolysis', img('diag-glycolysis'), 'full'],
+  [Bl, 'Key facts', `<ul><li><b>Embden, Meyerhof, Parnas</b> → EMP pathway.</li><li>In the <b>cytoplasm</b> of all organisms; <b>no O₂</b>; 10 reactions.</li><li>Sucrose → glucose + fructose (<b>invertase</b>); glucose → G-6-P (<b>hexokinase</b>).</li><li>Only respiratory process in <span class="hl">anaerobes</span>.</li></ul>`],
+  [O, 'Count it (per glucose)', `<table><tr><th>Step</th><th>Gives</th></tr><tr><td>Glucose → G-6-P</td><td>−1 ATP</td></tr><tr><td>F-6-P → F-1,6-BP</td><td>−1 ATP</td></tr><tr><td>PGAL → BPGA</td><td>+2 NADH</td></tr><tr><td>BPGA → PGA</td><td>+2 ATP</td></tr><tr><td>PEP → pyruvate</td><td>+2 ATP</td></tr></table><div class="note">Net: <b>2 ATP + 2 NADH + 2 pyruvic acid</b></div>`]]},
+ { t1: 'Fermentation', t2: 'Anaerobic Respiration', tag: 'Without oxygen', secs: [
+  [G, 'Major pathways of anaerobic respiration', img('diag-fermentation'), 'full'],
+  [Pu, 'Alcoholic vs lactic acid', `<table><tr><th></th><th>Alcoholic</th><th>Lactic acid</th></tr><tr><td>Who</td><td>Yeast</td><td>Muscle, bacteria</td></tr><tr><td>Product</td><td>Ethanol + CO₂</td><td>Lactic acid</td></tr><tr><td>Enzymes</td><td>Pyruvic acid decarboxylase, alcohol dehydrogenase</td><td>Lactate dehydrogenase</td></tr></table>`],
+  [R, 'Why so little energy?', `<ul><li>Less than <span class="hl">7%</span> of glucose energy released; net <b>2 ATP</b>.</li><li>Products are <b>hazardous</b> (acid or alcohol).</li><li>Yeast dies at about <b>13% alcohol</b>; stronger drinks are distilled.</li><li>NADH → NAD⁺ keeps glycolysis running.</li></ul>`]]},
+ { t1: 'Krebs Cycle', t2: 'Aerobic Respiration', tag: 'Link reaction and TCA cycle', secs: [
+  [G, 'The citric acid cycle', img('diag-krebs'), 'full'],
+  [Bl, 'Link reaction (matrix)', `<div class="note">Pyruvic acid + CoA + NAD⁺ → Acetyl CoA + CO₂ + NADH + H⁺</div><ul><li>Enzyme: <b>pyruvate dehydrogenase</b>; needs <b>Mg²⁺</b>.</li><li>2 pyruvate → <b>2 NADH</b>; called the <span class="hl">gateway step</span>.</li></ul>`],
+  [O, 'Per turn of the cycle', `<ul><li>Acetyl CoA + <b>OAA</b> → <b>citric acid</b> (citrate synthase).</li><li><span class="hl">3 NADH + 1 FADH₂ + 1 GTP + 2 CO₂</span>.</li><li>GTP at succinyl-CoA → succinic acid (substrate-level).</li><li>Needs OAA replenished, NAD⁺ / FAD⁺ regenerated.</li></ul>`]]},
+ { t1: 'ETS &amp;', t2: 'ATP Synthase', tag: 'Oxidative phosphorylation · inner membrane', secs: [
+  [G, 'Electron transport system', img('diag-ets'), 'full'],
+  [Bl, 'Complexes', `<table><tr><th>Complex</th><th>Name</th></tr><tr><td>I</td><td>NADH dehydrogenase</td></tr><tr><td>II</td><td>Succinate DH (FADH₂)</td></tr><tr><td>III</td><td>Cytochrome bc₁</td></tr><tr><td>IV</td><td>Cytochrome c oxidase</td></tr><tr><td>V</td><td>ATP synthase</td></tr></table>`],
+  [O, 'Remember', `<ul><li>Mobile carriers: <b>ubiquinone</b>, <b>cytochrome c</b>.</li><li><span class="hl">NADH → 3 ATP; FADH₂ → 2 ATP</span>.</li><li><b>O₂</b> = final hydrogen acceptor → H₂O.</li><li>F₀ channel + F₁ head; <b>4H⁺ per ATP</b>.</li></ul>`]]},
+ { t1: 'Balance Sheet', t2: '38 ATP', tag: 'Net gain of ATP', secs: [
+  [G, 'Where the 38 ATP come from', `<table><tr><th>Stage</th><th>ATP</th><th>NADH / FADH₂</th><th>Total</th></tr><tr><td>Glycolysis</td><td>2</td><td>2 NADH (6)</td><td><b>8</b></td></tr><tr><td>Link reaction</td><td>0</td><td>2 NADH (6)</td><td><b>6</b></td></tr><tr><td>Krebs cycle</td><td>2</td><td>6 NADH (18) + 2 FADH₂ (4)</td><td><b>24</b></td></tr><tr><td><b>Total</b></td><td>4</td><td>34</td><td><b>38</b></td></tr></table>${V.balanceBars()}`, 'full'],
+  [Bl, 'Assumptions', `<ul><li>Orderly pathway: glycolysis → TCA → ETS.</li><li>Glycolytic NADH enters mitochondria.</li><li>No intermediates withdrawn.</li><li>Only <b>glucose</b> respired.</li></ul><div class="note">Not valid in real cells → <b>theoretical</b> value.</div>`],
+  [R, 'Fermentation vs aerobic', `<table><tr><th>Fermentation</th><th>Aerobic</th></tr><tr><td>Partial breakdown</td><td>Complete → CO₂ + H₂O</td></tr><tr><td>2 ATP</td><td>38 ATP</td></tr><tr><td>NADH oxidised slowly</td><td>Very vigorously</td></tr></table>`]]},
+ { t1: 'Amphibolic', t2: 'Pathway', tag: 'Catabolism and anabolism', secs: [
+  [G, 'Interrelationship among metabolic pathways', img('diag-amphibolic'), 'full'],
+  [O, 'Entry points', `<ul><li>Carbohydrates → <b>glucose</b> (favoured substrate).</li><li>Fatty acids → <b>acetyl CoA</b>; glycerol → <b>PGAL</b>.</li><li>Proteins → amino acids (<b>proteases</b>) → deaminated → pyruvate / acetyl CoA / Krebs.</li></ul>`],
+  [Pu, 'Why amphibolic?', `<ul><li>The same intermediates are <b>withdrawn</b> to build fats and proteins (acetyl CoA → fatty acids).</li><li>Breakdown = <b>catabolism</b>; synthesis = <b>anabolism</b>.</li><li>Krebs cycle = <span class="hl">metabolic sink</span>.</li></ul>`]]},
+ { t1: 'Respiratory', t2: 'Quotient (RQ)', tag: 'CO₂ evolved / O₂ consumed', secs: [
+  [G, 'RQ of different substrates', img('diag-rq'), 'full'],
+  [Bl, 'Equations', `<div class="note">C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O · RQ = 6/6 = <b>1</b></div><div class="note">2(C₅₁H₉₈O₆) + 145O₂ → 102CO₂ + 98H₂O · RQ = 102/145 = <b>0.7</b></div>`],
+  [O, 'Remember', `<ul><li>Carbohydrate <b>1.0</b> &gt; protein <b>~0.9</b> &gt; fat <b>0.7</b>.</li><li>Fats are poor in oxygen → need more O₂.</li><li>Substrates are usually <span class="hl">mixed</span>; pure fats or proteins are never used.</li></ul>`]]}
+];
+const n = +new URLSearchParams(location.search).get('p') || 1, pg = PAGES[n - 1];
+document.getElementById('p').innerHTML = `<div class="hero"><div class="logo">BAIO<small>Learning System</small></div>
+  <div class="who">Narendra Sir <span>Biology Lecturer, Founder/CEO</span></div><div class="cls">Class 11<br>BIOLOGY<small>NCERT BASED<br>SHORT NOTES</small></div>
+  <div class="h1">${pg.t1}<em>${pg.t2}</em></div><div class="tag">Chapter 12 · Respiration in Plants · ${pg.tag}</div></div>
+  <div class="wrap">${pg.secs.map((s, i) => `<div class="sec ${s[3] || ''}" style="--c:${s[0]}"><div class="sh"><b>${i + 1}</b>${s[1]}</div><div class="sb">${s[2]}</div></div>`).join('')}</div>
+  <div class="ft"><div class="row"><span>📖 NCERT BASED</span><span>🎯 NEET FOCUSED</span><span>🧠 EASY REVISION</span><span>📝 CONCEPT CLARITY</span></div><div class="sig">Narendra Sir – Biology Lecturer, Founder/CEO<span>· BAIO Learning System</span></div></div><div class="pg">${n} / ${PAGES.length}</div>`;
+window.PAGES_N = PAGES.length;
+/* report overflow so the builder can warn */
+window.OVER = () => { const w = document.querySelector('.wrap'); return w.getBoundingClientRect().bottom > 1448 - 124; };
+window.FIT = () => { let ih = 460, sh = 230, fs = 18.5; const st = document.documentElement.style;
+  for (let k = 0; k < 40 && OVER(); k++){ ih *= .93; sh *= .93; if (k > 8) fs *= .985; st.setProperty('--ih', ih + 'px'); st.setProperty('--sh', sh + 'px'); st.setProperty('--fs', fs + 'px'); } };
+</script></body></html>

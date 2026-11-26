@@ -9,6 +9,7 @@ window.MM = {"pu1-ch2":[{"f":"ch2/assets/mindmap-quick.jpg","t":"One-page mind m
 "pu1-ch9":[{"f":"pu1-ch9-assets/mindmap.jpg","t":"One-page mind map","w":2400,"h":1560}],
 "pu1-ch10":[{"f":"pu1-ch10-assets/mindmap.jpg","t":"One-page mind map","w":2400,"h":1560}],
 "pu1-ch11":[{"f":"pu1-ch11-assets/mindmap.jpg","t":"One-page mind map","w":2400,"h":1560}],
+"pu1-ch12":[{"f":"pu1-ch12-assets/mindmap.jpg","t":"One-page mind map","w":2400,"h":1560}],
 "pu2-ch1":[{"f":"mind-maps/pu2-ch1.jpg","t":"One-page mind map","w":2400,"h":2076}],
 "pu2-ch2":[{"f":"mind-maps/pu2-ch2.jpg","t":"One-page mind map","w":2400,"h":1834}],
 "pu2-ch3":[{"f":"mind-maps/pu2-ch3.jpg","t":"One-page mind map","w":2400,"h":1834}],
