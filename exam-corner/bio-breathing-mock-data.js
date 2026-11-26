@@ -328,7 +328,8 @@ window.MT = {
      1
     ]
    ],
-   "m": "<ul><li><b>Larynx:</b> a cartilaginous box that helps in sound production (sound box); air passes through it from the pharynx into the trachea.</li><li><b>Respiratory (diffusion) membrane:</b> the site of exchange of gases: O₂ diffuses from the alveoli into the blood and CO₂ from the blood into the alveoli. It has three layers (squamous epithelium of alveoli, endothelium of alveolar capillaries and the basement substance between them) and is less than a millimetre thick, which favours diffusion.</li><li><b>Glottis:</b> the opening into the larynx through which air passes; during swallowing it is covered by the epiglottis to prevent the entry of food into the larynx.</li></ul>"
+   "m": "<ul><li><b>Larynx:</b> a cartilaginous box that helps in sound production (sound box); air passes through it from the pharynx into the trachea.</li><li><b>Respiratory (diffusion) membrane:</b> the site of exchange of gases: O₂ diffuses from the alveoli into the blood and CO₂ from the blood into the alveoli. It has three layers (squamous epithelium of alveoli, endothelium of alveolar capillaries and the basement substance between them) and is less than a millimetre thick, which favours diffusion.</li><li><b>Glottis:</b> the opening into the larynx through which air passes; during swallowing it is covered by the epiglottis to prevent the entry of food into the larynx.</li></ul>",
+   "img": "exam-corner/diagrams/ncert-alveolus-section-fig14-4.jpg"
   },
   {
    "id": "mechanism",
@@ -348,7 +349,8 @@ window.MT = {
      1
     ]
    ],
-   "m": "<ul><li>Breathing has two stages, <b>inspiration</b> and <b>expiration</b>, brought about by a pressure gradient between the lungs and the atmosphere: inspiration when the intra-pulmonary pressure is <b>less</b> than the atmospheric pressure, expiration when it is <b>higher</b>. The diaphragm and the external and internal intercostal muscles generate these gradients.</li><li><b>Inspiration:</b> the diaphragm contracts (volume of the thoracic chamber increases in the antero-posterior axis) and the external intercostal muscles contract, lifting the ribs and sternum (volume increases in the dorso-ventral axis). Pulmonary volume increases, intra-pulmonary pressure falls below atmospheric and air moves into the lungs.</li><li><b>Expiration:</b> the diaphragm and intercostal muscles relax, returning the diaphragm and sternum to normal. Thoracic and pulmonary volumes decrease, intra-pulmonary pressure rises slightly above atmospheric and air is expelled. Abdominal muscles can increase the strength of breathing; a healthy human breathes 12–16 times per minute.</li></ul>"
+   "m": "<ul><li>Breathing has two stages, <b>inspiration</b> and <b>expiration</b>, brought about by a pressure gradient between the lungs and the atmosphere: inspiration when the intra-pulmonary pressure is <b>less</b> than the atmospheric pressure, expiration when it is <b>higher</b>. The diaphragm and the external and internal intercostal muscles generate these gradients.</li><li><b>Inspiration:</b> the diaphragm contracts (volume of the thoracic chamber increases in the antero-posterior axis) and the external intercostal muscles contract, lifting the ribs and sternum (volume increases in the dorso-ventral axis). Pulmonary volume increases, intra-pulmonary pressure falls below atmospheric and air moves into the lungs.</li><li><b>Expiration:</b> the diaphragm and intercostal muscles relax, returning the diaphragm and sternum to normal. Thoracic and pulmonary volumes decrease, intra-pulmonary pressure rises slightly above atmospheric and air is expelled. Abdominal muscles can increase the strength of breathing; a healthy human breathes 12–16 times per minute.</li></ul>",
+   "img": "exam-corner/diagrams/ncert-mechanism-of-breathing-fig14-2.jpg"
   }
  ],
  "D": [
@@ -412,7 +414,7 @@ window.MT = {
  "D2": [],
  "diagrams": [
   {
-   "t": "Human respiratory system (NCERT Fig. 14.1)",
+   "t": "Human respiratory system (NCERT Fig. 14.1) · Q13, Q19",
    "ch": 14,
    "img": "exam-corner/diagrams/ncert-human-respiratory-system-fig14-1.jpg",
    "labels": [
@@ -431,7 +433,35 @@ window.MT = {
    ]
   },
   {
-   "t": "Oxygen dissociation curve (NCERT Fig. 14.5)",
+   "t": "Mechanism of breathing (NCERT Fig. 14.2) · Q20",
+   "ch": 14,
+   "img": "exam-corner/diagrams/ncert-mechanism-of-breathing-fig14-2.jpg",
+   "labels": [
+    "(a) Inspiration: diaphragm contracted",
+    "Ribs and sternum raised",
+    "Volume of thorax increased",
+    "Air entering lungs",
+    "(b) Expiration: diaphragm relaxed and arched upwards",
+    "Ribs and sternum returned to original position",
+    "Volume of thorax decreased",
+    "Air expelled from lungs"
+   ]
+  },
+  {
+   "t": "Section of an alveolus: respiratory membrane (NCERT Fig. 14.4) · Q19",
+   "ch": 14,
+   "img": "exam-corner/diagrams/ncert-alveolus-section-fig14-4.jpg",
+   "labels": [
+    "Alveolar cavity",
+    "Squamous epithelium of alveolar wall (one-celled thick)",
+    "Basement substance",
+    "Endothelium of blood capillary",
+    "Blood capillary",
+    "Red blood cell"
+   ]
+  },
+  {
+   "t": "Oxygen dissociation curve (NCERT Fig. 14.5) · Q18",
    "ch": 14,
    "img": "exam-corner/diagrams/ncert-o2-dissociation-curve-fig14-5.jpg",
    "labels": [
@@ -442,7 +472,7 @@ window.MT = {
    ]
   },
   {
-   "t": "Concept of activation energy (NCERT Fig. 9.4)",
+   "t": "Concept of activation energy (NCERT Fig. 9.4) · Q8",
    "ch": 9,
    "img": "exam-corner/diagrams/ncert-activation-energy-fig9-4.jpg",
    "labels": [

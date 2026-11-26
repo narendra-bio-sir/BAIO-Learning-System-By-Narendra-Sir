@@ -13,7 +13,9 @@ const CH = {9: 'Biomolecules', 14: 'Breathing and Exchange of Gases'};
 const IMG = {
   resp: 'exam-corner/diagrams/ncert-human-respiratory-system-fig14-1.jpg',
   odc: 'exam-corner/diagrams/ncert-o2-dissociation-curve-fig14-5.jpg',
-  ae: 'exam-corner/diagrams/ncert-activation-energy-fig9-4.jpg'
+  ae: 'exam-corner/diagrams/ncert-activation-energy-fig9-4.jpg',
+  mech: 'exam-corner/diagrams/ncert-mechanism-of-breathing-fig14-2.jpg',
+  alv: 'exam-corner/diagrams/ncert-alveolus-section-fig14-4.jpg'
 };
 
 /* ------------------------------------------------------------------ question bank ------------------------------------------------------------------ */
@@ -68,7 +70,7 @@ const Q = {
     m: '<ul><li><b>Body surface</b> (simple diffusion): lower invertebrates like sponges, coelenterates and flatworms.</li><li><b>Moist cuticle:</b> earthworms. <b>Tracheal tubes:</b> insects.</li><li><b>Gills</b> (branchial respiration): most aquatic arthropods and molluscs, and fishes.</li><li><b>Lungs</b> (pulmonary respiration): terrestrial forms; amphibians, reptiles, birds and mammals.</li><li><b>Moist skin</b> (cutaneous respiration): amphibians like frogs.</li></ul><p class="hint">Any four, ½ mark each.</p>'},
 
   /* ---- Ch 14 · three-mark ---- */
-  mechanism: {t: 'C', ch: 14, ref: 'C IV · Q2', lv: 'Easy', pg: '185, 186', q: 'Explain the mechanism of breathing.',
+  mechanism: {t: 'C', ch: 14, ref: 'C IV · Q2', lv: 'Easy', pg: '185, 186', img: IMG.mech, q: 'Explain the mechanism of breathing.',
     p: [['Two stages, inspiration and expiration, by a pressure gradient: inspiration when intra-pulmonary pressure is less than atmospheric, expiration when it is higher; diaphragm and intercostal muscles create it', 1],
         ['Inspiration: diaphragm and external intercostal muscles contract; thoracic and pulmonary volume increase; intra-pulmonary pressure falls; air moves in', 1],
         ['Expiration: diaphragm and intercostal muscles relax; thoracic and pulmonary volume decrease; pressure rises above atmospheric; air is expelled', 1]],
@@ -78,7 +80,7 @@ const Q = {
         ['Binding depends mainly on pO₂ (also pCO₂, H⁺ concentration, temperature); sigmoid oxygen dissociation curve', 1],
         ['Alveoli (high pO₂, low pCO₂) favour formation, tissues favour dissociation; 100 ml of oxygenated blood delivers about 5 ml of O₂', 1]],
     m: '<ul><li>Haemoglobin is a red, iron-containing pigment in the RBCs; about 97% of O₂ is transported by RBCs. O₂ binds with haemoglobin in a reversible manner to form <b>oxyhaemoglobin</b>; each haemoglobin molecule can carry a maximum of <b>four molecules of O₂</b>.</li><li>Binding is primarily related to the <b>partial pressure of O₂</b>; pCO₂, H⁺ concentration and temperature also interfere. Plotting percentage saturation of haemoglobin against pO₂ gives a sigmoid curve, the <b>oxygen dissociation curve</b> (NCERT Fig. 14.5).</li><li>In the <b>alveoli</b> (high pO₂, low pCO₂, less H⁺, lower temperature) oxyhaemoglobin is formed; in the <b>tissues</b> (low pO₂, high pCO₂, high H⁺, higher temperature) O₂ dissociates from it. Every 100 ml of oxygenated blood delivers about <b>5 ml of O₂</b> to the tissues.</li></ul>'},
-  larynx: {t: 'C', ch: 14, ref: 'C IV · Q1', lv: 'Easy', pg: 184, q: 'Mention the functions of the following organs of respiration: a) Larynx b) Respiratory membrane c) Glottis.',
+  larynx: {t: 'C', ch: 14, ref: 'C IV · Q1', lv: 'Easy', pg: 184, img: IMG.alv, q: 'Mention the functions of the following organs of respiration: a) Larynx b) Respiratory membrane c) Glottis.',
     p: [['Larynx: cartilaginous box that helps in sound production (sound box); passage of air from pharynx to trachea', 1],
         ['Respiratory (diffusion) membrane: site of exchange of O₂ and CO₂ between alveoli and blood; three thin layers, less than a millimetre thick', 1],
         ['Glottis: opening into the larynx for air; covered by the epiglottis during swallowing so food does not enter the larynx', 1]],

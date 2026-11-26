@@ -8,7 +8,7 @@
 // writes exam-corner/bio-breathing-mock-data.js for biomolecules-breathing-mock-practice.html (same questions, same order).
 // Run: NODE_PATH=<global node_modules with playwright> node scripts/class-tests/mock-biomolecules-breathing.js
 const fs = require('fs'), path = require('path');
-const {Q, IMG, build, writePdfs, order, ROOT} = require('./bio-breathing-bank');
+const {Q, IMG, build, writePdfs, order, numbers, ROOT} = require('./bio-breathing-bank');
 const MONTHLY = require('./monthly-biomolecules-breathing');
 
 const monthlyIds = order(MONTHLY);
@@ -31,7 +31,7 @@ MOCK.keyNote = `<b>M</b> marks the ${monthlyIds.length} questions of the 20-mark
 
 /* ---- data for the in-app practice page ---- */
 function appData(){
-  const P = MOCK.parts, pick = (id) => Q[id];
+  const P = MOCK.parts, pick = (id) => Q[id], N = numbers(MOCK);
   const chapters = [], page = [], marks = [];
   for (let i = 0; i <= 14; i++) { chapters.push(''); page.push(''); marks.push(0); }
   chapters[9] = 'Biomolecules'; chapters[14] = 'Breathing and Exchange of Gases'; page[9] = 'pu1-ch9.html';
@@ -43,10 +43,13 @@ function appData(){
     fibWords: MOCK.words.slice(),
     fib: P.fib.map(id => { const q = pick(id); return {ch: q.ch, q: q.q, a: q.a, e: q.e}; }),
     B: long(P.B.ids), C: long(P.C.ids), D: long(P.D.ids), D2: [],
+    /* NCERT figures that go with this paper's questions (question numbers from the paper) */
     diagrams: [
-      {t: 'Human respiratory system (NCERT Fig. 14.1)', ch: 14, img: IMG.resp, labels: ['Epiglottis', 'Larynx', 'Trachea', 'Bronchus', 'Bronchiole', 'Alveoli', 'Lung', 'Pleural membranes', 'Pleural fluid', 'Diaphragm', 'Heart', 'Cut end of rib']},
-      {t: 'Oxygen dissociation curve (NCERT Fig. 14.5)', ch: 14, img: IMG.odc, labels: ['X-axis: partial pressure of oxygen (mm Hg)', 'Y-axis: percentage saturation of haemoglobin with oxygen', 'Sigmoid (S-shaped) curve', 'Scale 0–100 on both axes']},
-      {t: 'Concept of activation energy (NCERT Fig. 9.4)', ch: 9, img: IMG.ae, labels: ['Y-axis: potential energy', 'X-axis: progress of reaction', 'Substrate (S)', 'Product (P)', 'Transition state', 'Activation energy without enzyme', 'Activation energy with enzyme']}
+      {t: `Human respiratory system (NCERT Fig. 14.1) · Q${N.organs}, Q${N.larynx}`, ch: 14, img: IMG.resp, labels: ['Epiglottis', 'Larynx', 'Trachea', 'Bronchus', 'Bronchiole', 'Alveoli', 'Lung', 'Pleural membranes', 'Pleural fluid', 'Diaphragm', 'Heart', 'Cut end of rib']},
+      {t: `Mechanism of breathing (NCERT Fig. 14.2) · Q${N.mechanism}`, ch: 14, img: IMG.mech, labels: ['(a) Inspiration: diaphragm contracted', 'Ribs and sternum raised', 'Volume of thorax increased', 'Air entering lungs', '(b) Expiration: diaphragm relaxed and arched upwards', 'Ribs and sternum returned to original position', 'Volume of thorax decreased', 'Air expelled from lungs']},
+      {t: `Section of an alveolus: respiratory membrane (NCERT Fig. 14.4) · Q${N.larynx}`, ch: 14, img: IMG.alv, labels: ['Alveolar cavity', 'Squamous epithelium of alveolar wall (one-celled thick)', 'Basement substance', 'Endothelium of blood capillary', 'Blood capillary', 'Red blood cell']},
+      {t: `Oxygen dissociation curve (NCERT Fig. 14.5) · Q${N.haemoglobin}`, ch: 14, img: IMG.odc, labels: ['X-axis: partial pressure of oxygen (mm Hg)', 'Y-axis: percentage saturation of haemoglobin with oxygen', 'Sigmoid (S-shaped) curve', 'Scale 0–100 on both axes']},
+      {t: `Concept of activation energy (NCERT Fig. 9.4) · Q${N.transition}`, ch: 9, img: IMG.ae, labels: ['Y-axis: potential energy', 'X-axis: progress of reaction', 'Substrate (S)', 'Product (P)', 'Transition state', 'Activation energy without enzyme', 'Activation energy with enzyme']}
     ]
   };
 }
