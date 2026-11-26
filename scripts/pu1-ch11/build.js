@@ -153,7 +153,9 @@ const TIP_EXAMPLES = {
 const nStd = man.std || 0, nLarge = man.large || 0;
 const list = (dir, n) => J(Array.from({ length: n }, (_, i) => A + '/' + dir + 'slide-' + String(i + 1).padStart(2, '0') + '.jpg'));
 setConst('CLASS_SLIDES', list('', nStd));
-setConst('CLASS_SLIDES_LARGE', list('proj/', nLarge));
+/* Large Text · Projector = Narendra Sir's own deck in projector/ (English slides in every language); see projector-deck.js */
+setConst('CLASS_SLIDES_LARGE', list(man.largeDeck === 'projector' ? 'projector/' : 'proj/', nLarge));
+if (man.largeDeck === 'projector') rep("large: {en: CLASS_SLIDES_LARGE, kn: pptDeckList('pu1-ch9-assets/proj/kn/', CLASS_SLIDES_LARGE.length), hi: pptDeckList('pu1-ch9-assets/proj/hi/', CLASS_SLIDES_LARGE.length)}", "large: {en: CLASS_SLIDES_LARGE, kn: CLASS_SLIDES_LARGE, hi: CLASS_SLIDES_LARGE}");
 rep('function pptSceneFor(){', 'Object.keys(PPT_SCENES).forEach(k=>{ PPT_SCENES[k] = {}; });   /* Ch11 has no live in-slide scenes; the Animated deck carries the animations */\nfunction pptSceneFor(){');
 rep('/* ---- Class Presentation: PowerPoint-style slide viewer ----', '/* ---- Class Presentation: PowerPoint-style slide viewer (Ch11 decks are built by scripts/pu1-ch11/slides.js) ----');
 setConst('OS_SKIP', J(man.osSkip || []), '   /* 0-based slide indices left out of the revision */');
