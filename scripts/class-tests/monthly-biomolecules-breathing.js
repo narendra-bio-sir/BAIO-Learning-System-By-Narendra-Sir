@@ -84,7 +84,7 @@ ${header('Question Paper')}
 <div class="q"><span class="n">8.</span><div class="b">The volume of air inspired or expired during a normal respiration is ____________.</div></div>
 
 <div class="sec"><span>III. Answer any TWO of the following in 3–5 sentences.</span><span class="mk">2 × 2 = 4</span></div>
-<div class="q"><span class="n">9.</span><div class="b">Give an example of a) Homopolysaccharides &nbsp;b) Heteropolysaccharides.</div></div>
+<div class="q"><span class="n">9.</span><div class="b">Starch gives a blue colour with iodine, but cellulose does not. Give reason.</div></div>
 <div class="q"><span class="n">10.</span><div class="b">Proteins are regarded as heteropolymers. Substantiate.</div></div>
 <div class="q"><span class="n">11.</span><div class="b">Differentiate between vital capacity and total lung capacity.</div></div>
 
@@ -114,7 +114,7 @@ ${withQ ? `<tr><th class="l">Questions set</th><th>5 × 1 = 5</th><th>3 × 1 = 3
 const pts = (n) => `<span class="pts">${n}</span>`;
 const QB = (r) => `Ch 9 · ${r}`, NC = (r) => `Ch 14 · ${r}`;
 const src = [
-  [1, QB('Part A I · Q14'), 'Easy', 110], [9, QB('Part B III · Q7'), 'Easy', 109],
+  [1, QB('Part A I · Q14'), 'Easy', 110], [9, 'NCERT Ch 9 · 9.5 Polysaccharides', 'Average', 110],
   [2, QB('Part A I · Q7'), 'Easy', 106], [10, QB('Part B III · Q3'), 'Average', 109],
   [3, QB('Part A I · Q24'), 'Average', 117], [11, NC('Part B III · Q11'), 'Average', 187],
   [4, NC('Part A I · Q15'), 'Easy', 189], [12, QB('Part C IV · Q1'), 'Easy', 106],
@@ -137,7 +137,7 @@ ${weightTable(true)}
 <tr><th>Paper Q</th><th>Question bank reference</th><th>Level</th><th>NCERT page</th><th>Paper Q</th><th>Question bank reference</th><th>Level</th><th>NCERT page</th></tr>
 ${srcRows.join('\n')}
 </table>
-<p class="note">All 15 questions are taken from the official <b>I PUC Biology Question Bank 2026-27</b> (Department of School Education, Karnataka). Q15 asks to draw the "diagrammatic view of human respiratory system" (Part D V · Q2) as a labelled diagram. The fill-in word box mixes words from both chapters' banks; "Larynx" is the extra word and is not an answer. Page numbers follow the question bank (current NCERT Class XI book).</p>
+<p class="note">14 of the 15 questions are taken from the official <b>I PUC Biology Question Bank 2026-27</b> (Department of School Education, Karnataka); Q9 (starch and cellulose with iodine) is framed from NCERT section 9.5, as the bank has no 2-mark question on starch or cellulose. Q15 asks to draw the "diagrammatic view of human respiratory system" (Part D V · Q2) as a labelled diagram. The fill-in word box mixes words from both chapters' banks; "Larynx" is the extra word and is not an answer. Page numbers follow the question bank (current NCERT Class XI book).</p>
 
 <div style="break-inside:avoid"><h2>Part I &amp; II: Answer key</h2>
 <table>
@@ -147,10 +147,10 @@ ${srcRows.join('\n')}
 <p class="note">1 mark each. Q2: in lipids the fatty acids are found esterified with glycerol (mono-, di- and triglycerides). Q6: cotton fibre is cellulosic. Q3: malonate closely resembles the substrate succinate in structure and competes with it for the substrate-binding site.</p></div>
 
 <h2>Part III: 2 marks each (any two)</h2>
-<div class="ka"><span class="qq">9. Homo- and heteropolysaccharides</span>
-<ul><li><b>a) Homopolysaccharides</b> (made of only one type of monosaccharide): <b>cellulose</b>, <b>starch</b> or <b>glycogen</b> (all made of glucose); <b>inulin</b> (a polymer of fructose). Any one. ${pts('1')}</li>
-<li><b>b) Heteropolysaccharides</b> (made of more than one type of monosaccharide or sugar derivative): e.g. <b>hyaluronic acid</b>, <b>heparin</b>, <b>peptidoglycan</b> (bacterial cell wall). Any one. ${pts('1')}</li></ul>
-<p class="note">NCERT names homopolysaccharides but gives no heteropolysaccharide example, so accept any correct one. Do not credit chitin for (b): NCERT notes that chitin and similar complex polysaccharides are mostly homopolymers.</p></div>
+<div class="ka"><span class="qq">9. Starch and iodine: blue colour; cellulose: no colour</span>
+<ul><li><b>Starch</b> forms <b>helical secondary structures</b> and can hold I<sub>2</sub> (iodine) molecules in the helical portion; the starch–I<sub>2</sub> complex is <b>blue</b> in colour. ${pts('1')}</li>
+<li><b>Cellulose</b> does not contain complex helices, hence it <b>cannot hold I<sub>2</sub></b> and gives no blue colour. ${pts('1')}</li></ul>
+<p class="note">Both are polymers of glucose (homopolysaccharides); the difference is in their structure. Award 1 mark only if the helical structure of starch is mentioned.</p></div>
 <div class="ka"><span class="qq">10. Proteins are heteropolymers</span>
 <ul><li>Each protein is a polymer of amino acids, and there are <b>20 types of amino acids</b> (e.g. alanine, cysteine, proline, tryptophan, lysine), so a protein is made of different kinds of monomers: a heteropolymer. ${pts('1')}</li>
 <li>A <b>homopolymer</b> has only one type of monomer repeating ‘n’ number of times (e.g. cellulose, made only of glucose); proteins are therefore heteropolymers and not homopolymers. ${pts('1')}</li></ul></div>
@@ -187,7 +187,7 @@ ${srcRows.join('\n')}
 /* ---------------- blueprint sheet ---------------- */
 const bp = doc(`
 ${header('Blueprint')}
-<p class="note">Prepared as per the I PUC annual blueprint weightage: Chapter 9 carries 6 marks and Chapter 14 carries 5 marks in the annual exam (6 : 5), so this 20-mark test keeps the same ratio. All questions are taken from the official <b>I PUC Biology Question Bank 2026-27</b> (Department of School Education, Karnataka).</p>
+<p class="note">Prepared as per the I PUC annual blueprint weightage: Chapter 9 carries 6 marks and Chapter 14 carries 5 marks in the annual exam (6 : 5), so this 20-mark test keeps the same ratio. Questions are taken from the official <b>I PUC Biology Question Bank 2026-27</b> (Department of School Education, Karnataka), except one 2-mark question on starch and cellulose framed from the NCERT text.</p>
 <h2>Chapter-wise weightage (number of questions)</h2>
 ${weightTable(false)}
 <h2>Question paper design</h2>
@@ -206,7 +206,7 @@ ${weightTable(false)}
 <tr><td class="l">Ch 9 Biomolecules</td><td>6</td><td>16</td><td>a little over half</td></tr>
 <tr><td class="l">Ch 14 Breathing and Exchange of Gases</td><td>5</td><td>14</td><td>a little under half</td></tr>
 </table>
-<p class="note" style="margin-top:10px"><b>How to prepare:</b> revise both chapters from the NCERT text and the question bank: proteins, lipids, carbohydrates (homo- and heteropolysaccharides), nucleotides and nucleic acids, and enzymes (classes, inhibition); respiratory volumes and capacities, exchange and transport of gases and regulation of respiration. Practise the labelled diagram of the human respiratory system.</p>`);
+<p class="note" style="margin-top:10px"><b>How to prepare:</b> revise both chapters from the NCERT text and the question bank: proteins, lipids, carbohydrates (cellulose, starch, glycogen, inulin), nucleotides and nucleic acids, and enzymes (classes, inhibition); respiratory volumes and capacities, exchange and transport of gases and regulation of respiration. Practise the labelled diagram of the human respiratory system.</p>`);
 
 (async () => {
   const b = await chromium.launch();
