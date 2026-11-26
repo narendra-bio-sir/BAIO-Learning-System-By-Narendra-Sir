@@ -219,5 +219,29 @@ Object.assign(window.NT, {
     {q:'O₂ evolved in photosynthesis comes from:', o:['CO₂','Water','Glucose','RuBP'], a:1, x:'Water (van Niel).'},
     {q:'Kranz anatomy shows large:', o:['Palisade cells','Bundle-sheath cells','Guard cells','Epidermal cells'], a:1, x:'Kranz = wreath of bundle-sheath cells.'}
   ]
+},
+'pu1-ch12': {
+  title:'Respiration in Plants', ch:'I PUC · Chapter 12', icon:'💨', color:'#00838F', href:'pu1-ch12.html',
+  intro:'Glycolysis, fermentation, Krebs cycle, ETS, the 38-ATP balance sheet and RQ: the counts and sites NEET asks every year.',
+  tricks:[
+    {t:'Where each step happens', h:'<div class="tb"><table><tr><th>Step</th><th>Site</th></tr><tr><td>Glycolysis</td><td><b>Cytoplasm</b></td></tr><tr><td>Fermentation</td><td>Cytoplasm</td></tr><tr><td>Link reaction, Krebs cycle</td><td><b>Mitochondrial matrix</b></td></tr><tr><td>ETS, ATP synthase</td><td><b>Inner mitochondrial membrane</b></td></tr></table></div>'},
+    {t:'Glycolysis in numbers', h:'<ul><li><b>10</b> steps (EMP pathway); glucose → <b>2 pyruvic acid</b>.</li><li>ATP <b>used 2</b> (glucose → G-6-P; F-6-P → F-1,6-bisP), ATP <b>made 4</b> (BPGA → 3-PGA; PEP → pyruvic acid).</li><li><b>NADH 2</b> (PGAL → BPGA). Net: <b>2 ATP + 2 NADH</b>.</li></ul><p>Trick: <b>"Spend 2, earn 4, keep 2"</b>.</p>'},
+    {t:'Fermentation pair', h:'<div class="tb"><table><tr><th></th><th>Alcoholic</th><th>Lactic acid</th></tr><tr><td>Organism</td><td>Yeast</td><td>Muscle (low O₂), some bacteria</td></tr><tr><td>Enzymes</td><td>Pyruvic acid decarboxylase, alcohol dehydrogenase</td><td>Lactate dehydrogenase</td></tr><tr><td>CO₂ released</td><td><b>Yes</b></td><td><b>No</b></td></tr></table></div><p>Energy released &lt; <b>7%</b>; yeast dies at about <b>13%</b> alcohol. NADH → NAD⁺ in both.</p>'},
+    {t:'Krebs cycle counts', h:'<p>Link reaction: pyruvic acid → acetyl CoA + CO₂ + NADH (pyruvate dehydrogenase, Mg²⁺).</p><p>Per turn: <b>2 CO₂ · 3 NADH · 1 FADH₂ · 1 GTP</b>. GTP at <b>succinyl CoA → succinic acid</b>. One glucose = <b>2 turns</b>.</p><p>Order: <b>"Citric Is King, So Succeed For Me, OK?"</b> = citric, isocitric, α-ketoglutaric, succinyl CoA, succinic, fumaric, malic, OAA.</p>'},
+    {t:'ETS order and ATP', h:'<p><b>I → UQ → III → cyt c → IV → O₂</b>; FADH₂ enters at <b>II</b>. Complex IV = cytochrome c oxidase (cyt a, a₃, 2 Cu centres). Complex V = ATP synthase: <b>F₀</b> proton channel, <b>F₁</b> makes ATP.</p><p>NADH → <b>3 ATP</b>, FADH₂ → <b>2 ATP</b>; O₂ is the <b>final electron acceptor</b>.</p>'},
+    {t:'Balance sheet and RQ', h:'<p>Glycolysis 8 + link 6 + Krebs 24 = <b>38 ATP</b> per glucose (aerobic); fermentation gives only <b>2</b>.</p><div class="tb"><table><tr><th>Substrate</th><th>RQ</th></tr><tr><td>Carbohydrate (glucose)</td><td><b>1</b></td></tr><tr><td>Fat (tripalmitin 102/145)</td><td><b>0.7</b></td></tr><tr><td>Protein</td><td><b>~0.9</b></td></tr></table></div>'}
+  ],
+  traps:['Glycolysis happens in the <b>cytoplasm</b>, not in mitochondria.','Lactic acid fermentation releases <b>no CO₂</b>.','The link reaction is <b>not</b> part of the Krebs cycle.','Fats have RQ <b>less than 1</b> (0.7); RQ = CO₂ ÷ O₂.','Respiration is <b>amphibolic</b>: fatty acids enter as acetyl CoA, glycerol as PGAL.'],
+  quiz:[
+    {q:'The net gain of ATP in glycolysis per glucose is:', o:['4','2','8','38'], a:1, x:'4 made − 2 used = 2 ATP (plus 2 NADH).'},
+    {q:'Which fermentation releases no CO₂?', o:['Alcoholic','Lactic acid','Both','Neither'], a:1, x:'Pyruvic acid → lactic acid by lactate dehydrogenase.'},
+    {q:'GTP is formed in the Krebs cycle when:', o:['Citric acid → isocitric acid','Succinyl CoA → succinic acid','Malic acid → OAA','Fumaric acid → malic acid'], a:1, x:'Substrate-level phosphorylation at succinyl CoA.'},
+    {q:'The final electron acceptor in aerobic respiration is:', o:['NAD⁺','Cytochrome c','Oxygen','Ubiquinone'], a:2, x:'O₂ is reduced to water at complex IV.'},
+    {q:'Electrons from FADH₂ enter the ETS at:', o:['Complex I','Complex II','Complex III','Complex IV'], a:1, x:'Succinate dehydrogenase (complex II).'},
+    {q:'RQ of tripalmitin (fat) is about:', o:['1','0.9','0.7','1.3'], a:2, x:'102 CO₂ ÷ 145 O₂ ≈ 0.7.'},
+    {q:'Net ATP per glucose in aerobic respiration (NCERT balance sheet):', o:['2','36','38','24'], a:2, x:'8 + 6 + 24 = 38.'},
+    {q:'Pyruvic acid is converted to acetyl CoA by:', o:['Pyruvic acid decarboxylase','Pyruvate dehydrogenase','Citrate synthase','Hexokinase'], a:1, x:'Oxidative decarboxylation in the matrix.'},
+    {q:'Fatty acids enter the respiratory pathway as:', o:['PGAL','Pyruvic acid','Acetyl CoA','OAA'], a:2, x:'Glycerol enters as PGAL; fatty acids as acetyl CoA.'}
+  ]
 }
 });

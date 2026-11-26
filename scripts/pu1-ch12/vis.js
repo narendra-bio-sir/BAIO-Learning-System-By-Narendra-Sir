@@ -1,0 +1,5 @@
+/* pictures used on slides, colour notes, worksheets and handwritten notes (needs draw.js, ps-draw.js, diagrams.js).
+   V[name](lang) returns an <svg> of SCENE[name], cropped to the drawing. Crop boxes are measured by make-vis.js. */
+window.V = {};
+const CROP = {"glycolysis":[400,56,980,948],"krebs":[272,75,1127,896],"ets":[36,116,1533,838],"atpSynth":[176,126,1248,818],"fermentation":[96,56,1408,928],"amphibolic":[166,96,1268,902],"cellSites":[66,86,1468,868],"rqBars":[175,93,1249,814],"rqSeeds":[260,176,1123,613],"energyFlow":[59,123,1407,743],"atpCoin":[150,251,1026,548],"plantGas":[266,103,1218,822],"woodyStem":[256,136,1336,768],"burnVsStep":[260,101,1278,834],"sucrose":[409,102,784,723],"pyrFate":[86,151,1428,694],"nadLoop":[96,241,1408,558],"link":[116,96,1389,828],"balanceBars":[127,156,1337,773],"fermVsAer":[116,156,1368,688],"pipeline":[32,95,1530,883],"phosCompare":[96,176,1408,648]};
+Object.keys(CROP).forEach(n => { V[n] = (lang) => { P.L = lang || 'en'; const [x, y, w, h] = CROP[n]; return D.svg(1600, 1000, () => SCENE[n]()).replace('viewBox="0 0 1600 1000"', `viewBox="${x} ${y} ${w} ${h}"`); }; });

@@ -8,4 +8,5 @@ window.HWN = {"pu1-ch2":{"f":"ch2/assets/pdf-11_Handwritten_Notes.pdf","pages":9
 "pu1-ch9":{"f":"pu1-ch9-assets/pdf-handwritten_notes.pdf","pages":10,"kb":2980,"ck":"CH9-PU1-HWNOTES","uk":"pu1ch9_hw_unlock"},
 "pu1-ch10":{"f":"pu1-ch10-assets/pdf-handwritten_notes.pdf","pages":10,"kb":2096,"ck":"CH10-PU1-HWNOTES","uk":"pu1ch10_hw_unlock"},
 "pu1-ch11":{"f":"pu1-ch11-assets/pdf-handwritten_notes.pdf","pages":11,"kb":2078,"ck":"CH11-PU1-HWNOTES","uk":"pu1ch11_hw_unlock"},
+"pu1-ch12":{"f":"pu1-ch12-assets/pdf-handwritten_notes.pdf","pages":10,"kb":1848,"ck":"CH12-PU1-HWNOTES","uk":"pu1ch12_hw_unlock"},
 "pu2-ch9":{"f":"ch9/assets/pdf-handwritten.pdf","pages":15,"kb":2795,"ck":"CH9-HWNOTES","uk":"ch9_hw_unlock"}};
