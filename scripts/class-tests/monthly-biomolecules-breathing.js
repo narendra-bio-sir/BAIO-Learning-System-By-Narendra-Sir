@@ -72,29 +72,29 @@ ${header('Question Paper')}
 <div class="op"><span>a) Glutamic acid</span><span>b) Lysine</span><span>c) Aspartic acid</span><span>d) Valine</span></div></div></div>
 <div class="q"><span class="n">3.</span><div class="b">When the enzyme succinic dehydrogenase is added to a mixture of the substrates malonate and succinate, the rate of enzyme activity declines because of
 <div class="op w"><span>a) Increase in pH</span><span>b) Decrease in pH</span><span>c) Decrease in concentration of substrate</span><span>d) Competitive inhibition</span></div></div></div>
-<div class="q"><span class="n">4.</span><div class="b">In human beings, O<sub>2</sub> and CO<sub>2</sub> are exchanged between the alveoli and the blood mainly by
-<div class="op"><span>a) Active transport</span><span>b) Simple diffusion</span><span>c) Osmosis</span><span>d) Phagocytosis</span></div></div></div>
-<div class="q"><span class="n">5.</span><div class="b">About 97 per cent of the oxygen in blood is transported by
-<div class="op"><span>a) Plasma</span><span>b) RBCs</span><span>c) WBCs</span><span>d) Platelets</span></div></div></div>
+<div class="q"><span class="n">4.</span><div class="b">What is the percentage of O<sub>2</sub> transported by RBCs in the blood?
+<div class="op"><span>a) 90%</span><span>b) 98%</span><span>c) 100%</span><span>d) 97%</span></div></div></div>
+<div class="q"><span class="n">5.</span><div class="b">Emphysema is a chronic respiratory disorder, in which the organ affected is
+<div class="op"><span>a) Alveolar walls</span><span>b) Bronchi</span><span>c) Bronchioles</span><span>d) Pleural membrane</span></div></div></div>
 
 <div class="sec"><span>II. Fill in the blanks by choosing the appropriate word given below.</span><span class="mk">3 × 1 = 3</span></div>
-<div class="wb">( Pleura, &nbsp;Haemoglobin, &nbsp;Ribozyme, &nbsp;Tidal volume )</div>
+<div class="wb">( Alveoli, &nbsp;Larynx, &nbsp;Ribozyme, &nbsp;Tidal volume )</div>
 <div class="q"><span class="n">6.</span><div class="b">A non-proteinaceous enzyme is ____________.</div></div>
-<div class="q"><span class="n">7.</span><div class="b">The lungs are covered by a double-layered ____________, with a fluid between the two layers.</div></div>
-<div class="q"><span class="n">8.</span><div class="b">The volume of air inspired or expired during a normal respiration is called ____________.</div></div>
+<div class="q"><span class="n">7.</span><div class="b">____________ are the primary sites of exchange of gases.</div></div>
+<div class="q"><span class="n">8.</span><div class="b">The volume of air inspired or expired during a normal respiration is ____________.</div></div>
 
 <div class="sec"><span>III. Answer any TWO of the following in 3–5 sentences.</span><span class="mk">2 × 2 = 4</span></div>
 <div class="q"><span class="n">9.</span><div class="b">Proteins are regarded as heteropolymers. Substantiate.</div></div>
 <div class="q"><span class="n">10.</span><div class="b">How does temperature affect the enzyme activity?</div></div>
-<div class="q"><span class="n">11.</span><div class="b">Define vital capacity. What is its significance?</div></div>
+<div class="q"><span class="n">11.</span><div class="b">Differentiate between vital capacity and total lung capacity.</div></div>
 
 <div class="sec"><span>IV. Answer any ONE of the following in 40–80 words.</span><span class="mk">1 × 3 = 3</span></div>
 <div class="q"><span class="n">12.</span><div class="b">Mention the three types of co-factors associated with enzymes, with an example each.</div></div>
-<div class="q"><span class="n">13.</span><div class="b">Explain how respiration is regulated in human beings.</div></div>
+<div class="q"><span class="n">13.</span><div class="b">Explain the mechanism of breathing.</div></div>
 
 <div class="sec"><span>V. Answer any ONE of the following in 200–250 words.</span><span class="mk">1 × 5 = 5</span></div>
 <div class="q"><span class="n">14.</span><div class="b">Classify the various classes of enzymes based on the type of reaction they catalyse.</div></div>
-<div class="q"><span class="n">15.</span><div class="b">Draw a neat labelled diagram of the human respiratory system.</div></div>
+<div class="q"><span class="n">15.</span><div class="b">Draw a neat labelled diagrammatic view of the human respiratory system.</div></div>
 
 <div class="end">✦ ✦ ✦ &nbsp; ALL THE BEST &nbsp; ✦ ✦ ✦</div>`);
 
@@ -112,16 +112,16 @@ ${withQ ? `<tr><th class="l">Questions set</th><th>5 × 1 = 5</th><th>3 × 1 = 3
 
 /* ---------------- teacher's copy ---------------- */
 const pts = (n) => `<span class="pts">${n}</span>`;
-const QB = (r) => `QB Ch 9 · ${r}`, NC = (s) => `NCERT ${s}`;
+const QB = (r) => `Ch 9 · ${r}`, NC = (r) => `Ch 14 · ${r}`;
 const src = [
   [1, QB('Part A I · Q14'), 'Easy', 110], [9, QB('Part B III · Q3'), 'Average', 109],
   [2, QB('Part A I · Q6'), 'Easy', 106], [10, QB('Part B III · Q12'), 'Average', 116],
-  [3, QB('Part A I · Q24'), 'Average', 117], [11, NC('Ch 14 · Exercise Q1'), 'Easy', 187],
-  [4, NC('14.3'), 'Easy', 187], [12, QB('Part C IV · Q4'), 'Easy', 118],
-  [5, NC('14.4'), 'Easy', 189], [13, NC('14.5'), 'Average', 190],
+  [3, QB('Part A I · Q24'), 'Average', 117], [11, NC('Part B III · Q11'), 'Average', 187],
+  [4, NC('Part A I · Q15'), 'Easy', 189], [12, QB('Part C IV · Q4'), 'Easy', 118],
+  [5, NC('Part A I · Q20'), 'Easy', 190], [13, NC('Part C IV · Q2'), 'Easy', '185, 186'],
   [6, QB('Part A II · Q4'), 'Difficult', 119], [14, QB('Part D V · Q1'), 'Easy', 117],
-  [7, NC('14.1.1'), 'Easy', 184], [15, NC('Fig. 14.1'), 'Average', 184],
-  [8, NC('14.2.1'), 'Easy', 186]];
+  [7, NC('Part A II · Q5'), 'Easy', 187], [15, NC('Part D V · Q2'), 'Easy', 184],
+  [8, NC('Part A II · Q11'), 'Easy', 186]];
 const srcRows = []; for(let i = 0; i < src.length; i += 2){ const a = src[i], b = src[i + 1] || ['', '', '', ''];
   srcRows.push(`<tr><td>${a[0]}</td><td class="l">${a[1]}</td><td>${a[2]}</td><td>${a[3]}</td><td>${b[0]}</td><td class="l">${b[1]}</td><td>${b[2]}</td><td>${b[3]}</td></tr>`); }
 
@@ -132,17 +132,17 @@ ${header("Teacher's Copy: Blueprint, Answer Key &amp; Scheme of Valuation")}
 <p class="note">${weightNote}</p>
 ${weightTable(true)}
 
-<h2>Source of each question</h2>
+<h2>Source of each question in the Question Bank</h2>
 <table>
-<tr><th>Paper Q</th><th>Source</th><th>Level</th><th>NCERT page</th><th>Paper Q</th><th>Source</th><th>Level</th><th>NCERT page</th></tr>
+<tr><th>Paper Q</th><th>Question bank reference</th><th>Level</th><th>NCERT page</th><th>Paper Q</th><th>Question bank reference</th><th>Level</th><th>NCERT page</th></tr>
 ${srcRows.join('\n')}
 </table>
-<p class="note"><b>QB</b>: all Chapter 9 questions are from the official <b>I PUC Biology Question Bank 2026-27</b> (Department of School Education, Karnataka). <b>NCERT</b>: Chapter 14 questions are framed from the current NCERT Class XI text in the question-bank style; Q11 is NCERT exercise question 1. Page numbers are from the current NCERT Class XI Biology book. The fill-in word box mixes words from both chapters; "Haemoglobin" is the extra word and is not an answer.</p>
+<p class="note">All 15 questions are taken from the official <b>I PUC Biology Question Bank 2026-27</b> (Department of School Education, Karnataka). Q15 asks to draw the "diagrammatic view of human respiratory system" (Part D V · Q2) as a labelled diagram. The fill-in word box mixes words from both chapters' banks; "Larynx" is the extra word and is not an answer. Page numbers follow the question bank (current NCERT Class XI book).</p>
 
 <div style="break-inside:avoid"><h2>Part I &amp; II: Answer key</h2>
 <table>
 <tr><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>Q5</th><th>Q6</th><th>Q7</th><th>Q8</th></tr>
-<tr><td>c) RuBisCO</td><td>d) Valine</td><td>d) Competitive inhibition</td><td>b) Simple diffusion</td><td>b) RBCs</td><td>Ribozyme</td><td>Pleura</td><td>Tidal volume</td></tr>
+<tr><td>c) RuBisCO</td><td>d) Valine</td><td>d) Competitive inhibition</td><td>d) 97%</td><td>a) Alveolar walls</td><td>Ribozyme</td><td>Alveoli</td><td>Tidal volume</td></tr>
 </table>
 <p class="note">1 mark each. Q3: malonate closely resembles the substrate succinate in structure and competes with it for the substrate-binding site.</p></div>
 
@@ -153,9 +153,9 @@ ${srcRows.join('\n')}
 <div class="ka"><span class="qq">10. Effect of temperature on enzyme activity</span>
 <ul><li>Enzymes function in a narrow range of temperature; each enzyme shows its highest activity at a particular temperature called the <b>optimum temperature</b>, and activity declines both below and above it. ${pts('1')}</li>
 <li><b>Low temperature</b> preserves the enzyme in a temporarily inactive state, whereas <b>high temperature</b> destroys enzymatic activity because proteins are denatured by heat. ${pts('1')}</li></ul></div>
-<div class="ka"><span class="qq">11. Vital capacity</span>
-<ul><li><b>Definition:</b> the maximum volume of air a person can breathe in after a forced expiration, or breathe out after a forced inspiration. It includes ERV, TV and IRV (VC = ERV + TV + IRV). ${pts('1')}</li>
-<li><b>Significance:</b> it shows the maximum amount of air that can be exchanged in one breath, so a higher vital capacity means more fresh air enters the lungs with each breath; pulmonary capacities like this are used in clinical diagnosis of lung function (and are higher in athletes and wind-instrument players). ${pts('1')}</li></ul></div>
+<div class="ka"><span class="qq">11. Vital capacity vs total lung capacity</span>
+<ul><li><b>Vital capacity (VC):</b> the maximum volume of air a person can breathe in after a forced expiration, or breathe out after a forced inspiration; it includes ERV, TV and IRV (VC = ERV + TV + IRV) and does not include the residual volume. ${pts('1')}</li>
+<li><b>Total lung capacity (TLC):</b> the total volume of air accommodated in the lungs at the end of a forced inspiration; it includes RV, ERV, TV and IRV, i.e. TLC = vital capacity + residual volume. ${pts('1')}</li></ul></div>
 
 <h2>Part IV: 3 marks (any one)</h2>
 <div class="ka"><span class="qq">12. Three types of co-factors</span> (1 mark each: name with its feature or example)
@@ -163,12 +163,12 @@ ${srcRows.join('\n')}
 <li><b>Co-enzymes:</b> organic compounds whose association with the apoenzyme is only transient, during catalysis; many contain vitamins, e.g. <b>NAD and NADP</b> contain the vitamin niacin.</li>
 <li><b>Metal ions:</b> form coordination bonds with side chains at the active site and with the substrate, e.g. <b>zinc</b> for the proteolytic enzyme carboxypeptidase.</li></ul>
 <p class="note">Award ½ mark for each correct name without its feature or example.</p></div>
-<div class="ka"><span class="qq">13. Regulation of respiration</span>
-<ul><li>The <b>respiratory rhythm centre</b> in the <b>medulla</b> region of the brain is primarily responsible for the regulation of respiration. ${pts('1')}</li>
-<li>The <b>pneumotaxic centre</b> in the <b>pons</b> moderates the rhythm centre: its neural signal can reduce the duration of inspiration and thereby alter the respiratory rate. ${pts('1')}</li>
-<li>A <b>chemosensitive area</b> next to the rhythm centre is highly sensitive to CO<sub>2</sub> and H<sup>+</sup>; an increase activates it and it signals the rhythm centre to adjust breathing. Receptors in the <b>aortic arch and carotid artery</b> also sense CO<sub>2</sub> and H<sup>+</sup>. The role of oxygen in regulating the rhythm is quite insignificant. ${pts('1')}</li></ul></div>
+<div class="ka"><span class="qq">13. Mechanism of breathing</span>
+<ul><li>Breathing has two stages, <b>inspiration</b> and <b>expiration</b>, brought about by a pressure gradient between the lungs and the atmosphere: inspiration when the intra-pulmonary pressure is <b>less</b> than the atmospheric pressure, expiration when it is <b>higher</b>. The diaphragm and the external and internal intercostal muscles generate these gradients. ${pts('1')}</li>
+<li><b>Inspiration:</b> the diaphragm contracts (volume of the thoracic chamber increases in the antero-posterior axis) and the external intercostal muscles contract, lifting the ribs and sternum (volume increases in the dorso-ventral axis); pulmonary volume increases, intra-pulmonary pressure falls below atmospheric and air moves into the lungs. ${pts('1')}</li>
+<li><b>Expiration:</b> the diaphragm and intercostal muscles relax, returning the diaphragm and sternum to normal; thoracic and pulmonary volumes decrease, intra-pulmonary pressure rises slightly above atmospheric and air is expelled. Abdominal muscles can increase the strength of breathing; a healthy human breathes 12–16 times per minute. ${pts('1')}</li></ul></div>
 
-<h2 style="break-before:page">Part V: 5 marks (any one)</h2>
+<h2 style="break-after:avoid">Part V: 5 marks (any one)</h2>
 <div class="ka"><span class="qq">14. Classes of enzymes</span> (enzymes are divided into 6 classes based on the type of reaction they catalyse)
 <ul><li><b>Oxidoreductases / dehydrogenases:</b> catalyse oxidoreduction between two substrates S and S′: S<sub>reduced</sub> + S′<sub>oxidised</sub> → S<sub>oxidised</sub> + S′<sub>reduced</sub>.</li>
 <li><b>Transferases:</b> catalyse the transfer of a group G (other than hydrogen) between a pair of substrates: S–G + S′ → S + S′–G.</li>
@@ -182,12 +182,12 @@ ${srcRows.join('\n')}
 <ul><li><b>Diagram</b>: neat, proportionate drawing of the trachea dividing into two bronchi, the two lungs in the thoracic cavity with the bronchial tree and alveoli in one lung, and the dome-shaped diaphragm below. ${pts('2')}</li>
 <li><b>Labels</b>: any six correct labels, ½ mark each. ${pts('3')}</li></ul>
 <p class="note">Labels must be pointed with clear lines. Accept the diagram drawn as in NCERT Figure 14.1; do not award diagram marks for a drawing without the diaphragm or the bronchial branching.</p></div>
-<p class="note" style="margin-top:10px">Answers are from the current NCERT Class XI Biology text (Chapters 9 and 14).</p>`);
+<p class="note" style="margin-top:10px">Answers are from the current NCERT Class XI Biology text (Chapters 9 and 14); page numbers follow the question bank.</p>`);
 
 /* ---------------- blueprint sheet ---------------- */
 const bp = doc(`
 ${header('Blueprint')}
-<p class="note">Prepared as per the I PUC annual blueprint weightage: Chapter 9 carries 6 marks and Chapter 14 carries 5 marks in the annual exam (6 : 5), so this 20-mark test keeps the same ratio. Chapter 9 questions are taken from the official <b>I PUC Biology Question Bank 2026-27</b> (Department of School Education, Karnataka); Chapter 14 questions follow the NCERT text in the same style.</p>
+<p class="note">Prepared as per the I PUC annual blueprint weightage: Chapter 9 carries 6 marks and Chapter 14 carries 5 marks in the annual exam (6 : 5), so this 20-mark test keeps the same ratio. All questions are taken from the official <b>I PUC Biology Question Bank 2026-27</b> (Department of School Education, Karnataka).</p>
 <h2>Chapter-wise weightage (number of questions)</h2>
 ${weightTable(false)}
 <h2>Question paper design</h2>
