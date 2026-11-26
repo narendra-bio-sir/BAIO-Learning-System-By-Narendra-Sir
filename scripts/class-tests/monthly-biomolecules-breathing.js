@@ -84,8 +84,8 @@ ${header('Question Paper')}
 <div class="q"><span class="n">8.</span><div class="b">The volume of air inspired or expired during a normal respiration is ____________.</div></div>
 
 <div class="sec"><span>III. Answer any TWO of the following in 3–5 sentences.</span><span class="mk">2 × 2 = 4</span></div>
-<div class="q"><span class="n">9.</span><div class="b">Proteins are regarded as heteropolymers. Substantiate.</div></div>
-<div class="q"><span class="n">10.</span><div class="b">Differentiate between primary and secondary metabolites with examples.</div></div>
+<div class="q"><span class="n">9.</span><div class="b">Give an example of a) Homopolysaccharides &nbsp;b) Heteropolysaccharides.</div></div>
+<div class="q"><span class="n">10.</span><div class="b">Proteins are regarded as heteropolymers. Substantiate.</div></div>
 <div class="q"><span class="n">11.</span><div class="b">Differentiate between vital capacity and total lung capacity.</div></div>
 
 <div class="sec"><span>IV. Answer any ONE of the following in 40–80 words.</span><span class="mk">1 × 3 = 3</span></div>
@@ -114,8 +114,8 @@ ${withQ ? `<tr><th class="l">Questions set</th><th>5 × 1 = 5</th><th>3 × 1 = 3
 const pts = (n) => `<span class="pts">${n}</span>`;
 const QB = (r) => `Ch 9 · ${r}`, NC = (r) => `Ch 14 · ${r}`;
 const src = [
-  [1, QB('Part A I · Q14'), 'Easy', 110], [9, QB('Part B III · Q3'), 'Average', 109],
-  [2, QB('Part A I · Q7'), 'Easy', 106], [10, QB('Part B III · Q4'), 'Average', 108],
+  [1, QB('Part A I · Q14'), 'Easy', 110], [9, QB('Part B III · Q7'), 'Easy', 109],
+  [2, QB('Part A I · Q7'), 'Easy', 106], [10, QB('Part B III · Q3'), 'Average', 109],
   [3, QB('Part A I · Q24'), 'Average', 117], [11, NC('Part B III · Q11'), 'Average', 187],
   [4, NC('Part A I · Q15'), 'Easy', 189], [12, QB('Part C IV · Q1'), 'Easy', 106],
   [5, NC('Part A I · Q20'), 'Easy', 190], [13, NC('Part C IV · Q2'), 'Easy', '185, 186'],
@@ -147,13 +147,13 @@ ${srcRows.join('\n')}
 <p class="note">1 mark each. Q2: in lipids the fatty acids are found esterified with glycerol (mono-, di- and triglycerides). Q6: cotton fibre is cellulosic. Q3: malonate closely resembles the substrate succinate in structure and competes with it for the substrate-binding site.</p></div>
 
 <h2>Part III: 2 marks each (any two)</h2>
-<div class="ka"><span class="qq">9. Proteins are heteropolymers</span>
+<div class="ka"><span class="qq">9. Homo- and heteropolysaccharides</span>
+<ul><li><b>a) Homopolysaccharides</b> (made of only one type of monosaccharide): <b>cellulose</b>, <b>starch</b> or <b>glycogen</b> (all made of glucose); <b>inulin</b> (a polymer of fructose). Any one. ${pts('1')}</li>
+<li><b>b) Heteropolysaccharides</b> (made of more than one type of monosaccharide or sugar derivative): e.g. <b>hyaluronic acid</b>, <b>heparin</b>, <b>peptidoglycan</b> (bacterial cell wall). Any one. ${pts('1')}</li></ul>
+<p class="note">NCERT names homopolysaccharides but gives no heteropolysaccharide example, so accept any correct one. Do not credit chitin for (b): NCERT notes that chitin and similar complex polysaccharides are mostly homopolymers.</p></div>
+<div class="ka"><span class="qq">10. Proteins are heteropolymers</span>
 <ul><li>Each protein is a polymer of amino acids, and there are <b>20 types of amino acids</b> (e.g. alanine, cysteine, proline, tryptophan, lysine), so a protein is made of different kinds of monomers: a heteropolymer. ${pts('1')}</li>
 <li>A <b>homopolymer</b> has only one type of monomer repeating ‘n’ number of times (e.g. cellulose, made only of glucose); proteins are therefore heteropolymers and not homopolymers. ${pts('1')}</li></ul></div>
-<div class="ka"><span class="qq">10. Primary vs secondary metabolites</span>
-<ul><li><b>Primary metabolites</b> are found in all living tissues, including animal tissues; they have identifiable functions and play known roles in normal physiological processes, e.g. amino acids, sugars, fatty acids, nucleotides. ${pts('1')}</li>
-<li><b>Secondary metabolites</b> are found mainly in plant, fungal and microbial cells; the roles of all of them in the host are not yet understood, but many are useful to human welfare, e.g. alkaloids (morphine, codeine), pigments (carotenoids, anthocyanins), essential oils (lemon grass oil), drugs (vinblastin, curcumin), toxins (abrin, ricin), lectins (concanavalin A), rubber and gums. ${pts('1')}</li></ul>
-<p class="note">Award the mark for each type only with at least one correct example.</p></div>
 <div class="ka"><span class="qq">11. Vital capacity vs total lung capacity</span>
 <ul><li><b>Vital capacity (VC):</b> the maximum volume of air a person can breathe in after a forced expiration, or breathe out after a forced inspiration; it includes ERV, TV and IRV (VC = ERV + TV + IRV) and does not include the residual volume. ${pts('1')}</li>
 <li><b>Total lung capacity (TLC):</b> the total volume of air accommodated in the lungs at the end of a forced inspiration; it includes RV, ERV, TV and IRV, i.e. TLC = vital capacity + residual volume. ${pts('1')}</li></ul></div>
@@ -206,7 +206,7 @@ ${weightTable(false)}
 <tr><td class="l">Ch 9 Biomolecules</td><td>6</td><td>16</td><td>a little over half</td></tr>
 <tr><td class="l">Ch 14 Breathing and Exchange of Gases</td><td>5</td><td>14</td><td>a little under half</td></tr>
 </table>
-<p class="note" style="margin-top:10px"><b>How to prepare:</b> revise both chapters from the NCERT text and the question bank: proteins, lipids, carbohydrates, nucleotides and nucleic acids, primary and secondary metabolites, and enzymes (classes, inhibition); respiratory volumes and capacities, exchange and transport of gases and regulation of respiration. Practise the labelled diagram of the human respiratory system.</p>`);
+<p class="note" style="margin-top:10px"><b>How to prepare:</b> revise both chapters from the NCERT text and the question bank: proteins, lipids, carbohydrates (homo- and heteropolysaccharides), nucleotides and nucleic acids, and enzymes (classes, inhibition); respiratory volumes and capacities, exchange and transport of gases and regulation of respiration. Practise the labelled diagram of the human respiratory system.</p>`);
 
 (async () => {
   const b = await chromium.launch();
