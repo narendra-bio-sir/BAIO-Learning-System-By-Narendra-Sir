@@ -26,6 +26,12 @@ ZONE.FACTS = [
  {t:'Making one glucose in the Calvin cycle uses 18 ATP and 12 NADPH.', c:'pu1-ch11'},
  {t:'Tomatoes and capsicum give higher yields when grown in greenhouses enriched with carbon dioxide.', c:'pu1-ch11'},
  {t:'In 1770 Joseph Priestley showed that a mint plant could restore air in which a candle had burned out.', c:'pu1-ch11'},
+ {t:'Yeast stops fermenting when the alcohol reaches about 13 percent, because the alcohol poisons it.', c:'pu1-ch12'},
+ {t:'Fermentation releases less than 7 percent of the energy stored in glucose.', c:'pu1-ch12'},
+ {t:'One glucose gives 38 ATP in aerobic respiration, as counted in the NCERT balance sheet.', c:'pu1-ch12'},
+ {t:'The Krebs cycle turns twice for every glucose, because one glucose gives two pyruvic acids.', c:'pu1-ch12'},
+ {t:'Fats have a respiratory quotient of about 0.7, because they need extra oxygen to burn.', c:'pu1-ch12'},
+ {t:'Bread rises because yeast releases carbon dioxide while fermenting sugar.', c:'pu1-ch12'},
  {t:'Robert Brown discovered the nucleus in 1831.', c:'pu1-ch8'},
  {t:'Camillo Golgi first saw the Golgi apparatus in 1898.', c:'pu1-ch8'},
  {t:'Lysosomes are called "suicide bags": their hydrolytic enzymes work best at acidic pH.', c:'pu1-ch8'},
@@ -119,7 +125,11 @@ ZONE.CLUES = [
  {a:'RuBisCO', o:['RuBisCO','PEPcase','ATP synthase','Amylase'], c:['I am an enzyme','I am the most abundant protein on Earth','I work in the stroma','I fix CO₂ on RuBP'], ch:'pu1-ch11', e:'🧪'},
  {a:'Photorespiration', o:['Photorespiration','Photolysis','Respiration','Transpiration'], c:['I happen in light','I am found in C₃ plants','I start when RuBisCO binds O₂','I waste energy and carbon'], ch:'pu1-ch11', e:'💨'},
  {a:'Z scheme', o:['Z scheme','Calvin cycle','C₄ pathway','Krebs cycle'], c:['I am a path of electrons','I use two photosystems','I end by making NADPH','My shape is a letter of the alphabet'], ch:'pu1-ch11', e:'⚡'},
- {a:'Chlorophyll a', o:['Chlorophyll a','Chlorophyll b','Carotene','Xanthophyll'], c:['I am a pigment','I absorb blue and red light','I am blue-green','I am the chief pigment of photosynthesis'], ch:'pu1-ch11', e:'🌿'}
+ {a:'Chlorophyll a', o:['Chlorophyll a','Chlorophyll b','Carotene','Xanthophyll'], c:['I am a pigment','I absorb blue and red light','I am blue-green','I am the chief pigment of photosynthesis'], ch:'pu1-ch11', e:'🌿'},
+ {a:'Glycolysis', o:['Glycolysis','Krebs cycle','Calvin cycle','ETS'], c:['I am a pathway','I happen in the cytoplasm','I need no oxygen','I split glucose into two pyruvic acids'], ch:'pu1-ch12', e:'🍬'},
+ {a:'ATP synthase', o:['ATP synthase','Cytochrome c','RuBisCO','Hexokinase'], c:['I am an enzyme complex','I sit in the inner mitochondrial membrane','Protons flow through my F₀ part','My F₁ head makes ATP'], ch:'pu1-ch12', e:'⚙️'},
+ {a:'Fermentation', o:['Fermentation','Photolysis','Transpiration','Krebs cycle'], c:['I happen without oxygen','Yeast does me','I make ethanol or lactic acid','I give only 2 ATP per glucose'], ch:'pu1-ch12', e:'🫧'},
+ {a:'Respiratory quotient', o:['Respiratory quotient','Action spectrum','Balance sheet','Water potential'], c:['I am a ratio','I compare two gases','I am 1 for carbohydrates','I am 0.7 for fats'], ch:'pu1-ch12', e:'📏'}
 ];
 
 /* Meme of the week: images in zone/memes/, newest first. The first one is "this week's meme". */

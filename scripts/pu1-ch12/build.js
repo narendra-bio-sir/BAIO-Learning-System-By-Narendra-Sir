@@ -53,6 +53,10 @@ topics.forEach(t => { const k = 'ws_' + t.id; TOPIC_WORKSHEET_FILES[t.id] = k; D
 const KCET = []; id = 0;
 topics.forEach(t => { const L = M.kcet[t.id], T = targets(L.length, hash('kcet' + t.id));
   L.forEach(([f, d, q, o, e, A1, B1], i) => { const x = { topic: t.id, difficulty: d, format: f, q }; if (A1) { x.colA = A1; x.colB = B1; } Object.assign(x, { options: place(o, T[i], hash(q + f)), exp: e, answer: T[i], id: id++ }); KCET.push(x); }); });
+/* diagram questions: NCERT figure (answer label hidden under a ?) from kcet-figs.py / kcet-figs.js */
+{ let FIGS = {}; try { FIGS = JSON.parse(fs.readFileSync(path.join(__dirname, 'kcet-figs.json'), 'utf8')); } catch (e) {}
+  KCET.forEach(x => { const k = Object.keys(FIGS).find(k => x.q.startsWith(k)); if (k) Object.assign(x, FIGS[k]); });
+  const miss = KCET.filter(x => x.format === 'diagram' && !x.img); if (miss.length) throw new Error('diagram question without a figure: ' + miss[0].q); }
 const DESC = []; topics.forEach(t => M.desc[t.id].forEach(([m, d, q, a]) => DESC.push({ topic: t.id, marks: m, difficulty: d, q, a })));
 const GLOSS = M.glossary.map(([term, def]) => ({ term, def }));
 const GLOSS_TR = {}; M.glossary.forEach(([term]) => GLOSS_TR[term] = { kn: KN.glossary[term], hi: HI.glossary[term] });
@@ -60,6 +64,7 @@ const STUDY_TR = {}, CONC_TR = {};
 topics.forEach(t => { STUDY_TR[t.id] = { kn: KN.study[t.id], hi: HI.study[t.id] }; CONC_TR[t.id] = { kn: KN.concepts[t.id], hi: HI.concepts[t.id] }; });
 const J = x => JSON.stringify(x);
 
+const DMCQ_LINK = "  <!-- diagram-mcq-link --><a class=\"dmcq-chapter-link\" href=\"diagram-mcq.html?c=1-12\" style=\"display:flex;align-items:center;gap:10px;margin:10px 0 6px;padding:11px 14px;border:1px solid var(--gold);border-radius:14px;text-decoration:none;color:inherit;background:var(--panel);\"><span style=\"font-size:20px;line-height:1\">\ud83d\udd2c</span><span style=\"flex:1;font-size:13px;line-height:1.4\"><b style=\"color:var(--gold)\">NCERT Diagram MCQs &middot; NEET &amp; KCET</b><br><span style=\"opacity:.8\">4 questions on this chapter&rsquo;s NCERT diagrams &middot; labelled parts &amp; their functions</span></span><span style=\"color:var(--gold);font-weight:800;font-size:16px\">&rarr;</span></a><!-- /diagram-mcq-link -->\n";
 /* ---------- template surgery ---------- */
 let s = fs.readFileSync(path.join(ROOT, 'pu1-ch9.html'), 'utf8');
 function setConst(name, value, tail){
@@ -275,6 +280,9 @@ s = s.replace(/pu1-ch9-assets/g, A)
 s = s.replace('data-ch="pu1-ch9" defer></script>', 'data-ch="pu1-ch12" defer></script>')   /* NEET tricks link */
      .replace('needs to set up Chapter 9 payment here.', 'needs to set up Chapter 12 payment here.')
      .replace("Chapter 9's own 'CH12-PREMIUM'", "Chapter 12's own 'CH12-PREMIUM'");
+/* NCERT Diagram MCQs for this chapter (diagram-mcq.html?c=1-12, added by diagram-mcq.py) */
+if (!s.includes('diagram-mcq-link')) rep('    <button onclick="dismissWhatsNew()" aria-label="Dismiss">&times;</button>\n  </div>\n  <div class="desktop-row">',
+  '    <button onclick="dismissWhatsNew()" aria-label="Dismiss">&times;</button>\n  </div>\n' + DMCQ_LINK + '  <div class="desktop-row">');
 fs.writeFileSync(path.join(ROOT, 'pu1-ch12.html'), s);
 
 /* leftovers report */
