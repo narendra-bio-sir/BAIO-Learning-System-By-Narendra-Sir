@@ -1,4 +1,4 @@
-// Monthly test (20 marks, 45 min): I PUC Biology, Ch 9 Biomolecules + Ch 14 Breathing and Exchange of Gases.
+// Monthly test (20 marks, 60 min): I PUC Biology, Ch 9 Biomolecules + Ch 14 Breathing and Exchange of Gases.
 // Same format as the Cell + Cell Cycle slip test. Builds 3 PDFs into exam-corner/pu-board-2026-27/:
 //   …-20m.pdf (question paper), …-20m-answer-key.pdf (teacher's copy), …-20m-blueprint.pdf
 // Run: NODE_PATH=<global node_modules with playwright> node scripts/class-tests/monthly-biomolecules-breathing.js
@@ -53,7 +53,7 @@ const header = (sub) => `
   <div class="t2">${sub}</div>
   <div class="t3">${CHAPTERS}</div>
 </div>
-<div class="meta"><span>Time: 45 minutes</span><span>Max. Marks: 20</span></div>`;
+<div class="meta"><span>Time: 60 minutes</span><span>Max. Marks: 20</span></div>`;
 const doc = (body) => `<!doctype html><html><head><meta charset="utf-8"><style>${css}</style></head><body>${body}</body></html>`;
 
 /* ---------------- question paper ---------------- */
