@@ -1862,10 +1862,10 @@ function exVisShow(target){
   let panel = document.getElementById('exVis');
   if(exVis && exVis.slide === idx && panel){ block.parentNode.insertBefore(panel, block); return; }
   exVisClear();
-  const lang = PPT_DECKS.large[currentLang] ? currentLang : 'en';
-  const src = PPT_DECKS.large[lang][idx];
+  const lang = PPT_DECKS.oslarge[currentLang] ? currentLang : 'en';
+  const src = PPT_DECKS.oslarge[lang][idx];
   panel = document.createElement('div'); panel.id = 'exVis'; panel.className = 'ex-vis';
-  panel.innerHTML = `<div class="ex-vis-stage" id="exVisStage"><img alt="" src="${src}"${(idx===0 || idx===PPT_DECKS.large[lang].length-1)?' class="ppt-photo"':''}><div class="ex-vis-box" id="exVisBox"></div></div>`;
+  panel.innerHTML = `<div class="ex-vis-stage" id="exVisStage"><img alt="" src="${src}"${(idx===0 || idx===PPT_DECKS.oslarge[lang].length-1)?' class="ppt-photo"':''}><div class="ex-vis-box" id="exVisBox"></div></div>`;
   block.parentNode.insertBefore(panel, block);
   exVis = {slide: idx, scene: null};
   const sc = PPT_SCENES.large && PPT_SCENES.large[idx];
@@ -1888,12 +1888,12 @@ function exVisSentence(text){
   const lang = currentLang, idx = exVis.slide;
   Promise.all([pptLoadNarr(), pptLoadCues().catch(()=>null)]).then(([N, C])=>{
     if(!exVis || exVis.slide !== idx) return;
-    const ss = pptSentences((N.large[lang] || N.large.en)[idx] || '');
+    const ss = pptSentences((N.oslarge[lang] || N.oslarge.en)[idx] || '');
     if(!ss.length) return;
     const a = new Set(exVisToks(text)); let best = -1, bi = 0;
     ss.forEach((s,i)=>{ const b = exVisToks(s); const sc = b.filter(w=>a.has(w)).length / Math.sqrt(1 + b.length); if(sc > best){ best = sc; bi = i; } });
     if(best <= 0) return;
-    const box = C && C.large && C.large[lang] && C.large[lang][idx] && C.large[lang][idx][bi];
+    const box = C && C.oslarge && C.oslarge[lang] && C.oslarge[lang][idx] && C.oslarge[lang][idx][bi];
     const bx = document.getElementById('exVisBox');
     if(bx && box && idx !== 0){ Object.assign(bx.style, {left:(box[0]/19.2)+'%', top:(box[1]/10.8)+'%', width:(box[2]/19.2)+'%', height:(box[3]/10.8)+'%'}); bx.classList.add('on'); }
     if(exVis.scene) exWithScene(()=>pptSceneStep(bi, ss.length));
@@ -3048,13 +3048,15 @@ function renderMindmap(){
    polysaccharides -> nucleic acids -> proteins -> enzymes -> enzyme action),
    and the cover again as the closing slide. 1600x900 JPGs in pu1-ch11-assets/. */
 const CLASS_SLIDES = ["pu1-ch11-assets/slide-01.jpg","pu1-ch11-assets/slide-02.jpg","pu1-ch11-assets/slide-03.jpg","pu1-ch11-assets/slide-04.jpg","pu1-ch11-assets/slide-05.jpg","pu1-ch11-assets/slide-06.jpg","pu1-ch11-assets/slide-07.jpg","pu1-ch11-assets/slide-08.jpg","pu1-ch11-assets/slide-09.jpg","pu1-ch11-assets/slide-10.jpg","pu1-ch11-assets/slide-11.jpg","pu1-ch11-assets/slide-12.jpg","pu1-ch11-assets/slide-13.jpg","pu1-ch11-assets/slide-14.jpg","pu1-ch11-assets/slide-15.jpg","pu1-ch11-assets/slide-16.jpg","pu1-ch11-assets/slide-17.jpg","pu1-ch11-assets/slide-18.jpg","pu1-ch11-assets/slide-19.jpg","pu1-ch11-assets/slide-20.jpg","pu1-ch11-assets/slide-21.jpg","pu1-ch11-assets/slide-22.jpg","pu1-ch11-assets/slide-23.jpg","pu1-ch11-assets/slide-24.jpg","pu1-ch11-assets/slide-25.jpg","pu1-ch11-assets/slide-26.jpg","pu1-ch11-assets/slide-27.jpg","pu1-ch11-assets/slide-28.jpg","pu1-ch11-assets/slide-29.jpg","pu1-ch11-assets/slide-30.jpg","pu1-ch11-assets/slide-31.jpg","pu1-ch11-assets/slide-32.jpg","pu1-ch11-assets/slide-33.jpg","pu1-ch11-assets/slide-34.jpg","pu1-ch11-assets/slide-35.jpg","pu1-ch11-assets/slide-36.jpg","pu1-ch11-assets/slide-37.jpg","pu1-ch11-assets/slide-38.jpg","pu1-ch11-assets/slide-39.jpg","pu1-ch11-assets/slide-40.jpg","pu1-ch11-assets/slide-41.jpg","pu1-ch11-assets/slide-42.jpg","pu1-ch11-assets/slide-43.jpg","pu1-ch11-assets/slide-44.jpg","pu1-ch11-assets/slide-45.jpg","pu1-ch11-assets/slide-46.jpg","pu1-ch11-assets/slide-47.jpg","pu1-ch11-assets/slide-48.jpg","pu1-ch11-assets/slide-49.jpg","pu1-ch11-assets/slide-50.jpg","pu1-ch11-assets/slide-51.jpg","pu1-ch11-assets/slide-52.jpg","pu1-ch11-assets/slide-53.jpg","pu1-ch11-assets/slide-54.jpg","pu1-ch11-assets/slide-55.jpg","pu1-ch11-assets/slide-56.jpg","pu1-ch11-assets/slide-57.jpg","pu1-ch11-assets/slide-58.jpg","pu1-ch11-assets/slide-59.jpg","pu1-ch11-assets/slide-60.jpg","pu1-ch11-assets/slide-61.jpg","pu1-ch11-assets/slide-62.jpg"];
-const CLASS_SLIDES_LARGE = ["pu1-ch11-assets/proj/slide-01.jpg","pu1-ch11-assets/proj/slide-02.jpg","pu1-ch11-assets/proj/slide-03.jpg","pu1-ch11-assets/proj/slide-04.jpg","pu1-ch11-assets/proj/slide-05.jpg","pu1-ch11-assets/proj/slide-06.jpg","pu1-ch11-assets/proj/slide-07.jpg","pu1-ch11-assets/proj/slide-08.jpg","pu1-ch11-assets/proj/slide-09.jpg","pu1-ch11-assets/proj/slide-10.jpg","pu1-ch11-assets/proj/slide-11.jpg","pu1-ch11-assets/proj/slide-12.jpg","pu1-ch11-assets/proj/slide-13.jpg","pu1-ch11-assets/proj/slide-14.jpg","pu1-ch11-assets/proj/slide-15.jpg","pu1-ch11-assets/proj/slide-16.jpg","pu1-ch11-assets/proj/slide-17.jpg","pu1-ch11-assets/proj/slide-18.jpg","pu1-ch11-assets/proj/slide-19.jpg","pu1-ch11-assets/proj/slide-20.jpg","pu1-ch11-assets/proj/slide-21.jpg","pu1-ch11-assets/proj/slide-22.jpg","pu1-ch11-assets/proj/slide-23.jpg","pu1-ch11-assets/proj/slide-24.jpg","pu1-ch11-assets/proj/slide-25.jpg","pu1-ch11-assets/proj/slide-26.jpg","pu1-ch11-assets/proj/slide-27.jpg","pu1-ch11-assets/proj/slide-28.jpg","pu1-ch11-assets/proj/slide-29.jpg","pu1-ch11-assets/proj/slide-30.jpg","pu1-ch11-assets/proj/slide-31.jpg","pu1-ch11-assets/proj/slide-32.jpg","pu1-ch11-assets/proj/slide-33.jpg","pu1-ch11-assets/proj/slide-34.jpg","pu1-ch11-assets/proj/slide-35.jpg","pu1-ch11-assets/proj/slide-36.jpg","pu1-ch11-assets/proj/slide-37.jpg","pu1-ch11-assets/proj/slide-38.jpg","pu1-ch11-assets/proj/slide-39.jpg","pu1-ch11-assets/proj/slide-40.jpg","pu1-ch11-assets/proj/slide-41.jpg","pu1-ch11-assets/proj/slide-42.jpg","pu1-ch11-assets/proj/slide-43.jpg","pu1-ch11-assets/proj/slide-44.jpg","pu1-ch11-assets/proj/slide-45.jpg","pu1-ch11-assets/proj/slide-46.jpg","pu1-ch11-assets/proj/slide-47.jpg","pu1-ch11-assets/proj/slide-48.jpg","pu1-ch11-assets/proj/slide-49.jpg","pu1-ch11-assets/proj/slide-50.jpg","pu1-ch11-assets/proj/slide-51.jpg","pu1-ch11-assets/proj/slide-52.jpg","pu1-ch11-assets/proj/slide-53.jpg","pu1-ch11-assets/proj/slide-54.jpg","pu1-ch11-assets/proj/slide-55.jpg","pu1-ch11-assets/proj/slide-56.jpg","pu1-ch11-assets/proj/slide-57.jpg","pu1-ch11-assets/proj/slide-58.jpg","pu1-ch11-assets/proj/slide-59.jpg","pu1-ch11-assets/proj/slide-60.jpg","pu1-ch11-assets/proj/slide-61.jpg","pu1-ch11-assets/proj/slide-62.jpg","pu1-ch11-assets/proj/slide-63.jpg","pu1-ch11-assets/proj/slide-64.jpg","pu1-ch11-assets/proj/slide-65.jpg","pu1-ch11-assets/proj/slide-66.jpg","pu1-ch11-assets/proj/slide-67.jpg","pu1-ch11-assets/proj/slide-68.jpg","pu1-ch11-assets/proj/slide-69.jpg","pu1-ch11-assets/proj/slide-70.jpg","pu1-ch11-assets/proj/slide-71.jpg","pu1-ch11-assets/proj/slide-72.jpg","pu1-ch11-assets/proj/slide-73.jpg","pu1-ch11-assets/proj/slide-74.jpg","pu1-ch11-assets/proj/slide-75.jpg","pu1-ch11-assets/proj/slide-76.jpg","pu1-ch11-assets/proj/slide-77.jpg","pu1-ch11-assets/proj/slide-78.jpg","pu1-ch11-assets/proj/slide-79.jpg","pu1-ch11-assets/proj/slide-80.jpg"];
+const CLASS_SLIDES_LARGE = ["pu1-ch11-assets/projector/slide-01.jpg","pu1-ch11-assets/projector/slide-02.jpg","pu1-ch11-assets/projector/slide-03.jpg","pu1-ch11-assets/projector/slide-04.jpg","pu1-ch11-assets/projector/slide-05.jpg","pu1-ch11-assets/projector/slide-06.jpg","pu1-ch11-assets/projector/slide-07.jpg","pu1-ch11-assets/projector/slide-08.jpg","pu1-ch11-assets/projector/slide-09.jpg","pu1-ch11-assets/projector/slide-10.jpg","pu1-ch11-assets/projector/slide-11.jpg","pu1-ch11-assets/projector/slide-12.jpg","pu1-ch11-assets/projector/slide-13.jpg","pu1-ch11-assets/projector/slide-14.jpg","pu1-ch11-assets/projector/slide-15.jpg","pu1-ch11-assets/projector/slide-16.jpg","pu1-ch11-assets/projector/slide-17.jpg","pu1-ch11-assets/projector/slide-18.jpg","pu1-ch11-assets/projector/slide-19.jpg","pu1-ch11-assets/projector/slide-20.jpg","pu1-ch11-assets/projector/slide-21.jpg","pu1-ch11-assets/projector/slide-22.jpg","pu1-ch11-assets/projector/slide-23.jpg","pu1-ch11-assets/projector/slide-24.jpg","pu1-ch11-assets/projector/slide-25.jpg","pu1-ch11-assets/projector/slide-26.jpg","pu1-ch11-assets/projector/slide-27.jpg","pu1-ch11-assets/projector/slide-28.jpg","pu1-ch11-assets/projector/slide-29.jpg","pu1-ch11-assets/projector/slide-30.jpg","pu1-ch11-assets/projector/slide-31.jpg","pu1-ch11-assets/projector/slide-32.jpg","pu1-ch11-assets/projector/slide-33.jpg","pu1-ch11-assets/projector/slide-34.jpg","pu1-ch11-assets/projector/slide-35.jpg","pu1-ch11-assets/projector/slide-36.jpg","pu1-ch11-assets/projector/slide-37.jpg","pu1-ch11-assets/projector/slide-38.jpg","pu1-ch11-assets/projector/slide-39.jpg","pu1-ch11-assets/projector/slide-40.jpg","pu1-ch11-assets/projector/slide-41.jpg","pu1-ch11-assets/projector/slide-42.jpg","pu1-ch11-assets/projector/slide-43.jpg","pu1-ch11-assets/projector/slide-44.jpg","pu1-ch11-assets/projector/slide-45.jpg","pu1-ch11-assets/projector/slide-46.jpg","pu1-ch11-assets/projector/slide-47.jpg","pu1-ch11-assets/projector/slide-48.jpg","pu1-ch11-assets/projector/slide-49.jpg","pu1-ch11-assets/projector/slide-50.jpg"];   /* Narendra Sir's Large Text deck (scripts/pu1-ch11/projector-deck.js) */
+const CLASS_SLIDES_OS = ["pu1-ch11-assets/proj/slide-01.jpg","pu1-ch11-assets/proj/slide-02.jpg","pu1-ch11-assets/proj/slide-03.jpg","pu1-ch11-assets/proj/slide-04.jpg","pu1-ch11-assets/proj/slide-05.jpg","pu1-ch11-assets/proj/slide-06.jpg","pu1-ch11-assets/proj/slide-07.jpg","pu1-ch11-assets/proj/slide-08.jpg","pu1-ch11-assets/proj/slide-09.jpg","pu1-ch11-assets/proj/slide-10.jpg","pu1-ch11-assets/proj/slide-11.jpg","pu1-ch11-assets/proj/slide-12.jpg","pu1-ch11-assets/proj/slide-13.jpg","pu1-ch11-assets/proj/slide-14.jpg","pu1-ch11-assets/proj/slide-15.jpg","pu1-ch11-assets/proj/slide-16.jpg","pu1-ch11-assets/proj/slide-17.jpg","pu1-ch11-assets/proj/slide-18.jpg","pu1-ch11-assets/proj/slide-19.jpg","pu1-ch11-assets/proj/slide-20.jpg","pu1-ch11-assets/proj/slide-21.jpg","pu1-ch11-assets/proj/slide-22.jpg","pu1-ch11-assets/proj/slide-23.jpg","pu1-ch11-assets/proj/slide-24.jpg","pu1-ch11-assets/proj/slide-25.jpg","pu1-ch11-assets/proj/slide-26.jpg","pu1-ch11-assets/proj/slide-27.jpg","pu1-ch11-assets/proj/slide-28.jpg","pu1-ch11-assets/proj/slide-29.jpg","pu1-ch11-assets/proj/slide-30.jpg","pu1-ch11-assets/proj/slide-31.jpg","pu1-ch11-assets/proj/slide-32.jpg","pu1-ch11-assets/proj/slide-33.jpg","pu1-ch11-assets/proj/slide-34.jpg","pu1-ch11-assets/proj/slide-35.jpg","pu1-ch11-assets/proj/slide-36.jpg","pu1-ch11-assets/proj/slide-37.jpg","pu1-ch11-assets/proj/slide-38.jpg","pu1-ch11-assets/proj/slide-39.jpg","pu1-ch11-assets/proj/slide-40.jpg","pu1-ch11-assets/proj/slide-41.jpg","pu1-ch11-assets/proj/slide-42.jpg","pu1-ch11-assets/proj/slide-43.jpg","pu1-ch11-assets/proj/slide-44.jpg","pu1-ch11-assets/proj/slide-45.jpg","pu1-ch11-assets/proj/slide-46.jpg","pu1-ch11-assets/proj/slide-47.jpg","pu1-ch11-assets/proj/slide-48.jpg","pu1-ch11-assets/proj/slide-49.jpg","pu1-ch11-assets/proj/slide-50.jpg","pu1-ch11-assets/proj/slide-51.jpg","pu1-ch11-assets/proj/slide-52.jpg","pu1-ch11-assets/proj/slide-53.jpg","pu1-ch11-assets/proj/slide-54.jpg","pu1-ch11-assets/proj/slide-55.jpg","pu1-ch11-assets/proj/slide-56.jpg","pu1-ch11-assets/proj/slide-57.jpg","pu1-ch11-assets/proj/slide-58.jpg","pu1-ch11-assets/proj/slide-59.jpg","pu1-ch11-assets/proj/slide-60.jpg","pu1-ch11-assets/proj/slide-61.jpg","pu1-ch11-assets/proj/slide-62.jpg","pu1-ch11-assets/proj/slide-63.jpg","pu1-ch11-assets/proj/slide-64.jpg","pu1-ch11-assets/proj/slide-65.jpg","pu1-ch11-assets/proj/slide-66.jpg","pu1-ch11-assets/proj/slide-67.jpg","pu1-ch11-assets/proj/slide-68.jpg","pu1-ch11-assets/proj/slide-69.jpg","pu1-ch11-assets/proj/slide-70.jpg","pu1-ch11-assets/proj/slide-71.jpg","pu1-ch11-assets/proj/slide-72.jpg","pu1-ch11-assets/proj/slide-73.jpg","pu1-ch11-assets/proj/slide-74.jpg","pu1-ch11-assets/proj/slide-75.jpg","pu1-ch11-assets/proj/slide-76.jpg","pu1-ch11-assets/proj/slide-77.jpg","pu1-ch11-assets/proj/slide-78.jpg","pu1-ch11-assets/proj/slide-79.jpg","pu1-ch11-assets/proj/slide-80.jpg"];   /* older 80-slide large deck: One-Shot revision + Explain visuals */
 let pptDeck = (function(){ try{ const v = localStorage.getItem('pu1ch11_ppt_deck'); return (v==='large'||v==='anim') ? v : 'std'; }catch(e){ return 'std'; } })();
 const PPT_LANGS = [{id:'en',label:'English',short:'EN'},{id:'kn',label:'ಕನ್ನಡ',short:'ಕ'},{id:'hi',label:'हिंदी',short:'हि'}];
 function pptDeckList(base, n){ const a=[]; for(let i=1;i<=n;i++) a.push(base+'slide-'+String(i).padStart(2,'0')+'.jpg'); return a; }
 const PPT_DECKS = {
   std:   {en: CLASS_SLIDES, kn: pptDeckList('pu1-ch11-assets/kn/', CLASS_SLIDES.length), hi: pptDeckList('pu1-ch11-assets/hi/', CLASS_SLIDES.length)},
-  large: {en: CLASS_SLIDES_LARGE, kn: pptDeckList('pu1-ch11-assets/proj/kn/', CLASS_SLIDES_LARGE.length), hi: pptDeckList('pu1-ch11-assets/proj/hi/', CLASS_SLIDES_LARGE.length)}
+  large: {en: CLASS_SLIDES_LARGE, kn: CLASS_SLIDES_LARGE, hi: CLASS_SLIDES_LARGE},   /* English slides; Explain narration follows the chosen language */
+  oslarge: {en: CLASS_SLIDES_OS, kn: pptDeckList('pu1-ch11-assets/proj/kn/', CLASS_SLIDES_OS.length), hi: pptDeckList('pu1-ch11-assets/proj/hi/', CLASS_SLIDES_OS.length)}
 };
 let pptLang = (function(){ try{ const v = localStorage.getItem('pu1ch11_ppt_lang'); if(v==='en'||v==='kn'||v==='hi') return v; }catch(e){} return (typeof currentLang!=='undefined' && (currentLang==='kn'||currentLang==='hi')) ? currentLang : 'en'; })();
 function pptSlides(){ const d = PPT_DECKS[pptDeck]; if(!d) return []; return d[pptLang] || d.en; }
@@ -3085,7 +3087,7 @@ let pptAuto = (function(){ try{ return localStorage.getItem('pu1ch11_ppt_auto')=
 let pptRate = (function(){ try{ const v = parseFloat(localStorage.getItem('pu1ch11_ppt_rate')); return v>0 ? v : 1; }catch(e){ return 1; } })();
 function pptLoadNarr(){
   if(PPT_NARR) return Promise.resolve(PPT_NARR);
-  if(!pptNarrLoading) pptNarrLoading = fetch('pu1-ch11-assets/narration.json?v=1').then(r=>{ if(!r.ok) throw new Error('narration '+r.status); return r.json(); }).then(j=>(PPT_NARR=j)).catch(e=>{ pptNarrLoading=null; throw e; });
+  if(!pptNarrLoading) pptNarrLoading = fetch('pu1-ch11-assets/narration.json?v=2').then(r=>{ if(!r.ok) throw new Error('narration '+r.status); return r.json(); }).then(j=>(PPT_NARR=j)).catch(e=>{ pptNarrLoading=null; throw e; });
   return pptNarrLoading;
 }
 function pptVoicesFor(l){
@@ -3232,7 +3234,7 @@ let PPT_CUES = null, pptCuesLoading = null, pptSpotLast = null;
 let pptAnim = (function(){ try{ return localStorage.getItem('pu1ch11_ppt_anim')!=='0'; }catch(e){ return true; } })();
 function pptLoadCues(){
   if(PPT_CUES) return Promise.resolve(PPT_CUES);
-  if(!pptCuesLoading) pptCuesLoading = fetch('pu1-ch11-assets/spot-cues.json?v=11').then(r=>{ if(!r.ok) throw new Error('cues'); return r.json(); }).then(j=>(PPT_CUES=j)).catch(e=>{ pptCuesLoading=null; throw e; });
+  if(!pptCuesLoading) pptCuesLoading = fetch('pu1-ch11-assets/spot-cues.json?v=12').then(r=>{ if(!r.ok) throw new Error('cues'); return r.json(); }).then(j=>(PPT_CUES=j)).catch(e=>{ pptCuesLoading=null; throw e; });
   return pptCuesLoading;
 }
 function pptSetAnim(on){ pptAnim = !!on; try{ localStorage.setItem('pu1ch11_ppt_anim', pptAnim?'1':'0'); }catch(e){} pptSceneMount(); if(!pptAnim) pptClearSpot(); else if(pptTalking && pptSpotLast) pptSpotlight(pptSpotLast[0], pptSpotLast[1]); }
@@ -3688,7 +3690,7 @@ let osSeq = [], osPos = 0, osSent = 0, osRun = 0, osPlaying = false, osShown = -
 let osRate = (function(){ try{ const v = parseFloat(localStorage.getItem('pu1ch11_os_rate')); return v>0 ? v : 1.1; }catch(e){ return 1.1; } })();
 /* the running order: intro, then a title card before each part, the slides of that part, and the closing slide */
 function osBuildSeq(){
-  const last = (PPT_DECKS.large.en || []).length - 1, seq = [{k:'intro', slide:0}];
+  const last = (PPT_DECKS.oslarge.en || []).length - 1, seq = [{k:'intro', slide:0}];
   OS_PARTS.forEach((p, pi)=>{
     const end = pi < OS_PARTS.length-1 ? OS_PARTS[pi+1].from : last;
     seq.push({k:'part', part:pi, slide:p.from});
@@ -3703,7 +3705,7 @@ function osSentencesOf(item, N){
   if(item.k === 'intro') return pptSentences(T.intro).map(t=>({t, oi:-1}));
   if(item.k === 'outro') return pptSentences(T.outro).map(t=>({t, oi:-1}));
   if(item.k === 'part'){ const p = OS_PARTS[item.part]; return [{t: T.part+' '+(OS_NUM[L]||OS_NUM.en)[item.part]+'. '+(p[L]||p.en)+'.', oi:-1, card:true}]; }
-  const list = N && N.large && (N.large[L] || N.large.en), all = pptSentences(list ? list[item.slide] : '');
+  const list = N && N.oslarge && (N.oslarge[L] || N.oslarge.en), all = pptSentences(list ? list[item.slide] : '');
   const drop = ((OS_DROP[L] || OS_DROP.en)[item.slide]) || [];
   return all.map((t, i)=>({t, oi:i, on:all.length})).filter(x=>drop.indexOf(x.oi) === -1);
 }
@@ -3724,7 +3726,7 @@ function osSavedPos(){ try{ const o = JSON.parse(localStorage.getItem('pu1ch11_o
 function renderOneShot(){
   if(!osSeq.length) osBuildSeq();
   if(osSavedDeck === null){ osSavedDeck = pptDeck; }
-  pptDeck = 'large';
+  pptDeck = 'oslarge';
   const T = osT(), saved = osSavedPos();
   document.getElementById('content').innerHTML = `<div class="setup-card os-card">
     <h3 style="color:var(--gold);margin-bottom:4px;">🎬 ${T.title}</h3>
