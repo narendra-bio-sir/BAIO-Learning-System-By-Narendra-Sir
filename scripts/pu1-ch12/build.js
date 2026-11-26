@@ -206,12 +206,11 @@ if (PODS.length) {
 setConst('COLOUR_NOTES_PAGES', String(man.cnPages || 8));
 /* Pages are drawn by colour-notes.html → render-cn.js (1100x1448 JPGs). */
 rep('draggable="false" width="1100" height="1450"', 'draggable="false" width="1100" height="1448"');
-/* Payment links for Ch12: UPI deep links (same style as the Ch9 template) until Razorpay links are made */
-const UPI = (am, what) => `upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=${am}&cu=INR&tn=PU-I%20Ch%2012%20${what}`;
+/* Razorpay links for Ch12 */
 rep("const CN_RAZORPAY_LINK = 'https://rzp.io/rzp/PzZQP9K'; /* Biomolecules Colour Notes ₹100 payment link */",
-    "const CN_RAZORPAY_LINK = '" + UPI(100, 'Colour%20Notes') + "'; /* Respiration Colour Notes ₹100 payment link */");
-rep("const RAZORPAY_PREMIUM_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=1999&cu=INR&tn=PU-I%20Ch%209%20Premium';", "const RAZORPAY_PREMIUM_LINK = '" + UPI(1999, 'Premium') + "';");
-rep("const HW_RAZORPAY_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=100&cu=INR&tn=PU-I%20Ch%209%20Handwritten%20Notes';", "const HW_RAZORPAY_LINK = '" + UPI(100, 'Handwritten%20Notes') + "';");
+    "const CN_RAZORPAY_LINK = 'https://rzp.io/rzp/1Gkun7e'; /* Respiration Colour Notes ₹100 payment link */");
+rep("const RAZORPAY_PREMIUM_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=1999&cu=INR&tn=PU-I%20Ch%209%20Premium';", "const RAZORPAY_PREMIUM_LINK = 'https://rzp.io/rzp/POk81oIv';");
+rep("const HW_RAZORPAY_LINK = 'upi://pay?pa=paytm.s4qa42a@pty&pn=Narendra%20Sir&am=100&cu=INR&tn=PU-I%20Ch%209%20Handwritten%20Notes';", "const HW_RAZORPAY_LINK = 'https://rzp.io/rzp/R3s9F4j';");
 
 rep('All 8 topics, condensed', 'All ' + topics.length + ' topics, condensed');
 rep('12 full-colour pages', (man.cnPages || 8) + ' full-colour pages');
