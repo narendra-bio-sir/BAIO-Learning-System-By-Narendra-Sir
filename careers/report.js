@@ -62,7 +62,49 @@
   try{ GOAL = JSON.parse(localStorage.getItem(GKEY) || '{}') || {}; }catch(e){ GOAL = {}; }
   function canEng(r){ var s = r.sub || {}; return !pcmOnly(r) && (s.MAT != null || !!r.kpcm || !!r.jee); }
   function keyOf(r){ return (DATA && me && DATA[me] === r) ? me : null; }
-  function engGoal(r){ var k = keyOf(r); return canEng(r) && !!k && GOAL[k] === 'eng'; }
+  /* PCMB students who write both PCB and PCM tests: compare like with like (KCET PCB vs KCET PCM, Biology vs Maths
+     class-test average, Bio vs Maths section of the latest KCET mocks). Positive = medical side is stronger. */
+  function subPct(x, name){ if(!x || !x.sub) return null; var a = x.sub.filter(function(q){ return q[0] === name; })[0]; return a && a[2] ? Math.max(0, a[1]) / a[2] * 100 : null; }
+  function compareSides(r){
+    var s = r.sub || {}, parts = [], d = [];
+    if(r.kpcb && r.kpcm){ parts.push(r.kpcb.p - r.kpcm.p); d.push(['kcet', Math.round(r.kpcb.p), Math.round(r.kpcm.p)]); }
+    if(s.BIO != null && s.MAT != null){ parts.push(s.BIO - s.MAT); d.push(['sub', Math.round(s.BIO), Math.round(s.MAT)]); }
+    var bp = subPct(r.kpcb, 'Bio'), mp = subPct(r.kpcm, 'Mat');
+    if(bp != null && mp != null){ parts.push(bp - mp); d.push(['sec', Math.round(bp), Math.round(mp)]); }
+    var diff = parts.length ? parts.reduce(function(a, b){ return a + b; }, 0) / parts.length : (r.neet ? 1 : r.jee ? -1 : 1);
+    return { eng: diff < 0, d: d };
+  }
+  /* goal: explicit choice in "My goal" wins; otherwise the stronger side from the test results */
+  function engGoal(r){ var k = keyOf(r); if(!canEng(r) || !k) return false; if(GOAL[k] === 'eng') return true; if(GOAL[k] === 'med') return false; return compareSides(r).eng; }
+  var SW = {
+    ele:{ en:'You study Electronics (PCME), so engineering paths that use Electronics come first.', kn:'ನೀವು ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ (PCME) ಓದುತ್ತೀರಿ, ಆದ್ದರಿಂದ ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ ಬಳಸುವ ಎಂಜಿನಿಯರಿಂಗ್ ದಾರಿಗಳು ಮೊದಲು.', hi:'आप इलेक्ट्रॉनिक्स (PCME) पढ़ते हैं, इसलिए इलेक्ट्रॉनिक्स वाले इंजीनियरिंग रास्ते पहले।' },
+    pcm:{ en:'You write PCM tests (KCET PCM / JEE), so Engineering is shown.', kn:'ನೀವು PCM ಪರೀಕ್ಷೆಗಳನ್ನು (KCET PCM / JEE) ಬರೆಯುತ್ತೀರಿ, ಆದ್ದರಿಂದ ಎಂಜಿನಿಯರಿಂಗ್ ತೋರಿಸಲಾಗಿದೆ.', hi:'आप PCM टेस्ट (KCET PCM / JEE) देते हैं, इसलिए इंजीनियरिंग दिखाया गया है।' },
+    pcb:{ en:'You write PCB tests (NEET / KCET PCB), so Medical is shown.', kn:'ನೀವು PCB ಪರೀಕ್ಷೆಗಳನ್ನು (NEET / KCET PCB) ಬರೆಯುತ್ತೀರಿ, ಆದ್ದರಿಂದ ವೈದ್ಯಕೀಯ ತೋರಿಸಲಾಗಿದೆ.', hi:'आप PCB टेस्ट (NEET / KCET PCB) देते हैं, इसलिए मेडिकल दिखाया गया है।' },
+    goalE:{ en:'You chose Engineering in “My goal”.', kn:'“ನನ್ನ ಗುರಿ”ಯಲ್ಲಿ ನೀವು ಎಂಜಿನಿಯರಿಂಗ್ ಆಯ್ಕೆ ಮಾಡಿದ್ದೀರಿ.', hi:'आपने “मेरा लक्ष्य” में इंजीनियरिंग चुना।' },
+    goalM:{ en:'You chose Medical in “My goal”.', kn:'“ನನ್ನ ಗುರಿ”ಯಲ್ಲಿ ನೀವು ವೈದ್ಯಕೀಯ ಆಯ್ಕೆ ಮಾಡಿದ್ದೀರಿ.', hi:'आपने “मेरा लक्ष्य” में मेडिकल चुना।' },
+    both:{ en:function(x, d){ return 'You wrote both PCB and PCM tests, and your scores suit ' + x + ' more (' + d + '). You can change it with “My goal” in your report.'; },
+           kn:function(x, d){ return 'ನೀವು PCB ಮತ್ತು PCM ಎರಡೂ ಪರೀಕ್ಷೆ ಬರೆದಿದ್ದೀರಿ; ನಿಮ್ಮ ಅಂಕಗಳು ' + x + ' ವಿಭಾಗಕ್ಕೆ ಹೆಚ್ಚು ಹೊಂದುತ್ತವೆ (' + d + '). ವರದಿಯ “ನನ್ನ ಗುರಿ”ಯಲ್ಲಿ ಬದಲಾಯಿಸಬಹುದು.'; },
+           hi:function(x, d){ return 'आपने PCB और PCM दोनों टेस्ट दिए हैं, और आपके अंक ' + x + ' के लिए ज़्यादा उपयुक्त हैं (' + d + ')। रिपोर्ट में “मेरा लक्ष्य” से बदल सकते हैं।'; } },
+    side:{ en:['Medical','Engineering'], kn:['ವೈದ್ಯಕೀಯ','ಎಂಜಿನಿಯರಿಂಗ್'], hi:['मेडिकल','इंजीनियरिंग'] },
+    lab:{ en:{ kcet:'KCET PCB %1 vs PCM %2', sub:'Biology %1 vs Maths %2', sec:'KCET Bio section %1 vs Maths %2' },
+          kn:{ kcet:'KCET PCB %1 / PCM %2', sub:'ಜೀವಶಾಸ್ತ್ರ %1 / ಗಣಿತ %2', sec:'KCET ಜೀವಶಾಸ್ತ್ರ ವಿಭಾಗ %1 / ಗಣಿತ %2' },
+          hi:{ kcet:'KCET PCB %1 बनाम PCM %2', sub:'बायोलॉजी %1 बनाम गणित %2', sec:'KCET बायो सेक्शन %1 बनाम गणित %2' } }
+  };
+  /* Which Career Guidance stream and group suit this student: { st, g, why:{en,kn,hi} } */
+  function bestStream(r){
+    var s = r.sub || {}, k = keyOf(r);
+    if(s.ELE != null) return { st:'pcm', g:'ele', why:SW.ele };
+    if(pcmOnly(r)) return { st:'pcm', g:'eng', why:SW.pcm };
+    if(!canEng(r)) return { st:'pcb', g:'neet', why:SW.pcb };
+    if(k && GOAL[k] === 'eng') return { st:'pcm', g:'eng', why:SW.goalE };
+    if(k && GOAL[k] === 'med') return { st:'pcb', g:'neet', why:SW.goalM };
+    var c = compareSides(r), why = {};
+    ['en','kn','hi'].forEach(function(l){
+      var d = c.d.map(function(x){ return SW.lab[l][x[0]].replace('%1', x[1] + '%').replace('%2', x[2] + '%'); }).join('; ');
+      why[l] = SW.both[l](SW.side[l][c.eng ? 1 : 0], d || (c.eng ? 'JEE' : 'NEET'));
+    });
+    return { st:c.eng ? 'pcm' : 'pcb', g:c.eng ? 'eng' : 'neet', why:why };
+  }
   function isPcm(r){ return pcmOnly(r) || engGoal(r); }
   var G = {
     en:{ l:'🎯 My goal', med:'🩺 Medical', eng:'⚙️ Engineering', note:'You study both Biology and Maths, so both doors are open. Choose your goal to see matching careers and steps.' },
@@ -320,7 +362,15 @@
       + '<label class="pw-show"><input type="checkbox" id="cpShow" autocomplete="off"> '+u.show+'</label>'
       + '<button type="button" class="btn" data-rp="go">'+(loading ? u.busy : u.go)+'</button></div>' + (err ? '<p class="err">'+err+'</p>' : '');
   }
-  var lastErr = '', curLang = 'en', box = null, goFn = null, D = null;
+  var lastErr = '', curLang = 'en', box = null, goFn = null, D = null, pickFn = null, pickKey = null, pickByGoal = false;
+  /* tell careers.html which stream suits the student whenever the open report (or its goal) changes */
+  function notifyPick(){
+    var r = me && DATA && DATA[me], key = r ? me + '|' + (GOAL[me] || '') : '';
+    if(key === pickKey || !pickFn) return;
+    pickKey = key; var byGoal = pickByGoal; pickByGoal = false;
+    var sg = r ? bestStream(r) : null;
+    setTimeout(function(){ pickFn(sg, byGoal); }, 0);
+  }
   function paint(){
     var u = T[curLang] || T.en;
     var inner = '<h3>'+u.h+'</h3>';
@@ -328,6 +378,7 @@
     else if(TLIST) inner += teacherHtml();
     else inner += formHtml(curLang, lastErr);
     box.innerHTML = inner;
+    notifyPick();
   }
   function shareText(r){
     var u = T.en, bits = ['🎯 BAIO career report: ' + r.name + ' (' + u.puc[r.pu] + ')'];
@@ -341,7 +392,7 @@
   }
   function onClick(e){
     var b = e.target.closest('[data-rp],[data-go],[data-tk],[data-goal]'); if(!b) return;
-    if(b.dataset.goal){ if(me){ if(b.dataset.goal === 'eng') GOAL[me] = 'eng'; else delete GOAL[me]; try{ localStorage.setItem(GKEY, JSON.stringify(GOAL)); }catch(x){} } paint(); return; }
+    if(b.dataset.goal){ if(me){ GOAL[me] = b.dataset.goal === 'eng' ? 'eng' : 'med'; try{ localStorage.setItem(GKEY, JSON.stringify(GOAL)); }catch(x){} } pickByGoal = true; paint(); return; }
     if(b.dataset.go){ goFn(b.dataset.go); return; }
     if(b.dataset.tk){ me = b.dataset.tk; paint(); box.scrollIntoView({ block:'start' }); return; }
     /* All students: clear the search so the full list shows (no keyboard popping up over it) */
@@ -383,8 +434,8 @@
     }
   }
   window.CareerReport = {
-    render: function(el, lang, go, data){
-      var first = !box; box = el; curLang = lang; goFn = go; D = data;
+    render: function(el, lang, go, data, onPick){
+      var first = !box; box = el; curLang = lang; goFn = go; D = data; if(onPick) pickFn = onPick;
       if(first){
         box.addEventListener('click', onClick);
         box.addEventListener('input', function(e){ if(e.target.id === 'cpPass') onCode(e.target); });
