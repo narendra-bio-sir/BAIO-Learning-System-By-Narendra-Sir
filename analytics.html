@@ -3634,6 +3634,12 @@ const COLORS = {BIO:"#2bb3a3", PHY:"#8ecae6", CHE:"#e0685f", MAT:"#d4af37", ELE:
    from before Test 3 existed; extended here now that it does, so "combined"
    keeps meaning "every Slip Test on file" rather than silently going stale
    each time a new one is added). */
+/* First name for teacher remarks: skip initials ("A NAME" -> "Name", "B. C. NAME" -> "Name"), title-cased. */
+function remarkFirstName(name){
+  const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+  const pick = parts.find(w => w.replace(/\./g, '').length > 1) || parts[0] || '';
+  return pick.charAt(0).toUpperCase() + pick.slice(1).toLowerCase();
+}
 function buildSlipD(){
   const SUBJS = ['BIO','PHY','CHE','MAT','ELE'];
   const CORE = ['BIO','PHY','CHE','MAT'];
@@ -7449,7 +7455,7 @@ function findStudentBioTier(name){
    subject combination). Driven by their own Physics/Chemistry/Maths/Electronics
    marks instead of Biology, using the most recent test with data on file. ---- */
 function generateElectronicsTeacherComment(student, pu){
-  const firstName = student.name.split(' ')[0];
+  const firstName = remarkFirstName(student.name);
   const SUBJ_NAMES = {PHY:'Physics', CHE:'Chemistry', MAT:'Mathematics', ELE:'Electronics'};
   const SUBJ_NAMES_KN = {PHY:'ಭೌತಶಾಸ್ತ್ರ', CHE:'ರಸಾಯನಶಾಸ್ತ್ರ', MAT:'ಗಣಿತ', ELE:'ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್'};
   const SUBJ_NAMES_HI = {PHY:'भौतिकी', CHE:'रसायन विज्ञान', MAT:'गणित', ELE:'इलेक्ट्रॉनिक्स'};
@@ -7488,7 +7494,8 @@ function generateElectronicsTeacherComment(student, pu){
   const rec = recFor(latestTest);
   const prevRec = prevTest ? recFor(prevTest) : null;
 
-  if(!rec){
+  const hasAny = rec && ['PHY','CHE','MAT','ELE'].some(k=>rec[k]!==null && rec[k]!==undefined);
+  if(!rec || !hasAny){
     const en = `${firstName}, I don't yet have enough recorded test data on file for Electronics/Physics/Chemistry/Maths to give a detailed remark. Please make sure you're submitting your test sheets so I can track your progress properly.${signEn}`;
     return {en, kn: en, hi: en};
   }
@@ -7565,7 +7572,7 @@ function generateElectronicsTeacherComment(student, pu){
 function generateTeacherComment(student){
   if(isElectronicsOnly(student, 1)) return generateElectronicsTeacherComment(student, 1);
   const n = student.name.trim().toLowerCase();
-  const firstName = student.name.split(' ')[0];
+  const firstName = remarkFirstName(student.name);
   const isTopper = D.bio_consistent_toppers.some(s=>s.Name.toLowerCase()===n);
   const isCritical = D.bio_critical_support.some(s=>s.Name.toLowerCase()===n);
   const isBigDrop = D.bio_top_drops.some(s=>s.Name.toLowerCase()===n);
@@ -7646,14 +7653,15 @@ function generateTeacherComment(student){
     en = `${firstName} has been a consistent Biology topper across every Slip Test attempted \u2014 excellent grasp of concepts. Keep this consistency going into NEET-level practice; try adding a few high-difficulty questions to your Biology revision.${otherSubjectNote('en')}${rankLine('en')}`;
     kn = `${firstName} ಪ್ರತಿ ಸ್ಲಿಪ್ ಟೆಸ್ಟ್‌ನಲ್ಲೂ ಜೀವಶಾಸ್ತ್ರದಲ್ಲಿ ಸ್ಥಿರವಾಗಿ ಅಗ್ರಸ್ಥಾನ ಗಳಿಸಿದ್ದಾರೆ \u2014 ಪರಿಕಲ್ಪನೆಗಳ ಬಗ್ಗೆ ಅತ್ಯುತ್ತಮ ಹಿಡಿತ. ಈ ಸ್ಥಿರತೆಯನ್ನು NEET ಮಟ್ಟದ ಅಭ್ಯಾಸದವರೆಗೆ ಮುಂದುವರಿಸಿ; ಜೀವಶಾಸ್ತ್ರದ ಪುನರಾವರ್ತನೆಯಲ್ಲಿ ಕೆಲವು ಕಠಿಣ ಪ್ರಶ್ನೆಗಳನ್ನು ಸೇರಿಸಿ.${otherSubjectNote('kn')}${rankLine('kn')}`;
     hi = `${firstName} ने हर स्लिप टेस्ट में जीव विज्ञान में लगातार टॉप किया है \u2014 विषय की उत्कृष्ट समझ। यह निरंतरता NEET स्तर के अभ्यास तक बनाए रखें; अपनी जीव विज्ञान रिवीजन में कुछ कठिन प्रश्न भी शामिल करें।${otherSubjectNote('hi')}${rankLine('hi')}`;
+  } else if(isCritical){
+    en = `${firstName} is currently below the passing mark in Biology. Please attend the remedial sessions and revise the basics topic-by-topic \u2014 there is time to turn this around before the next assessment. I'm available for extra help.${otherSubjectNote('en')}${rankLine('en')}`;
+    kn = `${firstName} ಪ್ರಸ್ತುತ ಜೀವಶಾಸ್ತ್ರದಲ್ಲಿ ಉತ್ತೀರ್ಣ ಅಂಕಗಳಿಗಿಂತ ಕಡಿಮೆ ಇದ್ದಾರೆ. ದಯವಿಟ್ಟು ಪರಿಹಾರ ತರಗತಿಗಳಿಗೆ ಹಾಜರಾಗಿ ಮತ್ತು ಮೂಲಭೂತ ವಿಷಯಗಳನ್ನು ಹಂತ ಹಂತವಾಗಿ ಪುನರಾವರ್ತಿಸಿ \u2014 ಮುಂದಿನ ಮೌಲ್ಯಮಾಪನದ ಮೊದಲು ಇದನ್ನು ಸರಿಪಡಿಸಲು ಸಮಯವಿದೆ. ಹೆಚ್ಚುವರಿ ಸಹಾಯಕ್ಕಾಗಿ ನಾನು ಲಭ್ಯವಿದ್ದೇನೆ.${otherSubjectNote('kn')}${rankLine('kn')}`;
+    hi = `${firstName} फिलहाल जीव विज्ञान में पासिंग मार्क्स से नीचे हैं। कृपया रेमेडियल कक्षाओं में शामिल हों और बुनियादी विषयों को क्रमवार दोहराएं \u2014 अगली परीक्षा से पहले इसे सुधारने का समय है। अतिरिक्त सहायता के लिए मैं उपलब्ध हूं।${otherSubjectNote('hi')}${rankLine('hi')}`;
   } else if(isBigDrop && bioDelta!==null && bioDelta<0){
     const absd = Math.abs(bioDelta);
     en = `${firstName}, your Biology score dropped by ${absd} marks between ${fromLabelEn} and ${toLabelEn} (${bioPrevScore}/20 \u2192 ${bioNow}/20). This is worth a conversation \u2014 let's identify whether it was a syllabus gap, exam pressure, or preparation time, and get Biology back on track before the next test.${otherSubjectNote('en')}${rankLine('en')}`;
     kn = `${firstName}, ${fromLabelKn} ಮತ್ತು ${toLabelKn} ರ ನಡುವೆ ನಿಮ್ಮ ಜೀವಶಾಸ್ತ್ರ ಅಂಕಗಳು ${absd} ಅಂಕಗಳಷ್ಟು ಕುಸಿದಿವೆ (${bioPrevScore}/20 \u2192 ${bioNow}/20). ಇದರ ಬಗ್ಗೆ ಮಾತನಾಡುವುದು ಅಗತ್ಯ \u2014 ಪಠ್ಯಕ್ರಮದ ಕೊರತೆಯೋ, ಪರೀಕ್ಷಾ ಒತ್ತಡವೋ ಅಥವಾ ತಯಾರಿ ಸಮಯದ ಕೊರತೆಯೋ ಎಂಬುದನ್ನು ಗುರುತಿಸಿ, ಮುಂದಿನ ಪರೀಕ್ಷೆಗೂ ಮುನ್ನ ಜೀವಶಾಸ್ತ್ರವನ್ನು ಸರಿದಾರಿಗೆ ತರೋಣ.${otherSubjectNote('kn')}${rankLine('kn')}`;
     hi = `${firstName}, ${fromLabelHi} और ${toLabelHi} के बीच आपका जीव विज्ञान स्कोर ${absd} अंक गिर गया (${bioPrevScore}/20 \u2192 ${bioNow}/20)। इस पर बातचीत जरूरी है \u2014 यह पाठ्यक्रम की कमी थी, परीक्षा का दबाव था, या तैयारी के समय की कमी, इसे पहचान कर अगली परीक्षा से पहले जीव विज्ञान को फिर से पटरी पर लाएं।${otherSubjectNote('hi')}${rankLine('hi')}`;
-    en = `${firstName} is currently below the passing mark in Biology. Please attend the remedial sessions and revise the basics topic-by-topic \u2014 there is time to turn this around before the next assessment. I'm available for extra help.${otherSubjectNote('en')}${rankLine('en')}`;
-    kn = `${firstName} ಪ್ರಸ್ತುತ ಜೀವಶಾಸ್ತ್ರದಲ್ಲಿ ಉತ್ತೀರ್ಣ ಅಂಕಗಳಿಗಿಂತ ಕಡಿಮೆ ಇದ್ದಾರೆ. ದಯವಿಟ್ಟು ಪರಿಹಾರ ತರಗತಿಗಳಿಗೆ ಹಾಜರಾಗಿ ಮತ್ತು ಮೂಲಭೂತ ವಿಷಯಗಳನ್ನು ಹಂತ ಹಂತವಾಗಿ ಪುನರಾವರ್ತಿಸಿ \u2014 ಮುಂದಿನ ಮೌಲ್ಯಮಾಪನದ ಮೊದಲು ಇದನ್ನು ಸರಿಪಡಿಸಲು ಸಮಯವಿದೆ. ಹೆಚ್ಚುವರಿ ಸಹಾಯಕ್ಕಾಗಿ ನಾನು ಲಭ್ಯವಿದ್ದೇನೆ.${otherSubjectNote('kn')}${rankLine('kn')}`;
-    hi = `${firstName} फिलहाल जीव विज्ञान में पासिंग मार्क्स से नीचे हैं। कृपया रेमेडियल कक्षाओं में शामिल हों और बुनियादी विषयों को क्रमवार दोहराएं \u2014 अगली परीक्षा से पहले इसे सुधारने का समय है। अतिरिक्त सहायता के लिए मैं उपलब्ध हूं।${otherSubjectNote('hi')}${rankLine('hi')}`;
   } else if(bioDelta!==null && bioDelta>=5){
     en = `Good improvement in Biology, ${firstName}! Your score rose from ${bioPrevScore}/20 to ${bioNow}/20 between the two Slip Tests.${vsAvgPhrase('en')} Whatever changed in your Biology preparation is working \u2014 keep building on it.${otherSubjectNote('en')}${rankLine('en')}`;
     kn = `ಜೀವಶಾಸ್ತ್ರದಲ್ಲಿ ಉತ್ತಮ ಸುಧಾರಣೆ, ${firstName}! ಎರಡು ಸ್ಲಿಪ್ ಟೆಸ್ಟ್‌ಗಳ ನಡುವೆ ನಿಮ್ಮ ಅಂಕಗಳು ${bioPrevScore}/20 ರಿಂದ ${bioNow}/20 ಕ್ಕೆ ಏರಿವೆ.${vsAvgPhrase('kn')} ನಿಮ್ಮ ಜೀವಶಾಸ್ತ್ರ ತಯಾರಿಯಲ್ಲಿ ಏನು ಬದಲಾಗಿದೆಯೋ ಅದು ಕೆಲಸ ಮಾಡುತ್ತಿದೆ \u2014 ಇದನ್ನು ಮುಂದುವರಿಸಿ.${otherSubjectNote('kn')}${rankLine('kn')}`;
@@ -7941,7 +7949,7 @@ function pu2SubjectRowsHtml(student, key){
 
 function generatePU2TeacherComment(student){
   if(isElectronicsOnly(student, 2)) return generateElectronicsTeacherComment(student, 2);
-  const firstName = student.name.split(' ')[0];
+  const firstName = remarkFirstName(student.name);
   /* ---- Latest month with real Biology data for this student, walked from PU2_MONTH_ORDER
      (currently ['july','june','may','april','march']) rather than hardcoded to June, so the
      remark always reflects the most recent Monthly Test on file. ---- */
@@ -8033,6 +8041,10 @@ function generatePU2TeacherComment(student){
     en = `${firstName}, you're one of the strongest Biology students in PU-II right now - ${bioNow}/40, and holding that level consistently. I'm genuinely proud of this. Keep pushing into NEET-level difficulty questions so this strength converts directly into a high NEET score.${otherSubjectNote('en')}${vsAvgEn}${rankLine}${trend.en}`;
     kn = `${firstName}, ನೀವು ಪ್ರಸ್ತುತ PU-II ನಲ್ಲಿ ಪ್ರಬಲ ಜೀವಶಾಸ್ತ್ರ ವಿದ್ಯಾರ್ಥಿಗಳಲ್ಲಿ ಒಬ್ಬರು - ${bioNow}/40, ಮತ್ತು ಈ ಮಟ್ಟವನ್ನು ಸ್ಥಿರವಾಗಿ ಕಾಪಾಡಿಕೊಂಡಿದ್ದೀರಿ. ಇದಕ್ಕಾಗಿ ನನಗೆ ನಿಜವಾಗಿಯೂ ಹೆಮ್ಮೆ ಇದೆ. ಈ ಬಲವನ್ನು ಉನ್ನತ NEET ಅಂಕಗಳಾಗಿ ಪರಿವರ್ತಿಸಲು NEET ಮಟ್ಟದ ಕಷ್ಟಕರ ಪ್ರಶ್ನೆಗಳ ಅಭ್ಯಾಸವನ್ನು ಮುಂದುವರಿಸಿ.${otherSubjectNote('kn')}${vsAvgKn}${rankLineKn}${trend.kn}`;
     hi = `${firstName}, आप अभी PU-II के सबसे मजबूत जीव विज्ञान छात्रों में से एक हैं - ${bioNow}/40, और यह स्तर लगातार बनाए हुए हैं। मुझे इस पर सच में गर्व है। इस मजबूती को उच्च NEET स्कोर में बदलने के लिए NEET-स्तर के कठिन प्रश्नों का अभ्यास जारी रखें।${otherSubjectNote('hi')}${vsAvgHi}${rankLineHi}${trend.hi}`;
+  } else if(bioNow!==null && bioNow!==undefined && bioNow<14){
+    en = `${firstName}, your Biology score (${bioNow}/40) is currently below the passing mark. Please don't be discouraged - there is plenty of time to turn this around. Come talk to me so we can build a focused, topic-by-topic revision plan together. I'm available for extra help whenever you need it.${otherSubjectNote('en')}${rankLine}${trend.en}`;
+    kn = `${firstName}, ನಿಮ್ಮ ಜೀವಶಾಸ್ತ್ರ ಅಂಕಗಳು (${bioNow}/40) ಪ್ರಸ್ತುತ ಉತ್ತೀರ್ಣ ಅಂಕಗಳಿಗಿಂತ ಕಡಿಮೆ ಇವೆ. ದಯವಿಟ್ಟು ನಿರುತ್ಸಾಹಗೊಳ್ಳಬೇಡಿ - ಇದನ್ನು ಸರಿಪಡಿಸಲು ಸಾಕಷ್ಟು ಸಮಯವಿದೆ. ಒಟ್ಟಿಗೆ ಒಂದು ಕೇಂದ್ರೀಕೃತ, ವಿಷಯ-ಆಧಾರಿತ ಪುನರಾವರ್ತನೆ ಯೋಜನೆಯನ್ನು ರೂಪಿಸಲು ನನ್ನೊಂದಿಗೆ ಮಾತನಾಡಿ.${otherSubjectNote('kn')}${rankLineKn}${trend.kn}`;
+    hi = `${firstName}, आपका जीव विज्ञान स्कोर (${bioNow}/40) फिलहाल पासिंग मार्क्स से कम है। कृपया निराश न हों - इसे सुधारने के लिए काफी समय है। साथ मिलकर एक केंद्रित, विषय-दर-विषय रिवीजन योजना बनाने के लिए मुझसे बात करें।${otherSubjectNote('hi')}${rankLineHi}${trend.hi}`;
   } else if(bioDelta!==null && bioDelta>=5){
     en = `Good improvement in Biology, ${firstName}! Your score rose from ${marchBio}/40 in ${prevMonthEn} to ${juneBio}/40 in ${curMonthEn}.${vsAvgEn} Whatever changes you've made to your Biology preparation are clearly working - keep building on this momentum, and let's aim even higher next test.${otherSubjectNote('en')}${rankLine}${trend.en}`;
     kn = `ಜೀವಶಾಸ್ತ್ರದಲ್ಲಿ ಉತ್ತಮ ಸುಧಾರಣೆ, ${firstName}! ನಿಮ್ಮ ಅಂಕಗಳು ${prevMonthKn}‌ನಲ್ಲಿ ${marchBio}/40 ರಿಂದ ${curMonthKn}‌ನಲ್ಲಿ ${juneBio}/40 ಕ್ಕೆ ಏರಿವೆ.${vsAvgKn} ನಿಮ್ಮ ಜೀವಶಾಸ್ತ್ರ ಸಿದ್ಧತೆಯಲ್ಲಿ ನೀವು ಮಾಡಿದ ಬದಲಾವಣೆಗಳು ಸ್ಪಷ್ಟವಾಗಿ ಕೆಲಸ ಮಾಡುತ್ತಿವೆ - ಈ ಪ್ರಗತಿಯನ್ನು ಮುಂದುವರಿಸಿ.${otherSubjectNote('kn')}${rankLineKn}${trend.kn}`;
@@ -8042,10 +8054,6 @@ function generatePU2TeacherComment(student){
     en = `${firstName}, your Biology score has dropped by ${absd} marks from ${prevMonthEn} (${marchBio}/40) to ${curMonthEn} (${juneBio}/40). This isn't something to be discouraged about, but it does need attention - please come and see me so we can sit down together and rebuild a focused revision plan for this subject before the next test.${otherSubjectNote('en')}${rankLine}${trend.en}`;
     kn = `${firstName}, ${prevMonthKn} (${marchBio}/40) ರಿಂದ ${curMonthKn} (${juneBio}/40) ವರೆಗೆ ನಿಮ್ಮ ಜೀವಶಾಸ್ತ್ರ ಅಂಕಗಳು ${absd} ಅಂಕಗಳಷ್ಟು ಕುಸಿದಿವೆ. ಇದು ನಿರುತ್ಸಾಹಗೊಳ್ಳುವ ವಿಷಯವಲ್ಲ, ಆದರೆ ಗಮನ ಬೇಕಾಗಿದೆ - ದಯವಿಟ್ಟು ನನ್ನನ್ನು ಭೇಟಿಯಾಗಿ ಇದರಿಂದ ನಾವು ಒಟ್ಟಿಗೆ ಕುಳಿತು ಒಂದು ಕೇಂದ್ರೀಕೃತ ಪುನರಾವರ್ತನೆ ಯೋಜನೆಯನ್ನು ರೂಪಿಸಬಹುದು.${otherSubjectNote('kn')}${rankLineKn}${trend.kn}`;
     hi = `${firstName}, ${prevMonthHi} (${marchBio}/40) से ${curMonthHi} (${juneBio}/40) तक आपका जीव विज्ञान स्कोर ${absd} अंक गिर गया है। यह निराश होने वाली बात नहीं है, लेकिन इस पर ध्यान देने की जरूरत है - कृपया मुझसे मिलें ताकि हम मिलकर अगली परीक्षा से पहले एक केंद्रित रिवीजन योजना बना सकें।${otherSubjectNote('hi')}${rankLineHi}${trend.hi}`;
-  } else if(bioNow!==null && bioNow!==undefined && bioNow<14){
-    en = `${firstName}, your Biology score (${bioNow}/40) is currently below the passing mark. Please don't be discouraged - there is plenty of time to turn this around. Come talk to me so we can build a focused, topic-by-topic revision plan together. I'm available for extra help whenever you need it.${otherSubjectNote('en')}${rankLine}${trend.en}`;
-    kn = `${firstName}, ನಿಮ್ಮ ಜೀವಶಾಸ್ತ್ರ ಅಂಕಗಳು (${bioNow}/40) ಪ್ರಸ್ತುತ ಉತ್ತೀರ್ಣ ಅಂಕಗಳಿಗಿಂತ ಕಡಿಮೆ ಇವೆ. ದಯವಿಟ್ಟು ನಿರುತ್ಸಾಹಗೊಳ್ಳಬೇಡಿ - ಇದನ್ನು ಸರಿಪಡಿಸಲು ಸಾಕಷ್ಟು ಸಮಯವಿದೆ. ಒಟ್ಟಿಗೆ ಒಂದು ಕೇಂದ್ರೀಕೃತ, ವಿಷಯ-ಆಧಾರಿತ ಪುನರಾವರ್ತನೆ ಯೋಜನೆಯನ್ನು ರೂಪಿಸಲು ನನ್ನೊಂದಿಗೆ ಮಾತನಾಡಿ.${otherSubjectNote('kn')}${rankLineKn}${trend.kn}`;
-    hi = `${firstName}, आपका जीव विज्ञान स्कोर (${bioNow}/40) फिलहाल पासिंग मार्क्स से कम है। कृपया निराश न हों - इसे सुधारने के लिए काफी समय है। साथ मिलकर एक केंद्रित, विषय-दर-विषय रिवीजन योजना बनाने के लिए मुझसे बात करें।${otherSubjectNote('hi')}${rankLineHi}${trend.hi}`;
   } else if(bioNow!==null && bioNow!==undefined && bioNow>=30){
     en = `Solid, steady performance in Biology, ${firstName} - ${bioNow}/40 in the ${curLabel}.${vsAvgEn} Keep this consistency going, and start looking for opportunities to push into the distinction range.${otherSubjectNote('en')}${rankLine}${trend.en}`;
     kn = `ಜೀವಶಾಸ್ತ್ರದಲ್ಲಿ ಉತ್ತಮ, ಸ್ಥಿರ ಸಾಧನೆ, ${firstName} - ${curExamKn}ಯಲ್ಲಿ ${bioNow}/40.${vsAvgKn} ಈ ಸ್ಥಿರತೆಯನ್ನು ಮುಂದುವರಿಸಿ, ಮತ್ತು ಡಿಸ್ಟಿಂಕ್ಷನ್ ಶ್ರೇಣಿಗೆ ಏರುವ ಅವಕಾಶಗಳನ್ನು ಹುಡುಕಿ.${otherSubjectNote('kn')}${rankLineKn}${trend.kn}`;
