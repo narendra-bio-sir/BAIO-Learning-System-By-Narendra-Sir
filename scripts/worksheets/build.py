@@ -25,7 +25,7 @@ TITLES = ["The Living World", "Biological Classification", "Plant Kingdom", "Ani
   "Molecular Basis of Inheritance", "Evolution", "Human Health and Disease", "Microbes in Human Welfare",
   "Biotechnology: Principles and Processes", "Biotechnology and its Applications", "Organisms and Populations", "Ecosystem",
   "Biodiversity and Conservation"]
-ICONS = ["🌍", "🦠", "🌿", "🐾", "🌺", "🔬", "🐸", "🧫", "🧪", "🔄", "☀️", "💨", "🌱", "🫁", "❤️", "🫘", "💪", "🧠", "⚗️",
+ICONS = ["🌍", "🦠", "🌿", "🐾", "🌺", "🔬", "🐸", "🧫", "🧪", "🔄", "☀️", "🍃", "🌱", "🫁", "❤️", "🫘", "💪", "🧠", "⚗️",
   "🌸", "👶", "🩺", "🧬", "🧬", "🦕", "🛡️", "🍞", "✂️", "🌾", "🐝", "🌳", "🐅"]
 
 # Board weightage (marks out of 105, choices included).

@@ -224,7 +224,7 @@ rep('tricks.html#pu1-ch9', 'tricks.html#pu1-ch12', true);
 rep('10-page handwritten-style notes', (man.hwPages || 11) + '-page handwritten-style notes');
 
 /* home-screen look: same skin, this chapter's own icon and id */
-rep("data-icon=\"🧪\" data-ch=\"pu1-ch9\"", "data-icon=\"💨\" data-ch=\"pu1-ch12\"");
+rep("data-icon=\"🧪\" data-ch=\"pu1-ch9\"", "data-icon=\"🍃\" data-ch=\"pu1-ch12\"");
 
 /* Header, titles, jump list */
 rep('<title>Chapter 9: Biomolecules — PU-I Biology | Narendra Sir</title>', '<title>Chapter 12: Respiration in Plants — PU-I Biology | Narendra Sir</title>');
@@ -241,11 +241,11 @@ rep(`      <div class="notif-modal-item chapter-jump-item chapter-jump-current">
         <span><b>Chapter 9</b><span class="chapter-jump-title">Biomolecules</span></span>
       </a>`);
 rep(`      <a class="notif-modal-item chapter-jump-item" href="pu1-ch12.html">
-        <span class="chapter-jump-icon">💨</span>
+        <span class="chapter-jump-icon">🍃</span>
         <span><b>Chapter 12</b><span class="chapter-jump-title">Respiration in Plants</span></span>
       </a>`,
 `      <div class="notif-modal-item chapter-jump-item chapter-jump-current">
-        <span class="chapter-jump-icon">💨</span>
+        <span class="chapter-jump-icon">🍃</span>
         <span><b>Chapter 12</b><span class="chapter-jump-title">Respiration in Plants</span></span>
         <span class="chapter-jump-current-tag">You're here</span>
       </div>`);
