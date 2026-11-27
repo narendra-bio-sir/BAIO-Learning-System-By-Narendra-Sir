@@ -78,7 +78,7 @@ body{font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',system-ui,sans
   <footer>BAIO Learning System · Narendra Sir · Guru Mantra</footer>
 </main>
 <div class="toast" id="toast" role="status"></div>
-<script src="guru-mantra/data.js?v=1"></script>
+<script src="guru-mantra/data.js?v=2"></script>
 <script>
 (function(){
   var G = window.GURU_MANTRA, UI = G.ui;
@@ -97,11 +97,10 @@ body{font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',system-ui,sans
   function ymd(d){ return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
   var now = new Date(), TODAY = ymd(now);
   var dayNo = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 864e5);
-  var shift = 0;
   /* spread neighbouring days across topics: step through the list by a stride coprime with its length */
   function stride(n){ var s = 7; while(gcd(s, n) !== 1) s++; return s; }
   function gcd(a, b){ return b ? gcd(b, a % b) : a; }
-  function todayItem(){ var n = ALL.length; return ALL[((dayNo + shift) * stride(n)) % n]; }
+  function todayItem(){ var n = ALL.length; return ALL[(dayNo * stride(n)) % n]; }
 
   function get(k, d){ try{ var v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; }catch(e){ return d; } }
   function put(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
@@ -126,7 +125,7 @@ body{font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',system-ui,sans
       + '<blockquote>'+esc(L(it.x.m))+'</blockquote>'
       + '<div class="hw"><b>'+esc(u.how)+':</b> '+esc(L(it.x.d))+'</div><div class="by">'+esc(u.by)+'</div>'
       + '<div class="acts"><button type="button" class="fl'+(done?' on':'')+'" id="tFollow">'+(done ? esc(u.followed) : '✅ '+esc(u.follow))+'</button>'
-      + '<button type="button" id="tNext">🔁 '+esc(u.another)+'</button><button type="button" id="tShare">📤 '+esc(u.share)+'</button></div>'
+      + '<button type="button" id="tShare">📤 '+esc(u.share)+'</button></div>'
       + '<div class="stk">'+(n ? esc(u.streak(n)) : '')+'</div>';
   }
 
@@ -165,7 +164,6 @@ body{font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',system-ui,sans
   $('langs').addEventListener('click', function(e){ var b = e.target.closest('button'); if(!b) return; lang = b.dataset.l; try{ localStorage.setItem('baio_lang', lang); }catch(x){} render(); });
   $('today').addEventListener('click', function(e){
     var u = UI[lang], b = e.target.closest('button'); if(!b) return;
-    if(b.id === 'tNext'){ shift++; renderToday(); return; }
     if(b.id === 'tFollow'){
       if(stk && stk.d === TODAY) return;
       stk = { d:TODAY, n:streakNow() + 1 }; put('baio_gm_streak', stk); renderToday(); return;

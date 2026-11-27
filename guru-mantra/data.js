@@ -104,15 +104,15 @@ window.GURU_MANTRA = {
   ],
   ui: {
     en:{ eyebrow:'Special · From Narendra Sir', h1:'BAIO Guru Mantra', intro:'Narendra Sir’s mantras for study, memory, exams, NEET & KCET, routine and a calm mind. One new mantra every day.',
-         today:'Today’s Guru Mantra', how:'How', another:'Another mantra', share:'Share', follow:'I’ll follow it today', followed:'Following today ✓',
+         today:'Today’s Guru Mantra', how:'How', share:'Share', follow:'I’ll follow it today', followed:'Following today ✓',
          streak:function(n){ return '🔥 ' + n + '-day mantra streak'; }, all:'All', saved:'Saved', save:'Save', unsave:'Saved', none:'Tap 💛 on any mantra to save it here.',
          count:function(n){ return n + ' mantras'; }, by:'— Narendra Sir, BAIO', copied:'Copied', note:'Memory tricks are aids — always learn the full NCERT content behind them.' },
     kn:{ eyebrow:'ವಿಶೇಷ · ನರೇಂದ್ರ ಸರ್ ಅವರಿಂದ', h1:'BAIO ಗುರು ಮಂತ್ರ', intro:'ಓದು, ನೆನಪು, ಪರೀಕ್ಷೆ, NEET ಮತ್ತು KCET, ದಿನಚರಿ ಮತ್ತು ಶಾಂತ ಮನಸ್ಸಿಗೆ ನರೇಂದ್ರ ಸರ್ ಅವರ ಮಂತ್ರಗಳು. ಪ್ರತಿದಿನ ಒಂದು ಹೊಸ ಮಂತ್ರ.',
-         today:'ಇಂದಿನ ಗುರು ಮಂತ್ರ', how:'ಹೇಗೆ', another:'ಇನ್ನೊಂದು ಮಂತ್ರ', share:'ಹಂಚಿ', follow:'ಇಂದು ಪಾಲಿಸುತ್ತೇನೆ', followed:'ಇಂದು ಪಾಲಿಸುತ್ತಿದ್ದೇನೆ ✓',
+         today:'ಇಂದಿನ ಗುರು ಮಂತ್ರ', how:'ಹೇಗೆ', share:'ಹಂಚಿ', follow:'ಇಂದು ಪಾಲಿಸುತ್ತೇನೆ', followed:'ಇಂದು ಪಾಲಿಸುತ್ತಿದ್ದೇನೆ ✓',
          streak:function(n){ return '🔥 ' + n + ' ದಿನಗಳ ಮಂತ್ರ ಸರಣಿ'; }, all:'ಎಲ್ಲಾ', saved:'ಉಳಿಸಿದವು', save:'ಉಳಿಸಿ', unsave:'ಉಳಿಸಲಾಗಿದೆ', none:'ಯಾವುದೇ ಮಂತ್ರದ 💛 ಒತ್ತಿ ಇಲ್ಲಿ ಉಳಿಸಿ.',
          count:function(n){ return n + ' ಮಂತ್ರಗಳು'; }, by:'— ನರೇಂದ್ರ ಸರ್, BAIO', copied:'ನಕಲಿಸಲಾಗಿದೆ', note:'ನೆನಪಿನ ತಂತ್ರಗಳು ಸಹಾಯಕ ಮಾತ್ರ — ಅವುಗಳ ಹಿಂದಿನ ಸಂಪೂರ್ಣ NCERT ವಿಷಯ ಕಲಿಯಿರಿ.' },
     hi:{ eyebrow:'विशेष · नरेंद्र सर की ओर से', h1:'BAIO गुरु मंत्र', intro:'पढ़ाई, याददाश्त, परीक्षा, NEET और KCET, दिनचर्या और शांत मन के लिए नरेंद्र सर के मंत्र। हर दिन एक नया मंत्र।',
-         today:'आज का गुरु मंत्र', how:'कैसे', another:'दूसरा मंत्र', share:'शेयर', follow:'आज इसे अपनाऊँगा', followed:'आज अपना रहा हूँ ✓',
+         today:'आज का गुरु मंत्र', how:'कैसे', share:'शेयर', follow:'आज इसे अपनाऊँगा', followed:'आज अपना रहा हूँ ✓',
          streak:function(n){ return '🔥 ' + n + ' दिन की मंत्र स्ट्रीक'; }, all:'सभी', saved:'सेव किए', save:'सेव', unsave:'सेव हुआ', none:'किसी भी मंत्र पर 💛 दबाकर यहाँ सेव करें।',
          count:function(n){ return n + ' मंत्र'; }, by:'— नरेंद्र सर, BAIO', copied:'कॉपी हुआ', note:'याद रखने की ट्रिक सिर्फ़ मदद है — उनके पीछे का पूरा NCERT कंटेंट ज़रूर पढ़ें।' }
   }
