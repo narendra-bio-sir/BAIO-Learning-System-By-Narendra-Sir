@@ -4372,6 +4372,7 @@ window.indexHardRefresh = indexHardRefresh;
   var sh=document.getElementById('bhNotesSheet'), list=document.getElementById('bhNotesList'), title=document.getElementById('bhNotesTitle'), V='?v=20261126b', want=null;
   function esc(t){ var d=document.createElement('div'); d.textContent=t==null?'':String(t); return d.innerHTML; }
   function load(cb){
+    if(!window.baioPdfReader && !document.getElementById('bhReaderJs')){ var r=document.createElement('script'); r.id='bhReaderJs'; r.src='notes/free/reader.js?v=1'; document.head.appendChild(r); }
     if(window.FREE_NOTES) return cb();
     var s=document.createElement('script'); s.src='notes/free/free-notes.js'+V; s.onload=cb;
     s.onerror=function(){ list.innerHTML='<p class="bh-nnote">Could not load the notes list. Check your internet connection and try again.</p>'; };
@@ -4388,13 +4389,13 @@ window.indexHardRefresh = indexHardRefresh;
     load(function(){
       if(want!==k) return;
       var c=window.FREE_NOTES[k]; list.innerHTML='';
-      var note=document.createElement('p'); note.className='bh-nnote'; note.textContent='Tap a pill to download. All notes are free · '+c.ch.length+' chapters.'; list.appendChild(note);
+      var note=document.createElement('p'); note.className='bh-nnote'; note.textContent='Tap a pill to read the notes in the app, then download from inside if you want. All notes are free · '+c.ch.length+' chapters.'; list.appendChild(note);
       c.ch.forEach(function(ch){
         var d=document.createElement('div'); d.className='bh-nch';
         d.innerHTML='<div class="hd"><span class="no">'+ch.n+'</span><span class="nm">'+esc(ch.t)+'</span>'+(ch.page?'<a class="op" href="'+esc(ch.page)+'">Open ›</a>':'')+'</div>'
           +'<div class="bh-pills">'+ch.files.map(function(f,i){
             var h=f.h+(f.h.indexOf('?')<0&&i===0?V:'');
-            return '<a'+(i===0?' class="pri"':'')+' href="'+esc(h)+'" download="'+esc(fname(f.h,c.t,ch.n,f.t))+'" target="_blank" rel="noopener">'+esc(f.e)+' '+esc(f.t)+(f.pg?' <small>'+f.pg+' pp</small>':'')+' ⬇</a>';
+            return '<a'+(i===0?' class="pri"':'')+' href="'+esc(h)+'" download="'+esc(fname(f.h,c.t,ch.n,f.t))+'" target="_blank" rel="noopener" data-rd="'+esc(c.t+' · Ch '+ch.n+' · '+ch.t)+'" data-rt="'+esc(f.t)+'">'+esc(f.e)+' '+esc(f.t)+(f.pg?' <small>'+f.pg+' pp</small>':'')+'</a>';
           }).join('')+'</div>';
         list.appendChild(d);
       });
@@ -4403,6 +4404,13 @@ window.indexHardRefresh = indexHardRefresh;
     });
   }
   ['bhFreeNotes','bhFreeNotesChip'].forEach(function(id){ var b=document.getElementById(id); if(b) b.addEventListener('click',open); });
+  /* read before downloading: a pill opens the in-app reader (notes/free/reader.js); its Download button saves the PDF.
+     If the reader script is not there (offline), the link downloads as before. */
+  list.addEventListener('click',function(e){
+    var a=e.target.closest('a[data-rd]'); if(!a || !window.baioPdfReader) return;
+    e.preventDefault();
+    baioPdfReader({ url:a.getAttribute('href'), title:a.dataset.rt+' · '+(a.dataset.rd.split(' · ').slice(2).join(' · ')), sub:a.dataset.rd.split(' · ').slice(0,2).join(' · ')+' · Free', fname:a.getAttribute('download') });
+  });
   document.getElementById('bhNotesClose').addEventListener('click',close);
   document.getElementById('bhNotesBack').addEventListener('click',home);
   sh.addEventListener('click',function(e){ if(e.target===sh) close(); });
