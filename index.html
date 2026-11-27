@@ -1044,8 +1044,10 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
     <div class="bh-sec"><h2>More tools</h2><a href="#bhTools">All 30+</a></div>
     <div class="bh-chips">
       <a class="bh-chip bh-gm" href="guru-mantra.html" id="bhGmChip" aria-label="BAIO Guru Mantra, special: Narendra Sir's daily mantra"><i>🪔</i><span>BAIO Guru Mantra</span><em class="sp">SPECIAL</em></a>
-      <a class="bh-chip" href="study-tips.html" id="bhTipsChip"><i style="background:#FFF6CC">💡</i><span>Study Tips</span><em class="nw">NEW</em></a>
       <a class="bh-chip" href="store.html" id="bhStoreChip"><i style="background:#FFE0EC">🛍️</i><span>BAIO Store</span><em class="nw">NEW</em></a>
+      <a class="bh-chip" href="biology-prep-books.html" id="bhBookChip"><i style="background:#FFE3C2">📕</i><span>Board Exam Scorer ₹50</span><em class="nw">NEW</em></a>
+      <a class="bh-chip" href="#start3" id="bhPlanChip"><i style="background:#E3F4FF">🗓️</i><span>NEET Daily Plan</span><em class="nw">NEW</em></a>
+      <a class="bh-chip" href="study-tips.html" id="bhTipsChip"><i style="background:#FFF6CC">💡</i><span>Study Tips</span><em class="nw">NEW</em></a>
       <button type="button" class="bh-chip" id="bhFreeNotesChip" aria-haspopup="dialog"><i style="background:#D9F7E8">⬇️</i><span>Free Notes</span><em class="nw">NEW</em></button>
       <a class="bh-chip" href="worksheets.html" id="bhWsChip"><i style="background:#E0F0FF">📑</i><span>Free Worksheets</span><em class="nw">NEW</em></a>
       <a class="bh-chip" href="mind-maps.html" id="bhMmChip"><i style="background:#DDEBFF">🗺️</i><span>Mind Maps</span><em class="nw">NEW</em></a>
@@ -1053,7 +1055,6 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
       <a class="bh-chip" href="rapid-fire.html" id="bhRfChip"><i style="background:#FFE3D3">⚡</i><span>Rapid Fire</span><em class="nw">NEW</em></a>
       <a class="bh-chip" href="activities.html" id="bhPaChip"><i style="background:#DDF5E8">🧪</i><span>Projects &amp; Activities</span><em class="nw">NEW</em></a>
       <a class="bh-chip" href="lecturers.html" id="bhLecChip"><i style="background:#E8F0FF">👩‍🏫</i><span>For Lecturers</span><em class="nw">NEW</em></a>
-      <a class="bh-chip" href="biology-prep-books.html" id="bhBookChip"><i style="background:#FFE3C2">📕</i><span>Board Exam Scorer ₹50</span><em class="nw">NEW</em></a>
       <a class="bh-chip" href="neet-tricks.html" id="bhNtChip"><i style="background:#FFF1D6">🎯</i><span>NEET Tricks</span><em class="nw">NEW</em></a>
       <a class="bh-chip" href="pyq.html" id="bhPyqChip"><i style="background:#D9F7EE">📝</i><span>NEET &amp; KCET PYQs</span><em class="nw">NEW</em></a>
       <a class="bh-chip" href="diagram-mcq.html"><i style="background:#E3F7EE">🔬</i><span>Diagram MCQs</span></a>
@@ -3996,8 +3997,9 @@ window.indexHardRefresh = indexHardRefresh;
   }
   var w=document.getElementById('bhPlanWatch');
   if(w) w.addEventListener('click',function(){ var v=document.getElementById('start3Watch'); if(v) v.click(); else location.href='neet-3-steps.html'; });
-  var pg=document.getElementById('bhPlanGo');
-  if(pg) pg.addEventListener('click',function(e){ var t=document.getElementById('start3'); if(t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth',block:'start'}); } });
+  /* "Start today's plan" (carousel) and the More tools "NEET Daily Plan" pill both glide to the 3-step daily plan */
+  ['bhPlanGo','bhPlanChip'].forEach(function(id){ var pg=document.getElementById(id);
+    if(pg) pg.addEventListener('click',function(e){ var t=document.getElementById('start3'); if(t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth',block:'start'}); } else { e.preventDefault(); location.href='neet-3-steps.html'; } }); });
   plan(); chal();
   window.addEventListener('pageshow',function(){ plan(); chal(); });
   document.addEventListener('visibilitychange',function(){ if(!document.hidden){ plan(); chal(); } });
