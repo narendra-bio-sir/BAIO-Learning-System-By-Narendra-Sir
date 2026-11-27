@@ -1,5 +1,5 @@
 /* Protected preview viewer for paid notes (home "Premium Notes" sheet).
-   window.baioPreview({title, sub, imgs:[url], more, feats:[text], cta:{t, h}})
+   window.baioPreview({title, sub, imgs:[url], more, feats:[text], cta:{t, h} or {t, fn}})  fn: closes the preview, then runs
    - Pages are drawn on <canvas> (no image to long-press and save) under a live watermark with the
      student's name / roll (from this phone's BAIO profile), the date and time, that slowly drifts so it
      shows on any screenshot or recording.
@@ -78,7 +78,7 @@
     var end = '<div class="pv-end"><b>🔒 ' + esc(o.more || 'The preview ends here') + '</b>'
       + (o.feats && o.feats.length ? '<ul>' + o.feats.map(function(f){ return '<li>' + esc(f) + '</li>'; }).join('') + '</ul>' : '')
       + '<p>Unlock the full version on this phone with your code.</p>'
-      + (o.cta ? '<a class="pv-go" href="' + esc(o.cta.h) + '">' + esc(o.cta.t) + '</a>' : '') + '</div>'
+      + (o.cta ? (o.cta.fn ? '<button type="button" class="pv-go" style="border:0;width:100%;cursor:pointer;font-family:inherit">' + esc(o.cta.t) + '</button>' : '<a class="pv-go" href="' + esc(o.cta.h) + '">' + esc(o.cta.t) + '</a>') : '') + '</div>'
       + '<p class="pv-safe">Preview is watermarked with your name and the time. Screenshots and recordings carry the watermark. Sharing paid notes is not allowed.</p>';
     sc.insertAdjacentHTML('beforeend', end);
     document.body.appendChild(ov);
@@ -105,6 +105,7 @@
     window.addEventListener('beforeprint', hide); document.addEventListener('keydown', onKey, true); document.addEventListener('keyup', onKey, true);
     ov.querySelector('.pv-sh').addEventListener('click', show);
     ov.querySelector('.pv-x').addEventListener('click', close);
+    if(o.cta && o.cta.fn) ov.querySelector('button.pv-go').addEventListener('click', function(){ close(); o.cta.fn(); });
     ov.querySelector('.pv-x').focus();
     return close;
   };

@@ -56,7 +56,7 @@ button{font-family:inherit}
 .tile small{display:block;font-size:10.5px;color:rgba(30,27,75,.7);margin-top:1px}
 .tile:after{content:'';position:absolute;right:-22px;bottom:-22px;width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,.35)}
 .tile[aria-pressed="true"]{outline:3px solid var(--p1);outline-offset:2px}
-.g-prem{background:linear-gradient(145deg,#FFE9A8,#FFD166)}.g-book{background:linear-gradient(145deg,#FFD6EC,#F7A8D8)}
+.g-notes{background:linear-gradient(145deg,#FFE0B2,#FDBA74)}.g-prem{background:linear-gradient(145deg,#FFE9A8,#FFD166)}.g-book{background:linear-gradient(145deg,#FFD6EC,#F7A8D8)}
 .g-pdf{background:linear-gradient(145deg,#C9F2D9,#7FDCA6)}.g-pod{background:linear-gradient(145deg,#E3D9FF,#B9A3FF)}
 .g-fc{background:linear-gradient(145deg,#D3E8FF,#8EC5FF)}.g-mm{background:linear-gradient(145deg,#D6F5EC,#7FD9BF)}.g-nt{background:linear-gradient(145deg,#FFE0CC,#FFAB7A)}
 .g-all{background:linear-gradient(145deg,#F0E9FF,#D9C9FF)}
@@ -88,6 +88,21 @@ button{font-family:inherit}
 /* product cards */
 .grp{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--muted);margin:14px 2px 8px}
 .grp:after{content:'';flex:1;height:1px;background:var(--line)}
+/* Premium Notes: chapter cards with preview pills */
+.nch{background:var(--card);border-radius:18px;padding:12px 13px;box-shadow:0 6px 16px var(--sh);margin-bottom:10px}
+.nch .hd{display:flex;align-items:center;gap:10px}
+.nch .no{width:34px;height:34px;border-radius:11px;flex:none;display:grid;place-items:center;font-weight:800;font-size:13px;background:rgba(251,191,36,.2);color:#B45309}
+.nch .nm{flex:1;min-width:0;font-weight:600;font-size:14px;line-height:1.3}
+.nch .op{font-size:11.5px;font-weight:700;color:var(--p1);white-space:nowrap}
+.npl{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.npl button{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:99px;border:1.5px solid rgba(214,158,46,.55);background:rgba(251,191,36,.10);color:#8A5A00;font:700 12.5px 'Poppins',sans-serif;cursor:pointer}
+.npl button small{font-size:11px;font-weight:600;opacity:.85}
+.npl button.own{border-color:rgba(22,163,107,.5);background:rgba(22,163,107,.10);color:var(--ok)}
+:root:not([data-theme="light"]) .npl button{color:#FCD34D;border-color:rgba(252,211,77,.4);background:rgba(252,211,77,.08)}
+:root:not([data-theme="light"]) .nch .no{color:#FCD34D}
+.npromo{display:flex;align-items:center;gap:12px;width:100%;margin-top:14px;padding:13px 14px;border:0;border-radius:18px;cursor:pointer;text-align:left;font-family:inherit;color:#3b1d00;background:linear-gradient(120deg,#FFE0B2,#FDBA74 60%,#FCA5A5);box-shadow:0 8px 20px var(--sh)}
+.npromo .ic{font-size:28px}.npromo b{display:block;font-size:15px}.npromo small{display:block;font-size:12px;opacity:.8}.npromo .ar{margin-left:auto;font-size:20px;font-weight:800}
+.nnote{font-size:12.5px;color:var(--muted);margin:0 2px 10px;line-height:1.5}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
 .it{display:flex;gap:11px;align-items:center;padding:11px;border-radius:20px;background:var(--card);box-shadow:0 6px 16px var(--sh)}
 .it .ic{flex:0 0 50px;height:50px;border-radius:16px;display:grid;place-items:center;font-size:24px;overflow:hidden;position:relative}
@@ -170,6 +185,8 @@ button{font-family:inherit}
   <p class="foot">Narendra Sir · Biology Lecturer · BAIO Learning System</p>
 </div>
 <script src="store/store-data.js?v=3"></script>
+<script src="premium/preview-data.js?v=1"></script>
+<script src="premium/preview.js?v=2"></script>
 <script>
 (function(){
 const D = window.STORE_DATA; if(!D) return;
@@ -225,6 +242,7 @@ const B = [
 for(let i = B.length - 1; i >= 0; i--) if(!B[i].p) B.splice(i, 1);   /* a bundle without a price is not on sale (e.g. II PUC notes with fewer than 2 chapters) */
 const ALL = {}; P.concat(B).forEach(x => { ALL[x.id] = x; });
 const CAT = {
+  notes: {n: 'Premium Notes', e: '📒', g: 'g-notes', d: ['📒 Premium Notes', 'Free watermarked preview, then buy.']},
   prem: {n: 'Premium', e: '⭐', g: 'g-prem', d: ['⭐ Premium chapters', 'Unlock every Premium tab of a chapter page.']},
   book: {n: 'E-Books', e: '📕', g: 'g-book', d: ['📕 E-Books', 'Board Exam Scorer revision e-books.']},
   pdf: {n: 'PDF Notes', e: '📄', g: 'g-pdf', d: ['📄 PDF Notes', 'Handwritten and colour notes to keep.']},
@@ -233,8 +251,9 @@ const CAT = {
   nt: {n: 'NEET Tricks', e: '🎯', g: 'g-nt', d: ['🎯 NEET Tricks', 'Memory tricks and examiner traps.']},
   mm: {n: 'Mind Maps', e: '🗺️', g: 'g-mm', d: ['🗺️ Mind Maps', 'The whole chapter on one HD page.']}
 };
-const ORDER = ['prem', 'mm', 'book', 'pdf', 'pod', 'fc', 'nt'];
+const ORDER = ['notes', 'prem', 'mm', 'book', 'pdf', 'pod', 'fc', 'nt'];
 const GRAD = {prem: 'linear-gradient(145deg,#FFE9A8,#FFD166)', book: 'linear-gradient(145deg,#FFD6EC,#F7A8D8)', pdf: 'linear-gradient(145deg,#C9F2D9,#7FDCA6)', pod: 'linear-gradient(145deg,#E3D9FF,#B9A3FF)', fc: 'linear-gradient(145deg,#D3E8FF,#8EC5FF)', nt: 'linear-gradient(145deg,#FFE0CC,#FFAB7A)', mm: 'linear-gradient(145deg,#D6F5EC,#7FD9BF)'};
+GRAD.notes = 'linear-gradient(145deg,#FFE0B2,#FDBA74)';
 const SOFT = {prem: '#FFF1C9', book: '#FFE3F1', pdf: '#DDF6E7', pod: '#ECE6FF', fc: '#E1EFFF', nt: '#FFE8DA', mm: '#DDF5EE'};
 const DEALG = {'b-hw1': 'radial-gradient(circle at 90% 10%,rgba(255,220,120,.45),transparent 50%),linear-gradient(135deg,#7A3E0E,#C2782A)', 'b-hw2': 'radial-gradient(circle at 90% 10%,rgba(190,160,255,.5),transparent 50%),linear-gradient(135deg,#3B1FA8,#7C4DFF)', 'b-hwall': 'radial-gradient(circle at 90% 10%,rgba(255,200,120,.5),transparent 50%),linear-gradient(135deg,#5A2E0E,#B8912A)', 'b-mm1': 'radial-gradient(circle at 90% 10%,rgba(255,220,120,.45),transparent 50%),linear-gradient(135deg,#0F6E5C,#13977F)', 'b-mm2': 'radial-gradient(circle at 90% 10%,rgba(190,160,255,.5),transparent 50%),linear-gradient(135deg,#1F4FA8,#3F7DE0)', 'b-mmall': 'radial-gradient(circle at 90% 10%,rgba(255,200,120,.5),transparent 50%),linear-gradient(135deg,#0B5D4B,#C79A2A)', 'b-prem2': 'radial-gradient(circle at 90% 10%,rgba(255,220,120,.45),transparent 50%),linear-gradient(135deg,#0F6E5C,#13977F)', 'b-pod1': 'radial-gradient(circle at 90% 10%,rgba(255,150,210,.45),transparent 50%),linear-gradient(135deg,#7A1E5A,#C2407F)', 'b-pod2': 'radial-gradient(circle at 90% 10%,rgba(190,160,255,.5),transparent 50%),linear-gradient(135deg,#3B1FA8,#7C4DFF)', 'b-nt1': 'radial-gradient(circle at 90% 10%,rgba(255,230,140,.45),transparent 50%),linear-gradient(135deg,#B85C00,#F08A24)', 'b-nt2': 'radial-gradient(circle at 90% 10%,rgba(255,180,140,.45),transparent 50%),linear-gradient(135deg,#A3361A,#E8612F)'};
 
@@ -243,9 +262,41 @@ try{ const z = JSON.parse(localStorage.getItem('baio_zone') || '{}'); if(z.cls =
 const h0 = location.hash.slice(1); if(CAT[h0]) cat = h0;
 $('#nItems').textContent = '🛒 ' + P.length + ' items · ' + B.length + ' bundles';
 
+/* Premium Notes: every chapter's paid notes (handwritten, colour, mind map, Premium) with a free preview.
+   Preview images: premium/preview-data.js (scripts/premium-preview/build.py); viewer: premium/preview.js. */
+const PV = window.PREM_PREVIEW || {};
+const PREM_FEATS = ['Mind Map', 'Class Presentation', 'MCQ Quiz', 'NEET & KCET Practice', 'Answer Practice', 'Paper Generator', 'Board Important', 'Chapter Audio Podcast'];
+function noteItems(id){
+  const c = D.ch[id], v = PV[id] || {}, out = [];
+  const add = (k, e, t, pid, pv, more, feats) => { if(ALL[pid]) out.push({k, e, t, x: ALL[pid], pv, more, feats}); };
+  add('hw', '✍️', 'Handwritten Notes', 'hw-' + id, v.hw, v.hwN ? (v.hwN - (v.hw || []).length) + ' more pages in the full notes' : '');
+  add('cn', '🎨', 'Colour Notes', 'cn-' + id, v.cn, 'Read every page in the chapter, download the PDF after unlocking');
+  add('mm', '🗺️', 'Mind Map', 'mm-' + id, v.mm ? [v.mm] : null, 'The full mind map is HD: zoom in, save and print');
+  add('pr', '⭐', 'Premium', 'prem-' + id, v.sl || (v.mm ? [v.mm] : null), 'Premium unlocks every Premium tab of this chapter', PREM_FEATS);
+  return out;
+}
+const NOTE_IDS = IDS.filter(id => noteItems(id).length).sort((a, b) => ord(a) - ord(b));
+function notesView(){
+  let h = '<div class="sec" id="s-notes"><h2>📒 Premium Notes</h2><span>' + NOTE_IDS.filter(id => !only || id.startsWith(only)).length + ' chapters</span></div>'
+    + '<p class="nnote">Tap any item for a free preview, watermarked with your name. Then buy it here and unlock it on this phone.</p>';
+  [['pu1', 'I PUC'], ['pu2', 'II PUC']].forEach(([c, n]) => {
+    if(only && only !== c) return;
+    const M = NOTE_IDS.filter(id => id.startsWith(c)); if(!M.length) return;
+    if(!only) h += '<div class="grp">' + n + '</div>';
+    h += M.map(id => '<div class="nch"><div class="hd"><span class="no">' + chNo(id) + '</span><span class="nm">' + esc(D.ch[id].t) + '</span>' + (page(id) ? '<a class="op" href="' + esc(page(id)) + '">Open ›</a>' : '') + '</div>'
+      + '<div class="npl">' + noteItems(id).map(i => '<button type="button" data-nv="' + id + '|' + i.k + '"' + (i.x.own() ? ' class="own"' : '') + '>' + i.e + ' ' + esc(i.t) + ' <small>' + (i.x.own() ? '✓ Unlocked' : '₹' + i.x.p) + '</small></button>').join('') + '</div></div>').join('');
+  });
+  return h;
+}
+function notePreview(id, k){
+  const i = noteItems(id).filter(n => n.k === k)[0]; if(!i) return;
+  if(i.x.own() || !i.pv || !i.pv.length || !window.baioPreview){ if(i.x.own()) location.href = i.x.open; else buy(i.x); return; }
+  baioPreview({ title: D.ch[id].t + ' · ' + i.t, sub: cls(id) + ' · Chapter ' + chNo(id) + ' · ₹' + i.x.p, imgs: i.pv, more: i.more, feats: i.feats,
+    cta: { t: '🛒 Buy · ₹' + i.x.p, fn: () => buy(i.x) } });
+}
 function minPrice(k){ const L = P.filter(x => x.cat === k); return L.length ? Math.min.apply(null, L.map(x => x.p)) : 0; }
 function chips(){
-  $('#tiles').innerHTML = ORDER.map(k => '<button type="button" class="tile ' + CAT[k].g + '" data-c="' + k + '" aria-pressed="' + (k === cat) + '"><span class="ic">' + CAT[k].e + '</span><b>' + CAT[k].n + '</b><small>' + P.filter(x => x.cat === k).length + ' items · from ₹' + minPrice(k) + '</small></button>').join('');
+  $('#tiles').innerHTML = ORDER.map(k => '<button type="button" class="tile ' + CAT[k].g + '" data-c="' + k + '" aria-pressed="' + (k === cat) + '"><span class="ic">' + CAT[k].e + '</span><b>' + CAT[k].n + '</b><small>' + (k === 'notes' ? NOTE_IDS.length + ' chapters · free preview' : P.filter(x => x.cat === k).length + ' items · from ₹' + minPrice(k)) + '</small></button>').join('');
   $('#cats').innerHTML = [['all', '🛍️ All']].concat(ORDER.map(k => [k, CAT[k].e + ' ' + CAT[k].n])).map(([k, n]) => '<button type="button" data-c="' + k + '" aria-pressed="' + (k === cat) + '">' + n + '</button>').join('');
   $('#cls').innerHTML = [['', 'Both classes'], ['pu1', 'I PUC'], ['pu2', 'II PUC']].map(([k, n]) => '<button type="button" data-k="' + k + '" aria-pressed="' + (k === only) + '">' + n + '</button>').join('');
   $('#catNote').textContent = cat === 'all' ? 'Tap to filter' : CAT[cat].n;
@@ -266,8 +317,9 @@ function render(){
   const fit = x => (cat === 'all' || x.cat === cat) && (!only || !x.c || x.c === only);
   const ds = B.filter(fit);
   $('#deals').innerHTML = ds.length ? '<div class="sec"><h2>🔥 Best value bundles</h2><span>one payment · one code</span></div><div class="deals">' + ds.map(deal).join('') + '</div>' : '';
+  if(cat === 'notes'){ $('#list').innerHTML = notesView(); return; }
   const cats = cat === 'all' ? ORDER : [cat];
-  let h = '';
+  let h = cat === 'all' && NOTE_IDS.length ? '<button type="button" class="npromo" data-c="notes"><span class="ic">📒</span><span><b>Premium Notes · free preview</b><small>Handwritten, colour notes, mind maps and Premium for ' + NOTE_IDS.length + ' chapters</small></span><span class="ar">›</span></button>' : '';
   cats.forEach(k => {
     const L = P.filter(x => x.cat === k && fit(x)); if(!L.length) return;
     h += '<div class="sec" id="s-' + k + '"><h2>' + CAT[k].d[0] + '</h2><span>' + L.length + ' items</span></div>';
@@ -282,7 +334,8 @@ function render(){
 function pick(c){ cat = c; history.replaceState(null, '', cat === 'all' ? location.pathname : '#' + cat); render(); }
 document.addEventListener('click', e => {
   const t = e.target.closest('.tile[data-c]'); if(t){ pick(t.dataset.c === cat ? 'all' : t.dataset.c); $('#fbar').scrollIntoView({behavior: 'smooth', block: 'start'}); return; }
-  const c = e.target.closest('#cats [data-c]'); if(c){ pick(c.dataset.c); return; }
+  const c = e.target.closest('#cats [data-c], .npromo[data-c]'); if(c){ pick(c.dataset.c); if(c.classList.contains('npromo')) $('#fbar').scrollIntoView({behavior: 'smooth', block: 'start'}); return; }
+  const nv = e.target.closest('[data-nv]'); if(nv){ const q = nv.dataset.nv.split('|'); notePreview(q[0], q[1]); return; }
   const k = e.target.closest('[data-k]'); if(k){ only = k.dataset.k; render(); return; }
   const o = e.target.closest('[data-open]'); if(o){ location.href = o.dataset.open; return; }
   const b = e.target.closest('[data-b]'); if(b && ALL[b.dataset.b]) buy(ALL[b.dataset.b]);

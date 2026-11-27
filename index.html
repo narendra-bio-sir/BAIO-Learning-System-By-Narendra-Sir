@@ -970,13 +970,6 @@ button.bh-chip{font:inherit;color:inherit;cursor:pointer}
 :root:not([data-theme="light"]) .bh-nch .no{color:#7FE3D2}
 :root:not([data-theme="light"]) .bh-nch .op{color:#B39BFF !important}
 .bh-nnote{font-size:12px;color:var(--bh-muted);margin:0 2px 2px;line-height:1.45}
-#bhPremSheet .bh-pills a{border-color:rgba(214,158,46,.55);color:#8A5A00 !important;background:rgba(251,191,36,.10)}
-#bhPremSheet .bh-pills a.pri{background:linear-gradient(120deg,#F59E0B,#EA580C);border-color:transparent;color:#fff !important}
-#bhPremSheet .bh-nch .no{background:rgba(251,191,36,.18);color:#B45309}
-#bhPremSheet .bh-pdeal{background:linear-gradient(135deg,rgba(251,191,36,.16),rgba(234,88,12,.10))}
-:root:not([data-theme="light"]) #bhPremSheet .bh-pills a{color:#FCD34D !important;border-color:rgba(252,211,77,.4);background:rgba(252,211,77,.08)}
-:root:not([data-theme="light"]) #bhPremSheet .bh-pills a.pri{color:#fff !important;background:linear-gradient(120deg,#F59E0B,#EA580C);border-color:transparent}
-:root:not([data-theme="light"]) #bhPremSheet .bh-nch .no{color:#FCD34D}
 body{padding-bottom:96px;}
 .faq-chat-btn{bottom:94px;}
 .faq-chat-panel{bottom:140px;}
@@ -1053,7 +1046,6 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
       <a class="bh-chip bh-gm" href="guru-mantra.html" id="bhGmChip" aria-label="BAIO Guru Mantra, special: Narendra Sir's daily mantra"><i>🪔</i><span>BAIO Guru Mantra</span><em class="sp">SPECIAL</em></a>
       <a class="bh-chip" href="store.html" id="bhStoreChip"><i style="background:#FFE0EC">🛍️</i><span>BAIO Store</span><em class="nw">NEW</em></a>
       <button type="button" class="bh-chip" id="bhFreeNotesChip" aria-haspopup="dialog"><i style="background:#D9F7E8">⬇️</i><span>Free Notes</span><em class="nw">NEW</em></button>
-      <button type="button" class="bh-chip" id="bhPremNotesChip" aria-haspopup="dialog"><i style="background:#FFF1C9">⭐</i><span>Premium Notes</span><em class="nw">NEW</em></button>
       <a class="bh-chip" href="worksheets.html" id="bhWsChip"><i style="background:#E0F0FF">📑</i><span>Free Worksheets</span><em class="nw">NEW</em></a>
       <a class="bh-chip" href="mind-maps.html" id="bhMmChip"><i style="background:#DDEBFF">🗺️</i><span>Mind Maps</span><em class="nw">NEW</em></a>
       <a class="bh-chip" href="handwritten-notes.html" id="bhHwChip"><i style="background:#FFE6CC">✍️</i><span>Handwritten Notes</span><em class="nw">NEW</em></a>
@@ -4355,98 +4347,6 @@ window.indexHardRefresh = indexHardRefresh;
   sh.addEventListener('click',function(e){ if(e.target===sh) close(); });
   document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&sh.classList.contains('open')) close(); });
   sh.querySelectorAll('.bh-opt[data-mpuc]').forEach(function(o){ o.addEventListener('click',function(){ show(o.getAttribute('data-mpuc')); }); });
-})();
-</script>
-<div class="bh-sheet" id="bhPremSheet" role="dialog" aria-modal="true" aria-label="Premium Notes" aria-hidden="true">
-  <div class="bh-sbox">
-    <div class="bh-grab"></div>
-    <div class="bh-shead">
-      <button type="button" class="bk" id="bhPremBack" aria-label="Back">←</button>
-      <b id="bhPremTitle">Premium Notes</b>
-      <button type="button" id="bhPremClose" aria-label="Close">✕</button>
-    </div>
-    <div class="bh-opts">
-      <button type="button" class="bh-opt bh-y" data-ppuc="1"><span class="ic">🌱</span><span><b>I PUC Biology</b><small id="bhPremS1">Handwritten notes · colour notes · mind maps · Premium</small></span><span class="ar">›</span></button>
-      <button type="button" class="bh-opt bh-v" data-ppuc="2"><span class="ic">🧬</span><span><b>II PUC Biology</b><small id="bhPremS2">Handwritten notes · mind maps · Premium</small></span><span class="ar">›</span></button>
-      <a class="bh-mfoot" href="store.html">Open the BAIO Store →</a>
-    </div>
-    <div class="bh-chs" id="bhPremList"></div>
-  </div>
-</div>
-<script>
-/* Premium Notes sheet: I PUC / II PUC → chapters with paid notes (handwritten, colour, mind map, chapter Premium),
-   each pill opening the page where it is bought and unlocked. Data: store/store-data.js, loaded on first open. */
-(function(){
-  var sh=document.getElementById('bhPremSheet'), list=document.getElementById('bhPremList'), title=document.getElementById('bhPremTitle'), want=null;
-  if(!sh) return;
-  function esc(t){ var d=document.createElement('div'); d.textContent=t==null?'':String(t); return d.innerHTML; }
-  function rs(n){ return '₹'+Number(n).toLocaleString('en-IN'); }
-  function js(src, ok, cb){
-    if(ok()) return cb();
-    var s=document.createElement('script'); s.src=src; s.onload=cb;
-    s.onerror=function(){ list.innerHTML='<p class="bh-nnote">Could not load the notes list. Check your internet connection and try again.</p>'; };
-    document.head.appendChild(s);
-  }
-  function load(cb){
-    js('store/store-data.js?v=3', function(){ return !!window.STORE_DATA; }, function(){
-      js('premium/preview-data.js?v=1', function(){ return !!window.PREM_PREVIEW; }, function(){
-        js('premium/preview.js?v=1', function(){ return !!window.baioPreview; }, cb); }); });
-  }
-  var PREM_FEATS=['Mind Map','Class Presentation','MCQ Quiz','NEET & KCET Practice','Answer Practice','Paper Generator','Board Important','Chapter Audio Podcast'];
-  function items(D, id){
-    var c=D.ch[id], v=(window.PREM_PREVIEW||{})[id]||{}, out=[];
-    if(D.hwn && D.hwn[id]) out.push({k:'hw', e:'✍️', t:'Handwritten Notes', p:D.hwnPrice||100, h:'handwritten-notes.html#'+id, pv:v.hw, more:v.hwN?(v.hwN-(v.hw||[]).length)+' more pages in the full notes':''});
-    if(c.cn) out.push({k:'cn', e:'🎨', t:'Colour Notes', p:c.cn[0], h:c.h, pv:v.cn, more:'Read every page in the chapter, download the PDF after unlocking'});
-    if((D.mm||[]).indexOf(id)>=0) out.push({k:'mm', e:'🗺️', t:'Mind Map', p:D.mmPrice, h:'mind-maps.html#'+id, pv:v.mm?[v.mm]:null, more:'The full mind map is HD: zoom in, save and print'});
-    if(c.prem) out.push({k:'pr', e:'⭐', t:'Premium', p:c.prem[0], h:c.h, pv:v.sl||(v.mm?[v.mm]:null), feats:PREM_FEATS, more:'Premium unlocks every Premium tab of this chapter'});
-    return out.filter(function(x){ return x.h; });
-  }
-  function chapters(D, k){
-    return Object.keys(D.ch).filter(function(id){ return id.indexOf('pu'+k+'-')===0 && items(D, id).length; })
-      .sort(function(a, b){ return +a.split('-ch')[1] - +b.split('-ch')[1]; });
-  }
-  function home(){ sh.classList.remove('list'); title.textContent='Premium Notes'; }
-  function open(){
-    home(); sh.classList.add('open'); sh.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden';
-    load(function(){ ['1','2'].forEach(function(k){ var el=document.getElementById('bhPremS'+k); if(el) el.textContent=chapters(window.STORE_DATA, k).length+' chapters · '+(k==='1'?'handwritten, colour notes, mind maps, Premium':'handwritten notes, mind maps, Premium'); }); });
-  }
-  function close(){ sh.classList.remove('open'); sh.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
-  function show(k){
-    title.textContent=(k==='1'?'I PUC':'II PUC')+' · Premium Notes'; sh.classList.add('list');
-    list.innerHTML='<p class="bh-nnote">Loading chapters…</p>'; want=k;
-    load(function(){
-      if(want!==k) return;
-      var D=window.STORE_DATA, ids=chapters(D, k), key='pu'+k+'-all';
-      var html='<p class="bh-nnote">Tap a pill for a free preview (watermarked), then buy and unlock it on this phone. '+ids.length+' chapters.</p>';
-      var deals=[];
-      if(D.hwnB && D.hwnB[key]) deals.push('<a class="pri" href="handwritten-notes.html#'+key+'">✍️ All '+(k==='1'?'I':'II')+' PUC Handwritten Notes · '+rs(D.hwnB[key])+'</a>');
-      if(D.mmB && D.mmB[key]) deals.push('<a class="pri" href="mind-maps.html#'+key+'">🗺️ All '+(k==='1'?'I':'II')+' PUC Mind Maps · '+rs(D.mmB[key])+'</a>');
-      if(k==='2' && D.bundle) deals.push('<a class="pri" href="store.html#prem">🎁 All II PUC Premium · '+rs(D.bundle[0])+'</a>');
-      if(deals.length) html+='<div class="bh-nch bh-pdeal"><div class="hd"><span class="no">🔥</span><span class="nm">Best value bundles · one payment, one code</span></div><div class="bh-pills">'+deals.join('')+'</div></div>';
-      html+=ids.map(function(id){
-        var c=D.ch[id], n=id.split('-ch')[1];
-        return '<div class="bh-nch"><div class="hd"><span class="no">'+n+'</span><span class="nm">'+esc(c.t)+'</span>'+(c.h?'<a class="op" href="'+esc(c.h)+'">Open ›</a>':'')+'</div>'
-          +'<div class="bh-pills">'+items(D, id).map(function(x){ return '<a href="'+esc(x.h)+'"'+(x.pv&&x.pv.length?' data-pv="'+id+'|'+x.k+'"':'')+'>'+x.e+' '+esc(x.t)+' <small>'+rs(x.p)+'</small></a>'; }).join('')+'</div></div>';
-      }).join('');
-      html+='<a class="bh-mfoot" href="store.html">See everything in the BAIO Store →</a>';
-      list.innerHTML=html; list.scrollTop=0;
-    });
-  }
-  var chip=document.getElementById('bhPremNotesChip'); if(chip) chip.addEventListener('click', open);
-  document.getElementById('bhPremClose').addEventListener('click', close);
-  document.getElementById('bhPremBack').addEventListener('click', home);
-  sh.addEventListener('click', function(e){ if(e.target===sh) close(); });
-  sh.querySelectorAll('[data-ppuc]').forEach(function(b){ b.addEventListener('click', function(){ show(b.dataset.ppuc); }); });
-  /* a pill with a preview opens the protected viewer; its button then goes to the page where it is unlocked */
-  list.addEventListener('click', function(e){
-    var a=e.target.closest('a[data-pv]'); if(!a || !window.baioPreview || !window.STORE_DATA) return;
-    e.preventDefault();
-    var pr=a.dataset.pv.split('|'), id=pr[0], D=window.STORE_DATA, x=items(D, id).filter(function(i){ return i.k===pr[1]; })[0]; if(!x) return;
-    var c=D.ch[id];
-    baioPreview({ title:c.t+' · '+x.t, sub:(id.indexOf('pu1')===0?'I PUC':'II PUC')+' · Chapter '+id.split('-ch')[1]+' · '+rs(x.p), imgs:x.pv, more:x.more, feats:x.feats,
-      cta:{ t:'🔓 Buy / unlock · '+rs(x.p), h:x.h } });
-  });
-  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && sh.classList.contains('open')) close(); });
 })();
 </script>
 <div class="bh-sheet" id="bhNotesSheet" role="dialog" aria-modal="true" aria-label="Free Notes" aria-hidden="true">
