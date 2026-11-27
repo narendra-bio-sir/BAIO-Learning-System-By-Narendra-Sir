@@ -130,7 +130,7 @@ ol.stp{margin:0;padding-left:20px;font-size:14.5px;line-height:1.55}ol.stp li{ma
   body.print-report #myReport{border:0;padding:0}
   body.print-report #myReport .qact,body.print-report #myReport .lnk,body.print-report #myReport .sg .op{display:none!important}
   html,body{background:#fff!important;color:#111!important}}
-#myReport,#quiz,#sch{scroll-margin-top:64px}
+#myReport,#quiz,#sch,#finder,#fres,.car{scroll-margin-top:64px}
 /* scholarships */
 .qcard.sch-btn{border-color:var(--gold2)}.qcard.sch-btn small{display:block;line-height:1.4;margin-top:2px}
 .schf{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 2px}
@@ -143,6 +143,40 @@ ol.stp{margin:0;padding-left:20px;font-size:14.5px;line-height:1.55}ol.stp li{ma
 .box h4{margin:16px 0 4px;font:700 15px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari'}
 .box .sub{margin:0;color:var(--dim);font-size:13.5px;line-height:1.5}
 ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{margin:4px 0}
+#loans{scroll-margin-top:64px}
+.qcard.loan-btn{border-color:#3B7BD9}.qcard.loan-btn small{display:block;line-height:1.4;margin-top:2px}
+/* scholarship finder */
+.fnd{margin-top:12px;padding:12px 13px;border-radius:16px;border:1.5px solid var(--teal);background:color-mix(in srgb,var(--teal) 7%,var(--panel))}
+.fnd h4{margin:0 0 2px!important}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.fgrid label{display:grid;gap:3px;font:700 12px Inter,'Noto Sans Kannada','Noto Sans Devanagari';color:var(--dim)}
+.fgrid label.w{grid-column:1/-1}
+.fgrid select{font:600 14px Inter,'Noto Sans Kannada','Noto Sans Devanagari';padding:9px 10px;border-radius:11px;border:1.5px solid var(--line);background:var(--panel2);color:var(--ink);width:100%}
+.fsp{grid-column:1/-1;display:grid;gap:5px;font-size:13.5px}.fsp b{font:700 12px Inter,'Noto Sans Kannada','Noto Sans Devanagari';color:var(--dim)}
+.fsp label{display:flex;gap:8px;align-items:center;cursor:pointer}.fsp input{width:18px;height:18px;accent-color:var(--teal);flex:none}
+.fres{margin-top:12px}.fres>p{margin:0 0 6px;font-weight:700;font-size:14px}
+.frc{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:var(--panel);border:1.5px solid var(--line);border-radius:14px;padding:10px 12px;margin-top:7px;color:var(--ink);font:inherit;cursor:pointer}
+.frc.y{border-color:color-mix(in srgb,#2F9E6B 55%,var(--line))}.frc.m{border-color:color-mix(in srgb,var(--gold2) 60%,var(--line))}
+.frc .e{font-size:22px;flex:none}.frc b{display:block;font:700 14.5px/1.3 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari'}
+.frc small{display:block;color:var(--dim);font-size:12.5px;line-height:1.4;margin-top:2px}
+.frc .st{display:inline-block;font:800 11px Inter,'Noto Sans Kannada','Noto Sans Devanagari';margin-top:4px}
+.frc .op{margin-left:auto;flex:none;color:var(--teal);font:700 12px Inter,'Noto Sans Kannada','Noto Sans Devanagari';padding-top:2px}
+.lhint{margin-top:10px;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,#3B7BD9 10%,var(--panel));font-size:13.5px;line-height:1.5}
+.lhint button{margin-top:6px}
+.sjr{margin-top:6px;display:flex;flex-wrap:wrap;gap:6px}
+.sjr button{border:1.5px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:999px;padding:5px 10px;font:700 12px Inter,'Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer}
+.sjr button.lk{border-color:var(--teal);color:var(--teal);background:transparent}
+/* loans */
+.ltab{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+.ltab th{text-align:left;font:800 11.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari';color:var(--dim);padding:6px 5px;border-bottom:1.5px solid var(--line)}
+.ltab td{padding:7px 5px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.4}
+.ltab td:first-child{font-weight:700;white-space:nowrap}
+.bank{padding:10px 0;border-top:1px solid var(--line)}
+.bank b{display:block;font:700 15px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari'}
+.bank .sc{display:block;font-size:12.5px;color:var(--teal);font-weight:700;margin-top:2px;line-height:1.4}
+.bank p{margin:4px 0 0;font-size:13.5px;line-height:1.5}
+.bank a{color:var(--teal);font-weight:700;font-size:12.5px}
+.rate{margin-top:12px;padding:10px 12px;border-radius:12px;background:var(--panel2);font-size:13.5px;line-height:1.5}
 </style>
 <script>/* apply the saved theme before the first paint (the page script below does the same later); avoids a light/dark flash on refresh */(function(){var t='light';try{t=localStorage.getItem('baio_theme')||'light';}catch(e){}document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');})();</script>
 </head>
@@ -168,11 +202,13 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
   <button class="qcard" id="qOpen" type="button"><span class="e">🧭</span><span><b id="qT"></b><small id="qS"></small></span></button>
   <div id="quiz" hidden></div>
   <button class="qcard sch-btn" id="schOpen" type="button"><span class="e">💰</span><span><b id="schT"></b><small id="schS"></small></span></button>
+  <button class="qcard loan-btn" id="loanOpen" type="button"><span class="e">🏦</span><span><b id="loanT"></b><small id="loanS"></small></span></button>
   <div class="seg2" id="streams" role="tablist"></div>
   <div class="groups" id="groups" role="tablist"></div>
   <div class="cards" id="cards"></div>
   <div class="box" id="exams"></div>
   <section class="box" id="sch" aria-labelledby="schH"></section>
+  <section class="box" id="loans" aria-labelledby="loanH"></section>
   <p class="note" id="note"></p>
   <footer>BAIO Learning System · Narendra Sir</footer>
 </main>
@@ -182,7 +218,8 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
 <script src="careers/data-more.js?v=1"></script>
 <script src="careers/data-skills.js?v=1"></script>
 <script src="careers/data-ele.js?v=1"></script>
-<script src="careers/data-sch.js?v=1"></script>
+<script src="careers/data-sch.js?v=2"></script>
+<script src="careers/data-loan.js?v=1"></script>
 <script src="careers/report.js?v=13"></script>
 <script src="careers/share-card.js?v=2" defer></script>
 <script>
@@ -226,7 +263,21 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
   var th = 'light'; try{ th = localStorage.getItem('baio_theme') || 'light'; }catch(e){} theme(th);
   tb.onclick = function(){ var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; theme(n); try{ localStorage.setItem('baio_theme', n); }catch(e){} };
 
-  var S = window.SCHOLARSHIPS, schCat = 'all', schOpen = {};
+  var S = window.SCHOLARSHIPS, LN = window.EDU_LOANS, schCat = 'all', schOpen = {}, prof = null, showFind = false;
+  try{ prof = JSON.parse(localStorage.getItem('baio_sch_finder') || 'null'); if(prof) showFind = true; }catch(e){}
+  function courseOfCareer(id){ if(!S || !S.courseOf) return null; for(var k in S.courseOf) if(S.courseOf[k].indexOf(id) >= 0) return k; return null; }
+  /* does scholarship x suit profile p? -> null, or {s:'y'|'m', why:[...]} */
+  function schMatch(x, p){
+    if(x.junior || !x.c || x.c.indexOf(p.c) < 0) return null;
+    var why = ['course'], st = 'y';
+    if(x.girls){ if(p.g !== 'girl') return null; why.push('girl'); }
+    if(x.cats){ if(x.cats.indexOf(p.cat) < 0) return null; why.push('cat'); }
+    if(x.govt){ if(p.govt !== 'yes') return null; why.push('govt'); }
+    if(x.sp){ if(!p.sp || !p.sp[x.sp]) return null; why.push('sp'); }
+    if(x.inc){ var ib = S.incBands[p.inc]; if(ib[0] >= x.inc) return null; if(ib[1] > x.inc) st = 'm'; why.push('inc'); }
+    if(x.mk){ var mb = S.mkBands[p.mk]; if(mb[1] < x.mk) return null; if(mb[0] < x.mk) st = 'm'; why.push('mk'); }
+    return { s:st, why:why };
+  }
   var grp = 'neet', open = {}, ans = {}, showRes = false, quizOpen = false, stream = 'pcb';
   function stOf(gid){ var g = D.groups.filter(function(x){ return x.id === gid; })[0]; return (g && g.st) || 'pcb'; }
   function firstGroup(st){ return D.groups.filter(function(g){ return (g.st || 'pcb') === st; })[0].id; }
@@ -257,7 +308,17 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
     return '<article class="car'+(open[c.id]?' open':'')+'" id="'+c.id+'"><button class="ch" type="button" data-id="'+c.id+'" aria-expanded="'+!!open[c.id]+'"><span class="e">'+c.ic+'</span><span><h3>'+esc(c.name)+'</h3><small>'+esc(L(c.sub))+'</small><span class="dur">⏱ '+esc(L(c.dur))+'</span></span><span class="ar">›</span></button>'
       + '<div class="cb"><p class="what">'+esc(L(c.what))+'</p>'
       + row('📝', u.exam, c.exam) + row('✅', u.elig, c.elig) + row('💰', u.fee, c.fee) + row('💼', u.pay, c.pay) + row('🚀', u.scope, c.scope)
+      + schRow(c)
       + '<button type="button" class="cshr" data-share="'+c.id+'">'+u.shareC+'</button></div></article>';
+  }
+  function schRow(c){
+    var ct = courseOfCareer(c.id); if(!ct) return '';
+    var f = S.finder[lang] || S.finder.en;
+    var rank = function(x){ return (x.sp ? 3 : 0) + (x.cats ? 2 : 0) + (x.girls || x.govt ? 1 : 0); };
+    var list = S.list.filter(function(x){ return !x.junior && x.c && x.c.indexOf(ct) >= 0; }).sort(function(a, b){ return rank(a) - rank(b); });
+    return '<div class="row"><span class="k">🎓</span><div class="v"><b>'+f.carSch+'</b><div class="sjr">'
+      + list.slice(0, 8).map(function(x){ return '<button type="button" data-jump="'+x.id+'">'+x.ic+' '+esc(x.name)+(x.girls ? ' 👩' : '')+'</button>'; }).join('')
+      + '<button type="button" class="lk" data-find="'+ct+'">'+f.carFind+'</button><button type="button" class="lk" data-loans="1">'+f.carLoan+'</button></div></div></div>';
   }
   function scores(){
     return D.list.filter(inStream).map(function(c){
@@ -288,6 +349,58 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
     }
     q.innerHTML = html + '</div>';
   }
+  function finderHtml(){
+    var f = S.finder[lang] || S.finder.en, p = prof || {};
+    function sel(name, opts, cur){ return '<select data-f="'+name+'">' + opts.map(function(o){ return '<option value="'+o[0]+'"'+(String(cur) === String(o[0]) ? ' selected' : '')+'>'+esc(o[1])+'</option>'; }).join('') + '</select>'; }
+    var html = '<div class="fnd" id="finder"><h4>'+f.t+'</h4><p class="sub" style="margin:0">'+esc(f.s)+'</p><div class="fgrid">'
+      + '<label class="w">'+f.course + sel('c', [['','—']].concat(['med','eng','health','sci','oth','dip'].map(function(k){ return [k, f.courses[k]]; })), p.c || '') + '</label>'
+      + '<label>'+f.gender + sel('g', [['girl', f.genders.girl], ['boy', f.genders.boy]], p.g || 'girl') + '</label>'
+      + '<label>'+f.cat + sel('cat', ['gen','obc','sc','st','min'].map(function(k){ return [k, f.cats[k]]; }), p.cat || 'gen') + '</label>'
+      + '<label>'+f.inc + sel('inc', f.incs.map(function(t, i){ return [i, t]; }), p.inc == null ? 2 : p.inc) + '</label>'
+      + '<label>'+f.mk + sel('mk', f.mks.map(function(t, i){ return [i, t]; }), p.mk == null ? 2 : p.mk) + '</label>'
+      + '<label class="w">'+f.govt + sel('govt', [['no', f.no], ['yes', f.yes]], p.govt || 'no') + '</label>'
+      + '<div class="fsp"><b>'+f.sp+'</b>' + ['exs','dis','bocw','lwf'].map(function(k){ return '<label><input type="checkbox" data-sp="'+k+'"'+(p.sp && p.sp[k] ? ' checked' : '')+'> '+esc(f.sps[k])+'</label>'; }).join('') + '</div>'
+      + '</div><div class="qact"><button class="btn" type="button" id="fGo">'+f.go+'</button><button class="btn ghost" type="button" id="fReset">'+f.reset+'</button></div>';
+    if(showFind && prof && prof.c){
+      var res = S.list.map(function(x){ var m = schMatch(x, prof); return m ? { x:x, m:m } : null; }).filter(Boolean)
+        .sort(function(a, b){ return (a.m.s === 'y' ? 0 : 1) - (b.m.s === 'y' ? 0 : 1); });
+      var ny = res.filter(function(r){ return r.m.s === 'y'; }).length;
+      html += '<div class="fres" id="fres">' + (res.length ? '<p>'+f.res(ny, res.length - ny)+'</p>' : '<p>'+esc(f.none)+'</p>')
+        + res.map(function(r){ var x = r.x;
+            return '<button type="button" class="frc '+r.m.s+'" data-jump="'+x.id+'"><span class="e">'+x.ic+'</span><span><b>'+esc(x.name)+'</b><small>'+esc(L(x.amt))+'</small>'
+              + '<span class="st">'+(r.m.s === 'y' ? f.sure : f.maybe)+' · '+r.m.why.map(function(w){ return f.why[w]; }).join(' · ')+(x.top ? ' · '+f.top : '')+(x.loan ? ' · '+f.loan : '')+'</span></span><span class="op">'+f.open+' ›</span></button>';
+          }).join('')
+        + (LN ? '<div class="lhint">🏦 '+esc(f.lHint(S.incBands[prof.inc][1]))+'<br><button type="button" class="btn ghost" data-loans="1">'+(LN.ui[lang] || LN.ui.en).h+'</button></div>' : '')
+        + '</div>';
+    }
+    return html + '</div>';
+  }
+  function renderLoans(){
+    if(!LN){ $('loans').hidden = true; $('loanOpen').hidden = true; return; }
+    var u = LN.ui[lang] || LN.ui.en;
+    $('loanT').textContent = u.btnT; $('loanS').textContent = u.btnS;
+    function row(k, lab, v){ return '<div class="row"><span class="k">'+k+'</span><div class="v"><b>'+lab+'</b>'+v+'</div></div>'; }
+    function host(url){ return url.replace(/^https?:\/\//, '').replace(/\/$/, ''); }
+    var html = '<h3 id="loanH">'+u.h+'</h3><p class="sub">'+esc(u.sub)+'</p><h4>🇮🇳 '+u.schH+'</h4><div class="sch-list">'
+      + LN.schemes.map(function(x){
+          return '<article class="car'+(schOpen['ln-'+x.id]?' open':'')+'" id="ln-'+x.id+'"><button class="ch" type="button" data-lid="'+x.id+'" aria-expanded="'+!!schOpen['ln-'+x.id]+'"><span class="e">'+x.ic+'</span><span><h3>'+esc(x.name)+'</h3><small>'+esc(x.by)+'</small></span><span class="ar">›</span></button>'
+            + '<div class="cb">'+row('ℹ️', u.what, esc(L(x.what)))+row('⭐', u.key, esc(L(x.key)))+row('📝', u.how, esc(L(x.how)))+row('🔗', u.site, '<a href="'+x.url+'" target="_blank" rel="noopener">'+esc(host(x.url))+'</a>')+'</div></article>';
+        }).join('') + '</div>'
+      + '<h4>📏 '+u.ibaH+'</h4><table class="ltab"><thead><tr>' + LN.iba.head[lang].map(function(t){ return '<th>'+esc(t)+'</th>'; }).join('') + '</tr></thead><tbody>'
+      + LN.iba.rows.map(function(r){ return '<tr>' + r.map(function(c){ return '<td>'+esc(L(c))+'</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table>'
+      + '<p class="note" style="margin-top:6px">'+esc(u.ibaNote)+'</p>'
+      + '<div class="rate"><b>📈 '+u.rateT+':</b> '+esc(u.rate)+'</div>'
+      + '<h4>🏛️ '+u.bankH+'</h4><p class="sub" style="margin:0">'+esc(u.bankS)+'</p>'
+      + LN.banks.filter(function(b){ return b.psb; }).map(bankHtml).join('')
+      + '<h4>🏢 '+u.pvtH+'</h4>' + LN.banks.filter(function(b){ return !b.psb; }).map(bankHtml).join('')
+      + '<h4>'+u.covT+'</h4><ul class="dl">' + u.cov.map(function(d){ return '<li>'+esc(d)+'</li>'; }).join('') + '</ul>'
+      + '<h4>'+u.repT+'</h4><ul class="dl">' + u.rep.map(function(d){ return '<li>'+esc(d)+'</li>'; }).join('') + '</ul>'
+      + '<h4>'+u.docT+'</h4><ul class="dl">' + u.doc.map(function(d){ return '<li>'+esc(d)+'</li>'; }).join('') + '</ul>'
+      + '<h4>'+u.tipT+'</h4><ul class="dl">' + u.tip.map(function(d){ return '<li>'+d+'</li>'; }).join('') + '</ul>'
+      + '<p class="note">'+esc(u.note)+'</p>';
+    function bankHtml(b){ return '<div class="bank"><b>'+b.ic+' '+esc(b.name)+'</b><span class="sc">'+esc(b.sch)+'</span><p>'+esc(L(b.note))+'</p>'+(b.url ? '<a href="'+b.url+'" target="_blank" rel="noopener">'+esc(host(b.url))+' ↗</a>' : '')+'</div>'; }
+    $('loans').innerHTML = html;
+  }
   function renderSch(){
     if(!S) return;
     var u = S.ui[lang] || S.ui.en;
@@ -295,6 +408,7 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
     function row(k, lab, v){ return '<div class="row"><span class="k">'+k+'</span><div class="v"><b>'+lab+'</b>'+v+'</div></div>'; }
     var list = S.list.filter(function(x){ return schCat === 'all' || (schCat === 'girls' ? x.girls : x.cat === schCat); });
     $('sch').innerHTML = '<h3 id="schH">'+u.h+'</h3><p class="sub">'+esc(u.sub)+'</p>'
+      + (S.finder ? finderHtml() : '')
       + '<div class="schf" role="tablist">' + S.cats.map(function(c){ return '<button type="button" role="tab" aria-selected="'+(c.id===schCat)+'" class="'+(c.id===schCat?'on':'')+'" data-sc="'+c.id+'">'+c.ic+' '+esc(L(c.t))+'</button>'; }).join('') + '</div>'
       + '<div class="sch-list">' + list.map(function(x){
           var host = x.url.replace(/^https?:\/\//, '').replace(/\/$/, '');
@@ -320,6 +434,7 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
     $('exams').innerHTML = '<h3>'+u.exT+'</h3>' + D.exams.filter(function(x){ return (x.st || 'pcb') === stream; }).map(function(x){ return '<div class="ex"><span class="n">'+esc(x.n)+'</span><span class="by">'+esc(x.by)+'</span><div>'+esc(L(x.m))+'</div><div class="f">'+esc(L(x.f))+'</div></div>'; }).join('');
     renderQuiz();
     renderSch();
+    renderLoans();
   }
   function go(id){
     var c = D.list.filter(function(x){ return x.id === id; })[0]; if(!c) return;
@@ -343,7 +458,16 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
     if(!w && navigator.clipboard) navigator.clipboard.writeText(url).then(function(){ toast(UI[lang].copied); });
   }
   $('shareBtn').onclick = function(){ share('BAIO · Career Guidance', UI[lang].shareMsg, BASE); };
+  function jumpSch(id){
+    schCat = 'all'; schOpen = {}; schOpen[id] = true; renderSch();
+    var el = $('sch-' + id); if(el){ el.scrollIntoView({ behavior:'smooth', block:'start' }); el.classList.add('flash'); setTimeout(function(){ el.classList.remove('flash'); }, 2000); }
+    try{ history.replaceState(null, '', '#sch-' + id); }catch(x){}
+  }
+  function toLoans(){ $('loans').scrollIntoView({ behavior:'smooth', block:'start' }); try{ history.replaceState(null, '', '#loans'); }catch(x){} }
   $('cards').addEventListener('click', function(e){
+    var j = e.target.closest('[data-jump]'); if(j){ jumpSch(j.dataset.jump); return; }
+    var fd = e.target.closest('[data-find]'); if(fd){ prof = prof || { g:'girl', cat:'gen', inc:2, mk:2, govt:'no', sp:{} }; prof.c = fd.dataset.find; showFind = false; renderSch(); $('finder').scrollIntoView({ behavior:'smooth', block:'start' }); return; }
+    if(e.target.closest('[data-loans]')){ toLoans(); return; }
     var sh = e.target.closest('[data-share]');
     if(sh){ var c = D.list.filter(function(x){ return x.id === sh.dataset.share; })[0];
       var u = UI[lang];
@@ -364,7 +488,24 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
     var g = e.target.closest('[data-go]'); if(g) go(g.dataset.go);
   });
   $('schOpen').onclick = function(){ $('sch').scrollIntoView({ behavior:'smooth', block:'start' }); try{ history.replaceState(null, '', '#scholarships'); }catch(x){} };
+  $('loanOpen').onclick = toLoans;
+  $('loans').addEventListener('click', function(e){
+    var b = e.target.closest('[data-lid]'); if(!b) return;
+    var id = 'ln-' + b.dataset.lid; schOpen[id] = !schOpen[id];
+    b.closest('.car').classList.toggle('open', !!schOpen[id]); b.setAttribute('aria-expanded', !!schOpen[id]);
+  });
   $('sch').addEventListener('click', function(e){
+    if(e.target.id === 'fGo'){
+      var p = { sp:{} };
+      $('finder').querySelectorAll('[data-f]').forEach(function(el){ p[el.dataset.f] = /^(inc|mk)$/.test(el.dataset.f) ? +el.value : el.value; });
+      $('finder').querySelectorAll('[data-sp]').forEach(function(el){ if(el.checked) p.sp[el.dataset.sp] = 1; });
+      if(!p.c){ var cs = $('finder').querySelector('[data-f="c"]'); cs.focus(); cs.style.borderColor = '#D0544B'; return; }
+      prof = p; showFind = true; try{ localStorage.setItem('baio_sch_finder', JSON.stringify(p)); }catch(x){}
+      renderSch(); var r = $('fres'); if(r) r.scrollIntoView({ behavior:'smooth', block:'start' }); return;
+    }
+    if(e.target.id === 'fReset'){ prof = null; showFind = false; try{ localStorage.removeItem('baio_sch_finder'); }catch(x){} renderSch(); return; }
+    var j = e.target.closest('[data-jump]'); if(j){ jumpSch(j.dataset.jump); return; }
+    if(e.target.closest('[data-loans]')){ toLoans(); return; }
     var c = e.target.closest('[data-sc]');
     if(c){ schCat = c.dataset.sc; schOpen = {}; renderSch(); return; }
     var b = e.target.closest('[data-sid]'); if(!b) return;
@@ -375,6 +516,8 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
   if(!S){ $('schOpen').hidden = true; $('sch').hidden = true; }
   render();
   if(hc) setTimeout(function(){ go(hc.id); }, 200);
+  else if(h === 'loans' || h.indexOf('ln-') === 0) setTimeout(function(){ toLoans(); }, 200);
+  else if(h === 'finder' && S) setTimeout(function(){ $('finder').scrollIntoView({ behavior:'smooth', block:'start' }); }, 200);
   else if(S && h.indexOf('sch') === 0) setTimeout(function(){ var el = $(h === 'scholarships' ? 'sch' : h) || $('sch'); el.scrollIntoView({ behavior:'smooth', block:'start' }); }, 200);
 })();
 </script>
