@@ -221,7 +221,7 @@ Object.assign(window.NT, {
   ]
 },
 'pu1-ch12': {
-  title:'Respiration in Plants', ch:'I PUC · Chapter 12', icon:'💨', color:'#00838F', href:'pu1-ch12.html',
+  title:'Respiration in Plants', ch:'I PUC · Chapter 12', icon:'🍃', color:'#00838F', href:'pu1-ch12.html',
   intro:'Glycolysis, fermentation, Krebs cycle, ETS, the 38-ATP balance sheet and RQ: the counts and sites NEET asks every year.',
   tricks:[
     {t:'Where each step happens', h:'<div class="tb"><table><tr><th>Step</th><th>Site</th></tr><tr><td>Glycolysis</td><td><b>Cytoplasm</b></td></tr><tr><td>Fermentation</td><td>Cytoplasm</td></tr><tr><td>Link reaction, Krebs cycle</td><td><b>Mitochondrial matrix</b></td></tr><tr><td>ETS, ATP synthase</td><td><b>Inner mitochondrial membrane</b></td></tr></table></div>'},

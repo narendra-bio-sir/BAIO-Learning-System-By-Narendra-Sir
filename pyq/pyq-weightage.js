@@ -14,7 +14,7 @@ window.PYQ_W={
  "pu1-ch9":{"t":"Biomolecules","i":"🧪","c":"#E65100","h":"pu1-ch9.html","n":[8,2,7,5],"app":16},
  "pu1-ch10":{"t":"Cell Cycle and Cell Division","i":"🔄","c":"#1565C0","h":"pu1-ch10.html","n":[10,5,5,1],"app":19},
  "pu1-ch11":{"t":"Photosynthesis in Higher Plants","i":"☀️","c":"#2E7D32","h":"pu1-ch11.html","n":[5,0,10,2],"app":13},
- "pu1-ch12":{"t":"Respiration in Plants","i":"💨","c":"#00838F","h":"","n":[2,2,9,1],"app":13},
+ "pu1-ch12":{"t":"Respiration in Plants","i":"🍃","c":"#00838F","h":"","n":[2,2,9,1],"app":13},
  "pu1-ch13":{"t":"Plant Growth and Development","i":"🌱","c":"#689F38","h":"","n":[4,3,4,2],"app":11},
  "pu1-ch14":{"t":"Breathing and Exchange of Gases","i":"🫁","c":"#0277BD","h":"","n":[5,2,3,0],"app":9},
  "pu1-ch15":{"t":"Body Fluids and Circulation","i":"❤️","c":"#C62828","h":"","n":[5,5,8,1],"app":18},
