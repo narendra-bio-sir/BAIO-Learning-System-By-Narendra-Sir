@@ -16,5 +16,8 @@ const OUT = __dirname;
   await cap('#fres', 560, 'shot-finder.png');
   await pg.click('#loans [data-lid="pm-vidyalaxmi"]'); await pg.waitForTimeout(300);
   await cap('#loans', 620, 'shot-loans.png');
+  await pg.evaluate(() => { document.getElementById('colOpen').click(); });
+  await pg.waitForTimeout(400);
+  await cap('#cols', 760, 'shot-colleges.png');
   await b.close(); srv.close(); console.log('shots done');
 })();
