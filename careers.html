@@ -154,11 +154,26 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
 .fnd{margin-top:12px;padding:12px 13px;border-radius:16px;border:1.5px solid var(--teal);background:color-mix(in srgb,var(--teal) 7%,var(--panel))}
 .fnd h4{margin:0 0 2px!important}
 .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-.fgrid label{display:grid;gap:3px;font:700 12px Inter,'Noto Sans Kannada','Noto Sans Devanagari';color:var(--dim)}
-.fgrid label.w{grid-column:1/-1}
-.fgrid select{font:600 14px Inter,'Noto Sans Kannada','Noto Sans Devanagari';padding:9px 10px;border-radius:11px;border:1.5px solid var(--line);background:var(--panel2);color:var(--ink);width:100%}
-.fsp{grid-column:1/-1;display:grid;gap:5px;font-size:13.5px}.fsp b{font:700 12px Inter,'Noto Sans Kannada','Noto Sans Devanagari';color:var(--dim)}
-.fsp label{display:flex;gap:8px;align-items:center;cursor:pointer}.fsp input{width:18px;height:18px;accent-color:var(--teal);flex:none}
+.fgrid .fl{display:grid;gap:3px;font:700 12px Inter,'Noto Sans Kannada','Noto Sans Devanagari';color:var(--dim)}
+.fgrid .fl.w{grid-column:1/-1}
+.fsp{grid-column:1/-1;display:grid;grid-template-columns:1fr;gap:7px;font-size:13px}.fsp>b{grid-column:1/-1;font:700 12px Inter,'Noto Sans Kannada','Noto Sans Devanagari';color:var(--dim)}
+.fsp button{display:flex;gap:8px;align-items:center;text-align:left;border:1.5px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:12px;padding:9px 10px;font:600 12.5px/1.3 Inter,'Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer;-webkit-tap-highlight-color:transparent}
+.fsp button .di{font-size:20px;flex:none}.fsp button .tk{margin-left:auto;flex:none;width:20px;height:20px;border-radius:6px;border:1.5px solid var(--line);display:grid;place-items:center;font-size:12px;color:transparent}
+.fsp button[aria-pressed="true"]{border-color:var(--teal);background:color-mix(in srgb,var(--teal) 14%,var(--panel))}
+.fsp button[aria-pressed="true"] .tk{background:var(--teal);border-color:var(--teal);color:#fff}
+/* custom drop-down with icons */
+.dd{position:relative}
+.ddb{display:flex;align-items:center;gap:9px;width:100%;text-align:left;border:1.5px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:12px;padding:9px 10px;font:600 14px/1.3 Inter,'Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer;-webkit-tap-highlight-color:transparent;min-height:46px}
+.ddb .di{font-size:20px;flex:none;width:26px;text-align:center}.ddb .dt{flex:1;min-width:0}.ddb .dc{flex:none;color:var(--dim);font-size:12px;transition:transform .15s}
+.dd.open .ddb{border-color:var(--teal);box-shadow:0 0 0 3px color-mix(in srgb,var(--teal) 18%,transparent)}.dd.open .ddb .dc{transform:rotate(180deg)}
+.dd.ph .ddb .dt{color:var(--dim)}.dd.err .ddb{border-color:#D0544B;box-shadow:0 0 0 3px rgba(208,84,75,.18)}
+.ddl{position:absolute;left:0;right:0;top:calc(100% + 5px);z-index:30;margin:0;padding:5px;list-style:none;background:var(--panel);border:1.5px solid var(--line);border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,.18);max-height:320px;overflow:auto}
+.fgrid .fl:not(.w) .ddl{min-width:min(250px,86vw)}.fgrid .fl:nth-child(3) .ddl,.fgrid .fl:nth-child(5) .ddl{left:auto;right:0}
+.ddl button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;background:transparent;color:var(--ink);border-radius:10px;padding:10px 9px;font:600 14px/1.3 Inter,'Noto Sans Kannada','Noto Sans Devanagari';cursor:pointer}
+.ddl button .di{font-size:20px;flex:none;width:26px;text-align:center}.ddl button .dt{flex:1}
+.ddl button .ck{flex:none;color:var(--teal);font-weight:800;visibility:hidden}
+.ddl button:hover,.ddl button:focus-visible{background:var(--panel2);outline:0}
+.ddl button[aria-selected="true"]{background:color-mix(in srgb,var(--teal) 13%,var(--panel))}.ddl button[aria-selected="true"] .ck{visibility:visible}
 .fres{margin-top:12px}.fres>p{margin:0 0 6px;font-weight:700;font-size:14px}
 .frc{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:var(--panel);border:1.5px solid var(--line);border-radius:14px;padding:10px 12px;margin-top:7px;color:var(--ink);font:inherit;cursor:pointer}
 .frc.y{border-color:color-mix(in srgb,#2F9E6B 55%,var(--line))}.frc.m{border-color:color-mix(in srgb,var(--gold2) 60%,var(--line))}
@@ -364,15 +379,22 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
   }
   function finderHtml(){
     var f = S.finder[lang] || S.finder.en, p = prof || {};
-    function sel(name, opts, cur){ return '<select data-f="'+name+'">' + opts.map(function(o){ return '<option value="'+o[0]+'"'+(String(cur) === String(o[0]) ? ' selected' : '')+'>'+esc(o[1])+'</option>'; }).join('') + '</select>'; }
+    /* custom drop-down: [value, label, icon] options; the chosen value lives in data-v */
+    function sel(name, opts, cur){
+      var on = opts.filter(function(o){ return String(o[0]) === String(cur); })[0] || opts[0];
+      return '<div class="dd'+(on[0] === '' ? ' ph' : '')+'" data-f="'+name+'" data-v="'+on[0]+'"><button type="button" class="ddb" aria-haspopup="listbox" aria-expanded="false"><span class="di">'+on[2]+'</span><span class="dt">'+esc(on[1])+'</span><span class="dc">▼</span></button>'
+        + '<div class="ddl" role="listbox" hidden>' + opts.filter(function(o){ return o[0] !== ''; }).map(function(o){ return '<button type="button" role="option" data-o="'+o[0]+'" aria-selected="'+(String(o[0]) === String(on[0]))+'"><span class="di">'+o[2]+'</span><span class="dt">'+esc(o[1])+'</span><span class="ck">✓</span></button>'; }).join('') + '</div></div>';
+    }
+    var CI = { med:'🩺', eng:'⚙️', health:'💊', sci:'🔬', oth:'📚', dip:'🛠️' }, II = ['🪙','🪙','💵','💵','💰','💰','🏦'], MI = ['📗','📘','📙','⭐','🏆'];
+    var PICK = { en:'Choose your course', kn:'ನಿಮ್ಮ ಕೋರ್ಸ್ ಆಯ್ಕೆಮಾಡಿ', hi:'अपना कोर्स चुनें' }, SPI = { exs:'🎖️', dis:'♿', bocw:'👷', lwf:'🏭' };
     var html = '<div class="fnd" id="finder"><h4>'+f.t+'</h4><p class="sub" style="margin:0">'+esc(f.s)+'</p><div class="fgrid">'
-      + '<label class="w">'+f.course + sel('c', [['','—']].concat(['med','eng','health','sci','oth','dip'].map(function(k){ return [k, f.courses[k]]; })), p.c || '') + '</label>'
-      + '<label>'+f.gender + sel('g', [['girl', f.genders.girl], ['boy', f.genders.boy]], p.g || 'girl') + '</label>'
-      + '<label>'+f.cat + sel('cat', ['gen','obc','sc','st','min'].map(function(k){ return [k, f.cats[k]]; }), p.cat || 'gen') + '</label>'
-      + '<label>'+f.inc + sel('inc', f.incs.map(function(t, i){ return [i, t]; }), p.inc == null ? 2 : p.inc) + '</label>'
-      + '<label>'+f.mk + sel('mk', f.mks.map(function(t, i){ return [i, t]; }), p.mk == null ? 2 : p.mk) + '</label>'
-      + '<label class="w">'+f.govt + sel('govt', [['no', f.no], ['yes', f.yes]], p.govt || 'no') + '</label>'
-      + '<div class="fsp"><b>'+f.sp+'</b>' + ['exs','dis','bocw','lwf'].map(function(k){ return '<label><input type="checkbox" data-sp="'+k+'"'+(p.sp && p.sp[k] ? ' checked' : '')+'> '+esc(f.sps[k])+'</label>'; }).join('') + '</div>'
+      + '<div class="fl w">'+f.course + sel('c', [['', PICK[lang] || PICK.en, '🎓']].concat(['med','eng','health','sci','oth','dip'].map(function(k){ return [k, f.courses[k], CI[k]]; })), p.c || '') + '</div>'
+      + '<div class="fl">'+f.gender + sel('g', [['girl', f.genders.girl, '👩‍🎓'], ['boy', f.genders.boy, '👨‍🎓']], p.g || 'girl') + '</div>'
+      + '<div class="fl">'+f.cat + sel('cat', ['gen','obc','sc','st','min'].map(function(k){ return [k, f.cats[k], '🏷️']; }), p.cat || 'gen') + '</div>'
+      + '<div class="fl">'+f.inc + sel('inc', f.incs.map(function(t, i){ return [i, t, II[i]]; }), p.inc == null ? 2 : p.inc) + '</div>'
+      + '<div class="fl">'+f.mk + sel('mk', f.mks.map(function(t, i){ return [i, t, MI[i]]; }), p.mk == null ? 2 : p.mk) + '</div>'
+      + '<div class="fl w">'+f.govt + sel('govt', [['no', f.no, '🏢'], ['yes', f.yes, '🏫']], p.govt || 'no') + '</div>'
+      + '<div class="fsp"><b>'+f.sp+'</b>' + ['exs','dis','bocw','lwf'].map(function(k){ var on = !!(p.sp && p.sp[k]); return '<button type="button" data-sp="'+k+'" aria-pressed="'+on+'"><span class="di">'+SPI[k]+'</span><span>'+esc(f.sps[k])+'</span><span class="tk">✓</span></button>'; }).join('') + '</div>'
       + '</div><div class="qact"><button class="btn" type="button" id="fGo">'+f.go+'</button><button class="btn ghost" type="button" id="fReset">'+f.reset+'</button></div>';
     if(showFind && prof && prof.c){
       var res = S.list.map(function(x){ var m = schMatch(x, prof); return m ? { x:x, m:m } : null; }).filter(Boolean)
@@ -518,12 +540,33 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
     var id = 'ln-' + b.dataset.lid; schOpen[id] = !schOpen[id];
     b.closest('.car').classList.toggle('open', !!schOpen[id]); b.setAttribute('aria-expanded', !!schOpen[id]);
   });
+  function ddClose(except){ document.querySelectorAll('.dd.open').forEach(function(d){ if(d === except) return; d.classList.remove('open'); d.querySelector('.ddl').hidden = true; d.querySelector('.ddb').setAttribute('aria-expanded', 'false'); }); }
+  document.addEventListener('click', function(e){ if(!e.target.closest('.dd')) ddClose(); });
+  document.addEventListener('keydown', function(e){
+    var d = e.target.closest && e.target.closest('.dd'); if(!d) return;
+    if(e.key === 'Escape'){ ddClose(); d.querySelector('.ddb').focus(); return; }
+    if(e.key === 'ArrowDown' || e.key === 'ArrowUp'){
+      e.preventDefault(); if(!d.classList.contains('open')) d.querySelector('.ddb').click();
+      var o = [].slice.call(d.querySelectorAll('.ddl button')), i = o.indexOf(document.activeElement);
+      (o[i < 0 ? 0 : Math.max(0, Math.min(o.length - 1, i + (e.key === 'ArrowDown' ? 1 : -1)))] || o[0]).focus();
+    }
+  });
   $('sch').addEventListener('click', function(e){
+    var db = e.target.closest('.ddb');
+    if(db){ var d = db.closest('.dd'), op = !d.classList.contains('open'); ddClose(d); d.classList.toggle('open', op); d.querySelector('.ddl').hidden = !op; db.setAttribute('aria-expanded', op);
+      if(op){ var cur = d.querySelector('[aria-selected="true"]') || d.querySelector('.ddl button'); if(cur) cur.focus({ preventScroll:true }); var l = d.querySelector('.ddl'), r = l.getBoundingClientRect(); if(r.bottom > innerHeight) window.scrollBy({ top:r.bottom - innerHeight + 16, behavior:'smooth' }); }
+      return; }
+    var dop = e.target.closest('.ddl button');
+    if(dop){ var dd = dop.closest('.dd'); dd.dataset.v = dop.dataset.o; dd.classList.remove('ph', 'err');
+      dd.querySelectorAll('.ddl button').forEach(function(x){ x.setAttribute('aria-selected', x === dop); });
+      dd.querySelector('.ddb .di').textContent = dop.querySelector('.di').textContent; dd.querySelector('.ddb .dt').textContent = dop.querySelector('.dt').textContent;
+      ddClose(); dd.querySelector('.ddb').focus(); return; }
+    var spb = e.target.closest('[data-sp]'); if(spb){ spb.setAttribute('aria-pressed', spb.getAttribute('aria-pressed') !== 'true'); return; }
     if(e.target.id === 'fGo'){
       var p = { sp:{} };
-      $('finder').querySelectorAll('[data-f]').forEach(function(el){ p[el.dataset.f] = /^(inc|mk)$/.test(el.dataset.f) ? +el.value : el.value; });
-      $('finder').querySelectorAll('[data-sp]').forEach(function(el){ if(el.checked) p.sp[el.dataset.sp] = 1; });
-      if(!p.c){ var cs = $('finder').querySelector('[data-f="c"]'); cs.focus(); cs.style.borderColor = '#D0544B'; return; }
+      $('finder').querySelectorAll('.dd[data-f]').forEach(function(el){ p[el.dataset.f] = /^(inc|mk)$/.test(el.dataset.f) ? +el.dataset.v : el.dataset.v; });
+      $('finder').querySelectorAll('[data-sp]').forEach(function(el){ if(el.getAttribute('aria-pressed') === 'true') p.sp[el.dataset.sp] = 1; });
+      if(!p.c){ var cs = $('finder').querySelector('.dd[data-f="c"]'); cs.classList.add('err'); cs.querySelector('.ddb').focus(); cs.scrollIntoView({ behavior:'smooth', block:'center' }); return; }
       prof = p; showFind = true; try{ localStorage.setItem('baio_sch_finder', JSON.stringify(p)); }catch(x){}
       renderSch(); var r = $('fres'); if(r) r.scrollIntoView({ behavior:'smooth', block:'start' }); return;
     }
