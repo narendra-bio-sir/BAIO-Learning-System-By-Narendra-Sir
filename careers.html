@@ -149,7 +149,6 @@ ol.stp{margin:0;padding-left:20px;font-size:14.5px;line-height:1.55}ol.stp li{ma
 .box .sub{margin:0;color:var(--dim);font-size:13.5px;line-height:1.5}
 ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{margin:4px 0}
 #loans,#cols,#abroad{scroll-margin-top:64px}
-.qcard.lock-btn{border-color:var(--gold2);border-style:dashed}.qcard.lock-btn small{display:block;line-height:1.45;margin-top:2px}
 .qcard.ab-btn{border-color:#0EA5E9}.qcard.ab-btn small{display:block;line-height:1.4;margin-top:2px}
 /* study abroad */
 .abl{display:grid;gap:8px;margin-top:8px}
@@ -256,7 +255,6 @@ ol.dl{margin:4px 0 0;padding-left:22px;font-size:14px;line-height:1.55}ol.dl li{
   <button class="qcard sch-btn" id="schOpen" type="button"><span class="e">💰</span><span><b id="schT"></b><small id="schS"></small></span></button>
   <button class="qcard loan-btn" id="loanOpen" type="button"><span class="e">🏦</span><span><b id="loanT"></b><small id="loanS"></small></span></button>
   <button class="qcard col-btn" id="colOpen" type="button"><span class="e">🏛️</span><span><b id="colT"></b><small id="colS"></small></span></button>
-  <button class="qcard lock-btn" id="lockOpen" type="button" hidden><span class="e">🔒</span><span><b id="lockT"></b><small id="lockS"></small></span></button>
   <button class="qcard ab-btn" id="abOpen" type="button"><span class="e">✈️</span><span><b id="abT"></b><small id="abS"></small></span></button>
   <div class="autost" id="autoSt" hidden></div>
   <div class="seg2" id="streams" role="tablist"></div>
@@ -331,22 +329,16 @@ ol.dl{margin:4px 0 0;padding-left:22px;font-size:14px;line-height:1.55}ol.dl li{
   var AB = window.STUDY_ABROAD, abTab = null;
   /* Members only: scholarships, education loans, top colleges and study abroad are shown only after a student
      opens their own report (roll number + report-card password) or the teacher's master code is unlocked
-     (careers/report.js → CareerReport.access()). Everyone else sees one locked card. */
-  var LOCK = {
-    en:{ t:'Scholarships, loans, colleges & study abroad', s:'For BAIO students only. Enter your roll number and report-card password in “My personal career report” above to unlock.' },
-    kn:{ t:'ವಿದ್ಯಾರ್ಥಿವೇತನ, ಸಾಲ, ಕಾಲೇಜುಗಳು ಮತ್ತು ವಿದೇಶ ಶಿಕ್ಷಣ', s:'BAIO ವಿದ್ಯಾರ್ಥಿಗಳಿಗೆ ಮಾತ್ರ. ಮೇಲಿನ ವೃತ್ತಿ ವರದಿಯಲ್ಲಿ ನಿಮ್ಮ ರೋಲ್ ಸಂಖ್ಯೆ ಮತ್ತು ರಿಪೋರ್ಟ್ ಕಾರ್ಡ್ ಪಾಸ್‌ವರ್ಡ್ ನಮೂದಿಸಿ ತೆರೆಯಿರಿ.' },
-    hi:{ t:'स्कॉलरशिप, लोन, कॉलेज और विदेश में पढ़ाई', s:'सिर्फ़ BAIO छात्रों के लिए। ऊपर अपनी करियर रिपोर्ट में रोल नंबर और रिपोर्ट कार्ड पासवर्ड डालकर खोलें।' }
-  };
+     (careers/report.js → CareerReport.access()). For everyone else they are simply not there. */
   function member(){ return !!(window.CareerReport && window.CareerReport.access && window.CareerReport.access()); }
   var pendingLink = null;   /* a deep link to a members-only section, run once the student has unlocked */
   function gate(){
-    var ok = member(), l = LOCK[lang] || LOCK.en;
+    var ok = member();
     [['schOpen', 'sch', S], ['loanOpen', 'loans', LN], ['colOpen', 'cols', TC], ['abOpen', 'abroad', AB]].forEach(function(g){
       $(g[0]).hidden = !ok || !g[2]; $(g[1]).hidden = !ok || !g[2];
     });
-    $('lockOpen').hidden = ok; $('lockT').textContent = l.t; $('lockS').textContent = l.s;
   }
-  function toLock(){ $('myReport').scrollIntoView({ behavior:'smooth', block:'start' }); setTimeout(function(){ var r = document.getElementById('cpRoll'); if(r && !r.value) r.focus({ preventScroll:true }); }, 500); }
+
   var S = window.SCHOLARSHIPS, LN = window.EDU_LOANS, schCat = 'all', schOpen = {}, prof = null, showFind = false;
   try{ prof = JSON.parse(localStorage.getItem('baio_sch_finder') || 'null'); if(prof) showFind = true; }catch(e){}
   function courseOfCareer(id){ if(!S || !S.courseOf) return null; for(var k in S.courseOf) if(S.courseOf[k].indexOf(id) >= 0) return k; return null; }
@@ -705,19 +697,17 @@ ol.dl{margin:4px 0 0;padding-left:22px;font-size:14px;line-height:1.55}ol.dl li{
     b.closest('.car').classList.toggle('open', !!schOpen[id]); b.setAttribute('aria-expanded', !!schOpen[id]);
     clearHash();
   });
-  $('lockOpen').onclick = toLock;
   window.addEventListener('baio-career-access', function(){
     render();
     if(member() && pendingLink){ var f = pendingLink; pendingLink = null; setTimeout(f, 150); }
   });
   if(!S){ $('schOpen').hidden = true; $('sch').hidden = true; }
   render();
-  /* members-only deep link before the report has loaded: remember it and show the locked card meanwhile */
+  /* members-only deep link before the report has loaded: remember it and open it once the code is accepted;
+     for anyone without a code the link just opens the page normally */
   var GATED = /^(scholarships|loans|finder|colleges(-med|-eng)?|abroad(-med|-oth)?|sch-|ln-)/.test(h);
-  if(GATED && !member()){
-    pendingLink = function(){ deepLink(); };
-    setTimeout(function(){ if(!member()) $('lockOpen').scrollIntoView({ behavior:'smooth', block:'center' }); }, 600);
-  } else deepLink();
+  if(GATED && !member()) pendingLink = function(){ deepLink(); };
+  else deepLink();
   function deepLink(){
   if(hc) setTimeout(function(){ go(hc.id); }, 200);
   else if(h === 'loans' || h.indexOf('ln-') === 0) setTimeout(function(){ toLoans(); }, 200);
