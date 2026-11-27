@@ -974,7 +974,6 @@ button.bh-chip{font:inherit;color:inherit;cursor:pointer}
 #bhPremSheet .bh-pills a.pri{background:linear-gradient(120deg,#F59E0B,#EA580C);border-color:transparent;color:#fff !important}
 #bhPremSheet .bh-nch .no{background:rgba(251,191,36,.18);color:#B45309}
 #bhPremSheet .bh-pdeal{background:linear-gradient(135deg,rgba(251,191,36,.16),rgba(234,88,12,.10))}
-#bhPremSheet .bh-pills a .eye{font-style:normal;font-size:11px;margin-left:2px;padding:1px 5px;border-radius:99px;background:rgba(124,58,237,.14)}
 :root:not([data-theme="light"]) #bhPremSheet .bh-pills a{color:#FCD34D !important;border-color:rgba(252,211,77,.4);background:rgba(252,211,77,.08)}
 :root:not([data-theme="light"]) #bhPremSheet .bh-pills a.pri{color:#fff !important;background:linear-gradient(120deg,#F59E0B,#EA580C);border-color:transparent}
 :root:not([data-theme="light"]) #bhPremSheet .bh-nch .no{color:#FCD34D}
@@ -4418,7 +4417,7 @@ window.indexHardRefresh = indexHardRefresh;
     load(function(){
       if(want!==k) return;
       var D=window.STORE_DATA, ids=chapters(D, k), key='pu'+k+'-all';
-      var html='<p class="bh-nnote">Tap a pill for a free 👁 preview (watermarked), then buy and unlock it on this phone. '+ids.length+' chapters.</p>';
+      var html='<p class="bh-nnote">Tap a pill for a free preview (watermarked), then buy and unlock it on this phone. '+ids.length+' chapters.</p>';
       var deals=[];
       if(D.hwnB && D.hwnB[key]) deals.push('<a class="pri" href="handwritten-notes.html#'+key+'">✍️ All '+(k==='1'?'I':'II')+' PUC Handwritten Notes · '+rs(D.hwnB[key])+'</a>');
       if(D.mmB && D.mmB[key]) deals.push('<a class="pri" href="mind-maps.html#'+key+'">🗺️ All '+(k==='1'?'I':'II')+' PUC Mind Maps · '+rs(D.mmB[key])+'</a>');
@@ -4427,7 +4426,7 @@ window.indexHardRefresh = indexHardRefresh;
       html+=ids.map(function(id){
         var c=D.ch[id], n=id.split('-ch')[1];
         return '<div class="bh-nch"><div class="hd"><span class="no">'+n+'</span><span class="nm">'+esc(c.t)+'</span>'+(c.h?'<a class="op" href="'+esc(c.h)+'">Open ›</a>':'')+'</div>'
-          +'<div class="bh-pills">'+items(D, id).map(function(x){ return '<a href="'+esc(x.h)+'"'+(x.pv&&x.pv.length?' data-pv="'+id+'|'+x.k+'"':'')+'>'+x.e+' '+esc(x.t)+' <small>'+rs(x.p)+'</small>'+(x.pv&&x.pv.length?' <i class="eye" aria-label="preview">👁</i>':'')+'</a>'; }).join('')+'</div></div>';
+          +'<div class="bh-pills">'+items(D, id).map(function(x){ return '<a href="'+esc(x.h)+'"'+(x.pv&&x.pv.length?' data-pv="'+id+'|'+x.k+'"':'')+'>'+x.e+' '+esc(x.t)+' <small>'+rs(x.p)+'</small></a>'; }).join('')+'</div></div>';
       }).join('');
       html+='<a class="bh-mfoot" href="store.html">See everything in the BAIO Store →</a>';
       list.innerHTML=html; list.scrollTop=0;
