@@ -6,7 +6,7 @@
 (function(){
   if(window.QuickCard) return;
   const SITE='https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/';
-  const V='?v=2';
+  const V='?v=3';
   function css(){
     if(document.getElementById('qcwCss')) return;
     const s=document.createElement('style'); s.id='qcwCss';
