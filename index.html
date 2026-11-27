@@ -545,8 +545,11 @@ body{background:var(--bh-bg);}
 .bh-hi b{font-size:19px;font-weight:700;}
 .bh-ibs{display:flex;gap:10px;}
 .bh-ib{width:42px;height:42px;border-radius:14px;background:var(--bh-card);display:grid;place-items:center;box-shadow:0 4px 14px var(--bh-sh);position:relative;font-size:18px;border:0;cursor:pointer;color:var(--bh-ink);}
-.bh-ib i{position:absolute;top:9px;right:10px;width:8px;height:8px;border-radius:50%;background:#FF4D7E;border:2px solid var(--bh-card);display:none;}
-.bh-ib.dot i{display:block;}
+.bh-ib i{position:absolute;top:-5px;right:-5px;min-width:20px;height:20px;padding:0 5px;box-sizing:border-box;border-radius:99px;background:#FF3D71;border:2px solid var(--bh-card);display:none;
+ font:800 11px/16px Poppins,system-ui,sans-serif;font-style:normal;color:#fff;text-align:center;box-shadow:0 3px 8px rgba(255,61,113,.45);}
+.bh-ib.dot i{display:block;animation:bhBadgePop .35s ease-out;}
+@keyframes bhBadgePop{0%{transform:scale(.3)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion: reduce){.bh-ib.dot i{animation:none}}
 .bh-hero{margin-top:12px;border-radius:26px;padding:22px 20px 20px;color:#fff;position:relative;overflow:hidden;min-height:200px;
  background:radial-gradient(circle at 85% 30%,rgba(255,120,200,.55),transparent 45%),linear-gradient(135deg,#4A1FD1 0%,#6E3BF0 50%,#9B6BFF 100%);box-shadow:0 18px 36px rgba(91,46,224,.35);}
 .bh-hero .bh-tag{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.18);padding:4px 10px;border-radius:99px;font-family:inherit;}
@@ -1818,6 +1821,7 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
       bellIcon?.classList.add('bell-ring');
       const bellCount = document.getElementById('bellCount');
       if(bellCount){ bellCount.textContent = unreadCount; bellCount.style.display = 'flex'; }
+      if(window.bhBellNum) window.bhBellNum(unreadCount);
       const banner = document.getElementById('announcementBanner');
       if(banner){
         document.getElementById('announceBannerText').textContent =
@@ -1836,6 +1840,7 @@ if(!n){try{n=c(localStorage.getItem('baio_user_name'));}catch(e){}}n=n.split(' '
         bellIcon?.classList.remove('bell-ring');
         if(bellCount) bellCount.style.display = 'none';
         if(banner) banner.style.display = 'none';
+        if(window.bhBellNum) window.bhBellNum(0);
       }
 
       // Closing the summary popup or dismissing the banner just hides them —
@@ -4168,10 +4173,18 @@ window.indexHardRefresh = indexHardRefresh;
   var qa=document.querySelector('.quick-actions-row'); if(qa&&!qa.id) qa.id='bhTools';
   document.getElementById('bhTheme').addEventListener('click',function(){var b=document.getElementById('themeToggleBtn'); if(b) b.click();});
   document.getElementById('bhNavHome').addEventListener('click',function(e){e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'});});
+  /* top-bar bell: red badge with the number of unread announcements (9+ above nine) */
+  window.bhBellNum=function(n){
+    var b=document.getElementById('bhBell'); if(!b) return; var i=b.querySelector('i');
+    n=Math.max(0,n|0); b.classList.toggle('dot', n>0); if(i) i.textContent = n>9 ? '9+' : (n>0 ? String(n) : '');
+    b.setAttribute('aria-label', n>0 ? 'Announcements, '+n+' new' : 'Announcements');
+  };
   function sync(){
     try{
-      var ab=document.getElementById('announcementBanner');
-      document.getElementById('bhBell').classList.toggle('dot', !!(ab && ab.style.display!=='none'));
+      var ab=document.getElementById('announcementBanner'), bc=document.getElementById('bellCount');
+      var un=(bc && bc.style.display!=='none') ? (parseInt(bc.textContent,10)||0) : 0;
+      if(!un && ab && ab.style.display!=='none') un=1;
+      window.bhBellNum(un);
       var cw=document.getElementById('continueWidget'), cb=document.getElementById('cwBtn');
       if(cw&&cw.classList.contains('show')&&cb&&cb.getAttribute('href')) document.getElementById('bhGo').setAttribute('href',cb.getAttribute('href'));
       if(typeof CHAPTERS!=='undefined'){
