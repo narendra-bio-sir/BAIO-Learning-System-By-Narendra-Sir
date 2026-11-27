@@ -79,6 +79,7 @@ body{font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',system-ui,sans
 </main>
 <div class="toast" id="toast" role="status"></div>
 <script src="guru-mantra/data.js?v=2"></script>
+<script src="guru-mantra/share.js?v=1" defer></script>
 <script>
 (function(){
   var G = window.GURU_MANTRA, UI = G.ui;
@@ -117,9 +118,11 @@ body{font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',system-ui,sans
     return (stk.d === TODAY || stk.d === ymd(y)) ? stk.n : 0;
   }
 
+  var SITE = 'https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/';
+  function dateStr(){ return now.toLocaleDateString(lang === 'kn' ? 'kn-IN' : lang === 'hi' ? 'hi-IN' : 'en-IN', { weekday:'long', day:'numeric', month:'long' }); }
   function renderToday(){
     var u = UI[lang], it = todayItem(), done = stk && stk.d === TODAY, n = streakNow();
-    var dt = now.toLocaleDateString(lang === 'kn' ? 'kn-IN' : lang === 'hi' ? 'hi-IN' : 'en-IN', { weekday:'long', day:'numeric', month:'long' });
+    var dt = dateStr();
     $('today').innerHTML = '<span class="lamp" aria-hidden="true">🪔</span><div class="lb">'+esc(u.today)+'</div><div class="dt">'+esc(dt)+'</div>'
       + '<span class="sc">'+it.s.ic+' '+esc(L(it.s.t))+'</span>'
       + '<blockquote>'+esc(L(it.x.m))+'</blockquote>'
@@ -169,7 +172,9 @@ body{font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',system-ui,sans
       stk = { d:TODAY, n:streakNow() + 1 }; put('baio_gm_streak', stk); renderToday(); return;
     }
     if(b.id === 'tShare'){
-      var it = todayItem(), url = location.href.split('#')[0];
+      var it = todayItem(), url = SITE + 'guru-mantra.html';
+      var o = { date:dateStr(), ymd:TODAY, url:url, by:u.by, how:u.how, today:u.today, h1:u.h1 };
+      if(window.gmShare){ gmShare(it, lang, o); return; }
       var text = '🪔 ' + u.h1 + '\n\n“' + L(it.x.m) + '”\n' + u.how + ': ' + L(it.x.d) + '\n' + u.by;
       if(navigator.share){ navigator.share({ title:u.h1, text:text, url:url }).catch(function(){}); }
       else { window.open('https://wa.me/?text=' + encodeURIComponent(text + '\n' + url), '_blank', 'noopener'); }
