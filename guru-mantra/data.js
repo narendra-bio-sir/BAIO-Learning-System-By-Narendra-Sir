@@ -1,8 +1,34 @@
-/* BAIO Guru Mantra (guru-mantra.html): Narendra Sir's mantras for study, memory, exams, NEET/KCET, routine, mind and
-   motivation. Each mantra is {m:{en,kn,hi}, d:{en,kn,hi}} — m is the short mantra, d the one-line "how". Memory-trick
+/* BAIO Guru Mantra (guru-mantra.html): Narendra Sir's Gurupadesh (life teachings) and mantras for study, memory, exams,
+   NEET/KCET, routine, mind and motivation. Each mantra is {m:{en,kn,hi}, d:{en,kn,hi}} — m is the short mantra, d the one-line "how". Memory-trick
    phrases stay in English (they are letter codes); only the explanation is translated. */
 window.GURU_MANTRA = {
   secs: [
+    { id:'upadesh', ic:'🙏', t:{en:'Gurupadesh', kn:'ಗುರೂಪದೇಶ', hi:'गुरु उपदेश'}, list: [
+      { m:{en:'Respect your parents and teachers — their blessings travel with you.', kn:'ಪೋಷಕರು ಮತ್ತು ಗುರುಗಳನ್ನು ಗೌರವಿಸಿ — ಅವರ ಆಶೀರ್ವಾದ ನಿಮ್ಮೊಂದಿಗೆ ಸಾಗುತ್ತದೆ.', hi:'माता-पिता और गुरुओं का सम्मान करें — उनका आशीर्वाद हमेशा साथ चलता है।'},
+        d:{en:'Say thank you to them every day. Their sacrifice is the fuel of your success.', kn:'ಪ್ರತಿದಿನ ಅವರಿಗೆ ಧನ್ಯವಾದ ಹೇಳಿ. ಅವರ ತ್ಯಾಗವೇ ನಿಮ್ಮ ಯಶಸ್ಸಿನ ಇಂಧನ.', hi:'हर दिन उन्हें धन्यवाद कहें। उनका त्याग ही आपकी सफलता का ईंधन है।'} },
+      { m:{en:'Discipline is doing what must be done, even when you don’t feel like it.', kn:'ಮನಸ್ಸಿಲ್ಲದಿದ್ದರೂ ಮಾಡಬೇಕಾದ್ದನ್ನು ಮಾಡುವುದೇ ಶಿಸ್ತು.', hi:'मन न हो तब भी जो करना ज़रूरी है, वह करना ही अनुशासन है।'},
+        d:{en:'Motivation comes and goes; a fixed routine carries you on lazy days.', kn:'ಪ್ರೇರಣೆ ಬರುತ್ತದೆ, ಹೋಗುತ್ತದೆ; ಆಲಸ್ಯದ ದಿನಗಳಲ್ಲಿ ನಿಗದಿತ ದಿನಚರಿಯೇ ನಿಮ್ಮನ್ನು ಮುಂದೆ ಸಾಗಿಸುತ್ತದೆ.', hi:'प्रेरणा आती-जाती रहती है; आलस वाले दिनों में तय दिनचर्या ही आगे ले जाती है।'} },
+      { m:{en:'Honesty in exams is honesty in life.', kn:'ಪರೀಕ್ಷೆಯಲ್ಲಿ ಪ್ರಾಮಾಣಿಕತೆಯೇ ಜೀವನದ ಪ್ರಾಮಾಣಿಕತೆ.', hi:'परीक्षा में ईमानदारी ही जीवन की ईमानदारी है।'},
+        d:{en:'Never copy or cheat. A mark earned honestly builds confidence that no shortcut can give.', kn:'ಎಂದಿಗೂ ನಕಲು ಮಾಡಬೇಡಿ. ಪ್ರಾಮಾಣಿಕವಾಗಿ ಗಳಿಸಿದ ಅಂಕ ಯಾವ ಅಡ್ಡದಾರಿಯೂ ಕೊಡದ ಆತ್ಮವಿಶ್ವಾಸ ಕೊಡುತ್ತದೆ.', hi:'कभी नकल न करें। ईमानदारी से कमाया अंक वह आत्मविश्वास देता है जो कोई शॉर्टकट नहीं दे सकता।'} },
+      { m:{en:'Failure is a teacher, not a judge.', kn:'ಸೋಲು ಗುರು, ತೀರ್ಪುಗಾರನಲ್ಲ.', hi:'असफलता शिक्षक है, न्यायाधीश नहीं।'},
+        d:{en:'Every topper has failed somewhere. Find the lesson, correct it and try again.', kn:'ಪ್ರತಿ ಟಾಪರ್ ಎಲ್ಲೋ ಒಮ್ಮೆ ಸೋತಿದ್ದಾರೆ. ಪಾಠ ಕಲಿತು, ಸರಿಪಡಿಸಿ, ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.', hi:'हर टॉपर कहीं न कहीं असफल हुआ है। सबक सीखें, सुधारें और फिर कोशिश करें।'} },
+      { m:{en:'Use the phone as a tool, not a toy.', kn:'ಫೋನ್ ಅನ್ನು ಆಟಿಕೆಯಾಗಿ ಅಲ್ಲ, ಸಾಧನವಾಗಿ ಬಳಸಿ.', hi:'फ़ोन को खिलौना नहीं, औज़ार की तरह इस्तेमाल करें।'},
+        d:{en:'Learn with BAIO, then keep it away. Hours lost to reels never come back.', kn:'BAIO ನಲ್ಲಿ ಕಲಿಯಿರಿ, ನಂತರ ದೂರ ಇಡಿ. ರೀಲ್ಸ್‌ನಲ್ಲಿ ಕಳೆದ ಗಂಟೆಗಳು ಮರಳಿ ಬರುವುದಿಲ್ಲ.', hi:'BAIO से सीखें, फिर फ़ोन दूर रखें। रील्स में गँवाए घंटे वापस नहीं आते।'} },
+      { m:{en:'Choose friends who make you better.', kn:'ನಿಮ್ಮನ್ನು ಉತ್ತಮರನ್ನಾಗಿಸುವ ಸ್ನೇಹಿತರನ್ನು ಆರಿಸಿ.', hi:'ऐसे दोस्त चुनें जो आपको बेहतर बनाएँ।'},
+        d:{en:'Study with friends who ask questions and share notes; stay away from habits that pull you down.', kn:'ಪ್ರಶ್ನೆ ಕೇಳುವ, ನೋಟ್ಸ್ ಹಂಚುವ ಸ್ನೇಹಿತರೊಂದಿಗೆ ಓದಿ; ನಿಮ್ಮನ್ನು ಕೆಳಗೆಳೆಯುವ ಅಭ್ಯಾಸಗಳಿಂದ ದೂರವಿರಿ.', hi:'सवाल पूछने और नोट्स बाँटने वाले दोस्तों के साथ पढ़ें; नीचे खींचने वाली आदतों से दूर रहें।'} },
+      { m:{en:'Health is the first wealth.', kn:'ಆರೋಗ್ಯವೇ ಮೊದಲ ಸಂಪತ್ತು.', hi:'स्वास्थ्य ही पहला धन है।'},
+        d:{en:'Eat home food, sleep on time and walk or play daily. A healthy body keeps the mind sharp.', kn:'ಮನೆ ಊಟ ಮಾಡಿ, ಸಮಯಕ್ಕೆ ಮಲಗಿ, ಪ್ರತಿದಿನ ನಡೆಯಿರಿ ಅಥವಾ ಆಡಿ. ಆರೋಗ್ಯಕರ ದೇಹ ಮನಸ್ಸನ್ನು ಚುರುಕಾಗಿಡುತ್ತದೆ.', hi:'घर का खाना खाएँ, समय पर सोएँ और रोज़ टहलें या खेलें। स्वस्थ शरीर दिमाग़ को तेज़ रखता है।'} },
+      { m:{en:'Be grateful every day.', kn:'ಪ್ರತಿದಿನ ಕೃತಜ್ಞರಾಗಿರಿ.', hi:'हर दिन कृतज्ञ रहें।'},
+        d:{en:'Before sleeping, think of three good things from the day. Gratitude keeps the mind calm and positive.', kn:'ಮಲಗುವ ಮೊದಲು ದಿನದ ಮೂರು ಒಳ್ಳೆಯ ವಿಷಯಗಳನ್ನು ನೆನಪಿಸಿಕೊಳ್ಳಿ. ಕೃತಜ್ಞತೆ ಮನಸ್ಸನ್ನು ಶಾಂತ ಮತ್ತು ಸಕಾರಾತ್ಮಕವಾಗಿಡುತ್ತದೆ.', hi:'सोने से पहले दिन की तीन अच्छी बातें याद करें। कृतज्ञता मन को शांत और सकारात्मक रखती है।'} },
+      { m:{en:'Dream big, start small, act today.', kn:'ದೊಡ್ಡ ಕನಸು ಕಾಣಿ, ಸಣ್ಣದಾಗಿ ಆರಂಭಿಸಿ, ಇಂದೇ ಕಾರ್ಯಪ್ರವೃತ್ತರಾಗಿ.', hi:'बड़ा सपना देखें, छोटे से शुरू करें, आज ही कदम उठाएँ।'},
+        d:{en:'Write down your goal — doctor, engineer, scientist — and take one small step towards it every day.', kn:'ನಿಮ್ಮ ಗುರಿಯನ್ನು ಬರೆಯಿರಿ — ವೈದ್ಯ, ಎಂಜಿನಿಯರ್, ವಿಜ್ಞಾನಿ — ಪ್ರತಿದಿನ ಅದರತ್ತ ಒಂದು ಸಣ್ಣ ಹೆಜ್ಜೆ ಇಡಿ.', hi:'अपना लक्ष्य लिखें — डॉक्टर, इंजीनियर, वैज्ञानिक — और हर दिन उसकी ओर एक छोटा कदम बढ़ाएँ।'} },
+      { m:{en:'Help others learn — knowledge grows when shared.', kn:'ಇತರರಿಗೆ ಕಲಿಯಲು ಸಹಾಯ ಮಾಡಿ — ಹಂಚಿದಾಗ ಜ್ಞಾನ ಬೆಳೆಯುತ್ತದೆ.', hi:'दूसरों को सीखने में मदद करें — बाँटने से ज्ञान बढ़ता है।'},
+        d:{en:'Explain a topic to a classmate who finds it hard. Teaching deepens your own understanding.', kn:'ಕಷ್ಟಪಡುವ ಸಹಪಾಠಿಗೆ ಒಂದು ವಿಷಯ ವಿವರಿಸಿ. ಕಲಿಸುವುದು ನಿಮ್ಮದೇ ತಿಳುವಳಿಕೆಯನ್ನು ಆಳಗೊಳಿಸುತ್ತದೆ.', hi:'जिस सहपाठी को कठिन लगे, उसे टॉपिक समझाएँ। सिखाने से आपकी अपनी समझ गहरी होती है।'} },
+      { m:{en:'Patience is power.', kn:'ತಾಳ್ಮೆಯೇ ಶಕ್ತಿ.', hi:'धैर्य ही शक्ति है।'},
+        d:{en:'Results take time. Keep sowing effort like a farmer — the harvest comes in its season.', kn:'ಫಲಿತಾಂಶಕ್ಕೆ ಸಮಯ ಬೇಕು. ರೈತನಂತೆ ಪರಿಶ್ರಮದ ಬೀಜ ಬಿತ್ತುತ್ತಿರಿ — ಫಸಲು ಅದರ ಕಾಲಕ್ಕೆ ಬರುತ್ತದೆ.', hi:'नतीजों में समय लगता है। किसान की तरह मेहनत बोते रहें — फ़सल अपने मौसम में आएगी।'} },
+      { m:{en:'Your character is your real certificate.', kn:'ನಿಮ್ಮ ಚಾರಿತ್ರ್ಯವೇ ನಿಜವಾದ ಪ್ರಮಾಣಪತ್ರ.', hi:'आपका चरित्र ही असली प्रमाणपत्र है।'},
+        d:{en:'Marks open doors; kindness, honesty and hard work keep them open for life.', kn:'ಅಂಕಗಳು ಬಾಗಿಲು ತೆರೆಯುತ್ತವೆ; ದಯೆ, ಪ್ರಾಮಾಣಿಕತೆ ಮತ್ತು ಪರಿಶ್ರಮ ಅವುಗಳನ್ನು ಜೀವನಪೂರ್ತಿ ತೆರೆದಿಡುತ್ತವೆ.', hi:'अंक दरवाज़े खोलते हैं; दया, ईमानदारी और मेहनत उन्हें जीवन भर खुला रखते हैं।'} }
+    ]},
     { id:'study', ic:'📚', t:{en:'Study mantras', kn:'ಓದಿನ ಮಂತ್ರಗಳು', hi:'पढ़ाई के मंत्र'}, list: [
       { m:{en:'NCERT is your bible — read it line by line.', kn:'NCERT ನಿಮ್ಮ ಗ್ರಂಥ — ಸಾಲು ಸಾಲಾಗಿ ಓದಿ.', hi:'NCERT आपकी गीता है — लाइन-दर-लाइन पढ़ें।'},
         d:{en:'Board, NEET and KCET questions come straight from NCERT lines, tables and figure labels.', kn:'ಬೋರ್ಡ್, NEET, KCET ಪ್ರಶ್ನೆಗಳು ನೇರವಾಗಿ NCERT ಸಾಲು, ಕೋಷ್ಟಕ ಮತ್ತು ಚಿತ್ರಗಳಿಂದ ಬರುತ್ತವೆ.', hi:'बोर्ड, NEET और KCET के सवाल सीधे NCERT की लाइनों, तालिकाओं और चित्रों से आते हैं।'} },
@@ -103,15 +129,15 @@ window.GURU_MANTRA = {
     ]}
   ],
   ui: {
-    en:{ eyebrow:'Special · From Narendra Sir', h1:'BAIO Guru Mantra', intro:'Narendra Sir’s mantras for study, memory, exams, NEET & KCET, routine and a calm mind. One new mantra every day.',
+    en:{ eyebrow:'Special · From Narendra Sir', h1:'BAIO Guru Mantra', intro:'Narendra Sir’s Gurupadesh for life, and mantras for study, memory, exams, NEET & KCET, routine and a calm mind. One new mantra every day.',
          today:'Today’s Guru Mantra', how:'How', share:'Share', follow:'I’ll follow it today', followed:'Following today ✓',
          streak:function(n){ return '🔥 ' + n + '-day mantra streak'; }, all:'All', saved:'Saved', save:'Save', unsave:'Saved', none:'Tap 💛 on any mantra to save it here.',
          count:function(n){ return n + ' mantras'; }, by:'— Narendra Sir, BAIO', copied:'Copied', note:'Memory tricks are aids — always learn the full NCERT content behind them.' },
-    kn:{ eyebrow:'ವಿಶೇಷ · ನರೇಂದ್ರ ಸರ್ ಅವರಿಂದ', h1:'BAIO ಗುರು ಮಂತ್ರ', intro:'ಓದು, ನೆನಪು, ಪರೀಕ್ಷೆ, NEET ಮತ್ತು KCET, ದಿನಚರಿ ಮತ್ತು ಶಾಂತ ಮನಸ್ಸಿಗೆ ನರೇಂದ್ರ ಸರ್ ಅವರ ಮಂತ್ರಗಳು. ಪ್ರತಿದಿನ ಒಂದು ಹೊಸ ಮಂತ್ರ.',
+    kn:{ eyebrow:'ವಿಶೇಷ · ನರೇಂದ್ರ ಸರ್ ಅವರಿಂದ', h1:'BAIO ಗುರು ಮಂತ್ರ', intro:'ಜೀವನಕ್ಕೆ ನರೇಂದ್ರ ಸರ್ ಅವರ ಗುರೂಪದೇಶ, ಜೊತೆಗೆ ಓದು, ನೆನಪು, ಪರೀಕ್ಷೆ, NEET ಮತ್ತು KCET, ದಿನಚರಿ ಮತ್ತು ಶಾಂತ ಮನಸ್ಸಿಗೆ ಮಂತ್ರಗಳು. ಪ್ರತಿದಿನ ಒಂದು ಹೊಸ ಮಂತ್ರ.',
          today:'ಇಂದಿನ ಗುರು ಮಂತ್ರ', how:'ಹೇಗೆ', share:'ಹಂಚಿ', follow:'ಇಂದು ಪಾಲಿಸುತ್ತೇನೆ', followed:'ಇಂದು ಪಾಲಿಸುತ್ತಿದ್ದೇನೆ ✓',
          streak:function(n){ return '🔥 ' + n + ' ದಿನಗಳ ಮಂತ್ರ ಸರಣಿ'; }, all:'ಎಲ್ಲಾ', saved:'ಉಳಿಸಿದವು', save:'ಉಳಿಸಿ', unsave:'ಉಳಿಸಲಾಗಿದೆ', none:'ಯಾವುದೇ ಮಂತ್ರದ 💛 ಒತ್ತಿ ಇಲ್ಲಿ ಉಳಿಸಿ.',
          count:function(n){ return n + ' ಮಂತ್ರಗಳು'; }, by:'— ನರೇಂದ್ರ ಸರ್, BAIO', copied:'ನಕಲಿಸಲಾಗಿದೆ', note:'ನೆನಪಿನ ತಂತ್ರಗಳು ಸಹಾಯಕ ಮಾತ್ರ — ಅವುಗಳ ಹಿಂದಿನ ಸಂಪೂರ್ಣ NCERT ವಿಷಯ ಕಲಿಯಿರಿ.' },
-    hi:{ eyebrow:'विशेष · नरेंद्र सर की ओर से', h1:'BAIO गुरु मंत्र', intro:'पढ़ाई, याददाश्त, परीक्षा, NEET और KCET, दिनचर्या और शांत मन के लिए नरेंद्र सर के मंत्र। हर दिन एक नया मंत्र।',
+    hi:{ eyebrow:'विशेष · नरेंद्र सर की ओर से', h1:'BAIO गुरु मंत्र', intro:'जीवन के लिए नरेंद्र सर का गुरु उपदेश, साथ ही पढ़ाई, याददाश्त, परीक्षा, NEET और KCET, दिनचर्या और शांत मन के मंत्र। हर दिन एक नया मंत्र।',
          today:'आज का गुरु मंत्र', how:'कैसे', share:'शेयर', follow:'आज इसे अपनाऊँगा', followed:'आज अपना रहा हूँ ✓',
          streak:function(n){ return '🔥 ' + n + ' दिन की मंत्र स्ट्रीक'; }, all:'सभी', saved:'सेव किए', save:'सेव', unsave:'सेव हुआ', none:'किसी भी मंत्र पर 💛 दबाकर यहाँ सेव करें।',
          count:function(n){ return n + ' मंत्र'; }, by:'— नरेंद्र सर, BAIO', copied:'कॉपी हुआ', note:'याद रखने की ट्रिक सिर्फ़ मदद है — उनके पीछे का पूरा NCERT कंटेंट ज़रूर पढ़ें।' }
