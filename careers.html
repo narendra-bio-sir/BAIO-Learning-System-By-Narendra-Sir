@@ -148,7 +148,20 @@ ol.stp{margin:0;padding-left:20px;font-size:14.5px;line-height:1.55}ol.stp li{ma
 .box h4{margin:16px 0 4px;font:700 15px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari'}
 .box .sub{margin:0;color:var(--dim);font-size:13.5px;line-height:1.5}
 ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{margin:4px 0}
-#loans,#cols{scroll-margin-top:64px}
+#loans,#cols,#abroad{scroll-margin-top:64px}
+.qcard.ab-btn{border-color:#0EA5E9}.qcard.ab-btn small{display:block;line-height:1.4;margin-top:2px}
+/* study abroad */
+.abl{display:grid;gap:8px;margin-top:8px}
+.abc{padding:10px 12px;border-radius:14px;background:var(--panel2);border:1px solid var(--line)}
+.abc .hd{display:flex;align-items:center;gap:8px}.abc .hd .fl{font-size:24px;line-height:1}
+.abc .hd b{font:700 15.5px/1.25 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari'}
+.abc dl{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin:8px 0 0;font-size:13px;line-height:1.4}
+.abc dt{color:var(--dim);font-weight:700}.abc dd{margin:0;font-weight:600}
+.abc p{margin:6px 0 0;font-size:13px;line-height:1.45;color:var(--dim)}
+ol.dl{margin:4px 0 0;padding-left:22px;font-size:14px;line-height:1.55}ol.dl li{margin:4px 0}
+.abx{display:grid;gap:2px;padding:8px 0;border-top:1px solid var(--line);font-size:13.5px;line-height:1.45}.abx b{font-weight:800}.abx span{color:var(--dim)}
+.abw{margin-top:10px;padding:10px 12px;border-radius:14px;border:1.5px solid #E0A82E;background:color-mix(in srgb,#E0A82E 9%,var(--panel))}
+.abw h4{margin:0 0 2px!important}
 .qcard.col-btn{border-color:#8B5CF6}.qcard.col-btn small{display:block;line-height:1.4;margin-top:2px}
 /* top colleges */
 .cst{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
@@ -242,6 +255,7 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
   <button class="qcard sch-btn" id="schOpen" type="button"><span class="e">💰</span><span><b id="schT"></b><small id="schS"></small></span></button>
   <button class="qcard loan-btn" id="loanOpen" type="button"><span class="e">🏦</span><span><b id="loanT"></b><small id="loanS"></small></span></button>
   <button class="qcard col-btn" id="colOpen" type="button"><span class="e">🏛️</span><span><b id="colT"></b><small id="colS"></small></span></button>
+  <button class="qcard ab-btn" id="abOpen" type="button"><span class="e">✈️</span><span><b id="abT"></b><small id="abS"></small></span></button>
   <div class="autost" id="autoSt" hidden></div>
   <div class="seg2" id="streams" role="tablist"></div>
   <div class="groups" id="groups" role="tablist"></div>
@@ -250,6 +264,7 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
   <section class="box" id="sch" aria-labelledby="schH"></section>
   <section class="box" id="loans" aria-labelledby="loanH"></section>
   <section class="box" id="cols" aria-labelledby="colH"></section>
+  <section class="box" id="abroad" aria-labelledby="abH"></section>
   <p class="note" id="note"></p>
   <footer>BAIO Learning System · Narendra Sir</footer>
 </main>
@@ -262,6 +277,7 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
 <script src="careers/data-sch.js?v=2"></script>
 <script src="careers/data-loan.js?v=1"></script>
 <script src="careers/data-col.js?v=1"></script>
+<script src="careers/data-abroad.js?v=1"></script>
 <script src="careers/report.js?v=15"></script>
 <script src="careers/share-card.js?v=2" defer></script>
 <script>
@@ -310,6 +326,7 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
   try{ if('scrollRestoration' in history) history.scrollRestoration = 'manual'; }catch(e){}
   function clearHash(){ try{ if(location.hash && !/report=/.test(location.hash)) history.replaceState(null, '', location.href.split('#')[0]); }catch(e){} }
   var TC = window.TOP_COLLEGES, colTab = null, colF = 'all';
+  var AB = window.STUDY_ABROAD, abTab = null;
   var S = window.SCHOLARSHIPS, LN = window.EDU_LOANS, schCat = 'all', schOpen = {}, prof = null, showFind = false;
   try{ prof = JSON.parse(localStorage.getItem('baio_sch_finder') || 'null'); if(prof) showFind = true; }catch(e){}
   function courseOfCareer(id){ if(!S || !S.courseOf) return null; for(var k in S.courseOf) if(S.courseOf[k].indexOf(id) >= 0) return k; return null; }
@@ -353,7 +370,7 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
   else if(h.indexOf('sch') === 0 && S){ var hs = S.list.filter(function(x){ return 'sch-' + x.id === h; })[0]; if(hs) schOpen[hs.id] = true; }
   if(stOf(grp) !== stream) grp = firstGroup(stream);
   /* a link that points at a career, group or stream keeps its target; otherwise the student's tests decide */
-  var hashLock = !!h && !/^(quiz|scholarships|loans|finder|colleges|myReport|sch-|ln-|report=)/.test(h);
+  var hashLock = !!h && !/^(quiz|scholarships|loans|finder|colleges|abroad|myReport|sch-|ln-|report=)/.test(h);
   loadAns();
 
   function card(c){
@@ -373,7 +390,8 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
     return '<div class="row"><span class="k">🎓</span><div class="v"><b>'+f.carSch+'</b><div class="sjr">'
       + list.slice(0, 8).map(function(x){ return '<button type="button" data-jump="'+x.id+'">'+x.ic+' '+esc(x.name)+(x.girls ? ' 👩' : '')+'</button>'; }).join('')
       + '<button type="button" class="lk" data-find="'+ct+'">'+f.carFind+'</button><button type="button" class="lk" data-loans="1">'+f.carLoan+'</button>'
-      + (TC && (ct === 'med' || ct === 'eng') ? '<button type="button" class="lk" data-cols="'+ct+'">🏛️ '+esc((TC.ui[lang] || TC.ui.en).btnT)+'</button>' : '') + '</div></div></div>';
+      + (TC && (ct === 'med' || ct === 'eng') ? '<button type="button" class="lk" data-cols="'+ct+'">🏛️ '+esc((TC.ui[lang] || TC.ui.en).btnT)+'</button>' : '')
+      + (AB ? '<button type="button" class="lk" data-abroad="'+(ct === 'med' ? 'med' : 'oth')+'">✈️ '+esc((AB.ui[lang] || AB.ui.en).btnT)+'</button>' : '') + '</div></div></div>';
   }
   function scores(){
     return D.list.filter(inStream).map(function(c){
@@ -457,6 +475,28 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
     html += '<h4>💡</h4><ul class="dl">' + u.tips.map(function(t){ return '<li>'+esc(t)+'</li>'; }).join('') + '</ul><p class="note">'+esc(u.note)+'</p>';
     $('cols').innerHTML = html;
   }
+  function renderAbroad(){
+    if(!AB){ $('abroad').hidden = true; $('abOpen').hidden = true; return; }
+    var u = AB.ui[lang] || AB.ui.en, tab = abTab || (stream === 'pcm' ? 'oth' : 'med');
+    $('abT').textContent = u.btnT; $('abS').textContent = u.btnS;
+    var li = function(a){ return a.map(function(t){ return '<li>'+esc(t)+'</li>'; }).join(''); };
+    var html = '<h3 id="abH">'+u.h+'</h3><p class="sub">'+esc(u.sub)+'</p>'
+      + '<div class="seg2 ctabs" role="tablist">' + ['med','oth'].map(function(k){ return '<button type="button" role="tab" aria-selected="'+(k===tab)+'" class="'+(k===tab?'on':'')+'" data-at="'+k+'"><b>'+u[k]+'</b></button>'; }).join('') + '</div>';
+    if(tab === 'med') html += '<h4>'+u.rulesH+'</h4><ul class="dl">' + li(AB.med.rules.map(L)) + '</ul>';
+    html += '<h4>'+u.cH+'</h4><div class="abl">' + AB[tab].countries.map(function(x){
+      var d = '<dt>'+u.dur+'</dt><dd>'+esc(x.d)+'</dd>' + (tab === 'med'
+        ? '<dt>'+u.cost+'</dt><dd>'+esc(x.c)+'</dd><dt>'+u.lang+'</dt><dd>'+esc(x.l)+'</dd>'
+        : '<dt>'+u.costY+'</dt><dd>'+esc(x.c)+'</dd><dt>'+u.exam+'</dt><dd>'+esc(x.x)+'</dd><dt>'+u.intake+'</dt><dd>'+esc(x.i)+'</dd><dt>'+u.work+'</dt><dd>'+esc(x.w)+'</dd>');
+      return '<div class="abc"><div class="hd"><span class="fl">'+x.f+'</span><b>'+esc(x.n)+'</b></div><dl>'+d+'</dl><p>'+esc(L(x.t))+'</p></div>';
+    }).join('') + '</div>'
+      + '<h4>'+u.stepsH+'</h4><ol class="dl">' + li(u.steps) + '</ol>'
+      + '<h4>'+u.exH+'</h4>' + AB.exams.map(function(x){ return '<div class="abx"><b>'+esc(x.n)+'</b><span>'+esc(L(x.t))+'</span></div>'; }).join('')
+      + '<h4>'+u.schH+'</h4>' + AB.scholarships.map(function(x){ return '<div class="abx"><b>'+esc(x.n)+'</b><span>'+esc(L(x.t))+'</span></div>'; }).join('')
+      + '<h4>'+u.loanH+'</h4><p class="sub">'+esc(u.loan)+'</p><div class="sjr"><button type="button" class="lk" data-loans="1">🏦 '+esc(u.loanBtn)+'</button></div>'
+      + '<div class="abw"><h4>'+u.safeH+'</h4><ul class="dl">' + li(u.safe) + '</ul></div>'
+      + '<p class="note">'+esc(u.note)+'</p>';
+    $('abroad').innerHTML = html;
+  }
   function renderLoans(){
     if(!LN){ $('loans').hidden = true; $('loanOpen').hidden = true; return; }
     var u = LN.ui[lang] || LN.ui.en;
@@ -520,6 +560,7 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
     renderSch();
     renderLoans();
     renderCols();
+    renderAbroad();
   }
   function onPick(sg, byGoal){
     autoPick = sg;
@@ -563,6 +604,7 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
     var fd = e.target.closest('[data-find]'); if(fd){ prof = prof || { g:'girl', cat:'gen', inc:2, mk:2, govt:'no', sp:{} }; prof.c = fd.dataset.find; showFind = false; renderSch(); $('finder').scrollIntoView({ behavior:'smooth', block:'start' }); return; }
     if(e.target.closest('[data-loans]')){ toLoans(); return; }
     var tcb = e.target.closest('[data-cols]'); if(tcb){ toCols(tcb.dataset.cols); return; }
+    var tab2 = e.target.closest('[data-abroad]'); if(tab2){ toAbroad(tab2.dataset.abroad); return; }
     var sh = e.target.closest('[data-share]');
     if(sh){ var c = D.list.filter(function(x){ return x.id === sh.dataset.share; })[0];
       var u = UI[lang];
@@ -586,6 +628,12 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
   $('loanOpen').onclick = toLoans;
   function toCols(tab){ if(tab){ colTab = tab; colF = 'all'; renderCols(); } $('cols').scrollIntoView({ behavior:'smooth', block:'start' }); clearHash(); }
   $('colOpen').onclick = function(){ toCols(); };
+  function toAbroad(tab){ if(tab){ abTab = tab; renderAbroad(); } $('abroad').scrollIntoView({ behavior:'smooth', block:'start' }); clearHash(); }
+  $('abOpen').onclick = function(){ toAbroad(); };
+  $('abroad').addEventListener('click', function(e){
+    var t = e.target.closest('[data-at]'); if(t){ abTab = t.dataset.at; renderAbroad(); return; }
+    if(e.target.closest('[data-loans]')) toLoans();
+  });
   $('cols').addEventListener('click', function(e){
     var t = e.target.closest('[data-ct]'); if(t){ colTab = t.dataset.ct; renderCols(); return; }
     var f = e.target.closest('[data-cf]'); if(f){ colF = f.dataset.cf; renderCols(); }
@@ -645,6 +693,12 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
     setTimeout(function(){ colTab = h.split('-')[1] || null; colF = 'all'; renderCols(); colsAlign(); }, 200);
     try{ document.fonts.ready.then(function(){ setTimeout(colsAlign, 60); }); }catch(e){}
     if(document.readyState === 'complete') setTimeout(colsAlign, 400); else window.addEventListener('load', function(){ setTimeout(colsAlign, 60); }, { once:true });
+  }
+  else if(/^abroad(-med|-oth)?$/.test(h)){
+    var abAlign = function(){ $('abroad').scrollIntoView({ block:'start' }); };
+    setTimeout(function(){ abTab = h.split('-')[1] || null; renderAbroad(); abAlign(); }, 200);
+    try{ document.fonts.ready.then(function(){ setTimeout(abAlign, 60); }); }catch(e){}
+    if(document.readyState === 'complete') setTimeout(abAlign, 400); else window.addEventListener('load', function(){ setTimeout(abAlign, 60); }, { once:true });
   }
   else if(h === 'finder' && S) setTimeout(function(){ $('finder').scrollIntoView({ behavior:'smooth', block:'start' }); }, 200);
   else if(S && h.indexOf('sch') === 0) setTimeout(function(){ var el = $(h === 'scholarships' ? 'sch' : h) || $('sch'); el.scrollIntoView({ behavior:'smooth', block:'start' }); }, 200);
