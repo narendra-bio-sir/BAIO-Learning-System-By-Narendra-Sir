@@ -148,7 +148,25 @@ ol.stp{margin:0;padding-left:20px;font-size:14.5px;line-height:1.55}ol.stp li{ma
 .box h4{margin:16px 0 4px;font:700 15px 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari'}
 .box .sub{margin:0;color:var(--dim);font-size:13.5px;line-height:1.5}
 ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{margin:4px 0}
-#loans{scroll-margin-top:64px}
+#loans,#cols{scroll-margin-top:64px}
+.qcard.col-btn{border-color:#8B5CF6}.qcard.col-btn small{display:block;line-height:1.4;margin-top:2px}
+/* top colleges */
+.cst{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.cst div{padding:10px 11px;border-radius:14px;background:var(--panel2);border:1px solid var(--line)}
+.cst b{display:block;font:800 19px/1.15 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari';color:var(--teal)}
+.cst span{display:block;font:700 12.5px/1.35 Inter,'Noto Sans Kannada','Noto Sans Devanagari';margin-top:3px}
+.cst small{display:block;color:var(--dim);font-size:11.5px;line-height:1.35;margin-top:2px}
+.cgh{margin:16px 0 4px!important}
+.clg{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
+.clg .rk{flex:none;min-width:44px;text-align:center;font:800 11px/1.2 Inter;padding:5px 4px;border-radius:10px;background:color-mix(in srgb,#8B5CF6 14%,var(--panel2));color:#7C3AED}
+.clg .rk.no{background:var(--panel2);color:var(--dim)}
+.clg .nm{flex:1;min-width:0}.clg .nm b{display:block;font:700 14.5px/1.3 'Space Grotesk','Noto Sans Kannada','Noto Sans Devanagari'}
+.clg .nm small{display:block;color:var(--dim);font-size:12px;line-height:1.4;margin-top:2px}
+.clg .nm em{display:block;font-style:normal;font-size:12.5px;line-height:1.4;margin-top:3px}
+.clg .st{flex:none;text-align:right;max-width:34%}.clg .st b{display:block;font:800 15.5px/1.15 'Space Grotesk',Inter;color:var(--ink)}.clg .st small{color:var(--dim);font-size:11px}
+.clg .ctp{display:inline-block;width:auto;font:700 10.5px Inter,'Noto Sans Kannada','Noto Sans Devanagari';padding:1px 7px;border-radius:999px;margin-left:4px;vertical-align:1px}
+.ctp.ini,.ctp.cg,.ctp.sg{background:rgba(47,158,107,.15);color:#2F9E6B}.ctp.pv,.ctp.dm{background:rgba(214,158,46,.18);color:#B7791F}
+.ctabs{margin-top:12px}
 .qcard.loan-btn{border-color:#3B7BD9}.qcard.loan-btn small{display:block;line-height:1.4;margin-top:2px}
 /* scholarship finder */
 .fnd{margin-top:12px;padding:12px 13px;border-radius:16px;border:1.5px solid var(--teal);background:color-mix(in srgb,var(--teal) 7%,var(--panel))}
@@ -223,6 +241,7 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
   <div id="quiz" hidden></div>
   <button class="qcard sch-btn" id="schOpen" type="button"><span class="e">💰</span><span><b id="schT"></b><small id="schS"></small></span></button>
   <button class="qcard loan-btn" id="loanOpen" type="button"><span class="e">🏦</span><span><b id="loanT"></b><small id="loanS"></small></span></button>
+  <button class="qcard col-btn" id="colOpen" type="button"><span class="e">🏛️</span><span><b id="colT"></b><small id="colS"></small></span></button>
   <div class="autost" id="autoSt" hidden></div>
   <div class="seg2" id="streams" role="tablist"></div>
   <div class="groups" id="groups" role="tablist"></div>
@@ -230,6 +249,7 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
   <div class="box" id="exams"></div>
   <section class="box" id="sch" aria-labelledby="schH"></section>
   <section class="box" id="loans" aria-labelledby="loanH"></section>
+  <section class="box" id="cols" aria-labelledby="colH"></section>
   <p class="note" id="note"></p>
   <footer>BAIO Learning System · Narendra Sir</footer>
 </main>
@@ -241,6 +261,7 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
 <script src="careers/data-ele.js?v=1"></script>
 <script src="careers/data-sch.js?v=2"></script>
 <script src="careers/data-loan.js?v=1"></script>
+<script src="careers/data-col.js?v=1"></script>
 <script src="careers/report.js?v=15"></script>
 <script src="careers/share-card.js?v=2" defer></script>
 <script>
@@ -288,6 +309,7 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
      card works once, then the hash is cleared, so reopening or refreshing starts at the top of the page. */
   try{ if('scrollRestoration' in history) history.scrollRestoration = 'manual'; }catch(e){}
   function clearHash(){ try{ if(location.hash && !/report=/.test(location.hash)) history.replaceState(null, '', location.href.split('#')[0]); }catch(e){} }
+  var TC = window.TOP_COLLEGES, colTab = null, colF = 'all';
   var S = window.SCHOLARSHIPS, LN = window.EDU_LOANS, schCat = 'all', schOpen = {}, prof = null, showFind = false;
   try{ prof = JSON.parse(localStorage.getItem('baio_sch_finder') || 'null'); if(prof) showFind = true; }catch(e){}
   function courseOfCareer(id){ if(!S || !S.courseOf) return null; for(var k in S.courseOf) if(S.courseOf[k].indexOf(id) >= 0) return k; return null; }
@@ -331,7 +353,7 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
   else if(h.indexOf('sch') === 0 && S){ var hs = S.list.filter(function(x){ return 'sch-' + x.id === h; })[0]; if(hs) schOpen[hs.id] = true; }
   if(stOf(grp) !== stream) grp = firstGroup(stream);
   /* a link that points at a career, group or stream keeps its target; otherwise the student's tests decide */
-  var hashLock = !!h && !/^(quiz|scholarships|loans|finder|myReport|sch-|ln-|report=)/.test(h);
+  var hashLock = !!h && !/^(quiz|scholarships|loans|finder|colleges|myReport|sch-|ln-|report=)/.test(h);
   loadAns();
 
   function card(c){
@@ -350,7 +372,8 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
     var list = S.list.filter(function(x){ return !x.junior && x.c && x.c.indexOf(ct) >= 0; }).sort(function(a, b){ return rank(a) - rank(b); });
     return '<div class="row"><span class="k">🎓</span><div class="v"><b>'+f.carSch+'</b><div class="sjr">'
       + list.slice(0, 8).map(function(x){ return '<button type="button" data-jump="'+x.id+'">'+x.ic+' '+esc(x.name)+(x.girls ? ' 👩' : '')+'</button>'; }).join('')
-      + '<button type="button" class="lk" data-find="'+ct+'">'+f.carFind+'</button><button type="button" class="lk" data-loans="1">'+f.carLoan+'</button></div></div></div>';
+      + '<button type="button" class="lk" data-find="'+ct+'">'+f.carFind+'</button><button type="button" class="lk" data-loans="1">'+f.carLoan+'</button>'
+      + (TC && (ct === 'med' || ct === 'eng') ? '<button type="button" class="lk" data-cols="'+ct+'">🏛️ '+esc((TC.ui[lang] || TC.ui.en).btnT)+'</button>' : '') + '</div></div></div>';
   }
   function scores(){
     return D.list.filter(inStream).map(function(c){
@@ -414,6 +437,26 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
     }
     return html + '</div>';
   }
+  function renderCols(){
+    if(!TC){ $('cols').hidden = true; $('colOpen').hidden = true; return; }
+    var u = TC.ui[lang] || TC.ui.en, tab = colTab || (stream === 'pcm' ? 'eng' : 'med'), D2 = TC[tab];
+    $('colT').textContent = u.btnT; $('colS').textContent = u.btnS;
+    var keep = function(x){ return colF === 'all' || (colF === 'ka' ? x.k : colF === 'gov' ? /^(ini|cg|sg)$/.test(x.t) : /^(pv|dm)$/.test(x.t)); };
+    var html = '<h3 id="colH">'+u.h+'</h3><p class="sub">'+esc(u.sub)+'</p>'
+      + '<div class="seg2 ctabs" role="tablist">' + ['med','eng'].map(function(k){ return '<button type="button" role="tab" aria-selected="'+(k===tab)+'" class="'+(k===tab?'on':'')+'" data-ct="'+k+'"><b>'+u[k]+'</b></button>'; }).join('') + '</div>'
+      + '<div class="cst">' + D2.stats.map(function(x){ return '<div><b>'+x.n+'</b><span>'+esc(L(x.l))+'</span><small>'+esc(L(x.s))+'</small></div>'; }).join('') + '</div>'
+      + '<div class="schf">' + [['all',u.all],['gov',u.gov],['pvt',u.pvt],['ka','📍 '+u.ka]].map(function(f){ return '<button type="button" data-cf="'+f[0]+'" class="'+(f[0]===colF?'on':'')+'">'+esc(f[1])+'</button>'; }).join('') + '</div>';
+    D2.groups.forEach(function(g){
+      var l = g.list.filter(keep); if(!l.length) return;
+      html += '<h4 class="cgh">'+esc(L(g.t))+'</h4>' + l.map(function(x){
+        var rk = x.r ? (typeof x.r === 'number' ? u.nirf+'<br>#'+x.r : u.nirf+'<br>'+esc(x.r)) : '—';
+        return '<div class="clg"><span class="rk'+(x.r ? '' : ' no')+'">'+rk+'</span><div class="nm"><b>'+esc(x.n)+'</b><small>📍 '+esc(x.c)+'<span class="ctp '+x.t+'">'+esc(L(TC.types[x.t]))+'</span></small><small>📝 '+u.how+': '+esc(x.x)+'</small>'+(x.note ? '<em>'+esc(L(x.note))+'</em>' : '')+'</div>'
+          + '<div class="st"><b>'+esc(x.s)+'</b><small>'+(/\d/.test(x.s) ? u.seats : '')+'</small></div></div>';
+      }).join('');
+    });
+    html += '<h4>💡</h4><ul class="dl">' + u.tips.map(function(t){ return '<li>'+esc(t)+'</li>'; }).join('') + '</ul><p class="note">'+esc(u.note)+'</p>';
+    $('cols').innerHTML = html;
+  }
   function renderLoans(){
     if(!LN){ $('loans').hidden = true; $('loanOpen').hidden = true; return; }
     var u = LN.ui[lang] || LN.ui.en;
@@ -476,6 +519,7 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
     renderQuiz();
     renderSch();
     renderLoans();
+    renderCols();
   }
   function onPick(sg, byGoal){
     autoPick = sg;
@@ -518,6 +562,7 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
     var j = e.target.closest('[data-jump]'); if(j){ jumpSch(j.dataset.jump); return; }
     var fd = e.target.closest('[data-find]'); if(fd){ prof = prof || { g:'girl', cat:'gen', inc:2, mk:2, govt:'no', sp:{} }; prof.c = fd.dataset.find; showFind = false; renderSch(); $('finder').scrollIntoView({ behavior:'smooth', block:'start' }); return; }
     if(e.target.closest('[data-loans]')){ toLoans(); return; }
+    var tcb = e.target.closest('[data-cols]'); if(tcb){ toCols(tcb.dataset.cols); return; }
     var sh = e.target.closest('[data-share]');
     if(sh){ var c = D.list.filter(function(x){ return x.id === sh.dataset.share; })[0];
       var u = UI[lang];
@@ -539,6 +584,12 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
   });
   $('schOpen').onclick = function(){ $('sch').scrollIntoView({ behavior:'smooth', block:'start' }); clearHash(); };
   $('loanOpen').onclick = toLoans;
+  function toCols(tab){ if(tab){ colTab = tab; colF = 'all'; renderCols(); } $('cols').scrollIntoView({ behavior:'smooth', block:'start' }); clearHash(); }
+  $('colOpen').onclick = function(){ toCols(); };
+  $('cols').addEventListener('click', function(e){
+    var t = e.target.closest('[data-ct]'); if(t){ colTab = t.dataset.ct; renderCols(); return; }
+    var f = e.target.closest('[data-cf]'); if(f){ colF = f.dataset.cf; renderCols(); }
+  });
   $('loans').addEventListener('click', function(e){
     var b = e.target.closest('[data-lid]'); if(!b) return;
     var id = 'ln-' + b.dataset.lid; schOpen[id] = !schOpen[id];
@@ -588,6 +639,13 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
   render();
   if(hc) setTimeout(function(){ go(hc.id); }, 200);
   else if(h === 'loans' || h.indexOf('ln-') === 0) setTimeout(function(){ toLoans(); }, 200);
+  else if(/^colleges(-med|-eng)?$/.test(h)){
+    /* re-align once fonts and the rest of the page have settled, so the section is not pushed off by late layout shifts */
+    var colsAlign = function(){ $('cols').scrollIntoView({ block:'start' }); };
+    setTimeout(function(){ colTab = h.split('-')[1] || null; colF = 'all'; renderCols(); colsAlign(); }, 200);
+    try{ document.fonts.ready.then(function(){ setTimeout(colsAlign, 60); }); }catch(e){}
+    if(document.readyState === 'complete') setTimeout(colsAlign, 400); else window.addEventListener('load', function(){ setTimeout(colsAlign, 60); }, { once:true });
+  }
   else if(h === 'finder' && S) setTimeout(function(){ $('finder').scrollIntoView({ behavior:'smooth', block:'start' }); }, 200);
   else if(S && h.indexOf('sch') === 0) setTimeout(function(){ var el = $(h === 'scholarships' ? 'sch' : h) || $('sch'); el.scrollIntoView({ behavior:'smooth', block:'start' }); }, 200);
   if(h && !/report=/.test(h)) setTimeout(clearHash, 900);
