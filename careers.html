@@ -284,6 +284,10 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
   var th = 'light'; try{ th = localStorage.getItem('baio_theme') || 'light'; }catch(e){} theme(th);
   tb.onclick = function(){ var n = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; theme(n); try{ localStorage.setItem('baio_theme', n); }catch(e){} };
 
+  /* The address bar never keeps an in-page position (#sch-…, #loans, #mbbs …): a link that opens the page at a
+     card works once, then the hash is cleared, so reopening or refreshing starts at the top of the page. */
+  try{ if('scrollRestoration' in history) history.scrollRestoration = 'manual'; }catch(e){}
+  function clearHash(){ try{ if(location.hash && !/report=/.test(location.hash)) history.replaceState(null, '', location.href.split('#')[0]); }catch(e){} }
   var S = window.SCHOLARSHIPS, LN = window.EDU_LOANS, schCat = 'all', schOpen = {}, prof = null, showFind = false;
   try{ prof = JSON.parse(localStorage.getItem('baio_sch_finder') || 'null'); if(prof) showFind = true; }catch(e){}
   function courseOfCareer(id){ if(!S || !S.courseOf) return null; for(var k in S.courseOf) if(S.courseOf[k].indexOf(id) >= 0) return k; return null; }
@@ -486,16 +490,16 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
     else grp = alsoHere(c);
     loadAns(); open = {}; open[id] = true; render();
     var el = $(id); if(el){ el.scrollIntoView({ behavior:'smooth', block:'start' }); el.classList.add('flash'); setTimeout(function(){ el.classList.remove('flash'); }, 2000); }
-    try{ history.replaceState(null, '', '#' + id); }catch(e){}
+    try{ clearHash(); }catch(e){}
   }
 
   $('langs').addEventListener('click', function(e){ var b = e.target.closest('button'); if(!b) return; lang = b.dataset.l; try{ localStorage.setItem('baio_lang', lang); }catch(x){} render(); });
   $('autoSt').addEventListener('click', function(e){ if(e.target.id !== 'autoBack' || !autoPick) return;
-    userPicked = false; stream = autoPick.st; grp = autoPick.g; open = {}; showRes = false; loadAns(); render(); try{ history.replaceState(null, '', '#' + stream); }catch(x){} });
+    userPicked = false; stream = autoPick.st; grp = autoPick.g; open = {}; showRes = false; loadAns(); render(); try{ clearHash(); }catch(x){} });
   $('streams').addEventListener('click', function(e){ var b = e.target.closest('[data-st]'); if(!b || b.dataset.st === stream) return;
     userPicked = true; stream = b.dataset.st; grp = firstGroup(stream); open = {}; showRes = false; loadAns(); render();
-    try{ localStorage.setItem('baio_career_stream', stream); history.replaceState(null, '', '#' + stream); }catch(x){} });
-  $('groups').addEventListener('click', function(e){ var b = e.target.closest('.gbtn'); if(!b) return; grp = b.dataset.g; open = {}; render(); try{ history.replaceState(null, '', '#' + grp); }catch(x){} });
+    try{ localStorage.setItem('baio_career_stream', stream); clearHash(); }catch(x){} });
+  $('groups').addEventListener('click', function(e){ var b = e.target.closest('.gbtn'); if(!b) return; grp = b.dataset.g; open = {}; render(); try{ clearHash(); }catch(x){} });
   var BASE = 'https://narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir/careers.html';
   function toast(t){ var d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(function(){ d.remove(); }, 1800); }
   function share(title, text, url){
@@ -507,9 +511,9 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
   function jumpSch(id){
     schCat = 'all'; schOpen = {}; schOpen[id] = true; renderSch();
     var el = $('sch-' + id); if(el){ el.scrollIntoView({ behavior:'smooth', block:'start' }); el.classList.add('flash'); setTimeout(function(){ el.classList.remove('flash'); }, 2000); }
-    try{ history.replaceState(null, '', '#sch-' + id); }catch(x){}
+    try{ clearHash(); }catch(x){}
   }
-  function toLoans(){ $('loans').scrollIntoView({ behavior:'smooth', block:'start' }); try{ history.replaceState(null, '', '#loans'); }catch(x){} }
+  function toLoans(){ $('loans').scrollIntoView({ behavior:'smooth', block:'start' }); clearHash(); }
   $('cards').addEventListener('click', function(e){
     var j = e.target.closest('[data-jump]'); if(j){ jumpSch(j.dataset.jump); return; }
     var fd = e.target.closest('[data-find]'); if(fd){ prof = prof || { g:'girl', cat:'gen', inc:2, mk:2, govt:'no', sp:{} }; prof.c = fd.dataset.find; showFind = false; renderSch(); $('finder').scrollIntoView({ behavior:'smooth', block:'start' }); return; }
@@ -533,7 +537,7 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
     if(e.target.id === 'qClose'){ quizOpen = false; showRes = false; renderQuiz(); return; }
     var g = e.target.closest('[data-go]'); if(g) go(g.dataset.go);
   });
-  $('schOpen').onclick = function(){ $('sch').scrollIntoView({ behavior:'smooth', block:'start' }); try{ history.replaceState(null, '', '#scholarships'); }catch(x){} };
+  $('schOpen').onclick = function(){ $('sch').scrollIntoView({ behavior:'smooth', block:'start' }); clearHash(); };
   $('loanOpen').onclick = toLoans;
   $('loans').addEventListener('click', function(e){
     var b = e.target.closest('[data-lid]'); if(!b) return;
@@ -578,7 +582,7 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
     var b = e.target.closest('[data-sid]'); if(!b) return;
     var id = b.dataset.sid; schOpen[id] = !schOpen[id];
     b.closest('.car').classList.toggle('open', !!schOpen[id]); b.setAttribute('aria-expanded', !!schOpen[id]);
-    if(schOpen[id]) try{ history.replaceState(null, '', '#sch-' + id); }catch(x){}
+    clearHash();
   });
   if(!S){ $('schOpen').hidden = true; $('sch').hidden = true; }
   render();
@@ -586,6 +590,7 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
   else if(h === 'loans' || h.indexOf('ln-') === 0) setTimeout(function(){ toLoans(); }, 200);
   else if(h === 'finder' && S) setTimeout(function(){ $('finder').scrollIntoView({ behavior:'smooth', block:'start' }); }, 200);
   else if(S && h.indexOf('sch') === 0) setTimeout(function(){ var el = $(h === 'scholarships' ? 'sch' : h) || $('sch'); el.scrollIntoView({ behavior:'smooth', block:'start' }); }, 200);
+  if(h && !/report=/.test(h)) setTimeout(clearHash, 900);
 })();
 </script>
 </body>
