@@ -639,7 +639,13 @@ ul.dl{margin:4px 0 0;padding-left:20px;font-size:14px;line-height:1.55}ul.dl li{
   render();
   if(hc) setTimeout(function(){ go(hc.id); }, 200);
   else if(h === 'loans' || h.indexOf('ln-') === 0) setTimeout(function(){ toLoans(); }, 200);
-  else if(/^colleges(-med|-eng)?$/.test(h)){ setTimeout(function(){ toCols(h.split('-')[1]); }, 200); setTimeout(function(){ $('cols').scrollIntoView({ block:'start' }); }, 850); }
+  else if(/^colleges(-med|-eng)?$/.test(h)){
+    /* re-align once fonts and the rest of the page have settled, so the section is not pushed off by late layout shifts */
+    var colsAlign = function(){ $('cols').scrollIntoView({ block:'start' }); };
+    setTimeout(function(){ colTab = h.split('-')[1] || null; colF = 'all'; renderCols(); colsAlign(); }, 200);
+    try{ document.fonts.ready.then(function(){ setTimeout(colsAlign, 60); }); }catch(e){}
+    if(document.readyState === 'complete') setTimeout(colsAlign, 400); else window.addEventListener('load', function(){ setTimeout(colsAlign, 60); }, { once:true });
+  }
   else if(h === 'finder' && S) setTimeout(function(){ $('finder').scrollIntoView({ behavior:'smooth', block:'start' }); }, 200);
   else if(S && h.indexOf('sch') === 0) setTimeout(function(){ var el = $(h === 'scholarships' ? 'sch' : h) || $('sch'); el.scrollIntoView({ behavior:'smooth', block:'start' }); }, 200);
   if(h && !/report=/.test(h)) setTimeout(clearHash, 900);
