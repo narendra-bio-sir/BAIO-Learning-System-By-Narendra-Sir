@@ -382,6 +382,19 @@
     var sg = r ? bestStream(r) : null;
     setTimeout(function(){ pickFn(sg, byGoal); }, 0);
   }
+  /* Who may see the members-only parts of careers.html (scholarships, loans, colleges, study abroad):
+     'teacher' when the master code is unlocked on this phone, 'student' when a student opened their own report
+     with roll number + password (a shared report link does not count), '' otherwise. */
+  var lastAccess = null;
+  function access(){
+    if(TLIST) return 'teacher';
+    if(me && me !== LINK && DATA && DATA[me]) return 'student';
+    return '';
+  }
+  function notifyAccess(){
+    var a = access(); if(a === lastAccess) return; lastAccess = a;
+    setTimeout(function(){ try{ window.dispatchEvent(new CustomEvent('baio-career-access', { detail:a })); }catch(e){} }, 0);
+  }
   function paint(){
     var u = T[curLang] || T.en;
     var inner = '<h3>'+u.h+'</h3>';
@@ -390,6 +403,7 @@
     else inner += formHtml(curLang, lastErr);
     box.innerHTML = inner;
     notifyPick();
+    notifyAccess();
   }
   function shareText(r){
     var u = T.en, bits = ['🎯 BAIO career report: ' + r.name + ' (' + u.puc[r.pu] + ')'];
@@ -447,6 +461,7 @@
     }
   }
   window.CareerReport = {
+    access: access,
     render: function(el, lang, go, data, onPick){
       var first = !box; box = el; curLang = lang; goFn = go; D = data; if(onPick) pickFn = onPick;
       if(first){
