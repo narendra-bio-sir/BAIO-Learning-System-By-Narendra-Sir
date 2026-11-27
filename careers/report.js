@@ -58,8 +58,11 @@
   /* PCM students: no Biology marks and no NEET mocks on file. */
   function pcmOnly(r){ var s = r.sub || {}; return s.BIO == null && !r.neet; }
   /* PCMB students (Biology + Maths) can choose their goal: medical (default) or engineering. */
-  var GKEY = 'baio_career_goal', GOAL = {};
-  try{ GOAL = JSON.parse(localStorage.getItem(GKEY) || '{}') || {}; }catch(e){ GOAL = {}; }
+  /* v2: goals saved before the automatic choice existed (when tapping "Engineering" only meant "show me") are ignored.
+     In Teacher view a tap is only for viewing (TGOAL, this page visit) and is never saved as the student's goal. */
+  var GKEY = 'baio_career_goal_v2', GOAL = {}, TGOAL = {};
+  try{ GOAL = JSON.parse(localStorage.getItem(GKEY) || '{}') || {}; localStorage.removeItem('baio_career_goal'); }catch(e){ GOAL = {}; }
+  function goalOf(k){ return k ? (TLIST ? TGOAL : GOAL)[k] : undefined; }
   function canEng(r){ var s = r.sub || {}; return !pcmOnly(r) && (s.MAT != null || !!r.kpcm || !!r.jee); }
   function keyOf(r){ return (DATA && me && DATA[me] === r) ? me : null; }
   /* PCMB students who write both PCB and PCM tests: compare like with like (KCET PCB vs KCET PCM, Biology vs Maths
@@ -75,7 +78,7 @@
     return { eng: diff < 0, d: d };
   }
   /* goal: explicit choice in "My goal" wins; otherwise the stronger side from the test results */
-  function engGoal(r){ var k = keyOf(r); if(!canEng(r) || !k) return false; if(GOAL[k] === 'eng') return true; if(GOAL[k] === 'med') return false; return compareSides(r).eng; }
+  function engGoal(r){ var k = keyOf(r); if(!canEng(r) || !k) return false; var g = goalOf(k); if(g === 'eng') return true; if(g === 'med') return false; return compareSides(r).eng; }
   var SW = {
     ele:{ en:'You study Electronics (PCME), so engineering paths that use Electronics come first.', kn:'ನೀವು ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ (PCME) ಓದುತ್ತೀರಿ, ಆದ್ದರಿಂದ ಎಲೆಕ್ಟ್ರಾನಿಕ್ಸ್ ಬಳಸುವ ಎಂಜಿನಿಯರಿಂಗ್ ದಾರಿಗಳು ಮೊದಲು.', hi:'आप इलेक्ट्रॉनिक्स (PCME) पढ़ते हैं, इसलिए इलेक्ट्रॉनिक्स वाले इंजीनियरिंग रास्ते पहले।' },
     pcm:{ en:'You write PCM tests (KCET PCM / JEE), so Engineering is shown.', kn:'ನೀವು PCM ಪರೀಕ್ಷೆಗಳನ್ನು (KCET PCM / JEE) ಬರೆಯುತ್ತೀರಿ, ಆದ್ದರಿಂದ ಎಂಜಿನಿಯರಿಂಗ್ ತೋರಿಸಲಾಗಿದೆ.', hi:'आप PCM टेस्ट (KCET PCM / JEE) देते हैं, इसलिए इंजीनियरिंग दिखाया गया है।' },
@@ -96,8 +99,8 @@
     if(s.ELE != null) return { st:'pcm', g:'ele', why:SW.ele };
     if(pcmOnly(r)) return { st:'pcm', g:'eng', why:SW.pcm };
     if(!canEng(r)) return { st:'pcb', g:'neet', why:SW.pcb };
-    if(k && GOAL[k] === 'eng') return { st:'pcm', g:'eng', why:SW.goalE };
-    if(k && GOAL[k] === 'med') return { st:'pcb', g:'neet', why:SW.goalM };
+    if(goalOf(k) === 'eng') return { st:'pcm', g:'eng', why:SW.goalE };
+    if(goalOf(k) === 'med') return { st:'pcb', g:'neet', why:SW.goalM };
     var c = compareSides(r), why = {};
     ['en','kn','hi'].forEach(function(l){
       var d = c.d.map(function(x){ return SW.lab[l][x[0]].replace('%1', x[1] + '%').replace('%2', x[2] + '%'); }).join('; ');
@@ -107,14 +110,22 @@
   }
   function isPcm(r){ return pcmOnly(r) || engGoal(r); }
   var G = {
-    en:{ l:'🎯 My goal', med:'🩺 Medical', eng:'⚙️ Engineering', note:'You study both Biology and Maths, so both doors are open. Choose your goal to see matching careers and steps.' },
-    kn:{ l:'🎯 ನನ್ನ ಗುರಿ', med:'🩺 ವೈದ್ಯಕೀಯ', eng:'⚙️ ಎಂಜಿನಿಯರಿಂಗ್', note:'ನೀವು ಜೀವಶಾಸ್ತ್ರ ಮತ್ತು ಗಣಿತ ಎರಡನ್ನೂ ಓದುತ್ತಿದ್ದೀರಿ, ಎರಡೂ ದಾರಿ ತೆರೆದಿವೆ. ಹೊಂದುವ ವೃತ್ತಿ ಮತ್ತು ಹಂತಗಳನ್ನು ನೋಡಲು ನಿಮ್ಮ ಗುರಿ ಆಯ್ಕೆಮಾಡಿ.' },
-    hi:{ l:'🎯 मेरा लक्ष्य', med:'🩺 मेडिकल', eng:'⚙️ इंजीनियरिंग', note:'आप बायोलॉजी और गणित दोनों पढ़ते हैं, इसलिए दोनों रास्ते खुले हैं। मेल खाते करियर और कदम देखने के लिए अपना लक्ष्य चुनें।' }
+    en:{ l:'🎯 My goal', med:'🩺 Medical', eng:'⚙️ Engineering', note:'You study both Biology and Maths, so both doors are open. Choose your goal to see matching careers and steps.',
+         rec:function(x, d){ return '📊 Recommended from your scores: <b>' + x + '</b> (' + d + ').'; }, auto:function(x){ return '↺ Use recommended (' + x + ')'; }, own:'You chose this goal yourself.', tv:'Teacher view: your tap here is only for viewing and is not saved for the student.' },
+    kn:{ l:'🎯 ನನ್ನ ಗುರಿ', med:'🩺 ವೈದ್ಯಕೀಯ', eng:'⚙️ ಎಂಜಿನಿಯರಿಂಗ್', note:'ನೀವು ಜೀವಶಾಸ್ತ್ರ ಮತ್ತು ಗಣಿತ ಎರಡನ್ನೂ ಓದುತ್ತಿದ್ದೀರಿ, ಎರಡೂ ದಾರಿ ತೆರೆದಿವೆ. ಹೊಂದುವ ವೃತ್ತಿ ಮತ್ತು ಹಂತಗಳನ್ನು ನೋಡಲು ನಿಮ್ಮ ಗುರಿ ಆಯ್ಕೆಮಾಡಿ.',
+         rec:function(x, d){ return '📊 ನಿಮ್ಮ ಅಂಕಗಳ ಪ್ರಕಾರ ಶಿಫಾರಸು: <b>' + x + '</b> (' + d + ').'; }, auto:function(x){ return '↺ ಶಿಫಾರಸು ಬಳಸಿ (' + x + ')'; }, own:'ಈ ಗುರಿಯನ್ನು ನೀವೇ ಆಯ್ಕೆ ಮಾಡಿದ್ದೀರಿ.', tv:'ಶಿಕ್ಷಕರ ನೋಟ: ಇಲ್ಲಿನ ಆಯ್ಕೆ ನೋಡಲು ಮಾತ್ರ, ವಿದ್ಯಾರ್ಥಿಗಾಗಿ ಉಳಿಸಲಾಗುವುದಿಲ್ಲ.' },
+    hi:{ l:'🎯 मेरा लक्ष्य', med:'🩺 मेडिकल', eng:'⚙️ इंजीनियरिंग', note:'आप बायोलॉजी और गणित दोनों पढ़ते हैं, इसलिए दोनों रास्ते खुले हैं। मेल खाते करियर और कदम देखने के लिए अपना लक्ष्य चुनें।',
+         rec:function(x, d){ return '📊 आपके अंकों के अनुसार सुझाव: <b>' + x + '</b> (' + d + ')।'; }, auto:function(x){ return '↺ सुझाया गया चुनें (' + x + ')'; }, own:'यह लक्ष्य आपने खुद चुना है।', tv:'टीचर व्यू: यहाँ का चुनाव सिर्फ़ देखने के लिए है, छात्र के लिए सेव नहीं होता।' }
   };
   function goalHtml(r, lang){
     if(!canEng(r)) return '';
-    var g = G[lang] || G.en, e = engGoal(r);
-    return '<div class="goal"><b>'+g.l+'</b><div class="gseg"><button type="button" data-goal="med"'+(e ? '' : ' class="on"')+'>'+g.med+'</button><button type="button" data-goal="eng"'+(e ? ' class="on"' : '')+'>'+g.eng+'</button></div><small>'+g.note+'</small></div>';
+    var g = G[lang] || G.en, e = engGoal(r), c = compareSides(r), l = SW.lab[lang] ? lang : 'en', side = SW.side[l][c.eng ? 1 : 0];
+    var d = c.d.map(function(x){ return SW.lab[l][x[0]].replace('%1', x[1] + '%').replace('%2', x[2] + '%'); }).join('; ');
+    var own = !!goalOf(keyOf(r)), off = own && e !== c.eng;
+    return '<div class="goal"><b>'+g.l+'</b><div class="gseg"><button type="button" data-goal="med"'+(e ? '' : ' class="on"')+'>'+g.med+'</button><button type="button" data-goal="eng"'+(e ? ' class="on"' : '')+'>'+g.eng+'</button></div>'
+      + (d ? '<small style="margin-bottom:4px">'+g.rec(side, d)+(off ? ' '+g.own : '')+'</small>' : '')
+      + (off ? '<button type="button" class="lnk" data-goal="auto" style="margin:2px 0 4px">'+g.auto(side)+'</button>' : '')
+      + '<small>'+(TLIST ? g.tv : g.note)+'</small></div>';
   }
   function suggestPcm(r, add, list){
     var s = r.sub || {}, mat = s.MAT, kp = r.kpcm ? r.kpcm.p : null, jee = r.jee ? r.jee.p : null, th = r.th ? r.th.p : null;
@@ -365,7 +376,7 @@
   var lastErr = '', curLang = 'en', box = null, goFn = null, D = null, pickFn = null, pickKey = null, pickByGoal = false;
   /* tell careers.html which stream suits the student whenever the open report (or its goal) changes */
   function notifyPick(){
-    var r = me && DATA && DATA[me], key = r ? me + '|' + (GOAL[me] || '') : '';
+    var r = me && DATA && DATA[me], key = r ? me + '|' + (goalOf(me) || '') + (TLIST ? '|t' : '') : '';
     if(key === pickKey || !pickFn) return;
     pickKey = key; var byGoal = pickByGoal; pickByGoal = false;
     var sg = r ? bestStream(r) : null;
@@ -392,7 +403,9 @@
   }
   function onClick(e){
     var b = e.target.closest('[data-rp],[data-go],[data-tk],[data-goal]'); if(!b) return;
-    if(b.dataset.goal){ if(me){ GOAL[me] = b.dataset.goal === 'eng' ? 'eng' : 'med'; try{ localStorage.setItem(GKEY, JSON.stringify(GOAL)); }catch(x){} } pickByGoal = true; paint(); return; }
+    if(b.dataset.goal){ if(me){ var GS = TLIST ? TGOAL : GOAL;
+        if(b.dataset.goal === 'auto') delete GS[me]; else GS[me] = b.dataset.goal === 'eng' ? 'eng' : 'med';
+        if(!TLIST) try{ localStorage.setItem(GKEY, JSON.stringify(GOAL)); }catch(x){} } pickByGoal = true; paint(); return; }
     if(b.dataset.go){ goFn(b.dataset.go); return; }
     if(b.dataset.tk){ me = b.dataset.tk; paint(); box.scrollIntoView({ block:'start' }); return; }
     /* All students: clear the search so the full list shows (no keyboard popping up over it) */
