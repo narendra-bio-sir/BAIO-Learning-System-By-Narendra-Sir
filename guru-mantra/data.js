@@ -1,0 +1,119 @@
+/* BAIO Guru Mantra (guru-mantra.html): Narendra Sir's mantras for study, memory, exams, NEET/KCET, routine, mind and
+   motivation. Each mantra is {m:{en,kn,hi}, d:{en,kn,hi}} — m is the short mantra, d the one-line "how". Memory-trick
+   phrases stay in English (they are letter codes); only the explanation is translated. */
+window.GURU_MANTRA = {
+  secs: [
+    { id:'study', ic:'📚', t:{en:'Study mantras', kn:'ಓದಿನ ಮಂತ್ರಗಳು', hi:'पढ़ाई के मंत्र'}, list: [
+      { m:{en:'NCERT is your bible — read it line by line.', kn:'NCERT ನಿಮ್ಮ ಗ್ರಂಥ — ಸಾಲು ಸಾಲಾಗಿ ಓದಿ.', hi:'NCERT आपकी गीता है — लाइन-दर-लाइन पढ़ें।'},
+        d:{en:'Board, NEET and KCET questions come straight from NCERT lines, tables and figure labels.', kn:'ಬೋರ್ಡ್, NEET, KCET ಪ್ರಶ್ನೆಗಳು ನೇರವಾಗಿ NCERT ಸಾಲು, ಕೋಷ್ಟಕ ಮತ್ತು ಚಿತ್ರಗಳಿಂದ ಬರುತ್ತವೆ.', hi:'बोर्ड, NEET और KCET के सवाल सीधे NCERT की लाइनों, तालिकाओं और चित्रों से आते हैं।'} },
+      { m:{en:'Read once, recall twice.', kn:'ಒಮ್ಮೆ ಓದಿ, ಎರಡು ಬಾರಿ ನೆನಪಿಸಿಕೊಳ್ಳಿ.', hi:'एक बार पढ़ें, दो बार याद करें।'},
+        d:{en:'Close the book and write what you remember. Recalling builds memory far more than re-reading.', kn:'ಪುಸ್ತಕ ಮುಚ್ಚಿ ನೆನಪಿರುವುದನ್ನು ಬರೆಯಿರಿ. ಮತ್ತೆ ಓದುವುದಕ್ಕಿಂತ ನೆನಪಿಸಿಕೊಳ್ಳುವುದು ಹೆಚ್ಚು ಸ್ಮರಣೆ ಕಟ್ಟುತ್ತದೆ.', hi:'किताब बंद करके जो याद है वह लिखें। दोबारा पढ़ने से ज़्यादा याद करना याददाश्त बनाता है।'} },
+      { m:{en:'Revise on day 1, 3, 7 and 21.', kn:'1, 3, 7 ಮತ್ತು 21ನೇ ದಿನ ಪುನರಾವರ್ತಿಸಿ.', hi:'पहले, तीसरे, सातवें और 21वें दिन दोहराएँ।'},
+        d:{en:'Spaced revision moves a chapter from short-term to long-term memory.', kn:'ಅಂತರದ ಪುನರಾವರ್ತನೆ ಅಧ್ಯಾಯವನ್ನು ದೀರ್ಘಕಾಲದ ಸ್ಮರಣೆಗೆ ಕಳುಹಿಸುತ್ತದೆ.', hi:'अंतराल पर दोहराने से अध्याय लंबे समय तक याद रहता है।'} },
+      { m:{en:'A diagram a day keeps low marks away.', kn:'ದಿನಕ್ಕೊಂದು ಚಿತ್ರ — ಕಡಿಮೆ ಅಂಕ ದೂರ.', hi:'रोज़ एक चित्र — कम अंक दूर।'},
+        d:{en:'Draw one labelled diagram daily. Diagrams carry sure marks in Part D.', kn:'ಪ್ರತಿದಿನ ಒಂದು ಗುರುತಿಸಿದ ಚಿತ್ರ ಬರೆಯಿರಿ. ಭಾಗ D ಯಲ್ಲಿ ಚಿತ್ರಗಳಿಗೆ ಖಚಿತ ಅಂಕ.', hi:'रोज़ एक लेबल वाला चित्र बनाएँ। भाग D में चित्रों के पक्के अंक मिलते हैं।'} },
+      { m:{en:'Teach it to understand it.', kn:'ಕಲಿಸಿದರೆ ಅರ್ಥವಾಗುತ್ತದೆ.', hi:'सिखाएँगे तो समझेंगे।'},
+        d:{en:'Explain a topic aloud to a friend or a wall in 2 minutes. Gaps show up at once.', kn:'ಒಂದು ವಿಷಯವನ್ನು 2 ನಿಮಿಷದಲ್ಲಿ ಸ್ನೇಹಿತನಿಗೆ ಜೋರಾಗಿ ವಿವರಿಸಿ. ತಪ್ಪುಗಳು ತಕ್ಷಣ ಕಾಣುತ್ತವೆ.', hi:'किसी टॉपिक को 2 मिनट में दोस्त को ज़ोर से समझाएँ। कमियाँ तुरंत दिखेंगी।'} },
+      { m:{en:'45 minutes study, 10 minutes break.', kn:'45 ನಿಮಿಷ ಓದು, 10 ನಿಮಿಷ ವಿರಾಮ.', hi:'45 मिनट पढ़ाई, 10 मिनट ब्रेक।'},
+        d:{en:'Short focused blocks beat long tired hours. Stand up, drink water, then start again.', kn:'ಸಣ್ಣ ಏಕಾಗ್ರ ಅವಧಿಗಳು ದಣಿದ ದೀರ್ಘ ಗಂಟೆಗಳಿಗಿಂತ ಉತ್ತಮ. ಎದ್ದು, ನೀರು ಕುಡಿದು, ಮತ್ತೆ ಆರಂಭಿಸಿ.', hi:'छोटे ध्यान वाले सत्र लंबे थके घंटों से बेहतर हैं। उठें, पानी पिएँ, फिर शुरू करें।'} }
+    ]},
+    { id:'memory', ic:'🧠', t:{en:'Memory tricks', kn:'ನೆನಪಿನ ತಂತ್ರಗಳು', hi:'याद रखने की ट्रिक'}, list: [
+      { m:{en:'“Kings Play Chess On Fine Green Silk”', kn:'“Kings Play Chess On Fine Green Silk”', hi:'“Kings Play Chess On Fine Green Silk”'},
+        d:{en:'Taxonomic hierarchy: Kingdom → Phylum → Class → Order → Family → Genus → Species.', kn:'ವರ್ಗೀಕರಣ ಶ್ರೇಣಿ: Kingdom → Phylum → Class → Order → Family → Genus → Species.', hi:'वर्गीकरण पदानुक्रम: Kingdom → Phylum → Class → Order → Family → Genus → Species।'} },
+      { m:{en:'“PMAT”', kn:'“PMAT”', hi:'“PMAT”'},
+        d:{en:'Mitosis stages in order: Prophase, Metaphase, Anaphase, Telophase.', kn:'ಮೈಟೋಸಿಸ್ ಹಂತಗಳು ಕ್ರಮವಾಗಿ: Prophase, Metaphase, Anaphase, Telophase.', hi:'माइटोसिस के चरण क्रम से: Prophase, Metaphase, Anaphase, Telophase।'} },
+      { m:{en:'“Lazy Zebras Play Dumb Disco”', kn:'“Lazy Zebras Play Dumb Disco”', hi:'“Lazy Zebras Play Dumb Disco”'},
+        d:{en:'Prophase I of meiosis: Leptotene, Zygotene, Pachytene, Diplotene, Diakinesis.', kn:'ಮಿಯಾಸಿಸ್ Prophase I: Leptotene, Zygotene, Pachytene, Diplotene, Diakinesis.', hi:'मीयोसिस Prophase I: Leptotene, Zygotene, Pachytene, Diplotene, Diakinesis।'} },
+      { m:{en:'“Citrate Is Krebs’ Starting Substrate For Making Oxaloacetate”', kn:'“Citrate Is Krebs’ Starting Substrate For Making Oxaloacetate”', hi:'“Citrate Is Krebs’ Starting Substrate For Making Oxaloacetate”'},
+        d:{en:'Krebs cycle order: Citrate, Isocitrate, α-Ketoglutarate, Succinyl-CoA, Succinate, Fumarate, Malate, Oxaloacetate.', kn:'ಕ್ರೆಬ್ಸ್ ಚಕ್ರ ಕ್ರಮ: Citrate, Isocitrate, α-Ketoglutarate, Succinyl-CoA, Succinate, Fumarate, Malate, Oxaloacetate.', hi:'क्रेब्स चक्र क्रम: Citrate, Isocitrate, α-Ketoglutarate, Succinyl-CoA, Succinate, Fumarate, Malate, Oxaloacetate।'} },
+      { m:{en:'“Never Let Monkeys Eat Bananas”', kn:'“Never Let Monkeys Eat Bananas”', hi:'“Never Let Monkeys Eat Bananas”'},
+        d:{en:'WBCs from most to least: Neutrophils > Lymphocytes > Monocytes > Eosinophils > Basophils.', kn:'WBC ಹೆಚ್ಚಿನಿಂದ ಕಡಿಮೆಗೆ: Neutrophils > Lymphocytes > Monocytes > Eosinophils > Basophils.', hi:'WBC ज़्यादा से कम: Neutrophils > Lymphocytes > Monocytes > Eosinophils > Basophils।'} },
+      { m:{en:'“Pure As Gold” · “CUT the Py”', kn:'“Pure As Gold” · “CUT the Py”', hi:'“Pure As Gold” · “CUT the Py”'},
+        d:{en:'Purines are Adenine and Guanine; pyrimidines are Cytosine, Uracil and Thymine.', kn:'ಪ್ಯೂರಿನ್‌ಗಳು Adenine ಮತ್ತು Guanine; ಪಿರಿಮಿಡಿನ್‌ಗಳು Cytosine, Uracil, Thymine.', hi:'प्यूरीन: Adenine और Guanine; पिरिमिडीन: Cytosine, Uracil और Thymine।'} }
+    ]},
+    { id:'board', ic:'📝', t:{en:'Board exam mantras', kn:'ಬೋರ್ಡ್ ಪರೀಕ್ಷೆ ಮಂತ್ರಗಳು', hi:'बोर्ड परीक्षा मंत्र'}, list: [
+      { m:{en:'Read the whole paper before you write.', kn:'ಬರೆಯುವ ಮೊದಲು ಸಂಪೂರ್ಣ ಪ್ರಶ್ನೆಪತ್ರಿಕೆ ಓದಿ.', hi:'लिखने से पहले पूरा पेपर पढ़ें।'},
+        d:{en:'Use the reading time to mark the questions you know best and plan your order.', kn:'ಓದುವ ಸಮಯದಲ್ಲಿ ಚೆನ್ನಾಗಿ ತಿಳಿದ ಪ್ರಶ್ನೆಗಳನ್ನು ಗುರುತಿಸಿ ಕ್ರಮ ಯೋಜಿಸಿ.', hi:'पढ़ने के समय में अच्छी तरह आने वाले सवाल चिह्नित करें और क्रम तय करें।'} },
+      { m:{en:'Known questions first, doubtful ones later.', kn:'ತಿಳಿದ ಪ್ರಶ್ನೆ ಮೊದಲು, ಸಂದೇಹದವು ನಂತರ.', hi:'आने वाले सवाल पहले, शक वाले बाद में।'},
+        d:{en:'Early sure answers give confidence and save time for the hard ones.', kn:'ಆರಂಭದ ಖಚಿತ ಉತ್ತರಗಳು ಆತ್ಮವಿಶ್ವಾಸ ಕೊಡುತ್ತವೆ, ಕಷ್ಟದವಕ್ಕೆ ಸಮಯ ಉಳಿಸುತ್ತವೆ.', hi:'शुरू के पक्के उत्तर आत्मविश्वास देते हैं और कठिन सवालों के लिए समय बचाते हैं।'} },
+      { m:{en:'Marks decide length.', kn:'ಅಂಕಗಳು ಉದ್ದ ನಿರ್ಧರಿಸುತ್ತವೆ.', hi:'अंक तय करते हैं उत्तर की लंबाई।'},
+        d:{en:'2 marks = 2–3 points, 3 marks = 3 points, 5 marks = 5 points with a diagram where it fits.', kn:'2 ಅಂಕ = 2–3 ಅಂಶ, 3 ಅಂಕ = 3 ಅಂಶ, 5 ಅಂಕ = 5 ಅಂಶ ಮತ್ತು ಸೂಕ್ತವಿದ್ದಲ್ಲಿ ಚಿತ್ರ.', hi:'2 अंक = 2–3 बिंदु, 3 अंक = 3 बिंदु, 5 अंक = 5 बिंदु और जहाँ ठीक हो वहाँ चित्र।'} },
+      { m:{en:'Pencil diagram, neat labels, label lines straight.', kn:'ಪೆನ್ಸಿಲ್ ಚಿತ್ರ, ಅಚ್ಚುಕಟ್ಟಾದ ಗುರುತು, ನೇರ ಗೆರೆ.', hi:'पेंसिल से चित्र, साफ़ लेबल, सीधी लाइनें।'},
+        d:{en:'Examiners give marks for labels. Write them on one side, never crossing lines.', kn:'ಮೌಲ್ಯಮಾಪಕರು ಗುರುತುಗಳಿಗೆ ಅಂಕ ಕೊಡುತ್ತಾರೆ. ಒಂದೇ ಬದಿಯಲ್ಲಿ ಬರೆಯಿರಿ, ಗೆರೆಗಳು ದಾಟಬಾರದು.', hi:'परीक्षक लेबल के अंक देते हैं। एक तरफ़ लिखें, लाइनें आपस में न कटें।'} },
+      { m:{en:'Underline the keywords.', kn:'ಮುಖ್ಯ ಪದಗಳನ್ನು ಅಡಿಗೆರೆ ಹಾಕಿ.', hi:'मुख्य शब्दों को रेखांकित करें।'},
+        d:{en:'Scientific terms underlined help the examiner find your points quickly.', kn:'ಅಡಿಗೆರೆ ಹಾಕಿದ ವೈಜ್ಞಾನಿಕ ಪದಗಳು ಮೌಲ್ಯಮಾಪಕರಿಗೆ ಅಂಶಗಳನ್ನು ಬೇಗ ಹುಡುಕಲು ಸಹಾಯ.', hi:'रेखांकित वैज्ञानिक शब्द परीक्षक को आपके बिंदु जल्दी ढूँढने में मदद करते हैं।'} },
+      { m:{en:'Never leave a question blank.', kn:'ಯಾವ ಪ್ರಶ್ನೆಯನ್ನೂ ಖಾಲಿ ಬಿಡಬೇಡಿ.', hi:'कोई सवाल खाली न छोड़ें।'},
+        d:{en:'Board papers have no negative marks. Write what you know — part marks add up. Keep the last 10 minutes to check.', kn:'ಬೋರ್ಡ್ ಪತ್ರಿಕೆಯಲ್ಲಿ ಋಣಾತ್ಮಕ ಅಂಕ ಇಲ್ಲ. ತಿಳಿದದ್ದನ್ನು ಬರೆಯಿರಿ — ಭಾಗಶಃ ಅಂಕ ಸೇರುತ್ತದೆ. ಕೊನೆಯ 10 ನಿಮಿಷ ಪರಿಶೀಲನೆಗೆ.', hi:'बोर्ड पेपर में नेगेटिव मार्किंग नहीं। जो आता है लिखें — आंशिक अंक जुड़ते हैं। आख़िरी 10 मिनट जाँच के लिए रखें।'} }
+    ]},
+    { id:'neet', ic:'🎯', t:{en:'NEET & KCET mantras', kn:'NEET ಮತ್ತು KCET ಮಂತ್ರಗಳು', hi:'NEET और KCET मंत्र'}, list: [
+      { m:{en:'Previous year questions are your best teacher.', kn:'ಹಿಂದಿನ ವರ್ಷದ ಪ್ರಶ್ನೆಗಳೇ ಉತ್ತಮ ಗುರು.', hi:'पिछले वर्षों के सवाल सबसे अच्छे शिक्षक हैं।'},
+        d:{en:'Solve every PYQ of a chapter right after studying it. Patterns repeat.', kn:'ಅಧ್ಯಾಯ ಓದಿದ ತಕ್ಷಣ ಅದರ ಎಲ್ಲಾ PYQ ಬಿಡಿಸಿ. ಮಾದರಿಗಳು ಪುನರಾವರ್ತನೆಯಾಗುತ್ತವೆ.', hi:'अध्याय पढ़ते ही उसके सारे PYQ हल करें। पैटर्न दोहराते हैं।'} },
+      { m:{en:'NEET: +4 for right, −1 for wrong.', kn:'NEET: ಸರಿಗೆ +4, ತಪ್ಪಿಗೆ −1.', hi:'NEET: सही पर +4, ग़लत पर −1।'},
+        d:{en:'Guess only when you can cut two options. A wild guess can cost marks.', kn:'ಎರಡು ಆಯ್ಕೆ ತೆಗೆಯಲು ಸಾಧ್ಯವಾದಾಗ ಮಾತ್ರ ಊಹಿಸಿ. ಸುಮ್ಮನೆ ಊಹೆ ಅಂಕ ಕಳೆಯಬಹುದು.', hi:'दो विकल्प हटा सकें तभी अनुमान लगाएँ। अंधा अनुमान अंक काट सकता है।'} },
+      { m:{en:'KCET: no negative marks — attempt all.', kn:'KCET: ಋಣಾತ್ಮಕ ಅಂಕ ಇಲ್ಲ — ಎಲ್ಲಾ ಪ್ರಯತ್ನಿಸಿ.', hi:'KCET: नेगेटिव मार्किंग नहीं — सब हल करें।'},
+        d:{en:'Never leave a KCET bubble empty. Mark your best guess in the last minutes.', kn:'KCET ನಲ್ಲಿ ಯಾವ ವೃತ್ತವನ್ನೂ ಖಾಲಿ ಬಿಡಬೇಡಿ. ಕೊನೆಯ ನಿಮಿಷಗಳಲ್ಲಿ ಉತ್ತಮ ಊಹೆ ಗುರುತಿಸಿ.', hi:'KCET में कोई गोला खाली न छोड़ें। आख़िरी मिनटों में सबसे अच्छा अनुमान भरें।'} },
+      { m:{en:'Accuracy first, speed next.', kn:'ಮೊದಲು ನಿಖರತೆ, ನಂತರ ವೇಗ.', hi:'पहले सटीकता, फिर गति।'},
+        d:{en:'Speed comes from practice. Rushing early only adds silly mistakes.', kn:'ವೇಗ ಅಭ್ಯಾಸದಿಂದ ಬರುತ್ತದೆ. ಆರಂಭದಲ್ಲೇ ಆತುರ ತಪ್ಪುಗಳನ್ನು ಹೆಚ್ಚಿಸುತ್ತದೆ.', hi:'गति अभ्यास से आती है। शुरू में जल्दबाज़ी सिर्फ़ गलतियाँ बढ़ाती है।'} },
+      { m:{en:'One full mock test every week.', kn:'ಪ್ರತಿ ವಾರ ಒಂದು ಪೂರ್ಣ ಮಾಕ್ ಟೆಸ್ಟ್.', hi:'हर हफ़्ते एक पूरा मॉक टेस्ट।'},
+        d:{en:'Sit at the real exam time, with an OMR sheet, without your phone.', kn:'ನಿಜವಾದ ಪರೀಕ್ಷೆಯ ಸಮಯಕ್ಕೆ, OMR ಹಾಳೆಯೊಂದಿಗೆ, ಫೋನ್ ಇಲ್ಲದೆ ಕುಳಿತುಕೊಳ್ಳಿ.', hi:'असली परीक्षा के समय पर, OMR शीट के साथ, बिना फ़ोन के बैठें।'} },
+      { m:{en:'Keep a mistakes notebook.', kn:'ತಪ್ಪುಗಳ ನೋಟ್‌ಬುಕ್ ಇಡಿ.', hi:'गलतियों की नोटबुक रखें।'},
+        d:{en:'Write every wrong answer with the correct reason. Read it before each test.', kn:'ಪ್ರತಿ ತಪ್ಪು ಉತ್ತರವನ್ನು ಸರಿಯಾದ ಕಾರಣದೊಂದಿಗೆ ಬರೆಯಿರಿ. ಪ್ರತಿ ಪರೀಕ್ಷೆಗೂ ಮೊದಲು ಓದಿ.', hi:'हर ग़लत उत्तर सही कारण के साथ लिखें। हर टेस्ट से पहले पढ़ें।'} }
+    ]},
+    { id:'routine', ic:'⏰', t:{en:'Time & routine', kn:'ಸಮಯ ಮತ್ತು ದಿನಚರಿ', hi:'समय और दिनचर्या'}, list: [
+      { m:{en:'Same time, same place, every day.', kn:'ಅದೇ ಸಮಯ, ಅದೇ ಸ್ಥಳ, ಪ್ರತಿದಿನ.', hi:'रोज़ वही समय, वही जगह।'},
+        d:{en:'A fixed study slot turns study into a habit, not a fight.', kn:'ನಿಗದಿತ ಓದಿನ ಸಮಯ ಓದನ್ನು ಅಭ್ಯಾಸವನ್ನಾಗಿ ಮಾಡುತ್ತದೆ, ಹೋರಾಟವಲ್ಲ.', hi:'तय समय पढ़ाई को आदत बनाता है, लड़ाई नहीं।'} },
+      { m:{en:'Hardest subject when your mind is fresh.', kn:'ಮನಸ್ಸು ತಾಜಾ ಇದ್ದಾಗ ಕಷ್ಟದ ವಿಷಯ.', hi:'दिमाग़ ताज़ा हो तब सबसे कठिन विषय।'},
+        d:{en:'Early morning or after a short rest — keep easy work for when you are tired.', kn:'ಬೆಳಗ್ಗೆ ಬೇಗ ಅಥವಾ ಸ್ವಲ್ಪ ವಿಶ್ರಾಂತಿಯ ನಂತರ — ಸುಲಭ ಕೆಲಸ ದಣಿದಾಗ.', hi:'सुबह जल्दी या थोड़े आराम के बाद — आसान काम थकान के समय।'} },
+      { m:{en:'Revise today’s class today.', kn:'ಇಂದಿನ ತರಗತಿಯನ್ನು ಇಂದೇ ಪುನರಾವರ್ತಿಸಿ.', hi:'आज की क्लास आज ही दोहराएँ।'},
+        d:{en:'20 minutes the same evening saves 2 hours before the exam.', kn:'ಅದೇ ಸಂಜೆ 20 ನಿಮಿಷ ಪರೀಕ್ಷೆಯ ಮೊದಲು 2 ಗಂಟೆ ಉಳಿಸುತ್ತದೆ.', hi:'उसी शाम 20 मिनट परीक्षा से पहले 2 घंटे बचाते हैं।'} },
+      { m:{en:'Sunday is revision day.', kn:'ಭಾನುವಾರ ಪುನರಾವರ್ತನೆಯ ದಿನ.', hi:'रविवार दोहराने का दिन।'},
+        d:{en:'Revise the whole week and take one short test on it.', kn:'ಇಡೀ ವಾರದ್ದನ್ನು ಪುನರಾವರ್ತಿಸಿ ಮತ್ತು ಒಂದು ಸಣ್ಣ ಪರೀಕ್ಷೆ ಬರೆಯಿರಿ.', hi:'पूरे हफ़्ते का दोहराएँ और उस पर एक छोटा टेस्ट दें।'} },
+      { m:{en:'Phone in another room while you study.', kn:'ಓದುವಾಗ ಫೋನ್ ಬೇರೆ ಕೋಣೆಯಲ್ಲಿ.', hi:'पढ़ते समय फ़ोन दूसरे कमरे में।'},
+        d:{en:'Use the BAIO app in study time, then put the phone away for writing practice.', kn:'ಓದಿನ ಸಮಯದಲ್ಲಿ BAIO ಆ್ಯಪ್ ಬಳಸಿ, ಬರವಣಿಗೆ ಅಭ್ಯಾಸಕ್ಕೆ ಫೋನ್ ದೂರ ಇಡಿ.', hi:'पढ़ाई के समय BAIO ऐप इस्तेमाल करें, फिर लिखने के अभ्यास के लिए फ़ोन दूर रखें।'} },
+      { m:{en:'Plan tomorrow tonight.', kn:'ನಾಳೆಯ ಯೋಜನೆ ಇಂದು ರಾತ್ರಿ.', hi:'कल की योजना आज रात।'},
+        d:{en:'Write 3 tasks for tomorrow before sleeping. Start the day without confusion.', kn:'ಮಲಗುವ ಮೊದಲು ನಾಳೆಯ 3 ಕೆಲಸ ಬರೆಯಿರಿ. ಗೊಂದಲವಿಲ್ಲದೆ ದಿನ ಆರಂಭಿಸಿ.', hi:'सोने से पहले कल के 3 काम लिखें। दिन बिना उलझन शुरू करें।'} }
+    ]},
+    { id:'mind', ic:'🧘', t:{en:'Mind & health', kn:'ಮನಸ್ಸು ಮತ್ತು ಆರೋಗ್ಯ', hi:'मन और सेहत'}, list: [
+      { m:{en:'Sleep 7–8 hours — memory is saved while you sleep.', kn:'7–8 ಗಂಟೆ ನಿದ್ರೆ — ನಿದ್ರೆಯಲ್ಲಿ ಸ್ಮರಣೆ ಉಳಿಯುತ್ತದೆ.', hi:'7–8 घंटे सोएँ — नींद में याददाश्त पक्की होती है।'},
+        d:{en:'Late-night cramming before an exam usually lowers marks.', kn:'ಪರೀಕ್ಷೆಯ ಹಿಂದಿನ ರಾತ್ರಿ ತಡವಾಗಿ ಓದುವುದು ಸಾಮಾನ್ಯವಾಗಿ ಅಂಕ ಕಡಿಮೆ ಮಾಡುತ್ತದೆ.', hi:'परीक्षा से पहले देर रात रटना आमतौर पर अंक घटाता है।'} },
+      { m:{en:'Water, fruit and 20 minutes of movement.', kn:'ನೀರು, ಹಣ್ಣು ಮತ್ತು 20 ನಿಮಿಷ ಚಲನೆ.', hi:'पानी, फल और 20 मिनट की हलचल।'},
+        d:{en:'A walk, yoga or a game keeps the brain fresh for study.', kn:'ನಡಿಗೆ, ಯೋಗ ಅಥವಾ ಆಟ ಮೆದುಳನ್ನು ಓದಿಗೆ ತಾಜಾ ಇಡುತ್ತದೆ.', hi:'सैर, योग या खेल दिमाग़ को पढ़ाई के लिए ताज़ा रखते हैं।'} },
+      { m:{en:'Breathe 4-4-4-4 when you feel stressed.', kn:'ಒತ್ತಡವಾದಾಗ 4-4-4-4 ಉಸಿರಾಟ.', hi:'तनाव हो तो 4-4-4-4 साँस लें।'},
+        d:{en:'Breathe in 4 seconds, hold 4, out 4, hold 4. Repeat 4 times before an exam.', kn:'4 ಸೆಕೆಂಡ್ ಒಳಗೆ, 4 ಹಿಡಿದು, 4 ಹೊರಗೆ, 4 ಹಿಡಿದು. ಪರೀಕ್ಷೆಯ ಮೊದಲು 4 ಬಾರಿ.', hi:'4 सेकंड अंदर, 4 रोकें, 4 बाहर, 4 रोकें। परीक्षा से पहले 4 बार दोहराएँ।'} },
+      { m:{en:'Compare with your yesterday, not with others.', kn:'ಇತರರೊಂದಿಗಲ್ಲ, ನಿಮ್ಮ ನಿನ್ನೆಯೊಂದಿಗೆ ಹೋಲಿಸಿ.', hi:'दूसरों से नहीं, अपने कल से तुलना करें।'},
+        d:{en:'Your BAIO test scores show your own progress — that is the real race.', kn:'ನಿಮ್ಮ BAIO ಪರೀಕ್ಷೆ ಅಂಕಗಳು ನಿಮ್ಮದೇ ಪ್ರಗತಿ ತೋರಿಸುತ್ತವೆ — ಅದೇ ನಿಜವಾದ ಓಟ.', hi:'आपके BAIO टेस्ट स्कोर आपकी अपनी प्रगति दिखाते हैं — असली दौड़ यही है।'} },
+      { m:{en:'Talk when it feels heavy.', kn:'ಭಾರವೆನಿಸಿದಾಗ ಮಾತನಾಡಿ.', hi:'मन भारी लगे तो बात करें।'},
+        d:{en:'Share with parents, a teacher or a friend. Free help line: Tele-MANAS 14416 (24×7).', kn:'ಪೋಷಕರು, ಶಿಕ್ಷಕರು ಅಥವಾ ಸ್ನೇಹಿತರೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಿ. ಉಚಿತ ಸಹಾಯವಾಣಿ: Tele-MANAS 14416 (24×7).', hi:'माता-पिता, शिक्षक या दोस्त से बात करें। मुफ़्त हेल्पलाइन: Tele-MANAS 14416 (24×7)।'} },
+      { m:{en:'One bad test is not your future.', kn:'ಒಂದು ಕೆಟ್ಟ ಪರೀಕ್ಷೆ ನಿಮ್ಮ ಭವಿಷ್ಯವಲ್ಲ.', hi:'एक ख़राब टेस्ट आपका भविष्य नहीं है।'},
+        d:{en:'Find the reason, fix it in your mistakes notebook, and move on.', kn:'ಕಾರಣ ಹುಡುಕಿ, ತಪ್ಪುಗಳ ನೋಟ್‌ಬುಕ್‌ನಲ್ಲಿ ಸರಿಪಡಿಸಿ, ಮುಂದೆ ಸಾಗಿ.', hi:'कारण ढूँढें, गलतियों की नोटबुक में सुधारें और आगे बढ़ें।'} }
+    ]},
+    { id:'motive', ic:'🌟', t:{en:'Motivation', kn:'ಪ್ರೇರಣೆ', hi:'प्रेरणा'}, list: [
+      { m:{en:'Small steps every day beat big plans on Sunday.', kn:'ಭಾನುವಾರದ ದೊಡ್ಡ ಯೋಜನೆಗಿಂತ ಪ್ರತಿದಿನದ ಸಣ್ಣ ಹೆಜ್ಜೆ ಮೇಲು.', hi:'रविवार की बड़ी योजना से रोज़ के छोटे कदम बेहतर।'},
+        d:{en:'One topic, one diagram, ten MCQs — every single day.', kn:'ಒಂದು ವಿಷಯ, ಒಂದು ಚಿತ್ರ, ಹತ್ತು MCQ — ಪ್ರತಿದಿನ.', hi:'एक टॉपिक, एक चित्र, दस MCQ — हर दिन।'} },
+      { m:{en:'Your marks follow your habits.', kn:'ನಿಮ್ಮ ಅಂಕಗಳು ನಿಮ್ಮ ಅಭ್ಯಾಸಗಳನ್ನು ಹಿಂಬಾಲಿಸುತ್ತವೆ.', hi:'आपके अंक आपकी आदतों के पीछे चलते हैं।'},
+        d:{en:'Fix the daily routine and the result takes care of itself.', kn:'ದಿನಚರಿ ಸರಿಪಡಿಸಿ, ಫಲಿತಾಂಶ ತಾನಾಗಿ ಬರುತ್ತದೆ.', hi:'दिनचर्या ठीक करें, नतीजा अपने आप आएगा।'} },
+      { m:{en:'Doubt is a question waiting to be asked.', kn:'ಸಂದೇಹ ಎಂದರೆ ಕೇಳಬೇಕಾದ ಪ್ರಶ್ನೆ.', hi:'शंका एक सवाल है जो पूछे जाने का इंतज़ार कर रहा है।'},
+        d:{en:'Ask in class, ask the BAIO AI Assistant, ask Sir. Never carry a doubt home.', kn:'ತರಗತಿಯಲ್ಲಿ, BAIO AI ಸಹಾಯಕನಲ್ಲಿ, ಸರ್‌ನಲ್ಲಿ ಕೇಳಿ. ಸಂದೇಹವನ್ನು ಮನೆಗೆ ಒಯ್ಯಬೇಡಿ.', hi:'क्लास में, BAIO AI असिस्टेंट से, सर से पूछें। शंका घर मत ले जाइए।'} },
+      { m:{en:'Hard work in silence, results make the noise.', kn:'ಮೌನವಾಗಿ ಕಠಿಣ ಪರಿಶ್ರಮ, ಫಲಿತಾಂಶ ಸದ್ದು ಮಾಡುತ್ತದೆ.', hi:'मेहनत चुपचाप करें, नतीजे शोर मचाएँगे।'},
+        d:{en:'Focus on your work, not on what others say about it.', kn:'ನಿಮ್ಮ ಕೆಲಸದ ಮೇಲೆ ಗಮನ ಇಡಿ, ಇತರರ ಮಾತಿನ ಮೇಲಲ್ಲ.', hi:'अपने काम पर ध्यान दें, दूसरों की बातों पर नहीं।'} },
+      { m:{en:'Today’s effort is tomorrow’s white coat.', kn:'ಇಂದಿನ ಪರಿಶ್ರಮ ನಾಳೆಯ ಬಿಳಿ ಕೋಟ್.', hi:'आज की मेहनत कल का सफ़ेद कोट है।'},
+        d:{en:'Doctor, engineer or scientist — every dream is built one study hour at a time.', kn:'ವೈದ್ಯ, ಎಂಜಿನಿಯರ್ ಅಥವಾ ವಿಜ್ಞಾನಿ — ಪ್ರತಿ ಕನಸು ಒಂದೊಂದು ಓದಿನ ಗಂಟೆಯಿಂದ ಕಟ್ಟಲ್ಪಡುತ್ತದೆ.', hi:'डॉक्टर, इंजीनियर या वैज्ञानिक — हर सपना एक-एक घंटे की पढ़ाई से बनता है।'} },
+      { m:{en:'Believe in yourself — Sir believes in you.', kn:'ನಿಮ್ಮನ್ನು ನಂಬಿ — ಸರ್ ನಿಮ್ಮನ್ನು ನಂಬುತ್ತಾರೆ.', hi:'ख़ुद पर भरोसा रखें — सर आप पर भरोसा करते हैं।'},
+        d:{en:'Every topper once started exactly where you are today.', kn:'ಪ್ರತಿ ಟಾಪರ್ ಒಮ್ಮೆ ನೀವು ಇಂದು ಇರುವಲ್ಲಿಯೇ ಆರಂಭಿಸಿದ್ದರು.', hi:'हर टॉपर ने कभी ठीक वहीं से शुरुआत की थी जहाँ आप आज हैं।'} }
+    ]}
+  ],
+  ui: {
+    en:{ eyebrow:'Special · From Narendra Sir', h1:'BAIO Guru Mantra', intro:'Narendra Sir’s mantras for study, memory, exams, NEET & KCET, routine and a calm mind. One new mantra every day.',
+         today:'Today’s Guru Mantra', how:'How', another:'Another mantra', share:'Share', follow:'I’ll follow it today', followed:'Following today ✓',
+         streak:function(n){ return '🔥 ' + n + '-day mantra streak'; }, all:'All', saved:'Saved', save:'Save', unsave:'Saved', none:'Tap 💛 on any mantra to save it here.',
+         count:function(n){ return n + ' mantras'; }, by:'— Narendra Sir, BAIO', copied:'Copied', note:'Memory tricks are aids — always learn the full NCERT content behind them.' },
+    kn:{ eyebrow:'ವಿಶೇಷ · ನರೇಂದ್ರ ಸರ್ ಅವರಿಂದ', h1:'BAIO ಗುರು ಮಂತ್ರ', intro:'ಓದು, ನೆನಪು, ಪರೀಕ್ಷೆ, NEET ಮತ್ತು KCET, ದಿನಚರಿ ಮತ್ತು ಶಾಂತ ಮನಸ್ಸಿಗೆ ನರೇಂದ್ರ ಸರ್ ಅವರ ಮಂತ್ರಗಳು. ಪ್ರತಿದಿನ ಒಂದು ಹೊಸ ಮಂತ್ರ.',
+         today:'ಇಂದಿನ ಗುರು ಮಂತ್ರ', how:'ಹೇಗೆ', another:'ಇನ್ನೊಂದು ಮಂತ್ರ', share:'ಹಂಚಿ', follow:'ಇಂದು ಪಾಲಿಸುತ್ತೇನೆ', followed:'ಇಂದು ಪಾಲಿಸುತ್ತಿದ್ದೇನೆ ✓',
+         streak:function(n){ return '🔥 ' + n + ' ದಿನಗಳ ಮಂತ್ರ ಸರಣಿ'; }, all:'ಎಲ್ಲಾ', saved:'ಉಳಿಸಿದವು', save:'ಉಳಿಸಿ', unsave:'ಉಳಿಸಲಾಗಿದೆ', none:'ಯಾವುದೇ ಮಂತ್ರದ 💛 ಒತ್ತಿ ಇಲ್ಲಿ ಉಳಿಸಿ.',
+         count:function(n){ return n + ' ಮಂತ್ರಗಳು'; }, by:'— ನರೇಂದ್ರ ಸರ್, BAIO', copied:'ನಕಲಿಸಲಾಗಿದೆ', note:'ನೆನಪಿನ ತಂತ್ರಗಳು ಸಹಾಯಕ ಮಾತ್ರ — ಅವುಗಳ ಹಿಂದಿನ ಸಂಪೂರ್ಣ NCERT ವಿಷಯ ಕಲಿಯಿರಿ.' },
+    hi:{ eyebrow:'विशेष · नरेंद्र सर की ओर से', h1:'BAIO गुरु मंत्र', intro:'पढ़ाई, याददाश्त, परीक्षा, NEET और KCET, दिनचर्या और शांत मन के लिए नरेंद्र सर के मंत्र। हर दिन एक नया मंत्र।',
+         today:'आज का गुरु मंत्र', how:'कैसे', another:'दूसरा मंत्र', share:'शेयर', follow:'आज इसे अपनाऊँगा', followed:'आज अपना रहा हूँ ✓',
+         streak:function(n){ return '🔥 ' + n + ' दिन की मंत्र स्ट्रीक'; }, all:'सभी', saved:'सेव किए', save:'सेव', unsave:'सेव हुआ', none:'किसी भी मंत्र पर 💛 दबाकर यहाँ सेव करें।',
+         count:function(n){ return n + ' मंत्र'; }, by:'— नरेंद्र सर, BAIO', copied:'कॉपी हुआ', note:'याद रखने की ट्रिक सिर्फ़ मदद है — उनके पीछे का पूरा NCERT कंटेंट ज़रूर पढ़ें।' }
+  }
+};
