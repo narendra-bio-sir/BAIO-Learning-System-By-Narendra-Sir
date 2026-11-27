@@ -1,0 +1,127 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<title>Career guidance announcement banner</title>
+<!-- 1080x1350 announcement banner. ?t=light for the light version. Rendered by render.js -->
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#050b1d}
+body{font-family:Inter,'Noto Sans Kannada','Noto Sans Devanagari',sans-serif;color:#fff}
+#c{position:relative;width:1080px;height:1350px;overflow:hidden;
+  background:
+   radial-gradient(820px 640px at 92% 4%, rgba(251,191,36,.42), rgba(251,191,36,.10) 40%, transparent 65%),
+   radial-gradient(760px 640px at 0% 100%, rgba(45,212,191,.26), transparent 62%),
+   radial-gradient(600px 460px at 100% 72%, rgba(99,102,241,.22), transparent 60%),
+   linear-gradient(165deg,#0d1b45 0%,#081233 52%,#040818 100%);}
+.grain{position:absolute;inset:0;opacity:.07;background-image:radial-gradient(#fff 1px,transparent 1.2px);background-size:22px 22px}
+.cap{position:absolute;right:58px;top:150px;font-size:150px;transform:rotate(12deg);filter:drop-shadow(0 18px 30px rgba(0,0,0,.45))}
+.coin{position:absolute;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff6c8,#fcd34d 40%,#d99a0b 100%);box-shadow:0 10px 24px rgba(0,0,0,.35),inset 0 -4px 0 rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;font:900 30px Inter;color:#7c4a03}
+
+.wrap{position:relative;padding:46px 64px 0;height:100%;display:flex;flex-direction:column}
+.wrap>*{flex-shrink:0}
+.top{display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:16px}
+.logo{width:62px;height:62px;border-radius:16px;background:linear-gradient(145deg,#ffe07a,#f2b632);color:#0b1640;font:900 36px 'Inter Display',Inter;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(242,182,50,.35)}
+.brand h1{font:700 30px 'Inter Display',Inter;letter-spacing:-.3px}
+.brand p{font:500 18px Inter;color:#a9bbe8;margin-top:2px}
+.pill{display:flex;align-items:center;gap:10px;padding:13px 22px;border-radius:999px;background:rgba(9,18,52,.75);border:1.5px solid rgba(255,220,110,.8);color:#ffe28a;font:800 18px Inter;letter-spacing:2.2px}
+.pill i{width:12px;height:12px;border-radius:50%;background:#fbbf24;box-shadow:0 0 0 5px rgba(251,191,36,.25),0 0 16px #fbbf24}
+
+.eyebrow{margin-top:26px;font:800 22px Inter;letter-spacing:5px;color:#5eead4}
+.t1{margin-top:8px;font:900 102px/1 'Inter Display',Inter;letter-spacing:-4px;
+  background:linear-gradient(100deg,#5eead4 0%,#a7f3d0 32%,#fde68a 70%,#fbbf24 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 6px 30px rgba(94,234,212,.22))}
+.t2{font:800 68px/1.04 'Inter Display',Inter;letter-spacing:-2px;color:#f5f8ff;margin-top:4px}
+.t3{font:800 40px/1.15 'Inter Display',Inter;letter-spacing:-1px;color:#fde68a;margin-top:8px}
+.sub{margin-top:12px;font:500 23px/1.42 Inter;color:#cdd8f6;max-width:930px}
+.sub b{color:#fff;font-weight:700}
+
+.fan{position:relative;height:300px;margin-top:20px}
+.card{position:absolute;border-radius:18px;overflow:hidden;background:#fff;
+  box-shadow:0 30px 60px rgba(0,0,0,.55),0 0 0 3px rgba(255,255,255,.9),0 0 50px rgba(94,234,212,.15)}
+.card img{display:block;width:100%;height:100%;object-fit:cover}
+.c1{left:0;top:36px;width:330px;height:248px;transform:rotate(-7deg)}.c1 img{object-position:top}
+.c2{left:306px;top:6px;width:340px;height:280px;z-index:3}.c2 img{object-position:bottom}
+.c3{right:0;top:36px;width:330px;height:248px;transform:rotate(7deg)}.c3 img{object-position:top}
+.tag{position:absolute;padding:9px 17px;border-radius:999px;font:800 17px Inter;letter-spacing:.4px;color:#0b1640;box-shadow:0 10px 24px rgba(0,0,0,.4);white-space:nowrap;z-index:6}
+.ta{left:22px;top:246px;background:#5eead4;transform:rotate(-6deg)}
+.tb{left:330px;top:-8px;background:#fde68a}
+.tc{right:26px;top:246px;background:#a5b4fc;transform:rotate(6deg)}
+
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}
+.f{padding:11px 8px 10px;border-radius:18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.13);text-align:center}
+.f .e{font-size:28px;line-height:1}
+.f b{display:block;font:700 19px Inter;margin-top:5px;color:#fff}
+.f small{display:block;font:500 15px Inter;color:#a9bbe8;margin-top:3px}
+.banks{margin-top:14px;display:flex;flex-wrap:nowrap;gap:6px;align-items:center}
+.banks span{font:700 14.5px Inter;padding:6px 10px;white-space:nowrap;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);color:#e6ecff}
+.banks em{font:800 18px Inter;font-style:normal;letter-spacing:0;color:#5eead4;margin-right:4px}
+
+.cta{margin-top:auto;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 24px 18px 30px;border-radius:26px;
+  background:linear-gradient(100deg,#fde68a,#fbbf24 60%,#f59e0b);color:#0b1640;box-shadow:0 20px 50px rgba(251,191,36,.25)}
+.cta b{display:block;font:800 34px 'Inter Display',Inter;letter-spacing:-.6px}
+.cta small{display:block;font:600 19px Inter;margin-top:4px;color:#3b2a05}
+.cta .go{flex:none;padding:16px 22px;border-radius:16px;background:#0b1640;color:#fde68a;font:900 22px/1.1 Inter;letter-spacing:2px;text-align:center}
+.foot{display:flex;justify-content:space-between;align-items:center;padding-bottom:28px}
+.foot p{font:500 21px Inter;color:#cdd8f6}.foot p b{color:#fff}
+.foot span{font:600 20px Inter;padding:9px 18px;border-radius:999px;border:1.5px solid rgba(255,255,255,.3)}
+
+/* ---------- light theme ---------- */
+.light #c{background:
+   radial-gradient(820px 640px at 92% 4%, rgba(251,191,36,.35), transparent 62%),
+   radial-gradient(760px 640px at 0% 100%, rgba(45,212,191,.22), transparent 62%),
+   linear-gradient(165deg,#fffaf0 0%,#f5f7ff 55%,#eef3ff 100%);}
+.light body,.light{color:#0b1640}
+.light .grain{opacity:.35;background-image:radial-gradient(rgba(30,58,138,.16) 1px,transparent 1.2px)}
+.light .brand h1{color:#0b1640}.light .brand p{color:#475584}
+.light .pill{background:#fff;color:#a16207;border-color:#f59e0b}
+.light .eyebrow{color:#0f766e}
+.light .t1{background:linear-gradient(100deg,#0f766e 0%,#0d9488 35%,#d97706 75%,#b45309 100%);-webkit-background-clip:text;background-clip:text;filter:none}
+.light .t2{color:#0b1640}.light .t3{color:#b45309}
+.light .sub{color:#334170}.light .sub b{color:#0b1640}
+.light .card{box-shadow:0 26px 50px rgba(15,23,42,.22),0 0 0 3px #fff}
+.light .f{background:#fff;border-color:rgba(15,23,42,.1);box-shadow:0 6px 18px rgba(15,23,42,.06)}
+.light .f b{color:#0b1640}.light .f small{color:#56628f}
+.light .banks span{background:#fff;border-color:rgba(15,23,42,.14);color:#1e2a5a}.light .banks em{color:#0f766e}
+.light .foot p{color:#334170}.light .foot p b{color:#0b1640}.light .foot span{border-color:rgba(15,23,42,.25);color:#0b1640}
+</style></head>
+<body>
+<div id="c">
+  <div class="grain"></div>
+  <div class="cap">🎓</div>
+  <div class="coin" style="width:66px;height:66px;right:250px;top:290px">₹</div>
+  <div class="coin" style="width:46px;height:46px;right:200px;top:368px;font-size:22px">₹</div>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand"><div class="logo">B</div><div><h1>BAIO Learning System</h1><p>by Narendra Sir</p></div></div>
+      <div class="pill"><i></i>OFFICIAL ANNOUNCEMENT</div>
+    </div>
+    <div class="eyebrow">FOR EVERY I &amp; II PUC STUDENT</div>
+    <div class="t1">Personalised</div>
+    <div class="t2">Career Guidance</div>
+    <div class="t3">+ Scholarships &amp; Education Loans</div>
+    <div class="sub">Your <b>career report from your test results</b>, the right stream for you, <b>scholarships you can get</b> and <b>loans from PSU &amp; other banks</b> for higher studies.</div>
+    <div class="fan">
+      <div class="card c1"><img src="shot-finder.png" alt=""></div>
+      <div class="card c3"><img src="shot-loans.png" alt=""></div>
+      <div class="card c2"><img src="shot-career.png" alt=""></div>
+      <div class="tag ta">🔎 Scholarship finder</div>
+      <div class="tag tb">🎓 Scholarships for your course</div>
+      <div class="tag tc">🏦 Education loans</div>
+    </div>
+    <div class="grid">
+      <div class="f"><div class="e">📊</div><b>Career report</b><small>From your test marks</small></div>
+      <div class="f"><div class="e">🧭</div><b>Right stream</b><small>Medical or Engineering</small></div>
+      <div class="f"><div class="e">🎓</div><b>22 scholarships</b><small>Central · Karnataka · private</small></div>
+      <div class="f"><div class="e">🔎</div><b>Scholarship finder</b><small>Matched to you</small></div>
+      <div class="f"><div class="e">🏦</div><b>PSU bank loans</b><small>And other banks</small></div>
+      <div class="f"><div class="e">💸</div><b>Interest subsidy</b><small>CSIS · PM-Vidyalaxmi</small></div>
+      <div class="f"><div class="e">🛡️</div><b>No collateral</b><small>Up to ₹7.5 lakh</small></div>
+      <div class="f"><div class="e">🧑‍🏫</div><b>66 careers</b><small>Exams · fees · pay</small></div>
+    </div>
+    <div class="banks"><em>🏦</em><span>SBI</span><span>Canara Bank</span><span>Bank of Baroda</span><span>Union Bank</span><span>PNB</span><span>Bank of India</span><span>Indian Bank</span><span>Central Bank</span></div>
+    <div class="cta"><div><b>BAIO app → Career Guidance</b><small>narendra-bio-sir.github.io/BAIO-Learning-System-By-Narendra-Sir</small></div><div class="go">OPEN<br>NOW</div></div>
+    <div class="foot"><p><b>Narendra Sir</b> · Founder &amp; CEO, BAIO Learning System</p><span>English · ಕನ್ನಡ · हिंदी</span></div>
+  </div>
+</div>
+<script>if(/t=light/.test(location.search)) document.documentElement.classList.add('light');</script>
+</body></html>
