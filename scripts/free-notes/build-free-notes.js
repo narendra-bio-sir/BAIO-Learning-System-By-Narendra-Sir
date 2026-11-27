@@ -8,7 +8,10 @@
 // 2. notes/free/free-notes.js (window.FREE_NOTES): for every chapter, that PDF plus the free
 //    Study Material PDFs already offered in the chapter page's Downloads tab (typed notes,
 //    complete / comprehensive notes, rapid revision notes). Premium items (handwritten notes,
-//    colour notes) are left out on purpose.
+//    colour notes) are left out on purpose. Chapters whose page lives in a folder (ch2/, ch3/, ch9/)
+//    are read from that folder's index.html.
+//
+//   --index-only  keep the revision-notes PDFs already in notes/free/ and only rebuild free-notes.js
 const {chromium} = require('playwright'), http = require('http'), fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..', '..'), OUT = path.join(ROOT, 'notes', 'free');
 const TYPES = {'.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml', '.webp': 'image/webp'};
@@ -16,11 +19,24 @@ const SRC = [
   {k: '1', page: 'biology-unittest1-prep.html', cls: 'I PUC Biology'},
   {k: '2', page: 'biology-ii-puc-prep.html', cls: 'II PUC Biology'}
 ];
+const INDEX_ONLY = process.argv.includes('--index-only');
 const slug = (t) => t.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const pad = (n) => String(n).padStart(2, '0');
 
 // Free Study Material PDFs in the chapter pages (keys rendered by pdfRow / static dl-rows; all free).
+const FOLDER = {'1-2': 'ch2/', '1-3': 'ch3/', '2-9': 'ch9/'};
+function folderExtras(k, dir) {
+  const s = fs.readFileSync(path.join(ROOT, dir, 'index.html'), 'utf8'), files = [];
+  const add = (e, t, h) => { if (fs.existsSync(path.join(ROOT, dir, h.split('?')[0]))) files.push({e, t, h: dir + h}); };
+  const want = [['notes', '📄', "Sir's Typed Notes"], ['typed_notes', '📄', "Sir's Typed Notes"], ['study_guide', '📗', 'Complete Notes'], ['comprehensive', '📗', 'Complete Notes'], ['revision_notes', '⚡', k === '1' ? 'Rapid Revision' : 'Quick Summary']];
+  for (const [key, e, t] of want) {
+    const m = s.match(new RegExp('"' + key + '":\\s*\\{"title":\\s*"[^"]*",\\s*"desc":\\s*"[^"]*",\\s*"section":\\s*"[^"]*",\\s*"data":\\s*"([^"]+\\.pdf)"'));
+    if (m && !files.some((f) => f.t === t)) add(e, t, m[1]);
+  }
+  return {page: dir, files};
+}
 function chapterExtras(k, n) {
+  if (FOLDER[k + '-' + n]) return folderExtras(k, FOLDER[k + '-' + n]);
   const f = path.join(ROOT, 'pu' + k + '-ch' + n + '.html');
   if (!fs.existsSync(f)) return {page: null, files: []};
   const s = fs.readFileSync(f, 'utf8'), files = [];
@@ -117,7 +133,7 @@ body{margin:0!important;padding:0!important;-webkit-print-color-adjust:exact;pri
       await p.evaluate(() => Promise.all([...document.images].map((i) => i.complete ? 0 : new Promise((r) => { i.onload = i.onerror = r; }))));
       await p.evaluate(() => document.fonts.ready);
       const file = 'pu' + src.k + '-ch' + pad(ch.n) + '-' + slug(ch.name) + '.pdf';
-      await p.pdf({path: path.join(OUT, file), format: 'A4', printBackground: true, margin: {top: '12mm', bottom: '14mm', left: '12mm', right: '12mm'},
+      if (!(INDEX_ONLY && fs.existsSync(path.join(OUT, file)))) await p.pdf({path: path.join(OUT, file), format: 'A4', printBackground: true, margin: {top: '12mm', bottom: '14mm', left: '12mm', right: '12mm'},
         displayHeaderFooter: true, headerTemplate: '<span></span>',
         footerTemplate: '<div style="width:100%;font:9px Inter,Arial,sans-serif;color:#7a857f;padding:0 12mm;display:flex;justify-content:space-between"><span>BAIO Learning System · ' + src.cls + ' · Ch ' + ch.n + ' · Free revision notes</span><span><span class="pageNumber"></span> / <span class="totalPages"></span></span></div>'});
       const pages = (fs.readFileSync(path.join(OUT, file), 'latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
