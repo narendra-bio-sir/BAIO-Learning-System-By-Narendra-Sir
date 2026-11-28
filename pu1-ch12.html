@@ -3086,7 +3086,7 @@ let pptAuto = (function(){ try{ return localStorage.getItem('pu1ch12_ppt_auto')=
 let pptRate = (function(){ try{ const v = parseFloat(localStorage.getItem('pu1ch12_ppt_rate')); return v>0 ? v : 1; }catch(e){ return 1; } })();
 function pptLoadNarr(){
   if(PPT_NARR) return Promise.resolve(PPT_NARR);
-  if(!pptNarrLoading) pptNarrLoading = fetch('pu1-ch12-assets/narration.json?v=1').then(r=>{ if(!r.ok) throw new Error('narration '+r.status); return r.json(); }).then(j=>(PPT_NARR=j)).catch(e=>{ pptNarrLoading=null; throw e; });
+  if(!pptNarrLoading) pptNarrLoading = fetch('pu1-ch12-assets/narration.json?v=2').then(r=>{ if(!r.ok) throw new Error('narration '+r.status); return r.json(); }).then(j=>(PPT_NARR=j)).catch(e=>{ pptNarrLoading=null; throw e; });
   return pptNarrLoading;
 }
 function pptVoicesFor(l){
@@ -3233,7 +3233,7 @@ let PPT_CUES = null, pptCuesLoading = null, pptSpotLast = null;
 let pptAnim = (function(){ try{ return localStorage.getItem('pu1ch12_ppt_anim')!=='0'; }catch(e){ return true; } })();
 function pptLoadCues(){
   if(PPT_CUES) return Promise.resolve(PPT_CUES);
-  if(!pptCuesLoading) pptCuesLoading = fetch('pu1-ch12-assets/spot-cues.json?v=11').then(r=>{ if(!r.ok) throw new Error('cues'); return r.json(); }).then(j=>(PPT_CUES=j)).catch(e=>{ pptCuesLoading=null; throw e; });
+  if(!pptCuesLoading) pptCuesLoading = fetch('pu1-ch12-assets/spot-cues.json?v=12').then(r=>{ if(!r.ok) throw new Error('cues'); return r.json(); }).then(j=>(PPT_CUES=j)).catch(e=>{ pptCuesLoading=null; throw e; });
   return pptCuesLoading;
 }
 function pptSetAnim(on){ pptAnim = !!on; try{ localStorage.setItem('pu1ch12_ppt_anim', pptAnim?'1':'0'); }catch(e){} pptSceneMount(); if(!pptAnim) pptClearSpot(); else if(pptTalking && pptSpotLast) pptSpotlight(pptSpotLast[0], pptSpotLast[1]); }
