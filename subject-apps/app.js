@@ -89,7 +89,6 @@
   /* text that may carry simple formatting (K<sub>2</sub>Cr<sub>2</sub>O<sub>7</sub>, x<sup>2</sup>): escape everything,
      then let only sub / sup / b / i / em / strong / br back in */
   function rich(s){ return esc(s == null ? '' : s).replace(/&lt;(\/?)(sub|sup|b|i|em|strong)&gt;/g, '<$1$2>').replace(/&lt;br\s*\/?&gt;/g, '<br>'); }
-  function plain(s){ return String(s == null ? '' : s).replace(/<[^>]+>/g, ''); }
 
   /* ---------- theme ---------- */
   var tb = $('themeBtn');
