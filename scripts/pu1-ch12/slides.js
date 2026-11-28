@@ -28,12 +28,13 @@ const SAY = {
 /* a picture for each Study section (null = text only) */
 const VIS = {
   'breathe': ['energyFlow', 'cellSites', 'atpCoin', 'plantGas', 'woodyStem', 'burnVsStep'],
-  'glycolysis': ['glycolysis', 'sucrose', 'glycolysis', 'glycolysis', 'glycolysis', 'pyrFate'],
-  'fermentation': ['fermentation', 'fermentation', 'fermentation', 'fermVsAer', 'nadLoop'],
-  'krebs': ['cellSites', 'link', 'krebs', 'krebs', 'krebs', 'krebs'],
-  'ets': ['ets', 'ets', 'ets', 'ets', 'phosCompare', 'atpSynth'],
+  /* 'ncert:<file>' = an NCERT Class XI figure (ncert-figs/, crops made by ncert-crops.py) instead of a drawn diagram */
+  'glycolysis': ['ncert:fig-12-1', 'sucrose', 'ncert:fig-12-1a', 'ncert:fig-12-1b', 'ncert:fig-12-1c', 'pyrFate'],
+  'fermentation': ['ncert:fig-12-2', 'ncert:fig-12-2', 'ncert:fig-12-2', 'fermVsAer', 'nadLoop'],
+  'krebs': ['cellSites', 'ncert:fig-12-3a', 'ncert:fig-12-3', 'ncert:fig-12-3', 'ncert:fig-12-3', 'ncert:fig-12-3'],
+  'ets': ['ncert:fig-12-4', 'ncert:fig-12-4', 'ncert:fig-12-4', 'ncert:fig-12-4', 'phosCompare', 'ncert:fig-12-5'],
   'balance': ['balanceBars', 'pipeline', 'pipeline', 'balanceBars', 'fermVsAer'],
-  'amphibolic': ['amphibolic', 'amphibolic', 'amphibolic', 'amphibolic', 'amphibolic'],
+  'amphibolic': ['ncert:fig-12-6', 'ncert:fig-12-6', 'ncert:fig-12-6', 'ncert:fig-12-6', 'ncert:fig-12-6'],
   'rq': ['rqBars', 'rqBars', 'rqSeeds', 'rqBars', 'rqSeeds']
 };
 const TABLE_VIS = {};
@@ -72,7 +73,7 @@ function deck(L, kind){
     const b = await chromium.launch(); const p = await b.newPage({ viewport:{ width:W, height:H } }); const srv = require('./serve.js')();
     await p.goto(srv.url + 'scripts/pu1-ch12/slides.html'); await p.evaluate(() => document.fonts.ready);
     const D = deck(L, kind), want = list ? list.split(',').map(Number) : D.map(s => s.n);
-    for (const s of D.filter(s => want.includes(s.n))){ await p.evaluate(s => window.renderSlide(s), s); await p.waitForTimeout(150); await p.screenshot({ path: path.join(dir, `${kind}-${L}-${String(s.n).padStart(2, '0')}.jpg`), type:'jpeg', quality:80 }); }
+    for (const s of D.filter(s => want.includes(s.n))){ await p.evaluate(s => window.renderSlide(s), s); await p.evaluate(() => Promise.all([...document.images].map(i => i.complete ? 0 : new Promise(r => { i.onload = i.onerror = r; })))); await p.waitForTimeout(150); await p.screenshot({ path: path.join(dir, `${kind}-${L}-${String(s.n).padStart(2, '0')}.jpg`), type:'jpeg', quality:80 }); }
     console.log('preview', D.length, 'slides in deck;', want.length, 'rendered'); await b.close(); srv.close(); return;
   }
   const b = await chromium.launch(); const p = await b.newPage();
@@ -96,6 +97,7 @@ function deck(L, kind){
       const dir = path.join(A, (kind === 'large' ? 'proj/' : '') + (L === 'en' ? '' : L + '/')); fs.mkdirSync(dir, { recursive: true });
       for (const s of D){
         const rects = await p.evaluate(s => window.renderSlide(s), s);
+        await p.evaluate(() => Promise.all([...document.images].map(i => i.complete ? 0 : new Promise(r => { i.onload = i.onerror = r; }))));
         const k = 1920 / W;
         /* one cue per narration sentence, in 1920-wide slide coordinates */
         CUES[kind][L].push(s.narr.map(([c]) => { const r = rects[c] || rects[0]; return r ? r.map(v => Math.round(v * k)) : null; }));

@@ -21,15 +21,15 @@ function speak(h, L){
        .replace(/\s*\(\s*/g, ', ').replace(/\s*\)/g, ',').replace(/,\s*([,.!?।])/g, '$1').replace(/,\s*,/g, ',').replace(/\s+/g, ' ').trim().replace(/,$/, '');
   return t;
 }
-const SPLIT = t => (t || '').split(/(?<=[.!?।])\s+/).map(x => x.trim()).filter(Boolean);
+const SPLIT = t => (t || '').split(/(?<=[.!?।])\s+/).map(x => x.trim()).filter(Boolean); /* must match pptSentences() in the app */
 function endP(t, L){ return /[.!?।]$/.test(t) ? t : t + (L === 'hi' ? '।' : '.'); }
 /* sentences of a block of html, each guaranteed to end in punctuation */
 function sentences(h, L){ return SPLIT(speak(h, L)).map(x => endP(x, L)); }
-/* split display html into sentences (keeps markup; never splits after e.g./i.e./ಉದಾ.) */
+/* split display html into sentences (keeps markup; never splits after e.g./i.e./ಉದಾ. or an initial like J.) */
 function displaySentences(h){
   const out = []; let cur = '';
   const parts = String(h).split(/(?<=[.!?।](?:<\/b>)?)\s+/);
-  parts.forEach(p => { cur = cur ? cur + ' ' + p : p; if (!/(\be\.g\.|\bi\.e\.|ಉದಾ\.|\bvs\.|\bNo\.)(<\/b>)?$/.test(cur)) { out.push(cur); cur = ''; } });
+  parts.forEach(p => { cur = cur ? cur + ' ' + p : p; if (!/(\be\.g\.|\bi\.e\.|ಉದಾ\.|\bvs\.|\bNo\.|(^|[\s>])[A-Z]\.)(<\/b>)?$/.test(cur)) { out.push(cur); cur = ''; } });
   if (cur) out.push(cur);
   return out;
 }
