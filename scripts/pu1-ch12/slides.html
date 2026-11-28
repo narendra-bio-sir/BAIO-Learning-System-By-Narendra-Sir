@@ -46,13 +46,16 @@ td:first-child{font-weight:700}
 .std #s{background:radial-gradient(1200px 700px at 0% 0%,#e7f3ec 0,rgba(231,243,236,0) 60%),radial-gradient(1100px 700px at 100% 100%,#f6ead2 0,rgba(246,234,210,0) 60%),#f8f4ea}
 .std .kick{top:4.4%;left:4.2%;font-size:calc(var(--u)*.95);letter-spacing:.22em;color:#b0841a}
 .std.lang-kn .kick,.std.lang-hi .kick{letter-spacing:.04em}
-.std .ttl{top:7.6%;font-size:calc(var(--u)*2.55);color:#16213a;letter-spacing:-.01em}
+.std .ttl{top:7.4%;font-size:calc(var(--u)*2.9);color:#16213a;letter-spacing:-.01em}
 .std .ttl em{color:#0f8a6c}
 .std .uline{position:absolute;left:4.2%;top:15.3%;width:4.2%;height:4px;border-radius:2px;background:#d4a52a}
 .std .body{top:19.5%;bottom:8.5%;gap:1.6%}
 .std .col{flex:1;display:flex;flex-direction:column;gap:calc(var(--u)*.85);min-width:0}
 .std .lead{background:linear-gradient(135deg,#dff1e8,#eaf6ef);border:1.5px solid #bfe0cf;border-radius:calc(var(--u)*1.1);padding:calc(var(--u)*1) calc(var(--u)*1.3);font-size:calc(var(--f)*1.08);line-height:1.38;font-weight:600;color:#14324a}
 .std .lead b{color:#0f7a62}
+.std .lead{display:flex;gap:calc(var(--u)*.75);align-items:flex-start}.std .lead .e{flex:0 0 auto;width:calc(var(--f)*1.9);height:calc(var(--f)*1.9);border-radius:calc(var(--f)*.55);display:flex;align-items:center;justify-content:center;font-size:calc(var(--f)*1.05);background:rgba(255,255,255,.8)}
+.std .pts{gap:calc(var(--u)*1.1)}
+.std .pts > *{line-height:1.3}
 .std .grid{display:grid;gap:calc(var(--u)*.85);align-content:start}
 .std .grid.two{grid-template-columns:1fr 1fr}
 .std .ic{border-radius:calc(var(--u)*1);padding:calc(var(--u)*.8) calc(var(--u)*1.05);font-size:var(--f);line-height:1.38;font-weight:500;display:flex;gap:calc(var(--u)*.75);align-items:flex-start;border:1.5px solid}
@@ -103,7 +106,7 @@ function over(b){ return b.scrollHeight > b.clientHeight + 2 || [...b.querySelec
 function grow(){
   const b = document.querySelector('.body'); if (!b || !document.body.classList.contains('std')) return;
   const col = b.querySelector('.col, .vs, .road, .cards'); if (!col) return;
-  const cap = col.matches('.rem') ? 1.75 : col.matches('.road') ? 1.3 : col.matches('.cards') ? 1.5 : 1.4, fill = col.matches('.road, .cards') ? 0.8 : 0.9;
+  const cap = col.matches('.rem') ? 1.3 : col.matches('.road') ? 1.25 : col.matches('.cards') ? 1.15 : col.matches('.pts') ? 1.5 : 1.25, fill = col.matches('.road, .cards') ? 0.8 : 0.9;
   const root = document.documentElement, f0 = parseFloat(getComputedStyle(root).getPropertyValue('--f'));
   const panel = b.querySelector('.panel');
   if (panel){ b.style.alignItems = 'flex-start'; panel.style.height = (b.clientHeight * 0.7) + 'px'; }
@@ -168,19 +171,19 @@ function stdSlide(s, U){
     return stdHead(U, s.title) + `<div class="body"><div class="grid road">${s.items.map((x, i) => `<div class="ic t${[2,1,3,4][i % 4]}" data-cue="${i + 1}"><span class="n">${i + 1}</span><span class="e">${ri[i] || '📘'}</span><span>${x}</span></div>`).join('')}</div></div>` + stdFoot(U);
   }
   if (s.type === 'sec'){
-    const c = s.cards, lead = c[0], rest = c.slice(1);
-    let note = null;
-    if (rest.length >= 2 && plainLen(rest[rest.length - 1]) < 170) note = rest.pop();
-    const two = !s.vis && rest.length >= 2;
-    const cards = rest.map((x, i) => `<div class="ic t${[0,1,2,3,4][i % 5]}" data-cue="${i + 2}"><span class="e">${icons[(i + 1) % icons.length]}</span><span>${x}</span></div>`).join('');
-    const col = `<div class="col"><div class="lead" data-cue="1">${lead}</div>${cards ? `<div class="grid ${two ? 'two' : ''}">${cards}</div>` : ''}${note ? `<div class="note" data-cue="${c.length}"><span class="tg">${U.note}</span><span>${note}</span></div>` : ''}</div>`;
+    /* short points: the first is the lead, NOTE points become a NOTE strip, the rest are icon cards */
+    const pts = s.points, li = pts[0].ic === 'NOTE' ? -1 : 0;
+    const row = (p, i) => p.ic === 'NOTE' ? `<div class="note" data-cue="${i + 1}"><span class="tg">${U.note}</span><span>${p.t}</span></div>`
+      : i === li ? `<div class="lead" data-cue="${i + 1}"><span class="e">${p.ic}</span><span>${p.t}</span></div>`
+      : `<div class="ic t${[0,1,2,3,4][(i - 1 + 5) % 5]}" data-cue="${i + 1}"><span class="e">${p.ic}</span><span>${p.t}</span></div>`;
+    const col = `<div class="col pts">${pts.map(row).join('')}</div>`;
     const panel = s.vis ? panelHtml(s, U) : '';
     return stdHead(U, s.title, s.hl) + `<div class="body">${panel}${col}</div>` + stdFoot(U);
   }
   if (s.type === 'part'){
     const t = twoTone(s.title);
     const head = `<div class="kick">${U.kick}</div><div class="ttl" data-cue="0"><span class="badge">${U.part} ${s.pn}</span> ${t[0]}<em>${t[1]}</em></div><div class="uline"></div>`;
-    const cards = s.items.map((x, i) => `<div class="ic t${[2,1,0,4,3][i % 5]}" data-cue="${i + 1}"><span class="e">✅</span><span>${x}</span></div>`).join('');
+    const cards = s.items.map((x, i) => `<div class="ic t${[2,1,0,4,3][i % 5]}" data-cue="${i + 1}"><span class="e">${x.ic}</span><span>${x.t}</span></div>`).join('');
     return head + `<div class="body"><div class="col"><div class="grid">${cards}</div></div></div>` + stdFoot(U);
   }
   if (s.type === 'rem'){
@@ -199,7 +202,7 @@ function stdSlide(s, U){
 window.renderSlide = function(s){
   const W = innerWidth, u = W / 100 * 1.04; const large = s.kind === 'large';
   document.documentElement.style.setProperty('--u', u + 'px');
-  document.documentElement.style.setProperty('--f', (large ? u * 1.72 : u * 1.36) + 'px');
+  document.documentElement.style.setProperty('--f', (large ? u * 2.3 : u * 2.1) + 'px'); /* big, last-bench text like the Biomolecules deck */
   document.body.className = (large ? "std large" : "std") + " lang-" + s.lang; /* both decks use the infographic style; the large deck keeps bigger text */
   const U = s.ui, el = document.getElementById('s');
   /* photo thumbnail as the first and last slide of both decks (same as the Biomolecules deck) */
