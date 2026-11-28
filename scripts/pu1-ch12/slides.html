@@ -90,6 +90,8 @@ td:first-child{font-weight:700}
 .std .road{grid-template-columns:1fr 1fr;gap:calc(var(--u)*.85)}
 .std .road .ic{align-items:center;font-weight:650}
 .std .road .n{flex:0 0 auto;width:calc(var(--f)*1.8);height:calc(var(--f)*1.8);border-radius:50%;background:#0f8a6c;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:calc(var(--f)*.85)}
+.large .panel{flex-basis:36%}
+.std .ttl .badge{display:inline-block;vertical-align:.12em;font-size:.55em;margin-right:.35em;background:#0f8a6c}
 .std .foot{bottom:3.4%;font-size:calc(var(--u)*.78);color:#7b7f88}
 .std .foot b{color:#a87d14}
 </style></head><body><div id="s"></div>
@@ -99,7 +101,7 @@ function over(b){ return b.scrollHeight > b.clientHeight + 2 || [...b.querySelec
 function grow(){
   const b = document.querySelector('.body'); if (!b || !document.body.classList.contains('std')) return;
   const col = b.querySelector('.col, .vs, .road, .cards'); if (!col) return;
-  const cap = col.matches('.road') ? 1.3 : col.matches('.cards') ? 1.5 : 1.4, fill = col.matches('.road, .cards') ? 0.8 : 0.9;
+  const cap = col.matches('.rem') ? 1.75 : col.matches('.road') ? 1.3 : col.matches('.cards') ? 1.5 : 1.4, fill = col.matches('.road, .cards') ? 0.8 : 0.9;
   const root = document.documentElement, f0 = parseFloat(getComputedStyle(root).getPropertyValue('--f'));
   const panel = b.querySelector('.panel');
   if (panel){ b.style.alignItems = 'flex-start'; panel.style.height = (b.clientHeight * 0.7) + 'px'; }
@@ -165,6 +167,15 @@ function stdSlide(s, U){
     const panel = s.vis ? `<div class="panel"><div class="cap">${U.dia}</div><div class="art">${V[s.vis](s.lang)}</div></div>` : '';
     return stdHead(U, s.title, s.hl) + `<div class="body">${panel}${col}</div>` + stdFoot(U);
   }
+  if (s.type === 'part'){
+    const t = twoTone(s.title);
+    const head = `<div class="kick">${U.kick}</div><div class="ttl" data-cue="0"><span class="badge">${U.part} ${s.pn}</span> ${t[0]}<em>${t[1]}</em></div><div class="uline"></div>`;
+    const cards = s.items.map((x, i) => `<div class="ic t${[2,1,0,4,3][i % 5]}" data-cue="${i + 1}"><span class="e">✅</span><span>${x}</span></div>`).join('');
+    return head + `<div class="body"><div class="col"><div class="grid">${cards}</div></div></div>` + stdFoot(U);
+  }
+  if (s.type === 'rem'){
+    return stdHead(U, s.title) + `<div class="body"><div class="grid road rem">${s.items.map((x, i) => `<div class="ic t${[2,1,3,4][i % 4]}" data-cue="${i + 1}"><span class="n">★</span><span>${x}</span></div>`).join('')}</div></div>` + stdFoot(U);
+  }
   if (s.type === 'table'){
     const t = s.table;
     if (s.vs){
@@ -179,7 +190,7 @@ window.renderSlide = function(s){
   const W = innerWidth, u = W / 100 * 1.04; const large = s.kind === 'large';
   document.documentElement.style.setProperty('--u', u + 'px');
   document.documentElement.style.setProperty('--f', (large ? u * 1.72 : u * 1.36) + 'px');
-  document.body.className = (large ? "large" : "std") + " lang-" + s.lang;
+  document.body.className = (large ? "std large" : "std") + " lang-" + s.lang; /* both decks use the infographic style; the large deck keeps bigger text */
   const U = s.ui, el = document.getElementById('s');
   const foot = `<div class="foot"><span><b>${U.foot}</b> · ${U.by}</span><span>${s.n}</span></div>`;
   const head = (t, hl) => `<div class="bar"></div><div class="kick">${U.kick}</div><div class="ttl" data-cue="0">${t}${hl ? ' — <em>' + hl + '</em>' : ''}</div>`;
@@ -203,12 +214,12 @@ window.renderSlide = function(s){
   } else if (s.type === 'rem'){
     h = head(s.title) + `<div class="body"><div class="cards">${s.items.map((x, i) => `<div class="card" data-cue="${i + 1}"><span class="num">★</span><span>${x}</span></div>`).join('')}</div></div>` + foot;
   }
-  /* photo thumbnail as the cover of both decks and the close of the standard deck (same as the Biomolecules deck) */
-  if (s.type === 'cover' || (s.type === 'close' && !large)){
+  /* photo thumbnail as the first and last slide of both decks (same as the Biomolecules deck) */
+  if (s.type === 'cover' || s.type === 'close'){
     el.innerHTML = '<div class="photo" data-cue="0"></div>';
     const r = el.firstChild.getBoundingClientRect(); return { 0: [r.left, r.top, r.width, r.height] };
   }
-  if (!large) h = stdSlide(s, U);
+  h = stdSlide(s, U) || h;
   el.innerHTML = h; fit(); grow();
   const rects = {}; el.querySelectorAll('[data-cue]').forEach(n => { const r = n.getBoundingClientRect(), o = rects[n.dataset.cue]; if (!o){ rects[n.dataset.cue] = [r.left, r.top, r.width, r.height]; return; } const x = Math.min(o[0], r.left), y = Math.min(o[1], r.top), X2 = Math.max(o[0] + o[2], r.right), Y2 = Math.max(o[1] + o[3], r.bottom); rects[n.dataset.cue] = [x, y, X2 - x, Y2 - y]; });
   return rects;
