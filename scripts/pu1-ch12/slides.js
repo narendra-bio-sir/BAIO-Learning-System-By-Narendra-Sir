@@ -9,6 +9,8 @@ const ROOT = path.join(__dirname, '..', '..'), A = path.join(ROOT, 'pu1-ch12-ass
 const LANGS = ['en', 'kn', 'hi'];
 const STUDY = { en: S.study, kn: KN.study, hi: HI.study };
 const NAMES = require('./names.js');
+const POINTS = require('./points.js'); /* short large-print points shown on the slides */
+const LI = { en: 1, kn: 2, hi: 3 };
 const UI = {
   en: { ref: 'Ref: NCERT Biology Class XI, Chapter 12', note: 'NOTE', dia: 'DIAGRAM', kick: 'PU-I BIOLOGY · CHAPTER 12 · RESPIRATION IN PLANTS', part: 'Part', key: 'Key points', rem: 'Remember', chap: 'Respiration in Plants', sub: 'PU-I Biology · NCERT Class XI · NEET / KCET', by: 'Narendra Sir', role: 'Lecturer in Biology · Founder/CEO, BAIO Learning System', road: 'What we will learn', thanks: 'Revise · Practise · Excel', foot: 'BAIO Learning System', ch: 'Chapter 12' },
   kn: { ref: 'ಆಧಾರ: NCERT ಜೀವಶಾಸ್ತ್ರ ತರಗತಿ XI, ಅಧ್ಯಾಯ 12', note: 'ಗಮನಿಸಿ', dia: 'ಚಿತ್ರ', kick: 'PU-I ಜೀವಶಾಸ್ತ್ರ · ಅಧ್ಯಾಯ 12 · ಸಸ್ಯಗಳಲ್ಲಿ ಉಸಿರಾಟ', part: 'ಭಾಗ', key: 'ಮುಖ್ಯ ಅಂಶಗಳು', rem: 'ನೆನಪಿಡಿ', chap: 'ಸಸ್ಯಗಳಲ್ಲಿ ಉಸಿರಾಟ', sub: 'PU-I ಜೀವಶಾಸ್ತ್ರ · NCERT 11ನೇ ತರಗತಿ · NEET / KCET', by: 'ನರೇಂದ್ರ ಸರ್', role: 'ಜೀವಶಾಸ್ತ್ರ ಉಪನ್ಯಾಸಕರು · ಸಂಸ್ಥಾಪಕರು/CEO, BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್', road: 'ನಾವು ಏನು ಕಲಿಯುತ್ತೇವೆ', thanks: 'ಪುನರಾವರ್ತಿಸಿ · ಅಭ್ಯಾಸ ಮಾಡಿ · ಸಾಧಿಸಿ', foot: 'BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್', ch: 'ಅಧ್ಯಾಯ 12' },
@@ -28,12 +30,13 @@ const SAY = {
 /* a picture for each Study section (null = text only) */
 const VIS = {
   'breathe': ['energyFlow', 'cellSites', 'atpCoin', 'plantGas', 'woodyStem', 'burnVsStep'],
-  'glycolysis': ['glycolysis', 'sucrose', 'glycolysis', 'glycolysis', 'glycolysis', 'pyrFate'],
-  'fermentation': ['fermentation', 'fermentation', 'fermentation', 'fermVsAer', 'nadLoop'],
-  'krebs': ['cellSites', 'link', 'krebs', 'krebs', 'krebs', 'krebs'],
-  'ets': ['ets', 'ets', 'ets', 'ets', 'phosCompare', 'atpSynth'],
+  /* 'ncert:<file>' = an NCERT Class XI figure (ncert-figs/, crops made by ncert-crops.py) instead of a drawn diagram */
+  'glycolysis': ['ncert:fig-12-1', 'sucrose', 'ncert:fig-12-1a', 'ncert:fig-12-1b', 'ncert:fig-12-1c', 'pyrFate'],
+  'fermentation': ['ncert:fig-12-2', 'ncert:fig-12-2', 'ncert:fig-12-2', 'fermVsAer', 'nadLoop'],
+  'krebs': ['cellSites', 'ncert:fig-12-3a', 'ncert:fig-12-3', 'ncert:fig-12-3', 'ncert:fig-12-3', 'ncert:fig-12-3'],
+  'ets': ['ncert:fig-12-4', 'ncert:fig-12-4', 'ncert:fig-12-4', 'ncert:fig-12-4', 'phosCompare', 'ncert:fig-12-5'],
   'balance': ['balanceBars', 'pipeline', 'pipeline', 'balanceBars', 'fermVsAer'],
-  'amphibolic': ['amphibolic', 'amphibolic', 'amphibolic', 'amphibolic', 'amphibolic'],
+  'amphibolic': ['ncert:fig-12-6', 'ncert:fig-12-6', 'ncert:fig-12-6', 'ncert:fig-12-6', 'ncert:fig-12-6'],
   'rq': ['rqBars', 'rqBars', 'rqSeeds', 'rqBars', 'rqSeeds']
 };
 const TABLE_VIS = {};
@@ -50,11 +53,17 @@ function deck(L, kind){
   push({ type: 'road', title: u.road, items: NAMES[L] }, [[0, X.endP(say.road, L)], ...NAMES[L].map((n, i) => [i + 1, X.endP(X.speak(say.part(i + 1, n), L), L)])]);
   S.topics.forEach((t, ti) => {
     const d = st[t.id];
-    if (large) push({ type: 'part', pn: ti + 1, title: NAMES[L][ti], items: d.recap, topic: t.id, dropN: X.SPLIT(X.endP(X.speak(say.part(ti + 1, NAMES[L][ti]), L), L)).length }, [[0, X.endP(X.speak(say.part(ti + 1, NAMES[L][ti]), L), L)], [0, X.endP(say.keys, L)], ...d.recap.flatMap((r, i) => speakAll(r, i + 1))]);
+    const P = POINTS[t.id], pt = a => a.map(x => ({ ic: x[0], t: x[LI[L]] }));
+    if (P.recap.length !== d.recap.length || P.sec.length !== d.sections.length) throw new Error('points.js does not match study.js for ' + t.id);
+    if (large) push({ type: 'part', pn: ti + 1, title: NAMES[L][ti], items: pt(P.recap), topic: t.id, dropN: X.SPLIT(X.endP(X.speak(say.part(ti + 1, NAMES[L][ti]), L), L)).length }, [[0, X.endP(X.speak(say.part(ti + 1, NAMES[L][ti]), L), L)], [0, X.endP(say.keys, L)], ...d.recap.flatMap((r, i) => speakAll(r, i + 1))]);
     d.sections.forEach((sec, si) => {
       const vis = VIS[t.id][si], cards = cardsOf(sec.body, vis ? (large ? 4 : 5) : (large ? 6 : 6));
       const [t1, t2] = titleSplit(sec.h);
-      push({ type: 'sec', title: t1, hl: t2, cards, vis, topic: t.id, sec: si }, [[0, X.endP(X.speak(/[?]$/.test(X.plain(sec.h)) ? X.plain(sec.h) : say.look(X.plain(sec.h)), L), L)], ...cards.flatMap((c, i) => speakAll(c, i + 1))]);
+      const points = pt(P.sec[si]);
+      push({ type: 'sec', title: t1, hl: t2, points, vis, topic: t.id, sec: si }, [[0, X.endP(X.speak(/[?]$/.test(X.plain(sec.h)) ? X.plain(sec.h) : say.look(X.plain(sec.h)), L), L)], ...cards.flatMap((c, i) => speakAll(c, i + 1))]);
+      /* the narration still reads the full text; its sentences walk through the short points in order */
+      const o = out[out.length - 1], body = o.narr.filter(x => x[0] > 0), N = body.length;
+      body.forEach((x, k) => { x[0] = 1 + Math.floor(k * points.length / N); });
     });
     const tb = d.table;
     push({ type: 'table', title: tb.title, table: tb, topic: t.id, vs: tb.headers.length === 3 && /\bvs\b/i.test(X.plain(S.study[t.id].table.title)), vis: TABLE_VIS[t.id] === undefined ? null : TABLE_VIS[t.id] }, [[0, X.endP(X.speak(say.table(X.plain(tb.title)), L), L)], ...tb.rows.map((r, i) => [i + 1, X.endP(X.speak(r[0] + ': ' + r.slice(1).join(', '), L), L)])]);
@@ -72,7 +81,7 @@ function deck(L, kind){
     const b = await chromium.launch(); const p = await b.newPage({ viewport:{ width:W, height:H } }); const srv = require('./serve.js')();
     await p.goto(srv.url + 'scripts/pu1-ch12/slides.html'); await p.evaluate(() => document.fonts.ready);
     const D = deck(L, kind), want = list ? list.split(',').map(Number) : D.map(s => s.n);
-    for (const s of D.filter(s => want.includes(s.n))){ await p.evaluate(s => window.renderSlide(s), s); await p.waitForTimeout(150); await p.screenshot({ path: path.join(dir, `${kind}-${L}-${String(s.n).padStart(2, '0')}.jpg`), type:'jpeg', quality:80 }); }
+    for (const s of D.filter(s => want.includes(s.n))){ await p.evaluate(s => window.renderSlide(s), s); await p.evaluate(() => Promise.all([...document.images].map(i => i.complete ? 0 : new Promise(r => { i.onload = i.onerror = r; })))); await p.waitForTimeout(150); await p.screenshot({ path: path.join(dir, `${kind}-${L}-${String(s.n).padStart(2, '0')}.jpg`), type:'jpeg', quality:80 }); }
     console.log('preview', D.length, 'slides in deck;', want.length, 'rendered'); await b.close(); srv.close(); return;
   }
   const b = await chromium.launch(); const p = await b.newPage();
@@ -96,6 +105,7 @@ function deck(L, kind){
       const dir = path.join(A, (kind === 'large' ? 'proj/' : '') + (L === 'en' ? '' : L + '/')); fs.mkdirSync(dir, { recursive: true });
       for (const s of D){
         const rects = await p.evaluate(s => window.renderSlide(s), s);
+        await p.evaluate(() => Promise.all([...document.images].map(i => i.complete ? 0 : new Promise(r => { i.onload = i.onerror = r; }))));
         const k = 1920 / W;
         /* one cue per narration sentence, in 1920-wide slide coordinates */
         CUES[kind][L].push(s.narr.map(([c]) => { const r = rects[c] || rects[0]; return r ? r.map(v => Math.round(v * k)) : null; }));
