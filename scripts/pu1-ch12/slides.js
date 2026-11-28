@@ -10,9 +10,9 @@ const LANGS = ['en', 'kn', 'hi'];
 const STUDY = { en: S.study, kn: KN.study, hi: HI.study };
 const NAMES = require('./names.js');
 const UI = {
-  en: { kick: 'PU-I BIOLOGY · CHAPTER 12 · RESPIRATION IN PLANTS', part: 'Part', key: 'Key points', rem: 'Remember', chap: 'Respiration in Plants', sub: 'PU-I Biology · NCERT Class XI · NEET / KCET', by: 'Narendra Sir', role: 'Lecturer in Biology · Founder/CEO, BAIO Learning System', road: 'What we will learn', thanks: 'Revise · Practise · Excel', foot: 'BAIO Learning System', ch: 'Chapter 12' },
-  kn: { kick: 'PU-I ಜೀವಶಾಸ್ತ್ರ · ಅಧ್ಯಾಯ 12 · ಸಸ್ಯಗಳಲ್ಲಿ ಉಸಿರಾಟ', part: 'ಭಾಗ', key: 'ಮುಖ್ಯ ಅಂಶಗಳು', rem: 'ನೆನಪಿಡಿ', chap: 'ಸಸ್ಯಗಳಲ್ಲಿ ಉಸಿರಾಟ', sub: 'PU-I ಜೀವಶಾಸ್ತ್ರ · NCERT 11ನೇ ತರಗತಿ · NEET / KCET', by: 'ನರೇಂದ್ರ ಸರ್', role: 'ಜೀವಶಾಸ್ತ್ರ ಉಪನ್ಯಾಸಕರು · ಸಂಸ್ಥಾಪಕರು/CEO, BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್', road: 'ನಾವು ಏನು ಕಲಿಯುತ್ತೇವೆ', thanks: 'ಪುನರಾವರ್ತಿಸಿ · ಅಭ್ಯಾಸ ಮಾಡಿ · ಸಾಧಿಸಿ', foot: 'BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್', ch: 'ಅಧ್ಯಾಯ 12' },
-  hi: { kick: 'PU-I जीवविज्ञान · अध्याय 12 · पादपों में श्वसन', part: 'भाग', key: 'मुख्य बिंदु', rem: 'याद रखें', chap: 'पादपों में श्वसन', sub: 'PU-I जीवविज्ञान · NCERT कक्षा 11 · NEET / KCET', by: 'नरेंद्र सर', role: 'जीवविज्ञान व्याख्याता · संस्थापक/CEO, BAIO लर्निंग सिस्टम', road: 'हम क्या सीखेंगे', thanks: 'दोहराएँ · अभ्यास करें · आगे बढ़ें', foot: 'BAIO लर्निंग सिस्टम', ch: 'अध्याय 12' }
+  en: { ref: 'Ref: NCERT Biology Class XI, Chapter 12', note: 'NOTE', dia: 'DIAGRAM', kick: 'PU-I BIOLOGY · CHAPTER 12 · RESPIRATION IN PLANTS', part: 'Part', key: 'Key points', rem: 'Remember', chap: 'Respiration in Plants', sub: 'PU-I Biology · NCERT Class XI · NEET / KCET', by: 'Narendra Sir', role: 'Lecturer in Biology · Founder/CEO, BAIO Learning System', road: 'What we will learn', thanks: 'Revise · Practise · Excel', foot: 'BAIO Learning System', ch: 'Chapter 12' },
+  kn: { ref: 'ಆಧಾರ: NCERT ಜೀವಶಾಸ್ತ್ರ ತರಗತಿ XI, ಅಧ್ಯಾಯ 12', note: 'ಗಮನಿಸಿ', dia: 'ಚಿತ್ರ', kick: 'PU-I ಜೀವಶಾಸ್ತ್ರ · ಅಧ್ಯಾಯ 12 · ಸಸ್ಯಗಳಲ್ಲಿ ಉಸಿರಾಟ', part: 'ಭಾಗ', key: 'ಮುಖ್ಯ ಅಂಶಗಳು', rem: 'ನೆನಪಿಡಿ', chap: 'ಸಸ್ಯಗಳಲ್ಲಿ ಉಸಿರಾಟ', sub: 'PU-I ಜೀವಶಾಸ್ತ್ರ · NCERT 11ನೇ ತರಗತಿ · NEET / KCET', by: 'ನರೇಂದ್ರ ಸರ್', role: 'ಜೀವಶಾಸ್ತ್ರ ಉಪನ್ಯಾಸಕರು · ಸಂಸ್ಥಾಪಕರು/CEO, BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್', road: 'ನಾವು ಏನು ಕಲಿಯುತ್ತೇವೆ', thanks: 'ಪುನರಾವರ್ತಿಸಿ · ಅಭ್ಯಾಸ ಮಾಡಿ · ಸಾಧಿಸಿ', foot: 'BAIO ಲರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್', ch: 'ಅಧ್ಯಾಯ 12' },
+  hi: { ref: 'संदर्भ: NCERT जीवविज्ञान कक्षा XI, अध्याय 12', note: 'ध्यान दें', dia: 'चित्र', kick: 'PU-I जीवविज्ञान · अध्याय 12 · पादपों में श्वसन', part: 'भाग', key: 'मुख्य बिंदु', rem: 'याद रखें', chap: 'पादपों में श्वसन', sub: 'PU-I जीवविज्ञान · NCERT कक्षा 11 · NEET / KCET', by: 'नरेंद्र सर', role: 'जीवविज्ञान व्याख्याता · संस्थापक/CEO, BAIO लर्निंग सिस्टम', road: 'हम क्या सीखेंगे', thanks: 'दोहराएँ · अभ्यास करें · आगे बढ़ें', foot: 'BAIO लर्निंग सिस्टम', ch: 'अध्याय 12' }
 };
 const SAY = {
   en: { cover: 'Welcome, dear students, to Chapter 12, Respiration in Plants. I am Narendra Sir, and this is the BAIO Learning System. In this chapter we will see how every living cell breaks down food step by step and traps its energy as ATP. Let us begin.',
@@ -57,7 +57,7 @@ function deck(L, kind){
       push({ type: 'sec', title: t1, hl: t2, cards, vis, topic: t.id, sec: si }, [[0, X.endP(X.speak(/[?]$/.test(X.plain(sec.h)) ? X.plain(sec.h) : say.look(X.plain(sec.h)), L), L)], ...cards.flatMap((c, i) => speakAll(c, i + 1))]);
     });
     const tb = d.table;
-    push({ type: 'table', title: tb.title, table: tb, topic: t.id, vis: TABLE_VIS[t.id] === undefined ? null : TABLE_VIS[t.id] }, [[0, X.endP(X.speak(say.table(X.plain(tb.title)), L), L)], ...tb.rows.map((r, i) => [i + 1, X.endP(X.speak(r[0] + ': ' + r.slice(1).join(', '), L), L)])]);
+    push({ type: 'table', title: tb.title, table: tb, topic: t.id, vs: tb.headers.length === 3 && /\bvs\b/i.test(X.plain(S.study[t.id].table.title)), vis: TABLE_VIS[t.id] === undefined ? null : TABLE_VIS[t.id] }, [[0, X.endP(X.speak(say.table(X.plain(tb.title)), L), L)], ...tb.rows.map((r, i) => [i + 1, X.endP(X.speak(r[0] + ': ' + r.slice(1).join(', '), L), L)])]);
     if (large) push({ type: 'rem', title: d.keyList.title, items: d.keyList.items, topic: t.id }, [[0, X.endP(say.rem, L)], ...d.keyList.items.flatMap((x, i) => speakAll(x, i + 1))]);
   });
   push({ type: 'close' }, X.SPLIT(say.close).map(t => [0, t]));
@@ -66,7 +66,15 @@ function deck(L, kind){
 }
 
 (async () => {
-  const only = process.argv[2]; /* optional: en|kn|hi */
+  const only = process.argv[2]; /* optional: en|kn|hi, or "preview <dir> <lang> <kind> <n,n,…>" to render a few slides elsewhere */
+  if (only === 'preview'){
+    const [dir, L, kind, list] = process.argv.slice(3); const W = kind === 'large' ? 1920 : 1600, H = kind === 'large' ? 1080 : 900;
+    const b = await chromium.launch(); const p = await b.newPage({ viewport:{ width:W, height:H } }); const srv = require('./serve.js')();
+    await p.goto(srv.url + 'scripts/pu1-ch12/slides.html'); await p.evaluate(() => document.fonts.ready);
+    const D = deck(L, kind), want = list ? list.split(',').map(Number) : D.map(s => s.n);
+    for (const s of D.filter(s => want.includes(s.n))){ await p.evaluate(s => window.renderSlide(s), s); await p.waitForTimeout(150); await p.screenshot({ path: path.join(dir, `${kind}-${L}-${String(s.n).padStart(2, '0')}.jpg`), type:'jpeg', quality:80 }); }
+    console.log('preview', D.length, 'slides in deck;', want.length, 'rendered'); await b.close(); srv.close(); return;
+  }
   const b = await chromium.launch(); const p = await b.newPage();
   const srv = require('./serve.js')(); await p.goto(srv.url + 'scripts/pu1-ch12/slides.html'); await p.evaluate(() => document.fonts.ready);
   const NARR = { std: {}, large: {} }, CUES = { std: {}, large: {} }, man = {};
@@ -103,6 +111,7 @@ function deck(L, kind){
     fs.writeFileSync(path.join(A, 'narration.json'), JSON.stringify(NARR));
     fs.writeFileSync(path.join(A, 'spot-cues.json'), JSON.stringify(CUES));
     const mf = path.join(A, 'manifest.json'); let M = {}; try { M = JSON.parse(fs.readFileSync(mf, 'utf8')); } catch (e) {}
-    Object.assign(M, man); fs.writeFileSync(mf, JSON.stringify(M, null, 1));
+    const before = JSON.stringify(M); Object.assign(M, man);
+    if (JSON.stringify(M) !== before) fs.writeFileSync(mf, JSON.stringify(M, null, 1));
   }
 })();
