@@ -86,6 +86,10 @@
 
   function $(id){ return document.getElementById(id); }
   function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  /* text that may carry simple formatting (K<sub>2</sub>Cr<sub>2</sub>O<sub>7</sub>, x<sup>2</sup>): escape everything,
+     then let only sub / sup / b / i / em / strong / br back in */
+  function rich(s){ return esc(s == null ? '' : s).replace(/&lt;(\/?)(sub|sup|b|i|em|strong)&gt;/g, '<$1$2>').replace(/&lt;br\s*\/?&gt;/g, '<br>'); }
+  function plain(s){ return String(s == null ? '' : s).replace(/<[^>]+>/g, ''); }
 
   /* ---------- theme ---------- */
   var tb = $('themeBtn');
@@ -99,8 +103,8 @@
     document.documentElement.lang = lang;
     $('langs').innerHTML = [['en','English'],['kn','ಕನ್ನಡ'],['hi','हिंदी']].map(function(l){ return '<button class="lang'+(l[0]===lang?' on':'')+'" data-l="'+l[0]+'">'+l[1]+'</button>'; }).join('');
     $('eyebrow').textContent = V().eyebrow || (A.cls + ' ' + A.subject + ' · NEET / KCET aligned');
-    $('title').textContent = (UI[lang].chw || 'Chapter') + ' ' + A.ch + ': ' + V().title;
-    $('intro').textContent = V().intro;
+    $('title').innerHTML = rich((UI[lang].chw || 'Chapter') + ' ' + A.ch + ': ' + V().title);
+    $('intro').innerHTML = rich(V().intro);
     var p = null; try{ p = JSON.parse(localStorage.getItem('baio_student') || 'null'); }catch(e){}
     $('hello').textContent = p && p.name ? u.hi_user(p.name) + (p.roll ? ' (' + p.roll + ')' : '') : '';
     $('hello').hidden = !(p && p.name);
